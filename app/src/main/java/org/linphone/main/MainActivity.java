@@ -193,6 +193,11 @@ public abstract class MainActivity extends LinphoneGenericActivity
                     }
 
                     @Override
+                    public void onChatRoomRead(Core lc, ChatRoom room) {
+                        displayMissedChats();
+                    }
+
+                    @Override
                     public void onMessageReceivedUnableDecrypt(
                             Core lc, ChatRoom room, ChatMessage message) {
                         displayMissedChats();

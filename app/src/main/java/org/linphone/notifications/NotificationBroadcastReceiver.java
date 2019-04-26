@@ -87,11 +87,6 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
             }
 
             room.markAsRead();
-            // TODO FIXME
-            /*if (LinphoneActivity.isInstanciated()) {
-                LinphoneActivity.instance()
-                        .displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
-            }*/
 
             if (intent.getAction().equals(Compatibility.INTENT_REPLY_NOTIF_ACTION)) {
                 final String reply = getMessageText(intent).toString();

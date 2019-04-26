@@ -31,7 +31,6 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import org.linphone.LinphoneManager;
@@ -44,7 +43,6 @@ import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomListenerStub;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
-import org.linphone.core.EventLog;
 import org.linphone.core.ProxyConfig;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.utils.SelectableHelper;
@@ -140,8 +138,24 @@ public class ChatRoomsFragment extends Fragment
         mListener =
                 new CoreListenerStub() {
                     @Override
+                    public void onMessageSent(Core lc, ChatRoom room, ChatMessage message) {
+                        refreshChatRoom(room);
+                    }
+
+                    @Override
                     public void onMessageReceived(Core lc, ChatRoom cr, ChatMessage message) {
                         refreshChatRoom(cr);
+                    }
+
+                    @Override
+                    public void onMessageReceivedUnableDecrypt(
+                            Core lc, ChatRoom room, ChatMessage message) {
+                        refreshChatRoom(room);
+                    }
+
+                    @Override
+                    public void onChatRoomRead(Core lc, ChatRoom room) {
+                        refreshChatRoom(room);
                     }
 
                     @Override
