@@ -286,7 +286,11 @@ public abstract class MainActivity extends LinphoneGenericActivity
     }
 
     protected void quit() {
-        finish();
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+
         stopService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));
         ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         am.killBackgroundProcesses(getString(R.string.sync_account_type));

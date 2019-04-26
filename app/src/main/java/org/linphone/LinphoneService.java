@@ -410,12 +410,6 @@ public final class LinphoneService extends Service {
             mNotificationManager.destroy();
         }
 
-        // This will prevent the app from crashing if the service gets killed in background mode
-        /*if (LinphoneActivity.isInstanciated()) {
-            Log.w("[Service] Service is getting destroyed, finish LinphoneActivity");
-            LinphoneActivity.instance().finish();
-        }*/
-
         if (LinphonePreferences.instance().useJavaLogger()) {
             Factory.instance().getLoggingService().removeListener(mJavaLoggingService);
         }
