@@ -2,7 +2,7 @@ package org.linphone;
 
 /*
 LinphoneLauncherActivity.java
-Copyright (C) 2017  Belledonne Communications, Grenoble, France
+Copyright (C) 2017 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -27,6 +27,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import org.linphone.assistant.MenuAssistantActivity;
+import org.linphone.chat.ChatActivity;
 import org.linphone.main.DialerActivity;
 import org.linphone.settings.LinphonePreferences;
 
@@ -69,7 +70,12 @@ public class LinphoneLauncherActivity extends Activity {
         if (useFirstLoginActivity && LinphonePreferences.instance().isFirstLaunch()) {
             classToStart = MenuAssistantActivity.class;
         } else {
-            classToStart = DialerActivity.class;
+            if (getIntent().getExtras() != null
+                    && "Chat".equals(getIntent().getExtras().getString("Activity", null))) {
+                classToStart = ChatActivity.class;
+            } else {
+                classToStart = DialerActivity.class;
+            }
         }
 
         mHandler.postDelayed(
@@ -81,7 +87,11 @@ public class LinphoneLauncherActivity extends Activity {
                         if (getIntent() != null && getIntent().getExtras() != null) {
                             intent.putExtras(getIntent().getExtras());
                         }
+                        intent.setAction(getIntent().getAction());
+                        intent.setType(getIntent().getType());
                         startActivity(intent);
+
+                        LinphoneService.instance().removeForegroundServiceNotificationIfPossible();
                     }
                 },
                 500);

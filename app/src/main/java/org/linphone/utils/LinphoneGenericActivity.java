@@ -2,7 +2,7 @@ package org.linphone.utils;
 
 /*
 LinphoneGenericActivity.java
-Copyright (C) 2017  Belledonne Communications, Grenoble, France
+Copyright (C) 2017 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -29,13 +29,12 @@ public class LinphoneGenericActivity extends ThemableActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         /*After a crash, Android restart the last Activity so we need to check
          * if all dependencies are load
          */
         if (!LinphoneService.isReady() || !LinphoneManager.isInstanciated()) {
-            finish();
             startActivity(getIntent().setClass(this, LinphoneLauncherActivity.class));
+            finish();
         }
     }
 }

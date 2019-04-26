@@ -378,8 +378,6 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <activity android:name=".utils.LinphoneGenericActivity" />
-
         <receiver
             android:name=".notifications.NotificationBroadcastReceiver"
             android:enabled="true"

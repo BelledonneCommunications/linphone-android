@@ -37,7 +37,13 @@ import org.linphone.utils.FileUtils;
 public class ChatActivity extends MainActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getIntent().putExtra("Activity", "Chat");
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
 
         Fragment currentFragment = getFragmentManager().findFragmentById(R.id.fragmentContainer);
         if (currentFragment == null) {

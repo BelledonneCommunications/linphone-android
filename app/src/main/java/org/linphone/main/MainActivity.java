@@ -56,11 +56,11 @@ import org.linphone.history.HistoryActivity;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.settings.SettingsActivity;
 import org.linphone.utils.DeviceUtils;
+import org.linphone.utils.LinphoneGenericActivity;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.utils.PushNotificationUtils;
-import org.linphone.utils.ThemableActivity;
 
-public abstract class MainActivity extends ThemableActivity
+public abstract class MainActivity extends LinphoneGenericActivity
         implements StatusFragment.MenuClikedListener, SideMenuFragment.QuitClikedListener {
     private static final int MAIN_PERMISSIONS = 1;
     private static final int FRAGMENT_SPECIFIC_PERMISSION = 2;
@@ -86,8 +86,6 @@ public abstract class MainActivity extends ThemableActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        LinphoneService.instance().removeForegroundServiceNotificationIfPossible();
 
         setContentView(R.layout.main);
 
