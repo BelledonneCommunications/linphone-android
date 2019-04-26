@@ -21,77 +21,47 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 public class XmlRpcListenerBase implements XmlRpcListener {
     @Override
-    public void onError() {
-
-    }
+    public void onError() {}
 
     @Override
-    public void onAccountCreated() {
-
-    }
+    public void onAccountCreated() {}
 
     @Override
-    public void onAccountExpireFetched(String result) {
-
-    }
+    public void onAccountExpireFetched(String result) {}
 
     @Override
-    public void onAccountActivated() {
-
-    }
+    public void onAccountActivated() {}
 
     @Override
-    public void onAccountActivatedFetched() {
-
-    }
+    public void onAccountActivatedFetched() {}
 
     @Override
-    public void onTrialAccountFetched(boolean isTrial) {
-
-    }
+    public void onTrialAccountFetched(boolean isTrial) {}
 
     @Override
-    public void onAccountFetched() {
-
-    }
+    public void onAccountFetched() {}
 
     @Override
-    public void onAccountEmailChanged() {
-
-    }
+    public void onAccountEmailChanged() {}
 
     @Override
-    public void onAccountPasswordChanged() {
-
-    }
+    public void onAccountPasswordChanged() {}
 
     @Override
-    public void onRecoverPasswordLinkSent() {
-
-    }
+    public void onRecoverPasswordLinkSent() {}
 
     @Override
-    public void onActivateAccountLinkSent() {
-
-    }
+    public void onActivateAccountLinkSent() {}
 
     @Override
-    public void onAccountExpireUpdated() {
-
-    }
+    public void onAccountExpireUpdated() {}
 
     @Override
-    public void onSignatureVerified(boolean success) {
-
-    }
+    public void onSignatureVerified(boolean success) {}
 
     @Override
-    public void onUsernameSent() {
-
-    }
+    public void onUsernameSent() {}
 
     @Override
-    public void onRemoteProvisioningFilenameSent(String result) {
-
-    }
+    public void onRemoteProvisioningFilenameSent(String result) {}
 }

@@ -1769,9 +1769,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     public void onNetworkReachable(Core lc, boolean enable) {}
 
     @Override
-    public void onAuthenticationRequested(Core lc, AuthInfo authInfo, AuthMethod method) {
-
-    }
+    public void onAuthenticationRequested(Core lc, AuthInfo authInfo, AuthMethod method) {}
 
     @Override
     public void onNotifyPresenceReceivedForUriOrTel(

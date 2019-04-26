@@ -168,8 +168,7 @@ public class InAppPurchaseActivity extends Activity
             xmlRpcHelper.updateAccountExpireAsync(
                     new XmlRpcListenerBase() {
                         @Override
-                        public void onAccountExpireUpdated() {
-                        }
+                        public void onAccountExpireUpdated() {}
                     },
                     LinphonePreferences.instance().getAccountUsername(0),
                     LinphonePreferences.instance().getAccountHa1(0),

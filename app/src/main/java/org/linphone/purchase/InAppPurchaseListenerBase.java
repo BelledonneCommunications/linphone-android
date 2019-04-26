@@ -23,37 +23,23 @@ import java.util.ArrayList;
 
 public class InAppPurchaseListenerBase implements InAppPurchaseListener {
     @Override
-    public void onServiceAvailableForQueries() {
-
-    }
+    public void onServiceAvailableForQueries() {}
 
     @Override
-    public void onAvailableItemsForPurchaseQueryFinished(ArrayList<Purchasable> items) {
-
-    }
+    public void onAvailableItemsForPurchaseQueryFinished(ArrayList<Purchasable> items) {}
 
     @Override
-    public void onPurchasedItemsQueryFinished(ArrayList<Purchasable> items) {
-
-    }
+    public void onPurchasedItemsQueryFinished(ArrayList<Purchasable> items) {}
 
     @Override
-    public void onPurchasedItemConfirmationQueryFinished(boolean success) {
-
-    }
+    public void onPurchasedItemConfirmationQueryFinished(boolean success) {}
 
     @Override
-    public void onRecoverAccountSuccessful() {
-
-    }
+    public void onRecoverAccountSuccessful() {}
 
     @Override
-    public void onActivateAccountSuccessful(boolean success) {
-
-    }
+    public void onActivateAccountSuccessful(boolean success) {}
 
     @Override
-    public void onError(String error) {
-
-    }
+    public void onError(String error) {}
 }
