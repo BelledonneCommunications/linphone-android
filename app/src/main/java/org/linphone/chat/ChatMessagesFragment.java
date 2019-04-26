@@ -318,7 +318,7 @@ public class ChatMessagesFragment extends Fragment
         mChatEventsList.addOnScrollListener(mChatScrollListener);
 
         if (getArguments() != null) {
-            String fileSharedUri = getArguments().getString("fileSharedUri");
+            String fileSharedUri = getArguments().getString("SharedFiles");
             if (fileSharedUri != null) {
                 Log.i("[ChatMessages] Found shared file(s): " + fileSharedUri);
                 if (fileSharedUri.contains(":")) {
@@ -331,8 +331,8 @@ public class ChatMessagesFragment extends Fragment
                 }
             }
 
-            if (getArguments().getString("messageDraft") != null) {
-                String sharedText = getArguments().getString("messageDraft");
+            if (getArguments().containsKey("SharedText")) {
+                String sharedText = getArguments().getString("SharedText");
                 mMessageTextToSend.setText(sharedText);
                 Log.i("[ChatMessages] Found shared text: " + sharedText);
             }

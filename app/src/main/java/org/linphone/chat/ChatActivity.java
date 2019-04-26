@@ -35,6 +35,8 @@ import org.linphone.main.MainActivity;
 import org.linphone.utils.FileUtils;
 
 public class ChatActivity extends MainActivity {
+    private String mSharedText, mSharedFiles;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getIntent().putExtra("Activity", "Chat");
@@ -69,18 +71,27 @@ public class ChatActivity extends MainActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         mChatSelected.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        getIntent().setAction("");
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putString("SharedText", mSharedText);
+        outState.putString("SharedFiles", mSharedFiles);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+        mSharedText = savedInstanceState.getString("SharedText", null);
+        mSharedFiles = savedInstanceState.getString("SharedFiles", null);
     }
 
     @Override
@@ -109,19 +120,19 @@ public class ChatActivity extends MainActivity {
     private void handleIntentExtras(Intent intent) {
         if (intent == null) return;
 
-        String stringFileShared = null;
-        String stringUriFileShared = null;
+        String sharedText = null;
+        String sharedFiles = null;
 
         String action = intent.getAction();
         String type = intent.getType();
         if (Intent.ACTION_SEND.equals(action) && type != null) {
             if (("text/plain").equals(type) && intent.getStringExtra(Intent.EXTRA_TEXT) != null) {
-                stringFileShared = intent.getStringExtra(Intent.EXTRA_TEXT);
-                Log.i("[Chat Activity] ACTION_SEND with text/plain data: " + stringFileShared);
+                sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
+                Log.i("[Chat Activity] ACTION_SEND with text/plain data: " + sharedText);
             } else {
                 Uri fileUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
-                stringUriFileShared = FileUtils.getFilePath(this, fileUri);
-                Log.i("[Chat Activity] ACTION_SEND with file: " + stringUriFileShared);
+                sharedFiles = FileUtils.getFilePath(this, fileUri);
+                Log.i("[Chat Activity] ACTION_SEND with file: " + sharedFiles);
             }
         } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
             if (type.startsWith("image/")) {
@@ -131,7 +142,8 @@ public class ChatActivity extends MainActivity {
                     filePaths += FileUtils.getFilePath(this, uri);
                     filePaths += ":";
                 }
-                Log.i("[Chat Activity] ACTION_SEND_MULTIPLE with files: " + filePaths);
+                sharedFiles = filePaths;
+                Log.i("[Chat Activity] ACTION_SEND_MULTIPLE with files: " + sharedFiles);
             }
         } else {
             if (intent.getExtras() != null) {
@@ -140,15 +152,12 @@ public class ChatActivity extends MainActivity {
             }
         }
 
-        if (stringFileShared != null || stringUriFileShared != null) {
-            // TODO do something about it
+        if (sharedText != null || sharedFiles != null) {
+            mSharedText = sharedText;
+            mSharedFiles = sharedFiles;
             Toast.makeText(this, R.string.toast_choose_chat_room_for_sharing, Toast.LENGTH_LONG)
                     .show();
-            Log.i(
-                    "[Chat Activity] Sharing arguments found: "
-                            + stringFileShared
-                            + " / "
-                            + stringUriFileShared);
+            Log.i("[Chat Activity] Sharing arguments found: " + mSharedText + " / " + mSharedFiles);
         }
     }
 
@@ -185,6 +194,15 @@ public class ChatActivity extends MainActivity {
         if (peerAddress != null) {
             extras.putSerializable("RemoteSipUri", peerAddress.asStringUriOnly());
         }
+        if (mSharedText != null) {
+            extras.putString("SharedText", mSharedText);
+            mSharedText = null;
+        }
+        if (mSharedFiles != null) {
+            extras.putString("SharedFiles", mSharedFiles);
+            mSharedFiles = null;
+        }
+
         ChatMessagesFragment fragment = new ChatMessagesFragment();
         fragment.setArguments(extras);
         changeFragment(fragment, "Chat room", isChild);
