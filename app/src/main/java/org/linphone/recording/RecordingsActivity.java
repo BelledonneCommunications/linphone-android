@@ -105,8 +105,6 @@ public class RecordingsActivity extends MainActivity
         hideTopBar();
         hideTabBar();
 
-        // TODO: permission check for external storage
-
         LinphoneManager.getInstance().setAudioManagerModeNormal();
         LinphoneManager.getInstance().routeAudioToSpeaker();
 

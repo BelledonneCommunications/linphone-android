@@ -49,6 +49,11 @@ import org.linphone.contacts.ContactsActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
+import org.linphone.core.Call;
+import org.linphone.core.ChatMessage;
+import org.linphone.core.ChatRoom;
+import org.linphone.core.Core;
+import org.linphone.core.CoreListenerStub;
 import org.linphone.core.tools.Log;
 import org.linphone.fragments.EmptyFragment;
 import org.linphone.fragments.StatusFragment;
@@ -82,6 +87,8 @@ public abstract class MainActivity extends LinphoneGenericActivity
 
     protected boolean mOnBackPressGoHome;
     protected String[] mPermissionsToHave;
+
+    private CoreListenerStub mListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,6 +176,28 @@ public abstract class MainActivity extends LinphoneGenericActivity
         if (getResources().getBoolean(R.bool.disable_chat)) {
             mChat.setVisibility(View.GONE);
         }
+
+        mListener =
+                new CoreListenerStub() {
+                    @Override
+                    public void onCallStateChanged(
+                            Core lc, Call call, Call.State state, String message) {
+                        if (state == Call.State.End || state == Call.State.Released) {
+                            displayMissedCalls();
+                        }
+                    }
+
+                    @Override
+                    public void onMessageReceived(Core lc, ChatRoom room, ChatMessage message) {
+                        displayMissedChats();
+                    }
+
+                    @Override
+                    public void onMessageReceivedUnableDecrypt(
+                            Core lc, ChatRoom room, ChatMessage message) {
+                        displayMissedChats();
+                    }
+                };
     }
 
     @Override
@@ -218,12 +247,24 @@ public abstract class MainActivity extends LinphoneGenericActivity
         if (mSideMenuFragment.isOpened()) {
             mSideMenuFragment.closeDrawer();
         }
+
+        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        if (core != null) {
+            core.addListener(mListener);
+            displayMissedChats();
+            displayMissedCalls();
+        }
     }
 
     @Override
     protected void onPause() {
         mStatusFragment.setMenuListener(null);
         mSideMenuFragment.setQuitListener(null);
+
+        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        if (core != null) {
+            core.removeListener(mListener);
+        }
 
         super.onPause();
     }
@@ -421,9 +462,15 @@ public abstract class MainActivity extends LinphoneGenericActivity
 
     // Missed calls & chat indicators
 
-    public void displayMissedCalls(final int missedCallsCount) {
-        if (missedCallsCount > 0) {
-            mMissedCalls.setText(missedCallsCount + "");
+    public void displayMissedCalls() {
+        int count = 0;
+        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        if (core != null) {
+            count = core.getMissedCallsCount();
+        }
+
+        if (count > 0) {
+            mMissedCalls.setText(String.valueOf(count));
             mMissedCalls.setVisibility(View.VISIBLE);
         } else {
             if (LinphoneManager.isInstanciated()) LinphoneManager.getLc().resetMissedCallsCount();
@@ -432,9 +479,14 @@ public abstract class MainActivity extends LinphoneGenericActivity
         }
     }
 
-    public void displayMissedChats(final int missedChatCount) {
-        if (missedChatCount > 0) {
-            mMissedMessages.setText(missedChatCount + "");
+    public void displayMissedChats() {
+        int count = 0;
+        if (LinphoneManager.isInstanciated()) {
+            count = LinphoneManager.getInstance().getUnreadMessageCount();
+        }
+
+        if (count > 0) {
+            mMissedMessages.setText(String.valueOf(count));
             mMissedMessages.setVisibility(View.VISIBLE);
         } else {
             mMissedMessages.clearAnimation();

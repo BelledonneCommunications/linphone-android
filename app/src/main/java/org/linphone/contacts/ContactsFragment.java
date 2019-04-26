@@ -181,7 +181,87 @@ public class ContactsFragment extends Fragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        // TODO: contacts filter to save and restore
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
+        LinphoneContact contact = (LinphoneContact) adapter.getItemAtPosition(position);
+        mLastKnownPosition = mLayoutManager.findFirstVisibleItemPosition();
+        ((ContactsActivity) getActivity()).showContactDetails(contact);
+    }
+
+    @Override
+    public void onItemClicked(int position) {
+        LinphoneContact contact = (LinphoneContact) mContactAdapter.getItem(position);
+
+        if (mContactAdapter.isEditionEnabled()) {
+            mContactAdapter.toggleSelection(position);
+        } else {
+            mLastKnownPosition = mLayoutManager.findFirstVisibleItemPosition();
+            ((ContactsActivity) getActivity()).showContactDetails(contact);
+        }
+    }
+
+    @Override
+    public boolean onItemLongClicked(int position) {
+        if (!mContactAdapter.isEditionEnabled()) {
+            mSelectionHelper.enterEditionMode();
+        }
+        mContactAdapter.toggleSelection(position);
+        return true;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ContactsManager.getInstance().addContactsListener(this);
+
+        mOnlyDisplayLinphoneContacts =
+                ContactsManager.getInstance().isLinphoneContactsPrefered()
+                        || getResources().getBoolean(R.bool.hide_non_linphone_contacts);
+
+        changeContactsToggle();
+        invalidate();
+    }
+
+    @Override
+    public void onPause() {
+        ContactsManager.getInstance().removeContactsListener(this);
+        super.onPause();
+    }
+
+    @Override
+    public void onContactsUpdated() {
+        if (mContactAdapter != null) {
+            mContactAdapter.updateDataSet(
+                    mOnlyDisplayLinphoneContacts
+                            ? ContactsManager.getInstance().getSIPContacts()
+                            : ContactsManager.getInstance().getContacts());
+            mContactAdapter.notifyDataSetChanged();
+
+            if (mContactAdapter.getItemCount() > 0) {
+                mNoContact.setVisibility(View.GONE);
+                mNoSipContact.setVisibility(View.GONE);
+            }
+        }
+        mContactsFetchInProgress.setVisibility(View.GONE);
+        mContactsRefresher.setRefreshing(false);
+    }
+
+    @Override
+    public void onDeleteSelection(Object[] objectsToDelete) {
+        ArrayList<String> ids = new ArrayList<>();
+        int size = mContactAdapter.getSelectedItemCount();
+        for (int i = size - 1; i >= 0; i--) {
+            LinphoneContact contact = (LinphoneContact) objectsToDelete[i];
+            if (contact.isAndroidContact()) {
+                contact.deleteFriend();
+                ids.add(contact.getAndroidId());
+            } else {
+                contact.delete();
+            }
+        }
+        ContactsManager.getInstance().deleteMultipleContactsAtOnce(ids);
     }
 
     private void searchContacts(String search) {
@@ -274,70 +354,6 @@ public class ContactsFragment extends Fragment
         }
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
-        LinphoneContact contact = (LinphoneContact) adapter.getItemAtPosition(position);
-        mLastKnownPosition = mLayoutManager.findFirstVisibleItemPosition();
-        ((ContactsActivity) getActivity()).showContactDetails(contact);
-    }
-
-    @Override
-    public void onItemClicked(int position) {
-        LinphoneContact contact = (LinphoneContact) mContactAdapter.getItem(position);
-
-        if (mContactAdapter.isEditionEnabled()) {
-            mContactAdapter.toggleSelection(position);
-        } else {
-            mLastKnownPosition = mLayoutManager.findFirstVisibleItemPosition();
-            ((ContactsActivity) getActivity()).showContactDetails(contact);
-        }
-    }
-
-    @Override
-    public boolean onItemLongClicked(int position) {
-        if (!mContactAdapter.isEditionEnabled()) {
-            mSelectionHelper.enterEditionMode();
-        }
-        mContactAdapter.toggleSelection(position);
-        return true;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        ContactsManager.getInstance().addContactsListener(this);
-
-        mOnlyDisplayLinphoneContacts =
-                ContactsManager.getInstance().isLinphoneContactsPrefered()
-                        || getResources().getBoolean(R.bool.hide_non_linphone_contacts);
-        changeContactsToggle();
-        invalidate();
-    }
-
-    @Override
-    public void onPause() {
-        ContactsManager.getInstance().removeContactsListener(this);
-        super.onPause();
-    }
-
-    @Override
-    public void onContactsUpdated() {
-        if (mContactAdapter != null) {
-            mContactAdapter.updateDataSet(
-                    mOnlyDisplayLinphoneContacts
-                            ? ContactsManager.getInstance().getSIPContacts()
-                            : ContactsManager.getInstance().getContacts());
-            mContactAdapter.notifyDataSetChanged();
-
-            if (mContactAdapter.getItemCount() > 0) {
-                mNoContact.setVisibility(View.GONE);
-                mNoSipContact.setVisibility(View.GONE);
-            }
-        }
-        mContactsFetchInProgress.setVisibility(View.GONE);
-        mContactsRefresher.setRefreshing(false);
-    }
-
     private void invalidate() {
         if (mSearchView != null && mSearchView.getQuery().toString().length() > 0) {
             searchContacts(mSearchView.getQuery().toString());
@@ -345,21 +361,5 @@ public class ContactsFragment extends Fragment
             changeContactsAdapter();
         }
         mContactsList.scrollToPosition(mLastKnownPosition);
-    }
-
-    @Override
-    public void onDeleteSelection(Object[] objectsToDelete) {
-        ArrayList<String> ids = new ArrayList<>();
-        int size = mContactAdapter.getSelectedItemCount();
-        for (int i = size - 1; i >= 0; i--) {
-            LinphoneContact contact = (LinphoneContact) objectsToDelete[i];
-            if (contact.isAndroidContact()) {
-                contact.deleteFriend();
-                ids.add(contact.getAndroidId());
-            } else {
-                contact.delete();
-            }
-        }
-        ContactsManager.getInstance().deleteMultipleContactsAtOnce(ids);
     }
 }

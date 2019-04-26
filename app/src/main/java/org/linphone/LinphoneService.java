@@ -224,18 +224,14 @@ public final class LinphoneService extends Service {
 
                                     @Override
                                     public void onGlobalStateChanged(
-                                            Core lc, GlobalState state, String message) {
-                                        // TODO global state if ON
-                                    }
+                                            Core lc, GlobalState state, String message) {}
 
                                     @Override
                                     public void onRegistrationStateChanged(
                                             Core lc,
                                             ProxyConfig cfg,
                                             RegistrationState state,
-                                            String smessage) {
-                                        // TODO registration status
-                                    }
+                                            String smessage) {}
                                 });
 
         if (Version.sdkAboveOrEqual(Version.API26_O_80)

@@ -109,7 +109,9 @@ public class CallSettingsFragment extends SettingsFragment {
                         if (readExternalStorage == PackageManager.PERMISSION_GRANTED) {
                             mPrefs.enableDeviceRingtone(newValue);
                         } else {
-                            // TODO: ask for READ_EXTERNAL_STORAGE permission
+                            ((SettingsActivity) getActivity())
+                                    .requestPermissionIfNotGranted(
+                                            Manifest.permission.READ_EXTERNAL_STORAGE);
                         }
                     }
                 });

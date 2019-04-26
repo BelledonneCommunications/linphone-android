@@ -735,8 +735,7 @@ public class ChatMessagesFragment extends Fragment
         mChatRoom.markAsRead();
         LinphoneManager.getInstance().updateUnreadCountForChatRoom(mChatRoom, 0);
 
-        ((ChatActivity) getActivity())
-                .displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
+        ((ChatActivity) getActivity()).displayMissedChats();
 
         mRemoteParticipantAddress = mRemoteSipAddress;
         if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())
@@ -1204,8 +1203,7 @@ public class ChatMessagesFragment extends Fragment
     public void onChatMessageReceived(ChatRoom cr, EventLog event) {
         cr.markAsRead();
         LinphoneManager.getInstance().updateUnreadCountForChatRoom(mChatRoom, 0);
-        ((ChatActivity) getActivity())
-                .displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
+        ((ChatActivity) getActivity()).displayMissedChats();
 
         ChatMessage msg = event.getChatMessage();
         if (msg.getErrorInfo() != null

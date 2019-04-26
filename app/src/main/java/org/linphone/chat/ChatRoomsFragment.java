@@ -270,8 +270,7 @@ public class ChatRoomsFragment extends Fragment
         if (mChatRoomDeletionPendingCount > 0) {
             mWaitLayout.setVisibility(View.VISIBLE);
         }
-        ((ChatActivity) getActivity())
-                .displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
+        ((ChatActivity) getActivity()).displayMissedChats();
     }
 
     @Override
