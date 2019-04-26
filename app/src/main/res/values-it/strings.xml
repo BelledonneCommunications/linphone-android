@@ -6,15 +6,26 @@
   <string name="addressbook_label">Linphone</string>
   <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">Avvio</string>
+  <string name="notification_registered">%sè connesso</string>
+  <string name="notification_register_failure">%s non è riuscito a connettersi</string>
   <string name="tunnel_host"></string>
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone Core %s</string>
+  <string name="about_liblinphone_sdk_version">Linphone SDK %s</string>
+  <string name="about_privacy_policy">Leggi le nostre regole della privacy</string>
   <string name="sync_account_name">contatti linphone</string>
   <!--Notifications-->
+  <string name="notification_reply_label">Rispondi</string>
+  <string name="notification_replied_label">Risposta inviata: %s</string>
+  <string name="notification_call_hangup_label">Interrompi</string>
+  <string name="notification_call_answer_label">Rispondi</string>
+  <string name="notification_mark_as_read_label">Segna come già letto</string>
   <!--Common-->
   <string name="username">Nome utente</string>
   <string name="userid">ID utente (facoltativo)</string>
   <string name="phone_number">Numero di telefono</string>
+  <string name="confirmation_code">Codice di conferma</string>
+  <string name="international_prefix">Prefisso internazionale</string>
   <string name="display_name">Nome visualizzato</string>
   <string name="password">Password</string>
   <string name="confirm_password">Conferma password</string>
@@ -48,6 +59,9 @@
   <string name="yes">Si</string>
   <string name="link_account">Collega il tuo account</string>
   <string name="update_available">È disponibile un aggiornamento</string>
+  <string name="do_not_ask_again">Non mostrarlo più</string>
+  <string name="delete_contacts_text">Sei sicuro di eliminare questi contatti?\nSaranno eliminati anche dal tuo telefono!</string>
+  <string name="logs_url_copied_to_clipboard">Log indirizzi copiati negli appunti</string>
   <!--Launch screen-->
   <string name="app_description">the <i>libre</i> SIP client</string>
   <!--Assistant-->
@@ -78,6 +92,7 @@
   <string name="assistant_generic_account">Usa l\'account SIP</string>
   <string name="assistant_remote_provisioning_title">Recupera la configurazione remota</string>
   <string name="assistant_fetch_apply">Recupera ed applica</string>
+  <string name="assistant_launch_qrcode">Codice QR</string>
   <string name="assistant_login">Login</string>
   <string name="assistant_ec_calibration">Calibrazione del cancellatore dell\'eco in corso</string>
   <string name="assistant_remote_provisioning_login">Inserisci il tuo login</string>
@@ -145,6 +160,7 @@
   <string name="delete_history_log">Vuoi cancellare il registro delle chiamate selezionato?</string>
   <string name="today">Oggi</string>
   <string name="yesterday">Ieri</string>
+  <string name="calls">Chiamate</string>
   <!--Contacts-->
   <string name="no_contact">Nessun contatto nella tua rubrica.</string>
   <string name="no_sip_contact">Nessun contatto SIP nella tua rubrica.</string>
@@ -154,10 +170,16 @@
   <string name="contact_first_name">Nome</string>
   <string name="contact_last_name">Cognome</string>
   <string name="contact_organization">Organizzazione</string>
+  <string name="invite_friend">Invito</string>
+  <string name="invite_friend_text">Ciao, chiamami con Linphone! Puoi scaricarlo gratuitamente a %s</string>
+  <string name="toast_choose_contact_for_edition">Scegli un contatto o creane uno nuovo</string>
   <!--Chat-->
   <string name="no_chat_history">Nessuna conversazione</string>
   <string name="delete_conversation">Vuoi eliminare la conversazione selezionata?</string>
   <string name="delete_message">Vuoi eliminare il messaggio selezionato?</string>
+  <string name="remote_composing"> L\'interlocutore sta scrivendo...</string>
+  <string name="remote_composing_single">%s sta scrivendo...</string>
+  <string name="remote_composing_multiple">%s stanno scrivendo...</string>
   <string name="share_picture_size_small">Piccolo</string>
   <string name="share_picture_size_medium">Medio</string>
   <string name="share_picture_size_large">Grande</string>
@@ -167,6 +189,7 @@
   <string name="image_picker_title">Seleziona la fonte</string>
   <string name="image_saved">Immagine salvata</string>
   <string name="image_not_saved">Errore, immagine non salvata</string>
+  <string name="wait">Attendere prego...</string>
   <string name="image_transfert_error">Si è verificato un errore durante il trasferimento del file</string>
   <string name="message_not_encrypted">Questo messaggio non è cifrato</string>
   <string name="message_cant_be_decrypted">Hai ricevuto un messaggio crittografato che non sei in grado di decodificare da %s\nDevi chiamare il tuo corrispondente per scambiare le tue chiavi ZRTP se vuoi decodificare i messaggi futuri che riceverai.</string>
@@ -200,17 +223,33 @@
   <string name="chat_room_you_are_now_admin">Ora sei amministratore</string>
   <string name="chat_room_you_are_no_longer_admin">Non sei più amministratore</string>
   <string name="chat_room_creation_failed">Creazione della chat room fallita</string>
+  <string name="chat_room_leave_dialog">Vuoi veramente lasciare questa conversazione?</string>
   <string name="chat_room_leave_button">Lascia</string>
+  <string name="chat_room_delete_dialog">Vuoi eliminare e lasciare le conversazioni selezionate?</string>
   <string name="separator">: </string>
   <string name="imdn_info">Stato della consegna</string>
   <string name="chat_room_devices">Dispositivi di %s</string>
   <string name="group_chat_room_devices">Dispositivi di conversazione</string>
   <string name="add_to_contacts">Aggiungi ai contatti</string>
+  <string name="lime_security_popup">I messaggi sono criptati in conversazioni sicure. È possibile aumentare il livello di sicurezza di una conversazione autentificando i partecipanti. Per farlo, chiama il contatto e segui il processo di autenticazione.</string>
+  <string name="lime_identity_key_changed">Chiave di identità LIME cambiata per %s</string>
+  <string name="man_in_the_middle_detected">Attacco del tipo man-in-the-middle per %s</string>
+  <string name="security_level_downgraded">%sha fatto diminuire il livello di sicurezza</string>
+  <string name="participant_max_count_exceeded">%sha superato il numero max partecipanti</string>
+  <string name="unexpected_event">Evento inaspettato %iper %s</string>
+  <string name="download_file">Scarica</string>
+  <string name="toast_choose_chat_room_for_sharing">Scegli una conversazione o creane una nuova</string>
   <!--Status Bar-->
+  <string name="status_connected">Connesso</string>
+  <string name="status_not_connected">Non connesso</string>
+  <string name="status_in_progress">Registrazione in corso</string>
+  <string name="status_error">Connessione difettosa</string>
   <string name="voicemail_unread">messaggi non letti</string>
   <!--Side Menu-->
+  <string name="menu_logout">Uscita</string>
   <string name="menu_assistant">Assistente</string>
   <string name="menu_settings">Impostazioni</string>
+  <string name="menu_recordings">Registrazioni</string>
   <string name="menu_about">Informazioni</string>
   <string name="quit">Esci</string>
   <!--Call-->
@@ -220,6 +259,9 @@
   <string name="no_current_call">Nessuna chiamata attiva</string>
   <string name="call_paused_by_remote">Il chiamante ha messo in pausa la chiamata</string>
   <string name="couldnt_accept_call">Si è verificato un errore durante l\'accettazione della chiamata</string>
+  <string name="zrtp_local_sas">Leggi:</string>
+  <string name="zrtp_remote_sas">Conferma che il tuo interlocutore dice:</string>
+  <string name="zrtp_dialog_title">Sicurezza della conversazione</string>
   <string name="zrtp_notification_title">SAS</string>
   <string name="zrtp_notification_message">Conferma il precedente codice SAS con il tuo corrispondente</string>
   <string name="unknown_incoming_call_name">Sconosciuto</string>
@@ -242,7 +284,10 @@
   <string name="call_stats_decoder_name">Decoder:</string>
   <string name="call_stats_display_filter">Filtro di visualizzazione:</string>
   <string name="call">Chiamata</string>
+  <string name="call_log_delete_dialog">Vuoi cancellare il registro delle chiamate selezionate?</string>
   <!--Recordings-->
+  <string name="no_recordings">Nessuna registrazione</string>
+  <string name="recordings_delete_dialog">Vuoi eliminare le registrazioni selezionate?</string>
   <!--About-->
   <string name="menu_send_log">Invia log</string>
   <string name="menu_reset_log">Cancella log</string>
@@ -250,6 +295,8 @@
   <string name="incall_notif_active">Chiamata audio in corso</string>
   <string name="incall_notif_paused">Chiamata in pausa</string>
   <string name="incall_notif_video">Chiamata video in corso</string>
+  <string name="incall_notif_incoming">Chiamata in arrivo</string>
+  <string name="incall_notif_outgoing">Chiamata effettuata</string>
   <string name="notification_started">avviato</string>
   <string name="unread_messages">%i messaggi non letti</string>
   <string name="missed_calls_notif_title">Chiamata persa</string>
@@ -270,6 +317,7 @@
   <string name="error_unauthorized">Non autorizzato</string>
   <string name="error_io_error">Errore di rete</string>
   <string name="download_image_failed">Scaricamento fallito. Controlla la connessione di rete o riprova più tardi.</string>
+  <string name="remote_provisioning_failure">Impossibile scaricare o applicare il profilo di provisioning remoto...</string>
   <string name="remote_provisioning_again_title">Provisioning remoto</string>
   <string name="remote_provisioning_again_message">Vuoi cambiare l\'URI di provisioning?</string>
   <!--Account Settings-->
@@ -336,6 +384,8 @@
   <string name="failed">non riuscito</string>
   <string name="pref_adaptive_rate_control">Controllo adattivo della velocità</string>
   <string name="pref_codec_bitrate_limit">Limite bitrate del codec</string>
+  <string name="pref_mic_gain_db">Amplificazione microfono (in db)</string>
+  <string name="pref_playback_gain_db">Amplificazione ascolto (in db)</string>
   <string name="pref_codecs">Codec</string>
   <!--Video settings-->
   <string name="pref_video_title">Video</string>
@@ -354,6 +404,7 @@
   <!--Call settings-->
   <string name="pref_call_title">Chiamata</string>
   <string name="pref_device_ringtone">Usa la suoneria del dispositivo</string>
+  <string name="pref_vibrate_on_incoming_calls">Vibrazione per chiamata in arrivo</string>
   <string name="pref_auto_answer">Rispondere automaticamente alle chiamate in arrivo</string>
   <string name="pref_auto_answer_time">Tempo di risposta automatica (in millisecondi)</string>
   <string name="pref_rfc2833_dtmf">Invia DTMF in-band (RFC2833)</string>
@@ -361,6 +412,7 @@
   <string name="pref_call_timeout_title">Timeout della chiamata (in secondi)</string>
   <string name="pref_voice_mail">URI della segreteria telefonica</string>
   <string name="pref_dialer_call">Utilizza Linphone come app telefono predefinita</string>
+  <string name="pref_accept_early_media">Accetta early-media</string>
   <!--Chat settings-->
   <string name="pref_chat_title">Chat</string>
   <string name="pref_image_sharing_server_title">Server di condivisione</string>
@@ -370,6 +422,11 @@
   <string name="lime_encryption_entry_mandatory">Obbligatorio</string>
   <string name="lime_encryption_entry_preferred">Preferito</string>
   <string name="lime_encryption_enable_zrtp">LIME richiede la cifratura ZRTP.\nAttivando LIME si attiva automaticamente la cifratura multimediale ZRTP.</string>
+  <string name="pref_auto_download_policy_title">Regole per scaricamento di file in arrivo</string>
+  <string name="pref_auto_download_max_size_title">Grandezza max (in byte)</string>
+  <string name="pref_auto_download_disabled">Mai</string>
+  <string name="pref_auto_download_always">Sempre</string>
+  <string name="pref_auto_download_under_size">Se minore della grandezza massima</string>
   <!--Network settings-->
   <string name="pref_network_title">Rete</string>
   <string name="pref_wifi_only">Usa solo Wi-Fi</string>
@@ -389,17 +446,23 @@
   <string name="pref_media_encryption">Cifratura multimediale</string>
   <string name="pref_push_notification">Abilita le notifiche push</string>
   <string name="pref_ipv6_title">Consenti IPv6</string>
+  <string name="pref_protected_settings_title">Impostazioni per protezione batteria</string>
+  <string name="pref_protected_settings_desc">La app deve\'essere abilitata per ricevere notifiche push</string>
   <!--Advanced settings-->
   <string name="pref_advanced_title">Avanzate</string>
+  <string name="pref_dark_mode">Modalità scura</string>
   <string name="pref_debug_title">Debug</string>
   <string name="pref_debug">Debug</string>
   <string name="pref_java_debug">Utilizza il Java logger</string>
   <string name="pref_friendlist_subscribe">Iscrizione ad una lista di amici</string>
   <string name="pref_background_mode">Modalità Background</string>
+  <string name="pref_background_mode_desc">Mostra una notifica per tenere la app aperta</string>
   <string name="pref_animation_enable_title">Abilita animazioni</string>
   <string name="pref_service_notification">Abilita notifica di servizio</string>
   <string name="pref_autostart">Parti dell\'avvio</string>
   <string name="pref_incoming_call_timeout_title">Riaggancio delle chiamate in entrata (in secondi)</string>
+  <string name="pref_device_name">Nome dispositivo</string>
+  <string name="pref_display_name_subtitle">I cambiamenti entrano in vigore alla prossima accensione</string>
   <string name="pref_remote_provisioning_title">Provisioning remoto</string>
   <string name="pref_android_app_settings_title">Impostazioni dell\'app Android</string>
   <string name="pref_android_app_notif_settings_title">Impostazioni di notifica Android</string>
@@ -413,10 +476,15 @@
   <string name="pref_audio_hacks_use_routing_api_title">Usa la modifica delle API di instradamento</string>
   <string name="pref_audio_hacks_use_galaxys_hack_title">Utilizza le modifiche audio per Galaxy S</string>
   <!--Device specifics-->
+  <string name="device_power_saver_dialog_title">Rilevato risparmio energetico</string>
+  <string name="device_power_saver_dialog_message">Sembra che il tuo dispositivo abbia il risparmio energetico. Se desideri ricevere chiamate e notifiche push mentre la app è chiusa devi abilitare tale funzione.</string>
   <string name="device_power_saver_dialog_button_go_to_settings">Impostazioni</string>
   <string name="device_power_saver_dialog_button_later">Dopo</string>
   <!--Debug popup-->
   <string name="debug_popup_title">Debug</string>
+  <string name="debug_popup_enable_logs">Abilita registri attività</string>
+  <string name="debug_popup_disable_logs">Disabilita registri attività</string>
+  <string name="debug_popup_send_logs">Invia registro attività</string>
   <!--Content description-->
   <string name="content_description_back">Indietro</string>
   <string name="content_description_dialer">Tastierino</string>
@@ -493,4 +561,5 @@
   <string name="content_title_notification">Notifiche di messaggi istantanei Linphone</string>
   <string name="content_description_conversation_subject">Oggetto della chat room di gruppo</string>
   <string name="content_description_conversation_infos">Informazioni sulla chat room di gruppo</string>
+  <string name="content_description_record_call">Registra chiamata</string>
 </resources>

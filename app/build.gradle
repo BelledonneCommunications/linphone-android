@@ -72,7 +72,7 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 4121
+        versionCode 4122
         versionName "4.1"
         applicationId getPackageName()
         multiDexEnabled true
@@ -158,17 +158,7 @@ dependencies {
     implementation 'com.google.android:flexbox:1.1.0'
     implementation 'com.github.bumptech.glide:glide:4.9.0'
 
-    if (isLocalAarAvailable()) {
-        if (isLocalReleaseAarAvailable()) {
-            //debug AAR is a lot bigger than release one, and APK install time will be much longer so use release one for day-to-day development
-            implementation project(path: ":linphone-sdk-android", configuration: 'release')
-        } else {
-            releaseImplementation project(path: ":linphone-sdk-android", configuration: 'release')
-            debugImplementation project(path: ":linphone-sdk-android", configuration: 'debug')
-        }
-    } else {
-        implementation "org.linphone:linphone-sdk-android:4.1-366-g1b22291"
-    }
+    implementation "org.linphone:linphone-sdk-android:4.1-369-ge4ad24e"
 }
 if (firebaseEnabled()) {
     apply plugin: 'com.google.gms.google-services'
