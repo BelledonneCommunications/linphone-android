@@ -133,10 +133,7 @@ public class BluetoothManager extends BroadcastReceiver {
     }
 
     private void refreshCallView() {
-        /*if (CallActivity.isInstanciated()) {
-            CallActivity.instance().refreshInCallActions();
-        }*/
-        // TODO FIXME
+        LinphoneManager.getInstance().refreshInCallActions();
     }
 
     private boolean ensureInit() {

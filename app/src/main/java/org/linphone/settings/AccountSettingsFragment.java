@@ -179,7 +179,7 @@ public class AccountSettingsFragment extends SettingsFragment {
                 PushNotificationUtils.isAvailable(getActivity()) ? View.VISIBLE : View.GONE);
 
         mChangePassword = mRootView.findViewById(R.id.pref_change_password);
-        mChangePassword.setVisibility(View.GONE); // TODO
+        mChangePassword.setVisibility(View.GONE); // TODO add feature
 
         mDeleteAccount = mRootView.findViewById(R.id.pref_delete_account);
 
@@ -511,7 +511,7 @@ public class AccountSettingsFragment extends SettingsFragment {
                 new SettingListenerBase() {
                     @Override
                     public void onClicked() {
-                        // TODO
+                        // TODO add feature
                     }
                 });
 

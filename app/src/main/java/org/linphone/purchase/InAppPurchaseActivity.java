@@ -169,7 +169,6 @@ public class InAppPurchaseActivity extends Activity
                     new XmlRpcListenerBase() {
                         @Override
                         public void onAccountExpireUpdated() {
-                            // TODO
                         }
                     },
                     LinphonePreferences.instance().getAccountUsername(0),

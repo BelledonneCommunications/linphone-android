@@ -818,6 +818,12 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         }
     }
 
+    public void refreshInCallActions() {
+        if (mCallInterface != null) {
+            mCallInterface.refreshInCallActions();
+        }
+    }
+
     public void setHandsetMode(Boolean on) {
         if (mCore.isIncomingInvitePending() && on) {
             mHandsetON = true;
@@ -1764,7 +1770,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
     @Override
     public void onAuthenticationRequested(Core lc, AuthInfo authInfo, AuthMethod method) {
-        // TODO Auto-generated method stub
 
     }
 

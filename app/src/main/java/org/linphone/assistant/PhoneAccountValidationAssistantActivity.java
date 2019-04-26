@@ -124,7 +124,7 @@ public class PhoneAccountValidationAssistantActivity extends AssistantActivity {
                             showGenericErrorDialog(status);
 
                             if (status.equals(AccountCreator.Status.WrongActivationCode)) {
-                                // TODO
+                                // TODO do something so the server re-send a SMS
                             }
                         }
                     }
@@ -141,7 +141,7 @@ public class PhoneAccountValidationAssistantActivity extends AssistantActivity {
                             showGenericErrorDialog(status);
 
                             if (status.equals(AccountCreator.Status.WrongActivationCode)) {
-                                // TODO
+                                // TODO do something so the server re-send a SMS
                             }
                         }
                     }

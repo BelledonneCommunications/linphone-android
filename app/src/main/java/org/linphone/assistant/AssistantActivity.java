@@ -172,7 +172,7 @@ public abstract class AssistantActivity extends ThemableActivity
         String message;
 
         switch (status) {
-                // TODO
+                // TODO handle other possible status
             case PhoneNumberInvalid:
                 message = getString(R.string.phone_number_invalid);
                 break;

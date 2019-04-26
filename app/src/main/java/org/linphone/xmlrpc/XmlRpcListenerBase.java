@@ -22,91 +22,76 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 public class XmlRpcListenerBase implements XmlRpcListener {
     @Override
     public void onError() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void onAccountCreated() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void onAccountExpireFetched(String result) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void onAccountActivated() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void onAccountActivatedFetched() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void onTrialAccountFetched(boolean isTrial) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void onAccountFetched() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void onAccountEmailChanged() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void onAccountPasswordChanged() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void onRecoverPasswordLinkSent() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void onActivateAccountLinkSent() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void onAccountExpireUpdated() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void onSignatureVerified(boolean success) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void onUsernameSent() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void onRemoteProvisioningFilenameSent(String result) {
-        // TODO Auto-generated method stub
 
     }
 }
