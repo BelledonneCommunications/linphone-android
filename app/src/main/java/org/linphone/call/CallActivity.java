@@ -1658,7 +1658,11 @@ public class CallActivity extends LinphoneGenericActivity
     }
 
     private void displayMissedChats() {
-        int count = LinphoneManager.getInstance().getUnreadMessageCount();
+        int count = 0;
+        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        if (core != null) {
+            count = core.getUnreadChatMessageCountFromActiveLocals();
+        }
 
         if (count > 0) {
             mMissedChats.setText(String.valueOf(count));

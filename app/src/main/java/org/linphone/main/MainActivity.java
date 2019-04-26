@@ -481,8 +481,9 @@ public abstract class MainActivity extends LinphoneGenericActivity
 
     public void displayMissedChats() {
         int count = 0;
-        if (LinphoneManager.isInstanciated()) {
-            count = LinphoneManager.getInstance().getUnreadMessageCount();
+        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        if (core != null) {
+            count = core.getUnreadChatMessageCountFromActiveLocals();
         }
 
         if (count > 0) {

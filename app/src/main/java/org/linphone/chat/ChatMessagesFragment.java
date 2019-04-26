@@ -733,7 +733,6 @@ public class ChatMessagesFragment extends Fragment
         }
         mChatRoom.addListener(this);
         mChatRoom.markAsRead();
-        LinphoneManager.getInstance().updateUnreadCountForChatRoom(mChatRoom, 0);
 
         ((ChatActivity) getActivity()).displayMissedChats();
 
@@ -1202,7 +1201,6 @@ public class ChatMessagesFragment extends Fragment
     @Override
     public void onChatMessageReceived(ChatRoom cr, EventLog event) {
         cr.markAsRead();
-        LinphoneManager.getInstance().updateUnreadCountForChatRoom(mChatRoom, 0);
         ((ChatActivity) getActivity()).displayMissedChats();
 
         ChatMessage msg = event.getChatMessage();

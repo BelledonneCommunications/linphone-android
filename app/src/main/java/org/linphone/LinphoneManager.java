@@ -804,8 +804,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                         .createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
         mAccountCreator.setListener(this);
         mCallGsmON = false;
-
-        updateMissedChatCount();
     }
 
     public void setHandsetMode(Boolean on) {
@@ -951,8 +949,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                     "[Manager] Message has no text or file transfer information to display, ignoring it...");
             return;
         }
-
-        increaseUnreadCountForChatRoom(cr);
 
         if (mServiceContext.getResources().getBoolean(R.bool.disable_chat_message_notification)
                 || message.isOutgoing()) {
@@ -1812,43 +1808,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     @Override
     public void onUpdateAccount(
             AccountCreator accountCreator, AccountCreator.Status status, String resp) {}
-
-    private void updateMissedChatCount() {
-        for (ChatRoom cr : LinphoneManager.getLc().getChatRooms()) {
-            updateUnreadCountForChatRoom(cr, cr.getUnreadMessagesCount());
-        }
-    }
-
-    public int getUnreadMessageCount() {
-        int count = 0;
-        for (ChatRoom room : mCore.getChatRooms()) {
-            count += room.getUnreadMessagesCount();
-        }
-        return count;
-    }
-
-    public void updateUnreadCountForChatRoom(
-            String localSipUri, String remoteSipUri, Integer value) {
-        String key = localSipUri + "//" + remoteSipUri;
-        mUnreadChatsPerRoom.put(key, value);
-    }
-
-    public void updateUnreadCountForChatRoom(ChatRoom cr, Integer value) {
-        String localSipUri = cr.getLocalAddress().asStringUriOnly();
-        String remoteSipUri = cr.getPeerAddress().asStringUriOnly();
-        updateUnreadCountForChatRoom(localSipUri, remoteSipUri, value);
-    }
-
-    private void increaseUnreadCountForChatRoom(ChatRoom cr) {
-        String localSipUri = cr.getLocalAddress().asStringUriOnly();
-        String remoteSipUri = cr.getPeerAddress().asStringUriOnly();
-        String key = localSipUri + "//" + remoteSipUri;
-        if (mUnreadChatsPerRoom.containsKey(key)) {
-            mUnreadChatsPerRoom.put(key, mUnreadChatsPerRoom.get(key) + 1);
-        } else {
-            mUnreadChatsPerRoom.put(key, 1);
-        }
-    }
 
     public interface AddressType {
         CharSequence getText();
