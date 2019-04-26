@@ -141,15 +141,13 @@ public class ChatRoomsFragment extends Fragment
                 new CoreListenerStub() {
                     @Override
                     public void onMessageReceived(Core lc, ChatRoom cr, ChatMessage message) {
-                        refreshChatRoomsList();
+                        refreshChatRoom(cr);
                     }
-
-                    // TODO: refresh chat rooms list when message is sent (for tablets)
 
                     @Override
                     public void onChatRoomStateChanged(Core lc, ChatRoom cr, ChatRoom.State state) {
                         if (state == ChatRoom.State.Created) {
-                            refreshChatRoomsList();
+                            refreshChatRoom(cr);
                         }
                     }
                 };
@@ -173,16 +171,6 @@ public class ChatRoomsFragment extends Fragment
                             }
                         }
                     }
-
-                    @Override
-                    public void onChatMessageReceived(ChatRoom cr, EventLog eventLog) {
-                        refreshChatRoomsList();
-                    }
-
-                    @Override
-                    public void onChatMessageSent(ChatRoom cr, EventLog eventLog) {
-                        refreshChatRoomsList();
-                    }
                 };
 
         return view;
@@ -197,6 +185,7 @@ public class ChatRoomsFragment extends Fragment
             if (room != null) {
                 ((ChatActivity) getActivity())
                         .showChatRoom(room.getLocalAddress(), room.getPeerAddress());
+                refreshChatRoom(room);
             }
         }
     }
@@ -278,6 +267,20 @@ public class ChatRoomsFragment extends Fragment
         ChatRoomsAdapter adapter = (ChatRoomsAdapter) mChatRoomsList.getAdapter();
         if (adapter != null) {
             adapter.notifyDataSetChanged();
+        }
+    }
+
+    private void refreshChatRoom(ChatRoom cr) {
+        ChatRoomViewHolder holder = (ChatRoomViewHolder) cr.getUserData();
+        if (holder != null) {
+            int position = holder.getAdapterPosition();
+            if (position == 0) {
+                mChatRoomsAdapter.notifyItemChanged(0);
+            } else {
+                refreshChatRoomsList();
+            }
+        } else {
+            refreshChatRoomsList();
         }
     }
 

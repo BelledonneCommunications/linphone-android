@@ -371,19 +371,6 @@ public class ChatMessagesFragment extends Fragment
         LinphoneManager.getInstance().setCurrentChatRoomAddress(mRemoteSipAddress);
     }
 
-    public void changeDisplayedChat(String localSipUri, String remoteSipUri) {
-        mLocalSipUri = localSipUri;
-        mLocalSipAddress = LinphoneManager.getLc().createAddress(mLocalSipUri);
-        mRemoteSipUri = remoteSipUri;
-        mRemoteSipAddress = LinphoneManager.getLc().createAddress(mRemoteSipUri);
-
-        initChatRoom();
-        displayChatRoomHeader();
-        displayChatRoomHistory();
-
-        LinphoneManager.getInstance().setCurrentChatRoomAddress(mRemoteSipAddress);
-    }
-
     @Override
     public void onPause() {
         ContactsManager.getInstance().removeContactsListener(this);
@@ -916,29 +903,6 @@ public class ChatMessagesFragment extends Fragment
             mSelectionHelper.getAdapter().toggleSelection(position);
         }
     }
-
-    /** File transfer related */
-    /*@Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (mFilesUploadLayout != null) {
-            String files[] = new String[mFilesUploadLayout.getChildCount()];
-            for (int i = 0; i < mFilesUploadLayout.getChildCount(); i++) {
-                View child = mFilesUploadLayout.getChildAt(i);
-                String path = (String) child.getTag();
-                files[i] = path;
-            }
-            outState.putStringArray("Files", files);
-        }
-
-        if (mCurrentInputContentInfo != null) {
-            outState.putParcelable(
-                    INPUT_CONTENT_INFO_KEY, (Parcelable) mCurrentInputContentInfo.unwrap());
-            outState.putInt(COMMIT_CONTENT_FLAGS_KEY, mCurrentFlags);
-        }
-        mCurrentInputContentInfo = null;
-        mCurrentFlags = 0;
-    }*/
 
     private void onRestoreInstanceState(Bundle savedInstanceState) {
         String files[] = savedInstanceState.getStringArray("Files");

@@ -68,6 +68,7 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomViewHolder> {
                         ? View.INVISIBLE
                         : (room.getUnreadMessagesCount() > 0 ? View.VISIBLE : View.INVISIBLE));
         holder.delete.setChecked(isSelected(position));
+        room.setUserData(holder);
         holder.bindChatRoom(room);
     }
 

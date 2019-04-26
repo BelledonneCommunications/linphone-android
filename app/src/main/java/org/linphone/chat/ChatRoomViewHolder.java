@@ -77,7 +77,7 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder
                     messageContent.insert(0, c.getStringBuffer() + " ");
                 }
             }
-            lastMessageView.setText(getSender(room) + messageContent);
+            lastMessageView.setText(getSender(lastMessage) + messageContent);
             date.setText(
                     LinphoneUtils.timestampToHumanDate(
                             mContext,
@@ -106,17 +106,15 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder
         return false;
     }
 
-    public String getSender(ChatRoom mRoom) {
-        if (mRoom.getLastMessageInHistory() != null) {
+    public String getSender(ChatMessage lastMessage) {
+        if (lastMessage != null) {
             LinphoneContact contact =
                     ContactsManager.getInstance()
-                            .findContactFromAddress(
-                                    mRoom.getLastMessageInHistory().getFromAddress());
+                            .findContactFromAddress(lastMessage.getFromAddress());
             if (contact != null) {
                 return (contact.getFullName() + mContext.getString(R.string.separator));
             }
-            return (LinphoneUtils.getAddressDisplayName(
-                            mRoom.getLastMessageInHistory().getFromAddress())
+            return (LinphoneUtils.getAddressDisplayName(lastMessage.getFromAddress())
                     + mContext.getString(R.string.separator));
         }
         return null;
