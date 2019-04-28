@@ -54,6 +54,8 @@ import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
+import org.linphone.core.ProxyConfig;
+import org.linphone.core.RegistrationState;
 import org.linphone.core.tools.Log;
 import org.linphone.fragments.EmptyFragment;
 import org.linphone.fragments.StatusFragment;
@@ -197,6 +199,21 @@ public abstract class MainActivity extends LinphoneGenericActivity
                     public void onMessageReceivedUnableDecrypt(
                             Core lc, ChatRoom room, ChatMessage message) {
                         displayMissedChats();
+                    }
+
+                    @Override
+                    public void onRegistrationStateChanged(
+                            Core lc, ProxyConfig cfg, RegistrationState state, String message) {
+                        mSideMenuFragment.displayAccountsInSideMenu();
+
+                        if (state == RegistrationState.Ok) {
+                            // For push notifications to work on some devices,
+                            // app must be in "protected mode" in battery settings...
+                            // https://stackoverflow.com/questions/31638986/protected-apps-setting-on-huawei-phones-and-how-to-handle-it
+                            DeviceUtils
+                                    .displayDialogIfDeviceHasPowerManagerThatCouldPreventPushNotifications(
+                                            MainActivity.this);
+                        }
                     }
                 };
     }
