@@ -225,7 +225,7 @@ public class LinphonePreferences {
         }
     }
 
-    public boolean isAccountEnabled(int n) {
+    private boolean isAccountEnabled(int n) {
         return getProxyConfig(n).registerEnabled();
     }
     // End of accounts settings

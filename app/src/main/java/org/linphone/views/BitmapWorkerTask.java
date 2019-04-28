@@ -38,7 +38,7 @@ import org.linphone.utils.FileUtils;
 import org.linphone.utils.ImageUtils;
 
 public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
-    public String path;
+    private String path;
 
     private final WeakReference<ImageView> mImageViewReference;
     private final Context mContext;
@@ -54,7 +54,7 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
         mImageViewHeight = imageView.getMeasuredHeight();
     }
 
-    public static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
+    private static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
         if (imageView != null) {
             final Drawable drawable = imageView.getDrawable();
             if (drawable instanceof AsyncBitmap) {

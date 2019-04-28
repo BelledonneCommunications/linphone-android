@@ -86,7 +86,7 @@ public final class LinphoneService extends Service {
     private String mIncomingReceivedActivityName;
     private Class<? extends Activity> mIncomingReceivedActivity = CallIncomingActivity.class;
 
-    private LoggingServiceListener mJavaLoggingService =
+    private final LoggingServiceListener mJavaLoggingService =
             new LoggingServiceListener() {
                 @Override
                 public void onLogMessageWritten(

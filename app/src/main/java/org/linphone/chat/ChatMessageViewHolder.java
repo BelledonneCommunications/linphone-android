@@ -70,13 +70,14 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
     public final LinearLayout background;
     public final RelativeLayout avatarLayout;
 
-    public final ProgressBar downloadInProgress, sendInProgress;
+    private final ProgressBar downloadInProgress;
+    public final ProgressBar sendInProgress;
     public final TextView timeText;
-    public final ImageView outgoingImdn;
-    public final TextView messageText;
+    private final ImageView outgoingImdn;
+    private final TextView messageText;
 
-    public final FlexboxLayout multiFileContents;
-    public final RelativeLayout singleFileContent;
+    private final FlexboxLayout multiFileContents;
+    private final RelativeLayout singleFileContent;
 
     public final CheckBox delete;
 
@@ -91,7 +92,7 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
         view.setOnClickListener(this);
     }
 
-    public ChatMessageViewHolder(View view) {
+    private ChatMessageViewHolder(View view) {
         super(view);
         eventLayout = view.findViewById(R.id.event);
         eventMessage = view.findViewById(R.id.event_text);

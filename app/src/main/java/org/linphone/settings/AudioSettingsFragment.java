@@ -43,8 +43,8 @@ import org.linphone.settings.widget.SwitchSetting;
 import org.linphone.settings.widget.TextSetting;
 
 public class AudioSettingsFragment extends SettingsFragment {
-    protected View mRootView;
-    protected LinphonePreferences mPrefs;
+    private View mRootView;
+    private LinphonePreferences mPrefs;
 
     private SwitchSetting mEchoCanceller, mAdaptiveRateControl;
     private TextSetting mMicGain, mSpeakerGain;
@@ -72,7 +72,7 @@ public class AudioSettingsFragment extends SettingsFragment {
         updateValues();
     }
 
-    protected void loadSettings() {
+    private void loadSettings() {
         mEchoCanceller = mRootView.findViewById(R.id.pref_echo_cancellation);
 
         mAdaptiveRateControl = mRootView.findViewById(R.id.pref_adaptive_rate_control);
@@ -92,7 +92,7 @@ public class AudioSettingsFragment extends SettingsFragment {
         mAudioCodecs = mRootView.findViewById(R.id.pref_audio_codecs);
     }
 
-    protected void setListeners() {
+    private void setListeners() {
         mEchoCanceller.setListener(
                 new SettingListenerBase() {
                     @Override
@@ -188,7 +188,7 @@ public class AudioSettingsFragment extends SettingsFragment {
                 });
     }
 
-    protected void updateValues() {
+    private void updateValues() {
         mEchoCanceller.setChecked(mPrefs.echoCancellationEnabled());
 
         mAdaptiveRateControl.setChecked(mPrefs.adaptiveRateControlEnabled());
@@ -241,7 +241,7 @@ public class AudioSettingsFragment extends SettingsFragment {
         }
     }
 
-    public void startEchoTester() {
+    private void startEchoTester() {
         if (LinphoneManager.getInstance().startEchoTester() > 0) {
             mEchoTester.setSubtitle("Is running");
         }
@@ -253,7 +253,7 @@ public class AudioSettingsFragment extends SettingsFragment {
         }
     }
 
-    public void startEchoCancellerCalibration() {
+    private void startEchoCancellerCalibration() {
         if (LinphoneManager.getInstance().getEchoTesterStatus()) stopEchoTester();
         LinphoneManager.getLc()
                 .addListener(

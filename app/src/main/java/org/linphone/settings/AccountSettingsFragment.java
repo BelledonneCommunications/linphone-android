@@ -48,7 +48,7 @@ import org.linphone.settings.widget.TextSetting;
 import org.linphone.utils.PushNotificationUtils;
 
 public class AccountSettingsFragment extends SettingsFragment {
-    protected View mRootView;
+    private View mRootView;
     private int mAccountIndex;
     private ProxyConfig mProxyConfig;
     private AuthInfo mAuthInfo;
@@ -131,7 +131,7 @@ public class AccountSettingsFragment extends SettingsFragment {
         }
     }
 
-    protected void loadSettings() {
+    private void loadSettings() {
         mUsername = mRootView.findViewById(R.id.pref_username);
 
         mUserId = mRootView.findViewById(R.id.pref_auth_userid);
@@ -186,7 +186,7 @@ public class AccountSettingsFragment extends SettingsFragment {
         initTransportList();
     }
 
-    protected void setListeners() {
+    private void setListeners() {
         mUsername.setListener(
                 new SettingListenerBase() {
                     @Override
@@ -573,7 +573,7 @@ public class AccountSettingsFragment extends SettingsFragment {
                 });
     }
 
-    protected void updateValues() {
+    private void updateValues() {
         Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
         if (core == null) return;
 

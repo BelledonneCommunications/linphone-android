@@ -83,6 +83,10 @@ public class LinphoneLauncherActivity extends Activity {
             }
         }
 
+        if (getResources().getBoolean(R.bool.check_for_update_when_app_starts)) {
+            LinphoneManager.getInstance().checkForUpdate();
+        }
+
         mHandler.postDelayed(
                 new Runnable() {
                     @Override

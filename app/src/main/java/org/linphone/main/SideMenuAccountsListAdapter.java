@@ -35,8 +35,8 @@ import org.linphone.core.RegistrationState;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 
-public class SideMenuAccountsListAdapter extends BaseAdapter {
-    private Context mContext;
+class SideMenuAccountsListAdapter extends BaseAdapter {
+    private final Context mContext;
     private List<ProxyConfig> proxy_list;
 
     SideMenuAccountsListAdapter(Context context) {
@@ -45,7 +45,7 @@ public class SideMenuAccountsListAdapter extends BaseAdapter {
         refresh();
     }
 
-    void refresh() {
+    private void refresh() {
         proxy_list = new ArrayList<>();
         for (ProxyConfig proxyConfig : LinphoneManager.getLc().getProxyConfigList()) {
             if (proxyConfig != LinphoneManager.getLc().getDefaultProxyConfig()) {

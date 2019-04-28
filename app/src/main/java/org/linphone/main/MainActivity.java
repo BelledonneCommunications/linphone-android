@@ -49,6 +49,7 @@ import org.linphone.contacts.ContactsActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
+import org.linphone.core.AuthInfo;
 import org.linphone.core.Call;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
@@ -72,19 +73,26 @@ public abstract class MainActivity extends LinphoneGenericActivity
     private static final int MAIN_PERMISSIONS = 1;
     private static final int FRAGMENT_SPECIFIC_PERMISSION = 2;
 
-    protected RelativeLayout mHistory, mContacts, mDialer, mChat;
-    protected TextView mMissedCalls, mMissedMessages;
-    protected View mContactsSelected, mHistorySelected, mDialerSelected, mChatSelected;
-    protected LinearLayout mTopBar;
-    protected TextView mTopBarTitle;
-    protected LinearLayout mTabBar;
-    protected ImageView mBack;
+    private RelativeLayout mHistory;
+    private RelativeLayout mContacts;
+    private RelativeLayout mDialer;
+    private RelativeLayout mChat;
+    private TextView mMissedCalls;
+    private TextView mMissedMessages;
+    protected View mContactsSelected;
+    protected View mHistorySelected;
+    View mDialerSelected;
+    protected View mChatSelected;
+    private LinearLayout mTopBar;
+    private TextView mTopBarTitle;
+    private LinearLayout mTabBar;
+    private ImageView mBack;
 
-    protected DrawerLayout mSideMenu;
-    protected RelativeLayout mSideMenuContent;
+    private DrawerLayout mSideMenu;
+    private RelativeLayout mSideMenuContent;
 
-    protected SideMenuFragment mSideMenuFragment;
-    protected StatusFragment mStatusFragment;
+    private SideMenuFragment mSideMenuFragment;
+    private StatusFragment mStatusFragment;
 
     protected boolean mOnBackPressGoHome;
     protected String[] mPermissionsToHave;
@@ -203,7 +211,10 @@ public abstract class MainActivity extends LinphoneGenericActivity
 
                     @Override
                     public void onRegistrationStateChanged(
-                            Core lc, ProxyConfig cfg, RegistrationState state, String message) {
+                            Core lc,
+                            ProxyConfig proxyConfig,
+                            RegistrationState state,
+                            String message) {
                         mSideMenuFragment.displayAccountsInSideMenu();
 
                         if (state == RegistrationState.Ok) {
@@ -213,6 +224,19 @@ public abstract class MainActivity extends LinphoneGenericActivity
                             DeviceUtils
                                     .displayDialogIfDeviceHasPowerManagerThatCouldPreventPushNotifications(
                                             MainActivity.this);
+
+                            if (getResources().getBoolean(R.bool.use_phone_number_validation)) {
+                                AuthInfo authInfo =
+                                        lc.findAuthInfo(
+                                                proxyConfig.getRealm(),
+                                                proxyConfig.getIdentityAddress().getUsername(),
+                                                proxyConfig.getDomain());
+                                if (authInfo != null
+                                        && authInfo.getDomain()
+                                                .equals(getString(R.string.default_domain))) {
+                                    LinphoneManager.getInstance().isAccountWithAlias();
+                                }
+                            }
                         }
                     }
                 };
@@ -350,14 +374,14 @@ public abstract class MainActivity extends LinphoneGenericActivity
         return getResources().getBoolean(R.bool.isTablet);
     }
 
-    protected void goHomeAndClearStack() {
+    private void goHomeAndClearStack() {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 
-    protected void quit() {
+    private void quit() {
         goHomeAndClearStack();
         stopService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));
         ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
@@ -390,7 +414,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
         mTopBarTitle.setText("");
     }
 
-    protected void showTopBar() {
+    private void showTopBar() {
         mTopBar.setVisibility(View.VISIBLE);
     }
 
@@ -401,7 +425,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
 
     // Permissions
 
-    protected boolean checkPermission(String permission) {
+    private boolean checkPermission(String permission) {
         int granted = getPackageManager().checkPermission(permission, getPackageName());
         Log.i(
                 "[Permission] "
@@ -489,7 +513,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
 
     // Missed calls & chat indicators
 
-    public void displayMissedCalls() {
+    protected void displayMissedCalls() {
         int count = 0;
         Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
         if (core != null) {

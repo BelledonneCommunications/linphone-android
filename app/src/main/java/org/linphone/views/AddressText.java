@@ -42,7 +42,7 @@ public class AddressText extends EditText implements AddressType {
         mAddressListener = null;
     }
 
-    public void clearDisplayedName() {
+    private void clearDisplayedName() {
         mDisplayedName = null;
     }
 

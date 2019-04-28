@@ -31,7 +31,7 @@ import androidx.annotation.Nullable;
 import java.util.List;
 import org.linphone.R;
 
-public class SideMenuAdapter extends ArrayAdapter<SideMenuItem> {
+class SideMenuAdapter extends ArrayAdapter<SideMenuItem> {
     private final List<SideMenuItem> mItems;
     private final int mResource;
 

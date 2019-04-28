@@ -36,7 +36,7 @@ import org.linphone.settings.widget.SettingListenerBase;
 import org.linphone.utils.LinphoneUtils;
 
 public class MenuSettingsFragment extends SettingsFragment {
-    protected View mRootView;
+    private View mRootView;
     private BasicSetting mTunnel, mAudio, mVideo, mCall, mChat, mNetwork, mAdvanced;
     private LinearLayout mAccounts;
     private TextView mAccountsHeader;
@@ -60,7 +60,7 @@ public class MenuSettingsFragment extends SettingsFragment {
         updateValues();
     }
 
-    protected void loadSettings() {
+    private void loadSettings() {
         mAccounts = mRootView.findViewById(R.id.accounts_settings_list);
         mAccountsHeader = mRootView.findViewById(R.id.accounts_settings_list_header);
 
@@ -79,7 +79,7 @@ public class MenuSettingsFragment extends SettingsFragment {
         mAdvanced = mRootView.findViewById(R.id.pref_advanced);
     }
 
-    protected void setListeners() {
+    private void setListeners() {
         mTunnel.setListener(
                 new SettingListenerBase() {
                     @Override
@@ -158,7 +158,7 @@ public class MenuSettingsFragment extends SettingsFragment {
                 });
     }
 
-    protected void updateValues() {
+    private void updateValues() {
         Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
         if (core != null) {
             mTunnel.setVisibility(core.tunnelAvailable() ? View.VISIBLE : View.GONE);

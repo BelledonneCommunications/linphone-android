@@ -38,8 +38,8 @@ import org.linphone.settings.widget.SettingListenerBase;
 import org.linphone.settings.widget.TextSetting;
 
 public class ChatSettingsFragment extends SettingsFragment {
-    protected View mRootView;
-    protected LinphonePreferences mPrefs;
+    private View mRootView;
+    private LinphonePreferences mPrefs;
 
     private TextSetting mSharingServer, mMaxSizeForAutoDownloadIncomingFiles;
     private BasicSetting mAndroidNotificationSettings;
@@ -65,7 +65,7 @@ public class ChatSettingsFragment extends SettingsFragment {
         updateValues();
     }
 
-    protected void loadSettings() {
+    private void loadSettings() {
         mSharingServer = mRootView.findViewById(R.id.pref_image_sharing_server);
         mSharingServer.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
 
@@ -77,7 +77,7 @@ public class ChatSettingsFragment extends SettingsFragment {
         mAndroidNotificationSettings = mRootView.findViewById(R.id.pref_android_app_notif_settings);
     }
 
-    protected void setListeners() {
+    private void setListeners() {
         mSharingServer.setListener(
                 new SettingListenerBase() {
                     @Override
@@ -134,7 +134,7 @@ public class ChatSettingsFragment extends SettingsFragment {
                 });
     }
 
-    protected void updateValues() {
+    private void updateValues() {
         mSharingServer.setValue(mPrefs.getSharingPictureServerUrl());
 
         updateAutoDownloadSettingsFromValue(mPrefs.getAutoDownloadFileMaxSize());

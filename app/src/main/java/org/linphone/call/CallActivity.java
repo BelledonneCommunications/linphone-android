@@ -601,11 +601,11 @@ public class CallActivity extends LinphoneGenericActivity
         displayMissedChats();
     }
 
-    public void setSpeakerEnabled(boolean enabled) {
+    private void setSpeakerEnabled(boolean enabled) {
         mIsSpeakerEnabled = enabled;
     }
 
-    public void refreshInCallActions() {
+    private void refreshInCallActions() {
         if (!LinphonePreferences.instance().isVideoEnabled() || mIsConferenceRunning) {
             mVideo.setEnabled(false);
         } else {
@@ -1062,7 +1062,7 @@ public class CallActivity extends LinphoneGenericActivity
         }
     }
 
-    public void resetCallControlsHidingTimer() {
+    private void resetCallControlsHidingTimer() {
         if (mControlsHandler != null && mControls != null) {
             mControlsHandler.removeCallbacks(mControls);
         }

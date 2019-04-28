@@ -36,8 +36,8 @@ import org.linphone.utils.DeviceUtils;
 import org.linphone.utils.PushNotificationUtils;
 
 public class NetworkSettingsFragment extends SettingsFragment {
-    protected View mRootView;
-    protected LinphonePreferences mPrefs;
+    private View mRootView;
+    private LinphonePreferences mPrefs;
 
     private SwitchSetting mWifiOnly, mIpv6, mPush, mRandomPorts, mIce, mTurn;
     private TextSetting mSipPort, mStunServer, mTurnUsername, mTurnPassword;
@@ -63,7 +63,7 @@ public class NetworkSettingsFragment extends SettingsFragment {
         updateValues();
     }
 
-    protected void loadSettings() {
+    private void loadSettings() {
         mWifiOnly = mRootView.findViewById(R.id.pref_wifi_only);
 
         mIpv6 = mRootView.findViewById(R.id.pref_ipv6);
@@ -92,7 +92,7 @@ public class NetworkSettingsFragment extends SettingsFragment {
                 mRootView.findViewById(R.id.pref_android_battery_protected_settings);
     }
 
-    protected void setListeners() {
+    private void setListeners() {
         mWifiOnly.setListener(
                 new SettingListenerBase() {
                     @Override
@@ -204,7 +204,7 @@ public class NetworkSettingsFragment extends SettingsFragment {
                 });
     }
 
-    protected void updateValues() {
+    private void updateValues() {
         mWifiOnly.setChecked(mPrefs.isWifiOnlyEnabled());
 
         mIpv6.setChecked(mPrefs.isUsingIpv6());

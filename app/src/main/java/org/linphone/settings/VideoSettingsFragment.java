@@ -42,8 +42,8 @@ import org.linphone.settings.widget.SwitchSetting;
 import org.linphone.settings.widget.TextSetting;
 
 public class VideoSettingsFragment extends SettingsFragment {
-    protected View mRootView;
-    protected LinphonePreferences mPrefs;
+    private View mRootView;
+    private LinphonePreferences mPrefs;
 
     private SwitchSetting mEnable, mAutoInitiate, mAutoAccept, mOverlay;
     private ListSetting mPreset, mSize, mFps;
@@ -71,7 +71,7 @@ public class VideoSettingsFragment extends SettingsFragment {
         updateValues();
     }
 
-    protected void loadSettings() {
+    private void loadSettings() {
         mEnable = mRootView.findViewById(R.id.pref_video_enable);
 
         mAutoInitiate = mRootView.findViewById(R.id.pref_video_initiate_call_with_video);
@@ -95,7 +95,7 @@ public class VideoSettingsFragment extends SettingsFragment {
         mVideoCodecsHeader = mRootView.findViewById(R.id.pref_video_codecs_header);
     }
 
-    protected void setListeners() {
+    private void setListeners() {
         mEnable.setListener(
                 new SettingListenerBase() {
                     @Override
@@ -180,7 +180,7 @@ public class VideoSettingsFragment extends SettingsFragment {
                 });
     }
 
-    protected void updateValues() {
+    private void updateValues() {
         mEnable.setChecked(mPrefs.isVideoEnabled());
         updateVideoSettingsVisibility(mPrefs.isVideoEnabled());
 

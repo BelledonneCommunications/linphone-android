@@ -40,8 +40,8 @@ import org.linphone.settings.widget.SwitchSetting;
 import org.linphone.settings.widget.TextSetting;
 
 public class CallSettingsFragment extends SettingsFragment {
-    protected View mRootView;
-    protected LinphonePreferences mPrefs;
+    private View mRootView;
+    private LinphonePreferences mPrefs;
 
     private SwitchSetting mDeviceRingtone,
             mVibrateIncomingCall,
@@ -71,7 +71,7 @@ public class CallSettingsFragment extends SettingsFragment {
         updateValues();
     }
 
-    protected void loadSettings() {
+    private void loadSettings() {
         mDeviceRingtone = mRootView.findViewById(R.id.pref_device_ringtone);
 
         mVibrateIncomingCall = mRootView.findViewById(R.id.pref_vibrate_on_incoming_calls);
@@ -95,7 +95,7 @@ public class CallSettingsFragment extends SettingsFragment {
         mAutoAnswerTime.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
     }
 
-    protected void setListeners() {
+    private void setListeners() {
         mDeviceRingtone.setListener(
                 new SettingListenerBase() {
                     @Override
@@ -198,7 +198,7 @@ public class CallSettingsFragment extends SettingsFragment {
                 });
     }
 
-    protected void updateValues() {
+    private void updateValues() {
         mDeviceRingtone.setChecked(mPrefs.isDeviceRingtoneEnabled());
 
         mVibrateIncomingCall.setChecked(mPrefs.isIncomingCallVibrationEnabled());

@@ -1361,7 +1361,6 @@ public class ChatMessagesFragment extends Fragment
         }
 
         mCurrentInputContentInfo = inputContentInfo;
-        int mCurrentFlags = flags;
 
         return true;
     }

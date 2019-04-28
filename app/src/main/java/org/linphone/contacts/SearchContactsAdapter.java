@@ -41,7 +41,7 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
     private List<SearchResult> mContacts;
     private ArrayList<ContactAddress> mContactsSelected;
     private boolean mOnlySipContact = false;
-    private SearchContactViewHolder.ClickListener mListener;
+    private final SearchContactViewHolder.ClickListener mListener;
     private final boolean mIsOnlyOnePersonSelection;
     private String mPreviousSearch;
     private boolean mSecurityEnabled;
@@ -182,7 +182,7 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
         return position;
     }
 
-    public synchronized boolean isContactSelected(SearchResult sr) {
+    private synchronized boolean isContactSelected(SearchResult sr) {
         for (ContactAddress c : mContactsSelected) {
             Address addr = c.getAddress();
             if (addr != null && sr.getAddress() != null) {

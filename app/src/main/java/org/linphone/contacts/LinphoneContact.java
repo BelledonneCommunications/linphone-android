@@ -198,7 +198,7 @@ public class LinphoneContact extends AndroidContact
        Number or address related
     */
 
-    public void addNumberOrAddress(LinphoneNumberOrAddress noa) {
+    private void addNumberOrAddress(LinphoneNumberOrAddress noa) {
         if (noa == null) return;
         if (noa.isSIPAddress()) {
             mHasSipAddress = true;
@@ -481,7 +481,7 @@ public class LinphoneContact extends AndroidContact
         }
     }
 
-    public void syncValuesFromAndroidContact(Context context) {
+    private void syncValuesFromAndroidContact(Context context) {
         Cursor c =
                 context.getContentResolver()
                         .query(

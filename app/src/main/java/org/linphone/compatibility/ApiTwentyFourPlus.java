@@ -141,15 +141,13 @@ class ApiTwentyFourPlus {
                         replyIntent,
                         PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Notification.Action replyAction =
-                new Notification.Action.Builder(
-                                R.drawable.chat_send_over,
-                                context.getString(R.string.notification_reply_label),
-                                replyPendingIntent)
-                        .addRemoteInput(remoteInput)
-                        .setAllowGeneratedReplies(true)
-                        .build();
-        return replyAction;
+        return new Notification.Action.Builder(
+                        R.drawable.chat_send_over,
+                        context.getString(R.string.notification_reply_label),
+                        replyPendingIntent)
+                .addRemoteInput(remoteInput)
+                .setAllowGeneratedReplies(true)
+                .build();
     }
 
     public static Notification.Action getMarkMessageAsReadAction(
@@ -166,14 +164,11 @@ class ApiTwentyFourPlus {
                         markAsReadIntent,
                         PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Notification.Action markAsReadAction =
-                new Notification.Action.Builder(
-                                R.drawable.chat_send_over,
-                                context.getString(R.string.notification_mark_as_read_label),
-                                markAsReadPendingIntent)
-                        .build();
-
-        return markAsReadAction;
+        return new Notification.Action.Builder(
+                        R.drawable.chat_send_over,
+                        context.getString(R.string.notification_mark_as_read_label),
+                        markAsReadPendingIntent)
+                .build();
     }
 
     public static Notification.Action getCallAnswerAction(Context context, int callId) {
@@ -185,14 +180,11 @@ class ApiTwentyFourPlus {
                 PendingIntent.getBroadcast(
                         context, callId, answerIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Notification.Action answerAction =
-                new Notification.Action.Builder(
-                                R.drawable.call_audio_start,
-                                context.getString(R.string.notification_call_answer_label),
-                                answerPendingIntent)
-                        .build();
-
-        return answerAction;
+        return new Notification.Action.Builder(
+                        R.drawable.call_audio_start,
+                        context.getString(R.string.notification_call_answer_label),
+                        answerPendingIntent)
+                .build();
     }
 
     public static Notification.Action getCallDeclineAction(Context context, int callId) {
@@ -204,13 +196,11 @@ class ApiTwentyFourPlus {
                 PendingIntent.getBroadcast(
                         context, callId, hangupIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Notification.Action declineAction =
-                new Notification.Action.Builder(
-                                R.drawable.call_hangup,
-                                context.getString(R.string.notification_call_hangup_label),
-                                hangupPendingIntent)
-                        .build();
-        return declineAction;
+        return new Notification.Action.Builder(
+                        R.drawable.call_hangup,
+                        context.getString(R.string.notification_call_hangup_label),
+                        hangupPendingIntent)
+                .build();
     }
 
     public static void closeContentProviderClient(ContentProviderClient client) {

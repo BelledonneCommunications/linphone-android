@@ -231,7 +231,7 @@ public class ChatActivity extends MainActivity {
         showDevices(localAddress, peerAddress, true);
     }
 
-    public void showDevices(Address localAddress, Address peerAddress, boolean isChild) {
+    private void showDevices(Address localAddress, Address peerAddress, boolean isChild) {
         Bundle extras = new Bundle();
         if (localAddress != null) {
             extras.putSerializable("LocalSipUri", localAddress.asStringUriOnly());

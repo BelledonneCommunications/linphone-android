@@ -41,13 +41,14 @@ import org.linphone.utils.ThemableActivity;
 
 public abstract class AssistantActivity extends ThemableActivity
         implements CountryPicker.CountryPickedListener {
-    protected static AccountCreator mAccountCreator;
+    static AccountCreator mAccountCreator;
 
-    protected View mTopBar, mStatusBar;
-    protected ImageView mBack;
-    protected AlertDialog mCountryPickerDialog;
+    private View mTopBar;
+    private View mStatusBar;
+    ImageView mBack;
+    private AlertDialog mCountryPickerDialog;
 
-    protected CountryPicker mCountryPicker;
+    private CountryPicker mCountryPicker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +96,7 @@ public abstract class AssistantActivity extends ThemableActivity
         }
     }
 
-    protected void createProxyConfigAndLeaveAssistant() {
+    void createProxyConfigAndLeaveAssistant() {
         Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
         boolean useLinphoneDefaultValues =
                 getString(R.string.default_domain).equals(mAccountCreator.getDomain());
@@ -119,7 +120,7 @@ public abstract class AssistantActivity extends ThemableActivity
         }
     }
 
-    protected void goToLinphoneActivity() {
+    void goToLinphoneActivity() {
         boolean needsEchoCalibration = LinphoneManager.getLc().isEchoCancellerCalibrationRequired();
         boolean echoCalibrationDone =
                 LinphonePreferences.instance().isEchoCancellationCalibrationDone();
@@ -150,7 +151,7 @@ public abstract class AssistantActivity extends ThemableActivity
         startActivity(intent);
     }
 
-    protected void showPhoneNumberDialog() {
+    void showPhoneNumberDialog() {
         new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.phone_number_info_title))
                 .setMessage(
@@ -161,14 +162,14 @@ public abstract class AssistantActivity extends ThemableActivity
                 .show();
     }
 
-    protected void showAccountAlreadyExistsDialog() {
+    void showAccountAlreadyExistsDialog() {
         new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.account_already_exist))
                 .setMessage(getString(R.string.assistant_phone_number_unavailable))
                 .show();
     }
 
-    protected void showGenericErrorDialog(AccountCreator.Status status) {
+    void showGenericErrorDialog(AccountCreator.Status status) {
         String message;
 
         switch (status) {
@@ -193,7 +194,7 @@ public abstract class AssistantActivity extends ThemableActivity
                 .show();
     }
 
-    protected void showCountryPickerDialog() {
+    void showCountryPickerDialog() {
         if (mCountryPicker == null) {
             mCountryPicker = new CountryPicker(this, this);
         }
@@ -201,7 +202,7 @@ public abstract class AssistantActivity extends ThemableActivity
                 new AlertDialog.Builder(this).setView(mCountryPicker.getView()).show();
     }
 
-    protected DialPlan getDialPlanForCurrentCountry() {
+    DialPlan getDialPlanForCurrentCountry() {
         try {
             TelephonyManager tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
             String countryIso = tm.getNetworkCountryIso();
@@ -212,7 +213,7 @@ public abstract class AssistantActivity extends ThemableActivity
         return null;
     }
 
-    protected String getDevicePhoneNumber() {
+    String getDevicePhoneNumber() {
         try {
             TelephonyManager tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
             return tm.getLine1Number();
@@ -222,7 +223,7 @@ public abstract class AssistantActivity extends ThemableActivity
         return null;
     }
 
-    protected DialPlan getDialPlanFromPrefix(String prefix) {
+    DialPlan getDialPlanFromPrefix(String prefix) {
         if (prefix == null || prefix.isEmpty()) return null;
 
         for (DialPlan c : Factory.instance().getDialPlans()) {
@@ -231,7 +232,7 @@ public abstract class AssistantActivity extends ThemableActivity
         return null;
     }
 
-    protected DialPlan getDialPlanFromCountryCode(String countryCode) {
+    private DialPlan getDialPlanFromCountryCode(String countryCode) {
         if (countryCode == null || countryCode.isEmpty()) return null;
 
         for (DialPlan c : Factory.instance().getDialPlans()) {
@@ -240,7 +241,7 @@ public abstract class AssistantActivity extends ThemableActivity
         return null;
     }
 
-    protected int arePhoneNumberAndPrefixOk(EditText prefixEditText, EditText phoneNumberEditText) {
+    int arePhoneNumberAndPrefixOk(EditText prefixEditText, EditText phoneNumberEditText) {
         String prefix = prefixEditText.getText().toString();
         if (prefix.startsWith("+")) {
             prefix = prefix.substring(1);
@@ -250,7 +251,7 @@ public abstract class AssistantActivity extends ThemableActivity
         return mAccountCreator.setPhoneNumber(phoneNumber, prefix);
     }
 
-    protected String getErrorFromPhoneNumberStatus(int status) {
+    String getErrorFromPhoneNumberStatus(int status) {
         AccountCreator.PhoneNumberStatus phoneNumberStatus =
                 AccountCreator.PhoneNumberStatus.fromInt(status);
         switch (phoneNumberStatus) {

@@ -224,7 +224,7 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
                         || !mAddress.getText().toString().equals(""));
     }
 
-    public void updateLayout() {
+    private void updateLayout() {
         Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
         if (core == null) {
             return;

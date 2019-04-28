@@ -38,7 +38,7 @@ import org.linphone.core.CallLog;
 import org.linphone.utils.LinphoneUtils;
 
 class HistoryLogAdapter extends ArrayAdapter<CallLog> {
-    private Context mContext;
+    private final Context mContext;
     private final List<CallLog> mItems;
     private final int mResource;
 

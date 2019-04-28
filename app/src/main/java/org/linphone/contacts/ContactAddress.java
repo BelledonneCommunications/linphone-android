@@ -33,11 +33,11 @@ public class ContactAddress implements Serializable {
     private transient View mView;
 
     public ContactAddress(LinphoneContact c, String a, String pn, boolean isLC) {
-        init(c, a, pn, isLC);
+        init(c, a, pn);
     }
 
     public ContactAddress(LinphoneContact c, String a, String pn, boolean isLC, boolean isAdmin) {
-        init(c, a, pn, isLC);
+        init(c, a, pn);
         mIsAdmin = isAdmin;
     }
 
@@ -112,7 +112,7 @@ public class ContactAddress implements Serializable {
         return mContact != null && mContact.hasFriendCapability(capability);
     }
 
-    private void init(LinphoneContact c, String a, String pn, boolean isLC) {
+    private void init(LinphoneContact c, String a, String pn) {
         mContact = c;
         mAddress = a;
         mPhoneNumber = pn;

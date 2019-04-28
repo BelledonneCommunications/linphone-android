@@ -57,7 +57,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
     private static ContactsManager sInstance;
 
     private List<LinphoneContact> mContacts, mSipContacts;
-    private ArrayList<ContactsUpdatedListener> mContactsUpdatedListeners;
+    private final ArrayList<ContactsUpdatedListener> mContactsUpdatedListeners;
     private MagicSearch mMagicSearch;
     private boolean mContactsFetchedOnce = false;
     private Context mContext;
@@ -220,7 +220,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                 && !mContext.getResources().getBoolean(R.bool.force_use_of_linphone_friends);
     }
 
-    public boolean hasWriteContactsAccess() {
+    private boolean hasWriteContactsAccess() {
         if (mContext == null) {
             return false;
         }
@@ -230,7 +230,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                                 Manifest.permission.WRITE_CONTACTS, mContext.getPackageName()));
     }
 
-    public boolean hasWriteSyncPermission() {
+    private boolean hasWriteSyncPermission() {
         if (mContext == null) {
             return false;
         }

@@ -192,7 +192,7 @@ public class ContactDetailsFragment extends Fragment implements ContactsUpdatedL
         outState.putSerializable("Contact", mContact);
     }
 
-    public void changeDisplayedContact(LinphoneContact newContact) {
+    private void changeDisplayedContact(LinphoneContact newContact) {
         mContact = newContact;
         displayContact(mInflater, mView);
     }

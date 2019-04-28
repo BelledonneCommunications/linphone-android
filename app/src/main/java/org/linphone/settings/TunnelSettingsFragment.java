@@ -32,8 +32,8 @@ import org.linphone.settings.widget.SettingListenerBase;
 import org.linphone.settings.widget.TextSetting;
 
 public class TunnelSettingsFragment extends SettingsFragment {
-    protected View mRootView;
-    protected LinphonePreferences mPrefs;
+    private View mRootView;
+    private LinphonePreferences mPrefs;
 
     private TextSetting mHost, mPort;
     private ListSetting mMode;
@@ -58,7 +58,7 @@ public class TunnelSettingsFragment extends SettingsFragment {
         updateValues();
     }
 
-    protected void loadSettings() {
+    private void loadSettings() {
         mHost = mRootView.findViewById(R.id.pref_tunnel_host);
 
         mPort = mRootView.findViewById(R.id.pref_tunnel_port);
@@ -67,7 +67,7 @@ public class TunnelSettingsFragment extends SettingsFragment {
         mMode = mRootView.findViewById(R.id.pref_tunnel_mode);
     }
 
-    protected void setListeners() {
+    private void setListeners() {
         mHost.setListener(
                 new SettingListenerBase() {
                     @Override
@@ -97,7 +97,7 @@ public class TunnelSettingsFragment extends SettingsFragment {
                 });
     }
 
-    protected void updateValues() {
+    private void updateValues() {
         mHost.setValue(mPrefs.getTunnelHost());
 
         mPort.setValue(mPrefs.getTunnelPort());

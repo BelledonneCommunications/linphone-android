@@ -32,10 +32,10 @@ import org.linphone.R;
 import org.linphone.core.DialPlan;
 
 public class CountryPicker {
-    private LayoutInflater mInflater;
-    private CountryAdapter mAdapter;
+    private final LayoutInflater mInflater;
+    private final CountryAdapter mAdapter;
     private EditText mSearch;
-    private CountryPickedListener mListener;
+    private final CountryPickedListener mListener;
 
     public CountryPicker(Context context, CountryPickedListener listener) {
         mListener = listener;
@@ -94,8 +94,7 @@ public class CountryPicker {
     }
 
     public View getView() {
-        View view = createView();
-        return view;
+        return createView();
     }
 
     public interface CountryPickedListener {

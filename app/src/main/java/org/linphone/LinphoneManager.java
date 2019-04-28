@@ -470,15 +470,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         }
     }
 
-    public void subscribeFriendList(boolean enabled) {
-        Core lc = getLcIfManagerNotDestroyedOrNull();
-        if (lc != null && lc.getFriendsLists() != null && lc.getFriendsLists().length > 0) {
-            FriendList friendList = (lc.getFriendsLists())[0];
-            Log.i("[Manager] Presence list subscription is " + (enabled ? "enabled" : "disabled"));
-            friendList.enableSubscriptions(enabled);
-        }
-    }
-
     public void newOutgoingCall(AddressType address) {
         String to = address.getText().toString();
         newOutgoingCall(to, address.getDisplayedName());

@@ -38,8 +38,8 @@ import org.linphone.settings.widget.SwitchSetting;
 import org.linphone.settings.widget.TextSetting;
 
 public class AdvancedSettingsFragment extends SettingsFragment {
-    protected View mRootView;
-    protected LinphonePreferences mPrefs;
+    private View mRootView;
+    private LinphonePreferences mPrefs;
 
     private SwitchSetting mDebug,
             mJavaLogger,
@@ -70,7 +70,7 @@ public class AdvancedSettingsFragment extends SettingsFragment {
         updateValues();
     }
 
-    protected void loadSettings() {
+    private void loadSettings() {
         mDebug = mRootView.findViewById(R.id.pref_debug);
 
         mJavaLogger = mRootView.findViewById(R.id.pref_java_debug);
@@ -99,7 +99,7 @@ public class AdvancedSettingsFragment extends SettingsFragment {
         mDeviceName = mRootView.findViewById(R.id.pref_device_name);
     }
 
-    protected void setListeners() {
+    private void setListeners() {
         mDebug.setListener(
                 new SettingListenerBase() {
                     @Override
@@ -206,7 +206,7 @@ public class AdvancedSettingsFragment extends SettingsFragment {
                 });
     }
 
-    protected void updateValues() {
+    private void updateValues() {
         mDebug.setChecked(mPrefs.isDebugEnabled());
 
         mJavaLogger.setChecked(mPrefs.useJavaLogger());

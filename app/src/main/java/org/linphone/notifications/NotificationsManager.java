@@ -114,7 +114,7 @@ public class NotificationsManager {
         mCurrentForegroundServiceNotification = SERVICE_NOTIF_ID;
     }
 
-    public void startForeground(Notification notification, int id) {
+    private void startForeground(Notification notification, int id) {
         LinphoneService.instance().startForeground(id, notification);
         mCurrentForegroundServiceNotification = id;
     }
