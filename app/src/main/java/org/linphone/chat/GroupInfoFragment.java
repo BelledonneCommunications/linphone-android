@@ -24,7 +24,6 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -58,14 +57,13 @@ import org.linphone.core.tools.Log;
 import org.linphone.utils.LinphoneUtils;
 
 public class GroupInfoFragment extends Fragment {
-    private ImageView mBackButton, mConfirmButton, mAddParticipantsButton;
-    private RelativeLayout mAddParticipantsLayout;
+    private ImageView mConfirmButton;
+    private ImageView mAddParticipantsButton;
     private Address mGroupChatRoomAddress;
     private EditText mSubjectField;
 
     private RecyclerView mParticipantsList;
 
-    private LinearLayout mLeaveGroupButton;
     private RelativeLayout mWaitLayout;
     private GroupInfoAdapter mAdapter;
     private boolean mIsAlreadyCreatedGroup;
@@ -75,8 +73,6 @@ public class GroupInfoFragment extends Fragment {
     private ChatRoom mChatRoom, mTempChatRoom;
     private Dialog mAdminStateChangedDialog;
     private ChatRoomListenerStub mChatRoomCreationListener;
-    private Context mContext;
-    private LinearLayoutManager layoutManager;
     private boolean mIsEncryptionEnabled;
     private ChatRoomListenerStub mListener;
 
@@ -88,7 +84,6 @@ public class GroupInfoFragment extends Fragment {
         if (getArguments() == null || getArguments().isEmpty()) {
             return null;
         }
-        mContext = getActivity().getApplicationContext();
 
         mParticipants = (ArrayList<ContactAddress>) getArguments().getSerializable("Participants");
         mGroupChatRoomAddress = null;
@@ -134,18 +129,18 @@ public class GroupInfoFragment extends Fragment {
                 });
         mParticipantsList.setAdapter(mAdapter);
         mAdapter.setChatRoom(mChatRoom);
-        layoutManager = new LinearLayoutManager(mContext);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mParticipantsList.setLayoutManager(layoutManager);
 
         // Divider between items
         DividerItemDecoration dividerItemDecoration =
                 new DividerItemDecoration(
                         mParticipantsList.getContext(), layoutManager.getOrientation());
-        dividerItemDecoration.setDrawable(mContext.getResources().getDrawable(R.drawable.divider));
+        dividerItemDecoration.setDrawable(getResources().getDrawable(R.drawable.divider));
         mParticipantsList.addItemDecoration(dividerItemDecoration);
 
-        mBackButton = view.findViewById(R.id.back);
-        mBackButton.setOnClickListener(
+        ImageView backButton = view.findViewById(R.id.back);
+        backButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -163,21 +158,21 @@ public class GroupInfoFragment extends Fragment {
                 });
         mConfirmButton.setEnabled(!mSubject.isEmpty() && mParticipants.size() > 0);
 
-        mLeaveGroupButton = view.findViewById(R.id.leaveGroupLayout);
-        mLeaveGroupButton.setOnClickListener(
+        LinearLayout leaveGroupButton = view.findViewById(R.id.leaveGroupLayout);
+        leaveGroupButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         showLeaveGroupDialog();
                     }
                 });
-        mLeaveGroupButton.setVisibility(
+        leaveGroupButton.setVisibility(
                 mIsAlreadyCreatedGroup && mChatRoom.hasBeenLeft()
                         ? View.GONE
                         : mIsAlreadyCreatedGroup ? View.VISIBLE : View.GONE);
 
-        mAddParticipantsLayout = view.findViewById(R.id.addParticipantsLayout);
-        mAddParticipantsLayout.setOnClickListener(
+        RelativeLayout addParticipantsLayout = view.findViewById(R.id.addParticipantsLayout);
+        addParticipantsLayout.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

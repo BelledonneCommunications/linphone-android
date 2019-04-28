@@ -137,12 +137,12 @@ public class ChatActivity extends MainActivity {
         } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
             if (type.startsWith("image/")) {
                 ArrayList<Uri> imageUris = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
-                String filePaths = "";
+                StringBuilder filePaths = new StringBuilder();
                 for (Uri uri : imageUris) {
-                    filePaths += FileUtils.getFilePath(this, uri);
-                    filePaths += ":";
+                    filePaths.append(FileUtils.getFilePath(this, uri));
+                    filePaths.append(":");
                 }
-                sharedFiles = filePaths;
+                sharedFiles = filePaths.toString();
                 Log.i("[Chat Activity] ACTION_SEND_MULTIPLE with files: " + sharedFiles);
             }
         } else {

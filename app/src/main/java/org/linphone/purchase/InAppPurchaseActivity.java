@@ -42,7 +42,6 @@ public class InAppPurchaseActivity extends Activity
     private static InAppPurchaseActivity sInstance;
 
     private InAppPurchaseHelper mInAppPurchaseHelper;
-    private ImageView mCancel, mBack;
     private ProgressBar mInProgress;
 
     private List<Purchasable> mPurchasedItems;
@@ -63,10 +62,10 @@ public class InAppPurchaseActivity extends Activity
         mInProgress = findViewById(R.id.purchaseItemsFetchInProgress);
         mInProgress.setVisibility(View.VISIBLE);
 
-        mBack = findViewById(R.id.back);
+        ImageView mBack = findViewById(R.id.back);
         mBack.setOnClickListener(this);
         mBack.setVisibility(View.INVISIBLE);
-        mCancel = findViewById(R.id.cancel);
+        ImageView mCancel = findViewById(R.id.cancel);
         mCancel.setOnClickListener(this);
 
         sInstance = this;

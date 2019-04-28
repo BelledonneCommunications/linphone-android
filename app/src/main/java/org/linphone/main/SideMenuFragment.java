@@ -50,9 +50,9 @@ import org.linphone.utils.LinphoneUtils;
 
 public class SideMenuFragment extends Fragment {
     private DrawerLayout mSideMenu;
-    private RelativeLayout mSideMenuContent, mQuitLayout, mDefaultAccount;
+    private RelativeLayout mSideMenuContent;
+    private RelativeLayout mDefaultAccount;
     private ListView mAccountsList, mSideMenuItemList;
-    private List<SideMenuItem> mSideMenuItems;
     private QuitClikedListener mQuitListener;
 
     @Nullable
@@ -63,43 +63,43 @@ public class SideMenuFragment extends Fragment {
             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.side_menu, container, false);
 
-        mSideMenuItems = new ArrayList<>();
+        List<SideMenuItem> sideMenuItems = new ArrayList<>();
         if (getResources().getBoolean(R.bool.show_log_out_in_side_menu)) {
-            mSideMenuItems.add(
+            sideMenuItems.add(
                     new SideMenuItem(
                             getResources().getString(R.string.menu_logout),
                             R.drawable.quit_default));
         }
         if (!getResources().getBoolean(R.bool.hide_assistant_from_side_menu)) {
-            mSideMenuItems.add(
+            sideMenuItems.add(
                     new SideMenuItem(
                             getResources().getString(R.string.menu_assistant),
                             R.drawable.menu_assistant));
         }
         if (!getResources().getBoolean(R.bool.hide_settings_from_side_menu)) {
-            mSideMenuItems.add(
+            sideMenuItems.add(
                     new SideMenuItem(
                             getResources().getString(R.string.menu_settings),
                             R.drawable.menu_options));
         }
         if (getResources().getBoolean(R.bool.enable_in_app_purchase)) {
-            mSideMenuItems.add(
+            sideMenuItems.add(
                     new SideMenuItem(
                             getResources().getString(R.string.inapp), R.drawable.menu_options));
         }
         if (!getResources().getBoolean(R.bool.hide_recordings_from_side_menu)) {
-            mSideMenuItems.add(
+            sideMenuItems.add(
                     new SideMenuItem(
                             getResources().getString(R.string.menu_recordings),
                             R.drawable.menu_recordings));
         }
-        mSideMenuItems.add(
+        sideMenuItems.add(
                 new SideMenuItem(
                         getResources().getString(R.string.menu_about), R.drawable.menu_about));
         mSideMenuItemList = view.findViewById(R.id.item_list);
 
         mSideMenuItemList.setAdapter(
-                new SideMenuAdapter(getActivity(), R.layout.side_menu_item_cell, mSideMenuItems));
+                new SideMenuAdapter(getActivity(), R.layout.side_menu_item_cell, sideMenuItems));
         mSideMenuItemList.setOnItemClickListener(
                 new AdapterView.OnItemClickListener() {
                     @Override
@@ -133,8 +133,8 @@ public class SideMenuFragment extends Fragment {
         mAccountsList = view.findViewById(R.id.accounts_list);
         mDefaultAccount = view.findViewById(R.id.default_account);
 
-        mQuitLayout = view.findViewById(R.id.side_menu_quit);
-        mQuitLayout.setOnClickListener(
+        RelativeLayout quitLayout = view.findViewById(R.id.side_menu_quit);
+        quitLayout.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

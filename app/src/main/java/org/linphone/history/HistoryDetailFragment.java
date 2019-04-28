@@ -51,8 +51,8 @@ import org.linphone.utils.LinphoneUtils;
 import org.linphone.views.ContactAvatar;
 
 public class HistoryDetailFragment extends Fragment {
-    private ImageView mDialBack, mChat, mAddToContacts, mGoToContact, mBack;
-    private View mView;
+    private ImageView mAddToContacts;
+    private ImageView mGoToContact;
     private TextView mContactName, mContactAddress;
     private String mSipUri, mDisplayName;
     private RelativeLayout mWaitLayout, mAvatarLayout, mChatSecured;
@@ -67,13 +67,13 @@ public class HistoryDetailFragment extends Fragment {
         mSipUri = getArguments().getString("SipUri");
         mDisplayName = getArguments().getString("DisplayName");
 
-        mView = inflater.inflate(R.layout.history_detail, container, false);
+        View view = inflater.inflate(R.layout.history_detail, container, false);
 
-        mWaitLayout = mView.findViewById(R.id.waitScreen);
+        mWaitLayout = view.findViewById(R.id.waitScreen);
         mWaitLayout.setVisibility(View.GONE);
 
-        mDialBack = mView.findViewById(R.id.call);
-        mDialBack.setOnClickListener(
+        ImageView dialBack = view.findViewById(R.id.call);
+        dialBack.setOnClickListener(
                 new OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -81,19 +81,19 @@ public class HistoryDetailFragment extends Fragment {
                     }
                 });
 
-        mBack = mView.findViewById(R.id.back);
-        mBack.setOnClickListener(
+        ImageView back = view.findViewById(R.id.back);
+        back.setOnClickListener(
                 new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         ((HistoryActivity) getActivity()).goBack();
                     }
                 });
-        mBack.setVisibility(
+        back.setVisibility(
                 getResources().getBoolean(R.bool.isTablet) ? View.INVISIBLE : View.VISIBLE);
 
-        mChat = mView.findViewById(R.id.chat);
-        mChat.setOnClickListener(
+        ImageView chat = view.findViewById(R.id.chat);
+        chat.setOnClickListener(
                 new OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -101,7 +101,7 @@ public class HistoryDetailFragment extends Fragment {
                     }
                 });
 
-        mChatSecured = mView.findViewById(R.id.chat_secured);
+        mChatSecured = view.findViewById(R.id.chat_secured);
         mChatSecured.setOnClickListener(
                 new OnClickListener() {
                     @Override
@@ -111,11 +111,11 @@ public class HistoryDetailFragment extends Fragment {
                 });
 
         if (getResources().getBoolean(R.bool.disable_chat)) {
-            mChat.setVisibility(View.GONE);
+            chat.setVisibility(View.GONE);
             mChatSecured.setVisibility(View.GONE);
         }
 
-        mAddToContacts = mView.findViewById(R.id.add_contact);
+        mAddToContacts = view.findViewById(R.id.add_contact);
         mAddToContacts.setOnClickListener(
                 new OnClickListener() {
                     @Override
@@ -129,7 +129,7 @@ public class HistoryDetailFragment extends Fragment {
                     }
                 });
 
-        mGoToContact = mView.findViewById(R.id.goto_contact);
+        mGoToContact = view.findViewById(R.id.goto_contact);
         mGoToContact.setOnClickListener(
                 new OnClickListener() {
                     @Override
@@ -138,9 +138,9 @@ public class HistoryDetailFragment extends Fragment {
                     }
                 });
 
-        mAvatarLayout = mView.findViewById(R.id.avatar_layout);
-        mContactName = mView.findViewById(R.id.contact_name);
-        mContactAddress = mView.findViewById(R.id.contact_address);
+        mAvatarLayout = view.findViewById(R.id.avatar_layout);
+        mContactName = view.findViewById(R.id.contact_name);
+        mContactAddress = view.findViewById(R.id.contact_address);
 
         mChatRoomCreationListener =
                 new ChatRoomListenerStub() {
@@ -161,10 +161,10 @@ public class HistoryDetailFragment extends Fragment {
                     }
                 };
 
-        mLogsList = mView.findViewById(R.id.logs_list);
+        mLogsList = view.findViewById(R.id.logs_list);
         displayHistory();
 
-        return mView;
+        return view;
     }
 
     @Override
@@ -245,7 +245,7 @@ public class HistoryDetailFragment extends Fragment {
                 // We don't want a basic chat room
                 params.setBackend(ChatRoomBackend.FlexisipChat);
 
-                Address participants[] = new Address[1];
+                Address[] participants = new Address[1];
                 participants[0] = participant;
 
                 mChatRoom =

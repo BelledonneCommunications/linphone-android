@@ -29,8 +29,6 @@ public class ContactAddress implements Serializable {
     private LinphoneContact mContact;
     private String mAddress;
     private String mPhoneNumber;
-    private boolean mIsLinphoneContact;
-    private boolean mIsSelect = false;
     private boolean mIsAdmin = false;
     private transient View mView;
 
@@ -49,14 +47,6 @@ public class ContactAddress implements Serializable {
 
     public void setAdmin(boolean admin) {
         mIsAdmin = admin;
-    }
-
-    public boolean isSelect() {
-        return mIsSelect;
-    }
-
-    public void setSelect(boolean select) {
-        mIsSelect = select;
     }
 
     public View getView() {
@@ -126,7 +116,6 @@ public class ContactAddress implements Serializable {
         mContact = c;
         mAddress = a;
         mPhoneNumber = pn;
-        mIsLinphoneContact = isLC;
     }
 
     @Override

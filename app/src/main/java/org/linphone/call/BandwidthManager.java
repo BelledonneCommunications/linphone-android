@@ -29,7 +29,7 @@ public class BandwidthManager {
 
     private static BandwidthManager sInstance;
 
-    private final int currentProfile = HIGH_RESOLUTION;
+    private static final int currentProfile = HIGH_RESOLUTION;
 
     private BandwidthManager() {
         // FIXME register a listener on NetworkManager to get notified of network state

@@ -176,10 +176,6 @@ public class LinphoneContact extends AndroidContact
        Picture related
     */
 
-    public boolean hasPhoto() {
-        return mPhotoUri != null;
-    }
-
     public Uri getPhotoUri() {
         return mPhotoUri;
     }

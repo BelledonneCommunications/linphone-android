@@ -47,7 +47,6 @@ public class LinphoneTextureViewOverlay extends RelativeLayout implements Linpho
     private final DisplayMetrics mMetrics;
     private float mX, mY, mTouchX, mTouchY;
     private boolean mDragEnabled;
-    private TextureView mRemoteVideo, mLocalPreview;
 
     public LinphoneTextureViewOverlay(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs);
@@ -76,15 +75,15 @@ public class LinphoneTextureViewOverlay extends RelativeLayout implements Linpho
         mParams.width = callParams.getReceivedVideoDefinition().getWidth();
         mParams.height = callParams.getReceivedVideoDefinition().getHeight();
 
-        mRemoteVideo = new TextureView(context);
-        addView(mRemoteVideo);
-        mLocalPreview = new TextureView(context);
-        addView(mLocalPreview);
+        TextureView remoteVideo = new TextureView(context);
+        addView(remoteVideo);
+        TextureView localPreview = new TextureView(context);
+        addView(localPreview);
 
         RelativeLayout.LayoutParams remoteVideoParams =
                 new RelativeLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        mRemoteVideo.setLayoutParams(remoteVideoParams);
+        remoteVideo.setLayoutParams(remoteVideoParams);
 
         VideoDefinition videoSize = call.getCurrentParams().getSentVideoDefinition();
         int localPreviewWidth = videoSize.getWidth();
@@ -97,11 +96,11 @@ public class LinphoneTextureViewOverlay extends RelativeLayout implements Linpho
                 new RelativeLayout.LayoutParams(localPreviewWidth, localPreviewHeight);
         localPreviewParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, TRUE);
         localPreviewParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, TRUE);
-        mLocalPreview.setLayoutParams(localPreviewParams);
+        localPreview.setLayoutParams(localPreviewParams);
 
         Core lc = LinphoneManager.getLc();
-        lc.setNativeVideoWindowId(mRemoteVideo);
-        lc.setNativePreviewWindowId(mLocalPreview);
+        lc.setNativeVideoWindowId(remoteVideo);
+        lc.setNativePreviewWindowId(localPreview);
 
         setOnClickListener(
                 new OnClickListener() {

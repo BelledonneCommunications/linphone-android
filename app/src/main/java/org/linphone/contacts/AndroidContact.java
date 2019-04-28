@@ -377,7 +377,6 @@ class AndroidContact implements Serializable {
 
         if (mAndroidId == null) {
             Log.e("[Contact] Can't remove a number or address from non existing contact");
-            return;
         } else {
             Log.i(
                     "[Contact] Removing number or address "
@@ -560,7 +559,7 @@ class AndroidContact implements Serializable {
         return result;
     }
 
-    protected void createRawLinphoneContactFromExistingAndroidContactIfNeeded(String fullName) {
+    protected void createRawLinphoneContactFromExistingAndroidContactIfNeeded() {
         if (LinphoneService.instance().getResources().getBoolean(R.bool.use_linphone_tag)) {
             if (mAndroidId != null && (mAndroidRawId == null || !isAndroidRawIdLinphone)) {
                 if (mAndroidRawId == null) {

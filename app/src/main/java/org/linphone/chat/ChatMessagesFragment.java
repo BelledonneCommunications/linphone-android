@@ -102,7 +102,9 @@ public class ChatMessagesFragment extends Fragment
     private static final String COMMIT_CONTENT_FLAGS_KEY = "COMMIT_CONTENT_FLAGS";
 
     private final Handler mHandler = new Handler(Looper.getMainLooper());
-    private ImageView mBackButton, mCallButton, mBackToCallButton, mGroupInfosButton;
+    private ImageView mCallButton;
+    private ImageView mBackToCallButton;
+    private ImageView mGroupInfosButton;
     private ImageView mAttachImageButton, mSendMessageButton;
     private TextView mRoomLabel, mParticipantsLabel, mSipUriLabel, mRemoteComposing;
     private RichEditText mMessageTextToSend;
@@ -113,19 +115,15 @@ public class ChatMessagesFragment extends Fragment
     private Context mContext;
     private ViewTreeObserver.OnGlobalLayoutListener mKeyboardListener;
     private Uri mImageToUploadUri;
-    private ChatMessagesAdapter mEventsAdapter;
-    private String mLocalSipUri, mRemoteSipUri;
+    private String mRemoteSipUri;
     private Address mLocalSipAddress, mRemoteSipAddress, mRemoteParticipantAddress;
     private ChatRoom mChatRoom;
     private ArrayList<LinphoneContact> mParticipants;
-    private LinearLayoutManager layoutManager;
     private int mContextMenuMessagePosition;
-    private ChatScrollListener mChatScrollListener;
     private LinearLayout mTopBar;
     private ImageView mChatRoomSecurityLevel;
 
     private InputContentInfoCompat mCurrentInputContentInfo;
-    private int mCurrentFlags;
 
     @Override
     public View onCreateView(
@@ -136,7 +134,7 @@ public class ChatMessagesFragment extends Fragment
 
         if (getArguments() != null) {
             if (getArguments().getString("LocalSipUri") != null) {
-                mLocalSipUri = getArguments().getString("LocalSipUri");
+                String mLocalSipUri = getArguments().getString("LocalSipUri");
                 mLocalSipAddress = LinphoneManager.getLc().createAddress(mLocalSipUri);
             }
             if (getArguments().getString("RemoteSipUri") != null) {
@@ -180,15 +178,15 @@ public class ChatMessagesFragment extends Fragment
                     }
                 });
 
-        mBackButton = view.findViewById(R.id.back);
-        mBackButton.setOnClickListener(
+        ImageView backButton = view.findViewById(R.id.back);
+        backButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         ((ChatActivity) getActivity()).goBack();
                     }
                 });
-        mBackButton.setVisibility(
+        backButton.setVisibility(
                 getResources().getBoolean(R.bool.isTablet) ? View.INVISIBLE : View.VISIBLE);
 
         mCallButton = view.findViewById(R.id.start_call);
@@ -304,18 +302,18 @@ public class ChatMessagesFragment extends Fragment
 
         mChatEventsList = view.findViewById(R.id.chat_message_list);
         mSelectionHelper = new SelectableHelper(view, this);
-        layoutManager =
+        LinearLayoutManager layoutManager =
                 new LinphoneLinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, true);
         mChatEventsList.setLayoutManager(layoutManager);
 
-        mChatScrollListener =
+        ChatScrollListener chatScrollListener =
                 new ChatScrollListener(layoutManager) {
                     @Override
                     public void onLoadMore(int totalItemsCount) {
                         loadMoreData(totalItemsCount);
                     }
                 };
-        mChatEventsList.addOnScrollListener(mChatScrollListener);
+        mChatEventsList.addOnScrollListener(chatScrollListener);
 
         if (getArguments() != null) {
             String fileSharedUri = getArguments().getString("SharedFiles");
@@ -800,6 +798,7 @@ public class ChatMessagesFragment extends Fragment
 
     private void displayChatRoomHistory() {
         if (mChatRoom == null) return;
+        ChatMessagesAdapter mEventsAdapter;
         if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
             mEventsAdapter =
                     new ChatMessagesAdapter(
@@ -895,7 +894,7 @@ public class ChatMessagesFragment extends Fragment
     }
 
     private void onRestoreInstanceState(Bundle savedInstanceState) {
-        String files[] = savedInstanceState.getStringArray("Files");
+        String[] files = savedInstanceState.getStringArray("Files");
         if (files != null && files.length > 0) {
             for (String file : files) {
                 if (FileUtils.isExtensionImage(file)) {
@@ -922,9 +921,7 @@ public class ChatMessagesFragment extends Fragment
                 new File(
                         FileUtils.getStorageDirectory(mContext),
                         getString(R.string.temp_photo_name_with_date)
-                                .replace(
-                                        "%s",
-                                        String.valueOf(System.currentTimeMillis()) + ".jpeg"));
+                                .replace("%s", System.currentTimeMillis() + ".jpeg"));
         mImageToUploadUri = Uri.fromFile(file);
         captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageToUploadUri);
         cameraIntents.add(captureIntent);
@@ -1364,7 +1361,7 @@ public class ChatMessagesFragment extends Fragment
         }
 
         mCurrentInputContentInfo = inputContentInfo;
-        mCurrentFlags = flags;
+        int mCurrentFlags = flags;
 
         return true;
     }

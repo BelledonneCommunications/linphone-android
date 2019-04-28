@@ -33,7 +33,6 @@ public class SelectableHelper {
     private final ImageView mSelectAllButton;
     private final ImageView mDeselectAllButton;
     private final ImageView mDeleteSelectionButton;
-    private final ImageView mCancelButton;
     private final LinearLayout mEditTopBar;
     private final LinearLayout mTopBar;
     private SelectableAdapter<RecyclerView.ViewHolder> mAdapter;
@@ -48,8 +47,8 @@ public class SelectableHelper {
         mEditTopBar = view.findViewById(R.id.edit_list);
         mTopBar = view.findViewById(R.id.top_bar);
 
-        mCancelButton = view.findViewById(R.id.cancel);
-        mCancelButton.setOnClickListener(
+        ImageView cancelButton = view.findViewById(R.id.cancel);
+        cancelButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -178,7 +177,7 @@ public class SelectableHelper {
     }
 
     private Object[] getSelectedObjects() {
-        Object objects[] = new Object[mAdapter.getSelectedItemCount()];
+        Object[] objects = new Object[mAdapter.getSelectedItemCount()];
         int index = 0;
         for (Integer i : mAdapter.getSelectedItems()) {
             objects[index] = mAdapter.getItem(i);

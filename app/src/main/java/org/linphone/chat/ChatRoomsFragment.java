@@ -53,13 +53,13 @@ public class ChatRoomsFragment extends Fragment
                 SelectableHelper.DeleteListener {
 
     private RecyclerView mChatRoomsList;
-    private ImageView mNewDiscussionButton, mNewGroupDiscussionButton, mBackToCallButton;
+    private ImageView mNewGroupDiscussionButton;
+    private ImageView mBackToCallButton;
     private ChatRoomsAdapter mChatRoomsAdapter;
     private CoreListenerStub mListener;
     private RelativeLayout mWaitLayout;
     private int mChatRoomDeletionPendingCount;
     private ChatRoomListenerStub mChatRoomListener;
-    private List<ChatRoom> mRooms;
     private SelectableHelper mSelectionHelper;
     private TextView mNoChatHistory;
 
@@ -72,12 +72,13 @@ public class ChatRoomsFragment extends Fragment
 
         mChatRoomsList = view.findViewById(R.id.chatList);
         mWaitLayout = view.findViewById(R.id.waitScreen);
-        mNewDiscussionButton = view.findViewById(R.id.new_discussion);
+        ImageView newDiscussionButton = view.findViewById(R.id.new_discussion);
         mNewGroupDiscussionButton = view.findViewById(R.id.new_group_discussion);
         mBackToCallButton = view.findViewById(R.id.back_in_call);
         mNoChatHistory = view.findViewById(R.id.noChatHistory);
 
         ChatRoom[] rooms = LinphoneManager.getLc().getChatRooms();
+        List<ChatRoom> mRooms;
         if (getResources().getBoolean(R.bool.hide_empty_one_to_one_chat_rooms)) {
             mRooms = LinphoneUtils.removeEmptyOneToOneChatRooms(rooms);
         } else {
@@ -93,13 +94,12 @@ public class ChatRoomsFragment extends Fragment
         mSelectionHelper.setAdapter(mChatRoomsAdapter);
         mSelectionHelper.setDialogMessage(R.string.chat_room_delete_dialog);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mChatRoomsList.setLayoutManager(layoutManager);
 
         DividerItemDecoration dividerItemDecoration =
                 new DividerItemDecoration(
-                        mChatRoomsList.getContext(),
-                        ((LinearLayoutManager) layoutManager).getOrientation());
+                        mChatRoomsList.getContext(), layoutManager.getOrientation());
         dividerItemDecoration.setDrawable(
                 getActivity()
                         .getApplicationContext()
@@ -109,7 +109,7 @@ public class ChatRoomsFragment extends Fragment
 
         mWaitLayout.setVisibility(View.GONE);
 
-        mNewDiscussionButton.setOnClickListener(
+        newDiscussionButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

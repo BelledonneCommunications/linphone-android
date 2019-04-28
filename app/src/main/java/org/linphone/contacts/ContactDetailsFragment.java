@@ -54,7 +54,6 @@ import org.linphone.views.ContactAvatar;
 
 public class ContactDetailsFragment extends Fragment implements ContactsUpdatedListener {
     private LinphoneContact mContact;
-    private ImageView mEditContact, mDeleteContact, mBack;
     private TextView mOrganization;
     private RelativeLayout mWaitLayout;
     private LayoutInflater mInflater;
@@ -82,8 +81,8 @@ public class ContactDetailsFragment extends Fragment implements ContactsUpdatedL
         mWaitLayout = mView.findViewById(R.id.waitScreen);
         mWaitLayout.setVisibility(View.GONE);
 
-        mEditContact = mView.findViewById(R.id.editContact);
-        mEditContact.setOnClickListener(
+        ImageView editContact = mView.findViewById(R.id.editContact);
+        editContact.setOnClickListener(
                 new OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -91,8 +90,8 @@ public class ContactDetailsFragment extends Fragment implements ContactsUpdatedL
                     }
                 });
 
-        mDeleteContact = mView.findViewById(R.id.deleteContact);
-        mDeleteContact.setOnClickListener(
+        ImageView deleteContact = mView.findViewById(R.id.deleteContact);
+        deleteContact.setOnClickListener(
                 new OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -128,15 +127,15 @@ public class ContactDetailsFragment extends Fragment implements ContactsUpdatedL
 
         mOrganization = mView.findViewById(R.id.contactOrganization);
 
-        mBack = mView.findViewById(R.id.back);
-        mBack.setOnClickListener(
+        ImageView back = mView.findViewById(R.id.back);
+        back.setOnClickListener(
                 new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         ((ContactsActivity) getActivity()).goBack();
                     }
                 });
-        mBack.setVisibility(
+        back.setVisibility(
                 getResources().getBoolean(R.bool.isTablet) ? View.INVISIBLE : View.VISIBLE);
 
         mChatRoomCreationListener =
@@ -379,7 +378,7 @@ public class ContactDetailsFragment extends Fragment implements ContactsUpdatedL
                     // so if isSecured is false we have to set this manually
                     params.setBackend(ChatRoomBackend.FlexisipChat);
 
-                    Address participants[] = new Address[1];
+                    Address[] participants = new Address[1];
                     participants[0] = participant;
 
                     mChatRoom =

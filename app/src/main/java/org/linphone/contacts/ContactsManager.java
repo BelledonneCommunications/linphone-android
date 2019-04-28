@@ -29,7 +29,6 @@ import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -155,36 +154,6 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         mLoadContactTask = new AsyncContactsLoader(mContext);
         mContactsFetchedOnce = true;
         mLoadContactTask.executeOnExecutor(THREAD_POOL_EXECUTOR);
-    }
-
-    public void editContact(Context context, LinphoneContact contact, String valueToAdd) {
-        if (context.getResources().getBoolean(R.bool.use_native_contact_editor)) {
-            Intent intent = new Intent(Intent.ACTION_EDIT);
-            Uri contactUri = contact.getAndroidLookupUri();
-            intent.setDataAndType(contactUri, ContactsContract.Contacts.CONTENT_ITEM_TYPE);
-            intent.putExtra(
-                    "finishActivityOnSaveCompleted", true); // So after save will go back here
-            if (valueToAdd != null) {
-                intent.putExtra(ContactsContract.Intents.Insert.IM_HANDLE, valueToAdd);
-            }
-            context.startActivity(intent);
-        }
-    }
-
-    public void createContact(Context context, String name, String valueToAdd) {
-        if (context.getResources().getBoolean(R.bool.use_native_contact_editor)) {
-            Intent intent = new Intent(ContactsContract.Intents.Insert.ACTION);
-            intent.setType(ContactsContract.RawContacts.CONTENT_TYPE);
-            intent.putExtra(
-                    "finishActivityOnSaveCompleted", true); // So after save will go back here
-            if (name != null) {
-                intent.putExtra(ContactsContract.Intents.Insert.NAME, name);
-            }
-            if (valueToAdd != null) {
-                intent.putExtra(ContactsContract.Intents.Insert.IM_HANDLE, valueToAdd);
-            }
-            context.startActivity(intent);
-        }
     }
 
     public MagicSearch getMagicSearch() {
@@ -347,12 +316,12 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                 Log.e("[Contacts Manager] Couldn't initialize sync account: " + e);
             }
         } else if (accounts != null) {
-            for (int i = 0; i < accounts.length; i++) {
+            for (Account account : accounts) {
                 Log.i(
                         "[Contacts Manager] Found account with name \""
-                                + accounts[i].name
+                                + account.name
                                 + "\" and type \""
-                                + accounts[i].type
+                                + account.type
                                 + "\"");
                 makeContactAccountVisible();
             }

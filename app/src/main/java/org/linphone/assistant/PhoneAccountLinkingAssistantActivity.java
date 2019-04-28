@@ -43,10 +43,8 @@ import org.linphone.core.tools.Log;
 public class PhoneAccountLinkingAssistantActivity extends AssistantActivity {
     private TextView mCountryPicker, mError, mLink;
     private EditText mPrefix, mPhoneNumber;
-    private ImageView mPhoneNumberInfos;
 
     private AccountCreatorListenerStub mListener;
-    private ProxyConfig mProxyConfig;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,7 +62,7 @@ public class PhoneAccountLinkingAssistantActivity extends AssistantActivity {
 
             ProxyConfig[] proxyConfigs = core.getProxyConfigList();
             if (proxyConfigIndex >= 0 && proxyConfigIndex < proxyConfigs.length) {
-                mProxyConfig = proxyConfigs[proxyConfigIndex];
+                ProxyConfig mProxyConfig = proxyConfigs[proxyConfigIndex];
 
                 Address identity = mProxyConfig.getIdentityAddress();
                 if (identity == null) {
@@ -160,8 +158,8 @@ public class PhoneAccountLinkingAssistantActivity extends AssistantActivity {
                     }
                 });
 
-        mPhoneNumberInfos = findViewById(R.id.info_phone_number);
-        mPhoneNumberInfos.setOnClickListener(
+        ImageView phoneNumberInfos = findViewById(R.id.info_phone_number);
+        phoneNumberInfos.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

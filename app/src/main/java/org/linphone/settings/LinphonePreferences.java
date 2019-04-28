@@ -742,7 +742,7 @@ public class LinphonePreferences {
         if (getLc().tunnelAvailable()) {
             Tunnel tunnel = getLc().getTunnel();
             if (mTunnelConfig == null) {
-                TunnelConfig servers[] = tunnel.getServers();
+                TunnelConfig[] servers = tunnel.getServers();
                 if (servers.length > 0) {
                     mTunnelConfig = servers[0];
                 } else {
@@ -799,10 +799,6 @@ public class LinphonePreferences {
     }
 
     // End of tunnel settings
-
-    public boolean isFirstRemoteProvisioning() {
-        return getConfig().getBool("app", "first_remote_provisioning", true);
-    }
 
     public boolean adaptiveRateControlEnabled() {
         if (getLc() == null) return false;

@@ -70,17 +70,17 @@ public class ChatRoomCreationFragment extends Fragment
     private RecyclerView mContactsList;
     private LinearLayout mContactsSelectedLayout;
     private HorizontalScrollView mContactsSelectLayout;
-    private ImageView mAllContactsButton, mLinphoneContactsButton, mBackButton, mNextButton;
+    private ImageView mAllContactsButton;
+    private ImageView mLinphoneContactsButton;
+    private ImageView mNextButton;
     private boolean mOnlyDisplayLinphoneContacts;
     private View mAllContactsSelected, mLinphoneContactsSelected;
     private RelativeLayout mSearchLayout, mWaitLayout, mLinphoneContactsToggle, mAllContactsToggle;
     private SearchView mSearchField;
-    private ProgressBar mContactsFetchInProgress;
     private SearchContactsAdapter mSearchAdapter;
     private String mChatRoomSubject, mChatRoomAddress;
     private ChatRoom mChatRoom;
     private ChatRoomListenerStub mChatRoomCreationListener;
-    private ImageView mSecurityToggleOff, mSecurityToggleOn;
     private Switch mSecurityToggle;
     private ArrayList<ContactAddress> mParticipants;
     private boolean mCreateGroupChatRoom;
@@ -125,16 +125,16 @@ public class ChatRoomCreationFragment extends Fragment
         mAllContactsSelected = view.findViewById(R.id.all_contacts_select);
         mLinphoneContactsSelected = view.findViewById(R.id.linphone_contacts_select);
 
-        mBackButton = view.findViewById(R.id.back);
-        mBackButton.setOnClickListener(this);
+        ImageView backButton = view.findViewById(R.id.back);
+        backButton.setOnClickListener(this);
 
         mNextButton = view.findViewById(R.id.next);
         mNextButton.setOnClickListener(this);
         mNextButton.setEnabled(false);
         mSearchLayout = view.findViewById(R.id.layoutSearchField);
 
-        mContactsFetchInProgress = view.findViewById(R.id.contactsFetchInProgress);
-        mContactsFetchInProgress.setVisibility(View.GONE);
+        ProgressBar contactsFetchInProgress = view.findViewById(R.id.contactsFetchInProgress);
+        contactsFetchInProgress.setVisibility(View.GONE);
 
         mSearchAdapter = new SearchContactsAdapter(this, !mCreateGroupChatRoom, mChatRoomEncrypted);
 
@@ -164,16 +164,16 @@ public class ChatRoomCreationFragment extends Fragment
                         setSecurityEnabled(isChecked);
                     }
                 });
-        mSecurityToggleOn = view.findViewById(R.id.security_toogle_on);
-        mSecurityToggleOff = view.findViewById(R.id.security_toogle_off);
-        mSecurityToggleOn.setOnClickListener(
+        ImageView securityToggleOn = view.findViewById(R.id.security_toogle_on);
+        ImageView securityToggleOff = view.findViewById(R.id.security_toogle_off);
+        securityToggleOn.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         setSecurityEnabled(true);
                     }
                 });
-        mSecurityToggleOff.setOnClickListener(
+        securityToggleOff.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -187,8 +187,8 @@ public class ChatRoomCreationFragment extends Fragment
         if ((mChatRoomSubject != null && mChatRoomAddress != null)
                 || (lpc == null || lpc.getConferenceFactoryUri() == null)) {
             mSecurityToggle.setVisibility(View.GONE);
-            mSecurityToggleOn.setVisibility(View.GONE);
-            mSecurityToggleOff.setVisibility(View.GONE);
+            securityToggleOn.setVisibility(View.GONE);
+            securityToggleOff.setVisibility(View.GONE);
         }
 
         LinearLayoutManager layoutManager =
@@ -377,7 +377,7 @@ public class ChatRoomCreationFragment extends Fragment
                     params.enableEncryption(true);
                     params.enableGroup(false);
 
-                    Address participants[] = new Address[1];
+                    Address[] participants = new Address[1];
                     participants[0] = address;
 
                     mChatRoom =
@@ -406,7 +406,7 @@ public class ChatRoomCreationFragment extends Fragment
                         // We don't want a basic chat room
                         params.setBackend(ChatRoomBackend.FlexisipChat);
 
-                        Address participants[] = new Address[1];
+                        Address[] participants = new Address[1];
                         participants[0] = address;
 
                         mChatRoom =

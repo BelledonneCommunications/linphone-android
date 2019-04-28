@@ -212,17 +212,6 @@ public class StatusFragment extends Fragment {
         }
     }
 
-    public void resetAccountStatus() {
-        if (LinphoneManager.getLc().getProxyConfigList().length == 0) {
-            mStatusLed.setImageResource(R.drawable.led_disconnected);
-            mStatusText.setText(getString(R.string.no_account));
-        }
-    }
-
-    public void enableSideMenu(boolean enabled) {
-        mMenu.setEnabled(enabled);
-    }
-
     private int getStatusIconResource(RegistrationState state) {
         try {
             Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();

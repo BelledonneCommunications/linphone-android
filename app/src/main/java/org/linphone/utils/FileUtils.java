@@ -39,8 +39,6 @@ import java.util.Date;
 import java.util.Locale;
 import org.linphone.LinphoneManager;
 import org.linphone.core.Address;
-import org.linphone.core.ChatMessage;
-import org.linphone.core.Content;
 import org.linphone.core.Friend;
 import org.linphone.core.FriendList;
 import org.linphone.core.tools.Log;
@@ -68,19 +66,6 @@ public class FileUtils {
         String extension = getExtensionFromFileName(path);
         if (extension != null) extension = extension.toLowerCase();
         return (extension != null && extension.matches("(png|jpg|jpeg|bmp|gif)"));
-    }
-
-    public static void recursiveFileRemoval(File root) {
-        if (!root.delete()) {
-            if (root.isDirectory()) {
-                File[] files = root.listFiles();
-                if (files != null) {
-                    for (File f : files) {
-                        recursiveFileRemoval(f);
-                    }
-                }
-            }
-        }
     }
 
     public static String getFilePath(final Context context, final Uri uri) {
@@ -227,18 +212,6 @@ public class FileUtils {
         fileName += format.format(new Date()) + ".mkv";
 
         return fileName;
-    }
-
-    public static void scanFile(ChatMessage message) {
-        String appData = message.getAppdata();
-        if (appData == null) {
-            for (Content c : message.getContents()) {
-                if (c.isFile()) {
-                    appData = c.getFilePath();
-                }
-            }
-        }
-        LinphoneManager.getInstance().getMediaScanner().scanFile(new File(appData), null);
     }
 
     private static Uri createCvsFromString(String vcardString) {

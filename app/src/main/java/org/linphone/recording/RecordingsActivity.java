@@ -45,9 +45,7 @@ public class RecordingsActivity extends MainActivity
     private RecyclerView mRecordingList;
     private List<Recording> mRecordings;
     private TextView mNoRecordings;
-    private ImageView mBackButton;
     private RecordingsAdapter mRecordingsAdapter;
-    private LinearLayoutManager mLayoutManager;
     private SelectableHelper mSelectableHelper;
 
     @Override
@@ -68,8 +66,8 @@ public class RecordingsActivity extends MainActivity
             findViewById(R.id.fragmentContainer2).setVisibility(View.GONE);
         }
 
-        mBackButton = findViewById(R.id.back);
-        mBackButton.setOnClickListener(
+        ImageView backButton = findViewById(R.id.back);
+        backButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -82,7 +80,7 @@ public class RecordingsActivity extends MainActivity
         mRecordingList = findViewById(R.id.recording_list);
         mNoRecordings = findViewById(R.id.no_recordings);
 
-        mLayoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecordingList.setLayoutManager(mLayoutManager);
 
         // Divider between items

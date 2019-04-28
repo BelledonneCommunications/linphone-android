@@ -76,14 +76,12 @@ public class EchoCancellerCalibrationAssistantActivity extends AssistantActivity
                                     : "denied"));
         }
 
-        switch (requestCode) {
-            case RECORD_AUDIO_PERMISSION_RESULT:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startEchoCancellerCalibration();
-                } else {
-                    // TODO: permission denied, display something to the user
-                }
-                break;
+        if (requestCode == RECORD_AUDIO_PERMISSION_RESULT) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startEchoCancellerCalibration();
+            } else {
+                // TODO: permission denied, display something to the user
+            }
         }
     }
 

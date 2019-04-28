@@ -49,7 +49,6 @@ import org.linphone.utils.PushNotificationUtils;
 
 public class AccountSettingsFragment extends SettingsFragment {
     protected View mRootView;
-    protected LinphonePreferences mPrefs;
     private int mAccountIndex;
     private ProxyConfig mProxyConfig;
     private AuthInfo mAuthInfo;
@@ -113,8 +112,6 @@ public class AccountSettingsFragment extends SettingsFragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        mPrefs = LinphonePreferences.instance();
 
         updateValues();
     }

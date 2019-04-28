@@ -35,12 +35,12 @@ import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 
 public class PhoneAccountValidationAssistantActivity extends AssistantActivity {
-    private TextView mPhoneNumber, mFinishCreation;
+    private TextView mFinishCreation;
     private EditText mSmsCode;
     private ClipboardManager mClipboard;
 
     private int mActivationCodeLength;
-    private boolean mIsLogin, mIsLinking;
+    private boolean mIsLinking;
     private AccountCreatorListenerStub mListener;
 
     @Override
@@ -49,10 +49,8 @@ public class PhoneAccountValidationAssistantActivity extends AssistantActivity {
 
         setContentView(R.layout.assistant_phone_account_validation);
 
-        mIsLogin = mIsLinking = false;
         if (getIntent() != null && getIntent().getBooleanExtra("isLoginVerification", false)) {
             findViewById(R.id.title_account_creation).setVisibility(View.VISIBLE);
-            mIsLogin = true;
         } else if (getIntent() != null
                 && getIntent().getBooleanExtra("isLinkingVerification", false)) {
             mIsLinking = true;
@@ -64,8 +62,8 @@ public class PhoneAccountValidationAssistantActivity extends AssistantActivity {
         mActivationCodeLength =
                 getResources().getInteger(R.integer.phone_number_validation_code_length);
 
-        mPhoneNumber = findViewById(R.id.phone_number);
-        mPhoneNumber.setText(mAccountCreator.getPhoneNumber());
+        TextView phoneNumber = findViewById(R.id.phone_number);
+        phoneNumber.setText(mAccountCreator.getPhoneNumber());
 
         mSmsCode = findViewById(R.id.sms_code);
         mSmsCode.addTextChangedListener(

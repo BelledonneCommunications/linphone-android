@@ -54,13 +54,9 @@ import org.linphone.views.ContactAvatar;
 
 public class CallIncomingActivity extends LinphoneGenericActivity {
     private TextView mName, mNumber;
-    private ImageView mAcceptIcon;
-    private CallIncomingAnswerButton mAccept;
-    private CallIncomingDeclineButton mDecline;
     private Call mCall;
     private CoreListenerStub mListener;
     private boolean mAlreadyAcceptedOrDeniedCall;
-    private KeyguardManager mKeyguardManager;
     private TextureView mVideoDisplay;
 
     @Override
@@ -76,9 +72,9 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
         mNumber = findViewById(R.id.contact_number);
         mVideoDisplay = findViewById(R.id.videoSurface);
 
-        mAccept = findViewById(R.id.answer_button);
-        mDecline = findViewById(R.id.decline_button);
-        mAcceptIcon = findViewById(R.id.acceptIcon);
+        CallIncomingAnswerButton mAccept = findViewById(R.id.answer_button);
+        CallIncomingDeclineButton mDecline = findViewById(R.id.decline_button);
+        ImageView mAcceptIcon = findViewById(R.id.acceptIcon);
         lookupCurrentCall();
 
         if (LinphonePreferences.instance() != null
@@ -89,7 +85,8 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
             mAcceptIcon.setImageResource(R.drawable.call_video_start);
         }
 
-        mKeyguardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+        KeyguardManager mKeyguardManager =
+                (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
         boolean doNotUseSliders =
                 getResources()
                         .getBoolean(
@@ -195,11 +192,6 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
             lc.removeListener(mListener);
         }
         super.onPause();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
     @Override

@@ -54,10 +54,6 @@ public class CallManager {
         inviteAddress(lAddress, false, isLowBandwidthConnection, forceZRTP);
     }
 
-    public void inviteAddress(Address lAddress) {
-        inviteAddress(lAddress, false);
-    }
-
     public void inviteAddress(
             Address lAddress, boolean videoEnabled, boolean lowBandwidth, boolean forceZRTP) {
         Core lc = LinphoneManager.getLc();

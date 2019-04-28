@@ -64,8 +64,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import org.linphone.assistant.PhoneAccountLinkingAssistantActivity;
@@ -154,7 +152,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
     private final String mLinphoneFactoryConfigFile;
     private final String mLinphoneDynamicConfigFile, mDefaultDynamicConfigFile;
-    private final String mChatDatabaseFile;
     private final String mRingSoundFile;
     private final String mCallLogDatabaseFile;
     private final String mFriendsDatabaseFile;
@@ -174,8 +171,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     private final ConnectivityManager mConnectivityManager;
     private BroadcastReceiver mHookReceiver;
     private BroadcastReceiver mCallReceiver;
-    private IntentFilter mHookIntentFilter;
-    private IntentFilter mCallIntentFilter;
     private final Handler mHandler = new Handler();
     private WakeLock mProximityWakelock;
     private AccountCreator mAccountCreator;
@@ -185,7 +180,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     private boolean mHandsetON = false;
     private Address mCurrentChatRoomAddress;
     private Timer mTimer;
-    private final Map<String, Integer> mUnreadChatsPerRoom;
     private final MediaScanner mMediaScanner;
     private Call mRingingCall;
     private MediaPlayer mRingerPlayer;
@@ -194,7 +188,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     private CallActivity.CallActivityInterface mCallInterface;
 
     private LinphoneManager(Context c) {
-        mUnreadChatsPerRoom = new HashMap();
         sExited = false;
         mEchoTesterIsRunning = false;
         mServiceContext = c;
@@ -204,7 +197,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         configFile = mBasePath + "/.linphonerc";
         mLinphoneDynamicConfigFile = mBasePath + "/linphone_assistant_create.rc";
         mDefaultDynamicConfigFile = mBasePath + "/default_assistant_create.rc";
-        mChatDatabaseFile = mBasePath + "/linphone-history.db";
         mCallLogDatabaseFile = mBasePath + "/linphone-log-history.db";
         mFriendsDatabaseFile = mBasePath + "/linphone-friends.db";
         mRingSoundFile = mBasePath + "/share/sounds/linphone/rings/notes_of_the_optimistic.mkv";
@@ -781,7 +773,8 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
             initPushNotificationsService();
         }
 
-        mCallIntentFilter = new IntentFilter("android.intent.action.ACTION_NEW_OUTGOING_CALL");
+        IntentFilter mCallIntentFilter =
+                new IntentFilter("android.intent.action.ACTION_NEW_OUTGOING_CALL");
         mCallIntentFilter.setPriority(99999999);
         mCallReceiver = new OutgoingCallReceiver();
         try {
@@ -794,7 +787,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                         PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK,
                         mServiceContext.getPackageName() + ";manager_proximity_sensor");
 
-        mHookIntentFilter = new IntentFilter("com.base.module.phone.HOOKEVENT");
+        IntentFilter mHookIntentFilter = new IntentFilter("com.base.module.phone.HOOKEVENT");
         mHookIntentFilter.setPriority(999);
         mHookReceiver = new HookReceiver();
         mServiceContext.registerReceiver(mHookReceiver, mHookIntentFilter);
@@ -1673,7 +1666,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                             + " , total = "
                             + total
                             + ", % = "
-                            + String.valueOf((offset * 100) / total));
+                            + (offset * 100) / total);
     }
 
     @Override

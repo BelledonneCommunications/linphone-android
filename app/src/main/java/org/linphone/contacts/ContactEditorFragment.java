@@ -64,9 +64,8 @@ public class ContactEditorFragment extends Fragment {
     private static final int PHOTO_SIZE = 128;
 
     private View mView;
-    private ImageView mCancel, mDeleteContact, mOk;
-    private ImageView mAddNumber, mAddSipAddress, mContactPicture;
-    private LinearLayout mPhoneNumbersSection, mSipAddressesSection;
+    private ImageView mOk;
+    private ImageView mContactPicture;
     private EditText mFirstName, mLastName, mOrganization;
     private LayoutInflater mInflater;
     private boolean mIsNewContact;
@@ -99,29 +98,28 @@ public class ContactEditorFragment extends Fragment {
             mNewDisplayName = savedInstanceState.getString("DisplayName");
         }
         if (mContact != null) {
-            mContact.createRawLinphoneContactFromExistingAndroidContactIfNeeded(
-                    mContact.getFullName());
+            mContact.createRawLinphoneContactFromExistingAndroidContactIfNeeded();
             mIsNewContact = false;
         }
 
         mView = inflater.inflate(R.layout.contact_edit, container, false);
 
-        mPhoneNumbersSection = mView.findViewById(R.id.phone_numbers);
+        LinearLayout phoneNumbersSection = mView.findViewById(R.id.phone_numbers);
         if (getResources().getBoolean(R.bool.hide_phone_numbers_in_editor)
                 || !ContactsManager.getInstance().hasReadContactsAccess()) {
             // Currently linphone friends don't support phone mNumbers, so hide them
-            mPhoneNumbersSection.setVisibility(View.GONE);
+            phoneNumbersSection.setVisibility(View.GONE);
         }
 
-        mSipAddressesSection = mView.findViewById(R.id.sip_addresses);
+        LinearLayout sipAddressesSection = mView.findViewById(R.id.sip_addresses);
         if (getResources().getBoolean(R.bool.hide_sip_addresses_in_editor)) {
-            mSipAddressesSection.setVisibility(View.GONE);
+            sipAddressesSection.setVisibility(View.GONE);
         }
 
-        mDeleteContact = mView.findViewById(R.id.delete_contact);
+        ImageView deleteContact = mView.findViewById(R.id.delete_contact);
 
-        mCancel = mView.findViewById(R.id.cancel);
-        mCancel.setOnClickListener(
+        ImageView cancel = mView.findViewById(R.id.cancel);
+        cancel.setOnClickListener(
                 new OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -266,7 +264,7 @@ public class ContactEditorFragment extends Fragment {
                 mFirstName.setText("");
             }
 
-            mDeleteContact.setOnClickListener(
+            deleteContact.setOnClickListener(
                     new OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -297,7 +295,7 @@ public class ContactEditorFragment extends Fragment {
                         }
                     });
         } else {
-            mDeleteContact.setVisibility(View.INVISIBLE);
+            deleteContact.setVisibility(View.INVISIBLE);
         }
 
         mContactPicture = mView.findViewById(R.id.contact_picture);
@@ -313,11 +311,11 @@ public class ContactEditorFragment extends Fragment {
 
         mNumbersAndAddresses = new ArrayList<>();
 
-        mAddSipAddress = mView.findViewById(R.id.add_address_field);
+        ImageView addSipAddress = mView.findViewById(R.id.add_address_field);
         if (getResources().getBoolean(R.bool.allow_only_one_sip_address)) {
-            mAddSipAddress.setVisibility(View.GONE);
+            addSipAddress.setVisibility(View.GONE);
         }
-        mAddSipAddress.setOnClickListener(
+        addSipAddress.setOnClickListener(
                 new OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -325,11 +323,11 @@ public class ContactEditorFragment extends Fragment {
                     }
                 });
 
-        mAddNumber = mView.findViewById(R.id.add_number_field);
+        ImageView addNumber = mView.findViewById(R.id.add_number_field);
         if (getResources().getBoolean(R.bool.allow_only_one_phone_number)) {
-            mAddNumber.setVisibility(View.GONE);
+            addNumber.setVisibility(View.GONE);
         }
-        mAddNumber.setOnClickListener(
+        addNumber.setOnClickListener(
                 new OnClickListener() {
                     @Override
                     public void onClick(View view) {

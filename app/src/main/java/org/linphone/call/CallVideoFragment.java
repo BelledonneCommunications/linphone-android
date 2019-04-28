@@ -55,8 +55,6 @@ public class CallVideoFragment extends Fragment
     private CallActivity mInCallActivity;
     private int mPreviewX, mPreviewY;
 
-    @SuppressWarnings("deprecation")
-    // Warning useless because value is ignored and automatically set by new APIs.
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

@@ -20,7 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,15 +57,12 @@ public class HistoryFragment extends Fragment
     private boolean mOnlyDisplayMissedCalls;
     private List<CallLog> mLogs;
     private HistoryAdapter mHistoryAdapter;
-    private LinearLayoutManager mLayoutManager;
-    private Context mContext;
     private SelectableHelper mSelectionHelper;
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.history, container, false);
-        mContext = getActivity().getApplicationContext();
         mSelectionHelper = new SelectableHelper(view, this);
 
         mNoCallHistory = view.findViewById(R.id.no_call_history);
@@ -74,13 +70,13 @@ public class HistoryFragment extends Fragment
 
         mHistoryList = view.findViewById(R.id.history_list);
 
-        mLayoutManager = new LinearLayoutManager(mContext);
-        mHistoryList.setLayoutManager(mLayoutManager);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        mHistoryList.setLayoutManager(layoutManager);
         // Divider between items
         DividerItemDecoration dividerItemDecoration =
                 new DividerItemDecoration(
-                        mHistoryList.getContext(), mLayoutManager.getOrientation());
-        dividerItemDecoration.setDrawable(mContext.getResources().getDrawable(R.drawable.divider));
+                        mHistoryList.getContext(), layoutManager.getOrientation());
+        dividerItemDecoration.setDrawable(getResources().getDrawable(R.drawable.divider));
         mHistoryList.addItemDecoration(dividerItemDecoration);
 
         mAllCalls = view.findViewById(R.id.all_calls);

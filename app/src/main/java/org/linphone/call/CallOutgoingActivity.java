@@ -53,7 +53,8 @@ import org.linphone.views.ContactAvatar;
 
 public class CallOutgoingActivity extends LinphoneGenericActivity implements OnClickListener {
     private TextView mName, mNumber;
-    private ImageView mMicro, mSpeaker, mHangUp;
+    private ImageView mMicro;
+    private ImageView mSpeaker;
     private Call mCall;
     private CoreListenerStub mListener;
     private boolean mIsMicMuted, mIsSpeakerEnabled;
@@ -76,8 +77,8 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
         mSpeaker = findViewById(R.id.speaker);
         mSpeaker.setOnClickListener(this);
 
-        mHangUp = findViewById(R.id.outgoing_hang_up);
-        mHangUp.setOnClickListener(this);
+        ImageView hangUp = findViewById(R.id.outgoing_hang_up);
+        hangUp.setOnClickListener(this);
 
         mListener =
                 new CoreListenerStub() {

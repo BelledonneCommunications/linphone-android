@@ -108,20 +108,22 @@ public class CallActivity extends LinphoneGenericActivity
     private ImageView mSwitchCamera;
     private TextView mMissedChats;
     private RelativeLayout mActiveCallHeader, mSideMenuContent, mAvatarLayout;
-    private ImageView mPause,
-            mHangUp,
-            mDialer,
-            mVideo,
-            mMicro,
-            mSpeaker,
-            mOptions,
-            mAddCall,
-            mTransfer,
-            mConference,
-            mConferenceStatus,
-            mRecordCall,
-            mRecording;
-    private ImageView mAudioRoute, mRouteSpeaker, mRouteEarpiece, mRouteBluetooth, mMenu, mChat;
+    private ImageView mPause;
+    private ImageView mDialer;
+    private ImageView mVideo;
+    private ImageView mMicro;
+    private ImageView mSpeaker;
+    private ImageView mOptions;
+    private ImageView mAddCall;
+    private ImageView mTransfer;
+    private ImageView mConference;
+    private ImageView mConferenceStatus;
+    private ImageView mRecordCall;
+    private ImageView mRecording;
+    private ImageView mAudioRoute;
+    private ImageView mRouteSpeaker;
+    private ImageView mRouteEarpiece;
+    private ImageView mRouteBluetooth;
     private LinearLayout mNoCurrentCall, mCallInfo, mCallPaused;
     private ProgressBar mVideoProgress;
     private StatusFragment mStatus;
@@ -152,7 +154,6 @@ public class CallActivity extends LinphoneGenericActivity
     private TimerTask mTask;
     private HashMap<String, String> mEncoderTexts;
     private HashMap<String, String> mDecoderTexts;
-    private CallListenerStub mCallListener;
     private Call mCallDisplayedInStats;
 
     private boolean mOldIsSpeakerEnabled = false;
@@ -404,7 +405,7 @@ public class CallActivity extends LinphoneGenericActivity
         mOptions.setEnabled(false);
 
         // BottonBar
-        mHangUp = findViewById(R.id.hang_up);
+        ImageView mHangUp = findViewById(R.id.hang_up);
         mHangUp.setOnClickListener(this);
 
         mDialer = findViewById(R.id.dialer);
@@ -413,7 +414,7 @@ public class CallActivity extends LinphoneGenericActivity
         mNumpad = findViewById(R.id.numpad);
         mNumpad.getBackground().setAlpha(240);
 
-        mChat = findViewById(R.id.chat);
+        ImageView mChat = findViewById(R.id.chat);
         mChat.setOnClickListener(this);
         mMissedChats = findViewById(R.id.missed_chats);
 
@@ -571,7 +572,7 @@ public class CallActivity extends LinphoneGenericActivity
 
     private void createInCallStats() {
         mSideMenu = findViewById(R.id.side_menu);
-        mMenu = findViewById(R.id.call_quality);
+        ImageView mMenu = findViewById(R.id.call_quality);
 
         mSideMenuContent = findViewById(R.id.side_menu_content);
 
@@ -1695,7 +1696,6 @@ public class CallActivity extends LinphoneGenericActivity
         }
     }
 
-    @SuppressWarnings("deprecation")
     private void formatText(TextView tv, String name, String value) {
         tv.setText(Html.fromHtml("<b>" + name + " </b>" + value));
     }
@@ -1763,16 +1763,16 @@ public class CallActivity extends LinphoneGenericActivity
             formatText(
                     dl,
                     getString(R.string.call_stats_download),
-                    String.valueOf((int) stats.getDownloadBandwidth()) + " kbits/s");
+                    (int) stats.getDownloadBandwidth() + " kbits/s");
             formatText(
                     ul,
                     getString(R.string.call_stats_upload),
-                    String.valueOf((int) stats.getUploadBandwidth()) + " kbits/s");
+                    (int) stats.getUploadBandwidth() + " kbits/s");
             if (isVideo) {
                 formatText(
                         edl,
                         getString(R.string.call_stats_estimated_download),
-                        String.valueOf(stats.getEstimatedDownloadBandwidth()) + " kbits/s");
+                        stats.getEstimatedDownloadBandwidth() + " kbits/s");
             }
             formatText(ice, getString(R.string.call_stats_ice), stats.getIceState().toString());
             formatText(
@@ -1866,10 +1866,10 @@ public class CallActivity extends LinphoneGenericActivity
         final View videoLayout = view.findViewById(R.id.callStatsVideo);
         final View audioLayout = view.findViewById(R.id.callStatsAudio);
 
-        mCallListener =
+        CallListenerStub mCallListener =
                 new CallListenerStub() {
-                    public void onStateChanged(Call call, Call.State cstate, String message) {
-                        if (cstate == Call.State.End || cstate == Call.State.Error) {
+                    public void onStateChanged(Call call, State cstate, String message) {
+                        if (cstate == State.End || cstate == State.Error) {
                             if (mTimer != null) {
                                 Log.i(
                                         "Call is terminated, stopping mCountDownTimer in charge of stats refreshing.");

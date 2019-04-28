@@ -51,13 +51,11 @@ public class ImdnFragment extends Fragment {
             mSentHeader,
             mUndelivered,
             mUndeliveredHeader;
-    private ImageView mBackButton;
     private ChatMessageViewHolder mBubble;
     private ViewGroup mContainer;
 
-    private String mLocalSipuri, mRoomUri, mMessageId;
+    private String mMessageId;
     private Address mLocalSipAddr, mRoomAddr;
-    private ChatRoom mRoom;
     private ChatMessage mMessage;
     private ChatMessageListenerStub mListener;
 
@@ -68,22 +66,22 @@ public class ImdnFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mLocalSipuri = getArguments().getString("LocalSipUri");
-            mLocalSipAddr = LinphoneManager.getLc().createAddress(mLocalSipuri);
-            mRoomUri = getArguments().getString("RemoteSipUri");
-            mRoomAddr = LinphoneManager.getLc().createAddress(mRoomUri);
+            String localSipuri = getArguments().getString("LocalSipUri");
+            mLocalSipAddr = LinphoneManager.getLc().createAddress(localSipuri);
+            String roomUri = getArguments().getString("RemoteSipUri");
+            mRoomAddr = LinphoneManager.getLc().createAddress(roomUri);
             mMessageId = getArguments().getString("MessageId");
         }
 
         Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        mRoom = core.getChatRoom(mRoomAddr, mLocalSipAddr);
+        ChatRoom room = core.getChatRoom(mRoomAddr, mLocalSipAddr);
 
         mInflater = inflater;
         mContainer = container;
         View view = mInflater.inflate(R.layout.chat_imdn, container, false);
 
-        mBackButton = view.findViewById(R.id.back);
-        mBackButton.setOnClickListener(
+        ImageView backButton = view.findViewById(R.id.back);
+        backButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -106,7 +104,7 @@ public class ImdnFragment extends Fragment {
 
         mBubble = new ChatMessageViewHolder(getActivity(), view.findViewById(R.id.bubble), null);
 
-        mMessage = mRoom.findMessage(mMessageId);
+        mMessage = room.findMessage(mMessageId);
         mListener =
                 new ChatMessageListenerStub() {
                     @Override

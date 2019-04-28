@@ -42,13 +42,10 @@ import org.linphone.core.ParticipantDevice;
 import org.linphone.utils.LinphoneUtils;
 
 public class DevicesFragment extends Fragment {
-    private LayoutInflater mInflater;
-    private ImageView mBackButton;
     private TextView mTitle;
     private ExpandableListView mExpandableList;
     private DevicesAdapter mAdapter;
 
-    private String mLocalSipUri, mRoomUri;
     private Address mLocalSipAddr, mRoomAddr;
     private ChatRoom mRoom;
     private boolean mOnlyDisplayChilds;
@@ -60,14 +57,13 @@ public class DevicesFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mLocalSipUri = getArguments().getString("LocalSipUri");
-            mLocalSipAddr = LinphoneManager.getLc().createAddress(mLocalSipUri);
-            mRoomUri = getArguments().getString("RemoteSipUri");
-            mRoomAddr = LinphoneManager.getLc().createAddress(mRoomUri);
+            String localSipUri = getArguments().getString("LocalSipUri");
+            mLocalSipAddr = LinphoneManager.getLc().createAddress(localSipUri);
+            String roomUri = getArguments().getString("RemoteSipUri");
+            mRoomAddr = LinphoneManager.getLc().createAddress(roomUri);
         }
 
-        mInflater = inflater;
-        View view = mInflater.inflate(R.layout.chat_devices, container, false);
+        View view = inflater.inflate(R.layout.chat_devices, container, false);
 
         mOnlyDisplayChilds = false;
 
@@ -118,8 +114,8 @@ public class DevicesFragment extends Fragment {
         mTitle = view.findViewById(R.id.title);
         initHeader();
 
-        mBackButton = view.findViewById(R.id.back);
-        mBackButton.setOnClickListener(
+        ImageView backButton = view.findViewById(R.id.back);
+        backButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

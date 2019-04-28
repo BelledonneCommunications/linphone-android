@@ -70,7 +70,6 @@ public abstract class MainActivity extends LinphoneGenericActivity
     private static final int MAIN_PERMISSIONS = 1;
     private static final int FRAGMENT_SPECIFIC_PERMISSION = 2;
 
-    protected LinearLayout mFragment, mChildFragment;
     protected RelativeLayout mHistory, mContacts, mDialer, mChat;
     protected TextView mMissedCalls, mMissedMessages;
     protected View mContactsSelected, mHistorySelected, mDialerSelected, mChatSelected;
@@ -97,9 +96,6 @@ public abstract class MainActivity extends LinphoneGenericActivity
         setContentView(R.layout.main);
 
         mOnBackPressGoHome = true;
-
-        mFragment = findViewById(R.id.fragmentContainer);
-        mChildFragment = findViewById(R.id.fragmentContainer2);
 
         mHistory = findViewById(R.id.history);
         mHistory.setOnClickListener(

@@ -46,7 +46,7 @@ public class RemoteConfigurationAssistantActivity extends AssistantActivity {
     private static final int QR_CODE_ACTIVITY_RESULT = 1;
     private static final int CAMERA_PERMISSION_RESULT = 2;
 
-    private TextView mFetchAndApply, mQrCode;
+    private TextView mFetchAndApply;
     private EditText mRemoteConfigurationUrl;
     private RelativeLayout mWaitLayout;
 
@@ -106,8 +106,8 @@ public class RemoteConfigurationAssistantActivity extends AssistantActivity {
                 });
         mRemoteConfigurationUrl.setText(LinphonePreferences.instance().getRemoteProvisioningUrl());
 
-        mQrCode = findViewById(R.id.qr_code);
-        mQrCode.setOnClickListener(
+        TextView qrCode = findViewById(R.id.qr_code);
+        qrCode.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -186,18 +186,16 @@ public class RemoteConfigurationAssistantActivity extends AssistantActivity {
                                     : "denied"));
         }
 
-        switch (requestCode) {
-            case CAMERA_PERMISSION_RESULT:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startActivityForResult(
-                            new Intent(
-                                    RemoteConfigurationAssistantActivity.this,
-                                    QrCodeConfigurationAssistantActivity.class),
-                            QR_CODE_ACTIVITY_RESULT);
-                } else {
-                    // TODO: permission denied, display something to the user
-                }
-                break;
+        if (requestCode == CAMERA_PERMISSION_RESULT) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startActivityForResult(
+                        new Intent(
+                                RemoteConfigurationAssistantActivity.this,
+                                QrCodeConfigurationAssistantActivity.class),
+                        QR_CODE_ACTIVITY_RESULT);
+            } else {
+                // TODO: permission denied, display something to the user
+            }
         }
     }
 }

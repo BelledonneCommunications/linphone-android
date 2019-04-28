@@ -48,7 +48,8 @@ public class ContactsFragment extends Fragment
                 SelectableHelper.DeleteListener {
     private RecyclerView mContactsList;
     private TextView mNoSipContact, mNoContact;
-    private ImageView mAllContacts, mLinphoneContacts, mNewContact;
+    private ImageView mAllContacts;
+    private ImageView mLinphoneContacts;
     private boolean mOnlyDisplayLinphoneContacts;
     private View mAllContactsSelected, mLinphoneContactsSelected;
     private int mLastKnownPosition;
@@ -77,7 +78,7 @@ public class ContactsFragment extends Fragment
         mAllContactsSelected = view.findViewById(R.id.all_contacts_select);
         mLinphoneContactsSelected = view.findViewById(R.id.linphone_contacts_select);
         mContactsFetchInProgress = view.findViewById(R.id.contactsFetchInProgress);
-        mNewContact = view.findViewById(R.id.newContact);
+        ImageView newContact = view.findViewById(R.id.newContact);
         mContactsRefresher = view.findViewById(R.id.contactsListRefresher);
 
         mContactsRefresher.setOnRefreshListener(
@@ -114,7 +115,7 @@ public class ContactsFragment extends Fragment
                     }
                 });
 
-        mNewContact.setOnClickListener(
+        newContact.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -134,7 +135,7 @@ public class ContactsFragment extends Fragment
             mAllContacts.setEnabled(mOnlyDisplayLinphoneContacts);
             mLinphoneContacts.setEnabled(!mAllContacts.isEnabled());
         }
-        mNewContact.setEnabled(LinphoneManager.getLc().getCallsNb() == 0);
+        newContact.setEnabled(LinphoneManager.getLc().getCallsNb() == 0);
 
         if (!ContactsManager.getInstance().contactsFetchedOnce()) {
             if (ContactsManager.getInstance().hasReadContactsAccess()) {
