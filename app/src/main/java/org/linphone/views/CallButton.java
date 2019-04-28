@@ -45,14 +45,6 @@ public class CallButton extends ImageView implements OnClickListener, AddressAwa
         mAddress = a;
     }
 
-    public void setExternalClickListener(OnClickListener e) {
-        setOnClickListener(e);
-    }
-
-    public void resetClickListener() {
-        setOnClickListener(this);
-    }
-
     public void onClick(View v) {
         if (mAddress.getText().length() > 0) {
             LinphoneManager.getInstance().newOutgoingCall(mAddress);
