@@ -2,7 +2,7 @@ package org.linphone.utils;
 
 /*
 LinphoneUtils.java
-Copyright (C) 2017  Belledonne Communications, Grenoble, France
+Copyright (C) 2017 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -34,10 +34,8 @@ import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.KeyEvent;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import java.text.SimpleDateFormat;
@@ -96,11 +94,6 @@ public final class LinphoneUtils {
         sHandler.post(r);
     }
 
-    // private static final String sipAddressRegExp =
-    // "^(sip:)?(\\+)?[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\\.-][a-z0-9]+)*)+\\.[a-z]{2,}(:[0-9]{2,5})?$";
-    // private static final String strictSipAddressRegExp =
-    // "^sip:(\\+)?[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\\.-][a-z0-9]+)*)+\\.[a-z]{2,}$";
-
     private static boolean isSipAddress(String numberOrAddress) {
         Factory.instance().createAddress(numberOrAddress);
         return true;
@@ -136,14 +129,6 @@ public final class LinphoneUtils {
             displayName = address.asStringUriOnly();
         }
         return displayName;
-    }
-
-    public static String getUsernameFromAddress(String address) {
-        if (address.contains("sip:")) address = address.replace("sip:", "");
-
-        if (address.contains("@")) address = address.split("@")[0];
-
-        return address;
     }
 
     public static boolean onKeyBackGoHome(Activity activity, int keyCode, KeyEvent event) {
@@ -364,16 +349,6 @@ public final class LinphoneUtils {
         }
 
         return Html.fromHtml(text);
-    }
-
-    public static void hideKeyboard(Activity activity) {
-        InputMethodManager imm =
-                (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        View view = activity.getCurrentFocus();
-        if (view == null) {
-            view = new View(activity);
-        }
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     public static ArrayList<ChatRoom> removeEmptyOneToOneChatRooms(ChatRoom[] rooms) {

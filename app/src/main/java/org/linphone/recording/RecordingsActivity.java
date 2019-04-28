@@ -53,6 +53,7 @@ public class RecordingsActivity extends MainActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mOnBackPressGoHome = false;
 
         // Uses the fragment container layout to inflate the about view instead of using a fragment
         View recordingsView =

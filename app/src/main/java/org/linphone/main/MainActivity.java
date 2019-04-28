@@ -309,6 +309,12 @@ public abstract class MainActivity extends LinphoneGenericActivity
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (mOnBackPressGoHome) {
+                if (getFragmentManager().getBackStackEntryCount() == 0) {
+                    goHomeAndClearStack();
+                    return true;
+                }
+            }
             goBack();
             return true;
         }
@@ -331,12 +337,15 @@ public abstract class MainActivity extends LinphoneGenericActivity
         return getResources().getBoolean(R.bool.isTablet);
     }
 
-    protected void quit() {
+    protected void goHomeAndClearStack() {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+    }
 
+    protected void quit() {
+        goHomeAndClearStack();
         stopService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));
         ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         am.killBackgroundProcesses(getString(R.string.sync_account_type));
