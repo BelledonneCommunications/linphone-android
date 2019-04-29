@@ -103,7 +103,7 @@ public class GroupInfoFragment extends Fragment {
             mIsAlreadyCreatedGroup = false;
             mIsEditionEnabled = true;
             mSubject = getArguments().getString("Subject", "");
-            mIsEncryptionEnabled = getArguments().getBoolean("Enctypted", false);
+            mIsEncryptionEnabled = getArguments().getBoolean("Encrypted", false);
         } else {
             mIsEditionEnabled =
                     mChatRoom.getMe() != null

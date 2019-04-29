@@ -126,10 +126,38 @@ public class ChatRoomCreationFragment extends Fragment
         mLinphoneContactsSelected = view.findViewById(R.id.linphone_contacts_select);
 
         ImageView backButton = view.findViewById(R.id.back);
-        backButton.setOnClickListener(this);
+        backButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ((ChatActivity) getActivity()).goBack();
+                    }
+                });
 
         mNextButton = view.findViewById(R.id.next);
-        mNextButton.setOnClickListener(this);
+        mNextButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mChatRoomAddress == null && mChatRoomSubject == null) {
+                            mContactsSelectedLayout.removeAllViews();
+                        } else {
+                            // Pop the back stack twice so we don't have in stack Group -> Creation
+                            // -> Group
+                            getFragmentManager().popBackStack();
+                            getFragmentManager().popBackStack();
+                        }
+                        ((ChatActivity) getActivity())
+                                .showChatRoomGroupInfo(
+                                        mChatRoomAddress == null
+                                                ? null
+                                                : Factory.instance()
+                                                        .createAddress(mChatRoomAddress),
+                                        mSearchAdapter.getContactsSelectedList(),
+                                        mChatRoomSubject,
+                                        mSecurityToggle.isChecked());
+                    }
+                });
         mNextButton.setEnabled(false);
         mSearchLayout = view.findViewById(R.id.layoutSearchField);
 
@@ -289,7 +317,7 @@ public class ChatRoomCreationFragment extends Fragment
         int id = view.getId();
         if (id == R.id.all_contacts) {
             mOnlyDisplayLinphoneContacts = false;
-            mSearchAdapter.setOnlySipContact(mOnlyDisplayLinphoneContacts);
+            mSearchAdapter.setOnlySipContact(false);
             mAllContactsSelected.setVisibility(View.VISIBLE);
             mAllContactsButton.setEnabled(false);
             mLinphoneContactsButton.setEnabled(true);
@@ -301,27 +329,10 @@ public class ChatRoomCreationFragment extends Fragment
             mLinphoneContactsSelected.setVisibility(View.VISIBLE);
             mLinphoneContactsButton.setEnabled(false);
             mOnlyDisplayLinphoneContacts = true;
-            mAllContactsButton.setEnabled(mOnlyDisplayLinphoneContacts);
+            mAllContactsButton.setEnabled(true);
             mAllContactsSelected.setVisibility(View.INVISIBLE);
             updateList();
             resetAndResearch();
-        } else if (id == R.id.back) {
-            ((ChatActivity) getActivity()).goBack();
-        } else if (id == R.id.next) {
-            if (mChatRoomAddress == null && mChatRoomSubject == null) {
-                mContactsSelectedLayout.removeAllViews();
-            } else {
-                // Pop the back stack twice so we don't have in stack Group -> Creation -> Group
-                getFragmentManager().popBackStack();
-                getFragmentManager().popBackStack();
-            }
-            Address roomAddress = Factory.instance().createAddress(mChatRoomAddress);
-            ((ChatActivity) getActivity())
-                    .showChatRoomGroupInfo(
-                            roomAddress,
-                            mSearchAdapter.getContactsSelectedList(),
-                            mChatRoomSubject,
-                            mSecurityToggle.isChecked());
         } else if (id == R.id.contactChatDelete) {
             ContactAddress ca = (ContactAddress) view.getTag();
             addOrRemoveContactFromSelection(ca);
