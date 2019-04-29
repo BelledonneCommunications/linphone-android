@@ -21,7 +21,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import org.linphone.assistant.MenuAssistantActivity;
@@ -29,19 +28,14 @@ import org.linphone.chat.ChatActivity;
 import org.linphone.main.DialerActivity;
 import org.linphone.settings.LinphonePreferences;
 
-/** Launch Linphone main activity when Service is ready. */
+/** Creates LinphoneService and wait until Core is ready to start main Activity */
 public class LinphoneLauncherActivity extends Activity {
-
     private Handler mHandler;
-    private ServiceWaitThread mServiceThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Hack to avoid to draw twice LinphoneActivity on tablets
-        if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
+
         if (!getResources().getBoolean(R.bool.use_full_screen_image_splashscreen)) {
             setContentView(R.layout.launch_screen);
         } // Otherwise use drawable/launch_screen layer list up until first activity starts
@@ -56,9 +50,9 @@ public class LinphoneLauncherActivity extends Activity {
         if (LinphoneService.isReady()) {
             onServiceReady();
         } else {
-            // start linphone as background
-            mServiceThread = new ServiceWaitThread();
-            mServiceThread.start();
+            startService(
+                    new Intent().setClass(LinphoneLauncherActivity.this, LinphoneService.class));
+            new ServiceWaitThread().start();
         }
     }
 
@@ -98,19 +92,13 @@ public class LinphoneLauncherActivity extends Activity {
                         LinphoneService.instance().removeForegroundServiceNotificationIfPossible();
                     }
                 },
-                500);
+                100);
 
         LinphoneManager.getInstance().changeStatusToOnline();
     }
 
     private class ServiceWaitThread extends Thread {
         public void run() {
-            if (!LinphoneService.isReady()) {
-                startService(
-                        new Intent()
-                                .setClass(LinphoneLauncherActivity.this, LinphoneService.class));
-            }
-
             while (!LinphoneService.isReady()) {
                 try {
                     sleep(30);
@@ -125,7 +113,6 @@ public class LinphoneLauncherActivity extends Activity {
                             onServiceReady();
                         }
                     });
-            mServiceThread = null;
         }
     }
 }
