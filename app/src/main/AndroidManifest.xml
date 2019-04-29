@@ -63,11 +63,8 @@
 
         <activity
             android:name=".LinphoneLauncherActivity"
-            android:exported="true"
-            android:label="@string/app_name"
             android:noHistory="true"
-            android:theme="@style/LinphoneStyleLight"
-            android:windowSoftInputMode="adjustPan|stateHidden">
+            android:theme="@style/LinphoneLauncherStyle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

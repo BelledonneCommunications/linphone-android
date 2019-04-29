@@ -19,8 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-import static android.content.Intent.ACTION_MAIN;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -44,11 +42,9 @@ public class LinphoneLauncherActivity extends Activity {
         if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
-        if (getResources().getBoolean(R.bool.use_full_screen_image_splashscreen)) {
-            setContentView(R.layout.launch_screen_full_image);
-        } else {
+        if (!getResources().getBoolean(R.bool.use_full_screen_image_splashscreen)) {
             setContentView(R.layout.launch_screen);
-        }
+        } // Otherwise use drawable/launch_screen layer list up until first activity starts
 
         mHandler = new Handler();
     }
@@ -61,7 +57,6 @@ public class LinphoneLauncherActivity extends Activity {
             onServiceReady();
         } else {
             // start linphone as background
-            startService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
             mServiceThread = new ServiceWaitThread();
             mServiceThread.start();
         }
@@ -110,6 +105,12 @@ public class LinphoneLauncherActivity extends Activity {
 
     private class ServiceWaitThread extends Thread {
         public void run() {
+            if (!LinphoneService.isReady()) {
+                startService(
+                        new Intent()
+                                .setClass(LinphoneLauncherActivity.this, LinphoneService.class));
+            }
+
             while (!LinphoneService.isReady()) {
                 try {
                     sleep(30);
