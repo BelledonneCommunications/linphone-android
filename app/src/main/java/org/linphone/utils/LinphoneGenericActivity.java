@@ -25,7 +25,6 @@ import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 
 public class LinphoneGenericActivity extends ThemableActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

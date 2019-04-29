@@ -62,7 +62,7 @@
         android:roundIcon="@mipmap/ic_launcher_round">
 
         <activity
-            android:name=".LinphoneLauncherActivity"
+            android:name=".SplashScreenActivity"
             android:noHistory="true"
             android:theme="@style/LinphoneLauncherStyle">
             <intent-filter>
@@ -73,12 +73,21 @@
         </activity>
 
         <activity
+            android:name=".LinphoneLauncherActivity"
+            android:noHistory="true"
+            android:theme="@style/LinphoneLauncherStyle">
+        </activity>
+
+        <service
+            android:name=".LinphoneService"
+            android:label="@string/service_name" />
+
+        <!-- Main activities -->
+
+        <activity
             android:name=".main.DialerActivity"
             android:launchMode="singleTop"
             android:theme="@style/LinphoneStyleLight">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.CALL" />
                 <action android:name="android.intent.action.CALL_PRIVILEGED" />
@@ -101,37 +110,29 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".main.AboutActivity"
             android:noHistory="true"
             android:theme="@style/LinphoneStyleLight">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
         </activity>
+
         <activity
             android:name=".recording.RecordingsActivity"
             android:noHistory="true"
             android:theme="@style/LinphoneStyleLight">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
         </activity>
+
         <activity
             android:name=".settings.SettingsActivity"
             android:noHistory="true"
             android:theme="@style/LinphoneStyleLight">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
         </activity>
+
         <activity
             android:name=".chat.ChatActivity"
             android:launchMode="singleTop"
             android:theme="@style/LinphoneStyleLight">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
 
@@ -153,13 +154,11 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".contacts.ContactsActivity"
             android:launchMode="singleTop"
             android:theme="@style/LinphoneStyleLight">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.BROWSABLE" />
@@ -167,14 +166,14 @@
                 <data android:mimeType="${linphone_address_mime_type}" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".history.HistoryActivity"
             android:launchMode="singleTop"
             android:theme="@style/LinphoneStyleLight">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
         </activity>
+
+        <!-- Call activities -->
 
         <activity
             android:name=".call.CallIncomingActivity"
@@ -183,127 +182,82 @@
             android:showWhenLocked="true"
             android:turnScreenOn="true"
             android:theme="@style/LinphoneStyleLight">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
         </activity>
+
         <activity
             android:name=".call.CallOutgoingActivity"
             android:launchMode="singleTop"
             android:noHistory="true"
             android:theme="@style/LinphoneStyleLight">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
         </activity>
+
         <activity
             android:name=".call.CallActivity"
             android:launchMode="singleTop"
             android:noHistory="true"
             android:showWhenLocked="true"
             android:theme="@style/LinphoneStyleLight">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
         </activity>
+
+        <!-- Assistant activities -->
 
         <activity
             android:name=".assistant.MenuAssistantActivity"
             android:theme="@style/LinphoneStyleLight">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".assistant.AccountConnectionAssistantActivity"
             android:theme="@style/LinphoneStyleLight">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".assistant.EmailAccountCreationAssistantActivity"
             android:theme="@style/LinphoneStyleLight">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".assistant.EmailAccountValidationAssistantActivity"
             android:theme="@style/LinphoneStyleLight">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".assistant.PhoneAccountCreationAssistantActivity"
             android:theme="@style/LinphoneStyleLight">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".assistant.PhoneAccountValidationAssistantActivity"
             android:theme="@style/LinphoneStyleLight">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".assistant.PhoneAccountLinkingAssistantActivity"
             android:theme="@style/LinphoneStyleLight">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".assistant.GenericConnectionAssistantActivity"
             android:theme="@style/LinphoneStyleLight">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".assistant.QrCodeConfigurationAssistantActivity"
             android:theme="@style/LinphoneStyleLight">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".assistant.RemoteConfigurationAssistantActivity"
             android:theme="@style/LinphoneStyleLight">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".assistant.EchoCancellerCalibrationAssistantActivity"
             android:theme="@style/LinphoneStyleLight">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".assistant.OpenH264DownloadAssistantActivity"
             android:theme="@style/LinphoneStyleLight">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
         </activity>
+
+        <!-- Other stuff -->
 
         <activity
             android:name=".purchase.InAppPurchaseActivity"
             android:screenOrientation="nosensor"
             android:theme="@style/LinphoneStyleLight">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
         </activity>
 
-        <service
-            android:name=".LinphoneService"
-            android:label="@string/service_name" />
         <service
             android:name=".sync.SyncService"
             android:exported="true">
@@ -318,6 +272,7 @@
                 android:name="android.provider.CONTACTS_STRUCTURE"
                 android:resource="@xml/contacts" />
         </service>
+
         <service android:name=".sync.AuthenticationService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
@@ -331,6 +286,7 @@
         <receiver
             android:name=".receivers.BluetoothManager"
             android:enabled="false"/>
+
         <receiver android:name=".receivers.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -339,6 +295,7 @@
                 <action android:name="android.intent.action.ACTION_SHUTDOWN" />
             </intent-filter>
         </receiver>
+
         <receiver android:name=".receivers.PhoneStateChangedReceiver">
             <intent-filter android:priority="999">
                 <action android:name="android.intent.action.PHONE_STATE" />
