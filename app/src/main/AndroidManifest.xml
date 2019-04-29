@@ -125,7 +125,6 @@
 
         <activity
             android:name=".settings.SettingsActivity"
-            android:noHistory="true"
             android:theme="@style/LinphoneStyleLight">
         </activity>
 
