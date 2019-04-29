@@ -156,9 +156,9 @@ public class AudioSettingsFragment extends SettingsFragment {
                         if (recordAudio == PackageManager.PERMISSION_GRANTED) {
                             startEchoCancellerCalibration();
                         } else {
-                            // FIXME TODO
-                            /*LinphoneActivity.instance()
-                            .checkAndRequestRecordAudioPermissionForEchoCanceller();*/
+                            ((SettingsActivity) getActivity())
+                                    .requestPermissionIfNotGranted(
+                                            Manifest.permission.RECORD_AUDIO);
                         }
                     }
                 });
@@ -180,9 +180,9 @@ public class AudioSettingsFragment extends SettingsFragment {
                                 startEchoTester();
                             }
                         } else {
-                            // FIXME TODO
-                            /*LinphoneActivity.instance()
-                            .checkAndRequestRecordAudioPermissionsForEchoTester();*/
+                            ((SettingsActivity) getActivity())
+                                    .requestPermissionIfNotGranted(
+                                            Manifest.permission.RECORD_AUDIO);
                         }
                     }
                 });

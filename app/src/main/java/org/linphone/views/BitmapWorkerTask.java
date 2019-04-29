@@ -33,6 +33,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import org.linphone.LinphoneService;
 import org.linphone.core.tools.Log;
 import org.linphone.utils.FileUtils;
 import org.linphone.utils.ImageUtils;
@@ -41,12 +42,10 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
     private String path;
 
     private final WeakReference<ImageView> mImageViewReference;
-    private final Context mContext;
     private final Bitmap mDefaultBitmap;
     private final int mImageViewHeight;
 
-    public BitmapWorkerTask(Context context, ImageView imageView, Bitmap defaultBitmap) {
-        mContext = context;
+    public BitmapWorkerTask(ImageView imageView, Bitmap defaultBitmap) {
         mDefaultBitmap = defaultBitmap;
         path = null;
         // Use a WeakReference to ensure the ImageView can be garbage collected
@@ -77,6 +76,7 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
     // Decode image in background.
     @Override
     protected Bitmap doInBackground(String... params) {
+        Context context = LinphoneService.instance();
         path = params[0];
         Bitmap bm = null;
         Bitmap thumbnail = null;
@@ -85,7 +85,7 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
                 try {
                     bm =
                             MediaStore.Images.Media.getBitmap(
-                                    mContext.getContentResolver(), Uri.parse(path));
+                                    context.getContentResolver(), Uri.parse(path));
                 } catch (IOException e) {
                     Log.e(e);
                 }
@@ -146,15 +146,16 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
             bitmap = null;
         }
         if (mImageViewReference != null && bitmap != null) {
+            Context context = LinphoneService.instance();
             final ImageView imageView = mImageViewReference.get();
             final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
             if (this == bitmapWorkerTask && imageView != null) {
                 imageView.setImageBitmap(bitmap);
-                if (bitmap.getWidth() > ImageUtils.dpToPixels(mContext, 300)) {
+                if (bitmap.getWidth() > ImageUtils.dpToPixels(context, 300)) {
                     RelativeLayout.LayoutParams params =
                             new RelativeLayout.LayoutParams(
                                     bitmap.getWidth(), ViewGroup.LayoutParams.WRAP_CONTENT);
-                    int margin = (int) ImageUtils.dpToPixels(mContext, 5);
+                    int margin = (int) ImageUtils.dpToPixels(context, 5);
                     params.setMargins(margin, margin, margin, margin);
                     imageView.setLayoutParams(params);
                     imageView.invalidate();

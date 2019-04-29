@@ -43,8 +43,6 @@ public abstract class AssistantActivity extends ThemableActivity
         implements CountryPicker.CountryPickedListener {
     static AccountCreator mAccountCreator;
 
-    private View mTopBar;
-    private View mStatusBar;
     ImageView mBack;
     private AlertDialog mCountryPickerDialog;
 
@@ -68,14 +66,14 @@ public abstract class AssistantActivity extends ThemableActivity
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        mStatusBar = findViewById(R.id.status);
+        View statusBar = findViewById(R.id.status);
         if (getResources().getBoolean(R.bool.assistant_hide_status_bar)) {
-            mStatusBar.setVisibility(View.GONE);
+            statusBar.setVisibility(View.GONE);
         }
 
-        mTopBar = findViewById(R.id.top_bar);
+        View topBar = findViewById(R.id.top_bar);
         if (getResources().getBoolean(R.bool.assistant_hide_top_bar)) {
-            mTopBar.setVisibility(View.GONE);
+            topBar.setVisibility(View.GONE);
         }
 
         mBack = findViewById(R.id.back);

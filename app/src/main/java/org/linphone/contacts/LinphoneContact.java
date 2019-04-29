@@ -53,7 +53,6 @@ public class LinphoneContact extends AndroidContact
         super();
         mAddresses = new ArrayList<>();
         mAndroidId = null;
-        mAndroidLookupKey = null;
         mThumbnailUri = null;
         mPhotoUri = null;
         mHasSipAddress = false;
@@ -511,9 +510,7 @@ public class LinphoneContact extends AndroidContact
         String data2 = c.getString(c.getColumnIndex("data2"));
         String data3 = c.getString(c.getColumnIndex("data3"));
         String data4 = c.getString(c.getColumnIndex("data4"));
-        String lookupKey = c.getString(c.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY));
 
-        setAndroidLookupKey(lookupKey);
         setFullName(displayName);
 
         if (ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE.equals(mime)) {

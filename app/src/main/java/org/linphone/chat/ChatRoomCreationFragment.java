@@ -455,8 +455,7 @@ public class ChatRoomCreationFragment extends Fragment
                     new ContactAddress(
                             c,
                             searchResult.getAddress().asStringUriOnly(),
-                            searchResult.getPhoneNumber(),
-                            searchResult.getFriend() != null));
+                            searchResult.getPhoneNumber()));
         }
     }
 

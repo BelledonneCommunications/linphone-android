@@ -354,10 +354,9 @@ public final class LinphoneUtils {
     public static ArrayList<ChatRoom> removeEmptyOneToOneChatRooms(ChatRoom[] rooms) {
         ArrayList<ChatRoom> newRooms = new ArrayList<>();
         for (ChatRoom room : rooms) {
-            if (room.hasCapability(ChatRoomCapabilities.OneToOne.toInt())
-                    && room.getHistorySize() == 0) {
-                // Hide 1-1 chat rooms without messages
-            } else {
+            // Hide 1-1 chat rooms without messages
+            if (!(room.hasCapability(ChatRoomCapabilities.OneToOne.toInt())
+                    && room.getHistorySize() == 0)) {
                 newRooms.add(room);
             }
         }

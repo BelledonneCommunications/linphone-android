@@ -1817,10 +1817,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     public interface AddressType {
         CharSequence getText();
 
-        void setText(CharSequence s);
-
         String getDisplayedName();
-
-        void setDisplayedName(String s);
     }
 }

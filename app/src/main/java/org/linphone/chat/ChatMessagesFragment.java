@@ -225,8 +225,7 @@ public class ChatMessagesFragment extends Fragment
                                 c.setFullName(displayName);
                             }
                             ContactAddress ca =
-                                    new ContactAddress(
-                                            c, a.asString(), "", c.isFriend(), p.isAdmin());
+                                    new ContactAddress(c, a.asString(), "", p.isAdmin());
                             participants.add(ca);
                         }
 

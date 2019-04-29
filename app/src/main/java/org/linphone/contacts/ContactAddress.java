@@ -32,11 +32,11 @@ public class ContactAddress implements Serializable {
     private boolean mIsAdmin = false;
     private transient View mView;
 
-    public ContactAddress(LinphoneContact c, String a, String pn, boolean isLC) {
+    public ContactAddress(LinphoneContact c, String a, String pn) {
         init(c, a, pn);
     }
 
-    public ContactAddress(LinphoneContact c, String a, String pn, boolean isLC, boolean isAdmin) {
+    public ContactAddress(LinphoneContact c, String a, String pn, boolean isAdmin) {
         init(c, a, pn);
         mIsAdmin = isAdmin;
     }

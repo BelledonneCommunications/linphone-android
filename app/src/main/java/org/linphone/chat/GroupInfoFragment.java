@@ -331,7 +331,7 @@ public class GroupInfoFragment extends Fragment {
                 String displayName = LinphoneUtils.getAddressDisplayName(a);
                 c.setFullName(displayName);
             }
-            ContactAddress ca = new ContactAddress(c, a.asString(), "", c.isFriend(), p.isAdmin());
+            ContactAddress ca = new ContactAddress(c, a.asString(), "", p.isAdmin());
             mParticipants.add(ca);
         }
 

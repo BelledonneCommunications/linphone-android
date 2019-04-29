@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="70dp"
     android:layout_margin="2dp"
-    android:background="?attr/backgroundColor"
     android:divider="?attr/dividerColor"
     android:dividerHeight="1dp"
     android:gravity="center_vertical"

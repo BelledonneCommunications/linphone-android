@@ -39,7 +39,6 @@ import org.linphone.core.tools.Log;
 class AndroidContact implements Serializable {
     String mAndroidId;
     private String mAndroidRawId;
-    String mAndroidLookupKey;
     private boolean isAndroidRawIdLinphone;
 
     private final transient ArrayList<ContentProviderOperation> mChangesToCommit;
@@ -55,10 +54,6 @@ class AndroidContact implements Serializable {
 
     void setAndroidId(String id) {
         mAndroidId = id;
-    }
-
-    void setAndroidLookupKey(String lookupKey) {
-        mAndroidLookupKey = lookupKey;
     }
 
     boolean isAndroidContact() {

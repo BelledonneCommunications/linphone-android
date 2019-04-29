@@ -384,6 +384,7 @@ public final class LinphoneService extends Service {
         super.onTaskRemoved(rootIntent);
     }
 
+    @SuppressWarnings("UnusedAssignment")
     @Override
     public synchronized void onDestroy() {
         if (mActivityCallbacks != null) {

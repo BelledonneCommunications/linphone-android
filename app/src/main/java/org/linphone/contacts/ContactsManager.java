@@ -151,7 +151,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
             Log.w("[Contacts Manager] Can't fetch contact without READ permission");
             return;
         }
-        mLoadContactTask = new AsyncContactsLoader(mContext);
+        mLoadContactTask = new AsyncContactsLoader();
         mContactsFetchedOnce = true;
         mLoadContactTask.executeOnExecutor(THREAD_POOL_EXECUTOR);
     }

@@ -201,7 +201,7 @@ public class HistoryFragment extends Fragment
     }
 
     public void displayFirstLog() {
-        Address addr = null;
+        Address addr;
         if (mLogs != null && mLogs.size() > 0) {
             CallLog log = mLogs.get(0); // More recent one is 0
             if (log.getDir() == Call.Dir.Incoming) {

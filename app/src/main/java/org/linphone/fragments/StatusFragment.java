@@ -154,7 +154,7 @@ public class StatusFragment extends Fragment {
                             try {
                                 unreadCount = Integer.parseInt(intToParse[0]);
                             } catch (NumberFormatException nfe) {
-
+                                Log.e("[Status Fragment] " + nfe);
                             }
                             if (unreadCount > 0) {
                                 mVoicemailCount.setText(String.valueOf(unreadCount));
@@ -198,10 +198,7 @@ public class StatusFragment extends Fragment {
         if (LinphoneManager.isInstanciated() && LinphoneManager.getLc() != null) {
             mVoicemailCount.setVisibility(View.GONE);
 
-            if (mIsInCall && mIsAttached) {
-                // Call call = LinphoneManager.getLc().getCurrentCall();
-                // initCallStatsRefresher(call, callStats);
-            } else if (!mIsInCall) {
+            if (!mIsInCall) {
                 mVoicemailCount.setVisibility(View.VISIBLE);
             }
 
@@ -397,7 +394,7 @@ public class StatusFragment extends Fragment {
 
     public void showZRTPDialog(final Call call) {
         if (getActivity() == null) {
-            Log.w("Can't display ZRTP popup, no Activity");
+            Log.w("[Status Fragment] Can't display ZRTP popup, no Activity");
             return;
         }
 
@@ -405,11 +402,14 @@ public class StatusFragment extends Fragment {
             String token = call.getAuthenticationToken();
 
             if (token == null) {
-                Log.w("Can't display ZRTP popup, no token !");
+                Log.w("[Status Fragment] Can't display ZRTP popup, no token !");
                 return;
             }
             if (token.length() < 4) {
-                Log.w("Can't display ZRTP popup, token is invalid (" + token + ")");
+                Log.w(
+                        "[Status Fragment] Can't display ZRTP popup, token is invalid ("
+                                + token
+                                + ")");
                 return;
             }
 

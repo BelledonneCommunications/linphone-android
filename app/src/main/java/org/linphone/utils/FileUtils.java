@@ -84,7 +84,7 @@ public class FileUtils {
 
             remoteFile.close();
         } catch (IOException e) {
-            Log.e("Enable to get sharing file", e);
+            Log.e("[File Utils] Enable to get sharing file", e);
         }
 
         return result;
@@ -135,7 +135,12 @@ public class FileUtils {
         final File root;
         root = context.getExternalCacheDir();
 
-        if (root != null && !root.exists()) root.mkdirs();
+        if (root != null && !root.exists()) {
+            boolean result = root.mkdirs();
+            if (!result) {
+                Log.e("[File Utils] Couldn't create directory " + root.getAbsolutePath());
+            }
+        }
         return new File(root, fileName);
     }
 
@@ -175,8 +180,14 @@ public class FileUtils {
                                                 "app_name", "string", mContext.getPackageName()));
         File file = new File(storageDir);
         if (!file.isDirectory() || !file.exists()) {
-            Log.w("Directory " + file + " doesn't seem to exists yet, let's create it");
-            file.mkdirs();
+            Log.w(
+                    "[File Utils] Directory "
+                            + file
+                            + " doesn't seem to exists yet, let's create it");
+            boolean result = file.mkdirs();
+            if (!result) {
+                Log.e("[File Utils] Couldn't create directory " + file.getAbsolutePath());
+            }
             LinphoneManager.getInstance().getMediaScanner().scanFile(file, null);
         }
         return storageDir;
@@ -193,8 +204,14 @@ public class FileUtils {
                         + "/recordings";
         File file = new File(recordingsDir);
         if (!file.isDirectory() || !file.exists()) {
-            Log.w("Directory " + file + " doesn't seem to exists yet, let's create it");
-            file.mkdirs();
+            Log.w(
+                    "[File Utils] Directory "
+                            + file
+                            + " doesn't seem to exists yet, let's create it");
+            boolean result = file.mkdirs();
+            if (!result) {
+                Log.e("[File Utils] Couldn't create directory " + file.getAbsolutePath());
+            }
             LinphoneManager.getInstance().getMediaScanner().scanFile(file, null);
         }
         return recordingsDir;

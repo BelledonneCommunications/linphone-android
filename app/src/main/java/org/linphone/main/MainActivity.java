@@ -73,10 +73,6 @@ public abstract class MainActivity extends LinphoneGenericActivity
     private static final int MAIN_PERMISSIONS = 1;
     private static final int FRAGMENT_SPECIFIC_PERMISSION = 2;
 
-    private RelativeLayout mHistory;
-    private RelativeLayout mContacts;
-    private RelativeLayout mDialer;
-    private RelativeLayout mChat;
     private TextView mMissedCalls;
     private TextView mMissedMessages;
     protected View mContactsSelected;
@@ -86,10 +82,6 @@ public abstract class MainActivity extends LinphoneGenericActivity
     private LinearLayout mTopBar;
     private TextView mTopBarTitle;
     private LinearLayout mTabBar;
-    private ImageView mBack;
-
-    private DrawerLayout mSideMenu;
-    private RelativeLayout mSideMenuContent;
 
     private SideMenuFragment mSideMenuFragment;
     private StatusFragment mStatusFragment;
@@ -107,8 +99,8 @@ public abstract class MainActivity extends LinphoneGenericActivity
 
         mOnBackPressGoHome = true;
 
-        mHistory = findViewById(R.id.history);
-        mHistory.setOnClickListener(
+        RelativeLayout history = findViewById(R.id.history);
+        history.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -117,8 +109,8 @@ public abstract class MainActivity extends LinphoneGenericActivity
                         startActivity(intent);
                     }
                 });
-        mContacts = findViewById(R.id.contacts);
-        mContacts.setOnClickListener(
+        RelativeLayout contacts = findViewById(R.id.contacts);
+        contacts.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -127,8 +119,8 @@ public abstract class MainActivity extends LinphoneGenericActivity
                         startActivity(intent);
                     }
                 });
-        mDialer = findViewById(R.id.dialer);
-        mDialer.setOnClickListener(
+        RelativeLayout dialer = findViewById(R.id.dialer);
+        dialer.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -137,8 +129,8 @@ public abstract class MainActivity extends LinphoneGenericActivity
                         startActivity(intent);
                     }
                 });
-        mChat = findViewById(R.id.chat);
-        mChat.setOnClickListener(
+        RelativeLayout chat = findViewById(R.id.chat);
+        chat.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -160,8 +152,8 @@ public abstract class MainActivity extends LinphoneGenericActivity
         mTopBar = findViewById(R.id.top_bar);
         mTopBarTitle = findViewById(R.id.top_bar_title);
 
-        mBack = findViewById(R.id.cancel);
-        mBack.setOnClickListener(
+        ImageView back = findViewById(R.id.cancel);
+        back.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -172,15 +164,15 @@ public abstract class MainActivity extends LinphoneGenericActivity
         mStatusFragment =
                 (StatusFragment) getFragmentManager().findFragmentById(R.id.status_fragment);
 
-        mSideMenu = findViewById(R.id.side_menu);
-        mSideMenuContent = findViewById(R.id.side_menu_content);
+        DrawerLayout mSideMenu = findViewById(R.id.side_menu);
+        RelativeLayout mSideMenuContent = findViewById(R.id.side_menu_content);
         mSideMenuFragment =
                 (SideMenuFragment)
                         getSupportFragmentManager().findFragmentById(R.id.side_menu_fragment);
         mSideMenuFragment.setDrawer(mSideMenu, mSideMenuContent);
 
         if (getResources().getBoolean(R.bool.disable_chat)) {
-            mChat.setVisibility(View.GONE);
+            chat.setVisibility(View.GONE);
         }
 
         mListener =

@@ -1484,9 +1484,6 @@ public class CallActivity extends LinphoneGenericActivity
                 || call.getState() == State.PausedByRemote
                 || call.getState() == State.Pausing) {
             onCallStateChanged.setSelected(false);
-        } else if (call.getState() == State.OutgoingInit
-                || call.getState() == State.OutgoingProgress
-                || call.getState() == State.OutgoingRinging) {
         }
     }
 

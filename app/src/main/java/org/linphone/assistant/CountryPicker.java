@@ -31,7 +31,7 @@ import android.widget.ListView;
 import org.linphone.R;
 import org.linphone.core.DialPlan;
 
-public class CountryPicker {
+class CountryPicker {
     private final LayoutInflater mInflater;
     private final CountryAdapter mAdapter;
     private EditText mSearch;
