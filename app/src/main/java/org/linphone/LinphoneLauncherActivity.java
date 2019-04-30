@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import org.linphone.assistant.MenuAssistantActivity;
 import org.linphone.chat.ChatActivity;
+import org.linphone.history.HistoryActivity;
 import org.linphone.main.DialerActivity;
 import org.linphone.settings.LinphonePreferences;
 
@@ -64,9 +65,15 @@ public class LinphoneLauncherActivity extends Activity {
         if (useFirstLoginActivity && LinphonePreferences.instance().isFirstLaunch()) {
             classToStart = MenuAssistantActivity.class;
         } else {
-            if (getIntent().getExtras() != null
-                    && "Chat".equals(getIntent().getExtras().getString("Activity", null))) {
-                classToStart = ChatActivity.class;
+            if (getIntent().getExtras() != null) {
+                String activity = getIntent().getExtras().getString("Activity", null);
+                if (ChatActivity.NAME.equals(activity)) {
+                    classToStart = ChatActivity.class;
+                } else if (HistoryActivity.NAME.equals(activity)) {
+                    classToStart = HistoryActivity.class;
+                } else {
+                    classToStart = DialerActivity.class;
+                }
             } else {
                 classToStart = DialerActivity.class;
             }
