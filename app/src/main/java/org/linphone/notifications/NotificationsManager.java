@@ -118,6 +118,12 @@ public class NotificationsManager {
 
         mListener =
                 new CoreListenerStub() {
+                    @Override
+                    public void onMessageSent(Core core, ChatRoom room, ChatMessage message) {
+                        if (room.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
+                            Compatibility.createChatShortcuts(mContext);
+                        }
+                    }
 
                     @Override
                     public void onMessageReceived(
@@ -190,6 +196,10 @@ public class NotificationsManager {
                         if (file == null) {
                             createNotification(
                                     cr, contact, from, textMessage, message.getTime(), null, null);
+                        }
+
+                        if (cr.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
+                            Compatibility.createChatShortcuts(mContext);
                         }
                     }
                 };
