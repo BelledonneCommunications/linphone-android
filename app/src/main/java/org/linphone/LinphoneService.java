@@ -32,13 +32,13 @@ import android.provider.ContactsContract;
 import android.view.WindowManager;
 import org.linphone.call.CallIncomingActivity;
 import org.linphone.call.CallOutgoingActivity;
+import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.Factory;
-import org.linphone.core.GlobalState;
 import org.linphone.core.LogLevel;
 import org.linphone.core.LoggingService;
 import org.linphone.core.LoggingServiceListener;
@@ -175,12 +175,11 @@ public final class LinphoneService extends Service {
                     }
 
                     @Override
-                    public void onGlobalStateChanged(
-                            Core core, GlobalState state, String message) {}
-
-                    @Override
                     public void onRegistrationStateChanged(
-                            Core core, ProxyConfig cfg, RegistrationState state, String smessage) {}
+                            Core core, ProxyConfig cfg, RegistrationState state, String message) {
+                        if (state == RegistrationState.Ok)
+                            Compatibility.createChatShortcuts(LinphoneService.this);
+                    }
                 };
     }
 
