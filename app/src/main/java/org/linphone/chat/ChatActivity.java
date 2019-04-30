@@ -149,6 +149,8 @@ public class ChatActivity extends MainActivity {
             if (intent.getExtras() != null) {
                 Bundle extras = intent.getExtras();
                 handleRemoteSipUriInIntentExtras(extras);
+            } else {
+                showChatRooms();
             }
         }
 
@@ -178,6 +180,8 @@ public class ChatActivity extends MainActivity {
             }
             // Don't make it a child on smartphones to have a working back button
             showChatRoom(localAddress, remoteAddress, isTablet());
+        } else {
+            showChatRooms();
         }
     }
 
