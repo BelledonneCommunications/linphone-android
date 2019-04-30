@@ -27,9 +27,9 @@ import android.os.Bundle;
 import android.provider.Settings;
 import androidx.annotation.Nullable;
 import org.linphone.R;
+import org.linphone.activities.MainActivity;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.tools.Log;
-import org.linphone.main.MainActivity;
 
 public class SettingsActivity extends MainActivity {
     private static final int PERMISSIONS_REQUEST_OVERLAY = 206;

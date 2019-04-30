@@ -1,4 +1,4 @@
-package org.linphone;
+package org.linphone.activities;
 
 /*
 SplashScreenActivity.java
@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import org.linphone.R;
 
 /**
  * This activity does pretty much nothing except starting the linphone launcher that will be

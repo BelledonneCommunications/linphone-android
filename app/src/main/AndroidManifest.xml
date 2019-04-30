@@ -62,7 +62,7 @@
         android:roundIcon="@mipmap/ic_launcher_round">
 
         <activity
-            android:name=".SplashScreenActivity"
+            android:name=".activities.SplashScreenActivity"
             android:noHistory="true"
             android:theme="@style/LinphoneLauncherStyle">
             <intent-filter>
@@ -73,7 +73,7 @@
         </activity>
 
         <activity
-            android:name=".LinphoneLauncherActivity"
+            android:name=".activities.LinphoneLauncherActivity"
             android:noHistory="true"
             android:theme="@style/LinphoneLauncherStyle">
         </activity>
@@ -85,7 +85,7 @@
         <!-- Main activities -->
 
         <activity
-            android:name=".main.DialerActivity"
+            android:name=".activities.DialerActivity"
             android:launchMode="singleTop"
             android:theme="@style/LinphoneStyleLight">
             <intent-filter>
@@ -112,7 +112,7 @@
         </activity>
 
         <activity
-            android:name=".main.AboutActivity"
+            android:name=".activities.AboutActivity"
             android:noHistory="true"
             android:theme="@style/LinphoneStyleLight">
         </activity>

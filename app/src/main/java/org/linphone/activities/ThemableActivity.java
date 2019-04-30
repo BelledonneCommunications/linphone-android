@@ -1,4 +1,4 @@
-package org.linphone.utils;
+package org.linphone.activities;
 
 /*
 ThemableActivity.java
@@ -25,11 +25,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.linphone.R;
 import org.linphone.settings.LinphonePreferences;
 
-public class ThemableActivity extends AppCompatActivity {
+public abstract class ThemableActivity extends AppCompatActivity {
+    private int mTheme;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mTheme = R.style.LinphoneStyleLight;
         if (LinphonePreferences.instance().isDarkModeEnabled()) {
+            mTheme = R.style.LinphoneStyleDark;
             setTheme(R.style.LinphoneStyleDark);
         }
 
@@ -38,5 +41,20 @@ public class ThemableActivity extends AppCompatActivity {
         }
 
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (LinphonePreferences.instance().isDarkModeEnabled()) {
+            if (mTheme != R.style.LinphoneStyleDark) {
+                recreate();
+            }
+        } else {
+            if (mTheme != R.style.LinphoneStyleLight) {
+                recreate();
+            }
+        }
     }
 }

@@ -1,4 +1,4 @@
-package org.linphone.main;
+package org.linphone.menu;
 
 /*
 SideMenuFragment.java
@@ -38,6 +38,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.activities.AboutActivity;
+import org.linphone.activities.MainActivity;
 import org.linphone.assistant.MenuAssistantActivity;
 import org.linphone.core.Core;
 import org.linphone.core.ProxyConfig;

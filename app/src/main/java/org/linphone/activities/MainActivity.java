@@ -1,4 +1,4 @@
-package org.linphone.main;
+package org.linphone.activities;
 
 /*
 MainActivity.java
@@ -61,10 +61,10 @@ import org.linphone.core.tools.Log;
 import org.linphone.fragments.EmptyFragment;
 import org.linphone.fragments.StatusFragment;
 import org.linphone.history.HistoryActivity;
+import org.linphone.menu.SideMenuFragment;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.settings.SettingsActivity;
 import org.linphone.utils.DeviceUtils;
-import org.linphone.utils.LinphoneGenericActivity;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.utils.PushNotificationUtils;
 

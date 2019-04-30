@@ -27,11 +27,11 @@ import android.view.View;
 import android.widget.Toast;
 import java.util.ArrayList;
 import org.linphone.R;
+import org.linphone.activities.MainActivity;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.core.Address;
 import org.linphone.core.Factory;
 import org.linphone.core.tools.Log;
-import org.linphone.main.MainActivity;
 import org.linphone.utils.FileUtils;
 
 public class ChatActivity extends MainActivity {

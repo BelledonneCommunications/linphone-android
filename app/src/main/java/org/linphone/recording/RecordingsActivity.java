@@ -36,7 +36,7 @@ import java.util.Collections;
 import java.util.List;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
-import org.linphone.main.MainActivity;
+import org.linphone.activities.MainActivity;
 import org.linphone.utils.FileUtils;
 import org.linphone.utils.SelectableHelper;
 

@@ -25,10 +25,10 @@ import android.os.Bundle;
 import android.view.View;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.activities.MainActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
-import org.linphone.main.MainActivity;
 import org.linphone.utils.LinphoneUtils;
 
 public class HistoryActivity extends MainActivity {

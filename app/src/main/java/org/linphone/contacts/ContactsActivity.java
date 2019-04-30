@@ -26,7 +26,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 import org.linphone.R;
-import org.linphone.main.MainActivity;
+import org.linphone.activities.MainActivity;
 
 public class ContactsActivity extends MainActivity {
     private boolean mEditOnClick;

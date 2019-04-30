@@ -1,4 +1,4 @@
-package org.linphone;
+package org.linphone.activities;
 
 /*
 LinphoneLauncherActivity.java
@@ -23,9 +23,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import org.linphone.LinphoneManager;
+import org.linphone.LinphoneService;
+import org.linphone.R;
 import org.linphone.assistant.MenuAssistantActivity;
 import org.linphone.chat.ChatActivity;
-import org.linphone.main.DialerActivity;
 import org.linphone.settings.LinphonePreferences;
 
 /** Creates LinphoneService and wait until Core is ready to start main Activity */

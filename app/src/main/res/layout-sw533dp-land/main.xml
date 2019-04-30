@@ -232,7 +232,7 @@
 
             <fragment
                 android:id="@+id/side_menu_fragment"
-                android:name="org.linphone.main.SideMenuFragment"
+                android:name="org.linphone.menu.SideMenuFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:layout="@layout/side_menu" />

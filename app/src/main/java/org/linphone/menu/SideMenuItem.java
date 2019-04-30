@@ -1,4 +1,4 @@
-package org.linphone.main;
+package org.linphone.menu;
 
 /*
 SideMenuItem.java

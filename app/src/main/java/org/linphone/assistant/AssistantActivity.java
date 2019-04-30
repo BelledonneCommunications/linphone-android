@@ -29,15 +29,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.activities.DialerActivity;
+import org.linphone.activities.ThemableActivity;
 import org.linphone.core.AccountCreator;
 import org.linphone.core.Core;
 import org.linphone.core.DialPlan;
 import org.linphone.core.Factory;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.tools.Log;
-import org.linphone.main.DialerActivity;
 import org.linphone.settings.LinphonePreferences;
-import org.linphone.utils.ThemableActivity;
 
 public abstract class AssistantActivity extends ThemableActivity
         implements CountryPicker.CountryPickedListener {

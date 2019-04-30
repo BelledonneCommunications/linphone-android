@@ -37,6 +37,7 @@ import androidx.core.app.ActivityCompat;
 import java.util.ArrayList;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.activities.LinphoneGenericActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
@@ -47,7 +48,6 @@ import org.linphone.core.CoreListenerStub;
 import org.linphone.core.Reason;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
-import org.linphone.utils.LinphoneGenericActivity;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.views.ContactAvatar;
 
