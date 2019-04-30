@@ -97,7 +97,7 @@ public class LinphoneManager implements SensorEventListener {
     private final String mFriendsDatabaseFile;
     private final String mUserCertsPath;
 
-    private final Context mServiceContext;
+    private final Context mContext;
     private AndroidAudioManager mAudioManager;
     private CallManager mCallManager;
     private final PowerManager mPowerManager;
@@ -122,7 +122,7 @@ public class LinphoneManager implements SensorEventListener {
 
     private LinphoneManager(Context c) {
         sExited = false;
-        mServiceContext = c;
+        mContext = c;
         mBasePath = c.getFilesDir().getAbsolutePath();
         mLPConfigXsd = mBasePath + "/lpconfig.xsd";
         mLinphoneFactoryConfigFile = mBasePath + "/linphonerc";
@@ -261,7 +261,7 @@ public class LinphoneManager implements SensorEventListener {
                                         @Override
                                         public void run() {
                                             AlertDialog.Builder builder =
-                                                    new AlertDialog.Builder(mServiceContext);
+                                                    new AlertDialog.Builder(mContext);
                                             builder.setMessage(
                                                     getString(R.string.update_available)
                                                             + ": "
@@ -280,8 +280,7 @@ public class LinphoneManager implements SensorEventListener {
                                                                                 Intent.ACTION_VIEW);
                                                                 urlIntent.setData(
                                                                         Uri.parse(urlToUse));
-                                                                mServiceContext.startActivity(
-                                                                        urlIntent);
+                                                                mContext.startActivity(urlIntent);
                                                             }
                                                         }
                                                     });
@@ -437,12 +436,12 @@ public class LinphoneManager implements SensorEventListener {
             Log.e("[Manager] Destroy Core Runtime Exception: " + e);
         } finally {
             try {
-                mServiceContext.unregisterReceiver(mHookReceiver);
+                mContext.unregisterReceiver(mHookReceiver);
             } catch (Exception e) {
                 Log.e("[Manager] unregister receiver exception: " + e);
             }
             try {
-                mServiceContext.unregisterReceiver(mCallReceiver);
+                mContext.unregisterReceiver(mCallReceiver);
             } catch (Exception e) {
                 Log.e("[Manager] unregister receiver exception: " + e);
             }
@@ -488,12 +487,12 @@ public class LinphoneManager implements SensorEventListener {
 
     private synchronized void initLiblinphone(Core core) {
         mCore = core;
-        mAudioManager = new AndroidAudioManager(mServiceContext);
+        mAudioManager = new AndroidAudioManager(mContext);
 
         mCore.setZrtpSecretsFile(mBasePath + "/zrtp_secrets");
 
-        String deviceName = mPrefs.getDeviceName(mServiceContext);
-        String appName = mServiceContext.getResources().getString(R.string.user_agent);
+        String deviceName = mPrefs.getDeviceName(mContext);
+        String appName = mContext.getResources().getString(R.string.user_agent);
         String androidVersion = BuildConfig.VERSION_NAME;
         String userAgent = appName + "/" + androidVersion + " (" + deviceName + ") LinphoneSDK";
 
@@ -542,8 +541,8 @@ public class LinphoneManager implements SensorEventListener {
             }
         }
 
-        if (mServiceContext.getResources().getBoolean(R.bool.enable_push_id)) {
-            PushNotificationUtils.init(mServiceContext);
+        if (mContext.getResources().getBoolean(R.bool.enable_push_id)) {
+            PushNotificationUtils.init(mContext);
         }
 
         IntentFilter mCallIntentFilter =
@@ -551,19 +550,19 @@ public class LinphoneManager implements SensorEventListener {
         mCallIntentFilter.setPriority(99999999);
         mCallReceiver = new OutgoingCallReceiver();
         try {
-            mServiceContext.registerReceiver(mCallReceiver, mCallIntentFilter);
+            mContext.registerReceiver(mCallReceiver, mCallIntentFilter);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
         mProximityWakelock =
                 mPowerManager.newWakeLock(
                         PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK,
-                        mServiceContext.getPackageName() + ";manager_proximity_sensor");
+                        mContext.getPackageName() + ";manager_proximity_sensor");
 
         IntentFilter mHookIntentFilter = new IntentFilter("com.base.module.phone.HOOKEVENT");
         mHookIntentFilter.setPriority(999);
         mHookReceiver = new HookReceiver();
-        mServiceContext.registerReceiver(mHookReceiver, mHookIntentFilter);
+        mContext.registerReceiver(mHookReceiver, mHookIntentFilter);
 
         resetCameraFromPreferences();
 
@@ -619,8 +618,7 @@ public class LinphoneManager implements SensorEventListener {
 
         long future =
                 new Timestamp(
-                                mServiceContext
-                                        .getResources()
+                                mContext.getResources()
                                         .getInteger(
                                                 R.integer.phone_number_linking_popup_time_interval))
                         .getTime();
@@ -630,7 +628,7 @@ public class LinphoneManager implements SensorEventListener {
 
         final Dialog dialog =
                 LinphoneUtils.getDialog(
-                        mServiceContext,
+                        mContext,
                         String.format(
                                 getString(R.string.link_account_popup),
                                 mCore.getDefaultProxyConfig()
@@ -660,9 +658,8 @@ public class LinphoneManager implements SensorEventListener {
                     @Override
                     public void onClick(View view) {
                         Intent assistant = new Intent();
-                        assistant.setClass(
-                                mServiceContext, PhoneAccountLinkingAssistantActivity.class);
-                        mServiceContext.startActivity(assistant);
+                        assistant.setClass(mContext, PhoneAccountLinkingAssistantActivity.class);
+                        mContext.startActivity(assistant);
                         dialog.dismiss();
                     }
                 });
@@ -700,8 +697,8 @@ public class LinphoneManager implements SensorEventListener {
     }
 
     private void copyFromPackage(int ressourceId, String target) throws IOException {
-        FileOutputStream lOutputStream = mServiceContext.openFileOutput(target, 0);
-        InputStream lInputStream = mServiceContext.getResources().openRawResource(ressourceId);
+        FileOutputStream lOutputStream = mContext.openFileOutput(target, 0);
+        InputStream lInputStream = mContext.getResources().openRawResource(ressourceId);
         int readByte;
         byte[] buff = new byte[8048];
         while ((readByte = lInputStream.read(buff)) != -1) {
@@ -875,9 +872,7 @@ public class LinphoneManager implements SensorEventListener {
             int lastTimestamp = LinphonePreferences.instance().getLastCheckReleaseTimestamp();
             int currentTimeStamp = (int) System.currentTimeMillis();
             int interval =
-                    mServiceContext
-                            .getResources()
-                            .getInteger(R.integer.time_between_update_check); // 24h
+                    mContext.getResources().getInteger(R.integer.time_between_update_check); // 24h
             if (lastTimestamp == 0 || currentTimeStamp - lastTimestamp >= interval) {
                 LinphoneManager.getCore().checkForUpdate(BuildConfig.VERSION_NAME);
                 LinphonePreferences.instance().setLastCheckReleaseTimestamp(currentTimeStamp);
@@ -914,6 +909,6 @@ public class LinphoneManager implements SensorEventListener {
     }
 
     private String getString(int key) {
-        return mServiceContext.getString(key);
+        return mContext.getString(key);
     }
 }
