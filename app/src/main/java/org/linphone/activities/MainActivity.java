@@ -26,6 +26,8 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.KeyguardManager;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -37,6 +39,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import java.util.ArrayList;
@@ -229,6 +232,28 @@ public abstract class MainActivity extends LinphoneGenericActivity
                                     LinphoneManager.getInstance().isAccountWithAlias();
                                 }
                             }
+                        }
+                    }
+
+                    @Override
+                    public void onLogCollectionUploadStateChanged(
+                            Core linphoneCore, Core.LogCollectionUploadState state, String info) {
+                        Log.d(
+                                "[Main Activity] Log upload state: "
+                                        + state.toString()
+                                        + ", info = "
+                                        + info);
+                        if (state == Core.LogCollectionUploadState.Delivered) {
+                            ClipboardManager clipboard =
+                                    (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                            ClipData clip = ClipData.newPlainText("Logs url", info);
+                            clipboard.setPrimaryClip(clip);
+                            Toast.makeText(
+                                            MainActivity.this,
+                                            getString(R.string.logs_url_copied_to_clipboard),
+                                            Toast.LENGTH_SHORT)
+                                    .show();
+                            shareUploadedLogsUrl(info);
                         }
                     }
                 };
@@ -641,5 +666,23 @@ public abstract class MainActivity extends LinphoneGenericActivity
                 });
 
         dialog.show();
+    }
+
+    // Logs
+
+    private void shareUploadedLogsUrl(String info) {
+        final String appName = getString(R.string.app_name);
+
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.putExtra(Intent.EXTRA_EMAIL, new String[] {getString(R.string.about_bugreport_email)});
+        i.putExtra(Intent.EXTRA_SUBJECT, appName + " Logs");
+        i.putExtra(Intent.EXTRA_TEXT, info);
+        i.setType("application/zip");
+
+        try {
+            startActivity(Intent.createChooser(i, "Send mail..."));
+        } catch (android.content.ActivityNotFoundException ex) {
+            Log.e(ex);
+        }
     }
 }

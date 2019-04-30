@@ -28,8 +28,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -79,7 +77,6 @@ import org.linphone.core.Call.State;
 import org.linphone.core.CallParams;
 import org.linphone.core.ConfiguringState;
 import org.linphone.core.Core;
-import org.linphone.core.Core.LogCollectionUploadState;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.EcCalibratorStatus;
 import org.linphone.core.Factory;
@@ -90,7 +87,6 @@ import org.linphone.core.PresenceBasicStatus;
 import org.linphone.core.PresenceModel;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.Reason;
-import org.linphone.core.RegistrationState;
 import org.linphone.core.Tunnel;
 import org.linphone.core.TunnelConfig;
 import org.linphone.core.VersionUpdateCheckResult;
@@ -231,42 +227,6 @@ public class LinphoneManager implements SensorEventListener {
                                         "[Manager] Global State Changed Illegal Argument Exception: "
                                                 + iae);
                             }
-                        }
-                    }
-
-                    @Override
-                    public void onRegistrationStateChanged(
-                            final Core lc,
-                            final ProxyConfig proxy,
-                            final RegistrationState state,
-                            final String message) {
-                        Log.i("[Manager] New registration state [" + state + "]");
-
-                        if (state == RegistrationState.Failed) {
-                            ConnectivityManager connectivityManager =
-                                    (ConnectivityManager)
-                                            mServiceContext.getSystemService(
-                                                    Context.CONNECTIVITY_SERVICE);
-
-                            NetworkInfo activeNetworkInfo =
-                                    connectivityManager.getActiveNetworkInfo();
-                            Log.i(
-                                    "[Manager] Active network type: "
-                                            + activeNetworkInfo.getTypeName());
-                            if (activeNetworkInfo.isAvailable()
-                                    && activeNetworkInfo.isConnected()) {
-                                Log.i("[Manager] Active network is available");
-                            }
-                            Log.i(
-                                    "[Manager] Active network reason and extra info: "
-                                            + activeNetworkInfo.getReason()
-                                            + " / "
-                                            + activeNetworkInfo.getExtraInfo());
-                            Log.i(
-                                    "[Manager] Active network state "
-                                            + activeNetworkInfo.getState()
-                                            + " / "
-                                            + activeNetworkInfo.getDetailedState());
                         }
                     }
 
@@ -463,52 +423,6 @@ public class LinphoneManager implements SensorEventListener {
                                         }
                                     },
                                     1000);
-                        }
-                    }
-
-                    @Override
-                    public void onEcCalibrationAudioUninit(Core lc) {}
-
-                    private void sendLogs(String info) {
-                        Context context = mServiceContext;
-                        final String appName = context.getString(R.string.app_name);
-
-                        Intent i = new Intent(Intent.ACTION_SEND);
-                        i.putExtra(
-                                Intent.EXTRA_EMAIL,
-                                new String[] {context.getString(R.string.about_bugreport_email)});
-                        i.putExtra(Intent.EXTRA_SUBJECT, appName + " Logs");
-                        i.putExtra(Intent.EXTRA_TEXT, info);
-                        i.setType("application/zip");
-
-                        try {
-                            context.startActivity(Intent.createChooser(i, "Send mail..."));
-                        } catch (android.content.ActivityNotFoundException ex) {
-                            Log.e(ex);
-                        }
-                    }
-
-                    @Override
-                    public void onLogCollectionUploadStateChanged(
-                            Core linphoneCore, LogCollectionUploadState state, String info) {
-                        Log.d(
-                                "[Manager] Log upload state: "
-                                        + state.toString()
-                                        + ", info = "
-                                        + info);
-                        if (state == LogCollectionUploadState.Delivered) {
-                            ClipboardManager clipboard =
-                                    (ClipboardManager)
-                                            mServiceContext.getSystemService(
-                                                    Context.CLIPBOARD_SERVICE);
-                            ClipData clip = ClipData.newPlainText("Logs url", info);
-                            clipboard.setPrimaryClip(clip);
-                            Toast.makeText(
-                                            mServiceContext,
-                                            getString(R.string.logs_url_copied_to_clipboard),
-                                            Toast.LENGTH_SHORT)
-                                    .show();
-                            sendLogs(info);
                         }
                     }
 
@@ -1038,10 +952,6 @@ public class LinphoneManager implements SensorEventListener {
         }
     }
 
-    private void initPushNotificationsService() {
-        PushNotificationUtils.init(mServiceContext);
-    }
-
     private synchronized void initLiblinphone(Core lc) {
         mCore = lc;
 
@@ -1098,7 +1008,7 @@ public class LinphoneManager implements SensorEventListener {
         }
 
         if (mServiceContext.getResources().getBoolean(R.bool.enable_push_id)) {
-            initPushNotificationsService();
+            PushNotificationUtils.init(mServiceContext);
         }
 
         IntentFilter mCallIntentFilter =
