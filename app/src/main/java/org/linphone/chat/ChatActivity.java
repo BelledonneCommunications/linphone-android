@@ -150,7 +150,7 @@ public class ChatActivity extends MainActivity {
                 Bundle extras = intent.getExtras();
                 handleRemoteSipUriInIntentExtras(extras);
             } else {
-                showChatRooms();
+                showChatRoomsIfNeeded();
             }
         }
 
@@ -181,6 +181,13 @@ public class ChatActivity extends MainActivity {
             // Don't make it a child on smartphones to have a working back button
             showChatRoom(localAddress, remoteAddress, isTablet());
         } else {
+            showChatRoomsIfNeeded();
+        }
+    }
+
+    private void showChatRoomsIfNeeded() {
+        Fragment currentFragment = getFragmentManager().findFragmentById(R.id.fragmentContainer);
+        if (currentFragment == null || !(currentFragment instanceof ChatRoomsFragment)) {
             showChatRooms();
         }
     }
