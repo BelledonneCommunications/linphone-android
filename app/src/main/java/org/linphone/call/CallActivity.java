@@ -854,7 +854,7 @@ public class CallActivity extends LinphoneGenericActivity
         } else {
             mVideoProgress.setVisibility(View.VISIBLE);
             if (call.getRemoteParams() != null && !call.getRemoteParams().lowBandwidthEnabled()) {
-                LinphoneManager.getInstance().addVideo();
+                LinphoneManager.getCallManager().addVideo();
             } else {
                 displayCustomToast(getString(R.string.error_low_bandwidth), Toast.LENGTH_LONG);
             }
@@ -888,7 +888,7 @@ public class CallActivity extends LinphoneGenericActivity
             showAudioView();
         } else {
             if (!call.getRemoteParams().lowBandwidthEnabled()) {
-                LinphoneManager.getInstance().addVideo();
+                LinphoneManager.getCallManager().addVideo();
                 if (mVideoCallFragment == null || !mVideoCallFragment.isVisible()) showVideoView();
             } else {
                 displayCustomToast(getString(R.string.error_low_bandwidth), Toast.LENGTH_LONG);
@@ -1286,7 +1286,7 @@ public class CallActivity extends LinphoneGenericActivity
     protected void onResume() {
         super.onResume();
 
-        LinphoneManager.getInstance().setCallInterface(mCallInterface);
+        LinphoneManager.getCallManager().setCallInterface(mCallInterface);
         Core core = LinphoneManager.getCore();
         if (core != null) {
             core.addListener(mListener);
@@ -1344,7 +1344,7 @@ public class CallActivity extends LinphoneGenericActivity
         if (core != null) {
             core.removeListener(mListener);
         }
-        LinphoneManager.getInstance().setCallInterface(null);
+        LinphoneManager.getCallManager().setCallInterface(null);
 
         super.onPause();
 

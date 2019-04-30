@@ -174,11 +174,12 @@ public class Digit extends Button implements AddressAware {
             if (!mPlayDtmf) return false;
             if (!linphoneServiceReady()) return true;
 
-            LinphoneManager.getInstance().resetCallControlsHidingTimer();
+            LinphoneManager.getCallManager().resetCallControlsHidingTimer();
 
             Core core = LinphoneManager.getCore();
             if (event.getAction() == MotionEvent.ACTION_DOWN && !mIsDtmfStarted) {
-                LinphoneManager.getInstance().playDtmf(getContext().getContentResolver(), mKeyCode);
+                LinphoneManager.getCallManager()
+                        .playDtmf(getContext().getContentResolver(), mKeyCode);
                 mIsDtmfStarted = true;
             } else {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -204,7 +205,7 @@ public class Digit extends Button implements AddressAware {
                 mAddress.getEditableText().clear();
                 if (voiceMail != null) {
                     mAddress.getEditableText().append(voiceMail);
-                    LinphoneManager.getInstance().newOutgoingCall(mAddress);
+                    LinphoneManager.getCallManager().newOutgoingCall(mAddress);
                 }
                 return true;
             }

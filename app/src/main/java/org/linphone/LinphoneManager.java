@@ -23,7 +23,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -38,12 +37,9 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
-import android.provider.Settings;
-import android.provider.Settings.SettingNotFoundException;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.Toast;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -53,16 +49,12 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import org.linphone.assistant.PhoneAccountLinkingAssistantActivity;
-import org.linphone.call.CallActivity;
 import org.linphone.call.CallManager;
 import org.linphone.contacts.ContactsManager;
-import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.AccountCreator;
 import org.linphone.core.AccountCreatorListenerStub;
-import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
-import org.linphone.core.CallParams;
 import org.linphone.core.ConfiguringState;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
@@ -79,7 +71,6 @@ import org.linphone.core.TunnelConfig;
 import org.linphone.core.VersionUpdateCheckResult;
 import org.linphone.core.tools.H264Helper;
 import org.linphone.core.tools.Log;
-import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration.AndroidCamera;
 import org.linphone.receivers.BluetoothManager;
@@ -87,11 +78,9 @@ import org.linphone.receivers.HookReceiver;
 import org.linphone.receivers.OutgoingCallReceiver;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.AndroidAudioManager;
-import org.linphone.utils.FileUtils;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.utils.MediaScanner;
 import org.linphone.utils.PushNotificationUtils;
-import org.linphone.views.AddressType;
 
 /** Handles Linphone's Core lifecycle */
 public class LinphoneManager implements SensorEventListener {
@@ -110,6 +99,7 @@ public class LinphoneManager implements SensorEventListener {
 
     private final Context mServiceContext;
     private AndroidAudioManager mAudioManager;
+    private CallManager mCallManager;
     private final PowerManager mPowerManager;
     private final ConnectivityManager mConnectivityManager;
     private BroadcastReceiver mHookReceiver;
@@ -126,11 +116,9 @@ public class LinphoneManager implements SensorEventListener {
     private CoreListenerStub mCoreListener;
     private AccountCreator mAccountCreator;
     private AccountCreatorListenerStub mAccountCreatorListener;
-    private CallActivity.CallActivityInterface mCallInterface;
 
     private boolean mCallGsmON;
     private boolean mProximitySensingEnabled;
-    private boolean mHandsetON = false;
 
     private LinphoneManager(Context c) {
         sExited = false;
@@ -152,6 +140,7 @@ public class LinphoneManager implements SensorEventListener {
                 (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
         mSensorManager = (SensorManager) c.getSystemService(Context.SENSOR_SERVICE);
         mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+        mCallManager = new CallManager(c);
 
         File f = new File(mUserCertsPath);
         if (!f.exists()) {
@@ -226,7 +215,7 @@ public class LinphoneManager implements SensorEventListener {
                                         public void run() {
                                             if (mCore != null) {
                                                 if (mCore.getCallsNb() > 0) {
-                                                    acceptCall(call);
+                                                    mCallManager.acceptCall(call);
                                                     mAudioManager.routeAudioToEarPiece();
                                                 }
                                             }
@@ -384,6 +373,10 @@ public class LinphoneManager implements SensorEventListener {
         return getInstance().mAudioManager;
     }
 
+    public static synchronized CallManager getCallManager() {
+        return getInstance().mCallManager;
+    }
+
     public static synchronized void destroy() {
         if (sInstance == null) return;
         sExited = true;
@@ -401,142 +394,10 @@ public class LinphoneManager implements SensorEventListener {
         return sInstance.mCore;
     }
 
-    private static Boolean isProximitySensorNearby(final SensorEvent event) {
-        float threshold = 4.001f; // <= 4 cm is near
-
-        final float distanceInCm = event.values[0];
-        final float maxDistance = event.sensor.getMaximumRange();
-        Log.d(
-                "[Manager] Proximity sensor report ["
-                        + distanceInCm
-                        + "] , for max range ["
-                        + maxDistance
-                        + "]");
-
-        if (maxDistance <= threshold) {
-            // Case binary 0/1 and short sensors
-            threshold = maxDistance;
-        }
-        return distanceInCm < threshold;
-    }
-
     /* End of static */
 
     public MediaScanner getMediaScanner() {
         return mMediaScanner;
-    }
-
-    public void newOutgoingCall(AddressType address) {
-        String to = address.getText().toString();
-        newOutgoingCall(to, address.getDisplayedName());
-    }
-
-    public void newOutgoingCall(String to, String displayName) {
-        //		if (mCore.inCall()) {
-        //			listenerDispatcher.tryingNewOutgoingCallButAlreadyInCall();
-        //			return;
-        //		}
-        if (to == null) return;
-
-        // If to is only a username, try to find the contact to get an alias if existing
-        if (!to.startsWith("sip:") || !to.contains("@")) {
-            LinphoneContact contact = ContactsManager.getInstance().findContactFromPhoneNumber(to);
-            if (contact != null) {
-                String alias = contact.getContactFromPresenceModelForUriOrTel(to);
-                if (alias != null) {
-                    to = alias;
-                }
-            }
-        }
-
-        Address lAddress;
-        lAddress = mCore.interpretUrl(to); // InterpretUrl does normalizePhoneNumber
-        if (lAddress == null) {
-            Log.e("[Manager] Couldn't convert to String to Address : " + to);
-            return;
-        }
-
-        ProxyConfig lpc = mCore.getDefaultProxyConfig();
-        if (mServiceContext.getResources().getBoolean(R.bool.forbid_self_call)
-                && lpc != null
-                && lAddress.weakEqual(lpc.getIdentityAddress())) {
-            return;
-        }
-        lAddress.setDisplayName(displayName);
-
-        boolean isLowBandwidthConnection =
-                !LinphoneUtils.isHighBandwidthConnection(
-                        LinphoneService.instance().getApplicationContext());
-
-        if (mCore.isNetworkReachable()) {
-            if (Version.isVideoCapable()) {
-                boolean prefVideoEnable = mPrefs.isVideoEnabled();
-                boolean prefInitiateWithVideo = mPrefs.shouldInitiateVideoCall();
-                CallManager.getInstance()
-                        .inviteAddress(
-                                lAddress,
-                                prefVideoEnable && prefInitiateWithVideo,
-                                isLowBandwidthConnection);
-            } else {
-                CallManager.getInstance().inviteAddress(lAddress, false, isLowBandwidthConnection);
-            }
-        } else {
-            Toast.makeText(
-                            mServiceContext,
-                            getString(R.string.error_network_unreachable),
-                            Toast.LENGTH_LONG)
-                    .show();
-            Log.e("[Manager] Error: " + getString(R.string.error_network_unreachable));
-        }
-    }
-
-    private void resetCameraFromPreferences() {
-        boolean useFrontCam = mPrefs.useFrontCam();
-        int camId = 0;
-        AndroidCamera[] cameras = AndroidCameraConfiguration.retrieveCameras();
-        for (AndroidCamera androidCamera : cameras) {
-            if (androidCamera.frontFacing == useFrontCam) {
-                camId = androidCamera.id;
-                break;
-            }
-        }
-        String[] devices = mCore.getVideoDevicesList();
-        if (camId >= devices.length) {
-            Log.e(
-                    "[Manager] Trying to use a camera id that's higher than the linphone's devices list, using 0 to prevent crash...");
-            camId = 0;
-        }
-        String newDevice = devices[camId];
-        mCore.setVideoDevice(newDevice);
-    }
-
-    private void enableCamera(Call call, boolean enable) {
-        if (call != null) {
-            call.enableCamera(enable);
-            if (mServiceContext.getResources().getBoolean(R.bool.enable_call_notification))
-                LinphoneService.instance()
-                        .getNotificationManager()
-                        .displayCallNotification(mCore.getCurrentCall());
-        }
-    }
-
-    public void playDtmf(ContentResolver r, char dtmf) {
-        try {
-            if (Settings.System.getInt(r, Settings.System.DTMF_TONE_WHEN_DIALING) == 0) {
-                // audible touch disabled: don't play on speaker, only send in outgoing stream
-                return;
-            }
-        } catch (SettingNotFoundException e) {
-            Log.e("[Manager] playDtmf exception: " + e);
-        }
-
-        mCore.playDtmf(dtmf, -1);
-    }
-
-    private void terminateCall() {
-        if (mCore.inCall()) {
-            mCore.terminateCall(mCore.getCurrentCall());
-        }
     }
 
     public void restartCore() {
@@ -563,6 +424,7 @@ public class LinphoneManager implements SensorEventListener {
         Log.w("[Manager] Destroying Manager");
         changeStatusToOffline();
 
+        mCallManager.destroy();
         mMediaScanner.destroy();
         mAudioManager.destroy();
         ContactsManager.getInstance().destroy();
@@ -710,128 +572,27 @@ public class LinphoneManager implements SensorEventListener {
         mCallGsmON = false;
     }
 
-    public void setCallInterface(CallActivity.CallActivityInterface callInterface) {
-        mCallInterface = callInterface;
-    }
-
-    public void resetCallControlsHidingTimer() {
-        if (mCallInterface != null) {
-            mCallInterface.resetCallControlsHidingTimer();
-        }
-    }
-
-    public void refreshInCallActions() {
-        if (mCallInterface != null) {
-            mCallInterface.refreshInCallActions();
-        }
-    }
-
-    public void setHandsetMode(Boolean on) {
-        if (mCore.isIncomingInvitePending() && on) {
-            mHandsetON = true;
-            acceptCall(mCore.getCurrentCall());
-        } else if (on && mCallInterface != null) {
-            mHandsetON = true;
-            mCallInterface.setSpeakerEnabled(true);
-            mCallInterface.refreshInCallActions();
-        } else if (!on) {
-            mHandsetON = false;
-            LinphoneManager.getInstance().terminateCall();
-        }
-    }
-
-    public boolean isHansetModeOn() {
-        return mHandsetON;
-    }
-
-    public void enableProximitySensing(boolean enable) {
-        if (enable) {
-            if (!mProximitySensingEnabled) {
-                mSensorManager.registerListener(
-                        this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
-                mProximitySensingEnabled = true;
-            }
-        } else {
-            if (mProximitySensingEnabled) {
-                mSensorManager.unregisterListener(this);
-                mProximitySensingEnabled = false;
-                // Don't forgeting to release wakelock if held
-                if (mProximityWakelock.isHeld()) {
-                    mProximityWakelock.release();
-                }
+    private void resetCameraFromPreferences() {
+        boolean useFrontCam = mPrefs.useFrontCam();
+        int camId = 0;
+        AndroidCamera[] cameras = AndroidCameraConfiguration.retrieveCameras();
+        for (AndroidCamera androidCamera : cameras) {
+            if (androidCamera.frontFacing == useFrontCam) {
+                camId = androidCamera.id;
+                break;
             }
         }
-    }
-
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        if (event.timestamp == 0) return;
-        if (isProximitySensorNearby(event)) {
-            if (!mProximityWakelock.isHeld()) {
-                mProximityWakelock.acquire();
-            }
-        } else {
-            if (mProximityWakelock.isHeld()) {
-                mProximityWakelock.release();
-            }
+        String[] devices = mCore.getVideoDevicesList();
+        if (camId >= devices.length) {
+            Log.e(
+                    "[Manager] Trying to use a camera id that's higher than the linphone's devices list, using 0 to prevent crash...");
+            camId = 0;
         }
+        String newDevice = devices[camId];
+        mCore.setVideoDevice(newDevice);
     }
 
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {}
-
-    public void checkForUpdate() {
-        String url = LinphonePreferences.instance().getCheckReleaseUrl();
-        if (url != null && !url.isEmpty()) {
-            int lastTimestamp = LinphonePreferences.instance().getLastCheckReleaseTimestamp();
-            int currentTimeStamp = (int) System.currentTimeMillis();
-            int interval =
-                    mServiceContext
-                            .getResources()
-                            .getInteger(R.integer.time_between_update_check); // 24h
-            if (lastTimestamp == 0 || currentTimeStamp - lastTimestamp >= interval) {
-                LinphoneManager.getCore().checkForUpdate(BuildConfig.VERSION_NAME);
-                LinphonePreferences.instance().setLastCheckReleaseTimestamp(currentTimeStamp);
-            }
-        }
-    }
-
-    public void enableDeviceRingtone(boolean use) {
-        if (use) {
-            mCore.setRing(null);
-        } else {
-            mCore.setRing(mRingSoundFile);
-        }
-    }
-
-    /** @return false if already in video call. */
-    public boolean addVideo() {
-        Call call = mCore.getCurrentCall();
-        enableCamera(call, true);
-        return CallManager.getInstance().reinviteWithVideo();
-    }
-
-    public boolean acceptCall(Call call) {
-        if (call == null) return false;
-
-        CallParams params = mCore.createCallParams(call);
-
-        boolean isLowBandwidthConnection =
-                !LinphoneUtils.isHighBandwidthConnection(
-                        LinphoneService.instance().getApplicationContext());
-
-        if (params != null) {
-            params.enableLowBandwidth(isLowBandwidthConnection);
-            params.setRecordFile(
-                    FileUtils.getCallRecordingFilename(mServiceContext, call.getRemoteAddress()));
-        } else {
-            Log.e("[Manager] Could not create call params for call");
-            return false;
-        }
-
-        mCore.acceptCallWithParams(call, params);
-        return true;
-    }
+    /* Account linking */
 
     public void isAccountWithAlias() {
         if (mCore.getDefaultProxyConfig() != null) {
@@ -917,26 +678,6 @@ public class LinphoneManager implements SensorEventListener {
                     }
                 });
         dialog.show();
-    }
-
-    public String getDefaultDynamicConfigFile() {
-        return mDefaultDynamicConfigFile;
-    }
-
-    public String getLinphoneDynamicConfigFile() {
-        return mLinphoneDynamicConfigFile;
-    }
-
-    public String getConfigFile() {
-        return mConfigFile;
-    }
-
-    public boolean getCallGsmON() {
-        return mCallGsmON;
-    }
-
-    public void setCallGsmON(boolean on) {
-        mCallGsmON = on;
     }
 
     /* Assets stuff */
@@ -1069,7 +810,108 @@ public class LinphoneManager implements SensorEventListener {
         }
     }
 
+    /* Proximity sensor stuff */
+
+    public void enableProximitySensing(boolean enable) {
+        if (enable) {
+            if (!mProximitySensingEnabled) {
+                mSensorManager.registerListener(
+                        this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
+                mProximitySensingEnabled = true;
+            }
+        } else {
+            if (mProximitySensingEnabled) {
+                mSensorManager.unregisterListener(this);
+                mProximitySensingEnabled = false;
+                // Don't forgeting to release wakelock if held
+                if (mProximityWakelock.isHeld()) {
+                    mProximityWakelock.release();
+                }
+            }
+        }
+    }
+
+    private Boolean isProximitySensorNearby(final SensorEvent event) {
+        float threshold = 4.001f; // <= 4 cm is near
+
+        final float distanceInCm = event.values[0];
+        final float maxDistance = event.sensor.getMaximumRange();
+        Log.d(
+                "[Manager] Proximity sensor report ["
+                        + distanceInCm
+                        + "] , for max range ["
+                        + maxDistance
+                        + "]");
+
+        if (maxDistance <= threshold) {
+            // Case binary 0/1 and short sensors
+            threshold = maxDistance;
+        }
+        return distanceInCm < threshold;
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.timestamp == 0) return;
+        if (isProximitySensorNearby(event)) {
+            if (!mProximityWakelock.isHeld()) {
+                mProximityWakelock.acquire();
+            }
+        } else {
+            if (mProximityWakelock.isHeld()) {
+                mProximityWakelock.release();
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+
     /* Other stuff */
+
+    public void checkForUpdate() {
+        String url = LinphonePreferences.instance().getCheckReleaseUrl();
+        if (url != null && !url.isEmpty()) {
+            int lastTimestamp = LinphonePreferences.instance().getLastCheckReleaseTimestamp();
+            int currentTimeStamp = (int) System.currentTimeMillis();
+            int interval =
+                    mServiceContext
+                            .getResources()
+                            .getInteger(R.integer.time_between_update_check); // 24h
+            if (lastTimestamp == 0 || currentTimeStamp - lastTimestamp >= interval) {
+                LinphoneManager.getCore().checkForUpdate(BuildConfig.VERSION_NAME);
+                LinphonePreferences.instance().setLastCheckReleaseTimestamp(currentTimeStamp);
+            }
+        }
+    }
+
+    public void enableDeviceRingtone(boolean use) {
+        if (use) {
+            mCore.setRing(null);
+        } else {
+            mCore.setRing(mRingSoundFile);
+        }
+    }
+
+    public String getDefaultDynamicConfigFile() {
+        return mDefaultDynamicConfigFile;
+    }
+
+    public String getLinphoneDynamicConfigFile() {
+        return mLinphoneDynamicConfigFile;
+    }
+
+    public String getConfigFile() {
+        return mConfigFile;
+    }
+
+    public boolean getCallGsmON() {
+        return mCallGsmON;
+    }
+
+    public void setCallGsmON(boolean on) {
+        mCallGsmON = on;
+    }
 
     private String getString(int key) {
         return mServiceContext.getString(key);

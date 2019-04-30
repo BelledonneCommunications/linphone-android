@@ -223,7 +223,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
         }
         mAlreadyAcceptedOrDeniedCall = true;
 
-        if (!LinphoneManager.getInstance().acceptCall(mCall)) {
+        if (!LinphoneManager.getCallManager().acceptCall(mCall)) {
             // the above method takes care of Samsung Galaxy S
             Toast.makeText(this, R.string.couldnt_accept_call, Toast.LENGTH_LONG).show();
         }

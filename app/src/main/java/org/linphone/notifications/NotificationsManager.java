@@ -53,7 +53,6 @@ import org.linphone.core.CoreListenerStub;
 import org.linphone.core.Reason;
 import org.linphone.core.tools.Log;
 import org.linphone.history.HistoryActivity;
-import org.linphone.purchase.InAppPurchaseActivity;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.FileUtils;
 import org.linphone.utils.ImageUtils;
@@ -517,7 +516,7 @@ public class NotificationsManager {
         return null;
     }
 
-    public void displayInappNotification(String message) {
+    /*public void displayInappNotification(String message) {
         Intent notifIntent = new Intent(mContext, InAppPurchaseActivity.class);
         PendingIntent pendingIntent =
                 PendingIntent.getActivity(
@@ -530,7 +529,7 @@ public class NotificationsManager {
                         message,
                         pendingIntent);
         sendNotification(IN_APP_NOTIF_ID, notif);
-    }
+    }*/
 
     public void dismissNotification(int notifId) {
         mNM.cancel(notifId);

@@ -133,7 +133,7 @@ public class BluetoothManager extends BroadcastReceiver {
     }
 
     private void refreshCallView() {
-        LinphoneManager.getInstance().refreshInCallActions();
+        LinphoneManager.getCallManager().refreshInCallActions();
     }
 
     private boolean ensureInit() {

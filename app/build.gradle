@@ -30,6 +30,9 @@ if (!firebaseEnabled()) {
     excludeFiles.add('**/Firebase*')
     println '[Push Notification] Firebase disabled'
 }
+// Remove or comment if you want to use those
+excludeFiles.add('**/XmlRpc*')
+excludeFiles.add('**/InAppPurchase*')
 
 def excludePackage = []
 
@@ -72,7 +75,7 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 4121
+        versionCode 4123
         versionName "4.1"
         applicationId getPackageName()
         multiDexEnabled true

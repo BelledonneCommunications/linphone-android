@@ -65,7 +65,6 @@ import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.call.CallActivity;
-import org.linphone.call.CallManager;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.ContactsUpdatedListener;
@@ -170,7 +169,8 @@ public class ChatMessagesFragment extends Fragment
                             if (oneParticipantOneDevice) {
                                 ParticipantDevice device =
                                         mChatRoom.getParticipants()[0].getDevices()[0];
-                                CallManager.getInstance().inviteAddress(device.getAddress(), true);
+                                LinphoneManager.getCallManager()
+                                        .inviteAddress(device.getAddress(), true);
                             } else {
                                 ((ChatActivity) getActivity())
                                         .showDevices(mLocalSipAddress, mRemoteSipAddress);
@@ -195,7 +195,7 @@ public class ChatMessagesFragment extends Fragment
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        LinphoneManager.getInstance()
+                        LinphoneManager.getCallManager()
                                 .newOutgoingCall(mRemoteParticipantAddress.asString(), null);
                     }
                 });
@@ -862,7 +862,8 @@ public class ChatMessagesFragment extends Fragment
                         if (oneParticipantOneDevice) {
                             ParticipantDevice device =
                                     mChatRoom.getParticipants()[0].getDevices()[0];
-                            CallManager.getInstance().inviteAddress(device.getAddress(), true);
+                            LinphoneManager.getCallManager()
+                                    .inviteAddress(device.getAddress(), true);
                         } else {
                             ((ChatActivity) getActivity())
                                     .showDevices(mLocalSipAddress, mRemoteSipAddress);
@@ -1131,7 +1132,7 @@ public class ChatMessagesFragment extends Fragment
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            LinphoneManager.getInstance()
+                            LinphoneManager.getCallManager()
                                     .newOutgoingCall(
                                             from.asStringUriOnly(),
                                             (contact != null)

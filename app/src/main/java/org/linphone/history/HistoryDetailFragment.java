@@ -77,7 +77,7 @@ public class HistoryDetailFragment extends Fragment {
                 new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        LinphoneManager.getInstance().newOutgoingCall(mSipUri, mDisplayName);
+                        LinphoneManager.getCallManager().newOutgoingCall(mSipUri, mDisplayName);
                     }
                 });
 

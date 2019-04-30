@@ -81,7 +81,7 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        LinphoneManager.getInstance().newOutgoingCall(mAddress);
+                        LinphoneManager.getCallManager().newOutgoingCall(mAddress);
                     }
                 });
 
@@ -91,7 +91,7 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        LinphoneManager.getInstance().newOutgoingCall(mAddress);
+                        LinphoneManager.getCallManager().newOutgoingCall(mAddress);
                     }
                 });
 
@@ -254,7 +254,7 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
                 && (intent.getStringExtra("NumberToCall") != null)) {
             String numberToCall = intent.getStringExtra("NumberToCall");
             Log.i("[Dialer] ACTION_CALL_LINPHONE with number: " + numberToCall);
-            LinphoneManager.getInstance().newOutgoingCall(numberToCall, null);
+            LinphoneManager.getCallManager().newOutgoingCall(numberToCall, null);
         } else if (Intent.ACTION_CALL.equals(action)) {
             if (intent.getData() != null) {
                 addressToCall = intent.getData().toString();

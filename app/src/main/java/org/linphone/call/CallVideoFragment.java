@@ -193,7 +193,7 @@ public class CallVideoFragment extends Fragment
             else newDevice = devices[index];
             core.setVideoDevice(newDevice);
 
-            CallManager.getInstance().updateCall();
+            LinphoneManager.getCallManager().updateCall();
         } catch (ArithmeticException ae) {
             Log.e("[Video Fragment] Cannot swtich camera : no camera");
         }

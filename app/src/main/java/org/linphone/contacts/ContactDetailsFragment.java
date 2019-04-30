@@ -298,7 +298,7 @@ public class ContactDetailsFragment extends Fragment implements ContactsUpdatedL
                                     @Override
                                     public void onClick(View v) {
                                         String tag = (String) v.getTag();
-                                        LinphoneManager.getInstance().newOutgoingCall(tag, null);
+                                        LinphoneManager.getCallManager().newOutgoingCall(tag, null);
                                     }
                                 });
                 if (contactAddress != null) {

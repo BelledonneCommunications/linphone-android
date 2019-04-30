@@ -184,7 +184,7 @@ public class HistoryFragment extends Fragment
                 address = log.getToAddress();
             }
             if (address != null) {
-                LinphoneManager.getInstance().newOutgoingCall(address.asStringUriOnly(), null);
+                LinphoneManager.getCallManager().newOutgoingCall(address.asStringUriOnly(), null);
             }
         }
     }
