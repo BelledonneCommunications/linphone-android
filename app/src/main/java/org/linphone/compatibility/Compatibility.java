@@ -1,7 +1,7 @@
 package org.linphone.compatibility;
 /*
 Compatibility.java
-Copyright (C) 2017  Belledonne Communications, Grenoble, France
+Copyright (C) 2017 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -243,5 +243,17 @@ public class Compatibility {
             return ApiTwentyThreePlus.isDoNotDisturbPolicyAllowingRinging(context, remoteAddress);
         }
         return true;
+    }
+
+    public static void createChatShortcuts(Context context) {
+        if (Version.sdkAboveOrEqual(Version.API25_NOUGAT_71)) {
+            ApiTwentyFivePlus.createChatShortcuts(context);
+        }
+    }
+
+    public static void updateShortcuts(Context context) {
+        if (Version.sdkAboveOrEqual(Version.API25_NOUGAT_71)) {
+            ApiTwentyFivePlus.updateShortcuts(context);
+        }
     }
 }
