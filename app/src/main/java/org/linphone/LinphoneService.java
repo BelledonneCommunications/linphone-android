@@ -314,12 +314,6 @@ public final class LinphoneService extends Service {
         return mNotificationManager;
     }
 
-    public void setCurrentlyDisplayedChatRoom(String address) {
-        if (address != null) {
-            mNotificationManager.resetMessageNotifCount(address);
-        }
-    }
-
     public void createOverlay() {
         if (mOverlay != null) destroyOverlay();
 
