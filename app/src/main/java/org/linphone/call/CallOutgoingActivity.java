@@ -84,7 +84,7 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
                 new CoreListenerStub() {
                     @Override
                     public void onCallStateChanged(
-                            Core lc, Call call, Call.State state, String message) {
+                            Core core, Call call, Call.State state, String message) {
                         if (state == State.Error) {
                             // Convert Core message for internalization
                             if (call.getErrorInfo().getReason() == Reason.Declined) {
@@ -125,7 +125,7 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
                                     new Intent(CallOutgoingActivity.this, CallActivity.class));
                         }
 
-                        if (LinphoneManager.getLc().getCallsNb() == 0) {
+                        if (LinphoneManager.getCore().getCallsNb() == 0) {
                             finish();
                         }
                     }
@@ -135,16 +135,16 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
     @Override
     protected void onResume() {
         super.onResume();
-        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        if (lc != null) {
-            lc.addListener(mListener);
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            core.addListener(mListener);
         }
 
         mCall = null;
 
         // Only one call ringing at a time is allowed
-        if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
-            for (Call call : LinphoneManager.getLc().getCalls()) {
+        if (LinphoneManager.getCore() != null) {
+            for (Call call : LinphoneManager.getCore().getCalls()) {
                 State cstate = call.getState();
                 if (State.OutgoingInit == cstate
                         || State.OutgoingProgress == cstate
@@ -182,9 +182,9 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
 
     @Override
     protected void onPause() {
-        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        if (lc != null) {
-            lc.removeListener(mListener);
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            core.removeListener(mListener);
         }
         super.onPause();
     }
@@ -196,7 +196,7 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
         if (id == R.id.micro) {
             mIsMicMuted = !mIsMicMuted;
             mMicro.setSelected(mIsMicMuted);
-            LinphoneManager.getLc().enableMic(!mIsMicMuted);
+            LinphoneManager.getCore().enableMic(!mIsMicMuted);
         }
         if (id == R.id.speaker) {
             mIsSpeakerEnabled = !mIsSpeakerEnabled;
@@ -216,7 +216,7 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (LinphoneManager.isInstanciated()
                 && (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME)) {
-            LinphoneManager.getLc().terminateCall(mCall);
+            LinphoneManager.getCore().terminateCall(mCall);
             finish();
         }
         return super.onKeyDown(keyCode, event);
@@ -237,7 +237,7 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
     }
 
     private void decline() {
-        LinphoneManager.getLc().terminateCall(mCall);
+        LinphoneManager.getCore().terminateCall(mCall);
         finish();
     }
 

@@ -50,7 +50,7 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
                             .getNotificationManager()
                             .getSipUriForNotificationId(notifId);
 
-            Core core = LinphoneManager.getLc();
+            Core core = LinphoneManager.getCore();
             if (core == null) {
                 Log.e("[Notification Broadcast Receiver] Couldn't get Core instance");
                 onError(context, notifId);
@@ -126,7 +126,7 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
                             .getNotificationManager()
                             .getSipUriForCallNotificationId(notifId);
 
-            Core core = LinphoneManager.getLc();
+            Core core = LinphoneManager.getCore();
             if (core == null) {
                 Log.e("[Notification Broadcast Receiver] Couldn't get Core instance");
                 return;

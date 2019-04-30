@@ -108,7 +108,7 @@ public class AboutActivity extends MainActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+                        Core core = LinphoneManager.getCore();
                         if (core != null) {
                             core.uploadLogCollection();
                         }
@@ -122,7 +122,7 @@ public class AboutActivity extends MainActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+                        Core core = LinphoneManager.getCore();
                         if (core != null) {
                             core.resetLogCollection();
                         }
@@ -135,11 +135,11 @@ public class AboutActivity extends MainActivity {
                 new CoreListenerStub() {
                     @Override
                     public void onLogCollectionUploadProgressIndication(
-                            Core lc, int offset, int total) {}
+                            Core core, int offset, int total) {}
 
                     @Override
                     public void onLogCollectionUploadStateChanged(
-                            Core lc, Core.LogCollectionUploadState state, String info) {
+                            Core core, Core.LogCollectionUploadState state, String info) {
                         if (state == Core.LogCollectionUploadState.InProgress) {
                             displayUploadLogsInProgress();
                         } else if (state == Core.LogCollectionUploadState.Delivered
@@ -153,7 +153,7 @@ public class AboutActivity extends MainActivity {
 
     @Override
     public void onPause() {
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         if (core != null) {
             core.removeListener(mListener);
         }
@@ -170,7 +170,7 @@ public class AboutActivity extends MainActivity {
             hideTabBar();
         }
 
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         if (core != null) {
             core.addListener(mListener);
         }

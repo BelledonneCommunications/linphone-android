@@ -95,7 +95,7 @@ public class StatusFragment extends Fragment {
                 new CoreListenerStub() {
                     @Override
                     public void onRegistrationStateChanged(
-                            final Core lc,
+                            final Core core,
                             final ProxyConfig proxy,
                             final RegistrationState state,
                             String smessage) {
@@ -103,18 +103,18 @@ public class StatusFragment extends Fragment {
                             return;
                         }
 
-                        if (lc.getProxyConfigList() == null) {
+                        if (core.getProxyConfigList() == null) {
                             mStatusLed.setImageResource(R.drawable.led_disconnected);
                             mStatusText.setText(getString(R.string.no_account));
                         } else {
                             mStatusLed.setVisibility(View.VISIBLE);
                         }
 
-                        if (lc.getDefaultProxyConfig() != null
-                                && lc.getDefaultProxyConfig().equals(proxy)) {
+                        if (core.getDefaultProxyConfig() != null
+                                && core.getDefaultProxyConfig().equals(proxy)) {
                             mStatusLed.setImageResource(getStatusIconResource(state));
                             mStatusText.setText(getStatusIconText(state));
-                        } else if (lc.getDefaultProxyConfig() == null) {
+                        } else if (core.getDefaultProxyConfig() == null) {
                             mStatusLed.setImageResource(getStatusIconResource(state));
                             mStatusText.setText(getStatusIconText(state));
                         }
@@ -124,9 +124,7 @@ public class StatusFragment extends Fragment {
                                     new OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            Core core =
-                                                    LinphoneManager
-                                                            .getLcIfManagerNotDestroyedOrNull();
+                                            Core core = LinphoneManager.getCore();
                                             if (core != null) {
                                                 core.refreshRegisters();
                                             }
@@ -139,7 +137,7 @@ public class StatusFragment extends Fragment {
 
                     @Override
                     public void onNotifyReceived(
-                            Core lc, Event ev, String eventName, Content content) {
+                            Core core, Event ev, String eventName, Content content) {
 
                         if (!content.getType().equals("application")) return;
                         if (!content.getSubtype().equals("simple-message-summary")) return;
@@ -195,14 +193,15 @@ public class StatusFragment extends Fragment {
     // NORMAL STATUS BAR
 
     private void populateSliderContent() {
-        if (LinphoneManager.isInstanciated() && LinphoneManager.getLc() != null) {
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
             mVoicemailCount.setVisibility(View.GONE);
 
             if (!mIsInCall) {
                 mVoicemailCount.setVisibility(View.VISIBLE);
             }
 
-            if (LinphoneManager.getLc().getProxyConfigList().length == 0) {
+            if (core.getProxyConfigList().length == 0) {
                 mStatusLed.setImageResource(R.drawable.led_disconnected);
                 mStatusText.setText(getString(R.string.no_account));
             }
@@ -211,11 +210,11 @@ public class StatusFragment extends Fragment {
 
     private int getStatusIconResource(RegistrationState state) {
         try {
-            Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+            Core core = LinphoneManager.getCore();
             boolean defaultAccountConnected =
-                    (lc != null
-                            && lc.getDefaultProxyConfig() != null
-                            && lc.getDefaultProxyConfig().getState() == RegistrationState.Ok);
+                    (core != null
+                            && core.getDefaultProxyConfig() != null
+                            && core.getDefaultProxyConfig().getState() == RegistrationState.Ok);
             if (state == RegistrationState.Ok && defaultAccountConnected) {
                 return R.drawable.led_connected;
             } else if (state == RegistrationState.Progress) {
@@ -238,9 +237,7 @@ public class StatusFragment extends Fragment {
 
         try {
             if (state == RegistrationState.Ok
-                    && LinphoneManager.getLcIfManagerNotDestroyedOrNull()
-                                    .getDefaultProxyConfig()
-                                    .getState()
+                    && LinphoneManager.getCore().getDefaultProxyConfig().getState()
                             == RegistrationState.Ok) {
                 return context.getString(R.string.status_connected);
             } else if (state == RegistrationState.Progress) {
@@ -263,7 +260,7 @@ public class StatusFragment extends Fragment {
         mRefreshHandler.postDelayed(
                 mCallQualityUpdater =
                         new Runnable() {
-                            final Call mCurrentCall = LinphoneManager.getLc().getCurrentCall();
+                            final Call mCurrentCall = LinphoneManager.getCore().getCurrentCall();
 
                             public void run() {
                                 if (mCurrentCall == null) {
@@ -308,16 +305,17 @@ public class StatusFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        if (lc != null) {
-            lc.addListener(mListener);
-            ProxyConfig lpc = lc.getDefaultProxyConfig();
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            core.addListener(mListener);
+            ProxyConfig lpc = core.getDefaultProxyConfig();
             if (lpc != null) {
-                mListener.onRegistrationStateChanged(lc, lpc, lpc.getState(), null);
+                mListener.onRegistrationStateChanged(core, lpc, lpc.getState(), null);
             }
 
-            Call call = lc.getCurrentCall();
-            if (mIsInCall && (call != null || lc.getConferenceSize() > 1 || lc.getCallsNb() > 0)) {
+            Call call = core.getCurrentCall();
+            if (mIsInCall
+                    && (call != null || core.getConferenceSize() > 1 || core.getCallsNb() > 0)) {
                 if (call != null) {
                     startCallQuality();
                     refreshStatusItems(call);
@@ -326,13 +324,13 @@ public class StatusFragment extends Fragment {
                 mCallQuality.setVisibility(View.VISIBLE);
 
                 // We are obviously connected
-                if (lc.getDefaultProxyConfig() == null) {
+                if (core.getDefaultProxyConfig() == null) {
                     mStatusLed.setImageResource(R.drawable.led_disconnected);
                     mStatusText.setText(getString(R.string.no_account));
                 } else {
                     mStatusLed.setImageResource(
-                            getStatusIconResource(lc.getDefaultProxyConfig().getState()));
-                    mStatusText.setText(getStatusIconText(lc.getDefaultProxyConfig().getState()));
+                            getStatusIconResource(core.getDefaultProxyConfig().getState()));
+                    mStatusText.setText(getStatusIconText(core.getDefaultProxyConfig().getState()));
                 }
             }
         } else {
@@ -345,9 +343,9 @@ public class StatusFragment extends Fragment {
     public void onPause() {
         super.onPause();
 
-        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        if (lc != null) {
-            lc.removeListener(mListener);
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            core.removeListener(mListener);
         }
 
         if (mCallQualityUpdater != null) {

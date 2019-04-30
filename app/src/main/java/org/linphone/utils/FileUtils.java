@@ -146,7 +146,7 @@ public class FileUtils {
 
     public static Uri getCVSPathFromLookupUri(String content) {
         String contactId = getNameFromFilePath(content);
-        FriendList[] friendList = LinphoneManager.getLc().getFriendsLists();
+        FriendList[] friendList = LinphoneManager.getCore().getFriendsLists();
         for (FriendList list : friendList) {
             for (Friend friend : list.getFriends()) {
                 if (friend.getRefKey().equals(contactId)) {

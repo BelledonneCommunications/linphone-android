@@ -122,7 +122,7 @@ public class NotificationsManager {
 
                     @Override
                     public void onMessageReceived(
-                            Core lc, final ChatRoom cr, final ChatMessage message) {
+                            Core core, final ChatRoom cr, final ChatMessage message) {
                         if (message.isOutgoing()
                                 || mContext.getResources().getBoolean(R.bool.disable_chat)
                                 || mContext.getResources()
@@ -195,7 +195,7 @@ public class NotificationsManager {
                     }
                 };
 
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         if (core != null) {
             core.addListener(mListener);
         }
@@ -203,7 +203,7 @@ public class NotificationsManager {
 
     public void destroy() {
         mNM.cancelAll();
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         if (core != null) {
             core.removeListener(mListener);
         }
@@ -368,8 +368,7 @@ public class NotificationsManager {
                         missedCallNotifIntent,
                         PendingIntent.FLAG_UPDATE_CURRENT);
 
-        int missedCallCount =
-                LinphoneManager.getLcIfManagerNotDestroyedOrNull().getMissedCallsCount();
+        int missedCallCount = LinphoneManager.getCore().getMissedCallsCount();
         String body;
         if (missedCallCount > 1) {
             body =

@@ -67,7 +67,7 @@ public class GenericConnectionAssistantActivity extends AssistantActivity implem
         mTransport = findViewById(R.id.assistant_transports);
 
         mAccountCreator =
-                LinphoneManager.getLcIfManagerNotDestroyedOrNull()
+                LinphoneManager.getCore()
                         .createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
     }
 

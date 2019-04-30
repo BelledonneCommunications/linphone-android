@@ -211,7 +211,7 @@ public class ChatRoomCreationFragment extends Fragment
 
         mSecurityToggle.setChecked(mChatRoomEncrypted);
         mSearchAdapter.setSecurityEnabled(mChatRoomEncrypted);
-        ProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
+        ProxyConfig lpc = LinphoneManager.getCore().getDefaultProxyConfig();
         if ((mChatRoomSubject != null && mChatRoomAddress != null)
                 || (lpc == null || lpc.getConferenceFactoryUri() == null)) {
             mSecurityToggle.setVisibility(View.GONE);
@@ -342,8 +342,8 @@ public class ChatRoomCreationFragment extends Fragment
     @Override
     public void onItemClicked(int position) {
         SearchResult searchResult = mSearchAdapter.getContacts().get(position);
-        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        ProxyConfig lpc = lc.getDefaultProxyConfig();
+        Core core = LinphoneManager.getCore();
+        ProxyConfig lpc = core.getDefaultProxyConfig();
         boolean createEncryptedChatRoom = mSecurityToggle.isChecked();
 
         if (createEncryptedChatRoom && !searchResult.hasCapability(FriendCapability.LimeX3Dh)) {
@@ -366,7 +366,7 @@ public class ChatRoomCreationFragment extends Fragment
             if (address == null) {
                 Log.w(
                         "[Chat Room Creation] Using search result without an address, trying with phone number...");
-                address = lc.interpretUrl(searchResult.getPhoneNumber());
+                address = core.interpretUrl(searchResult.getPhoneNumber());
             }
             if (address == null) {
                 Log.e("[Chat Room Creation] Can't create a chat room without a valid address !");
@@ -378,12 +378,12 @@ public class ChatRoomCreationFragment extends Fragment
             }
 
             if (createEncryptedChatRoom && lpc != null && lpc.getConferenceFactoryUri() != null) {
-                mChatRoom = lc.findOneToOneChatRoom(lpc.getIdentityAddress(), address, true);
+                mChatRoom = core.findOneToOneChatRoom(lpc.getIdentityAddress(), address, true);
                 if (mChatRoom != null) {
                     ((ChatActivity) getActivity())
                             .showChatRoom(mChatRoom.getLocalAddress(), mChatRoom.getPeerAddress());
                 } else {
-                    ChatRoomParams params = lc.createDefaultChatRoomParams();
+                    ChatRoomParams params = core.createDefaultChatRoomParams();
                     // This will set the backend to FlexisipChat automatically
                     params.enableEncryption(true);
                     params.enableGroup(false);
@@ -392,7 +392,7 @@ public class ChatRoomCreationFragment extends Fragment
                     participants[0] = address;
 
                     mChatRoom =
-                            lc.createChatRoom(
+                            core.createChatRoom(
                                     params,
                                     getString(R.string.dummy_group_chat_subject),
                                     participants);
@@ -407,11 +407,11 @@ public class ChatRoomCreationFragment extends Fragment
                 if (lpc != null
                         && lpc.getConferenceFactoryUri() != null
                         && !LinphonePreferences.instance().useBasicChatRoomFor1To1()) {
-                    mChatRoom = lc.findOneToOneChatRoom(lpc.getIdentityAddress(), address, false);
+                    mChatRoom = core.findOneToOneChatRoom(lpc.getIdentityAddress(), address, false);
                     if (mChatRoom == null) {
                         mWaitLayout.setVisibility(View.VISIBLE);
 
-                        ChatRoomParams params = lc.createDefaultChatRoomParams();
+                        ChatRoomParams params = core.createDefaultChatRoomParams();
                         params.enableEncryption(false);
                         params.enableGroup(false);
                         // We don't want a basic chat room
@@ -421,7 +421,7 @@ public class ChatRoomCreationFragment extends Fragment
                         participants[0] = address;
 
                         mChatRoom =
-                                lc.createChatRoom(
+                                core.createChatRoom(
                                         params,
                                         getString(R.string.dummy_group_chat_subject),
                                         participants);
@@ -439,7 +439,7 @@ public class ChatRoomCreationFragment extends Fragment
                                         mChatRoom.getLocalAddress(), mChatRoom.getPeerAddress());
                     }
                 } else {
-                    ChatRoom chatRoom = lc.getChatRoom(address);
+                    ChatRoom chatRoom = core.getChatRoom(address);
                     if (chatRoom != null) {
                         // Pop back stack so back button takes to the chat rooms list
                         getFragmentManager().popBackStack();

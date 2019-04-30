@@ -148,7 +148,7 @@ public final class LinphoneService extends Service {
                 new CoreListenerStub() {
                     @Override
                     public void onCallStateChanged(
-                            Core lc, Call call, Call.State state, String message) {
+                            Core core, Call call, Call.State state, String message) {
                         if (sInstance == null) {
                             Log.i(
                                     "[Service] Service not ready, discarding call state change to ",
@@ -178,11 +178,12 @@ public final class LinphoneService extends Service {
                     }
 
                     @Override
-                    public void onGlobalStateChanged(Core lc, GlobalState state, String message) {}
+                    public void onGlobalStateChanged(
+                            Core core, GlobalState state, String message) {}
 
                     @Override
                     public void onRegistrationStateChanged(
-                            Core lc, ProxyConfig cfg, RegistrationState state, String smessage) {}
+                            Core core, ProxyConfig cfg, RegistrationState state, String smessage) {}
                 };
     }
 
@@ -205,7 +206,7 @@ public final class LinphoneService extends Service {
 
         sInstance = this; // sInstance is ready once linphone manager has been created
         mNotificationManager = new NotificationsManager(this);
-        LinphoneManager.getLc().addListener(mListener);
+        LinphoneManager.getCore().addListener(mListener);
 
         if (Version.sdkAboveOrEqual(Version.API26_O_80)
                 && intent != null
@@ -247,14 +248,14 @@ public final class LinphoneService extends Service {
             Log.i("[Service] Service is running in foreground, don't stop it");
         } else if (getResources().getBoolean(R.bool.kill_service_with_task_manager)) {
             Log.i("[Service] Task removed, stop service");
-            Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-            if (lc != null) {
-                lc.terminateAllCalls();
+            Core core = LinphoneManager.getCore();
+            if (core != null) {
+                core.terminateAllCalls();
             }
 
             // If push is enabled, don't unregister account, otherwise do unregister
             if (LinphonePreferences.instance().isPushNotificationEnabled()) {
-                if (lc != null) lc.setNetworkReachable(false);
+                if (core != null) core.setNetworkReachable(false);
             }
             stopSelf();
         }
@@ -270,7 +271,7 @@ public final class LinphoneService extends Service {
         }
         destroyOverlay();
 
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         if (core != null) {
             core.removeListener(mListener);
             core = null; // To allow the gc calls below to free the Core
@@ -317,7 +318,7 @@ public final class LinphoneService extends Service {
     public void createOverlay() {
         if (mOverlay != null) destroyOverlay();
 
-        Core core = LinphoneManager.getLc();
+        Core core = LinphoneManager.getCore();
         Call call = core.getCurrentCall();
         if (call == null || !call.getCurrentParams().videoEnabled()) return;
 

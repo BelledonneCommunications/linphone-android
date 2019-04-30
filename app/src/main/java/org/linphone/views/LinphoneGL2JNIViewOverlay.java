@@ -35,6 +35,7 @@ import org.linphone.LinphoneService;
 import org.linphone.call.CallActivity;
 import org.linphone.core.Call;
 import org.linphone.core.CallParams;
+import org.linphone.core.Core;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 
@@ -76,7 +77,7 @@ public class LinphoneGL2JNIViewOverlay extends org.linphone.mediastream.video.di
                         new AndroidVideoWindowImpl.VideoWindowListener() {
                             public void onVideoRenderingSurfaceReady(
                                     AndroidVideoWindowImpl vw, SurfaceView surface) {
-                                LinphoneManager.getLc().setNativeVideoWindowId(vw);
+                                LinphoneManager.getCore().setNativeVideoWindowId(vw);
                             }
 
                             public void onVideoRenderingSurfaceDestroyed(
@@ -88,11 +89,12 @@ public class LinphoneGL2JNIViewOverlay extends org.linphone.mediastream.video.di
                             public void onVideoPreviewSurfaceDestroyed(AndroidVideoWindowImpl vw) {}
                         });
 
-        Call call = LinphoneManager.getLc().getCurrentCall();
+        Core core = LinphoneManager.getCore();
+        Call call = core.getCurrentCall();
         CallParams callParams = call.getCurrentParams();
         mParams.width = callParams.getReceivedVideoDefinition().getWidth();
         mParams.height = callParams.getReceivedVideoDefinition().getHeight();
-        LinphoneManager.getLc().setNativeVideoWindowId(mAndroidVideoWindowImpl);
+        core.setNativeVideoWindowId(mAndroidVideoWindowImpl);
 
         setOnClickListener(
                 new OnClickListener() {

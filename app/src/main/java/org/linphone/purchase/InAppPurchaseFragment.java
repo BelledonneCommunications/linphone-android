@@ -114,7 +114,7 @@ public class InAppPurchaseFragment extends Fragment implements View.OnClickListe
     }
 
     private boolean isUsernameCorrect(String username) {
-        ProxyConfig lpc = LinphoneManager.getLc().createProxyConfig();
+        ProxyConfig lpc = LinphoneManager.getCore().createProxyConfig();
         return lpc.isPhoneNumber(username);
     }
 
@@ -133,7 +133,7 @@ public class InAppPurchaseFragment extends Fragment implements View.OnClickListe
 
     private String getUsername() {
         String username = this.mUsername.getText().toString();
-        ProxyConfig lpc = LinphoneManager.getLc().createProxyConfig();
+        ProxyConfig lpc = LinphoneManager.getCore().createProxyConfig();
         username = lpc.normalizePhoneNumber(username);
         return username.toLowerCase(Locale.getDefault());
     }

@@ -37,6 +37,7 @@ import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatMessageListenerStub;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.Core;
+import org.linphone.core.Factory;
 import org.linphone.core.ParticipantImdnState;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.views.ContactAvatar;
@@ -67,13 +68,13 @@ public class ImdnFragment extends Fragment {
 
         if (getArguments() != null) {
             String localSipuri = getArguments().getString("LocalSipUri");
-            mLocalSipAddr = LinphoneManager.getLc().createAddress(localSipuri);
+            mLocalSipAddr = Factory.instance().createAddress(localSipuri);
             String roomUri = getArguments().getString("RemoteSipUri");
-            mRoomAddr = LinphoneManager.getLc().createAddress(roomUri);
+            mRoomAddr = Factory.instance().createAddress(roomUri);
             mMessageId = getArguments().getString("MessageId");
         }
 
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         ChatRoom room = core.getChatRoom(mRoomAddr, mLocalSipAddr);
 
         mInflater = inflater;

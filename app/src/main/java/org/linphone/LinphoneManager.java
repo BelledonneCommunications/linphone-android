@@ -22,14 +22,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Resources;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -37,7 +35,6 @@ import android.hardware.SensorManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
@@ -82,8 +79,6 @@ import org.linphone.core.TunnelConfig;
 import org.linphone.core.VersionUpdateCheckResult;
 import org.linphone.core.tools.H264Helper;
 import org.linphone.core.tools.Log;
-import org.linphone.core.tools.OpenH264DownloadHelper;
-import org.linphone.core.tools.OpenH264DownloadHelperListener;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration.AndroidCamera;
@@ -98,60 +93,44 @@ import org.linphone.utils.MediaScanner;
 import org.linphone.utils.PushNotificationUtils;
 import org.linphone.views.AddressType;
 
-/**
- * Manager of the low level LibLinphone stuff.<br>
- * Including:
- *
- * <ul>
- *   <li>Starting C liblinphone
- *   <li>Reacting to C liblinphone state changes
- *   <li>Calling Linphone android service listener methods
- *   <li>Interacting from Android GUI/service with low level SIP stuff/
- * </ul>
- *
- * <p>Add Service Listener to react to Linphone state changes.
- */
+/** Handles Linphone's Core lifecycle */
 public class LinphoneManager implements SensorEventListener {
     private static LinphoneManager sInstance;
     private static boolean sExited;
 
-    public final String configFile;
-
-    /** Called when the activity is first created. */
+    private final String mConfigFile;
     private final String mLPConfigXsd;
-
+    private final String mBasePath;
     private final String mLinphoneFactoryConfigFile;
     private final String mLinphoneDynamicConfigFile, mDefaultDynamicConfigFile;
     private final String mRingSoundFile;
     private final String mCallLogDatabaseFile;
     private final String mFriendsDatabaseFile;
     private final String mUserCertsPath;
+
     private final Context mServiceContext;
+    private AndroidAudioManager mAudioManager;
     private final PowerManager mPowerManager;
-    private final Resources mRessources;
-    private final LinphonePreferences mPrefs;
-    private Core mCore;
-    private CoreListenerStub mCoreListener;
-    private OpenH264DownloadHelper mCodecDownloader;
-    private OpenH264DownloadHelperListener mCodecListener;
-    private final String mBasePath;
-    private boolean mCallGsmON;
     private final ConnectivityManager mConnectivityManager;
     private BroadcastReceiver mHookReceiver;
     private BroadcastReceiver mCallReceiver;
-    private final Handler mHandler = new Handler();
     private WakeLock mProximityWakelock;
-    private AccountCreator mAccountCreator;
-    private AccountCreatorListenerStub mAccountCreatorListener;
     private final SensorManager mSensorManager;
     private final Sensor mProximity;
+    private final MediaScanner mMediaScanner;
+    private Timer mTimer;
+    private final Handler mHandler = new Handler();
+
+    private final LinphonePreferences mPrefs;
+    private Core mCore;
+    private CoreListenerStub mCoreListener;
+    private AccountCreator mAccountCreator;
+    private AccountCreatorListenerStub mAccountCreatorListener;
+    private CallActivity.CallActivityInterface mCallInterface;
+
+    private boolean mCallGsmON;
     private boolean mProximitySensingEnabled;
     private boolean mHandsetON = false;
-    private Timer mTimer;
-    private final MediaScanner mMediaScanner;
-
-    private CallActivity.CallActivityInterface mCallInterface;
-    private AndroidAudioManager mAudioManager;
 
     private LinphoneManager(Context c) {
         sExited = false;
@@ -159,7 +138,7 @@ public class LinphoneManager implements SensorEventListener {
         mBasePath = c.getFilesDir().getAbsolutePath();
         mLPConfigXsd = mBasePath + "/lpconfig.xsd";
         mLinphoneFactoryConfigFile = mBasePath + "/linphonerc";
-        configFile = mBasePath + "/.linphonerc";
+        mConfigFile = mBasePath + "/.linphonerc";
         mLinphoneDynamicConfigFile = mBasePath + "/linphone_assistant_create.rc";
         mDefaultDynamicConfigFile = mBasePath + "/default_assistant_create.rc";
         mCallLogDatabaseFile = mBasePath + "/linphone-log-history.db";
@@ -173,7 +152,6 @@ public class LinphoneManager implements SensorEventListener {
                 (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
         mSensorManager = (SensorManager) c.getSystemService(Context.SENSOR_SERVICE);
         mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
-        mRessources = c.getResources();
 
         File f = new File(mUserCertsPath);
         if (!f.exists()) {
@@ -188,11 +166,11 @@ public class LinphoneManager implements SensorEventListener {
                 new CoreListenerStub() {
                     @Override
                     public void onGlobalStateChanged(
-                            final Core lc, final GlobalState state, final String message) {
+                            final Core core, final GlobalState state, final String message) {
                         Log.i("New global state [", state, "]");
                         if (state == GlobalState.On) {
                             try {
-                                initLiblinphone(lc);
+                                initLiblinphone(core);
                             } catch (IllegalArgumentException iae) {
                                 Log.e(
                                         "[Manager] Global State Changed Illegal Argument Exception: "
@@ -203,7 +181,7 @@ public class LinphoneManager implements SensorEventListener {
 
                     @Override
                     public void onConfiguringStatus(
-                            Core lc, ConfiguringState state, String message) {
+                            Core core, ConfiguringState state, String message) {
                         Log.d(
                                 "[Manager] Remote provisioning status = "
                                         + state.toString()
@@ -220,12 +198,13 @@ public class LinphoneManager implements SensorEventListener {
                     @SuppressLint("Wakelock")
                     @Override
                     public void onCallStateChanged(
-                            final Core lc,
+                            final Core core,
                             final Call call,
                             final State state,
                             final String message) {
                         Log.i("[Manager] New call state [", state, "]");
-                        if (state == State.IncomingReceived && !call.equals(lc.getCurrentCall())) {
+                        if (state == State.IncomingReceived
+                                && !call.equals(core.getCurrentCall())) {
                             if (call.getReplacedCall() != null) {
                                 // attended transfer
                                 // it will be accepted automatically.
@@ -273,15 +252,18 @@ public class LinphoneManager implements SensorEventListener {
                             if (remoteVideo
                                     && !localVideo
                                     && !autoAcceptCameraPolicy
-                                    && LinphoneManager.getLc().getConference() == null) {
-                                LinphoneManager.getLc().deferCallUpdate(call);
+                                    && mCore.getConference() == null) {
+                                mCore.deferCallUpdate(call);
                             }
                         }
                     }
 
                     @Override
                     public void onVersionUpdateCheckResultReceived(
-                            Core lc, VersionUpdateCheckResult result, String version, String url) {
+                            Core core,
+                            VersionUpdateCheckResult result,
+                            String version,
+                            String url) {
                         if (result == VersionUpdateCheckResult.NewVersionAvailable) {
                             final String urlToUse = url;
                             final String versionAv = version;
@@ -322,14 +304,14 @@ public class LinphoneManager implements SensorEventListener {
                     }
 
                     @Override
-                    public void onFriendListCreated(Core lc, FriendList list) {
+                    public void onFriendListCreated(Core core, FriendList list) {
                         if (LinphoneService.isReady()) {
                             list.addListener(ContactsManager.getInstance());
                         }
                     }
 
                     @Override
-                    public void onFriendListRemoved(Core lc, FriendList list) {
+                    public void onFriendListRemoved(Core core, FriendList list) {
                         list.removeListener(ContactsManager.getInstance());
                     }
                 };
@@ -377,10 +359,13 @@ public class LinphoneManager implements SensorEventListener {
 
         sInstance = new LinphoneManager(c);
         sInstance.startLibLinphone(c, isPush);
-        sInstance.initOpenH264DownloadHelper();
 
         // H264 codec Management - set to auto mode -> MediaCodec >= android 5.0 >= OpenH264
-        H264Helper.setH264Mode(H264Helper.MODE_AUTO, getLc());
+        H264Helper.setH264Mode(H264Helper.MODE_AUTO, sInstance.mCore);
+    }
+
+    public static boolean isInstanciated() {
+        return sInstance != null;
     }
 
     public static synchronized LinphoneManager getInstance() {
@@ -389,18 +374,31 @@ public class LinphoneManager implements SensorEventListener {
         if (sExited) {
             throw new RuntimeException(
                     "[Manager] Linphone Manager was already destroyed. "
-                            + "Better use getLcIfManagerNotDestroyedOrNull and check returned value");
+                            + "Better use getCore and check returned value");
         }
 
         throw new RuntimeException("[Manager] Linphone Manager should be created before accessed");
     }
 
-    public static synchronized Core getLc() {
-        return getInstance().mCore;
-    }
-
     public static synchronized AndroidAudioManager getAudioManager() {
         return getInstance().mAudioManager;
+    }
+
+    public static synchronized void destroy() {
+        if (sInstance == null) return;
+        sExited = true;
+        sInstance.destroyManager();
+        sInstance = null;
+    }
+
+    public static synchronized Core getCore() {
+        if (sExited || sInstance == null) {
+            // Can occur if the UI thread play a posted event but in the meantime the
+            // LinphoneManager was destroyed
+            // Ex: stop call and quickly terminate application.
+            return null;
+        }
+        return sInstance.mCore;
     }
 
     private static Boolean isProximitySensorNearby(final SensorEvent event) {
@@ -422,173 +420,10 @@ public class LinphoneManager implements SensorEventListener {
         return distanceInCm < threshold;
     }
 
-    private static void ContactsManagerDestroy() {
-        if (LinphoneManager.sInstance != null && LinphoneManager.sInstance.mServiceContext != null)
-            LinphoneManager.sInstance
-                    .mServiceContext
-                    .getContentResolver()
-                    .unregisterContentObserver(ContactsManager.getInstance());
-        ContactsManager.getInstance().destroy();
-    }
+    /* End of static */
 
-    private static void BluetoothManagerDestroy() {
-        BluetoothManager.getInstance().destroy();
-    }
-
-    public static synchronized void destroy() {
-        if (sInstance == null) return;
-        sInstance.changeStatusToOffline();
-        sInstance.mMediaScanner.destroy();
-        sInstance.mAudioManager.destroy();
-        sExited = true;
-        sInstance.destroyCore();
-        sInstance = null;
-    }
-
-    public static synchronized Core getLcIfManagerNotDestroyedOrNull() {
-        if (sExited || sInstance == null) {
-            // Can occur if the UI thread play a posted event but in the meantime the
-            // LinphoneManager was destroyed
-            // Ex: stop call and quickly terminate application.
-            return null;
-        }
-        return getLc();
-    }
-
-    public static boolean isInstanciated() {
-        return sInstance != null;
-    }
-
-    private void initOpenH264DownloadHelper() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            Log.i("[Manager] Android >= 5.1 we disable the download of OpenH264");
-            OpenH264DownloadHelper.setOpenH264DownloadEnabled(false);
-            return;
-        }
-
-        mCodecDownloader = Factory.instance().createOpenH264DownloadHelper(mServiceContext);
-        mCodecListener =
-                new OpenH264DownloadHelperListener() {
-                    ProgressDialog progress;
-                    final int ctxt = 0;
-
-                    @Override
-                    public void OnProgress(final int current, final int max) {
-                        mHandler.post(
-                                new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        OpenH264DownloadHelper ohcodec =
-                                                LinphoneManager.getInstance()
-                                                        .getOpenH264DownloadHelper();
-                                        if (progress == null) {
-                                            progress =
-                                                    new ProgressDialog(
-                                                            (Context) ohcodec.getUserData(ctxt));
-                                            progress.setCanceledOnTouchOutside(false);
-                                            progress.setCancelable(false);
-                                            progress.setProgressStyle(
-                                                    ProgressDialog.STYLE_HORIZONTAL);
-                                        } else if (current <= max) {
-                                            progress.setMessage(
-                                                    getString(
-                                                            R.string
-                                                                    .assistant_openh264_downloading));
-                                            progress.setMax(max);
-                                            progress.setProgress(current);
-                                            progress.show();
-                                        } else {
-                                            progress.dismiss();
-                                            progress = null;
-                                            /*if (Build.VERSION.SDK_INT
-                                                    >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                                                LinphoneManager.getLc()
-                                                        .reloadMsPlugins(
-                                                                AssistantActivity.instance()
-                                                                        .getApplicationInfo()
-                                                                        .nativeLibraryDir);
-                                                AssistantActivity.instance().endDownloadCodec();
-                                            } else {
-                                                // We need to restart due to bad android linker
-                                                AssistantActivity.instance().restartApplication();
-                                            }*/
-                                        }
-                                    }
-                                });
-                    }
-
-                    @Override
-                    public void OnError(final String error) {
-                        mHandler.post(
-                                new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (progress != null) progress.dismiss();
-                                        AlertDialog.Builder builder =
-                                                new AlertDialog.Builder(
-                                                        (Context)
-                                                                LinphoneManager.getInstance()
-                                                                        .getOpenH264DownloadHelper()
-                                                                        .getUserData(ctxt));
-                                        builder.setMessage(
-                                                getString(R.string.assistant_openh264_error));
-                                        builder.setCancelable(false);
-                                        builder.setNeutralButton(getString(R.string.ok), null);
-                                        builder.show();
-                                    }
-                                });
-                    }
-                };
-        mCodecDownloader.setOpenH264HelperListener(mCodecListener);
-    }
-
-    public OpenH264DownloadHelperListener getOpenH264HelperListener() {
-        return mCodecListener;
-    }
-
-    public OpenH264DownloadHelper getOpenH264DownloadHelper() {
-        return mCodecDownloader;
-    }
-
-    private boolean isPresenceModelActivitySet() {
-        Core lc = getLcIfManagerNotDestroyedOrNull();
-        if (isInstanciated() && lc != null) {
-            return lc.getPresenceModel() != null && lc.getPresenceModel().getActivity() != null;
-        }
-        return false;
-    }
-
-    public void changeStatusToOnline() {
-        Core lc = getLcIfManagerNotDestroyedOrNull();
-        if (lc == null) return;
-        PresenceModel model = lc.createPresenceModel();
-        model.setBasicStatus(PresenceBasicStatus.Open);
-        lc.setPresenceModel(model);
-    }
-
-    public void changeStatusToOnThePhone() {
-        Core lc = getLcIfManagerNotDestroyedOrNull();
-        if (lc == null) return;
-
-        if (isInstanciated()
-                && isPresenceModelActivitySet()
-                && lc.getPresenceModel().getActivity().getType()
-                        != PresenceActivity.Type.OnThePhone) {
-            lc.getPresenceModel().getActivity().setType(PresenceActivity.Type.OnThePhone);
-        } else if (isInstanciated() && !isPresenceModelActivitySet()) {
-            PresenceModel model =
-                    lc.createPresenceModelWithActivity(PresenceActivity.Type.OnThePhone, null);
-            lc.setPresenceModel(model);
-        }
-    }
-
-    private void changeStatusToOffline() {
-        Core lc = getLcIfManagerNotDestroyedOrNull();
-        if (isInstanciated() && lc != null) {
-            PresenceModel model = lc.getPresenceModel();
-            model.setBasicStatus(PresenceBasicStatus.Closed);
-            lc.setPresenceModel(model);
-        }
+    public MediaScanner getMediaScanner() {
+        return mMediaScanner;
     }
 
     public void newOutgoingCall(AddressType address) {
@@ -622,7 +457,7 @@ public class LinphoneManager implements SensorEventListener {
         }
 
         ProxyConfig lpc = mCore.getDefaultProxyConfig();
-        if (mRessources.getBoolean(R.bool.forbid_self_call)
+        if (mServiceContext.getResources().getBoolean(R.bool.forbid_self_call)
                 && lpc != null
                 && lAddress.weakEqual(lpc.getIdentityAddress())) {
             return;
@@ -665,14 +500,14 @@ public class LinphoneManager implements SensorEventListener {
                 break;
             }
         }
-        String[] devices = getLc().getVideoDevicesList();
+        String[] devices = mCore.getVideoDevicesList();
         if (camId >= devices.length) {
             Log.e(
                     "[Manager] Trying to use a camera id that's higher than the linphone's devices list, using 0 to prevent crash...");
             camId = 0;
         }
         String newDevice = devices[camId];
-        LinphoneManager.getLc().setVideoDevice(newDevice);
+        mCore.setVideoDevice(newDevice);
     }
 
     private void enableCamera(Call call, boolean enable) {
@@ -695,7 +530,7 @@ public class LinphoneManager implements SensorEventListener {
             Log.e("[Manager] playDtmf exception: " + e);
         }
 
-        getLc().playDtmf(dtmf, -1);
+        mCore.playDtmf(dtmf, -1);
     }
 
     private void terminateCall() {
@@ -704,67 +539,38 @@ public class LinphoneManager implements SensorEventListener {
         }
     }
 
-    public void initTunnelFromConf() {
-        if (!mCore.tunnelAvailable()) return;
-
-        NetworkInfo info = mConnectivityManager.getActiveNetworkInfo();
-        Tunnel tunnel = mCore.getTunnel();
-        tunnel.cleanServers();
-        TunnelConfig config = mPrefs.getTunnelConfig();
-        if (config.getHost() != null) {
-            tunnel.addServer(config);
-            manageTunnelServer(info);
-        }
+    public void restartCore() {
+        mCore.stop();
+        mCore.start();
     }
 
-    private boolean isTunnelNeeded(NetworkInfo info) {
-        if (info == null) {
-            Log.i("[Manager] No connectivity: tunnel should be disabled");
-            return false;
-        }
-
-        String pref = mPrefs.getTunnelMode();
-
-        if (getString(R.string.tunnel_mode_entry_value_always).equals(pref)) {
-            return true;
-        }
-
-        if (info.getType() != ConnectivityManager.TYPE_WIFI
-                && getString(R.string.tunnel_mode_entry_value_3G_only).equals(pref)) {
-            Log.i("[Manager] Need tunnel: 'no wifi' connection");
-            return true;
-        }
-
-        return false;
-    }
-
-    private void manageTunnelServer(NetworkInfo info) {
-        if (mCore == null) return;
-        if (!mCore.tunnelAvailable()) return;
-        Tunnel tunnel = mCore.getTunnel();
-
-        Log.i("[Manager] Managing tunnel");
-        if (isTunnelNeeded(info)) {
-            Log.i("[Manager] Tunnel need to be activated");
-            tunnel.setMode(Tunnel.Mode.Enable);
-        } else {
-            Log.i("[Manager] Tunnel should not be used");
-            String pref = mPrefs.getTunnelMode();
-            tunnel.setMode(Tunnel.Mode.Disable);
-            if (getString(R.string.tunnel_mode_entry_value_auto).equals(pref)) {
-                tunnel.setMode(Tunnel.Mode.Auto);
+    private void destroyCore() {
+        Log.w("[Manager] Destroying Core");
+        if (LinphonePreferences.instance() != null) {
+            // We set network reachable at false before destroy LC to not send register with expires
+            // at 0
+            if (LinphonePreferences.instance().isPushNotificationEnabled()) {
+                Log.w(
+                        "[Manager] Setting network reachability to False to prevent unregister and allow incoming push notifications");
+                mCore.setNetworkReachable(false);
             }
         }
+        mCore.stop();
+        mCore.removeListener(mCoreListener);
     }
 
-    private synchronized void destroyCore() {
-        Log.w("[Manager] Destroying Core");
-        sExited = true;
-        ContactsManagerDestroy();
-        BluetoothManagerDestroy();
+    private synchronized void destroyManager() {
+        Log.w("[Manager] Destroying Manager");
+        changeStatusToOffline();
+
+        mMediaScanner.destroy();
+        mAudioManager.destroy();
+        ContactsManager.getInstance().destroy();
+        BluetoothManager.getInstance().destroy();
+
         try {
             mTimer.cancel();
-            destroyLinphoneCore();
+            destroyCore();
         } catch (RuntimeException e) {
             Log.e("[Manager] Destroy Core Runtime Exception: " + e);
         } finally {
@@ -778,20 +584,16 @@ public class LinphoneManager implements SensorEventListener {
             } catch (Exception e) {
                 Log.e("[Manager] unregister receiver exception: " + e);
             }
+
             mCore = null;
         }
-    }
-
-    public void restartCore() {
-        mCore.stop();
-        mCore.start();
     }
 
     private synchronized void startLibLinphone(Context c, boolean isPush) {
         try {
             copyAssetsFromPackage();
             // traces alway start with traces enable to not missed first initialization
-            mCore = Factory.instance().createCore(configFile, mLinphoneFactoryConfigFile, c);
+            mCore = Factory.instance().createCore(mConfigFile, mLinphoneFactoryConfigFile, c);
             mCore.addListener(mCoreListener);
             if (isPush) {
                 Log.w(
@@ -822,8 +624,8 @@ public class LinphoneManager implements SensorEventListener {
         }
     }
 
-    private synchronized void initLiblinphone(Core lc) {
-        mCore = lc;
+    private synchronized void initLiblinphone(Core core) {
+        mCore = core;
         mAudioManager = new AndroidAudioManager(mServiceContext);
 
         mCore.setZrtpSecretsFile(mBasePath + "/zrtp_secrets");
@@ -903,9 +705,7 @@ public class LinphoneManager implements SensorEventListener {
 
         resetCameraFromPreferences();
 
-        mAccountCreator =
-                LinphoneManager.getLc()
-                        .createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
+        mAccountCreator = mCore.createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
         mAccountCreator.setListener(mAccountCreatorListener);
         mCallGsmON = false;
     }
@@ -944,50 +744,6 @@ public class LinphoneManager implements SensorEventListener {
         return mHandsetON;
     }
 
-    private void copyAssetsFromPackage() throws IOException {
-        copyIfNotExist(R.raw.linphonerc_default, configFile);
-        copyFromPackage(R.raw.linphonerc_factory, new File(mLinphoneFactoryConfigFile).getName());
-        copyIfNotExist(R.raw.lpconfig, mLPConfigXsd);
-        copyFromPackage(
-                R.raw.default_assistant_create, new File(mDefaultDynamicConfigFile).getName());
-        copyFromPackage(
-                R.raw.linphone_assistant_create, new File(mLinphoneDynamicConfigFile).getName());
-    }
-
-    private void copyIfNotExist(int ressourceId, String target) throws IOException {
-        File lFileToCopy = new File(target);
-        if (!lFileToCopy.exists()) {
-            copyFromPackage(ressourceId, lFileToCopy.getName());
-        }
-    }
-
-    private void copyFromPackage(int ressourceId, String target) throws IOException {
-        FileOutputStream lOutputStream = mServiceContext.openFileOutput(target, 0);
-        InputStream lInputStream = mRessources.openRawResource(ressourceId);
-        int readByte;
-        byte[] buff = new byte[8048];
-        while ((readByte = lInputStream.read(buff)) != -1) {
-            lOutputStream.write(buff, 0, readByte);
-        }
-        lOutputStream.flush();
-        lOutputStream.close();
-        lInputStream.close();
-    }
-
-    private void destroyLinphoneCore() {
-        if (LinphonePreferences.instance() != null) {
-            // We set network reachable at false before destroy LC to not send register with expires
-            // at 0
-            if (LinphonePreferences.instance().isPushNotificationEnabled()) {
-                Log.w(
-                        "[Manager] Setting network reachability to False to prevent unregister and allow incoming push notifications");
-                mCore.setNetworkReachable(false);
-            }
-        }
-        mCore.stop();
-        mCore.removeListener(mCoreListener);
-    }
-
     public void enableProximitySensing(boolean enable) {
         if (enable) {
             if (!mProximitySensingEnabled) {
@@ -1024,14 +780,6 @@ public class LinphoneManager implements SensorEventListener {
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 
-    public MediaScanner getMediaScanner() {
-        return mMediaScanner;
-    }
-
-    private String getString(int key) {
-        return mRessources.getString(key);
-    }
-
     public void checkForUpdate() {
         String url = LinphonePreferences.instance().getCheckReleaseUrl();
         if (url != null && !url.isEmpty()) {
@@ -1042,8 +790,7 @@ public class LinphoneManager implements SensorEventListener {
                             .getResources()
                             .getInteger(R.integer.time_between_update_check); // 24h
             if (lastTimestamp == 0 || currentTimeStamp - lastTimestamp >= interval) {
-                LinphoneManager.getLcIfManagerNotDestroyedOrNull()
-                        .checkForUpdate(BuildConfig.VERSION_NAME);
+                LinphoneManager.getCore().checkForUpdate(BuildConfig.VERSION_NAME);
                 LinphonePreferences.instance().setLastCheckReleaseTimestamp(currentTimeStamp);
             }
         }
@@ -1067,7 +814,7 @@ public class LinphoneManager implements SensorEventListener {
     public boolean acceptCall(Call call) {
         if (call == null) return false;
 
-        CallParams params = LinphoneManager.getLc().createCallParams(call);
+        CallParams params = mCore.createCallParams(call);
 
         boolean isLowBandwidthConnection =
                 !LinphoneUtils.isHighBandwidthConnection(
@@ -1087,7 +834,7 @@ public class LinphoneManager implements SensorEventListener {
     }
 
     public void isAccountWithAlias() {
-        if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
+        if (mCore.getDefaultProxyConfig() != null) {
             long now = new Timestamp(new Date().getTime()).getTime();
             if (mAccountCreator != null && LinphonePreferences.instance().getLinkPopupTime() == null
                     || Long.parseLong(LinphonePreferences.instance().getLinkPopupTime()) < now) {
@@ -1125,8 +872,7 @@ public class LinphoneManager implements SensorEventListener {
                         mServiceContext,
                         String.format(
                                 getString(R.string.link_account_popup),
-                                LinphoneManager.getLc()
-                                        .getDefaultProxyConfig()
+                                mCore.getDefaultProxyConfig()
                                         .getIdentityAddress()
                                         .asStringUriOnly()));
         Button delete = dialog.findViewById(R.id.dialog_delete_button);
@@ -1181,11 +927,151 @@ public class LinphoneManager implements SensorEventListener {
         return mLinphoneDynamicConfigFile;
     }
 
+    public String getConfigFile() {
+        return mConfigFile;
+    }
+
     public boolean getCallGsmON() {
         return mCallGsmON;
     }
 
     public void setCallGsmON(boolean on) {
         mCallGsmON = on;
+    }
+
+    /* Assets stuff */
+
+    private void copyAssetsFromPackage() throws IOException {
+        copyIfNotExist(R.raw.linphonerc_default, mConfigFile);
+        copyFromPackage(R.raw.linphonerc_factory, new File(mLinphoneFactoryConfigFile).getName());
+        copyIfNotExist(R.raw.lpconfig, mLPConfigXsd);
+        copyFromPackage(
+                R.raw.default_assistant_create, new File(mDefaultDynamicConfigFile).getName());
+        copyFromPackage(
+                R.raw.linphone_assistant_create, new File(mLinphoneDynamicConfigFile).getName());
+    }
+
+    private void copyIfNotExist(int ressourceId, String target) throws IOException {
+        File lFileToCopy = new File(target);
+        if (!lFileToCopy.exists()) {
+            copyFromPackage(ressourceId, lFileToCopy.getName());
+        }
+    }
+
+    private void copyFromPackage(int ressourceId, String target) throws IOException {
+        FileOutputStream lOutputStream = mServiceContext.openFileOutput(target, 0);
+        InputStream lInputStream = mServiceContext.getResources().openRawResource(ressourceId);
+        int readByte;
+        byte[] buff = new byte[8048];
+        while ((readByte = lInputStream.read(buff)) != -1) {
+            lOutputStream.write(buff, 0, readByte);
+        }
+        lOutputStream.flush();
+        lOutputStream.close();
+        lInputStream.close();
+    }
+
+    /* Presence stuff */
+
+    private boolean isPresenceModelActivitySet() {
+        Core core = getCore();
+        if (isInstanciated() && core != null) {
+            return core.getPresenceModel() != null && core.getPresenceModel().getActivity() != null;
+        }
+        return false;
+    }
+
+    public void changeStatusToOnline() {
+        Core core = getCore();
+        if (core == null) return;
+        PresenceModel model = core.createPresenceModel();
+        model.setBasicStatus(PresenceBasicStatus.Open);
+        core.setPresenceModel(model);
+    }
+
+    public void changeStatusToOnThePhone() {
+        Core core = getCore();
+        if (core == null) return;
+
+        if (isInstanciated()
+                && isPresenceModelActivitySet()
+                && core.getPresenceModel().getActivity().getType()
+                        != PresenceActivity.Type.OnThePhone) {
+            core.getPresenceModel().getActivity().setType(PresenceActivity.Type.OnThePhone);
+        } else if (isInstanciated() && !isPresenceModelActivitySet()) {
+            PresenceModel model =
+                    core.createPresenceModelWithActivity(PresenceActivity.Type.OnThePhone, null);
+            core.setPresenceModel(model);
+        }
+    }
+
+    private void changeStatusToOffline() {
+        Core core = getCore();
+        if (isInstanciated() && core != null) {
+            PresenceModel model = core.getPresenceModel();
+            model.setBasicStatus(PresenceBasicStatus.Closed);
+            core.setPresenceModel(model);
+        }
+    }
+
+    /* Tunnel stuff */
+
+    public void initTunnelFromConf() {
+        if (!mCore.tunnelAvailable()) return;
+
+        NetworkInfo info = mConnectivityManager.getActiveNetworkInfo();
+        Tunnel tunnel = mCore.getTunnel();
+        tunnel.cleanServers();
+        TunnelConfig config = mPrefs.getTunnelConfig();
+        if (config.getHost() != null) {
+            tunnel.addServer(config);
+            manageTunnelServer(info);
+        }
+    }
+
+    private boolean isTunnelNeeded(NetworkInfo info) {
+        if (info == null) {
+            Log.i("[Manager] No connectivity: tunnel should be disabled");
+            return false;
+        }
+
+        String pref = mPrefs.getTunnelMode();
+
+        if (getString(R.string.tunnel_mode_entry_value_always).equals(pref)) {
+            return true;
+        }
+
+        if (info.getType() != ConnectivityManager.TYPE_WIFI
+                && getString(R.string.tunnel_mode_entry_value_3G_only).equals(pref)) {
+            Log.i("[Manager] Need tunnel: 'no wifi' connection");
+            return true;
+        }
+
+        return false;
+    }
+
+    private void manageTunnelServer(NetworkInfo info) {
+        if (mCore == null) return;
+        if (!mCore.tunnelAvailable()) return;
+        Tunnel tunnel = mCore.getTunnel();
+
+        Log.i("[Manager] Managing tunnel");
+        if (isTunnelNeeded(info)) {
+            Log.i("[Manager] Tunnel need to be activated");
+            tunnel.setMode(Tunnel.Mode.Enable);
+        } else {
+            Log.i("[Manager] Tunnel should not be used");
+            String pref = mPrefs.getTunnelMode();
+            tunnel.setMode(Tunnel.Mode.Disable);
+            if (getString(R.string.tunnel_mode_entry_value_auto).equals(pref)) {
+                tunnel.setMode(Tunnel.Mode.Auto);
+            }
+        }
+    }
+
+    /* Other stuff */
+
+    private String getString(int key) {
+        return mServiceContext.getString(key);
     }
 }

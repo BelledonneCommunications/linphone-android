@@ -182,31 +182,31 @@ public abstract class MainActivity extends LinphoneGenericActivity
                 new CoreListenerStub() {
                     @Override
                     public void onCallStateChanged(
-                            Core lc, Call call, Call.State state, String message) {
+                            Core core, Call call, Call.State state, String message) {
                         if (state == Call.State.End || state == Call.State.Released) {
                             displayMissedCalls();
                         }
                     }
 
                     @Override
-                    public void onMessageReceived(Core lc, ChatRoom room, ChatMessage message) {
+                    public void onMessageReceived(Core core, ChatRoom room, ChatMessage message) {
                         displayMissedChats();
                     }
 
                     @Override
-                    public void onChatRoomRead(Core lc, ChatRoom room) {
+                    public void onChatRoomRead(Core core, ChatRoom room) {
                         displayMissedChats();
                     }
 
                     @Override
                     public void onMessageReceivedUnableDecrypt(
-                            Core lc, ChatRoom room, ChatMessage message) {
+                            Core core, ChatRoom room, ChatMessage message) {
                         displayMissedChats();
                     }
 
                     @Override
                     public void onRegistrationStateChanged(
-                            Core lc,
+                            Core core,
                             ProxyConfig proxyConfig,
                             RegistrationState state,
                             String message) {
@@ -222,7 +222,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
 
                             if (getResources().getBoolean(R.bool.use_phone_number_validation)) {
                                 AuthInfo authInfo =
-                                        lc.findAuthInfo(
+                                        core.findAuthInfo(
                                                 proxyConfig.getRealm(),
                                                 proxyConfig.getIdentityAddress().getUsername(),
                                                 proxyConfig.getDomain());
@@ -237,7 +237,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
 
                     @Override
                     public void onLogCollectionUploadStateChanged(
-                            Core linphoneCore, Core.LogCollectionUploadState state, String info) {
+                            Core core, Core.LogCollectionUploadState state, String info) {
                         Log.d(
                                 "[Main Activity] Log upload state: "
                                         + state.toString()
@@ -307,7 +307,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
             mSideMenuFragment.closeDrawer();
         }
 
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         if (core != null) {
             core.addListener(mListener);
             displayMissedChats();
@@ -320,7 +320,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
         mStatusFragment.setMenuListener(null);
         mSideMenuFragment.setQuitListener(null);
 
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         if (core != null) {
             core.removeListener(mListener);
         }
@@ -532,7 +532,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
 
     protected void displayMissedCalls() {
         int count = 0;
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         if (core != null) {
             count = core.getMissedCallsCount();
         }
@@ -541,7 +541,6 @@ public abstract class MainActivity extends LinphoneGenericActivity
             mMissedCalls.setText(String.valueOf(count));
             mMissedCalls.setVisibility(View.VISIBLE);
         } else {
-            if (LinphoneManager.isInstanciated()) LinphoneManager.getLc().resetMissedCallsCount();
             mMissedCalls.clearAnimation();
             mMissedCalls.setVisibility(View.GONE);
         }
@@ -549,7 +548,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
 
     public void displayMissedChats() {
         int count = 0;
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         if (core != null) {
             count = core.getUnreadChatMessageCountFromActiveLocals();
         }

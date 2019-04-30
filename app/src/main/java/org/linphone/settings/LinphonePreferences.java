@@ -83,13 +83,13 @@ public class LinphonePreferences {
     private Core getLc() {
         if (!LinphoneManager.isInstanciated()) return null;
 
-        return LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        return LinphoneManager.getCore();
     }
 
     public Config getConfig() {
-        Core lc = getLc();
-        if (lc != null) {
-            return lc.getConfig();
+        Core core = getLc();
+        if (core != null) {
+            return core.getConfig();
         }
 
         if (!LinphoneManager.isInstanciated()) {
@@ -114,7 +114,7 @@ public class LinphonePreferences {
                 return Factory.instance().createConfigFromString(text.toString());
             }
         } else {
-            return Factory.instance().createConfig(LinphoneManager.getInstance().configFile);
+            return Factory.instance().createConfig(LinphoneManager.getInstance().getConfigFile());
         }
         return null;
     }
@@ -575,8 +575,8 @@ public class LinphonePreferences {
     public void setPushNotificationEnabled(boolean enable) {
         getConfig().setBool("app", "push_notification", enable);
 
-        Core lc = getLc();
-        if (lc == null) {
+        Core core = getLc();
+        if (core == null) {
             return;
         }
 
@@ -584,8 +584,8 @@ public class LinphonePreferences {
             // Add push infos to exisiting proxy configs
             String regId = getPushNotificationRegistrationID();
             String appId = getString(R.string.gcm_defaultSenderId);
-            if (regId != null && lc.getProxyConfigList().length > 0) {
-                for (ProxyConfig lpc : lc.getProxyConfigList()) {
+            if (regId != null && core.getProxyConfigList().length > 0) {
+                for (ProxyConfig lpc : core.getProxyConfigList()) {
                     if (lpc == null) continue;
                     if (!lpc.isPushNotificationAllowed()) {
                         lpc.edit();
@@ -621,11 +621,11 @@ public class LinphonePreferences {
                 Log.i(
                         "[Push Notification] Refreshing registers to ensure token is up to date: "
                                 + regId);
-                lc.refreshRegisters();
+                core.refreshRegisters();
             }
         } else {
-            if (lc.getProxyConfigList().length > 0) {
-                for (ProxyConfig lpc : lc.getProxyConfigList()) {
+            if (core.getProxyConfigList().length > 0) {
+                for (ProxyConfig lpc : core.getProxyConfigList()) {
                     lpc.edit();
                     lpc.setContactUriParameters(null);
                     lpc.done();
@@ -634,7 +634,7 @@ public class LinphonePreferences {
                                 "[Push Notification] infos removed from proxy config "
                                         + lpc.getIdentityAddress().asStringUriOnly());
                 }
-                lc.refreshRegisters();
+                core.refreshRegisters();
             }
         }
     }

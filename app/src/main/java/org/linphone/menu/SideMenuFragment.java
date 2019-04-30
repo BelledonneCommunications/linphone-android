@@ -108,11 +108,11 @@ public class SideMenuFragment extends Fragment {
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         String selectedItem = mSideMenuItemList.getAdapter().getItem(i).toString();
                         if (selectedItem.equals(getString(R.string.menu_logout))) {
-                            Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-                            if (lc != null) {
-                                lc.setDefaultProxyConfig(null);
-                                lc.clearAllAuthInfo();
-                                lc.clearProxyConfig();
+                            Core core = LinphoneManager.getCore();
+                            if (core != null) {
+                                core.setDefaultProxyConfig(null);
+                                core.clearAllAuthInfo();
+                                core.clearProxyConfig();
                                 startActivity(
                                         new Intent()
                                                 .setClass(
@@ -182,7 +182,7 @@ public class SideMenuFragment extends Fragment {
         TextView address = mDefaultAccount.findViewById(R.id.main_account_address);
         TextView displayName = mDefaultAccount.findViewById(R.id.main_account_display_name);
 
-        ProxyConfig proxy = LinphoneManager.getLc().getDefaultProxyConfig();
+        ProxyConfig proxy = LinphoneManager.getCore().getDefaultProxyConfig();
         if (proxy == null) {
             displayName.setText(getString(R.string.no_account));
             status.setVisibility(View.GONE);
@@ -228,8 +228,10 @@ public class SideMenuFragment extends Fragment {
     }
 
     public void displayAccountsInSideMenu() {
-        if (LinphoneManager.getLc().getProxyConfigList() != null
-                && LinphoneManager.getLc().getProxyConfigList().length > 1) {
+        Core core = LinphoneManager.getCore();
+        if (core != null
+                && core.getProxyConfigList() != null
+                && core.getProxyConfigList().length > 1) {
             mAccountsList.setVisibility(View.VISIBLE);
             mAccountsList.setAdapter(new SideMenuAccountsListAdapter(getActivity()));
             mAccountsList.setOnItemClickListener(

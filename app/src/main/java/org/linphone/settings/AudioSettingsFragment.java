@@ -132,7 +132,7 @@ public class AudioSettingsFragment extends SettingsFragment {
                         int bitrate = Integer.valueOf(newValue);
                         mPrefs.setCodecBitrateLimit(bitrate);
 
-                        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+                        Core core = LinphoneManager.getCore();
                         for (final PayloadType pt : core.getAudioPayloadTypes()) {
                             if (pt.isVbr()) {
                                 pt.setNormalBitrate(bitrate);
@@ -213,7 +213,7 @@ public class AudioSettingsFragment extends SettingsFragment {
 
     private void populateAudioCodecs() {
         mAudioCodecs.removeAllViews();
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         if (core != null) {
             for (final PayloadType pt : core.getAudioPayloadTypes()) {
                 final SwitchSetting codec = new SwitchSetting(getActivity());
@@ -253,7 +253,7 @@ public class AudioSettingsFragment extends SettingsFragment {
 
     private void startEchoCancellerCalibration() {
         if (LinphoneManager.getAudioManager().getEchoTesterStatus()) stopEchoTester();
-        LinphoneManager.getLc()
+        LinphoneManager.getCore()
                 .addListener(
                         new CoreListenerStub() {
                             @Override

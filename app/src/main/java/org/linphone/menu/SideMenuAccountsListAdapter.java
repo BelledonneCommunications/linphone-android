@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.core.Core;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.RegistrationState;
 import org.linphone.core.tools.Log;
@@ -47,8 +48,9 @@ class SideMenuAccountsListAdapter extends BaseAdapter {
 
     private void refresh() {
         proxy_list = new ArrayList<>();
-        for (ProxyConfig proxyConfig : LinphoneManager.getLc().getProxyConfigList()) {
-            if (proxyConfig != LinphoneManager.getLc().getDefaultProxyConfig()) {
+        Core core = LinphoneManager.getCore();
+        for (ProxyConfig proxyConfig : core.getProxyConfigList()) {
+            if (proxyConfig != core.getDefaultProxyConfig()) {
                 proxy_list.add(proxyConfig);
             }
         }

@@ -159,7 +159,7 @@ public class MenuSettingsFragment extends SettingsFragment {
     }
 
     private void updateValues() {
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         if (core != null) {
             mTunnel.setVisibility(core.tunnelAvailable() ? View.VISIBLE : View.GONE);
             initAccounts(core);

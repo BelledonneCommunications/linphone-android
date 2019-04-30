@@ -54,7 +54,7 @@ public abstract class AssistantActivity extends ThemableActivity
 
         if (mAccountCreator == null) {
             String url = LinphonePreferences.instance().getXmlrpcUrl();
-            Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+            Core core = LinphoneManager.getCore();
             core.loadConfigFromXml(LinphoneManager.getInstance().getDefaultDynamicConfigFile());
             mAccountCreator = core.createAccountCreator(url);
         }
@@ -95,7 +95,7 @@ public abstract class AssistantActivity extends ThemableActivity
     }
 
     void createProxyConfigAndLeaveAssistant() {
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         boolean useLinphoneDefaultValues =
                 getString(R.string.default_domain).equals(mAccountCreator.getDomain());
         if (useLinphoneDefaultValues) {
@@ -119,7 +119,8 @@ public abstract class AssistantActivity extends ThemableActivity
     }
 
     void goToLinphoneActivity() {
-        boolean needsEchoCalibration = LinphoneManager.getLc().isEchoCancellerCalibrationRequired();
+        boolean needsEchoCalibration =
+                LinphoneManager.getCore().isEchoCancellerCalibrationRequired();
         boolean echoCalibrationDone =
                 LinphonePreferences.instance().isEchoCancellationCalibrationDone();
         Log.i(

@@ -136,11 +136,11 @@ public class ChatMessagesFragment extends Fragment
         if (getArguments() != null) {
             if (getArguments().getString("LocalSipUri") != null) {
                 String mLocalSipUri = getArguments().getString("LocalSipUri");
-                mLocalSipAddress = LinphoneManager.getLc().createAddress(mLocalSipUri);
+                mLocalSipAddress = Factory.instance().createAddress(mLocalSipUri);
             }
             if (getArguments().getString("RemoteSipUri") != null) {
                 mRemoteSipUri = getArguments().getString("RemoteSipUri");
-                mRemoteSipAddress = LinphoneManager.getLc().createAddress(mRemoteSipUri);
+                mRemoteSipAddress = Factory.instance().createAddress(mRemoteSipUri);
             }
         }
 
@@ -695,7 +695,7 @@ public class ChatMessagesFragment extends Fragment
             mChatRoom.removeListener(this);
         }
 
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         if (mRemoteSipAddress == null
                 || mRemoteSipUri == null
                 || mRemoteSipUri.length() == 0
@@ -726,7 +726,7 @@ public class ChatMessagesFragment extends Fragment
     }
 
     private void displayChatRoomHeader() {
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         if (core == null || mChatRoom == null) return;
 
         if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
@@ -1113,7 +1113,7 @@ public class ChatMessagesFragment extends Fragment
         final Address from = msg.getFromAddress();
         final LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(from);
 
-        if (LinphoneManager.getLc().limeEnabled() == LimeState.Mandatory) {
+        if (LinphoneManager.getCore().limeEnabled() == LimeState.Mandatory) {
             final Dialog dialog =
                     ((ChatActivity) getActivity())
                             .displayDialog(

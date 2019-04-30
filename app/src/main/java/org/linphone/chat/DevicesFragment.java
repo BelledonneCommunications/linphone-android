@@ -38,6 +38,7 @@ import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.Core;
+import org.linphone.core.Factory;
 import org.linphone.core.ParticipantDevice;
 import org.linphone.utils.LinphoneUtils;
 
@@ -58,9 +59,9 @@ public class DevicesFragment extends Fragment {
 
         if (getArguments() != null) {
             String localSipUri = getArguments().getString("LocalSipUri");
-            mLocalSipAddr = LinphoneManager.getLc().createAddress(localSipUri);
+            mLocalSipAddr = Factory.instance().createAddress(localSipUri);
             String roomUri = getArguments().getString("RemoteSipUri");
-            mRoomAddr = LinphoneManager.getLc().createAddress(roomUri);
+            mRoomAddr = Factory.instance().createAddress(roomUri);
         }
 
         View view = inflater.inflate(R.layout.chat_devices, container, false);
@@ -134,7 +135,7 @@ public class DevicesFragment extends Fragment {
     }
 
     private void initChatRoom() {
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         mRoom = core.getChatRoom(mRoomAddr, mLocalSipAddr);
     }
 

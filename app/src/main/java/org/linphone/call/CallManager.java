@@ -56,9 +56,9 @@ public class CallManager {
 
     private void inviteAddress(
             Address lAddress, boolean videoEnabled, boolean lowBandwidth, boolean forceZRTP) {
-        Core lc = LinphoneManager.getLc();
+        Core core = LinphoneManager.getCore();
 
-        CallParams params = lc.createCallParams(null);
+        CallParams params = core.createCallParams(null);
         getBandwidthManager().updateWithProfileSettings(params);
 
         if (videoEnabled && params.videoEnabled()) {
@@ -80,7 +80,7 @@ public class CallManager {
                 FileUtils.getCallRecordingFilename(LinphoneService.instance(), lAddress);
         params.setRecordFile(recordFile);
 
-        lc.inviteAddressWithParams(lAddress, params);
+        core.inviteAddressWithParams(lAddress, params);
     }
 
     public void inviteAddress(Address lAddress, boolean videoEnabled, boolean lowBandwidth) {
@@ -94,13 +94,13 @@ public class CallManager {
      * @return if updateCall called
      */
     public boolean reinviteWithVideo() {
-        Core lc = LinphoneManager.getLc();
-        Call lCall = lc.getCurrentCall();
-        if (lCall == null) {
+        Core core = LinphoneManager.getCore();
+        Call call = core.getCurrentCall();
+        if (call == null) {
             Log.e("Trying to reinviteWithVideo while not in call: doing nothing");
             return false;
         }
-        CallParams params = lc.createCallParams(lCall);
+        CallParams params = core.createCallParams(call);
 
         if (params.videoEnabled()) return false;
 
@@ -113,7 +113,7 @@ public class CallManager {
         }
 
         // Not yet in video call: try to re-invite with video
-        lc.updateCall(lCall, params);
+        core.updateCall(call, params);
         return true;
     }
 
@@ -123,14 +123,14 @@ public class CallManager {
      * is recreated and setParameters is called.
      */
     public void updateCall() {
-        Core lc = LinphoneManager.getLc();
-        Call lCall = lc.getCurrentCall();
-        if (lCall == null) {
+        Core core = LinphoneManager.getCore();
+        Call call = core.getCurrentCall();
+        if (call == null) {
             Log.e("Trying to updateCall while not in call: doing nothing");
             return;
         }
-        CallParams params = lc.createCallParams(lCall);
+        CallParams params = core.createCallParams(call);
         getBandwidthManager().updateWithProfileSettings(params);
-        lc.updateCall(lCall, null);
+        core.updateCall(call, null);
     }
 }

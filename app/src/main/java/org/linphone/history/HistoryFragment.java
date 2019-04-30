@@ -42,6 +42,7 @@ import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.CallLog;
+import org.linphone.core.Core;
 import org.linphone.utils.SelectableHelper;
 
 public class HistoryFragment extends Fragment
@@ -100,7 +101,7 @@ public class HistoryFragment extends Fragment
         super.onResume();
         ContactsManager.getInstance().addContactsListener(this);
 
-        mLogs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
+        mLogs = Arrays.asList(LinphoneManager.getCore().getCallLogs());
         hideHistoryListAndDisplayMessageIfEmpty();
         mHistoryAdapter =
                 new HistoryAdapter((HistoryActivity) getActivity(), mLogs, this, mSelectionHelper);
@@ -154,8 +155,9 @@ public class HistoryFragment extends Fragment
     public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
         if (mHistoryAdapter.isEditionEnabled()) {
             CallLog log = mLogs.get(position);
-            LinphoneManager.getLc().removeCallLog(log);
-            mLogs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
+            Core core = LinphoneManager.getCore();
+            core.removeCallLog(log);
+            mLogs = Arrays.asList(core.getCallLogs());
         }
     }
 
@@ -164,7 +166,7 @@ public class HistoryFragment extends Fragment
         int size = mHistoryAdapter.getSelectedItemCount();
         for (int i = 0; i < size; i++) {
             CallLog log = (CallLog) objectsToDelete[i];
-            LinphoneManager.getLc().removeCallLog(log);
+            LinphoneManager.getCore().removeCallLog(log);
             onResume();
         }
     }
@@ -197,7 +199,7 @@ public class HistoryFragment extends Fragment
     }
 
     private void refresh() {
-        mLogs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
+        mLogs = Arrays.asList(LinphoneManager.getCore().getCallLogs());
     }
 
     public void displayFirstLog() {

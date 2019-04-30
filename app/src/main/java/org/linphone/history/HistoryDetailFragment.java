@@ -181,9 +181,7 @@ public class HistoryDetailFragment extends Fragment {
             mChatSecured.setVisibility(View.GONE);
 
             if (lAddress != null) {
-                CallLog[] logs =
-                        LinphoneManager.getLcIfManagerNotDestroyedOrNull()
-                                .getCallHistoryForAddress(lAddress);
+                CallLog[] logs = LinphoneManager.getCore().getCallHistoryForAddress(lAddress);
                 List<CallLog> logsList = Arrays.asList(logs);
                 mLogsList.setAdapter(
                         new HistoryLogAdapter(
@@ -224,22 +222,22 @@ public class HistoryDetailFragment extends Fragment {
     }
 
     private void goToChat(boolean isSecured) {
-        Core lc = LinphoneManager.getLc();
+        Core core = LinphoneManager.getCore();
         Address participant = Factory.instance().createAddress(mSipUri);
         ChatRoom room =
-                lc.findOneToOneChatRoom(
-                        lc.getDefaultProxyConfig().getContact(), participant, isSecured);
+                core.findOneToOneChatRoom(
+                        core.getDefaultProxyConfig().getContact(), participant, isSecured);
         if (room != null) {
             ((HistoryActivity) getActivity())
                     .showChatRoom(room.getLocalAddress(), room.getPeerAddress());
         } else {
-            ProxyConfig lpc = lc.getDefaultProxyConfig();
+            ProxyConfig lpc = core.getDefaultProxyConfig();
             if (lpc != null
                     && lpc.getConferenceFactoryUri() != null
                     && (isSecured || !LinphonePreferences.instance().useBasicChatRoomFor1To1())) {
                 mWaitLayout.setVisibility(View.VISIBLE);
 
-                ChatRoomParams params = lc.createDefaultChatRoomParams();
+                ChatRoomParams params = core.createDefaultChatRoomParams();
                 params.enableEncryption(isSecured);
                 params.enableGroup(false);
                 // We don't want a basic chat room
@@ -249,7 +247,7 @@ public class HistoryDetailFragment extends Fragment {
                 participants[0] = participant;
 
                 mChatRoom =
-                        lc.createChatRoom(
+                        core.createChatRoom(
                                 params, getString(R.string.dummy_group_chat_subject), participants);
                 if (mChatRoom != null) {
                     mChatRoom.addListener(mChatRoomCreationListener);
@@ -258,7 +256,7 @@ public class HistoryDetailFragment extends Fragment {
                     mWaitLayout.setVisibility(View.GONE);
                 }
             } else {
-                room = lc.getChatRoom(participant);
+                room = core.getChatRoom(participant);
                 if (room != null) {
                     ((HistoryActivity) getActivity())
                             .showChatRoom(room.getLocalAddress(), room.getPeerAddress());

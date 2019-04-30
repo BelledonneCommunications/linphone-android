@@ -72,9 +72,9 @@ public class RemoteConfigurationAssistantActivity extends AssistantActivity {
                             mWaitLayout.setVisibility(View.VISIBLE);
                             mFetchAndApply.setEnabled(false);
                             LinphonePreferences.instance().setRemoteProvisioningUrl(url);
-                            LinphoneManager.getLc().getConfig().sync();
-                            Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+                            Core core = LinphoneManager.getCore();
                             if (core != null) {
+                                core.getConfig().sync();
                                 core.addListener(mListener);
                             }
                             LinphoneManager.getInstance().restartCore();

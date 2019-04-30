@@ -77,7 +77,7 @@ public class ChatRoomsFragment extends Fragment
         mBackToCallButton = view.findViewById(R.id.back_in_call);
         mNoChatHistory = view.findViewById(R.id.noChatHistory);
 
-        ChatRoom[] rooms = LinphoneManager.getLc().getChatRooms();
+        ChatRoom[] rooms = LinphoneManager.getCore().getChatRooms();
         List<ChatRoom> mRooms;
         if (getResources().getBoolean(R.bool.hide_empty_one_to_one_chat_rooms)) {
             mRooms = LinphoneUtils.removeEmptyOneToOneChatRooms(rooms);
@@ -138,28 +138,29 @@ public class ChatRoomsFragment extends Fragment
         mListener =
                 new CoreListenerStub() {
                     @Override
-                    public void onMessageSent(Core lc, ChatRoom room, ChatMessage message) {
+                    public void onMessageSent(Core core, ChatRoom room, ChatMessage message) {
                         refreshChatRoom(room);
                     }
 
                     @Override
-                    public void onMessageReceived(Core lc, ChatRoom cr, ChatMessage message) {
+                    public void onMessageReceived(Core core, ChatRoom cr, ChatMessage message) {
                         refreshChatRoom(cr);
                     }
 
                     @Override
                     public void onMessageReceivedUnableDecrypt(
-                            Core lc, ChatRoom room, ChatMessage message) {
+                            Core core, ChatRoom room, ChatMessage message) {
                         refreshChatRoom(room);
                     }
 
                     @Override
-                    public void onChatRoomRead(Core lc, ChatRoom room) {
+                    public void onChatRoomRead(Core core, ChatRoom room) {
                         refreshChatRoom(room);
                     }
 
                     @Override
-                    public void onChatRoomStateChanged(Core lc, ChatRoom cr, ChatRoom.State state) {
+                    public void onChatRoomStateChanged(
+                            Core core, ChatRoom cr, ChatRoom.State state) {
                         if (state == ChatRoom.State.Created) {
                             refreshChatRoom(cr);
                         }
@@ -218,15 +219,14 @@ public class ChatRoomsFragment extends Fragment
         super.onResume();
         ContactsManager.getInstance().addContactsListener(this);
 
-        if (LinphoneManager.getLc().getCallsNb() > 0) {
-            mBackToCallButton.setVisibility(View.VISIBLE);
-        } else {
-            mBackToCallButton.setVisibility(View.INVISIBLE);
-        }
-
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        mBackToCallButton.setVisibility(View.INVISIBLE);
+        Core core = LinphoneManager.getCore();
         if (core != null) {
             core.addListener(mListener);
+
+            if (core.getCallsNb() > 0) {
+                mBackToCallButton.setVisibility(View.VISIBLE);
+            }
         }
 
         refreshChatRoomsList();
@@ -238,7 +238,7 @@ public class ChatRoomsFragment extends Fragment
 
     @Override
     public void onPause() {
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         if (core != null) {
             core.removeListener(mListener);
         }
@@ -249,12 +249,12 @@ public class ChatRoomsFragment extends Fragment
 
     @Override
     public void onDeleteSelection(Object[] objectsToDelete) {
-        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         mChatRoomDeletionPendingCount = objectsToDelete.length;
         for (Object obj : objectsToDelete) {
             ChatRoom room = (ChatRoom) obj;
             room.addListener(mChatRoomListener);
-            lc.deleteChatRoom(room);
+            core.deleteChatRoom(room);
         }
         if (mChatRoomDeletionPendingCount > 0) {
             mWaitLayout.setVisibility(View.VISIBLE);

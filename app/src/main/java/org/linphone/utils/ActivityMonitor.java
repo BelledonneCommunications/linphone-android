@@ -106,15 +106,15 @@ public class ActivityMonitor implements Application.ActivityLifecycleCallbacks {
 
     private void onBackgroundMode() {
         Log.i("[Activity Monitor] App has entered background mode");
-        if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
-            LinphoneManager.getLcIfManagerNotDestroyedOrNull().enterBackground();
+        if (LinphoneManager.getCore() != null) {
+            LinphoneManager.getCore().enterBackground();
         }
     }
 
     private void onForegroundMode() {
         Log.i("[Activity Monitor] App has left background mode");
-        if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
-            LinphoneManager.getLcIfManagerNotDestroyedOrNull().enterForeground();
+        if (LinphoneManager.getCore() != null) {
+            LinphoneManager.getCore().enterForeground();
         }
     }
 

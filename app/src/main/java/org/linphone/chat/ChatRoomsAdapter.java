@@ -73,7 +73,7 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomViewHolder> {
     }
 
     public void refresh() {
-        ChatRoom[] rooms = LinphoneManager.getLc().getChatRooms();
+        ChatRoom[] rooms = LinphoneManager.getCore().getChatRooms();
         if (mContext.getResources().getBoolean(R.bool.hide_empty_one_to_one_chat_rooms)) {
             mRooms = LinphoneUtils.removeEmptyOneToOneChatRooms(rooms);
         } else {

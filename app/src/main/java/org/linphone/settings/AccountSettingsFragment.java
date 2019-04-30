@@ -89,7 +89,7 @@ public class AccountSettingsFragment extends SettingsFragment {
         }
 
         mProxyConfig = null;
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         if (mAccountIndex >= 0 && core != null) {
             ProxyConfig[] proxyConfigs = core.getProxyConfigList();
             if (proxyConfigs.length > mAccountIndex) {
@@ -120,7 +120,7 @@ public class AccountSettingsFragment extends SettingsFragment {
     public void onPause() {
         super.onPause();
         if (mIsNewlyCreatedAccount) {
-            Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+            Core core = LinphoneManager.getCore();
             if (core != null && mProxyConfig != null && mAuthInfo != null) {
                 core.addAuthInfo(mAuthInfo);
                 core.addProxyConfig(mProxyConfig);
@@ -217,7 +217,7 @@ public class AccountSettingsFragment extends SettingsFragment {
                     public void onTextValueChanged(String newValue) {
                         if (mAuthInfo != null) {
                             mAuthInfo.setUserid(newValue);
-                            Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+                            Core core = LinphoneManager.getCore();
                             if (core != null) {
                                 core.refreshRegisters();
                             }
@@ -233,7 +233,7 @@ public class AccountSettingsFragment extends SettingsFragment {
                     public void onTextValueChanged(String newValue) {
                         if (mAuthInfo != null) {
                             mAuthInfo.setPassword(newValue);
-                            Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+                            Core core = LinphoneManager.getCore();
                             if (core != null) {
                                 core.refreshRegisters();
                             }
@@ -314,7 +314,7 @@ public class AccountSettingsFragment extends SettingsFragment {
                             mProxyConfig.edit();
                             NatPolicy natPolicy = mProxyConfig.getNatPolicy();
                             if (natPolicy == null) {
-                                Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+                                Core core = LinphoneManager.getCore();
                                 if (core != null) {
                                     natPolicy = core.createNatPolicy();
                                     mProxyConfig.setNatPolicy(natPolicy);
@@ -403,7 +403,7 @@ public class AccountSettingsFragment extends SettingsFragment {
                     @Override
                     public void onBoolValueChanged(boolean newValue) {
                         if (mProxyConfig != null) {
-                            Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+                            Core core = LinphoneManager.getCore();
                             if (core != null && newValue) {
                                 core.setDefaultProxyConfig(mProxyConfig);
                                 mUseAsDefault.setEnabled(false);
@@ -443,7 +443,7 @@ public class AccountSettingsFragment extends SettingsFragment {
 
                             NatPolicy natPolicy = mProxyConfig.getNatPolicy();
                             if (natPolicy == null) {
-                                Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+                                Core core = LinphoneManager.getCore();
                                 if (core != null) {
                                     natPolicy = core.createNatPolicy();
                                     mProxyConfig.setNatPolicy(natPolicy);
@@ -516,7 +516,7 @@ public class AccountSettingsFragment extends SettingsFragment {
                 new SettingListenerBase() {
                     @Override
                     public void onClicked() {
-                        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+                        Core core = LinphoneManager.getCore();
                         if (core != null) {
                             if (mProxyConfig != null) {
                                 core.removeProxyConfig(mProxyConfig);
@@ -574,7 +574,7 @@ public class AccountSettingsFragment extends SettingsFragment {
     }
 
     private void updateValues() {
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         if (core == null) return;
 
         // Create a proxy config if there is none

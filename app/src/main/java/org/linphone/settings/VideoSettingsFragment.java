@@ -235,7 +235,7 @@ public class VideoSettingsFragment extends SettingsFragment {
 
     private void populateVideoCodecs() {
         mVideoCodecs.removeAllViews();
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         if (core != null) {
             for (final PayloadType pt : core.getVideoPayloadTypes()) {
                 final SwitchSetting codec = new SwitchSetting(getActivity());

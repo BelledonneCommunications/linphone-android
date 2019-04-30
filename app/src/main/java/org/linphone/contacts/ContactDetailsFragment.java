@@ -243,7 +243,7 @@ public class ContactDetailsFragment extends Fragment implements ContactsUpdatedL
             tv.setText(displayedNumberOrAddress);
             tv.setSelected(true);
 
-            ProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
+            ProxyConfig lpc = LinphoneManager.getCore().getDefaultProxyConfig();
             if (lpc != null) {
                 String username = lpc.normalizePhoneNumber(displayedNumberOrAddress);
                 if (username != null) {
@@ -354,13 +354,13 @@ public class ContactDetailsFragment extends Fragment implements ContactsUpdatedL
     }
 
     private void goToChat(String tag, boolean isSecured) {
-        Core lc = LinphoneManager.getLc();
+        Core core = LinphoneManager.getCore();
         Address participant = Factory.instance().createAddress(tag);
-        ProxyConfig defaultProxyConfig = lc.getDefaultProxyConfig();
+        ProxyConfig defaultProxyConfig = core.getDefaultProxyConfig();
 
         if (defaultProxyConfig != null) {
             ChatRoom room =
-                    lc.findOneToOneChatRoom(
+                    core.findOneToOneChatRoom(
                             defaultProxyConfig.getContact(), participant, isSecured);
             if (room != null) {
                 ((ContactsActivity) getActivity())
@@ -371,7 +371,7 @@ public class ContactDetailsFragment extends Fragment implements ContactsUpdatedL
                                 || !LinphonePreferences.instance().useBasicChatRoomFor1To1())) {
                     mWaitLayout.setVisibility(View.VISIBLE);
 
-                    ChatRoomParams params = lc.createDefaultChatRoomParams();
+                    ChatRoomParams params = core.createDefaultChatRoomParams();
                     params.enableEncryption(isSecured);
                     params.enableGroup(false);
                     // We don't want a basic chat room,
@@ -382,7 +382,7 @@ public class ContactDetailsFragment extends Fragment implements ContactsUpdatedL
                     participants[0] = participant;
 
                     mChatRoom =
-                            lc.createChatRoom(
+                            core.createChatRoom(
                                     params,
                                     getString(R.string.dummy_group_chat_subject),
                                     participants);
@@ -393,7 +393,7 @@ public class ContactDetailsFragment extends Fragment implements ContactsUpdatedL
                         mWaitLayout.setVisibility(View.GONE);
                     }
                 } else {
-                    room = lc.getChatRoom(participant);
+                    room = core.getChatRoom(participant);
                     if (room != null) {
                         ((ContactsActivity) getActivity())
                                 .showChatRoom(room.getLocalAddress(), room.getPeerAddress());

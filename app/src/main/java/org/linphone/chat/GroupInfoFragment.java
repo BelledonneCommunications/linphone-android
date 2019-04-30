@@ -52,6 +52,7 @@ import org.linphone.core.ChatRoomListenerStub;
 import org.linphone.core.ChatRoomParams;
 import org.linphone.core.Core;
 import org.linphone.core.EventLog;
+import org.linphone.core.Factory;
 import org.linphone.core.Participant;
 import org.linphone.core.tools.Log;
 import org.linphone.utils.LinphoneUtils;
@@ -91,12 +92,12 @@ public class GroupInfoFragment extends Fragment {
 
         String address = getArguments().getString("RemoteSipUri");
         if (address != null && address.length() > 0) {
-            mGroupChatRoomAddress = LinphoneManager.getLc().createAddress(address);
+            mGroupChatRoomAddress = Factory.instance().createAddress(address);
         }
 
         mIsAlreadyCreatedGroup = mGroupChatRoomAddress != null;
         if (mIsAlreadyCreatedGroup) {
-            mChatRoom = LinphoneManager.getLc().getChatRoom(mGroupChatRoomAddress);
+            mChatRoom = LinphoneManager.getCore().getChatRoom(mGroupChatRoomAddress);
         }
 
         if (mChatRoom == null) {
@@ -412,7 +413,7 @@ public class GroupInfoFragment extends Fragment {
     private void applyChanges() {
         if (!mIsAlreadyCreatedGroup) {
             mWaitLayout.setVisibility(View.VISIBLE);
-            Core core = LinphoneManager.getLc();
+            Core core = LinphoneManager.getCore();
 
             int i = 0;
             Address[] participants = new Address[mParticipants.size()];

@@ -37,9 +37,9 @@ public class PhoneStateChangedReceiver extends BroadcastReceiver {
         if (TelephonyManager.EXTRA_STATE_OFFHOOK.equals(extraState)
                 || TelephonyManager.EXTRA_STATE_RINGING.equals(extraState)) {
             LinphoneManager.getInstance().setCallGsmON(true);
-            Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-            if (lc != null) {
-                lc.pauseAllCalls();
+            Core core = LinphoneManager.getCore();
+            if (core != null) {
+                core.pauseAllCalls();
             }
         } else if (TelephonyManager.EXTRA_STATE_IDLE.equals(extraState)) {
             LinphoneManager.getInstance().setCallGsmON(false);

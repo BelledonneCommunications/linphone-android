@@ -135,7 +135,7 @@ public class ContactsFragment extends Fragment
             mAllContacts.setEnabled(mOnlyDisplayLinphoneContacts);
             mLinphoneContacts.setEnabled(!mAllContacts.isEnabled());
         }
-        newContact.setEnabled(LinphoneManager.getLc().getCallsNb() == 0);
+        newContact.setEnabled(LinphoneManager.getCore().getCallsNb() == 0);
 
         if (!ContactsManager.getInstance().contactsFetchedOnce()) {
             if (ContactsManager.getInstance().hasReadContactsAccess()) {

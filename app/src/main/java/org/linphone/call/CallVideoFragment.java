@@ -59,7 +59,8 @@ public class CallVideoFragment extends Fragment
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view;
-        if (LinphoneManager.getLc().hasCrappyOpengl()) {
+        Core core = LinphoneManager.getCore();
+        if (core.hasCrappyOpengl()) {
             view = inflater.inflate(R.layout.video_no_opengl, container, false);
         } else {
             view = inflater.inflate(R.layout.video, container, false);
@@ -68,8 +69,8 @@ public class CallVideoFragment extends Fragment
         mVideoView = view.findViewById(R.id.videoSurface);
         mCaptureView = view.findViewById(R.id.videoCaptureSurface);
 
-        LinphoneManager.getLc().setNativeVideoWindowId(mVideoView);
-        LinphoneManager.getLc().setNativePreviewWindowId(mCaptureView);
+        core.setNativeVideoWindowId(mVideoView);
+        core.setNativePreviewWindowId(mCaptureView);
 
         mVideoView.setOnTouchListener(
                 new OnTouchListener() {
@@ -129,11 +130,11 @@ public class CallVideoFragment extends Fragment
     }
 
     private void resizePreview() {
-        Core lc = LinphoneManager.getLc();
-        if (lc.getCallsNb() > 0) {
-            Call call = lc.getCurrentCall();
+        Core core = LinphoneManager.getCore();
+        if (core.getCallsNb() > 0) {
+            Call call = core.getCurrentCall();
             if (call == null) {
-                call = lc.getCalls()[0];
+                call = core.getCalls()[0];
             }
             if (call == null) return;
 
@@ -149,7 +150,7 @@ public class CallVideoFragment extends Fragment
             if (videoSize.getWidth() == 0 || videoSize.getHeight() == 0) {
                 Log.w(
                         "[Video Fragment] Couldn't get sent video definition, using default video definition");
-                videoSize = lc.getPreferredVideoDefinition();
+                videoSize = core.getPreferredVideoDefinition();
             }
             int width = videoSize.getWidth();
             int height = videoSize.getHeight();
@@ -175,8 +176,9 @@ public class CallVideoFragment extends Fragment
 
     public void switchCamera() {
         try {
-            String currentDevice = LinphoneManager.getLc().getVideoDevice();
-            String[] devices = LinphoneManager.getLc().getVideoDevicesList();
+            Core core = LinphoneManager.getCore();
+            String currentDevice = core.getVideoDevice();
+            String[] devices = core.getVideoDevicesList();
             int index = 0;
             for (String d : devices) {
                 if (d.equals(currentDevice)) {
@@ -189,7 +191,7 @@ public class CallVideoFragment extends Fragment
             if (index == 1) newDevice = devices[0];
             else if (devices.length > 1) newDevice = devices[1];
             else newDevice = devices[index];
-            LinphoneManager.getLc().setVideoDevice(newDevice);
+            core.setVideoDevice(newDevice);
 
             CallManager.getInstance().updateCall();
         } catch (ArithmeticException ae) {
@@ -214,11 +216,11 @@ public class CallVideoFragment extends Fragment
 
     @Override
     public void onPause() {
-        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         if (LinphonePreferences.instance().isOverlayEnabled()
-                && lc != null
-                && lc.getCurrentCall() != null) {
-            Call call = lc.getCurrentCall();
+                && core != null
+                && core.getCurrentCall() != null) {
+            Call call = core.getCurrentCall();
             if (call.getState() == Call.State.StreamsRunning) {
                 // Prevent overlay creation if video call is paused by remote
                 LinphoneService.instance().createOverlay();
@@ -242,7 +244,7 @@ public class CallVideoFragment extends Fragment
                         0.1f,
                         Math.min(mZoomFactor, Math.max(portraitZoomFactor, landscapeZoomFactor)));
 
-        Call currentCall = LinphoneManager.getLc().getCurrentCall();
+        Call currentCall = LinphoneManager.getCore().getCurrentCall();
         if (currentCall != null) {
             currentCall.zoom(mZoomFactor, mZoomCenterX, mZoomCenterY);
             return true;
@@ -252,7 +254,8 @@ public class CallVideoFragment extends Fragment
 
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-        if (LinphoneUtils.isCallEstablished(LinphoneManager.getLc().getCurrentCall())) {
+        Core core = LinphoneManager.getCore();
+        if (LinphoneUtils.isCallEstablished(core.getCurrentCall())) {
             if (mZoomFactor > 1) {
                 // Video is zoomed, slide is used to change center of zoom
                 if (distanceX > 0 && mZoomCenterX < 1) {
@@ -271,9 +274,7 @@ public class CallVideoFragment extends Fragment
                 if (mZoomCenterY > 1) mZoomCenterY = 1;
                 if (mZoomCenterY < 0) mZoomCenterY = 0;
 
-                LinphoneManager.getLc()
-                        .getCurrentCall()
-                        .zoom(mZoomFactor, mZoomCenterX, mZoomCenterY);
+                core.getCurrentCall().zoom(mZoomFactor, mZoomCenterX, mZoomCenterY);
                 return true;
             }
         }
@@ -283,7 +284,8 @@ public class CallVideoFragment extends Fragment
 
     @Override
     public boolean onDoubleTap(MotionEvent e) {
-        if (LinphoneUtils.isCallEstablished(LinphoneManager.getLc().getCurrentCall())) {
+        Core core = LinphoneManager.getCore();
+        if (LinphoneUtils.isCallEstablished(core.getCurrentCall())) {
             if (mZoomFactor == 1.f) {
                 // Zoom to make the video fill the screen vertically
                 float portraitZoomFactor =
@@ -299,7 +301,7 @@ public class CallVideoFragment extends Fragment
                 resetZoom();
             }
 
-            LinphoneManager.getLc().getCurrentCall().zoom(mZoomFactor, mZoomCenterX, mZoomCenterY);
+            core.getCurrentCall().zoom(mZoomFactor, mZoomCenterX, mZoomCenterY);
             return true;
         }
 

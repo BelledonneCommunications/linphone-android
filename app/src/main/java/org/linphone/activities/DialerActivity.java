@@ -101,7 +101,7 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Core core = LinphoneManager.getLc();
+                        Core core = LinphoneManager.getCore();
                         if (core.getCurrentCall() == null) {
                             return;
                         }
@@ -146,7 +146,7 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
                 new CoreListenerStub() {
                     @Override
                     public void onCallStateChanged(
-                            Core lc, Call call, Call.State state, String message) {
+                            Core core, Call call, Call.State state, String message) {
                         updateLayout();
                     }
                 };
@@ -177,7 +177,7 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
 
         mDialerSelected.setVisibility(View.VISIBLE);
 
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         if (core != null) {
             core.addListener(mListener);
         }
@@ -198,7 +198,7 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
     protected void onPause() {
         super.onPause();
 
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         if (core != null) {
             core.removeListener(mListener);
         }
@@ -218,14 +218,13 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
 
     @Override
     public void onAddressChanged() {
+        Core core = LinphoneManager.getCore();
         mAddContact.setEnabled(
-                LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null
-                                && LinphoneManager.getLc().getCallsNb() > 0
-                        || !mAddress.getText().toString().equals(""));
+                core != null && core.getCallsNb() > 0 || !mAddress.getText().toString().equals(""));
     }
 
     private void updateLayout() {
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         if (core == null) {
             return;
         }

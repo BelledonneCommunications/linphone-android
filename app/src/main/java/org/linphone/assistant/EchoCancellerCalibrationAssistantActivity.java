@@ -109,7 +109,7 @@ public class EchoCancellerCalibrationAssistantActivity extends AssistantActivity
     }
 
     private void startEchoCancellerCalibration() {
-        LinphoneManager.getLc()
+        LinphoneManager.getCore()
                 .addListener(
                         new CoreListenerStub() {
                             @Override

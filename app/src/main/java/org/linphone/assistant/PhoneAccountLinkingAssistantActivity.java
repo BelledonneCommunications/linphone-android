@@ -54,7 +54,7 @@ public class PhoneAccountLinkingAssistantActivity extends AssistantActivity {
 
         if (getIntent() != null && getIntent().hasExtra("AccountNumber")) {
             int proxyConfigIndex = getIntent().getExtras().getInt("AccountNumber");
-            Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+            Core core = LinphoneManager.getCore();
             if (core == null) {
                 Log.e("[Account Linking] Core not available");
                 unexpectedError();

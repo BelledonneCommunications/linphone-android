@@ -119,7 +119,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
                 new CoreListenerStub() {
                     @Override
                     public void onCallStateChanged(
-                            Core lc, Call call, State state, String message) {
+                            Core core, Call call, State state, String message) {
                         if (call == mCall && State.End == state) {
                             finish();
                         } else if (state == State.Connected) {
@@ -133,9 +133,9 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        if (lc != null) {
-            lc.addListener(mListener);
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            core.addListener(mListener);
         }
 
         mAlreadyAcceptedOrDeniedCall = false;
@@ -178,9 +178,9 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
 
     @Override
     protected void onPause() {
-        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        if (lc != null) {
-            lc.removeListener(mListener);
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            core.removeListener(mListener);
         }
         super.onPause();
     }
@@ -189,15 +189,15 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (LinphoneManager.isInstanciated()
                 && (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME)) {
-            LinphoneManager.getLc().terminateCall(mCall);
+            LinphoneManager.getCore().terminateCall(mCall);
             finish();
         }
         return super.onKeyDown(keyCode, event);
     }
 
     private void lookupCurrentCall() {
-        if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
-            for (Call call : LinphoneManager.getLc().getCalls()) {
+        if (LinphoneManager.getCore() != null) {
+            for (Call call : LinphoneManager.getCore().getCalls()) {
                 if (State.IncomingReceived == call.getState()
                         || State.IncomingEarlyMedia == call.getState()) {
                     mCall = call;
@@ -213,7 +213,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
         }
         mAlreadyAcceptedOrDeniedCall = true;
 
-        LinphoneManager.getLc().terminateCall(mCall);
+        LinphoneManager.getCore().terminateCall(mCall);
         finish();
     }
 

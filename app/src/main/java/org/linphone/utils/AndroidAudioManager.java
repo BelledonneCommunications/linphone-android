@@ -146,21 +146,21 @@ public class AndroidAudioManager {
 
                     @Override
                     public void onEcCalibrationResult(
-                            Core lc, EcCalibratorStatus status, int delay_ms) {
+                            Core core, EcCalibratorStatus status, int delay_ms) {
                         mAudioManager.setMode(AudioManager.MODE_NORMAL);
                         mAudioManager.abandonAudioFocus(null);
                         Log.i("[Audio Manager] Set audio mode on 'Normal'");
                     }
                 };
 
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         if (core != null) {
             core.addListener(mListener);
         }
     }
 
     public void destroy() {
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         if (core != null) {
             core.removeListener(mListener);
         }
@@ -187,7 +187,7 @@ public class AndroidAudioManager {
     /* Echo cancellation */
 
     public void startEcCalibration() {
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         if (core == null) {
             return;
         }
@@ -204,7 +204,7 @@ public class AndroidAudioManager {
     }
 
     public void startEchoTester() {
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         if (core == null) {
             return;
         }
@@ -224,7 +224,7 @@ public class AndroidAudioManager {
     }
 
     public void stopEchoTester() {
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         if (core == null) {
             return;
         }

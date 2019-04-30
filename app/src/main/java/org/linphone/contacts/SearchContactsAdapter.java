@@ -143,8 +143,7 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
                 // Disable row, contact doesn't have the required capabilities
                 holder.disabled.setVisibility(View.VISIBLE);
             } else if (mSecurityEnabled || !mIsOnlyOnePersonSelection) {
-                ProxyConfig lpc =
-                        LinphoneManager.getLcIfManagerNotDestroyedOrNull().getDefaultProxyConfig();
+                ProxyConfig lpc = LinphoneManager.getCore().getDefaultProxyConfig();
                 if (lpc != null
                         && searchResult.getAddress() != null
                         && lpc.getIdentityAddress().weakEqual(searchResult.getAddress())) {
@@ -240,7 +239,7 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
         mPreviousSearch = search;
 
         String domain = "";
-        ProxyConfig prx = LinphoneManager.getLc().getDefaultProxyConfig();
+        ProxyConfig prx = LinphoneManager.getCore().getDefaultProxyConfig();
         if (prx != null) domain = prx.getDomain();
         SearchResult[] searchResults =
                 ContactsManager.getInstance()

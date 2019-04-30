@@ -75,8 +75,8 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         mContacts = new ArrayList<>();
         mSipContacts = new ArrayList<>();
 
-        if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
-            mMagicSearch = LinphoneManager.getLcIfManagerNotDestroyedOrNull().createMagicSearch();
+        if (LinphoneManager.getCore() != null) {
+            mMagicSearch = LinphoneManager.getCore().createMagicSearch();
             mMagicSearch.setLimitedSearch(false); // Do not limit the number of results
         }
     }
@@ -120,6 +120,8 @@ public class ContactsManager extends ContentObserver implements FriendListListen
     }
 
     public void destroy() {
+        mContext.getContentResolver().unregisterContentObserver(ContactsManager.getInstance());
+
         if (mLoadContactTask != null) {
             mLoadContactTask.cancel(true);
         }
@@ -134,12 +136,13 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         }
         mSipContacts.clear();
 
-        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        if (lc != null) {
-            for (FriendList list : lc.getFriendsLists()) {
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            for (FriendList list : core.getFriendsLists()) {
                 list.removeListener(this);
             }
         }
+
         sInstance = null;
     }
 
@@ -242,7 +245,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
     }
 
     public boolean isLinphoneContactsPrefered() {
-        ProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
+        ProxyConfig lpc = LinphoneManager.getCore().getDefaultProxyConfig();
         return lpc != null
                 && lpc.getIdentityAddress()
                         .getDomain()
@@ -341,8 +344,8 @@ public class ContactsManager extends ContentObserver implements FriendListListen
 
     public synchronized LinphoneContact findContactFromAddress(Address address) {
         if (address == null) return null;
-        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        Friend lf = lc.findFriend(address);
+        Core core = LinphoneManager.getCore();
+        Friend lf = core.findFriend(address);
         if (lf != null) {
             return (LinphoneContact) lf.getUserData();
         }
@@ -351,10 +354,10 @@ public class ContactsManager extends ContentObserver implements FriendListListen
 
     public synchronized LinphoneContact findContactFromPhoneNumber(String phoneNumber) {
         if (phoneNumber == null) return null;
-        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         ProxyConfig lpc = null;
-        if (lc != null) {
-            lpc = lc.getDefaultProxyConfig();
+        if (core != null) {
+            lpc = core.getDefaultProxyConfig();
         }
         if (lpc == null) return null;
         String normalized = lpc.normalizePhoneNumber(phoneNumber);
@@ -366,7 +369,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         }
         addr.setUriParam("user", "phone");
         Friend lf =
-                lc.findFriend(
+                core.findFriend(
                         addr); // Without this, the hashmap inside liblinphone won't find it...
         if (lf != null) {
             return (LinphoneContact) lf.getUserData();

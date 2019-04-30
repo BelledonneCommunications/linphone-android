@@ -228,7 +228,7 @@ public class CallSettingsFragment extends SettingsFragment {
         entries.add(getString(R.string.pref_none));
         values.add(String.valueOf(MediaEncryption.None.toInt()));
 
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         if (core != null
                 && !getResources().getBoolean(R.bool.disable_all_security_features_for_markets)) {
             boolean hasZrtp = core.mediaEncryptionSupported(MediaEncryption.ZRTP);

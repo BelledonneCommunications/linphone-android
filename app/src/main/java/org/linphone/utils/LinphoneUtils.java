@@ -99,7 +99,7 @@ public final class LinphoneUtils {
     }
 
     public static boolean isNumberAddress(String numberOrAddress) {
-        ProxyConfig proxy = LinphoneManager.getLc().createProxyConfig();
+        ProxyConfig proxy = LinphoneManager.getCore().createProxyConfig();
         return proxy.normalizePhoneNumber(numberOrAddress) != null;
     }
 
@@ -179,9 +179,9 @@ public final class LinphoneUtils {
                 && cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR));
     }
 
-    public static List<Call> getCallsInState(Core lc, Collection<State> states) {
+    public static List<Call> getCallsInState(Core core, Collection<State> states) {
         List<Call> foundCalls = new ArrayList<>();
-        for (Call call : lc.getCalls()) {
+        for (Call call : core.getCalls()) {
             if (states.contains(call.getState())) {
                 foundCalls.add(call);
             }
@@ -240,8 +240,8 @@ public final class LinphoneUtils {
 
     public static String getDisplayableUsernameFromAddress(String sipAddress) {
         String username = sipAddress;
-        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        if (lc == null) return username;
+        Core core = LinphoneManager.getCore();
+        if (core == null) return username;
 
         if (username.startsWith("sip:")) {
             username = username.substring(4);
@@ -249,7 +249,7 @@ public final class LinphoneUtils {
 
         if (username.contains("@")) {
             String domain = username.split("@")[1];
-            ProxyConfig lpc = lc.getDefaultProxyConfig();
+            ProxyConfig lpc = core.getDefaultProxyConfig();
             if (lpc != null) {
                 if (domain.equals(lpc.getDomain())) {
                     return username.split("@")[0];
@@ -265,15 +265,15 @@ public final class LinphoneUtils {
 
     public static String getFullAddressFromUsername(String username) {
         String sipAddress = username;
-        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        if (lc == null || username == null) return sipAddress;
+        Core core = LinphoneManager.getCore();
+        if (core == null || username == null) return sipAddress;
 
         if (!sipAddress.startsWith("sip:")) {
             sipAddress = "sip:" + sipAddress;
         }
 
         if (!sipAddress.contains("@")) {
-            ProxyConfig lpc = lc.getDefaultProxyConfig();
+            ProxyConfig lpc = core.getDefaultProxyConfig();
             if (lpc != null) {
                 sipAddress = sipAddress + "@" + lpc.getDomain();
             } else {

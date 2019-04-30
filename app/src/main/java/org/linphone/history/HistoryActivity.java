@@ -66,7 +66,7 @@ public class HistoryActivity extends MainActivity {
         super.onResume();
 
         mHistorySelected.setVisibility(View.VISIBLE);
-        LinphoneManager.getLc().resetMissedCallsCount();
+        LinphoneManager.getCore().resetMissedCallsCount();
         displayMissedCalls();
     }
 

@@ -70,7 +70,8 @@ public class LinphoneTextureViewOverlay extends RelativeLayout implements Linpho
         mMetrics = new DisplayMetrics();
         mWindowManager.getDefaultDisplay().getMetrics(mMetrics);
 
-        Call call = LinphoneManager.getLc().getCurrentCall();
+        Core core = LinphoneManager.getCore();
+        Call call = core.getCurrentCall();
         CallParams callParams = call.getCurrentParams();
         mParams.width = callParams.getReceivedVideoDefinition().getWidth();
         mParams.height = callParams.getReceivedVideoDefinition().getHeight();
@@ -98,9 +99,8 @@ public class LinphoneTextureViewOverlay extends RelativeLayout implements Linpho
         localPreviewParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, TRUE);
         localPreview.setLayoutParams(localPreviewParams);
 
-        Core lc = LinphoneManager.getLc();
-        lc.setNativeVideoWindowId(remoteVideo);
-        lc.setNativePreviewWindowId(localPreview);
+        core.setNativeVideoWindowId(remoteVideo);
+        core.setNativePreviewWindowId(localPreview);
 
         setOnClickListener(
                 new OnClickListener() {
