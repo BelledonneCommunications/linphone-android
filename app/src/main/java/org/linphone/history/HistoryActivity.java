@@ -32,8 +32,11 @@ import org.linphone.core.Address;
 import org.linphone.utils.LinphoneUtils;
 
 public class HistoryActivity extends MainActivity {
+    public static final String NAME = "History";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getIntent().putExtra("Activity", NAME);
         super.onCreate(savedInstanceState);
     }
 
