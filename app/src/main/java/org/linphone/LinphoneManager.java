@@ -72,15 +72,11 @@ import org.linphone.call.CallManager;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.AccountCreator;
-import org.linphone.core.AccountCreatorListener;
+import org.linphone.core.AccountCreatorListenerStub;
 import org.linphone.core.Address;
-import org.linphone.core.AuthInfo;
-import org.linphone.core.AuthMethod;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
-import org.linphone.core.CallLog;
 import org.linphone.core.CallParams;
-import org.linphone.core.CallStats;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomCapabilities;
@@ -88,22 +84,17 @@ import org.linphone.core.ConfiguringState;
 import org.linphone.core.Content;
 import org.linphone.core.Core;
 import org.linphone.core.Core.LogCollectionUploadState;
-import org.linphone.core.CoreListener;
+import org.linphone.core.CoreListenerStub;
 import org.linphone.core.EcCalibratorStatus;
-import org.linphone.core.Event;
 import org.linphone.core.Factory;
-import org.linphone.core.Friend;
 import org.linphone.core.FriendList;
 import org.linphone.core.GlobalState;
-import org.linphone.core.InfoMessage;
 import org.linphone.core.PresenceActivity;
 import org.linphone.core.PresenceBasicStatus;
 import org.linphone.core.PresenceModel;
 import org.linphone.core.ProxyConfig;
-import org.linphone.core.PublishState;
 import org.linphone.core.Reason;
 import org.linphone.core.RegistrationState;
-import org.linphone.core.SubscriptionState;
 import org.linphone.core.Tunnel;
 import org.linphone.core.TunnelConfig;
 import org.linphone.core.VersionUpdateCheckResult;
@@ -138,7 +129,7 @@ import org.linphone.utils.PushNotificationUtils;
  *
  * <p>Add Service Listener to react to Linphone state changes.
  */
-public class LinphoneManager implements CoreListener, SensorEventListener, AccountCreatorListener {
+public class LinphoneManager implements SensorEventListener {
 
     private static final int LINPHONE_VOLUME_STREAM = STREAM_VOICE_CALL;
 
@@ -162,6 +153,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     private final Resources mRessources;
     private final LinphonePreferences mPrefs;
     private Core mCore;
+    private CoreListenerStub mCoreListener;
     private OpenH264DownloadHelper mCodecDownloader;
     private OpenH264DownloadHelperListener mCodecListener;
     private final String mBasePath;
@@ -174,6 +166,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     private final Handler mHandler = new Handler();
     private WakeLock mProximityWakelock;
     private AccountCreator mAccountCreator;
+    private AccountCreatorListenerStub mAccountCreatorListener;
     private final SensorManager mSensorManager;
     private final Sensor mProximity;
     private boolean mProximitySensingEnabled;
@@ -220,6 +213,433 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         }
 
         mMediaScanner = new MediaScanner(c);
+
+        mCoreListener =
+                new CoreListenerStub() {
+                    @Override
+                    public void onMessageReceived(
+                            Core lc, final ChatRoom cr, final ChatMessage message) {
+                        if (mServiceContext.getResources().getBoolean(R.bool.disable_chat)) {
+                            return;
+                        }
+
+                        if (mCurrentChatRoomAddress != null
+                                && cr.getPeerAddress()
+                                        .asStringUriOnly()
+                                        .equals(mCurrentChatRoomAddress.asStringUriOnly())) {
+                            Log.i(
+                                    "[Manager] Message received for currently displayed chat room, do not make a notification");
+                            return;
+                        }
+
+                        if (message.getErrorInfo() != null
+                                && message.getErrorInfo().getReason()
+                                        == Reason.UnsupportedContent) {
+                            Log.w(
+                                    "[Manager] Message received but content is unsupported, do not notify it");
+                            return;
+                        }
+
+                        if (!message.hasTextContent()
+                                && message.getFileTransferInformation() == null) {
+                            Log.w(
+                                    "[Manager] Message has no text or file transfer information to display, ignoring it...");
+                            return;
+                        }
+
+                        if (mServiceContext
+                                        .getResources()
+                                        .getBoolean(R.bool.disable_chat_message_notification)
+                                || message.isOutgoing()) {
+                            return;
+                        }
+
+                        final Address from = message.getFromAddress();
+                        final LinphoneContact contact =
+                                ContactsManager.getInstance().findContactFromAddress(from);
+                        final String textMessage =
+                                (message.hasTextContent())
+                                        ? message.getTextContent()
+                                        : getString(R.string.content_description_incoming_file);
+
+                        String file = null;
+                        for (Content c : message.getContents()) {
+                            if (c.isFile()) {
+                                file = c.getFilePath();
+                                getMediaScanner()
+                                        .scanFile(
+                                                new File(file),
+                                                new MediaScannerListener() {
+                                                    @Override
+                                                    public void onMediaScanned(
+                                                            String path, Uri uri) {
+                                                        createNotification(
+                                                                cr,
+                                                                contact,
+                                                                from,
+                                                                textMessage,
+                                                                message.getTime(),
+                                                                uri,
+                                                                FileUtils.getMimeFromFile(path));
+                                                    }
+                                                });
+                                break;
+                            }
+                        }
+
+                        if (file == null) {
+                            createNotification(
+                                    cr, contact, from, textMessage, message.getTime(), null, null);
+                        }
+                    }
+
+                    @Override
+                    public void onEcCalibrationResult(
+                            Core lc, EcCalibratorStatus status, int delay_ms) {
+                        ((AudioManager) mServiceContext.getSystemService(Context.AUDIO_SERVICE))
+                                .setMode(AudioManager.MODE_NORMAL);
+                        mAudioManager.abandonAudioFocus(null);
+                        Log.i("[Manager] Set audio mode on 'Normal'");
+                    }
+
+                    @Override
+                    public void onGlobalStateChanged(
+                            final Core lc, final GlobalState state, final String message) {
+                        Log.i("New global state [", state, "]");
+                        if (state == GlobalState.On) {
+                            try {
+                                initLiblinphone(lc);
+                            } catch (IllegalArgumentException iae) {
+                                Log.e(
+                                        "[Manager] Global State Changed Illegal Argument Exception: "
+                                                + iae);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onRegistrationStateChanged(
+                            final Core lc,
+                            final ProxyConfig proxy,
+                            final RegistrationState state,
+                            final String message) {
+                        Log.i("[Manager] New registration state [" + state + "]");
+
+                        if (state == RegistrationState.Failed) {
+                            ConnectivityManager connectivityManager =
+                                    (ConnectivityManager)
+                                            mServiceContext.getSystemService(
+                                                    Context.CONNECTIVITY_SERVICE);
+
+                            NetworkInfo activeNetworkInfo =
+                                    connectivityManager.getActiveNetworkInfo();
+                            Log.i(
+                                    "[Manager] Active network type: "
+                                            + activeNetworkInfo.getTypeName());
+                            if (activeNetworkInfo.isAvailable()
+                                    && activeNetworkInfo.isConnected()) {
+                                Log.i("[Manager] Active network is available");
+                            }
+                            Log.i(
+                                    "[Manager] Active network reason and extra info: "
+                                            + activeNetworkInfo.getReason()
+                                            + " / "
+                                            + activeNetworkInfo.getExtraInfo());
+                            Log.i(
+                                    "[Manager] Active network state "
+                                            + activeNetworkInfo.getState()
+                                            + " / "
+                                            + activeNetworkInfo.getDetailedState());
+                        }
+                    }
+
+                    @Override
+                    public void onConfiguringStatus(
+                            Core lc, ConfiguringState state, String message) {
+                        Log.d(
+                                "[Manager] Remote provisioning status = "
+                                        + state.toString()
+                                        + " ("
+                                        + message
+                                        + ")");
+
+                        LinphonePreferences prefs = LinphonePreferences.instance();
+                        if (state == ConfiguringState.Successful) {
+                            prefs.setPushNotificationEnabled(prefs.isPushNotificationEnabled());
+                        }
+                    }
+
+                    @SuppressLint("Wakelock")
+                    @Override
+                    public void onCallStateChanged(
+                            final Core lc,
+                            final Call call,
+                            final State state,
+                            final String message) {
+                        Log.i("[Manager] New call state [", state, "]");
+                        if (state == State.IncomingReceived && !call.equals(lc.getCurrentCall())) {
+                            if (call.getReplacedCall() != null) {
+                                // attended transfer
+                                // it will be accepted automatically.
+                                return;
+                            }
+                        }
+
+                        if ((state == State.IncomingReceived || state == State.IncomingEarlyMedia)
+                                && getCallGsmON()) {
+                            if (mCore != null) {
+                                mCore.declineCall(call, Reason.Busy);
+                            }
+                        } else if (state == State.IncomingReceived
+                                && (LinphonePreferences.instance().isAutoAnswerEnabled())
+                                && !getCallGsmON()) {
+                            TimerTask lTask =
+                                    new TimerTask() {
+                                        @Override
+                                        public void run() {
+                                            if (mCore != null) {
+                                                if (mCore.getCallsNb() > 0) {
+                                                    acceptCall(call);
+                                                    if (LinphoneManager.getInstance() != null) {
+                                                        LinphoneManager.getInstance()
+                                                                .routeAudioToReceiver();
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    };
+                            mTimer = new Timer("Auto answer");
+                            mTimer.schedule(lTask, mPrefs.getAutoAnswerTime());
+                        } else if (state == State.IncomingReceived
+                                || (state == State.IncomingEarlyMedia
+                                        && mRessources.getBoolean(
+                                                R.bool.allow_ringing_while_early_media))) {
+                            // Brighten screen for at least 10 seconds
+                            if (mCore.getCallsNb() == 1) {
+                                requestAudioFocus(STREAM_RING);
+
+                                mRingingCall = call;
+                                startRinging();
+                                // otherwise there is the beep
+                            }
+                        } else if (call == mRingingCall && mIsRinging) {
+                            // previous state was ringing, so stop ringing
+                            stopRinging();
+                        }
+
+                        if (state == State.Connected) {
+                            if (mCore.getCallsNb() == 1) {
+                                // It is for incoming calls, because outgoing calls enter
+                                // MODE_IN_COMMUNICATION
+                                // immediately when they start.
+                                // However, incoming call first use the MODE_RINGING to play the
+                                // local ring.
+                                if (call.getDir() == Call.Dir.Incoming) {
+                                    setAudioManagerInCallMode();
+                                    // mAudioManager.abandonAudioFocus(null);
+                                    requestAudioFocus(STREAM_VOICE_CALL);
+                                }
+                            }
+
+                            if (Hacks.needSoftvolume()) {
+                                Log.w("[Manager] Using soft volume audio hack");
+                                adjustVolume(0); // Synchronize
+                            }
+                        }
+
+                        if (state == State.End || state == State.Error) {
+                            if (mCore.getCallsNb() == 0) {
+                                // Disabling proximity sensor
+                                enableProximitySensing(false);
+                                Context activity = mServiceContext;
+                                if (mAudioFocused) {
+                                    int res = mAudioManager.abandonAudioFocus(null);
+                                    Log.d(
+                                            "[Manager] Audio focus released a bit later: "
+                                                    + (res
+                                                                    == AudioManager
+                                                                            .AUDIOFOCUS_REQUEST_GRANTED
+                                                            ? "Granted"
+                                                            : "Denied"));
+                                    mAudioFocused = false;
+                                }
+                                if (activity != null) {
+                                    TelephonyManager tm =
+                                            (TelephonyManager)
+                                                    activity.getSystemService(
+                                                            Context.TELEPHONY_SERVICE);
+                                    if (tm.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
+                                        Log.d("[Manager] ---AudioManager: back to MODE_NORMAL");
+                                        mAudioManager.setMode(AudioManager.MODE_NORMAL);
+                                        Log.d(
+                                                "[Manager] All call terminated, routing back to earpiece");
+                                        routeAudioToReceiver();
+                                    }
+                                }
+                            }
+                        }
+                        if (state == State.UpdatedByRemote) {
+                            // If the correspondent proposes video while audio call
+                            boolean remoteVideo = call.getRemoteParams().videoEnabled();
+                            boolean localVideo = call.getCurrentParams().videoEnabled();
+                            boolean autoAcceptCameraPolicy =
+                                    LinphonePreferences.instance()
+                                            .shouldAutomaticallyAcceptVideoRequests();
+                            if (remoteVideo
+                                    && !localVideo
+                                    && !autoAcceptCameraPolicy
+                                    && LinphoneManager.getLc().getConference() == null) {
+                                LinphoneManager.getLc().deferCallUpdate(call);
+                            }
+                        }
+                        if (state == State.OutgoingInit) {
+                            // Enter the MODE_IN_COMMUNICATION mode as soon as possible, so that
+                            // ringback
+                            // is heard normally in earpiece or bluetooth receiver.
+                            setAudioManagerInCallMode();
+                            requestAudioFocus(STREAM_VOICE_CALL);
+                            startBluetooth();
+                        }
+
+                        if (state == State.StreamsRunning) {
+                            startBluetooth();
+                            setAudioManagerInCallMode();
+                        }
+                    }
+
+                    @Override
+                    public void onVersionUpdateCheckResultReceived(
+                            Core lc, VersionUpdateCheckResult result, String version, String url) {
+                        if (result == VersionUpdateCheckResult.NewVersionAvailable) {
+                            final String urlToUse = url;
+                            final String versionAv = version;
+                            mHandler.postDelayed(
+                                    new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            AlertDialog.Builder builder =
+                                                    new AlertDialog.Builder(mServiceContext);
+                                            builder.setMessage(
+                                                    getString(R.string.update_available)
+                                                            + ": "
+                                                            + versionAv);
+                                            builder.setCancelable(false);
+                                            builder.setNeutralButton(
+                                                    getString(R.string.ok),
+                                                    new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(
+                                                                DialogInterface dialogInterface,
+                                                                int i) {
+                                                            if (urlToUse != null) {
+                                                                Intent urlIntent =
+                                                                        new Intent(
+                                                                                Intent.ACTION_VIEW);
+                                                                urlIntent.setData(
+                                                                        Uri.parse(urlToUse));
+                                                                mServiceContext.startActivity(
+                                                                        urlIntent);
+                                                            }
+                                                        }
+                                                    });
+                                            builder.show();
+                                        }
+                                    },
+                                    1000);
+                        }
+                    }
+
+                    @Override
+                    public void onEcCalibrationAudioUninit(Core lc) {}
+
+                    private void sendLogs(String info) {
+                        Context context = mServiceContext;
+                        final String appName = context.getString(R.string.app_name);
+
+                        Intent i = new Intent(Intent.ACTION_SEND);
+                        i.putExtra(
+                                Intent.EXTRA_EMAIL,
+                                new String[] {context.getString(R.string.about_bugreport_email)});
+                        i.putExtra(Intent.EXTRA_SUBJECT, appName + " Logs");
+                        i.putExtra(Intent.EXTRA_TEXT, info);
+                        i.setType("application/zip");
+
+                        try {
+                            context.startActivity(Intent.createChooser(i, "Send mail..."));
+                        } catch (android.content.ActivityNotFoundException ex) {
+                            Log.e(ex);
+                        }
+                    }
+
+                    @Override
+                    public void onLogCollectionUploadStateChanged(
+                            Core linphoneCore, LogCollectionUploadState state, String info) {
+                        Log.d(
+                                "[Manager] Log upload state: "
+                                        + state.toString()
+                                        + ", info = "
+                                        + info);
+                        if (state == LogCollectionUploadState.Delivered) {
+                            ClipboardManager clipboard =
+                                    (ClipboardManager)
+                                            mServiceContext.getSystemService(
+                                                    Context.CLIPBOARD_SERVICE);
+                            ClipData clip = ClipData.newPlainText("Logs url", info);
+                            clipboard.setPrimaryClip(clip);
+                            Toast.makeText(
+                                            mServiceContext,
+                                            getString(R.string.logs_url_copied_to_clipboard),
+                                            Toast.LENGTH_SHORT)
+                                    .show();
+                            sendLogs(info);
+                        }
+                    }
+
+                    @Override
+                    public void onFriendListCreated(Core lc, FriendList list) {
+                        if (LinphoneService.isReady()) {
+                            list.addListener(ContactsManager.getInstance());
+                        }
+                    }
+
+                    @Override
+                    public void onFriendListRemoved(Core lc, FriendList list) {
+                        list.removeListener(ContactsManager.getInstance());
+                    }
+                };
+
+        mAccountCreatorListener =
+                new AccountCreatorListenerStub() {
+                    @Override
+                    public void onIsAccountExist(
+                            AccountCreator accountCreator,
+                            AccountCreator.Status status,
+                            String resp) {
+                        if (status.equals(AccountCreator.Status.AccountExist)) {
+                            accountCreator.isAccountLinked();
+                        }
+                    }
+
+                    @Override
+                    public void onLinkAccount(
+                            AccountCreator accountCreator,
+                            AccountCreator.Status status,
+                            String resp) {
+                        if (status.equals(AccountCreator.Status.AccountNotLinked)) {
+                            askLinkWithPhoneNumber();
+                        }
+                    }
+
+                    @Override
+                    public void onIsAccountLinked(
+                            AccountCreator accountCreator,
+                            AccountCreator.Status status,
+                            String resp) {
+                        if (status.equals(AccountCreator.Status.AccountNotLinked)) {
+                            askLinkWithPhoneNumber();
+                        }
+                    }
+                };
     }
 
     public static synchronized void createAndStart(Context c, boolean isPush) {
@@ -671,7 +1091,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
             copyAssetsFromPackage();
             // traces alway start with traces enable to not missed first initialization
             mCore = Factory.instance().createCore(configFile, mLinphoneFactoryConfigFile, c);
-            mCore.addListener(this);
+            mCore.addListener(mCoreListener);
             if (isPush) {
                 Log.w(
                         "[Manager] We are here because of a received push notification, enter background mode before starting the Core");
@@ -788,7 +1208,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         mAccountCreator =
                 LinphoneManager.getLc()
                         .createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
-        mAccountCreator.setListener(this);
+        mAccountCreator.setListener(mAccountCreatorListener);
         mCallGsmON = false;
     }
 
@@ -867,6 +1287,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
             }
         }
         mCore.stop();
+        mCore.removeListener(mCoreListener);
     }
 
     public void enableProximitySensing(boolean enable) {
@@ -911,89 +1332,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
     private String getString(int key) {
         return mRessources.getString(key);
-    }
-
-    public void onNewSubscriptionRequested(Core lc, Friend lf, String url) {}
-
-    public void onNotifyPresenceReceived(Core lc, Friend lf) {}
-
-    @Override
-    public void onEcCalibrationAudioInit(Core lc) {}
-
-    @Override
-    public void onDtmfReceived(Core lc, Call call, int dtmf) {
-        Log.d("[Manager] DTMF received: " + dtmf);
-    }
-
-    @Override
-    public void onMessageSent(Core core, ChatRoom chatRoom, ChatMessage chatMessage) {}
-
-    @Override
-    public void onMessageReceived(Core lc, final ChatRoom cr, final ChatMessage message) {
-        if (mServiceContext.getResources().getBoolean(R.bool.disable_chat)) {
-            return;
-        }
-
-        if (mCurrentChatRoomAddress != null
-                && cr.getPeerAddress()
-                        .asStringUriOnly()
-                        .equals(mCurrentChatRoomAddress.asStringUriOnly())) {
-            Log.i(
-                    "[Manager] Message received for currently displayed chat room, do not make a notification");
-            return;
-        }
-
-        if (message.getErrorInfo() != null
-                && message.getErrorInfo().getReason() == Reason.UnsupportedContent) {
-            Log.w("[Manager] Message received but content is unsupported, do not notify it");
-            return;
-        }
-
-        if (!message.hasTextContent() && message.getFileTransferInformation() == null) {
-            Log.w(
-                    "[Manager] Message has no text or file transfer information to display, ignoring it...");
-            return;
-        }
-
-        if (mServiceContext.getResources().getBoolean(R.bool.disable_chat_message_notification)
-                || message.isOutgoing()) {
-            return;
-        }
-
-        final Address from = message.getFromAddress();
-        final LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(from);
-        final String textMessage =
-                (message.hasTextContent())
-                        ? message.getTextContent()
-                        : getString(R.string.content_description_incoming_file);
-
-        String file = null;
-        for (Content c : message.getContents()) {
-            if (c.isFile()) {
-                file = c.getFilePath();
-                getMediaScanner()
-                        .scanFile(
-                                new File(file),
-                                new MediaScannerListener() {
-                                    @Override
-                                    public void onMediaScanned(String path, Uri uri) {
-                                        createNotification(
-                                                cr,
-                                                contact,
-                                                from,
-                                                textMessage,
-                                                message.getTime(),
-                                                uri,
-                                                FileUtils.getMimeFromFile(path));
-                                    }
-                                });
-                break;
-            }
-        }
-
-        if (file == null) {
-            createNotification(cr, contact, from, textMessage, message.getTime(), null, null);
-        }
     }
 
     private void createNotification(
@@ -1085,55 +1423,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         }
     }
 
-    @Override
-    public void onEcCalibrationResult(Core lc, EcCalibratorStatus status, int delay_ms) {
-        ((AudioManager) mServiceContext.getSystemService(Context.AUDIO_SERVICE))
-                .setMode(AudioManager.MODE_NORMAL);
-        mAudioManager.abandonAudioFocus(null);
-        Log.i("[Manager] Set audio mode on 'Normal'");
-    }
-
-    public void onGlobalStateChanged(final Core lc, final GlobalState state, final String message) {
-        Log.i("New global state [", state, "]");
-        if (state == GlobalState.On) {
-            try {
-                initLiblinphone(lc);
-            } catch (IllegalArgumentException iae) {
-                Log.e("[Manager] Global State Changed Illegal Argument Exception: " + iae);
-            }
-        }
-    }
-
-    public void onRegistrationStateChanged(
-            final Core lc,
-            final ProxyConfig proxy,
-            final RegistrationState state,
-            final String message) {
-        Log.i("[Manager] New registration state [" + state + "]");
-
-        if (state == RegistrationState.Failed) {
-            ConnectivityManager connectivityManager =
-                    (ConnectivityManager)
-                            mServiceContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-            Log.i("[Manager] Active network type: " + activeNetworkInfo.getTypeName());
-            if (activeNetworkInfo.isAvailable() && activeNetworkInfo.isConnected()) {
-                Log.i("[Manager] Active network is available");
-            }
-            Log.i(
-                    "[Manager] Active network reason and extra info: "
-                            + activeNetworkInfo.getReason()
-                            + " / "
-                            + activeNetworkInfo.getExtraInfo());
-            Log.i(
-                    "[Manager] Active network state "
-                            + activeNetworkInfo.getState()
-                            + " / "
-                            + activeNetworkInfo.getDetailedState());
-        }
-    }
-
     public void setAudioManagerModeNormal() {
         mAudioManager.setMode(AudioManager.MODE_NORMAL);
     }
@@ -1148,145 +1437,11 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         mAudioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
     }
 
-    @SuppressLint("Wakelock")
-    public void onCallStateChanged(
-            final Core lc, final Call call, final State state, final String message) {
-        Log.i("[Manager] New call state [", state, "]");
-        if (state == State.IncomingReceived && !call.equals(lc.getCurrentCall())) {
-            if (call.getReplacedCall() != null) {
-                // attended transfer
-                // it will be accepted automatically.
-                return;
-            }
-        }
-
-        if ((state == State.IncomingReceived || state == State.IncomingEarlyMedia)
-                && getCallGsmON()) {
-            if (mCore != null) {
-                mCore.declineCall(call, Reason.Busy);
-            }
-        } else if (state == State.IncomingReceived
-                && (LinphonePreferences.instance().isAutoAnswerEnabled())
-                && !getCallGsmON()) {
-            TimerTask lTask =
-                    new TimerTask() {
-                        @Override
-                        public void run() {
-                            if (mCore != null) {
-                                if (mCore.getCallsNb() > 0) {
-                                    acceptCall(call);
-                                    if (LinphoneManager.getInstance() != null) {
-                                        LinphoneManager.getInstance().routeAudioToReceiver();
-                                    }
-                                }
-                            }
-                        }
-                    };
-            mTimer = new Timer("Auto answer");
-            mTimer.schedule(lTask, mPrefs.getAutoAnswerTime());
-        } else if (state == State.IncomingReceived
-                || (state == State.IncomingEarlyMedia
-                        && mRessources.getBoolean(R.bool.allow_ringing_while_early_media))) {
-            // Brighten screen for at least 10 seconds
-            if (mCore.getCallsNb() == 1) {
-                requestAudioFocus(STREAM_RING);
-
-                mRingingCall = call;
-                startRinging();
-                // otherwise there is the beep
-            }
-        } else if (call == mRingingCall && mIsRinging) {
-            // previous state was ringing, so stop ringing
-            stopRinging();
-        }
-
-        if (state == State.Connected) {
-            if (mCore.getCallsNb() == 1) {
-                // It is for incoming calls, because outgoing calls enter MODE_IN_COMMUNICATION
-                // immediately when they start.
-                // However, incoming call first use the MODE_RINGING to play the local ring.
-                if (call.getDir() == Call.Dir.Incoming) {
-                    setAudioManagerInCallMode();
-                    // mAudioManager.abandonAudioFocus(null);
-                    requestAudioFocus(STREAM_VOICE_CALL);
-                }
-            }
-
-            if (Hacks.needSoftvolume()) {
-                Log.w("[Manager] Using soft volume audio hack");
-                adjustVolume(0); // Synchronize
-            }
-        }
-
-        if (state == State.End || state == State.Error) {
-            if (mCore.getCallsNb() == 0) {
-                // Disabling proximity sensor
-                enableProximitySensing(false);
-                Context activity = mServiceContext;
-                if (mAudioFocused) {
-                    int res = mAudioManager.abandonAudioFocus(null);
-                    Log.d(
-                            "[Manager] Audio focus released a bit later: "
-                                    + (res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
-                                            ? "Granted"
-                                            : "Denied"));
-                    mAudioFocused = false;
-                }
-                if (activity != null) {
-                    TelephonyManager tm =
-                            (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
-                    if (tm.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
-                        Log.d("[Manager] ---AudioManager: back to MODE_NORMAL");
-                        mAudioManager.setMode(AudioManager.MODE_NORMAL);
-                        Log.d("[Manager] All call terminated, routing back to earpiece");
-                        routeAudioToReceiver();
-                    }
-                }
-            }
-        }
-        if (state == State.UpdatedByRemote) {
-            // If the correspondent proposes video while audio call
-            boolean remoteVideo = call.getRemoteParams().videoEnabled();
-            boolean localVideo = call.getCurrentParams().videoEnabled();
-            boolean autoAcceptCameraPolicy =
-                    LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests();
-            if (remoteVideo
-                    && !localVideo
-                    && !autoAcceptCameraPolicy
-                    && LinphoneManager.getLc().getConference() == null) {
-                LinphoneManager.getLc().deferCallUpdate(call);
-            }
-        }
-        if (state == State.OutgoingInit) {
-            // Enter the MODE_IN_COMMUNICATION mode as soon as possible, so that ringback
-            // is heard normally in earpiece or bluetooth receiver.
-            setAudioManagerInCallMode();
-            requestAudioFocus(STREAM_VOICE_CALL);
-            startBluetooth();
-        }
-
-        if (state == State.StreamsRunning) {
-            startBluetooth();
-            setAudioManagerInCallMode();
-        }
-    }
-
     private void startBluetooth() {
         if (BluetoothManager.getInstance().isBluetoothHeadsetAvailable()) {
             BluetoothManager.getInstance().routeAudioToBluetooth();
         }
     }
-
-    public void onCallStatsUpdated(final Core lc, final Call call, final CallStats stats) {}
-
-    @Override
-    public void onChatRoomStateChanged(Core lc, ChatRoom cr, ChatRoom.State state) {}
-
-    @Override
-    public void onQrcodeFound(Core lc, String result) {}
-
-    public void onCallEncryptionChanged(
-            Core lc, Call call, boolean encrypted, String authenticationToken) {}
 
     public void startEcCalibration() {
         routeAudioToSpeaker();
@@ -1571,248 +1726,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     public void setCallGsmON(boolean on) {
         mCallGsmON = on;
     }
-
-    @Override
-    public void onTransferStateChanged(Core lc, Call call, State new_call_state) {}
-
-    @Override
-    public void onInfoReceived(Core lc, Call call, InfoMessage info) {
-        Log.d("[Manager] Info message received from " + call.getRemoteAddress().asString());
-        Content ct = info.getContent();
-        if (ct != null) {
-            Log.d(
-                    "[Manager] Info received with body with mime type "
-                            + ct.getType()
-                            + "/"
-                            + ct.getSubtype()
-                            + " and data ["
-                            + ct.getStringBuffer()
-                            + "]");
-        }
-    }
-
-    @Override
-    public void onChatRoomRead(Core core, ChatRoom chatRoom) {}
-
-    @Override
-    public void onSubscriptionStateChanged(Core lc, Event ev, SubscriptionState state) {
-        Log.d(
-                "[Manager] Subscription state changed to "
-                        + state
-                        + " event name is "
-                        + ev.getName());
-    }
-
-    @Override
-    public void onCallLogUpdated(Core lc, CallLog newcl) {}
-
-    @Override
-    public void onNotifyReceived(Core lc, Event ev, String eventName, Content content) {
-        Log.d("[Manager] Notify received for event " + eventName);
-        if (content != null)
-            Log.d(
-                    "[Manager] With content "
-                            + content.getType()
-                            + "/"
-                            + content.getSubtype()
-                            + " data:"
-                            + content.getStringBuffer());
-    }
-
-    @Override
-    public void onSubscribeReceived(Core lc, Event lev, String subscribeEvent, Content body) {}
-
-    @Override
-    public void onPublishStateChanged(Core lc, Event ev, PublishState state) {
-        Log.d("[Manager] Publish state changed to " + state + " for event name " + ev.getName());
-    }
-
-    @Override
-    public void onIsComposingReceived(Core lc, ChatRoom cr) {
-        Log.d("[Manager] Composing received for chatroom " + cr.getPeerAddress().asStringUriOnly());
-    }
-
-    @Override
-    public void onMessageReceivedUnableDecrypt(Core lc, ChatRoom room, ChatMessage message) {}
-
-    @Override
-    public void onConfiguringStatus(Core lc, ConfiguringState state, String message) {
-        Log.d("[Manager] Remote provisioning status = " + state.toString() + " (" + message + ")");
-
-        LinphonePreferences prefs = LinphonePreferences.instance();
-        if (state == ConfiguringState.Successful) {
-            prefs.setPushNotificationEnabled(prefs.isPushNotificationEnabled());
-        }
-    }
-
-    @Override
-    public void onCallCreated(Core lc, Call call) {}
-
-    @Override
-    public void onLogCollectionUploadProgressIndication(Core linphoneCore, int offset, int total) {
-        if (total > 0)
-            Log.d(
-                    "[Manager] Log upload progress: currently uploaded = "
-                            + offset
-                            + " , total = "
-                            + total
-                            + ", % = "
-                            + (offset * 100) / total);
-    }
-
-    @Override
-    public void onVersionUpdateCheckResultReceived(
-            Core lc, VersionUpdateCheckResult result, String version, String url) {
-        if (result == VersionUpdateCheckResult.NewVersionAvailable) {
-            final String urlToUse = url;
-            final String versionAv = version;
-            mHandler.postDelayed(
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(mServiceContext);
-                            builder.setMessage(
-                                    getString(R.string.update_available) + ": " + versionAv);
-                            builder.setCancelable(false);
-                            builder.setNeutralButton(
-                                    getString(R.string.ok),
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(
-                                                DialogInterface dialogInterface, int i) {
-                                            if (urlToUse != null) {
-                                                Intent urlIntent = new Intent(Intent.ACTION_VIEW);
-                                                urlIntent.setData(Uri.parse(urlToUse));
-                                                mServiceContext.startActivity(urlIntent);
-                                            }
-                                        }
-                                    });
-                            builder.show();
-                        }
-                    },
-                    1000);
-        }
-    }
-
-    @Override
-    public void onEcCalibrationAudioUninit(Core lc) {}
-
-    private void sendLogs(String info) {
-        Context context = mServiceContext;
-        final String appName = context.getString(R.string.app_name);
-
-        Intent i = new Intent(Intent.ACTION_SEND);
-        i.putExtra(
-                Intent.EXTRA_EMAIL,
-                new String[] {context.getString(R.string.about_bugreport_email)});
-        i.putExtra(Intent.EXTRA_SUBJECT, appName + " Logs");
-        i.putExtra(Intent.EXTRA_TEXT, info);
-        i.setType("application/zip");
-
-        try {
-            context.startActivity(Intent.createChooser(i, "Send mail..."));
-        } catch (android.content.ActivityNotFoundException ex) {
-            Log.e(ex);
-        }
-    }
-
-    @Override
-    public void onLogCollectionUploadStateChanged(
-            Core linphoneCore, LogCollectionUploadState state, String info) {
-        Log.d("[Manager] Log upload state: " + state.toString() + ", info = " + info);
-        if (state == LogCollectionUploadState.Delivered) {
-            ClipboardManager clipboard =
-                    (ClipboardManager) mServiceContext.getSystemService(Context.CLIPBOARD_SERVICE);
-            ClipData clip = ClipData.newPlainText("Logs url", info);
-            clipboard.setPrimaryClip(clip);
-            Toast.makeText(
-                            mServiceContext,
-                            getString(R.string.logs_url_copied_to_clipboard),
-                            Toast.LENGTH_SHORT)
-                    .show();
-            sendLogs(info);
-        }
-    }
-
-    @Override
-    public void onFriendListCreated(Core lc, FriendList list) {
-        if (LinphoneService.isReady()) {
-            list.addListener(ContactsManager.getInstance());
-        }
-    }
-
-    @Override
-    public void onFriendListRemoved(Core lc, FriendList list) {
-        list.removeListener(ContactsManager.getInstance());
-    }
-
-    @Override
-    public void onReferReceived(Core lc, String refer_to) {}
-
-    @Override
-    public void onNetworkReachable(Core lc, boolean enable) {}
-
-    @Override
-    public void onAuthenticationRequested(Core lc, AuthInfo authInfo, AuthMethod method) {}
-
-    @Override
-    public void onNotifyPresenceReceivedForUriOrTel(
-            Core lc, Friend lf, String uri_or_tel, PresenceModel presence_model) {}
-
-    @Override
-    public void onBuddyInfoUpdated(Core lc, Friend lf) {}
-
-    @Override
-    public void onIsAccountExist(
-            AccountCreator accountCreator, AccountCreator.Status status, String resp) {
-        if (status.equals(AccountCreator.Status.AccountExist)) {
-            accountCreator.isAccountLinked();
-        }
-    }
-
-    @Override
-    public void onCreateAccount(
-            AccountCreator accountCreator, AccountCreator.Status status, String resp) {}
-
-    @Override
-    public void onActivateAccount(
-            AccountCreator accountCreator, AccountCreator.Status status, String resp) {}
-
-    @Override
-    public void onLinkAccount(
-            AccountCreator accountCreator, AccountCreator.Status status, String resp) {
-        if (status.equals(AccountCreator.Status.AccountNotLinked)) {
-            askLinkWithPhoneNumber();
-        }
-    }
-
-    @Override
-    public void onActivateAlias(
-            AccountCreator accountCreator, AccountCreator.Status status, String resp) {}
-
-    @Override
-    public void onIsAccountActivated(
-            AccountCreator accountCreator, AccountCreator.Status status, String resp) {}
-
-    @Override
-    public void onRecoverAccount(
-            AccountCreator accountCreator, AccountCreator.Status status, String resp) {}
-
-    @Override
-    public void onIsAccountLinked(
-            AccountCreator accountCreator, AccountCreator.Status status, String resp) {
-        if (status.equals(AccountCreator.Status.AccountNotLinked)) {
-            askLinkWithPhoneNumber();
-        }
-    }
-
-    @Override
-    public void onIsAliasUsed(
-            AccountCreator accountCreator, AccountCreator.Status status, String resp) {}
-
-    @Override
-    public void onUpdateAccount(
-            AccountCreator accountCreator, AccountCreator.Status status, String resp) {}
 
     public interface AddressType {
         CharSequence getText();

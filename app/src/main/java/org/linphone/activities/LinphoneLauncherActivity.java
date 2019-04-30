@@ -91,7 +91,9 @@ public class LinphoneLauncherActivity extends Activity {
                         intent.setType(getIntent().getType());
                         startActivity(intent);
 
-                        LinphoneService.instance().removeForegroundServiceNotificationIfPossible();
+                        LinphoneService.instance()
+                                .getNotificationManager()
+                                .removeForegroundServiceNotificationIfPossible();
                     }
                 },
                 100);
