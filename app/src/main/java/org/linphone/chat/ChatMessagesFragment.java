@@ -1317,6 +1317,8 @@ public class ChatMessagesFragment extends Fragment
     @Override
     public void onContactsUpdated() {
         getContactsForParticipants();
+        displayChatRoomHeader();
+        mChatEventsList.getAdapter().notifyDataSetChanged();
     }
 
     @Override
