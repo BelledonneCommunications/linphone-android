@@ -10,6 +10,11 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [4.1.1] - 2019-xx-xx
+
+### Added
+- Added shortcuts to calls history & chat rooms list
+
 ## [4.1.0] - 2019-05-03
 
 ### Added

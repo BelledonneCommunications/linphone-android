@@ -2,7 +2,7 @@ package org.linphone.compatibility;
 
 /*
 ApiTwentyThreePlus.java
-Copyright (C) 2017  Belledonne Communications, Grenoble, France
+Copyright (C) 2017 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
