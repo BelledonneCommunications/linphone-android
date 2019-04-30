@@ -480,5 +480,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         for (ContactsUpdatedListener listener : mContactsUpdatedListeners) {
             listener.onContactsUpdated();
         }
+
+        Compatibility.updateShortcuts(mContext);
     }
 }

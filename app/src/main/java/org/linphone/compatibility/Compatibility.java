@@ -1,7 +1,7 @@
 package org.linphone.compatibility;
 /*
 Compatibility.java
-Copyright (C) 2017  Belledonne Communications, Grenoble, France
+Copyright (C) 2017 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -226,6 +226,18 @@ public class Compatibility {
     public static void setTurnScreenOn(Activity activity, boolean enable) {
         if (Version.sdkStrictlyBelow(Version.API27_OREO_81)) {
             ApiTwentyOnePlus.setTurnScreenOn(activity, enable);
+        }
+    }
+
+    public static void createChatShortcuts(Context context) {
+        if (Version.sdkAboveOrEqual(Version.API25_NOUGAT_71)) {
+            ApiTwentyFivePlus.createChatShortcuts(context);
+        }
+    }
+
+    public static void updateShortcuts(Context context) {
+        if (Version.sdkAboveOrEqual(Version.API25_NOUGAT_71)) {
+            ApiTwentyFivePlus.updateShortcuts(context);
         }
     }
 }
