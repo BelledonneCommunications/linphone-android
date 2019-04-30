@@ -25,7 +25,6 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.widget.EditText;
-import org.linphone.LinphoneManager.AddressType;
 import org.linphone.R;
 
 @SuppressLint("AppCompatCustomView")

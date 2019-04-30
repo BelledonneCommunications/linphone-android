@@ -295,7 +295,7 @@ public class CallActivity extends LinphoneGenericActivity
                 refreshInCallActions();
                 return;
             } else {
-                mIsSpeakerEnabled = LinphoneManager.getInstance().isSpeakerEnabled();
+                mIsSpeakerEnabled = LinphoneManager.getAudioManager().isAudioRoutedToSpeaker();
                 mIsMicMuted = !LinphoneManager.getLc().micEnabled();
             }
 
@@ -304,7 +304,7 @@ public class CallActivity extends LinphoneGenericActivity
                 callFragment = new CallVideoFragment();
                 mVideoCallFragment = (CallVideoFragment) callFragment;
                 displayVideoCall(false);
-                LinphoneManager.getInstance().routeAudioToSpeaker();
+                LinphoneManager.getAudioManager().routeAudioToSpeaker();
                 mIsSpeakerEnabled = true;
             } else {
                 callFragment = new CallAudioFragment();
@@ -368,7 +368,7 @@ public class CallActivity extends LinphoneGenericActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean("Speaker", LinphoneManager.getInstance().isSpeakerEnabled());
+        outState.putBoolean("Speaker", LinphoneManager.getAudioManager().isAudioRoutedToSpeaker());
         outState.putBoolean("Mic", !LinphoneManager.getLc().micEnabled());
         outState.putBoolean("VideoCallPaused", mIsVideoCallPaused);
         outState.putBoolean("AskingVideo", mIsVideoAsk);
@@ -795,14 +795,14 @@ public class CallActivity extends LinphoneGenericActivity
             }
             hideOrDisplayAudioRoutes();
         } else if (id == R.id.route_earpiece) {
-            LinphoneManager.getInstance().routeAudioToReceiver();
+            LinphoneManager.getAudioManager().routeAudioToEarPiece();
             mIsSpeakerEnabled = false;
             mRouteBluetooth.setSelected(false);
             mRouteSpeaker.setSelected(false);
             mRouteEarpiece.setSelected(true);
             hideOrDisplayAudioRoutes();
         } else if (id == R.id.route_speaker) {
-            LinphoneManager.getInstance().routeAudioToSpeaker();
+            LinphoneManager.getAudioManager().routeAudioToSpeaker();
             mIsSpeakerEnabled = true;
             mRouteBluetooth.setSelected(false);
             mRouteSpeaker.setSelected(true);
@@ -912,7 +912,7 @@ public class CallActivity extends LinphoneGenericActivity
     private void showVideoView() {
         if (!BluetoothManager.getInstance().isBluetoothHeadsetAvailable()) {
             Log.w("Bluetooth not available, using mSpeaker");
-            LinphoneManager.getInstance().routeAudioToSpeaker();
+            LinphoneManager.getAudioManager().routeAudioToSpeaker();
             mIsSpeakerEnabled = true;
         }
         refreshInCallActions();
@@ -989,11 +989,10 @@ public class CallActivity extends LinphoneGenericActivity
         }
         mSpeaker.setSelected(mIsSpeakerEnabled);
         if (mIsSpeakerEnabled) {
-            LinphoneManager.getInstance().routeAudioToSpeaker();
-            LinphoneManager.getInstance().enableSpeaker(mIsSpeakerEnabled);
+            LinphoneManager.getAudioManager().routeAudioToSpeaker();
         } else {
             Log.d("Toggle mSpeaker off, routing back to earpiece");
-            LinphoneManager.getInstance().routeAudioToReceiver();
+            LinphoneManager.getAudioManager().routeAudioToEarPiece();
         }
     }
 
@@ -1290,7 +1289,7 @@ public class CallActivity extends LinphoneGenericActivity
         if (core != null) {
             core.addListener(mListener);
         }
-        mIsSpeakerEnabled = LinphoneManager.getInstance().isSpeakerEnabled();
+        mIsSpeakerEnabled = LinphoneManager.getAudioManager().isAudioRoutedToSpeaker();
 
         refreshIncallUi();
         handleViewIntent();
@@ -1391,7 +1390,7 @@ public class CallActivity extends LinphoneGenericActivity
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (LinphoneUtils.onKeyVolumeAdjust(keyCode)) return true;
+        if (LinphoneManager.getAudioManager().onKeyVolumeAdjust(keyCode)) return true;
         if (LinphoneUtils.onKeyBackGoHome(this, keyCode, event)) return true;
         return super.onKeyDown(keyCode, event);
     }
@@ -2009,13 +2008,13 @@ public class CallActivity extends LinphoneGenericActivity
                     switch (intent.getIntExtra("state", 0)) {
                         case 0:
                             if (mOldIsSpeakerEnabled) {
-                                LinphoneManager.getInstance().routeAudioToSpeaker();
+                                LinphoneManager.getAudioManager().routeAudioToSpeaker();
                                 mIsSpeakerEnabled = true;
                                 mSpeaker.setEnabled(true);
                             }
                             break;
                         case 1:
-                            LinphoneManager.getInstance().routeAudioToReceiver();
+                            LinphoneManager.getAudioManager().routeAudioToEarPiece();
                             mOldIsSpeakerEnabled = mIsSpeakerEnabled;
                             mIsSpeakerEnabled = false;
                             mSpeaker.setEnabled(false);

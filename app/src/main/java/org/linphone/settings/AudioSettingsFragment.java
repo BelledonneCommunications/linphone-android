@@ -174,7 +174,7 @@ public class AudioSettingsFragment extends SettingsFragment {
                                                 Manifest.permission.RECORD_AUDIO,
                                                 getActivity().getPackageName());
                         if (recordAudio == PackageManager.PERMISSION_GRANTED) {
-                            if (LinphoneManager.getInstance().getEchoTesterStatus()) {
+                            if (LinphoneManager.getAudioManager().getEchoTesterStatus()) {
                                 stopEchoTester();
                             } else {
                                 startEchoTester();
@@ -242,19 +242,17 @@ public class AudioSettingsFragment extends SettingsFragment {
     }
 
     private void startEchoTester() {
-        if (LinphoneManager.getInstance().startEchoTester() > 0) {
-            mEchoTester.setSubtitle("Is running");
-        }
+        LinphoneManager.getAudioManager().startEchoTester();
+        mEchoTester.setSubtitle("Is running");
     }
 
     private void stopEchoTester() {
-        if (LinphoneManager.getInstance().stopEchoTester() > 0) {
-            mEchoTester.setSubtitle("Is stopped");
-        }
+        LinphoneManager.getAudioManager().stopEchoTester();
+        mEchoTester.setSubtitle("Is stopped");
     }
 
     private void startEchoCancellerCalibration() {
-        if (LinphoneManager.getInstance().getEchoTesterStatus()) stopEchoTester();
+        if (LinphoneManager.getAudioManager().getEchoTesterStatus()) stopEchoTester();
         LinphoneManager.getLc()
                 .addListener(
                         new CoreListenerStub() {
@@ -263,7 +261,7 @@ public class AudioSettingsFragment extends SettingsFragment {
                                     Core core, EcCalibratorStatus status, int delayMs) {
                                 if (status == EcCalibratorStatus.InProgress) return;
                                 core.removeListener(this);
-                                LinphoneManager.getInstance().routeAudioToReceiver();
+                                LinphoneManager.getAudioManager().routeAudioToEarPiece();
 
                                 if (status == EcCalibratorStatus.DoneNoEcho) {
                                     mEchoCalibration.setSubtitle(getString(R.string.no_echo));
@@ -282,6 +280,6 @@ public class AudioSettingsFragment extends SettingsFragment {
                                         .setMode(AudioManager.MODE_NORMAL);
                             }
                         });
-        LinphoneManager.getInstance().startEcCalibration();
+        LinphoneManager.getAudioManager().startEcCalibration();
     }
 }

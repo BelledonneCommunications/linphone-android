@@ -201,7 +201,11 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
         if (id == R.id.speaker) {
             mIsSpeakerEnabled = !mIsSpeakerEnabled;
             mSpeaker.setSelected(mIsSpeakerEnabled);
-            LinphoneManager.getInstance().enableSpeaker(mIsSpeakerEnabled);
+            if (mIsSpeakerEnabled) {
+                LinphoneManager.getAudioManager().routeAudioToSpeaker();
+            } else {
+                LinphoneManager.getAudioManager().routeAudioToEarPiece();
+            }
         }
         if (id == R.id.outgoing_hang_up) {
             decline();

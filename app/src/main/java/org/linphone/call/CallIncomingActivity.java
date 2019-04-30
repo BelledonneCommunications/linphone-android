@@ -125,15 +125,6 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
                         } else if (state == State.Connected) {
                             startActivity(
                                     new Intent(CallIncomingActivity.this, CallActivity.class));
-                        } else if (state == State.StreamsRunning) {
-                            Log.e(
-                                    "CallIncommingActivity - onCreate -  State.StreamsRunning - speaker = "
-                                            + LinphoneManager.getInstance().isSpeakerEnabled());
-                            // The following should not be needed except some devices need it (e.g.
-                            // Galaxy S).
-                            LinphoneManager.getInstance()
-                                    .enableSpeaker(
-                                            LinphoneManager.getInstance().isSpeakerEnabled());
                         }
                     }
                 };

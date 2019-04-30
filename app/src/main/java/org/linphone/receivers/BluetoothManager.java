@@ -117,7 +117,7 @@ public class BluetoothManager extends BroadcastReceiver {
                                 mIsBluetoothConnected = false;
                                 android.util.Log.d(
                                         "BluetoothManager", "[Bluetooth] Headset disconnected");
-                                LinphoneManager.getInstance().routeAudioToReceiver();
+                                LinphoneManager.getAudioManager().routeAudioToEarPiece();
                             }
                         }
                     };
@@ -281,7 +281,7 @@ public class BluetoothManager extends BroadcastReceiver {
         android.util.Log.w("BluetoothManager", "[Bluetooth] Stopped!");
 
         if (LinphoneManager.isInstanciated()) {
-            LinphoneManager.getInstance().routeAudioToReceiver();
+            LinphoneManager.getAudioManager().routeAudioToEarPiece();
         }
 
         refreshCallView();

@@ -104,8 +104,8 @@ public class RecordingsActivity extends MainActivity
         hideTopBar();
         hideTabBar();
 
-        LinphoneManager.getInstance().setAudioManagerModeNormal();
-        LinphoneManager.getInstance().routeAudioToSpeaker();
+        LinphoneManager.getAudioManager().setAudioManagerModeNormal();
+        LinphoneManager.getAudioManager().routeAudioToSpeaker();
 
         removeDeletedRecordings();
         searchForRecordings();
@@ -121,7 +121,7 @@ public class RecordingsActivity extends MainActivity
     protected void onPause() {
         super.onPause();
 
-        LinphoneManager.getInstance().routeAudioToReceiver();
+        LinphoneManager.getAudioManager().routeAudioToEarPiece();
 
         // Close all opened mRecordings
         for (Recording r : mRecordings) {

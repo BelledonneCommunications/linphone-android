@@ -117,13 +117,13 @@ public class EchoCancellerCalibrationAssistantActivity extends AssistantActivity
                                     Core core, EcCalibratorStatus status, int delayMs) {
                                 if (status == EcCalibratorStatus.InProgress) return;
                                 core.removeListener(this);
-                                LinphoneManager.getInstance().routeAudioToReceiver();
+                                LinphoneManager.getAudioManager().routeAudioToEarPiece();
                                 goToLinphoneActivity();
 
                                 ((AudioManager) getSystemService(Context.AUDIO_SERVICE))
                                         .setMode(AudioManager.MODE_NORMAL);
                             }
                         });
-        LinphoneManager.getInstance().startEcCalibration();
+        LinphoneManager.getAudioManager().startEcCalibration();
     }
 }
