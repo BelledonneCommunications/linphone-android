@@ -77,11 +77,7 @@ import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
 import org.linphone.core.CallParams;
-import org.linphone.core.ChatMessage;
-import org.linphone.core.ChatRoom;
-import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.ConfiguringState;
-import org.linphone.core.Content;
 import org.linphone.core.Core;
 import org.linphone.core.Core.LogCollectionUploadState;
 import org.linphone.core.CoreListenerStub;
@@ -113,7 +109,6 @@ import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.FileUtils;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.utils.MediaScanner;
-import org.linphone.utils.MediaScannerListener;
 import org.linphone.utils.PushNotificationUtils;
 
 /**
@@ -171,7 +166,6 @@ public class LinphoneManager implements SensorEventListener {
     private final Sensor mProximity;
     private boolean mProximitySensingEnabled;
     private boolean mHandsetON = false;
-    private Address mCurrentChatRoomAddress;
     private Timer mTimer;
     private final MediaScanner mMediaScanner;
     private Call mRingingCall;
@@ -216,83 +210,6 @@ public class LinphoneManager implements SensorEventListener {
 
         mCoreListener =
                 new CoreListenerStub() {
-                    @Override
-                    public void onMessageReceived(
-                            Core lc, final ChatRoom cr, final ChatMessage message) {
-                        if (mServiceContext.getResources().getBoolean(R.bool.disable_chat)) {
-                            return;
-                        }
-
-                        if (mCurrentChatRoomAddress != null
-                                && cr.getPeerAddress()
-                                        .asStringUriOnly()
-                                        .equals(mCurrentChatRoomAddress.asStringUriOnly())) {
-                            Log.i(
-                                    "[Manager] Message received for currently displayed chat room, do not make a notification");
-                            return;
-                        }
-
-                        if (message.getErrorInfo() != null
-                                && message.getErrorInfo().getReason()
-                                        == Reason.UnsupportedContent) {
-                            Log.w(
-                                    "[Manager] Message received but content is unsupported, do not notify it");
-                            return;
-                        }
-
-                        if (!message.hasTextContent()
-                                && message.getFileTransferInformation() == null) {
-                            Log.w(
-                                    "[Manager] Message has no text or file transfer information to display, ignoring it...");
-                            return;
-                        }
-
-                        if (mServiceContext
-                                        .getResources()
-                                        .getBoolean(R.bool.disable_chat_message_notification)
-                                || message.isOutgoing()) {
-                            return;
-                        }
-
-                        final Address from = message.getFromAddress();
-                        final LinphoneContact contact =
-                                ContactsManager.getInstance().findContactFromAddress(from);
-                        final String textMessage =
-                                (message.hasTextContent())
-                                        ? message.getTextContent()
-                                        : getString(R.string.content_description_incoming_file);
-
-                        String file = null;
-                        for (Content c : message.getContents()) {
-                            if (c.isFile()) {
-                                file = c.getFilePath();
-                                getMediaScanner()
-                                        .scanFile(
-                                                new File(file),
-                                                new MediaScannerListener() {
-                                                    @Override
-                                                    public void onMediaScanned(
-                                                            String path, Uri uri) {
-                                                        createNotification(
-                                                                cr,
-                                                                contact,
-                                                                from,
-                                                                textMessage,
-                                                                message.getTime(),
-                                                                uri,
-                                                                FileUtils.getMimeFromFile(path));
-                                                    }
-                                                });
-                                break;
-                            }
-                        }
-
-                        if (file == null) {
-                            createNotification(
-                                    cr, contact, from, textMessage, message.getTime(), null, null);
-                        }
-                    }
-
                     @Override
                     public void onEcCalibrationResult(
                             Core lc, EcCalibratorStatus status, int delay_ms) {
@@ -1332,78 +1249,6 @@ public class LinphoneManager implements SensorEventListener {
 
     private String getString(int key) {
         return mRessources.getString(key);
-    }
-
-    private void createNotification(
-            ChatRoom cr,
-            LinphoneContact contact,
-            Address from,
-            String textMessage,
-            long time,
-            Uri file,
-            String mime) {
-        if (cr.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
-            if (contact != null) {
-                LinphoneService.instance()
-                        .getNotificationManager()
-                        .displayMessageNotification(
-                                cr.getPeerAddress().asStringUriOnly(),
-                                contact.getFullName(),
-                                contact.getThumbnailUri(),
-                                textMessage,
-                                cr.getLocalAddress(),
-                                time,
-                                file,
-                                mime);
-            } else {
-                LinphoneService.instance()
-                        .getNotificationManager()
-                        .displayMessageNotification(
-                                cr.getPeerAddress().asStringUriOnly(),
-                                from.getUsername(),
-                                null,
-                                textMessage,
-                                cr.getLocalAddress(),
-                                time,
-                                file,
-                                mime);
-            }
-        } else {
-            String subject = cr.getSubject();
-            if (contact != null) {
-                LinphoneService.instance()
-                        .getNotificationManager()
-                        .displayGroupChatMessageNotification(
-                                subject,
-                                cr.getPeerAddress().asStringUriOnly(),
-                                contact.getFullName(),
-                                contact.getThumbnailUri(),
-                                textMessage,
-                                cr.getLocalAddress(),
-                                time,
-                                file,
-                                mime);
-            } else {
-                LinphoneService.instance()
-                        .getNotificationManager()
-                        .displayGroupChatMessageNotification(
-                                subject,
-                                cr.getPeerAddress().asStringUriOnly(),
-                                from.getUsername(),
-                                null,
-                                textMessage,
-                                cr.getLocalAddress(),
-                                time,
-                                file,
-                                mime);
-            }
-        }
-    }
-
-    public void setCurrentChatRoomAddress(Address address) {
-        mCurrentChatRoomAddress = address;
-        LinphoneService.instance()
-                .setCurrentlyDisplayedChatRoom(address != null ? address.asStringUriOnly() : null);
     }
 
     public void checkForUpdate() {
