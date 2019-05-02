@@ -42,8 +42,6 @@ import org.linphone.core.Factory;
 import org.linphone.core.LogLevel;
 import org.linphone.core.LoggingService;
 import org.linphone.core.LoggingServiceListener;
-import org.linphone.core.ProxyConfig;
-import org.linphone.core.RegistrationState;
 import org.linphone.core.tools.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.notifications.NotificationsManager;
@@ -173,13 +171,6 @@ public final class LinphoneService extends Service {
                             }
                         }
                     }
-
-                    @Override
-                    public void onRegistrationStateChanged(
-                            Core core, ProxyConfig cfg, RegistrationState state, String message) {
-                        if (state == RegistrationState.Ok)
-                            Compatibility.createChatShortcuts(LinphoneService.this);
-                    }
                 };
     }
 
@@ -220,6 +211,8 @@ public final class LinphoneService extends Service {
         }
 
         mBluetoothManager = new BluetoothManager();
+
+        Compatibility.createChatShortcuts(this);
 
         return START_STICKY;
     }

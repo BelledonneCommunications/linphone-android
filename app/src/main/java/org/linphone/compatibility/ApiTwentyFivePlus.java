@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import org.linphone.LinphoneManager;
+import org.linphone.R;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.utils.LinphoneShortcutManager;
@@ -37,6 +38,9 @@ import org.linphone.utils.LinphoneShortcutManager;
 class ApiTwentyFivePlus {
 
     public static void createChatShortcuts(Context context) {
+        if (!context.getResources().getBoolean(R.bool.create_most_recent_chat_rooms_shortcuts))
+            return;
+
         ShortcutManager shortcutManager =
                 (ShortcutManager) context.getSystemService(Context.SHORTCUT_SERVICE);
         ArrayList<ShortcutInfo> shortcuts = new ArrayList<>();
@@ -76,6 +80,9 @@ class ApiTwentyFivePlus {
     }
 
     public static void updateShortcuts(Context context) {
+        if (!context.getResources().getBoolean(R.bool.create_most_recent_chat_rooms_shortcuts))
+            return;
+
         ShortcutManager shortcutManager =
                 (ShortcutManager) context.getSystemService(Context.SHORTCUT_SERVICE);
         ArrayList<ShortcutInfo> shortcuts = new ArrayList<>();
