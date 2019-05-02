@@ -194,7 +194,7 @@ public class ContactEditorFragment extends Fragment {
                             ContactsManager.getInstance().fetchContactsAsync();
                         }
 
-                        getFragmentManager().popBackStackImmediate();
+                        getFragmentManager().popBackStack();
                         if (mIsNewContact || getResources().getBoolean(R.bool.isTablet)) {
                             ((ContactsActivity) getActivity()).showContactDetails(mContact);
                         }
