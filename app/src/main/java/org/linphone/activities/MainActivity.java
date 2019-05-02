@@ -35,6 +35,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -231,6 +232,11 @@ public abstract class MainActivity extends LinphoneGenericActivity
                                                 .equals(getString(R.string.default_domain))) {
                                     LinphoneManager.getInstance().isAccountWithAlias();
                                 }
+                            }
+
+                            if (!Compatibility.isDoNotDisturbSettingsAccessGranted(
+                                    MainActivity.this)) {
+                                displayDNDSettingsDialog();
                             }
                         }
                     }
@@ -664,6 +670,50 @@ public abstract class MainActivity extends LinphoneGenericActivity
                     }
                 });
 
+        dialog.show();
+    }
+
+    private void displayDNDSettingsDialog() {
+        if (!LinphonePreferences.instance().isDNDSettingsPopupEnabled()) return;
+
+        final Dialog dialog =
+                displayDialog(getString(R.string.pref_grant_read_dnd_settings_permission_desc));
+        dialog.findViewById(R.id.dialog_do_not_ask_again_layout).setVisibility(View.VISIBLE);
+        final CheckBox doNotAskAgain = dialog.findViewById(R.id.doNotAskAgain);
+        dialog.findViewById(R.id.doNotAskAgainLabel)
+                .setOnClickListener(
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                doNotAskAgain.setChecked(!doNotAskAgain.isChecked());
+                            }
+                        });
+        Button cancel = dialog.findViewById(R.id.dialog_cancel_button);
+        cancel.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (doNotAskAgain.isChecked()) {
+                            LinphonePreferences.instance().enableDNDSettingsPopup(false);
+                        }
+                        dialog.dismiss();
+                    }
+                });
+        Button ok = dialog.findViewById(R.id.dialog_ok_button);
+        ok.setVisibility(View.VISIBLE);
+        ok.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.w(
+                                "[Permission] Asking user to grant us permission to read DND settings");
+                        startActivity(
+                                new Intent("android.settings.NOTIFICATION_POLICY_ACCESS_SETTINGS"));
+                        dialog.dismiss();
+                    }
+                });
+        Button delete = dialog.findViewById(R.id.dialog_delete_button);
+        delete.setVisibility(View.GONE);
         dialog.show();
     }
 

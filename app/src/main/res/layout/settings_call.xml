@@ -23,6 +23,13 @@
             android:layout_height="wrap_content"
             linphone:title="@string/pref_vibrate_on_incoming_calls" />
 
+        <org.linphone.settings.widget.BasicSetting
+            android:id="@+id/pref_grant_read_dnd_settings_permission"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            linphone:title="@string/pref_grant_read_dnd_settings_permission_title"
+            linphone:subtitle="@string/pref_grant_read_dnd_settings_permission_desc"/>
+
         <org.linphone.settings.widget.ListSetting
             android:id="@+id/pref_media_encryption"
             android:layout_width="match_parent"
