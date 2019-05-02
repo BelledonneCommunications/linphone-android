@@ -47,6 +47,7 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
         ContactsContract.Contacts.LOOKUP_KEY,
         ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
         ContactsContract.Data.MIMETYPE,
+        ContactsContract.Contacts.STARRED,
         "data1", // Company, Phone or SIP Address
         "data2", // ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME
         "data3", // ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME
@@ -125,6 +126,8 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
                 if (isCancelled()) return data;
 
                 String id = c.getString(c.getColumnIndex(ContactsContract.Data.CONTACT_ID));
+                boolean starred =
+                        c.getInt(c.getColumnIndex(ContactsContract.Contacts.STARRED)) == 1;
                 String lookupKey =
                         c.getString(c.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY));
 
@@ -133,6 +136,7 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
                     nativeIds.add(id);
                     contact = new LinphoneContact();
                     contact.setAndroidId(id);
+                    contact.setIsFavourite(starred);
                     androidContactsCache.put(id, contact);
                 }
 
