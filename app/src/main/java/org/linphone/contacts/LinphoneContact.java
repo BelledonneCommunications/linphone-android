@@ -48,6 +48,7 @@ public class LinphoneContact extends AndroidContact
     private transient Uri mPhotoUri, mThumbnailUri;
     private List<LinphoneNumberOrAddress> mAddresses;
     private boolean mHasSipAddress;
+    private boolean mIsStarred;
 
     public LinphoneContact() {
         super();
@@ -56,6 +57,7 @@ public class LinphoneContact extends AndroidContact
         mThumbnailUri = null;
         mPhotoUri = null;
         mHasSipAddress = false;
+        mIsStarred = false;
     }
 
     public static LinphoneContact createContact() {
@@ -545,5 +547,13 @@ public class LinphoneContact extends AndroidContact
         if (!isFriend()) return false;
 
         return getFriend().hasCapability(capability);
+    }
+
+    public void setIsFavourite(boolean starred) {
+        mIsStarred = starred;
+    }
+
+    public boolean isFavourite() {
+        return mIsStarred;
     }
 }
