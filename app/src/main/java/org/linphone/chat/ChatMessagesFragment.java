@@ -644,7 +644,7 @@ public class ChatMessagesFragment extends Fragment
     }
 
     private void hideKeyboardVisibleMode() {
-        if (getResources().getBoolean(R.bool.hide_bottom_bar_on_second_level_views)) {
+        if (!getResources().getBoolean(R.bool.hide_bottom_bar_on_second_level_views)) {
             ((ChatActivity) getActivity()).showTabBar();
         }
         ((ChatActivity) getActivity()).showStatusBar();
