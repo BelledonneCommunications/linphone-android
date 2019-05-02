@@ -199,7 +199,7 @@ public class LinphoneContact extends AndroidContact
        Number or address related
     */
 
-    private void addNumberOrAddress(LinphoneNumberOrAddress noa) {
+    private synchronized void addNumberOrAddress(LinphoneNumberOrAddress noa) {
         if (noa == null) return;
         if (noa.isSIPAddress()) {
             mHasSipAddress = true;
@@ -220,7 +220,7 @@ public class LinphoneContact extends AndroidContact
         }
     }
 
-    public List<LinphoneNumberOrAddress> getNumbersOrAddresses() {
+    public synchronized List<LinphoneNumberOrAddress> getNumbersOrAddresses() {
         return mAddresses;
     }
 
@@ -242,7 +242,7 @@ public class LinphoneContact extends AndroidContact
         return mHasSipAddress;
     }
 
-    public void removeNumberOrAddress(LinphoneNumberOrAddress noa) {
+    public synchronized void removeNumberOrAddress(LinphoneNumberOrAddress noa) {
         if (noa != null && noa.getOldValue() != null) {
 
             removeNumberOrAddress(noa.getOldValue(), noa.isSIPAddress());
@@ -268,7 +268,7 @@ public class LinphoneContact extends AndroidContact
         }
     }
 
-    public void addOrUpdateNumberOrAddress(LinphoneNumberOrAddress noa) {
+    public synchronized void addOrUpdateNumberOrAddress(LinphoneNumberOrAddress noa) {
         if (noa != null && noa.getValue() != null) {
 
             addNumberOrAddress(noa.getValue(), noa.getOldValue(), noa.isSIPAddress());
@@ -299,7 +299,7 @@ public class LinphoneContact extends AndroidContact
         }
     }
 
-    public void clearAddresses() {
+    public synchronized void clearAddresses() {
         mAddresses.clear();
     }
 
@@ -345,7 +345,7 @@ public class LinphoneContact extends AndroidContact
                     mFriend.removePhoneNumber(phone);
                 }
             }
-            for (LinphoneNumberOrAddress noa : mAddresses) {
+            for (LinphoneNumberOrAddress noa : getNumbersOrAddresses()) {
                 if (noa.isSIPAddress()) {
                     Address addr = core.interpretUrl(noa.getValue());
                     if (addr != null) {
@@ -401,7 +401,7 @@ public class LinphoneContact extends AndroidContact
 
     public boolean isInFriendList() {
         if (mFriend == null) return false;
-        for (LinphoneNumberOrAddress noa : mAddresses) {
+        for (LinphoneNumberOrAddress noa : getNumbersOrAddresses()) {
             PresenceModel pm = mFriend.getPresenceModelForUriOrTel(noa.getValue());
             if (pm != null && pm.getBasicStatus().equals(PresenceBasicStatus.Open)) {
                 return true;
@@ -451,7 +451,7 @@ public class LinphoneContact extends AndroidContact
         setPhotoUri(getContactPictureUri());
     }
 
-    public void syncValuesFromFriend() {
+    public synchronized void syncValuesFromFriend() {
         if (isFriend()) {
             mAddresses = new ArrayList<>();
             mFullName = mFriend.getName();
@@ -482,7 +482,7 @@ public class LinphoneContact extends AndroidContact
         }
     }
 
-    private void syncValuesFromAndroidContact(Context context) {
+    private synchronized void syncValuesFromAndroidContact(Context context) {
         Cursor c =
                 context.getContentResolver()
                         .query(

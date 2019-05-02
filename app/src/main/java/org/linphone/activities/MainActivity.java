@@ -675,6 +675,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
 
     private void displayDNDSettingsDialog() {
         if (!LinphonePreferences.instance().isDNDSettingsPopupEnabled()) return;
+        Log.w("[Permission] Asking user to grant us permission to read DND settings");
 
         final Dialog dialog =
                 displayDialog(getString(R.string.pref_grant_read_dnd_settings_permission_desc));
@@ -705,8 +706,6 @@ public abstract class MainActivity extends LinphoneGenericActivity
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.w(
-                                "[Permission] Asking user to grant us permission to read DND settings");
                         startActivity(
                                 new Intent("android.settings.NOTIFICATION_POLICY_ACCESS_SETTINGS"));
                         dialog.dismiss();
