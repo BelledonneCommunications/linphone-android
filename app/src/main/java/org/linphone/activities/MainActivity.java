@@ -384,6 +384,10 @@ public abstract class MainActivity extends LinphoneGenericActivity
     public boolean popBackStack() {
         if (getFragmentManager().getBackStackEntryCount() > 0) {
             getFragmentManager().popBackStackImmediate();
+            if (getFragmentManager().getBackStackEntryCount() == 0
+                    && getResources().getBoolean(R.bool.hide_bottom_bar_on_second_level_views)) {
+                showTabBar();
+            }
             return true;
         }
         return false;
@@ -594,6 +598,16 @@ public abstract class MainActivity extends LinphoneGenericActivity
 
             if (isChild) {
                 transaction.addToBackStack(name);
+            }
+        }
+
+        if (getResources().getBoolean(R.bool.hide_bottom_bar_on_second_level_views)) {
+            if (isChild) {
+                if (!isTablet()) {
+                    hideTabBar();
+                }
+            } else {
+                showTabBar();
             }
         }
 
