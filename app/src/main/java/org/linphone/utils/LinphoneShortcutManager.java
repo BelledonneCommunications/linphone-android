@@ -25,9 +25,7 @@ import android.content.Intent;
 import android.content.pm.ShortcutInfo;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Icon;
-import android.provider.MediaStore;
 import android.util.ArraySet;
-import java.io.IOException;
 import java.util.Set;
 import org.linphone.LinphoneService;
 import org.linphone.R;
@@ -60,15 +58,10 @@ public class LinphoneShortcutManager {
         String address = peerAddress.asStringUriOnly();
 
         Bitmap bm = null;
-        try {
-            if (contact != null && contact.getThumbnailUri() != null) {
-                bm =
-                        MediaStore.Images.Media.getBitmap(
-                                LinphoneService.instance().getContentResolver(),
-                                contact.getThumbnailUri());
-            }
-        } catch (IOException e) {
-            Log.e("[Shortcuts Manager] Failed to get shortcut bitmap from contact thumbnail: " + e);
+        if (contact != null && contact.getThumbnailUri() != null) {
+            bm =
+                    ImageUtils.getRoundBitmapFromUri(
+                            LinphoneService.instance(), contact.getThumbnailUri());
         }
         Icon icon =
                 bm == null
@@ -107,17 +100,10 @@ public class LinphoneShortcutManager {
 
         if (contact != null) {
             Bitmap bm = null;
-            try {
-                if (contact != null && contact.getThumbnailUri() != null) {
-                    bm =
-                            MediaStore.Images.Media.getBitmap(
-                                    LinphoneService.instance().getContentResolver(),
-                                    contact.getThumbnailUri());
-                }
-            } catch (IOException e) {
-                Log.e(
-                        "[Shortcuts Manager] Failed to get shortcut bitmap from contact thumbnail: "
-                                + e);
+            if (contact != null && contact.getThumbnailUri() != null) {
+                bm =
+                        ImageUtils.getRoundBitmapFromUri(
+                                LinphoneService.instance(), contact.getThumbnailUri());
             }
             Icon icon =
                     bm == null
