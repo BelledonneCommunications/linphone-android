@@ -239,6 +239,7 @@
   <string name="unexpected_event">Evento inaspettato %iper %s</string>
   <string name="download_file">Scarica</string>
   <string name="toast_choose_chat_room_for_sharing">Scegli una conversazione o creane una nuova</string>
+  <string name="trust_denied">Il trust è stato negato. Effettua una chiamata per avviare nuovamente la procedura di autenticazione.</string>
   <!--Status Bar-->
   <string name="status_connected">Connesso</string>
   <string name="status_not_connected">Non connesso</string>
