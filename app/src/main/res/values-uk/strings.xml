@@ -6,10 +6,13 @@
   <string name="addressbook_label">Linphone</string>
   <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">Завантажується</string>
+  <string name="notification_registered">%s з\'єднано</string>
+  <string name="notification_register_failure">%s з\'єднатися не вийшло</string>
   <string name="tunnel_host"></string>
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone ядро %s</string>
   <string name="about_liblinphone_sdk_version">Linphone SDK %s</string>
+  <string name="about_privacy_policy">Відвідайте нашу політику конфіденційності</string>
   <string name="sync_account_name">контакти linphone</string>
   <!--Notifications-->
   <string name="notification_reply_label">Відповідь</string>
@@ -21,6 +24,8 @@
   <string name="username">Ім\'я користувача</string>
   <string name="userid">Ідентифікатор користувача (необов\'язково)</string>
   <string name="phone_number">Номер телефону</string>
+  <string name="confirmation_code">Код підтвердження</string>
+  <string name="international_prefix">Префікс міжнародного номеру телефону</string>
   <string name="display_name">Показуване ім\'я</string>
   <string name="password">Пароль</string>
   <string name="confirm_password">Схвалення паролю</string>
@@ -56,6 +61,7 @@
   <string name="update_available">Доступне оновлення</string>
   <string name="do_not_ask_again">Не показувати знову</string>
   <string name="delete_contacts_text">Ви впевнені, що волієте вилучити ці контакти?\nВони також будуть вилучені з вашого телефону!</string>
+  <string name="logs_url_copied_to_clipboard">URL-адресу журналів скопійовано до буферу обміну</string>
   <!--Launch screen-->
   <string name="app_description">це <i>безкоштовний</i> SIP-клієнт</string>
   <!--Assistant-->
@@ -154,6 +160,7 @@
   <string name="delete_history_log">Ви справді бажаєте вилучити обраний журнал викликів?</string>
   <string name="today">Сьогодні</string>
   <string name="yesterday">Вчора</string>
+  <string name="calls">Виклики</string>
   <!--Contacts-->
   <string name="no_contact">В адресній книзі немає контактів.</string>
   <string name="no_sip_contact">В адресній книзі немає SIP контактів.</string>
@@ -164,10 +171,15 @@
   <string name="contact_last_name">Прізвище</string>
   <string name="contact_organization">Організація</string>
   <string name="invite_friend">Запросити</string>
+  <string name="invite_friend_text">Вітаю! Приєднуйтеся до мене в Linphone! Ви можете завантажити його безкоштовно звідси: %s</string>
+  <string name="toast_choose_contact_for_edition">Оберіть контакт або створіть новий</string>
   <!--Chat-->
   <string name="no_chat_history">Немає розмов</string>
   <string name="delete_conversation">Ви справді бажаєте вилучити обрану розмову?</string>
   <string name="delete_message">Ви справді бажаєте вилучити обране повідомлення?</string>
+  <string name="remote_composing">Співрозмовник пише...</string>
+  <string name="remote_composing_single">%s пише…</string>
+  <string name="remote_composing_multiple">%s пишуть…</string>
   <string name="share_picture_size_small">Маленький</string>
   <string name="share_picture_size_medium">Середній</string>
   <string name="share_picture_size_large">Великий</string>
@@ -177,6 +189,7 @@
   <string name="image_picker_title">Вибрати джерело</string>
   <string name="image_saved">Зображення збережено</string>
   <string name="image_not_saved">Помилка, зображення не збережено</string>
+  <string name="wait">Будь ласка зачекайте...</string>
   <string name="image_transfert_error">При передачі файлу трапилася помилка</string>
   <string name="message_not_encrypted">Це повідомлення не зашифровано</string>
   <string name="message_cant_be_decrypted">Від %sотримано зашифроване повідомлення, яке ви не можете розшифрувати.\nВи маєте зателефонувати своєму співрозмовнику для обміну ключами ZRTP. Це необхідно для розшифрування майбутніх повідомлень, які ви отримаєте.</string>
@@ -225,9 +238,16 @@
   <string name="participant_max_count_exceeded">Щонайбільша кількість учасників перебільшена %s</string>
   <string name="unexpected_event">Несподівана подія %i для %s</string>
   <string name="download_file">Стягнути</string>
+  <string name="toast_choose_chat_room_for_sharing">Оберіть бесіду або створіть нову</string>
+  <string name="trust_denied">У довірі було відмовлено. Зробіть виклик, аби почати процес автентифікації знову.</string>
   <!--Status Bar-->
+  <string name="status_connected">З\'єднано</string>
+  <string name="status_not_connected">Не з\'єднано</string>
+  <string name="status_in_progress">Виконується з\'єднання</string>
+  <string name="status_error">З\'єднання не відбулося</string>
   <string name="voicemail_unread">непрочитаних повідомлень</string>
   <!--Side Menu-->
+  <string name="menu_logout">Вийти</string>
   <string name="menu_assistant">Асистент</string>
   <string name="menu_settings">Налаштування</string>
   <string name="menu_recordings">Записи</string>
@@ -265,6 +285,7 @@
   <string name="call_stats_decoder_name">Декодер</string>
   <string name="call_stats_display_filter">Відображуваний фільтр:</string>
   <string name="call">Виклик</string>
+  <string name="call_log_delete_dialog">Ви справді волієте вилучити обрані журнали викликів?</string>
   <!--Recordings-->
   <string name="no_recordings">Немає записів</string>
   <string name="recordings_delete_dialog">Ви бажаєте вилучити обрані записи?</string>
@@ -275,6 +296,8 @@
   <string name="incall_notif_active">Встановлено авдіоз\'єднання</string>
   <string name="incall_notif_paused">Виклик на павзі</string>
   <string name="incall_notif_video">Встановлено відеоз\'єднання</string>
+  <string name="incall_notif_incoming">Вхідний виклик</string>
+  <string name="incall_notif_outgoing">Вихідний виклик</string>
   <string name="notification_started">почато</string>
   <string name="unread_messages">%i непрочитаних повідомлень</string>
   <string name="missed_calls_notif_title">Пропущений виклик</string>
@@ -295,6 +318,7 @@
   <string name="error_unauthorized">Не авторизований</string>
   <string name="error_io_error">Помилка мережі</string>
   <string name="download_image_failed">Завантаження не вдалося. Перевірте мережеве з\'єднання або повторіть спробу пізніше.</string>
+  <string name="remote_provisioning_failure">Не вдалося завантажити або застосувати профіль віддаленої конфігурації...</string>
   <string name="remote_provisioning_again_title">Віддалене конфігурування</string>
   <string name="remote_provisioning_again_message">Ви бажаєте змінити URI конфігурування?</string>
   <!--Account Settings-->
@@ -361,6 +385,8 @@
   <string name="failed">не вдалося</string>
   <string name="pref_adaptive_rate_control">Адаптивний контроль швидкости</string>
   <string name="pref_codec_bitrate_limit">Гранична межа кодеку</string>
+  <string name="pref_mic_gain_db">Підсилення мікрофону (в дБ)</string>
+  <string name="pref_playback_gain_db">Підсилення відтворення (в дБ)</string>
   <string name="pref_codecs">Кодеки</string>
   <!--Video settings-->
   <string name="pref_video_title">Відео</string>
@@ -387,6 +413,7 @@
   <string name="pref_call_timeout_title">Час очікування виклику (у секундах)</string>
   <string name="pref_voice_mail">URI голосової пошти</string>
   <string name="pref_dialer_call">Використовувати Linphone у якости типового застосунку для дзвінків.</string>
+  <string name="pref_accept_early_media">Приймати ранній потік</string>
   <!--Chat settings-->
   <string name="pref_chat_title">Чат</string>
   <string name="pref_image_sharing_server_title">Сервер обміну</string>
@@ -424,15 +451,19 @@
   <string name="pref_protected_settings_desc">Цей застосунок має бути увімкнений для отримання push-сповіщень</string>
   <!--Advanced settings-->
   <string name="pref_advanced_title">Додатково</string>
+  <string name="pref_dark_mode">Темний режим</string>
   <string name="pref_debug_title">Зневадження</string>
   <string name="pref_debug">Зневадження</string>
   <string name="pref_java_debug">Використовувати Java-реєстратор</string>
   <string name="pref_friendlist_subscribe">Підписка</string>
   <string name="pref_background_mode">Тловий режим</string>
+  <string name="pref_background_mode_desc">Показувати сповіщення, аби зберегти застосунок робочим</string>
   <string name="pref_animation_enable_title">Увімкнути анімацію</string>
   <string name="pref_service_notification">Увімкнути сервісне сповіщення</string>
   <string name="pref_autostart">Запуск під час завантаження</string>
   <string name="pref_incoming_call_timeout_title">Відхилення вхідного виклику (у секундах)</string>
+  <string name="pref_device_name">Ім\'я пристрою</string>
+  <string name="pref_display_name_subtitle">Зміни буде застосовано при наступному запуску</string>
   <string name="pref_remote_provisioning_title">Віддалене конфігурування</string>
   <string name="pref_android_app_settings_title">Параметри додатку в Android</string>
   <string name="pref_android_app_notif_settings_title">Параметри сповіщень в Android</string>
@@ -452,6 +483,9 @@
   <string name="device_power_saver_dialog_button_later">Пізніше</string>
   <!--Debug popup-->
   <string name="debug_popup_title">Зневадження</string>
+  <string name="debug_popup_enable_logs">Увімкнути журнали</string>
+  <string name="debug_popup_disable_logs">Вимкнути журнали</string>
+  <string name="debug_popup_send_logs">Відправити журнали</string>
   <!--Content description-->
   <string name="content_description_back">Назад</string>
   <string name="content_description_dialer">Номеронабирач</string>
