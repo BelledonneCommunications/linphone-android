@@ -440,6 +440,8 @@
     <string name="pref_voice_mail">Voice mail URI</string>
     <string name="pref_dialer_call">Use Linphone as default phone app</string>
     <string name="pref_accept_early_media">Accept early-media</string>
+    <string name="pref_grant_read_dnd_settings_permission_title">Do Not Disturb settings</string>
+    <string name="pref_grant_read_dnd_settings_permission_desc">We need you to grant use the access to the Do Not Disturb settings to correctly ring or not depending on the current policy</string>
 
     <!-- Chat settings -->
     <string name="pref_chat_title">Chat</string>

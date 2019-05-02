@@ -35,6 +35,13 @@ class ApiTwentyThreePlus {
         return ((PowerManager) context.getSystemService(Context.POWER_SERVICE)).isDeviceIdleMode();
     }
 
+    public static boolean isDoNotDisturbSettingsAccessGranted(Context context) {
+        NotificationManager notificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        boolean accessGranted = notificationManager.isNotificationPolicyAccessGranted();
+        return accessGranted;
+    }
+
     public static boolean isDoNotDisturbPolicyAllowingRinging(
             Context context, Address remoteAddress) {
         NotificationManager notificationManager =
@@ -44,7 +51,8 @@ class ApiTwentyThreePlus {
             Log.w("[Audio Manager] Priority interruption filter detected");
             boolean accessGranted = notificationManager.isNotificationPolicyAccessGranted();
             if (!accessGranted) {
-                Log.e("[Audio Manager] Access to policy is denied, let's assume it is not safe for ringing");
+                Log.e(
+                        "[Audio Manager] Access to policy is denied, let's assume it is not safe for ringing");
                 return false;
             }
 

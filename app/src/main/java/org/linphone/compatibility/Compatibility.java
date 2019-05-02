@@ -230,6 +230,13 @@ public class Compatibility {
         }
     }
 
+    public static boolean isDoNotDisturbSettingsAccessGranted(Context context) {
+        if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
+            return ApiTwentyThreePlus.isDoNotDisturbSettingsAccessGranted(context);
+        }
+        return true;
+    }
+
     public static boolean isDoNotDisturbPolicyAllowingRinging(
             Context context, Address remoteAddress) {
         if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {

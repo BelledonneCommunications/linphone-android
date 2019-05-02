@@ -889,6 +889,14 @@ public class LinphonePreferences {
         getConfig().setBool("app", "link_popup_enabled", enable);
     }
 
+    public boolean isDNDSettingsPopupEnabled() {
+        return getConfig().getBool("app", "dnd_settings_popup_enabled", true);
+    }
+
+    public void enableDNDSettingsPopup(boolean enable) {
+        getConfig().setBool("app", "dnd_settings_popup_enabled", enable);
+    }
+
     public boolean isLimeSecurityPopupEnabled() {
         return getConfig().getBool("app", "lime_security_popup_enabled", true);
     }
