@@ -23,30 +23,15 @@ import static java.lang.Math.min;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Icon;
-import android.provider.MediaStore;
-import android.util.ArraySet;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Set;
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneService;
-import org.linphone.R;
-import org.linphone.chat.ChatActivity;
-import org.linphone.contacts.ContactsManager;
-import org.linphone.contacts.LinphoneContact;
-import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomCapabilities;
-import org.linphone.core.Factory;
-import org.linphone.core.tools.Log;
-import org.linphone.utils.LinphoneUtils;
+import org.linphone.utils.LinphoneShortcutManager;
 
 @TargetApi(25)
 class ApiTwentyFivePlus {
@@ -75,64 +60,15 @@ class ApiTwentyFivePlus {
                     }
                 });
 
-        Set<String> categories = new ArraySet<>();
-        categories.add(ShortcutInfo.SHORTCUT_CATEGORY_CONVERSATION);
-
-        for (int i = 0;
-                i
-                        < min(
-                                notEmptyOneToOneRooms.size(),
-                                shortcutManager.getMaxShortcutCountPerActivity());
-                i++) {
-            // Android can only have 4 shortcuts at a time max
+        LinphoneShortcutManager manager = new LinphoneShortcutManager(context);
+        int maxShortcuts =
+                min(notEmptyOneToOneRooms.size(), shortcutManager.getMaxShortcutCountPerActivity());
+        for (int i = 0; i < maxShortcuts; i++) {
+            // Android can only have around 4-5 shortcuts at a time
             ChatRoom room = notEmptyOneToOneRooms.get(i);
-            Address peerAddress =
-                    room.hasCapability(ChatRoomCapabilities.Basic.toInt())
-                            ? room.getPeerAddress()
-                            : room.getParticipants()[0].getAddress();
-            LinphoneContact contact =
-                    ContactsManager.getInstance().findContactFromAddress(peerAddress);
-            String address = peerAddress.asStringUriOnly();
-
-            Bitmap bm = null;
-            try {
-                if (contact != null && contact.getThumbnailUri() != null) {
-                    bm =
-                            MediaStore.Images.Media.getBitmap(
-                                    LinphoneService.instance().getContentResolver(),
-                                    contact.getThumbnailUri());
-                }
-            } catch (IOException e) {
-                Log.e("[Shortcuts Manager] " + e);
-            }
-            Icon icon =
-                    bm == null
-                            ? Icon.createWithResource(context, R.drawable.avatar)
-                            : Icon.createWithBitmap(bm);
-
-            String name =
-                    contact == null
-                            ? LinphoneUtils.getAddressDisplayName(peerAddress)
-                            : contact.getFullName();
-
-            try {
-                Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.setClass(context, ChatActivity.class);
-                intent.addFlags(
-                        Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                intent.putExtra("RemoteSipUri", room.getPeerAddress().asStringUriOnly());
-
-                ShortcutInfo shortcut =
-                        new ShortcutInfo.Builder(context, address)
-                                .setShortLabel(name)
-                                .setIcon(icon)
-                                .setCategories(categories)
-                                .setIntent(intent)
-                                .build();
-
+            ShortcutInfo shortcut = manager.createChatRoomShortcutInfo(room);
+            if (shortcut != null) {
                 shortcuts.add(shortcut);
-            } catch (Exception e) {
-                Log.e("[Shortcuts Manager] " + e);
             }
         }
 
@@ -143,45 +79,11 @@ class ApiTwentyFivePlus {
         ShortcutManager shortcutManager =
                 (ShortcutManager) context.getSystemService(Context.SHORTCUT_SERVICE);
         ArrayList<ShortcutInfo> shortcuts = new ArrayList<>();
-
-        Set<String> categories = new ArraySet<>();
-        categories.add(ShortcutInfo.SHORTCUT_CATEGORY_CONVERSATION);
+        LinphoneShortcutManager manager = new LinphoneShortcutManager(context);
 
         for (ShortcutInfo shortcutInfo : shortcutManager.getDynamicShortcuts()) {
-            String address = shortcutInfo.getId();
-            Address peerAddress = Factory.instance().createAddress(address);
-            LinphoneContact contact =
-                    ContactsManager.getInstance().findContactFromAddress(peerAddress);
-
-            if (contact != null) {
-                Bitmap bm = null;
-                try {
-                    if (contact != null && contact.getThumbnailUri() != null) {
-                        bm =
-                                MediaStore.Images.Media.getBitmap(
-                                        LinphoneService.instance().getContentResolver(),
-                                        contact.getThumbnailUri());
-                    }
-                } catch (IOException e) {
-                    Log.e("[Shortcuts Manager] " + e);
-                }
-                Icon icon =
-                        bm == null
-                                ? Icon.createWithResource(context, R.drawable.avatar)
-                                : Icon.createWithBitmap(bm);
-
-                String name =
-                        contact == null
-                                ? LinphoneUtils.getAddressDisplayName(peerAddress)
-                                : contact.getFullName();
-                ShortcutInfo shortcut =
-                        new ShortcutInfo.Builder(context, address)
-                                .setShortLabel(name)
-                                .setIcon(icon)
-                                .setCategories(categories)
-                                .setIntent(shortcutInfo.getIntent())
-                                .build();
-
+            ShortcutInfo shortcut = manager.updateShortcutInfo(shortcutInfo);
+            if (shortcut != null) {
                 shortcuts.add(shortcut);
             }
         }
