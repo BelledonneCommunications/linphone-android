@@ -220,7 +220,7 @@ public class ContactDetailsFragment extends Fragment implements ContactsUpdatedL
         TableLayout controls = view.findViewById(R.id.controls);
         controls.removeAllViews();
         for (LinphoneNumberOrAddress noa : mContact.getNumbersOrAddresses()) {
-            boolean skip = false;
+            boolean skip;
             View v = inflater.inflate(R.layout.contact_control_row, null);
 
             String value = noa.getValue();
