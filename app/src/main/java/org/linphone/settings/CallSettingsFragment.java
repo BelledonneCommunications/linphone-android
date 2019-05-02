@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.InputType;
@@ -34,6 +35,8 @@ import org.linphone.R;
 import org.linphone.core.Core;
 import org.linphone.core.MediaEncryption;
 import org.linphone.core.tools.Log;
+import org.linphone.mediastream.Version;
+import org.linphone.settings.widget.BasicSetting;
 import org.linphone.settings.widget.ListSetting;
 import org.linphone.settings.widget.SettingListenerBase;
 import org.linphone.settings.widget.SwitchSetting;
@@ -50,6 +53,7 @@ public class CallSettingsFragment extends SettingsFragment {
             mAutoAnswer;
     private ListSetting mMediaEncryption;
     private TextSetting mAutoAnswerTime, mIncomingCallTimeout, mVoiceMailUri;
+    private BasicSetting mDndPermissionSettings;
 
     @Nullable
     @Override
@@ -93,6 +97,9 @@ public class CallSettingsFragment extends SettingsFragment {
 
         mVoiceMailUri = mRootView.findViewById(R.id.pref_voice_mail);
         mAutoAnswerTime.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
+
+        mDndPermissionSettings =
+                mRootView.findViewById(R.id.pref_grant_read_dnd_settings_permission);
     }
 
     private void setListeners() {
@@ -196,6 +203,15 @@ public class CallSettingsFragment extends SettingsFragment {
                         mPrefs.setVoiceMailUri(newValue);
                     }
                 });
+
+        mDndPermissionSettings.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onClicked() {
+                        startActivity(
+                                new Intent("android.settings.NOTIFICATION_POLICY_ACCESS_SETTINGS"));
+                    }
+                });
     }
 
     private void updateValues() {
@@ -217,6 +233,9 @@ public class CallSettingsFragment extends SettingsFragment {
         mIncomingCallTimeout.setValue(mPrefs.getIncTimeout());
 
         mVoiceMailUri.setValue(mPrefs.getVoiceMailUri());
+
+        mDndPermissionSettings.setVisibility(
+                Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60) ? View.VISIBLE : View.GONE);
 
         setListeners();
     }

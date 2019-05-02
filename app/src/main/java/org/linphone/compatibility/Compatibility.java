@@ -29,6 +29,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.provider.Settings;
+import org.linphone.core.Address;
 import org.linphone.mediastream.Version;
 import org.linphone.notifications.Notifiable;
 
@@ -227,5 +228,20 @@ public class Compatibility {
         if (Version.sdkStrictlyBelow(Version.API27_OREO_81)) {
             ApiTwentyOnePlus.setTurnScreenOn(activity, enable);
         }
+    }
+
+    public static boolean isDoNotDisturbSettingsAccessGranted(Context context) {
+        if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
+            return ApiTwentyThreePlus.isDoNotDisturbSettingsAccessGranted(context);
+        }
+        return true;
+    }
+
+    public static boolean isDoNotDisturbPolicyAllowingRinging(
+            Context context, Address remoteAddress) {
+        if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
+            return ApiTwentyThreePlus.isDoNotDisturbPolicyAllowingRinging(context, remoteAddress);
+        }
+        return true;
     }
 }

@@ -46,6 +46,8 @@
     <!-- Needed for kill application yourself -->
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!-- Needed to get the current Do Not Disturb policy -->
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
 
     <supports-screens
         android:anyDensity="true"
