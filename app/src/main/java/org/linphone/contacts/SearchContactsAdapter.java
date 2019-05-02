@@ -26,6 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
@@ -116,12 +117,6 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
                 holder.name.setVisibility(View.VISIBLE);
                 holder.name.setText(searchResult.getAddress().getDisplayName());
             }
-        } else if (searchResult.getAddress() != null) {
-            holder.name.setVisibility(View.VISIBLE);
-            holder.name.setText(
-                    (searchResult.getAddress().getDisplayName() != null)
-                            ? searchResult.getAddress().getDisplayName()
-                            : searchResult.getAddress().getUsername());
         }
 
         holder.disabled.setVisibility(View.GONE);
@@ -143,7 +138,8 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
                 // Disable row, contact doesn't have the required capabilities
                 holder.disabled.setVisibility(View.VISIBLE);
             } else if (mSecurityEnabled || !mIsOnlyOnePersonSelection) {
-                ProxyConfig lpc = LinphoneManager.getCore().getDefaultProxyConfig();
+                ProxyConfig lpc =
+                        Objects.requireNonNull(LinphoneManager.getCore()).getDefaultProxyConfig();
                 if (lpc != null
                         && searchResult.getAddress() != null
                         && lpc.getIdentityAddress().weakEqual(searchResult.getAddress())) {
@@ -239,7 +235,7 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
         mPreviousSearch = search;
 
         String domain = "";
-        ProxyConfig prx = LinphoneManager.getCore().getDefaultProxyConfig();
+        ProxyConfig prx = Objects.requireNonNull(LinphoneManager.getCore()).getDefaultProxyConfig();
         if (prx != null) domain = prx.getDomain();
         SearchResult[] searchResults =
                 ContactsManager.getInstance()

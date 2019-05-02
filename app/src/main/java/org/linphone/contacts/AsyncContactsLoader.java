@@ -63,9 +63,8 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
         if (LinphonePreferences.instance().isFriendlistsubscriptionEnabled()) {
             String rls = context.getString(R.string.rls_uri);
             for (FriendList list : LinphoneManager.getCore().getFriendsLists()) {
-                if (rls != null
-                        && (list.getRlsAddress() == null
-                                || !list.getRlsAddress().asStringUriOnly().equals(rls))) {
+                if (list.getRlsAddress() == null
+                        || !list.getRlsAddress().asStringUriOnly().equals(rls)) {
                     list.setRlsUri(rls);
                 }
                 list.addListener(ContactsManager.getInstance());

@@ -22,26 +22,20 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import org.linphone.core.CallParams;
 
 public class BandwidthManager {
-
     private static final int HIGH_RESOLUTION = 0;
     private static final int LOW_RESOLUTION = 1;
     private static final int LOW_BANDWIDTH = 2;
 
-    private static BandwidthManager sInstance;
-
     private static final int currentProfile = HIGH_RESOLUTION;
 
-    private BandwidthManager() {
+    public BandwidthManager() {
         // FIXME register a listener on NetworkManager to get notified of network state
         // FIXME register a listener on Preference to get notified of change in video enable value
 
         // FIXME initially get those values
     }
 
-    public static synchronized BandwidthManager getInstance() {
-        if (sInstance == null) sInstance = new BandwidthManager();
-        return sInstance;
-    }
+    public void destroy() {}
 
     public void updateWithProfileSettings(CallParams callParams) {
         if (callParams != null) { // in call

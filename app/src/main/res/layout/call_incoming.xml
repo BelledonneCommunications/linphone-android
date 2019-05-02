@@ -28,61 +28,55 @@
 
     </RelativeLayout>
 
-    <FrameLayout
+    <RelativeLayout
+        android:id="@+id/contact_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/menu"
-        android:layout_below="@id/top_bar">
+        android:layout_below="@id/top_bar"
+        android:background="?attr/backgroundColor">
+
+        <TextView
+            android:id="@+id/contact_name"
+            style="@style/big_contact_name_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_vertical|center_horizontal"
+            android:paddingTop="5dp" />
+
+        <TextView
+            android:id="@+id/contact_number"
+            style="@style/sip_uri_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/contact_name"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingBottom="10dp" />
 
         <RelativeLayout
-            android:id="@+id/contact_detail"
+            android:id="@+id/avatar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/backgroundColor">
+            android:layout_below="@id/contact_number"
+            android:layout_margin="5dp"
+            android:gravity="center">
 
-            <TextView
-                android:id="@+id/contact_name"
-                style="@style/big_contact_name_font"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:gravity="center_vertical|center_horizontal"
-                android:paddingTop="5dp" />
-
-            <TextView
-                android:id="@+id/contact_number"
-                style="@style/sip_uri_font"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/contact_name"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center_vertical|center_horizontal"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:paddingBottom="10dp" />
-
-            <RelativeLayout
-                android:id="@+id/avatar_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/contact_number"
-                android:layout_margin="5dp"
-                android:gravity="center">
-
-                <include layout="@layout/contact_avatar_200" />
-
-            </RelativeLayout>
-
-            <TextureView
-                android:id="@+id/videoSurface"
-                android:layout_below="@id/contact_number"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+            <include layout="@layout/contact_avatar_200" />
 
         </RelativeLayout>
 
-    </FrameLayout>
+        <TextureView
+            android:id="@+id/videoSurface"
+            android:layout_below="@id/contact_number"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/menu"

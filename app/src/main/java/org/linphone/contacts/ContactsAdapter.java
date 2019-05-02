@@ -79,9 +79,8 @@ public class ContactsAdapter extends SelectableAdapter<ContactViewHolder>
         }
         holder.separator.setVisibility(
                 mIsSearchMode
-                                || (!mIsSearchMode
-                                        && getPositionForSection(getSectionForPosition(position))
-                                                != position)
+                                || (getPositionForSection(getSectionForPosition(position))
+                                        != position)
                         ? View.GONE
                         : View.VISIBLE);
         holder.linphoneFriend.setVisibility(contact.isInFriendList() ? View.VISIBLE : View.GONE);

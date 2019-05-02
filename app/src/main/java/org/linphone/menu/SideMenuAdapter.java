@@ -58,7 +58,10 @@ class SideMenuAdapter extends ArrayAdapter<SideMenuItem> {
         LayoutInflater inflater =
                 (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View rowView = inflater.inflate(mResource, parent, false);
+        View rowView = convertView;
+        if (rowView == null) {
+            rowView = inflater.inflate(mResource, parent, false);
+        }
 
         TextView textView = rowView.findViewById(R.id.item_name);
         ImageView imageView = rowView.findViewById(R.id.item_icon);

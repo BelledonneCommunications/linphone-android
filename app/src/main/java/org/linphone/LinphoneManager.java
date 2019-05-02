@@ -73,7 +73,6 @@ import org.linphone.core.tools.H264Helper;
 import org.linphone.core.tools.Log;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration.AndroidCamera;
-import org.linphone.receivers.BluetoothManager;
 import org.linphone.receivers.HookReceiver;
 import org.linphone.receivers.OutgoingCallReceiver;
 import org.linphone.settings.LinphonePreferences;
@@ -84,9 +83,6 @@ import org.linphone.utils.PushNotificationUtils;
 
 /** Handles Linphone's Core lifecycle */
 public class LinphoneManager implements SensorEventListener {
-    private static LinphoneManager sInstance;
-    private static boolean sExited;
-
     private final String mConfigFile;
     private final String mLPConfigXsd;
     private final String mBasePath;
@@ -117,11 +113,12 @@ public class LinphoneManager implements SensorEventListener {
     private AccountCreator mAccountCreator;
     private AccountCreatorListenerStub mAccountCreatorListener;
 
+    private boolean mExited;
     private boolean mCallGsmON;
     private boolean mProximitySensingEnabled;
 
-    private LinphoneManager(Context c) {
-        sExited = false;
+    public LinphoneManager(Context c) {
+        mExited = false;
         mServiceContext = c;
         mBasePath = c.getFilesDir().getAbsolutePath();
         mLPConfigXsd = mBasePath + "/lpconfig.xsd";
@@ -339,34 +336,18 @@ public class LinphoneManager implements SensorEventListener {
                 };
     }
 
-    public static synchronized void createAndStart(Context c, boolean isPush) {
-        if (sInstance != null) {
-            Log.e(
-                    "[Manager] Linphone Manager is already initialized ! Destroying it and creating a new one...");
-            destroy();
-        }
-
-        sInstance = new LinphoneManager(c);
-        sInstance.startLibLinphone(c, isPush);
-
-        // H264 codec Management - set to auto mode -> MediaCodec >= android 5.0 >= OpenH264
-        H264Helper.setH264Mode(H264Helper.MODE_AUTO, sInstance.mCore);
-    }
-
-    public static boolean isInstanciated() {
-        return sInstance != null;
-    }
-
     public static synchronized LinphoneManager getInstance() {
-        if (sInstance != null) return sInstance;
-
-        if (sExited) {
+        LinphoneManager manager = LinphoneService.instance().getLinphoneManager();
+        if (manager == null) {
+            throw new RuntimeException(
+                    "[Manager] Linphone Manager should be created before accessed");
+        }
+        if (manager.mExited) {
             throw new RuntimeException(
                     "[Manager] Linphone Manager was already destroyed. "
                             + "Better use getCore and check returned value");
         }
-
-        throw new RuntimeException("[Manager] Linphone Manager should be created before accessed");
+        return manager;
     }
 
     public static synchronized AndroidAudioManager getAudioManager() {
@@ -377,27 +358,25 @@ public class LinphoneManager implements SensorEventListener {
         return getInstance().mCallManager;
     }
 
-    public static synchronized void destroy() {
-        if (sInstance == null) return;
-        sExited = true;
-        sInstance.destroyManager();
-        sInstance = null;
-    }
-
     public static synchronized Core getCore() {
-        if (sExited || sInstance == null) {
+        if (getInstance().mExited) {
             // Can occur if the UI thread play a posted event but in the meantime the
             // LinphoneManager was destroyed
             // Ex: stop call and quickly terminate application.
             return null;
         }
-        return sInstance.mCore;
+        return getInstance().mCore;
     }
 
     /* End of static */
 
     public MediaScanner getMediaScanner() {
         return mMediaScanner;
+    }
+
+    public synchronized void destroy() {
+        mExited = true;
+        destroyManager();
     }
 
     public void restartCore() {
@@ -427,8 +406,6 @@ public class LinphoneManager implements SensorEventListener {
         mCallManager.destroy();
         mMediaScanner.destroy();
         mAudioManager.destroy();
-        ContactsManager.getInstance().destroy();
-        BluetoothManager.getInstance().destroy();
 
         try {
             mTimer.cancel();
@@ -451,11 +428,13 @@ public class LinphoneManager implements SensorEventListener {
         }
     }
 
-    private synchronized void startLibLinphone(Context c, boolean isPush) {
+    public synchronized void startLibLinphone(boolean isPush) {
         try {
             copyAssetsFromPackage();
             // traces alway start with traces enable to not missed first initialization
-            mCore = Factory.instance().createCore(mConfigFile, mLinphoneFactoryConfigFile, c);
+            mCore =
+                    Factory.instance()
+                            .createCore(mConfigFile, mLinphoneFactoryConfigFile, mServiceContext);
             mCore.addListener(mCoreListener);
             if (isPush) {
                 Log.w(
@@ -484,6 +463,9 @@ public class LinphoneManager implements SensorEventListener {
         } catch (Exception e) {
             Log.e(e, "[Manager] Cannot start linphone");
         }
+
+        // H264 codec Management - set to auto mode -> MediaCodec >= android 5.0 >= OpenH264
+        H264Helper.setH264Mode(H264Helper.MODE_AUTO, mCore);
     }
 
     private synchronized void initLiblinphone(Core core) {
@@ -715,43 +697,39 @@ public class LinphoneManager implements SensorEventListener {
     /* Presence stuff */
 
     private boolean isPresenceModelActivitySet() {
-        Core core = getCore();
-        if (isInstanciated() && core != null) {
-            return core.getPresenceModel() != null && core.getPresenceModel().getActivity() != null;
+        if (mCore != null) {
+            return mCore.getPresenceModel() != null
+                    && mCore.getPresenceModel().getActivity() != null;
         }
         return false;
     }
 
     public void changeStatusToOnline() {
-        Core core = getCore();
-        if (core == null) return;
-        PresenceModel model = core.createPresenceModel();
+        if (mCore == null) return;
+        PresenceModel model = mCore.createPresenceModel();
         model.setBasicStatus(PresenceBasicStatus.Open);
-        core.setPresenceModel(model);
+        mCore.setPresenceModel(model);
     }
 
     public void changeStatusToOnThePhone() {
-        Core core = getCore();
-        if (core == null) return;
+        if (mCore == null) return;
 
-        if (isInstanciated()
-                && isPresenceModelActivitySet()
-                && core.getPresenceModel().getActivity().getType()
+        if (isPresenceModelActivitySet()
+                && mCore.getPresenceModel().getActivity().getType()
                         != PresenceActivity.Type.OnThePhone) {
-            core.getPresenceModel().getActivity().setType(PresenceActivity.Type.OnThePhone);
-        } else if (isInstanciated() && !isPresenceModelActivitySet()) {
+            mCore.getPresenceModel().getActivity().setType(PresenceActivity.Type.OnThePhone);
+        } else if (!isPresenceModelActivitySet()) {
             PresenceModel model =
-                    core.createPresenceModelWithActivity(PresenceActivity.Type.OnThePhone, null);
-            core.setPresenceModel(model);
+                    mCore.createPresenceModelWithActivity(PresenceActivity.Type.OnThePhone, null);
+            mCore.setPresenceModel(model);
         }
     }
 
     private void changeStatusToOffline() {
-        Core core = getCore();
-        if (isInstanciated() && core != null) {
-            PresenceModel model = core.getPresenceModel();
+        if (mCore != null) {
+            PresenceModel model = mCore.getPresenceModel();
             model.setBasicStatus(PresenceBasicStatus.Closed);
-            core.setPresenceModel(model);
+            mCore.setPresenceModel(model);
         }
     }
 
@@ -879,7 +857,7 @@ public class LinphoneManager implements SensorEventListener {
                             .getResources()
                             .getInteger(R.integer.time_between_update_check); // 24h
             if (lastTimestamp == 0 || currentTimeStamp - lastTimestamp >= interval) {
-                LinphoneManager.getCore().checkForUpdate(BuildConfig.VERSION_NAME);
+                mCore.checkForUpdate(BuildConfig.VERSION_NAME);
                 LinphonePreferences.instance().setLastCheckReleaseTimestamp(currentTimeStamp);
             }
         }

@@ -233,10 +233,10 @@ public class ContactDetailsFragment extends Fragment implements ContactsUpdatedL
             TextView label = v.findViewById(R.id.address_label);
             if (noa.isSIPAddress()) {
                 label.setText(R.string.sip_address);
-                skip |= getResources().getBoolean(R.bool.hide_contact_sip_addresses);
+                skip = getResources().getBoolean(R.bool.hide_contact_sip_addresses);
             } else {
                 label.setText(R.string.phone_number);
-                skip |= getResources().getBoolean(R.bool.hide_contact_phone_numbers);
+                skip = getResources().getBoolean(R.bool.hide_contact_phone_numbers);
             }
 
             TextView tv = v.findViewById(R.id.numeroOrAddress);

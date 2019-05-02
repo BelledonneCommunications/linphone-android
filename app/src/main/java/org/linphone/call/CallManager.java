@@ -46,15 +46,15 @@ public class CallManager {
     private Context mContext;
     private boolean mHandsetON = false;
     private CallActivity.CallActivityInterface mCallInterface;
+    private BandwidthManager mBandwidthManager;
 
     public CallManager(Context context) {
         mContext = context;
+        mBandwidthManager = new BandwidthManager();
     }
 
-    public void destroy() {}
-
-    private BandwidthManager getBandwidthManager() {
-        return BandwidthManager.getInstance();
+    public void destroy() {
+        mBandwidthManager.destroy();
     }
 
     public void inviteAddress(Address lAddress, boolean forceZRTP) {
@@ -70,7 +70,7 @@ public class CallManager {
         Core core = LinphoneManager.getCore();
 
         CallParams params = core.createCallParams(null);
-        getBandwidthManager().updateWithProfileSettings(params);
+        mBandwidthManager.updateWithProfileSettings(params);
 
         if (videoEnabled && params.videoEnabled()) {
             params.enableVideo(true);
@@ -116,7 +116,7 @@ public class CallManager {
         if (params.videoEnabled()) return false;
 
         // Check if video possible regarding bandwidth limitations
-        getBandwidthManager().updateWithProfileSettings(params);
+        mBandwidthManager.updateWithProfileSettings(params);
 
         // Abort if not enough bandwidth...
         if (!params.videoEnabled()) {
@@ -141,7 +141,7 @@ public class CallManager {
             return;
         }
         CallParams params = core.createCallParams(call);
-        getBandwidthManager().updateWithProfileSettings(params);
+        mBandwidthManager.updateWithProfileSettings(params);
         core.updateCall(call, null);
     }
 

@@ -268,7 +268,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
         if (checkPermission(Manifest.permission.READ_CONTACTS)) {
             ContactsManager.getInstance().enableContactsAccess();
         }
-        ContactsManager.getInstance().initializeContactManager(this);
+        ContactsManager.getInstance().initializeContactManager();
 
         if (DeviceUtils.isAppUserRestricted(this)) {
             Log.w(

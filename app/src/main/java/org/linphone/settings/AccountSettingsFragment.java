@@ -621,8 +621,7 @@ public class AccountSettingsFragment extends SettingsFragment {
 
             mDisable.setChecked(!mProxyConfig.registerEnabled());
 
-            mUseAsDefault.setChecked(
-                    core != null && mProxyConfig.equals(core.getDefaultProxyConfig()));
+            mUseAsDefault.setChecked(mProxyConfig.equals(core.getDefaultProxyConfig()));
             mUseAsDefault.setEnabled(!mUseAsDefault.isChecked());
 
             mOutboundProxy.setChecked(mProxyConfig.getRoute() != null);

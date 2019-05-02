@@ -33,6 +33,7 @@ import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Handler;
 import android.os.RemoteException;
 import android.provider.ContactsContract;
 import java.util.ArrayList;
@@ -54,8 +55,6 @@ import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 
 public class ContactsManager extends ContentObserver implements FriendListListener {
-    private static ContactsManager sInstance;
-
     private List<LinphoneContact> mContacts, mSipContacts;
     private final ArrayList<ContactsUpdatedListener> mContactsUpdatedListeners;
     private MagicSearch mMagicSearch;
@@ -65,12 +64,12 @@ public class ContactsManager extends ContentObserver implements FriendListListen
     private boolean mInitialized = false;
 
     public static ContactsManager getInstance() {
-        if (sInstance == null) sInstance = new ContactsManager();
-        return sInstance;
+        return LinphoneService.instance().getContactsManager();
     }
 
-    private ContactsManager() {
-        super(LinphoneService.instance().handler);
+    public ContactsManager(Context context, Handler handler) {
+        super(handler);
+        mContext = context;
         mContactsUpdatedListeners = new ArrayList<>();
         mContacts = new ArrayList<>();
         mSipContacts = new ArrayList<>();
@@ -142,8 +141,6 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                 list.removeListener(this);
             }
         }
-
-        sInstance = null;
     }
 
     public void fetchContactsAsync() {
@@ -252,9 +249,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                         .equals(mContext.getString(R.string.default_domain));
     }
 
-    public void initializeContactManager(Context context) {
-        mContext = context;
-
+    public void initializeContactManager() {
         if (!mInitialized) {
             if (mContext.getResources().getBoolean(R.bool.use_linphone_tag)) {
                 if (hasReadContactsAccess()

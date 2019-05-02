@@ -36,6 +36,7 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import java.util.ArrayList;
 import org.linphone.LinphoneManager;
+import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.activities.LinphoneGenericActivity;
 import org.linphone.contacts.ContactsManager;
@@ -214,7 +215,7 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (LinphoneManager.isInstanciated()
+        if (LinphoneService.isReady()
                 && (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME)) {
             LinphoneManager.getCore().terminateCall(mCall);
             finish();

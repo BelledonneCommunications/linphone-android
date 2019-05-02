@@ -34,8 +34,6 @@ import org.linphone.LinphoneService;
 import org.linphone.core.tools.Log;
 
 public class BluetoothManager extends BroadcastReceiver {
-    private static BluetoothManager sInstance;
-
     private Context mContext;
     private AudioManager mAudioManager;
     private BluetoothAdapter mBluetoothAdapter;
@@ -52,17 +50,17 @@ public class BluetoothManager extends BroadcastReceiver {
                     "BluetoothManager",
                     "[Bluetooth] Manager tried to init but LinphoneService not ready yet...");
         }
-        sInstance = this;
+        initBluetooth();
     }
 
     public static BluetoothManager getInstance() {
-        if (sInstance == null) {
-            sInstance = new BluetoothManager();
+        if (LinphoneService.isReady()) {
+            return LinphoneService.instance().getBluetoothManager();
         }
-        return sInstance;
+        return null;
     }
 
-    public void initBluetooth() {
+    private void initBluetooth() {
         if (!ensureInit()) {
             android.util.Log.w(
                     "BluetoothManager",
@@ -280,7 +278,7 @@ public class BluetoothManager extends BroadcastReceiver {
 
         android.util.Log.w("BluetoothManager", "[Bluetooth] Stopped!");
 
-        if (LinphoneManager.isInstanciated()) {
+        if (LinphoneService.isReady()) {
             LinphoneManager.getAudioManager().routeAudioToEarPiece();
         }
 
@@ -303,7 +301,7 @@ public class BluetoothManager extends BroadcastReceiver {
     }
 
     public void onReceive(Context context, Intent intent) {
-        if (!LinphoneManager.isInstanciated()) return;
+        if (!LinphoneService.isReady()) return;
 
         String action = intent.getAction();
         if (AudioManager.ACTION_SCO_AUDIO_STATE_UPDATED.equals(action)) {

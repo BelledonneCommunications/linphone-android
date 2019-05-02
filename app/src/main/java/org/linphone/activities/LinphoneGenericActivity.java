@@ -20,7 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.os.Bundle;
-import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 
 public abstract class LinphoneGenericActivity extends ThemableActivity {
@@ -29,7 +28,7 @@ public abstract class LinphoneGenericActivity extends ThemableActivity {
         super.onCreate(savedInstanceState);
         // After a crash, Android restart the last Activity so we need to check
         // if all dependencies are loaded
-        if (!LinphoneService.isReady() || !LinphoneManager.isInstanciated()) {
+        if (!LinphoneService.isReady()) {
             startActivity(getIntent().setClass(this, LinphoneLauncherActivity.class));
             finish();
         }

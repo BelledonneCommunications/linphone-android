@@ -67,13 +67,18 @@ public class LinphonePreferences {
         return sInstance;
     }
 
+    public void destroy() {
+        mContext = null;
+        sInstance = null;
+    }
+
     public void setContext(Context c) {
         mContext = c;
         mBasePath = mContext.getFilesDir().getAbsolutePath();
     }
 
     private String getString(int key) {
-        if (mContext == null && LinphoneManager.isInstanciated()) {
+        if (mContext == null && LinphoneService.isReady()) {
             mContext = LinphoneService.instance();
         }
 
@@ -81,7 +86,7 @@ public class LinphonePreferences {
     }
 
     private Core getLc() {
-        if (!LinphoneManager.isInstanciated()) return null;
+        if (!LinphoneService.isReady()) return null;
 
         return LinphoneManager.getCore();
     }
@@ -92,7 +97,7 @@ public class LinphonePreferences {
             return core.getConfig();
         }
 
-        if (!LinphoneManager.isInstanciated()) {
+        if (!LinphoneService.isReady()) {
             File linphonerc = new File(mBasePath + "/.linphonerc");
             if (linphonerc.exists()) {
                 return Factory.instance().createConfig(linphonerc.getAbsolutePath());
