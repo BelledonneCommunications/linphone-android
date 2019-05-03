@@ -68,7 +68,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-import org.linphone.assistant.AssistantActivity;
+import org.linphone.assistant.PhoneAccountLinkingAssistantActivity;
 import org.linphone.call.CallActivity;
 import org.linphone.call.CallIncomingActivity;
 import org.linphone.call.CallManager;
@@ -149,7 +149,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     private static boolean sExited;
 
     public final String configFile;
-    public String wizardLoginViewDomain = null;
 
     /** Called when the activity is first created. */
     private final String mLPConfigXsd;
@@ -382,7 +381,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                                         } else {
                                             progress.dismiss();
                                             progress = null;
-                                            if (Build.VERSION.SDK_INT
+                                            /*if (Build.VERSION.SDK_INT
                                                     >= Build.VERSION_CODES.LOLLIPOP_MR1) {
                                                 LinphoneManager.getLc()
                                                         .reloadMsPlugins(
@@ -393,7 +392,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                                             } else {
                                                 // We need to restart due to bad android linker
                                                 AssistantActivity.instance().restartApplication();
-                                            }
+                                            }*/
                                         }
                                     }
                                 });
@@ -1507,6 +1506,21 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     private void askLinkWithPhoneNumber() {
         if (!LinphonePreferences.instance().isLinkPopupEnabled()) return;
 
+        long now = new Timestamp(new Date().getTime()).getTime();
+        if (LinphonePreferences.instance().getLinkPopupTime() != null
+                && Long.parseLong(LinphonePreferences.instance().getLinkPopupTime()) >= now) return;
+
+        long future =
+                new Timestamp(
+                                LinphoneActivity.instance()
+                                        .getResources()
+                                        .getInteger(
+                                                R.integer.phone_number_linking_popup_time_interval))
+                        .getTime();
+        long newDate = now + future;
+
+        LinphonePreferences.instance().setLinkPopupTime(String.valueOf(newDate));
+
         final Dialog dialog =
                 LinphoneActivity.instance()
                         .displayDialog(
@@ -1540,9 +1554,9 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                     @Override
                     public void onClick(View view) {
                         Intent assistant = new Intent();
-                        assistant.setClass(LinphoneActivity.instance(), AssistantActivity.class);
-                        assistant.putExtra("LinkPhoneNumber", true);
-                        assistant.putExtra("LinkPhoneNumberAsk", true);
+                        assistant.setClass(
+                                LinphoneActivity.instance(),
+                                PhoneAccountLinkingAssistantActivity.class);
                         mServiceContext.startActivity(assistant);
                         dialog.dismiss();
                     }
@@ -1643,11 +1657,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
         LinphonePreferences prefs = LinphonePreferences.instance();
         if (state == ConfiguringState.Successful) {
-            if (prefs.isProvisioningLoginViewEnabled()) {
-                ProxyConfig proxyConfig = lc.createProxyConfig();
-                Address addr = proxyConfig.getIdentityAddress();
-                wizardLoginViewDomain = addr.getDomain();
-            }
             prefs.setPushNotificationEnabled(prefs.isPushNotificationEnabled());
         }
     }

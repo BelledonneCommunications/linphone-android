@@ -29,7 +29,6 @@ import android.app.FragmentTransaction;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -68,8 +67,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import org.linphone.LinphoneManager.AddressType;
-import org.linphone.assistant.AssistantActivity;
-import org.linphone.assistant.RemoteProvisioningLoginActivity;
+import org.linphone.assistant.MenuAssistantActivity;
 import org.linphone.call.CallActivity;
 import org.linphone.call.CallIncomingActivity;
 import org.linphone.call.CallOutgoingActivity;
@@ -179,31 +177,6 @@ public class LinphoneActivity extends LinphoneGenericActivity
         super.onCreate(savedInstanceState);
 
         LinphoneService.instance().removeForegroundServiceNotificationIfPossible();
-
-        if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
-        boolean useFirstLoginActivity =
-                getResources().getBoolean(R.bool.display_account_assistant_at_first_start);
-        if (LinphonePreferences.instance().isProvisioningLoginViewEnabled()) {
-            Intent wizard = new Intent();
-            wizard.setClass(this, RemoteProvisioningLoginActivity.class);
-            wizard.putExtra("Domain", LinphoneManager.getInstance().wizardLoginViewDomain);
-            startActivity(wizard);
-            finish();
-            return;
-        } else if (savedInstanceState == null
-                && (useFirstLoginActivity
-                        && LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null
-                        && LinphonePreferences.instance().isFirstLaunch())) {
-            if (LinphonePreferences.instance().getAccountCount() > 0) {
-                LinphonePreferences.instance().firstLaunchSuccessful();
-            } else {
-                startActivity(new Intent().setClass(this, AssistantActivity.class));
-                finish();
-                return;
-            }
-        }
 
         if (getResources().getBoolean(R.bool.use_linphone_tag)) {
             if (getPackageManager()
@@ -1034,7 +1007,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
     }
 
     private void displayAssistant() {
-        startActivity(new Intent(LinphoneActivity.this, AssistantActivity.class));
+        startActivity(new Intent(LinphoneActivity.this, MenuAssistantActivity.class));
     }
 
     private void displayInapp() {
@@ -1660,7 +1633,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
                                         new Intent()
                                                 .setClass(
                                                         LinphoneManager.getInstance().getContext(),
-                                                        AssistantActivity.class));
+                                                        MenuAssistantActivity.class));
                                 finish();
                             }
                         } else if (selectedItem.equals(getString(R.string.menu_settings))) {
