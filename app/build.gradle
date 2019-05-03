@@ -72,7 +72,7 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 4123
+        versionCode 4124
         versionName "4.1"
         applicationId getPackageName()
         multiDexEnabled true
@@ -167,7 +167,7 @@ dependencies {
             debugImplementation project(path: ":linphone-sdk-android", configuration: 'debug')
         }
     } else {
-        implementation "org.linphone:linphone-sdk-android:4.1-366-g1b22291"
+        implementation "org.linphone:linphone-sdk-android:4.2"
     }
 }
 if (firebaseEnabled()) {
