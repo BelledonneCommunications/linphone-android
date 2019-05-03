@@ -28,6 +28,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -376,6 +377,21 @@ public class CallActivity extends LinphoneGenericActivity
         outState.putBoolean("AskingVideo", mIsVideoAsk);
         outState.putLong("sTimeRemind", sTimeRemind);
         if (mDialog != null) mDialog.dismiss();
+    }
+
+    @Override
+    public void onUserLeaveHint() {
+        if (mVideo.isSelected() && getResources().getBoolean(R.bool.allow_pip_while_video_call)) {
+            Compatibility.enterPipMode(this);
+        }
+    }
+
+    @Override
+    public void onPictureInPictureModeChanged(
+            boolean isInPictureInPictureMode, Configuration newConfig) {
+        if (isInPictureInPictureMode) {
+            hideControls();
+        }
     }
 
     private boolean isTablet() {
@@ -1062,6 +1078,18 @@ public class CallActivity extends LinphoneGenericActivity
         }
     }
 
+    private void hideControls() {
+        hideNumpad();
+        mVideo.setEnabled(true);
+        mTransfer.setVisibility(View.INVISIBLE);
+        mAddCall.setVisibility(View.INVISIBLE);
+        mConference.setVisibility(View.INVISIBLE);
+        mRecordCall.setVisibility(View.INVISIBLE);
+        displayVideoCall(false);
+        mNumpad.setVisibility(View.GONE);
+        mOptions.setSelected(false);
+    }
+
     private void resetCallControlsHidingTimer() {
         if (mControlsHandler != null && mControls != null) {
             mControlsHandler.removeCallbacks(mControls);
@@ -1074,15 +1102,7 @@ public class CallActivity extends LinphoneGenericActivity
                     mControls =
                             new Runnable() {
                                 public void run() {
-                                    hideNumpad();
-                                    mVideo.setEnabled(true);
-                                    mTransfer.setVisibility(View.INVISIBLE);
-                                    mAddCall.setVisibility(View.INVISIBLE);
-                                    mConference.setVisibility(View.INVISIBLE);
-                                    mRecordCall.setVisibility(View.INVISIBLE);
-                                    displayVideoCall(false);
-                                    mNumpad.setVisibility(View.GONE);
-                                    mOptions.setSelected(false);
+                                    hideControls();
                                 }
                             },
                     SECONDS_BEFORE_HIDING_CONTROLS);
