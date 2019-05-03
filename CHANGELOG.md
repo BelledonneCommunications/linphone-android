@@ -14,6 +14,7 @@ Group changes to describe their impact on the project, as follows:
 
 ### Added
 - Added shortcuts to calls history & chat rooms list
+- Added PiP on devices running Android 8+ (instead of using Video Overlay)
 
 ## [4.1.0] - 2019-05-03
 

@@ -65,6 +65,7 @@ public class CallVideoFragment extends Fragment
         } else {
             view = inflater.inflate(R.layout.video, container, false);
         }
+        setRetainInstance(true);
 
         mVideoView = view.findViewById(R.id.videoSurface);
         mCaptureView = view.findViewById(R.id.videoCaptureSurface);

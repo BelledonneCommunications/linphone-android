@@ -203,6 +203,8 @@
             android:launchMode="singleTop"
             android:noHistory="true"
             android:showWhenLocked="true"
+            android:supportsPictureInPicture="true"
+            android:resizeableActivity="true"
             android:theme="@style/LinphoneStyleLight">
         </activity>
 
