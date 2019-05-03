@@ -516,9 +516,6 @@ public class ChatRoomCreationFragment extends Fragment
                                 mShareInfos,
                                 mSecurityToggle.isChecked());
             }
-        } else if (id == R.id.clearSearchField) {
-            mSearchField.setQuery("", false);
-            mSearchAdapter.searchContacts("");
         } else if (id == R.id.contactChatDelete) {
             ContactAddress ca = (ContactAddress) view.getTag();
             addOrRemoveContactFromSelection(ca);
