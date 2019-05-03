@@ -2,7 +2,7 @@ package org.linphone.views;
 
 /*
 CallButton.java
-Copyright (C) 2017  Belledonne Communications, Grenoble, France
+Copyright (C) 2017 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -34,11 +34,13 @@ import org.linphone.settings.LinphonePreferences;
 
 @SuppressLint("AppCompatCustomView")
 public class CallButton extends ImageView implements OnClickListener, AddressAware {
-
     private AddressText mAddress;
+    private boolean mIsTransfer;
 
     public CallButton(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        mIsTransfer = false;
         setOnClickListener(this);
     }
 
@@ -46,9 +48,21 @@ public class CallButton extends ImageView implements OnClickListener, AddressAwa
         mAddress = a;
     }
 
+    public void setIsTransfer(boolean isTransfer) {
+        mIsTransfer = isTransfer;
+    }
+
     public void onClick(View v) {
         if (mAddress.getText().length() > 0) {
-            LinphoneManager.getCallManager().newOutgoingCall(mAddress);
+            if (mIsTransfer) {
+                Core core = LinphoneManager.getCore();
+                if (core.getCurrentCall() == null) {
+                    return;
+                }
+                core.transferCall(core.getCurrentCall(), mAddress.getText().toString());
+            } else {
+                LinphoneManager.getCallManager().newOutgoingCall(mAddress);
+            }
         } else {
             if (LinphonePreferences.instance().isBisFeatureEnabled()) {
                 Core core = LinphoneManager.getCore();

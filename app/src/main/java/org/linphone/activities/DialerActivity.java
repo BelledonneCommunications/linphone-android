@@ -77,37 +77,13 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
 
         mStartCall = findViewById(R.id.start_call);
         mStartCall.setAddressWidget(mAddress);
-        mStartCall.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        LinphoneManager.getCallManager().newOutgoingCall(mAddress);
-                    }
-                });
 
         mAddCall = findViewById(R.id.add_call);
         mAddCall.setAddressWidget(mAddress);
-        mAddCall.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        LinphoneManager.getCallManager().newOutgoingCall(mAddress);
-                    }
-                });
 
         mTransferCall = findViewById(R.id.transfer_call);
         mTransferCall.setAddressWidget(mAddress);
-        mTransferCall.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Core core = LinphoneManager.getCore();
-                        if (core.getCurrentCall() == null) {
-                            return;
-                        }
-                        core.transferCall(core.getCurrentCall(), mAddress.getText().toString());
-                    }
-                });
+        mTransferCall.setIsTransfer(true);
 
         mNumpad = findViewById(R.id.numpad);
         if (mNumpad != null) {
