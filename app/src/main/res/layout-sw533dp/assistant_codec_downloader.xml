@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="30dp"
+    android:background="?attr/backgroundColor">
+
+    <TextView
+        android:id="@+id/question"
+        style="@style/assistant_codec_downloader_font"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="145dp"
+        android:gravity="center"
+        android:text="@string/assistant_codec_down_question"
+        android:textAllCaps="true" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/linphone_logo_orange" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView"
+        android:layout_alignEnd="@+id/question"
+        android:layout_alignRight="@+id/question"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="107dp" />
+
+    <TextView
+        android:id="@+id/downloading"
+        style="@style/assistant_codec_downloader_font"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/downloaded"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:gravity="center"
+        android:text="@string/assistant_codec_downloading"
+        android:textAllCaps="true" />
+
+    <Button
+        android:id="@+id/answerNo"
+        style="@style/assistant_codec_downloader_font"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="40dp"
+        android:layout_toStartOf="@+id/imageView"
+        android:layout_toLeftOf="@+id/imageView"
+        android:gravity="center"
+        android:text="No"
+        android:textAllCaps="true" />
+
+    <Button
+        android:id="@+id/answerYes"
+        style="@style/assistant_codec_downloader_font"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/answerOk"
+        android:layout_toEndOf="@+id/imageView"
+        android:layout_toRightOf="@+id/imageView"
+        android:gravity="center"
+        android:text="Yes"
+        android:textAllCaps="true" />
+
+    <Button
+        android:id="@+id/answerOk"
+        style="@style/assistant_codec_downloader_font"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/answerNo"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="Ok"
+        android:textAllCaps="true" />
+
+    <TextView
+        android:id="@+id/downloaded"
+        style="@style/assistant_codec_downloader_font"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/question"
+        android:layout_alignBottom="@+id/question"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="@string/assistant_codec_downloaded"
+        android:textAllCaps="true" />
+
+    <TextView
+        android:id="@+id/downloadingInfo"
+        style="@style/assistant_codec_downloader_font"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/progressBar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="29dp"
+        android:gravity="center"
+        android:textAllCaps="true" />
+
+</RelativeLayout>
