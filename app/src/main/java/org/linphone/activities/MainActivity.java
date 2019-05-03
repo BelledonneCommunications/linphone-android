@@ -91,6 +91,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
     private StatusFragment mStatusFragment;
 
     protected boolean mOnBackPressGoHome;
+    protected boolean mAlwaysHideTabBar;
     protected String[] mPermissionsToHave;
 
     private CoreListenerStub mListener;
@@ -102,6 +103,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
         setContentView(R.layout.main);
 
         mOnBackPressGoHome = true;
+        mAlwaysHideTabBar = false;
 
         RelativeLayout history = findViewById(R.id.history);
         history.setOnClickListener(
@@ -298,8 +300,10 @@ public abstract class MainActivity extends LinphoneGenericActivity
         super.onResume();
 
         hideTopBar();
-        if (getFragmentManager().getBackStackEntryCount() == 0
-                || !getResources().getBoolean(R.bool.hide_bottom_bar_on_second_level_views)) {
+        if (!mAlwaysHideTabBar
+                && (getFragmentManager().getBackStackEntryCount() == 0
+                        || !getResources()
+                                .getBoolean(R.bool.hide_bottom_bar_on_second_level_views))) {
             showTabBar();
         }
 
@@ -387,8 +391,10 @@ public abstract class MainActivity extends LinphoneGenericActivity
     public boolean popBackStack() {
         if (getFragmentManager().getBackStackEntryCount() > 0) {
             getFragmentManager().popBackStackImmediate();
-            if (getFragmentManager().getBackStackEntryCount() == 0
-                    && getResources().getBoolean(R.bool.hide_bottom_bar_on_second_level_views)) {
+            if (!mAlwaysHideTabBar
+                    && (getFragmentManager().getBackStackEntryCount() == 0
+                            && getResources()
+                                    .getBoolean(R.bool.hide_bottom_bar_on_second_level_views))) {
                 showTabBar();
             }
             return true;

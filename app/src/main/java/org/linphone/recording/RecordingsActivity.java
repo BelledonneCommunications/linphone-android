@@ -52,6 +52,7 @@ public class RecordingsActivity extends MainActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mOnBackPressGoHome = false;
+        mAlwaysHideTabBar = true;
 
         // Uses the fragment container layout to inflate the about view instead of using a fragment
         View recordingsView =

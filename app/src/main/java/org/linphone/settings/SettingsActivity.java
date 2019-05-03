@@ -38,6 +38,7 @@ public class SettingsActivity extends MainActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mOnBackPressGoHome = false;
+        mAlwaysHideTabBar = true;
     }
 
     @Override
