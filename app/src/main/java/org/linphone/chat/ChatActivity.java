@@ -35,11 +35,13 @@ import org.linphone.core.tools.Log;
 import org.linphone.utils.FileUtils;
 
 public class ChatActivity extends MainActivity {
+    public static final String NAME = "Chat";
+
     private String mSharedText, mSharedFiles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getIntent().putExtra("Activity", "Chat");
+        getIntent().putExtra("Activity", NAME);
         super.onCreate(savedInstanceState);
     }
 
