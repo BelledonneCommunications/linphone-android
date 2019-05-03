@@ -16,22 +16,7 @@
     <entry name="realm" overwrite="true"></entry>
     <entry name="conference_factory_uri" overwrite="true"></entry>
   </section>
-  <section name="nat_policy_default_values">
-    <entry name="stun_server" overwrite="true"></entry>
-    <entry name="protocols" overwrite="true"></entry>
-  </section>
-  <section name="sip">
-    <entry name="rls_uri" overwrite="true"></entry>
-  </section>
-  <section name="lime">
-    <entry name="x3dh_server_url" overwrite="true"></entry>
-  </section>
   <section name="assistant">
-    <entry name="password_max_length" overwrite="true">-1</entry>
-    <entry name="password_min_length" overwrite="true">1</entry>
-    <entry name="username_length" overwrite="true">-1</entry>
-    <entry name="username_max_length" overwrite="true">64</entry>
-    <entry name="username_min_length" overwrite="true">1</entry>
-    <entry name="username_regex" overwrite="true">^[a-z0-9+_.\-]*$</entry>
+    <entry name="domain" overwrite="true"></entry>
   </section>
 </config>

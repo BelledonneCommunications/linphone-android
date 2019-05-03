@@ -164,6 +164,13 @@ public class LinphonePreferences {
         return (proxyConf != null) ? proxyConf.getDomain() : "";
     }
 
+    public void setPrefix(int n, String prefix) {
+        ProxyConfig prxCfg = getProxyConfig(n);
+        prxCfg.edit();
+        prxCfg.setDialPrefix(prefix);
+        prxCfg.done();
+    }
+
     public boolean isFriendlistsubscriptionEnabled() {
         if (getConfig().getBool("app", "friendlist_subscription_enabled", false)) {
             // Old setting, do migration
@@ -227,6 +234,21 @@ public class LinphonePreferences {
 
     public boolean isAccountEnabled(int n) {
         return getProxyConfig(n).registerEnabled();
+    }
+
+    public void resetDefaultProxyConfig() {
+        if (getLc() == null) return;
+        int count = getLc().getProxyConfigList().length;
+        for (int i = 0; i < count; i++) {
+            if (isAccountEnabled(i)) {
+                getLc().setDefaultProxyConfig(getProxyConfig(i));
+                break;
+            }
+        }
+
+        if (getLc().getDefaultProxyConfig() == null) {
+            getLc().setDefaultProxyConfig(getProxyConfig(0));
+        }
     }
     // End of accounts settings
 
@@ -798,7 +820,19 @@ public class LinphonePreferences {
         LinphoneManager.getInstance().initTunnelFromConf();
     }
 
+    public boolean isProvisioningLoginViewEnabled() {
+
+        return (getConfig() != null) && getConfig().getBool("app", "show_login_view", false);
+    }
     // End of tunnel settings
+
+    public void disableProvisioningLoginView() {
+        if (isProvisioningLoginViewEnabled()) { // Only do it if it was previously enabled
+            getConfig().setBool("app", "show_login_view", false);
+        } else {
+            Log.w("Remote provisioning login view wasn't enabled, ignoring");
+        }
+    }
 
     public boolean isFirstRemoteProvisioning() {
         return getConfig().getBool("app", "first_remote_provisioning", true);
@@ -987,6 +1021,10 @@ public class LinphonePreferences {
         getConfig().setInt("app", "auto_answer_delay", time);
     }
 
+    public int getCodeLength() {
+        return getConfig().getInt("app", "activation_code_length", 0);
+    }
+
     public void disableFriendsStorage() {
         getConfig().setBool("misc", "store_friends", false);
     }
@@ -1037,21 +1075,5 @@ public class LinphonePreferences {
 
     public void setDeviceName(String name) {
         getConfig().setString("app", "device_name", name);
-    }
-
-    public boolean isEchoCancellationCalibrationDone() {
-        return getConfig().getBool("app", "echo_cancellation_calibration_done", false);
-    }
-
-    public void setEchoCancellationCalibrationDone(boolean done) {
-        getConfig().setBool("app", "echo_cancellation_calibration_done", done);
-    }
-
-    public boolean isOpenH264CodecDownloadEnabled() {
-        return getConfig().getBool("app", "open_h264_download_enabled", true);
-    }
-
-    public void setOpenH264CodecDownloadEnabled(boolean enable) {
-        getConfig().setBool("app", "open_h264_download_enabled", enable);
     }
 }

@@ -1,8 +1,7 @@
-package org.linphone.utils;
-
+package org.linphone.assistant;
 /*
-ThemableActivity.java
-Copyright (C) 2019 Belledonne Communications, Grenoble, France
+AssistantFragmentsEnum.java
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -19,19 +18,16 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import org.linphone.R;
-import org.linphone.settings.LinphonePreferences;
-
-public class ThemableActivity extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        if (LinphonePreferences.instance().isDarkModeEnabled()) {
-            setTheme(R.style.LinphoneStyleDark);
-        }
-
-        super.onCreate(savedInstanceState);
-    }
+public enum AssistantFragmentsEnum {
+    WELCOME,
+    CREATE_ACCOUNT,
+    CREATE_ACCOUNT_ACTIVATION,
+    CREATE_ACCOUNT_CODE_ACTIVATION,
+    LINPHONE_LOGIN,
+    COUNTRY_CHOOSER,
+    LOGIN,
+    REMOTE_PROVISIONING,
+    ECHO_CANCELLER_CALIBRATION,
+    DOWNLOAD_CODEC,
+    QRCODE_READER
 }

@@ -2,9 +2,6 @@
 <resources>
 
     <style name="LinphoneStyleLight" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Disable animations between activities -->
-        <item name="android:windowAnimationStyle">@null</item>
-
         <!-- Android theme override -->
         <item name="colorAccent">@color/primary_color</item>
         <item name="android:colorPrimary">@color/primary_color</item>
@@ -44,9 +41,6 @@
     </style>
 
     <style name="LinphoneStyleDark" parent="Theme.AppCompat.NoActionBar">
-        <!-- Disable animations between activities -->
-        <item name="android:windowAnimationStyle">@null</item>
-
         <!-- Android theme override -->
         <item name="colorAccent">@color/primary_color</item>
         <item name="android:colorPrimary">@color/primary_color</item>

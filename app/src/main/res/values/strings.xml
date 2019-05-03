@@ -133,7 +133,6 @@
     <string name="phone_number_info_content">\nThanks to your phone number, your friends will find you more easily.\n\n You will see in your address book who is using Linphone and your friends will know that they can reach you on Linphone as well.\n</string>
     <string name="phone_number_link_info_content">\nYour friends will find you more easily if you link your account to your phone number\n\nYou will see in your address book who is using Linphone and your friends will know that they can reach you on Linphone as well.\n</string>
     <string name="phone_number_link_info_content_already_account">You can only use your phone number with one Linphone account.\n\nIf you had already linked your number to an other account but you prefer to use this one, simply link it now and your number will automatically be moved to this account.</string>
-    <string name="phone_number_overuse">Too much SMS have been sent to this number in a short period of time, try again in 24 hours.</string>
 
     <!-- Status -->
     <string name="invalid_email">Invalid email</string>
@@ -149,13 +148,11 @@
     <string name="phone_number_too_long">Phone number too long</string>
     <string name="phone_number_too_short">Phone number too short</string>
     <string name="phone_number_invalid">Invalid phone number</string>
-    <string name="activation_code_invalid">Invalid activation code</string>
     <string name="password_too_short">Password too short</string>
     <string name="password_too_long">Password too long</string>
     <string name="request_failed">Failed to query the server. Please try again later</string>
     <string name="transport_unsupported">Unsupported transport</string>
     <string name="country_code_invalid">Country code invalid</string>
-    <string name="invalid_characters">Invalid character(s) found</string>
 
     <!-- In-app -->
     <string name="inapp">In-app</string>

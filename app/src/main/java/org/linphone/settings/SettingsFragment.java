@@ -153,11 +153,6 @@ public class SettingsFragment extends Fragment {
             mTunnel.setVisibility(core.tunnelAvailable() ? View.VISIBLE : View.GONE);
             initAccounts(core);
         }
-
-        if (getResources().getBoolean(R.bool.hide_accounts)) {
-            mAccounts.setVisibility(View.GONE);
-            mAccountsHeader.setVisibility(View.GONE);
-        }
     }
 
     private void initAccounts(Core core) {

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/backgroundColor">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="30dp">
+
+        <TextView
+            style="@style/standard_text_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/welcome"
+            android:textAllCaps="true" />
+
+        <TextView
+            style="@style/standard_small_text_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingTop="20dp"
+            android:text="@string/assistant_welcome_desc" />
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:orientation="horizontal">
+
+            <TableRow
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/create_account"
+                    style="@style/button_font"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/assistant_button"
+                    android:textColor="@drawable/assistant_button_text_color"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:contentDescription="@string/assistant_create_account"
+                    android:text="@string/assistant_create_account" />
+
+                <TextView
+                    android:id="@+id/login_linphone"
+                    style="@style/button_font"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/assistant_button"
+                    android:textColor="@drawable/assistant_button_text_color"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:contentDescription="@string/assistant_login_linphone"
+                    android:text="@string/assistant_login_linphone" />
+            </TableRow>
+
+            <TableRow
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/login_generic"
+                    style="@style/button_font"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/assistant_button"
+                    android:textColor="@drawable/assistant_button_text_color"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:contentDescription="@string/assistant_login_generic"
+                    android:text="@string/assistant_login_generic" />
+
+                <TextView
+                    android:id="@+id/remote_provisioning"
+                    style="@style/button_font"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/assistant_button"
+                    android:textColor="@drawable/assistant_button_text_color"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:contentDescription="@string/assistant_remote_provisioning"
+                    android:text="@string/assistant_remote_provisioning" />
+
+            </TableRow>
+
+        </TableLayout>
+
+    </LinearLayout>
+
+</ScrollView>
