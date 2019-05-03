@@ -10,7 +10,7 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
-## [4.1.0] - 2019-xx-xx
+## [4.1.0] - 2019-05-03
 
 ### Added
 - End-to-end encryption for instant messaging, for both one-to-one and group conversations.
