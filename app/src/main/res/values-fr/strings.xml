@@ -29,7 +29,7 @@
   <string name="display_name">Nom d\'affichage</string>
   <string name="password">Mot de passe</string>
   <string name="confirm_password">Confirmation du mot de passe</string>
-  <string name="domain">Domain</string>
+  <string name="domain">Domaine</string>
   <string name="remote_provisioning_url">URL</string>
   <string name="email">Email</string>
   <string name="delete_text">Voulez-vous supprimer votre sélection ?</string>
@@ -241,6 +241,7 @@ Disponible gratuitement ici : %s</string>
   <string name="unexpected_event">Evénement inattendu %i pour %s</string>
   <string name="download_file">Télécharger</string>
   <string name="toast_choose_chat_room_for_sharing">Sélectionnez une conversation ou créez-en une nouvelle</string>
+  <string name="trust_denied">La confiance a été retirée. Faites un appel pour relancer la procédure d’authentification.</string>
   <!--Status Bar-->
   <string name="status_connected">Connecté</string>
   <string name="status_not_connected">Déconnecté</string>

@@ -376,6 +376,11 @@ public class ChatMessagesFragment extends Fragment
         displayChatRoomHeader();
         displayChatRoomHistory();
         LinphoneManager.getInstance().setCurrentChatRoomAddress(mRemoteSipAddress);
+
+        if (LinphoneManager.getInstance().hasLastCallSasBeenRejected()) {
+            LinphoneManager.getInstance().lastCallSasRejected(false);
+            LinphoneUtils.showTrustDeniedDialog(getActivity());
+        }
     }
 
     public void changeDisplayedChat(String localSipUri, String remoteSipUri) {

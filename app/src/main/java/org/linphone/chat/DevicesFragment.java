@@ -145,6 +145,11 @@ public class DevicesFragment extends Fragment {
         }
 
         initValues();
+
+        if (LinphoneManager.getInstance().hasLastCallSasBeenRejected()) {
+            LinphoneManager.getInstance().lastCallSasRejected(false);
+            LinphoneUtils.showTrustDeniedDialog(getActivity());
+        }
     }
 
     private void initChatRoom() {
