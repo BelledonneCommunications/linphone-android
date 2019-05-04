@@ -79,7 +79,9 @@ public class LinphoneService extends Service {
             public void onCallStateChanged(Core lc, Call call, Call.State state, String message) {
                 if (state == Call.State.IncomingReceived) {
                     // For this sample we will automatically answer incoming calls
-                    call.accept();
+                    CallParams params = getCore().createCallParams(call);
+                    params.enableVideo(true);
+                    call.acceptWithParams(params);
                 } else if (state == Call.State.Connected) {
                     // This stats means the call has been established, let's start the call activity
                     Intent intent = new Intent(LinphoneService.this, CallActivity.class);
@@ -93,7 +95,7 @@ public class LinphoneService extends Service {
         try {
             // Let's copy some RAW resources to the device
             // The default config file must only be installed once (the first time)
-            copyIfNotExist(R.raw.linphonerc_default, ".linphonerc");
+            copyIfNotExist(R.raw.linphonerc_default, basePath + "/.linphonerc");
             // The factory config is used to override any other setting, let's copy it each time
             copyFromPackage(R.raw.linphonerc_factory, "linphonerc");
         } catch (IOException ioe) {
