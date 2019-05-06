@@ -44,6 +44,7 @@ import org.linphone.core.Call;
 import org.linphone.core.CallLog;
 import org.linphone.core.Core;
 import org.linphone.utils.SelectableHelper;
+import org.linphone.views.LinphoneLinearLayoutManager;
 
 public class HistoryFragment extends Fragment
         implements OnClickListener,
@@ -71,7 +72,7 @@ public class HistoryFragment extends Fragment
 
         mHistoryList = view.findViewById(R.id.history_list);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        LinearLayoutManager layoutManager = new LinphoneLinearLayoutManager(getActivity());
         mHistoryList.setLayoutManager(layoutManager);
         // Divider between items
         DividerItemDecoration dividerItemDecoration =

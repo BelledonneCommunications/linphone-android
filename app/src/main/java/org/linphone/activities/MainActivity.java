@@ -100,6 +100,10 @@ public abstract class MainActivity extends LinphoneGenericActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (!LinphoneService.isReady()) {
+            finish();
+        }
+
         setContentView(R.layout.main);
 
         mOnBackPressGoHome = true;

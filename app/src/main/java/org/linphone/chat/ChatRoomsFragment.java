@@ -46,6 +46,7 @@ import org.linphone.core.CoreListenerStub;
 import org.linphone.core.ProxyConfig;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.utils.SelectableHelper;
+import org.linphone.views.LinphoneLinearLayoutManager;
 
 public class ChatRoomsFragment extends Fragment
         implements ContactsUpdatedListener,
@@ -94,7 +95,7 @@ public class ChatRoomsFragment extends Fragment
         mSelectionHelper.setAdapter(mChatRoomsAdapter);
         mSelectionHelper.setDialogMessage(R.string.chat_room_delete_dialog);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        LinearLayoutManager layoutManager = new LinphoneLinearLayoutManager(getActivity());
         mChatRoomsList.setLayoutManager(layoutManager);
 
         DividerItemDecoration dividerItemDecoration =

@@ -39,6 +39,7 @@ import org.linphone.R;
 import org.linphone.activities.MainActivity;
 import org.linphone.utils.FileUtils;
 import org.linphone.utils.SelectableHelper;
+import org.linphone.views.LinphoneLinearLayoutManager;
 
 public class RecordingsActivity extends MainActivity
         implements SelectableHelper.DeleteListener, RecordingViewHolder.ClickListener {
@@ -81,7 +82,7 @@ public class RecordingsActivity extends MainActivity
         mRecordingList = findViewById(R.id.recording_list);
         mNoRecordings = findViewById(R.id.no_recordings);
 
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager mLayoutManager = new LinphoneLinearLayoutManager(this);
         mRecordingList.setLayoutManager(mLayoutManager);
 
         // Divider between items
