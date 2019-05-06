@@ -177,18 +177,25 @@ public class HistoryDetailFragment extends Fragment {
 
     private void displayHistory() {
         if (mSipUri != null) {
-            Address lAddress = Factory.instance().createAddress(mSipUri);
+            Address address = Factory.instance().createAddress(mSipUri);
             mChatSecured.setVisibility(View.GONE);
 
-            if (lAddress != null) {
-                CallLog[] logs = LinphoneManager.getCore().getCallHistoryForAddress(lAddress);
+            Core core = LinphoneManager.getCore();
+            if (address != null && core != null) {
+                ProxyConfig proxyConfig = core.getDefaultProxyConfig();
+                CallLog[] logs;
+                if (proxyConfig != null) {
+                    logs = core.getCallHistory(address, proxyConfig.getIdentityAddress());
+                } else {
+                    logs = core.getCallHistoryForAddress(address);
+                }
                 List<CallLog> logsList = Arrays.asList(logs);
                 mLogsList.setAdapter(
                         new HistoryLogAdapter(
                                 getActivity(), R.layout.history_detail_cell, logsList));
 
-                mContactAddress.setText(LinphoneUtils.getDisplayableAddress(lAddress));
-                mContact = ContactsManager.getInstance().findContactFromAddress(lAddress);
+                mContactAddress.setText(LinphoneUtils.getDisplayableAddress(address));
+                mContact = ContactsManager.getInstance().findContactFromAddress(address);
 
                 if (mContact != null) {
                     mContactName.setText(mContact.getFullName());
@@ -207,7 +214,7 @@ public class HistoryDetailFragment extends Fragment {
                                     ? LinphoneUtils.getAddressDisplayName(mSipUri)
                                     : mDisplayName);
                     ContactAvatar.displayAvatar(
-                            LinphoneUtils.getAddressDisplayName(lAddress), mAvatarLayout);
+                            LinphoneUtils.getAddressDisplayName(address), mAvatarLayout);
                     mAddToContacts.setVisibility(View.VISIBLE);
                     mGoToContact.setVisibility(View.GONE);
                 }

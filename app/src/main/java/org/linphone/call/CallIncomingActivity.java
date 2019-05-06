@@ -190,7 +190,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (LinphoneService.isReady()
                 && (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME)) {
-            LinphoneManager.getCore().terminateCall(mCall);
+            mCall.terminate();
             finish();
         }
         return super.onKeyDown(keyCode, event);
@@ -214,7 +214,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
         }
         mAlreadyAcceptedOrDeniedCall = true;
 
-        LinphoneManager.getCore().terminateCall(mCall);
+        mCall.terminate();
         finish();
     }
 

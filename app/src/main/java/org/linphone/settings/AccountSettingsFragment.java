@@ -636,7 +636,8 @@ public class AccountSettingsFragment extends SettingsFragment {
             mUseAsDefault.setChecked(mProxyConfig.equals(core.getDefaultProxyConfig()));
             mUseAsDefault.setEnabled(!mUseAsDefault.isChecked());
 
-            mOutboundProxy.setChecked(mProxyConfig.getRoute() != null);
+            String[] routes = mProxyConfig.getRoutes();
+            mOutboundProxy.setChecked(routes != null && routes.length > 0);
 
             mIce.setChecked(natPolicy.iceEnabled());
             mIce.setEnabled(
