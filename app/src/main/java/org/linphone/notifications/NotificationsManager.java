@@ -203,7 +203,9 @@ public class NotificationsManager {
                         }
                     }
                 };
+    }
 
+    public void onCoreReady() {
         Core core = LinphoneManager.getCore();
         if (core != null) {
             core.addListener(mListener);

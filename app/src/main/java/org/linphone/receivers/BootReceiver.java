@@ -41,10 +41,10 @@ public class BootReceiver extends BroadcastReceiver {
             android.util.Log.i(
                     "LinphoneBootReceiver", "Device is starting, auto_start is " + autostart);
             if (autostart && !LinphoneService.isReady()) {
-                Intent linphoneServiceIntent = new Intent(Intent.ACTION_MAIN);
-                linphoneServiceIntent.setClass(context, LinphoneService.class);
-                linphoneServiceIntent.putExtra("ForceStartForeground", true);
-                Compatibility.startService(context, linphoneServiceIntent);
+                Intent serviceIntent = new Intent(Intent.ACTION_MAIN);
+                serviceIntent.setClass(context, LinphoneService.class);
+                serviceIntent.putExtra("ForceStartForeground", true);
+                Compatibility.startService(context, serviceIntent);
             }
         }
     }
