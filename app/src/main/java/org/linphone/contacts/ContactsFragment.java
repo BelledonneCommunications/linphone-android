@@ -40,6 +40,7 @@ import java.util.List;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.utils.SelectableHelper;
+import org.linphone.views.LinphoneLinearLayoutManager;
 
 public class ContactsFragment extends Fragment
         implements OnItemClickListener,
@@ -166,7 +167,7 @@ public class ContactsFragment extends Fragment
                     }
                 });
 
-        mLayoutManager = new LinearLayoutManager(mContext);
+        mLayoutManager = new LinphoneLinearLayoutManager(mContext);
         mContactsList.setLayoutManager(mLayoutManager);
 
         DividerItemDecoration dividerItemDecoration =

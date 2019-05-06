@@ -56,6 +56,7 @@ import org.linphone.core.Factory;
 import org.linphone.core.Participant;
 import org.linphone.core.tools.Log;
 import org.linphone.utils.LinphoneUtils;
+import org.linphone.views.LinphoneLinearLayoutManager;
 
 public class GroupInfoFragment extends Fragment {
     private ImageView mConfirmButton;
@@ -130,7 +131,7 @@ public class GroupInfoFragment extends Fragment {
                 });
         mParticipantsList.setAdapter(mAdapter);
         mAdapter.setChatRoom(mChatRoom);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        LinearLayoutManager layoutManager = new LinphoneLinearLayoutManager(getActivity());
         mParticipantsList.setLayoutManager(layoutManager);
 
         // Divider between items

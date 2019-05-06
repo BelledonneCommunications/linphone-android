@@ -62,6 +62,7 @@ import org.linphone.core.SearchResult;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.views.ContactSelectView;
+import org.linphone.views.LinphoneLinearLayoutManager;
 
 public class ChatRoomCreationFragment extends Fragment
         implements View.OnClickListener,
@@ -220,7 +221,7 @@ public class ChatRoomCreationFragment extends Fragment
         }
 
         LinearLayoutManager layoutManager =
-                new LinearLayoutManager(getActivity().getApplicationContext());
+                new LinphoneLinearLayoutManager(getActivity().getApplicationContext());
 
         mContactsList.setAdapter(mSearchAdapter);
 
