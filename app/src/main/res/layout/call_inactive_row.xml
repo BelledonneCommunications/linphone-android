@@ -8,7 +8,6 @@
     android:padding="5dp">
 
     <RelativeLayout
-        android:id="@+id/avatar_layout"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:gravity="center">
