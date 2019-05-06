@@ -192,18 +192,20 @@ public final class LinphoneService extends Service {
             return START_STICKY;
         }
 
+        mNotificationManager = new NotificationsManager(this);
+        if (Version.sdkAboveOrEqual(Version.API26_O_80)
+                && intent != null
+                && intent.getBooleanExtra("ForceStartForeground", false)) {
+            // We need to call this asap
+            mNotificationManager.startForeground();
+        }
+
         mLinphoneManager = new LinphoneManager(this);
         sInstance = this; // sInstance is ready once linphone manager has been created
         mLinphoneManager.startLibLinphone(isPush);
         LinphoneManager.getCore().addListener(mListener);
 
-        mNotificationManager = new NotificationsManager(this);
-
-        if (Version.sdkAboveOrEqual(Version.API26_O_80)
-                && intent != null
-                && intent.getBooleanExtra("ForceStartForeground", false)) {
-            mNotificationManager.startForeground();
-        }
+        mNotificationManager.onCoreReady();
 
         mContactsManager = new ContactsManager(this, handler);
         if (!Version.sdkAboveOrEqual(Version.API26_O_80)
