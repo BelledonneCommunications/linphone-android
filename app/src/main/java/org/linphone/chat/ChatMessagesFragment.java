@@ -79,7 +79,6 @@ import org.linphone.core.Content;
 import org.linphone.core.Core;
 import org.linphone.core.EventLog;
 import org.linphone.core.Factory;
-import org.linphone.core.LimeState;
 import org.linphone.core.Participant;
 import org.linphone.core.ParticipantDevice;
 import org.linphone.core.Reason;
@@ -1115,7 +1114,7 @@ public class ChatMessagesFragment extends Fragment
         final Address from = msg.getFromAddress();
         final LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(from);
 
-        if (LinphoneManager.getCore().limeEnabled() == LimeState.Mandatory) {
+        if (LinphoneManager.getCore().limeX3DhEnabled()) {
             final Dialog dialog =
                     ((ChatActivity) getActivity())
                             .displayDialog(

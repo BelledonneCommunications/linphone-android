@@ -851,7 +851,7 @@ public class CallActivity extends LinphoneGenericActivity
         if (videoDisabled) {
             CallParams params = core.createCallParams(call);
             params.enableVideo(false);
-            core.updateCall(call, params);
+            call.update(params);
         } else {
             mVideoProgress.setVisibility(View.VISIBLE);
             if (call.getRemoteParams() != null && !call.getRemoteParams().lowBandwidthEnabled()) {
@@ -1000,14 +1000,14 @@ public class CallActivity extends LinphoneGenericActivity
     private void pauseOrResumeCall(Call call) {
         Core core = LinphoneManager.getCore();
         if (call != null && core.getCurrentCall() == call) {
-            core.pauseCall(call);
+            call.pause();
             if (isVideoEnabled(core.getCurrentCall())) {
                 mIsVideoCallPaused = true;
             }
             mPause.setSelected(true);
         } else if (call != null) {
             if (call.getState() == State.Paused) {
-                core.resumeCall(call);
+                call.resume();
                 if (mIsVideoCallPaused) {
                     mIsVideoCallPaused = false;
                 }
@@ -1025,7 +1025,7 @@ public class CallActivity extends LinphoneGenericActivity
         }
 
         if (currentCall != null) {
-            core.terminateCall(currentCall);
+            currentCall.terminate();
         } else if (core.isInConference()) {
             core.terminateConference();
         } else {
@@ -1192,7 +1192,7 @@ public class CallActivity extends LinphoneGenericActivity
             core.enableVideoDisplay(true);
         }
 
-        core.acceptCallUpdate(call, params);
+        call.acceptUpdate(params);
     }
 
     private void hideStatusBar() {

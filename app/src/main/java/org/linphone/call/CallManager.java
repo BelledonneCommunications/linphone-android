@@ -124,7 +124,7 @@ public class CallManager {
         }
 
         // Not yet in video call: try to re-invite with video
-        core.updateCall(call, params);
+        call.update(params);
         return true;
     }
 
@@ -140,9 +140,7 @@ public class CallManager {
             Log.e("[Call Manager] Trying to updateCall while not in call: doing nothing");
             return;
         }
-        CallParams params = core.createCallParams(call);
-        mBandwidthManager.updateWithProfileSettings(params);
-        core.updateCall(call, null);
+        call.update(null);
     }
 
     public void newOutgoingCall(AddressType address) {
@@ -238,7 +236,7 @@ public class CallManager {
     private void terminateCall() {
         Core core = LinphoneManager.getCore();
         if (core.inCall()) {
-            core.terminateCall(core.getCurrentCall());
+            core.getCurrentCall().terminate();
         }
     }
 
@@ -268,7 +266,7 @@ public class CallManager {
             return false;
         }
 
-        core.acceptCallWithParams(call, params);
+        call.acceptWithParams(params);
         return true;
     }
 

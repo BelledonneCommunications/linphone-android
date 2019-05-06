@@ -45,6 +45,7 @@ import org.linphone.core.Transports;
 import org.linphone.core.Tunnel;
 import org.linphone.core.TunnelConfig;
 import org.linphone.core.VideoActivationPolicy;
+import org.linphone.core.VideoDefinition;
 import org.linphone.core.tools.Log;
 import org.linphone.purchase.Purchasable;
 import org.linphone.utils.LinphoneUtils;
@@ -338,7 +339,9 @@ public class LinphonePreferences {
 
     public void setPreferredVideoSize(String preferredVideoSize) {
         if (getLc() == null) return;
-        getLc().setPreferredVideoSizeByName(preferredVideoSize);
+        VideoDefinition preferredVideoDefinition =
+                Factory.instance().createVideoDefinitionFromName(preferredVideoSize);
+        getLc().setPreferredVideoDefinition(preferredVideoDefinition);
     }
 
     public int getPreferredVideoFps() {
@@ -719,24 +722,24 @@ public class LinphonePreferences {
 
     public String getDefaultDisplayName() {
         if (getLc() == null) return null;
-        return getLc().getPrimaryContactParsed().getDisplayName();
+        return getLc().createPrimaryContactParsed().getDisplayName();
     }
 
     public void setDefaultDisplayName(String displayName) {
         if (getLc() == null) return;
-        Address primary = getLc().getPrimaryContactParsed();
+        Address primary = getLc().createPrimaryContactParsed();
         primary.setDisplayName(displayName);
         getLc().setPrimaryContact(primary.asString());
     }
 
     public String getDefaultUsername() {
         if (getLc() == null) return null;
-        return getLc().getPrimaryContactParsed().getUsername();
+        return getLc().createPrimaryContactParsed().getUsername();
     }
 
     public void setDefaultUsername(String username) {
         if (getLc() == null) return;
-        Address primary = getLc().getPrimaryContactParsed();
+        Address primary = getLc().createPrimaryContactParsed();
         primary.setUsername(username);
         getLc().setPrimaryContact(primary.asString());
     }

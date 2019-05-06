@@ -358,7 +358,7 @@ public class LinphoneContact extends AndroidContact
             mFriend.done();
         }
         if (created) {
-            core.addFriend(mFriend);
+            core.getDefaultFriendList().addFriend(mFriend);
         }
 
         if (!ContactsManager.getInstance().hasReadContactsAccess()) {

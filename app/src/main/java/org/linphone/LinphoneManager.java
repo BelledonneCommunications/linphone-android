@@ -203,7 +203,7 @@ public class LinphoneManager implements SensorEventListener {
                         if ((state == State.IncomingReceived || state == State.IncomingEarlyMedia)
                                 && getCallGsmON()) {
                             if (mCore != null) {
-                                mCore.declineCall(call, Reason.Busy);
+                                call.decline(Reason.Busy);
                             }
                         } else if (state == State.IncomingReceived
                                 && (LinphonePreferences.instance().isAutoAnswerEnabled())
@@ -241,7 +241,7 @@ public class LinphoneManager implements SensorEventListener {
                                     && !localVideo
                                     && !autoAcceptCameraPolicy
                                     && mCore.getConference() == null) {
-                                mCore.deferCallUpdate(call);
+                                call.deferUpdate();
                             }
                         }
                     }

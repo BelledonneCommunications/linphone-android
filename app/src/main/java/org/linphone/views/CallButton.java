@@ -59,7 +59,7 @@ public class CallButton extends ImageView implements OnClickListener, AddressAwa
                 if (core.getCurrentCall() == null) {
                     return;
                 }
-                core.transferCall(core.getCurrentCall(), mAddress.getText().toString());
+                core.getCurrentCall().transfer(mAddress.getText().toString());
             } else {
                 LinphoneManager.getCallManager().newOutgoingCall(mAddress);
             }

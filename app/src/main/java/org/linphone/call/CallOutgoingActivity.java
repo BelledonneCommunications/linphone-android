@@ -217,7 +217,7 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (LinphoneService.isReady()
                 && (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME)) {
-            LinphoneManager.getCore().terminateCall(mCall);
+            mCall.terminate();
             finish();
         }
         return super.onKeyDown(keyCode, event);
@@ -238,7 +238,7 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
     }
 
     private void decline() {
-        LinphoneManager.getCore().terminateCall(mCall);
+        mCall.terminate();
         finish();
     }
 
