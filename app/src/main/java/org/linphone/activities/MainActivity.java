@@ -330,6 +330,14 @@ public abstract class MainActivity extends LinphoneGenericActivity
             displayMissedChats();
             displayMissedCalls();
         }
+
+        ProxyConfig proxyConfig = core.getDefaultProxyConfig();
+        if (proxyConfig != null) {
+            if (proxyConfig.getState() == RegistrationState.Failed) {
+                Log.w("[Main Activity] Default proxy config's registration state is failed, refresh registers");
+                core.refreshRegisters();
+            }
+        }
     }
 
     @Override
