@@ -62,7 +62,6 @@
             android:paddingBottom="5dp">
 
             <RelativeLayout
-                android:id="@+id/avatar_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center">
@@ -124,7 +123,6 @@
                         android:src="@drawable/chat_start_default" />
 
                     <ImageView
-                        android:id="@+id/security_level"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_alignParentTop="true"
