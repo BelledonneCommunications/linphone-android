@@ -36,6 +36,7 @@ import org.linphone.core.Factory;
 import org.linphone.core.PayloadType;
 import org.linphone.core.VideoDefinition;
 import org.linphone.core.tools.Log;
+import org.linphone.mediastream.Version;
 import org.linphone.settings.widget.ListSetting;
 import org.linphone.settings.widget.SettingListenerBase;
 import org.linphone.settings.widget.SwitchSetting;
@@ -189,6 +190,11 @@ public class VideoSettingsFragment extends SettingsFragment {
         mAutoAccept.setChecked(mPrefs.shouldAutomaticallyAcceptVideoRequests());
 
         mOverlay.setChecked(mPrefs.isOverlayEnabled());
+        if (Version.sdkAboveOrEqual(Version.API26_O_80)
+                && getResources().getBoolean(R.bool.allow_pip_while_video_call)) {
+            // Disable overlay and use PIP feature
+            mOverlay.setVisibility(View.GONE);
+        }
 
         mBandwidth.setValue(mPrefs.getBandwidthLimit());
         mBandwidth.setVisibility(

@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
@@ -41,7 +42,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.activities.DialerActivity;
-import org.linphone.activities.ThemableActivity;
+import org.linphone.activities.ThemeableActivity;
 import org.linphone.chat.ChatActivity;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
@@ -61,7 +62,7 @@ import org.linphone.utils.LinphoneUtils;
 import org.linphone.views.ContactAvatar;
 import org.linphone.views.Numpad;
 
-public class NewCallActivity extends ThemableActivity
+public class NewCallActivity extends ThemeableActivity
         implements CallStatusBarFragment.StatsClikedListener, ContactsUpdatedListener {
     private static final int SECONDS_BEFORE_HIDING_CONTROLS = 4000;
 
@@ -302,19 +303,18 @@ public class NewCallActivity extends ThemableActivity
     protected void onStart() {
         super.onStart();
 
-        Core core = LinphoneManager.getCore();
-        core.setNativeVideoWindowId(mRemoteVideo);
-        core.setNativePreviewWindowId(mLocalPreview);
+        mCore = LinphoneManager.getCore();
+        if (mCore != null) {
+            mCore.setNativeVideoWindowId(mRemoteVideo);
+            mCore.setNativePreviewWindowId(mLocalPreview);
+            mCore.addListener(mListener);
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        mCore = LinphoneManager.getCore();
-        if (mCore != null) {
-            mCore.addListener(mListener);
-        }
         mAudioManager = LinphoneManager.getAudioManager();
 
         updateButtons();
@@ -327,21 +327,25 @@ public class NewCallActivity extends ThemableActivity
 
     @Override
     protected void onPause() {
-        Core core = LinphoneManager.getCore();
-        if (core != null) {
-            core.removeListener(mListener);
-        }
-
         super.onPause();
+
+        ContactsManager.getInstance().removeContactsListener(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         Core core = LinphoneManager.getCore();
-        core.setNativeVideoWindowId(null);
-        core.setNativePreviewWindowId(null);
+        if (core != null) {
+            core.removeListener(mListener);
+            core.setNativeVideoWindowId(null);
+            core.setNativePreviewWindowId(null);
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
     }
 
     @Override
@@ -384,6 +388,25 @@ public class NewCallActivity extends ThemableActivity
     @Override
     public void onContactsUpdated() {
         setContactInformation();
+    }
+
+    @Override
+    public void onUserLeaveHint() {
+        Call call = mCore.getCurrentCall();
+        boolean videoEnabled =
+                LinphonePreferences.instance().isVideoEnabled()
+                        && call.getCurrentParams().videoEnabled();
+        if (videoEnabled && getResources().getBoolean(R.bool.allow_pip_while_video_call)) {
+            Compatibility.enterPipMode(this);
+        }
+    }
+
+    @Override
+    public void onPictureInPictureModeChanged(
+            boolean isInPictureInPictureMode, Configuration newConfig) {
+        if (isInPictureInPictureMode) {
+            updateButtonsVisibility(false);
+        }
     }
 
     // BUTTONS
