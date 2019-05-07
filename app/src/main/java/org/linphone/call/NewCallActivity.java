@@ -75,17 +75,21 @@ public class NewCallActivity extends ThemeableActivity
             new Runnable() {
                 @Override
                 public void run() {
-                    updateButtonsVisibility(false);
+                    // Make sure that at the time this is executed this is still required
+                    Call call = mCore.getCurrentCall();
+                    if (call != null && call.getCurrentParams().videoEnabled()) {
+                        updateButtonsVisibility(false);
+                    }
                 }
             };
 
     private int mPreviewX, mPreviewY;
     private TextureView mLocalPreview, mRemoteVideo;
     private RelativeLayout mActiveCalls, mContactAvatar, mActiveCallHeader;
-    private LinearLayout mMenu, mNoCurrentCall, mCallsList;
+    private LinearLayout mMenu, mNoCurrentCall, mCallsList, mCallPausedByRemote;
     private ImageView mMicro, mSpeaker, mVideo;
     private ImageView mNumpadButton, mHangUp, mChat;
-    private ImageView mPause, mSwitchCamera, mRecoringInProgress;
+    private ImageView mPause, mSwitchCamera, mRecordingInProgress;
     private ImageView mExtrasButtons, mAddCall, mTransferCall, mRecordCall, mConference;
     private Numpad mNumpad;
     private TextView mContactName, mMissedMessages;
@@ -129,6 +133,7 @@ public class NewCallActivity extends ThemeableActivity
         mActiveCalls = findViewById(R.id.active_calls);
         mActiveCallHeader = findViewById(R.id.active_call);
         mNoCurrentCall = findViewById(R.id.no_current_call);
+        mCallPausedByRemote = findViewById(R.id.remote_pause);
         mCallsList = findViewById(R.id.calls_list);
         mMenu = findViewById(R.id.menu);
 
@@ -258,8 +263,8 @@ public class NewCallActivity extends ThemeableActivity
                     }
                 });
 
-        mRecoringInProgress = findViewById(R.id.recording);
-        mRecoringInProgress.setOnClickListener(
+        mRecordingInProgress = findViewById(R.id.recording);
+        mRecordingInProgress.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -294,19 +299,22 @@ public class NewCallActivity extends ThemeableActivity
                             if (core.getCallsNb() == 0) {
                                 finish();
                             }
-                        } else if (state == Call.State.Paused
-                                || state == Call.State.PausedByRemote
-                                || state == Call.State.Pausing) {
-
-                        } else if (state == Call.State.Resuming
-                                || state == Call.State.StreamsRunning
-                                || state == Call.State.UpdatedByRemote) {
-                            updateButtons();
-                            updateInterfaceDependingOnVideo(call);
-
-                            if (state == Call.State.StreamsRunning) {
-                                updateCurrentCallTimer();
+                        } else if (state == Call.State.PausedByRemote) {
+                            if (core.getCurrentCall() != null) {
+                                showVideoControls(false);
+                                mCallPausedByRemote.setVisibility(View.VISIBLE);
                             }
+                        } else if (state == Call.State.Pausing || state == Call.State.Paused) {
+                            if (core.getCurrentCall() != null) {
+                                showVideoControls(false);
+                            }
+                        } else if (state == Call.State.StreamsRunning) {
+                            mCallPausedByRemote.setVisibility(View.GONE);
+
+                            updateButtons();
+                            setCurrentCallContactInformation();
+                            updateInterfaceDependingOnVideo();
+                            updateCurrentCallTimer();
                         }
 
                         updateCallsList();
@@ -334,9 +342,9 @@ public class NewCallActivity extends ThemeableActivity
 
         updateButtons();
         updateMissedChatCount();
-        updateInterfaceDependingOnVideo(mCore.getCurrentCall());
+        updateInterfaceDependingOnVideo();
 
-        setContactInformation();
+        setCurrentCallContactInformation();
         ContactsManager.getInstance().addContactsListener(this);
     }
 
@@ -402,7 +410,7 @@ public class NewCallActivity extends ThemeableActivity
 
     @Override
     public void onContactsUpdated() {
-        setContactInformation();
+        setCurrentCallContactInformation();
     }
 
     @Override
@@ -454,7 +462,7 @@ public class NewCallActivity extends ThemeableActivity
         mPause.setEnabled(call != null && !call.mediaInProgress());
 
         mRecordCall.setSelected(call != null && call.isRecording());
-        mRecoringInProgress.setVisibility(
+        mRecordingInProgress.setVisibility(
                 call != null && call.isRecording() ? View.VISIBLE : View.GONE);
     }
 
@@ -479,7 +487,6 @@ public class NewCallActivity extends ThemeableActivity
         mVideoInviteInProgress.setVisibility(View.VISIBLE);
         mVideo.setEnabled(false);
         if (call.getCurrentParams().videoEnabled()) {
-            mHandler.removeCallbacks(mHideControlsRunnable);
             LinphoneManager.getCallManager().removeVideo();
 
         } else {
@@ -491,7 +498,6 @@ public class NewCallActivity extends ThemeableActivity
         if (call == null) return;
 
         if (call == mCore.getCurrentCall()) {
-            mHandler.removeCallbacks(mHideControlsRunnable);
             call.pause();
             mPause.setSelected(true);
         } else if (call.getState() == Call.State.Paused) {
@@ -518,7 +524,7 @@ public class NewCallActivity extends ThemeableActivity
             call.startRecording();
         }
         mRecordCall.setSelected(call.isRecording());
-        mRecoringInProgress.setVisibility(call.isRecording() ? View.VISIBLE : View.INVISIBLE);
+        mRecordingInProgress.setVisibility(call.isRecording() ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void updateMissedChatCount() {
@@ -550,16 +556,7 @@ public class NewCallActivity extends ThemeableActivity
 
     // VIDEO RELATED
 
-    private void updateInterfaceDependingOnVideo(Call call) {
-        if (call == null) return;
-
-        mVideoInviteInProgress.setVisibility(View.GONE);
-        mVideo.setEnabled(LinphonePreferences.instance().isVideoEnabled());
-
-        boolean videoEnabled =
-                LinphonePreferences.instance().isVideoEnabled()
-                        && call.getCurrentParams().videoEnabled();
-
+    private void showVideoControls(boolean videoEnabled) {
         mContactAvatar.setVisibility(videoEnabled ? View.GONE : View.VISIBLE);
         mRemoteVideo.setVisibility(videoEnabled ? View.VISIBLE : View.GONE);
         mLocalPreview.setVisibility(videoEnabled ? View.VISIBLE : View.GONE);
@@ -567,6 +564,26 @@ public class NewCallActivity extends ThemeableActivity
         updateButtonsVisibility(!videoEnabled);
         mVideo.setSelected(videoEnabled);
         LinphoneManager.getInstance().enableProximitySensing(!videoEnabled);
+
+        if (!videoEnabled) {
+            mHandler.removeCallbacks(mHideControlsRunnable);
+        }
+    }
+
+    private void updateInterfaceDependingOnVideo() {
+        Call call = mCore.getCurrentCall();
+        if (call == null) {
+            showVideoControls(false);
+            return;
+        }
+
+        mVideoInviteInProgress.setVisibility(View.GONE);
+        mVideo.setEnabled(LinphonePreferences.instance().isVideoEnabled());
+
+        boolean videoEnabled =
+                LinphonePreferences.instance().isVideoEnabled()
+                        && call.getCurrentParams().videoEnabled();
+        showVideoControls(videoEnabled);
 
         if (videoEnabled) {
             mAudioManager.routeAudioToSpeaker();
@@ -719,7 +736,7 @@ public class NewCallActivity extends ThemeableActivity
         mCallTimer.start();
     }
 
-    private void setContactInformation() {
+    private void setCurrentCallContactInformation() {
         Call call = mCore.getCurrentCall();
         if (call == null) return;
 
