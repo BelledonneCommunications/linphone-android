@@ -25,12 +25,15 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.TextureView;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -48,6 +51,7 @@ import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.contacts.LinphoneContact;
+import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
@@ -77,8 +81,8 @@ public class NewCallActivity extends ThemeableActivity
 
     private int mPreviewX, mPreviewY;
     private TextureView mLocalPreview, mRemoteVideo;
-    private RelativeLayout mActiveCalls, mContactAvatar;
-    private LinearLayout mMenu;
+    private RelativeLayout mActiveCalls, mContactAvatar, mActiveCallHeader;
+    private LinearLayout mMenu, mNoCurrentCall, mCallsList;
     private ImageView mMicro, mSpeaker, mVideo;
     private ImageView mNumpadButton, mHangUp, mChat;
     private ImageView mPause, mSwitchCamera, mRecoringInProgress;
@@ -86,6 +90,7 @@ public class NewCallActivity extends ThemeableActivity
     private Numpad mNumpad;
     private TextView mContactName, mMissedMessages;
     private ProgressBar mVideoInviteInProgress;
+    private Chronometer mCallTimer;
 
     private CallStatusBarFragment mStatusBarFragment;
     private CallStatsFragment mStatsFragment;
@@ -122,10 +127,14 @@ public class NewCallActivity extends ThemeableActivity
                 });
 
         mActiveCalls = findViewById(R.id.active_calls);
+        mActiveCallHeader = findViewById(R.id.active_call);
+        mNoCurrentCall = findViewById(R.id.no_current_call);
+        mCallsList = findViewById(R.id.calls_list);
         mMenu = findViewById(R.id.menu);
 
         mContactName = findViewById(R.id.current_contact_name);
         mContactAvatar = findViewById(R.id.avatar_layout);
+        mCallTimer = findViewById(R.id.current_call_timer);
 
         mVideoInviteInProgress = findViewById(R.id.video_in_progress);
         mVideo = findViewById(R.id.video);
@@ -294,7 +303,13 @@ public class NewCallActivity extends ThemeableActivity
                                 || state == Call.State.UpdatedByRemote) {
                             updateButtons();
                             updateInterfaceDependingOnVideo(call);
+
+                            if (state == Call.State.StreamsRunning) {
+                                updateCurrentCallTimer();
+                            }
                         }
+
+                        updateCallsList();
                     }
                 };
     }
@@ -476,6 +491,7 @@ public class NewCallActivity extends ThemeableActivity
         if (call == null) return;
 
         if (call == mCore.getCurrentCall()) {
+            mHandler.removeCallbacks(mHideControlsRunnable);
             call.pause();
             mPause.setSelected(true);
         } else if (call.getState() == Call.State.Paused) {
@@ -554,6 +570,7 @@ public class NewCallActivity extends ThemeableActivity
 
         if (videoEnabled) {
             mAudioManager.routeAudioToSpeaker();
+            mSpeaker.setSelected(true);
             resizePreview(call);
         }
     }
@@ -643,7 +660,64 @@ public class NewCallActivity extends ThemeableActivity
         startActivity(intent);
     }
 
-    // CONTACT
+    // OTHER
+
+    private void updateCallsList() {
+        Call currentCall = mCore.getCurrentCall();
+        mActiveCallHeader.setVisibility(currentCall != null ? View.VISIBLE : View.GONE);
+        mNoCurrentCall.setVisibility(currentCall != null ? View.GONE : View.VISIBLE);
+
+        boolean callThatIsNotCurrentFound = false;
+        mCallsList.removeAllViews();
+        for (Call call : mCore.getCalls()) {
+            if (call != currentCall) {
+                displayPausedCall(call);
+                callThatIsNotCurrentFound = true;
+            }
+        }
+        mCallsList.setVisibility(callThatIsNotCurrentFound ? View.VISIBLE : View.GONE);
+    }
+
+    private void displayPausedCall(final Call call) {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        LinearLayout callView =
+                (LinearLayout) inflater.inflate(R.layout.call_inactive_row, null, false);
+
+        TextView contactName = callView.findViewById(R.id.contact_name);
+        Address address = call.getRemoteAddress();
+        LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
+        if (contact == null) {
+            String displayName = LinphoneUtils.getAddressDisplayName(address);
+            contactName.setText(displayName);
+            ContactAvatar.displayAvatar(displayName, callView.findViewById(R.id.avatar_layout));
+        } else {
+            contactName.setText(contact.getFullName());
+            ContactAvatar.displayAvatar(contact, callView.findViewById(R.id.avatar_layout));
+        }
+
+        Chronometer timer = callView.findViewById(R.id.call_timer);
+        timer.setBase(SystemClock.elapsedRealtime() - 1000 * call.getDuration());
+        timer.start();
+
+        ImageView resumeCall = callView.findViewById(R.id.call_pause);
+        resumeCall.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        togglePause(call);
+                    }
+                });
+
+        mCallsList.addView(callView);
+    }
+
+    private void updateCurrentCallTimer() {
+        Call call = mCore.getCurrentCall();
+        if (call == null) return;
+
+        mCallTimer.setBase(SystemClock.elapsedRealtime() - 1000 * call.getDuration());
+        mCallTimer.start();
+    }
 
     private void setContactInformation() {
         Call call = mCore.getCurrentCall();
