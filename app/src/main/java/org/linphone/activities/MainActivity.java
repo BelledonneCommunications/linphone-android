@@ -760,4 +760,10 @@ public abstract class MainActivity extends LinphoneGenericActivity
             Log.e(ex);
         }
     }
+
+    // Others
+
+    public SideMenuFragment getSideMenuFragment() {
+        return mSideMenuFragment;
+    }
 }
