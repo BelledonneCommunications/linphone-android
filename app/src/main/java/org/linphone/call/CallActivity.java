@@ -34,7 +34,6 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.text.Html;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -54,13 +53,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import java.text.DecimalFormat;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.activities.DialerActivity;
@@ -70,21 +64,15 @@ import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
-import org.linphone.core.AddressFamily;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
-import org.linphone.core.CallListenerStub;
 import org.linphone.core.CallParams;
-import org.linphone.core.CallStats;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
-import org.linphone.core.PayloadType;
 import org.linphone.core.Player;
-import org.linphone.core.StreamType;
 import org.linphone.core.tools.Log;
-import org.linphone.fragments.StatusBarFragment;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.receivers.BluetoothManager;
 import org.linphone.settings.LinphonePreferences;
@@ -125,7 +113,6 @@ public class CallActivity extends LinphoneGenericActivity
     private ImageView mRouteBluetooth;
     private LinearLayout mNoCurrentCall, mCallInfo, mCallPaused;
     private ProgressBar mVideoProgress;
-    private StatusBarFragment mStatus;
     private CallAudioFragment mAudioCallFragment;
     private CallVideoFragment mVideoCallFragment;
     private boolean mIsSpeakerEnabled = false,
@@ -146,14 +133,6 @@ public class CallActivity extends LinphoneGenericActivity
     private ViewGroup mContainer;
     private boolean mIsConferenceRunning = false;
     private CoreListenerStub mListener;
-    private DrawerLayout mSideMenu;
-
-    private final Handler mHandler = new Handler();
-    private Timer mTimer;
-    private TimerTask mTask;
-    private HashMap<String, String> mEncoderTexts;
-    private HashMap<String, String> mDecoderTexts;
-    private Call mCallDisplayedInStats;
 
     private boolean mOldIsSpeakerEnabled = false;
 
@@ -178,9 +157,6 @@ public class CallActivity extends LinphoneGenericActivity
                 getApplicationContext().getResources().getBoolean(R.bool.allow_transfers);
 
         mCameraNumber = AndroidCameraConfiguration.retrieveCameras().length;
-
-        mEncoderTexts = new HashMap<>();
-        mDecoderTexts = new HashMap<>();
 
         mListener =
                 new CoreListenerStub() {
@@ -219,9 +195,9 @@ public class CallActivity extends LinphoneGenericActivity
                             switchVideo(isVideoEnabled(call));
                             enableAndRefreshInCallActions();
 
-                            if (mStatus != null) {
+                            /*if (mStatus != null) {
                                 mVideoProgress.setVisibility(View.GONE);
-                            }
+                            }*/
                         } else if (state == State.UpdatedByRemote) {
                             // If the correspondent proposes video while audio call
                             boolean videoEnabled = LinphonePreferences.instance().isVideoEnabled();
@@ -472,7 +448,6 @@ public class CallActivity extends LinphoneGenericActivity
             }
         }
 
-        createInCallStats();
         LinphoneManager.getInstance().changeStatusToOnThePhone();
     }
 
@@ -546,30 +521,6 @@ public class CallActivity extends LinphoneGenericActivity
                                 }
                             }
                         });
-        }
-    }
-
-    private void createInCallStats() {
-        mSideMenu = findViewById(R.id.side_menu);
-        ImageView mMenu = findViewById(R.id.call_quality);
-
-        mSideMenuContent = findViewById(R.id.side_menu_content);
-
-        mMenu.setOnClickListener(
-                new OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (mSideMenu.isDrawerVisible(Gravity.LEFT)) {
-                            mSideMenu.closeDrawer(mSideMenuContent);
-                        } else {
-                            mSideMenu.openDrawer(mSideMenuContent);
-                        }
-                    }
-                });
-
-        Core core = LinphoneManager.getCore();
-        if (core != null) {
-            // initCallStatsRefresher(core.getCurrentCall(), findViewById(R.id.incall_stats));
         }
     }
 
@@ -679,10 +630,6 @@ public class CallActivity extends LinphoneGenericActivity
         mTransfer.setEnabled(true);
         mPause.setEnabled(true);
         mDialer.setEnabled(true);
-    }
-
-    public void updateStatusFragment(StatusBarFragment statusBarFragment) {
-        mStatus = statusBarFragment;
     }
 
     @Override
@@ -1186,11 +1133,6 @@ public class CallActivity extends LinphoneGenericActivity
             return;
         }
 
-        if (mStatus != null && !mStatus.isVisible()) {
-            // Hack to ensure statusFragment is visible after coming back to
-            // mDialer from mChat
-            mStatus.getView().setVisibility(View.VISIBLE);
-        }
         findViewById(R.id.status).setVisibility(View.VISIBLE);
         // findViewById(R.id.fragmentContainer).setPadding(0,
         // LinphoneUtils.pixelsToDpi(getResources(), 40), 0, 0);
@@ -1339,10 +1281,6 @@ public class CallActivity extends LinphoneGenericActivity
         mControlsHandler = null;
 
         unbindDrawables(findViewById(R.id.topLayout));
-        if (mTimer != null) {
-            mTimer.cancel();
-        }
-
         super.onDestroy();
     }
 
@@ -1663,304 +1601,6 @@ public class CallActivity extends LinphoneGenericActivity
             mMissedChats.clearAnimation();
             mMissedChats.setVisibility(View.GONE);
         }
-    }
-
-    private void formatText(TextView tv, String name, String value) {
-        tv.setText(Html.fromHtml("<b>" + name + " </b>" + value));
-    }
-
-    private String getEncoderText(String mime) {
-        String ret = mEncoderTexts.get(mime);
-        if (ret == null) {
-            org.linphone.mediastream.Factory msfactory =
-                    LinphoneManager.getCore().getMediastreamerFactory();
-            ret = msfactory.getEncoderText(mime);
-            mEncoderTexts.put(mime, ret);
-        }
-        return ret;
-    }
-
-    private String getDecoderText(String mime) {
-        String ret = mDecoderTexts.get(mime);
-        if (ret == null) {
-            org.linphone.mediastream.Factory msfactory =
-                    LinphoneManager.getCore().getMediastreamerFactory();
-            ret = msfactory.getDecoderText(mime);
-            mDecoderTexts.put(mime, ret);
-        }
-        return ret;
-    }
-
-    private void displayMediaStats(
-            CallParams params,
-            CallStats stats,
-            PayloadType media,
-            View layout,
-            TextView title,
-            TextView codec,
-            TextView dl,
-            TextView ul,
-            TextView edl,
-            TextView ice,
-            TextView ip,
-            TextView senderLossRate,
-            TextView receiverLossRate,
-            TextView enc,
-            TextView dec,
-            TextView videoResolutionSent,
-            TextView videoResolutionReceived,
-            TextView videoFpsSent,
-            TextView videoFpsReceived,
-            boolean isVideo,
-            TextView jitterBuffer) {
-        if (stats != null) {
-            String mime = null;
-
-            layout.setVisibility(View.VISIBLE);
-            title.setVisibility(TextView.VISIBLE);
-            if (media != null) {
-                mime = media.getMimeType();
-                formatText(
-                        codec,
-                        getString(R.string.call_stats_codec),
-                        mime + " / " + (media.getClockRate() / 1000) + "kHz");
-            }
-            if (mime != null) {
-                formatText(enc, getString(R.string.call_stats_encoder_name), getEncoderText(mime));
-                formatText(dec, getString(R.string.call_stats_decoder_name), getDecoderText(mime));
-            }
-            formatText(
-                    dl,
-                    getString(R.string.call_stats_download),
-                    (int) stats.getDownloadBandwidth() + " kbits/s");
-            formatText(
-                    ul,
-                    getString(R.string.call_stats_upload),
-                    (int) stats.getUploadBandwidth() + " kbits/s");
-            if (isVideo) {
-                formatText(
-                        edl,
-                        getString(R.string.call_stats_estimated_download),
-                        stats.getEstimatedDownloadBandwidth() + " kbits/s");
-            }
-            formatText(ice, getString(R.string.call_stats_ice), stats.getIceState().toString());
-            formatText(
-                    ip,
-                    getString(R.string.call_stats_ip),
-                    (stats.getIpFamilyOfRemote() == AddressFamily.Inet6)
-                            ? "IpV6"
-                            : (stats.getIpFamilyOfRemote() == AddressFamily.Inet)
-                                    ? "IpV4"
-                                    : "Unknown");
-            formatText(
-                    senderLossRate,
-                    getString(R.string.call_stats_sender_loss_rate),
-                    new DecimalFormat("##.##").format(stats.getSenderLossRate()) + "%");
-            formatText(
-                    receiverLossRate,
-                    getString(R.string.call_stats_receiver_loss_rate),
-                    new DecimalFormat("##.##").format(stats.getReceiverLossRate()) + "%");
-            if (isVideo) {
-                formatText(
-                        videoResolutionSent,
-                        getString(R.string.call_stats_video_resolution_sent),
-                        "\u2191 " + params.getSentVideoDefinition() != null
-                                ? params.getSentVideoDefinition().getName()
-                                : "");
-                formatText(
-                        videoResolutionReceived,
-                        getString(R.string.call_stats_video_resolution_received),
-                        "\u2193 " + params.getReceivedVideoDefinition() != null
-                                ? params.getReceivedVideoDefinition().getName()
-                                : "");
-                formatText(
-                        videoFpsSent,
-                        getString(R.string.call_stats_video_fps_sent),
-                        "\u2191 " + params.getSentFramerate());
-                formatText(
-                        videoFpsReceived,
-                        getString(R.string.call_stats_video_fps_received),
-                        "\u2193 " + params.getReceivedFramerate());
-            } else {
-                formatText(
-                        jitterBuffer,
-                        getString(R.string.call_stats_jitter_buffer),
-                        new DecimalFormat("##.##").format(stats.getJitterBufferSizeMs()) + " ms");
-            }
-        } else {
-            layout.setVisibility(View.GONE);
-            title.setVisibility(TextView.GONE);
-        }
-    }
-
-    private void initCallStatsRefresher(final Call call, final View view) {
-        if (mCallDisplayedInStats == call) return;
-
-        if (mTimer != null && mTask != null) {
-            mTimer.cancel();
-            mTimer = null;
-            mTask = null;
-        }
-        mCallDisplayedInStats = call;
-
-        if (call == null) return;
-
-        final TextView titleAudio = view.findViewById(R.id.call_stats_audio);
-        final TextView titleVideo = view.findViewById(R.id.call_stats_video);
-        final TextView codecAudio = view.findViewById(R.id.codec_audio);
-        final TextView codecVideo = view.findViewById(R.id.codec_video);
-        final TextView encoderAudio = view.findViewById(R.id.encoder_audio);
-        final TextView decoderAudio = view.findViewById(R.id.decoder_audio);
-        final TextView encoderVideo = view.findViewById(R.id.encoder_video);
-        final TextView decoderVideo = view.findViewById(R.id.decoder_video);
-        final TextView displayFilter = view.findViewById(R.id.display_filter);
-        final TextView dlAudio = view.findViewById(R.id.downloadBandwith_audio);
-        final TextView ulAudio = view.findViewById(R.id.uploadBandwith_audio);
-        final TextView dlVideo = view.findViewById(R.id.downloadBandwith_video);
-        final TextView ulVideo = view.findViewById(R.id.uploadBandwith_video);
-        final TextView edlVideo = view.findViewById(R.id.estimatedDownloadBandwidth_video);
-        final TextView iceAudio = view.findViewById(R.id.ice_audio);
-        final TextView iceVideo = view.findViewById(R.id.ice_video);
-        final TextView videoResolutionSent = view.findViewById(R.id.video_resolution_sent);
-        final TextView videoResolutionReceived = view.findViewById(R.id.video_resolution_received);
-        final TextView videoFpsSent = view.findViewById(R.id.video_fps_sent);
-        final TextView videoFpsReceived = view.findViewById(R.id.video_fps_received);
-        final TextView senderLossRateAudio = view.findViewById(R.id.senderLossRateAudio);
-        final TextView receiverLossRateAudio = view.findViewById(R.id.receiverLossRateAudio);
-        final TextView senderLossRateVideo = view.findViewById(R.id.senderLossRateVideo);
-        final TextView receiverLossRateVideo = view.findViewById(R.id.receiverLossRateVideo);
-        final TextView ipAudio = view.findViewById(R.id.ip_audio);
-        final TextView ipVideo = view.findViewById(R.id.ip_video);
-        final TextView jitterBufferAudio = view.findViewById(R.id.jitterBufferAudio);
-        final View videoLayout = view.findViewById(R.id.callStatsVideo);
-        final View audioLayout = view.findViewById(R.id.callStatsAudio);
-
-        CallListenerStub mCallListener =
-                new CallListenerStub() {
-                    public void onStateChanged(Call call, State cstate, String message) {
-                        if (cstate == State.End || cstate == State.Error) {
-                            if (mTimer != null) {
-                                Log.i(
-                                        "Call is terminated, stopping mCountDownTimer in charge of stats refreshing.");
-                                mTimer.cancel();
-                            }
-                        }
-                    }
-                };
-
-        mTimer = new Timer();
-        mTask =
-                new TimerTask() {
-                    @Override
-                    public void run() {
-                        if (call == null) {
-                            mTimer.cancel();
-                            return;
-                        }
-
-                        if (titleAudio == null
-                                || codecAudio == null
-                                || dlVideo == null
-                                || edlVideo == null
-                                || iceAudio == null
-                                || videoResolutionSent == null
-                                || videoLayout == null
-                                || titleVideo == null
-                                || ipVideo == null
-                                || ipAudio == null
-                                || codecVideo == null
-                                || dlAudio == null
-                                || ulAudio == null
-                                || ulVideo == null
-                                || iceVideo == null
-                                || videoResolutionReceived == null) {
-                            mTimer.cancel();
-                            return;
-                        }
-
-                        mHandler.post(
-                                new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (LinphoneManager.getCore() == null) return;
-                                        synchronized (LinphoneManager.getCore()) {
-                                            if (call.getState() != Call.State.Released) {
-                                                CallParams params = call.getCurrentParams();
-                                                if (params != null) {
-                                                    CallStats audioStats =
-                                                            call.getStats(StreamType.Audio);
-                                                    CallStats videoStats = null;
-
-                                                    if (params.videoEnabled())
-                                                        videoStats =
-                                                                call.getStats(StreamType.Video);
-
-                                                    PayloadType payloadAudio =
-                                                            params.getUsedAudioPayloadType();
-                                                    PayloadType payloadVideo =
-                                                            params.getUsedVideoPayloadType();
-
-                                                    formatText(
-                                                            displayFilter,
-                                                            getString(
-                                                                    R.string
-                                                                            .call_stats_display_filter),
-                                                            call.getCore().getVideoDisplayFilter());
-
-                                                    displayMediaStats(
-                                                            params,
-                                                            audioStats,
-                                                            payloadAudio,
-                                                            audioLayout,
-                                                            titleAudio,
-                                                            codecAudio,
-                                                            dlAudio,
-                                                            ulAudio,
-                                                            null,
-                                                            iceAudio,
-                                                            ipAudio,
-                                                            senderLossRateAudio,
-                                                            receiverLossRateAudio,
-                                                            encoderAudio,
-                                                            decoderAudio,
-                                                            null,
-                                                            null,
-                                                            null,
-                                                            null,
-                                                            false,
-                                                            jitterBufferAudio);
-
-                                                    displayMediaStats(
-                                                            params,
-                                                            videoStats,
-                                                            payloadVideo,
-                                                            videoLayout,
-                                                            titleVideo,
-                                                            codecVideo,
-                                                            dlVideo,
-                                                            ulVideo,
-                                                            edlVideo,
-                                                            iceVideo,
-                                                            ipVideo,
-                                                            senderLossRateVideo,
-                                                            receiverLossRateVideo,
-                                                            encoderVideo,
-                                                            decoderVideo,
-                                                            videoResolutionSent,
-                                                            videoResolutionReceived,
-                                                            videoFpsSent,
-                                                            videoFpsReceived,
-                                                            true,
-                                                            null);
-                                                }
-                                            }
-                                        }
-                                    }
-                                });
-                    }
-                };
-        call.addListener(mCallListener);
-        mTimer.scheduleAtFixedRate(mTask, 0, 1000);
     }
 
     public interface CallActivityInterface {
