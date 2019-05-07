@@ -63,7 +63,7 @@ import org.linphone.core.ProxyConfig;
 import org.linphone.core.RegistrationState;
 import org.linphone.core.tools.Log;
 import org.linphone.fragments.EmptyFragment;
-import org.linphone.fragments.StatusFragment;
+import org.linphone.fragments.StatusBarFragment;
 import org.linphone.history.HistoryActivity;
 import org.linphone.menu.SideMenuFragment;
 import org.linphone.settings.LinphonePreferences;
@@ -73,7 +73,7 @@ import org.linphone.utils.LinphoneUtils;
 import org.linphone.utils.PushNotificationUtils;
 
 public abstract class MainActivity extends LinphoneGenericActivity
-        implements StatusFragment.MenuClikedListener, SideMenuFragment.QuitClikedListener {
+        implements StatusBarFragment.MenuClikedListener, SideMenuFragment.QuitClikedListener {
     private static final int MAIN_PERMISSIONS = 1;
     private static final int FRAGMENT_SPECIFIC_PERMISSION = 2;
 
@@ -88,7 +88,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
     private LinearLayout mTabBar;
 
     private SideMenuFragment mSideMenuFragment;
-    private StatusFragment mStatusFragment;
+    private StatusBarFragment mStatusBarFragment;
 
     protected boolean mOnBackPressGoHome;
     protected boolean mAlwaysHideTabBar;
@@ -171,8 +171,8 @@ public abstract class MainActivity extends LinphoneGenericActivity
                     }
                 });
 
-        mStatusFragment =
-                (StatusFragment) getFragmentManager().findFragmentById(R.id.status_fragment);
+        mStatusBarFragment =
+                (StatusBarFragment) getFragmentManager().findFragmentById(R.id.status_fragment);
 
         DrawerLayout mSideMenu = findViewById(R.id.side_menu);
         RelativeLayout mSideMenuContent = findViewById(R.id.side_menu_content);
@@ -316,7 +316,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
         mDialerSelected.setVisibility(View.GONE);
         mChatSelected.setVisibility(View.GONE);
 
-        mStatusFragment.setMenuListener(this);
+        mStatusBarFragment.setMenuListener(this);
         mSideMenuFragment.setQuitListener(this);
         mSideMenuFragment.displayAccountsInSideMenu();
 
@@ -334,7 +334,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
 
     @Override
     protected void onPause() {
-        mStatusFragment.setMenuListener(null);
+        mStatusBarFragment.setMenuListener(null);
         mSideMenuFragment.setQuitListener(null);
 
         Core core = LinphoneManager.getCore();

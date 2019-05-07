@@ -7,10 +7,10 @@
 
     <fragment
         android:id="@+id/status"
-        android:name="org.linphone.fragments.StatusFragment"
+        android:name="org.linphone.call.CallStatusBarFragment"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        tools:layout="@layout/status" />
+        tools:layout="@layout/status_bar" />
 
     <RelativeLayout
         android:id="@+id/top_bar"

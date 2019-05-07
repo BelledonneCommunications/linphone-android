@@ -123,7 +123,7 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
                             }
                         } else if (state == State.Connected) {
                             startActivity(
-                                    new Intent(CallOutgoingActivity.this, CallActivity.class));
+                                    new Intent(CallOutgoingActivity.this, NewCallActivity.class));
                         }
 
                         if (LinphoneManager.getCore().getCallsNb() == 0) {
