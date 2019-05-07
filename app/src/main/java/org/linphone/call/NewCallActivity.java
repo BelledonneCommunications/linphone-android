@@ -60,7 +60,6 @@ import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
-import org.linphone.core.CallParams;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.Core;
@@ -340,7 +339,6 @@ public class NewCallActivity extends ThemeableActivity
                             updateButtons();
                             setCurrentCallContactInformation();
                             updateInterfaceDependingOnVideo();
-                            updateCurrentCallTimer();
                         } else if (state == Call.State.UpdatedByRemote) {
                             // If the correspondent asks for video while in audio call
                             boolean videoEnabled = LinphonePreferences.instance().isVideoEnabled();
@@ -874,6 +872,8 @@ public class NewCallActivity extends ThemeableActivity
     }
 
     private void setCurrentCallContactInformation() {
+        updateCurrentCallTimer();
+
         Call call = mCore.getCurrentCall();
         if (call == null) return;
 

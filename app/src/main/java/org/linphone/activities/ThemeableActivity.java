@@ -45,18 +45,6 @@ public abstract class ThemeableActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt("Theme", mTheme);
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        mTheme = savedInstanceState.getInt("Theme");
-        super.onRestoreInstanceState(savedInstanceState);
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
 

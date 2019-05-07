@@ -57,7 +57,7 @@
                         android:layout_alignParentTop="true"
                         android:layout_centerHorizontal="true"
                         android:alpha="0.8"
-                        android:background="@color/white_color"
+                        android:background="?attr/backgroundColor"
                         android:orientation="vertical">
 
                         <TextView
@@ -75,7 +75,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center" />
-
+                        remote_pause
                     </LinearLayout>
 
                     <RelativeLayout
@@ -119,7 +119,7 @@
                         android:id="@+id/pause"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:layout_below="@+id/active_call_info"
+                        android:layout_below="@id/active_call_info"
                         android:layout_alignParentRight="true"
                         android:contentDescription="@string/content_description_pause"
                         android:padding="20dp"
@@ -129,7 +129,7 @@
                         android:id="@+id/switchCamera"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:layout_below="@+id/active_call_info"
+                        android:layout_below="@id/active_call_info"
                         android:layout_alignParentLeft="true"
                         android:contentDescription="@string/content_description_switch_camera"
                         android:padding="20dp"
