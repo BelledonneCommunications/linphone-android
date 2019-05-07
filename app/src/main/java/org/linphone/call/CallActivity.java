@@ -80,12 +80,11 @@ import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
-import org.linphone.core.MediaEncryption;
 import org.linphone.core.PayloadType;
 import org.linphone.core.Player;
 import org.linphone.core.StreamType;
 import org.linphone.core.tools.Log;
-import org.linphone.fragments.StatusFragment;
+import org.linphone.fragments.StatusBarFragment;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.receivers.BluetoothManager;
 import org.linphone.settings.LinphonePreferences;
@@ -126,7 +125,7 @@ public class CallActivity extends LinphoneGenericActivity
     private ImageView mRouteBluetooth;
     private LinearLayout mNoCurrentCall, mCallInfo, mCallPaused;
     private ProgressBar mVideoProgress;
-    private StatusFragment mStatus;
+    private StatusBarFragment mStatus;
     private CallAudioFragment mAudioCallFragment;
     private CallVideoFragment mVideoCallFragment;
     private boolean mIsSpeakerEnabled = false,
@@ -198,10 +197,7 @@ public class CallActivity extends LinphoneGenericActivity
                             return;
                         }
 
-                        if (state == State.IncomingReceived || state == State.IncomingEarlyMedia) {
-                            // This scenario will be handled by the Service listener
-                            return;
-                        } else if (state == State.Paused
+                        if (state == State.Paused
                                 || state == State.PausedByRemote
                                 || state == State.Pausing) {
                             if (core.getCurrentCall() != null) {
@@ -212,7 +208,6 @@ public class CallActivity extends LinphoneGenericActivity
                             }
                         } else if (state == State.Resuming) {
                             if (LinphonePreferences.instance().isVideoEnabled()) {
-                                mStatus.refreshStatusItems(call);
                                 if (call.getCurrentParams().videoEnabled()) {
                                     showVideoView();
                                 }
@@ -226,7 +221,6 @@ public class CallActivity extends LinphoneGenericActivity
 
                             if (mStatus != null) {
                                 mVideoProgress.setVisibility(View.GONE);
-                                mStatus.refreshStatusItems(call);
                             }
                         } else if (state == State.UpdatedByRemote) {
                             // If the correspondent proposes video while audio call
@@ -252,23 +246,6 @@ public class CallActivity extends LinphoneGenericActivity
 
                         refreshIncallUi();
                         mTransfer.setEnabled(core.getCurrentCall() != null);
-                    }
-
-                    @Override
-                    public void onCallEncryptionChanged(
-                            Core core,
-                            final Call call,
-                            boolean encrypted,
-                            String authenticationToken) {
-                        if (mStatus != null) {
-                            if (call.getCurrentParams()
-                                            .getMediaEncryption()
-                                            .equals(MediaEncryption.ZRTP)
-                                    && !call.getAuthenticationTokenVerified()) {
-                                mStatus.showZRTPDialog(call);
-                            }
-                            mStatus.refreshStatusItems(call);
-                        }
                     }
                 };
 
@@ -592,7 +569,7 @@ public class CallActivity extends LinphoneGenericActivity
 
         Core core = LinphoneManager.getCore();
         if (core != null) {
-            initCallStatsRefresher(core.getCurrentCall(), findViewById(R.id.incall_stats));
+            // initCallStatsRefresher(core.getCurrentCall(), findViewById(R.id.incall_stats));
         }
     }
 
@@ -704,8 +681,8 @@ public class CallActivity extends LinphoneGenericActivity
         mDialer.setEnabled(true);
     }
 
-    public void updateStatusFragment(StatusFragment statusFragment) {
-        mStatus = statusFragment;
+    public void updateStatusFragment(StatusBarFragment statusBarFragment) {
+        mStatus = statusBarFragment;
     }
 
     @Override
@@ -1296,13 +1273,6 @@ public class CallActivity extends LinphoneGenericActivity
 
         refreshIncallUi();
         handleViewIntent();
-
-        if (mStatus != null && core != null) {
-            Call currentCall = core.getCurrentCall();
-            if (currentCall != null && !currentCall.getAuthenticationTokenVerified()) {
-                mStatus.showZRTPDialog(currentCall);
-            }
-        }
 
         if (!isVideoEnabled(LinphoneManager.getCore().getCurrentCall())) {
             if (!mIsSpeakerEnabled) {

@@ -35,9 +35,9 @@ import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.activities.DialerActivity;
-import org.linphone.call.CallActivity;
 import org.linphone.call.CallIncomingActivity;
 import org.linphone.call.CallOutgoingActivity;
+import org.linphone.call.NewCallActivity;
 import org.linphone.chat.ChatActivity;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
@@ -420,7 +420,7 @@ public class NotificationsManager {
                 || call.getState() == Call.State.OutgoingEarlyMedia) {
             callNotifIntent = new Intent(mContext, CallOutgoingActivity.class);
         } else {
-            callNotifIntent = new Intent(mContext, CallActivity.class);
+            callNotifIntent = new Intent(mContext, NewCallActivity.class);
         }
         callNotifIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
