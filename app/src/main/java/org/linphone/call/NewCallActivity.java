@@ -23,15 +23,18 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.TextureView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -41,6 +44,9 @@ import org.linphone.activities.DialerActivity;
 import org.linphone.activities.ThemableActivity;
 import org.linphone.chat.ChatActivity;
 import org.linphone.compatibility.Compatibility;
+import org.linphone.contacts.ContactsManager;
+import org.linphone.contacts.ContactsUpdatedListener;
+import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Call;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
@@ -50,18 +56,41 @@ import org.linphone.core.CoreListenerStub;
 import org.linphone.core.VideoDefinition;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
+import org.linphone.utils.AndroidAudioManager;
+import org.linphone.utils.LinphoneUtils;
+import org.linphone.views.ContactAvatar;
+import org.linphone.views.Numpad;
 
 public class NewCallActivity extends ThemableActivity
-        implements CallStatusBarFragment.StatsClikedListener {
-    private TextureView mLocalPreview, mRemoteVideo;
-    private RelativeLayout mActiveCalls;
-    private LinearLayout mMenu;
+        implements CallStatusBarFragment.StatsClikedListener, ContactsUpdatedListener {
+    private static final int SECONDS_BEFORE_HIDING_CONTROLS = 4000;
 
+    private Handler mHandler = new Handler();
+    private Runnable mHideControlsRunnable =
+            new Runnable() {
+                @Override
+                public void run() {
+                    updateButtonsVisibility(false);
+                }
+            };
+
+    private int mPreviewX, mPreviewY;
+    private TextureView mLocalPreview, mRemoteVideo;
+    private RelativeLayout mActiveCalls, mContactAvatar;
+    private LinearLayout mMenu;
     private ImageView mMicro, mSpeaker, mVideo;
+    private ImageView mNumpadButton, mHangUp, mChat;
+    private ImageView mPause, mSwitchCamera, mRecoringInProgress;
+    private ImageView mExtrasButtons, mAddCall, mTransferCall, mRecordCall, mConference;
+    private Numpad mNumpad;
+    private TextView mContactName, mMissedMessages;
+    private ProgressBar mVideoInviteInProgress;
 
     private CallStatusBarFragment mStatusBarFragment;
     private CallStatsFragment mStatsFragment;
+    private Core mCore;
     private CoreListener mListener;
+    private AndroidAudioManager mAudioManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,14 +102,162 @@ public class NewCallActivity extends ThemableActivity
         setContentView(R.layout.call);
 
         mLocalPreview = findViewById(R.id.local_preview_texture);
+        mLocalPreview.setOnTouchListener(
+                new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        moveLocalPreview(event);
+                        return true;
+                    }
+                });
+
         mRemoteVideo = findViewById(R.id.remote_video_texture);
+        mRemoteVideo.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        makeButtonsVisibleTemporary();
+                    }
+                });
 
         mActiveCalls = findViewById(R.id.active_calls);
         mMenu = findViewById(R.id.menu);
 
-        mMicro = findViewById(R.id.micro);
-        mSpeaker = findViewById(R.id.speaker);
+        mContactName = findViewById(R.id.current_contact_name);
+        mContactAvatar = findViewById(R.id.avatar_layout);
+
+        mVideoInviteInProgress = findViewById(R.id.video_in_progress);
         mVideo = findViewById(R.id.video);
+        mVideo.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        toggleVideo();
+                    }
+                });
+
+        mMicro = findViewById(R.id.micro);
+        mMicro.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        toggleMic();
+                    }
+                });
+
+        mSpeaker = findViewById(R.id.speaker);
+        mSpeaker.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        toggleSpeaker();
+                    }
+                });
+
+        mExtrasButtons = findViewById(R.id.options);
+        mExtrasButtons.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        toggleExtrasButtons();
+                    }
+                });
+        mExtrasButtons.setSelected(false);
+
+        mAddCall = findViewById(R.id.add_call);
+        mAddCall.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        goBackToDialer();
+                    }
+                });
+
+        mTransferCall = findViewById(R.id.transfer);
+        mTransferCall.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        goBackToDialerAndDisplayTransferButton();
+                    }
+                });
+
+        mConference = findViewById(R.id.conference);
+        mConference.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // TODO
+                    }
+                });
+
+        mRecordCall = findViewById(R.id.record_call);
+        mRecordCall.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        toggleRecording();
+                    }
+                });
+
+        mNumpad = findViewById(R.id.numpad);
+
+        mNumpadButton = findViewById(R.id.dialer);
+        mNumpadButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mNumpad.setVisibility(
+                                mNumpad.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+                    }
+                });
+
+        mHangUp = findViewById(R.id.hang_up);
+        mHangUp.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        LinphoneManager.getCallManager().terminateCurrentCallOrConferenceOrAll();
+                    }
+                });
+
+        mChat = findViewById(R.id.chat);
+        mChat.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        goToChatList();
+                    }
+                });
+
+        mPause = findViewById(R.id.pause);
+        mPause.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        togglePause(mCore.getCurrentCall());
+                    }
+                });
+
+        mSwitchCamera = findViewById(R.id.switchCamera);
+        mSwitchCamera.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        LinphoneManager.getCallManager().switchCamera();
+                    }
+                });
+
+        mRecoringInProgress = findViewById(R.id.recording);
+        mRecoringInProgress.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        toggleRecording();
+                    }
+                });
+
+        mMissedMessages = findViewById(R.id.missed_chats);
 
         DrawerLayout mSideMenu = findViewById(R.id.side_menu);
         RelativeLayout mSideMenuContent = findViewById(R.id.side_menu_content);
@@ -97,7 +274,7 @@ public class NewCallActivity extends ThemableActivity
                 new CoreListenerStub() {
                     @Override
                     public void onMessageReceived(Core core, ChatRoom cr, ChatMessage message) {
-                        // TODO: update unread message count
+                        updateMissedChatCount();
                     }
 
                     @Override
@@ -111,11 +288,10 @@ public class NewCallActivity extends ThemableActivity
                                 || state == Call.State.PausedByRemote
                                 || state == Call.State.Pausing) {
 
-                        } else if (state == Call.State.Resuming) {
-                            updateInterfaceDependingOnVideo(call);
-                        } else if (state == Call.State.StreamsRunning) {
-                            updateInterfaceDependingOnVideo(call);
-                        } else if (state == Call.State.UpdatedByRemote) {
+                        } else if (state == Call.State.Resuming
+                                || state == Call.State.StreamsRunning
+                                || state == Call.State.UpdatedByRemote) {
+                            updateButtons();
                             updateInterfaceDependingOnVideo(call);
                         }
                     }
@@ -135,14 +311,18 @@ public class NewCallActivity extends ThemableActivity
     protected void onResume() {
         super.onResume();
 
-        Core core = LinphoneManager.getCore();
-        if (core != null) {
-            core.addListener(mListener);
+        mCore = LinphoneManager.getCore();
+        if (mCore != null) {
+            mCore.addListener(mListener);
         }
+        mAudioManager = LinphoneManager.getAudioManager();
 
         updateButtons();
+        updateMissedChatCount();
+        updateInterfaceDependingOnVideo(mCore.getCurrentCall());
 
-        updateInterfaceDependingOnVideo(core.getCurrentCall());
+        setContactInformation();
+        ContactsManager.getInstance().addContactsListener(this);
     }
 
     @Override
@@ -181,7 +361,9 @@ public class NewCallActivity extends ThemableActivity
 
     @Override
     public void onRequestPermissionsResult(
-            int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {}
+            int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        // TODO
+    }
 
     private void checkAndRequestPermission(String permission, int result) {
         int permissionGranted = getPackageManager().checkPermission(permission, getPackageName());
@@ -199,9 +381,15 @@ public class NewCallActivity extends ThemableActivity
         }
     }
 
+    @Override
+    public void onContactsUpdated() {
+        setContactInformation();
+    }
+
+    // BUTTONS
+
     private void updateButtons() {
-        Core core = LinphoneManager.getCore();
-        Call call = core.getCurrentCall();
+        Call call = mCore.getCurrentCall();
 
         int recordAudioPermission =
                 getPackageManager()
@@ -210,13 +398,115 @@ public class NewCallActivity extends ThemableActivity
                 recordAudioPermission == PackageManager.PERMISSION_GRANTED;
 
         mMicro.setEnabled(recordAudioPermissionGranted);
-        mMicro.setSelected(!recordAudioPermissionGranted || !core.micEnabled());
+        mMicro.setSelected(!recordAudioPermissionGranted || !mCore.micEnabled());
 
         mSpeaker.setEnabled(true);
         mSpeaker.setSelected(LinphoneManager.getAudioManager().isAudioRoutedToSpeaker());
 
-        mVideo.setEnabled(LinphonePreferences.instance().isVideoEnabled());
+        mVideo.setEnabled(
+                LinphonePreferences.instance().isVideoEnabled()
+                        && call != null
+                        && !call.mediaInProgress());
         mVideo.setSelected(call != null && call.getCurrentParams().videoEnabled());
+        mSwitchCamera.setVisibility(
+                call != null && call.getCurrentParams().videoEnabled()
+                        ? View.VISIBLE
+                        : View.INVISIBLE);
+
+        mPause.setEnabled(call != null && !call.mediaInProgress());
+
+        mRecordCall.setSelected(call != null && call.isRecording());
+        mRecoringInProgress.setVisibility(
+                call != null && call.isRecording() ? View.VISIBLE : View.GONE);
+    }
+
+    private void toggleMic() {
+        mCore.enableMic(!mCore.micEnabled());
+        mMicro.setSelected(!mCore.micEnabled());
+    }
+
+    private void toggleSpeaker() {
+        if (mAudioManager.isAudioRoutedToSpeaker()) {
+            mAudioManager.routeAudioToEarPiece();
+        } else {
+            mAudioManager.routeAudioToSpeaker();
+        }
+        mSpeaker.setSelected(mAudioManager.isAudioRoutedToSpeaker());
+    }
+
+    private void toggleVideo() {
+        Call call = mCore.getCurrentCall();
+        if (call == null) return;
+
+        mVideoInviteInProgress.setVisibility(View.VISIBLE);
+        mVideo.setEnabled(false);
+        if (call.getCurrentParams().videoEnabled()) {
+            mHandler.removeCallbacks(mHideControlsRunnable);
+            LinphoneManager.getCallManager().removeVideo();
+
+        } else {
+            LinphoneManager.getCallManager().addVideo();
+        }
+    }
+
+    private void togglePause(Call call) {
+        if (call == null) return;
+
+        if (call == mCore.getCurrentCall()) {
+            call.pause();
+            mPause.setSelected(true);
+        } else if (call.getState() == Call.State.Paused) {
+            call.resume();
+            mPause.setSelected(false);
+        }
+    }
+
+    private void toggleExtrasButtons() {
+        mExtrasButtons.setSelected(!mExtrasButtons.isSelected());
+        mAddCall.setVisibility(mExtrasButtons.isSelected() ? View.VISIBLE : View.GONE);
+        mTransferCall.setVisibility(mExtrasButtons.isSelected() ? View.VISIBLE : View.GONE);
+        mRecordCall.setVisibility(mExtrasButtons.isSelected() ? View.VISIBLE : View.GONE);
+        mConference.setVisibility(mExtrasButtons.isSelected() ? View.VISIBLE : View.GONE);
+    }
+
+    private void toggleRecording() {
+        Call call = mCore.getCurrentCall();
+        if (call == null) return;
+
+        if (call.isRecording()) {
+            call.stopRecording();
+        } else {
+            call.startRecording();
+        }
+        mRecordCall.setSelected(call.isRecording());
+        mRecoringInProgress.setVisibility(call.isRecording() ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    private void updateMissedChatCount() {
+        int count = 0;
+        if (mCore != null) {
+            count = mCore.getUnreadChatMessageCountFromActiveLocals();
+        }
+
+        if (count > 0) {
+            mMissedMessages.setText(String.valueOf(count));
+            mMissedMessages.setVisibility(View.VISIBLE);
+        } else {
+            mMissedMessages.clearAnimation();
+            mMissedMessages.setVisibility(View.GONE);
+        }
+    }
+
+    private void updateButtonsVisibility(boolean visible) {
+        findViewById(R.id.status_bar_fragment).setVisibility(visible ? View.VISIBLE : View.GONE);
+        mActiveCalls.setVisibility(visible ? View.VISIBLE : View.GONE);
+        mMenu.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    private void makeButtonsVisibleTemporary() {
+        updateButtonsVisibility(true);
+        mHandler.removeCallbacks(mHideControlsRunnable);
+        mHandler.postDelayed(mHideControlsRunnable, SECONDS_BEFORE_HIDING_CONTROLS);
     }
 
     // VIDEO RELATED
@@ -224,36 +514,24 @@ public class NewCallActivity extends ThemableActivity
     private void updateInterfaceDependingOnVideo(Call call) {
         if (call == null) return;
 
+        mVideoInviteInProgress.setVisibility(View.GONE);
+        mVideo.setEnabled(LinphonePreferences.instance().isVideoEnabled());
+
         boolean videoEnabled =
                 LinphonePreferences.instance().isVideoEnabled()
                         && call.getCurrentParams().videoEnabled();
 
-        findViewById(R.id.status_bar_fragment)
-                .setVisibility(videoEnabled ? View.GONE : View.VISIBLE);
-        mActiveCalls.setVisibility(videoEnabled ? View.GONE : View.VISIBLE);
-        mMenu.setVisibility(videoEnabled ? View.GONE : View.VISIBLE);
+        mContactAvatar.setVisibility(videoEnabled ? View.GONE : View.VISIBLE);
         mRemoteVideo.setVisibility(videoEnabled ? View.VISIBLE : View.GONE);
         mLocalPreview.setVisibility(videoEnabled ? View.VISIBLE : View.GONE);
+        mSwitchCamera.setVisibility(videoEnabled ? View.VISIBLE : View.INVISIBLE);
+        updateButtonsVisibility(!videoEnabled);
         mVideo.setSelected(videoEnabled);
         LinphoneManager.getInstance().enableProximitySensing(!videoEnabled);
 
         if (videoEnabled) {
+            mAudioManager.routeAudioToSpeaker();
             resizePreview(call);
-        }
-    }
-
-    private void startVideo(Call call) {
-        if (call == null) return;
-        if (call.getState() == Call.State.End || call.getState() == Call.State.Released) return;
-        if (!LinphonePreferences.instance().isVideoEnabled()
-                || call.getCurrentParams().videoEnabled()) {
-            return;
-        }
-
-        if (!call.getRemoteParams().lowBandwidthEnabled()) {
-            LinphoneManager.getCallManager().addVideo();
-        } else {
-            Toast.makeText(this, getString(R.string.error_low_bandwidth), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -295,28 +573,28 @@ public class NewCallActivity extends ThemableActivity
         Log.d("[Call Activity] [Video] Video preview size set to " + width + "x" + height);
     }
 
-    private void switchCamera() {
-        try {
-            Core core = LinphoneManager.getCore();
-            String currentDevice = core.getVideoDevice();
-            String[] devices = core.getVideoDevicesList();
-            int index = 0;
-            for (String d : devices) {
-                if (d.equals(currentDevice)) {
-                    break;
-                }
-                index++;
-            }
-
-            String newDevice;
-            if (index == 1) newDevice = devices[0];
-            else if (devices.length > 1) newDevice = devices[1];
-            else newDevice = devices[index];
-            core.setVideoDevice(newDevice);
-
-            LinphoneManager.getCallManager().updateCall();
-        } catch (ArithmeticException ae) {
-            Log.e("[Call Activity] [Video] Cannot swtich camera : no camera");
+    private void moveLocalPreview(MotionEvent motionEvent) {
+        switch (motionEvent.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                mPreviewX = (int) motionEvent.getX();
+                mPreviewY = (int) motionEvent.getY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                int x = (int) motionEvent.getX();
+                int y = (int) motionEvent.getY();
+                RelativeLayout.LayoutParams lp =
+                        (RelativeLayout.LayoutParams) mLocalPreview.getLayoutParams();
+                lp.addRule(
+                        RelativeLayout.ALIGN_PARENT_BOTTOM,
+                        0); // Clears the rule, as there is no removeRule until API
+                // 17.
+                lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
+                int left = lp.leftMargin + (x - mPreviewX);
+                int top = lp.topMargin + (y - mPreviewY);
+                lp.leftMargin = left;
+                lp.topMargin = top;
+                mLocalPreview.setLayoutParams(lp);
+                break;
         }
     }
 
@@ -340,5 +618,23 @@ public class NewCallActivity extends ThemableActivity
         Intent intent = new Intent();
         intent.setClass(this, ChatActivity.class);
         startActivity(intent);
+    }
+
+    // CONTACT
+
+    private void setContactInformation() {
+        Call call = mCore.getCurrentCall();
+        if (call == null) return;
+
+        LinphoneContact contact =
+                ContactsManager.getInstance().findContactFromAddress(call.getRemoteAddress());
+        if (contact != null) {
+            ContactAvatar.displayAvatar(contact, mContactAvatar, true);
+            mContactName.setText(contact.getFullName());
+        } else {
+            String displayName = LinphoneUtils.getAddressDisplayName(call.getRemoteAddress());
+            ContactAvatar.displayAvatar(displayName, mContactAvatar, true);
+            mContactName.setText(displayName);
+        }
     }
 }
