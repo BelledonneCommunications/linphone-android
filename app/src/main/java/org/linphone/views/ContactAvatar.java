@@ -20,27 +20,23 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.graphics.Bitmap;
-import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import java.io.IOException;
 import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.ChatRoomSecurityLevel;
-import org.linphone.core.tools.Log;
+import org.linphone.utils.ImageUtils;
 
 class ContactAvatarHolder {
     public final ImageView contactPicture;
-    public final ImageView avatarMask;
     public final ImageView avatarBorder;
     public final ImageView securityLevel;
     public final TextView generatedAvatar;
 
     public ContactAvatarHolder(View v) {
         contactPicture = v.findViewById(R.id.contact_picture);
-        avatarMask = v.findViewById(R.id.mask);
         securityLevel = v.findViewById(R.id.security_level);
         generatedAvatar = v.findViewById(R.id.generated_avatar);
         avatarBorder = v.findViewById(R.id.border);
@@ -99,8 +95,7 @@ public class ContactAvatar {
         }
     }
 
-    private static void displayAvatar(
-            String displayName, View v, boolean showBorder, int maskResource) {
+    public static void displayAvatar(String displayName, View v, boolean showBorder) {
         if (displayName == null || v == null) return;
 
         ContactAvatarHolder holder = new ContactAvatarHolder(v);
@@ -123,20 +118,13 @@ public class ContactAvatar {
         }
         holder.securityLevel.setVisibility(View.GONE);
 
-        if (maskResource != 0) {
-            holder.avatarMask.setImageResource(maskResource);
-        }
         if (showBorder) {
             holder.avatarBorder.setVisibility(View.VISIBLE);
         }
     }
 
-    public static void displayAvatar(String displayName, View v, boolean showBorder) {
-        displayAvatar(displayName, v, showBorder, 0);
-    }
-
     public static void displayAvatar(String displayName, View v) {
-        displayAvatar(displayName, v, false, 0);
+        displayAvatar(displayName, v, false);
     }
 
     public static void displayAvatar(
@@ -145,8 +133,7 @@ public class ContactAvatar {
         setSecurityLevel(securityLevel, v);
     }
 
-    private static void displayAvatar(
-            LinphoneContact contact, View v, boolean showBorder, int maskResource) {
+    public static void displayAvatar(LinphoneContact contact, View v, boolean showBorder) {
         if (contact == null || v == null) return;
 
         ContactAvatarHolder holder = new ContactAvatarHolder(v);
@@ -166,17 +153,9 @@ public class ContactAvatar {
         holder.contactPicture.setVisibility(View.VISIBLE);
         holder.securityLevel.setVisibility(View.GONE);
 
-        Bitmap bm = null;
-        try {
-            if (contact.getThumbnailUri() != null) {
-                bm =
-                        MediaStore.Images.Media.getBitmap(
-                                LinphoneService.instance().getContentResolver(),
-                                contact.getThumbnailUri());
-            }
-        } catch (IOException e) {
-            Log.e(e);
-        }
+        Bitmap bm =
+                ImageUtils.getRoundBitmapFromUri(
+                        LinphoneService.instance(), contact.getThumbnailUri());
         if (bm != null) {
             holder.contactPicture.setImageBitmap(bm);
             holder.contactPicture.setVisibility(View.VISIBLE);
@@ -190,20 +169,13 @@ public class ContactAvatar {
             holder.generatedAvatar.setVisibility(View.VISIBLE);
         }
 
-        if (maskResource != 0) {
-            holder.avatarMask.setImageResource(maskResource);
-        }
         if (showBorder) {
             holder.avatarBorder.setVisibility(View.VISIBLE);
         }
     }
 
-    public static void displayAvatar(LinphoneContact contact, View v, boolean showBorder) {
-        displayAvatar(contact, v, showBorder, 0);
-    }
-
     public static void displayAvatar(LinphoneContact contact, View v) {
-        displayAvatar(contact, v, false, 0);
+        displayAvatar(contact, v, false);
     }
 
     public static void displayAvatar(
