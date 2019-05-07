@@ -27,7 +27,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Icon;
 import android.util.ArraySet;
 import java.util.Set;
-import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.chat.ChatActivity;
 import org.linphone.contacts.ContactsManager;
@@ -59,9 +58,7 @@ public class LinphoneShortcutManager {
 
         Bitmap bm = null;
         if (contact != null && contact.getThumbnailUri() != null) {
-            bm =
-                    ImageUtils.getRoundBitmapFromUri(
-                            LinphoneService.instance(), contact.getThumbnailUri());
+            bm = ImageUtils.getRoundBitmapFromUri(mContext, contact.getThumbnailUri());
         }
         Icon icon =
                 bm == null
@@ -101,9 +98,7 @@ public class LinphoneShortcutManager {
         if (contact != null) {
             Bitmap bm = null;
             if (contact != null && contact.getThumbnailUri() != null) {
-                bm =
-                        ImageUtils.getRoundBitmapFromUri(
-                                LinphoneService.instance(), contact.getThumbnailUri());
+                bm = ImageUtils.getRoundBitmapFromUri(mContext, contact.getThumbnailUri());
             }
             Icon icon =
                     bm == null
