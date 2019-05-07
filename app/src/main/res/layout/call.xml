@@ -441,19 +441,22 @@
             android:layout_marginTop="40dp"
             android:background="?attr/backgroundColor">
 
-            <include
-                android:id="@+id/incall_stats"
-                layout="@layout/incall_stats" />
+            <fragment
+                android:id="@+id/call_stats_fragment"
+                android:name="org.linphone.call.CallStatsFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:layout="@layout/call_stats" />
 
         </RelativeLayout>
 
     </androidx.drawerlayout.widget.DrawerLayout>
 
     <fragment
-        android:id="@+id/status"
-        android:name="org.linphone.fragments.StatusFragment"
+        android:id="@+id/status_bar_fragment"
+        android:name="org.linphone.call.CallStatusBarFragment"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        tools:layout="@layout/status" />
+        tools:layout="@layout/status_bar" />
 
 </RelativeLayout>

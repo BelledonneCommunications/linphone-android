@@ -199,7 +199,7 @@
         </activity>
 
         <activity
-            android:name=".call.CallActivity"
+            android:name=".call.NewCallActivity"
             android:launchMode="singleTop"
             android:noHistory="true"
             android:showWhenLocked="true"
