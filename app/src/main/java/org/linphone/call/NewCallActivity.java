@@ -20,10 +20,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.util.DisplayMetrics;
@@ -32,7 +36,9 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.TextureView;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,6 +47,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
@@ -53,6 +60,7 @@ import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
+import org.linphone.core.CallParams;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.Core;
@@ -69,9 +77,12 @@ import org.linphone.views.Numpad;
 public class NewCallActivity extends ThemeableActivity
         implements CallStatusBarFragment.StatsClikedListener, ContactsUpdatedListener {
     private static final int SECONDS_BEFORE_HIDING_CONTROLS = 4000;
+    private static final int SECONDS_BEFORE_DENYING_CALL_UPDATE = 30000;
+
     private static final int CAMERA_TO_TOGGLE_VIDEO = 0;
     private static final int MIC_TO_DISABLE_MUTE = 1;
     private static final int WRITE_EXTERNAL_STORAGE_FOR_RECORDING = 2;
+    private static final int CAMERA_TO_ACCEPT_UPDATE = 3;
 
     private Handler mHandler = new Handler();
     private Runnable mHideControlsRunnable =
@@ -98,6 +109,8 @@ public class NewCallActivity extends ThemeableActivity
     private TextView mContactName, mMissedMessages;
     private ProgressBar mVideoInviteInProgress;
     private Chronometer mCallTimer;
+    private CountDownTimer mCallUpdateCountDownTimer;
+    private Dialog mCallUpdateDialog;
 
     private CallStatusBarFragment mStatusBarFragment;
     private CallStatsFragment mStatsFragment;
@@ -328,6 +341,27 @@ public class NewCallActivity extends ThemeableActivity
                             setCurrentCallContactInformation();
                             updateInterfaceDependingOnVideo();
                             updateCurrentCallTimer();
+                        } else if (state == Call.State.UpdatedByRemote) {
+                            // If the correspondent asks for video while in audio call
+                            boolean videoEnabled = LinphonePreferences.instance().isVideoEnabled();
+                            if (!videoEnabled) {
+                                // Video is disabled globally, don't even ask user
+                                acceptCallUpdate(false);
+                                return;
+                            }
+
+                            boolean remoteVideo = call.getRemoteParams().videoEnabled();
+                            boolean localVideo = call.getCurrentParams().videoEnabled();
+                            boolean autoAcceptCameraPolicy =
+                                    LinphonePreferences.instance()
+                                            .shouldAutomaticallyAcceptVideoRequests();
+                            if (remoteVideo
+                                    && !localVideo
+                                    && !autoAcceptCameraPolicy
+                                    && !core.isInConference()) {
+                                showAcceptCallUpdateDialog();
+                                createTimerForDialog(SECONDS_BEFORE_DENYING_CALL_UPDATE);
+                            }
                         }
 
                         updateCallsList();
@@ -414,6 +448,9 @@ public class NewCallActivity extends ThemeableActivity
                 break;
             case WRITE_EXTERNAL_STORAGE_FOR_RECORDING:
                 toggleRecording();
+                break;
+            case CAMERA_TO_ACCEPT_UPDATE:
+                acceptCallUpdate(true);
                 break;
         }
     }
@@ -699,6 +736,82 @@ public class NewCallActivity extends ThemeableActivity
         Intent intent = new Intent();
         intent.setClass(this, ChatActivity.class);
         startActivity(intent);
+    }
+
+    // CALL UPDATE
+
+    private void createTimerForDialog(long time) {
+        mCallUpdateCountDownTimer =
+                new CountDownTimer(time, 1000) {
+                    public void onTick(long millisUntilFinished) {}
+
+                    public void onFinish() {
+                        if (mCallUpdateDialog != null) {
+                            mCallUpdateDialog.dismiss();
+                            mCallUpdateDialog = null;
+                        }
+                        acceptCallUpdate(false);
+                    }
+                }.start();
+    }
+
+    private void acceptCallUpdate(boolean accept) {
+        if (mCallUpdateCountDownTimer != null) {
+            mCallUpdateCountDownTimer.cancel();
+        }
+        LinphoneManager.getCallManager().acceptCallUpdate(accept);
+    }
+
+    private void showAcceptCallUpdateDialog() {
+        mCallUpdateDialog = new Dialog(this);
+        mCallUpdateDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mCallUpdateDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        mCallUpdateDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+        mCallUpdateDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.dark_grey_color));
+        d.setAlpha(200);
+        mCallUpdateDialog.setContentView(R.layout.dialog);
+        mCallUpdateDialog
+                .getWindow()
+                .setLayout(
+                        WindowManager.LayoutParams.MATCH_PARENT,
+                        WindowManager.LayoutParams.MATCH_PARENT);
+        mCallUpdateDialog.getWindow().setBackgroundDrawable(d);
+
+        TextView customText = mCallUpdateDialog.findViewById(R.id.dialog_message);
+        customText.setText(getResources().getString(R.string.add_video_dialog));
+        mCallUpdateDialog.findViewById(R.id.dialog_delete_button).setVisibility(View.GONE);
+        Button accept = mCallUpdateDialog.findViewById(R.id.dialog_ok_button);
+        accept.setVisibility(View.VISIBLE);
+        accept.setText(R.string.accept);
+        Button cancel = mCallUpdateDialog.findViewById(R.id.dialog_cancel_button);
+        cancel.setText(R.string.decline);
+
+        accept.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (checkPermission(Manifest.permission.CAMERA)) {
+                            acceptCallUpdate(true);
+                        } else {
+                            checkAndRequestPermission(
+                                    Manifest.permission.CAMERA, CAMERA_TO_ACCEPT_UPDATE);
+                        }
+                        mCallUpdateDialog.dismiss();
+                        mCallUpdateDialog = null;
+                    }
+                });
+
+        cancel.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        acceptCallUpdate(false);
+                        mCallUpdateDialog.dismiss();
+                        mCallUpdateDialog = null;
+                    }
+                });
+        mCallUpdateDialog.show();
     }
 
     // OTHER

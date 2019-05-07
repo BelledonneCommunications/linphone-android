@@ -138,6 +138,23 @@ public class CallManager {
         return true;
     }
 
+    public void acceptCallUpdate(boolean accept) {
+        Core core = LinphoneManager.getCore();
+        Call call = core.getCurrentCall();
+        if (call == null) {
+            return;
+        }
+
+        CallParams params = core.createCallParams(call);
+        if (accept) {
+            params.enableVideo(true);
+            core.enableVideoCapture(true);
+            core.enableVideoDisplay(true);
+        }
+
+        call.acceptUpdate(params);
+    }
+
     public void inviteAddress(Address address, boolean forceZRTP) {
         boolean isLowBandwidthConnection =
                 !LinphoneUtils.isHighBandwidthConnection(LinphoneService.instance());
