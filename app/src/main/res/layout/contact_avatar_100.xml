@@ -23,22 +23,12 @@
         android:maxLines="1" />
 
     <ImageView
-        android:id="@+id/mask"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignParentLeft="true"
-        android:adjustViewBounds="true"
-        android:src="@drawable/avatar_mask"
-        android:tint="?attr/backgroundColor" />
-
-    <ImageView
         android:id="@+id/border"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_alignParentLeft="true"
         android:adjustViewBounds="true"
-        android:src="@drawable/avatar_border"
-        android:tint="?attr/accentColor" />
+        android:src="@drawable/avatar_border" />
 
     <ImageView
         android:id="@+id/security_level"
