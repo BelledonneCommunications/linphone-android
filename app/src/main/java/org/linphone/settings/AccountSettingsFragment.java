@@ -419,8 +419,9 @@ public class AccountSettingsFragment extends SettingsFragment {
                                 core.setDefaultProxyConfig(mProxyConfig);
                                 mUseAsDefault.setEnabled(false);
                             }
-                            // FIXME TODO
-                            // LinphoneActivity.instance().refreshAccounts();
+                            ((SettingsActivity) getActivity())
+                                    .getSideMenuFragment()
+                                    .displayAccountsInSideMenu();
                         } else {
                             Log.e("[Account Settings] No proxy config !");
                         }
@@ -536,9 +537,10 @@ public class AccountSettingsFragment extends SettingsFragment {
                                 core.removeAuthInfo(mAuthInfo);
                             }
                         }
-                        // FIXME TODO
-                        /*LinphoneActivity.instance().displaySettings();
-                        LinphoneActivity.instance().refreshAccounts();*/
+                        ((SettingsActivity) getActivity()).popBackStack();
+                        ((SettingsActivity) getActivity())
+                                .getSideMenuFragment()
+                                .displayAccountsInSideMenu();
                     }
                 });
 
