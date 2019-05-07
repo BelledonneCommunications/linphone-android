@@ -1,7 +1,7 @@
 package org.linphone.activities;
 
 /*
-ThemableActivity.java
+ThemeableActivity.java
 Copyright (C) 2019 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -23,9 +23,10 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import org.linphone.R;
+import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 
-public abstract class ThemableActivity extends AppCompatActivity {
+public abstract class ThemeableActivity extends AppCompatActivity {
     private int mTheme;
 
     @Override
@@ -44,15 +45,29 @@ public abstract class ThemableActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt("Theme", mTheme);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        mTheme = savedInstanceState.getInt("Theme");
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
 
         if (LinphonePreferences.instance().isDarkModeEnabled()) {
             if (mTheme != R.style.LinphoneStyleDark) {
+                Log.w("[Themeable Activity] Recreate Activity cause theme doesn't match");
                 recreate();
             }
         } else {
             if (mTheme != R.style.LinphoneStyleLight) {
+                Log.w("[Themeable Activity] Recreate Activity cause theme doesn't match");
                 recreate();
             }
         }

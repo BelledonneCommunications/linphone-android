@@ -184,7 +184,9 @@
             android:name=".call.NewCallActivity"
             android:launchMode="singleTop"
             android:noHistory="true"
-            android:showWhenLocked="true"/>
+            android:showWhenLocked="true"
+            android:resizeableActivity="true"
+            android:supportsPictureInPicture="true"/>
 
         <!-- Assistant activities -->
 

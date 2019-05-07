@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import android.os.Bundle;
 import org.linphone.LinphoneService;
 
-public abstract class LinphoneGenericActivity extends ThemableActivity {
+public abstract class LinphoneGenericActivity extends ThemeableActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

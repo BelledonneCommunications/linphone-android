@@ -206,7 +206,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.25"
-                        android:background="@drawable/unread_message_count_bg"
+                        android:background="@drawable/button_background_dark"
                         android:contentDescription="@string/content_description_numpad"
                         android:padding="15dp"
                         android:src="@drawable/footer_dialer" />
@@ -233,7 +233,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
-                            android:background="@drawable/unread_message_count_bg"
+                            android:background="@drawable/button_background_dark"
                             android:contentDescription="@string/content_description_chat_button"
                             android:padding="15dp"
                             android:src="@drawable/footer_chat" />
