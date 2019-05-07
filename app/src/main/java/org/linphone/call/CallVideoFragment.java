@@ -91,29 +91,7 @@ public class CallVideoFragment extends Fragment
                 new OnTouchListener() {
                     @Override
                     public boolean onTouch(View view, MotionEvent motionEvent) {
-                        switch (motionEvent.getAction()) {
-                            case MotionEvent.ACTION_DOWN:
-                                mPreviewX = (int) motionEvent.getX();
-                                mPreviewY = (int) motionEvent.getY();
-                                break;
-                            case MotionEvent.ACTION_MOVE:
-                                int x = (int) motionEvent.getX();
-                                int y = (int) motionEvent.getY();
-                                RelativeLayout.LayoutParams lp =
-                                        (RelativeLayout.LayoutParams)
-                                                mCaptureView.getLayoutParams();
-                                lp.addRule(
-                                        RelativeLayout.ALIGN_PARENT_BOTTOM,
-                                        0); // Clears the rule, as there is no removeRule until API
-                                // 17.
-                                lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
-                                int left = lp.leftMargin + (x - mPreviewX);
-                                int top = lp.topMargin + (y - mPreviewY);
-                                lp.leftMargin = left;
-                                lp.topMargin = top;
-                                view.setLayoutParams(lp);
-                                break;
-                        }
+
                         return true;
                     }
                 });
@@ -193,7 +171,7 @@ public class CallVideoFragment extends Fragment
             else newDevice = devices[index];
             core.setVideoDevice(newDevice);
 
-            LinphoneManager.getCallManager().updateCall();
+            // LinphoneManager.getCallManager().updateCall();
         } catch (ArithmeticException ae) {
             Log.e("[Video Fragment] Cannot swtich camera : no camera");
         }

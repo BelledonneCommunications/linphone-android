@@ -17,7 +17,7 @@
             <TextureView
                 android:id="@+id/remote_video_texture"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"/>
 
             <TextureView
                 android:id="@+id/local_preview_texture"
@@ -372,7 +372,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.25"
-                        android:background="@color/dark_grey_color"
+                        android:background="@drawable/button_background_dark"
                         android:contentDescription="@string/content_description_numpad"
                         android:padding="15dp"
                         android:src="@drawable/footer_dialer" />
@@ -399,7 +399,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
-                            android:background="@color/dark_grey_color"
+                            android:background="@drawable/button_background_dark"
                             android:contentDescription="@string/content_description_chat_button"
                             android:padding="15dp"
                             android:src="@drawable/footer_chat" />
