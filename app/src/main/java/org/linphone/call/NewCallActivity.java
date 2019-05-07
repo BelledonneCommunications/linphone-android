@@ -69,6 +69,9 @@ import org.linphone.views.Numpad;
 public class NewCallActivity extends ThemeableActivity
         implements CallStatusBarFragment.StatsClikedListener, ContactsUpdatedListener {
     private static final int SECONDS_BEFORE_HIDING_CONTROLS = 4000;
+    private static final int CAMERA_TO_TOGGLE_VIDEO = 0;
+    private static final int MIC_TO_DISABLE_MUTE = 1;
+    private static final int WRITE_EXTERNAL_STORAGE_FOR_RECORDING = 2;
 
     private Handler mHandler = new Handler();
     private Runnable mHideControlsRunnable =
@@ -147,7 +150,10 @@ public class NewCallActivity extends ThemeableActivity
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        toggleVideo();
+                        if (checkAndRequestPermission(
+                                Manifest.permission.CAMERA, CAMERA_TO_TOGGLE_VIDEO)) {
+                            toggleVideo();
+                        }
                     }
                 });
 
@@ -156,7 +162,10 @@ public class NewCallActivity extends ThemeableActivity
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        toggleMic();
+                        if (checkAndRequestPermission(
+                                Manifest.permission.RECORD_AUDIO, MIC_TO_DISABLE_MUTE)) {
+                            toggleMic();
+                        }
                     }
                 });
 
@@ -211,7 +220,11 @@ public class NewCallActivity extends ThemeableActivity
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        toggleRecording();
+                        if (checkAndRequestPermission(
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                WRITE_EXTERNAL_STORAGE_FOR_RECORDING)) {
+                            toggleRecording();
+                        }
                     }
                 });
 
@@ -389,23 +402,39 @@ public class NewCallActivity extends ThemeableActivity
     @Override
     public void onRequestPermissionsResult(
             int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        // TODO
+        // Permission not granted, won't change anything
+        if (grantResults[0] != PackageManager.PERMISSION_GRANTED) return;
+
+        switch (requestCode) {
+            case CAMERA_TO_TOGGLE_VIDEO:
+                toggleVideo();
+                break;
+            case MIC_TO_DISABLE_MUTE:
+                toggleMic();
+                break;
+            case WRITE_EXTERNAL_STORAGE_FOR_RECORDING:
+                toggleRecording();
+                break;
+        }
     }
 
-    private void checkAndRequestPermission(String permission, int result) {
-        int permissionGranted = getPackageManager().checkPermission(permission, getPackageName());
+    private boolean checkPermission(String permission) {
+        int granted = getPackageManager().checkPermission(permission, getPackageName());
         Log.i(
                 "[Permission] "
                         + permission
-                        + " is "
-                        + (permissionGranted == PackageManager.PERMISSION_GRANTED
-                                ? "granted"
-                                : "denied"));
+                        + " permission is "
+                        + (granted == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+        return granted == PackageManager.PERMISSION_GRANTED;
+    }
 
-        if (permissionGranted != PackageManager.PERMISSION_GRANTED) {
+    private boolean checkAndRequestPermission(String permission, int result) {
+        if (!checkPermission(permission)) {
             Log.i("[Permission] Asking for " + permission);
             ActivityCompat.requestPermissions(this, new String[] {permission}, result);
+            return false;
         }
+        return true;
     }
 
     @Override
@@ -437,14 +466,9 @@ public class NewCallActivity extends ThemeableActivity
     private void updateButtons() {
         Call call = mCore.getCurrentCall();
 
-        int recordAudioPermission =
-                getPackageManager()
-                        .checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName());
-        boolean recordAudioPermissionGranted =
-                recordAudioPermission == PackageManager.PERMISSION_GRANTED;
-
-        mMicro.setEnabled(recordAudioPermissionGranted);
-        mMicro.setSelected(!recordAudioPermissionGranted || !mCore.micEnabled());
+        boolean recordAudioPermissionGranted = checkPermission(Manifest.permission.RECORD_AUDIO);
+        mCore.enableMic(recordAudioPermissionGranted);
+        mMicro.setSelected(!mCore.micEnabled());
 
         mSpeaker.setEnabled(true);
         mSpeaker.setSelected(LinphoneManager.getAudioManager().isAudioRoutedToSpeaker());
