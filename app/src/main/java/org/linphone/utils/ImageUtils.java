@@ -21,7 +21,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
@@ -31,12 +30,11 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import org.linphone.R;
 
 public class ImageUtils {
 
     public static Bitmap getRoundBitmapFromUri(Context context, Uri fromPictureUri) {
-        Bitmap bm;
+        Bitmap bm = null;
         Bitmap roundBm;
         if (fromPictureUri != null) {
             try {
@@ -44,10 +42,8 @@ public class ImageUtils {
                         MediaStore.Images.Media.getBitmap(
                                 context.getContentResolver(), fromPictureUri);
             } catch (Exception e) {
-                bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.topbar_avatar);
+                return null;
             }
-        } else {
-            bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.topbar_avatar);
         }
         if (bm != null) {
             roundBm = getRoundBitmap(bm);

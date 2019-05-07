@@ -20,35 +20,33 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.graphics.Bitmap;
-import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import java.io.IOException;
-import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.ChatRoomSecurityLevel;
-import org.linphone.core.tools.Log;
+import org.linphone.utils.ImageUtils;
 
 class ContactAvatarHolder {
     public final ImageView contactPicture;
-    public final ImageView avatarMask;
     public final ImageView avatarBorder;
     public final ImageView securityLevel;
     public final TextView generatedAvatar;
+    public final ImageView generatedAvatarBackground;
 
     public ContactAvatarHolder(View v) {
         contactPicture = v.findViewById(R.id.contact_picture);
-        avatarMask = v.findViewById(R.id.mask);
         securityLevel = v.findViewById(R.id.security_level);
         generatedAvatar = v.findViewById(R.id.generated_avatar);
+        generatedAvatarBackground = v.findViewById(R.id.generated_avatar_background);
         avatarBorder = v.findViewById(R.id.border);
     }
 
     public void init() {
         contactPicture.setVisibility(View.VISIBLE);
         generatedAvatar.setVisibility(View.VISIBLE);
+        generatedAvatarBackground.setVisibility(View.VISIBLE);
         securityLevel.setVisibility(View.GONE);
         avatarBorder.setVisibility(View.GONE);
     }
@@ -99,8 +97,7 @@ public class ContactAvatar {
         }
     }
 
-    private static void displayAvatar(
-            String displayName, View v, boolean showBorder, int maskResource) {
+    public static void displayAvatar(String displayName, View v, boolean showBorder) {
         if (displayName == null || v == null) return;
 
         ContactAvatarHolder holder = new ContactAvatarHolder(v);
@@ -112,31 +109,27 @@ public class ContactAvatar {
             // If display name is a phone number, use default avatar because generated one will be
             // +...
             holder.generatedAvatar.setVisibility(View.GONE);
+            holder.generatedAvatarBackground.setVisibility(View.GONE);
         } else {
             String generatedAvatar = generateAvatar(displayName);
             if (generatedAvatar != null && generatedAvatar.length() > 0) {
                 holder.generatedAvatar.setText(generatedAvatar);
                 holder.generatedAvatar.setVisibility(View.VISIBLE);
+                holder.generatedAvatarBackground.setVisibility(View.VISIBLE);
             } else {
                 holder.generatedAvatar.setVisibility(View.GONE);
+                holder.generatedAvatarBackground.setVisibility(View.GONE);
             }
         }
         holder.securityLevel.setVisibility(View.GONE);
 
-        if (maskResource != 0) {
-            holder.avatarMask.setImageResource(maskResource);
-        }
         if (showBorder) {
             holder.avatarBorder.setVisibility(View.VISIBLE);
         }
     }
 
-    public static void displayAvatar(String displayName, View v, boolean showBorder) {
-        displayAvatar(displayName, v, showBorder, 0);
-    }
-
     public static void displayAvatar(String displayName, View v) {
-        displayAvatar(displayName, v, false, 0);
+        displayAvatar(displayName, v, false);
     }
 
     public static void displayAvatar(
@@ -145,8 +138,7 @@ public class ContactAvatar {
         setSecurityLevel(securityLevel, v);
     }
 
-    private static void displayAvatar(
-            LinphoneContact contact, View v, boolean showBorder, int maskResource) {
+    public static void displayAvatar(LinphoneContact contact, View v, boolean showBorder) {
         if (contact == null || v == null) return;
 
         ContactAvatarHolder holder = new ContactAvatarHolder(v);
@@ -163,47 +155,28 @@ public class ContactAvatar {
                                 : contact.getFullName()));
 
         holder.generatedAvatar.setVisibility(View.GONE);
+        holder.generatedAvatarBackground.setVisibility(View.GONE);
         holder.contactPicture.setVisibility(View.VISIBLE);
         holder.securityLevel.setVisibility(View.GONE);
 
-        Bitmap bm = null;
-        try {
-            if (contact.getThumbnailUri() != null) {
-                bm =
-                        MediaStore.Images.Media.getBitmap(
-                                LinphoneService.instance().getContentResolver(),
-                                contact.getThumbnailUri());
-            }
-        } catch (IOException e) {
-            Log.e(e);
-        }
+        Bitmap bm = ImageUtils.getRoundBitmapFromUri(v.getContext(), contact.getThumbnailUri());
         if (bm != null) {
             holder.contactPicture.setImageBitmap(bm);
             holder.contactPicture.setVisibility(View.VISIBLE);
             holder.generatedAvatar.setVisibility(View.GONE);
+            holder.generatedAvatarBackground.setVisibility(View.GONE);
         } else if (generated_avatars) {
-            holder.generatedAvatar.setText(
-                    generateAvatar(
-                            contact.getFullName() == null
-                                    ? contact.getFirstName() + " " + contact.getLastName()
-                                    : contact.getFullName()));
             holder.generatedAvatar.setVisibility(View.VISIBLE);
+            holder.generatedAvatarBackground.setVisibility(View.VISIBLE);
         }
 
-        if (maskResource != 0) {
-            holder.avatarMask.setImageResource(maskResource);
-        }
         if (showBorder) {
             holder.avatarBorder.setVisibility(View.VISIBLE);
         }
     }
 
-    public static void displayAvatar(LinphoneContact contact, View v, boolean showBorder) {
-        displayAvatar(contact, v, showBorder, 0);
-    }
-
     public static void displayAvatar(LinphoneContact contact, View v) {
-        displayAvatar(contact, v, false, 0);
+        displayAvatar(contact, v, false);
     }
 
     public static void displayAvatar(
@@ -224,6 +197,7 @@ public class ContactAvatar {
         ContactAvatarHolder holder = new ContactAvatarHolder(v);
         holder.contactPicture.setImageResource(R.drawable.chat_group_avatar);
         holder.generatedAvatar.setVisibility(View.GONE);
+        holder.generatedAvatarBackground.setVisibility(View.GONE);
         holder.securityLevel.setVisibility(View.GONE);
         holder.avatarBorder.setVisibility(View.GONE);
     }
