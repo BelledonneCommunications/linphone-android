@@ -79,6 +79,7 @@
     <bool name="hide_camera_settings">false</bool>
     <bool name="hide_in_call_stats">false</bool>
     <bool name="do_not_use_sliders_to_answer_hangup_call_if_phone_unlocked">true</bool>
+    <bool name="allow_pip_while_video_call">true</bool>
 
     <!-- Settings -->
     <bool name="disable_every_log">false</bool>
