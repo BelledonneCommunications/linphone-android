@@ -67,7 +67,6 @@ import org.linphone.core.CoreListener;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.VideoDefinition;
 import org.linphone.core.tools.Log;
-import org.linphone.receivers.BluetoothManager;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.AndroidAudioManager;
 import org.linphone.utils.LinphoneUtils;
@@ -229,7 +228,7 @@ public class CallActivity extends ThemeableActivity
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        BluetoothManager.getInstance().routeAudioToBluetooth();
+                        mAudioManager.routeAudioToBluetooth();
                         updateAudioRouteButtons();
                     }
                 });
@@ -462,7 +461,7 @@ public class CallActivity extends ThemeableActivity
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (LinphoneManager.getAudioManager().onKeyVolumeAdjust(keyCode)) return true;
+        if (mAudioManager.onKeyVolumeAdjust(keyCode)) return true;
         return super.onKeyDown(keyCode, event);
     }
 
@@ -554,9 +553,9 @@ public class CallActivity extends ThemeableActivity
     // BUTTONS
 
     private void updateAudioRouteButtons() {
-        mRouteSpeaker.setSelected(LinphoneManager.getAudioManager().isAudioRoutedToSpeaker());
-        mRouteBluetooth.setSelected(BluetoothManager.getInstance().isUsingBluetoothAudioRoute());
-        mRouteEarpiece.setSelected(LinphoneManager.getAudioManager().isAudioRoutedToEarpiece());
+        mRouteSpeaker.setSelected(mAudioManager.isAudioRoutedToSpeaker());
+        mRouteBluetooth.setSelected(mAudioManager.isUsingBluetoothAudioRoute());
+        mRouteEarpiece.setSelected(mAudioManager.isAudioRoutedToEarpiece());
     }
 
     private void updateButtons() {
@@ -566,11 +565,11 @@ public class CallActivity extends ThemeableActivity
         mCore.enableMic(recordAudioPermissionGranted);
         mMicro.setSelected(!mCore.micEnabled());
 
-        mSpeaker.setSelected(LinphoneManager.getAudioManager().isAudioRoutedToSpeaker());
+        mSpeaker.setSelected(mAudioManager.isAudioRoutedToSpeaker());
 
         updateAudioRouteButtons();
 
-        boolean isBluetoothAvailable = BluetoothManager.getInstance().isBluetoothHeadsetAvailable();
+        boolean isBluetoothAvailable = mAudioManager.isBluetoothHeadsetConnected();
         mSpeaker.setVisibility(isBluetoothAvailable ? View.GONE : View.VISIBLE);
         mAudioRoute.setVisibility(isBluetoothAvailable ? View.VISIBLE : View.GONE);
 
