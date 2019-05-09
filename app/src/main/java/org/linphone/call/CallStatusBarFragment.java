@@ -159,6 +159,10 @@ public class CallStatusBarFragment extends Fragment {
                 if (call != null) {
                     startCallQuality();
                     refreshStatusItems(call);
+
+                    if (!call.getAuthenticationTokenVerified()) {
+                        showZRTPDialog(call);
+                    }
                 }
 
                 // We are obviously connected
@@ -169,10 +173,6 @@ public class CallStatusBarFragment extends Fragment {
                     mStatusLed.setImageResource(
                             getStatusIconResource(core.getDefaultProxyConfig().getState()));
                     mStatusText.setText(getStatusIconText(core.getDefaultProxyConfig().getState()));
-                }
-
-                if (!call.getAuthenticationTokenVerified()) {
-                    showZRTPDialog(call);
                 }
             }
         } else {

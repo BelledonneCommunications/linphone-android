@@ -184,7 +184,6 @@
         <activity
             android:name=".call.CallActivity"
             android:launchMode="singleTop"
-            android:noHistory="true"
             android:showWhenLocked="true"
             android:resizeableActivity="true"
             android:supportsPictureInPicture="true"/>
@@ -261,12 +260,6 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_SHUTDOWN" />
-            </intent-filter>
-        </receiver>
-
-        <receiver android:name=".receivers.PhoneStateChangedReceiver">
-            <intent-filter android:priority="999">
-                <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>
         </receiver>
 
