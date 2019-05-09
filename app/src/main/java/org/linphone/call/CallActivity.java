@@ -242,6 +242,7 @@ public class CallActivity extends ThemeableActivity
                     }
                 });
         mExtrasButtons.setSelected(false);
+        mExtrasButtons.setEnabled(!getResources().getBoolean(R.bool.disable_options_in_call));
 
         mAddCall = findViewById(R.id.add_call);
         mAddCall.setOnClickListener(
@@ -260,6 +261,7 @@ public class CallActivity extends ThemeableActivity
                         goBackToDialerAndDisplayTransferButton();
                     }
                 });
+        mTransferCall.setEnabled(getResources().getBoolean(R.bool.allow_transfers));
 
         mConference = findViewById(R.id.conference);
         mConference.setOnClickListener(
@@ -445,6 +447,7 @@ public class CallActivity extends ThemeableActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         Core core = LinphoneManager.getCore();
         if (core != null) {
             core.removeListener(mListener);
