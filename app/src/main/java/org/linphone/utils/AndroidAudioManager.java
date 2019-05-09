@@ -183,7 +183,13 @@ public class AndroidAudioManager {
     }
 
     public boolean isAudioRoutedToSpeaker() {
-        return mAudioManager.isSpeakerphoneOn();
+        return mAudioManager.isSpeakerphoneOn()
+                && !BluetoothManager.getInstance().isUsingBluetoothAudioRoute();
+    }
+
+    public boolean isAudioRoutedToEarpiece() {
+        return !mAudioManager.isSpeakerphoneOn()
+                && !BluetoothManager.getInstance().isUsingBluetoothAudioRoute();
     }
 
     /* Echo cancellation */
