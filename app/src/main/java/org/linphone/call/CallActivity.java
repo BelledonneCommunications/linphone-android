@@ -67,6 +67,7 @@ import org.linphone.core.CoreListener;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.VideoDefinition;
 import org.linphone.core.tools.Log;
+import org.linphone.receivers.BluetoothManager;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.AndroidAudioManager;
 import org.linphone.utils.LinphoneUtils;
@@ -106,6 +107,7 @@ public class CallActivity extends ThemeableActivity
     private ImageView mNumpadButton, mHangUp, mChat;
     private ImageView mPause, mSwitchCamera, mRecordingInProgress;
     private ImageView mExtrasButtons, mAddCall, mTransferCall, mRecordCall, mConference;
+    private ImageView mAudioRoute, mRouteEarpiece, mRouteSpeaker, mRouteBluetooth;
     private Numpad mNumpad;
     private TextView mContactName, mMissedMessages;
     private ProgressBar mVideoInviteInProgress;
@@ -190,6 +192,45 @@ public class CallActivity extends ThemeableActivity
                     @Override
                     public void onClick(View v) {
                         toggleSpeaker();
+                    }
+                });
+
+        mAudioRoute = findViewById(R.id.audio_route);
+        mAudioRoute.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        toggleAudioRouteButtons();
+                    }
+                });
+
+        mRouteEarpiece = findViewById(R.id.route_earpiece);
+        mRouteEarpiece.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mAudioManager.routeAudioToEarPiece();
+                        updateAudioRouteButtons();
+                    }
+                });
+
+        mRouteSpeaker = findViewById(R.id.route_speaker);
+        mRouteSpeaker.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mAudioManager.routeAudioToSpeaker();
+                        updateAudioRouteButtons();
+                    }
+                });
+
+        mRouteBluetooth = findViewById(R.id.route_bluetooth);
+        mRouteBluetooth.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        BluetoothManager.getInstance().routeAudioToBluetooth();
+                        updateAudioRouteButtons();
                     }
                 });
 
@@ -512,6 +553,12 @@ public class CallActivity extends ThemeableActivity
 
     // BUTTONS
 
+    private void updateAudioRouteButtons() {
+        mRouteSpeaker.setSelected(LinphoneManager.getAudioManager().isAudioRoutedToSpeaker());
+        mRouteBluetooth.setSelected(BluetoothManager.getInstance().isUsingBluetoothAudioRoute());
+        mRouteEarpiece.setSelected(LinphoneManager.getAudioManager().isAudioRoutedToEarpiece());
+    }
+
     private void updateButtons() {
         Call call = mCore.getCurrentCall();
 
@@ -519,8 +566,13 @@ public class CallActivity extends ThemeableActivity
         mCore.enableMic(recordAudioPermissionGranted);
         mMicro.setSelected(!mCore.micEnabled());
 
-        mSpeaker.setEnabled(true);
         mSpeaker.setSelected(LinphoneManager.getAudioManager().isAudioRoutedToSpeaker());
+
+        updateAudioRouteButtons();
+
+        boolean isBluetoothAvailable = BluetoothManager.getInstance().isBluetoothHeadsetAvailable();
+        mSpeaker.setVisibility(isBluetoothAvailable ? View.GONE : View.VISIBLE);
+        mAudioRoute.setVisibility(isBluetoothAvailable ? View.VISIBLE : View.GONE);
 
         mVideo.setEnabled(
                 LinphonePreferences.instance().isVideoEnabled()
@@ -576,6 +628,13 @@ public class CallActivity extends ThemeableActivity
             call.resume();
             mPause.setSelected(false);
         }
+    }
+
+    private void toggleAudioRouteButtons() {
+        mAudioRoute.setSelected(!mAudioRoute.isSelected());
+        mRouteEarpiece.setVisibility(mAudioRoute.isSelected() ? View.VISIBLE : View.GONE);
+        mRouteSpeaker.setVisibility(mAudioRoute.isSelected() ? View.VISIBLE : View.GONE);
+        mRouteBluetooth.setVisibility(mAudioRoute.isSelected() ? View.VISIBLE : View.GONE);
     }
 
     private void toggleExtrasButtons() {
