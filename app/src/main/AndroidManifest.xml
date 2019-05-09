@@ -241,11 +241,6 @@
 
         <!-- Other stuff -->
 
-        <activity
-            android:name=".purchase.InAppPurchaseActivity"
-            android:screenOrientation="nosensor">
-        </activity>
-
         <service
             android:name=".sync.SyncService"
             android:exported="true">
@@ -287,20 +282,6 @@
         <receiver android:name=".receivers.PhoneStateChangedReceiver">
             <intent-filter android:priority="999">
                 <action android:name="android.intent.action.PHONE_STATE" />
-            </intent-filter>
-        </receiver>
-
-        <receiver android:name=".receivers.HookReceiver">
-            <intent-filter>
-                <action android:name="com.base.module.phone.HOOKEVENT" />
-            </intent-filter>
-        </receiver>
-
-        <receiver
-            android:name=".receivers.AccountEnableReceiver"
-            android:permission="android.permission.USE_SIP">
-            <intent-filter>
-                <action android:name="org.linphone.intent.ACCOUNTACTIVATE" />
             </intent-filter>
         </receiver>
 
