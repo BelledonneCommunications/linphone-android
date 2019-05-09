@@ -9,13 +9,7 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.CALL_PHONE" />
-    <!-- Needed to allow Linphone to install on tablets, since android.permission.CALL_PHONE implies android.hardware.telephony is required -->
-    <uses-feature
-        android:name="android.hardware.telephony"
-        android:required="false" />
 
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <!-- Needed to allow Linphone to install on tablets, since android.permission.CAMERA implies android.hardware.camera and android.hardware.camera.autofocus are required -->
@@ -23,7 +17,9 @@
         android:name="android.hardware.camera"
         android:required="false" />
 
+    <!-- Needed to be able to detect a GSM call and thus pause any active SIP call -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- Needed to be able to pick images from SD card to share in chat message -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <!-- Needed to store received images if the user wants to -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -31,21 +27,23 @@
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
     <!-- Needed to route the audio to the bluetooth headset if available -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
     <!-- Needed to pre fill the wizard email field (only if enabled in custom settings) -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- Needed by the SDK to be able to use WifiManager.MulticastLock -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <!-- Required for contacts sync account -->
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+    <!-- Required if Android < 6.0 to be able to use AccountManager for contacts & email auto-fill in assistant -->
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
-    <!-- Needed for in-app purchase -->
-    <!-- <uses-permission android:name="com.android.vending.BILLING"/> -->
     <!-- Needed for overlay widget and floating notifications -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <!-- Needed for kill application yourself -->
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
+    <!-- Needed for auto start at boot and to ensure the service won't be killed by OS while in call -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!-- Needed to get the current Do Not Disturb policy -->
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
 
@@ -63,6 +61,8 @@
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round">
 
+        <!-- Starting activities -->
+
         <activity
             android:name=".activities.SplashScreenActivity"
             android:noHistory="true"
@@ -77,12 +77,7 @@
         <activity
             android:name=".activities.LinphoneLauncherActivity"
             android:noHistory="true"
-            android:theme="@style/LinphoneLauncherStyle">
-        </activity>
-
-        <service
-            android:name=".LinphoneService"
-            android:label="@string/service_name" />
+            android:theme="@style/LinphoneLauncherStyle"/>
 
         <!-- Main activities -->
 
@@ -115,20 +110,14 @@
 
         <activity
             android:name=".activities.AboutActivity"
-            android:noHistory="true"
-            android:theme="@style/LinphoneStyleLight">
-        </activity>
+            android:noHistory="true"/>
 
         <activity
             android:name=".recording.RecordingsActivity"
-            android:noHistory="true"
-            android:theme="@style/LinphoneStyleLight">
-        </activity>
+            android:noHistory="true"/>
 
         <activity
-            android:name=".settings.SettingsActivity"
-            android:theme="@style/LinphoneStyleLight">
-        </activity>
+            android:name=".settings.SettingsActivity"/>
 
         <activity
             android:name=".chat.ChatActivity"
@@ -187,77 +176,54 @@
             android:launchMode="singleTop"
             android:noHistory="true"
             android:showWhenLocked="true"
-            android:turnScreenOn="true"
-            android:theme="@style/LinphoneStyleLight">
-        </activity>
+            android:turnScreenOn="true"/>
 
         <activity
             android:name=".call.CallOutgoingActivity"
             android:launchMode="singleTop"
-            android:noHistory="true"
-            android:theme="@style/LinphoneStyleLight">
-        </activity>
+            android:noHistory="true"/>
 
         <activity
             android:name=".call.CallActivity"
             android:launchMode="singleTop"
             android:noHistory="true"
             android:showWhenLocked="true"
-            android:theme="@style/LinphoneStyleLight">
-        </activity>
+            android:resizeableActivity="true"
+            android:supportsPictureInPicture="true"
+            android:hardwareAccelerated="true"/>
 
         <!-- Assistant activities -->
 
         <activity
-            android:name=".assistant.MenuAssistantActivity"
-            android:theme="@style/LinphoneStyleLight">
-        </activity>
+            android:name=".assistant.MenuAssistantActivity"/>
         <activity
-            android:name=".assistant.AccountConnectionAssistantActivity"
-            android:theme="@style/LinphoneStyleLight">
-        </activity>
+            android:name=".assistant.AccountConnectionAssistantActivity"/>
         <activity
-            android:name=".assistant.EmailAccountCreationAssistantActivity"
-            android:theme="@style/LinphoneStyleLight">
-        </activity>
+            android:name=".assistant.EmailAccountCreationAssistantActivity"/>
         <activity
-            android:name=".assistant.EmailAccountValidationAssistantActivity"
-            android:theme="@style/LinphoneStyleLight">
-        </activity>
+            android:name=".assistant.EmailAccountValidationAssistantActivity"/>
         <activity
-            android:name=".assistant.PhoneAccountCreationAssistantActivity"
-            android:theme="@style/LinphoneStyleLight">
-        </activity>
+            android:name=".assistant.PhoneAccountCreationAssistantActivity"/>
         <activity
-            android:name=".assistant.PhoneAccountValidationAssistantActivity"
-            android:theme="@style/LinphoneStyleLight">
-        </activity>
+            android:name=".assistant.PhoneAccountValidationAssistantActivity"/>
         <activity
-            android:name=".assistant.PhoneAccountLinkingAssistantActivity"
-            android:theme="@style/LinphoneStyleLight">
-        </activity>
+            android:name=".assistant.PhoneAccountLinkingAssistantActivity"/>
         <activity
-            android:name=".assistant.GenericConnectionAssistantActivity"
-            android:theme="@style/LinphoneStyleLight">
-        </activity>
+            android:name=".assistant.GenericConnectionAssistantActivity"/>
         <activity
-            android:name=".assistant.QrCodeConfigurationAssistantActivity"
-            android:theme="@style/LinphoneStyleLight">
-        </activity>
+            android:name=".assistant.QrCodeConfigurationAssistantActivity"/>
         <activity
-            android:name=".assistant.RemoteConfigurationAssistantActivity"
-            android:theme="@style/LinphoneStyleLight">
-        </activity>
+            android:name=".assistant.RemoteConfigurationAssistantActivity"/>
         <activity
-            android:name=".assistant.EchoCancellerCalibrationAssistantActivity"
-            android:theme="@style/LinphoneStyleLight">
-        </activity>
+            android:name=".assistant.EchoCancellerCalibrationAssistantActivity"/>
         <activity
-            android:name=".assistant.OpenH264DownloadAssistantActivity"
-            android:theme="@style/LinphoneStyleLight">
-        </activity>
+            android:name=".assistant.OpenH264DownloadAssistantActivity"/>
 
-        <!-- Other stuff -->
+        <!-- Services -->
+
+        <service
+            android:name=".LinphoneService"
+            android:label="@string/service_name" />
 
         <activity
             android:name=".purchase.InAppPurchaseActivity"
@@ -290,6 +256,14 @@
                 android:resource="@xml/authenticator" />
         </service>
 
+        <service android:name=".firebase.FirebaseMessaging">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <!-- Receivers -->
+
         <receiver
             android:name=".receivers.BluetoothManager"
             android:enabled="false"/>
@@ -309,25 +283,12 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".receivers.HookReceiver">
-            <intent-filter>
-                <action android:name="com.base.module.phone.HOOKEVENT" />
-            </intent-filter>
-        </receiver>
-
         <receiver
-            android:name=".receivers.AccountEnableReceiver"
-            android:permission="android.permission.USE_SIP">
-            <intent-filter>
-                <action android:name="org.linphone.intent.ACCOUNTACTIVATE" />
-            </intent-filter>
-        </receiver>
+            android:name=".notifications.NotificationBroadcastReceiver"
+            android:enabled="true"
+            android:exported="false" />
 
-        <service android:name=".firebase.FirebaseMessaging">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
+        <!-- Providers -->
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -338,11 +299,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-
-        <receiver
-            android:name=".notifications.NotificationBroadcastReceiver"
-            android:enabled="true"
-            android:exported="false" />
 
     </application>
 </manifest>
