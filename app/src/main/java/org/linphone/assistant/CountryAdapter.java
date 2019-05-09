@@ -69,7 +69,7 @@ class CountryAdapter extends BaseAdapter implements Filterable {
         if (convertView != null) {
             view = convertView;
         } else {
-            view = mInflater.inflate(R.layout.country_cell, parent, false);
+            view = mInflater.inflate(R.layout.assistant_country_cell, parent, false);
         }
 
         DialPlan c = mFilteredCountries.get(position);

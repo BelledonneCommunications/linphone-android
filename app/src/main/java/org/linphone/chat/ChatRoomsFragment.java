@@ -35,7 +35,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
-import org.linphone.call.NewCallActivity;
+import org.linphone.call.CallActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.core.ChatMessage;
@@ -132,7 +132,7 @@ public class ChatRoomsFragment extends Fragment
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startActivity(new Intent(getActivity(), NewCallActivity.class));
+                        startActivity(new Intent(getActivity(), CallActivity.class));
                     }
                 });
 
