@@ -26,7 +26,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -73,8 +72,6 @@ import org.linphone.core.tools.H264Helper;
 import org.linphone.core.tools.Log;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration.AndroidCamera;
-import org.linphone.receivers.HookReceiver;
-import org.linphone.receivers.OutgoingCallReceiver;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.AndroidAudioManager;
 import org.linphone.utils.LinphoneUtils;
@@ -529,24 +526,10 @@ public class LinphoneManager implements SensorEventListener {
             PushNotificationUtils.init(mContext);
         }
 
-        IntentFilter mCallIntentFilter =
-                new IntentFilter("android.intent.action.ACTION_NEW_OUTGOING_CALL");
-        mCallIntentFilter.setPriority(99999999);
-        mCallReceiver = new OutgoingCallReceiver();
-        try {
-            mContext.registerReceiver(mCallReceiver, mCallIntentFilter);
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        }
         mProximityWakelock =
                 mPowerManager.newWakeLock(
                         PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK,
                         mContext.getPackageName() + ";manager_proximity_sensor");
-
-        IntentFilter mHookIntentFilter = new IntentFilter("com.base.module.phone.HOOKEVENT");
-        mHookIntentFilter.setPriority(999);
-        mHookReceiver = new HookReceiver();
-        mContext.registerReceiver(mHookReceiver, mHookIntentFilter);
 
         resetCameraFromPreferences();
 

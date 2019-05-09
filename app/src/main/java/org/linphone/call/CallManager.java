@@ -44,8 +44,7 @@ import org.linphone.views.AddressType;
 /** Handle call updating, reinvites. */
 public class CallManager {
     private Context mContext;
-    private boolean mHandsetON = false;
-    private CallActivity.CallActivityInterface mCallInterface;
+    private CallActivityInterface mCallInterface;
     private BandwidthManager mBandwidthManager;
 
     public CallManager(Context context) {
@@ -241,7 +240,20 @@ public class CallManager {
         LinphoneManager.getCore().playDtmf(dtmf, -1);
     }
 
-    public void setCallInterface(CallActivity.CallActivityInterface callInterface) {
+    public boolean shouldShowAcceptCallUpdateDialog(Call call) {
+        if (call == null) return true;
+
+        boolean remoteVideo = call.getRemoteParams().videoEnabled();
+        boolean localVideo = call.getCurrentParams().videoEnabled();
+        boolean autoAcceptCameraPolicy =
+                LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests();
+        return remoteVideo
+                && !localVideo
+                && !autoAcceptCameraPolicy
+                && !call.getCore().isInConference();
+    }
+
+    public void setCallInterface(CallActivityInterface callInterface) {
         mCallInterface = callInterface;
     }
 
@@ -254,23 +266,6 @@ public class CallManager {
     public void refreshInCallActions() {
         if (mCallInterface != null) {
             mCallInterface.refreshInCallActions();
-        }
-    }
-
-    public void setHandsetMode(Boolean on) {
-        if (mHandsetON == on) return;
-        Core core = LinphoneManager.getCore();
-
-        if (core.isIncomingInvitePending() && on) {
-            mHandsetON = true;
-            acceptCall(core.getCurrentCall());
-        } else if (on && mCallInterface != null) {
-            mHandsetON = true;
-            mCallInterface.setSpeakerEnabled(true);
-            mCallInterface.refreshInCallActions();
-        } else if (!on) {
-            mHandsetON = false;
-            terminateCurrentCallOrConferenceOrAll();
         }
     }
 

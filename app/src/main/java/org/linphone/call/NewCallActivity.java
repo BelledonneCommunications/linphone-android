@@ -75,7 +75,9 @@ import org.linphone.views.ContactAvatar;
 import org.linphone.views.Numpad;
 
 public class NewCallActivity extends ThemeableActivity
-        implements CallStatusBarFragment.StatsClikedListener, ContactsUpdatedListener {
+        implements CallStatusBarFragment.StatsClikedListener,
+                ContactsUpdatedListener,
+                CallActivityInterface {
     private static final int SECONDS_BEFORE_HIDING_CONTROLS = 4000;
     private static final int SECONDS_BEFORE_DENYING_CALL_UPDATE = 30000;
 
@@ -117,6 +119,7 @@ public class NewCallActivity extends ThemeableActivity
     private Core mCore;
     private CoreListener mListener;
     private AndroidAudioManager mAudioManager;
+    private VideoZoomHelper mZoomHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -311,6 +314,8 @@ public class NewCallActivity extends ThemeableActivity
                         getFragmentManager().findFragmentById(R.id.status_bar_fragment);
         mStatusBarFragment.setStatsListener(this);
 
+        mZoomHelper = new VideoZoomHelper(this, mRemoteVideo);
+
         mListener =
                 new CoreListenerStub() {
                     @Override
@@ -350,15 +355,10 @@ public class NewCallActivity extends ThemeableActivity
                                 return;
                             }
 
-                            boolean remoteVideo = call.getRemoteParams().videoEnabled();
-                            boolean localVideo = call.getCurrentParams().videoEnabled();
-                            boolean autoAcceptCameraPolicy =
-                                    LinphonePreferences.instance()
-                                            .shouldAutomaticallyAcceptVideoRequests();
-                            if (remoteVideo
-                                    && !localVideo
-                                    && !autoAcceptCameraPolicy
-                                    && !core.isInConference()) {
+                            boolean showAcceptUpdateDialog =
+                                    LinphoneManager.getCallManager()
+                                            .shouldShowAcceptCallUpdateDialog(call);
+                            if (showAcceptUpdateDialog) {
                                 showAcceptCallUpdateDialog();
                                 createTimerForDialog(SECONDS_BEFORE_DENYING_CALL_UPDATE);
                             }
@@ -393,6 +393,7 @@ public class NewCallActivity extends ThemeableActivity
 
         setCurrentCallContactInformation();
         ContactsManager.getInstance().addContactsListener(this);
+        LinphoneManager.getCallManager().setCallInterface(this);
     }
 
     @Override
@@ -400,6 +401,7 @@ public class NewCallActivity extends ThemeableActivity
         super.onPause();
 
         ContactsManager.getInstance().removeContactsListener(this);
+        LinphoneManager.getCallManager().setCallInterface(null);
     }
 
     @Override
@@ -411,6 +413,7 @@ public class NewCallActivity extends ThemeableActivity
             core.setNativeVideoWindowId(null);
             core.setNativePreviewWindowId(null);
         }
+        mZoomHelper.destroy();
     }
 
     @Override
@@ -498,6 +501,17 @@ public class NewCallActivity extends ThemeableActivity
         }
     }
 
+    @Override
+    public void refreshInCallActions() {
+        updateButtons();
+    }
+
+    @Override
+    public void resetCallControlsHidingTimer() {
+        mHandler.removeCallbacks(mHideControlsRunnable);
+        mHandler.postDelayed(mHideControlsRunnable, SECONDS_BEFORE_HIDING_CONTROLS);
+    }
+
     // BUTTONS
 
     private void updateButtons() {
@@ -549,7 +563,6 @@ public class NewCallActivity extends ThemeableActivity
         mVideo.setEnabled(false);
         if (call.getCurrentParams().videoEnabled()) {
             LinphoneManager.getCallManager().removeVideo();
-
         } else {
             LinphoneManager.getCallManager().addVideo();
         }
@@ -611,8 +624,7 @@ public class NewCallActivity extends ThemeableActivity
 
     private void makeButtonsVisibleTemporary() {
         updateButtonsVisibility(true);
-        mHandler.removeCallbacks(mHideControlsRunnable);
-        mHandler.postDelayed(mHideControlsRunnable, SECONDS_BEFORE_HIDING_CONTROLS);
+        resetCallControlsHidingTimer();
     }
 
     // VIDEO RELATED

@@ -279,10 +279,6 @@ public class CallActivity extends LinphoneGenericActivity
 
         mCallInterface =
                 new CallActivityInterface() {
-                    @Override
-                    public void setSpeakerEnabled(boolean enable) {
-                        CallActivity.this.setSpeakerEnabled(enable);
-                    }
 
                     @Override
                     public void refreshInCallActions() {
@@ -1206,7 +1202,7 @@ public class CallActivity extends LinphoneGenericActivity
     protected void onResume() {
         super.onResume();
 
-        LinphoneManager.getCallManager().setCallInterface(mCallInterface);
+        // LinphoneManager.getCallManager().setCallInterface(mCallInterface);
         Core core = LinphoneManager.getCore();
         if (core != null) {
             core.addListener(mListener);
@@ -1257,7 +1253,7 @@ public class CallActivity extends LinphoneGenericActivity
         if (core != null) {
             core.removeListener(mListener);
         }
-        LinphoneManager.getCallManager().setCallInterface(null);
+        // LinphoneManager.getCallManager().setCallInterface(null);
 
         super.onPause();
 
@@ -1601,14 +1597,6 @@ public class CallActivity extends LinphoneGenericActivity
             mMissedChats.clearAnimation();
             mMissedChats.setVisibility(View.GONE);
         }
-    }
-
-    public interface CallActivityInterface {
-        void setSpeakerEnabled(boolean enable);
-
-        void refreshInCallActions();
-
-        void resetCallControlsHidingTimer();
     }
 
     //// Earset Connectivity Broadcast innerClass

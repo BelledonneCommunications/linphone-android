@@ -27,7 +27,6 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
@@ -95,12 +94,7 @@ public class Digit extends Button implements AddressAware {
 
         private boolean linphoneServiceReady() {
             if (!LinphoneService.isReady()) {
-                Log.w("Service is not ready while pressing digit");
-                Toast.makeText(
-                                getContext(),
-                                getContext().getString(R.string.skipable_error_service_not_ready),
-                                Toast.LENGTH_SHORT)
-                        .show();
+                Log.e("[Numpad] Service is not ready while pressing digit");
                 return false;
             }
             return true;
