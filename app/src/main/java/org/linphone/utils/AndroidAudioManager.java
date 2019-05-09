@@ -50,6 +50,7 @@ import org.linphone.core.CoreListenerStub;
 import org.linphone.core.EcCalibratorStatus;
 import org.linphone.core.tools.Log;
 import org.linphone.receivers.BluetoothReceiver;
+import org.linphone.receivers.HeadsetReceiver;
 import org.linphone.settings.LinphonePreferences;
 
 public class AndroidAudioManager {
@@ -64,6 +65,7 @@ public class AndroidAudioManager {
     private BluetoothHeadset mBluetoothHeadset;
     private BluetoothProfile.ServiceListener mBluetoothServiceListener;
     private BluetoothReceiver mBluetoothReceiver;
+    private HeadsetReceiver mHeadsetReceiver;
 
     private boolean mIsRinging;
     private boolean mAudioFocused;
@@ -125,6 +127,8 @@ public class AndroidAudioManager {
                                         routeAudioToEarPiece();
                                     }
                                 }
+                                // Only register this one when a call is active
+                                enableHeadsetReceiver();
                             }
                         } else if (state == Call.State.End || state == Call.State.Error) {
                             if (core.getCallsNb() == 0) {
@@ -138,6 +142,12 @@ public class AndroidAudioManager {
                                                             ? "Granted"
                                                             : "Denied"));
                                     mAudioFocused = false;
+                                }
+
+                                // Only register this one when a call is active
+                                if (mHeadsetReceiver != null) {
+                                    Log.i("[Audio Manager] Unregistering headset receiver");
+                                    mContext.unregisterReceiver(mHeadsetReceiver);
                                 }
 
                                 TelephonyManager tm =
@@ -192,7 +202,10 @@ public class AndroidAudioManager {
             Log.i("[Audio Manager] [Bluetooth] Closing HEADSET profile proxy");
             mBluetoothAdapter.closeProfileProxy(BluetoothProfile.HEADSET, mBluetoothHeadset);
 
-            mContext.unregisterReceiver(mBluetoothReceiver);
+            Log.i("[Audio Manager] [Bluetooth] Unegistering bluetooth receiver");
+            if (mBluetoothReceiver != null) {
+                mContext.unregisterReceiver(mBluetoothReceiver);
+            }
         }
 
         Core core = LinphoneManager.getCore();
@@ -514,6 +527,9 @@ public class AndroidAudioManager {
                                         bluetoothHeadetConnectionChanged(true);
                                     }
 
+                                    Log.i(
+                                            "[Audio Manager] [Bluetooth] Registering bluetooth receiver");
+
                                     mContext.registerReceiver(
                                             mBluetoothReceiver,
                                             new IntentFilter(
@@ -569,5 +585,17 @@ public class AndroidAudioManager {
                         mContext, mBluetoothServiceListener, BluetoothProfile.HEADSET);
             }
         }
+    }
+
+    // HEADSET
+
+    private void enableHeadsetReceiver() {
+        mHeadsetReceiver = new HeadsetReceiver();
+
+        Log.i("[Audio Manager] Registering headset receiver");
+        mContext.registerReceiver(
+                mHeadsetReceiver, new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY));
+        mContext.registerReceiver(
+                mHeadsetReceiver, new IntentFilter(AudioManager.ACTION_HEADSET_PLUG));
     }
 }
