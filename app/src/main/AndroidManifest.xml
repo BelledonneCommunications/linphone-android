@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <!-- Needed for bluetooth headset -->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -253,10 +254,6 @@
         </service>
 
         <!-- Receivers -->
-
-        <receiver
-            android:name=".receivers.BluetoothManager"
-            android:enabled="false"/>
 
         <receiver android:name=".receivers.BootReceiver">
             <intent-filter>
