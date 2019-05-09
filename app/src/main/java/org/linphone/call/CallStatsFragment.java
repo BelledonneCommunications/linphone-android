@@ -107,6 +107,10 @@ public class CallStatsFragment extends Fragment {
     public void setDrawer(DrawerLayout drawer, RelativeLayout content) {
         mSideMenu = drawer;
         mSideMenuContent = content;
+
+        if (getResources().getBoolean(R.bool.hide_in_call_stats)) {
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        }
     }
 
     public boolean isOpened() {
@@ -119,6 +123,7 @@ public class CallStatsFragment extends Fragment {
 
     public void openOrCloseSideMenu(boolean open, boolean animate) {
         if (mSideMenu == null || mSideMenuContent == null) return;
+        if (getResources().getBoolean(R.bool.hide_in_call_stats)) return;
 
         if (open) {
             mSideMenu.openDrawer(mSideMenuContent, animate);
@@ -136,6 +141,8 @@ public class CallStatsFragment extends Fragment {
     }
 
     private void init(View view) {
+        if (getResources().getBoolean(R.bool.hide_in_call_stats)) return;
+
         if (mTimer != null && mTask != null) {
             mTimer.cancel();
             mTimer = null;
