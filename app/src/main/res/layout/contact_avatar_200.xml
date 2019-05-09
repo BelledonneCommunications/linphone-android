@@ -12,13 +12,20 @@
         android:adjustViewBounds="true"
         android:src="@drawable/avatar" />
 
+    <ImageView
+        android:id="@+id/generated_avatar_background"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_alignParentLeft="true"
+        android:adjustViewBounds="true"
+        android:src="@drawable/generated_avatar_bg" />
+
     <TextView
         android:id="@+id/generated_avatar"
         style="@style/generated_contact_avatar_100_font"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_alignParentLeft="true"
-        android:background="@drawable/generated_avatar_bg"
         android:gravity="center"
         android:maxLines="1" />
 
