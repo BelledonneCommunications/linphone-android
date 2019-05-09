@@ -434,6 +434,11 @@ public class CallActivity extends ThemeableActivity
         setCurrentCallContactInformation();
         ContactsManager.getInstance().addContactsListener(this);
         LinphoneManager.getCallManager().setCallInterface(this);
+
+        if (mCore.getCallsNb() == 0) {
+            Log.w("[Call Activity] Resuming but no call found...");
+            finish();
+        }
     }
 
     @Override
@@ -526,6 +531,7 @@ public class CallActivity extends ThemeableActivity
     @Override
     public void onUserLeaveHint() {
         Call call = mCore.getCurrentCall();
+        if (call == null) return;
         boolean videoEnabled =
                 LinphonePreferences.instance().isVideoEnabled()
                         && call.getCurrentParams().videoEnabled();
