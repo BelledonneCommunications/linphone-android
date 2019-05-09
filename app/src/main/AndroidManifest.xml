@@ -181,7 +181,7 @@
             android:noHistory="true"/>
 
         <activity
-            android:name=".call.NewCallActivity"
+            android:name=".call.CallActivity"
             android:launchMode="singleTop"
             android:noHistory="true"
             android:showWhenLocked="true"

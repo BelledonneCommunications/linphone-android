@@ -125,7 +125,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
                             finish();
                         } else if (state == State.Connected) {
                             startActivity(
-                                    new Intent(CallIncomingActivity.this, NewCallActivity.class));
+                                    new Intent(CallIncomingActivity.this, CallActivity.class));
                         }
                     }
                 };
