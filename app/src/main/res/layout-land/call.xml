@@ -33,16 +33,16 @@
                 android:layout_marginBottom="60dp"
                 android:layout_marginTop="40dp">
 
+                <include layout="@layout/conference_header" android:visibility="gone" />
+
                 <LinearLayout
                     android:id="@+id/conference_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
+                    android:layout_below="@id/conference_header"
                     android:layout_gravity="top"
                     android:orientation="vertical"
-                    android:visibility="gone">
-
-                </LinearLayout>
+                    android:visibility="gone" />
 
                 <RelativeLayout
                     android:id="@+id/active_call"
@@ -75,7 +75,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center" />
-                        remote_pause
+
                     </LinearLayout>
 
                     <RelativeLayout
@@ -169,6 +169,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text="@string/no_current_call" />
+
                 </LinearLayout>
 
                 <ImageView
@@ -188,7 +189,7 @@
 
             <LinearLayout
                 android:baselineAligned="false"
-                android:id="@+id/menu"
+                android:id="@+id/buttons"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="bottom"

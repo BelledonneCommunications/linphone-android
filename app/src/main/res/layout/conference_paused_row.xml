@@ -10,13 +10,11 @@
     android:padding="5dp">
 
     <ImageView
-        android:id="@+id/contact_picture"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:src="@drawable/conference_start" />
 
     <TextView
-        android:id="@+id/contact_name"
         style="@style/call_contact_name_paused_font"
         android:layout_width="0dip"
         android:layout_height="wrap_content"
@@ -28,7 +26,7 @@
         android:text="@string/conference" />
 
     <ImageView
-        android:id="@+id/conference_pause"
+        android:id="@+id/conference_resume"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:contentDescription="@string/content_description_pause"
