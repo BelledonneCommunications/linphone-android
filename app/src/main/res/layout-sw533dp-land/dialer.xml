@@ -10,6 +10,12 @@
         android:layout_centerVertical="true"
         android:src="@drawable/dialer_background" />
 
+    <TextureView
+        android:id="@+id/video_preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
     <RelativeLayout
         android:id="@+id/dialer"
         android:layout_width="300dp"
