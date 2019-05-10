@@ -187,239 +187,24 @@
 
             </RelativeLayout>
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/buttons"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <LinearLayout
-                    android:id="@+id/secondary_bar"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:gravity="bottom"
-                    android:minHeight="60dp"
-                    android:orientation="horizontal">
-
-                    <RelativeLayout
-                        android:layout_width="0dp"
-                        android:layout_height="60dp"
-                        android:layout_weight="0.25">
-
-                        <ImageView
-                            android:id="@+id/video"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="?attr/button_background_drawable"
-                            android:contentDescription="@string/content_description_switch_video"
-                            android:padding="20dp"
-                            android:src="@drawable/camera" />
-
-                        <ProgressBar
-                            android:id="@+id/video_in_progress"
-                            style="?android:attr/progressBarStyle"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:layout_centerVertical="true"
-                            android:visibility="gone" />
-
-                    </RelativeLayout>
-
-                    <ImageView
-                        android:id="@+id/micro"
-                        android:layout_width="0dp"
-                        android:layout_height="60dp"
-                        android:layout_weight="0.25"
-                        android:background="?attr/button_background_drawable"
-                        android:contentDescription="@string/content_description_toggle_micro"
-                        android:padding="10dp"
-                        android:src="@drawable/micro" />
-
-                    <RelativeLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.25">
-
-                        <ImageView
-                            android:id="@+id/speaker"
-                            android:layout_width="match_parent"
-                            android:layout_height="60dp"
-                            android:layout_alignParentBottom="true"
-                            android:background="?attr/button_background_drawable"
-                            android:contentDescription="@string/content_description_toggle_speaker"
-                            android:padding="15dp"
-                            android:src="@drawable/speaker" />
-
-                        <ImageView
-                            android:id="@+id/audio_route"
-                            android:layout_width="match_parent"
-                            android:layout_height="60dp"
-                            android:layout_alignParentBottom="true"
-                            android:background="?attr/button_background_drawable"
-                            android:contentDescription="@string/content_description_audio_route"
-                            android:padding="15dp"
-                            android:src="@drawable/routes"
-                            android:visibility="gone" />
-
-                        <ImageView
-                            android:id="@+id/route_bluetooth"
-                            android:layout_width="match_parent"
-                            android:layout_height="60dp"
-                            android:layout_above="@id/audio_route"
-                            android:background="?attr/button_background_drawable"
-                            android:contentDescription="@string/content_description_bluetooth"
-                            android:padding="15dp"
-                            android:src="@drawable/route_bluetooth"
-                            android:visibility="gone" />
-
-                        <ImageView
-                            android:id="@+id/route_earpiece"
-                            android:layout_width="match_parent"
-                            android:layout_height="60dp"
-                            android:layout_above="@id/route_bluetooth"
-                            android:background="?attr/button_background_drawable"
-                            android:contentDescription="@string/content_description_earpiece"
-                            android:padding="15dp"
-                            android:src="@drawable/route_earpiece"
-                            android:visibility="gone" />
-
-                        <ImageView
-                            android:id="@+id/route_speaker"
-                            android:layout_width="match_parent"
-                            android:layout_height="60dp"
-                            android:layout_above="@id/route_earpiece"
-                            android:background="?attr/button_background_drawable"
-                            android:contentDescription="@string/content_description_toggle_speaker"
-                            android:padding="15dp"
-                            android:src="@drawable/route_speaker"
-                            android:visibility="gone" />
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.25">
-
-                        <ImageView
-                            android:id="@+id/options"
-                            android:layout_width="match_parent"
-                            android:layout_height="60dp"
-                            android:layout_alignParentBottom="true"
-                            android:background="?attr/button_background_drawable"
-                            android:contentDescription="@string/content_description_call_options"
-                            android:padding="15dp"
-                            android:src="@drawable/options" />
-
-                        <ImageView
-                            android:id="@+id/record_call"
-                            android:layout_width="match_parent"
-                            android:layout_height="60dp"
-                            android:layout_above="@id/options"
-                            android:background="?attr/button_background_drawable"
-                            android:contentDescription="@string/content_description_record_call"
-                            android:padding="15dp"
-                            android:src="@drawable/options_rec"
-                            android:visibility="gone" />
-
-                        <ImageView
-                            android:id="@+id/add_call"
-                            android:layout_width="match_parent"
-                            android:layout_height="60dp"
-                            android:layout_above="@id/record_call"
-                            android:background="?attr/button_background_drawable"
-                            android:contentDescription="@string/content_description_add_call"
-                            android:padding="15dp"
-                            android:src="@drawable/options_add_call"
-                            android:visibility="gone" />
-
-                        <ImageView
-                            android:id="@+id/transfer"
-                            android:layout_width="match_parent"
-                            android:layout_height="60dp"
-                            android:layout_above="@id/add_call"
-                            android:background="?attr/button_background_drawable"
-                            android:contentDescription="@string/content_description_transfer"
-                            android:padding="15dp"
-                            android:src="@drawable/options_transfer_call"
-                            android:visibility="gone" />
-
-                        <ImageView
-                            android:id="@+id/conference"
-                            android:layout_width="match_parent"
-                            android:layout_height="60dp"
-                            android:layout_above="@id/transfer"
-                            android:background="?attr/button_background_drawable"
-                            android:contentDescription="@string/content_description_conference"
-                            android:padding="15dp"
-                            android:src="@drawable/options_start_conference"
-                            android:visibility="gone" />
-
-                    </RelativeLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/main_bar"
+                <include layout="@layout/call_primary_buttons"
+                    android:id="@+id/call_primary_buttons"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:layout_gravity="center"
-                    android:orientation="horizontal">
+                    android:layout_alignParentBottom="true" />
 
-                    <ImageView
-                        android:id="@+id/dialer"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.25"
-                        android:background="@drawable/button_background_dark"
-                        android:contentDescription="@string/content_description_numpad"
-                        android:padding="15dp"
-                        android:src="@drawable/footer_dialer" />
+                <include layout="@layout/call_secondary_buttons"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@id/call_primary_buttons" />
 
-                    <ImageView
-                        android:id="@+id/hang_up"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="0.5"
-                        android:background="@drawable/hangup"
-                        android:contentDescription="@string/content_description_hang_up"
-                        android:padding="12dp"
-                        android:src="@drawable/call_hangup" />
-
-                    <RelativeLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.25"
-                        android:background="@drawable/footer_button">
-
-                        <ImageView
-                            android:id="@+id/chat"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:background="@drawable/button_background_dark"
-                            android:contentDescription="@string/content_description_chat_button"
-                            android:padding="15dp"
-                            android:src="@drawable/footer_chat" />
-
-                        <TextView
-                            android:id="@+id/missed_chats"
-                            style="@style/unread_count_font"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="15dp"
-                            android:background="@drawable/unread_message_count_bg"
-                            android:gravity="center"
-                            android:visibility="gone" />
-
-                    </RelativeLayout>
-
-                </LinearLayout>
-
-            </LinearLayout>
+            </RelativeLayout>
 
             <org.linphone.views.Numpad
                 android:id="@+id/numpad"

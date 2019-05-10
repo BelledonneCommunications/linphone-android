@@ -100,13 +100,16 @@ public class CallActivity extends LinphoneGenericActivity
 
     private int mPreviewX, mPreviewY;
     private TextureView mLocalPreview, mRemoteVideo;
-    private RelativeLayout mActiveCalls, mContactAvatar, mActiveCallHeader, mConferenceHeader;
-    private LinearLayout mButtons, mNoCurrentCall, mCallsList, mCallPausedByRemote, mConferenceList;
+    private RelativeLayout mButtons,
+            mActiveCalls,
+            mContactAvatar,
+            mActiveCallHeader,
+            mConferenceHeader;
+    private LinearLayout mNoCurrentCall, mCallsList, mCallPausedByRemote, mConferenceList;
     private ImageView mMicro, mSpeaker, mVideo;
-    private ImageView mNumpadButton, mHangUp, mChat;
     private ImageView mPause, mSwitchCamera, mRecordingInProgress;
     private ImageView mExtrasButtons, mAddCall, mTransferCall, mRecordCall;
-    private ImageView mConference, mConferencePause;
+    private ImageView mConference;
     private ImageView mAudioRoute, mRouteEarpiece, mRouteSpeaker, mRouteBluetooth;
     private Numpad mNumpad;
     private TextView mContactName, mMissedMessages;
@@ -115,7 +118,6 @@ public class CallActivity extends LinphoneGenericActivity
     private CountDownTimer mCallUpdateCountDownTimer;
     private Dialog mCallUpdateDialog;
 
-    private CallStatusBarFragment mStatusBarFragment;
     private CallStatsFragment mStatsFragment;
     private Core mCore;
     private CoreListener mListener;
@@ -162,8 +164,8 @@ public class CallActivity extends LinphoneGenericActivity
         mConferenceHeader = findViewById(R.id.conference_header);
         mButtons = findViewById(R.id.buttons);
 
-        mConferencePause = findViewById(R.id.conference_pause);
-        mConferencePause.setOnClickListener(
+        ImageView conferencePause = findViewById(R.id.conference_pause);
+        conferencePause.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -303,8 +305,8 @@ public class CallActivity extends LinphoneGenericActivity
 
         mNumpad = findViewById(R.id.numpad);
 
-        mNumpadButton = findViewById(R.id.dialer);
-        mNumpadButton.setOnClickListener(
+        ImageView numpadButton = findViewById(R.id.dialer);
+        numpadButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -313,8 +315,8 @@ public class CallActivity extends LinphoneGenericActivity
                     }
                 });
 
-        mHangUp = findViewById(R.id.hang_up);
-        mHangUp.setOnClickListener(
+        ImageView hangUp = findViewById(R.id.hang_up);
+        hangUp.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -322,8 +324,8 @@ public class CallActivity extends LinphoneGenericActivity
                     }
                 });
 
-        mChat = findViewById(R.id.chat);
-        mChat.setOnClickListener(
+        ImageView chat = findViewById(R.id.chat);
+        chat.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -360,16 +362,16 @@ public class CallActivity extends LinphoneGenericActivity
 
         mMissedMessages = findViewById(R.id.missed_chats);
 
-        DrawerLayout mSideMenu = findViewById(R.id.side_menu);
-        RelativeLayout mSideMenuContent = findViewById(R.id.side_menu_content);
+        DrawerLayout sideMenu = findViewById(R.id.side_menu);
+        RelativeLayout sideMenuContent = findViewById(R.id.side_menu_content);
         mStatsFragment =
                 (CallStatsFragment) getFragmentManager().findFragmentById(R.id.call_stats_fragment);
-        mStatsFragment.setDrawer(mSideMenu, mSideMenuContent);
+        mStatsFragment.setDrawer(sideMenu, sideMenuContent);
 
-        mStatusBarFragment =
+        CallStatusBarFragment statusBarFragment =
                 (CallStatusBarFragment)
                         getFragmentManager().findFragmentById(R.id.status_bar_fragment);
-        mStatusBarFragment.setStatsListener(this);
+        statusBarFragment.setStatsListener(this);
 
         mZoomHelper = new VideoZoomHelper(this, mRemoteVideo);
 

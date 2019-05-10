@@ -12,7 +12,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_weight="1"
             android:background="?attr/backgroundContastColor"
             android:gravity="center"
             android:orientation="vertical"
@@ -59,7 +58,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_weight="1"
             android:orientation="vertical"
             android:background="?attr/backgroundColor"
             android:padding="10dp">

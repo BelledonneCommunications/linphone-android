@@ -40,7 +40,8 @@ import org.linphone.core.tools.Log;
 
 public class StatusBarFragment extends Fragment {
     private TextView mStatusText, mVoicemailCount;
-    private ImageView mStatusLed, mMenu, mVoicemail;
+    private ImageView mStatusLed;
+    private ImageView mVoicemail;
     private CoreListenerStub mListener;
     private MenuClikedListener mMenuListener;
 
@@ -51,12 +52,12 @@ public class StatusBarFragment extends Fragment {
 
         mStatusText = view.findViewById(R.id.status_text);
         mStatusLed = view.findViewById(R.id.status_led);
-        mMenu = view.findViewById(R.id.side_menu_button);
+        ImageView menu = view.findViewById(R.id.side_menu_button);
         mVoicemail = view.findViewById(R.id.voicemail);
         mVoicemailCount = view.findViewById(R.id.voicemail_count);
 
         mMenuListener = null;
-        mMenu.setOnClickListener(
+        menu.setOnClickListener(
                 new OnClickListener() {
                     @Override
                     public void onClick(View v) {

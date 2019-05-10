@@ -111,9 +111,10 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
                                 decline();
                             } else if (call.getErrorInfo().getReason() == Reason.Busy) {
                                 Toast.makeText(
-                                        CallOutgoingActivity.this,
-                                        getString(R.string.error_user_busy),
-                                        Toast.LENGTH_SHORT);
+                                                CallOutgoingActivity.this,
+                                                getString(R.string.error_user_busy),
+                                                Toast.LENGTH_SHORT)
+                                        .show();
                                 decline();
                             } else if (message != null) {
                                 Toast.makeText(
