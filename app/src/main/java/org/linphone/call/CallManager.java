@@ -44,8 +44,7 @@ import org.linphone.views.AddressType;
 /** Handle call updating, reinvites. */
 public class CallManager {
     private Context mContext;
-    private boolean mHandsetON = false;
-    private CallActivity.CallActivityInterface mCallInterface;
+    private CallActivityInterface mCallInterface;
     private BandwidthManager mBandwidthManager;
 
     public CallManager(Context context) {
@@ -57,90 +56,113 @@ public class CallManager {
         mBandwidthManager.destroy();
     }
 
-    public void inviteAddress(Address lAddress, boolean forceZRTP) {
-        boolean isLowBandwidthConnection =
-                !LinphoneUtils.isHighBandwidthConnection(
-                        LinphoneService.instance().getApplicationContext());
-
-        inviteAddress(lAddress, false, isLowBandwidthConnection, forceZRTP);
-    }
-
-    private void inviteAddress(
-            Address lAddress, boolean videoEnabled, boolean lowBandwidth, boolean forceZRTP) {
-        Core core = LinphoneManager.getCore();
-
-        CallParams params = core.createCallParams(null);
-        mBandwidthManager.updateWithProfileSettings(params);
-
-        if (videoEnabled && params.videoEnabled()) {
-            params.enableVideo(true);
-        } else {
-            params.enableVideo(false);
-        }
-
-        if (lowBandwidth) {
-            params.enableLowBandwidth(true);
-            Log.d("[Call Manager] Low bandwidth enabled in call params");
-        }
-
-        if (forceZRTP) {
-            params.setMediaEncryption(MediaEncryption.ZRTP);
-        }
-
-        String recordFile =
-                FileUtils.getCallRecordingFilename(LinphoneService.instance(), lAddress);
-        params.setRecordFile(recordFile);
-
-        core.inviteAddressWithParams(lAddress, params);
-    }
-
-    public void inviteAddress(Address lAddress, boolean videoEnabled, boolean lowBandwidth) {
-        inviteAddress(lAddress, videoEnabled, lowBandwidth, false);
-    }
-
-    /**
-     * Add video to a currently running voice only call. No re-invite is sent if the current call is
-     * already video or if the bandwidth settings are too low.
-     *
-     * @return if updateCall called
-     */
-    public boolean reinviteWithVideo() {
+    public void terminateCurrentCallOrConferenceOrAll() {
         Core core = LinphoneManager.getCore();
         Call call = core.getCurrentCall();
-        if (call == null) {
-            Log.e("[Call Manager] Trying to reinviteWithVideo while not in call: doing nothing");
-            return false;
+        if (call != null) {
+            call.terminate();
+        } else if (core.isInConference()) {
+            core.terminateConference();
+        } else {
+            core.terminateAllCalls();
         }
+    }
+
+    public void addVideo() {
+        Call call = LinphoneManager.getCore().getCurrentCall();
+        if (call.getState() == Call.State.End || call.getState() == Call.State.Released) return;
+        if (!call.getCurrentParams().videoEnabled()) {
+            enableCamera(call, true);
+            reinviteWithVideo();
+        }
+    }
+
+    public void removeVideo() {
+        Core core = LinphoneManager.getCore();
+        Call call = core.getCurrentCall();
+        CallParams params = core.createCallParams(call);
+        params.enableVideo(false);
+        call.update(params);
+    }
+
+    public void switchCamera() {
+        Core core = LinphoneManager.getCore();
+        try {
+            String currentDevice = core.getVideoDevice();
+            String[] devices = core.getVideoDevicesList();
+            int index = 0;
+            for (String d : devices) {
+                if (d.equals(currentDevice)) {
+                    break;
+                }
+                index++;
+            }
+
+            String newDevice;
+            if (index == 1) newDevice = devices[0];
+            else if (devices.length > 1) newDevice = devices[1];
+            else newDevice = devices[index];
+            core.setVideoDevice(newDevice);
+
+            Call call = core.getCurrentCall();
+            if (call == null) {
+                Log.e("[Call Manager] Trying to switch camera while not in call");
+                return;
+            }
+            call.update(null);
+        } catch (ArithmeticException ae) {
+            Log.e("[Call Manager] [Video] Cannot switch camera: no camera");
+        }
+    }
+
+    public boolean acceptCall(Call call) {
+        if (call == null) return false;
+
+        Core core = LinphoneManager.getCore();
         CallParams params = core.createCallParams(call);
 
-        if (params.videoEnabled()) return false;
+        boolean isLowBandwidthConnection =
+                !LinphoneUtils.isHighBandwidthConnection(LinphoneService.instance());
 
-        // Check if video possible regarding bandwidth limitations
-        mBandwidthManager.updateWithProfileSettings(params);
-
-        // Abort if not enough bandwidth...
-        if (!params.videoEnabled()) {
+        if (params != null) {
+            params.enableLowBandwidth(isLowBandwidthConnection);
+            params.setRecordFile(
+                    FileUtils.getCallRecordingFilename(mContext, call.getRemoteAddress()));
+        } else {
+            Log.e("[Call Manager] Could not create call params for call");
             return false;
         }
 
-        // Not yet in video call: try to re-invite with video
-        call.update(params);
+        call.acceptWithParams(params);
         return true;
     }
 
-    /**
-     * Change the preferred video size used by linphone core. (impact landscape/portrait buffer).
-     * Update current call, without reinvite. The camera will be restarted when mediastreamer chain
-     * is recreated and setParameters is called.
-     */
-    public void updateCall() {
+    public void acceptCallUpdate(boolean accept) {
         Core core = LinphoneManager.getCore();
         Call call = core.getCurrentCall();
         if (call == null) {
-            Log.e("[Call Manager] Trying to updateCall while not in call: doing nothing");
             return;
         }
-        call.update(null);
+
+        CallParams params = core.createCallParams(call);
+        if (accept) {
+            params.enableVideo(true);
+            core.enableVideoCapture(true);
+            core.enableVideoDisplay(true);
+        }
+
+        call.acceptUpdate(params);
+    }
+
+    public void inviteAddress(Address address, boolean forceZRTP) {
+        boolean isLowBandwidthConnection =
+                !LinphoneUtils.isHighBandwidthConnection(LinphoneService.instance());
+
+        inviteAddress(address, false, isLowBandwidthConnection, forceZRTP);
+    }
+
+    public void inviteAddress(Address address, boolean videoEnabled, boolean lowBandwidth) {
+        inviteAddress(address, videoEnabled, lowBandwidth, false);
     }
 
     public void newOutgoingCall(AddressType address) {
@@ -149,10 +171,6 @@ public class CallManager {
     }
 
     public void newOutgoingCall(String to, String displayName) {
-        //		if (mCore.inCall()) {
-        //			listenerDispatcher.tryingNewOutgoingCallButAlreadyInCall();
-        //			return;
-        //		}
         if (to == null) return;
 
         // If to is only a username, try to find the contact to get an alias if existing
@@ -184,8 +202,7 @@ public class CallManager {
         address.setDisplayName(displayName);
 
         boolean isLowBandwidthConnection =
-                !LinphoneUtils.isHighBandwidthConnection(
-                        LinphoneService.instance().getApplicationContext());
+                !LinphoneUtils.isHighBandwidthConnection(LinphoneService.instance());
 
         if (core.isNetworkReachable()) {
             if (Version.isVideoCapable()) {
@@ -210,16 +227,6 @@ public class CallManager {
         }
     }
 
-    private void enableCamera(Call call, boolean enable) {
-        if (call != null) {
-            call.enableCamera(enable);
-            if (mContext.getResources().getBoolean(R.bool.enable_call_notification))
-                LinphoneService.instance()
-                        .getNotificationManager()
-                        .displayCallNotification(LinphoneManager.getCore().getCurrentCall());
-        }
-    }
-
     public void playDtmf(ContentResolver r, char dtmf) {
         try {
             if (Settings.System.getInt(r, Settings.System.DTMF_TONE_WHEN_DIALING) == 0) {
@@ -233,44 +240,20 @@ public class CallManager {
         LinphoneManager.getCore().playDtmf(dtmf, -1);
     }
 
-    private void terminateCall() {
-        Core core = LinphoneManager.getCore();
-        if (core.inCall()) {
-            core.getCurrentCall().terminate();
-        }
+    public boolean shouldShowAcceptCallUpdateDialog(Call call) {
+        if (call == null) return true;
+
+        boolean remoteVideo = call.getRemoteParams().videoEnabled();
+        boolean localVideo = call.getCurrentParams().videoEnabled();
+        boolean autoAcceptCameraPolicy =
+                LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests();
+        return remoteVideo
+                && !localVideo
+                && !autoAcceptCameraPolicy
+                && !call.getCore().isInConference();
     }
 
-    /** @return false if already in video call. */
-    public boolean addVideo() {
-        Call call = LinphoneManager.getCore().getCurrentCall();
-        enableCamera(call, true);
-        return reinviteWithVideo();
-    }
-
-    public boolean acceptCall(Call call) {
-        if (call == null) return false;
-
-        Core core = LinphoneManager.getCore();
-        CallParams params = core.createCallParams(call);
-
-        boolean isLowBandwidthConnection =
-                !LinphoneUtils.isHighBandwidthConnection(
-                        LinphoneService.instance().getApplicationContext());
-
-        if (params != null) {
-            params.enableLowBandwidth(isLowBandwidthConnection);
-            params.setRecordFile(
-                    FileUtils.getCallRecordingFilename(mContext, call.getRemoteAddress()));
-        } else {
-            Log.e("[Call Manager] Could not create call params for call");
-            return false;
-        }
-
-        call.acceptWithParams(params);
-        return true;
-    }
-
-    public void setCallInterface(CallActivity.CallActivityInterface callInterface) {
+    public void setCallInterface(CallActivityInterface callInterface) {
         mCallInterface = callInterface;
     }
 
@@ -286,20 +269,102 @@ public class CallManager {
         }
     }
 
-    public void setHandsetMode(Boolean on) {
-        if (mHandsetON == on) return;
+    public void removeCallFromConference(Call call) {
+        if (call == null || call.getConference() == null) {
+            return;
+        }
+        call.getConference().removeParticipant(call.getRemoteAddress());
+
+        if (call.getCore().getConferenceSize() <= 1) {
+            call.getCore().leaveConference();
+        }
+    }
+
+    public void pauseConference() {
+        Core core = LinphoneManager.getCore();
+        if (core == null) return;
+        if (core.isInConference()) {
+            Log.i("[Call Manager] Pausing conference");
+            core.leaveConference();
+        } else {
+            Log.w("[Call Manager] Core isn't in a conference, can't pause it");
+        }
+    }
+
+    public void resumeConference() {
+        Core core = LinphoneManager.getCore();
+        if (core == null) return;
+        if (!core.isInConference()) {
+            Log.i("[Call Manager] Resuming conference");
+            core.enterConference();
+        } else {
+            Log.w("[Call Manager] Core is already in a conference, can't resume it");
+        }
+    }
+
+    private void inviteAddress(
+            Address address, boolean videoEnabled, boolean lowBandwidth, boolean forceZRTP) {
         Core core = LinphoneManager.getCore();
 
-        if (core.isIncomingInvitePending() && on) {
-            mHandsetON = true;
-            acceptCall(core.getCurrentCall());
-        } else if (on && mCallInterface != null) {
-            mHandsetON = true;
-            mCallInterface.setSpeakerEnabled(true);
-            mCallInterface.refreshInCallActions();
-        } else if (!on) {
-            mHandsetON = false;
-            terminateCall();
+        CallParams params = core.createCallParams(null);
+        mBandwidthManager.updateWithProfileSettings(params);
+
+        if (videoEnabled && params.videoEnabled()) {
+            params.enableVideo(true);
+        } else {
+            params.enableVideo(false);
+        }
+
+        if (lowBandwidth) {
+            params.enableLowBandwidth(true);
+            Log.d("[Call Manager] Low bandwidth enabled in call params");
+        }
+
+        if (forceZRTP) {
+            params.setMediaEncryption(MediaEncryption.ZRTP);
+        }
+
+        String recordFile = FileUtils.getCallRecordingFilename(LinphoneService.instance(), address);
+        params.setRecordFile(recordFile);
+
+        core.inviteAddressWithParams(address, params);
+    }
+
+    private boolean reinviteWithVideo() {
+        Core core = LinphoneManager.getCore();
+        Call call = core.getCurrentCall();
+        if (call == null) {
+            Log.e("[Call Manager] Trying to add video while not in call");
+            return false;
+        }
+        if (call.getRemoteParams().lowBandwidthEnabled()) {
+            Log.e("[Call Manager] Remote has low bandwidth, won't be able to do video");
+            return false;
+        }
+
+        CallParams params = core.createCallParams(call);
+        if (params.videoEnabled()) return false;
+
+        // Check if video possible regarding bandwidth limitations
+        mBandwidthManager.updateWithProfileSettings(params);
+
+        // Abort if not enough bandwidth...
+        if (!params.videoEnabled()) {
+            return false;
+        }
+
+        // Not yet in video call: try to re-invite with video
+        call.update(params);
+        return true;
+    }
+
+    private void enableCamera(Call call, boolean enable) {
+        if (call != null) {
+            call.enableCamera(enable);
+            if (mContext.getResources().getBoolean(R.bool.enable_call_notification))
+                LinphoneService.instance()
+                        .getNotificationManager()
+                        .displayCallNotification(LinphoneManager.getCore().getCurrentCall());
         }
     }
 }

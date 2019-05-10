@@ -56,6 +56,9 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (mAbortCreation) {
+            return;
+        }
 
         // Uses the fragment container layout to inflate the dialer view instead of using a fragment
         View dialerView = LayoutInflater.from(this).inflate(R.layout.dialer, null, false);

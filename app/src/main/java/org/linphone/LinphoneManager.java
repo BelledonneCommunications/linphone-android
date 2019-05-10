@@ -22,11 +22,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -37,6 +35,8 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -73,8 +73,6 @@ import org.linphone.core.tools.H264Helper;
 import org.linphone.core.tools.Log;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration.AndroidCamera;
-import org.linphone.receivers.HookReceiver;
-import org.linphone.receivers.OutgoingCallReceiver;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.AndroidAudioManager;
 import org.linphone.utils.LinphoneUtils;
@@ -98,8 +96,8 @@ public class LinphoneManager implements SensorEventListener {
     private CallManager mCallManager;
     private final PowerManager mPowerManager;
     private final ConnectivityManager mConnectivityManager;
-    private BroadcastReceiver mHookReceiver;
-    private BroadcastReceiver mCallReceiver;
+    private TelephonyManager mTelephonyManager;
+    private PhoneStateListener mPhoneStateListener;
     private WakeLock mProximityWakelock;
     private final SensorManager mSensorManager;
     private final Sensor mProximity;
@@ -138,6 +136,27 @@ public class LinphoneManager implements SensorEventListener {
                 (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
         mSensorManager = (SensorManager) c.getSystemService(Context.SENSOR_SERVICE);
         mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+        mTelephonyManager = (TelephonyManager) c.getSystemService(Context.TELEPHONY_SERVICE);
+        mPhoneStateListener =
+                new PhoneStateListener() {
+                    @Override
+                    public void onCallStateChanged(int state, String phoneNumber) {
+                        switch (state) {
+                            case TelephonyManager.CALL_STATE_OFFHOOK:
+                                Log.i("[Manager] Phone state is off hook");
+                                setCallGsmON(true);
+                                break;
+                            case TelephonyManager.CALL_STATE_RINGING:
+                                Log.i("[Manager] Phone state is ringing");
+                                setCallGsmON(true);
+                                break;
+                            case TelephonyManager.CALL_STATE_IDLE:
+                                Log.i("[Manager] Phone state is idle");
+                                setCallGsmON(false);
+                                break;
+                        }
+                    }
+                };
         mHasLastCallSasBeenRejected = false;
         mCallManager = new CallManager(c);
 
@@ -194,8 +213,7 @@ public class LinphoneManager implements SensorEventListener {
                         if (state == State.IncomingReceived
                                 && !call.equals(core.getCurrentCall())) {
                             if (call.getReplacedCall() != null) {
-                                // attended transfer
-                                // it will be accepted automatically.
+                                // attended transfer will be accepted automatically.
                                 return;
                             }
                         }
@@ -222,15 +240,16 @@ public class LinphoneManager implements SensorEventListener {
                                     };
                             mTimer = new Timer("Auto answer");
                             mTimer.schedule(lTask, mPrefs.getAutoAnswerTime());
-                        }
-
-                        if (state == State.End || state == State.Error) {
+                        } else if (state == State.End || state == State.Error) {
                             if (mCore.getCallsNb() == 0) {
                                 // Disabling proximity sensor
                                 enableProximitySensing(false);
+
+                                Log.i("[Manager] Unregistering phone state listener");
+                                mTelephonyManager.listen(
+                                        mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
                             }
-                        }
-                        if (state == State.UpdatedByRemote) {
+                        } else if (state == State.UpdatedByRemote) {
                             // If the correspondent proposes video while audio call
                             boolean remoteVideo = call.getRemoteParams().videoEnabled();
                             boolean localVideo = call.getCurrentParams().videoEnabled();
@@ -242,6 +261,12 @@ public class LinphoneManager implements SensorEventListener {
                                     && !autoAcceptCameraPolicy
                                     && mCore.getConference() == null) {
                                 call.deferUpdate();
+                            }
+                        } else if (state == State.Connected) {
+                            if (core.getCallsNb() == 1) {
+                                Log.i("[Manager] Registering phone state listener");
+                                mTelephonyManager.listen(
+                                        mPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
                             }
                         }
                     }
@@ -414,17 +439,6 @@ public class LinphoneManager implements SensorEventListener {
         } catch (RuntimeException e) {
             Log.e("[Manager] Destroy Core Runtime Exception: " + e);
         } finally {
-            try {
-                mContext.unregisterReceiver(mHookReceiver);
-            } catch (Exception e) {
-                Log.e("[Manager] unregister receiver exception: " + e);
-            }
-            try {
-                mContext.unregisterReceiver(mCallReceiver);
-            } catch (Exception e) {
-                Log.e("[Manager] unregister receiver exception: " + e);
-            }
-
             mCore = null;
         }
     }
@@ -529,24 +543,10 @@ public class LinphoneManager implements SensorEventListener {
             PushNotificationUtils.init(mContext);
         }
 
-        IntentFilter mCallIntentFilter =
-                new IntentFilter("android.intent.action.ACTION_NEW_OUTGOING_CALL");
-        mCallIntentFilter.setPriority(99999999);
-        mCallReceiver = new OutgoingCallReceiver();
-        try {
-            mContext.registerReceiver(mCallReceiver, mCallIntentFilter);
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        }
         mProximityWakelock =
                 mPowerManager.newWakeLock(
                         PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK,
                         mContext.getPackageName() + ";manager_proximity_sensor");
-
-        IntentFilter mHookIntentFilter = new IntentFilter("com.base.module.phone.HOOKEVENT");
-        mHookIntentFilter.setPriority(999);
-        mHookReceiver = new HookReceiver();
-        mContext.registerReceiver(mHookReceiver, mHookIntentFilter);
 
         resetCameraFromPreferences();
 
@@ -886,6 +886,9 @@ public class LinphoneManager implements SensorEventListener {
 
     public void setCallGsmON(boolean on) {
         mCallGsmON = on;
+        if (on) {
+            mCore.pauseAllCalls();
+        }
     }
 
     private String getString(int key) {

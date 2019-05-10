@@ -4,6 +4,10 @@
         <bitmap android:src="@drawable/route_earpiece_default"
             android:tint="?attr/drawableTintOverColor"/>
     </item>
+    <item android:state_selected="true">
+        <bitmap android:src="@drawable/route_earpiece_default"
+            android:tint="?attr/drawableTintOverColor"/>
+    </item>
     <item android:state_enabled="false">
         <bitmap android:src="@drawable/route_earpiece_default"
             android:tint="?attr/drawableTintDisabledColor"/>

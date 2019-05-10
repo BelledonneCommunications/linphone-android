@@ -256,4 +256,10 @@ public class Compatibility {
             ApiTwentyFivePlus.updateShortcuts(context);
         }
     }
+
+    public static void enterPipMode(Activity activity) {
+        if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
+            ApiTwentySixPlus.enterPipMode(activity);
+        }
+    }
 }

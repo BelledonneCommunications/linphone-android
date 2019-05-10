@@ -597,7 +597,7 @@ public class ContactEditorFragment extends Fragment {
         final LinphoneNumberOrAddress nounoa = tempNounoa;
         mNumbersAndAddresses.add(nounoa);
 
-        final View view = mInflater.inflate(R.layout.contact_edit_row, null);
+        final View view = mInflater.inflate(R.layout.contact_edit_cell, null);
 
         final EditText noa = view.findViewById(R.id.numoraddr);
         if (!isSIP) {
@@ -641,7 +641,7 @@ public class ContactEditorFragment extends Fragment {
     @SuppressLint("InflateParams")
     private void addEmptyRowToAllowNewNumberOrAddress(
             final LinearLayout controls, final boolean isSip) {
-        final View view = mInflater.inflate(R.layout.contact_edit_row, null);
+        final View view = mInflater.inflate(R.layout.contact_edit_cell, null);
         final LinphoneNumberOrAddress nounoa = new LinphoneNumberOrAddress(null, isSip);
 
         final EditText noa = view.findViewById(R.id.numoraddr);

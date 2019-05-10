@@ -23,12 +23,9 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -63,6 +60,9 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (mAbortCreation) {
+            return;
+        }
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.call_outgoing);
@@ -89,36 +89,49 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
                         if (state == State.Error) {
                             // Convert Core message for internalization
                             if (call.getErrorInfo().getReason() == Reason.Declined) {
-                                displayCustomToast(
-                                        getString(R.string.error_call_declined),
-                                        Toast.LENGTH_SHORT);
+                                Toast.makeText(
+                                                CallOutgoingActivity.this,
+                                                getString(R.string.error_call_declined),
+                                                Toast.LENGTH_SHORT)
+                                        .show();
                                 decline();
                             } else if (call.getErrorInfo().getReason() == Reason.NotFound) {
-                                displayCustomToast(
-                                        getString(R.string.error_user_not_found),
-                                        Toast.LENGTH_SHORT);
+                                Toast.makeText(
+                                                CallOutgoingActivity.this,
+                                                getString(R.string.error_user_not_found),
+                                                Toast.LENGTH_SHORT)
+                                        .show();
                                 decline();
                             } else if (call.getErrorInfo().getReason() == Reason.NotAcceptable) {
-                                displayCustomToast(
-                                        getString(R.string.error_incompatible_media),
-                                        Toast.LENGTH_SHORT);
+                                Toast.makeText(
+                                                CallOutgoingActivity.this,
+                                                getString(R.string.error_incompatible_media),
+                                                Toast.LENGTH_SHORT)
+                                        .show();
                                 decline();
                             } else if (call.getErrorInfo().getReason() == Reason.Busy) {
-                                displayCustomToast(
-                                        getString(R.string.error_user_busy), Toast.LENGTH_SHORT);
+                                Toast.makeText(
+                                                CallOutgoingActivity.this,
+                                                getString(R.string.error_user_busy),
+                                                Toast.LENGTH_SHORT)
+                                        .show();
                                 decline();
                             } else if (message != null) {
-                                displayCustomToast(
-                                        getString(R.string.error_unknown) + " - " + message,
-                                        Toast.LENGTH_SHORT);
+                                Toast.makeText(
+                                                CallOutgoingActivity.this,
+                                                getString(R.string.error_unknown) + " - " + message,
+                                                Toast.LENGTH_SHORT)
+                                        .show();
                                 decline();
                             }
                         } else if (state == State.End) {
                             // Convert Core message for internalization
                             if (call.getErrorInfo().getReason() == Reason.Declined) {
-                                displayCustomToast(
-                                        getString(R.string.error_call_declined),
-                                        Toast.LENGTH_SHORT);
+                                Toast.makeText(
+                                                CallOutgoingActivity.this,
+                                                getString(R.string.error_call_declined),
+                                                Toast.LENGTH_SHORT)
+                                        .show();
                                 decline();
                             }
                         } else if (state == State.Connected) {
@@ -221,20 +234,6 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
             finish();
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-    private void displayCustomToast(final String message, final int duration) {
-        LayoutInflater inflater = getLayoutInflater();
-        View layout = inflater.inflate(R.layout.toast, (ViewGroup) findViewById(R.id.toastRoot));
-
-        TextView toastText = layout.findViewById(R.id.toastMessage);
-        toastText.setText(message);
-
-        final Toast toast = new Toast(getApplicationContext());
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.setDuration(duration);
-        toast.setView(layout);
-        toast.show();
     }
 
     private void decline() {

@@ -1,7 +1,8 @@
-package org.linphone.fragments;
+package org.linphone.call;
+
 /*
-StatusFragment.java
-Copyright (C) 2017  Belledonne Communications, Grenoble, France
+CallStatusBarFragment.java
+Copyright (C) 2019 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -18,7 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
@@ -37,59 +37,46 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneService;
 import org.linphone.R;
-import org.linphone.call.CallActivity;
-import org.linphone.call.CallIncomingActivity;
-import org.linphone.call.CallOutgoingActivity;
 import org.linphone.core.Call;
-import org.linphone.core.Content;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
-import org.linphone.core.Event;
 import org.linphone.core.MediaEncryption;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.RegistrationState;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 
-public class StatusFragment extends Fragment {
+public class CallStatusBarFragment extends Fragment {
     private final Handler mRefreshHandler = new Handler();
-    private TextView mStatusText, mVoicemailCount;
-    private ImageView mStatusLed, mCallQuality, mEncryption, mMenu, mVoicemail;
+    private TextView mStatusText;
+    private ImageView mStatusLed, mCallQuality, mEncryption;
     private Runnable mCallQualityUpdater;
-    private boolean mIsInCall, mIsAttached = false;
     private CoreListenerStub mListener;
     private Dialog mZrtpDialog = null;
     private int mDisplayedQuality = -1;
-    private MenuClikedListener mMenuListener;
+    private StatsClikedListener mStatsListener;
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.status, container, false);
+        View view = inflater.inflate(R.layout.call_status_bar, container, false);
 
         mStatusText = view.findViewById(R.id.status_text);
         mStatusLed = view.findViewById(R.id.status_led);
         mCallQuality = view.findViewById(R.id.call_quality);
         mEncryption = view.findViewById(R.id.encryption);
-        mMenu = view.findViewById(R.id.side_menu_button);
-        mVoicemail = view.findViewById(R.id.voicemail);
-        mVoicemailCount = view.findViewById(R.id.voicemail_count);
 
-        mMenuListener = null;
-        mMenu.setOnClickListener(
+        mStatsListener = null;
+        mCallQuality.setOnClickListener(
                 new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (mMenuListener != null) {
-                            mMenuListener.onMenuCliked();
+                        if (mStatsListener != null) {
+                            mStatsListener.onStatsClicked();
                         }
                     }
                 });
-
-        // We create it once to not delay the first display
-        populateSliderContent();
 
         mListener =
                 new CoreListenerStub() {
@@ -98,11 +85,7 @@ public class StatusFragment extends Fragment {
                             final Core core,
                             final ProxyConfig proxy,
                             final RegistrationState state,
-                            String smessage) {
-                        if (!mIsAttached || !LinphoneService.isReady()) {
-                            return;
-                        }
-
+                            String message) {
                         if (core.getProxyConfigList() == null) {
                             mStatusLed.setImageResource(R.drawable.led_disconnected);
                             mStatusText.setText(getString(R.string.no_account));
@@ -136,169 +119,27 @@ public class StatusFragment extends Fragment {
                     }
 
                     @Override
-                    public void onNotifyReceived(
-                            Core core, Event ev, String eventName, Content content) {
-
-                        if (!content.getType().equals("application")) return;
-                        if (!content.getSubtype().equals("simple-message-summary")) return;
-
-                        if (content.getSize() == 0) return;
-
-                        int unreadCount = 0;
-                        String data = content.getStringBuffer().toLowerCase();
-                        String[] voiceMail = data.split("voice-message: ");
-                        if (voiceMail.length >= 2) {
-                            final String[] intToParse = voiceMail[1].split("/", 0);
-                            try {
-                                unreadCount = Integer.parseInt(intToParse[0]);
-                            } catch (NumberFormatException nfe) {
-                                Log.e("[Status Fragment] " + nfe);
-                            }
-                            if (unreadCount > 0) {
-                                mVoicemailCount.setText(String.valueOf(unreadCount));
-                                mVoicemail.setVisibility(View.VISIBLE);
-                                mVoicemailCount.setVisibility(View.VISIBLE);
-                            } else {
-                                mVoicemail.setVisibility(View.GONE);
-                                mVoicemailCount.setVisibility(View.GONE);
-                            }
+                    public void onCallStateChanged(
+                            Core core, Call call, Call.State state, String message) {
+                        if (state == Call.State.Resuming || state == Call.State.StreamsRunning) {
+                            refreshStatusItems(call);
                         }
+                    }
+
+                    @Override
+                    public void onCallEncryptionChanged(
+                            Core core, Call call, boolean on, String authenticationToken) {
+                        if (call.getCurrentParams()
+                                        .getMediaEncryption()
+                                        .equals(MediaEncryption.ZRTP)
+                                && !call.getAuthenticationTokenVerified()) {
+                            showZRTPDialog(call);
+                        }
+                        refreshStatusItems(call);
                     }
                 };
 
-        mIsAttached = true;
-        Activity activity = getActivity();
-
-        if (activity instanceof CallActivity) {
-            ((CallActivity) activity).updateStatusFragment(this);
-        }
-        mIsInCall =
-                activity instanceof CallActivity
-                        || activity instanceof CallIncomingActivity
-                        || activity instanceof CallOutgoingActivity;
-
         return view;
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mIsAttached = false;
-    }
-
-    public void setMenuListener(MenuClikedListener listener) {
-        mMenuListener = listener;
-    }
-
-    // NORMAL STATUS BAR
-
-    private void populateSliderContent() {
-        Core core = LinphoneManager.getCore();
-        if (core != null) {
-            mVoicemailCount.setVisibility(View.GONE);
-
-            if (!mIsInCall) {
-                mVoicemailCount.setVisibility(View.VISIBLE);
-            }
-
-            if (core.getProxyConfigList().length == 0) {
-                mStatusLed.setImageResource(R.drawable.led_disconnected);
-                mStatusText.setText(getString(R.string.no_account));
-            }
-        }
-    }
-
-    private int getStatusIconResource(RegistrationState state) {
-        try {
-            Core core = LinphoneManager.getCore();
-            boolean defaultAccountConnected =
-                    (core != null
-                            && core.getDefaultProxyConfig() != null
-                            && core.getDefaultProxyConfig().getState() == RegistrationState.Ok);
-            if (state == RegistrationState.Ok && defaultAccountConnected) {
-                return R.drawable.led_connected;
-            } else if (state == RegistrationState.Progress) {
-                return R.drawable.led_inprogress;
-            } else if (state == RegistrationState.Failed) {
-                return R.drawable.led_error;
-            } else {
-                return R.drawable.led_disconnected;
-            }
-        } catch (Exception e) {
-            Log.e(e);
-        }
-
-        return R.drawable.led_disconnected;
-    }
-
-    private String getStatusIconText(RegistrationState state) {
-        Context context = getActivity();
-        if (!mIsAttached && LinphoneService.isReady()) context = LinphoneService.instance();
-
-        try {
-            if (state == RegistrationState.Ok
-                    && LinphoneManager.getCore().getDefaultProxyConfig().getState()
-                            == RegistrationState.Ok) {
-                return context.getString(R.string.status_connected);
-            } else if (state == RegistrationState.Progress) {
-                return context.getString(R.string.status_in_progress);
-            } else if (state == RegistrationState.Failed) {
-                return context.getString(R.string.status_error);
-            } else {
-                return context.getString(R.string.status_not_connected);
-            }
-        } catch (Exception e) {
-            Log.e(e);
-        }
-
-        return context.getString(R.string.status_not_connected);
-    }
-
-    // INCALL STATUS BAR
-    private void startCallQuality() {
-        mCallQuality.setVisibility(View.VISIBLE);
-        mRefreshHandler.postDelayed(
-                mCallQualityUpdater =
-                        new Runnable() {
-                            final Call mCurrentCall = LinphoneManager.getCore().getCurrentCall();
-
-                            public void run() {
-                                if (mCurrentCall == null) {
-                                    mCallQualityUpdater = null;
-                                    return;
-                                }
-                                float newQuality = mCurrentCall.getCurrentQuality();
-                                updateQualityOfSignalIcon(newQuality);
-
-                                if (mIsInCall) {
-                                    mRefreshHandler.postDelayed(this, 1000);
-                                } else mCallQualityUpdater = null;
-                            }
-                        },
-                1000);
-    }
-
-    private void updateQualityOfSignalIcon(float quality) {
-        int iQuality = (int) quality;
-
-        if (iQuality == mDisplayedQuality) return;
-        if (quality >= 4) // Good Quality
-        {
-            mCallQuality.setImageResource(R.drawable.call_quality_indicator_4);
-        } else if (quality >= 3) // Average quality
-        {
-            mCallQuality.setImageResource(R.drawable.call_quality_indicator_3);
-        } else if (quality >= 2) // Low quality
-        {
-            mCallQuality.setImageResource(R.drawable.call_quality_indicator_2);
-        } else if (quality >= 1) // Very low quality
-        {
-            mCallQuality.setImageResource(R.drawable.call_quality_indicator_1);
-        } else // Worst quality
-        {
-            mCallQuality.setImageResource(R.drawable.call_quality_indicator_0);
-        }
-        mDisplayedQuality = iQuality;
     }
 
     @Override
@@ -314,14 +155,15 @@ public class StatusFragment extends Fragment {
             }
 
             Call call = core.getCurrentCall();
-            if (mIsInCall
-                    && (call != null || core.getConferenceSize() > 1 || core.getCallsNb() > 0)) {
+            if (call != null || core.getConferenceSize() > 1 || core.getCallsNb() > 0) {
                 if (call != null) {
                     startCallQuality();
                     refreshStatusItems(call);
+
+                    if (!call.getAuthenticationTokenVerified()) {
+                        showZRTPDialog(call);
+                    }
                 }
-                mMenu.setVisibility(View.INVISIBLE);
-                mCallQuality.setVisibility(View.VISIBLE);
 
                 // We are obviously connected
                 if (core.getDefaultProxyConfig() == null) {
@@ -354,9 +196,99 @@ public class StatusFragment extends Fragment {
         }
     }
 
+    public void setStatsListener(StatsClikedListener listener) {
+        mStatsListener = listener;
+    }
+
+    private int getStatusIconResource(RegistrationState state) {
+        try {
+            Core core = LinphoneManager.getCore();
+            boolean defaultAccountConnected =
+                    (core != null
+                            && core.getDefaultProxyConfig() != null
+                            && core.getDefaultProxyConfig().getState() == RegistrationState.Ok);
+            if (state == RegistrationState.Ok && defaultAccountConnected) {
+                return R.drawable.led_connected;
+            } else if (state == RegistrationState.Progress) {
+                return R.drawable.led_inprogress;
+            } else if (state == RegistrationState.Failed) {
+                return R.drawable.led_error;
+            } else {
+                return R.drawable.led_disconnected;
+            }
+        } catch (Exception e) {
+            Log.e(e);
+        }
+
+        return R.drawable.led_disconnected;
+    }
+
+    private String getStatusIconText(RegistrationState state) {
+        Context context = getActivity();
+        try {
+            if (state == RegistrationState.Ok
+                    && LinphoneManager.getCore().getDefaultProxyConfig().getState()
+                            == RegistrationState.Ok) {
+                return context.getString(R.string.status_connected);
+            } else if (state == RegistrationState.Progress) {
+                return context.getString(R.string.status_in_progress);
+            } else if (state == RegistrationState.Failed) {
+                return context.getString(R.string.status_error);
+            } else {
+                return context.getString(R.string.status_not_connected);
+            }
+        } catch (Exception e) {
+            Log.e(e);
+        }
+
+        return context.getString(R.string.status_not_connected);
+    }
+
+    private void startCallQuality() {
+        mRefreshHandler.postDelayed(
+                mCallQualityUpdater =
+                        new Runnable() {
+                            final Call mCurrentCall = LinphoneManager.getCore().getCurrentCall();
+
+                            public void run() {
+                                if (mCurrentCall == null) {
+                                    mCallQualityUpdater = null;
+                                    return;
+                                }
+                                float newQuality = mCurrentCall.getCurrentQuality();
+                                updateQualityOfSignalIcon(newQuality);
+
+                                mRefreshHandler.postDelayed(this, 1000);
+                            }
+                        },
+                1000);
+    }
+
+    private void updateQualityOfSignalIcon(float quality) {
+        int iQuality = (int) quality;
+
+        if (iQuality == mDisplayedQuality) return;
+        if (quality >= 4) // Good Quality
+        {
+            mCallQuality.setImageResource(R.drawable.call_quality_indicator_4);
+        } else if (quality >= 3) // Average quality
+        {
+            mCallQuality.setImageResource(R.drawable.call_quality_indicator_3);
+        } else if (quality >= 2) // Low quality
+        {
+            mCallQuality.setImageResource(R.drawable.call_quality_indicator_2);
+        } else if (quality >= 1) // Very low quality
+        {
+            mCallQuality.setImageResource(R.drawable.call_quality_indicator_1);
+        } else // Worst quality
+        {
+            mCallQuality.setImageResource(R.drawable.call_quality_indicator_0);
+        }
+        mDisplayedQuality = iQuality;
+    }
+
     public void refreshStatusItems(final Call call) {
         if (call != null) {
-            mVoicemailCount.setVisibility(View.GONE);
             MediaEncryption mediaEncryption = call.getCurrentParams().getMediaEncryption();
 
             mEncryption.setVisibility(View.VISIBLE);
@@ -491,7 +423,7 @@ public class StatusFragment extends Fragment {
         }
     }
 
-    public interface MenuClikedListener {
-        void onMenuCliked();
+    public interface StatsClikedListener {
+        void onStatsClicked();
     }
 }
