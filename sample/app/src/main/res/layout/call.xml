@@ -16,4 +16,12 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true" />
 
+    <Button
+        android:id="@+id/terminate_call"
+        android:text="Terminate call"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 </RelativeLayout>

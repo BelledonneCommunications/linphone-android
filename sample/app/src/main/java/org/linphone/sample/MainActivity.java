@@ -5,11 +5,21 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 
+import org.linphone.core.Address;
+import org.linphone.core.Call;
+import org.linphone.core.CallParams;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.ProxyConfig;
@@ -21,6 +31,8 @@ import java.util.ArrayList;
 public class MainActivity extends Activity {
     private ImageView mLed;
     private CoreListenerStub mCoreListener;
+
+    private EditText mSipAddressToCall;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,6 +49,25 @@ public class MainActivity extends Activity {
                 updateLed(state);
             }
         };
+
+        mSipAddressToCall = findViewById(R.id.address_to_call);
+
+        Button callButton = findViewById(R.id.call_button);
+        callButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Core core = LinphoneService.getCore();
+                Address addressToCall = core.interpretUrl(mSipAddressToCall.getText().toString());
+                CallParams params = core.createCallParams(null);
+
+                Switch videoEnabled = findViewById(R.id.call_with_video);
+                params.enableVideo(videoEnabled.isChecked());
+
+                if (addressToCall != null) {
+                    core.inviteAddressWithParams(addressToCall, params);
+                }
+            }
+        });
     }
 
     @Override
