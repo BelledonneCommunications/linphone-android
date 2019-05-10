@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.TextureView;
+import android.view.View;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
@@ -42,7 +43,7 @@ public class CallActivity extends Activity {
         // Listen for call state changes
         mCoreListener = new CoreListenerStub() {
             @Override
-            public void onCallStateChanged(Core lc, Call call, Call.State state, String message) {
+            public void onCallStateChanged(Core core, Call call, Call.State state, String message) {
                 if (state == Call.State.End || state == Call.State.Released) {
                     // Once call is finished (end state), terminate the activity
                     // We also check for released state (called a few seconds later) just in case
@@ -51,6 +52,21 @@ public class CallActivity extends Activity {
                 }
             }
         };
+
+        findViewById(R.id.terminate_call).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Core core = LinphoneService.getCore();
+                if (core.getCallsNb() > 0) {
+                    Call call = core.getCurrentCall();
+                    if (call == null) {
+                        // Current call can be null if paused for example
+                        call = core.getCalls()[0];
+                    }
+                    call.terminate();
+                }
+            }
+        });
     }
 
     @Override

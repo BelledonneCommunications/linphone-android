@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -76,7 +77,9 @@ public class LinphoneService extends Service {
         // This will be our main Core listener, it will change activities depending on events
         mCoreListener = new CoreListenerStub() {
             @Override
-            public void onCallStateChanged(Core lc, Call call, Call.State state, String message) {
+            public void onCallStateChanged(Core core, Call call, Call.State state, String message) {
+                Toast.makeText(LinphoneService.this, message, Toast.LENGTH_SHORT).show();
+
                 if (state == Call.State.IncomingReceived) {
                     // For this sample we will automatically answer incoming calls
                     CallParams params = getCore().createCallParams(call);
