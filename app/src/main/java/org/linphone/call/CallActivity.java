@@ -105,11 +105,10 @@ public class CallActivity extends LinphoneGenericActivity
             mContactAvatar,
             mActiveCallHeader,
             mConferenceHeader;
-    private LinearLayout mNoCurrentCall, mCallsList, mCallPausedByRemote, mConferenceList;
+    private LinearLayout mCallsList, mCallPausedByRemote, mConferenceList;
     private ImageView mMicro, mSpeaker, mVideo;
     private ImageView mPause, mSwitchCamera, mRecordingInProgress;
-    private ImageView mExtrasButtons, mAddCall, mTransferCall, mRecordCall;
-    private ImageView mConference;
+    private ImageView mExtrasButtons, mAddCall, mTransferCall, mRecordCall, mConference;
     private ImageView mAudioRoute, mRouteEarpiece, mRouteSpeaker, mRouteBluetooth;
     private Numpad mNumpad;
     private TextView mContactName, mMissedMessages;
@@ -157,7 +156,6 @@ public class CallActivity extends LinphoneGenericActivity
 
         mActiveCalls = findViewById(R.id.active_calls);
         mActiveCallHeader = findViewById(R.id.active_call);
-        mNoCurrentCall = findViewById(R.id.no_current_call);
         mCallPausedByRemote = findViewById(R.id.remote_pause);
         mCallsList = findViewById(R.id.calls_list);
         mConferenceList = findViewById(R.id.conference_list);
@@ -477,7 +475,9 @@ public class CallActivity extends LinphoneGenericActivity
             core.setNativeVideoWindowId(null);
             core.setNativePreviewWindowId(null);
         }
-        mZoomHelper.destroy();
+        if (mZoomHelper != null) {
+            mZoomHelper.destroy();
+        }
     }
 
     @Override
@@ -921,7 +921,7 @@ public class CallActivity extends LinphoneGenericActivity
         LinearLayout conferenceCallView =
                 (LinearLayout)
                         LayoutInflater.from(this)
-                                .inflate(R.layout.conference_call_cell, null, false);
+                                .inflate(R.layout.call_conference_cell, null, false);
 
         TextView contactNameView = conferenceCallView.findViewById(R.id.contact_name);
         LinphoneContact contact =
@@ -958,7 +958,7 @@ public class CallActivity extends LinphoneGenericActivity
         LinearLayout pausedConferenceView =
                 (LinearLayout)
                         LayoutInflater.from(this)
-                                .inflate(R.layout.conference_paused_row, null, false);
+                                .inflate(R.layout.call_conference_paused_cell, null, false);
 
         ImageView conferenceResume = pausedConferenceView.findViewById(R.id.conference_resume);
         conferenceResume.setSelected(true);
@@ -1007,8 +1007,6 @@ public class CallActivity extends LinphoneGenericActivity
                 pausedConferenceDisplayed || callThatIsNotCurrentFound ? View.VISIBLE : View.GONE);
         mActiveCallHeader.setVisibility(
                 currentCall != null && !conferenceDisplayed ? View.VISIBLE : View.GONE);
-        mNoCurrentCall.setVisibility(
-                currentCall != null || conferenceDisplayed ? View.GONE : View.VISIBLE);
         mConferenceHeader.setVisibility(conferenceDisplayed ? View.VISIBLE : View.GONE);
         mConferenceList.setVisibility(mConferenceHeader.getVisibility());
     }

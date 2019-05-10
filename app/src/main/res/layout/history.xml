@@ -79,7 +79,7 @@
 
         </LinearLayout>
 
-        <include layout="@layout/edit_list" />
+        <include layout="@layout/edit_list" android:visibility="gone" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/history_list"

@@ -221,7 +221,7 @@ public class ContactDetailsFragment extends Fragment implements ContactsUpdatedL
         controls.removeAllViews();
         for (LinphoneNumberOrAddress noa : mContact.getNumbersOrAddresses()) {
             boolean skip;
-            View v = inflater.inflate(R.layout.contact_control_row, null);
+            View v = inflater.inflate(R.layout.contact_control_cell, null);
 
             String value = noa.getValue();
             String displayedNumberOrAddress = value;
