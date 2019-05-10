@@ -9,12 +9,15 @@
     android:orientation="horizontal"
     android:padding="2dp">
 
-    <ImageView
-        android:id="@+id/contactPicture"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/avatar" />
+    <RelativeLayout
+        android:id="@+id/avatar"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center">
 
+        <include layout="@layout/contact_avatar" />
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="0dip"
@@ -23,7 +26,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/contactNameOrNumber"
+            android:id="@+id/contact_name"
             style="@style/contact_name_list_cell_font"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -44,9 +47,8 @@
 
     </LinearLayout>
 
-
     <ImageView
-        android:id="@+id/quitConference"
+        android:id="@+id/remove_from_conference"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:adjustViewBounds="true"

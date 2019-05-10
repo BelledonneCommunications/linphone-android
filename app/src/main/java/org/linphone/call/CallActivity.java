@@ -52,7 +52,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.activities.DialerActivity;
-import org.linphone.activities.ThemeableActivity;
+import org.linphone.activities.LinphoneGenericActivity;
 import org.linphone.chat.ChatActivity;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
@@ -73,7 +73,7 @@ import org.linphone.utils.LinphoneUtils;
 import org.linphone.views.ContactAvatar;
 import org.linphone.views.Numpad;
 
-public class CallActivity extends ThemeableActivity
+public class CallActivity extends LinphoneGenericActivity
         implements CallStatusBarFragment.StatsClikedListener,
                 ContactsUpdatedListener,
                 CallActivityInterface {
@@ -100,12 +100,13 @@ public class CallActivity extends ThemeableActivity
 
     private int mPreviewX, mPreviewY;
     private TextureView mLocalPreview, mRemoteVideo;
-    private RelativeLayout mActiveCalls, mContactAvatar, mActiveCallHeader;
-    private LinearLayout mMenu, mNoCurrentCall, mCallsList, mCallPausedByRemote;
+    private RelativeLayout mActiveCalls, mContactAvatar, mActiveCallHeader, mConferenceHeader;
+    private LinearLayout mButtons, mNoCurrentCall, mCallsList, mCallPausedByRemote, mConferenceList;
     private ImageView mMicro, mSpeaker, mVideo;
     private ImageView mNumpadButton, mHangUp, mChat;
     private ImageView mPause, mSwitchCamera, mRecordingInProgress;
-    private ImageView mExtrasButtons, mAddCall, mTransferCall, mRecordCall, mConference;
+    private ImageView mExtrasButtons, mAddCall, mTransferCall, mRecordCall;
+    private ImageView mConference, mConferencePause;
     private ImageView mAudioRoute, mRouteEarpiece, mRouteSpeaker, mRouteBluetooth;
     private Numpad mNumpad;
     private TextView mContactName, mMissedMessages;
@@ -124,6 +125,9 @@ public class CallActivity extends ThemeableActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (mAbortCreation) {
+            return;
+        }
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         Compatibility.setShowWhenLocked(this, true);
@@ -154,7 +158,19 @@ public class CallActivity extends ThemeableActivity
         mNoCurrentCall = findViewById(R.id.no_current_call);
         mCallPausedByRemote = findViewById(R.id.remote_pause);
         mCallsList = findViewById(R.id.calls_list);
-        mMenu = findViewById(R.id.menu);
+        mConferenceList = findViewById(R.id.conference_list);
+        mConferenceHeader = findViewById(R.id.conference_header);
+        mButtons = findViewById(R.id.buttons);
+
+        mConferencePause = findViewById(R.id.conference_pause);
+        mConferencePause.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        LinphoneManager.getCallManager().pauseConference();
+                        updateCallsList();
+                    }
+                });
 
         mContactName = findViewById(R.id.current_contact_name);
         mContactAvatar = findViewById(R.id.avatar_layout);
@@ -268,7 +284,7 @@ public class CallActivity extends ThemeableActivity
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // TODO
+                        mCore.addAllToConference();
                     }
                 });
 
@@ -383,7 +399,6 @@ public class CallActivity extends ThemeableActivity
                         } else if (state == Call.State.StreamsRunning) {
                             mCallPausedByRemote.setVisibility(View.GONE);
 
-                            updateButtons();
                             setCurrentCallContactInformation();
                             updateInterfaceDependingOnVideo();
                         } else if (state == Call.State.UpdatedByRemote) {
@@ -404,6 +419,7 @@ public class CallActivity extends ThemeableActivity
                             }
                         }
 
+                        updateButtons();
                         updateCallsList();
                     }
                 };
@@ -431,7 +447,7 @@ public class CallActivity extends ThemeableActivity
         updateMissedChatCount();
         updateInterfaceDependingOnVideo();
 
-        setCurrentCallContactInformation();
+        updateCallsList();
         ContactsManager.getInstance().addContactsListener(this);
         LinphoneManager.getCallManager().setCallInterface(this);
 
@@ -530,6 +546,7 @@ public class CallActivity extends ThemeableActivity
 
     @Override
     public void onUserLeaveHint() {
+        if (mCore == null) return;
         Call call = mCore.getCurrentCall();
         if (call == null) return;
         boolean videoEnabled =
@@ -597,6 +614,11 @@ public class CallActivity extends ThemeableActivity
         mRecordCall.setSelected(call != null && call.isRecording());
         mRecordingInProgress.setVisibility(
                 call != null && call.isRecording() ? View.VISIBLE : View.GONE);
+
+        mConference.setEnabled(
+                mCore.getCallsNb() > 1
+                        && mCore.getCallsNb() > mCore.getConferenceSize()
+                        && !mCore.soundResourcesLocked());
     }
 
     private void toggleMic() {
@@ -684,7 +706,7 @@ public class CallActivity extends ThemeableActivity
     private void updateButtonsVisibility(boolean visible) {
         findViewById(R.id.status_bar_fragment).setVisibility(visible ? View.VISIBLE : View.GONE);
         mActiveCalls.setVisibility(visible ? View.VISIBLE : View.GONE);
-        mMenu.setVisibility(visible ? View.VISIBLE : View.GONE);
+        mButtons.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     private void makeButtonsVisibleTemporary() {
@@ -891,28 +913,108 @@ public class CallActivity extends ThemeableActivity
         mCallUpdateDialog.show();
     }
 
+    // CONFERENCE
+
+    private void displayConferenceCall(final Call call) {
+        LinearLayout conferenceCallView =
+                (LinearLayout)
+                        LayoutInflater.from(this)
+                                .inflate(R.layout.conference_call_cell, null, false);
+
+        TextView contactNameView = conferenceCallView.findViewById(R.id.contact_name);
+        LinphoneContact contact =
+                ContactsManager.getInstance().findContactFromAddress(call.getRemoteAddress());
+        if (contact != null) {
+            ContactAvatar.displayAvatar(
+                    contact, conferenceCallView.findViewById(R.id.avatar_layout), true);
+            contactNameView.setText(contact.getFullName());
+        } else {
+            String displayName = LinphoneUtils.getAddressDisplayName(call.getRemoteAddress());
+            ContactAvatar.displayAvatar(
+                    displayName, conferenceCallView.findViewById(R.id.avatar_layout), true);
+            contactNameView.setText(displayName);
+        }
+
+        Chronometer timer = conferenceCallView.findViewById(R.id.call_timer);
+        timer.setBase(SystemClock.elapsedRealtime() - 1000 * call.getDuration());
+        timer.start();
+
+        ImageView removeFromConference =
+                conferenceCallView.findViewById(R.id.remove_from_conference);
+        removeFromConference.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        LinphoneManager.getCallManager().removeCallFromConference(call);
+                    }
+                });
+
+        mConferenceList.addView(conferenceCallView);
+    }
+
+    private void displayPausedConference() {
+        LinearLayout pausedConferenceView =
+                (LinearLayout)
+                        LayoutInflater.from(this)
+                                .inflate(R.layout.conference_paused_row, null, false);
+
+        ImageView conferenceResume = pausedConferenceView.findViewById(R.id.conference_resume);
+        conferenceResume.setSelected(true);
+        conferenceResume.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        LinphoneManager.getCallManager().resumeConference();
+                        updateCallsList();
+                    }
+                });
+
+        mCallsList.addView(pausedConferenceView);
+    }
+
     // OTHER
 
     private void updateCallsList() {
         Call currentCall = mCore.getCurrentCall();
-        mActiveCallHeader.setVisibility(currentCall != null ? View.VISIBLE : View.GONE);
-        mNoCurrentCall.setVisibility(currentCall != null ? View.GONE : View.VISIBLE);
+        if (currentCall != null) {
+            setCurrentCallContactInformation();
+        }
 
         boolean callThatIsNotCurrentFound = false;
+        boolean pausedConferenceDisplayed = false;
+        boolean conferenceDisplayed = false;
         mCallsList.removeAllViews();
+        mConferenceList.removeAllViews();
+
         for (Call call : mCore.getCalls()) {
-            if (call != currentCall) {
+            if (call.getConference() != null) {
+                if (mCore.isInConference()) {
+                    displayConferenceCall(call);
+                    conferenceDisplayed = true;
+                } else if (!pausedConferenceDisplayed) {
+                    displayPausedConference();
+                    pausedConferenceDisplayed = true;
+                }
+            } else if (call != currentCall) {
                 displayPausedCall(call);
                 callThatIsNotCurrentFound = true;
             }
         }
-        mCallsList.setVisibility(callThatIsNotCurrentFound ? View.VISIBLE : View.GONE);
+
+        mCallsList.setVisibility(
+                pausedConferenceDisplayed || callThatIsNotCurrentFound ? View.VISIBLE : View.GONE);
+        mActiveCallHeader.setVisibility(
+                currentCall != null && !conferenceDisplayed ? View.VISIBLE : View.GONE);
+        mNoCurrentCall.setVisibility(
+                currentCall != null || conferenceDisplayed ? View.GONE : View.VISIBLE);
+        mConferenceHeader.setVisibility(conferenceDisplayed ? View.VISIBLE : View.GONE);
+        mConferenceList.setVisibility(mConferenceHeader.getVisibility());
     }
 
     private void displayPausedCall(final Call call) {
-        LayoutInflater inflater = LayoutInflater.from(this);
         LinearLayout callView =
-                (LinearLayout) inflater.inflate(R.layout.call_inactive_row, null, false);
+                (LinearLayout)
+                        LayoutInflater.from(this).inflate(R.layout.call_inactive_row, null, false);
 
         TextView contactName = callView.findViewById(R.id.contact_name);
         Address address = call.getRemoteAddress();

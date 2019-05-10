@@ -269,6 +269,39 @@ public class CallManager {
         }
     }
 
+    public void removeCallFromConference(Call call) {
+        if (call == null || call.getConference() == null) {
+            return;
+        }
+        call.getConference().removeParticipant(call.getRemoteAddress());
+
+        if (call.getCore().getConferenceSize() <= 1) {
+            call.getCore().leaveConference();
+        }
+    }
+
+    public void pauseConference() {
+        Core core = LinphoneManager.getCore();
+        if (core == null) return;
+        if (core.isInConference()) {
+            Log.i("[Call Manager] Pausing conference");
+            core.leaveConference();
+        } else {
+            Log.w("[Call Manager] Core isn't in a conference, can't pause it");
+        }
+    }
+
+    public void resumeConference() {
+        Core core = LinphoneManager.getCore();
+        if (core == null) return;
+        if (!core.isInConference()) {
+            Log.i("[Call Manager] Resuming conference");
+            core.enterConference();
+        } else {
+            Log.w("[Call Manager] Core is already in a conference, can't resume it");
+        }
+    }
+
     private void inviteAddress(
             Address address, boolean videoEnabled, boolean lowBandwidth, boolean forceZRTP) {
         Core core = LinphoneManager.getCore();
