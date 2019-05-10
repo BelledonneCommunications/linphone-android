@@ -7,10 +7,10 @@
 
     <fragment
         android:id="@+id/status"
-        android:name="org.linphone.fragments.StatusFragment"
+        android:name="org.linphone.fragments.StatusBarFragment"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        tools:layout="@layout/status" />
+        tools:layout="@layout/status_bar" />
 
     <include
         android:id="@+id/top_bar"
@@ -56,7 +56,7 @@
 
         <TextView
             android:id="@+id/answer_no"
-            android:text="No"
+            android:text="@string/no"
             android:textAllCaps="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -72,7 +72,7 @@
 
         <TextView
             android:id="@+id/answer_yes"
-            android:text="Yes"
+            android:text="@string/yes"
             android:textAllCaps="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

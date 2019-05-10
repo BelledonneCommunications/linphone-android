@@ -45,7 +45,6 @@ import org.linphone.core.LoggingServiceListener;
 import org.linphone.core.tools.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.notifications.NotificationsManager;
-import org.linphone.receivers.BluetoothManager;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.ActivityMonitor;
 import org.linphone.utils.DeviceOrientationEventListener;
@@ -103,7 +102,6 @@ public final class LinphoneService extends Service {
     private NotificationsManager mNotificationManager;
     private LinphoneManager mLinphoneManager;
     private ContactsManager mContactsManager;
-    private BluetoothManager mBluetoothManager;
     private DeviceOrientationEventListener mOrientationHelper;
 
     private Class<? extends Activity> mIncomingReceivedActivity = CallIncomingActivity.class;
@@ -215,8 +213,6 @@ public final class LinphoneService extends Service {
                             ContactsContract.Contacts.CONTENT_URI, true, mContactsManager);
         }
 
-        mBluetoothManager = new BluetoothManager();
-
         Compatibility.createChatShortcuts(this);
         mOrientationHelper.enable();
 
@@ -268,7 +264,6 @@ public final class LinphoneService extends Service {
             mNotificationManager.destroy();
         }
         mContactsManager.destroy();
-        mBluetoothManager.destroy();
 
         if (LinphonePreferences.instance().useJavaLogger()) {
             Factory.instance().getLoggingService().removeListener(mJavaLoggingService);
@@ -309,10 +304,6 @@ public final class LinphoneService extends Service {
 
     public ContactsManager getContactsManager() {
         return mContactsManager;
-    }
-
-    public BluetoothManager getBluetoothManager() {
-        return mBluetoothManager;
     }
 
     public void createOverlay() {

@@ -44,7 +44,7 @@
             android:src="@drawable/delete" />
     </LinearLayout>
 
-    <include layout="@layout/edit_list" />
+    <include layout="@layout/edit_list" android:visibility="gone" />
 
     <RelativeLayout
         android:layout_width="match_parent"

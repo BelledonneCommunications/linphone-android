@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import static org.linphone.compatibility.Compatibility.CHAT_NOTIFICATIONS_GROUP;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -30,10 +31,12 @@ import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.provider.Settings;
 import org.linphone.R;
+import org.linphone.core.tools.Log;
 import org.linphone.notifications.Notifiable;
 import org.linphone.notifications.NotifiableMessage;
 
@@ -259,5 +262,15 @@ class ApiTwentySixPlus {
     public static void setFragmentTransactionReorderingAllowed(
             FragmentTransaction transaction, boolean allowed) {
         transaction.setReorderingAllowed(allowed);
+    }
+
+    public static void enterPipMode(Activity activity) {
+        boolean supportsPip =
+                activity.getPackageManager()
+                        .hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE);
+        Log.i("[Call] Is picture in picture supported: " + supportsPip);
+        if (supportsPip) {
+            activity.enterPictureInPictureMode();
+        }
     }
 }

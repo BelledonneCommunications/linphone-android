@@ -38,8 +38,7 @@ class ApiTwentyThreePlus {
     public static boolean isDoNotDisturbSettingsAccessGranted(Context context) {
         NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        boolean accessGranted = notificationManager.isNotificationPolicyAccessGranted();
-        return accessGranted;
+        return notificationManager.isNotificationPolicyAccessGranted();
     }
 
     public static boolean isDoNotDisturbPolicyAllowingRinging(

@@ -23,7 +23,13 @@ import static android.media.AudioManager.MODE_RINGTONE;
 import static android.media.AudioManager.STREAM_RING;
 import static android.media.AudioManager.STREAM_VOICE_CALL;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothHeadset;
+import android.bluetooth.BluetoothProfile;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -33,6 +39,7 @@ import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.List;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.compatibility.Compatibility;
@@ -42,7 +49,8 @@ import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.EcCalibratorStatus;
 import org.linphone.core.tools.Log;
-import org.linphone.receivers.BluetoothManager;
+import org.linphone.receivers.BluetoothReceiver;
+import org.linphone.receivers.HeadsetReceiver;
 import org.linphone.settings.LinphonePreferences;
 
 public class AndroidAudioManager {
@@ -53,10 +61,16 @@ public class AndroidAudioManager {
     private Call mRingingCall;
     private MediaPlayer mRingerPlayer;
     private final Vibrator mVibrator;
+    private BluetoothAdapter mBluetoothAdapter;
+    private BluetoothHeadset mBluetoothHeadset;
+    private BluetoothReceiver mBluetoothReceiver;
+    private HeadsetReceiver mHeadsetReceiver;
 
     private boolean mIsRinging;
     private boolean mAudioFocused;
     private boolean mEchoTesterIsRunning;
+    private boolean mIsBluetoothHeadsetConnected;
+    private boolean mIsBluetoothHeadsetScoConnected;
 
     private CoreListenerStub mListener;
 
@@ -65,6 +79,8 @@ public class AndroidAudioManager {
         mAudioManager = ((AudioManager) context.getSystemService(Context.AUDIO_SERVICE));
         mVibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         mEchoTesterIsRunning = false;
+
+        startBluetooth();
 
         mListener =
                 new CoreListenerStub() {
@@ -103,6 +119,15 @@ public class AndroidAudioManager {
                                     // mAudioManager.abandonAudioFocus(null);
                                     requestAudioFocus(STREAM_VOICE_CALL);
                                 }
+                                if (!mIsBluetoothHeadsetConnected) {
+                                    if (mContext.getResources().getBoolean(R.bool.isTablet)) {
+                                        routeAudioToSpeaker();
+                                    } else {
+                                        routeAudioToEarPiece();
+                                    }
+                                }
+                                // Only register this one when a call is active
+                                enableHeadsetReceiver();
                             }
                         } else if (state == Call.State.End || state == Call.State.Error) {
                             if (core.getCallsNb() == 0) {
@@ -116,6 +141,12 @@ public class AndroidAudioManager {
                                                             ? "Granted"
                                                             : "Denied"));
                                     mAudioFocused = false;
+                                }
+
+                                // Only register this one when a call is active
+                                if (mHeadsetReceiver != null) {
+                                    Log.i("[Audio Manager] Unregistering headset receiver");
+                                    mContext.unregisterReceiver(mHeadsetReceiver);
                                 }
 
                                 TelephonyManager tm =
@@ -137,12 +168,16 @@ public class AndroidAudioManager {
                             // ringback is heard normally in earpiece or bluetooth receiver.
                             setAudioManagerInCallMode();
                             requestAudioFocus(STREAM_VOICE_CALL);
-                            startBluetooth();
+                            if (mIsBluetoothHeadsetConnected) {
+                                routeAudioToBluetooth();
+                            }
                         }
 
                         if (state == Call.State.StreamsRunning) {
-                            startBluetooth();
                             setAudioManagerInCallMode();
+                            if (mIsBluetoothHeadsetConnected) {
+                                routeAudioToBluetooth();
+                            }
                         }
                     }
 
@@ -162,6 +197,16 @@ public class AndroidAudioManager {
     }
 
     public void destroy() {
+        if (mBluetoothAdapter != null && mBluetoothHeadset != null) {
+            Log.i("[Audio Manager] [Bluetooth] Closing HEADSET profile proxy");
+            mBluetoothAdapter.closeProfileProxy(BluetoothProfile.HEADSET, mBluetoothHeadset);
+
+            Log.i("[Audio Manager] [Bluetooth] Unegistering bluetooth receiver");
+            if (mBluetoothReceiver != null) {
+                mContext.unregisterReceiver(mBluetoothReceiver);
+            }
+        }
+
         Core core = LinphoneManager.getCore();
         if (core != null) {
             core.removeListener(mListener);
@@ -183,7 +228,11 @@ public class AndroidAudioManager {
     }
 
     public boolean isAudioRoutedToSpeaker() {
-        return mAudioManager.isSpeakerphoneOn();
+        return mAudioManager.isSpeakerphoneOn() && !isUsingBluetoothAudioRoute();
+    }
+
+    public boolean isAudioRoutedToEarpiece() {
+        return !mAudioManager.isSpeakerphoneOn() && !isUsingBluetoothAudioRoute();
     }
 
     /* Echo cancellation */
@@ -263,12 +312,6 @@ public class AndroidAudioManager {
         mAudioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
     }
 
-    private void startBluetooth() {
-        if (BluetoothManager.getInstance().isBluetoothHeadsetAvailable()) {
-            BluetoothManager.getInstance().routeAudioToBluetooth();
-        }
-    }
-
     private void requestAudioFocus(int stream) {
         if (!mAudioFocused) {
             int res =
@@ -297,10 +340,7 @@ public class AndroidAudioManager {
             return;
         }
 
-        if (mContext.getResources().getBoolean(R.bool.allow_ringing_while_early_media)) {
-            routeAudioToSpeaker(); // Need to be able to ear the ringtone during the early media
-        }
-
+        routeAudioToSpeaker();
         mAudioManager.setMode(MODE_RINGTONE);
 
         try {
@@ -354,23 +394,14 @@ public class AndroidAudioManager {
         }
 
         mIsRinging = false;
-        if (!BluetoothManager.getInstance().isBluetoothHeadsetAvailable()) {
-            if (mContext.getResources().getBoolean(R.bool.isTablet)) {
-                Log.d("[Audio Manager] Stopped ringing, routing back to speaker");
-                routeAudioToSpeaker();
-            } else {
-                Log.d("[Audio Manager] Stopped ringing, routing back to earpiece");
-                routeAudioToEarPiece();
-            }
-        }
     }
 
     private void routeAudioToSpeakerHelper(boolean speakerOn) {
-        Log.w(
-                "[Audio Manager] Routing audio to "
-                        + (speakerOn ? "speaker" : "earpiece")
-                        + ", disabling bluetooth audio route");
-        BluetoothManager.getInstance().disableBluetoothSCO();
+        Log.w("[Audio Manager] Routing audio to " + (speakerOn ? "speaker" : "earpiece"));
+        if (mIsBluetoothHeadsetScoConnected) {
+            Log.w("[Audio Manager] [Bluetooth] Disabling bluetooth audio route");
+            changeBluetoothSco(false);
+        }
 
         mAudioManager.setSpeakerphoneOn(speakerOn);
     }
@@ -382,5 +413,188 @@ public class AndroidAudioManager {
                 LINPHONE_VOLUME_STREAM,
                 i < 0 ? AudioManager.ADJUST_LOWER : AudioManager.ADJUST_RAISE,
                 AudioManager.FLAG_SHOW_UI);
+    }
+
+    // Bluetooth
+
+    public synchronized void bluetoothHeadetConnectionChanged(boolean connected) {
+        mIsBluetoothHeadsetConnected = connected;
+        mAudioManager.setBluetoothScoOn(connected);
+    }
+
+    public synchronized void bluetoothHeadetAudioConnectionChanged(boolean connected) {
+        mIsBluetoothHeadsetScoConnected = connected;
+        mAudioManager.setBluetoothScoOn(connected);
+    }
+
+    public synchronized boolean isBluetoothHeadsetConnected() {
+        return mIsBluetoothHeadsetConnected;
+    }
+
+    public synchronized void bluetoothHeadetScoConnectionChanged(boolean connected) {
+        mIsBluetoothHeadsetScoConnected = connected;
+        LinphoneManager.getCallManager().refreshInCallActions();
+    }
+
+    public synchronized boolean isUsingBluetoothAudioRoute() {
+        return mIsBluetoothHeadsetScoConnected;
+    }
+
+    public synchronized void routeAudioToBluetooth() {
+        if (!isBluetoothHeadsetConnected()) {
+            Log.w("[Audio Manager] [Bluetooth] No headset connected");
+            return;
+        }
+        if (mAudioManager.getMode() != AudioManager.MODE_IN_COMMUNICATION) {
+            Log.w(
+                    "[Audio Manager] [Bluetooth] Changing audio mode to MODE_IN_COMMUNICATION and requesting STREAM_VOICE_CALL focus");
+            mAudioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
+            requestAudioFocus(STREAM_VOICE_CALL);
+        }
+        changeBluetoothSco(true);
+    }
+
+    private synchronized void changeBluetoothSco(final boolean enable) {
+        // IT WILL TAKE A CERTAIN NUMBER OF CALLS TO EITHER START/STOP BLUETOOTH SCO FOR IT TO WORK
+        if (enable && mIsBluetoothHeadsetScoConnected) {
+            Log.i("[Audio Manager] [Bluetooth] SCO already enabled, skipping");
+            return;
+        } else if (!enable && !mIsBluetoothHeadsetScoConnected) {
+            Log.i("[Audio Manager] [Bluetooth] SCO already disabled, skipping");
+            return;
+        }
+
+        new Thread() {
+            @Override
+            public void run() {
+                boolean resultAcknoledged;
+                int retries = 0;
+                do {
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        Log.e(e);
+                    }
+
+                    synchronized (AndroidAudioManager.this) {
+                        if (enable) {
+                            Log.i(
+                                    "[Audio Manager] [Bluetooth] Starting SCO: try number "
+                                            + retries);
+                            mAudioManager.startBluetoothSco();
+                        } else {
+                            Log.i(
+                                    "[Audio Manager] [Bluetooth] Stopping SCO: try number "
+                                            + retries);
+                            mAudioManager.stopBluetoothSco();
+                        }
+                        resultAcknoledged = isUsingBluetoothAudioRoute() == enable;
+                        retries++;
+                    }
+                } while (!resultAcknoledged && retries < 10);
+            }
+        }.start();
+    }
+
+    private void startBluetooth() {
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mBluetoothAdapter != null) {
+            Log.i("[Audio Manager] [Bluetooth] Adapter found");
+            if (mAudioManager.isBluetoothScoAvailableOffCall()) {
+                Log.i("[Audio Manager] [Bluetooth] SCO available off call, continue");
+            } else {
+                Log.w("[Audio Manager] [Bluetooth] SCO not available off call !");
+            }
+            if (mBluetoothAdapter.isEnabled()) {
+                Log.i("[Audio Manager] [Bluetooth] Adapter enabled");
+                mBluetoothReceiver = new BluetoothReceiver();
+                mIsBluetoothHeadsetConnected = false;
+                mIsBluetoothHeadsetScoConnected = false;
+
+                BluetoothProfile.ServiceListener bluetoothServiceListener =
+                        new BluetoothProfile.ServiceListener() {
+                            public void onServiceConnected(int profile, BluetoothProfile proxy) {
+                                if (profile == BluetoothProfile.HEADSET) {
+                                    Log.i("[Audio Manager] [Bluetooth] HEADSET profile connected");
+                                    mBluetoothHeadset = (BluetoothHeadset) proxy;
+
+                                    List<BluetoothDevice> devices =
+                                            mBluetoothHeadset.getConnectedDevices();
+                                    if (devices.size() > 0) {
+                                        Log.i(
+                                                "[Audio Manager] [Bluetooth] A device is already connected");
+                                        bluetoothHeadetConnectionChanged(true);
+                                    }
+
+                                    Log.i(
+                                            "[Audio Manager] [Bluetooth] Registering bluetooth receiver");
+
+                                    mContext.registerReceiver(
+                                            mBluetoothReceiver,
+                                            new IntentFilter(
+                                                    BluetoothHeadset
+                                                            .ACTION_CONNECTION_STATE_CHANGED));
+                                    mContext.registerReceiver(
+                                            mBluetoothReceiver,
+                                            new IntentFilter(
+                                                    BluetoothHeadset.ACTION_AUDIO_STATE_CHANGED));
+                                    Intent sticky =
+                                            mContext.registerReceiver(
+                                                    mBluetoothReceiver,
+                                                    new IntentFilter(
+                                                            AudioManager
+                                                                    .ACTION_SCO_AUDIO_STATE_UPDATED));
+                                    int state =
+                                            sticky.getIntExtra(
+                                                    AudioManager.EXTRA_SCO_AUDIO_STATE,
+                                                    AudioManager.SCO_AUDIO_STATE_DISCONNECTED);
+                                    if (state == AudioManager.SCO_AUDIO_STATE_CONNECTED) {
+                                        Log.i(
+                                                "[Audio Manager] [Bluetooth] Bluetooth headset SCO connected");
+                                        bluetoothHeadetScoConnectionChanged(true);
+                                    } else if (state == AudioManager.SCO_AUDIO_STATE_DISCONNECTED) {
+                                        Log.i(
+                                                "[Audio Manager] [Bluetooth] Bluetooth headset SCO disconnected");
+                                        bluetoothHeadetScoConnectionChanged(false);
+                                    } else if (state == AudioManager.SCO_AUDIO_STATE_CONNECTING) {
+                                        Log.i(
+                                                "[Audio Manager] [Bluetooth] Bluetooth headset SCO connecting");
+                                    } else if (state == AudioManager.SCO_AUDIO_STATE_ERROR) {
+                                        Log.i(
+                                                "[Audio Manager] [Bluetooth] Bluetooth headset SCO connection error");
+                                    } else {
+                                        Log.w(
+                                                "[Audio Manager] [Bluetooth] Bluetooth headset unknown SCO state changed: "
+                                                        + state);
+                                    }
+                                }
+                            }
+
+                            public void onServiceDisconnected(int profile) {
+                                if (profile == BluetoothProfile.HEADSET) {
+                                    Log.i(
+                                            "[Audio Manager] [Bluetooth] HEADSET profile disconnected");
+                                    mBluetoothHeadset = null;
+                                    mIsBluetoothHeadsetConnected = false;
+                                    mIsBluetoothHeadsetScoConnected = false;
+                                }
+                            }
+                        };
+                mBluetoothAdapter.getProfileProxy(
+                        mContext, bluetoothServiceListener, BluetoothProfile.HEADSET);
+            }
+        }
+    }
+
+    // HEADSET
+
+    private void enableHeadsetReceiver() {
+        mHeadsetReceiver = new HeadsetReceiver();
+
+        Log.i("[Audio Manager] Registering headset receiver");
+        mContext.registerReceiver(
+                mHeadsetReceiver, new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY));
+        mContext.registerReceiver(
+                mHeadsetReceiver, new IntentFilter(AudioManager.ACTION_HEADSET_PLUG));
     }
 }

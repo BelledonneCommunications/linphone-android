@@ -47,6 +47,7 @@ import org.linphone.core.TunnelConfig;
 import org.linphone.core.VideoActivationPolicy;
 import org.linphone.core.VideoDefinition;
 import org.linphone.core.tools.Log;
+import org.linphone.mediastream.Version;
 import org.linphone.purchase.Purchasable;
 import org.linphone.utils.LinphoneUtils;
 
@@ -943,6 +944,11 @@ public class LinphonePreferences {
     }
 
     public boolean isOverlayEnabled() {
+        if (Version.sdkAboveOrEqual(Version.API26_O_80)
+                && mContext.getResources().getBoolean(R.bool.allow_pip_while_video_call)) {
+            // Disable overlay and use PIP feature
+            return false;
+        }
         return getConfig().getBool("app", "display_overlay", false);
     }
 

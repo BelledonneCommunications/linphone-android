@@ -27,10 +27,10 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
+import org.linphone.core.Call;
 import org.linphone.core.Core;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
@@ -95,12 +95,7 @@ public class Digit extends Button implements AddressAware {
 
         private boolean linphoneServiceReady() {
             if (!LinphoneService.isReady()) {
-                Log.w("Service is not ready while pressing digit");
-                Toast.makeText(
-                                getContext(),
-                                getContext().getString(R.string.skipable_error_service_not_ready),
-                                Toast.LENGTH_SHORT)
-                        .show();
+                Log.e("[Numpad] Service is not ready while pressing digit");
                 return false;
             }
             return true;
@@ -112,18 +107,19 @@ public class Digit extends Button implements AddressAware {
                 Core core = LinphoneManager.getCore();
                 core.stopDtmf();
                 mIsDtmfStarted = false;
-                if (core.inCall()) {
-                    core.getCurrentCall().sendDtmf(mKeyCode);
+                Call call = core.getCurrentCall();
+                if (call != null) {
+                    call.sendDtmf(mKeyCode);
                 }
             }
 
             if (mAddress != null) {
-                int lBegin = mAddress.getSelectionStart();
-                if (lBegin == -1) {
-                    lBegin = mAddress.length();
+                int begin = mAddress.getSelectionStart();
+                if (begin == -1) {
+                    begin = mAddress.length();
                 }
-                if (lBegin >= 0) {
-                    mAddress.getEditableText().insert(lBegin, String.valueOf(mKeyCode));
+                if (begin >= 0) {
+                    mAddress.getEditableText().insert(begin, String.valueOf(mKeyCode));
                 }
 
                 if (LinphonePreferences.instance().getDebugPopupAddress() != null
@@ -212,12 +208,12 @@ public class Digit extends Button implements AddressAware {
 
             if (mAddress == null) return true;
 
-            int lBegin = mAddress.getSelectionStart();
-            if (lBegin == -1) {
-                lBegin = mAddress.getEditableText().length();
+            int begin = mAddress.getSelectionStart();
+            if (begin == -1) {
+                begin = mAddress.getEditableText().length();
             }
-            if (lBegin >= 0) {
-                mAddress.getEditableText().insert(lBegin, "+");
+            if (begin >= 0) {
+                mAddress.getEditableText().insert(begin, "+");
             }
             return true;
         }

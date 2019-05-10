@@ -74,11 +74,9 @@
     <bool name="allow_ringing_while_early_media">false</bool>
     <bool name="allow_transfers">true</bool>
     <bool name="disable_options_in_call">false</bool>
-    <!-- This settings handle the behavior of the view waiting for the remote provisioning configuration to be done -->
-    <bool name="automatically_start_intercepted_outgoing_gsm_call">true</bool>
-    <bool name="hide_camera_settings">false</bool>
     <bool name="hide_in_call_stats">false</bool>
     <bool name="do_not_use_sliders_to_answer_hangup_call_if_phone_unlocked">true</bool>
+    <bool name="allow_pip_while_video_call">true</bool>
 
     <!-- Settings -->
     <bool name="disable_every_log">false</bool>
