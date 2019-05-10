@@ -28,6 +28,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import org.linphone.LinphoneManager;
+import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.activities.DialerActivity;
 import org.linphone.activities.ThemableActivity;
@@ -107,6 +108,11 @@ public abstract class AssistantActivity extends ThemableActivity
         if (useLinphoneDefaultValues) {
             // Restore default values
             core.loadConfigFromXml(LinphoneManager.getInstance().getDefaultDynamicConfigFile());
+        } else {
+            // If this isn't a sip.linphone.org account, disable push notifications and enable
+            // service notification, otherwise incoming calls won't work (most probably)
+            LinphonePreferences.instance().setServiceNotificationVisibility(true);
+            LinphoneService.instance().getNotificationManager().startForeground();
         }
 
         if (proxyConfig == null) {
