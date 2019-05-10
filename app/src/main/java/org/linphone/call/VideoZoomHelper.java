@@ -59,13 +59,10 @@ public class VideoZoomHelper extends GestureDetector.SimpleOnGestureListener
                         }
 
                         boolean touch = mGestureDetector.onTouchEvent(event);
-                        if (touch) {
-                            // Gesture detected, prevent touch event from going further
-                            return true;
-                        }
-
-                        // It seems we didn't use event, allow it to be dispatched somewhere else
-                        return false;
+                        // If true, gesture detected, prevent touch event from going further
+                        // Otherwise it seems we didn't use event,
+                        // allow it to be dispatched somewhere else
+                        return touch;
                     }
                 });
     }

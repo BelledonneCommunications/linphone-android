@@ -63,7 +63,6 @@ public class AndroidAudioManager {
     private final Vibrator mVibrator;
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothHeadset mBluetoothHeadset;
-    private BluetoothProfile.ServiceListener mBluetoothServiceListener;
     private BluetoothReceiver mBluetoothReceiver;
     private HeadsetReceiver mHeadsetReceiver;
 
@@ -512,7 +511,7 @@ public class AndroidAudioManager {
                 mIsBluetoothHeadsetConnected = false;
                 mIsBluetoothHeadsetScoConnected = false;
 
-                mBluetoothServiceListener =
+                BluetoothProfile.ServiceListener bluetoothServiceListener =
                         new BluetoothProfile.ServiceListener() {
                             public void onServiceConnected(int profile, BluetoothProfile proxy) {
                                 if (profile == BluetoothProfile.HEADSET) {
@@ -582,7 +581,7 @@ public class AndroidAudioManager {
                             }
                         };
                 mBluetoothAdapter.getProfileProxy(
-                        mContext, mBluetoothServiceListener, BluetoothProfile.HEADSET);
+                        mContext, bluetoothServiceListener, BluetoothProfile.HEADSET);
             }
         }
     }
