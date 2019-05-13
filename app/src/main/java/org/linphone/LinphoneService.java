@@ -256,14 +256,17 @@ public final class LinphoneService extends Service {
             core = null; // To allow the gc calls below to free the Core
         }
 
-        mLinphoneManager.destroy();
-        sInstance = null;
-
         // Make sure our notification is gone.
         if (mNotificationManager != null) {
             mNotificationManager.destroy();
         }
         mContactsManager.destroy();
+
+        // Destroy the LinphoneManager second to last to ensure any getCore() call will work
+        mLinphoneManager.destroy();
+
+        // Wait for every other object to be destroyed to make LinphoneService.instance() invalid
+        sInstance = null;
 
         if (LinphonePreferences.instance().useJavaLogger()) {
             Factory.instance().getLoggingService().removeListener(mJavaLoggingService);

@@ -401,8 +401,11 @@ public class LinphoneManager implements SensorEventListener {
     }
 
     public synchronized void destroy() {
-        mExited = true;
         destroyManager();
+        // Wait for Manager to destroy everything before setting mExited to true
+        // Otherwise some objects might crash during their own destroy if they try to call
+        // LinphoneManager.getCore(), for example to unregister a listener
+        mExited = true;
     }
 
     public void restartCore() {
