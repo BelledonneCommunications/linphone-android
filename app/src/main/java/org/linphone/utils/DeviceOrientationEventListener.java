@@ -48,7 +48,12 @@ public class DeviceOrientationEventListener extends OrientationEventListener {
             return;
         }
         mAlwaysChangingPhoneAngle = degrees;
-        Log.i("[Orientation Helper] Device orientation changed to " + degrees);
+        Log.i(
+                "[Orientation Helper] Device orientation changed to "
+                        + degrees
+                        + " (raw value is "
+                        + orientation
+                        + ")");
 
         int rotation = (360 - degrees) % 360;
         Core core = LinphoneManager.getCore();

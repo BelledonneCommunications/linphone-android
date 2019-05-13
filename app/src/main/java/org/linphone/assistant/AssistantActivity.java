@@ -31,7 +31,7 @@ import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.activities.DialerActivity;
-import org.linphone.activities.ThemeableActivity;
+import org.linphone.activities.LinphoneGenericActivity;
 import org.linphone.core.AccountCreator;
 import org.linphone.core.Core;
 import org.linphone.core.DialPlan;
@@ -40,7 +40,7 @@ import org.linphone.core.ProxyConfig;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 
-public abstract class AssistantActivity extends ThemeableActivity
+public abstract class AssistantActivity extends LinphoneGenericActivity
         implements CountryPicker.CountryPickedListener {
     static AccountCreator mAccountCreator;
 
@@ -52,6 +52,9 @@ public abstract class AssistantActivity extends ThemeableActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (mAbortCreation) {
+            return;
+        }
 
         if (mAccountCreator == null) {
             String url = LinphonePreferences.instance().getXmlrpcUrl();
