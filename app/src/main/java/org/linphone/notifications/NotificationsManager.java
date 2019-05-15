@@ -236,8 +236,8 @@ public class NotificationsManager {
     }
 
     public void removeForegroundServiceNotificationIfPossible() {
-        if (!isServiceNotificationDisplayed()
-                && mCurrentForegroundServiceNotification == SERVICE_NOTIF_ID) {
+        if (mCurrentForegroundServiceNotification == SERVICE_NOTIF_ID
+                && !isServiceNotificationDisplayed()) {
             stopForeground();
         }
     }
