@@ -14,6 +14,9 @@ Group changes to describe their impact on the project, as follows:
 
 ### Added
 - Added shortcuts to calls history & chat rooms list
+- Improved device's do not disturb policy compliance
+- Added sample application to help developpers getting started with our SDK
+- Added picture in picture feature if supported instead of video overlay
 
 ## [4.1.0] - 2019-05-03
 

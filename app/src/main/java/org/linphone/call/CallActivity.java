@@ -50,6 +50,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import org.linphone.LinphoneManager;
+import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.activities.DialerActivity;
 import org.linphone.activities.LinphoneGenericActivity;
@@ -455,20 +456,31 @@ public class CallActivity extends LinphoneGenericActivity
             Log.w("[Call Activity] Resuming but no call found...");
             finish();
         }
+
+        LinphoneService.instance().destroyOverlay();
     }
 
     @Override
     protected void onPause() {
-        super.onPause();
-
         ContactsManager.getInstance().removeContactsListener(this);
         LinphoneManager.getCallManager().setCallInterface(null);
+
+        Core core = LinphoneManager.getCore();
+        if (LinphonePreferences.instance().isOverlayEnabled()
+                && core != null
+                && core.getCurrentCall() != null) {
+            Call call = core.getCurrentCall();
+            if (call.getState() == Call.State.StreamsRunning) {
+                // Prevent overlay creation if video call is paused by remote
+                LinphoneService.instance().createOverlay();
+            }
+        }
+
+        super.onPause();
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-
         Core core = LinphoneManager.getCore();
         if (core != null) {
             core.removeListener(mListener);
@@ -478,6 +490,8 @@ public class CallActivity extends LinphoneGenericActivity
         if (mZoomHelper != null) {
             mZoomHelper.destroy();
         }
+
+        super.onDestroy();
     }
 
     @Override
