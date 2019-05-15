@@ -19,13 +19,20 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.Manifest;
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.activities.MainActivity;
 import org.linphone.contacts.ContactAddress;
@@ -38,6 +45,8 @@ public class ChatActivity extends MainActivity {
     public static final String NAME = "Chat";
 
     private String mSharedText, mSharedFiles;
+    private MediaRecorder mRecorder;
+    private File mRecordingFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +127,22 @@ public class ChatActivity extends MainActivity {
         }
 
         handleIntentExtras(intent);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(
+            int requestCode, String[] permissions, int[] grantResults) {
+        if (permissions.length <= 0) return;
+
+        if (requestCode == MainActivity.FRAGMENT_SPECIFIC_PERMISSION) {
+            if (permissions[0].equals(Manifest.permission.RECORD_AUDIO)) {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    recordMessage();
+                }
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 
     private void handleIntentExtras(Intent intent) {
@@ -291,5 +316,58 @@ public class ChatActivity extends MainActivity {
         GroupInfoFragment fragment = new GroupInfoFragment();
         fragment.setArguments(extras);
         changeFragment(fragment, "Chat room group info", true);
+    }
+
+    // Audio recording
+
+    private void generateNewRecordingFilePath() {
+        mRecordingFile =
+                new File(
+                        FileUtils.getStorageDirectory(this)
+                                + "/"
+                                + System.currentTimeMillis()
+                                + "-audio-record.3gp");
+    }
+
+    public boolean isRecording() {
+        return mRecorder != null;
+    }
+
+    public void recordMessage() {
+        if (!checkPermission(Manifest.permission.RECORD_AUDIO)) {
+            requestPermissionIfNotGranted(Manifest.permission.RECORD_AUDIO);
+            return;
+        }
+
+        generateNewRecordingFilePath();
+
+        mRecorder = new MediaRecorder();
+        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mRecorder.setOutputFile(getRecordedFilePath());
+        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_WB);
+
+        try {
+            mRecorder.prepare();
+        } catch (IOException e) {
+            Log.e("[ChatMessages] Media recorder prepare failed");
+            return;
+        }
+
+        mRecorder.start();
+        Toast.makeText(this, getString(R.string.audio_record_in_progress), Toast.LENGTH_LONG)
+                .show();
+    }
+
+    public void stopRecording() {
+        if (mRecorder != null) {
+            mRecorder.stop();
+            mRecorder.release();
+            mRecorder = null;
+        }
+    }
+
+    public String getRecordedFilePath() {
+        return mRecordingFile.getAbsolutePath();
     }
 }

@@ -95,6 +95,7 @@
     <bool name="show_sip_uri_in_chat">false</bool>
     <bool name="hide_empty_one_to_one_chat_rooms">true</bool>
     <bool name="create_most_recent_chat_rooms_shortcuts">true</bool>
+    <bool name="allow_audio_recording_file_sharing">true</bool>
 
     <!-- Contacts -->
     <bool name="hide_contact_phone_numbers">false</bool>

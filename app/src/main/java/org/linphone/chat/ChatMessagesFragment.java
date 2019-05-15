@@ -104,7 +104,7 @@ public class ChatMessagesFragment extends Fragment
     private ImageView mCallButton;
     private ImageView mBackToCallButton;
     private ImageView mGroupInfosButton;
-    private ImageView mAttachImageButton, mSendMessageButton;
+    private ImageView mAttachImageButton, mSendMessageButton, mRecordAudioButton;
     private TextView mRoomLabel, mParticipantsLabel, mSipUriLabel, mRemoteComposing;
     private RichEditText mMessageTextToSend;
     private LayoutInflater mInflater;
@@ -258,6 +258,26 @@ public class ChatMessagesFragment extends Fragment
                         pickFile();
                     }
                 });
+
+        mRecordAudioButton = view.findViewById(R.id.record_message);
+        mRecordAudioButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ChatActivity chatActivity = (ChatActivity) getActivity();
+                        if (!chatActivity.isRecording()) {
+                            chatActivity.recordMessage();
+                            v.setSelected(true);
+                        } else {
+                            chatActivity.stopRecording();
+                            addFileToPendingList(chatActivity.getRecordedFilePath());
+                            v.setSelected(false);
+                        }
+                    }
+                });
+        if (!getResources().getBoolean(R.bool.allow_audio_recording_file_sharing)) {
+            mRecordAudioButton.setVisibility(View.GONE);
+        }
 
         mSendMessageButton = view.findViewById(R.id.send_message);
         mSendMessageButton.setEnabled(false);
@@ -1332,7 +1352,7 @@ public class ChatMessagesFragment extends Fragment
                 mCurrentInputContentInfo.releasePermission();
             }
         } catch (Exception e) {
-            Log.e("[TimelineFragment] releasePermission failed : ", e);
+            Log.e("[ChatMessages] releasePermission failed : ", e);
         } finally {
             mCurrentInputContentInfo = null;
         }
@@ -1356,7 +1376,7 @@ public class ChatMessagesFragment extends Fragment
             try {
                 inputContentInfo.requestPermission();
             } catch (Exception e) {
-                Log.e("[TimelineFragment] requestPermission failed : ", e);
+                Log.e("[ChatMessages] requestPermission failed : ", e);
                 return false;
             }
         }

@@ -75,7 +75,7 @@ import org.linphone.utils.PushNotificationUtils;
 public abstract class MainActivity extends LinphoneGenericActivity
         implements StatusBarFragment.MenuClikedListener, SideMenuFragment.QuitClikedListener {
     private static final int MAIN_PERMISSIONS = 1;
-    private static final int FRAGMENT_SPECIFIC_PERMISSION = 2;
+    protected static final int FRAGMENT_SPECIFIC_PERMISSION = 2;
 
     private TextView mMissedCalls;
     private TextView mMissedMessages;
@@ -467,7 +467,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
 
     // Permissions
 
-    private boolean checkPermission(String permission) {
+    public boolean checkPermission(String permission) {
         int granted = getPackageManager().checkPermission(permission, getPackageName());
         Log.i(
                 "[Permission] "
@@ -532,23 +532,25 @@ public abstract class MainActivity extends LinphoneGenericActivity
             int requestCode, String[] permissions, int[] grantResults) {
         if (permissions.length <= 0) return;
 
-        for (int i = 0; i < permissions.length; i++) {
-            Log.i(
-                    "[Permission] "
-                            + permissions[i]
-                            + " is "
-                            + (grantResults[i] == PackageManager.PERMISSION_GRANTED
-                                    ? "granted"
-                                    : "denied"));
-            if (permissions[i].equals(Manifest.permission.READ_CONTACTS)
-                    || permissions[i].equals(Manifest.permission.WRITE_CONTACTS)) {
-                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                    ContactsManager.getInstance().enableContactsAccess();
+        if (requestCode == MAIN_PERMISSIONS) {
+            for (int i = 0; i < permissions.length; i++) {
+                Log.i(
+                        "[Permission] "
+                                + permissions[i]
+                                + " is "
+                                + (grantResults[i] == PackageManager.PERMISSION_GRANTED
+                                        ? "granted"
+                                        : "denied"));
+                if (permissions[i].equals(Manifest.permission.READ_CONTACTS)
+                        || permissions[i].equals(Manifest.permission.WRITE_CONTACTS)) {
+                    if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                        ContactsManager.getInstance().enableContactsAccess();
+                    }
+                } else if (permissions[i].equals(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    boolean enableRingtone = grantResults[i] == PackageManager.PERMISSION_GRANTED;
+                    LinphonePreferences.instance().enableDeviceRingtone(enableRingtone);
+                    LinphoneManager.getInstance().enableDeviceRingtone(enableRingtone);
                 }
-            } else if (permissions[i].equals(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                boolean enableRingtone = grantResults[i] == PackageManager.PERMISSION_GRANTED;
-                LinphonePreferences.instance().enableDeviceRingtone(enableRingtone);
-                LinphoneManager.getInstance().enableDeviceRingtone(enableRingtone);
             }
         }
     }
