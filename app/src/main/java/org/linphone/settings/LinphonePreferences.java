@@ -708,6 +708,16 @@ public class LinphonePreferences {
         getLc().setFileTransferServer(url);
     }
 
+    public String getLogCollectionUploadServerUrl() {
+        if (getLc() == null) return null;
+        return getLc().getLogCollectionUploadServerUrl();
+    }
+
+    public void setLogCollectionUploadServerUrl(String url) {
+        if (getLc() == null) return;
+        getLc().setLogCollectionUploadServerUrl(url);
+    }
+
     public String getRemoteProvisioningUrl() {
         if (getLc() == null) return null;
         return getLc().getProvisioningUri();

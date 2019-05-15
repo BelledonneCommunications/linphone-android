@@ -47,7 +47,7 @@ public class AdvancedSettingsFragment extends SettingsFragment {
             mBackgroundMode,
             mStartAtBoot,
             mDarkMode;
-    private TextSetting mRemoteProvisioningUrl, mDisplayName, mUsername, mDeviceName;
+    private TextSetting mRemoteProvisioningUrl, mDisplayName, mUsername, mDeviceName, mLogUploadUrl;
     private BasicSetting mAndroidAppSettings;
 
     @Nullable
@@ -77,6 +77,9 @@ public class AdvancedSettingsFragment extends SettingsFragment {
         // This is only required for blackberry users for all we know
         mJavaLogger.setVisibility(
                 Build.MANUFACTURER.equals("BlackBerry") ? View.VISIBLE : View.GONE);
+
+        mLogUploadUrl = mRootView.findViewById(R.id.pref_log_collection_upload_server_url);
+        mLogUploadUrl.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
 
         mFriendListSubscribe = mRootView.findViewById(R.id.pref_friendlist_subscribe);
 
@@ -113,6 +116,14 @@ public class AdvancedSettingsFragment extends SettingsFragment {
                     @Override
                     public void onBoolValueChanged(boolean newValue) {
                         mPrefs.setJavaLogger(newValue);
+                    }
+                });
+
+        mLogUploadUrl.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onTextValueChanged(String newValue) {
+                        mPrefs.setLogCollectionUploadServerUrl(newValue);
                     }
                 });
 
@@ -205,6 +216,8 @@ public class AdvancedSettingsFragment extends SettingsFragment {
         mDebug.setChecked(mPrefs.isDebugEnabled());
 
         mJavaLogger.setChecked(mPrefs.useJavaLogger());
+
+        mLogUploadUrl.setValue(mPrefs.getLogCollectionUploadServerUrl());
 
         mFriendListSubscribe.setChecked(mPrefs.isFriendlistsubscriptionEnabled());
 
