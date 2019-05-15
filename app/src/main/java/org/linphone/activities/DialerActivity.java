@@ -157,6 +157,17 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
                 preview.setVisibility(View.VISIBLE);
                 core.setNativePreviewWindowId(preview);
                 core.enableVideoPreview(true);
+                ImageView changeCamera = findViewById(R.id.video_preview_change_camera);
+                if (changeCamera != null && core.getVideoDevicesList().length > 1) {
+                    changeCamera.setVisibility(View.VISIBLE);
+                    changeCamera.setOnClickListener(
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    LinphoneManager.getCallManager().switchCamera();
+                                }
+                            });
+                }
             }
         }
     }
@@ -198,6 +209,17 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
         if (core != null) {
             core.removeListener(mListener);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (isTablet()
+                && getResources().getBoolean(R.bool.show_camera_preview_on_dialer_on_tablets)) {
+            Core core = LinphoneManager.getCore();
+            core.setNativePreviewWindowId(null);
+            core.enableVideoPreview(false);
+        }
+        super.onDestroy();
     }
 
     @Override

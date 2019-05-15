@@ -106,7 +106,7 @@ public class CallManager {
 
             Call call = core.getCurrentCall();
             if (call == null) {
-                Log.e("[Call Manager] Trying to switch camera while not in call");
+                Log.w("[Call Manager] Trying to switch camera while not in call");
                 return;
             }
             call.update(null);
