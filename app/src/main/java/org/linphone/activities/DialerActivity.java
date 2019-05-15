@@ -146,33 +146,6 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
-        if (isTablet()
-                && getResources().getBoolean(R.bool.show_camera_preview_on_dialer_on_tablets)) {
-            TextureView preview = findViewById(R.id.video_preview);
-            Core core = LinphoneManager.getCore();
-            if (preview != null && core != null) {
-                preview.setVisibility(View.VISIBLE);
-                core.setNativePreviewWindowId(preview);
-                core.enableVideoPreview(true);
-                ImageView changeCamera = findViewById(R.id.video_preview_change_camera);
-                if (changeCamera != null && core.getVideoDevicesList().length > 1) {
-                    changeCamera.setVisibility(View.VISIBLE);
-                    changeCamera.setOnClickListener(
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    LinphoneManager.getCallManager().switchCamera();
-                                }
-                            });
-                }
-            }
-        }
-    }
-
-    @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         handleIntentParams(intent);
@@ -199,27 +172,47 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
         }
 
         updateLayout();
+        enableVideoPreviewIfTablet(true);
     }
 
     @Override
     protected void onPause() {
-        super.onPause();
-
+        enableVideoPreviewIfTablet(false);
         Core core = LinphoneManager.getCore();
         if (core != null) {
             core.removeListener(mListener);
         }
+
+        super.onPause();
     }
 
-    @Override
-    protected void onDestroy() {
+    private void enableVideoPreviewIfTablet(boolean enable) {
         if (isTablet()
                 && getResources().getBoolean(R.bool.show_camera_preview_on_dialer_on_tablets)) {
             Core core = LinphoneManager.getCore();
-            core.setNativePreviewWindowId(null);
-            core.enableVideoPreview(false);
+            if (enable) {
+                TextureView preview = findViewById(R.id.video_preview);
+                if (preview != null && core != null) {
+                    preview.setVisibility(View.VISIBLE);
+                    core.setNativePreviewWindowId(preview);
+                    core.enableVideoPreview(true);
+                    ImageView changeCamera = findViewById(R.id.video_preview_change_camera);
+                    if (changeCamera != null && core.getVideoDevicesList().length > 1) {
+                        changeCamera.setVisibility(View.VISIBLE);
+                        changeCamera.setOnClickListener(
+                                new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        LinphoneManager.getCallManager().switchCamera();
+                                    }
+                                });
+                    }
+                }
+            } else {
+                core.setNativePreviewWindowId(null);
+                core.enableVideoPreview(false);
+            }
         }
-        super.onDestroy();
     }
 
     @Override
