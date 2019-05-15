@@ -45,13 +45,20 @@ excludePackage.add('**/LICENSE.txt')
 def gitVersion = new ByteArrayOutputStream()
 
 task getGitVersion {
-    exec {
-        commandLine 'git', 'describe', '--always'
-        standardOutput = gitVersion
-    }
     doLast {
-        gitVersion = gitVersion.toString().trim()
-        println("Git version: " + gitVersion)
+        def result = exec {
+            def command = "git describe --always"
+            ignoreExitValue = true
+            executable "bash" args "-l", "-c", command
+            standardOutput = gitVersion
+        }
+        if (result.getExitValue() == 0) {
+            gitVersion = gitVersion.toString().trim()
+            println("Git version: " + gitVersion)
+        } else {
+            gitVersion = "unknown"
+            println("Git not found")
+        }
     }
 }
 
