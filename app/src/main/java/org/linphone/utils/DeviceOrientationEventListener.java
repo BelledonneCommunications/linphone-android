@@ -47,6 +47,7 @@ public class DeviceOrientationEventListener extends OrientationEventListener {
         if (mAlwaysChangingPhoneAngle == degrees) {
             return;
         }
+
         mAlwaysChangingPhoneAngle = degrees;
         Log.i("[Orientation Helper] Device orientation changed to " + degrees);
 
