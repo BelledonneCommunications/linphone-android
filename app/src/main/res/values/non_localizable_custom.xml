@@ -33,7 +33,7 @@
     <bool name="use_linphone_tag">true</bool>
     <bool name="hide_bottom_bar_on_second_level_views">true</bool>
     <bool name="use_full_screen_image_splashscreen">false</bool>
-    <bool name="show_camera_preview_on_dialer_on_tablets">false</bool>
+    <bool name="show_camera_preview_on_dialer_on_tablets">true</bool>
 
     <!-- Time -->
     <string name="history_date_format" translatable="false">EEE d MMM</string>

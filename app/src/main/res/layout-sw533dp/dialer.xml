@@ -16,6 +16,14 @@
         android:layout_height="match_parent"
         android:visibility="gone"/>
 
+    <ImageView
+        android:id="@+id/video_preview_change_camera"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="5dp"
+        android:visibility="gone"
+        android:src="@drawable/switch_camera"/>
+
     <RelativeLayout
         android:id="@+id/dialer"
         android:layout_width="300dp"
