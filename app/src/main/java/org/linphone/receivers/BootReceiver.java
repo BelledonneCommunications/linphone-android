@@ -32,14 +32,15 @@ public class BootReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equalsIgnoreCase(Intent.ACTION_SHUTDOWN)) {
             android.util.Log.d(
-                    "LinphoneBootReceiver",
-                    "Device is shutting down, destroying Core to unregister");
+                    "Linphone",
+                    "[Boot Receiver] Device is shutting down, destroying Core to unregister");
             context.stopService(
                     new Intent(Intent.ACTION_MAIN).setClass(context, LinphoneService.class));
         } else {
+            LinphonePreferences.instance().setContext(context);
             boolean autostart = LinphonePreferences.instance().isAutoStartEnabled();
             android.util.Log.i(
-                    "LinphoneBootReceiver", "Device is starting, auto_start is " + autostart);
+                    "Linphone", "[Boot Receiver] Device is starting, auto_start is " + autostart);
             if (autostart && !LinphoneService.isReady()) {
                 Intent serviceIntent = new Intent(Intent.ACTION_MAIN);
                 serviceIntent.setClass(context, LinphoneService.class);

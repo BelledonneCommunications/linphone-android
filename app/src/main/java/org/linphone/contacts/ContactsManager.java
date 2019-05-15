@@ -99,6 +99,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
 
     @Override
     public void onChange(boolean selfChange, Uri uri) {
+        Log.i("[Contacts Manager] Content observer detected a changing in at least one contact");
         fetchContactsAsync();
     }
 
@@ -119,7 +120,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
     }
 
     public void destroy() {
-        mContext.getContentResolver().unregisterContentObserver(ContactsManager.getInstance());
+        mContext.getContentResolver().unregisterContentObserver(this);
 
         if (mLoadContactTask != null) {
             mLoadContactTask.cancel(true);
@@ -256,7 +257,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                         && hasWriteContactsAccess()
                         && hasWriteSyncPermission()) {
                     if (LinphoneService.isReady()) {
-                        ContactsManager.getInstance().initializeSyncAccount();
+                        initializeSyncAccount();
                         mInitialized = true;
                     }
                 }
@@ -462,7 +463,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
     public void onPresenceReceived(FriendList list, Friend[] friends) {
         boolean updated = false;
         for (Friend lf : friends) {
-            boolean newContact = ContactsManager.getInstance().refreshSipContact(lf);
+            boolean newContact = refreshSipContact(lf);
             if (newContact) {
                 updated = true;
             }
