@@ -301,6 +301,10 @@ public abstract class MainActivity extends LinphoneGenericActivity
     protected void onResume() {
         super.onResume();
 
+        LinphoneService.instance()
+                .getNotificationManager()
+                .removeForegroundServiceNotificationIfPossible();
+
         hideTopBar();
         if (!mAlwaysHideTabBar
                 && (getFragmentManager().getBackStackEntryCount() == 0
