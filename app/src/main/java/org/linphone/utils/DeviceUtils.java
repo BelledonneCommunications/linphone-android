@@ -27,6 +27,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -56,12 +57,12 @@ public class DeviceUtils {
                 .setComponent(
                         new ComponentName(
                                 "com.huawei.systemmanager",
-                                "com.huawei.systemmanager.optimize.process.ProtectActivity")),
+                                "com.huawei.systemmanager.appcontrol.activity.StartupAppControlActivity")),
         new Intent()
                 .setComponent(
                         new ComponentName(
                                 "com.huawei.systemmanager",
-                                "com.huawei.systemmanager.appcontrol.activity.StartupAppControlActivity")),
+                                "com.huawei.systemmanager.optimize.process.ProtectActivity")),
         new Intent()
                 .setComponent(
                         new ComponentName(
@@ -105,7 +106,23 @@ public class DeviceUtils {
         new Intent()
                 .setComponent(
                         new ComponentName(
-                                "com.asus.mobilemanager", "com.asus.mobilemanager.MainActivity"))
+                                "com.asus.mobilemanager", "com.asus.mobilemanager.MainActivity")),
+        new Intent()
+                .setComponent(
+                        new ComponentName(
+                                "com.asus.mobilemanager",
+                                "com.asus.mobilemanager.autostart.AutoStartActivity")),
+        new Intent()
+                .setComponent(
+                        new ComponentName(
+                                "com.asus.mobilemanager",
+                                "com.asus.mobilemanager.entry.FunctionActivity"))
+                .setData(Uri.parse("mobilemanager://function/entry/AutoStart")),
+        new Intent()
+                .setComponent(
+                        new ComponentName(
+                                "com.dewav.dwappmanager",
+                                "com.dewav.dwappmanager.memory.SmartClearupWhiteList"))
     };
 
     public static Intent getDevicePowerManagerIntent(Context context) {
