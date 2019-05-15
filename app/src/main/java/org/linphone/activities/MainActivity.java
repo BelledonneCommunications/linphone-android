@@ -280,11 +280,6 @@ public abstract class MainActivity extends LinphoneGenericActivity
 
         requestRequiredPermissions();
 
-        if (checkPermission(Manifest.permission.READ_CONTACTS)) {
-            ContactsManager.getInstance().enableContactsAccess();
-        }
-        ContactsManager.getInstance().initializeContactManager();
-
         if (DeviceUtils.isAppUserRestricted(this)) {
             Log.w(
                     "[Main Activity] Device has been restricted by user (Android 9+), push notifications won't work !");

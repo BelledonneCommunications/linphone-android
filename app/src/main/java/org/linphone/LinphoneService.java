@@ -191,15 +191,16 @@ public final class LinphoneService extends Service {
         }
 
         mNotificationManager = new NotificationsManager(this);
-        if (Version.sdkAboveOrEqual(Version.API26_O_80)
-                && intent != null
-                && intent.getBooleanExtra("ForceStartForeground", false)) {
-            // We need to call this asap
-            mNotificationManager.startForeground();
-        }
 
         mLinphoneManager = new LinphoneManager(this);
         sInstance = this; // sInstance is ready once linphone manager has been created
+        if (Version.sdkAboveOrEqual(Version.API26_O_80)
+                && intent != null
+                && intent.getBooleanExtra("ForceStartForeground", false)) {
+            // We need to call this asap after the Service can be accessed through it's singleton
+            mNotificationManager.startForeground();
+        }
+
         mLinphoneManager.startLibLinphone(isPush);
         LinphoneManager.getCore().addListener(mListener);
 
@@ -212,6 +213,10 @@ public final class LinphoneService extends Service {
                     .registerContentObserver(
                             ContactsContract.Contacts.CONTENT_URI, true, mContactsManager);
         }
+        if (mContactsManager.hasReadContactsAccess()) {
+            ContactsManager.getInstance().enableContactsAccess();
+        }
+        ContactsManager.getInstance().initializeContactManager();
 
         Compatibility.createChatShortcuts(this);
         mOrientationHelper.enable();
