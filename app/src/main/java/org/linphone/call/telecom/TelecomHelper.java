@@ -138,9 +138,13 @@ public class TelecomHelper {
         Log.i("[Telecom Manager] Outgoing call started");
 
         Bundle extras = new Bundle();
+        // FIXME: use correct video state
         extras.putInt(
                 TelecomManager.EXTRA_START_CALL_WITH_VIDEO_STATE, VideoProfile.STATE_AUDIO_ONLY);
         extras.putParcelable(TelecomManager.EXTRA_PHONE_ACCOUNT_HANDLE, mPhoneAccountHandle);
+        extras.putString(
+                TelecomManager.EXTRA_CALL_BACK_NUMBER,
+                call.getCallLog().getFromAddress().asStringUriOnly());
 
         Address address = call.getRemoteAddress();
 
@@ -151,6 +155,11 @@ public class TelecomHelper {
         if (call.getCore().getCallsNb() == 1) {
             registerCallScreenReceiver();
         }
+    }
+
+    public void goBackToCallScreen() {
+        // FIXME: check CALL_PHONE permission
+        mTelecomManager.showInCallScreen(false);
     }
 
     private void onCallTerminated(String callId) {
@@ -207,9 +216,6 @@ public class TelecomHelper {
         public void onReceive(Context context, Intent intent) {
             int action = intent.getIntExtra(LinphoneConnectionService.CS_TO_EXT_ACTION, -1);
             String callId = intent.getStringExtra(LinphoneConnectionService.CS_TO_EXT_CALL_ID);
-            /*boolean isConference =
-            intent.getBooleanExtra(
-                    LinphoneConnectionService.CS_TO_EXT_IS_CONFERENCE, false);*/
 
             Call call = findCallFromId(callId);
             Log.i(
@@ -218,7 +224,9 @@ public class TelecomHelper {
                             + " for call id "
                             + callId
                             + (call == null ? " (not found)" : " (found)"));
-            if (call == null) return;
+            if (call == null) {
+                onCallTerminated(callId);
+            }
 
             switch (action) {
                 case LinphoneConnectionService.CS_TO_EXT_ANSWER:
@@ -238,10 +246,6 @@ public class TelecomHelper {
                     break;
                 case LinphoneConnectionService.CS_TO_EXT_UNHOLD:
                     call.resume();
-                    break;
-                case LinphoneConnectionService.CS_TO_EXT_ADD_TO_CONF:
-                    break;
-                case LinphoneConnectionService.CS_TO_EXT_REMOVE_FROM_CONF:
                     break;
             }
         }
