@@ -17,6 +17,7 @@ Group changes to describe their impact on the project, as follows:
 - Improved device's do not disturb policy compliance
 - Added sample application to help developpers getting started with our SDK
 - Added picture in picture feature if supported instead of video overlay
+- Added camera preview as dialer's background on tablets
 
 ## [4.1.0] - 2019-05-03
 

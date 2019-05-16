@@ -23,6 +23,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.TextureView;
+import android.view.View;
+import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
@@ -56,6 +58,32 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
                         finish();
                     }
                 };
+
+        ImageView changeCamera = findViewById(R.id.qr_code_capture_change_camera);
+        changeCamera.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        LinphoneManager.getCallManager().switchCamera();
+                    }
+                });
+        Core core = LinphoneManager.getCore();
+        if (core != null && core.getVideoDevicesList().length > 1) {
+            changeCamera.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setBackCamera();
+        launchQrcodeReader();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        enableQrcodeReader(false);
     }
 
     private void enableQrcodeReader(boolean enable) {
@@ -84,6 +112,11 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
         }
         String[] devices = core.getVideoDevicesList();
         String newDevice = devices[camId];
+
+        String currentDevice = core.getVideoDevice();
+        if (currentDevice != null && currentDevice.equals(newDevice)) {
+            return;
+        }
         core.setVideoDevice(newDevice);
     }
 
@@ -92,19 +125,6 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
         if (core == null) return;
 
         core.setNativePreviewWindowId(mQrcodeView);
-        setBackCamera();
         enableQrcodeReader(true);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        launchQrcodeReader();
-    }
-
-    @Override
-    public void onPause() {
-        enableQrcodeReader(false);
-        super.onPause();
     }
 }
