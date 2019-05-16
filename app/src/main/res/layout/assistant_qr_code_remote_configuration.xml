@@ -16,9 +16,22 @@
         android:id="@+id/top_bar"
         layout="@layout/assistant_topbar" />
 
-    <TextureView
-        android:id="@+id/qr_code_capture_texture"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <TextureView
+            android:id="@+id/qr_code_capture_texture"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/qr_code_capture_change_camera"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="5dp"
+            android:src="@drawable/switch_camera"/>
+
+    </RelativeLayout>
 
 </LinearLayout>
