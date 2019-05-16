@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
+import org.linphone.call.telecom.TelecomHelper;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.Address;
 import org.linphone.core.AuthInfo;
@@ -1040,7 +1041,7 @@ public class LinphonePreferences {
 
     public void enableDeviceRingtone(boolean enable) {
         getConfig().setBool("app", "device_ringtone", enable);
-        LinphoneManager.getInstance().enableDeviceRingtone(enable);
+        LinphoneManager.getInstance().disableCoreRinging(enable);
     }
 
     public boolean isIncomingCallVibrationEnabled() {
@@ -1142,5 +1143,31 @@ public class LinphonePreferences {
 
     public void setVideoPreviewEnabled(boolean enabled) {
         getConfig().setBool("app", "video_preview", enabled);
+    }
+
+    public boolean isUsingTelecomManager() {
+        return Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)
+                && getConfig().getBool("app", "use_telecom_manager", false);
+    }
+
+    public void useTelecomManager(boolean use) {
+        getConfig().setBool("app", "use_telecom_manager", use);
+        if (use) {
+            // Disable native ringing if need be
+            if (!isDeviceRingtoneEnabled()) {
+                LinphoneManager.getInstance().disableCoreRinging(true);
+            }
+            LinphoneService.instance().createTelecomManagerHelper();
+        } else {
+            TelecomHelper telecomHelper = LinphoneService.instance().getTelecomHelper();
+            if (telecomHelper != null) {
+                telecomHelper.disable();
+                LinphoneService.instance().destroyTelecomManagerHelper();
+            }
+            // Restore native ringing if need be
+            if (!isDeviceRingtoneEnabled()) {
+                LinphoneManager.getInstance().disableCoreRinging(false);
+            }
+        }
     }
 }

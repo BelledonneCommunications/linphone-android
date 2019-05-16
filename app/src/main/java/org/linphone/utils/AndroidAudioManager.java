@@ -95,13 +95,16 @@ public class AndroidAudioManager {
                                         && mContext.getResources()
                                                 .getBoolean(
                                                         R.bool.allow_ringing_while_early_media))) {
-                            // Brighten screen for at least 10 seconds
-                            if (core.getCallsNb() == 1) {
-                                requestAudioFocus(STREAM_RING);
+                            // Do not ring if using Telecom Manager
+                            if (!LinphonePreferences.instance().isUsingTelecomManager()) {
+                                // Brighten screen for at least 10 seconds
+                                if (core.getCallsNb() == 1) {
+                                    requestAudioFocus(STREAM_RING);
 
-                                mRingingCall = call;
-                                startRinging(call.getRemoteAddress());
-                                // otherwise there is the beep
+                                    mRingingCall = call;
+                                    startRinging(call.getRemoteAddress());
+                                    // otherwise there is the beep
+                                }
                             }
                         } else if (call == mRingingCall && mIsRinging) {
                             // previous state was ringing, so stop ringing
