@@ -140,6 +140,8 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
                     Manifest.permission.SYSTEM_ALERT_WINDOW,
                     // Required starting Android 9 to be able to start a foreground service
                     "android.permission.FOREGROUND_SERVICE",
+                    // For telecom manager
+                    Manifest.permission.CALL_PHONE,
                     Manifest.permission.WRITE_CONTACTS,
                     Manifest.permission.READ_CONTACTS
                 };
