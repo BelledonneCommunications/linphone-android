@@ -74,8 +74,8 @@ public class LinphoneConnectionService extends ConnectionService {
     public static final String CS_TO_EXT_IS_CONFERENCE =
             "CS_TO_EXT_IS_CONFERENCE"; // true if conference
 
-    public static final int CS_TO_EXT_REJECT = 1; // reject by me
-    public static final int CS_TO_EXT_DISCONNECT = 2; // remote disconnect
+    public static final int CS_TO_EXT_END = 1; // remote hang up
+    public static final int CS_TO_EXT_TERMINATE = 2; // local hang up
     public static final int CS_TO_EXT_ANSWER = 3; // answer call
     public static final int CS_TO_EXT_ABORT = 4; // abort call
     public static final int CS_TO_EXT_HOLD = 5; // hold call
@@ -93,7 +93,6 @@ public class LinphoneConnectionService extends ConnectionService {
     }
 
     // Receive broadcasts from sendToCS methods in TelecomManagerHelper class
-
     private BroadcastReceiver mSipEventReceiver =
             new BroadcastReceiver() {
                 @Override
@@ -248,7 +247,7 @@ public class LinphoneConnectionService extends ConnectionService {
 
         @Override
         public void onDisconnect() {
-            sendLocalBroadcast(CS_TO_EXT_DISCONNECT);
+            sendLocalBroadcast(CS_TO_EXT_TERMINATE);
         }
 
         @Override
@@ -266,7 +265,7 @@ public class LinphoneConnectionService extends ConnectionService {
             setDisconnected(new DisconnectCause(DisconnectCause.REJECTED));
             destroyCall(this);
             destroy();
-            sendLocalBroadcast(CS_TO_EXT_REJECT);
+            sendLocalBroadcast(CS_TO_EXT_END);
             super.onReject();
         }
 
@@ -331,7 +330,6 @@ public class LinphoneConnectionService extends ConnectionService {
 
         @Override
         public void onSeparate(Connection connection) {
-
             for (Connection c : getConnections()) {
                 LinphoneConnection call = (LinphoneConnection) c;
 
@@ -349,7 +347,6 @@ public class LinphoneConnectionService extends ConnectionService {
 
             // Set conference on Hold if 2 or more people remains
             // destroy conference if not
-
             checkConference();
 
             updateConnectionCapabilities();

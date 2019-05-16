@@ -270,7 +270,10 @@ public class CallSettingsFragment extends SettingsFragment {
                 mPrefs.isUsingTelecomManager()
                         && LinphoneService.instance().getTelecomHelper().isAccountEnabled());
         mUseTelecomManager.setVisibility(
-                Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60) ? View.VISIBLE : View.GONE);
+                !getResources().getBoolean(R.bool.isTablet)
+                                && Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)
+                        ? View.VISIBLE
+                        : View.GONE);
 
         mPhoneAccountSettings.setVisibility(
                 mUseTelecomManager.isChecked() ? View.VISIBLE : View.GONE);
