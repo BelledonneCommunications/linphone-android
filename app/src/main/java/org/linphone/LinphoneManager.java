@@ -509,7 +509,7 @@ public class LinphoneManager implements SensorEventListener {
         mCore.setFriendsDatabasePath(mFriendsDatabaseFile);
         mCore.setUserCertificatesPath(mUserCertsPath);
         // mCore.setCallErrorTone(Reason.NotFound, mErrorToneFile);
-        enableDeviceRingtone(mPrefs.isDeviceRingtoneEnabled());
+        disableCoreRinging(mPrefs.isDeviceRingtoneEnabled());
 
         int availableCores = Runtime.getRuntime().availableProcessors();
         Log.w("[Manager] MediaStreamer : " + availableCores + " cores detected and configured");
@@ -863,8 +863,8 @@ public class LinphoneManager implements SensorEventListener {
         }
     }
 
-    public void enableDeviceRingtone(boolean use) {
-        if (use) {
+    public void disableCoreRinging(boolean disable) {
+        if (disable) {
             mCore.setRing(null);
         } else {
             mCore.setRing(mRingSoundFile);
