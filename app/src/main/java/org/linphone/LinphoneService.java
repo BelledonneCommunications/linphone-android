@@ -19,6 +19,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Service;
@@ -32,6 +33,7 @@ import android.provider.ContactsContract;
 import android.view.WindowManager;
 import org.linphone.call.CallIncomingActivity;
 import org.linphone.call.CallOutgoingActivity;
+import org.linphone.call.telecom.TelecomHelper;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.core.Call;
@@ -103,6 +105,7 @@ public final class LinphoneService extends Service {
     private LinphoneManager mLinphoneManager;
     private ContactsManager mContactsManager;
     private DeviceOrientationEventListener mOrientationHelper;
+    private TelecomHelper mTelecomHelper;
 
     private Class<? extends Activity> mIncomingReceivedActivity = CallIncomingActivity.class;
 
@@ -158,9 +161,9 @@ public final class LinphoneService extends Service {
 
                         if (state == Call.State.IncomingReceived
                                 || state == State.IncomingEarlyMedia) {
-                            if (!mLinphoneManager.getCallGsmON()) onIncomingReceived();
+                            if (!mLinphoneManager.getCallGsmON()) onIncomingReceived(call);
                         } else if (state == State.OutgoingInit) {
-                            onOutgoingStarted();
+                            onOutgoingStarted(call);
                         } else if (state == State.End
                                 || state == State.Released
                                 || state == State.Error) {
@@ -218,6 +221,11 @@ public final class LinphoneService extends Service {
         }
         ContactsManager.getInstance().initializeContactManager();
 
+        mTelecomHelper = null;
+        if (LinphonePreferences.instance().isUsingTelecomManager()) {
+            createTelecomManagerHelper();
+        }
+
         Compatibility.createChatShortcuts(this);
         mOrientationHelper.enable();
 
@@ -266,6 +274,7 @@ public final class LinphoneService extends Service {
             mNotificationManager.destroy();
         }
         mContactsManager.destroy();
+        destroyTelecomManagerHelper();
 
         // Destroy the LinphoneManager second to last to ensure any getCore() call will work
         mLinphoneManager.destroy();
@@ -314,6 +323,11 @@ public final class LinphoneService extends Service {
         return mContactsManager;
     }
 
+    @TargetApi(23)
+    public TelecomHelper getTelecomHelper() {
+        return mTelecomHelper;
+    }
+
     public void createOverlay() {
         if (mOverlay != null) destroyOverlay();
 
@@ -338,6 +352,19 @@ public final class LinphoneService extends Service {
             mOverlay.destroy();
         }
         mOverlay = null;
+    }
+
+    public void createTelecomManagerHelper() {
+        if (mTelecomHelper == null && Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
+            mTelecomHelper = new TelecomHelper(this);
+        }
+    }
+
+    public void destroyTelecomManagerHelper() {
+        if (mTelecomHelper != null) {
+            mTelecomHelper.destroy();
+            mTelecomHelper = null;
+        }
     }
 
     private void setupActivityMonitor() {
@@ -377,17 +404,25 @@ public final class LinphoneService extends Service {
         }
     }
 
-    private void onIncomingReceived() {
-        Intent intent = new Intent().setClass(this, mIncomingReceivedActivity);
-        // This flag is required to start an Activity from a Service context
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+    private void onIncomingReceived(Call call) {
+        if (mTelecomHelper != null) {
+            mTelecomHelper.onIncomingCallReceived(call);
+        } else {
+            Intent intent = new Intent().setClass(this, mIncomingReceivedActivity);
+            // This flag is required to start an Activity from a Service context
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
     }
 
-    private void onOutgoingStarted() {
-        Intent intent = new Intent(LinphoneService.this, CallOutgoingActivity.class);
-        // This flag is required to start an Activity from a Service context
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+    private void onOutgoingStarted(Call call) {
+        if (mTelecomHelper != null) {
+            mTelecomHelper.onOutgoingCallStarting(call);
+        } else {
+            Intent intent = new Intent(LinphoneService.this, CallOutgoingActivity.class);
+            // This flag is required to start an Activity from a Service context
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
     }
 }

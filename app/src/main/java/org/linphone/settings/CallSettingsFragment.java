@@ -23,6 +23,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.telecom.TelecomManager;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +32,7 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import org.linphone.LinphoneManager;
+import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.core.Core;
 import org.linphone.core.MediaEncryption;
@@ -50,10 +52,11 @@ public class CallSettingsFragment extends SettingsFragment {
             mVibrateIncomingCall,
             mDtmfSipInfo,
             mDtmfRfc2833,
-            mAutoAnswer;
+            mAutoAnswer,
+            mUseTelecomManager;
     private ListSetting mMediaEncryption;
     private TextSetting mAutoAnswerTime, mIncomingCallTimeout, mVoiceMailUri;
-    private BasicSetting mDndPermissionSettings;
+    private BasicSetting mDndPermissionSettings, mPhoneAccountSettings;
 
     @Nullable
     @Override
@@ -100,6 +103,10 @@ public class CallSettingsFragment extends SettingsFragment {
 
         mDndPermissionSettings =
                 mRootView.findViewById(R.id.pref_grant_read_dnd_settings_permission);
+
+        mUseTelecomManager = mRootView.findViewById(R.id.pref_use_telecom_manager);
+
+        mPhoneAccountSettings = mRootView.findViewById(R.id.pref_android_phone_accounts_settings);
     }
 
     private void setListeners() {
@@ -212,6 +219,28 @@ public class CallSettingsFragment extends SettingsFragment {
                                 new Intent("android.settings.NOTIFICATION_POLICY_ACCESS_SETTINGS"));
                     }
                 });
+
+        mUseTelecomManager.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onBoolValueChanged(boolean newValue) {
+                        if (newValue) {
+                            ((SettingsActivity) getActivity()).enableTelecomManagerAccount();
+                        } else {
+                            mPrefs.useTelecomManager(false);
+                        }
+                    }
+                });
+
+        mPhoneAccountSettings.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onClicked() {
+                        Intent phoneAccountSelect =
+                                new Intent(TelecomManager.ACTION_CHANGE_PHONE_ACCOUNTS);
+                        startActivity(phoneAccountSelect);
+                    }
+                });
     }
 
     private void updateValues() {
@@ -236,6 +265,15 @@ public class CallSettingsFragment extends SettingsFragment {
 
         mDndPermissionSettings.setVisibility(
                 Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60) ? View.VISIBLE : View.GONE);
+
+        mUseTelecomManager.setChecked(
+                mPrefs.isUsingTelecomManager()
+                        && LinphoneService.instance().getTelecomHelper().isAccountEnabled());
+        mUseTelecomManager.setVisibility(
+                Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60) ? View.VISIBLE : View.GONE);
+
+        mPhoneAccountSettings.setVisibility(
+                mUseTelecomManager.isChecked() ? View.VISIBLE : View.GONE);
 
         setListeners();
     }

@@ -21,18 +21,22 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import androidx.annotation.Nullable;
+import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.activities.MainActivity;
+import org.linphone.call.telecom.TelecomHelper;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.tools.Log;
 
 public class SettingsActivity extends MainActivity {
     private static final int PERMISSIONS_REQUEST_OVERLAY = 206;
+    private static final int PERMISSIONS_REQUEST_TELECOM = 300;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +109,13 @@ public class SettingsActivity extends MainActivity {
             if (Compatibility.canDrawOverlays(this)) {
                 LinphonePreferences.instance().enableOverlay(true);
             }
+        } else if (requestCode == PERMISSIONS_REQUEST_TELECOM) {
+            TelecomHelper telecomHelper = LinphoneService.instance().getTelecomHelper();
+            // We have to refresh account, otherwise isEnabled will always return false...
+            telecomHelper.refreshLinphoneTelecomAccount();
+            boolean enabled = telecomHelper.isAccountEnabled();
+            Log.i("[Telecom Manager] Has account been enabled ? " + enabled);
+            LinphonePreferences.instance().useTelecomManager(enabled);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -152,5 +163,17 @@ public class SettingsActivity extends MainActivity {
             return false;
         }
         return true;
+    }
+
+    public void enableTelecomManagerAccount() {
+        LinphoneService.instance().createTelecomManagerHelper();
+
+        Intent phoneAccountEnable = new Intent();
+        phoneAccountEnable.setComponent(
+                new ComponentName(
+                        "com.android.server.telecom",
+                        "com.android.server.telecom.settings.EnableAccountPreferenceActivity"));
+        // phoneAccountEnable.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivityForResult(phoneAccountEnable, PERMISSIONS_REQUEST_TELECOM);
     }
 }
