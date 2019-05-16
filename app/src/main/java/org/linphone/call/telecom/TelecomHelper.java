@@ -36,6 +36,7 @@ import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
+import org.linphone.core.CallLog;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.tools.Log;
@@ -187,6 +188,20 @@ public class TelecomHelper {
         LocalBroadcastManager.getInstance(LinphoneService.instance()).sendBroadcast(intent);
     }
 
+    private Call findCallFromId(String callId) {
+        Core core = LinphoneManager.getCore();
+        if (callId == null) return core.getCurrentCall();
+
+        Call[] calls = core.getCalls();
+        for (Call call : calls) {
+            CallLog log = call.getCallLog();
+            if (log != null && callId.equals(log.getCallId())) {
+                return call;
+            }
+        }
+        return null;
+    }
+
     private class TelecomBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -195,21 +210,34 @@ public class TelecomHelper {
             /*boolean isConference =
             intent.getBooleanExtra(
                     LinphoneConnectionService.CS_TO_EXT_IS_CONFERENCE, false);*/
-            Log.i("[Telecom Manager] Received action " + action + " for call id " + callId);
 
-            // TODO: call CallManager methods
+            Call call = findCallFromId(callId);
+            Log.i(
+                    "[Telecom Manager] Received action "
+                            + action
+                            + " for call id "
+                            + callId
+                            + (call == null ? " (not found)" : " (found)"));
+            if (call == null) return;
+
             switch (action) {
                 case LinphoneConnectionService.CS_TO_EXT_ANSWER:
+                    LinphoneManager.getCallManager().acceptCall(call);
                     break;
-                case LinphoneConnectionService.CS_TO_EXT_REJECT:
+                case LinphoneConnectionService.CS_TO_EXT_END:
+                    call.terminate();
                     break;
-                case LinphoneConnectionService.CS_TO_EXT_DISCONNECT:
+                case LinphoneConnectionService.CS_TO_EXT_TERMINATE:
+                    call.terminate();
                     break;
                 case LinphoneConnectionService.CS_TO_EXT_ABORT:
+                    call.terminate();
                     break;
                 case LinphoneConnectionService.CS_TO_EXT_HOLD:
+                    call.pause();
                     break;
                 case LinphoneConnectionService.CS_TO_EXT_UNHOLD:
+                    call.resume();
                     break;
                 case LinphoneConnectionService.CS_TO_EXT_ADD_TO_CONF:
                     break;
