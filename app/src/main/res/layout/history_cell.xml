@@ -84,17 +84,15 @@
                 android:padding="7dp"
                 android:src="@drawable/call_status_incoming" />
 
-            <TextView
+            <org.linphone.views.MarqueeTextView
                 android:id="@+id/sip_uri"
                 style="@style/contact_name_list_cell_font"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@id/icon"
-                android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:lines="1"
-                android:maxLines="1" />
+                android:singleLine="true" />
 
         </RelativeLayout>
 

@@ -15,20 +15,18 @@
         android:paddingTop="15dp"
         android:paddingBottom="15dp">
 
-        <TextView
+        <org.linphone.views.MarqueeTextView
             android:id="@+id/setting_title"
             android:singleLine="true"
-            android:ellipsize="marquee"
             android:layout_toLeftOf="@id/setting_led"
             android:paddingRight="5dp"
             style="@style/settings_item_font"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-        <TextView
+        <org.linphone.views.MarqueeTextView
             android:id="@+id/setting_subtitle"
             android:singleLine="true"
-            android:ellipsize="marquee"
             android:layout_toLeftOf="@id/setting_led"
             android:paddingRight="5dp"
             android:layout_below="@id/setting_title"

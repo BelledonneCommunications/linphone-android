@@ -78,11 +78,13 @@
                 style="@style/big_contact_name_font"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal" />
+                android:gravity="center_horizontal"
+                android:maxLines="2"/>
 
-            <TextView
+            <org.linphone.views.MarqueeTextView
                 android:id="@+id/contact_address"
                 style="@style/sip_uri_font"
+                android:singleLine="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 

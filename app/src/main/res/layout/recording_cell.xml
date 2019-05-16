@@ -69,10 +69,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:ellipsize="end"
-                android:lines="1"
-                android:maxLines="1">
+                android:layout_alignParentTop="true">
 
                 <TextView
                     android:id="@+id/record_name"
@@ -99,9 +96,6 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:ellipsize="end"
-                android:lines="1"
-                android:maxLines="1"
                 android:orientation="horizontal">
 
                 <TextView

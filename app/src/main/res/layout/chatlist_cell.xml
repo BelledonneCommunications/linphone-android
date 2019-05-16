@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/avatar_layout"
                 android:layout_marginTop="5dp"
-                android:maxLines="1" />
+                android:singleLine="true" />
 
         </RelativeLayout>
 
@@ -51,15 +51,13 @@
             android:layout_height="match_parent"
             android:paddingLeft="10dp">
 
-            <TextView
+            <org.linphone.views.MarqueeTextView
                 android:id="@+id/sipUri"
                 style="@style/contact_name_list_cell_font"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="30dp"
-                android:ellipsize="end"
-                android:lines="1"
-                android:maxLines="1"
+                android:singleLine="true"
                 android:scrollHorizontally="true" />
 
             <TextView
@@ -73,7 +71,8 @@
                 android:background="@drawable/unread_message_count_bg"
                 android:contentDescription="@string/content_description_unread_chat_message"
                 android:gravity="center"
-                android:maxLines="1" />
+                android:singleLine="true"
+                android:ellipsize="end"/>
 
             <LinearLayout
                 android:id="@id/lastMessageLayout"

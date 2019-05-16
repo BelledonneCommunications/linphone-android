@@ -33,7 +33,7 @@
                 android:layout_weight="0.4"
                 android:ellipsize="end"
                 android:gravity="center"
-                android:maxLines="1"
+                android:singleLine="true"
                 android:text="@string/chat_room_infos_title" />
 
             <ImageView

@@ -46,7 +46,7 @@
             android:gravity="center_vertical|center_horizontal"
             android:paddingTop="5dp" />
 
-        <TextView
+        <org.linphone.views.MarqueeTextView
             android:id="@+id/contact_number"
             style="@style/sip_uri_font"
             android:layout_width="wrap_content"
@@ -54,8 +54,7 @@
             android:layout_below="@id/contact_name"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_vertical|center_horizontal"
-            android:ellipsize="end"
-            android:maxLines="1"
+            android:singleLine="true"
             android:paddingBottom="10dp" />
 
         <RelativeLayout
