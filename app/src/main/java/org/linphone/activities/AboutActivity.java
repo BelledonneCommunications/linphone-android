@@ -80,7 +80,7 @@ public class AboutActivity extends MainActivity {
         aboutVersion.setText(
                 String.format(
                         getString(R.string.about_version),
-                        BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")"));
+                        BuildConfig.VERSION_NAME + " (" + BuildConfig.BUILD_TYPE + ")"));
 
         TextView privacyPolicy = findViewById(R.id.privacy_policy_link);
         privacyPolicy.setOnClickListener(
