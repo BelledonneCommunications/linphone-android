@@ -28,7 +28,7 @@
         android:layout_alignParentLeft="true"
         android:gravity="center"
         android:singleLine="true"
-        android:maxEms="2"/>
+        android:ellipsize="none" />
 
     <ImageView
         android:id="@+id/border"
