@@ -17,14 +17,14 @@
 
     </RelativeLayout>
 
-    <TextView
+    <org.linphone.views.MarqueeTextView
         android:id="@+id/contact_name"
         style="@style/call_contact_name_paused_font"
         android:layout_width="0dip"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center_vertical|left"
-        android:maxLines="1"
+        android:singleLine="true"
         android:paddingLeft="20dp"
         android:paddingRight="10dp" />
 

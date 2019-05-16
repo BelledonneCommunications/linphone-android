@@ -76,16 +76,16 @@
                     style="@style/big_contact_name_font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:maxLines="1" />
+                    android:gravity="center_horizontal"
+                    android:layout_gravity="center" />
 
-                <TextView
+                <org.linphone.views.MarqueeTextView
                     android:id="@+id/contactOrganization"
                     style="@style/contact_organization_font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:maxLines="1" />
+                    android:singleLine="true" />
 
                 <TableLayout
                     android:id="@+id/controls"

@@ -5,7 +5,7 @@
     android:layout_margin="5dp"
     android:gravity="center_vertical">
 
-    <TextView
+    <org.linphone.views.MarqueeTextView
         android:id="@+id/name"
         style="@style/contact_name_list_cell_font"
         android:layout_width="wrap_content"
@@ -13,9 +13,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="5dp"
-        android:ellipsize="end"
-        android:lines="1"
-        android:maxLines="1" />
+        android:singleLine="true" />
 
     <ImageView
         android:id="@+id/security_level"
