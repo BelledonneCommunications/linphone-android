@@ -220,6 +220,14 @@ public class ChatRoomCreationFragment extends Fragment
             securityToggleOff.setVisibility(View.GONE);
         }
 
+        if (getResources().getBoolean(R.bool.force_end_to_end_encryption_in_chat)) {
+            mSecurityToggle.setChecked(true);
+            mSearchAdapter.setSecurityEnabled(true);
+            mSecurityToggle.setVisibility(View.GONE);
+            securityToggleOn.setVisibility(View.GONE);
+            securityToggleOff.setVisibility(View.GONE);
+        }
+
         LinearLayoutManager layoutManager =
                 new LinphoneLinearLayoutManager(getActivity().getApplicationContext());
 

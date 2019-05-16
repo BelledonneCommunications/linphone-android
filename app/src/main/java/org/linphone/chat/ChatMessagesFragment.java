@@ -258,6 +258,10 @@ public class ChatMessagesFragment extends Fragment
                         pickFile();
                     }
                 });
+        if (getResources().getBoolean(R.bool.disable_chat_send_file)) {
+            mAttachImageButton.setEnabled(false);
+            mAttachImageButton.setVisibility(View.GONE);
+        }
 
         mSendMessageButton = view.findViewById(R.id.send_message);
         mSendMessageButton.setEnabled(false);

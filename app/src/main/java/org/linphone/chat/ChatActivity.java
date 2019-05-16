@@ -162,12 +162,18 @@ public class ChatActivity extends MainActivity {
             }
         }
 
-        if (sharedText != null || sharedFiles != null) {
-            mSharedText = sharedText;
-            mSharedFiles = sharedFiles;
-            Toast.makeText(this, R.string.toast_choose_chat_room_for_sharing, Toast.LENGTH_LONG)
-                    .show();
-            Log.i("[Chat Activity] Sharing arguments found: " + mSharedText + " / " + mSharedFiles);
+        if (!getResources().getBoolean(R.bool.disable_chat_send_file)) {
+            if (sharedText != null || sharedFiles != null) {
+                mSharedText = sharedText;
+                mSharedFiles = sharedFiles;
+                Toast.makeText(this, R.string.toast_choose_chat_room_for_sharing, Toast.LENGTH_LONG)
+                        .show();
+                Log.i(
+                        "[Chat Activity] Sharing arguments found: "
+                                + mSharedText
+                                + " / "
+                                + mSharedFiles);
+            }
         }
     }
 
