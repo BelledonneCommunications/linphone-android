@@ -446,6 +446,9 @@ public class NotificationsManager {
                     // Call is released, remove service notification to allow for an other call to
                     // be service notification
                     stopForeground();
+                } else if (LinphonePreferences.instance().isUsingTelecomManager()
+                        && call.getCore().getCallsNb() == 0) {
+                    stopForeground();
                 }
                 mNM.cancel(notif.getNotificationId());
                 mCallNotifMap.remove(addressAsString);
@@ -510,10 +513,18 @@ public class NotificationsManager {
             if (call.getCore().getCallsNb() == 0) {
                 stopForeground();
             } else {
+                // We don't want a call notification when using Telecom Manager
+                // But we need a foreground one so the Service is kept alive
                 if (mCurrentForegroundServiceNotification == 0) {
-                    startForeground(notification, notif.getNotificationId());
+                    if (LinphonePreferences.instance().isUsingTelecomManager()) {
+                        startForeground();
+                    } else {
+                        startForeground(notification, notif.getNotificationId());
+                    }
                 } else {
-                    sendNotification(notif.getNotificationId(), notification);
+                    if (!LinphonePreferences.instance().isUsingTelecomManager()) {
+                        sendNotification(notif.getNotificationId(), notification);
+                    }
                 }
             }
         }
