@@ -23,6 +23,25 @@ static def isLocalAarAvailable() {
     return isLocalDebugAarAvailable() || isLocalReleaseAarAvailable()
 }
 
+task getGitVersion() {
+    def gitVersion = "4.1"
+    def gitVersionStream = new ByteArrayOutputStream()
+
+    def result = exec {
+        def command = "git describe --always"
+        ignoreExitValue = true
+        executable "bash" args "-l", "-c", command
+        standardOutput = gitVersionStream
+    }
+    if (result.getExitValue() == 0) {
+        gitVersion = gitVersionStream.toString().trim()
+        println("Git version: " + gitVersion)
+    } else {
+        println("Git not found")
+    }
+    project.version = gitVersion
+}
+
 ///// Exclude Files /////
 
 def excludeFiles = []
@@ -41,29 +60,6 @@ excludePackage.add('**/libopenh264**')
 excludePackage.add('**/**tester**')
 excludePackage.add('**/LICENSE.txt')
 
-
-def gitVersion = new ByteArrayOutputStream()
-
-task getGitVersion {
-    doLast {
-        def result = exec {
-            def command = "git describe --always"
-            ignoreExitValue = true
-            executable "bash" args "-l", "-c", command
-            standardOutput = gitVersion
-        }
-        if (result.getExitValue() == 0) {
-            gitVersion = gitVersion.toString().trim()
-            println("Git version: " + gitVersion)
-        } else {
-            gitVersion = "unknown"
-            println("Git not found")
-        }
-    }
-}
-
-project.tasks['preBuild'].dependsOn 'getGitVersion'
-
 /////////////////////////
 
 repositories {
@@ -72,6 +68,8 @@ repositories {
         url "https://linphone.org/snapshots/maven_repository"
     }
 }
+
+project.tasks['preBuild'].dependsOn 'getGitVersion'
 
 android {
     lintOptions {
@@ -83,7 +81,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 4124
-        versionName "4.1"
+        versionName "${project.version}"
         applicationId getPackageName()
         multiDexEnabled true
         manifestPlaceholders = [linphone_address_mime_type:"vnd.android.cursor.item/vnd." + getPackageName() + ".provider.sip_address"]
@@ -91,7 +89,7 @@ android {
 
     applicationVariants.all { variant ->
         variant.outputs.all {
-            outputFileName = "linphone-android-${variant.buildType.name}-${gitVersion.toString().trim()}.apk"
+            outputFileName = "linphone-android-${variant.buildType.name}-${project.version}.apk"
         }
     }
 
@@ -126,7 +124,6 @@ android {
             applicationIdSuffix ".debug"
             debuggable true
             jniDebuggable true
-            versionNameSuffix '-debug'
 
             resValue "string", "sync_account_type", getPackageName() + ".sync"
             resValue "string", "file_provider", getPackageName() + ".provider"
