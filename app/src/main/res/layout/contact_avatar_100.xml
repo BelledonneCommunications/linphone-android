@@ -27,7 +27,8 @@
         android:layout_height="100dp"
         android:layout_alignParentLeft="true"
         android:gravity="center"
-        android:maxLines="1" />
+        android:singleLine="true"
+        android:maxEms="2" />
 
     <ImageView
         android:id="@+id/border"

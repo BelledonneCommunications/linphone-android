@@ -29,7 +29,8 @@
             android:layout_height="match_parent"
             android:layout_weight="0.6"
             android:gravity="center"
-            android:maxLines="1"
+            android:singleLine="true"
+            android:ellipsize="end"
             android:padding="15dp"
             android:text="@string/menu_recordings"/>
 

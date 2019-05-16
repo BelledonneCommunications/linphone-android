@@ -93,23 +93,19 @@
         android:layout_toRightOf="@id/avatar"
         android:orientation="vertical">
 
-        <TextView
+        <org.linphone.views.MarqueeTextView
             android:id="@+id/name"
             style="@style/contact_name_list_cell_font"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:lines="1"
-            android:maxLines="1" />
+            android:singleLine="true" />
 
-        <TextView
+        <org.linphone.views.MarqueeTextView
             android:id="@+id/sipUri"
             style="@style/sip_uri_small_font"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:lines="1"
-            android:maxLines="1" />
+            android:singleLine="true" />
 
     </LinearLayout>
 

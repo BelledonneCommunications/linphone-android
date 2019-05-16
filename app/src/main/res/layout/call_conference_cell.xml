@@ -31,13 +31,13 @@
             android:paddingRight="10dp"
             android:orientation="vertical">
 
-            <TextView
+            <org.linphone.views.MarqueeTextView
                 android:id="@+id/contact_name"
                 style="@style/contact_name_list_cell_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical|left"
-                android:maxLines="1" />
+                android:singleLine="true"/>
 
 
             <Chronometer
