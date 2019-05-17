@@ -153,7 +153,7 @@ public class LinphoneConnectionService extends ConnectionService {
             capabilities |= CAPABILITY_HOLD;
             capabilities |= CAPABILITY_CAN_UPGRADE_TO_VIDEO;
             capabilities |= CAPABILITY_SUPPORTS_VT_LOCAL_BIDIRECTIONAL;
-            capabilities |= CAPABILITY_DISCONNECT_FROM_CONFERENCE;
+            capabilities |= CAPABILITY_SUPPORTS_VT_REMOTE_BIDIRECTIONAL;
             setConnectionCapabilities(capabilities);
         }
 
@@ -192,9 +192,7 @@ public class LinphoneConnectionService extends ConnectionService {
 
         @Override
         public void onPlayDtmfTone(char c) {
-            if (c == '1') {
-                setDialing();
-            }
+            // TODO: play/send DTMF
         }
 
         @Override

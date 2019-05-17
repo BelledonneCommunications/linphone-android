@@ -225,7 +225,10 @@ public class CallSettingsFragment extends SettingsFragment {
                     @Override
                     public void onBoolValueChanged(boolean newValue) {
                         if (newValue) {
-                            ((SettingsActivity) getActivity()).enableTelecomManagerAccount();
+                            if (((SettingsActivity) getActivity())
+                                    .checkAndRequestTelecomManagerPermissions()) {
+                                ((SettingsActivity) getActivity()).enableTelecomManagerAccount();
+                            }
                         } else {
                             mPrefs.useTelecomManager(false);
                         }
