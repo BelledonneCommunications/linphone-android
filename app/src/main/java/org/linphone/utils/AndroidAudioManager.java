@@ -153,7 +153,11 @@ public class AndroidAudioManager {
                                 // Only register this one when a call is active
                                 if (mHeadsetReceiver != null) {
                                     Log.i("[Audio Manager] Unregistering headset receiver");
-                                    mContext.unregisterReceiver(mHeadsetReceiver);
+                                    try {
+                                        mContext.unregisterReceiver(mHeadsetReceiver);
+                                    } catch (IllegalArgumentException iae) {
+                                        Log.e("[Audio Manager] " + iae);
+                                    }
                                 }
 
                                 TelephonyManager tm =
