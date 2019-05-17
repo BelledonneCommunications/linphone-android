@@ -27,16 +27,14 @@ task getGitVersion() {
     def gitVersion = "4.1"
     def gitVersionStream = new ByteArrayOutputStream()
 
-    def result = exec {
-        def command = "git describe --always"
-        ignoreExitValue = true
-        executable "bash" args "-l", "-c", command
-        standardOutput = gitVersionStream
-    }
-    if (result.getExitValue() == 0) {
+    try {
+        exec {
+            executable "git" args "describe", "--always"
+            standardOutput = gitVersionStream
+        }
         gitVersion = gitVersionStream.toString().trim()
         println("Git version: " + gitVersion)
-    } else {
+    } catch (Exception e) {
         println("Git not found")
     }
     project.version = gitVersion
