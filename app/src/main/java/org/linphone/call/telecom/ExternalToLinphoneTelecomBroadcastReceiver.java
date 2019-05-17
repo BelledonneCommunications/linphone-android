@@ -1,7 +1,7 @@
 package org.linphone.call.telecom;
 
 /*
-TelecomBroadcastReceiver.java
+ExternalToLinphoneTelecomBroadcastReceiver.java
 Copyright (C) 2019 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ import org.linphone.core.CallLog;
 import org.linphone.core.Core;
 import org.linphone.core.tools.Log;
 
-public class TelecomBroadcastReceiver extends BroadcastReceiver {
+public class ExternalToLinphoneTelecomBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         int action = intent.getIntExtra(LinphoneConnectionService.CS_TO_EXT_ACTION, -1);
@@ -38,7 +38,7 @@ public class TelecomBroadcastReceiver extends BroadcastReceiver {
         Call call = findCallFromId(callId);
         Log.i(
                 "[Telecom Broadcast Receiver] Received action "
-                        + getActionNameFromValue(action)
+                        + TelecomHelper.getActionNameFromValue(action)
                         + " for call id "
                         + callId
                         + (call == null ? " (not found)" : " (found)"));
@@ -66,24 +66,6 @@ public class TelecomBroadcastReceiver extends BroadcastReceiver {
                 call.resume();
                 break;
         }
-    }
-
-    private String getActionNameFromValue(int action) {
-        switch (action) {
-            case LinphoneConnectionService.CS_TO_EXT_ANSWER:
-                return "CS_TO_EXT_ANSWER";
-            case LinphoneConnectionService.CS_TO_EXT_END:
-                return "CS_TO_EXT_END";
-            case LinphoneConnectionService.CS_TO_EXT_TERMINATE:
-                return "CS_TO_EXT_TERMINATE";
-            case LinphoneConnectionService.CS_TO_EXT_ABORT:
-                return "CS_TO_EXT_ABORT";
-            case LinphoneConnectionService.CS_TO_EXT_HOLD:
-                return "CS_TO_EXT_HOLD";
-            case LinphoneConnectionService.CS_TO_EXT_UNHOLD:
-                return "CS_TO_EXT_UNHOLD";
-        }
-        return "Unknown: " + action;
     }
 
     private Call findCallFromId(String callId) {

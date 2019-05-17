@@ -42,8 +42,8 @@ public class LinphoneConnection extends Connection {
     private boolean mIsActive = false;
     private String mCallId;
 
-    LinphoneConnection(LinphoneConnectionService connectionService) {
-        mConnectionService = connectionService;
+    LinphoneConnection(LinphoneConnectionService cs) {
+        mConnectionService = cs;
 
         int capabilities = getConnectionCapabilities();
         capabilities |= CAPABILITY_MUTE;
@@ -78,7 +78,7 @@ public class LinphoneConnection extends Connection {
 
     @Override
     public void onAnswer(int videoState) {
-        if (mConnectionService.getCallsNb() > 1) {
+        if (mConnectionService.getCalls().size() > 1) {
             mConnectionService.holdInActiveCalls(this);
         }
         mConnectionService.setAsActive(this);
@@ -100,7 +100,7 @@ public class LinphoneConnection extends Connection {
 
     @Override
     public void onHold() {
-        if (mConnectionService.getCallsNb() > 1) {
+        if (mConnectionService.getCalls().size() > 1) {
             mConnectionService.performSwitchCall();
         } else {
             setOnHold();
