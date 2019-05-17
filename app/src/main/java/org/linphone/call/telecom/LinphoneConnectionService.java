@@ -28,6 +28,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,15 +38,13 @@ import android.telecom.ConnectionService;
 import android.telecom.DisconnectCause;
 import android.telecom.PhoneAccountHandle;
 import android.telecom.RemoteConference;
+import android.telecom.StatusHints;
 import android.telecom.TelecomManager;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import org.linphone.LinphoneManager;
-import org.linphone.contacts.ContactsManager;
-import org.linphone.contacts.LinphoneContact;
-import org.linphone.core.Address;
 import org.linphone.core.tools.Log;
 
 // This class manages Connections, Conferences exclusively for the native mode
@@ -75,6 +74,8 @@ public class LinphoneConnectionService extends ConnectionService {
     public static final int CS_TO_EXT_ABORT = 4; // abort call
     public static final int CS_TO_EXT_HOLD = 5; // hold call
     public static final int CS_TO_EXT_UNHOLD = 6; // unhold call
+
+    private final List<LinphoneConnection> mCalls = new ArrayList<>();
 
     public LinphoneConnectionService() {}
 
@@ -242,34 +243,44 @@ public class LinphoneConnectionService extends ConnectionService {
         }
     }
 
-    // Create LinphoneConnection class on placecall method from TelecomManager
+    // Create LinphoneConnection class on placeCall method from TelecomManager
     @Override
     public Connection onCreateOutgoingConnection(
-            PhoneAccountHandle connectionManagerAccount, final ConnectionRequest request) {
+            PhoneAccountHandle connectionManagerAccount, ConnectionRequest request) {
 
         PhoneAccountHandle accountHandle = request.getAccountHandle();
         ComponentName componentName = new ComponentName(getApplicationContext(), this.getClass());
 
         // Check PhoneAccount activation
         if (accountHandle != null && componentName.equals(accountHandle.getComponentName())) {
-            Uri providedHandle = request.getAddress();
-            String callerName = null;
-            final LinphoneConnection connection = new LinphoneConnection();
-
-            Address address = LinphoneManager.getCore().getCurrentCall().getRemoteAddress();
-            LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
-            if (contact != null) {
-                callerName = contact.getFullName();
+            LinphoneConnection connection = new LinphoneConnection();
+            Bundle extras = request.getExtras();
+            String callId = extras.getString(EXT_TO_CS_CALL_ID);
+            if (callId == null) {
+                callId = LinphoneManager.getCore().getCurrentCall().getCallLog().getCallId();
             }
-            if (callerName != null) {
-                connection.setCallerDisplayName(callerName, TelecomManager.PRESENTATION_ALLOWED);
-            }
-            setAddress(connection, providedHandle);
-            String callId = LinphoneManager.getCore().getCurrentCall().getCallLog().getCallId();
             connection.setCallId(callId);
+            Log.i("[Telecom Manager] Outgoing call id is " + callId);
+
+            Uri providedHandle = request.getAddress();
+            connection.setAddress(providedHandle, TelecomManager.PRESENTATION_ALLOWED);
+
+            if (extras != null) {
+                // Caller display name not used for outgoing calls,
+                // at least on some dialers so keep it just in case...
+                String callerName =
+                        extras.getString(TelecomHelper.LINPHONE_TELECOM_EXTRA_CONTACT_NAME);
+                connection.setCallerDisplayName(callerName, TelecomManager.PRESENTATION_ALLOWED);
+                Log.i("[Telecom Manager] Using display name " + callerName);
+
+                String appName = extras.getString(TelecomHelper.LINPHONE_TELECOM_EXTRA_APP_NAME);
+                Icon appIcon = extras.getParcelable(TelecomHelper.LINPHONE_TELECOM_EXTRA_APP_ICON);
+                StatusHints statusHints = new StatusHints(appName, appIcon, new Bundle());
+                connection.setStatusHints(statusHints);
+            }
+
             connection.setAudioModeIsVoip(true);
             connection.setDialing();
-
             addCall(connection);
 
             return connection;
@@ -278,62 +289,39 @@ public class LinphoneConnectionService extends ConnectionService {
                     new DisconnectCause(
                             DisconnectCause.ERROR,
                             "Invalid inputs: " + accountHandle + " " + componentName));
-        }
-    }
-
-    // Never occured during experimentation, still here for future work, information
-    @Override
-    public void onCreateOutgoingConnectionFailed(
-            PhoneAccountHandle connectionManagerAccount, final ConnectionRequest request) {
-
-        PhoneAccountHandle accountHandle = request.getAccountHandle();
-        ComponentName componentName = new ComponentName(getApplicationContext(), this.getClass());
-
-        Bundle extras = request.getExtras();
-        String gatewayPackage = extras.getString(TelecomManager.GATEWAY_PROVIDER_PACKAGE);
-        Uri originalHandle = extras.getParcelable(TelecomManager.GATEWAY_ORIGINAL_ADDRESS);
-        Log.i(
-                "[Telecom Manager] package is "
-                        + gatewayPackage
-                        + ", original address "
-                        + originalHandle);
-
-        if (accountHandle != null && componentName.equals(accountHandle.getComponentName())) {
-            final LinphoneConnection connection = new LinphoneConnection();
-            // Get the stashed intent extra that determines if this is a video sipAudioCall or audio
-            // sipAudioCall.
-            Uri providedHandle = request.getAddress();
-            setAddress(connection, providedHandle);
-            connection.setAudioModeIsVoip(true);
-            connection.setRinging();
-            addCall(connection);
         }
     }
 
     // Create LinphoneConnection class on addincomingcall method from TelecomManager
     @Override
     public Connection onCreateIncomingConnection(
-            PhoneAccountHandle connectionManagerAccount, final ConnectionRequest request) {
+            PhoneAccountHandle connectionManagerAccount, ConnectionRequest request) {
         PhoneAccountHandle accountHandle = request.getAccountHandle();
         ComponentName componentName = new ComponentName(getApplicationContext(), this.getClass());
 
         if (accountHandle != null && componentName.equals(accountHandle.getComponentName())) {
-            mPhoneAccountHandle = accountHandle;
-            final LinphoneConnection connection = new LinphoneConnection();
+            LinphoneConnection connection = new LinphoneConnection();
             Bundle extras = request.getExtras();
             String callId = extras.getString(EXT_TO_CS_CALL_ID);
             connection.setCallId(callId);
+            Log.i("[Telecom Manager] Incoming call id is " + callId);
 
             Uri providedHandle =
                     Uri.parse(extras.getString(TelecomManager.EXTRA_INCOMING_CALL_ADDRESS));
+            connection.setAddress(providedHandle, TelecomManager.PRESENTATION_ALLOWED);
 
             Bundle b = extras.getBundle(TelecomManager.EXTRA_INCOMING_CALL_EXTRAS);
             if (b != null) {
-                String callerName = b.getString(TelecomManager.EXTRA_INCOMING_CALL_EXTRAS);
+                String callerName = b.getString(TelecomHelper.LINPHONE_TELECOM_EXTRA_CONTACT_NAME);
                 connection.setCallerDisplayName(callerName, TelecomManager.PRESENTATION_ALLOWED);
+                Log.i("[Telecom Manager] Using display name " + callerName);
+
+                String appName = b.getString(TelecomHelper.LINPHONE_TELECOM_EXTRA_APP_NAME);
+                Icon appIcon = b.getParcelable(TelecomHelper.LINPHONE_TELECOM_EXTRA_APP_ICON);
+                StatusHints statusHints = new StatusHints(appName, appIcon, new Bundle());
+                connection.setStatusHints(statusHints);
             }
 
-            setAddress(connection, providedHandle);
             connection.setAudioModeIsVoip(true);
             connection.setRinging();
             addCall(connection);
@@ -348,13 +336,14 @@ public class LinphoneConnectionService extends ConnectionService {
     }
 
     @Override
+    public void onCreateOutgoingConnectionFailed(
+            PhoneAccountHandle connectionManagerAccount, ConnectionRequest request) {}
+
+    @Override
     public void onConference(Connection a, Connection b) {}
 
     @Override
     public void onRemoteConferenceAdded(RemoteConference remoteConference) {}
-
-    private PhoneAccountHandle mPhoneAccountHandle = null;
-    private final List<LinphoneConnection> mCalls = new ArrayList<>();
 
     @Override
     public boolean onUnbind(Intent intent) {
@@ -468,9 +457,5 @@ public class LinphoneConnectionService extends ConnectionService {
 
         updateCallCapabilities();
         updateConferenceable();
-    }
-
-    private void setAddress(Connection connection, Uri address) {
-        connection.setAddress(address, TelecomManager.PRESENTATION_ALLOWED);
     }
 }
