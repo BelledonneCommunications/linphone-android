@@ -21,7 +21,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -39,7 +38,6 @@ import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
-import org.linphone.core.CallLog;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.tools.Log;
@@ -125,17 +123,6 @@ public class TelecomHelper {
                         ? LinphoneUtils.getAddressDisplayName(address)
                         : contact.getFullName();
 
-        /*if (contact != null) {
-            for (LinphoneNumberOrAddress noa : contact.getNumbersOrAddresses()) {
-                String alias = contact.getContactFromPresenceModelForUriOrTel(noa.getValue());
-                if (alias != null && alias.equals(displayedAddress)) {
-                    Log.i("[Telecom Manager] Found matching alias: " + alias);
-                    displayedAddress = alias;
-                    break;
-                }
-            }
-        }*/
-
         Bundle extras = new Bundle();
         extras.putString(
                 LinphoneConnectionService.EXT_TO_CS_CALL_ID, call.getCallLog().getCallId());
@@ -214,12 +201,7 @@ public class TelecomHelper {
         }
     }
 
-    @SuppressLint("MissingPermission")
-    public void goBackToCallScreen() {
-        mTelecomManager.showInCallScreen(false);
-    }
-
-    private void onCallTerminated(String callId) {
+    public void onCallTerminated(String callId) {
         Log.i("[Telecom Manager] Call terminated");
         sendToCS(LinphoneConnectionService.EXT_TO_CS_END_CALL, callId);
 
@@ -252,59 +234,5 @@ public class TelecomHelper {
         }
 
         LocalBroadcastManager.getInstance(LinphoneService.instance()).sendBroadcast(intent);
-    }
-
-    private Call findCallFromId(String callId) {
-        Core core = LinphoneManager.getCore();
-        if (callId == null) return core.getCurrentCall();
-
-        Call[] calls = core.getCalls();
-        for (Call call : calls) {
-            CallLog log = call.getCallLog();
-            if (log != null && callId.equals(log.getCallId())) {
-                return call;
-            }
-        }
-        return null;
-    }
-
-    private class TelecomBroadcastReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            int action = intent.getIntExtra(LinphoneConnectionService.CS_TO_EXT_ACTION, -1);
-            String callId = intent.getStringExtra(LinphoneConnectionService.CS_TO_EXT_CALL_ID);
-
-            Call call = findCallFromId(callId);
-            Log.i(
-                    "[Telecom Manager] Received action "
-                            + action
-                            + " for call id "
-                            + callId
-                            + (call == null ? " (not found)" : " (found)"));
-            if (call == null) {
-                onCallTerminated(callId);
-            }
-
-            switch (action) {
-                case LinphoneConnectionService.CS_TO_EXT_ANSWER:
-                    LinphoneManager.getCallManager().acceptCall(call);
-                    break;
-                case LinphoneConnectionService.CS_TO_EXT_END:
-                    call.terminate();
-                    break;
-                case LinphoneConnectionService.CS_TO_EXT_TERMINATE:
-                    call.terminate();
-                    break;
-                case LinphoneConnectionService.CS_TO_EXT_ABORT:
-                    call.terminate();
-                    break;
-                case LinphoneConnectionService.CS_TO_EXT_HOLD:
-                    call.pause();
-                    break;
-                case LinphoneConnectionService.CS_TO_EXT_UNHOLD:
-                    call.resume();
-                    break;
-            }
-        }
     }
 }
