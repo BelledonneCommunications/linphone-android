@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import android.Manifest;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.TextureView;
@@ -266,24 +267,29 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
             String numberToCall = intent.getStringExtra("NumberToCall");
             Log.i("[Dialer] ACTION_CALL_LINPHONE with number: " + numberToCall);
             LinphoneManager.getCallManager().newOutgoingCall(numberToCall, null);
-        } else if (Intent.ACTION_CALL.equals(action)) {
-            if (intent.getData() != null) {
-                addressToCall = intent.getData().toString();
-                addressToCall = addressToCall.replace("%40", "@");
-                addressToCall = addressToCall.replace("%3A", ":");
-                if (addressToCall.startsWith("sip:")) {
-                    addressToCall = addressToCall.substring("sip:".length());
-                } else if (addressToCall.startsWith("tel:")) {
-                    addressToCall = addressToCall.substring("tel:".length());
+        } else {
+            Uri uri = intent.getData();
+            if (uri != null) {
+                Log.i("[Dialer] Intent data is: " + uri.toString());
+                if (Intent.ACTION_CALL.equals(action)) {
+                    addressToCall = intent.getData().toString();
+                    addressToCall = addressToCall.replace("%40", "@");
+                    addressToCall = addressToCall.replace("%3A", ":");
+                    if (addressToCall.startsWith("sip:")) {
+                        addressToCall = addressToCall.substring("sip:".length());
+                    } else if (addressToCall.startsWith("tel:")) {
+                        addressToCall = addressToCall.substring("tel:".length());
+                    }
+                    Log.i("[Dialer] ACTION_CALL with number: " + addressToCall);
+                } else {
+                    addressToCall =
+                            ContactsManager.getInstance()
+                                    .getAddressOrNumberForAndroidContact(getContentResolver(), uri);
+                    Log.i("[Dialer] " + action + " with number: " + addressToCall);
                 }
-                Log.i("[Dialer] ACTION_CALL with number: " + addressToCall);
+            } else {
+                Log.w("[Dialer] Intent data is null for action " + action);
             }
-        } else if (Intent.ACTION_VIEW.equals(action)) {
-            addressToCall =
-                    ContactsManager.getInstance()
-                            .getAddressOrNumberForAndroidContact(
-                                    getContentResolver(), intent.getData());
-            Log.i("[Dialer] ACTION_VIEW with number: " + addressToCall);
         }
 
         if (addressToCall != null) {
