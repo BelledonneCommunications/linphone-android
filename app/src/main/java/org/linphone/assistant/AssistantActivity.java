@@ -59,7 +59,7 @@ public abstract class AssistantActivity extends LinphoneGenericActivity
         if (mAccountCreator == null) {
             String url = LinphonePreferences.instance().getXmlrpcUrl();
             Core core = LinphoneManager.getCore();
-            core.loadConfigFromXml(LinphoneManager.getInstance().getDefaultDynamicConfigFile());
+            core.loadConfigFromXml(LinphonePreferences.instance().getDefaultDynamicConfigFile());
             mAccountCreator = core.createAccountCreator(url);
         }
     }
@@ -103,14 +103,14 @@ public abstract class AssistantActivity extends LinphoneGenericActivity
         boolean useLinphoneDefaultValues =
                 getString(R.string.default_domain).equals(mAccountCreator.getDomain());
         if (useLinphoneDefaultValues) {
-            core.loadConfigFromXml(LinphoneManager.getInstance().getLinphoneDynamicConfigFile());
+            core.loadConfigFromXml(LinphonePreferences.instance().getLinphoneDynamicConfigFile());
         }
 
         ProxyConfig proxyConfig = mAccountCreator.configure();
 
         if (useLinphoneDefaultValues) {
             // Restore default values
-            core.loadConfigFromXml(LinphoneManager.getInstance().getDefaultDynamicConfigFile());
+            core.loadConfigFromXml(LinphonePreferences.instance().getDefaultDynamicConfigFile());
         } else {
             // If this isn't a sip.linphone.org account, disable push notifications and enable
             // service notification, otherwise incoming calls won't work (most probably)

@@ -41,9 +41,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Timer;
@@ -81,11 +78,7 @@ import org.linphone.utils.PushNotificationUtils;
 
 /** Handles Linphone's Core lifecycle */
 public class LinphoneManager implements SensorEventListener {
-    private final String mConfigFile;
-    private final String mLPConfigXsd;
     private final String mBasePath;
-    private final String mLinphoneFactoryConfigFile;
-    private final String mLinphoneDynamicConfigFile, mDefaultDynamicConfigFile;
     private final String mRingSoundFile;
     private final String mCallLogDatabaseFile;
     private final String mFriendsDatabaseFile;
@@ -120,11 +113,6 @@ public class LinphoneManager implements SensorEventListener {
         mExited = false;
         mContext = c;
         mBasePath = c.getFilesDir().getAbsolutePath();
-        mLPConfigXsd = mBasePath + "/lpconfig.xsd";
-        mLinphoneFactoryConfigFile = mBasePath + "/linphonerc";
-        mConfigFile = mBasePath + "/.linphonerc";
-        mLinphoneDynamicConfigFile = mBasePath + "/linphone_assistant_create.rc";
-        mDefaultDynamicConfigFile = mBasePath + "/default_assistant_create.rc";
         mCallLogDatabaseFile = mBasePath + "/linphone-log-history.db";
         mFriendsDatabaseFile = mBasePath + "/linphone-friends.db";
         mRingSoundFile = mBasePath + "/share/sounds/linphone/rings/notes_of_the_optimistic.mkv";
@@ -448,11 +436,12 @@ public class LinphoneManager implements SensorEventListener {
 
     public synchronized void startLibLinphone(boolean isPush) {
         try {
-            copyAssetsFromPackage();
-            // traces alway start with traces enable to not missed first initialization
             mCore =
                     Factory.instance()
-                            .createCore(mConfigFile, mLinphoneFactoryConfigFile, mContext);
+                            .createCore(
+                                    mPrefs.getLinphoneDefaultConfig(),
+                                    mPrefs.getLinphoneFactoryConfig(),
+                                    mContext);
             mCore.addListener(mCoreListener);
             if (isPush) {
                 Log.w(
@@ -664,38 +653,6 @@ public class LinphoneManager implements SensorEventListener {
         dialog.show();
     }
 
-    /* Assets stuff */
-
-    private void copyAssetsFromPackage() throws IOException {
-        copyIfNotExist(R.raw.linphonerc_default, mConfigFile);
-        copyFromPackage(R.raw.linphonerc_factory, new File(mLinphoneFactoryConfigFile).getName());
-        copyIfNotExist(R.raw.lpconfig, mLPConfigXsd);
-        copyFromPackage(
-                R.raw.default_assistant_create, new File(mDefaultDynamicConfigFile).getName());
-        copyFromPackage(
-                R.raw.linphone_assistant_create, new File(mLinphoneDynamicConfigFile).getName());
-    }
-
-    private void copyIfNotExist(int ressourceId, String target) throws IOException {
-        File lFileToCopy = new File(target);
-        if (!lFileToCopy.exists()) {
-            copyFromPackage(ressourceId, lFileToCopy.getName());
-        }
-    }
-
-    private void copyFromPackage(int ressourceId, String target) throws IOException {
-        FileOutputStream lOutputStream = mContext.openFileOutput(target, 0);
-        InputStream lInputStream = mContext.getResources().openRawResource(ressourceId);
-        int readByte;
-        byte[] buff = new byte[8048];
-        while ((readByte = lInputStream.read(buff)) != -1) {
-            lOutputStream.write(buff, 0, readByte);
-        }
-        lOutputStream.flush();
-        lOutputStream.close();
-        lInputStream.close();
-    }
-
     /* Presence stuff */
 
     private boolean isPresenceModelActivitySet() {
@@ -869,18 +826,6 @@ public class LinphoneManager implements SensorEventListener {
         } else {
             mCore.setRing(mRingSoundFile);
         }
-    }
-
-    public String getDefaultDynamicConfigFile() {
-        return mDefaultDynamicConfigFile;
-    }
-
-    public String getLinphoneDynamicConfigFile() {
-        return mLinphoneDynamicConfigFile;
-    }
-
-    public String getConfigFile() {
-        return mConfigFile;
     }
 
     public boolean getCallGsmON() {
