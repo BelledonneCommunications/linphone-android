@@ -190,10 +190,9 @@ public final class LinphoneService extends Service {
             return START_STICKY;
         }
 
-
         mLinphoneManager = new LinphoneManager(this);
         sInstance = this; // sInstance is ready once linphone manager has been created
-        
+
         mNotificationManager = new NotificationsManager(this);
         if (Version.sdkAboveOrEqual(Version.API26_O_80)
                 && intent != null

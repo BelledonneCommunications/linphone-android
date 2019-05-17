@@ -87,19 +87,16 @@
             android:name=".activities.DialerActivity"
             android:launchMode="singleTop">
             <intent-filter>
+                <action android:name="android.intent.action.DIAL" />
                 <action android:name="android.intent.action.CALL" />
                 <action android:name="android.intent.action.CALL_PRIVILEGED" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:scheme="tel" />
                 <data android:scheme="sip" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SENDTO" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:scheme="sip" />
                 <data android:scheme="imto" />
             </intent-filter>
