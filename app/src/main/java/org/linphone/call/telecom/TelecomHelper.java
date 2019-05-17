@@ -25,6 +25,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Bundle;
 import android.telecom.PhoneAccountHandle;
@@ -33,6 +34,7 @@ import android.telecom.VideoProfile;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
+import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
@@ -45,6 +47,10 @@ import org.linphone.utils.LinphoneUtils;
 
 @TargetApi(23)
 public class TelecomHelper {
+    public static final String LINPHONE_TELECOM_EXTRA_CONTACT_NAME = "CONTACT_NAME";
+    public static final String LINPHONE_TELECOM_EXTRA_APP_NAME = "APP_NAME";
+    public static final String LINPHONE_TELECOM_EXTRA_APP_ICON = "APP_ICON";
+
     private Context mContext;
     private TelecomManager mTelecomManager;
     private LinphoneTelecomAccount mLinphoneTelecomAccount;
@@ -112,20 +118,47 @@ public class TelecomHelper {
         Log.i("[Telecom Manager] Incoming call received");
 
         Address address = call.getRemoteAddress();
+        String displayedAddress = address.asStringUriOnly();
         LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
         String contactName =
                 contact == null
                         ? LinphoneUtils.getAddressDisplayName(address)
                         : contact.getFullName();
 
-        Bundle extras = new Bundle();
-        final Bundle b = new Bundle();
+        /*if (contact != null) {
+            for (LinphoneNumberOrAddress noa : contact.getNumbersOrAddresses()) {
+                String alias = contact.getContactFromPresenceModelForUriOrTel(noa.getValue());
+                if (alias != null && alias.equals(displayedAddress)) {
+                    Log.i("[Telecom Manager] Found matching alias: " + alias);
+                    displayedAddress = alias;
+                    break;
+                }
+            }
+        }*/
 
+        Bundle extras = new Bundle();
         extras.putString(
                 LinphoneConnectionService.EXT_TO_CS_CALL_ID, call.getCallLog().getCallId());
-        extras.putString(TelecomManager.EXTRA_INCOMING_CALL_ADDRESS, address.asStringUriOnly());
+        extras.putString(TelecomManager.EXTRA_INCOMING_CALL_ADDRESS, displayedAddress);
 
-        b.putString(TelecomManager.EXTRA_INCOMING_CALL_EXTRAS, contactName);
+        if (call.getRemoteParams().videoEnabled()) {
+            extras.putInt(
+                    TelecomManager.EXTRA_START_CALL_WITH_VIDEO_STATE,
+                    VideoProfile.STATE_BIDIRECTIONAL);
+            Log.i("[Telecom Manager] Using VideoProfile.STATE_BIDIRECTIONAL");
+        } else {
+            extras.putInt(
+                    TelecomManager.EXTRA_START_CALL_WITH_VIDEO_STATE,
+                    VideoProfile.STATE_AUDIO_ONLY);
+            Log.i("[Telecom Manager] Using VideoProfile.STATE_AUDIO_ONLY");
+        }
+
+        Bundle b = new Bundle();
+        b.putString(LINPHONE_TELECOM_EXTRA_CONTACT_NAME, contactName);
+        b.putString(LINPHONE_TELECOM_EXTRA_APP_NAME, mContext.getString(R.string.app_name));
+        b.putParcelable(
+                LINPHONE_TELECOM_EXTRA_APP_ICON,
+                Icon.createWithResource(mContext, R.drawable.linphone_logo));
         extras.putBundle(TelecomManager.EXTRA_INCOMING_CALL_EXTRAS, b);
 
         mTelecomManager.addNewIncomingCall(mPhoneAccountHandle, extras);
@@ -139,16 +172,39 @@ public class TelecomHelper {
         if (call == null) return;
         Log.i("[Telecom Manager] Outgoing call started");
 
+        Address address = call.getRemoteAddress();
+        LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
+        String contactName =
+                contact == null
+                        ? LinphoneUtils.getAddressDisplayName(address)
+                        : contact.getFullName();
+
         Bundle extras = new Bundle();
-        // FIXME: use correct video state
-        extras.putInt(
-                TelecomManager.EXTRA_START_CALL_WITH_VIDEO_STATE, VideoProfile.STATE_AUDIO_ONLY);
+        if (call.getParams().videoEnabled()) {
+            extras.putInt(
+                    TelecomManager.EXTRA_START_CALL_WITH_VIDEO_STATE,
+                    VideoProfile.STATE_BIDIRECTIONAL);
+            Log.i("[Telecom Manager] Using VideoProfile.STATE_BIDIRECTIONAL");
+        } else {
+            extras.putInt(
+                    TelecomManager.EXTRA_START_CALL_WITH_VIDEO_STATE,
+                    VideoProfile.STATE_AUDIO_ONLY);
+            Log.i("[Telecom Manager] Using VideoProfile.STATE_AUDIO_ONLY");
+        }
         extras.putParcelable(TelecomManager.EXTRA_PHONE_ACCOUNT_HANDLE, mPhoneAccountHandle);
         extras.putString(
                 TelecomManager.EXTRA_CALL_BACK_NUMBER,
                 call.getCallLog().getFromAddress().asStringUriOnly());
+        extras.putString(
+                LinphoneConnectionService.EXT_TO_CS_CALL_ID, call.getCallLog().getCallId());
 
-        Address address = call.getRemoteAddress();
+        Bundle b = new Bundle();
+        b.putString(LINPHONE_TELECOM_EXTRA_CONTACT_NAME, contactName);
+        b.putString(LINPHONE_TELECOM_EXTRA_APP_NAME, mContext.getString(R.string.app_name));
+        b.putParcelable(
+                LINPHONE_TELECOM_EXTRA_APP_ICON,
+                Icon.createWithResource(mContext, R.drawable.linphone_logo));
+        extras.putBundle(TelecomManager.EXTRA_OUTGOING_CALL_EXTRAS, b);
 
         // Send the call to LinphoneConnectionService, received by onCreateOutgoingConnection
         mTelecomManager.placeCall(Uri.parse(address.asStringUriOnly()), extras);
@@ -177,12 +233,12 @@ public class TelecomHelper {
         LocalBroadcastManager.getInstance(LinphoneService.instance())
                 .registerReceiver(
                         mReceiver, new IntentFilter(LinphoneConnectionService.CS_TO_EXT_BROADCAST));
-        Log.i("[Telecom Manager] Registered");
+        Log.i("[Telecom Manager] Registered call screen receiver");
     }
 
     private void unRegisterCallScreenReceiver() {
         LocalBroadcastManager.getInstance(LinphoneService.instance()).unregisterReceiver(mReceiver);
-        Log.i("[Telecom Manager] Unregistered");
+        Log.i("[Telecom Manager] Unregistered call screen receiver");
     }
 
     private void sendToCS(int action, String callId) {
