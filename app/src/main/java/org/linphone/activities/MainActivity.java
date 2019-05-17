@@ -75,7 +75,7 @@ import org.linphone.utils.PushNotificationUtils;
 public abstract class MainActivity extends LinphoneGenericActivity
         implements StatusBarFragment.MenuClikedListener, SideMenuFragment.QuitClikedListener {
     private static final int MAIN_PERMISSIONS = 1;
-    private static final int FRAGMENT_SPECIFIC_PERMISSION = 2;
+    protected static final int FRAGMENT_SPECIFIC_PERMISSION = 2;
 
     private TextView mMissedCalls;
     private TextView mMissedMessages;
@@ -467,7 +467,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
 
     // Permissions
 
-    private boolean checkPermission(String permission) {
+    protected boolean checkPermission(String permission) {
         int granted = getPackageManager().checkPermission(permission, getPackageName());
         Log.i(
                 "[Permission] "

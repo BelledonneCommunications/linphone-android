@@ -19,6 +19,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -133,6 +134,7 @@ public class TelecomHelper {
         }
     }
 
+    @SuppressLint("MissingPermission")
     public void onOutgoingCallStarting(Call call) {
         if (call == null) return;
         Log.i("[Telecom Manager] Outgoing call started");
@@ -149,7 +151,6 @@ public class TelecomHelper {
         Address address = call.getRemoteAddress();
 
         // Send the call to LinphoneConnectionService, received by onCreateOutgoingConnection
-        // FIXME: check CALL_PHONE permission
         mTelecomManager.placeCall(Uri.parse(address.asStringUriOnly()), extras);
 
         if (call.getCore().getCallsNb() == 1) {
@@ -157,8 +158,8 @@ public class TelecomHelper {
         }
     }
 
+    @SuppressLint("MissingPermission")
     public void goBackToCallScreen() {
-        // FIXME: check CALL_PHONE permission
         mTelecomManager.showInCallScreen(false);
     }
 

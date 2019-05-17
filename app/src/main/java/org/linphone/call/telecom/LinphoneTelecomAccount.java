@@ -19,10 +19,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.ComponentName;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Build;
@@ -34,6 +34,8 @@ import java.util.List;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
+import org.linphone.core.Core;
+import org.linphone.core.ProxyConfig;
 import org.linphone.core.tools.Log;
 
 /*This class is about creation and registration of PhoneAccount, a necessary component
@@ -62,22 +64,29 @@ public class LinphoneTelecomAccount {
                             new ComponentName(mContext, LinphoneConnectionService.class),
                             mContext.getPackageName());
 
-            String uriAdress = LinphoneManager.getCore().getIdentity();
+            Core core = LinphoneManager.getCore();
+            ProxyConfig proxyConfig = core.getDefaultProxyConfig();
+            String address;
+            if (proxyConfig != null) {
+                address = proxyConfig.getIdentityAddress().asStringUriOnly();
+            } else {
+                address = core.getIdentity();
+            }
 
             mAccount =
-                    PhoneAccount.builder(mAccountHandle, "Linphone")
-                            .setAddress(Uri.fromParts(PhoneAccount.SCHEME_SIP, uriAdress, null))
+                    PhoneAccount.builder(mAccountHandle, mContext.getString(R.string.app_name))
+                            .setAddress(Uri.fromParts(PhoneAccount.SCHEME_SIP, address, null))
                             .setIcon(Icon.createWithResource(mContext, R.drawable.linphone_logo))
                             .setSubscriptionAddress(null)
                             .setCapabilities(
-                                    PhoneAccount.CAPABILITY_CALL_PROVIDER
+                                    PhoneAccount.CAPABILITY_CALL_PROVIDER // This one is required
+                                            | PhoneAccount.CAPABILITY_CONNECTION_MANAGER
                                             | PhoneAccount.CAPABILITY_VIDEO_CALLING
-                                            | PhoneAccount.CAPABILITY_CONNECTION_MANAGER)
-                            .setHighlightColor(Color.GREEN)
+                                            | PhoneAccount.CAPABILITY_SUPPORTS_VIDEO_CALLING)
+                            .setHighlightColor(mContext.getColor(R.color.primary_color))
                             .setShortDescription(
-                                    "Enable to allow Linphone integration and set it as default Phone Account in the next panel.")
-                            .setSupportedUriSchemes(
-                                    Arrays.asList(PhoneAccount.SCHEME_SIP, "tel, sip"))
+                                    mContext.getString(R.string.telecom_manager_account_desc))
+                            .setSupportedUriSchemes(Arrays.asList(PhoneAccount.SCHEME_SIP, "sips"))
                             .build();
 
             register();
@@ -90,7 +99,7 @@ public class LinphoneTelecomAccount {
     }
 
     public void refreshPhoneAccount() {
-        // FIXME: check PHONE_READ_STATE permission
+        @SuppressLint("MissingPermission")
         List<PhoneAccountHandle> phoneAccountHandleList =
                 mTelecomManager.getCallCapablePhoneAccounts();
         ComponentName linphoneConnectionService =
