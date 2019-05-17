@@ -593,7 +593,7 @@ public class AccountSettingsFragment extends SettingsFragment {
         // Create a proxy config if there is none
         if (mProxyConfig == null) {
             // Ensure the default configuration is loaded first
-            String defaultConfig = LinphoneManager.getInstance().getDefaultDynamicConfigFile();
+            String defaultConfig = LinphonePreferences.instance().getDefaultDynamicConfigFile();
             core.loadConfigFromXml(defaultConfig);
             mProxyConfig = core.createProxyConfig();
             mAuthInfo = Factory.instance().createAuthInfo(null, null, null, null, null, null);

@@ -25,6 +25,7 @@ import android.content.pm.PackageManager;
 import androidx.appcompat.app.AppCompatDelegate;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -53,6 +54,12 @@ import org.linphone.utils.LinphoneUtils;
 
 public class LinphonePreferences {
     private static final int LINPHONE_CORE_RANDOM_PORT = -1;
+    private static final String LINPHONE_DEFAULT_RC = "/.linphonerc";
+    private static final String LINPHONE_FACTORY_RC = "/linphonerc";
+    private static final String LINPHONE_LPCONFIG_XSD = "/lpconfig.xsd";
+    private static final String DEFAULT_ASSISTANT_RC = "/default_assistant_create.rc";
+    private static final String LINPHONE_ASSISTANT_RC = "/linphone_assistant_create.rc";
+
     private static LinphonePreferences sInstance;
 
     private Context mContext;
@@ -77,6 +84,61 @@ public class LinphonePreferences {
     public void setContext(Context c) {
         mContext = c;
         mBasePath = mContext.getFilesDir().getAbsolutePath();
+        try {
+            copyAssetsFromPackage();
+        } catch (IOException ioe) {
+
+        }
+    }
+
+    /* Assets stuff */
+
+    private void copyAssetsFromPackage() throws IOException {
+        copyIfNotExist(R.raw.linphonerc_default, getLinphoneDefaultConfig());
+        copyFromPackage(R.raw.linphonerc_factory, new File(getLinphoneFactoryConfig()).getName());
+        copyIfNotExist(R.raw.lpconfig, mBasePath + LINPHONE_LPCONFIG_XSD);
+        copyFromPackage(
+                R.raw.default_assistant_create,
+                new File(mBasePath + DEFAULT_ASSISTANT_RC).getName());
+        copyFromPackage(
+                R.raw.linphone_assistant_create,
+                new File(mBasePath + LINPHONE_ASSISTANT_RC).getName());
+    }
+
+    private void copyIfNotExist(int ressourceId, String target) throws IOException {
+        File lFileToCopy = new File(target);
+        if (!lFileToCopy.exists()) {
+            copyFromPackage(ressourceId, lFileToCopy.getName());
+        }
+    }
+
+    private void copyFromPackage(int ressourceId, String target) throws IOException {
+        FileOutputStream lOutputStream = mContext.openFileOutput(target, 0);
+        InputStream lInputStream = mContext.getResources().openRawResource(ressourceId);
+        int readByte;
+        byte[] buff = new byte[8048];
+        while ((readByte = lInputStream.read(buff)) != -1) {
+            lOutputStream.write(buff, 0, readByte);
+        }
+        lOutputStream.flush();
+        lOutputStream.close();
+        lInputStream.close();
+    }
+
+    public String getLinphoneDefaultConfig() {
+        return mBasePath + LINPHONE_DEFAULT_RC;
+    }
+
+    public String getLinphoneFactoryConfig() {
+        return mBasePath + LINPHONE_FACTORY_RC;
+    }
+
+    public String getDefaultDynamicConfigFile() {
+        return mBasePath + DEFAULT_ASSISTANT_RC;
+    }
+
+    public String getLinphoneDynamicConfigFile() {
+        return mBasePath + LINPHONE_ASSISTANT_RC;
     }
 
     private String getString(int key) {
@@ -121,7 +183,7 @@ public class LinphonePreferences {
                 return Factory.instance().createConfigFromString(text.toString());
             }
         } else {
-            return Factory.instance().createConfig(LinphoneManager.getInstance().getConfigFile());
+            return Factory.instance().createConfig(getLinphoneDefaultConfig());
         }
         return null;
     }
