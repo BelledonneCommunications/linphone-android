@@ -79,13 +79,14 @@
             android:id="@+id/pref_use_telecom_manager"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            linphone:title="Use Telecom Manager"  />
+            linphone:subtitle="@string/pref_telecom_manager_desc"
+            linphone:title="@string/pref_telecom_manager_title"  />
 
         <org.linphone.settings.widget.BasicSetting
             android:id="@+id/pref_android_phone_accounts_settings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            linphone:title="Phone accounts settings"  />
+            linphone:title="@string/pref_android_phone_accounts_settings_title"  />
 
     </LinearLayout>
 

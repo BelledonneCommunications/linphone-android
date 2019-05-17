@@ -141,6 +141,17 @@ public class SettingsActivity extends MainActivity {
                     LinphonePreferences.instance().setVideoPreviewEnabled(true);
                 }
             }
+        } else if (requestCode == PERMISSIONS_REQUEST_TELECOM) {
+            boolean granted = true;
+            for (int result : grantResults) {
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    granted = false;
+                    break;
+                }
+            }
+            if (granted) {
+                enableTelecomManagerAccount();
+            }
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
@@ -191,6 +202,27 @@ public class SettingsActivity extends MainActivity {
         return true;
     }
 
+    public boolean checkAndRequestTelecomManagerPermissions() {
+        String[] permissions = {
+            Manifest.permission.CALL_PHONE,
+            Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.MANAGE_OWN_CALLS
+        };
+        boolean granted = true;
+        for (String permission : permissions) {
+            if (!checkPermission(permission)) {
+                granted = false;
+                break;
+            }
+        }
+
+        if (!granted) {
+            requestPermissionsIfNotGranted(permissions, PERMISSIONS_REQUEST_TELECOM);
+            return false;
+        }
+        return true;
+    }
+
     public void enableTelecomManagerAccount() {
         LinphoneService.instance().createTelecomManagerHelper();
 
@@ -199,7 +231,6 @@ public class SettingsActivity extends MainActivity {
                 new ComponentName(
                         "com.android.server.telecom",
                         "com.android.server.telecom.settings.EnableAccountPreferenceActivity"));
-        // phoneAccountEnable.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivityForResult(phoneAccountEnable, PERMISSIONS_REQUEST_TELECOM);
     }
 }

@@ -496,7 +496,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
         requestPermissionsIfNotGranted(perms, FRAGMENT_SPECIFIC_PERMISSION);
     }
 
-    private void requestPermissionsIfNotGranted(String[] perms, int resultCode) {
+    protected void requestPermissionsIfNotGranted(String[] perms, int resultCode) {
         ArrayList<String> permissionsToAskFor = new ArrayList<>();
         if (perms != null) { // This is created (or not) by the child activity
             for (String permissionToHave : perms) {
