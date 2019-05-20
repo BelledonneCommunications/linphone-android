@@ -23,6 +23,7 @@ ec_calibrator_cool_tones=1
 
 [video]
 displaytype=MSAndroidTextureDisplay
+auto_resize_preview_to_keep_ratio=1
 
 [misc]
 enable_basic_to_client_group_chat_room_migration=0
