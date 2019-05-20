@@ -30,7 +30,6 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -66,7 +65,6 @@ import org.linphone.core.ChatRoom;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListener;
 import org.linphone.core.CoreListenerStub;
-import org.linphone.core.VideoDefinition;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.AndroidAudioManager;
@@ -764,46 +762,7 @@ public class CallActivity extends LinphoneGenericActivity
         if (videoEnabled) {
             mAudioManager.routeAudioToSpeaker();
             mSpeaker.setSelected(true);
-            resizePreview(call);
         }
-    }
-
-    private void resizePreview(Call call) {
-        if (call == null) return;
-
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        int screenHeight = metrics.heightPixels;
-        int maxHeight =
-                screenHeight / 4; // Let's take at most 1/4 of the screen for the camera preview
-
-        VideoDefinition videoSize =
-                call.getCurrentParams()
-                        .getSentVideoDefinition(); // It already takes care of rotation
-        if (videoSize.getWidth() == 0 || videoSize.getHeight() == 0) {
-            Log.w(
-                    "[Call Activity] [Video] Couldn't get sent video definition, using default video definition");
-            videoSize = call.getCore().getPreferredVideoDefinition();
-        }
-        int width = videoSize.getWidth();
-        int height = videoSize.getHeight();
-
-        Log.d("[Call Activity] [Video] Video height is " + height + ", width is " + width);
-        width = width * maxHeight / height;
-        height = maxHeight;
-
-        if (mLocalPreview == null) {
-            Log.e("[Call Activity] [Video] mCaptureView is null !");
-            return;
-        }
-
-        RelativeLayout.LayoutParams newLp = new RelativeLayout.LayoutParams(width, height);
-        newLp.addRule(
-                RelativeLayout.ALIGN_PARENT_BOTTOM,
-                1); // Clears the rule, as there is no removeRule until API 17.
-        newLp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 1);
-        mLocalPreview.setLayoutParams(newLp);
-        Log.d("[Call Activity] [Video] Video preview size set to " + width + "x" + height);
     }
 
     private void moveLocalPreview(MotionEvent motionEvent) {
@@ -815,15 +774,15 @@ public class CallActivity extends LinphoneGenericActivity
             case MotionEvent.ACTION_MOVE:
                 int x = (int) motionEvent.getX();
                 int y = (int) motionEvent.getY();
+
                 RelativeLayout.LayoutParams lp =
                         (RelativeLayout.LayoutParams) mLocalPreview.getLayoutParams();
-                lp.addRule(
-                        RelativeLayout.ALIGN_PARENT_BOTTOM,
-                        0); // Clears the rule, as there is no removeRule until API
-                // 17.
-                lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
+                lp.removeRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                lp.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+
                 int left = lp.leftMargin + (x - mPreviewX);
                 int top = lp.topMargin + (y - mPreviewY);
+
                 lp.leftMargin = left;
                 lp.topMargin = top;
                 mLocalPreview.setLayoutParams(lp);
