@@ -537,10 +537,10 @@ public class AccountSettingsFragment extends SettingsFragment {
                                 core.removeAuthInfo(mAuthInfo);
                             }
                         }
-                        ((SettingsActivity) getActivity()).popBackStack();
                         ((SettingsActivity) getActivity())
                                 .getSideMenuFragment()
                                 .displayAccountsInSideMenu();
+                        ((SettingsActivity) getActivity()).popBackStack();
                     }
                 });
 

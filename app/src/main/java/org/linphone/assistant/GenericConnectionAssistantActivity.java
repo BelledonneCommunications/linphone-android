@@ -27,18 +27,13 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
-import org.linphone.LinphoneManager;
 import org.linphone.R;
-import org.linphone.core.AccountCreator;
 import org.linphone.core.TransportType;
-import org.linphone.settings.LinphonePreferences;
 
 public class GenericConnectionAssistantActivity extends AssistantActivity implements TextWatcher {
     private TextView mLogin;
     private EditText mUsername, mPassword, mDomain, mDisplayName;
     private RadioGroup mTransport;
-
-    private AccountCreator mAccountCreator;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,10 +63,6 @@ public class GenericConnectionAssistantActivity extends AssistantActivity implem
         mDomain = findViewById(R.id.assistant_domain);
         mDomain.addTextChangedListener(this);
         mTransport = findViewById(R.id.assistant_transports);
-
-        mAccountCreator =
-                LinphoneManager.getCore()
-                        .createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
     }
 
     private void configureAccount() {
