@@ -28,10 +28,10 @@
   </section>
   <section name="assistant">
     <entry name="password_max_length" overwrite="true">-1</entry>
-    <entry name="password_min_length" overwrite="true">1</entry>
+    <entry name="password_min_length" overwrite="true">0</entry>
     <entry name="username_length" overwrite="true">-1</entry>
-    <entry name="username_max_length" overwrite="true">64</entry>
+    <entry name="username_max_length" overwrite="true">128</entry>
     <entry name="username_min_length" overwrite="true">1</entry>
-    <entry name="username_regex" overwrite="true">^[a-z0-9+_.\-]*$</entry>
+    <entry name="username_regex" overwrite="true">^[a-zA-Z0-9+_.\-]*$</entry>
   </section>
 </config>
