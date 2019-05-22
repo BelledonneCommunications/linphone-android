@@ -25,11 +25,11 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.provider.ContactsContract;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.core.Core;
 import org.linphone.core.Friend;
@@ -53,15 +53,17 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
         "data4", // Normalized phone number
     };
 
-    public AsyncContactsLoader() {}
+    private Context mContext;
+
+    public AsyncContactsLoader(Context context) {
+        mContext = context;
+    }
 
     @Override
     protected void onPreExecute() {
         Log.i("[Contacts Manager] Synchronization started");
-        Context context = LinphoneService.instance().getApplicationContext();
-
         if (LinphonePreferences.instance().isFriendlistsubscriptionEnabled()) {
-            String rls = context.getString(R.string.rls_uri);
+            String rls = mContext.getString(R.string.rls_uri);
             for (FriendList list : LinphoneManager.getCore().getFriendsLists()) {
                 if (list.getRlsAddress() == null
                         || !list.getRlsAddress().asStringUriOnly().equals(rls)) {
@@ -75,9 +77,8 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
     @Override
     protected AsyncContactsData doInBackground(Void... params) {
         Log.i("[Contacts Manager] Background synchronization started");
-        Context context = LinphoneService.instance().getApplicationContext();
         Cursor c =
-                context.getContentResolver()
+                mContext.getContentResolver()
                         .query(
                                 ContactsContract.Data.CONTENT_URI,
                                 PROJECTION,
@@ -91,9 +92,14 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
 
         Core core = LinphoneManager.getCore();
         if (core != null) {
-            for (FriendList list : core.getFriendsLists()) {
-                for (Friend friend : list.getFriends()) {
-                    if (isCancelled()) return data;
+            FriendList[] friendLists = core.getFriendsLists();
+            for (FriendList list : friendLists) {
+                Friend[] friends = list.getFriends();
+                for (Friend friend : friends) {
+                    if (isCancelled()) {
+                        Log.w("[Contacts Manager] Task cancelled");
+                        return data;
+                    }
 
                     LinphoneContact contact = (LinphoneContact) friend.getUserData();
                     if (contact != null) {
@@ -121,8 +127,12 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
         }
 
         if (c != null) {
+            Log.i("[Contacts Manager] Found " + c.getCount() + " entries in cursor");
             while (c.moveToNext()) {
-                if (isCancelled()) return data;
+                if (isCancelled()) {
+                    Log.w("[Contacts Manager] Task cancelled");
+                    return data;
+                }
 
                 String id = c.getString(c.getColumnIndex(ContactsContract.Data.CONTACT_ID));
                 boolean starred =
@@ -141,14 +151,20 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
             }
             c.close();
 
-            for (FriendList list : core.getFriendsLists()) {
-                for (Friend friend : list.getFriends()) {
-                    if (isCancelled()) return data;
+            FriendList[] friendLists = core.getFriendsLists();
+            for (FriendList list : friendLists) {
+                Friend[] friends = list.getFriends();
+                for (Friend friend : friends) {
+                    if (isCancelled()) {
+                        Log.w("[Contacts Manager] Task cancelled");
+                        return data;
+                    }
 
                     LinphoneContact contact = (LinphoneContact) friend.getUserData();
                     if (contact != null && contact.isAndroidContact()) {
                         String id = contact.getAndroidId();
                         if (id != null && !nativeIds.contains(id)) {
+                            Log.i("[Contacts Manager] Contact removed since last fetch: " + id);
                             // Has been removed since last fetch
                             androidContactsCache.remove(id);
                         }
@@ -158,8 +174,13 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
             nativeIds.clear();
         }
 
-        for (LinphoneContact contact : androidContactsCache.values()) {
-            if (isCancelled()) return data;
+        Collection<LinphoneContact> contacts = androidContactsCache.values();
+        Log.i("[Contacts Manager] Found " + contacts.size() + " contacts");
+        for (LinphoneContact contact : contacts) {
+            if (isCancelled()) {
+                Log.w("[Contacts Manager] Task cancelled");
+                return data;
+            }
 
             if (contact.getFullName() == null) {
                 for (LinphoneNumberOrAddress noa : contact.getNumbersOrAddresses()) {
@@ -185,7 +206,7 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
                 }
             }
 
-            if (!context.getResources().getBoolean(R.bool.hide_sip_contacts_without_presence)) {
+            if (!mContext.getResources().getBoolean(R.bool.hide_sip_contacts_without_presence)) {
                 if (contact.hasAddress() && !data.sipContacts.contains(contact)) {
                     data.sipContacts.add(contact);
                 }
@@ -204,6 +225,12 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
 
     @Override
     protected void onPostExecute(AsyncContactsData data) {
+        Log.i(
+                "[Contacts Manager] "
+                        + data.contacts.size()
+                        + " contacts found in which "
+                        + data.sipContacts.size()
+                        + " are SIP");
         for (LinphoneContact contact : data.contacts) {
             contact.createOrUpdateFriendFromNativeContact();
         }
@@ -211,7 +238,9 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
         // Now that contact fetching is asynchronous, this is required to ensure
         // presence subscription event will be sent with all friends
         if (LinphonePreferences.instance().isFriendlistsubscriptionEnabled()) {
-            for (FriendList list : LinphoneManager.getCore().getFriendsLists()) {
+            Log.i("[Contacts Manager] Matching friends created, updating subscription");
+            FriendList[] friendLists = LinphoneManager.getCore().getFriendsLists();
+            for (FriendList list : friendLists) {
                 list.updateSubscriptions();
             }
         }
