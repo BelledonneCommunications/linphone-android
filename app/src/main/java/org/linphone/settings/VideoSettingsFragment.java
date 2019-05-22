@@ -19,6 +19,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.Manifest;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -117,7 +118,17 @@ public class VideoSettingsFragment extends SettingsFragment {
                 new SettingListenerBase() {
                     @Override
                     public void onBoolValueChanged(boolean newValue) {
-                        mPrefs.setVideoPreviewEnabled(newValue);
+                        if (newValue) {
+                            if (!((SettingsActivity) getActivity())
+                                    .checkPermission(Manifest.permission.CAMERA)) {
+                                ((SettingsActivity) getActivity())
+                                        .requestPermissionIfNotGranted(Manifest.permission.CAMERA);
+                            } else {
+                                mPrefs.setVideoPreviewEnabled(true);
+                            }
+                        } else {
+                            mPrefs.setVideoPreviewEnabled(false);
+                        }
                     }
                 });
 

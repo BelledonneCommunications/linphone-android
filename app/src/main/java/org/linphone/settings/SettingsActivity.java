@@ -19,9 +19,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.Manifest;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -30,6 +32,7 @@ import org.linphone.R;
 import org.linphone.activities.MainActivity;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.tools.Log;
+import org.linphone.utils.LinphoneUtils;
 
 public class SettingsActivity extends MainActivity {
     private static final int PERMISSIONS_REQUEST_OVERLAY = 206;
@@ -106,6 +109,30 @@ public class SettingsActivity extends MainActivity {
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(
+            int requestCode, String[] permissions, int[] grantResults) {
+        if (permissions.length <= 0) return;
+        if (requestCode == MainActivity.FRAGMENT_SPECIFIC_PERMISSION) {
+            for (int i = 0; i < permissions.length; i++) {
+                Log.i(
+                        "[Permission] "
+                                + permissions[i]
+                                + " is "
+                                + (grantResults[i] == PackageManager.PERMISSION_GRANTED
+                                        ? "granted"
+                                        : "denied"));
+                if (permissions[i].equals(Manifest.permission.CAMERA)
+                        && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    LinphoneUtils.reloadVideoDevices();
+                    LinphonePreferences.instance().setVideoPreviewEnabled(true);
+                }
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 
     private void handleIntentExtras(Bundle extras) {
