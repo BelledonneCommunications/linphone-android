@@ -549,6 +549,9 @@ public abstract class MainActivity extends LinphoneGenericActivity
                 boolean enableRingtone = grantResults[i] == PackageManager.PERMISSION_GRANTED;
                 LinphonePreferences.instance().enableDeviceRingtone(enableRingtone);
                 LinphoneManager.getInstance().enableDeviceRingtone(enableRingtone);
+            } else if (permissions[i].equals(Manifest.permission.CAMERA)
+                    && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                LinphoneUtils.reloadVideoDevices();
             }
         }
     }

@@ -41,6 +41,7 @@ import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
+import org.linphone.utils.LinphoneUtils;
 
 public class RemoteConfigurationAssistantActivity extends AssistantActivity {
     private static final int QR_CODE_ACTIVITY_RESULT = 1;
@@ -191,6 +192,7 @@ public class RemoteConfigurationAssistantActivity extends AssistantActivity {
 
         if (requestCode == CAMERA_PERMISSION_RESULT) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                LinphoneUtils.reloadVideoDevices();
                 startActivityForResult(
                         new Intent(
                                 RemoteConfigurationAssistantActivity.this,
