@@ -122,6 +122,13 @@ public abstract class AssistantActivity extends LinphoneGenericActivity
             Log.e("[Assistant] Account creator couldn't create proxy config");
             // TODO: display error message
         } else {
+            if (proxyConfig.getDialPrefix() == null) {
+                DialPlan dialPlan = getDialPlanForCurrentCountry();
+                if (dialPlan != null) {
+                    proxyConfig.setDialPrefix(dialPlan.getCountryCallingCode());
+                }
+            }
+
             LinphonePreferences.instance().firstLaunchSuccessful();
             goToLinphoneActivity();
         }
