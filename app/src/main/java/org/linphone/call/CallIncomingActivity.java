@@ -291,6 +291,10 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
                             + (grantResults[i] == PackageManager.PERMISSION_GRANTED
                                     ? "granted"
                                     : "denied"));
+            if (permissions[i].equals(Manifest.permission.CAMERA)
+                    && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                LinphoneUtils.reloadVideoDevices();
+            }
         }
     }
 }

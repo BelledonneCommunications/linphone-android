@@ -522,6 +522,7 @@ public class CallActivity extends LinphoneGenericActivity
 
         switch (requestCode) {
             case CAMERA_TO_TOGGLE_VIDEO:
+                LinphoneUtils.reloadVideoDevices();
                 toggleVideo();
                 break;
             case MIC_TO_DISABLE_MUTE:
@@ -531,6 +532,7 @@ public class CallActivity extends LinphoneGenericActivity
                 toggleRecording();
                 break;
             case CAMERA_TO_ACCEPT_UPDATE:
+                LinphoneUtils.reloadVideoDevices();
                 acceptCallUpdate(true);
                 break;
         }

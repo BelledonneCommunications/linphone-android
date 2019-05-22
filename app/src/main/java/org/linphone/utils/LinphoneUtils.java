@@ -19,11 +19,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
@@ -33,7 +31,6 @@ import android.os.Looper;
 import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.Spanned;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -44,8 +41,6 @@ import androidx.core.content.ContextCompat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 import org.linphone.LinphoneManager;
@@ -53,7 +48,6 @@ import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
-import org.linphone.core.Call.State;
 import org.linphone.core.CallLog;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomCapabilities;
@@ -61,6 +55,8 @@ import org.linphone.core.Core;
 import org.linphone.core.Factory;
 import org.linphone.core.LogCollectionState;
 import org.linphone.core.ProxyConfig;
+import org.linphone.core.tools.Log;
+import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.settings.LinphonePreferences;
 
 /** Helpers. */
@@ -134,16 +130,6 @@ public final class LinphoneUtils {
         return displayName;
     }
 
-    public static boolean onKeyBackGoHome(Activity activity, int keyCode, KeyEvent event) {
-        if (!(keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0)) {
-            return false; // continue
-        }
-
-        activity.startActivity(
-                new Intent().setAction(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME));
-        return true;
-    }
-
     public static String timestampToHumanDate(Context context, long timestamp, int format) {
         return timestampToHumanDate(context, timestamp, context.getString(format));
     }
@@ -181,16 +167,6 @@ public final class LinphoneUtils {
         return (cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA)
                 && cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
                 && cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR));
-    }
-
-    public static List<Call> getCallsInState(Core core, Collection<State> states) {
-        List<Call> foundCalls = new ArrayList<>();
-        for (Call call : core.getCalls()) {
-            if (states.contains(call.getState())) {
-                foundCalls.add(call);
-            }
-        }
-        return foundCalls;
     }
 
     private static boolean isCallRunning(Call call) {
@@ -240,6 +216,31 @@ public final class LinphoneUtils {
         }
         // in doubt, assume connection is good.
         return true;
+    }
+
+    public static void reloadVideoDevices() {
+        Core core = LinphoneManager.getCore();
+        if (core == null) return;
+
+        Log.i("[Utils] Reloading camera");
+        core.reloadVideoDevices();
+
+        boolean useFrontCam = LinphonePreferences.instance().useFrontCam();
+        int camId = 0;
+        AndroidCameraConfiguration.AndroidCamera[] cameras =
+                AndroidCameraConfiguration.retrieveCameras();
+        for (AndroidCameraConfiguration.AndroidCamera androidCamera : cameras) {
+            if (androidCamera.frontFacing == useFrontCam) {
+                camId = androidCamera.id;
+                break;
+            }
+        }
+        String[] devices = core.getVideoDevicesList();
+        if (camId >= devices.length) {
+            camId = 0;
+        }
+        String newDevice = devices[camId];
+        core.setVideoDevice(newDevice);
     }
 
     public static String getDisplayableUsernameFromAddress(String sipAddress) {
