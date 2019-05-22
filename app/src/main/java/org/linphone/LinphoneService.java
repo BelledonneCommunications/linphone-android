@@ -211,9 +211,9 @@ public final class LinphoneService extends Service {
                             ContactsContract.Contacts.CONTENT_URI, true, mContactsManager);
         }
         if (mContactsManager.hasReadContactsAccess()) {
-            ContactsManager.getInstance().enableContactsAccess();
+            mContactsManager.enableContactsAccess();
         }
-        ContactsManager.getInstance().initializeContactManager();
+        mContactsManager.initializeContactManager();
 
         Compatibility.createChatShortcuts(this);
 
