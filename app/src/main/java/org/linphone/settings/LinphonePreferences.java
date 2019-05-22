@@ -1135,4 +1135,12 @@ public class LinphonePreferences {
     public void setOpenH264CodecDownloadEnabled(boolean enable) {
         getConfig().setBool("app", "open_h264_download_enabled", enable);
     }
+
+    public boolean isVideoPreviewEnabled() {
+        return isVideoEnabled() && getConfig().getBool("app", "video_preview", false);
+    }
+
+    public void setVideoPreviewEnabled(boolean enabled) {
+        getConfig().setBool("app", "video_preview", enabled);
+    }
 }

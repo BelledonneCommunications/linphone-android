@@ -18,12 +18,14 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/black_color">
 
         <TextureView
             android:id="@+id/qr_code_capture_texture"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"/>
 
         <ImageView
             android:id="@+id/qr_code_capture_change_camera"

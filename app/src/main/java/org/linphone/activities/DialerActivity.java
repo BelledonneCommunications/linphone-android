@@ -39,6 +39,7 @@ import org.linphone.core.Call;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.tools.Log;
+import org.linphone.settings.LinphonePreferences;
 import org.linphone.views.AddressAware;
 import org.linphone.views.AddressText;
 import org.linphone.views.CallButton;
@@ -188,28 +189,27 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
     }
 
     private void enableVideoPreviewIfTablet(boolean enable) {
-        if (isTablet()
-                && getResources().getBoolean(R.bool.show_camera_preview_on_dialer_on_tablets)) {
-            Core core = LinphoneManager.getCore();
-            if (enable) {
-                TextureView preview = findViewById(R.id.video_preview);
-                if (preview != null && core != null) {
-                    preview.setVisibility(View.VISIBLE);
-                    core.setNativePreviewWindowId(preview);
-                    core.enableVideoPreview(true);
-                    ImageView changeCamera = findViewById(R.id.video_preview_change_camera);
-                    if (changeCamera != null && core.getVideoDevicesList().length > 1) {
-                        changeCamera.setVisibility(View.VISIBLE);
-                        changeCamera.setOnClickListener(
-                                new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        LinphoneManager.getCallManager().switchCamera();
-                                    }
-                                });
-                    }
+        Core core = LinphoneManager.getCore();
+        TextureView preview = findViewById(R.id.video_preview);
+        if (preview != null && core != null) {
+            if (enable && isTablet() && LinphonePreferences.instance().isVideoPreviewEnabled()) {
+                preview.setVisibility(View.VISIBLE);
+                core.setNativePreviewWindowId(preview);
+                core.enableVideoPreview(true);
+
+                ImageView changeCamera = findViewById(R.id.video_preview_change_camera);
+                if (changeCamera != null && core.getVideoDevicesList().length > 1) {
+                    changeCamera.setVisibility(View.VISIBLE);
+                    changeCamera.setOnClickListener(
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    LinphoneManager.getCallManager().switchCamera();
+                                }
+                            });
                 }
             } else {
+                preview.setVisibility(View.GONE);
                 core.setNativePreviewWindowId(null);
                 core.enableVideoPreview(false);
             }
