@@ -638,6 +638,11 @@ public class LinphoneActivity extends LinphoneGenericActivity
             if (permissions[i].compareTo(Manifest.permission.READ_CONTACTS) == 0
                     || permissions[i].compareTo(Manifest.permission.WRITE_CONTACTS) == 0)
                 readContactsI = i;
+
+            if (permissions[i].equals(Manifest.permission.CAMERA)
+                    && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                LinphoneUtils.reloadVideoDevices();
+            }
         }
 
         if (readContactsI >= 0

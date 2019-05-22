@@ -65,6 +65,7 @@ import org.linphone.core.Factory;
 import org.linphone.core.LogCollectionState;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.tools.Log;
+import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.settings.LinphonePreferences;
 
 /** Helpers. */
@@ -270,6 +271,31 @@ public final class LinphoneUtils {
         }
         // in doubt, assume connection is good.
         return true;
+    }
+
+    public static void reloadVideoDevices() {
+        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        if (core == null) return;
+
+        Log.i("[Utils] Reloading camera");
+        core.reloadVideoDevices();
+
+        boolean useFrontCam = LinphonePreferences.instance().useFrontCam();
+        int camId = 0;
+        AndroidCameraConfiguration.AndroidCamera[] cameras =
+                AndroidCameraConfiguration.retrieveCameras();
+        for (AndroidCameraConfiguration.AndroidCamera androidCamera : cameras) {
+            if (androidCamera.frontFacing == useFrontCam) {
+                camId = androidCamera.id;
+                break;
+            }
+        }
+        String[] devices = core.getVideoDevicesList();
+        if (camId >= devices.length) {
+            camId = 0;
+        }
+        String newDevice = devices[camId];
+        core.setVideoDevice(newDevice);
     }
 
     public static String getDisplayableUsernameFromAddress(String sipAddress) {

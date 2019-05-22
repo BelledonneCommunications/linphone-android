@@ -298,6 +298,10 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
                             + (grantResults[i] == PackageManager.PERMISSION_GRANTED
                                     ? "granted"
                                     : "denied"));
+            if (permissions[i].equals(Manifest.permission.CAMERA)
+                    && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                LinphoneUtils.reloadVideoDevices();
+            }
         }
     }
 }

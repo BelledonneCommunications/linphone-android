@@ -526,6 +526,7 @@ public class CallActivity extends LinphoneGenericActivity
                         new Runnable() {
                             @Override
                             public void run() {
+                                LinphoneUtils.reloadVideoDevices();
                                 acceptCallUpdate(
                                         grantResults[0] == PackageManager.PERMISSION_GRANTED);
                             }
@@ -536,6 +537,7 @@ public class CallActivity extends LinphoneGenericActivity
                         new Runnable() {
                             @Override
                             public void run() {
+                                LinphoneUtils.reloadVideoDevices();
                                 disableVideo(grantResults[0] != PackageManager.PERMISSION_GRANTED);
                             }
                         });
