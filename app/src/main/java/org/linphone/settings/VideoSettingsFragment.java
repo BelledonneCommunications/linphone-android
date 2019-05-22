@@ -46,7 +46,7 @@ public class VideoSettingsFragment extends SettingsFragment {
     private View mRootView;
     private LinphonePreferences mPrefs;
 
-    private SwitchSetting mEnable, mAutoInitiate, mAutoAccept, mOverlay;
+    private SwitchSetting mEnable, mAutoInitiate, mAutoAccept, mOverlay, mVideoPreview;
     private ListSetting mPreset, mSize, mFps;
     private TextSetting mBandwidth;
     private LinearLayout mVideoCodecs;
@@ -74,6 +74,8 @@ public class VideoSettingsFragment extends SettingsFragment {
 
     private void loadSettings() {
         mEnable = mRootView.findViewById(R.id.pref_video_enable);
+
+        mVideoPreview = mRootView.findViewById(R.id.pref_video_preview);
 
         mAutoInitiate = mRootView.findViewById(R.id.pref_video_initiate_call_with_video);
 
@@ -103,10 +105,19 @@ public class VideoSettingsFragment extends SettingsFragment {
                     public void onBoolValueChanged(boolean newValue) {
                         mPrefs.enableVideo(newValue);
                         if (!newValue) {
+                            mVideoPreview.setChecked(false);
                             mAutoAccept.setChecked(false);
                             mAutoInitiate.setChecked(false);
                         }
                         updateVideoSettingsVisibility(newValue);
+                    }
+                });
+
+        mVideoPreview.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onBoolValueChanged(boolean newValue) {
+                        mPrefs.setVideoPreviewEnabled(newValue);
                     }
                 });
 
@@ -184,6 +195,8 @@ public class VideoSettingsFragment extends SettingsFragment {
     private void updateValues() {
         mEnable.setChecked(mPrefs.isVideoEnabled());
         updateVideoSettingsVisibility(mPrefs.isVideoEnabled());
+
+        mVideoPreview.setChecked(mPrefs.isVideoPreviewEnabled());
 
         mAutoInitiate.setChecked(mPrefs.shouldInitiateVideoCall());
 
@@ -265,6 +278,13 @@ public class VideoSettingsFragment extends SettingsFragment {
     }
 
     private void updateVideoSettingsVisibility(boolean show) {
+        mVideoPreview.setVisibility(
+                show
+                                && getResources().getBoolean(R.bool.isTablet)
+                                && getResources()
+                                        .getBoolean(R.bool.show_camera_preview_on_dialer_on_tablets)
+                        ? View.VISIBLE
+                        : View.GONE);
         mAutoInitiate.setVisibility(show ? View.VISIBLE : View.GONE);
         mAutoAccept.setVisibility(show ? View.VISIBLE : View.GONE);
         mOverlay.setVisibility(show ? View.VISIBLE : View.GONE);

@@ -71,19 +71,22 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
         if (core != null && core.getVideoDevicesList().length > 1) {
             changeCamera.setVisibility(View.VISIBLE);
         }
+
+        setBackCamera();
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        setBackCamera();
+    protected void onResume() {
+        super.onResume();
+
         launchQrcodeReader();
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onPause() {
         enableQrcodeReader(false);
+
+        super.onPause();
     }
 
     private void enableQrcodeReader(boolean enable) {
