@@ -898,11 +898,11 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     public void onSensorChanged(SensorEvent event) {
         if (event.timestamp == 0) return;
         if (isProximitySensorNearby(event)) {
-            if (!mProximityWakelock.isHeld()) {
+            if (mProximityWakelock != null && !mProximityWakelock.isHeld()) {
                 mProximityWakelock.acquire();
             }
         } else {
-            if (mProximityWakelock.isHeld()) {
+            if (mProximityWakelock != null && mProximityWakelock.isHeld()) {
                 mProximityWakelock.release();
             }
         }

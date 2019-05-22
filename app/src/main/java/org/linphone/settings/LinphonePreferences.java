@@ -177,7 +177,12 @@ public class LinphonePreferences {
             getConfig().setBool("app", "friendlist_subscription_enabled", false);
             enabledFriendlistSubscription(true);
         }
-        return getLc().isFriendListSubscriptionEnabled();
+        Core lc = getLc();
+        if (lc != null) {
+            return lc.isFriendListSubscriptionEnabled();
+        } else {
+            return false;
+        }
     }
 
     public void enabledFriendlistSubscription(boolean enabled) {

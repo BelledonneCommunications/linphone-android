@@ -169,6 +169,9 @@ public class CallActivity extends LinphoneGenericActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (mAbortCreation) {
+            return;
+        }
         sInstance = this;
 
         if (getResources().getBoolean(R.bool.orientation_portrait_only)) {

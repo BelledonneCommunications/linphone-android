@@ -353,7 +353,7 @@ public class BluetoothManager extends BroadcastReceiver {
                     (Object[])
                             intent.getExtras()
                                     .get(BluetoothHeadset.EXTRA_VENDOR_SPECIFIC_HEADSET_EVENT_ARGS);
-            if (args.length <= 0) {
+            if (args == null || args.length <= 0) {
                 android.util.Log.d(
                         "BluetoothManager", "[Bluetooth] Event: " + command + ", no args");
                 return;

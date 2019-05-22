@@ -34,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import java.util.List;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
@@ -221,7 +222,8 @@ public class ContactDetailsFragment extends Fragment
 
         TableLayout controls = view.findViewById(R.id.controls);
         controls.removeAllViews();
-        for (LinphoneNumberOrAddress noa : mContact.getNumbersOrAddresses()) {
+        List<LinphoneNumberOrAddress> noas = mContact.getNumbersOrAddresses();
+        for (LinphoneNumberOrAddress noa : noas) {
             boolean skip = false;
             View v = inflater.inflate(R.layout.contact_control_row, null);
 

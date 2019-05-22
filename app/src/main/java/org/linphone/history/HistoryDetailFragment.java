@@ -219,9 +219,11 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
             boolean isSecured = id == R.id.chat_secured;
             Core lc = LinphoneManager.getLc();
             Address participant = Factory.instance().createAddress(mSipUri);
-            ChatRoom room =
-                    lc.findOneToOneChatRoom(
-                            lc.getDefaultProxyConfig().getContact(), participant, isSecured);
+            ProxyConfig lpc = lc.getDefaultProxyConfig();
+            ChatRoom room = null;
+            if (lpc != null) {
+                lc.findOneToOneChatRoom(lpc.getContact(), participant, isSecured);
+            }
             if (room != null) {
                 LinphoneActivity.instance()
                         .goToChat(
@@ -229,7 +231,6 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
                                 room.getPeerAddress().asStringUriOnly(),
                                 null);
             } else {
-                ProxyConfig lpc = lc.getDefaultProxyConfig();
                 if (lpc != null
                         && lpc.getConferenceFactoryUri() != null
                         && (isSecured

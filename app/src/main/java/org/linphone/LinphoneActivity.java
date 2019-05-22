@@ -177,6 +177,9 @@ public class LinphoneActivity extends LinphoneGenericActivity
     protected void onCreate(Bundle savedInstanceState) {
         // This must be done before calling super.onCreate().
         super.onCreate(savedInstanceState);
+        if (mAbortCreation) {
+            return;
+        }
 
         LinphoneService.instance().removeForegroundServiceNotificationIfPossible();
 

@@ -25,15 +25,18 @@ import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 
 public class LinphoneGenericActivity extends ThemableActivity {
+    protected boolean mAbortCreation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mAbortCreation = false;
         super.onCreate(savedInstanceState);
 
         /*After a crash, Android restart the last Activity so we need to check
          * if all dependencies are load
          */
         if (!LinphoneService.isReady() || !LinphoneManager.isInstanciated()) {
+            mAbortCreation = true;
             finish();
             startActivity(getIntent().setClass(this, LinphoneLauncherActivity.class));
         }

@@ -39,6 +39,7 @@ import org.linphone.core.Call;
 import org.linphone.core.CallParams;
 import org.linphone.core.Core;
 import org.linphone.core.VideoDefinition;
+import org.linphone.core.tools.Log;
 import org.linphone.mediastream.Version;
 
 public class LinphoneTextureViewOverlay extends RelativeLayout implements LinphoneOverlay {
@@ -179,7 +180,11 @@ public class LinphoneTextureViewOverlay extends RelativeLayout implements Linpho
 
     @Override
     public void addToWindowManager(WindowManager windowManager, WindowManager.LayoutParams params) {
-        windowManager.addView(this, params);
+        try {
+            windowManager.addView(this, params);
+        } catch (WindowManager.BadTokenException bte) {
+            Log.e("[TextureView Overlay] " + bte);
+        }
     }
 
     @Override

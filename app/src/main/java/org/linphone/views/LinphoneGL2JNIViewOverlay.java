@@ -35,6 +35,7 @@ import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.core.Call;
 import org.linphone.core.CallParams;
+import org.linphone.core.tools.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 
@@ -172,7 +173,11 @@ public class LinphoneGL2JNIViewOverlay extends org.linphone.mediastream.video.di
 
     @Override
     public void addToWindowManager(WindowManager windowManager, WindowManager.LayoutParams params) {
-        windowManager.addView(this, params);
+        try {
+            windowManager.addView(this, params);
+        } catch (WindowManager.BadTokenException bte) {
+            Log.e("[GL2JNIViewOverlay Overlay] " + bte);
+        }
     }
 
     @Override

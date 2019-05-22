@@ -72,9 +72,7 @@ import org.linphone.core.ProxyConfig;
 import org.linphone.core.RegistrationState;
 import org.linphone.core.TransportType;
 import org.linphone.core.tools.Log;
-import org.linphone.core.tools.OpenH264DownloadHelper;
 import org.linphone.fragments.StatusFragment;
-import org.linphone.mediastream.Version;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.utils.ThemableActivity;
@@ -622,7 +620,7 @@ public class AssistantActivity extends ThemableActivity
     }
 
     private void launchDownloadCodec() {
-        if (OpenH264DownloadHelper.isOpenH264DownloadEnabled()) {
+        /*if (OpenH264DownloadHelper.isOpenH264DownloadEnabled()) {
             OpenH264DownloadHelper downloadHelper =
                     Factory.instance().createOpenH264DownloadHelper(this);
             if (Version.getCpuAbis().contains("armeabi-v7a")
@@ -635,7 +633,9 @@ public class AssistantActivity extends ThemableActivity
             } else goToLinphoneActivity();
         } else {
             goToLinphoneActivity();
-        }
+        }*/
+        // There is an issue: https://bugs.linphone.org/view.php?id=6322
+        goToLinphoneActivity();
     }
 
     public void endDownloadCodec() {

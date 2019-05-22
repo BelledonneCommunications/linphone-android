@@ -61,8 +61,10 @@ public class MediaScanner implements MediaScannerConnection.MediaScannerConnecti
             return;
         }
 
-        Log.i("[MediaScanner] Scanning file " + file.getAbsolutePath() + " with MIME " + mime);
-        mMediaConnection.scanFile(file.getAbsolutePath(), mime);
+        if (mMediaConnection != null) {
+            Log.i("[MediaScanner] Scanning file " + file.getAbsolutePath() + " with MIME " + mime);
+            mMediaConnection.scanFile(file.getAbsolutePath(), mime);
+        }
     }
 
     @Override
