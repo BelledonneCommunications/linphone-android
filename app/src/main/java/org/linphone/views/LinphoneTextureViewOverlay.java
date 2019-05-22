@@ -108,6 +108,8 @@ public class LinphoneTextureViewOverlay extends RelativeLayout implements Linpho
                     public void onClick(View v) {
                         Context context = LinphoneService.instance();
                         Intent intent = new Intent(context, CallActivity.class);
+                        // This flag is required to start an Activity from a Service context
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(intent);
                     }
                 });
