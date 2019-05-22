@@ -81,6 +81,7 @@ public class LinphoneService extends Service {
                 Toast.makeText(LinphoneService.this, message, Toast.LENGTH_SHORT).show();
 
                 if (state == Call.State.IncomingReceived) {
+                    Toast.makeText(LinphoneService.this, "Incoming call received, answering it automatically", Toast.LENGTH_LONG).show();
                     // For this sample we will automatically answer incoming calls
                     CallParams params = getCore().createCallParams(call);
                     params.enableVideo(true);

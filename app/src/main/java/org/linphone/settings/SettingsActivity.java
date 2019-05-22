@@ -89,7 +89,6 @@ public class SettingsActivity extends MainActivity {
 
     @Override
     public void goBack() {
-        // 1 is for the empty fragment on tablets
         if (!isTablet()) {
             if (popBackStack()) {
                 showTopBarWithTitle(getString(R.string.settings));
