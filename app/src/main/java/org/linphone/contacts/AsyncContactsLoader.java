@@ -44,7 +44,6 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
     @SuppressLint("InlinedApi")
     public static final String[] PROJECTION = {
         ContactsContract.Data.CONTACT_ID,
-        ContactsContract.Contacts.LOOKUP_KEY,
         ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
         ContactsContract.Data.MIMETYPE,
         ContactsContract.Contacts.STARRED,
@@ -128,8 +127,6 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
                 String id = c.getString(c.getColumnIndex(ContactsContract.Data.CONTACT_ID));
                 boolean starred =
                         c.getInt(c.getColumnIndex(ContactsContract.Contacts.STARRED)) == 1;
-                String lookupKey =
-                        c.getString(c.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY));
 
                 LinphoneContact contact = androidContactsCache.get(id);
                 if (contact == null) {

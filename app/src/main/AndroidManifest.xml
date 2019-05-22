@@ -18,7 +18,7 @@
         android:name="android.hardware.camera"
         android:required="false" />
 
-    <!-- Needed to be able to detect a GSM call and thus pause any active SIP call -->
+    <!-- Needed to be able to detect a GSM call and thus pause any active SIP call, and auto fill the phone number field in assistant -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <!-- Needed to be able to pick images from SD card to share in chat message -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
