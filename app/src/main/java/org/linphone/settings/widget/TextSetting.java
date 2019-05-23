@@ -21,15 +21,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.text.InputType;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.EditText;
 import androidx.annotation.Nullable;
 import org.linphone.R;
 
-public class TextSetting extends BasicSetting implements TextWatcher {
+public class TextSetting extends BasicSetting {
     private EditText mInput;
 
     public TextSetting(Context context) {
@@ -56,6 +56,7 @@ public class TextSetting extends BasicSetting implements TextWatcher {
         super.init(attrs, defStyleAttr, defStyleRes);
 
         mInput = mView.findViewById(R.id.setting_input);
+        mInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 
         if (attrs != null) {
             TypedArray a =
@@ -70,20 +71,17 @@ public class TextSetting extends BasicSetting implements TextWatcher {
             }
         }
 
-        mInput.addTextChangedListener(this);
-    }
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-    @Override
-    public void afterTextChanged(Editable s) {
-        if (mListener != null) {
-            mListener.onTextValueChanged(mInput.getText().toString());
-        }
+        mInput.setOnFocusChangeListener(
+                new OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        if (!hasFocus) {
+                            if (mListener != null) {
+                                mListener.onTextValueChanged(mInput.getText().toString());
+                            }
+                        }
+                    }
+                });
     }
 
     public void setEnabled(boolean enabled) {
