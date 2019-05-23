@@ -87,7 +87,7 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
                         .query(
                                 ContactsContract.Data.CONTENT_URI,
                                 PROJECTION,
-                                ContactsContract.Data.IN_VISIBLE_GROUP + " == 1",
+                                ContactsContract.Data.IN_DEFAULT_DIRECTORY + " == 1",
                                 null,
                                 null);
 
