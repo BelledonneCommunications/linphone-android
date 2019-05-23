@@ -548,6 +548,15 @@ public class AccountSettingsFragment extends Fragment {
                                 core.removeAuthInfo(mAuthInfo);
                             }
                         }
+
+                        // Set a new default proxy config if the current one has been removed
+                        if (core != null && core.getDefaultProxyConfig() == null) {
+                            ProxyConfig[] proxyConfigs = core.getProxyConfigList();
+                            if (proxyConfigs.length > 0) {
+                                core.setDefaultProxyConfig(proxyConfigs[0]);
+                            }
+                        }
+
                         LinphoneActivity.instance().displaySettings();
                         LinphoneActivity.instance().refreshAccounts();
                     }
