@@ -106,7 +106,7 @@ public abstract class AssistantActivity extends LinphoneGenericActivity
             core.loadConfigFromXml(LinphonePreferences.instance().getLinphoneDynamicConfigFile());
         }
 
-        ProxyConfig proxyConfig = mAccountCreator.configure();
+        ProxyConfig proxyConfig = mAccountCreator.createProxyConfig();
 
         if (useLinphoneDefaultValues) {
             // Restore default values
