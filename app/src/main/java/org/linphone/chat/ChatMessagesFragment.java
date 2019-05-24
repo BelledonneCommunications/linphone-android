@@ -384,7 +384,21 @@ public class ChatMessagesFragment extends Fragment
         if (mChatRoom != null) mChatRoom.removeListener(this);
         if (mChatEventsList.getAdapter() != null)
             ((ChatMessagesGenericAdapter) mChatEventsList.getAdapter()).clear();
+
         super.onPause();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        ArrayList<String> files = new ArrayList<>();
+        for (int i = 0; i < mFilesUploadLayout.getChildCount(); i++) {
+            View child = mFilesUploadLayout.getChildAt(i);
+            String filePath = (String) child.getTag();
+            files.add(filePath);
+        }
+        outState.putStringArrayList("Files", files);
     }
 
     @Override
@@ -902,8 +916,8 @@ public class ChatMessagesFragment extends Fragment
     }
 
     private void onRestoreInstanceState(Bundle savedInstanceState) {
-        String[] files = savedInstanceState.getStringArray("Files");
-        if (files != null && files.length > 0) {
+        ArrayList<String> files = savedInstanceState.getStringArrayList("Files");
+        if (files != null && !files.isEmpty()) {
             for (String file : files) {
                 if (FileUtils.isExtensionImage(file)) {
                     addImageToPendingList(file);
