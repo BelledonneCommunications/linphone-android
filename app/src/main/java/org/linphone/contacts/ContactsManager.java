@@ -350,26 +350,44 @@ public class ContactsManager extends ContentObserver implements FriendListListen
 
     public synchronized LinphoneContact findContactFromPhoneNumber(String phoneNumber) {
         if (phoneNumber == null) return null;
+
+        if (!android.util.Patterns.PHONE.matcher(phoneNumber).matches()) {
+            Log.w(
+                    "[Contacts Manager] Expected phone number but doesn't look like it: "
+                            + phoneNumber);
+            return null;
+        }
+
         Core core = LinphoneManager.getCore();
         ProxyConfig lpc = null;
         if (core != null) {
             lpc = core.getDefaultProxyConfig();
         }
-        if (lpc == null) return null;
+        if (lpc == null) {
+            Log.i("[Contacts Manager] Couldn't find default proxy config...");
+            return null;
+        }
+
         String normalized = lpc.normalizePhoneNumber(phoneNumber);
-        if (normalized == null) normalized = phoneNumber;
+        if (normalized == null) {
+            Log.w("[Contacts Manager] Couldn't normalize phone number " + phoneNumber + ", default proxy config prefix is " + lpc.getDialPrefix());
+            normalized = phoneNumber;
+        }
 
         Address addr = lpc.normalizeSipUri(normalized);
         if (addr == null) {
+            Log.w("[Contacts Manager] Couldn't normalize SIP URI " + normalized);
             return null;
         }
+
+        // Without this, the hashmap inside liblinphone won't find it...
         addr.setUriParam("user", "phone");
-        Friend lf =
-                core.findFriend(
-                        addr); // Without this, the hashmap inside liblinphone won't find it...
+        Friend lf = core.findFriend(addr);
         if (lf != null) {
             return (LinphoneContact) lf.getUserData();
         }
+        
+        Log.w("[Contacts Manager] Couldn't find friend...");
         return null;
     }
 

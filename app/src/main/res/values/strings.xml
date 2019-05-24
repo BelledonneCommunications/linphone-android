@@ -367,6 +367,7 @@
     <string name="pref_display_name">Display name</string>
     <string name="pref_help_display_name">Enter display name (optional)</string>
     <string name="pref_prefix">Prefix</string>
+    <string name="pref_prefix_desc">Prefix for your country (without the +)</string>
     <string name="pref_transport">Transport</string>
     <string name="pref_transport_udp">UDP</string>
     <string name="pref_transport_tcp">TCP</string>
