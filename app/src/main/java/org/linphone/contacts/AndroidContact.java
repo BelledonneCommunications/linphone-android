@@ -45,6 +45,9 @@ class AndroidContact implements Serializable {
 
     protected AndroidContact() {
         mChangesToCommit = new ArrayList<>();
+        mAndroidId = null;
+        mAndroidRawId = null;
+        mAndroidLookupKey = null;
         isAndroidRawIdLinphone = false;
     }
 

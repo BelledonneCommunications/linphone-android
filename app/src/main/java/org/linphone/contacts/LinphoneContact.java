@@ -51,10 +51,14 @@ public class LinphoneContact extends AndroidContact
 
     public LinphoneContact() {
         super();
-        mAddresses = new ArrayList<>();
+        mFullName = null;
+        mFirstName = null;
+        mLastName = null;
+        mOrganization = null;
         mAndroidId = null;
         mAndroidLookupKey = null;
         mThumbnailUri = null;
+        mAddresses = new ArrayList<>();
         mPhotoUri = null;
         mHasSipAddress = false;
     }
@@ -491,7 +495,7 @@ public class LinphoneContact extends AndroidContact
                         .query(
                                 ContactsContract.Data.CONTENT_URI,
                                 AsyncContactsLoader.PROJECTION,
-                                ContactsContract.Data.IN_VISIBLE_GROUP
+                                ContactsContract.Data.IN_DEFAULT_DIRECTORY
                                         + " == 1 AND "
                                         + ContactsContract.Data.CONTACT_ID
                                         + " == "
@@ -517,8 +521,13 @@ public class LinphoneContact extends AndroidContact
         String data4 = c.getString(c.getColumnIndex("data4"));
         String lookupKey = c.getString(c.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY));
 
-        setAndroidLookupKey(lookupKey);
-        setFullName(displayName);
+        if (getAndroidLookupKey() == null) {
+            setAndroidLookupKey(lookupKey);
+        }
+
+        if (getFullName() == null) {
+            setFullName(displayName);
+        }
 
         if (ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE.equals(mime)) {
             addNumberOrAddress(new LinphoneNumberOrAddress(data1, data4));
