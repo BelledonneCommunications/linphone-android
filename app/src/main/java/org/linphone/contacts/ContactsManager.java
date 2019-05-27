@@ -2,7 +2,7 @@ package org.linphone.contacts;
 
 /*
 ContactsManager.java
-Copyright (C) 2017  Belledonne Communications, Grenoble, France
+Copyright (C) 2017 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -370,7 +370,11 @@ public class ContactsManager extends ContentObserver implements FriendListListen
 
         String normalized = lpc.normalizePhoneNumber(phoneNumber);
         if (normalized == null) {
-            Log.w("[Contacts Manager] Couldn't normalize phone number " + phoneNumber + ", default proxy config prefix is " + lpc.getDialPrefix());
+            Log.w(
+                    "[Contacts Manager] Couldn't normalize phone number "
+                            + phoneNumber
+                            + ", default proxy config prefix is "
+                            + lpc.getDialPrefix());
             normalized = phoneNumber;
         }
 
@@ -386,7 +390,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         if (lf != null) {
             return (LinphoneContact) lf.getUserData();
         }
-        
+
         Log.w("[Contacts Manager] Couldn't find friend...");
         return null;
     }

@@ -42,9 +42,17 @@ class ApiTwentyEightPlus {
         Person me = new Person.Builder().setName(notif.getMyself()).build();
         Notification.MessagingStyle style = new Notification.MessagingStyle(me);
         for (NotifiableMessage message : notif.getMessages()) {
-            Icon userIcon = Icon.createWithBitmap(message.getSenderBitmap());
-            Person user =
-                    new Person.Builder().setName(message.getSender()).setIcon(userIcon).build();
+            Icon userIcon = null;
+            if (message.getSenderBitmap() != null) {
+                userIcon = Icon.createWithBitmap(message.getSenderBitmap());
+            }
+
+            Person.Builder builder = new Person.Builder().setName(message.getSender());
+            if (userIcon != null) {
+                builder.setIcon(userIcon);
+            }
+            Person user = builder.build();
+
             Notification.MessagingStyle.Message msg =
                     new Notification.MessagingStyle.Message(
                             message.getMessage(), message.getTime(), user);
