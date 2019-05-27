@@ -106,7 +106,7 @@ public class ConfigureAccountActivity extends Activity {
         }
 
         // This will automatically create the proxy config and auth info and add them to the Core
-        ProxyConfig cfg = mAccountCreator.configure();
+        ProxyConfig cfg = mAccountCreator.createProxyConfig();
         // Make sure the newly created one is the default
         LinphoneService.getCore().setDefaultProxyConfig(cfg);
     }
