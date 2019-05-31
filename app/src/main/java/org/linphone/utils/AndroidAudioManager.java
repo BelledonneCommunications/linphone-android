@@ -123,7 +123,11 @@ public class AndroidAudioManager {
                                     if (mContext.getResources().getBoolean(R.bool.isTablet)) {
                                         routeAudioToSpeaker();
                                     } else {
-                                        routeAudioToEarPiece();
+                                        // Only force earpiece audio route for incoming audio calls,
+                                        // outgoing calls may have manually enabled speaker
+                                        if (call.getDir() == Call.Dir.Incoming) {
+                                            routeAudioToEarPiece();
+                                        }
                                     }
                                 }
                                 // Only register this one when a call is active
