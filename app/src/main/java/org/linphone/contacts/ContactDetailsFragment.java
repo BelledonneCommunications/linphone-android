@@ -291,6 +291,7 @@ public class ContactDetailsFragment extends Fragment implements ContactsUpdatedL
             }
 
             String contactAddress = mContact.getContactFromPresenceModelForUriOrTel(noa.getValue());
+
             if (!mDisplayChatAddressOnly) {
                 v.findViewById(R.id.contact_call)
                         .setOnClickListener(

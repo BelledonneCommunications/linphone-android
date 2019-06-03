@@ -327,8 +327,25 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         }
     }
 
+    public String getAndroidContactIdFromUri(Uri uri) {
+        String[] projection = {ContactsContract.CommonDataKinds.SipAddress.CONTACT_ID};
+        Cursor cursor =
+                mContext.getApplicationContext()
+                        .getContentResolver()
+                        .query(uri, projection, null, null, null);
+        cursor.moveToFirst();
+
+        int nameColumnIndex =
+                cursor.getColumnIndex(ContactsContract.CommonDataKinds.SipAddress.CONTACT_ID);
+        String id = cursor.getString(nameColumnIndex);
+        cursor.close();
+        return id;
+    }
+
     public synchronized LinphoneContact findContactFromAndroidId(String androidId) {
-        if (androidId == null) return null;
+        if (androidId == null) {
+            return null;
+        }
 
         for (LinphoneContact c : getContacts()) {
             if (c.getAndroidId() != null && c.getAndroidId().equals(androidId)) {
@@ -427,7 +444,9 @@ public class ContactsManager extends ContentObserver implements FriendListListen
 
     private synchronized boolean refreshSipContact(Friend lf) {
         LinphoneContact contact = (LinphoneContact) lf.getUserData();
+
         if (contact != null) {
+
             if (!mSipContacts.contains(contact)) {
                 mSipContacts.add(contact);
                 return true;
@@ -484,8 +503,11 @@ public class ContactsManager extends ContentObserver implements FriendListListen
     @Override
     public void onPresenceReceived(FriendList list, Friend[] friends) {
         boolean updated = false;
+
         for (Friend lf : friends) {
+
             boolean newContact = refreshSipContact(lf);
+
             if (newContact) {
                 updated = true;
             }
