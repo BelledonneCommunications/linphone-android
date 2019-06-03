@@ -202,7 +202,9 @@ public class LinphoneConnectionService extends ConnectionService {
 
     @Override
     public void onCreateOutgoingConnectionFailed(
-            PhoneAccountHandle connectionManagerAccount, ConnectionRequest request) {}
+            PhoneAccountHandle connectionManagerAccount, ConnectionRequest request) {
+        Log.e("[Telecom Manager] Error: Couldn't create outgoing connection");
+    }
 
     @Override
     public void onConference(Connection a, Connection b) {}
@@ -246,6 +248,7 @@ public class LinphoneConnectionService extends ConnectionService {
                 con.setActive();
             }
         }
+        updateCallCapabilities();
     }
 
     public void performSwitchCall() {
@@ -294,7 +297,8 @@ public class LinphoneConnectionService extends ConnectionService {
             if (call.getCurrentParams().videoEnabled()) {
                 if (connection.getVideoProvider() == null) {
                     Log.i("[Telecom Manager] Video is enabled, adding provider");
-                    connection.setVideoProvider(new LinphoneVideoProvider());
+                    connection.setVideoProvider(
+                            new LinphoneVideoProvider(linphoneConnection.getCallId()));
                     connection.setVideoState(VideoProfile.STATE_BIDIRECTIONAL);
                 } else {
                     Log.i("[Telecom Manager] Video is enabled, provider already set");

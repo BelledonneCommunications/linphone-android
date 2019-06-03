@@ -28,11 +28,25 @@ import android.view.Surface;
 import org.linphone.LinphoneManager;
 import org.linphone.core.Call;
 import org.linphone.core.Core;
+import org.linphone.core.VideoDefinition;
 import org.linphone.core.tools.Log;
 
 @TargetApi(Build.VERSION_CODES.M)
 public class LinphoneVideoProvider extends Connection.VideoProvider {
-    public LinphoneVideoProvider() {}
+    private String mCallId;
+
+    public LinphoneVideoProvider(String callId) {
+        mCallId = callId;
+    }
+
+    private Call getCall() {
+        Call call = LinphoneManager.getCallManager().findCallFromId(mCallId);
+        if (call == null) {
+            Log.w("[Telecom Manager] Call not found from id " + mCallId);
+        }
+        call = LinphoneManager.getCore().getCurrentCall();
+        return call;
+    }
 
     @Override
     public void onSetCamera(String cameraId) {
@@ -40,33 +54,32 @@ public class LinphoneVideoProvider extends Connection.VideoProvider {
         if (core == null) return;
         if (cameraId == null) return;
 
+        // In linphone, cameras are Android0, Android1 etc...
+        // Camera id given as parameter is only 0, 1, etc...
+        cameraId = "Android" + cameraId;
+
         String currentDevice = core.getVideoDevice();
-        if (currentDevice.equals(cameraId)) {
-            Log.w(
-                    "[Telecom Manager] Camera id "
-                            + cameraId
-                            + " is already the one being used, skipping");
-        } else {
-            Log.i("[Telecom Manager] Changing camera from " + currentDevice + " to " + cameraId);
-            String[] devices = core.getVideoDevicesList();
-            for (String device : devices) {
-                if (device.equals(cameraId)) {
-                    Log.i("[Telecom Manager] Found requested camera");
-                    core.setVideoDevice(device);
+        boolean updateRequired = !currentDevice.equals(cameraId);
 
-                    Call call = core.getCurrentCall();
-                    if (call == null) {
-                        Log.w("[Telecom Manager] Trying to switch camera while not in call");
-                        return;
-                    }
-                    // TODO: we must call the following !
-                    // changeCameraCapabilities(new VideoProfile.CameraCapabilities(width, height,
-                    // zoomSupported, maxZoom));
+        Call call = getCall();
+        if (call == null) {
+            Log.w("[Telecom Manager] Trying to switch camera while not in call");
+            return;
+        }
 
-                    call.update(null);
-                    return;
-                }
-            }
+        VideoDefinition size = call.getCurrentParams().getSentVideoDefinition();
+        Log.i(
+                "[Telecom Manager] Call video definition is "
+                        + size.getWidth()
+                        + "x"
+                        + size.getHeight());
+        changeCameraCapabilities(
+                new VideoProfile.CameraCapabilities(size.getWidth(), size.getHeight()));
+
+        if (updateRequired) {
+            Log.i("[Telecom Manager] Camera switched from " + currentDevice + " to " + cameraId);
+            core.setVideoDevice(cameraId);
+            call.update(null);
         }
     }
 
@@ -102,7 +115,7 @@ public class LinphoneVideoProvider extends Connection.VideoProvider {
         Core core = LinphoneManager.getCore();
         if (core == null) return;
 
-        Call call = core.getCurrentCall();
+        Call call = getCall();
         if (call == null) return;
 
         Log.i("[Telecom Manager] Zooming to " + value);
@@ -111,17 +124,39 @@ public class LinphoneVideoProvider extends Connection.VideoProvider {
 
     @Override
     public void onSendSessionModifyRequest(VideoProfile fromProfile, VideoProfile toProfile) {
-        Log.i("[Telecom Manager] TODO: onSendSessionModifyRequest");
+        Core core = LinphoneManager.getCore();
+        if (core == null) return;
+
+        Call call = getCall();
+        if (call == null) {
+            return;
+        }
+        Log.i("[Telecom Manager] Receiving request");
     }
 
     @Override
     public void onSendSessionModifyResponse(VideoProfile responseProfile) {
-        Log.i("[Telecom Manager] TODO: onSendSessionModifyResponse");
+        Log.i("[Telecom Manager] Sending response");
     }
 
     @Override
     public void onRequestCameraCapabilities() {
-        Log.i("[Telecom Manager] TODO: onRequestCameraCapabilities");
+        Core core = LinphoneManager.getCore();
+        if (core == null) return;
+
+        Call call = getCall();
+        if (call == null) {
+            return;
+        }
+
+        VideoDefinition size = call.getCurrentParams().getSentVideoDefinition();
+        Log.i(
+                "[Telecom Manager] Call video definition is "
+                        + size.getWidth()
+                        + "x"
+                        + size.getHeight());
+        changeCameraCapabilities(
+                new VideoProfile.CameraCapabilities(size.getWidth(), size.getHeight()));
     }
 
     @Override

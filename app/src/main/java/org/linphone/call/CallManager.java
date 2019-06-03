@@ -30,6 +30,7 @@ import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
+import org.linphone.core.CallLog;
 import org.linphone.core.CallParams;
 import org.linphone.core.Core;
 import org.linphone.core.MediaEncryption;
@@ -300,6 +301,20 @@ public class CallManager {
         } else {
             Log.w("[Call Manager] Core is already in a conference, can't resume it");
         }
+    }
+
+    public Call findCallFromId(String callId) {
+        Core core = LinphoneManager.getCore();
+        if (callId == null) return core.getCurrentCall();
+
+        Call[] calls = core.getCalls();
+        for (Call call : calls) {
+            CallLog log = call.getCallLog();
+            if (log != null && callId.equals(log.getCallId())) {
+                return call;
+            }
+        }
+        return null;
     }
 
     private void inviteAddress(

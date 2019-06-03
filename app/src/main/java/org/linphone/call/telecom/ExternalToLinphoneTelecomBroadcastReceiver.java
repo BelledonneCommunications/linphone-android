@@ -25,8 +25,6 @@ import android.content.Intent;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.core.Call;
-import org.linphone.core.CallLog;
-import org.linphone.core.Core;
 import org.linphone.core.tools.Log;
 
 public class ExternalToLinphoneTelecomBroadcastReceiver extends BroadcastReceiver {
@@ -35,7 +33,7 @@ public class ExternalToLinphoneTelecomBroadcastReceiver extends BroadcastReceive
         int action = intent.getIntExtra(LinphoneConnectionService.CS_TO_EXT_ACTION, -1);
         String callId = intent.getStringExtra(LinphoneConnectionService.CS_TO_EXT_CALL_ID);
 
-        Call call = findCallFromId(callId);
+        Call call = LinphoneManager.getCallManager().findCallFromId(callId);
         Log.i(
                 "[Telecom Broadcast Receiver] Received action "
                         + TelecomHelper.getActionNameFromValue(action)
@@ -66,19 +64,5 @@ public class ExternalToLinphoneTelecomBroadcastReceiver extends BroadcastReceive
                 call.resume();
                 break;
         }
-    }
-
-    private Call findCallFromId(String callId) {
-        Core core = LinphoneManager.getCore();
-        if (callId == null) return core.getCurrentCall();
-
-        Call[] calls = core.getCalls();
-        for (Call call : calls) {
-            CallLog log = call.getCallLog();
-            if (log != null && callId.equals(log.getCallId())) {
-                return call;
-            }
-        }
-        return null;
     }
 }

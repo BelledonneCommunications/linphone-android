@@ -76,11 +76,9 @@ public class TelecomHelper {
                                 onCallTerminated(call.getCallLog().getCallId());
                                 break;
                             case Connected:
-                                if (call.getDir() == Call.Dir.Outgoing) {
-                                    sendToCS(
-                                            LinphoneConnectionService.EXT_TO_CS_ESTABLISHED,
-                                            call.getCallLog().getCallId());
-                                }
+                                sendToCS(
+                                        LinphoneConnectionService.EXT_TO_CS_ESTABLISHED,
+                                        call.getCallLog().getCallId());
                         }
                     }
                 };
