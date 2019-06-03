@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import android.Manifest;
 import android.app.Fragment;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -47,6 +48,7 @@ public class ContactsActivity extends MainActivity {
         super.onStart();
 
         Fragment currentFragment = getFragmentManager().findFragmentById(R.id.fragmentContainer);
+
         if (currentFragment == null) {
             if (getIntent() != null && getIntent().getExtras() != null) {
                 Bundle extras = getIntent().getExtras();
@@ -54,6 +56,19 @@ public class ContactsActivity extends MainActivity {
                     showContactsList();
                 }
                 handleIntentExtras(extras);
+
+            } else if (getIntent() != null && getIntent().getData() != null) {
+
+                Uri uri = getIntent().getData();
+                if (uri != null) {
+                    Bundle extras = getIntent().getExtras();
+                    if (isTablet() || !extras.containsKey("Contact")) {
+                        showContactsList();
+                    }
+                    Bundle bundle = new Bundle();
+                    bundle.putString("uri", uri.toString());
+                    handleIntentExtras(bundle);
+                }
             } else {
                 showContactsList();
                 if (isTablet()) {
@@ -72,13 +87,18 @@ public class ContactsActivity extends MainActivity {
             getFragmentManager().popBackStackImmediate();
         }
 
+        if (intent.getData() != null) {
+            Bundle bundle = new Bundle();
+            bundle.putString("uri", intent.getDataString());
+            handleIntentExtras(bundle);
+        }
+
         handleIntentExtras(intent.getExtras());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
         mContactsSelected.setVisibility(View.VISIBLE);
     }
 
@@ -113,8 +133,24 @@ public class ContactsActivity extends MainActivity {
     private void handleIntentExtras(Bundle extras) {
         if (extras == null) return;
 
+        if (extras.containsKey("uri")) {
+            String uri = extras.getString("uri");
+            Uri myUri = Uri.parse(uri);
+
+            String id = ContactsManager.getInstance().getContactAndroidFromUri(myUri, this);
+
+            LinphoneContact linphoneContact =
+                    ContactsManager.getInstance().findContactFromAndroidId(id);
+            if (linphoneContact != null) {
+                showContactDetails(linphoneContact);
+            } else {
+                showContactsList();
+            }
+        }
+
         if (extras.containsKey("Contact")) {
             LinphoneContact contact = (LinphoneContact) extras.get("Contact");
+
             if (extras.containsKey("Edit")) {
                 showContactEdit(contact, extras, false);
             } else {
@@ -153,6 +189,7 @@ public class ContactsActivity extends MainActivity {
         if (contact != null) {
             extras.putSerializable("Contact", contact);
         }
+
         ContactDetailsFragment fragment = new ContactDetailsFragment();
         fragment.setArguments(extras);
         changeFragment(fragment, "Contact detail", isChild);
