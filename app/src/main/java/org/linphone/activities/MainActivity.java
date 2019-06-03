@@ -599,11 +599,13 @@ public abstract class MainActivity extends LinphoneGenericActivity
     protected void changeFragment(Fragment fragment, String name, boolean isChild) {
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
+
         if (transaction.isAddToBackStackAllowed()) {
             int count = fragmentManager.getBackStackEntryCount();
             if (count > 0) {
                 FragmentManager.BackStackEntry entry =
                         fragmentManager.getBackStackEntryAt(count - 1);
+
                 if (entry != null && name.equals(entry.getName())) {
                     fragmentManager.popBackStack();
                     if (!isChild) {
