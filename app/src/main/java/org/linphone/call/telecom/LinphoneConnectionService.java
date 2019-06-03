@@ -19,6 +19,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import static android.telecom.Connection.CAPABILITY_CAN_PAUSE_VIDEO;
+import static android.telecom.Connection.CAPABILITY_CAN_UPGRADE_TO_VIDEO;
+import static android.telecom.Connection.CAPABILITY_SUPPORTS_VT_LOCAL_BIDIRECTIONAL;
+import static android.telecom.Connection.CAPABILITY_SUPPORTS_VT_REMOTE_BIDIRECTIONAL;
 import static android.telecom.Connection.STATE_RINGING;
 
 import android.annotation.TargetApi;
@@ -37,11 +41,14 @@ import android.telecom.PhoneAccountHandle;
 import android.telecom.RemoteConference;
 import android.telecom.StatusHints;
 import android.telecom.TelecomManager;
+import android.telecom.VideoProfile;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import org.linphone.LinphoneManager;
+import org.linphone.core.Call;
+import org.linphone.core.Core;
 import org.linphone.core.tools.Log;
 
 // This class manages Connections, Conferences exclusively for the native mode
@@ -129,7 +136,9 @@ public class LinphoneConnectionService extends ConnectionService {
 
             connection.setAudioModeIsVoip(true);
             connection.setDialing();
-            addCall(connection);
+
+            mCalls.add(connection);
+            connection.setConnectionCapabilities(getCallCapabilities(connection, mCalls.size()));
 
             return connection;
         } else {
@@ -177,7 +186,9 @@ public class LinphoneConnectionService extends ConnectionService {
 
             connection.setAudioModeIsVoip(true);
             connection.setRinging();
-            addCall(connection);
+
+            mCalls.add(connection);
+            connection.setConnectionCapabilities(getCallCapabilities(connection, mCalls.size()));
 
             return connection;
         } else {
@@ -206,31 +217,8 @@ public class LinphoneConnectionService extends ConnectionService {
         return super.onUnbind(intent);
     }
 
-    public void addCall(LinphoneConnection connection) {
-        mCalls.add(connection);
-        updateCallCapabilities();
-        updateConferenceable();
-    }
-
     public void destroyCall(LinphoneConnection connection) {
         mCalls.remove(connection);
-        updateCallCapabilities();
-        updateConferenceable();
-    }
-
-    public void updateConferenceable() {
-        List<Connection> freeConnections = new ArrayList<>();
-        freeConnections.addAll(mCalls);
-        for (int i = 0; i < freeConnections.size(); i++) {
-            if (freeConnections.get(i).getConference() != null) {
-                freeConnections.remove(i);
-            }
-        }
-        for (int i = 0; i < freeConnections.size(); i++) {
-            Connection c = freeConnections.remove(i);
-            c.setConferenceableConnections(freeConnections);
-            freeConnections.add(i, c);
-        }
     }
 
     public void updateCallCapabilities() {
@@ -276,13 +264,55 @@ public class LinphoneConnectionService extends ConnectionService {
         setAsActive(futureActive);
 
         updateCallCapabilities();
-        updateConferenceable();
     }
 
     private int getCallCapabilities(Connection connection, int totalCall) {
         int callCapabilities = connection.getConnectionCapabilities();
 
-        // TODO: Add a LinphoneVideoProvider and video capabilities !
+        Core core = LinphoneManager.getCore();
+        if (core.videoEnabled()) {
+            callCapabilities |= CAPABILITY_CAN_UPGRADE_TO_VIDEO;
+            callCapabilities |= CAPABILITY_CAN_PAUSE_VIDEO;
+        }
+
+        Call call = null;
+        Call[] calls = core.getCalls();
+        LinphoneConnection linphoneConnection = (LinphoneConnection) connection;
+
+        if (totalCall == 1 && calls.length > 0) {
+            call = calls[0];
+        } else if (totalCall <= calls.length) {
+            for (Call tmpCall : calls) {
+                if (tmpCall.getCallLog().getCallId().equals(linphoneConnection.getCallId())) {
+                    call = tmpCall;
+                    break;
+                }
+            }
+        }
+
+        if (call != null) {
+            if (call.getCurrentParams().videoEnabled()) {
+                if (connection.getVideoProvider() == null) {
+                    Log.i("[Telecom Manager] Video is enabled, adding provider");
+                    connection.setVideoProvider(new LinphoneVideoProvider());
+                    connection.setVideoState(VideoProfile.STATE_BIDIRECTIONAL);
+                } else {
+                    Log.i("[Telecom Manager] Video is enabled, provider already set");
+                }
+
+                // TODO: the following isn't always true
+                callCapabilities |= CAPABILITY_SUPPORTS_VT_LOCAL_BIDIRECTIONAL;
+                callCapabilities |= CAPABILITY_SUPPORTS_VT_REMOTE_BIDIRECTIONAL;
+            } else {
+                // TODO: remove video capabilities
+            }
+        } else {
+            Log.w(
+                    "[Telecom Manager] Call with id "
+                            + linphoneConnection.getCallId()
+                            + " not found !");
+        }
+
         // TODO: Conference capabilities
 
         return callCapabilities;
@@ -291,9 +321,9 @@ public class LinphoneConnectionService extends ConnectionService {
     // Returns 1st inactive call
     private LinphoneConnection getInActive() {
         // Check for calls without conference, in the case we have an active Conference
-        for (LinphoneConnection con : mCalls) {
-            if ((!con.isLocalActive()) && con.getConference() == null) {
-                return con;
+        for (LinphoneConnection connection : mCalls) {
+            if ((!connection.isLocalActive()) && connection.getConference() == null) {
+                return connection;
             }
         }
         throw new NullPointerException("No inactive call found!");

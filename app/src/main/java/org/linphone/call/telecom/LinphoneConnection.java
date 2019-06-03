@@ -126,7 +126,6 @@ public class LinphoneConnection extends Connection {
     @Override
     public void onStateChanged(int state) {
         mConnectionService.updateCallCapabilities();
-        mConnectionService.updateConferenceable();
     }
 
     public void sendLocalBroadcast(int action) {

@@ -25,38 +25,112 @@ import android.os.Build;
 import android.telecom.Connection;
 import android.telecom.VideoProfile;
 import android.view.Surface;
+import org.linphone.LinphoneManager;
+import org.linphone.core.Call;
+import org.linphone.core.Core;
+import org.linphone.core.tools.Log;
 
 @TargetApi(Build.VERSION_CODES.M)
 public class LinphoneVideoProvider extends Connection.VideoProvider {
     public LinphoneVideoProvider() {}
 
     @Override
-    public void onSetCamera(String cameraId) {}
+    public void onSetCamera(String cameraId) {
+        Core core = LinphoneManager.getCore();
+        if (core == null) return;
+        if (cameraId == null) return;
+
+        String currentDevice = core.getVideoDevice();
+        if (currentDevice.equals(cameraId)) {
+            Log.w(
+                    "[Telecom Manager] Camera id "
+                            + cameraId
+                            + " is already the one being used, skipping");
+        } else {
+            Log.i("[Telecom Manager] Changing camera from " + currentDevice + " to " + cameraId);
+            String[] devices = core.getVideoDevicesList();
+            for (String device : devices) {
+                if (device.equals(cameraId)) {
+                    Log.i("[Telecom Manager] Found requested camera");
+                    core.setVideoDevice(device);
+
+                    Call call = core.getCurrentCall();
+                    if (call == null) {
+                        Log.w("[Telecom Manager] Trying to switch camera while not in call");
+                        return;
+                    }
+                    // TODO: we must call the following !
+                    // changeCameraCapabilities(new VideoProfile.CameraCapabilities(width, height,
+                    // zoomSupported, maxZoom));
+
+                    call.update(null);
+                    return;
+                }
+            }
+        }
+    }
 
     @Override
-    public void onSetPreviewSurface(Surface surface) {}
+    public void onSetPreviewSurface(Surface surface) {
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            Log.i("[Telecom Manager] Changing rendering surface to " + surface);
+            core.setNativePreviewWindowId(surface);
+        }
+    }
 
     @Override
-    public void onSetDisplaySurface(Surface surface) {}
+    public void onSetDisplaySurface(Surface surface) {
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            Log.i("[Telecom Manager] Changing display surface to " + surface);
+            core.setNativeVideoWindowId(surface);
+        }
+    }
 
     @Override
-    public void onSetDeviceOrientation(int rotation) {}
+    public void onSetDeviceOrientation(int rotation) {
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            Log.i("[Telecom Manager] Changing device rotation to " + rotation);
+            core.setDeviceRotation(rotation);
+        }
+    }
 
     @Override
-    public void onSetZoom(float value) {}
+    public void onSetZoom(float value) {
+        Core core = LinphoneManager.getCore();
+        if (core == null) return;
+
+        Call call = core.getCurrentCall();
+        if (call == null) return;
+
+        Log.i("[Telecom Manager] Zooming to " + value);
+        call.zoom(value, (float) 0.5, (float) 0.5);
+    }
 
     @Override
-    public void onSendSessionModifyRequest(VideoProfile fromProfile, VideoProfile toProfile) {}
+    public void onSendSessionModifyRequest(VideoProfile fromProfile, VideoProfile toProfile) {
+        Log.i("[Telecom Manager] TODO: onSendSessionModifyRequest");
+    }
 
     @Override
-    public void onSendSessionModifyResponse(VideoProfile responseProfile) {}
+    public void onSendSessionModifyResponse(VideoProfile responseProfile) {
+        Log.i("[Telecom Manager] TODO: onSendSessionModifyResponse");
+    }
 
     @Override
-    public void onRequestCameraCapabilities() {}
+    public void onRequestCameraCapabilities() {
+        Log.i("[Telecom Manager] TODO: onRequestCameraCapabilities");
+    }
 
     @Override
-    public void onRequestConnectionDataUsage() {}
+    public void onRequestConnectionDataUsage() {
+        Log.i("[Telecom Manager] TODO: onRequestConnectionDataUsage");
+    }
 
     @Override
-    public void onSetPauseImage(Uri uri) {}
+    public void onSetPauseImage(Uri uri) {
+        Log.i("[Telecom Manager] TODO: onSetPauseImage");
+    }
 }

@@ -73,7 +73,6 @@ public class LinphoneToExternalTelecomBroadcastReceiver extends BroadcastReceive
                 connection.destroy();
 
                 mService.updateCallCapabilities();
-                mService.updateConferenceable();
                 break;
 
             case EXT_TO_CS_HOLD_CALL:

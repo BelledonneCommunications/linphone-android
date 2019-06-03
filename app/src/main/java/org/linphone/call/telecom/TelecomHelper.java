@@ -29,7 +29,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.telecom.PhoneAccountHandle;
 import android.telecom.TelecomManager;
-import android.telecom.VideoProfile;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
@@ -156,18 +155,6 @@ public class TelecomHelper {
                 contact == null
                         ? LinphoneUtils.getAddressDisplayName(address)
                         : contact.getFullName();
-
-        if (call.getParams().videoEnabled()) {
-            extras.putInt(
-                    TelecomManager.EXTRA_START_CALL_WITH_VIDEO_STATE,
-                    VideoProfile.STATE_BIDIRECTIONAL);
-            Log.i("[Telecom Manager] Using VideoProfile.STATE_BIDIRECTIONAL");
-        } else {
-            extras.putInt(
-                    TelecomManager.EXTRA_START_CALL_WITH_VIDEO_STATE,
-                    VideoProfile.STATE_AUDIO_ONLY);
-            Log.i("[Telecom Manager] Using VideoProfile.STATE_AUDIO_ONLY");
-        }
 
         String bundleKey;
         if (call.getDir() == Call.Dir.Outgoing) {
