@@ -231,6 +231,7 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
                         + " contacts found in which "
                         + data.sipContacts.size()
                         + " are SIP");
+
         for (LinphoneContact contact : data.contacts) {
             contact.createOrUpdateFriendFromNativeContact();
         }
