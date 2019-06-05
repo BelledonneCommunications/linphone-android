@@ -19,6 +19,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import static org.linphone.core.AccountCreator.UsernameStatus.Invalid;
+import static org.linphone.core.AccountCreator.UsernameStatus.InvalidCharacters;
+import static org.linphone.core.AccountCreator.UsernameStatus.TooLong;
+import static org.linphone.core.AccountCreator.UsernameStatus.TooShort;
+
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -278,6 +283,20 @@ public abstract class AssistantActivity extends LinphoneGenericActivity
                 return getString(R.string.phone_number_too_long);
             case Invalid:
                 return getString(R.string.phone_number_invalid);
+        }
+        return null;
+    }
+
+    String getErrorFromUsernameStatus(AccountCreator.UsernameStatus status) {
+        switch (status) {
+            case Invalid:
+                return getString(R.string.username_invalid_size);
+            case InvalidCharacters:
+                return getString(R.string.invalid_characters);
+            case TooLong:
+                return getString(R.string.username_too_long);
+            case TooShort:
+                return getString(R.string.username_too_short);
         }
         return null;
     }

@@ -102,7 +102,7 @@
     <string name="assistant_ec_calibration">Echo canceler calibration in progress</string>
     <string name="assistant_remote_provisioning_login">Enter your login</string>
     <string name="assistant_account_not_validated">Your account has not been validated yet.</string>
-    <string name="assistant_error_confirmation_code">The confirmation code is invalid.\r\nPlease try again.</string>
+    <string name="assistant_error_confirmation_code">The confirmation code is invalid.\nPlease try again.</string>
     <string name="assistant_account_validated">Your account has been validated.</string>
     <string name="assistant_error_bad_credentials">Incorrect username or password</string>
     <string name="assistant_codec_down_question">Do you agree to download OpenH264 Video Codec provided by Cisco Systems, Inc.?</string>
@@ -114,13 +114,13 @@
     <string name="wizard_failed">An error occurred, try again later.</string>
     <string name="wizard_server_unavailable">Server unreachable, verify your network connection.</string>
     <string name="wizard_username_unavailable">This username is already taken.</string>
-    <string name="assistant_phone_number_unavailable">This phone number is already used.\r\nPlease type a different number.\r\nYou can delete your existing account if you want to reuse your phone number.</string>
+    <string name="assistant_phone_number_unavailable">This phone number is already used.\nPlease type a different number.\nYou can delete your existing account if you want to reuse your phone number.</string>
     <string name="wizard_username_incorrect">Your username is invalid.</string>
     <string name="assistant_phone_number_incorrect">Your phone number is invalid.</string>
     <string name="wizard_email_incorrect">Your email is invalid.</string>
     <string name="wizard_password_incorrect">Your password is invalid</string>
     <string name="wizard_passwords_unmatched">Passwords do not match.</string>
-    <string name="setup_confirm_username">Your username will be %s.\r\n\r\nIt may differ from your input to match requirements.\r\nDo you accept?</string>
+    <string name="setup_confirm_username">Your username will be %s.\n\nIt may differ from your input to match requirements.\nDo you accept?</string>
     <string name="first_launch_no_login_password">Please enter your login and password</string>
     <string name="forgot_password">Forgot password ?</string>
     <string name="assistant_choose_country">Choose a country</string>

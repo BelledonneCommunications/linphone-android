@@ -24,6 +24,8 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,7 +38,8 @@ import org.linphone.core.tools.Log;
 
 public class PhoneAccountCreationAssistantActivity extends AssistantActivity {
     private TextView mCountryPicker, mError, mSipUri, mCreate;
-    private EditText mPrefix, mPhoneNumber;
+    private EditText mPrefix, mPhoneNumber, mUsername;
+    private CheckBox mUseUsernameInsteadOfPhoneNumber;
 
     private AccountCreatorListenerStub mListener;
 
@@ -69,7 +72,11 @@ public class PhoneAccountCreationAssistantActivity extends AssistantActivity {
                     public void onClick(View v) {
                         enableButtonsAndFields(false);
 
-                        mAccountCreator.setUsername(mAccountCreator.getPhoneNumber());
+                        if (mUseUsernameInsteadOfPhoneNumber.isChecked()) {
+                            mAccountCreator.setUsername(mUsername.getText().toString());
+                        } else {
+                            mAccountCreator.setUsername(mAccountCreator.getPhoneNumber());
+                        }
                         mAccountCreator.setDomain(getString(R.string.default_domain));
 
                         AccountCreator.Status status = mAccountCreator.isAccountExist();
@@ -130,6 +137,32 @@ public class PhoneAccountCreationAssistantActivity extends AssistantActivity {
                     @Override
                     public void onClick(View v) {
                         showPhoneNumberDialog();
+                    }
+                });
+
+        mUseUsernameInsteadOfPhoneNumber = findViewById(R.id.use_username);
+        mUseUsernameInsteadOfPhoneNumber.setOnCheckedChangeListener(
+                new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        mUsername.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+                        updateCreateButtonAndDisplayError();
+                    }
+                });
+
+        mUsername = findViewById(R.id.username);
+        mUsername.addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(
+                            CharSequence s, int start, int count, int after) {}
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        updateCreateButtonAndDisplayError();
                     }
                 });
 
@@ -209,18 +242,34 @@ public class PhoneAccountCreationAssistantActivity extends AssistantActivity {
         if (mPrefix.getText().toString().isEmpty() || mPhoneNumber.getText().toString().isEmpty())
             return;
 
+        mCreate.setEnabled(true);
+        mError.setText("");
+        mError.setVisibility(View.INVISIBLE);
+
         int status = arePhoneNumberAndPrefixOk(mPrefix, mPhoneNumber);
         if (status == AccountCreator.PhoneNumberStatus.Ok.toInt()) {
-            mCreate.setEnabled(true);
-            mError.setText("");
-            mError.setVisibility(View.INVISIBLE);
+            if (mUseUsernameInsteadOfPhoneNumber.isChecked()) {
+                AccountCreator.UsernameStatus usernameStatus =
+                        mAccountCreator.setUsername(mUsername.getText().toString());
+                if (usernameStatus != AccountCreator.UsernameStatus.Ok) {
+                    mCreate.setEnabled(false);
+                    mError.setText(getErrorFromUsernameStatus(usernameStatus));
+                    mError.setVisibility(View.VISIBLE);
+                }
+            }
         } else {
             mCreate.setEnabled(false);
             mError.setText(getErrorFromPhoneNumberStatus(status));
             mError.setVisibility(View.VISIBLE);
         }
 
-        String username = mAccountCreator.getPhoneNumber();
+        String username;
+        if (mUseUsernameInsteadOfPhoneNumber.isChecked()) {
+            username = mUsername.getText().toString();
+        } else {
+            username = mAccountCreator.getPhoneNumber();
+        }
+
         if (username != null) {
             String sip =
                     getString(R.string.assistant_create_account_phone_number_address)
