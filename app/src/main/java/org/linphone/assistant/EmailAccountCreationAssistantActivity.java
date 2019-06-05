@@ -73,20 +73,7 @@ public class EmailAccountCreationAssistantActivity extends AssistantActivity {
                                 status == AccountCreator.UsernameStatus.Ok
                                         ? View.INVISIBLE
                                         : View.VISIBLE);
-                        switch (status) {
-                            case Invalid:
-                                mUsernameError.setText(getString(R.string.username_invalid_size));
-                                break;
-                            case InvalidCharacters:
-                                mUsernameError.setText(getString(R.string.invalid_characters));
-                                break;
-                            case TooLong:
-                                mUsernameError.setText(getString(R.string.username_too_long));
-                                break;
-                            case TooShort:
-                                mUsernameError.setText(getString(R.string.username_too_short));
-                                break;
-                        }
+                        mUsernameError.setText(getErrorFromUsernameStatus(status));
                         updateCreateButton();
                     }
                 });
