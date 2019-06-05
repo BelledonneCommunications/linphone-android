@@ -10,6 +10,20 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [4.1.1] - 2019-06-05
+
+### Changed
+- Improved text based setting validation in preferences
+- Auto refresh register when app leaves foreground if state is failed
+
+### Fixed
+- First call not sending video / displaying preview right after granting permission for camera
+- Video call overlay return to app crash
+- Core not choosing a new default proxy config after deleting the previous one
+- Some contacts not being visible
+- Phone number account creation "username too short" error message when not using alias
+- H264 issue on some Huawei devices
+
 ## [4.1.0] - 2019-05-03
 
 ### Added

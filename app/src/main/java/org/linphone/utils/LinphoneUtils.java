@@ -441,7 +441,11 @@ public final class LinphoneUtils {
                     || status.equals(AccountCreator.Status.AccountAlreadyActivated)
                     || status.equals(AccountCreator.Status.AccountActivated)
                     || status.equals(AccountCreator.Status.AccountNotCreated)
-                    || status.equals(AccountCreator.Status.RequestOk)) return "";
+                    || status.equals(AccountCreator.Status.RequestOk)) {
+                return ctxt.getString(R.string.unexpected_event)
+                        .replace("%i", status.name())
+                        .replace("%s", "account assistant");
+            }
         }
         return null;
     }

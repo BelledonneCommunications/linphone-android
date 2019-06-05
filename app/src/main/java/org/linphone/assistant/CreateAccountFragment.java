@@ -53,7 +53,7 @@ import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.LinphoneUtils;
 
 public class CreateAccountFragment extends Fragment
-        implements CompoundButton.OnCheckedChangeListener, OnClickListener, AccountCreatorListener {
+        implements CompoundButton.OnCheckedChangeListener, AccountCreatorListener {
     private final Pattern UPPER_CASE_REGEX = Pattern.compile("[A-Z]");
 
     private EditText mPhoneNumberEdit,
@@ -149,8 +149,35 @@ public class CreateAccountFragment extends Fragment
 
             mPhoneNumberLayout.setVisibility(View.VISIBLE);
 
-            mPhoneNumberInfo.setOnClickListener(this);
-            mSelectCountry.setOnClickListener(this);
+            mPhoneNumberInfo.setOnClickListener(
+                    new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (mLinkAccount) {
+                                new AlertDialog.Builder(getActivity())
+                                        .setTitle(getString(R.string.phone_number_info_title))
+                                        .setMessage(
+                                                getString(R.string.phone_number_link_info_content)
+                                                        + "\n"
+                                                        + getString(
+                                                                R.string
+                                                                        .phone_number_link_info_content_already_account))
+                                        .show();
+                            } else {
+                                new AlertDialog.Builder(getActivity())
+                                        .setTitle(getString(R.string.phone_number_info_title))
+                                        .setMessage(getString(R.string.phone_number_info_content))
+                                        .show();
+                            }
+                        }
+                    });
+            mSelectCountry.setOnClickListener(
+                    new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            AssistantActivity.instance().displayCountryChooser();
+                        }
+                    });
 
             DialPlan c = AssistantActivity.instance().country;
             if (c != null) {
@@ -229,7 +256,17 @@ public class CreateAccountFragment extends Fragment
             mEmailLayout.setVisibility(View.GONE);
 
             mSkip.setVisibility(View.VISIBLE);
-            mSkip.setOnClickListener(this);
+            mSkip.setOnClickListener(
+                    new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (getArguments().getBoolean("LinkFromPref")) {
+                                AssistantActivity.instance().finish();
+                            } else {
+                                AssistantActivity.instance().success();
+                            }
+                        }
+                    });
 
             mCreateAccount.setText(getResources().getString(R.string.link_account));
             mAssisstantTitle.setText(getResources().getString(R.string.link_account));
@@ -241,7 +278,28 @@ public class CreateAccountFragment extends Fragment
         addUsernameHandler(mUsernameEdit);
 
         mCreateAccount.setEnabled(true);
-        mCreateAccount.setOnClickListener(this);
+        mCreateAccount.setOnClickListener(
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mCreateAccount.setEnabled(false);
+                        if (mLinkAccount) {
+                            addAlias();
+                        } else {
+                            if (mUseEmail.isChecked()) mAccountCreator.setPhoneNumber(null, null);
+                            if (mAccountCreator.getUsername() != null
+                                    && mAccountCreator.getUsername().length() > 0) {
+                                mAccountCreator.isAccountExist();
+                            } else {
+                                LinphoneUtils.displayErrorAlert(
+                                        LinphoneUtils.errorForUsernameStatus(
+                                                AccountCreator.UsernameStatus.TooShort),
+                                        AssistantActivity.instance());
+                                mCreateAccount.setEnabled(true);
+                            }
+                        }
+                    }
+                });
 
         return view;
     }
@@ -250,14 +308,6 @@ public class CreateAccountFragment extends Fragment
     public void onPause() {
         super.onPause();
         mAccountCreator.setListener(null);
-    }
-
-    private String getUsername() {
-        if (mUsernameEdit != null) {
-            String username = mUsernameEdit.getText().toString();
-            return username.toLowerCase(Locale.getDefault());
-        }
-        return null;
     }
 
     @Override
@@ -304,54 +354,6 @@ public class CreateAccountFragment extends Fragment
         }
     }
 
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        if (id == R.id.select_country) {
-            AssistantActivity.instance().displayCountryChooser();
-        } else if (id == R.id.assistant_skip) {
-            if (getArguments().getBoolean("LinkFromPref")) {
-                AssistantActivity.instance().finish();
-            } else {
-                AssistantActivity.instance().success();
-            }
-        } else if (id == R.id.info_phone_number) {
-            if (mLinkAccount) {
-                new AlertDialog.Builder(getActivity())
-                        .setTitle(getString(R.string.phone_number_info_title))
-                        .setMessage(
-                                getString(R.string.phone_number_link_info_content)
-                                        + "\n"
-                                        + getString(
-                                                R.string
-                                                        .phone_number_link_info_content_already_account))
-                        .show();
-            } else {
-                new AlertDialog.Builder(getActivity())
-                        .setTitle(getString(R.string.phone_number_info_title))
-                        .setMessage(getString(R.string.phone_number_info_content))
-                        .show();
-            }
-        } else if (id == R.id.assistant_create) {
-            mCreateAccount.setEnabled(false);
-            if (mLinkAccount) {
-                addAlias();
-            } else {
-                if (mUseEmail.isChecked()) mAccountCreator.setPhoneNumber(null, null);
-                if (mAccountCreator.getUsername() != null
-                        && mAccountCreator.getUsername().length() > 0) {
-                    mAccountCreator.isAccountExist();
-                } else {
-                    LinphoneUtils.displayErrorAlert(
-                            LinphoneUtils.errorForUsernameStatus(
-                                    AccountCreator.UsernameStatus.TooShort),
-                            AssistantActivity.instance());
-                    mCreateAccount.setEnabled(true);
-                }
-            }
-        }
-    }
-
     private boolean isEmailCorrect(String email) {
         Pattern emailPattern = Patterns.EMAIL_ADDRESS;
         return emailPattern.matcher(email).matches();
@@ -359,6 +361,14 @@ public class CreateAccountFragment extends Fragment
 
     private boolean isPasswordCorrect(String password) {
         return password.length() >= 1;
+    }
+
+    private String getUsername() {
+        if (mUsernameEdit != null) {
+            String username = mUsernameEdit.getText().toString();
+            return username.toLowerCase(Locale.getDefault());
+        }
+        return null;
     }
 
     private void addAlias() {
@@ -757,8 +767,14 @@ public class CreateAccountFragment extends Fragment
             }
         } else {
             mCreateAccount.setEnabled(true);
-            LinphoneUtils.displayErrorAlert(
-                    LinphoneUtils.errorForStatus(status), AssistantActivity.instance());
+            if (status.equals(Status.AccountActivated)) {
+                LinphoneUtils.displayErrorAlert(
+                        getString(R.string.assistant_phone_number_unavailable),
+                        AssistantActivity.instance());
+            } else {
+                LinphoneUtils.displayErrorAlert(
+                        LinphoneUtils.errorForStatus(status), AssistantActivity.instance());
+            }
         }
     }
 
