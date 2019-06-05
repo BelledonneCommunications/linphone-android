@@ -338,7 +338,8 @@ public class CreateAccountFragment extends Fragment
                 addAlias();
             } else {
                 if (mUseEmail.isChecked()) mAccountCreator.setPhoneNumber(null, null);
-                if (getUsername().length() > 0) {
+                if (mAccountCreator.getUsername() != null
+                        && mAccountCreator.getUsername().length() > 0) {
                     mAccountCreator.isAccountExist();
                 } else {
                     LinphoneUtils.displayErrorAlert(
@@ -540,6 +541,13 @@ public class CreateAccountFragment extends Fragment
                                 mSelectCountry.setText(c.getCountry());
                             } else {
                                 mSelectCountry.setText(R.string.select_your_country);
+                            }
+                        } else {
+                            mAccountCreator.setPhoneNumber(
+                                    mAccountCreator.getPhoneNumber(),
+                                    mDialCode.getText().toString());
+                            if (!mUseUsername.isChecked()) {
+                                mAccountCreator.setUsername(mAccountCreator.getPhoneNumber());
                             }
                         }
                     }
@@ -745,7 +753,7 @@ public class CreateAccountFragment extends Fragment
                     || !getResources().getBoolean(R.bool.use_phone_number_validation)) {
                 // mAccountCreator.activateAccount(); // Resend email TODO
             } else {
-                accountCreator.recoverAccount(); // Resend SMS
+                accountCreator.createAccount();
             }
         } else {
             mCreateAccount.setEnabled(true);
