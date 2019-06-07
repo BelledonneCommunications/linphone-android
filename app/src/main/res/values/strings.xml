@@ -430,6 +430,11 @@
     <string name="pref_bandwidth_limit">Bandwidth limit in kbits/s</string>
     <string name="pref_video_codecs_title">Codecs</string>
 
+    <!-- Contact settings -->
+    <string name="pref_contact_sync">Presence informations in native contact</string>
+    <string name="pref_contact_subtitle">Inserting information shortcuts from the Linphone contact into native Android contacts</string>
+    <string name="pref_contact_title">Contact</string>
+
     <!-- Call settings -->
     <string name="pref_call_title">Call</string>
     <string name="pref_device_ringtone">Use device ringtone</string>

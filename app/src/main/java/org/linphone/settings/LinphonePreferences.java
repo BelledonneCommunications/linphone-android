@@ -429,6 +429,16 @@ public class LinphonePreferences {
     }
     // End of video settings
 
+    // Contact settings
+    public boolean isPresenceStorageInNativeAndroidContactEnabled() {
+        return getConfig().getBool("app", "store_presence_in_native_contact", false);
+    }
+
+    public void enablePresenceStorageInNativeAndroidContact(boolean enabled) {
+        getConfig().setBool("app", "store_presence_in_native_contact", enabled);
+    }
+    // End of contact settings
+
     // Call settings
     public boolean acceptIncomingEarlyMedia() {
         return getConfig().getBool("sip", "incoming_calls_early_media", false);
@@ -880,7 +890,6 @@ public class LinphonePreferences {
     }
 
     // End of tunnel settings
-
     public boolean adaptiveRateControlEnabled() {
         if (getLc() == null) return false;
         return getLc().adaptiveRateControlEnabled();
