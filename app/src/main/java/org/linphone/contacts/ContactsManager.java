@@ -426,7 +426,6 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         }
         c.close();
 
-        // SIP addresses
         projection = new String[] {ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS};
         c = resolver.query(contactUri, projection, null, null, null);
         if (c != null) {
@@ -444,11 +443,17 @@ public class ContactsManager extends ContentObserver implements FriendListListen
 
     private synchronized boolean refreshSipContact(Friend lf) {
         LinphoneContact contact = (LinphoneContact) lf.getUserData();
-
         if (contact != null) {
+
+            if (LinphoneService.instance().getResources().getBoolean(R.bool.use_linphone_tag)) {
+                // add presence to native contact
+                AsyncContactPresence asyncContactPresence = new AsyncContactPresence(contact);
+                asyncContactPresence.execute();
+            }
 
             if (!mSipContacts.contains(contact)) {
                 mSipContacts.add(contact);
+
                 return true;
             }
         }
@@ -505,7 +510,6 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         boolean updated = false;
 
         for (Friend lf : friends) {
-
             boolean newContact = refreshSipContact(lf);
 
             if (newContact) {
