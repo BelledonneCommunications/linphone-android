@@ -41,12 +41,7 @@ public class AdvancedSettingsFragment extends SettingsFragment {
     private View mRootView;
     private LinphonePreferences mPrefs;
 
-    private SwitchSetting mDebug,
-            mJavaLogger,
-            mFriendListSubscribe,
-            mBackgroundMode,
-            mStartAtBoot,
-            mDarkMode;
+    private SwitchSetting mDebug, mJavaLogger, mBackgroundMode, mStartAtBoot, mDarkMode;
     private TextSetting mRemoteProvisioningUrl, mDisplayName, mUsername, mDeviceName, mLogUploadUrl;
     private BasicSetting mAndroidAppSettings;
 
@@ -80,8 +75,6 @@ public class AdvancedSettingsFragment extends SettingsFragment {
 
         mLogUploadUrl = mRootView.findViewById(R.id.pref_log_collection_upload_server_url);
         mLogUploadUrl.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
-
-        mFriendListSubscribe = mRootView.findViewById(R.id.pref_friendlist_subscribe);
 
         mBackgroundMode = mRootView.findViewById(R.id.pref_background_mode);
 
@@ -124,14 +117,6 @@ public class AdvancedSettingsFragment extends SettingsFragment {
                     @Override
                     public void onTextValueChanged(String newValue) {
                         mPrefs.setLogCollectionUploadServerUrl(newValue);
-                    }
-                });
-
-        mFriendListSubscribe.setListener(
-                new SettingListenerBase() {
-                    @Override
-                    public void onBoolValueChanged(boolean newValue) {
-                        mPrefs.enabledFriendlistSubscription(newValue);
                     }
                 });
 
@@ -218,8 +203,6 @@ public class AdvancedSettingsFragment extends SettingsFragment {
         mJavaLogger.setChecked(mPrefs.useJavaLogger());
 
         mLogUploadUrl.setValue(mPrefs.getLogCollectionUploadServerUrl());
-
-        mFriendListSubscribe.setChecked(mPrefs.isFriendlistsubscriptionEnabled());
 
         mBackgroundMode.setChecked(mPrefs.getServiceNotificationVisibility());
 
