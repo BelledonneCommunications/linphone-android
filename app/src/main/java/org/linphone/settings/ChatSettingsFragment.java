@@ -40,7 +40,6 @@ import org.linphone.settings.widget.TextSetting;
 public class ChatSettingsFragment extends SettingsFragment {
     private View mRootView;
     private LinphonePreferences mPrefs;
-
     private TextSetting mSharingServer, mMaxSizeForAutoDownloadIncomingFiles;
     private BasicSetting mAndroidNotificationSettings;
     private ListSetting mAutoDownloadIncomingFilesPolicy;

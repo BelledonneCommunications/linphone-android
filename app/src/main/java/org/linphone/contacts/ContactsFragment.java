@@ -288,7 +288,6 @@ public class ContactsFragment extends Fragment
         mContactAdapter = new ContactsAdapter(mContext, listContact, this, mSelectionHelper);
         mContactAdapter.setIsSearchMode(true);
 
-        //		mContactsList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         mSelectionHelper.setAdapter(mContactAdapter);
         if (isEditionEnabled) {
             mSelectionHelper.enterEditionMode();

@@ -50,6 +50,7 @@ import org.linphone.call.CallManager;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.core.AccountCreator;
 import org.linphone.core.AccountCreatorListenerStub;
+import org.linphone.core.BuildConfig;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
 import org.linphone.core.ConfiguringState;

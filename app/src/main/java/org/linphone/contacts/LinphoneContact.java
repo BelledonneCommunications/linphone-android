@@ -209,22 +209,28 @@ public class LinphoneContact extends AndroidContact
 
     private synchronized void addNumberOrAddress(LinphoneNumberOrAddress noa) {
         if (noa == null) return;
-        if (noa.isSIPAddress()) {
-            mHasSipAddress = true;
+
+        boolean found = false;
+        // Check for duplicated phone numbers but with different formats
+        for (LinphoneNumberOrAddress number : mAddresses) {
+            if ((!noa.isSIPAddress()
+                            && !number.isSIPAddress()
+                            && noa.getNormalizedPhone().equals(number.getNormalizedPhone()))
+                    || (noa.isSIPAddress()
+                            && !number.isSIPAddress()
+                            && noa.getValue().equals(number.getNormalizedPhone()))
+                    || (number.getValue().equals(noa.getNormalizedPhone())
+                            || !number.isSIPAddress())) {
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            if (noa.isSIPAddress()) {
+                mHasSipAddress = true;
+            }
             mAddresses.add(noa);
-        } else {
-            boolean found = false;
-            // Check for duplicated phone numbers but with different formats
-            for (LinphoneNumberOrAddress number : mAddresses) {
-                if (!number.isSIPAddress()
-                        && noa.getNormalizedPhone().equals(number.getNormalizedPhone())) {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                mAddresses.add(noa);
-            }
         }
     }
 
@@ -541,7 +547,6 @@ public class LinphoneContact extends AndroidContact
                 || LinphoneService.instance()
                         .getString(R.string.linphone_address_mime_type)
                         .equals(mime)) {
-
             addNumberOrAddress(new LinphoneNumberOrAddress(data1, true));
         } else if (ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE.equals(mime)) {
             setOrganization(data1, false);

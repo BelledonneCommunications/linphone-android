@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import org.linphone.R;
+import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.SelectableAdapter;
 import org.linphone.utils.SelectableHelper;
 import org.linphone.views.ContactAvatar;
@@ -87,8 +88,7 @@ public class ContactsAdapter extends SelectableAdapter<ContactViewHolder>
 
         ContactAvatar.displayAvatar(contact, holder.avatarLayout);
 
-        boolean isOrgVisible =
-                mContext.getResources().getBoolean(R.bool.display_contact_organization);
+        boolean isOrgVisible = LinphonePreferences.instance().isDisplayContactOrganization();
         String org = contact.getOrganization();
         if (org != null && !org.isEmpty() && isOrgVisible) {
             holder.organization.setText(org);
