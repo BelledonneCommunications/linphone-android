@@ -544,6 +544,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
                     || permissions[i].equals(Manifest.permission.WRITE_CONTACTS)) {
                 if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                     ContactsManager.getInstance().enableContactsAccess();
+                    ContactsManager.getInstance().initializeContactManager();
                 }
             } else if (permissions[i].equals(Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 boolean enableRingtone = grantResults[i] == PackageManager.PERMISSION_GRANTED;
