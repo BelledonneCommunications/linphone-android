@@ -172,11 +172,13 @@ public class ContactEditorFragment extends Fragment {
                                 }
 
                                 if (noa.isSIPAddress()) {
+
                                     noa.setValue(
                                             LinphoneUtils.getFullAddressFromUsername(
                                                     noa.getValue()));
                                 }
                                 Log.i("[Contact Editor] Adding new number " + noa.getValue());
+
                                 mContact.addOrUpdateNumberOrAddress(noa);
                             }
                         }
