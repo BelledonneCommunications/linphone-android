@@ -426,7 +426,6 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         }
         c.close();
 
-        // SIP addresses
         projection = new String[] {ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS};
         c = resolver.query(contactUri, projection, null, null, null);
         if (c != null) {
@@ -444,11 +443,15 @@ public class ContactsManager extends ContentObserver implements FriendListListen
 
     private synchronized boolean refreshSipContact(Friend lf) {
         LinphoneContact contact = (LinphoneContact) lf.getUserData();
-
         if (contact != null) {
+
+            // add presence to native contact
+            AsyncContactPresence asyncContactPresence = new AsyncContactPresence(contact);
+            asyncContactPresence.execute();
 
             if (!mSipContacts.contains(contact)) {
                 mSipContacts.add(contact);
+
                 return true;
             }
         }
@@ -503,24 +506,25 @@ public class ContactsManager extends ContentObserver implements FriendListListen
     @Override
     public void onPresenceReceived(FriendList list, Friend[] friends) {
         boolean updated = false;
+        if (LinphoneService.instance().getResources().getBoolean(R.bool.use_linphone_tag)) {
 
-        for (Friend lf : friends) {
+            for (Friend lf : friends) {
+                boolean newContact = refreshSipContact(lf);
 
-            boolean newContact = refreshSipContact(lf);
-
-            if (newContact) {
-                updated = true;
+                if (newContact) {
+                    updated = true;
+                }
             }
-        }
 
-        if (updated) {
-            Collections.sort(mSipContacts);
-        }
+            if (updated) {
+                Collections.sort(mSipContacts);
+            }
 
-        for (ContactsUpdatedListener listener : mContactsUpdatedListeners) {
-            listener.onContactsUpdated();
-        }
+            for (ContactsUpdatedListener listener : mContactsUpdatedListeners) {
+                listener.onContactsUpdated();
+            }
 
-        Compatibility.updateShortcuts(mContext);
+            Compatibility.updateShortcuts(mContext);
+        }
     }
 }
