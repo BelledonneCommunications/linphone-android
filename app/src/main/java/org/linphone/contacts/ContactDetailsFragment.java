@@ -202,7 +202,7 @@ public class ContactDetailsFragment extends Fragment implements ContactsUpdatedL
         if (mContact == null) return;
         ContactAvatar.displayAvatar(mContact, view.findViewById(R.id.avatar_layout));
 
-        boolean isOrgVisible = getResources().getBoolean(R.bool.display_contact_organization);
+        boolean isOrgVisible = LinphonePreferences.instance().isDisplayContactOrganization();
         if (mContact != null
                 && mContact.getOrganization() != null
                 && !mContact.getOrganization().isEmpty()
