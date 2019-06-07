@@ -150,7 +150,6 @@ public class ContactsActivity extends MainActivity {
             }
         } else if (extras.containsKey("Contact")) {
             LinphoneContact contact = (LinphoneContact) extras.get("Contact");
-
             if (extras.containsKey("Edit")) {
                 showContactEdit(contact, extras, isTablet());
             } else {
