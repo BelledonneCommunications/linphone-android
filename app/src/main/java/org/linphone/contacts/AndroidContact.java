@@ -34,13 +34,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import org.linphone.LinphoneService;
 import org.linphone.R;
+import org.linphone.core.PresenceBasicStatus;
+import org.linphone.core.PresenceModel;
 import org.linphone.core.tools.Log;
 
 class AndroidContact implements Serializable {
     String mAndroidId;
     private String mAndroidRawId;
     private boolean isAndroidRawIdLinphone;
-
     private final transient ArrayList<ContentProviderOperation> mChangesToCommit;
 
     AndroidContact() {
@@ -128,6 +129,7 @@ class AndroidContact implements Serializable {
                                     RawContacts.AGGREGATION_MODE_DEFAULT)
                             .build());
             isAndroidRawIdLinphone = true;
+
         } else {
             Log.i("[Contact] Creating contact using default account type");
             addChangesToCommit(
@@ -206,6 +208,76 @@ class AndroidContact implements Serializable {
                                     ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME, ln)
                             .build());
         }
+    }
+
+    public void updateNativeContactWithPresenceInfo(LinphoneContact contact) {
+        // creation of the raw contact with the presence information (tablet)
+        createRawLinphoneContactFromExistingAndroidContactIfNeeded();
+        for (LinphoneNumberOrAddress noa : contact.getNumbersOrAddresses()) {
+            // Recuperation des LinphoneNumberOrAdress
+            String value = noa.getValue();
+            if (value == null || value.isEmpty()) {
+                return;
+            }
+
+            //  Test presence of the value
+            PresenceModel pm = contact.getFriend().getPresenceModelForUriOrTel(value);
+            // If presence is not null
+            if (pm != null && pm.getBasicStatus().equals(PresenceBasicStatus.Open)) {
+                Boolean action = hasLinphoneAdresseMimeType();
+                // do the action on the contact only once if it has not been done
+                if (action) {
+                    if (!noa.isSIPAddress()) {
+                        addChangesToCommit(
+                                ContentProviderOperation.newInsert(Data.CONTENT_URI)
+                                        .withValue(
+                                                ContactsContract.Data.RAW_CONTACT_ID, mAndroidRawId)
+                                        .withValue(
+                                                Data.MIMETYPE,
+                                                ContactsManager.getInstance()
+                                                        .getString(
+                                                                R.string
+                                                                        .linphone_address_mime_type))
+                                        .withValue("data1", value) // phone number
+                                        .withValue(
+                                                "data2",
+                                                ContactsManager.getInstance()
+                                                        .getString(R.string.app_name)) // Summary
+                                        .withValue("data3", value) // Detail
+                                        .build());
+                        saveChangesCommited();
+                    }
+                }
+            }
+        }
+    }
+
+    private Boolean hasLinphoneAdresseMimeType() {
+        Boolean action = true;
+
+        ContentResolver resolver = LinphoneService.instance().getContentResolver();
+        String[] projection = {"data1", "data3"};
+        String selection =
+                ContactsContract.Data.RAW_CONTACT_ID + "= ? AND " + Data.MIMETYPE + "= ?";
+
+        Cursor c =
+                resolver.query(
+                        ContactsContract.Data.CONTENT_URI,
+                        projection,
+                        selection,
+                        new String[] {
+                            mAndroidRawId,
+                            ContactsManager.getInstance()
+                                    .getString(R.string.linphone_address_mime_type)
+                        },
+                        null);
+        if (c != null) {
+            if (c.moveToFirst()) {
+                action = false;
+            }
+            c.close();
+        }
+        return action;
     }
 
     void addNumberOrAddress(String value, String oldValueToReplace, boolean isSIP) {
