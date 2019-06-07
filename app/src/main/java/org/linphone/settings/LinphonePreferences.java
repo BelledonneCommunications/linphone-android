@@ -233,19 +233,6 @@ public class LinphonePreferences {
         return (proxyConf != null) ? proxyConf.getDomain() : "";
     }
 
-    public boolean isFriendlistsubscriptionEnabled() {
-        if (getConfig().getBool("app", "friendlist_subscription_enabled", false)) {
-            // Old setting, do migration
-            getConfig().setBool("app", "friendlist_subscription_enabled", false);
-            enabledFriendlistSubscription(true);
-        }
-        return getLc().isFriendListSubscriptionEnabled();
-    }
-
-    public void enabledFriendlistSubscription(boolean enabled) {
-        getLc().enableFriendListSubscription(enabled);
-    }
-
     public int getDefaultAccountIndex() {
         if (getLc() == null) return -1;
         ProxyConfig defaultPrxCfg = getLc().getDefaultProxyConfig();
@@ -428,6 +415,41 @@ public class LinphonePreferences {
         getLc().setDownloadBandwidth(bandwidth);
     }
     // End of video settings
+
+    // Contact settings
+    public boolean isFriendlistsubscriptionEnabled() {
+        if (getConfig().getBool("app", "friendlist_subscription_enabled", false)) {
+            // Old setting, do migration
+            getConfig().setBool("app", "friendlist_subscription_enabled", false);
+            enabledFriendlistSubscription(true);
+        }
+        return getLc().isFriendListSubscriptionEnabled();
+    }
+
+    public void enabledFriendlistSubscription(boolean enabled) {
+        getLc().enableFriendListSubscription(enabled);
+    }
+
+    public boolean isPresenceStorageInNativeAndroidContactEnabled() {
+        return getConfig().getBool("app", "store_presence_in_native_contact", false);
+    }
+
+    public void enabledPresenceStorageInNativeAndroidContact(boolean enabled) {
+        getConfig().setBool("app", "store_presence_in_native_contact", enabled);
+    }
+
+    public boolean isDisplayContactOrganization() {
+        return getConfig()
+                .getBool(
+                        "app",
+                        "display_contact_organization",
+                        mContext.getResources().getBoolean(R.bool.display_contact_organization));
+    }
+
+    public void enabledDisplayContactOrganization(boolean enabled) {
+        getConfig().setBool("app", "display_contact_organization", enabled);
+    }
+    // End of contact settings
 
     // Call settings
     public boolean acceptIncomingEarlyMedia() {
@@ -880,7 +902,6 @@ public class LinphonePreferences {
     }
 
     // End of tunnel settings
-
     public boolean adaptiveRateControlEnabled() {
         if (getLc() == null) return false;
         return getLc().adaptiveRateControlEnabled();
