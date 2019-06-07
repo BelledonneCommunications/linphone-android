@@ -55,6 +55,7 @@ import java.util.List;
 import org.linphone.R;
 import org.linphone.core.tools.Log;
 import org.linphone.mediastream.Version;
+import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.FileUtils;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.views.ContactAvatar;
@@ -172,11 +173,13 @@ public class ContactEditorFragment extends Fragment {
                                 }
 
                                 if (noa.isSIPAddress()) {
+
                                     noa.setValue(
                                             LinphoneUtils.getFullAddressFromUsername(
                                                     noa.getValue()));
                                 }
                                 Log.i("[Contact Editor] Adding new number " + noa.getValue());
+
                                 mContact.addOrUpdateNumberOrAddress(noa);
                             }
                         }
@@ -413,7 +416,7 @@ public class ContactEditorFragment extends Fragment {
     }
 
     private void displayContact() {
-        boolean isOrgVisible = getResources().getBoolean(R.bool.display_contact_organization);
+        boolean isOrgVisible = LinphonePreferences.instance().isDisplayContactOrganization();
         if (!isOrgVisible) {
             mOrganization.setVisibility(View.GONE);
             mView.findViewById(R.id.contactOrganizationTitle).setVisibility(View.GONE);
