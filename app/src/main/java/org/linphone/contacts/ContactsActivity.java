@@ -48,27 +48,18 @@ public class ContactsActivity extends MainActivity {
         super.onStart();
 
         Fragment currentFragment = getFragmentManager().findFragmentById(R.id.fragmentContainer);
-
         if (currentFragment == null) {
+            showContactsList();
+
             if (getIntent() != null && getIntent().getExtras() != null) {
                 Bundle extras = getIntent().getExtras();
-                if (isTablet() || !extras.containsKey("Contact")) {
-                    showContactsList();
-                }
                 handleIntentExtras(extras);
-
             } else if (getIntent() != null && getIntent().getData() != null) {
                 Uri uri = getIntent().getData();
-
-                if (isTablet()) {
-                    showContactsList();
-                }
                 Bundle bundle = new Bundle();
-                bundle.putString("uri", uri.toString());
+                bundle.putString("ContactUri", uri.toString());
                 handleIntentExtras(bundle);
-
             } else {
-                showContactsList();
                 if (isTablet()) {
                     showEmptyChildFragment();
                 }
@@ -91,7 +82,7 @@ public class ContactsActivity extends MainActivity {
         }
 
         if (intent.getData() != null) {
-            bundle.putString("uri", intent.getDataString());
+            bundle.putString("ContactUri", intent.getDataString());
         }
 
         handleIntentExtras(bundle);
@@ -134,27 +125,28 @@ public class ContactsActivity extends MainActivity {
     private void handleIntentExtras(Bundle extras) {
         if (extras == null) return;
 
-        if (isTablet()) {
+        Fragment currentFragment = getFragmentManager().findFragmentById(R.id.fragmentContainer);
+        if (currentFragment == null || !(currentFragment instanceof ContactsFragment)) {
             showContactsList();
         }
 
-        if (extras.containsKey("uri")) {
-            String uri = extras.getString("uri");
+        if (extras.containsKey("ContactUri")) {
+            String uri = extras.getString("ContactUri");
             Uri contactUri = Uri.parse(uri);
             String id = ContactsManager.getInstance().getAndroidContactIdFromUri(contactUri);
 
             LinphoneContact linphoneContact =
                     ContactsManager.getInstance().findContactFromAndroidId(id);
             if (linphoneContact != null) {
-                showContactDetails(linphoneContact, isTablet());
+                showContactDetails(linphoneContact);
             }
         } else if (extras.containsKey("Contact")) {
             LinphoneContact contact = (LinphoneContact) extras.get("Contact");
 
             if (extras.containsKey("Edit")) {
-                showContactEdit(contact, extras, isTablet());
+                showContactEdit(contact, extras, true);
             } else {
-                showContactDetails(contact, isTablet());
+                showContactDetails(contact);
             }
         } else if (extras.containsKey("CreateOrEdit")) {
             mEditOnClick = extras.getBoolean("CreateOrEdit");
