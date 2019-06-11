@@ -79,7 +79,7 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
     protected void onResume() {
         super.onResume();
 
-        launchQrcodeReader();
+        enableQrcodeReader(true);
     }
 
     @Override
@@ -93,6 +93,7 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
         Core core = LinphoneManager.getCore();
         if (core == null) return;
 
+        core.setNativePreviewWindowId(enable ? mQrcodeView : null);
         core.enableQrcodeVideoPreview(enable);
         core.enableVideoPreview(enable);
 
@@ -121,13 +122,5 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
             return;
         }
         core.setVideoDevice(newDevice);
-    }
-
-    private void launchQrcodeReader() {
-        Core core = LinphoneManager.getCore();
-        if (core == null) return;
-
-        core.setNativePreviewWindowId(mQrcodeView);
-        enableQrcodeReader(true);
     }
 }
