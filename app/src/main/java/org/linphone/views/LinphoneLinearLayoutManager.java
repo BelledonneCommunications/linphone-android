@@ -21,6 +21,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import android.content.Context;
 import android.util.AttributeSet;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import org.linphone.core.tools.Log;
 
 /* https://stackoverflow.com/questions/30220771/recyclerview-inconsistency-detected-invalid-item-position */
 public class LinphoneLinearLayoutManager extends LinearLayoutManager {
@@ -45,5 +47,14 @@ public class LinphoneLinearLayoutManager extends LinearLayoutManager {
     public LinphoneLinearLayoutManager(
             Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+    }
+
+    @Override
+    public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
+        try {
+            super.onLayoutChildren(recycler, state);
+        } catch (IndexOutOfBoundsException e) {
+            Log.w("[LinearLayoutManager] Index out of bounds exception successfully catched...");
+        }
     }
 }

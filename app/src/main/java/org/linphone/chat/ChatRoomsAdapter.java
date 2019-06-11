@@ -23,6 +23,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.recyclerview.widget.DiffUtil;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -74,14 +75,15 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomViewHolder> {
 
     public void refresh() {
         ChatRoom[] rooms = LinphoneManager.getCore().getChatRooms();
+        List<ChatRoom> roomsList;
         if (mContext.getResources().getBoolean(R.bool.hide_empty_one_to_one_chat_rooms)) {
-            mRooms = LinphoneUtils.removeEmptyOneToOneChatRooms(rooms);
+            roomsList = LinphoneUtils.removeEmptyOneToOneChatRooms(rooms);
         } else {
-            mRooms = Arrays.asList(rooms);
+            roomsList = Arrays.asList(rooms);
         }
 
         Collections.sort(
-                mRooms,
+                roomsList,
                 new Comparator<ChatRoom>() {
                     public int compare(ChatRoom cr1, ChatRoom cr2) {
                         long timeDiff = cr1.getLastUpdateTime() - cr2.getLastUpdateTime();
@@ -91,7 +93,10 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomViewHolder> {
                     }
                 });
 
-        notifyDataSetChanged();
+        DiffUtil.DiffResult diffResult =
+                DiffUtil.calculateDiff(new ChatRoomDiffCallback(roomsList, mRooms));
+        diffResult.dispatchUpdatesTo(this);
+        mRooms = roomsList;
     }
 
     public void clear() {
@@ -113,5 +118,38 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomViewHolder> {
     @Override
     public long getItemId(int position) {
         return position;
+    }
+
+    class ChatRoomDiffCallback extends DiffUtil.Callback {
+        List<ChatRoom> oldChatRooms;
+        List<ChatRoom> newChatRooms;
+
+        public ChatRoomDiffCallback(List<ChatRoom> newRooms, List<ChatRoom> oldRooms) {
+            oldChatRooms = oldRooms;
+            newChatRooms = newRooms;
+        }
+
+        @Override
+        public int getOldListSize() {
+            return oldChatRooms.size();
+        }
+
+        @Override
+        public int getNewListSize() {
+            return newChatRooms.size();
+        }
+
+        @Override
+        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+            ChatRoom oldRoom = oldChatRooms.get(oldItemPosition);
+            ChatRoom newRoom = newChatRooms.get(newItemPosition);
+            return oldRoom.getLocalAddress().weakEqual(newRoom.getLocalAddress())
+                    && oldRoom.getPeerAddress().weakEqual(newRoom.getPeerAddress());
+        }
+
+        @Override
+        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+            return oldChatRooms.get(oldItemPosition).equals(newChatRooms.get(newItemPosition));
+        }
     }
 }
