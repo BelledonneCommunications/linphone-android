@@ -51,24 +51,18 @@ public class ChatActivity extends MainActivity {
 
         Fragment currentFragment = getFragmentManager().findFragmentById(R.id.fragmentContainer);
         if (currentFragment == null) {
-            if (getIntent() != null && getIntent().getExtras() != null) {
-                Bundle extras = getIntent().getExtras();
-                if (isTablet() || !extras.containsKey("RemoteSipUri")) {
-                    showChatRooms();
-                }
+            showChatRooms();
 
-                handleRemoteSipUriInIntentExtras(extras);
+            if (getIntent() != null && getIntent().getExtras() != null) {
+                handleIntentExtras(getIntent());
                 // Remove the SIP Uri from the intent so a click on chat button will go back to list
                 getIntent().removeExtra("RemoteSipUri");
             } else {
-                showChatRooms();
                 if (isTablet()) {
                     showEmptyChildFragment();
                 }
             }
         }
-
-        handleIntentExtras(getIntent());
     }
 
     @Override
@@ -123,6 +117,11 @@ public class ChatActivity extends MainActivity {
     private void handleIntentExtras(Intent intent) {
         if (intent == null) return;
 
+        Fragment currentFragment = getFragmentManager().findFragmentById(R.id.fragmentContainer);
+        if (currentFragment == null || !(currentFragment instanceof ChatRoomsFragment)) {
+            showChatRooms();
+        }
+
         String sharedText = null;
         String sharedFiles = null;
 
@@ -152,13 +151,6 @@ public class ChatActivity extends MainActivity {
             if (intent.getExtras() != null) {
                 Bundle extras = intent.getExtras();
                 handleRemoteSipUriInIntentExtras(extras);
-            } else {
-                // If there is no extras, make sure the chat rooms list fragment is displayed
-                Fragment currentFragment =
-                        getFragmentManager().findFragmentById(R.id.fragmentContainer);
-                if (currentFragment == null || !(currentFragment instanceof ChatRoomsFragment)) {
-                    showChatRooms();
-                }
             }
         }
 
@@ -193,7 +185,7 @@ public class ChatActivity extends MainActivity {
                 remoteAddress = Factory.instance().createAddress(remoteSipUri);
             }
             // Don't make it a child on smartphones to have a working back button
-            showChatRoom(localAddress, remoteAddress, isTablet());
+            showChatRoom(localAddress, remoteAddress);
         }
     }
 
