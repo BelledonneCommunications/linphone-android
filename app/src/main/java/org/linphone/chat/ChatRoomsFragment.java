@@ -267,7 +267,7 @@ public class ChatRoomsFragment extends Fragment
     public void onContactsUpdated() {
         ChatRoomsAdapter adapter = (ChatRoomsAdapter) mChatRoomsList.getAdapter();
         if (adapter != null) {
-            adapter.notifyDataSetChanged();
+            adapter.refresh();
         }
     }
 
