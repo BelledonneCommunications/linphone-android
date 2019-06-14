@@ -37,6 +37,12 @@
             linphone:title="@string/pref_media_encryption" />
 
         <org.linphone.settings.widget.SwitchSetting
+            android:id="@+id/pref_media_encryption_mandatory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            linphone:title="@string/pref_media_encryption_mandatory_title" />
+
+        <org.linphone.settings.widget.SwitchSetting
             android:id="@+id/pref_sipinfo_dtmf"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

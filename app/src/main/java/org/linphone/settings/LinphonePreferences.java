@@ -452,6 +452,14 @@ public class LinphonePreferences {
     // End of contact settings
 
     // Call settings
+    public boolean acceptMediaEncryptionMandatory() {
+        return getLc().isMediaEncryptionMandatory();
+    }
+
+    public void setMediaEncryptionMandatory(boolean accept) {
+        getLc().setMediaEncryptionMandatory(accept);
+    }
+
     public boolean acceptIncomingEarlyMedia() {
         return getConfig().getBool("sip", "incoming_calls_early_media", false);
     }
