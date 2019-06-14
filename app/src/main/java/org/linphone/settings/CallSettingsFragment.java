@@ -47,6 +47,7 @@ public class CallSettingsFragment extends SettingsFragment {
     private LinphonePreferences mPrefs;
 
     private SwitchSetting mDeviceRingtone,
+            mMediaEncryptionMandatory,
             mVibrateIncomingCall,
             mDtmfSipInfo,
             mDtmfRfc2833,
@@ -100,6 +101,8 @@ public class CallSettingsFragment extends SettingsFragment {
 
         mDndPermissionSettings =
                 mRootView.findViewById(R.id.pref_grant_read_dnd_settings_permission);
+
+        mMediaEncryptionMandatory = mRootView.findViewById(R.id.pref_media_encryption_mandatory);
     }
 
     private void setListeners() {
@@ -212,6 +215,14 @@ public class CallSettingsFragment extends SettingsFragment {
                                 new Intent("android.settings.NOTIFICATION_POLICY_ACCESS_SETTINGS"));
                     }
                 });
+
+        mMediaEncryptionMandatory.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onBoolValueChanged(boolean newValue) {
+                        mPrefs.setMediaEncryptionMandatory(newValue);
+                    }
+                });
     }
 
     private void updateValues() {
@@ -236,6 +247,8 @@ public class CallSettingsFragment extends SettingsFragment {
 
         mDndPermissionSettings.setVisibility(
                 Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60) ? View.VISIBLE : View.GONE);
+
+        mMediaEncryptionMandatory.setChecked(mPrefs.acceptMediaEncryptionMandatory());
 
         setListeners();
     }
