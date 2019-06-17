@@ -23,12 +23,14 @@ import android.Manifest;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.asynclayoutinflater.view.AsyncLayoutInflater;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.linphone.LinphoneManager;
@@ -55,6 +57,7 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
 
     private boolean mIsTransfer;
     private CoreListenerStub mListener;
+    private boolean mInterfaceLoaded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,60 +66,30 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
             return;
         }
 
+        mInterfaceLoaded = false;
         // Uses the fragment container layout to inflate the dialer view instead of using a fragment
-        View dialerView = LayoutInflater.from(this).inflate(R.layout.dialer, null, false);
-        LinearLayout fragmentContainer = findViewById(R.id.fragmentContainer);
-        LinearLayout.LayoutParams params =
-                new LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        fragmentContainer.addView(dialerView, params);
+        new AsyncLayoutInflater(this)
+                .inflate(
+                        R.layout.dialer,
+                        null,
+                        new AsyncLayoutInflater.OnInflateFinishedListener() {
+                            @Override
+                            public void onInflateFinished(
+                                    @NonNull View view, int resid, @Nullable ViewGroup parent) {
+                                LinearLayout fragmentContainer =
+                                        findViewById(R.id.fragmentContainer);
+                                LinearLayout.LayoutParams params =
+                                        new LinearLayout.LayoutParams(
+                                                ViewGroup.LayoutParams.MATCH_PARENT,
+                                                ViewGroup.LayoutParams.MATCH_PARENT);
+                                fragmentContainer.addView(view, params);
+                                initUI(view);
+                                mInterfaceLoaded = true;
+                            }
+                        });
 
         if (isTablet()) {
             findViewById(R.id.fragmentContainer2).setVisibility(View.GONE);
-        }
-
-        mAddress = findViewById(R.id.address);
-        mAddress.setAddressListener(this);
-
-        EraseButton erase = findViewById(R.id.erase);
-        erase.setAddressWidget(mAddress);
-
-        mStartCall = findViewById(R.id.start_call);
-        mStartCall.setAddressWidget(mAddress);
-
-        mAddCall = findViewById(R.id.add_call);
-        mAddCall.setAddressWidget(mAddress);
-
-        mTransferCall = findViewById(R.id.transfer_call);
-        mTransferCall.setAddressWidget(mAddress);
-        mTransferCall.setIsTransfer(true);
-
-        mAddContact = findViewById(R.id.add_contact);
-        mAddContact.setEnabled(false);
-        mAddContact.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(DialerActivity.this, ContactsActivity.class);
-                        intent.putExtra("EditOnClick", true);
-                        intent.putExtra("SipAddress", mAddress.getText().toString());
-                        startActivity(intent);
-                    }
-                });
-
-        mBackToCall = findViewById(R.id.back_to_call);
-        mBackToCall.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startActivity(new Intent(DialerActivity.this, CallActivity.class));
-                    }
-                });
-
-        mIsTransfer = false;
-        if (getIntent() != null) {
-            mIsTransfer = getIntent().getBooleanExtra("Transfer", false);
-            mAddress.setText(getIntent().getStringExtra("SipUri"));
         }
 
         mListener =
@@ -139,7 +112,6 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
                     Manifest.permission.READ_CONTACTS
                 };
 
-        setUpNumpad(dialerView);
         handleIntentParams(getIntent());
     }
 
@@ -160,8 +132,10 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
             core.addListener(mListener);
         }
 
-        updateLayout();
-        enableVideoPreviewIfTablet(true);
+        if (mInterfaceLoaded) {
+            updateLayout();
+            enableVideoPreviewIfTablet(true);
+        }
     }
 
     @Override
@@ -173,6 +147,56 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
         }
 
         super.onPause();
+    }
+
+    private void initUI(View view) {
+        mAddress = view.findViewById(R.id.address);
+        mAddress.setAddressListener(this);
+
+        EraseButton erase = view.findViewById(R.id.erase);
+        erase.setAddressWidget(mAddress);
+
+        mStartCall = view.findViewById(R.id.start_call);
+        mStartCall.setAddressWidget(mAddress);
+
+        mAddCall = view.findViewById(R.id.add_call);
+        mAddCall.setAddressWidget(mAddress);
+
+        mTransferCall = view.findViewById(R.id.transfer_call);
+        mTransferCall.setAddressWidget(mAddress);
+        mTransferCall.setIsTransfer(true);
+
+        mAddContact = view.findViewById(R.id.add_contact);
+        mAddContact.setEnabled(false);
+        mAddContact.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(DialerActivity.this, ContactsActivity.class);
+                        intent.putExtra("EditOnClick", true);
+                        intent.putExtra("SipAddress", mAddress.getText().toString());
+                        startActivity(intent);
+                    }
+                });
+
+        mBackToCall = view.findViewById(R.id.back_to_call);
+        mBackToCall.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(DialerActivity.this, CallActivity.class));
+                    }
+                });
+
+        mIsTransfer = false;
+        if (getIntent() != null) {
+            mIsTransfer = getIntent().getBooleanExtra("Transfer", false);
+            mAddress.setText(getIntent().getStringExtra("SipUri"));
+        }
+
+        setUpNumpad(view);
+        updateLayout();
+        enableVideoPreviewIfTablet(true);
     }
 
     private void enableVideoPreviewIfTablet(boolean enable) {
