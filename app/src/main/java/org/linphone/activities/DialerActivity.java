@@ -21,7 +21,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.Manifest;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -30,6 +29,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import java.util.ArrayList;
+import java.util.Collection;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.call.CallActivity;
@@ -40,15 +41,14 @@ import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
-import org.linphone.views.AddressAware;
 import org.linphone.views.AddressText;
 import org.linphone.views.CallButton;
+import org.linphone.views.Digit;
 import org.linphone.views.EraseButton;
 
 public class DialerActivity extends MainActivity implements AddressText.AddressChangedListener {
     private static final String ACTION_CALL_LINPHONE = "org.linphone.intent.action.CallLaunched";
 
-    private AddressAware mNumpad;
     private AddressText mAddress;
     private CallButton mStartCall, mAddCall, mTransferCall;
     private ImageView mAddContact, mBackToCall;
@@ -90,11 +90,6 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
         mTransferCall = findViewById(R.id.transfer_call);
         mTransferCall.setAddressWidget(mAddress);
         mTransferCall.setIsTransfer(true);
-
-        mNumpad = findViewById(R.id.numpad);
-        if (mNumpad != null) {
-            mNumpad.setAddressWidget(mAddress);
-        }
 
         mAddContact = findViewById(R.id.add_contact);
         mAddContact.setEnabled(false);
@@ -144,6 +139,7 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
                     Manifest.permission.READ_CONTACTS
                 };
 
+        setUpNumpad(dialerView);
         handleIntentParams(getIntent());
     }
 
@@ -162,15 +158,6 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
         Core core = LinphoneManager.getCore();
         if (core != null) {
             core.addListener(mListener);
-        }
-
-        boolean isOrientationLandscape =
-                getResources().getConfiguration().orientation
-                        == Configuration.ORIENTATION_LANDSCAPE;
-        if (isOrientationLandscape && !isTablet()) {
-            ((LinearLayout) mNumpad).setVisibility(View.GONE);
-        } else {
-            ((LinearLayout) mNumpad).setVisibility(View.VISIBLE);
         }
 
         updateLayout();
@@ -295,5 +282,25 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
         if (addressToCall != null) {
             mAddress.setText(addressToCall);
         }
+    }
+
+    private void setUpNumpad(View view) {
+        if (view == null) return;
+        for (Digit v : retrieveChildren((ViewGroup) view, Digit.class)) {
+            v.setAddressWidget(mAddress);
+        }
+    }
+
+    private <T> Collection<T> retrieveChildren(ViewGroup viewGroup, Class<T> clazz) {
+        final Collection<T> views = new ArrayList<>();
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
+            View v = viewGroup.getChildAt(i);
+            if (v instanceof ViewGroup) {
+                views.addAll(retrieveChildren((ViewGroup) v, clazz));
+            } else {
+                if (clazz.isInstance(v)) views.add(clazz.cast(v));
+            }
+        }
+        return views;
     }
 }

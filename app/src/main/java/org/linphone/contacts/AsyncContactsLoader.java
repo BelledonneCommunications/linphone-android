@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.compatibility.Compatibility;
 import org.linphone.core.Core;
 import org.linphone.core.Friend;
 import org.linphone.core.FriendList;
@@ -253,7 +254,9 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
                 ContactsManager.getInstance().getContactsListeners()) {
             listener.onContactsUpdated();
         }
+
         Log.i("[Contacts Manager] Synchronization finished");
+        Compatibility.updateShortcuts(mContext);
     }
 
     class AsyncContactsData {

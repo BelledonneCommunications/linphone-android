@@ -215,7 +215,9 @@ public final class LinphoneService extends Service {
         }
         mContactsManager.initializeContactManager();
 
-        Compatibility.createChatShortcuts(this);
+        if (!isPush) {
+            Compatibility.createChatShortcuts(this);
+        }
 
         return START_STICKY;
     }
