@@ -441,11 +441,13 @@ public class LinphoneManager implements SensorEventListener {
                                     mPrefs.getLinphoneFactoryConfig(),
                                     mContext);
             mCore.addListener(mCoreListener);
+
             if (isPush) {
                 Log.w(
                         "[Manager] We are here because of a received push notification, enter background mode before starting the Core");
                 mCore.enterBackground();
             }
+
             mCore.start();
             TimerTask lTask =
                     new TimerTask() {

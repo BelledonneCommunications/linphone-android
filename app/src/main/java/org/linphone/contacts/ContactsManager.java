@@ -443,8 +443,8 @@ public class ContactsManager extends ContentObserver implements FriendListListen
 
     private synchronized boolean refreshSipContact(Friend lf) {
         LinphoneContact contact = (LinphoneContact) lf.getUserData();
-        if (contact != null) {
 
+        if (contact != null) {
             if (LinphoneService.instance().getResources().getBoolean(R.bool.use_linphone_tag)) {
                 // Inserting Linphone information in Android contact if the parameter is enabled
                 if (LinphonePreferences.instance()
@@ -457,10 +457,10 @@ public class ContactsManager extends ContentObserver implements FriendListListen
 
             if (!mSipContacts.contains(contact)) {
                 mSipContacts.add(contact);
-
                 return true;
             }
         }
+
         return false;
     }
 

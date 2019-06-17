@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/backgroundColor">
 
     <TableRow
         android:layout_weight="1"
@@ -27,6 +28,7 @@
             android:background="@drawable/numpad_three"
             android:soundEffectsEnabled="true"
             android:text="3" />
+
     </TableRow>
 
     <TableRow
@@ -53,6 +55,7 @@
             android:background="@drawable/numpad_six"
             android:soundEffectsEnabled="true"
             android:text="6" />
+
     </TableRow>
 
     <TableRow
@@ -79,6 +82,7 @@
             android:background="@drawable/numpad_nine"
             android:soundEffectsEnabled="true"
             android:text="9" />
+
     </TableRow>
 
     <TableRow
@@ -105,6 +109,7 @@
             android:background="@drawable/numpad_sharp"
             android:soundEffectsEnabled="true"
             android:text="#" />
+
     </TableRow>
 
 </TableLayout>

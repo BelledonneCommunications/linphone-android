@@ -26,7 +26,6 @@ import android.provider.ContactsContract;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
@@ -78,12 +77,8 @@ public class LinphoneContact extends AndroidContact
 
     @Override
     public int compareTo(LinphoneContact contact) {
-        String fullName =
-                getFullName() != null ? getFullName().toUpperCase(Locale.getDefault()) : "";
-        String contactFullName =
-                contact.getFullName() != null
-                        ? contact.getFullName().toUpperCase(Locale.getDefault())
-                        : "";
+        String fullName = getFullName() != null ? getFullName() : "";
+        String contactFullName = contact.getFullName() != null ? contact.getFullName() : "";
 
         if (fullName.equals(contactFullName)) {
             if (getAndroidId() != null) {
