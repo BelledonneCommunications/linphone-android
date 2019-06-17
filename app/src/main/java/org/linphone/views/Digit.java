@@ -23,6 +23,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -37,18 +38,17 @@ import org.linphone.settings.LinphonePreferences;
 
 @SuppressLint("AppCompatCustomView")
 public class Digit extends Button implements AddressAware {
-
-    private AddressText mAddress;
     private boolean mPlayDtmf;
+    private AddressText mAddress;
 
     public Digit(Context context, AttributeSet attrs, int style) {
         super(context, attrs, style);
-        setLongClickable(true);
+        init(context, attrs);
     }
 
     public Digit(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setLongClickable(true);
+        init(context, attrs);
     }
 
     public Digit(Context context) {
@@ -56,12 +56,12 @@ public class Digit extends Button implements AddressAware {
         setLongClickable(true);
     }
 
-    public void setAddressWidget(AddressText address) {
-        mAddress = address;
-    }
+    private void init(Context context, AttributeSet attrs) {
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.Numpad);
+        mPlayDtmf = 1 == a.getInt(R.styleable.Numpad_play_dtmf, 1);
+        a.recycle();
 
-    public void setPlayDtmf(boolean play) {
-        mPlayDtmf = play;
+        setLongClickable(true);
     }
 
     @Override
@@ -83,6 +83,11 @@ public class Digit extends Button implements AddressAware {
         if ("1".equals(text.toString())) {
             setOnLongClickListener(lListener);
         }
+    }
+
+    @Override
+    public void setAddressWidget(AddressText address) {
+        mAddress = address;
     }
 
     private class DialKeyListener implements OnClickListener, OnTouchListener, OnLongClickListener {
