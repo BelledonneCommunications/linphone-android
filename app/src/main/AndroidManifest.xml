@@ -67,8 +67,7 @@
 
         <activity
             android:name=".activities.LinphoneLauncherActivity"
-            android:noHistory="true"
-            android:theme="@style/LinphoneLauncherStyle">
+            android:noHistory="true">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
 
