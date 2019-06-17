@@ -4,16 +4,6 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/dialer"
-        android:layout_width="300dp"
-        android:layout_height="460dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="50dp"
-        android:background="?attr/backgroundColor"
-        android:visibility="gone"/>
-
-    <RelativeLayout
         android:id="@+id/address_bar"
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -48,16 +38,6 @@
             android:textColorHint="@color/light_grey_color" />
 
     </RelativeLayout>
-
-    <org.linphone.views.Numpad
-        android:id="@+id/numpad"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/controls"
-        android:layout_below="@id/address_bar"
-        android:layout_centerInParent="true"
-        android:padding="10dp"
-        android:visibility="gone" />
 
     <ImageView
         android:layout_width="100dp"

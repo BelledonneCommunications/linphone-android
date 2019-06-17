@@ -70,7 +70,6 @@ import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.AndroidAudioManager;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.views.ContactAvatar;
-import org.linphone.views.Numpad;
 
 public class CallActivity extends LinphoneGenericActivity
         implements CallStatusBarFragment.StatsClikedListener,
@@ -109,7 +108,6 @@ public class CallActivity extends LinphoneGenericActivity
     private ImageView mPause, mSwitchCamera, mRecordingInProgress;
     private ImageView mExtrasButtons, mAddCall, mTransferCall, mRecordCall, mConference;
     private ImageView mAudioRoute, mRouteEarpiece, mRouteSpeaker, mRouteBluetooth;
-    private Numpad mNumpad;
     private TextView mContactName, mMissedMessages;
     private ProgressBar mVideoInviteInProgress;
     private Chronometer mCallTimer;
@@ -300,15 +298,16 @@ public class CallActivity extends LinphoneGenericActivity
                     }
                 });
 
-        mNumpad = findViewById(R.id.numpad);
-
         ImageView numpadButton = findViewById(R.id.dialer);
         numpadButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mNumpad.setVisibility(
-                                mNumpad.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+                        findViewById(R.id.numpad)
+                                .setVisibility(
+                                        findViewById(R.id.numpad).getVisibility() == View.VISIBLE
+                                                ? View.GONE
+                                                : View.VISIBLE);
                     }
                 });
 

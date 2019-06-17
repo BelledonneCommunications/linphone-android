@@ -130,7 +130,7 @@
 
             </RelativeLayout>
 
-            <org.linphone.views.Numpad
+            <include layout="@layout/numpad"
                 android:id="@+id/numpad"
                 android:visibility="gone"
                 android:layout_width="wrap_content"
@@ -138,8 +138,7 @@
                 android:layout_centerInParent="true"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:background="@color/toolbar_color"
-                android:contentDescription="@string/content_description_numpad" />
+                android:background="@color/toolbar_color" />
 
         </RelativeLayout>
 

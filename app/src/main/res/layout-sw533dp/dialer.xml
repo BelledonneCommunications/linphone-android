@@ -70,10 +70,10 @@
 
         </RelativeLayout>
 
-        <org.linphone.views.Numpad
+        <include layout="@layout/numpad"
             android:id="@+id/numpad"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_above="@id/controls"
             android:layout_below="@id/address_bar"
             android:layout_centerInParent="true"
