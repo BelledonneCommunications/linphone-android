@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/topLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/backgroundColor">
 
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/side_menu"
@@ -122,9 +123,10 @@
 
             </RelativeLayout>
 
-            <include layout="@layout/numpad"
+            <ViewStub
                 android:id="@+id/numpad"
-                android:visibility="gone"
+                android:inflatedId="@+id/numpad"
+                android:layout="@layout/numpad"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
