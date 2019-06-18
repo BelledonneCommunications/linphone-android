@@ -40,6 +40,7 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomViewHolder> {
     private List<ChatRoom> mRooms;
     private final int mItemResource;
     private final ChatRoomViewHolder.ClickListener mClickListener;
+    private final LayoutInflater mLayoutInflater;
 
     public ChatRoomsAdapter(
             Context context,
@@ -52,11 +53,12 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomViewHolder> {
         mRooms = rooms;
         mContext = context;
         mItemResource = itemResource;
+        mLayoutInflater = LayoutInflater.from(mContext);
     }
 
     @Override
     public ChatRoomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(mItemResource, parent, false);
+        View view = mLayoutInflater.inflate(mItemResource, parent, false);
         return new ChatRoomViewHolder(mContext, view, mClickListener);
     }
 

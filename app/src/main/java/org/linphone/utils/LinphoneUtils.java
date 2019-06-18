@@ -348,7 +348,7 @@ public final class LinphoneUtils {
         for (ChatRoom room : rooms) {
             // Hide 1-1 chat rooms without messages
             if (!(room.hasCapability(ChatRoomCapabilities.OneToOne.toInt())
-                    && room.getHistorySize() == 0)) {
+                    && room.getLastMessageInHistory() != null)) {
                 newRooms.add(room);
             }
         }

@@ -60,11 +60,13 @@ public class HistoryFragment extends Fragment
     private List<CallLog> mLogs;
     private HistoryAdapter mHistoryAdapter;
     private SelectableHelper mSelectionHelper;
+    private LayoutInflater mLayoutInflater;
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.history, container, false);
+        mLayoutInflater = inflater;
         mSelectionHelper = new SelectableHelper(view, this);
 
         mNoCallHistory = view.findViewById(R.id.no_call_history);
@@ -105,7 +107,12 @@ public class HistoryFragment extends Fragment
         mLogs = Arrays.asList(LinphoneManager.getCore().getCallLogs());
         hideHistoryListAndDisplayMessageIfEmpty();
         mHistoryAdapter =
-                new HistoryAdapter((HistoryActivity) getActivity(), mLogs, this, mSelectionHelper);
+                new HistoryAdapter(
+                        (HistoryActivity) getActivity(),
+                        mLogs,
+                        this,
+                        mSelectionHelper,
+                        mLayoutInflater);
         mHistoryList.setAdapter(mHistoryAdapter);
         mSelectionHelper.setAdapter(mHistoryAdapter);
         mSelectionHelper.setDialogMessage(R.string.call_log_delete_dialog);
@@ -146,7 +153,12 @@ public class HistoryFragment extends Fragment
         }
         hideHistoryListAndDisplayMessageIfEmpty();
         mHistoryAdapter =
-                new HistoryAdapter((HistoryActivity) getActivity(), mLogs, this, mSelectionHelper);
+                new HistoryAdapter(
+                        (HistoryActivity) getActivity(),
+                        mLogs,
+                        this,
+                        mSelectionHelper,
+                        mLayoutInflater);
         mHistoryList.setAdapter(mHistoryAdapter);
         mSelectionHelper.setAdapter(mHistoryAdapter);
         mSelectionHelper.setDialogMessage(R.string.chat_room_delete_dialog);

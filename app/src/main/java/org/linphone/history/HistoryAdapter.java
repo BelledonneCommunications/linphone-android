@@ -42,16 +42,19 @@ public class HistoryAdapter extends SelectableAdapter<HistoryViewHolder> {
     private final List<CallLog> mLogs;
     private final HistoryActivity mActivity;
     private final HistoryViewHolder.ClickListener mClickListener;
+    private final LayoutInflater mLayoutInflater;
 
     public HistoryAdapter(
             HistoryActivity activity,
             List<CallLog> logs,
             HistoryViewHolder.ClickListener listener,
-            SelectableHelper helper) {
+            SelectableHelper helper,
+            LayoutInflater inflater) {
         super(helper);
         mLogs = logs;
         mActivity = activity;
         mClickListener = listener;
+        mLayoutInflater = inflater;
     }
 
     public Object getItem(int position) {
@@ -61,9 +64,7 @@ public class HistoryAdapter extends SelectableAdapter<HistoryViewHolder> {
     @NonNull
     @Override
     public HistoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v =
-                LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.history_cell, parent, false);
+        View v = mLayoutInflater.inflate(R.layout.history_cell, parent, false);
         return new HistoryViewHolder(v, mClickListener);
     }
 
