@@ -83,12 +83,17 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
 
     private Context mContext;
     private ChatMessageViewHolderClickListener mListener;
+    private LayoutInflater mLayoutInflater;
 
     public ChatMessageViewHolder(
-            Context context, View view, ChatMessageViewHolderClickListener listener) {
+            Context context,
+            View view,
+            ChatMessageViewHolderClickListener listener,
+            LayoutInflater inflater) {
         this(view);
         mContext = context;
         mListener = listener;
+        mLayoutInflater = inflater;
         view.setOnClickListener(this);
     }
 
@@ -225,9 +230,7 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
             multiFileContents.setVisibility(View.VISIBLE);
 
             for (Content c : fileContents) {
-                View content =
-                        LayoutInflater.from(mContext)
-                                .inflate(R.layout.chat_bubble_content, null, false);
+                View content = mLayoutInflater.inflate(R.layout.chat_bubble_content, null, false);
 
                 displayContent(message, c, content, true);
 

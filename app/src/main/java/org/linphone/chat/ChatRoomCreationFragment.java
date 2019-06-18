@@ -86,6 +86,7 @@ public class ChatRoomCreationFragment extends Fragment
     private ArrayList<ContactAddress> mParticipants;
     private boolean mCreateGroupChatRoom;
     private boolean mChatRoomEncrypted;
+    private LayoutInflater mLayoutInflater;
 
     @Override
     public View onCreateView(
@@ -98,6 +99,7 @@ public class ChatRoomCreationFragment extends Fragment
         mChatRoomSubject = null;
         mChatRoomAddress = null;
         mCreateGroupChatRoom = false;
+        mLayoutInflater = inflater;
 
         if (getArguments() != null) {
             if (getArguments().getSerializable("Participants") != null) {
@@ -165,7 +167,9 @@ public class ChatRoomCreationFragment extends Fragment
         ProgressBar contactsFetchInProgress = view.findViewById(R.id.contactsFetchInProgress);
         contactsFetchInProgress.setVisibility(View.GONE);
 
-        mSearchAdapter = new SearchContactsAdapter(this, !mCreateGroupChatRoom, mChatRoomEncrypted);
+        mSearchAdapter =
+                new SearchContactsAdapter(
+                        this, !mCreateGroupChatRoom, mChatRoomEncrypted, mLayoutInflater);
 
         mSearchField = view.findViewById(R.id.searchField);
         mSearchField.setOnQueryTextListener(
@@ -601,8 +605,7 @@ public class ChatRoomCreationFragment extends Fragment
     }
 
     private void addSelectedContactAddress(ContactAddress ca) {
-        View viewContact =
-                LayoutInflater.from(getActivity()).inflate(R.layout.contact_selected, null);
+        View viewContact = mLayoutInflater.inflate(R.layout.contact_selected, null);
         if (ca.getContact() != null) {
             String name =
                     (ca.getContact().getFullName() != null

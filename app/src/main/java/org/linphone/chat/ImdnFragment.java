@@ -43,7 +43,7 @@ import org.linphone.utils.LinphoneUtils;
 import org.linphone.views.ContactAvatar;
 
 public class ImdnFragment extends Fragment {
-    private LayoutInflater mInflater;
+    private LayoutInflater mLayoutInflater;
     private LinearLayout mRead,
             mReadHeader,
             mDelivered,
@@ -77,9 +77,9 @@ public class ImdnFragment extends Fragment {
         Core core = LinphoneManager.getCore();
         ChatRoom room = core.getChatRoom(mRoomAddr, mLocalSipAddr);
 
-        mInflater = inflater;
+        mLayoutInflater = inflater;
         mContainer = container;
-        View view = mInflater.inflate(R.layout.chat_imdn, container, false);
+        View view = mLayoutInflater.inflate(R.layout.chat_imdn, container, false);
 
         ImageView backButton = view.findViewById(R.id.back);
         backButton.setOnClickListener(
@@ -103,7 +103,9 @@ public class ImdnFragment extends Fragment {
         mSentHeader = view.findViewById(R.id.sent_layout_header);
         mUndeliveredHeader = view.findViewById(R.id.undelivered_layout_header);
 
-        mBubble = new ChatMessageViewHolder(getActivity(), view.findViewById(R.id.bubble), null);
+        mBubble =
+                new ChatMessageViewHolder(
+                        getActivity(), view.findViewById(R.id.bubble), null, mLayoutInflater);
 
         mMessage = room.findMessage(mMessageId);
         mListener =
@@ -171,7 +173,7 @@ public class ImdnFragment extends Fragment {
                             ? participantContact.getFullName()
                             : LinphoneUtils.getAddressDisplayName(address);
 
-            View v = mInflater.inflate(R.layout.chat_imdn_cell, mContainer, false);
+            View v = mLayoutInflater.inflate(R.layout.chat_imdn_cell, mContainer, false);
             v.findViewById(R.id.separator).setVisibility(first ? View.GONE : View.VISIBLE);
             ((TextView) v.findViewById(R.id.time))
                     .setText(
@@ -221,7 +223,7 @@ public class ImdnFragment extends Fragment {
                             ? participantContact.getFullName()
                             : LinphoneUtils.getAddressDisplayName(address);
 
-            View v = mInflater.inflate(R.layout.chat_imdn_cell, mContainer, false);
+            View v = mLayoutInflater.inflate(R.layout.chat_imdn_cell, mContainer, false);
             v.findViewById(R.id.separator).setVisibility(first ? View.GONE : View.VISIBLE);
             ((TextView) v.findViewById(R.id.time))
                     .setText(
@@ -271,7 +273,7 @@ public class ImdnFragment extends Fragment {
                             ? participantContact.getFullName()
                             : LinphoneUtils.getAddressDisplayName(address);
 
-            View v = mInflater.inflate(R.layout.chat_imdn_cell, mContainer, false);
+            View v = mLayoutInflater.inflate(R.layout.chat_imdn_cell, mContainer, false);
             v.findViewById(R.id.separator).setVisibility(first ? View.GONE : View.VISIBLE);
             ((TextView) v.findViewById(R.id.time))
                     .setText(
@@ -321,7 +323,7 @@ public class ImdnFragment extends Fragment {
                             ? participantContact.getFullName()
                             : LinphoneUtils.getAddressDisplayName(address);
 
-            View v = mInflater.inflate(R.layout.chat_imdn_cell, mContainer, false);
+            View v = mLayoutInflater.inflate(R.layout.chat_imdn_cell, mContainer, false);
             v.findViewById(R.id.separator).setVisibility(first ? View.GONE : View.VISIBLE);
             TextView name = v.findViewById(R.id.name);
             name.setText(participantDisplayName);
