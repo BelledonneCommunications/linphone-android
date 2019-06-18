@@ -54,6 +54,8 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
     private final ChatMessageViewHolderClickListener mClickListener;
     private final ChatMessageListenerStub mListener;
 
+    private final LayoutInflater mLayoutInflater;
+
     public ChatMessagesAdapter(
             ChatMessagesFragment fragment,
             SelectableHelper helper,
@@ -70,6 +72,7 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
         mParticipants = participants;
         mClickListener = clickListener;
         mTransientMessages = new ArrayList<>();
+        mLayoutInflater = LayoutInflater.from(mContext);
 
         mListener =
                 new ChatMessageListenerStub() {
@@ -98,8 +101,9 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
 
     @Override
     public ChatMessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(mItemResource, parent, false);
-        ChatMessageViewHolder VH = new ChatMessageViewHolder(mContext, v, mClickListener);
+        View v = mLayoutInflater.inflate(mItemResource, parent, false);
+        ChatMessageViewHolder VH =
+                new ChatMessageViewHolder(mContext, v, mClickListener, mLayoutInflater);
 
         // Allows onLongClick ContextMenu on bubbles
         mFragment.registerForContextMenu(v);
