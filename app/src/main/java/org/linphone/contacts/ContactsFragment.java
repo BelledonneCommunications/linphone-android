@@ -61,12 +61,15 @@ public class ContactsFragment extends Fragment
     private SelectableHelper mSelectionHelper;
     private ContactsAdapter mContactAdapter;
     private SwipeRefreshLayout mContactsRefresher;
+    private LayoutInflater mLayoutInflater;
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.contacts_list, container, false);
         mContext = getActivity().getApplicationContext();
+        mLayoutInflater = inflater;
+
         mSelectionHelper = new SelectableHelper(view, this);
         mSelectionHelper.setDialogMessage(R.string.delete_contacts_text);
 
@@ -285,7 +288,7 @@ public class ContactsFragment extends Fragment
             isEditionEnabled = true;
         }
 
-        mContactAdapter = new ContactsAdapter(mContext, listContact, this, mSelectionHelper);
+        mContactAdapter = new ContactsAdapter(listContact, this, mSelectionHelper, mLayoutInflater);
         mContactAdapter.setIsSearchMode(true);
 
         mSelectionHelper.setAdapter(mContactAdapter);
@@ -322,7 +325,7 @@ public class ContactsFragment extends Fragment
             isEditionEnabled = true;
         }
 
-        mContactAdapter = new ContactsAdapter(mContext, listContact, this, mSelectionHelper);
+        mContactAdapter = new ContactsAdapter(listContact, this, mSelectionHelper, mLayoutInflater);
 
         mSelectionHelper.setAdapter(mContactAdapter);
 

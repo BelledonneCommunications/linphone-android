@@ -46,17 +46,20 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
     private final boolean mIsOnlyOnePersonSelection;
     private String mPreviousSearch;
     private boolean mSecurityEnabled;
+    private final LayoutInflater mLayoutInflater;
 
     public SearchContactsAdapter(
             SearchContactViewHolder.ClickListener clickListener,
             boolean hideSelectionMark,
-            boolean isSecurityEnabled) {
+            boolean isSecurityEnabled,
+            LayoutInflater inflater) {
         mIsOnlyOnePersonSelection = hideSelectionMark;
         mListener = clickListener;
         setContactsSelectedList(null);
         mPreviousSearch = null;
         mSecurityEnabled = isSecurityEnabled;
         mContacts = new ArrayList<>();
+        mLayoutInflater = inflater;
     }
 
     public List<SearchResult> getContacts() {
@@ -75,9 +78,7 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
     @NonNull
     @Override
     public SearchContactViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v =
-                LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.search_contact_cell, parent, false);
+        View v = mLayoutInflater.inflate(R.layout.search_contact_cell, parent, false);
         return new SearchContactViewHolder(v, mListener);
     }
 
