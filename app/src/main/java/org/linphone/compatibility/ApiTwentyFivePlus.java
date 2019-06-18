@@ -53,7 +53,7 @@ class ApiTwentyFivePlus {
         ArrayList<ChatRoom> notEmptyOneToOneRooms = new ArrayList<>();
         for (ChatRoom room : rooms) {
             if (room.hasCapability(ChatRoomCapabilities.OneToOne.toInt())
-                    && room.getHistorySize() > 0) {
+                    && room.getLastMessageInHistory() != null) {
                 notEmptyOneToOneRooms.add(room);
             }
         }

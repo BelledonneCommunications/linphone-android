@@ -19,7 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,26 +42,24 @@ public class ContactsAdapter extends SelectableAdapter<ContactViewHolder>
     private ArrayList<String> mSectionsList;
     private Map<String, Integer> mMap = new LinkedHashMap<>();
     private final ContactViewHolder.ClickListener mClickListener;
-    private final Context mContext;
     private boolean mIsSearchMode;
+    private final LayoutInflater mLayoutInflater;
 
     ContactsAdapter(
-            Context context,
             List<LinphoneContact> contactsList,
             ContactViewHolder.ClickListener clickListener,
-            SelectableHelper helper) {
+            SelectableHelper helper,
+            LayoutInflater inflater) {
         super(helper);
-        mContext = context;
         updateDataSet(contactsList);
         mClickListener = clickListener;
+        mLayoutInflater = inflater;
     }
 
     @NonNull
     @Override
     public ContactViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v =
-                LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.contact_cell, parent, false);
+        View v = mLayoutInflater.inflate(R.layout.contact_cell, parent, false);
         return new ContactViewHolder(v, mClickListener);
     }
 

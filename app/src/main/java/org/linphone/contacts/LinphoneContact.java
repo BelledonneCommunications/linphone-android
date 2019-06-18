@@ -68,10 +68,10 @@ public class LinphoneContact extends AndroidContact
 
         if (ContactsManager.getInstance().hasReadContactsAccess()) {
             contact.createAndroidContact();
-
         } else {
             contact.createFriend();
         }
+
         return contact;
     }
 
