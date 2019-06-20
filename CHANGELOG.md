@@ -173,3 +173,6 @@ Group changes to describe their impact on the project, as follows:
 - Crashes Android 6/7 at starting
 - Permissions issues
 - Layout of tablet views
+
+### Changed
+- management of the view for displaying call statistics
