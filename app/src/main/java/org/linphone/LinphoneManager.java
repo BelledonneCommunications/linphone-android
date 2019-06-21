@@ -525,7 +525,7 @@ public class LinphoneManager implements SensorEventListener {
 
                 if (mCore.limeX3DhAvailable()) {
                     String url = mCore.getLimeX3DhServerUrl();
-                    if (url == null || url.length() == 0) {
+                    if (url == null || url.isEmpty()) {
                         url = getString(R.string.default_lime_x3dh_server_url);
                         Log.i("[Manager] Setting LIME X3Dh server url to default value: " + url);
                         mCore.setLimeX3DhServerUrl(url);
