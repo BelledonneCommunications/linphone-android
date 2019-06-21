@@ -147,10 +147,10 @@ public class ContactsFragment extends Fragment
             }
         } else {
             if (!mOnlyDisplayLinphoneContacts
-                    && ContactsManager.getInstance().getContacts().size() == 0) {
+                    && ContactsManager.getInstance().getContacts().isEmpty()) {
                 mNoContact.setVisibility(View.VISIBLE);
             } else if (mOnlyDisplayLinphoneContacts
-                    && ContactsManager.getInstance().getSIPContacts().size() == 0) {
+                    && ContactsManager.getInstance().getSIPContacts().isEmpty()) {
                 mNoSipContact.setVisibility(View.VISIBLE);
             }
         }
@@ -271,7 +271,7 @@ public class ContactsFragment extends Fragment
 
     private void searchContacts(String search) {
         boolean isEditionEnabled = false;
-        if (search == null || search.length() == 0) {
+        if (search == null || search.isEmpty()) {
             changeContactsAdapter();
             return;
         }

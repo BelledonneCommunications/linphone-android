@@ -489,7 +489,7 @@ public class ChatRoomCreationFragment extends Fragment
     }
 
     private void updateLayout() {
-        if (mParticipants.size() != 0) {
+        if (!mParticipants.isEmpty()) {
             mSearchAdapter.setContactsSelectedList(mParticipants);
             updateList();
             updateListSelected();
