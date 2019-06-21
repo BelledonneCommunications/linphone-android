@@ -251,12 +251,6 @@ public class Compatibility {
         }
     }
 
-    public static void updateShortcuts(Context context) {
-        if (Version.sdkAboveOrEqual(Version.API25_NOUGAT_71)) {
-            ApiTwentyFivePlus.updateShortcuts(context);
-        }
-    }
-
     public static void enterPipMode(Activity activity) {
         if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
             ApiTwentySixPlus.enterPipMode(activity);

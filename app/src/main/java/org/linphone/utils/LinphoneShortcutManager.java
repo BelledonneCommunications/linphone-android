@@ -29,12 +29,7 @@ import android.util.ArraySet;
 import java.util.Set;
 import org.linphone.R;
 import org.linphone.chat.ChatActivity;
-import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
-import org.linphone.core.Address;
-import org.linphone.core.ChatRoom;
-import org.linphone.core.ChatRoomCapabilities;
-import org.linphone.core.Factory;
 import org.linphone.core.tools.Log;
 
 @TargetApi(25)
@@ -48,16 +43,12 @@ public class LinphoneShortcutManager {
         mCategories.add(ShortcutInfo.SHORTCUT_CATEGORY_CONVERSATION);
     }
 
-    public ShortcutInfo createChatRoomShortcutInfo(ChatRoom room) {
-        Address peerAddress =
-                room.hasCapability(ChatRoomCapabilities.Basic.toInt())
-                        ? room.getPeerAddress()
-                        : room.getParticipants()[0].getAddress();
-        LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(peerAddress);
-        String address = peerAddress.asStringUriOnly();
+    public ShortcutInfo createChatRoomShortcutInfo(
+            LinphoneContact contact, String chatRoomAddress) {
+        if (contact == null) return null;
 
         Bitmap bm = null;
-        if (contact != null && contact.getThumbnailUri() != null) {
+        if (contact.getThumbnailUri() != null) {
             bm = ImageUtils.getRoundBitmapFromUri(mContext, contact.getThumbnailUri());
         }
         Icon icon =
@@ -65,20 +56,15 @@ public class LinphoneShortcutManager {
                         ? Icon.createWithResource(mContext, R.drawable.avatar)
                         : Icon.createWithBitmap(bm);
 
-        String name =
-                contact == null
-                        ? LinphoneUtils.getAddressDisplayName(peerAddress)
-                        : contact.getFullName();
-
         try {
             Intent intent = new Intent(Intent.ACTION_MAIN);
             intent.setClass(mContext, ChatActivity.class);
             intent.addFlags(
                     Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            intent.putExtra("RemoteSipUri", room.getPeerAddress().asStringUriOnly());
+            intent.putExtra("RemoteSipUri", chatRoomAddress);
 
-            return new ShortcutInfo.Builder(mContext, address)
-                    .setShortLabel(name)
+            return new ShortcutInfo.Builder(mContext, chatRoomAddress)
+                    .setShortLabel(contact.getFullName())
                     .setIcon(icon)
                     .setCategories(mCategories)
                     .setIntent(intent)
@@ -88,39 +74,5 @@ public class LinphoneShortcutManager {
         }
 
         return null;
-    }
-
-    public ShortcutInfo updateShortcutInfo(ShortcutInfo shortcutInfo) {
-        String address = shortcutInfo.getId();
-        Address peerAddress = Factory.instance().createAddress(address);
-        LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(peerAddress);
-
-        if (contact != null) {
-            Bitmap bm = null;
-            if (contact != null && contact.getThumbnailUri() != null) {
-                bm = ImageUtils.getRoundBitmapFromUri(mContext, contact.getThumbnailUri());
-            }
-            Icon icon =
-                    bm == null
-                            ? Icon.createWithResource(mContext, R.drawable.avatar)
-                            : Icon.createWithBitmap(bm);
-
-            String name =
-                    contact == null
-                            ? LinphoneUtils.getAddressDisplayName(peerAddress)
-                            : contact.getFullName();
-
-            try {
-                return new ShortcutInfo.Builder(mContext, address)
-                        .setShortLabel(name)
-                        .setIcon(icon)
-                        .setCategories(mCategories)
-                        .setIntent(shortcutInfo.getIntent())
-                        .build();
-            } catch (Exception e) {
-                Log.e("[Shortcuts Manager] ShortcutInfo.Builder exception: " + e);
-            }
-        }
-        return shortcutInfo;
     }
 }

@@ -435,6 +435,7 @@
     <string name="pref_contact_sync_subtitle">Inserting information shortcuts from the Linphone contact into native Android contacts</string>
     <string name="pref_contact_title">Contact</string>
     <string name="pref_contact_display_contact_organization_title">Display contact organization</string>
+    <string name="pref_create_contact_shortcuts">Create shortcuts in launcher</string>
 
     <!-- Call settings -->
     <string name="pref_call_title">Call</string>
