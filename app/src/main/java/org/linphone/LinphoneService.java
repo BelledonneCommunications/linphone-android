@@ -32,7 +32,6 @@ import android.provider.ContactsContract;
 import android.view.WindowManager;
 import org.linphone.call.CallIncomingActivity;
 import org.linphone.call.CallOutgoingActivity;
-import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
@@ -214,8 +213,6 @@ public final class LinphoneService extends Service {
             mContactsManager.enableContactsAccess();
         }
         mContactsManager.initializeContactManager();
-
-        Compatibility.createChatShortcuts(this);
 
         return START_STICKY;
     }

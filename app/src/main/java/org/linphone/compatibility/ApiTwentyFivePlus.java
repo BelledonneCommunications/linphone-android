@@ -29,18 +29,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import org.linphone.LinphoneManager;
-import org.linphone.R;
+import org.linphone.contacts.ContactsManager;
+import org.linphone.contacts.LinphoneContact;
+import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomCapabilities;
+import org.linphone.core.tools.Log;
+import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.LinphoneShortcutManager;
 
 @TargetApi(25)
 class ApiTwentyFivePlus {
 
     public static void createChatShortcuts(Context context) {
-        if (!context.getResources().getBoolean(R.bool.create_most_recent_chat_rooms_shortcuts))
-            return;
+        if (!LinphonePreferences.instance().shortcutsCreationEnabled()) return;
 
+        LinphoneShortcutManager manager = new LinphoneShortcutManager(context);
         ShortcutManager shortcutManager =
                 (ShortcutManager) context.getSystemService(Context.SHORTCUT_SERVICE);
         ArrayList<ShortcutInfo> shortcuts = new ArrayList<>();
@@ -64,37 +68,37 @@ class ApiTwentyFivePlus {
                     }
                 });
 
-        LinphoneShortcutManager manager = new LinphoneShortcutManager(context);
+        int i = 0;
         int maxShortcuts =
                 min(notEmptyOneToOneRooms.size(), shortcutManager.getMaxShortcutCountPerActivity());
-        for (int i = 0; i < maxShortcuts; i++) {
+        ArrayList<LinphoneContact> contacts = new ArrayList<>();
+        for (ChatRoom room : notEmptyOneToOneRooms) {
             // Android can only have around 4-5 shortcuts at a time
-            ChatRoom room = notEmptyOneToOneRooms.get(i);
-            ShortcutInfo shortcut = manager.createChatRoomShortcutInfo(room);
-            if (shortcut != null) {
-                shortcuts.add(shortcut);
+            if (i >= maxShortcuts) break;
+
+            Address participantAddress =
+                    room.hasCapability(ChatRoomCapabilities.Basic.toInt())
+                            ? room.getPeerAddress()
+                            : room.getParticipants()[0].getAddress();
+            LinphoneContact contact =
+                    ContactsManager.getInstance().findContactFromAddress(participantAddress);
+
+            if (contact != null && !contacts.contains(contact)) {
+                String peerAddress = room.getPeerAddress().asStringUriOnly();
+                ShortcutInfo shortcut = manager.createChatRoomShortcutInfo(contact, peerAddress);
+                if (shortcut != null) {
+                    Log.i(
+                            "[Shortcut] Creating launcher shortcut "
+                                    + shortcut.getShortLabel()
+                                    + " for room "
+                                    + shortcut.getId());
+                    shortcuts.add(shortcut);
+                    contacts.add(contact);
+                    i += 1;
+                }
             }
         }
 
         shortcutManager.setDynamicShortcuts(shortcuts);
-    }
-
-    public static void updateShortcuts(Context context) {
-        if (!context.getResources().getBoolean(R.bool.create_most_recent_chat_rooms_shortcuts))
-            return;
-
-        ShortcutManager shortcutManager =
-                (ShortcutManager) context.getSystemService(Context.SHORTCUT_SERVICE);
-        ArrayList<ShortcutInfo> shortcuts = new ArrayList<>();
-        LinphoneShortcutManager manager = new LinphoneShortcutManager(context);
-
-        for (ShortcutInfo shortcutInfo : shortcutManager.getDynamicShortcuts()) {
-            ShortcutInfo shortcut = manager.updateShortcutInfo(shortcutInfo);
-            if (shortcut != null) {
-                shortcuts.add(shortcut);
-            }
-        }
-
-        shortcutManager.updateShortcuts(shortcuts);
     }
 }

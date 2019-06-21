@@ -1172,4 +1172,12 @@ public class LinphonePreferences {
     public void setVideoPreviewEnabled(boolean enabled) {
         getConfig().setBool("app", "video_preview", enabled);
     }
+
+    public boolean shortcutsCreationEnabled() {
+        return getConfig().getBool("app", "shortcuts", false);
+    }
+
+    public void enableChatRoomsShortcuts(boolean enable) {
+        getConfig().setBool("app", "shortcuts", enable);
+    }
 }

@@ -30,6 +30,12 @@
             android:layout_height="wrap_content"
             linphone:title="@string/pref_contact_display_contact_organization_title" />
 
+        <org.linphone.settings.widget.SwitchSetting
+            android:id="@+id/pref_contact_shortcuts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            linphone:title="@string/pref_create_contact_shortcuts" />
+
     </LinearLayout>
 
 </ScrollView>

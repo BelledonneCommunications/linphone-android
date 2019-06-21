@@ -31,7 +31,8 @@ public class ContactSettingsFragment extends SettingsFragment {
     private View mContactView;
     private SwitchSetting mContactPresenceNativeContact,
             mFriendListSubscribe,
-            mDisplayDetailContact;
+            mDisplayDetailContact,
+            mCreateShortcuts;
     private LinphonePreferences mPrefs;
 
     @Override
@@ -55,15 +56,20 @@ public class ContactSettingsFragment extends SettingsFragment {
 
     private void loadSettings() {
         mFriendListSubscribe = mContactView.findViewById(R.id.pref_friendlist_subscribe);
+
         mContactPresenceNativeContact =
                 mContactView.findViewById(R.id.pref_contact_presence_native_contact);
+
         mDisplayDetailContact = mContactView.findViewById(R.id.pref_contact_organization);
+
+        mCreateShortcuts = mContactView.findViewById(R.id.pref_contact_shortcuts);
     }
 
     private void updateValues() {
         setListeners();
 
         mFriendListSubscribe.setChecked(mPrefs.isFriendlistsubscriptionEnabled());
+
         mContactPresenceNativeContact.setChecked(
                 mPrefs.isPresenceStorageInNativeAndroidContactEnabled());
 
@@ -71,6 +77,12 @@ public class ContactSettingsFragment extends SettingsFragment {
             mDisplayDetailContact.setChecked(mPrefs.isDisplayContactOrganization());
         } else {
             mDisplayDetailContact.setVisibility(View.INVISIBLE);
+        }
+
+        if (getResources().getBoolean(R.bool.create_most_recent_chat_rooms_shortcuts)) {
+            mCreateShortcuts.setChecked(mPrefs.shortcutsCreationEnabled());
+        } else {
+            mCreateShortcuts.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -99,11 +111,20 @@ public class ContactSettingsFragment extends SettingsFragment {
                         }
                     }
                 });
+
         mDisplayDetailContact.setListener(
                 new SettingListenerBase() {
                     @Override
                     public void onBoolValueChanged(boolean newValue) {
                         mPrefs.enabledDisplayContactOrganization(newValue);
+                    }
+                });
+
+        mCreateShortcuts.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onBoolValueChanged(boolean newValue) {
+                        mPrefs.enableChatRoomsShortcuts(newValue);
                     }
                 });
     }

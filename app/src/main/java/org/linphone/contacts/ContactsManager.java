@@ -529,6 +529,6 @@ public class ContactsManager extends ContentObserver implements FriendListListen
             listener.onContactsUpdated();
         }
 
-        Compatibility.updateShortcuts(mContext);
+        Compatibility.createChatShortcuts(mContext);
     }
 }
