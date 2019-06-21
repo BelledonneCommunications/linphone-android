@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <ExpandableListView
-        android:id="@+id/devices_list"
+        android:id="@+id/call_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="?attr/dividerColor"

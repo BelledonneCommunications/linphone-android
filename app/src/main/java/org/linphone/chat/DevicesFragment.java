@@ -67,7 +67,7 @@ public class DevicesFragment extends Fragment {
 
         mOnlyDisplayChilds = false;
 
-        mExpandableList = view.findViewById(R.id.devices_list);
+        mExpandableList = view.findViewById(R.id.call_list);
         mExpandableList.setOnChildClickListener(
                 new ExpandableListView.OnChildClickListener() {
                     @Override

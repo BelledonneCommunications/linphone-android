@@ -148,7 +148,7 @@
                 android:name="org.linphone.call.CallStatsFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:layout="@layout/call_stats_child" />
+                tools:layout="@layout/call_stats" />
 
         </RelativeLayout>
 

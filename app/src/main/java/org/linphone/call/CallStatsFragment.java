@@ -45,10 +45,10 @@ public class CallStatsFragment extends Fragment {
     @Override
     public View onCreateView(
             LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.call_stats_, container, false);
+        View view = inflater.inflate(R.layout.call_stats, container, false);
         mView = view;
 
-        mExpandableList = view.findViewById(R.id.devices_list);
+        mExpandableList = view.findViewById(R.id.call_list);
 
         return view;
     }
@@ -62,7 +62,7 @@ public class CallStatsFragment extends Fragment {
             mAdapter = new CallStatsAdapter(getActivity());
 
             mExpandableList.setAdapter(mAdapter);
-            //allows you to open the first child in the list
+            // allows you to open the first child in the list
             mExpandableList.expandGroup(0);
         }
 

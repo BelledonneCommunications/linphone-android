@@ -32,19 +32,16 @@ import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Call;
-import org.linphone.core.Core;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.views.ContactAvatar;
 
 public class CallStatsAdapter extends BaseExpandableListAdapter {
     private final Context mContext;
     private List<Call> mCalls;
-    Core core;
 
     public CallStatsAdapter(Context mContext) {
         this.mContext = mContext;
         mCalls = new ArrayList<>();
-        core = LinphoneManager.getCore();
     }
 
     public void updateListItems(List<Call> listCall) {
@@ -103,7 +100,7 @@ public class CallStatsAdapter extends BaseExpandableListAdapter {
             }
         } else {
             LayoutInflater inflater = LayoutInflater.from(mContext);
-            view = inflater.inflate(R.layout.call_stats_group_, viewGroup, false);
+            view = inflater.inflate(R.layout.call_stats_group, viewGroup, false);
         }
         if (holder == null) {
             holder = new CallStatsViewHolder(view);
@@ -144,7 +141,7 @@ public class CallStatsAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getGroup(int groupPosition) {
-        if (mCalls.isEmpty()) {
+        if (mCalls.isEmpty() && groupPosition < mCalls.size()) {
             return null;
         }
         return mCalls.get(groupPosition);
@@ -152,7 +149,7 @@ public class CallStatsAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        if (mCalls.isEmpty()) {
+        if (mCalls.isEmpty() && groupPosition < mCalls.size()) {
             return null;
         }
         return mCalls.get(groupPosition);
