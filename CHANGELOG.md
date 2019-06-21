@@ -13,7 +13,7 @@ Group changes to describe their impact on the project, as follows:
 ## [Unreleased]
 
 ### Added
-- Added shortcuts to calls history & chat rooms list
+- Added shortcuts to contacts' latest chat rooms
 - Improved device's do not disturb policy compliance
 - Added sample application to help developpers getting started with our SDK
 - Added picture in picture feature if supported instead of video overlay

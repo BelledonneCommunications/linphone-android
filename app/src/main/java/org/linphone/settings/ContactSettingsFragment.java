@@ -24,6 +24,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import org.linphone.R;
+import org.linphone.compatibility.Compatibility;
+import org.linphone.mediastream.Version;
 import org.linphone.settings.widget.SettingListenerBase;
 import org.linphone.settings.widget.SwitchSetting;
 
@@ -79,10 +81,11 @@ public class ContactSettingsFragment extends SettingsFragment {
             mDisplayDetailContact.setVisibility(View.INVISIBLE);
         }
 
-        if (getResources().getBoolean(R.bool.create_most_recent_chat_rooms_shortcuts)) {
+        if (Version.sdkAboveOrEqual(Version.API25_NOUGAT_71)
+                && getResources().getBoolean(R.bool.create_most_recent_chat_rooms_shortcuts)) {
             mCreateShortcuts.setChecked(mPrefs.shortcutsCreationEnabled());
         } else {
-            mCreateShortcuts.setVisibility(View.INVISIBLE);
+            mCreateShortcuts.setVisibility(View.GONE);
         }
     }
 
@@ -125,6 +128,11 @@ public class ContactSettingsFragment extends SettingsFragment {
                     @Override
                     public void onBoolValueChanged(boolean newValue) {
                         mPrefs.enableChatRoomsShortcuts(newValue);
+                        if (newValue) {
+                            Compatibility.createChatShortcuts(getActivity());
+                        } else {
+                            Compatibility.removeChatShortcuts(getActivity());
+                        }
                     }
                 });
     }
