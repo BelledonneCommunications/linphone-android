@@ -42,6 +42,12 @@ import org.linphone.utils.LinphoneUtils;
 @TargetApi(25)
 class ApiTwentyFivePlus {
 
+    public static void removeChatShortcuts(Context context) {
+        ShortcutManager shortcutManager =
+                (ShortcutManager) context.getSystemService(Context.SHORTCUT_SERVICE);
+        shortcutManager.removeAllDynamicShortcuts();
+    }
+
     public static void createChatShortcuts(Context context) {
         if (!LinphonePreferences.instance().shortcutsCreationEnabled()) return;
 

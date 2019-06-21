@@ -251,6 +251,12 @@ public class Compatibility {
         }
     }
 
+    public static void removeChatShortcuts(Context context) {
+        if (Version.sdkAboveOrEqual(Version.API25_NOUGAT_71)) {
+            ApiTwentyFivePlus.removeChatShortcuts(context);
+        }
+    }
+
     public static void enterPipMode(Activity activity) {
         if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
             ApiTwentySixPlus.enterPipMode(activity);
