@@ -31,8 +31,8 @@ import java.util.Comparator;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.ChatRoom;
-import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.utils.LinphoneShortcutManager;
+import org.linphone.utils.LinphoneUtils;
 
 @TargetApi(25)
 class ApiTwentyFivePlus {
@@ -46,13 +46,8 @@ class ApiTwentyFivePlus {
         ArrayList<ShortcutInfo> shortcuts = new ArrayList<>();
 
         ChatRoom[] rooms = LinphoneManager.getCore().getChatRooms();
-        ArrayList<ChatRoom> notEmptyOneToOneRooms = new ArrayList<>();
-        for (ChatRoom room : rooms) {
-            if (room.hasCapability(ChatRoomCapabilities.OneToOne.toInt())
-                    && room.getLastMessageInHistory() != null) {
-                notEmptyOneToOneRooms.add(room);
-            }
-        }
+        ArrayList<ChatRoom> notEmptyOneToOneRooms =
+                LinphoneUtils.removeEmptyOneToOneChatRooms(rooms);
         Collections.sort(
                 notEmptyOneToOneRooms,
                 new Comparator<ChatRoom>() {

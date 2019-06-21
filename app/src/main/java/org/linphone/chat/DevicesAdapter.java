@@ -199,7 +199,7 @@ class DevicesAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getGroupCount() {
-        if (mParticipants.size() == 0) return 0;
+        if (mParticipants.isEmpty()) return 0;
         return mOnlyDisplayChildsAsGroups
                 ? mParticipants.get(0).getDevices().length
                 : mParticipants.size();
@@ -207,7 +207,7 @@ class DevicesAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        if (mParticipants.size() == 0) return 0;
+        if (mParticipants.isEmpty()) return 0;
         return mOnlyDisplayChildsAsGroups
                 ? 0
                 : mParticipants.get(groupPosition).getDevices().length;
@@ -215,7 +215,7 @@ class DevicesAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getGroup(int groupPosition) {
-        if (mParticipants.size() == 0) return null;
+        if (mParticipants.isEmpty()) return null;
         return mOnlyDisplayChildsAsGroups
                 ? mParticipants.get(0).getDevices()[groupPosition]
                 : mParticipants.get(groupPosition);
@@ -223,7 +223,7 @@ class DevicesAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        if (mParticipants.size() == 0) return null;
+        if (mParticipants.isEmpty()) return null;
         return mParticipants.get(groupPosition).getDevices()[childPosition];
     }
 
