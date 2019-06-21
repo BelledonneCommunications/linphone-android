@@ -716,7 +716,7 @@ public class ChatMessagesFragment extends Fragment
         Core core = LinphoneManager.getCore();
         if (mRemoteSipAddress == null
                 || mRemoteSipUri == null
-                || mRemoteSipUri.length() == 0
+                || mRemoteSipUri.isEmpty()
                 || core == null) {
             // TODO error
             return;
@@ -768,7 +768,7 @@ public class ChatMessagesFragment extends Fragment
                         });
             }
 
-            if (mParticipants.size() == 0) {
+            if (mParticipants.isEmpty()) {
                 // Contact not found
                 String displayName = LinphoneUtils.getAddressDisplayName(mRemoteParticipantAddress);
                 mRoomLabel.setText(displayName);
@@ -1229,7 +1229,7 @@ public class ChatMessagesFragment extends Fragment
         }
 
         mRemoteComposing.setVisibility(View.VISIBLE);
-        if (composing.size() == 0) {
+        if (composing.isEmpty()) {
             mRemoteComposing.setVisibility(View.GONE);
         } else if (composing.size() == 1) {
             mRemoteComposing.setText(

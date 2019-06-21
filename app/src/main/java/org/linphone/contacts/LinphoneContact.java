@@ -125,7 +125,7 @@ public class LinphoneContact extends AndroidContact
     }
 
     public void setFirstNameAndLastName(String fn, String ln, boolean commitChanges) {
-        if (fn != null && fn.length() == 0 && ln != null && ln.length() == 0) return;
+        if (fn != null && fn.isEmpty() && ln != null && ln.isEmpty()) return;
         if (fn != null && fn.equals(mFirstName) && ln != null && ln.equals(mLastName)) return;
 
         if (commitChanges) {

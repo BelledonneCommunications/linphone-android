@@ -264,7 +264,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
             }
         }
 
-        if (mContext != null && getContacts().size() == 0 && hasReadContactsAccess()) {
+        if (mContext != null && getContacts().isEmpty() && hasReadContactsAccess()) {
             fetchContactsAsync();
         }
     }

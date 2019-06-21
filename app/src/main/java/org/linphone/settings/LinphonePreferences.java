@@ -199,7 +199,7 @@ public class LinphonePreferences {
 
     public String getRingtone(String defaultRingtone) {
         String ringtone = getConfig().getString("app", "ringtone", defaultRingtone);
-        if (ringtone == null || ringtone.length() == 0) ringtone = defaultRingtone;
+        if (ringtone == null || ringtone.isEmpty()) ringtone = defaultRingtone;
         return ringtone;
     }
 
@@ -817,7 +817,7 @@ public class LinphonePreferences {
 
     public void setRemoteProvisioningUrl(String url) {
         if (getLc() == null) return;
-        if (url != null && url.length() == 0) {
+        if (url != null && url.isEmpty()) {
             url = null;
         }
         getLc().setProvisioningUri(url);

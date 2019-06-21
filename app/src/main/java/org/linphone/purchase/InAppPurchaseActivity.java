@@ -108,7 +108,7 @@ public class InAppPurchaseActivity extends Activity
 
     public List<Purchasable> getPurchasedItems() {
 
-        if (mPurchasedItems == null || mPurchasedItems.size() == 0) {
+        if (mPurchasedItems == null || mPurchasedItems.isEmpty()) {
             Log.w("nul");
         }
         return mPurchasedItems;
@@ -145,7 +145,7 @@ public class InAppPurchaseActivity extends Activity
     public void onPurchasedItemsQueryFinished(ArrayList<Purchasable> items) {
         mPurchasedItems = items;
 
-        if (items == null || items.size() == 0) {
+        if (items == null || items.isEmpty()) {
             mInAppPurchaseHelper.getAvailableItemsForPurchaseAsync();
         } else {
             for (Purchasable purchasedItem : mPurchasedItems) {
