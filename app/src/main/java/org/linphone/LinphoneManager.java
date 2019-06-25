@@ -146,6 +146,10 @@ public class LinphoneManager implements SensorEventListener {
                         }
                     }
                 };
+
+        Log.i("[Manager] Registering phone state listener");
+        mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+
         mHasLastCallSasBeenRejected = false;
         mCallManager = new CallManager(c);
 
@@ -233,10 +237,6 @@ public class LinphoneManager implements SensorEventListener {
                             if (mCore.getCallsNb() == 0) {
                                 // Disabling proximity sensor
                                 enableProximitySensing(false);
-
-                                Log.i("[Manager] Unregistering phone state listener");
-                                mTelephonyManager.listen(
-                                        mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
                             }
                         } else if (state == State.UpdatedByRemote) {
                             // If the correspondent proposes video while audio call
@@ -250,12 +250,6 @@ public class LinphoneManager implements SensorEventListener {
                                     && !autoAcceptCameraPolicy
                                     && mCore.getConference() == null) {
                                 call.deferUpdate();
-                            }
-                        } else if (state == State.Connected) {
-                            if (core.getCallsNb() == 1) {
-                                Log.i("[Manager] Registering phone state listener");
-                                mTelephonyManager.listen(
-                                        mPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
                             }
                         }
                     }
@@ -420,6 +414,9 @@ public class LinphoneManager implements SensorEventListener {
     private synchronized void destroyManager() {
         Log.w("[Manager] Destroying Manager");
         changeStatusToOffline();
+
+        Log.i("[Manager] Unregistering phone state listener");
+        mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
 
         mCallManager.destroy();
         mMediaScanner.destroy();
