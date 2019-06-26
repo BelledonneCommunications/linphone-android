@@ -24,7 +24,9 @@ import static android.content.Intent.ACTION_MAIN;
 import android.content.Intent;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
+import org.linphone.core.Core;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.LinphoneUtils;
 
@@ -54,6 +56,14 @@ public class FirebaseMessaging extends FirebaseMessagingService {
             intent.setClass(this, LinphoneService.class);
             intent.putExtra("PushNotification", true);
             startService(intent);
+        } else {
+            android.util.Log.i("FirebaseMessaging", "[Push Notification] Notifying Core");
+            if (LinphoneManager.getInstance() != null) {
+                Core core = LinphoneManager.getCore();
+                if (core != null) {
+                    core.ensureRegistered();
+                }
+            }
         }
     }
 }
