@@ -19,6 +19,10 @@ Group changes to describe their impact on the project, as follows:
 - Added picture in picture feature if supported instead of video overlay
 - Added camera preview as dialer's background on tablets
 
+## Changed
+- Call statistics are now available for each call & conference
+- Added our own devices in LIME encrypted chatrooms' security view
+
 ## [4.1.0] - 2019-05-03
 
 ### Added
@@ -173,6 +177,3 @@ Group changes to describe their impact on the project, as follows:
 - Crashes Android 6/7 at starting
 - Permissions issues
 - Layout of tablet views
-
-### Changed
-- management of the view for displaying call statistics
