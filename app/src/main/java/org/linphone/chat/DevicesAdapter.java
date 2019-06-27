@@ -39,16 +39,13 @@ import org.linphone.views.ContactAvatar;
 class DevicesAdapter extends BaseExpandableListAdapter {
     private final Context mContext;
     private List<Participant> mParticipants;
-    private boolean mOnlyDisplayChildsAsGroups;
 
     public DevicesAdapter(Context context) {
         mContext = context;
         mParticipants = new ArrayList<>();
-        mOnlyDisplayChildsAsGroups = false;
     }
 
-    public void updateListItems(List<Participant> participants, boolean childsAsGroups) {
-        mOnlyDisplayChildsAsGroups = childsAsGroups;
+    public void updateListItems(List<Participant> participants) {
         mParticipants = participants;
         notifyDataSetChanged();
     }
@@ -56,26 +53,48 @@ class DevicesAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(
             int groupPosition, boolean isExpanded, View view, ViewGroup viewGroup) {
-        if (mOnlyDisplayChildsAsGroups) {
-            ParticipantDevice device = (ParticipantDevice) getGroup(groupPosition);
+        Participant participant = (Participant) getGroup(groupPosition);
 
-            DeviceChildViewHolder holder = null;
-            if (view != null) {
-                Object possibleHolder = view.getTag();
-                if (possibleHolder instanceof DeviceChildViewHolder) {
-                    holder = (DeviceChildViewHolder) possibleHolder;
-                }
-            } else {
-                LayoutInflater inflater = LayoutInflater.from(mContext);
-                view = inflater.inflate(R.layout.chat_device_cell_as_group, viewGroup, false);
+        // Group position 0 is reserved for ME participant & devices
+        DeviceGroupViewHolder holder = null;
+        if (view != null) {
+            Object possibleHolder = view.getTag();
+            if (possibleHolder instanceof DeviceGroupViewHolder) {
+                holder = (DeviceGroupViewHolder) possibleHolder;
             }
-            if (holder == null) {
-                holder = new DeviceChildViewHolder(view);
-                view.setTag(holder);
-            }
+        } else {
+            LayoutInflater inflater = LayoutInflater.from(mContext);
+            view = inflater.inflate(R.layout.chat_device_group, viewGroup, false);
+        }
+        if (holder == null) {
+            holder = new DeviceGroupViewHolder(view);
+            view.setTag(holder);
+        }
 
-            holder.deviceName.setText(device.getName());
+        Address participantAddress = participant.getAddress();
+        LinphoneContact contact =
+                ContactsManager.getInstance().findContactFromAddress(participantAddress);
+        if (contact != null) {
+            ContactAvatar.displayAvatar(
+                    contact, participant.getSecurityLevel(), holder.avatarLayout);
+            holder.participantName.setText(contact.getFullName());
+        } else {
+            String displayName = LinphoneUtils.getAddressDisplayName(participantAddress);
+            ContactAvatar.displayAvatar(
+                    displayName, participant.getSecurityLevel(), holder.avatarLayout);
+            holder.participantName.setText(displayName);
+        }
 
+        holder.sipUri.setText(participantAddress.asStringUriOnly());
+        if (!mContext.getResources().getBoolean(R.bool.show_sip_uri_in_chat)) {
+            holder.sipUri.setVisibility(View.GONE);
+        }
+
+        if (getChildrenCount(groupPosition) == 1) {
+            holder.securityLevel.setVisibility(View.VISIBLE);
+            holder.groupExpander.setVisibility(View.GONE);
+
+            ParticipantDevice device = (ParticipantDevice) getChild(groupPosition, 0);
             ChatRoomSecurityLevel level = device.getSecurityLevel();
             switch (level) {
                 case Safe:
@@ -91,67 +110,10 @@ class DevicesAdapter extends BaseExpandableListAdapter {
                     break;
             }
         } else {
-            Participant participant = (Participant) getGroup(groupPosition);
-
-            DeviceGroupViewHolder holder = null;
-            if (view != null) {
-                Object possibleHolder = view.getTag();
-                if (possibleHolder instanceof DeviceGroupViewHolder) {
-                    holder = (DeviceGroupViewHolder) possibleHolder;
-                }
-            } else {
-                LayoutInflater inflater = LayoutInflater.from(mContext);
-                view = inflater.inflate(R.layout.chat_device_group, viewGroup, false);
-            }
-            if (holder == null) {
-                holder = new DeviceGroupViewHolder(view);
-                view.setTag(holder);
-            }
-
-            Address participantAddress = participant.getAddress();
-            LinphoneContact contact =
-                    ContactsManager.getInstance().findContactFromAddress(participantAddress);
-            if (contact != null) {
-                ContactAvatar.displayAvatar(
-                        contact, participant.getSecurityLevel(), holder.avatarLayout);
-                holder.participantName.setText(contact.getFullName());
-            } else {
-                String displayName = LinphoneUtils.getAddressDisplayName(participantAddress);
-                ContactAvatar.displayAvatar(
-                        displayName, participant.getSecurityLevel(), holder.avatarLayout);
-                holder.participantName.setText(displayName);
-            }
-
-            holder.sipUri.setText(participantAddress.asStringUriOnly());
-            if (!mContext.getResources().getBoolean(R.bool.show_sip_uri_in_chat)) {
-                holder.sipUri.setVisibility(View.GONE);
-            }
-
-            if (getChildrenCount(groupPosition) == 1) {
-                holder.securityLevel.setVisibility(View.VISIBLE);
-                holder.groupExpander.setVisibility(View.GONE);
-
-                ParticipantDevice device = (ParticipantDevice) getChild(groupPosition, 0);
-                ChatRoomSecurityLevel level = device.getSecurityLevel();
-                switch (level) {
-                    case Safe:
-                        holder.securityLevel.setImageResource(R.drawable.security_2_indicator);
-                        break;
-                    case Encrypted:
-                        holder.securityLevel.setImageResource(R.drawable.security_1_indicator);
-                        break;
-                    case ClearText:
-                    case Unsafe:
-                    default:
-                        holder.securityLevel.setImageResource(R.drawable.security_alert_indicator);
-                        break;
-                }
-            } else {
-                holder.securityLevel.setVisibility(View.GONE);
-                holder.groupExpander.setVisibility(View.VISIBLE);
-                holder.groupExpander.setImageResource(
-                        isExpanded ? R.drawable.chevron_list_open : R.drawable.chevron_list_close);
-            }
+            holder.securityLevel.setVisibility(View.GONE);
+            holder.groupExpander.setVisibility(View.VISIBLE);
+            holder.groupExpander.setImageResource(
+                    isExpanded ? R.drawable.chevron_list_open : R.drawable.chevron_list_close);
         }
 
         return view;
@@ -199,32 +161,27 @@ class DevicesAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getGroupCount() {
-        if (mParticipants.isEmpty()) return 0;
-        return mOnlyDisplayChildsAsGroups
-                ? mParticipants.get(0).getDevices().length
-                : mParticipants.size();
+        return mParticipants.size();
     }
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        if (mParticipants.isEmpty()) return 0;
-        return mOnlyDisplayChildsAsGroups
-                ? 0
-                : mParticipants.get(groupPosition).getDevices().length;
+        if (groupPosition >= mParticipants.size()) return 0;
+        return mParticipants.get(groupPosition).getDevices().length;
     }
 
     @Override
     public Object getGroup(int groupPosition) {
-        if (mParticipants.isEmpty()) return null;
-        return mOnlyDisplayChildsAsGroups
-                ? mParticipants.get(0).getDevices()[groupPosition]
-                : mParticipants.get(groupPosition);
+        if (groupPosition >= mParticipants.size()) return null;
+        return mParticipants.get(groupPosition);
     }
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        if (mParticipants.isEmpty()) return null;
-        return mParticipants.get(groupPosition).getDevices()[childPosition];
+        if (groupPosition >= mParticipants.size()) return null;
+        ParticipantDevice[] devices = mParticipants.get(groupPosition).getDevices();
+        if (devices.length == 0 || childPosition >= devices.length) return null;
+        return devices[childPosition];
     }
 
     @Override

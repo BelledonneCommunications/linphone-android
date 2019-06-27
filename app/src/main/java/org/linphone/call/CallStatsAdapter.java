@@ -71,10 +71,10 @@ public class CallStatsAdapter extends BaseExpandableListAdapter {
             view = inflater.inflate(R.layout.call_stats_child, viewGroup, false);
         }
 
-            // filling the view
-            holder = new CallStatsChildViewHolder(view, mContext);
-            view.setTag(holder);
-            holder.setCall(mCalls.get(groupPosition));
+        // filling the view
+        holder = new CallStatsChildViewHolder(view, mContext);
+        view.setTag(holder);
+        holder.setCall(mCalls.get(groupPosition));
 
         return view;
     }

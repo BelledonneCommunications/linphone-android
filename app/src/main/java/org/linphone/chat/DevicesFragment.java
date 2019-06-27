@@ -28,7 +28,7 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
-import java.util.Arrays;
+import java.util.ArrayList;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
@@ -38,6 +38,7 @@ import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.Core;
 import org.linphone.core.Factory;
+import org.linphone.core.Participant;
 import org.linphone.core.ParticipantDevice;
 import org.linphone.utils.LinphoneUtils;
 
@@ -173,8 +174,13 @@ public class DevicesFragment extends Fragment {
         }
 
         if (mRoom != null && mRoom.getNbParticipants() > 0) {
-            mOnlyDisplayChilds = mRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt());
-            mAdapter.updateListItems(Arrays.asList(mRoom.getParticipants()), mOnlyDisplayChilds);
+            ArrayList<Participant> participantLists = new ArrayList<>();
+            // Group position 0 is reserved for ME participant & devices
+            participantLists.add(mRoom.getMe());
+            for (Participant participant : mRoom.getParticipants()) {
+                participantLists.add(participant);
+            }
+            mAdapter.updateListItems(participantLists);
         }
     }
 }
