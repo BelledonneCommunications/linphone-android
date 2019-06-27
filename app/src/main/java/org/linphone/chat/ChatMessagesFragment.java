@@ -157,9 +157,11 @@ public class ChatMessagesFragment extends Fragment
                         if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
                             ParticipantDevice[] devices =
                                     mChatRoom.getParticipants()[0].getDevices();
-                            if (devices.length == 1) {
-                                oneParticipantOneDevice = true;
-                            }
+                            // Only start a call automatically if both ourselves and the remote
+                            // have 1 device exactly, otherwise show devices list.
+                            oneParticipantOneDevice =
+                                    devices.length == 1
+                                            && mChatRoom.getMe().getDevices().length == 1;
                         }
 
                         if (LinphonePreferences.instance().isLimeSecurityPopupEnabled()) {
