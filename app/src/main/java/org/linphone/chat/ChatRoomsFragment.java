@@ -44,7 +44,6 @@ import org.linphone.core.ChatRoomListenerStub;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.ProxyConfig;
-import org.linphone.utils.LinphoneUtils;
 import org.linphone.utils.SelectableHelper;
 import org.linphone.views.LinphoneLinearLayoutManager;
 
@@ -79,12 +78,7 @@ public class ChatRoomsFragment extends Fragment
         mNoChatHistory = view.findViewById(R.id.noChatHistory);
 
         ChatRoom[] rooms = LinphoneManager.getCore().getChatRooms();
-        List<ChatRoom> mRooms;
-        if (getResources().getBoolean(R.bool.hide_empty_one_to_one_chat_rooms)) {
-            mRooms = LinphoneUtils.removeEmptyOneToOneChatRooms(rooms);
-        } else {
-            mRooms = Arrays.asList(rooms);
-        }
+        List<ChatRoom> mRooms = Arrays.asList(rooms);
 
         mSelectionHelper = new SelectableHelper(view, this);
         mChatRoomsAdapter =
@@ -244,7 +238,6 @@ public class ChatRoomsFragment extends Fragment
             core.removeListener(mListener);
         }
         ContactsManager.getInstance().removeContactsListener(this);
-        mChatRoomsAdapter.clear();
         super.onPause();
     }
 

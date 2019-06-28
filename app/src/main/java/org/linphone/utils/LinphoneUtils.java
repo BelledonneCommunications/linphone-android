@@ -39,7 +39,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -49,8 +48,6 @@ import org.linphone.R;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.CallLog;
-import org.linphone.core.ChatRoom;
-import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.Core;
 import org.linphone.core.Factory;
 import org.linphone.core.LogCollectionState;
@@ -341,18 +338,6 @@ public final class LinphoneUtils {
         }
 
         return Html.fromHtml(text);
-    }
-
-    public static ArrayList<ChatRoom> removeEmptyOneToOneChatRooms(ChatRoom[] rooms) {
-        ArrayList<ChatRoom> newRooms = new ArrayList<>();
-        for (ChatRoom room : rooms) {
-            // Hide 1-1 chat rooms without messages
-            if (!(room.hasCapability(ChatRoomCapabilities.OneToOne.toInt())
-                    && room.getHistorySize() == 0)) {
-                newRooms.add(room);
-            }
-        }
-        return newRooms;
     }
 
     public static void showTrustDeniedDialog(Context context) {
