@@ -1,7 +1,12 @@
 <?xml version='1.0' encoding='UTF-8'?>
+
+<!DOCTYPE resources [
+    <!ENTITY appName "Linphone">
+]>
+
 <resources>
   <!--Custom-->
-  <string name="app_name">Linphone</string>
+  <string name="app_name">&appName;</string>
   <string name="service_name">Linphone Service</string>
   <string name="addressbook_label">Linphone</string>
   <string name="notification_title">Linphone</string>
