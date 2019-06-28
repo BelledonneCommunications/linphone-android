@@ -25,13 +25,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.recyclerview.widget.DiffUtil;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import org.linphone.LinphoneManager;
-import org.linphone.R;
 import org.linphone.core.ChatRoom;
-import org.linphone.utils.LinphoneUtils;
 import org.linphone.utils.SelectableAdapter;
 import org.linphone.utils.SelectableHelper;
 
@@ -75,33 +71,12 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomViewHolder> {
 
     public void refresh() {
         ChatRoom[] rooms = LinphoneManager.getCore().getChatRooms();
-        List<ChatRoom> roomsList;
-        if (mContext.getResources().getBoolean(R.bool.hide_empty_one_to_one_chat_rooms)) {
-            roomsList = LinphoneUtils.removeEmptyOneToOneChatRooms(rooms);
-        } else {
-            roomsList = Arrays.asList(rooms);
-        }
-
-        Collections.sort(
-                roomsList,
-                new Comparator<ChatRoom>() {
-                    public int compare(ChatRoom cr1, ChatRoom cr2) {
-                        long timeDiff = cr1.getLastUpdateTime() - cr2.getLastUpdateTime();
-                        if (timeDiff > 0) return -1;
-                        else if (timeDiff == 0) return 0;
-                        return 1;
-                    }
-                });
+        List<ChatRoom> roomsList = Arrays.asList(rooms);
 
         DiffUtil.DiffResult diffResult =
                 DiffUtil.calculateDiff(new ChatRoomDiffCallback(roomsList, mRooms));
         diffResult.dispatchUpdatesTo(this);
         mRooms = roomsList;
-    }
-
-    public void clear() {
-        mRooms.clear();
-        // Do not notify data set changed, we don't want the list to empty when fragment is paused
     }
 
     /** Adapter's methods */
@@ -112,7 +87,8 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomViewHolder> {
 
     @Override
     public Object getItem(int position) {
-        return mRooms.get(position);
+        if (position < mRooms.size()) return mRooms.get(position);
+        return null;
     }
 
     @Override
@@ -141,15 +117,12 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomViewHolder> {
 
         @Override
         public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-            ChatRoom oldRoom = oldChatRooms.get(oldItemPosition);
-            ChatRoom newRoom = newChatRooms.get(newItemPosition);
-            return oldRoom.getLocalAddress().weakEqual(newRoom.getLocalAddress())
-                    && oldRoom.getPeerAddress().weakEqual(newRoom.getPeerAddress());
+            return oldChatRooms.get(oldItemPosition) == (newChatRooms.get(newItemPosition));
         }
 
         @Override
         public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-            return oldChatRooms.get(oldItemPosition).equals(newChatRooms.get(newItemPosition));
+            return newChatRooms.get(newItemPosition).getUnreadMessagesCount() > 0;
         }
     }
 }

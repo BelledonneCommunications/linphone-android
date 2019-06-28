@@ -26,8 +26,6 @@ import android.content.Context;
 import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import org.linphone.LinphoneManager;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
@@ -37,7 +35,6 @@ import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.LinphoneShortcutManager;
-import org.linphone.utils.LinphoneUtils;
 
 @TargetApi(25)
 class ApiTwentyFivePlus {
@@ -57,24 +54,11 @@ class ApiTwentyFivePlus {
         ArrayList<ShortcutInfo> shortcuts = new ArrayList<>();
 
         ChatRoom[] rooms = LinphoneManager.getCore().getChatRooms();
-        ArrayList<ChatRoom> notEmptyOneToOneRooms =
-                LinphoneUtils.removeEmptyOneToOneChatRooms(rooms);
-        Collections.sort(
-                notEmptyOneToOneRooms,
-                new Comparator<ChatRoom>() {
-                    public int compare(ChatRoom cr1, ChatRoom cr2) {
-                        long timeDiff = cr1.getLastUpdateTime() - cr2.getLastUpdateTime();
-                        if (timeDiff > 0) return -1;
-                        else if (timeDiff == 0) return 0;
-                        return 1;
-                    }
-                });
 
         int i = 0;
-        int maxShortcuts =
-                min(notEmptyOneToOneRooms.size(), shortcutManager.getMaxShortcutCountPerActivity());
+        int maxShortcuts = min(rooms.length, shortcutManager.getMaxShortcutCountPerActivity());
         ArrayList<LinphoneContact> contacts = new ArrayList<>();
-        for (ChatRoom room : notEmptyOneToOneRooms) {
+        for (ChatRoom room : rooms) {
             // Android can only have around 4-5 shortcuts at a time
             if (i >= maxShortcuts) break;
 
