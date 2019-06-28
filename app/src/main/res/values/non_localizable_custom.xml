@@ -93,7 +93,6 @@
     <bool name="send_multiple_images_as_different_messages">true</bool>
     <bool name="use_big_pictures_to_preview_images_file_transfers">true</bool>
     <bool name="show_sip_uri_in_chat">false</bool>
-    <bool name="hide_empty_one_to_one_chat_rooms">true</bool>
     <bool name="create_most_recent_chat_rooms_shortcuts">true</bool>
     <bool name="force_end_to_end_encryption_in_chat">false</bool>
 
