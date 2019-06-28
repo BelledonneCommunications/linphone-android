@@ -425,9 +425,7 @@ public class LinphoneContact extends AndroidContact
     }
 
     public String getContactFromPresenceModelForUriOrTel(String uri) {
-
         if (mFriend != null && mFriend.getPresenceModelForUriOrTel(uri) != null) {
-
             return mFriend.getPresenceModelForUriOrTel(uri).getContact();
         }
         return null;
@@ -441,8 +439,16 @@ public class LinphoneContact extends AndroidContact
     }
 
     public boolean hasPresenceModelForUriOrTelCapability(String uri, FriendCapability capability) {
-        if (mFriend != null && mFriend.getPresenceModelForUriOrTel(uri) != null) {
+        if (mFriend == null) return false;
+        if (mFriend.getPresenceModelForUriOrTel(uri) != null) {
             return mFriend.getPresenceModelForUriOrTel(uri).hasCapability(capability);
+        } else {
+            for (LinphoneNumberOrAddress noa : getNumbersOrAddresses()) {
+                if (getContactFromPresenceModelForUriOrTel(noa.getValue()).equals(uri)) {
+                    return mFriend.getPresenceModelForUriOrTel(noa.getValue())
+                            .hasCapability(capability);
+                }
+            }
         }
         return false;
     }
