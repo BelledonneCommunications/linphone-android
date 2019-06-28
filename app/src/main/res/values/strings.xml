@@ -1,20 +1,24 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<resources>
 
+<!DOCTYPE resources [
+    <!ENTITY appName SYSTEM "../raw/entities.dtd">
+]>
+
+<resources>
     <!-- Custom -->
-    <string name="app_name">Linphone</string>
-    <string name="service_name">Linphone Service</string>
-    <string name="addressbook_label">Linphone</string>
-    <string name="notification_title">Linphone</string>
+    <string name="app_name">&appName;</string>
+    <string name="service_name">&appName; Service</string>
+    <string name="addressbook_label">&appName;</string>
+    <string name="notification_title">&appName;</string>
     <string name="wait_dialog_text">Starting up</string>
     <string name="notification_registered">%s connected</string>
     <string name="notification_register_failure">%s failed to connect</string>
     <string name="tunnel_host"></string>
-    <string name="about_version">Linphone Android %s</string>
-    <string name="about_liblinphone_version">Linphone Core %s</string>
-    <string name="about_liblinphone_sdk_version">Linphone SDK %s</string>
+    <string name="about_version">&appName; Android %s</string>
+    <string name="about_liblinphone_version">&appName; Core %s</string>
+    <string name="about_liblinphone_sdk_version">&appName; SDK %s</string>
     <string name="about_privacy_policy">Visit our privacy policy</string>
-    <string name="sync_account_name">linphone contacts</string>
+    <string name="sync_account_name">&appName; contacts</string>
 
     <!-- Notifications -->
     <string name="notification_reply_label">Reply</string>
@@ -80,20 +84,20 @@
     <string name="assistant_validate_account_1">Your account is created. Please check your mails to validate your account:</string>
     <string name="assistant_validate_account_2">Once it is done, come back here and click on the button.</string>
     <string name="assistant_welcome_desc">This assistant will help you configure and use your SIP account.</string>
-    <string name="assistant_linphone_login_desc">Please enter your username and password of Linphone account</string>
+    <string name="assistant_linphone_login_desc">Please enter your username and password of &appName; account</string>
     <string name="assistant_login_desc">Please enter your username and password with your SIP domain</string>
     <string name="assistant_remote_provisioning_desc">Please provide your provisioning URL</string>
     <string name="transport">Transport</string>
     <string name="assistant_create_account_phone_number_address">Your SIP address is</string>
-    <string name="assistant_login_linphone">Use Linphone account</string>
+    <string name="assistant_login_linphone">Use &appName; account</string>
     <string name="assistant_login_generic">Use SIP account</string>
     <string name="assistant_remote_provisioning">Fetch remote configuration</string>
     <string name="assistant_create_account_part_1">Please confirm your country code and enter your phone number</string>
     <string name="assistant_create_account_part_2">We have sent you a SMS with a validation code to your phone number:</string>
     <string name="assistant_create_account_part_3">To complete your phone number verification, please enter the 4 digit code below:\n</string>
-    <string name="assistant_create_account_part_email">Please enter an username, email and password for your Linphone account</string>
+    <string name="assistant_create_account_part_email">Please enter an username, email and password for your &appName; account</string>
     <string name="assistant_display_name_optional">Display name (optional)</string>
-    <string name="assistant_linphone_account">Use your Linphone account</string>
+    <string name="assistant_linphone_account">Use your &appName; account</string>
     <string name="assistant_generic_account">Use SIP account</string>
     <string name="assistant_remote_provisioning_title">Fetch remote configuration</string>
     <string name="assistant_fetch_apply">Fetch and apply</string>
@@ -130,9 +134,9 @@
     <string name="use_email_for_validation">Use email address for account validation</string>
     <string name="login_with_username">Use your username and password instead of your phone number</string>
     <string name="phone_number_info_title">What will my phone number be used for?</string>
-    <string name="phone_number_info_content">\nThanks to your phone number, your friends will find you more easily.\n\n You will see in your address book who is using Linphone and your friends will know that they can reach you on Linphone as well.\n</string>
-    <string name="phone_number_link_info_content">\nYour friends will find you more easily if you link your account to your phone number\n\nYou will see in your address book who is using Linphone and your friends will know that they can reach you on Linphone as well.\n</string>
-    <string name="phone_number_link_info_content_already_account">You can only use your phone number with one Linphone account.\n\nIf you had already linked your number to an other account but you prefer to use this one, simply link it now and your number will automatically be moved to this account.</string>
+    <string name="phone_number_info_content">\nThanks to your phone number, your friends will find you more easily.\n\n You will see in your address book who is using &appName; and your friends will know that they can reach you on &appName; as well.\n</string>
+    <string name="phone_number_link_info_content">\nYour friends will find you more easily if you link your account to your phone number\n\nYou will see in your address book who is using &appName; and your friends will know that they can reach you on &appName; as well.\n</string>
+    <string name="phone_number_link_info_content_already_account">You can only use your phone number with one &appName; account.\n\nIf you had already linked your number to an other account but you prefer to use this one, simply link it now and your number will automatically be moved to this account.</string>
     <string name="phone_number_overuse">Too much SMS have been sent to this number in a short period of time, try again in 24 hours.</string>
 
     <!-- Status -->
@@ -184,7 +188,7 @@
     <string name="contact_last_name">Last name</string>
     <string name="contact_organization">Organization</string>
     <string name="invite_friend">Invite</string>
-    <string name="invite_friend_text">Hello, join me on Linphone! You can download it for free at %s</string>
+    <string name="invite_friend_text">Hello, join me on &appName;! You can download it for free at %s</string>
     <string name="toast_choose_contact_for_edition">Select a contact or create a new one</string>
 
     <!-- Chat -->
@@ -432,7 +436,7 @@
 
     <!-- Contact settings -->
     <string name="pref_contact_sync_title">Presence information in native contact</string>
-    <string name="pref_contact_sync_subtitle">Inserting information shortcuts from the Linphone contact into native Android contacts</string>
+    <string name="pref_contact_sync_subtitle">Inserting information shortcuts from the &appName; contact into native Android contacts</string>
     <string name="pref_contact_title">Contact</string>
     <string name="pref_contact_display_contact_organization_title">Display contact organization</string>
     <string name="pref_create_contact_shortcuts">Create shortcuts in launcher</string>
@@ -447,7 +451,7 @@
     <string name="pref_sipinfo_dtmf">Send out-band DTMFs (SIP INFO)</string>
     <string name="pref_call_timeout_title">Call timeout (in seconds)</string>
     <string name="pref_voice_mail">Voice mail URI</string>
-    <string name="pref_dialer_call">Use Linphone as default phone app</string>
+    <string name="pref_dialer_call">Use &appName; as default phone app</string>
     <string name="pref_accept_early_media">Accept early-media</string>
     <string name="pref_grant_read_dnd_settings_permission_title">Do Not Disturb settings</string>
     <string name="pref_grant_read_dnd_settings_permission_desc">We need you to grant use the access to the Do Not Disturb settings to correctly ring or not depending on the current policy</string>
@@ -562,7 +566,7 @@
     <string name="content_description_search_contact">Search contact</string>
     <string name="content_description_search_country">Search country</string>
     <string name="content_description_all_contacts">All contacts</string>
-    <string name="content_description_linphone_contacts">Linphone contacts</string>
+    <string name="content_description_linphone_contacts">&appName; contacts</string>
     <string name="content_description_call_direction">Call direction</string>
     <string name="content_description_all_calls">All calls</string>
     <string name="content_description_missed_calls">Missed calls</string>
@@ -605,8 +609,8 @@
     <string name="content_description_call_options">Call options</string>
     <string name="content_description_audio_route">Audio route</string>
     <string name="content_description_exit_conference">Exit conference</string>
-    <string name="content_title_notification_service">Linphone service notification</string>
-    <string name="content_title_notification">Linphone instant messages notifications</string>
+    <string name="content_title_notification_service">&appName; service notification</string>
+    <string name="content_title_notification">&appName; instant messages notifications</string>
     <string name="content_description_conversation_subject">Group chat room subject</string>
     <string name="content_description_conversation_infos">Group chat room info</string>
     <string name="content_description_record_call">Record call</string>
