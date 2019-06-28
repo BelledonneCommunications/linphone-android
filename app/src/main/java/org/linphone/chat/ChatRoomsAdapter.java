@@ -141,15 +141,12 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomViewHolder> {
 
         @Override
         public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-            ChatRoom oldRoom = oldChatRooms.get(oldItemPosition);
-            ChatRoom newRoom = newChatRooms.get(newItemPosition);
-            return oldRoom.getLocalAddress().weakEqual(newRoom.getLocalAddress())
-                    && oldRoom.getPeerAddress().weakEqual(newRoom.getPeerAddress());
+            return oldChatRooms.get(oldItemPosition).equals(newChatRooms.get(newItemPosition));
         }
 
         @Override
         public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-            return oldChatRooms.get(oldItemPosition).equals(newChatRooms.get(newItemPosition));
+            return true;
         }
     }
 }
