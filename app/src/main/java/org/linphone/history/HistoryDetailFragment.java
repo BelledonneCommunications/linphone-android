@@ -110,6 +110,9 @@ public class HistoryDetailFragment extends Fragment {
                     }
                 });
 
+        if (getResources().getBoolean(R.bool.force_end_to_end_encryption_in_chat)) {
+            chat.setVisibility(View.GONE);
+        }
         if (getResources().getBoolean(R.bool.disable_chat)) {
             chat.setVisibility(View.GONE);
             mChatSecured.setVisibility(View.GONE);
@@ -182,6 +185,7 @@ public class HistoryDetailFragment extends Fragment {
 
             Core core = LinphoneManager.getCore();
             if (address != null && core != null) {
+                address.clean();
                 ProxyConfig proxyConfig = core.getDefaultProxyConfig();
                 CallLog[] logs;
                 if (proxyConfig != null) {
@@ -205,7 +209,7 @@ public class HistoryDetailFragment extends Fragment {
 
                     if (!getResources().getBoolean(R.bool.disable_chat)
                             && mContact.hasPresenceModelForUriOrTelCapability(
-                                    mSipUri, FriendCapability.LimeX3Dh)) {
+                                    address.asStringUriOnly(), FriendCapability.LimeX3Dh)) {
                         mChatSecured.setVisibility(View.VISIBLE);
                     }
                 } else {

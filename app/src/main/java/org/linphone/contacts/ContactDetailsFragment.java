@@ -343,6 +343,9 @@ public class ContactDetailsFragment extends Fragment implements ContactsUpdatedL
                 v.findViewById(R.id.contact_chat_secured).setVisibility(View.GONE);
             }
 
+            if (getResources().getBoolean(R.bool.force_end_to_end_encryption_in_chat)) {
+                v.findViewById(R.id.contact_chat).setVisibility(View.GONE);
+            }
             if (getResources().getBoolean(R.bool.disable_chat)) {
                 v.findViewById(R.id.contact_chat).setVisibility(View.GONE);
                 v.findViewById(R.id.contact_chat_secured).setVisibility(View.GONE);
