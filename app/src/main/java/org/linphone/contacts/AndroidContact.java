@@ -209,26 +209,24 @@ class AndroidContact implements Serializable {
     }
 
     void updateNativeContactWithPresenceInfo(String value) {
-        if (!isLinphoneAddressMimeEntryAlreadyExisting(value)) {
-            Log.d("[Contact] Adding presence information " + value);
-            addChangesToCommit(
-                    ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-                            .withValue(ContactsContract.Data.RAW_CONTACT_ID, mAndroidRawId)
-                            .withValue(
-                                    ContactsContract.Data.MIMETYPE,
-                                    ContactsManager.getInstance()
-                                            .getString(R.string.linphone_address_mime_type))
-                            .withValue("data1", value) // phone number
-                            .withValue(
-                                    "data2",
-                                    ContactsManager.getInstance()
-                                            .getString(R.string.app_name)) // Summary
-                            .withValue("data3", value) // Detail
-                            .build());
-        }
+        Log.d("[Contact] Adding presence information " + value);
+        addChangesToCommit(
+                ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                        .withValue(ContactsContract.Data.RAW_CONTACT_ID, mAndroidRawId)
+                        .withValue(
+                                ContactsContract.Data.MIMETYPE,
+                                ContactsManager.getInstance()
+                                        .getString(R.string.linphone_address_mime_type))
+                        .withValue("data1", value) // phone number
+                        .withValue(
+                                "data2",
+                                ContactsManager.getInstance()
+                                        .getString(R.string.app_name)) // Summary
+                        .withValue("data3", value) // Detail
+                        .build());
     }
 
-    private boolean isLinphoneAddressMimeEntryAlreadyExisting(String value) {
+    boolean isLinphoneAddressMimeEntryAlreadyExisting(String value) {
         boolean result = false;
 
         ContentResolver resolver = LinphoneService.instance().getContentResolver();
@@ -603,17 +601,17 @@ class AndroidContact implements Serializable {
         if (LinphoneService.instance().getResources().getBoolean(R.bool.use_linphone_tag)) {
             if (mAndroidId != null && (mAndroidRawId == null || !isAndroidRawIdLinphone)) {
                 if (mAndroidRawId == null) {
-                    Log.i("[Contact] RAW ID not found for contact " + mAndroidId);
+                    Log.d("[Contact] RAW ID not found for contact " + mAndroidId);
                     mAndroidRawId = findRawContactID();
                 }
-                Log.i("[Contact] Found RAW ID for contact " + mAndroidId + " : " + mAndroidRawId);
+                Log.d("[Contact] Found RAW ID for contact " + mAndroidId + " : " + mAndroidRawId);
 
                 String linphoneRawId = findLinphoneRawContactId();
                 if (linphoneRawId == null) {
-                    Log.i("[Contact] Linphone RAW ID not found for contact " + mAndroidId);
+                    Log.d("[Contact] Linphone RAW ID not found for contact " + mAndroidId);
                     createRawLinphoneContactFromExistingAndroidContact();
                 } else {
-                    Log.i(
+                    Log.d(
                             "[Contact] Linphone RAW ID found for contact "
                                     + mAndroidId
                                     + " : "
