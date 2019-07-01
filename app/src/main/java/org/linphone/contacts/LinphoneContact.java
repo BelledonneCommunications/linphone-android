@@ -559,12 +559,13 @@ public class LinphoneContact extends AndroidContact
             Log.d("[Linphone Contact] Found first name " + data2 + " and last name " + data3);
             setFirstNameAndLastName(data2, data3, false);
         } else {
-            Log.w("[Linphone Contact] Unexpected MIME type " + mime);
+            Log.d("[Linphone Contact] Skipping unused MIME type " + mime);
         }
     }
 
     public void updateNativeContactWithPresenceInfo() {
         Log.d("[Contact] Trying to update native contact with presence information");
+
         // Creation of the raw contact with the presence information (tablet)
         createRawLinphoneContactFromExistingAndroidContactIfNeeded();
 
@@ -583,8 +584,10 @@ public class LinphoneContact extends AndroidContact
             // If presence is not null
             if (pm != null && pm.getBasicStatus().equals(PresenceBasicStatus.Open)) {
                 Log.d("[Contact] Found presence information for phone number " + value);
-                // Do the action on the contact only once if it has not been done yet
-                updateNativeContactWithPresenceInfo(value);
+                if (!isLinphoneAddressMimeEntryAlreadyExisting(value)) {
+                    // Do the action on the contact only once if it has not been done yet
+                    updateNativeContactWithPresenceInfo(value);
+                }
             }
         }
         saveChangesCommited();
