@@ -321,7 +321,7 @@ public class LinphoneContact extends AndroidContact
         return mFriend;
     }
 
-    private void createOrUpdateFriend() {
+    private synchronized void createOrUpdateFriend() {
         boolean created = false;
         Core core = LinphoneManager.getCore();
         if (core == null) return;
@@ -563,7 +563,7 @@ public class LinphoneContact extends AndroidContact
         }
     }
 
-    public void updateNativeContactWithPresenceInfo() {
+    public synchronized void updateNativeContactWithPresenceInfo() {
         Log.d("[Contact] Trying to update native contact with presence information");
         // Creation of the raw contact with the presence information (tablet)
         createRawLinphoneContactFromExistingAndroidContactIfNeeded();
