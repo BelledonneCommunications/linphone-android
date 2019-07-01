@@ -111,6 +111,7 @@
     <bool name="hide_invite_contact">false</bool>
     <bool name="generate_text_avatar">true</bool>
     <bool name="only_show_address_username_if_matches_default_domain">true</bool>
+    <bool name="fetch_contacts_from_default_directory">true</bool> <!-- Recommended -->
 
     <!-- Side Menu -->
     <bool name="hide_assistant_from_side_menu">false</bool>
