@@ -358,11 +358,18 @@ public class ContactsManager extends ContentObserver implements FriendListListen
     public synchronized LinphoneContact findContactFromAddress(Address address) {
         if (address == null) return null;
         Core core = LinphoneManager.getCore();
+
         Friend lf = core.findFriend(address);
         if (lf != null) {
             return (LinphoneContact) lf.getUserData();
         }
-        return findContactFromPhoneNumber(address.getUsername());
+
+        String username = address.getUsername();
+        if (android.util.Patterns.PHONE.matcher(username).matches()) {
+            return findContactFromPhoneNumber(username);
+        }
+
+        return null;
     }
 
     public synchronized LinphoneContact findContactFromPhoneNumber(String phoneNumber) {

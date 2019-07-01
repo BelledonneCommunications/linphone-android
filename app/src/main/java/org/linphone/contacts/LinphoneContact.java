@@ -2,7 +2,7 @@ package org.linphone.contacts;
 
 /*
 LinphoneContact.java
-Copyright (C) 2017  Belledonne Communications, Grenoble, France
+Copyright (C) 2017 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -37,6 +37,7 @@ import org.linphone.core.FriendList;
 import org.linphone.core.PresenceBasicStatus;
 import org.linphone.core.PresenceModel;
 import org.linphone.core.SubscribePolicy;
+import org.linphone.core.tools.Log;
 
 public class LinphoneContact extends AndroidContact
         implements Serializable, Comparable<LinphoneContact> {
@@ -208,16 +209,16 @@ public class LinphoneContact extends AndroidContact
         boolean found = false;
         // Check for duplicated phone numbers but with different formats
         for (LinphoneNumberOrAddress number : mAddresses) {
-            if ((!noa.isSIPAddress()
-                            && !number.isSIPAddress()
-                            && noa.getNormalizedPhone().equals(number.getNormalizedPhone()))
-                    || (noa.isSIPAddress()
-                            && !number.isSIPAddress()
-                            && noa.getValue().equals(number.getNormalizedPhone()))
-                    || (number.getValue().equals(noa.getNormalizedPhone())
-                            || !number.isSIPAddress())) {
-                found = true;
-                break;
+            if (!number.isSIPAddress()) {
+                if ((!noa.isSIPAddress()
+                                && noa.getNormalizedPhone().equals(number.getNormalizedPhone()))
+                        || (noa.isSIPAddress()
+                                && noa.getValue().equals(number.getNormalizedPhone()))
+                        || (noa.getNormalizedPhone().equals(number.getValue()))) {
+                    Log.d("[Linphone Contact] Duplicated entry detected: " + noa);
+                    found = true;
+                    break;
+                }
             }
         }
 
@@ -538,22 +539,55 @@ public class LinphoneContact extends AndroidContact
         String data4 = c.getString(c.getColumnIndex("data4"));
 
         if (getFullName() == null) {
+            Log.d("[Linphone Contact] Setting display name " + displayName);
             setFullName(displayName);
         }
 
         if (ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE.equals(mime)) {
+            Log.d("[Linphone Contact] Found phone number " + data1 + " (" + data4 + ")");
             addNumberOrAddress(new LinphoneNumberOrAddress(data1, data4));
-
         } else if (ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE.equals(mime)
                 || LinphoneService.instance()
                         .getString(R.string.linphone_address_mime_type)
                         .equals(mime)) {
+            Log.d("[Linphone Contact] Found SIP address " + data1);
             addNumberOrAddress(new LinphoneNumberOrAddress(data1, true));
         } else if (ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE.equals(mime)) {
+            Log.d("[Linphone Contact] Found organization " + data1);
             setOrganization(data1, false);
         } else if (ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE.equals(mime)) {
+            Log.d("[Linphone Contact] Found first name " + data2 + " and last name " + data3);
             setFirstNameAndLastName(data2, data3, false);
+        } else {
+            Log.w("[Linphone Contact] Unexpected MIME type " + mime);
         }
+    }
+
+    public void updateNativeContactWithPresenceInfo() {
+        Log.d("[Contact] Trying to update native contact with presence information");
+        // Creation of the raw contact with the presence information (tablet)
+        createRawLinphoneContactFromExistingAndroidContactIfNeeded();
+
+        for (LinphoneNumberOrAddress noa : getNumbersOrAddresses()) {
+            if (noa.isSIPAddress()) {
+                // We are only interested in SIP addresses
+                continue;
+            }
+            String value = noa.getValue();
+            if (value == null || value.isEmpty()) {
+                return;
+            }
+
+            // Test presence of the value
+            PresenceModel pm = getFriend().getPresenceModelForUriOrTel(value);
+            // If presence is not null
+            if (pm != null && pm.getBasicStatus().equals(PresenceBasicStatus.Open)) {
+                Log.d("[Contact] Found presence information for phone number " + value);
+                // Do the action on the contact only once if it has not been done yet
+                updateNativeContactWithPresenceInfo(value);
+            }
+        }
+        saveChangesCommited();
     }
 
     public void save() {
