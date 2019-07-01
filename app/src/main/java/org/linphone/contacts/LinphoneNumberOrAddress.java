@@ -2,7 +2,7 @@ package org.linphone.contacts;
 
 /*
 LinphoneNumberOrAddress.java
-Copyright (C) 2017  Belledonne Communications, Grenoble, France
+Copyright (C) 2017 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -88,5 +88,9 @@ public class LinphoneNumberOrAddress implements Serializable, Comparable<Linphon
 
     public String getNormalizedPhone() {
         return mNormalizedPhone != null ? mNormalizedPhone : mValue;
+    }
+
+    public String toString() {
+        return (isSIPAddress() ? "sip:" : "tel:") + getNormalizedPhone();
     }
 }

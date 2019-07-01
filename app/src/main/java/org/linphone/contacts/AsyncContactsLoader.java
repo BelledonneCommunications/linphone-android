@@ -2,7 +2,7 @@ package org.linphone.contacts;
 
 /*
 AsyncContactsLoader.java
-Copyright (C) 2018  Belledonne Communications, Grenoble, France
+Copyright (C) 2018 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -78,12 +78,19 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
     @Override
     protected AsyncContactsData doInBackground(Void... params) {
         Log.i("[Contacts Manager] Background synchronization started");
+
+        String selection = null;
+        if (mContext.getResources().getBoolean(R.bool.fetch_contacts_from_default_directory)) {
+            Log.i("[Contacts Manager] Only fetching contacts in default directory");
+            selection = ContactsContract.Data.IN_DEFAULT_DIRECTORY + " == 1";
+        }
+
         Cursor c =
                 mContext.getContentResolver()
                         .query(
                                 ContactsContract.Data.CONTENT_URI,
                                 PROJECTION,
-                                ContactsContract.Data.IN_DEFAULT_DIRECTORY + " == 1",
+                                selection,
                                 null,
                                 null);
 
@@ -141,6 +148,11 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
 
                 LinphoneContact contact = androidContactsCache.get(id);
                 if (contact == null) {
+                    Log.d(
+                            "[Contacts Manager] Creating LinphoneContact with native ID "
+                                    + id
+                                    + ", favorite flag is "
+                                    + starred);
                     nativeIds.add(id);
                     contact = new LinphoneContact();
                     contact.setAndroidId(id);
