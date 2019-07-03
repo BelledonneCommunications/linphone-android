@@ -70,6 +70,7 @@ import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
+import org.linphone.core.Call;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomCapabilities;
@@ -77,6 +78,7 @@ import org.linphone.core.ChatRoomListener;
 import org.linphone.core.ChatRoomSecurityLevel;
 import org.linphone.core.Content;
 import org.linphone.core.Core;
+import org.linphone.core.CoreListenerStub;
 import org.linphone.core.EventLog;
 import org.linphone.core.Factory;
 import org.linphone.core.Participant;
@@ -121,6 +123,7 @@ public class ChatMessagesFragment extends Fragment
     private int mContextMenuMessagePosition;
     private LinearLayout mTopBar;
     private ImageView mChatRoomSecurityLevel;
+    private CoreListenerStub mCoreListener;
 
     private InputContentInfoCompat mCurrentInputContentInfo;
 
@@ -345,12 +348,26 @@ public class ChatMessagesFragment extends Fragment
             onRestoreInstanceState(savedInstanceState);
         }
 
+        mCoreListener =
+                new CoreListenerStub() {
+                    @Override
+                    public void onCallStateChanged(
+                            Core lc, Call call, Call.State state, String message) {
+                        displayChatRoomHeader();
+                    }
+                };
+
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            core.addListener(mCoreListener);
+        }
 
         ContactsManager.getInstance().addContactsListener(this);
 
@@ -380,6 +397,11 @@ public class ChatMessagesFragment extends Fragment
 
     @Override
     public void onPause() {
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            core.removeListener(mCoreListener);
+        }
+
         ContactsManager.getInstance().removeContactsListener(this);
         removeVirtualKeyboardVisiblityListener();
         LinphoneService.instance().getNotificationManager().setCurrentlyDisplayedChatRoom(null);

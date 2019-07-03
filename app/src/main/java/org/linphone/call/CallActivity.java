@@ -24,6 +24,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -753,7 +754,10 @@ public class CallActivity extends LinphoneGenericActivity
         }
 
         mVideoInviteInProgress.setVisibility(View.GONE);
-        mVideo.setEnabled(LinphonePreferences.instance().isVideoEnabled());
+        mVideo.setEnabled(
+                LinphonePreferences.instance().isVideoEnabled()
+                        && call != null
+                        && !call.mediaInProgress());
 
         boolean videoEnabled =
                 LinphonePreferences.instance().isVideoEnabled()
@@ -778,11 +782,30 @@ public class CallActivity extends LinphoneGenericActivity
 
                 RelativeLayout.LayoutParams lp =
                         (RelativeLayout.LayoutParams) mLocalPreview.getLayoutParams();
+
                 lp.removeRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                 lp.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 
                 int left = lp.leftMargin + (x - mPreviewX);
                 int top = lp.topMargin + (y - mPreviewY);
+
+                int width = lp.width;
+                int height = lp.height;
+
+                Point screenSize = new Point();
+                getWindow().getWindowManager().getDefaultDisplay().getSize(screenSize);
+
+                int statusBarHeight = 0;
+                int resource =
+                        getResources().getIdentifier("status_bar_height", "dimen", "android");
+                if (resource > 0) {
+                    statusBarHeight = getResources().getDimensionPixelSize(resource);
+                }
+
+                if (left < 0
+                        || top < 0
+                        || left + width >= screenSize.x
+                        || top + height + statusBarHeight >= screenSize.y) return;
 
                 lp.leftMargin = left;
                 lp.topMargin = top;

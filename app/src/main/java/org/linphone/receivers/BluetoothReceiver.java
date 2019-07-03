@@ -76,6 +76,35 @@ public class BluetoothReceiver extends BroadcastReceiver {
             } else {
                 Log.w("[Bluetooth] Bluetooth headset unknown SCO state changed: " + state);
             }
+        } else if (action.equals(BluetoothHeadset.ACTION_VENDOR_SPECIFIC_HEADSET_EVENT)) {
+            String command =
+                    intent.getStringExtra(BluetoothHeadset.EXTRA_VENDOR_SPECIFIC_HEADSET_EVENT_CMD);
+            int type =
+                    intent.getIntExtra(
+                            BluetoothHeadset.EXTRA_VENDOR_SPECIFIC_HEADSET_EVENT_CMD_TYPE, -1);
+
+            String commandType;
+            switch (type) {
+                case BluetoothHeadset.AT_CMD_TYPE_ACTION:
+                    commandType = "AT Action";
+                    break;
+                case BluetoothHeadset.AT_CMD_TYPE_READ:
+                    commandType = "AT Read";
+                    break;
+                case BluetoothHeadset.AT_CMD_TYPE_TEST:
+                    commandType = "AT Test";
+                    break;
+                case BluetoothHeadset.AT_CMD_TYPE_SET:
+                    commandType = "AT Set";
+                    break;
+                case BluetoothHeadset.AT_CMD_TYPE_BASIC:
+                    commandType = "AT Basic";
+                    break;
+                default:
+                    commandType = "AT Unknown";
+                    break;
+            }
+            Log.i("[Bluetooth] Vendor action " + commandType + " : " + command);
         } else {
             Log.w("[Bluetooth] Bluetooth unknown action: " + action);
         }

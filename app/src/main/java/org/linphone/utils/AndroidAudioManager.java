@@ -204,11 +204,11 @@ public class AndroidAudioManager {
         if (mBluetoothAdapter != null && mBluetoothHeadset != null) {
             Log.i("[Audio Manager] [Bluetooth] Closing HEADSET profile proxy");
             mBluetoothAdapter.closeProfileProxy(BluetoothProfile.HEADSET, mBluetoothHeadset);
+        }
 
-            Log.i("[Audio Manager] [Bluetooth] Unegistering bluetooth receiver");
-            if (mBluetoothReceiver != null) {
-                mContext.unregisterReceiver(mBluetoothReceiver);
-            }
+        Log.i("[Audio Manager] [Bluetooth] Unegistering bluetooth receiver");
+        if (mBluetoothReceiver != null) {
+            mContext.unregisterReceiver(mBluetoothReceiver);
         }
 
         Core core = LinphoneManager.getCore();
@@ -533,21 +533,16 @@ public class AndroidAudioManager {
                                     Log.i(
                                             "[Audio Manager] [Bluetooth] Registering bluetooth receiver");
 
-                                    mContext.registerReceiver(
-                                            mBluetoothReceiver,
-                                            new IntentFilter(
-                                                    BluetoothHeadset
-                                                            .ACTION_CONNECTION_STATE_CHANGED));
-                                    mContext.registerReceiver(
-                                            mBluetoothReceiver,
-                                            new IntentFilter(
-                                                    BluetoothHeadset.ACTION_AUDIO_STATE_CHANGED));
+                                    IntentFilter filter = new IntentFilter();
+                                    filter.addAction(BluetoothHeadset.ACTION_AUDIO_STATE_CHANGED);
+                                    filter.addAction(
+                                            BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED);
+                                    filter.addAction(AudioManager.ACTION_SCO_AUDIO_STATE_UPDATED);
+                                    filter.addAction(
+                                            BluetoothHeadset.ACTION_VENDOR_SPECIFIC_HEADSET_EVENT);
+
                                     Intent sticky =
-                                            mContext.registerReceiver(
-                                                    mBluetoothReceiver,
-                                                    new IntentFilter(
-                                                            AudioManager
-                                                                    .ACTION_SCO_AUDIO_STATE_UPDATED));
+                                            mContext.registerReceiver(mBluetoothReceiver, filter);
                                     int state =
                                             sticky.getIntExtra(
                                                     AudioManager.EXTRA_SCO_AUDIO_STATE,
