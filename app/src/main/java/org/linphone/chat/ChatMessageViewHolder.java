@@ -87,7 +87,7 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
     public ChatMessageViewHolder(
             Context context, View view, ChatMessageViewHolderClickListener listener) {
         this(view);
-        mContext = context;
+        mContext = context.getApplicationContext();
         mListener = listener;
         view.setOnClickListener(this);
     }

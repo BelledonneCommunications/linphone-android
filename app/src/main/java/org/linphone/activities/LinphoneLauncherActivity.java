@@ -34,7 +34,7 @@ import org.linphone.settings.LinphonePreferences;
 
 /** Creates LinphoneService and wait until Core is ready to start main Activity */
 public class LinphoneLauncherActivity extends Activity {
-    private Handler mHandler;
+    private final Handler mHandler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +47,6 @@ public class LinphoneLauncherActivity extends Activity {
         if (!getResources().getBoolean(R.bool.use_full_screen_image_splashscreen)) {
             setContentView(R.layout.launch_screen);
         } // Otherwise use drawable/launch_screen layer list up until first activity starts
-
-        mHandler = new Handler();
     }
 
     @Override

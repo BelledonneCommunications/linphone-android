@@ -137,9 +137,12 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
                         } else if (state == State.Connected) {
                             startActivity(
                                     new Intent(CallOutgoingActivity.this, CallActivity.class));
+                            mCall = null;
+                            finish();
                         }
 
                         if (LinphoneManager.getCore().getCallsNb() == 0) {
+                            mCall = null;
                             finish();
                         }
                     }
@@ -200,6 +203,7 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
         if (core != null) {
             core.removeListener(mListener);
         }
+        mCall = null;
         super.onPause();
     }
 
@@ -231,6 +235,7 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
         if (LinphoneService.isReady()
                 && (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME)) {
             mCall.terminate();
+            mCall = null;
             finish();
         }
         return super.onKeyDown(keyCode, event);
@@ -238,6 +243,7 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
 
     private void decline() {
         mCall.terminate();
+        mCall = null;
         finish();
     }
 

@@ -141,6 +141,16 @@ public class DevicesFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onPause() {
+        if (mAdapter != null) {
+            mAdapter.clear();
+            mAdapter = null;
+        }
+
+        super.onPause();
+    }
+
     private void initChatRoom() {
         Core core = LinphoneManager.getCore();
         mRoom = core.getChatRoom(mRoomAddr, mLocalSipAddr);

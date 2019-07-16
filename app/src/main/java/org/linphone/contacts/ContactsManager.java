@@ -69,7 +69,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
 
     public ContactsManager(Context context, Handler handler) {
         super(handler);
-        mContext = context;
+        mContext = context.getApplicationContext();
         mContactsUpdatedListeners = new ArrayList<>();
         mContacts = new ArrayList<>();
         mSipContacts = new ArrayList<>();

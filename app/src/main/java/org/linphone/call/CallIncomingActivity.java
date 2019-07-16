@@ -58,7 +58,6 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
     private Call mCall;
     private CoreListenerStub mListener;
     private boolean mAlreadyAcceptedOrDeniedCall;
-    private TextureView mVideoDisplay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +73,6 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
 
         mName = findViewById(R.id.contact_name);
         mNumber = findViewById(R.id.contact_number);
-        mVideoDisplay = findViewById(R.id.videoSurface);
 
         CallIncomingAnswerButton mAccept = findViewById(R.id.answer_button);
         CallIncomingDeclineButton mDecline = findViewById(R.id.decline_button);
@@ -125,10 +123,13 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
                     public void onCallStateChanged(
                             Core core, Call call, State state, String message) {
                         if (call == mCall && State.End == state) {
+                            mCall = null;
                             finish();
                         } else if (state == State.Connected) {
                             startActivity(
                                     new Intent(CallIncomingActivity.this, CallActivity.class));
+                            mCall = null;
+                            finish();
                         }
                     }
                 };
@@ -169,7 +170,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
         if (LinphonePreferences.instance().acceptIncomingEarlyMedia()) {
             if (mCall.getCurrentParams().videoEnabled()) {
                 findViewById(R.id.avatar_layout).setVisibility(View.GONE);
-                mCall.getCore().setNativeVideoWindowId(mVideoDisplay);
+                mCall.getCore().setNativeVideoWindowId(findViewById(R.id.videoSurface));
             }
         }
     }
@@ -186,6 +187,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
         if (core != null) {
             core.removeListener(mListener);
         }
+        mCall = null;
         super.onPause();
     }
 
@@ -194,6 +196,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
         if (LinphoneService.isReady()
                 && (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME)) {
             mCall.terminate();
+            mCall = null;
             finish();
         }
         return super.onKeyDown(keyCode, event);
@@ -218,6 +221,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
         mAlreadyAcceptedOrDeniedCall = true;
 
         mCall.terminate();
+        mCall = null;
         finish();
     }
 

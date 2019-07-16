@@ -57,7 +57,7 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
     private Context mContext;
 
     public AsyncContactsLoader(Context context) {
-        mContext = context;
+        mContext = context.getApplicationContext();
     }
 
     @Override

@@ -29,7 +29,6 @@ import android.widget.ExpandableListView;
 import android.widget.RelativeLayout;
 import androidx.annotation.Nullable;
 import androidx.drawerlayout.widget.DrawerLayout;
-import java.util.Arrays;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.Call;
@@ -57,8 +56,7 @@ public class CallStatsFragment extends Fragment {
                     public void onCallStateChanged(
                             Core lc, Call call, Call.State cstate, String message) {
                         if (cstate == Call.State.End || cstate == Call.State.Error) {
-                            mAdapter.updateListItems(
-                                    Arrays.asList(LinphoneManager.getCore().getCalls()));
+                            mAdapter.updateListItems(LinphoneManager.getCore().getCalls());
                         }
                     }
                 };
@@ -68,7 +66,6 @@ public class CallStatsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Core core = LinphoneManager.getCore();
 
         if (mAdapter == null) {
             mAdapter = new CallStatsAdapter(getActivity());
@@ -78,18 +75,21 @@ public class CallStatsFragment extends Fragment {
             mExpandableList.expandGroup(0);
         }
 
+        Core core = LinphoneManager.getCore();
         // Sends calls from the list to the adapter
         if (core != null && core.getCallsNb() >= 1) {
-            mAdapter.updateListItems(Arrays.asList(core.getCalls()));
+            mAdapter.updateListItems(core.getCalls());
         }
-
         core.addListener(mListener);
     }
 
     @Override
     public void onPause() {
-        super.onPause();
         LinphoneManager.getCore().removeListener(mListener);
+
+        mAdapter = null;
+
+        super.onPause();
     }
 
     public void setDrawer(DrawerLayout drawer, RelativeLayout content) {

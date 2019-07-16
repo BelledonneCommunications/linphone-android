@@ -37,7 +37,7 @@ import org.linphone.utils.LinphoneUtils;
 import org.linphone.views.ContactAvatar;
 
 class DevicesAdapter extends BaseExpandableListAdapter {
-    private final Context mContext;
+    private Context mContext;
     private List<Participant> mParticipants;
 
     public DevicesAdapter(Context context) {
@@ -48,6 +48,11 @@ class DevicesAdapter extends BaseExpandableListAdapter {
     public void updateListItems(List<Participant> participants) {
         mParticipants = participants;
         notifyDataSetChanged();
+    }
+
+    public void clear() {
+        mParticipants.clear();
+        mContext = null;
     }
 
     @Override
