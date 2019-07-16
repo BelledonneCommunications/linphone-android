@@ -81,8 +81,8 @@ public class LinphonePreferences {
         sInstance = null;
     }
 
-    public void setContext(Context c) {
-        mContext = c;
+    public void setContext(Context context) {
+        mContext = context.getApplicationContext();
         mBasePath = mContext.getFilesDir().getAbsolutePath();
         try {
             copyAssetsFromPackage();

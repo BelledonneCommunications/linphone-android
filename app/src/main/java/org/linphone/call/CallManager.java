@@ -48,7 +48,7 @@ public class CallManager {
     private BandwidthManager mBandwidthManager;
 
     public CallManager(Context context) {
-        mContext = context;
+        mContext = context.getApplicationContext();
         mBandwidthManager = new BandwidthManager();
     }
 

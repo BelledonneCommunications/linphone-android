@@ -75,7 +75,7 @@ public class AndroidAudioManager {
     private CoreListenerStub mListener;
 
     public AndroidAudioManager(Context context) {
-        mContext = context;
+        mContext = context.getApplicationContext();
         mAudioManager = ((AudioManager) context.getSystemService(Context.AUDIO_SERVICE));
         mVibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         mEchoTesterIsRunning = false;

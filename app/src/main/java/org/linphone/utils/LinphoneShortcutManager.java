@@ -38,7 +38,7 @@ public class LinphoneShortcutManager {
     private Set<String> mCategories;
 
     public LinphoneShortcutManager(Context context) {
-        mContext = context;
+        mContext = context.getApplicationContext();
         mCategories = new ArraySet<>();
         mCategories.add(ShortcutInfo.SHORTCUT_CATEGORY_CONVERSATION);
     }

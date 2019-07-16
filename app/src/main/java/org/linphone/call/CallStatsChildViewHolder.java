@@ -78,7 +78,7 @@ public class CallStatsChildViewHolder {
     private View mAudioLayout;
 
     public CallStatsChildViewHolder(View view, Context context) {
-        mContext = context;
+        mContext = context.getApplicationContext();
 
         mEncoderTexts = new HashMap<>();
         mDecoderTexts = new HashMap<>();
@@ -121,6 +121,9 @@ public class CallStatsChildViewHolder {
                                 org.linphone.core.tools.Log.i(
                                         "[Call Stats] Call is terminated, stopping mCountDownTimer in charge of stats refreshing.");
                                 mTimer.cancel();
+                                mTimer.purge();
+                                mContext = null;
+                                mCall = null;
                             }
                         }
                     }

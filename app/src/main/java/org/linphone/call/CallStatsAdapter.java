@@ -24,8 +24,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.List;
 import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
@@ -34,19 +34,20 @@ import org.linphone.utils.LinphoneUtils;
 import org.linphone.views.ContactAvatar;
 
 public class CallStatsAdapter extends BaseExpandableListAdapter {
-    private final Context mContext;
-    private List<Call> mCalls;
+    private WeakReference<Context> mContext;
+    private ArrayList<Call> mCalls;
 
-    public CallStatsAdapter(Context mContext) {
-        this.mContext = mContext;
+    public CallStatsAdapter(Context context) {
+        mContext = new WeakReference<>(context);
         mCalls = new ArrayList<>();
     }
 
-    public void updateListItems(List<Call> listCall) {
-        if (listCall != null) {
-            mCalls = listCall;
-            notifyDataSetChanged();
+    public void updateListItems(Call[] calls) {
+        mCalls = new ArrayList<>();
+        for (Call call : calls) {
+            mCalls.add(call);
         }
+        notifyDataSetChanged();
     }
 
     @Override
@@ -67,12 +68,12 @@ public class CallStatsAdapter extends BaseExpandableListAdapter {
             }
         } else {
             // opening the statistics view
-            LayoutInflater inflater = LayoutInflater.from(mContext);
+            LayoutInflater inflater = LayoutInflater.from(mContext.get());
             view = inflater.inflate(R.layout.call_stats_child, viewGroup, false);
         }
 
         // filling the view
-        holder = new CallStatsChildViewHolder(view, mContext);
+        holder = new CallStatsChildViewHolder(view, mContext.get());
         view.setTag(holder);
         holder.setCall(mCalls.get(groupPosition));
 
@@ -90,7 +91,7 @@ public class CallStatsAdapter extends BaseExpandableListAdapter {
                 holder = (CallStatsViewHolder) possibleHolder;
             }
         } else {
-            LayoutInflater inflater = LayoutInflater.from(mContext);
+            LayoutInflater inflater = LayoutInflater.from(mContext.get());
             view = inflater.inflate(R.layout.call_stats_group, viewGroup, false);
         }
         if (holder == null) {

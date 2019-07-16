@@ -84,7 +84,7 @@ public class CallActivity extends LinphoneGenericActivity
     private static final int WRITE_EXTERNAL_STORAGE_FOR_RECORDING = 2;
     private static final int CAMERA_TO_ACCEPT_UPDATE = 3;
 
-    private Handler mHandler = new Handler();
+    private final Handler mHandler = new Handler();
     private Runnable mHideControlsRunnable =
             new Runnable() {
                 @Override
@@ -485,6 +485,7 @@ public class CallActivity extends LinphoneGenericActivity
             core.setNativeVideoWindowId(null);
             core.setNativePreviewWindowId(null);
         }
+
         if (mZoomHelper != null) {
             mZoomHelper.destroy();
         }

@@ -36,6 +36,8 @@ import java.util.Collection;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.call.CallActivity;
+import org.linphone.call.CallIncomingActivity;
+import org.linphone.call.CallOutgoingActivity;
 import org.linphone.contacts.ContactsActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.core.Call;
@@ -184,7 +186,33 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startActivity(new Intent(DialerActivity.this, CallActivity.class));
+                        boolean incoming = false;
+                        boolean outgoing = false;
+                        Call[] calls = LinphoneManager.getCore().getCalls();
+
+                        for (Call call : calls) {
+                            Call.State state = call.getState();
+                            switch (state) {
+                                case IncomingEarlyMedia:
+                                case IncomingReceived:
+                                    incoming = true;
+                                    break;
+                                case OutgoingEarlyMedia:
+                                case OutgoingInit:
+                                case OutgoingProgress:
+                                case OutgoingRinging:
+                                    outgoing = true;
+                                    break;
+                            }
+                        }
+
+                        if (incoming) {
+                            startActivity(new Intent(DialerActivity.this, CallIncomingActivity.class));
+                        } else if (outgoing) {
+                            startActivity(new Intent(DialerActivity.this, CallOutgoingActivity.class));
+                        } else {
+                            startActivity(new Intent(DialerActivity.this, CallActivity.class));
+                        }
                     }
                 });
 
