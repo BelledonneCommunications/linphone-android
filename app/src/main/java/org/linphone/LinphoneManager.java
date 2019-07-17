@@ -96,7 +96,7 @@ public class LinphoneManager implements SensorEventListener {
     private final SensorManager mSensorManager;
     private final Sensor mProximity;
     private final MediaScanner mMediaScanner;
-    private Timer mTimer;
+    private Timer mTimer, mAutoAnswerTimer;
     private final Handler mHandler = new Handler();
 
     private final LinphonePreferences mPrefs;
@@ -231,8 +231,8 @@ public class LinphoneManager implements SensorEventListener {
                                             }
                                         }
                                     };
-                            mTimer = new Timer("Auto answer");
-                            mTimer.schedule(lTask, mPrefs.getAutoAnswerTime());
+                            mAutoAnswerTimer = new Timer("Auto answer");
+                            mAutoAnswerTimer.schedule(lTask, mPrefs.getAutoAnswerTime());
                         } else if (state == State.End || state == State.Error) {
                             if (mCore.getCallsNb() == 0) {
                                 // Disabling proximity sensor
@@ -424,6 +424,7 @@ public class LinphoneManager implements SensorEventListener {
 
         try {
             mTimer.cancel();
+            if (mAutoAnswerTimer != null) mAutoAnswerTimer.cancel();
             destroyCore();
         } catch (RuntimeException e) {
             Log.e("[Manager] Destroy Core Runtime Exception: " + e);

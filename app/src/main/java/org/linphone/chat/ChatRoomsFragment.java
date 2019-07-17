@@ -20,7 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +34,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
-import org.linphone.call.CallActivity;
+import org.linphone.activities.MainActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.core.ChatMessage;
@@ -126,7 +125,7 @@ public class ChatRoomsFragment extends Fragment
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startActivity(new Intent(getActivity(), CallActivity.class));
+                        ((MainActivity) getActivity()).goBackToCall();
                     }
                 });
 
