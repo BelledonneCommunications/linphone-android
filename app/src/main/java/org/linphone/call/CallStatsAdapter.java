@@ -37,8 +37,8 @@ public class CallStatsAdapter extends BaseExpandableListAdapter {
     private final Context mContext;
     private List<Call> mCalls;
 
-    public CallStatsAdapter(Context mContext) {
-        this.mContext = mContext;
+    public CallStatsAdapter(Context context) {
+        mContext = context;
         mCalls = new ArrayList<>();
     }
 

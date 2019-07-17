@@ -86,5 +86,6 @@ class ApiTwentyFivePlus {
         }
 
         shortcutManager.setDynamicShortcuts(shortcuts);
+        manager.destroy();
     }
 }

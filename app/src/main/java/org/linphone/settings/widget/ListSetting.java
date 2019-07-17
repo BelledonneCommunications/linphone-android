@@ -54,7 +54,9 @@ public class ListSetting extends BasicSetting implements AdapterView.OnItemSelec
     }
 
     protected void inflateView() {
-        mView = LayoutInflater.from(mContext).inflate(R.layout.settings_widget_list, this, true);
+        mView =
+                LayoutInflater.from(getContext())
+                        .inflate(R.layout.settings_widget_list, this, true);
     }
 
     protected void init(@Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
@@ -67,7 +69,8 @@ public class ListSetting extends BasicSetting implements AdapterView.OnItemSelec
 
         if (attrs != null) {
             TypedArray a =
-                    mContext.getTheme()
+                    getContext()
+                            .getTheme()
                             .obtainStyledAttributes(
                                     attrs, R.styleable.Settings, defStyleAttr, defStyleRes);
             try {
@@ -92,7 +95,7 @@ public class ListSetting extends BasicSetting implements AdapterView.OnItemSelec
         mItems = list;
         mItemsValues = valuesList;
         ArrayAdapter<String> dataAdapter =
-                new ArrayAdapter<>(mContext, android.R.layout.simple_spinner_item, list);
+                new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner.setAdapter(dataAdapter);
     }

@@ -49,7 +49,7 @@ public abstract class AssistantActivity extends LinphoneGenericActivity
         implements CountryPicker.CountryPickedListener {
     static AccountCreator mAccountCreator;
 
-    ImageView mBack;
+    protected ImageView mBack;
     private AlertDialog mCountryPickerDialog;
 
     private CountryPicker mCountryPicker;
@@ -93,6 +93,15 @@ public abstract class AssistantActivity extends LinphoneGenericActivity
                         finish();
                     }
                 });
+    }
+
+    @Override
+    protected void onDestroy() {
+        mBack = null;
+        mCountryPickerDialog = null;
+        mCountryPicker = null;
+
+        super.onDestroy();
     }
 
     @Override
@@ -166,6 +175,8 @@ public abstract class AssistantActivity extends LinphoneGenericActivity
                 intent = new Intent(this, OpenH264DownloadAssistantActivity.class);
             } else {*/
             intent = new Intent(this, DialerActivity.class);
+            intent.addFlags(
+                    Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             // }
         }
         startActivity(intent);

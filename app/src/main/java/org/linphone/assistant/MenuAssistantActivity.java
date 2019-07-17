@@ -130,17 +130,8 @@ public class MenuAssistantActivity extends AssistantActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (!getResources()
+        if (getResources()
                 .getBoolean(R.bool.forbid_to_leave_assistant_before_account_configuration)) {
-            mBack.setOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            LinphonePreferences.instance().firstLaunchSuccessful();
-                            goToLinphoneActivity();
-                        }
-                    });
-        } else {
             mBack.setEnabled(false);
         }
     }

@@ -94,35 +94,30 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
                                                 getString(R.string.error_call_declined),
                                                 Toast.LENGTH_SHORT)
                                         .show();
-                                decline();
                             } else if (call.getErrorInfo().getReason() == Reason.NotFound) {
                                 Toast.makeText(
                                                 CallOutgoingActivity.this,
                                                 getString(R.string.error_user_not_found),
                                                 Toast.LENGTH_SHORT)
                                         .show();
-                                decline();
                             } else if (call.getErrorInfo().getReason() == Reason.NotAcceptable) {
                                 Toast.makeText(
                                                 CallOutgoingActivity.this,
                                                 getString(R.string.error_incompatible_media),
                                                 Toast.LENGTH_SHORT)
                                         .show();
-                                decline();
                             } else if (call.getErrorInfo().getReason() == Reason.Busy) {
                                 Toast.makeText(
                                                 CallOutgoingActivity.this,
                                                 getString(R.string.error_user_busy),
                                                 Toast.LENGTH_SHORT)
                                         .show();
-                                decline();
                             } else if (message != null) {
                                 Toast.makeText(
                                                 CallOutgoingActivity.this,
                                                 getString(R.string.error_unknown) + " - " + message,
                                                 Toast.LENGTH_SHORT)
                                         .show();
-                                decline();
                             }
                         } else if (state == State.End) {
                             // Convert Core message for internalization
@@ -132,7 +127,6 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
                                                 getString(R.string.error_call_declined),
                                                 Toast.LENGTH_SHORT)
                                         .show();
-                                decline();
                             }
                         } else if (state == State.Connected) {
                             startActivity(
@@ -144,6 +138,12 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
                         }
                     }
                 };
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        checkAndRequestCallPermissions();
     }
 
     @Override
@@ -189,18 +189,24 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        checkAndRequestCallPermissions();
-    }
-
-    @Override
     protected void onPause() {
         Core core = LinphoneManager.getCore();
         if (core != null) {
             core.removeListener(mListener);
         }
         super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mName = null;
+        mNumber = null;
+        mMicro = null;
+        mSpeaker = null;
+        mCall = null;
+        mListener = null;
+
+        super.onDestroy();
     }
 
     @Override

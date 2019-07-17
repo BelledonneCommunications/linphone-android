@@ -157,16 +157,6 @@ public class AboutActivity extends MainActivity {
     }
 
     @Override
-    public void onPause() {
-        Core core = LinphoneManager.getCore();
-        if (core != null) {
-            core.removeListener(mListener);
-        }
-
-        super.onPause();
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
 
@@ -179,6 +169,24 @@ public class AboutActivity extends MainActivity {
         if (core != null) {
             core.addListener(mListener);
         }
+    }
+
+    @Override
+    public void onPause() {
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            core.removeListener(mListener);
+        }
+
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mListener = null;
+        mProgress = null;
+
+        super.onDestroy();
     }
 
     private void displayUploadLogsInProgress() {

@@ -53,7 +53,7 @@ public class LedSetting extends BasicSetting {
     }
 
     protected void inflateView() {
-        mView = LayoutInflater.from(mContext).inflate(R.layout.settings_widget_led, this, true);
+        mView = LayoutInflater.from(getContext()).inflate(R.layout.settings_widget_led, this, true);
     }
 
     protected void init(@Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {

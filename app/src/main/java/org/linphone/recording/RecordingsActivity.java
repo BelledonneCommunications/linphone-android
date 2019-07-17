@@ -139,6 +139,17 @@ public class RecordingsActivity extends MainActivity
     }
 
     @Override
+    protected void onDestroy() {
+        mRecordingList = null;
+        mRecordings = null;
+        mNoRecordings = null;
+        mRecordingsAdapter = null;
+        mSelectableHelper = null;
+
+        super.onDestroy();
+    }
+
+    @Override
     public void onDeleteSelection(Object[] objectsToDelete) {
         int size = mRecordingsAdapter.getSelectedItemCount();
         for (int i = 0; i < size; i++) {

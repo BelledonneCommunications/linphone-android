@@ -43,6 +43,10 @@ public class LinphoneShortcutManager {
         mCategories.add(ShortcutInfo.SHORTCUT_CATEGORY_CONVERSATION);
     }
 
+    public void destroy() {
+        mContext = null;
+    }
+
     public ShortcutInfo createChatRoomShortcutInfo(
             LinphoneContact contact, String chatRoomAddress) {
         if (contact == null) return null;

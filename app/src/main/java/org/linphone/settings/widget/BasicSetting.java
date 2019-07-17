@@ -31,38 +31,36 @@ import androidx.annotation.Nullable;
 import org.linphone.R;
 
 public class BasicSetting extends LinearLayout {
-    final Context mContext;
-    View mView;
+    protected View mView;
+    protected SettingListener mListener;
+
     private TextView mTitle;
     private TextView mSubtitle;
-    SettingListener mListener;
 
     public BasicSetting(Context context) {
         super(context);
-        mContext = context;
         init(null, 0, 0);
     }
 
     public BasicSetting(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        mContext = context;
         init(attrs, 0, 0);
     }
 
     public BasicSetting(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        mContext = context;
         init(attrs, defStyleAttr, 0);
     }
 
     BasicSetting(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        mContext = context;
         init(attrs, defStyleAttr, defStyleRes);
     }
 
     void inflateView() {
-        mView = LayoutInflater.from(mContext).inflate(R.layout.settings_widget_basic, this, true);
+        mView =
+                LayoutInflater.from(getContext())
+                        .inflate(R.layout.settings_widget_basic, this, true);
     }
 
     public void setListener(SettingListener listener) {
@@ -88,7 +86,8 @@ public class BasicSetting extends LinearLayout {
 
         if (attrs != null) {
             TypedArray a =
-                    mContext.getTheme()
+                    getContext()
+                            .getTheme()
                             .obtainStyledAttributes(
                                     attrs, R.styleable.Settings, defStyleAttr, defStyleRes);
             try {
