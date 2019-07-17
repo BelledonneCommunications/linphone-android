@@ -72,12 +72,6 @@
 
     </RelativeLayout>
 
-    <TextureView
-        android:id="@+id/videoSurface"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
-
     <LinearLayout
         android:id="@+id/menu"
         android:layout_width="match_parent"

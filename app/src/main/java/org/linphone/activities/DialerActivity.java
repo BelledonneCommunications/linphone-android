@@ -35,7 +35,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
-import org.linphone.call.CallActivity;
 import org.linphone.contacts.ContactsActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.core.Call;
@@ -184,7 +183,7 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startActivity(new Intent(DialerActivity.this, CallActivity.class));
+                        goBackToCall();
                     }
                 });
 

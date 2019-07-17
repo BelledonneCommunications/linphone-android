@@ -33,16 +33,14 @@ import org.linphone.utils.LinphoneUtils;
 public class VideoZoomHelper extends GestureDetector.SimpleOnGestureListener
         implements CompatibilityScaleGestureListener {
     private View mVideoView;
-    private Context mContext;
     private GestureDetector mGestureDetector;
     private float mZoomFactor = 1.f;
     private float mZoomCenterX, mZoomCenterY;
     private CompatibilityScaleGestureDetector mScaleDetector;
 
     public VideoZoomHelper(Context context, View videoView) {
-        mContext = context;
-        mGestureDetector = new GestureDetector(mContext, this);
-        mScaleDetector = new CompatibilityScaleGestureDetector(mContext);
+        mGestureDetector = new GestureDetector(context, this);
+        mScaleDetector = new CompatibilityScaleGestureDetector(context);
         mScaleDetector.setOnScaleListener(this);
 
         mVideoView = videoView;
@@ -146,8 +144,6 @@ public class VideoZoomHelper extends GestureDetector.SimpleOnGestureListener
     }
 
     public void destroy() {
-        mContext = null;
-
         if (mVideoView != null) {
             mVideoView.setOnTouchListener(null);
             mVideoView = null;

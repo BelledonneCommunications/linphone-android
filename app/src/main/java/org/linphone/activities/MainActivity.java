@@ -47,6 +47,9 @@ import java.util.ArrayList;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
+import org.linphone.call.CallActivity;
+import org.linphone.call.CallIncomingActivity;
+import org.linphone.call.CallOutgoingActivity;
 import org.linphone.chat.ChatActivity;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsActivity;
@@ -592,6 +595,36 @@ public abstract class MainActivity extends LinphoneGenericActivity
     }
 
     // Navigation between actvities
+
+    public void goBackToCall() {
+        boolean incoming = false;
+        boolean outgoing = false;
+        Call[] calls = LinphoneManager.getCore().getCalls();
+
+        for (Call call : calls) {
+            Call.State state = call.getState();
+            switch (state) {
+                case IncomingEarlyMedia:
+                case IncomingReceived:
+                    incoming = true;
+                    break;
+                case OutgoingEarlyMedia:
+                case OutgoingInit:
+                case OutgoingProgress:
+                case OutgoingRinging:
+                    outgoing = true;
+                    break;
+            }
+        }
+
+        if (incoming) {
+            startActivity(new Intent(this, CallIncomingActivity.class));
+        } else if (outgoing) {
+            startActivity(new Intent(this, CallOutgoingActivity.class));
+        } else {
+            startActivity(new Intent(this, CallActivity.class));
+        }
+    }
 
     private void addFlagsToIntent(Intent intent) {
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
