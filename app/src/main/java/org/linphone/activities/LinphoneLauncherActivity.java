@@ -23,7 +23,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.os.Handler;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
@@ -31,11 +30,10 @@ import org.linphone.assistant.MenuAssistantActivity;
 import org.linphone.chat.ChatActivity;
 import org.linphone.history.HistoryActivity;
 import org.linphone.settings.LinphonePreferences;
+import org.linphone.utils.LinphoneUtils;
 
 /** Creates LinphoneService and wait until Core is ready to start main Activity */
 public class LinphoneLauncherActivity extends Activity {
-    private Handler mHandler;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,8 +45,6 @@ public class LinphoneLauncherActivity extends Activity {
         if (!getResources().getBoolean(R.bool.use_full_screen_image_splashscreen)) {
             setContentView(R.layout.launch_screen);
         } // Otherwise use drawable/launch_screen layer list up until first activity starts
-
-        mHandler = new Handler();
     }
 
     @Override
@@ -90,7 +86,7 @@ public class LinphoneLauncherActivity extends Activity {
             LinphoneManager.getInstance().checkForUpdate();
         }
 
-        mHandler.postDelayed(
+        LinphoneUtils.dispatchOnUIThreadAfter(
                 new Runnable() {
                     @Override
                     public void run() {
@@ -118,7 +114,7 @@ public class LinphoneLauncherActivity extends Activity {
                     throw new RuntimeException("waiting thread sleep() has been interrupted");
                 }
             }
-            mHandler.post(
+            LinphoneUtils.dispatchOnUIThread(
                     new Runnable() {
                         @Override
                         public void run() {

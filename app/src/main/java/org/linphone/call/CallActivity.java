@@ -29,7 +29,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.os.SystemClock;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -49,6 +48,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import java.lang.ref.WeakReference;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
@@ -84,18 +84,25 @@ public class CallActivity extends LinphoneGenericActivity
     private static final int WRITE_EXTERNAL_STORAGE_FOR_RECORDING = 2;
     private static final int CAMERA_TO_ACCEPT_UPDATE = 3;
 
-    private Handler mHandler = new Handler();
-    private Runnable mHideControlsRunnable =
-            new Runnable() {
-                @Override
-                public void run() {
-                    // Make sure that at the time this is executed this is still required
-                    Call call = mCore.getCurrentCall();
-                    if (call != null && call.getCurrentParams().videoEnabled()) {
-                        updateButtonsVisibility(false);
-                    }
-                }
-            };
+    private static class HideControlsRunnable implements Runnable {
+        private WeakReference<CallActivity> mWeakCallActivity;
+
+        public HideControlsRunnable(CallActivity activity) {
+            mWeakCallActivity = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void run() {
+            // Make sure that at the time this is executed this is still required
+            Call call = LinphoneManager.getCore().getCurrentCall();
+            if (call != null && call.getCurrentParams().videoEnabled()) {
+                CallActivity activity = mWeakCallActivity.get();
+                if (activity != null) activity.updateButtonsVisibility(false);
+            }
+        }
+    }
+
+    private final HideControlsRunnable mHideControlsRunnable = new HideControlsRunnable(this);
 
     private int mPreviewX, mPreviewY;
     private TextureView mLocalPreview, mRemoteVideo;
@@ -485,9 +492,49 @@ public class CallActivity extends LinphoneGenericActivity
             core.setNativeVideoWindowId(null);
             core.setNativePreviewWindowId(null);
         }
+
         if (mZoomHelper != null) {
             mZoomHelper.destroy();
+            mZoomHelper = null;
         }
+        if (mCallUpdateCountDownTimer != null) {
+            mCallUpdateCountDownTimer.cancel();
+            mCallUpdateCountDownTimer = null;
+        }
+
+        mCallTimer.stop();
+        mCallTimer = null;
+        mLocalPreview = null;
+        mRemoteVideo = null;
+        mStatsFragment = null;
+
+        mButtons = null;
+        mActiveCalls = null;
+        mContactAvatar = null;
+        mActiveCallHeader = null;
+        mConferenceHeader = null;
+        mCallsList = null;
+        mCallPausedByRemote = null;
+        mConferenceList = null;
+        mMicro = null;
+        mSpeaker = null;
+        mVideo = null;
+        mPause = null;
+        mSwitchCamera = null;
+        mRecordingInProgress = null;
+        mExtrasButtons = null;
+        mAddCall = null;
+        mTransferCall = null;
+        mRecordCall = null;
+        mConference = null;
+        mAudioRoute = null;
+        mRouteEarpiece = null;
+        mRouteSpeaker = null;
+        mRouteBluetooth = null;
+        mContactName = null;
+        mMissedMessages = null;
+        mVideoInviteInProgress = null;
+        mCallUpdateDialog = null;
 
         super.onDestroy();
     }
@@ -588,8 +635,9 @@ public class CallActivity extends LinphoneGenericActivity
 
     @Override
     public void resetCallControlsHidingTimer() {
-        mHandler.removeCallbacks(mHideControlsRunnable);
-        mHandler.postDelayed(mHideControlsRunnable, SECONDS_BEFORE_HIDING_CONTROLS);
+        LinphoneUtils.removeFromUIThreadDispatcher(mHideControlsRunnable);
+        LinphoneUtils.dispatchOnUIThreadAfter(
+                mHideControlsRunnable, SECONDS_BEFORE_HIDING_CONTROLS);
     }
 
     // BUTTONS
@@ -742,7 +790,7 @@ public class CallActivity extends LinphoneGenericActivity
         LinphoneManager.getInstance().enableProximitySensing(!videoEnabled);
 
         if (!videoEnabled) {
-            mHandler.removeCallbacks(mHideControlsRunnable);
+            LinphoneUtils.removeFromUIThreadDispatcher(mHideControlsRunnable);
         }
     }
 

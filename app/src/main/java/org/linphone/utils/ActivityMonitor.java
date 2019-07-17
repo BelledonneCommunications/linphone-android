@@ -84,9 +84,7 @@ public class ActivityMonitor implements Application.ActivityLifecycleCallbacks {
 
     void startInactivityChecker() {
         if (mLastChecker != null) mLastChecker.cancel();
-        LinphoneService.instance()
-                .handler
-                .postDelayed((mLastChecker = new InactivityChecker()), 2000);
+        LinphoneUtils.dispatchOnUIThreadAfter((mLastChecker = new InactivityChecker()), 2000);
     }
 
     void checkActivity() {

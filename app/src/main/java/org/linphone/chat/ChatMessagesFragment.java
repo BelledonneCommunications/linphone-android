@@ -32,8 +32,6 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.text.Editable;
@@ -102,7 +100,6 @@ public class ChatMessagesFragment extends Fragment
     private static final String INPUT_CONTENT_INFO_KEY = "COMMIT_CONTENT_INPUT_CONTENT_INFO";
     private static final String COMMIT_CONTENT_FLAGS_KEY = "COMMIT_CONTENT_FLAGS";
 
-    private final Handler mHandler = new Handler(Looper.getMainLooper());
     private ImageView mCallButton;
     private ImageView mBackToCallButton;
     private ImageView mGroupInfosButton;
@@ -607,7 +604,7 @@ public class ChatMessagesFragment extends Fragment
     }
 
     private void loadMoreData(final int totalItemsCount) {
-        mHandler.post(
+        LinphoneUtils.dispatchOnUIThread(
                 new Runnable() {
                     @Override
                     public void run() {
