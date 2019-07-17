@@ -504,6 +504,8 @@ public class CallActivity extends LinphoneGenericActivity
 
         mCallTimer.stop();
         mCallTimer = null;
+
+        mListener = null;
         mLocalPreview = null;
         mRemoteVideo = null;
         mStatsFragment = null;
@@ -868,6 +870,7 @@ public class CallActivity extends LinphoneGenericActivity
         Intent intent = new Intent();
         intent.setClass(this, DialerActivity.class);
         intent.putExtra("Transfer", false);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         startActivity(intent);
     }
 
@@ -875,12 +878,14 @@ public class CallActivity extends LinphoneGenericActivity
         Intent intent = new Intent();
         intent.setClass(this, DialerActivity.class);
         intent.putExtra("Transfer", true);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         startActivity(intent);
     }
 
     private void goToChatList() {
         Intent intent = new Intent();
         intent.setClass(this, ChatActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         startActivity(intent);
     }
 

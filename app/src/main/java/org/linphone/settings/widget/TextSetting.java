@@ -49,7 +49,9 @@ public class TextSetting extends BasicSetting {
     }
 
     protected void inflateView() {
-        mView = LayoutInflater.from(mContext).inflate(R.layout.settings_widget_text, this, true);
+        mView =
+                LayoutInflater.from(getContext())
+                        .inflate(R.layout.settings_widget_text, this, true);
     }
 
     protected void init(@Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
@@ -60,7 +62,8 @@ public class TextSetting extends BasicSetting {
 
         if (attrs != null) {
             TypedArray a =
-                    mContext.getTheme()
+                    getContext()
+                            .getTheme()
                             .obtainStyledAttributes(
                                     attrs, R.styleable.Settings, defStyleAttr, defStyleRes);
             try {

@@ -148,6 +148,19 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
         super.onPause();
     }
 
+    @Override
+    protected void onDestroy() {
+        mAddress = null;
+        mStartCall = null;
+        mAddCall = null;
+        mTransferCall = null;
+        mAddContact = null;
+        mBackToCall = null;
+        mListener = null;
+
+        super.onDestroy();
+    }
+
     private void initUI(View view) {
         mAddress = view.findViewById(R.id.address);
         mAddress.setAddressListener(this);

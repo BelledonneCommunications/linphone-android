@@ -97,6 +97,7 @@ public class NotificationsManager {
 
         Intent notifIntent = new Intent(mContext, DialerActivity.class);
         notifIntent.putExtra("Notification", true);
+        addFlagsToIntent(notifIntent);
 
         PendingIntent pendingIntent =
                 PendingIntent.getActivity(
@@ -220,6 +221,10 @@ public class NotificationsManager {
         }
     }
 
+    private void addFlagsToIntent(Intent intent) {
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+    }
+
     public void startForeground() {
         LinphoneService.instance().startForeground(SERVICE_NOTIF_ID, mServiceNotification);
         mCurrentForegroundServiceNotification = SERVICE_NOTIF_ID;
@@ -305,6 +310,8 @@ public class NotificationsManager {
         Intent notifIntent = new Intent(mContext, ChatActivity.class);
         notifIntent.putExtra("RemoteSipUri", conferenceAddress);
         notifIntent.putExtra("LocalSipUri", localIdentity.asStringUriOnly());
+        addFlagsToIntent(notifIntent);
+
         PendingIntent pendingIntent =
                 PendingIntent.getActivity(
                         mContext,
@@ -357,6 +364,8 @@ public class NotificationsManager {
         Intent notifIntent = new Intent(mContext, ChatActivity.class);
         notifIntent.putExtra("RemoteSipUri", fromSipUri);
         notifIntent.putExtra("LocalSipUri", localIdentity.asStringUriOnly());
+        addFlagsToIntent(notifIntent);
+
         PendingIntent pendingIntent =
                 PendingIntent.getActivity(
                         mContext,
@@ -372,6 +381,8 @@ public class NotificationsManager {
 
     public void displayMissedCallNotification(Call call) {
         Intent missedCallNotifIntent = new Intent(mContext, HistoryActivity.class);
+        addFlagsToIntent(missedCallNotifIntent);
+
         PendingIntent pendingIntent =
                 PendingIntent.getActivity(
                         mContext,

@@ -84,7 +84,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
     private TextView mMissedMessages;
     protected View mContactsSelected;
     protected View mHistorySelected;
-    View mDialerSelected;
+    protected View mDialerSelected;
     protected View mChatSelected;
     private LinearLayout mTopBar;
     private TextView mTopBarTitle;
@@ -348,6 +348,26 @@ public abstract class MainActivity extends LinphoneGenericActivity
         }
 
         super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mMissedCalls = null;
+        mMissedMessages = null;
+        mContactsSelected = null;
+        mHistorySelected = null;
+        mDialerSelected = null;
+        mChatSelected = null;
+        mTopBar = null;
+        mTopBarTitle = null;
+        mTabBar = null;
+
+        mSideMenuFragment = null;
+        mStatusBarFragment = null;
+
+        mListener = null;
+
+        super.onDestroy();
     }
 
     @Override

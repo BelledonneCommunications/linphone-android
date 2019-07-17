@@ -50,7 +50,7 @@ public class CheckBoxSetting extends BasicSetting {
 
     protected void inflateView() {
         mView =
-                LayoutInflater.from(mContext)
+                LayoutInflater.from(getContext())
                         .inflate(R.layout.settings_widget_checkbox, this, true);
     }
 

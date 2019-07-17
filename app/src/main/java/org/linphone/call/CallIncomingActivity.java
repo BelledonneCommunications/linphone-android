@@ -124,14 +124,24 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
                     @Override
                     public void onCallStateChanged(
                             Core core, Call call, State state, String message) {
-                        if (call == mCall && State.End == state) {
+                        if (call == mCall) {
+                            if (state == State.Connected) {
+                                startActivity(
+                                        new Intent(CallIncomingActivity.this, CallActivity.class));
+                            }
+                        }
+
+                        if (LinphoneManager.getCore().getCallsNb() == 0) {
                             finish();
-                        } else if (state == State.Connected) {
-                            startActivity(
-                                    new Intent(CallIncomingActivity.this, CallActivity.class));
                         }
                     }
                 };
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        checkAndRequestCallPermissions();
     }
 
     @Override
@@ -175,18 +185,23 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        checkAndRequestCallPermissions();
-    }
-
-    @Override
     protected void onPause() {
         Core core = LinphoneManager.getCore();
         if (core != null) {
             core.removeListener(mListener);
         }
         super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mName = null;
+        mNumber = null;
+        mCall = null;
+        mListener = null;
+        mVideoDisplay = null;
+
+        super.onDestroy();
     }
 
     @Override
@@ -218,7 +233,6 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
         mAlreadyAcceptedOrDeniedCall = true;
 
         mCall.terminate();
-        finish();
     }
 
     private void answer() {
