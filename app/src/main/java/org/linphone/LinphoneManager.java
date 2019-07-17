@@ -32,7 +32,6 @@ import android.hardware.SensorManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.Handler;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.telephony.PhoneStateListener;
@@ -97,7 +96,6 @@ public class LinphoneManager implements SensorEventListener {
     private final Sensor mProximity;
     private final MediaScanner mMediaScanner;
     private Timer mTimer, mAutoAnswerTimer;
-    private final Handler mHandler = new Handler();
 
     private final LinphonePreferences mPrefs;
     private Core mCore;
@@ -109,6 +107,7 @@ public class LinphoneManager implements SensorEventListener {
     private boolean mCallGsmON;
     private boolean mProximitySensingEnabled;
     private boolean mHasLastCallSasBeenRejected;
+    private Runnable mIterateRunnable;
 
     public LinphoneManager(Context c) {
         mExited = false;
@@ -263,7 +262,7 @@ public class LinphoneManager implements SensorEventListener {
                         if (result == VersionUpdateCheckResult.NewVersionAvailable) {
                             final String urlToUse = url;
                             final String versionAv = version;
-                            mHandler.postDelayed(
+                            LinphoneUtils.dispatchOnUIThreadAfter(
                                     new Runnable() {
                                         @Override
                                         public void run() {
@@ -450,19 +449,21 @@ public class LinphoneManager implements SensorEventListener {
             }
 
             mCore.start();
+
+            mIterateRunnable =
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mCore != null) {
+                                mCore.iterate();
+                            }
+                        }
+                    };
             TimerTask lTask =
                     new TimerTask() {
                         @Override
                         public void run() {
-                            LinphoneUtils.dispatchOnUIThread(
-                                    new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            if (mCore != null) {
-                                                mCore.iterate();
-                                            }
-                                        }
-                                    });
+                            LinphoneUtils.dispatchOnUIThread(mIterateRunnable);
                         }
                     };
             /*use schedule instead of scheduleAtFixedRate to avoid iterate from being call in burst after cpu wake up*/

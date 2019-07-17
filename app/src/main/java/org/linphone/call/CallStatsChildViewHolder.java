@@ -20,7 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.content.Context;
-import android.os.Handler;
 import android.text.Html;
 import android.view.View;
 import android.widget.TextView;
@@ -37,11 +36,11 @@ import org.linphone.core.CallParams;
 import org.linphone.core.CallStats;
 import org.linphone.core.PayloadType;
 import org.linphone.core.StreamType;
+import org.linphone.utils.LinphoneUtils;
 
 public class CallStatsChildViewHolder {
     private Timer mTimer;
     private Call mCall;
-    private final Handler mHandler = new Handler();
     private CallListenerStub mListener;
     private HashMap<String, String> mEncoderTexts;
     private HashMap<String, String> mDecoderTexts;
@@ -170,7 +169,7 @@ public class CallStatsChildViewHolder {
                             return;
                         }
 
-                        mHandler.post(
+                        LinphoneUtils.dispatchOnUIThread(
                                 new Runnable() {
                                     @Override
                                     public void run() {

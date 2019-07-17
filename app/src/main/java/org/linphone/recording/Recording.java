@@ -21,7 +21,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.Handler;
 import androidx.annotation.NonNull;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -32,6 +31,7 @@ import org.linphone.LinphoneManager;
 import org.linphone.core.Player;
 import org.linphone.core.PlayerListener;
 import org.linphone.core.tools.Log;
+import org.linphone.utils.LinphoneUtils;
 
 class Recording implements PlayerListener, Comparable<Recording> {
     public static final Pattern RECORD_PATTERN =
@@ -42,7 +42,6 @@ class Recording implements PlayerListener, Comparable<Recording> {
     private Date mRecordDate;
     private final Player mPlayer;
     private RecordingListener mListener;
-    private final Handler mHandler;
     private Runnable mUpdateCurrentPositionTimer;
 
     @SuppressLint("SimpleDateFormat")
@@ -60,14 +59,14 @@ class Recording implements PlayerListener, Comparable<Recording> {
             }
         }
 
-        mHandler = new Handler(context.getMainLooper());
         mUpdateCurrentPositionTimer =
                 new Runnable() {
                     @Override
                     public void run() {
                         if (mListener != null)
                             mListener.currentPositionChanged(getCurrentPosition());
-                        if (isPlaying()) mHandler.postDelayed(mUpdateCurrentPositionTimer, 20);
+                        if (isPlaying())
+                            LinphoneUtils.dispatchOnUIThreadAfter(mUpdateCurrentPositionTimer, 20);
                     }
                 };
 
@@ -97,7 +96,7 @@ class Recording implements PlayerListener, Comparable<Recording> {
         }
 
         mPlayer.start();
-        mHandler.post(mUpdateCurrentPositionTimer);
+        LinphoneUtils.dispatchOnUIThread(mUpdateCurrentPositionTimer);
     }
 
     public boolean isPlaying() {

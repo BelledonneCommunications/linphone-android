@@ -25,7 +25,6 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -46,9 +45,9 @@ import org.linphone.core.ProxyConfig;
 import org.linphone.core.RegistrationState;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
+import org.linphone.utils.LinphoneUtils;
 
 public class CallStatusBarFragment extends Fragment {
-    private final Handler mRefreshHandler = new Handler();
     private TextView mStatusText;
     private ImageView mStatusLed, mCallQuality, mEncryption;
     private Runnable mCallQualityUpdater;
@@ -191,7 +190,7 @@ public class CallStatusBarFragment extends Fragment {
         }
 
         if (mCallQualityUpdater != null) {
-            mRefreshHandler.removeCallbacks(mCallQualityUpdater);
+            LinphoneUtils.removeFromUIThreadDispatcher(mCallQualityUpdater);
             mCallQualityUpdater = null;
         }
     }
@@ -245,7 +244,7 @@ public class CallStatusBarFragment extends Fragment {
     }
 
     private void startCallQuality() {
-        mRefreshHandler.postDelayed(
+        LinphoneUtils.dispatchOnUIThreadAfter(
                 mCallQualityUpdater =
                         new Runnable() {
                             final Call mCurrentCall = LinphoneManager.getCore().getCurrentCall();
@@ -258,7 +257,7 @@ public class CallStatusBarFragment extends Fragment {
                                 float newQuality = mCurrentCall.getCurrentQuality();
                                 updateQualityOfSignalIcon(newQuality);
 
-                                mRefreshHandler.postDelayed(this, 1000);
+                                LinphoneUtils.dispatchOnUIThreadAfter(this, 1000);
                             }
                         },
                 1000);

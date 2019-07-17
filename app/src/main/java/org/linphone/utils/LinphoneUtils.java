@@ -90,6 +90,14 @@ public final class LinphoneUtils {
         sHandler.post(r);
     }
 
+    public static void dispatchOnUIThreadAfter(Runnable r, long after) {
+        sHandler.postDelayed(r, after);
+    }
+
+    public static void removeFromUIThreadDispatcher(Runnable r) {
+        sHandler.removeCallbacks(r);
+    }
+
     private static boolean isSipAddress(String numberOrAddress) {
         Factory.instance().createAddress(numberOrAddress);
         return true;
