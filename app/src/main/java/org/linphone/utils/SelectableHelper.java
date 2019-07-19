@@ -41,7 +41,7 @@ public class SelectableHelper {
     private int mDialogDeleteMessageResourceId;
 
     public SelectableHelper(View view, DeleteListener listener) {
-        mContext = view.getContext().getApplicationContext();
+        mContext = view.getContext();
         mDeleteListener = listener;
 
         mEditTopBar = view.findViewById(R.id.edit_list);
