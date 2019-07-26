@@ -258,6 +258,11 @@ public class AccountSettingsFragment extends SettingsFragment {
                         if (newValue.isEmpty()) {
                             return;
                         }
+                        if (newValue.contains(":")) {
+                            Log.e(
+                                    "[Account Settings] Do not specify port information inside domain field !");
+                            return;
+                        }
 
                         if (mAuthInfo != null) {
                             mAuthInfo.setDomain(newValue);
