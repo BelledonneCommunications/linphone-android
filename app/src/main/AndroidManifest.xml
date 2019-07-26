@@ -237,7 +237,9 @@
                 android:resource="@xml/authenticator" />
         </service>
 
-        <service android:name=".firebase.FirebaseMessaging">
+        <service android:name=".firebase.FirebaseMessaging"
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>

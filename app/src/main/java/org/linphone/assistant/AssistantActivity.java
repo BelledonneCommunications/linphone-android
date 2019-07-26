@@ -19,11 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import static org.linphone.core.AccountCreator.UsernameStatus.Invalid;
-import static org.linphone.core.AccountCreator.UsernameStatus.InvalidCharacters;
-import static org.linphone.core.AccountCreator.UsernameStatus.TooLong;
-import static org.linphone.core.AccountCreator.UsernameStatus.TooShort;
-
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
