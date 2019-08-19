@@ -428,11 +428,12 @@ public class ChatMessagesFragment extends Fragment
             if (requestCode == ADD_PHOTO && resultCode == Activity.RESULT_OK) {
                 String fileToUploadPath = null;
                 if (data.getData() != null) {
+                    Log.i("[Chat Messages Fragment] Intent data after picking file is " + data.getData().toString());
                     if (data.getData().toString().contains("com.android.contacts/contacts/")) {
-                        if (FileUtils.getCVSPathFromLookupUri(data.getData().toString()) != null) {
-                            fileToUploadPath =
-                                    FileUtils.getCVSPathFromLookupUri(data.getData().toString())
-                                            .toString();
+                        Uri cvsPath = FileUtils.getCVSPathFromLookupUri(data.getData().toString());
+                        if (cvsPath != null) {
+                            fileToUploadPath = cvsPath.toString();
+                            Log.i("[Chat Messages Fragment] Found CVS path: " + fileToUploadPath);
                         } else {
                             // TODO Error
                             return;
@@ -440,12 +441,15 @@ public class ChatMessagesFragment extends Fragment
                     } else {
                         fileToUploadPath =
                                 FileUtils.getRealPathFromURI(getActivity(), data.getData());
+                        Log.i("[Chat Messages Fragment] Resolved path for data is: " + fileToUploadPath);
                     }
                     if (fileToUploadPath == null) {
                         fileToUploadPath = data.getData().toString();
+                        Log.i("[Chat Messages Fragment] Couldn't resolve path, using as-is: " + fileToUploadPath);
                     }
                 } else if (mImageToUploadUri != null) {
                     fileToUploadPath = mImageToUploadUri.getPath();
+                    Log.i("[Chat Messages Fragment] Using pre-created path for dynamic capture " + fileToUploadPath);
                 }
 
                 if (fileToUploadPath.startsWith("content://")
@@ -454,6 +458,7 @@ public class ChatMessagesFragment extends Fragment
                     fileToUploadPath =
                             FileUtils.getFilePath(
                                     getActivity().getApplicationContext(), uriToParse);
+                    Log.i("[Chat Messages Fragment] Path was using a content or file scheme, real path is: " + fileToUploadPath);
                     if (fileToUploadPath == null) {
                         Log.e(
                                 "[Chat Messages Fragment] Failed to get access to file "
@@ -462,6 +467,7 @@ public class ChatMessagesFragment extends Fragment
                 } else if (fileToUploadPath.contains("com.android.contacts/contacts/")) {
                     fileToUploadPath =
                             FileUtils.getCVSPathFromLookupUri(fileToUploadPath).toString();
+                    Log.i("[Chat Messages Fragment] Path was using a contact scheme, real path is: " + fileToUploadPath);
                 }
 
                 if (fileToUploadPath != null) {
@@ -470,6 +476,8 @@ public class ChatMessagesFragment extends Fragment
                     } else {
                         addFileToPendingList(fileToUploadPath);
                     }
+                } else {
+                    Log.e("[Chat Messages Fragment] Failed to get a path that we could use, aborting attachment");
                 }
             } else {
                 super.onActivityResult(requestCode, resultCode, data);
