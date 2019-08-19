@@ -323,7 +323,7 @@ public class ChatMessagesFragment extends Fragment
         if (getArguments() != null) {
             String fileSharedUri = getArguments().getString("SharedFiles");
             if (fileSharedUri != null) {
-                Log.i("[ChatMessages] Found shared file(s): " + fileSharedUri);
+                Log.i("[Chat Messages Fragment] Found shared file(s): " + fileSharedUri);
                 if (fileSharedUri.contains(":")) {
                     String[] files = fileSharedUri.split(":");
                     for (String file : files) {
@@ -337,7 +337,7 @@ public class ChatMessagesFragment extends Fragment
             if (getArguments().containsKey("SharedText")) {
                 String sharedText = getArguments().getString("SharedText");
                 mMessageTextToSend.setText(sharedText);
-                Log.i("[ChatMessages] Found shared text: " + sharedText);
+                Log.i("[Chat Messages Fragment] Found shared text: " + sharedText);
             }
         }
 
@@ -450,19 +450,25 @@ public class ChatMessagesFragment extends Fragment
 
                 if (fileToUploadPath.startsWith("content://")
                         || fileToUploadPath.startsWith("file://")) {
+                    Uri uriToParse = Uri.parse(fileToUploadPath);
                     fileToUploadPath =
                             FileUtils.getFilePath(
                                     getActivity().getApplicationContext(),
-                                    Uri.parse(fileToUploadPath));
+                                    uriToParse);
+                    if (fileToUploadPath == null) {
+                        Log.e("[Chat Messages Fragment] Failed to get access to file " + uriToParse.toString());
+                    }
                 } else if (fileToUploadPath.contains("com.android.contacts/contacts/")) {
                     fileToUploadPath =
                             FileUtils.getCVSPathFromLookupUri(fileToUploadPath).toString();
                 }
 
-                if (FileUtils.isExtensionImage(fileToUploadPath)) {
-                    addImageToPendingList(fileToUploadPath);
-                } else {
-                    addFileToPendingList(fileToUploadPath);
+                if (fileToUploadPath != null) {
+                    if (FileUtils.isExtensionImage(fileToUploadPath)) {
+                        addImageToPendingList(fileToUploadPath);
+                    } else {
+                        addFileToPendingList(fileToUploadPath);
+                    }
                 }
             } else {
                 super.onActivityResult(requestCode, resultCode, data);
@@ -991,7 +997,7 @@ public class ChatMessagesFragment extends Fragment
 
     private void addFileToPendingList(String path) {
         if (path == null) {
-            Log.e("Can't add file to pending list because it's path is null...");
+            Log.e("[Chat Messages Fragment] Can't add file to pending list because it's path is null...");
             return;
         }
 
@@ -1029,7 +1035,7 @@ public class ChatMessagesFragment extends Fragment
 
     private void addImageToPendingList(String path) {
         if (path == null) {
-            Log.e("Can't add image to pending list because it's path is null...");
+            Log.e("[Chat Messages Fragment] Can't add image to pending list because it's path is null...");
             return;
         }
 
@@ -1203,12 +1209,12 @@ public class ChatMessagesFragment extends Fragment
         ChatMessage msg = event.getChatMessage();
         if (msg.getErrorInfo() != null
                 && msg.getErrorInfo().getReason() == Reason.UnsupportedContent) {
-            Log.w("Message received but content is unsupported, do not display it");
+            Log.w("[Chat Messages Fragment] Message received but content is unsupported, do not display it");
             return;
         }
 
         if (!msg.hasTextContent() && msg.getFileTransferInformation() == null) {
-            Log.w("Message has no text or file transfer information to display, ignoring it...");
+            Log.w("[Chat Messages Fragment] Message has no text or file transfer information to display, ignoring it...");
             return;
         }
 
@@ -1374,7 +1380,7 @@ public class ChatMessagesFragment extends Fragment
                 mCurrentInputContentInfo.releasePermission();
             }
         } catch (Exception e) {
-            Log.e("[TimelineFragment] releasePermission failed : ", e);
+            Log.e("[Chat Messages Fragment] releasePermission failed : ", e);
         } finally {
             mCurrentInputContentInfo = null;
         }
@@ -1398,7 +1404,7 @@ public class ChatMessagesFragment extends Fragment
             try {
                 inputContentInfo.requestPermission();
             } catch (Exception e) {
-                Log.e("[TimelineFragment] requestPermission failed : ", e);
+                Log.e("[Chat Messages Fragment] requestPermission failed : ", e);
                 return false;
             }
         }
@@ -1424,7 +1430,7 @@ public class ChatMessagesFragment extends Fragment
             try {
                 super.onLayoutChildren(recycler, state);
             } catch (IndexOutOfBoundsException e) {
-                Log.e("InvalidIndexOutOfBound Exception, probably while rotating the device");
+                Log.e("[Chat Messages Fragment] InvalidIndexOutOfBound Exception, probably while rotating the device");
             }
         }
     }

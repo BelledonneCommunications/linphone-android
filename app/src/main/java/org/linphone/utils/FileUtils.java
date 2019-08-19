@@ -45,6 +45,8 @@ import org.linphone.core.tools.Log;
 
 public class FileUtils {
     public static String getNameFromFilePath(String filePath) {
+        if (filePath == null) return null;
+
         String name = filePath;
         int i = filePath.lastIndexOf('/');
         if (i > 0) {
@@ -54,6 +56,8 @@ public class FileUtils {
     }
 
     public static String getExtensionFromFileName(String fileName) {
+        if (fileName == null) return null;
+
         String extension = null;
         int i = fileName.lastIndexOf('.');
         if (i > 0) {
@@ -84,7 +88,7 @@ public class FileUtils {
 
             remoteFile.close();
         } catch (IOException e) {
-            Log.e("[File Utils] Enable to get sharing file", e);
+            Log.e("[File Utils] Enable to get sharing file ", e);
         }
 
         return result;
@@ -92,16 +96,19 @@ public class FileUtils {
 
     private static String getNameFromUri(Uri uri, Context context) {
         String name = null;
-        if (uri.getScheme().equals("content")) {
-            Cursor returnCursor = context.getContentResolver().query(uri, null, null, null, null);
-            if (returnCursor != null) {
-                returnCursor.moveToFirst();
-                int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-                name = returnCursor.getString(nameIndex);
-                returnCursor.close();
+        if (uri != null) {
+            if (uri.getScheme().equals("content")) {
+                Cursor returnCursor =
+                        context.getContentResolver().query(uri, null, null, null, null);
+                if (returnCursor != null) {
+                    returnCursor.moveToFirst();
+                    int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                    name = returnCursor.getString(nameIndex);
+                    returnCursor.close();
+                }
+            } else if (uri.getScheme().equals("file")) {
+                name = uri.getLastPathSegment();
             }
-        } else if (uri.getScheme().equals("file")) {
-            name = uri.getLastPathSegment();
         }
         return name;
     }
@@ -126,6 +133,7 @@ public class FileUtils {
     }
 
     private static File createFile(Context context, String fileName) {
+        if (fileName == null) return null;
         if (TextUtils.isEmpty(fileName)) fileName = getStartDate();
 
         if (!fileName.contains(".")) {
@@ -145,6 +153,8 @@ public class FileUtils {
     }
 
     public static Uri getCVSPathFromLookupUri(String content) {
+        if (content == null) return null;
+
         String contactId = getNameFromFilePath(content);
         FriendList[] friendList = LinphoneManager.getCore().getFriendsLists();
         for (FriendList list : friendList) {
