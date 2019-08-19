@@ -38,6 +38,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import org.linphone.LinphoneManager;
+import org.linphone.R;
 import org.linphone.core.Address;
 import org.linphone.core.Friend;
 import org.linphone.core.FriendList;
@@ -81,14 +82,22 @@ public class FileUtils {
         try {
             File localFile = createFile(context, name);
             InputStream remoteFile = context.getContentResolver().openInputStream(uri);
+            Log.i(
+                    "[File Utils] Trying to copy file from "
+                            + uri.toString()
+                            + " to local file "
+                            + localFile.getAbsolutePath());
 
             if (copyToFile(remoteFile, localFile)) {
+                Log.i("[File Utils] Copy successful");
                 result = localFile.getAbsolutePath();
+            } else {
+                Log.e("[File Utils] Copy failed");
             }
 
             remoteFile.close();
         } catch (IOException e) {
-            Log.e("[File Utils] Enable to get sharing file ", e);
+            Log.e("[File Utils] getFilePath exception: ", e);
         }
 
         return result;
@@ -128,8 +137,9 @@ public class FileUtils {
             }
             return true;
         } catch (IOException e) {
-            return false;
+            Log.e("[File Utils] copyToFile exception: " + e);
         }
+        return false;
     }
 
     private static File createFile(Context context, String fileName) {
@@ -182,12 +192,9 @@ public class FileUtils {
 
     public static String getStorageDirectory(Context mContext) {
         String storageDir =
-                Environment.getExternalStorageDirectory()
+                Environment.getExternalStorageDirectory().getAbsolutePath()
                         + "/"
-                        + mContext.getString(
-                                mContext.getResources()
-                                        .getIdentifier(
-                                                "app_name", "string", mContext.getPackageName()));
+                        + mContext.getString(R.string.app_name);
         File file = new File(storageDir);
         if (!file.isDirectory() || !file.exists()) {
             Log.w(
@@ -196,7 +203,11 @@ public class FileUtils {
                             + " doesn't seem to exists yet, let's create it");
             boolean result = file.mkdirs();
             if (!result) {
-                Log.e("[File Utils] Couldn't create directory " + file.getAbsolutePath());
+                Log.e(
+                        "[File Utils] Couldn't create media directory "
+                                + file.getAbsolutePath()
+                                + ", using external storage dir instead");
+                return Environment.getExternalStorageDirectory().getAbsolutePath();
             }
             LinphoneManager.getInstance().getMediaScanner().scanFile(file, null);
         }
@@ -207,10 +218,7 @@ public class FileUtils {
         String recordingsDir =
                 Environment.getExternalStorageDirectory()
                         + "/"
-                        + mContext.getString(
-                                mContext.getResources()
-                                        .getIdentifier(
-                                                "app_name", "string", mContext.getPackageName()))
+                        + mContext.getString(R.string.app_name)
                         + "/recordings";
         File file = new File(recordingsDir);
         if (!file.isDirectory() || !file.exists()) {
@@ -220,7 +228,11 @@ public class FileUtils {
                             + " doesn't seem to exists yet, let's create it");
             boolean result = file.mkdirs();
             if (!result) {
-                Log.e("[File Utils] Couldn't create directory " + file.getAbsolutePath());
+                Log.e(
+                        "[File Utils] Couldn't create recordings directory "
+                                + file.getAbsolutePath()
+                                + ", using external storage dir instead");
+                return Environment.getExternalStorageDirectory().getAbsolutePath();
             }
             LinphoneManager.getInstance().getMediaScanner().scanFile(file, null);
         }
@@ -250,7 +262,7 @@ public class FileUtils {
             fw.close();
             return Uri.fromFile(vcfFile);
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("[File Utils] createCVSFromString exception: " + e);
         }
         return null;
     }
