@@ -959,6 +959,13 @@ public class ChatMessagesFragment extends Fragment
 
     private void pickFile() {
         List<Intent> cameraIntents = new ArrayList<>();
+
+        // Handles image & video picking
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK);
+        galleryIntent.setType("*/*");
+        galleryIntent.putExtra(Intent.EXTRA_MIME_TYPES, new String[] {"image/*", "video/*"});
+
+        // Allows to capture directly from the camera
         Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         File file =
                 new File(
@@ -969,13 +976,9 @@ public class ChatMessagesFragment extends Fragment
         captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageToUploadUri);
         cameraIntents.add(captureIntent);
 
-        Intent galleryIntent = new Intent();
-        galleryIntent.setType("image/*");
-        galleryIntent.setAction(Intent.ACTION_PICK);
-
-        Intent fileIntent = new Intent();
+        // Finally allow any kind of file
+        Intent fileIntent = new Intent(Intent.ACTION_GET_CONTENT);
         fileIntent.setType("*/*");
-        fileIntent.setAction(Intent.ACTION_GET_CONTENT);
         cameraIntents.add(fileIntent);
 
         Intent chooserIntent =
