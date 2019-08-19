@@ -61,6 +61,7 @@
         android:label="@string/app_name"
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:resizeableActivity="true"
         android:theme="@style/LinphoneStyleLight">
 
         <!-- Starting activities -->
@@ -176,7 +177,6 @@
             android:name=".call.CallActivity"
             android:launchMode="singleTop"
             android:showWhenLocked="true"
-            android:resizeableActivity="true"
             android:supportsPictureInPicture="true"/>
 
         <!-- Assistant activities -->
