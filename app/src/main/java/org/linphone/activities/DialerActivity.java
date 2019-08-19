@@ -150,13 +150,15 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
 
     @Override
     protected void onDestroy() {
-        mAddress = null;
-        mStartCall = null;
-        mAddCall = null;
-        mTransferCall = null;
-        mAddContact = null;
-        mBackToCall = null;
-        mListener = null;
+        if (mInterfaceLoaded) {
+            mAddress = null;
+            mStartCall = null;
+            mAddCall = null;
+            mTransferCall = null;
+            mAddContact = null;
+            mBackToCall = null;
+        }
+        if (mListener != null) mListener = null;
 
         super.onDestroy();
     }
