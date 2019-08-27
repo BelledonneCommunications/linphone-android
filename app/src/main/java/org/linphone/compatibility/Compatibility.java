@@ -88,7 +88,7 @@ public class Compatibility {
             String msg,
             Bitmap contactIcon,
             PendingIntent intent) {
-        if (Version.sdkAboveOrEqual(28)) {
+        if (Version.sdkAboveOrEqual(Version.API28_PIE_90)) {
             return ApiTwentyEightPlus.createMessageNotification(
                     context, notif, contactIcon, intent);
         } else if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
@@ -151,13 +151,14 @@ public class Compatibility {
             int iconLevel,
             Bitmap largeIcon,
             PendingIntent intent,
-            int priority) {
+            int priority,
+            boolean ongoing) {
         if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
             return ApiTwentySixPlus.createNotification(
-                    context, title, message, icon, iconLevel, largeIcon, intent, priority);
+                    context, title, message, icon, iconLevel, largeIcon, intent, priority, ongoing);
         }
         return ApiTwentyOnePlus.createNotification(
-                context, title, message, icon, iconLevel, largeIcon, intent, priority);
+                context, title, message, icon, iconLevel, largeIcon, intent, priority, ongoing);
     }
 
     public static boolean canDrawOverlays(Context context) {

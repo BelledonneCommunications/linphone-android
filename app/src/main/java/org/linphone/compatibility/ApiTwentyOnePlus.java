@@ -107,7 +107,8 @@ class ApiTwentyOnePlus {
             int level,
             Bitmap largeIcon,
             PendingIntent intent,
-            int priority) {
+            int priority,
+            boolean ongoing) {
         Notification notif;
 
         if (largeIcon != null) {
@@ -128,6 +129,7 @@ class ApiTwentyOnePlus {
                             .setWhen(System.currentTimeMillis())
                             .setPriority(priority)
                             .setShowWhen(true)
+                            .setOngoing(ongoing)
                             .build();
         } else {
             notif =

@@ -186,7 +186,7 @@ public final class LinphoneService extends Service {
             return START_STICKY;
         }
 
-        mLinphoneManager = new LinphoneManager(this);
+        mLinphoneManager = new LinphoneManager(getApplicationContext());
         sInstance = this; // sInstance is ready once linphone manager has been created
 
         mNotificationManager = new NotificationsManager(this);
