@@ -114,6 +114,7 @@ class ApiTwentyFourPlus {
                         .setPriority(Notification.PRIORITY_HIGH)
                         .setWhen(System.currentTimeMillis())
                         .setShowWhen(true)
+                        .setOngoing(true)
                         .setColor(context.getColor(R.color.notification_led_color))
                         .addAction(getCallDeclineAction(context, callId));
 

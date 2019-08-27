@@ -111,7 +111,8 @@ public class NotificationsManager {
                         R.mipmap.ic_launcher,
                         bm,
                         pendingIntent,
-                        Notification.PRIORITY_MIN);
+                        Notification.PRIORITY_MIN,
+                        true);
 
         if (isServiceNotificationDisplayed()) {
             startForeground();

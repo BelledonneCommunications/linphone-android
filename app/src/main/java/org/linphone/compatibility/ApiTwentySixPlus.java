@@ -165,6 +165,7 @@ class ApiTwentySixPlus {
                         .setPriority(Notification.PRIORITY_HIGH)
                         .setWhen(System.currentTimeMillis())
                         .setShowWhen(true)
+                        .setOngoing(true)
                         .setColor(context.getColor(R.color.notification_led_color))
                         .addAction(ApiTwentyFourPlus.getCallDeclineAction(context, callId));
 
@@ -182,7 +183,8 @@ class ApiTwentySixPlus {
             int level,
             Bitmap largeIcon,
             PendingIntent intent,
-            int priority) {
+            int priority,
+            boolean ongoing) {
 
         if (largeIcon != null) {
             return new Notification.Builder(
@@ -197,6 +199,7 @@ class ApiTwentySixPlus {
                     .setPriority(priority)
                     .setWhen(System.currentTimeMillis())
                     .setShowWhen(true)
+                    .setOngoing(ongoing)
                     .setColor(context.getColor(R.color.notification_led_color))
                     .build();
         } else {
