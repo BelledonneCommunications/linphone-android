@@ -47,6 +47,8 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!-- Needed to get the current Do Not Disturb policy -->
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+    <!-- Needed for full screen intent in notifications -->
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
 
     <supports-screens
         android:anyDensity="true"

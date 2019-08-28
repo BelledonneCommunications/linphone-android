@@ -154,7 +154,9 @@ public final class LinphoneService extends Service {
 
                         if (state == Call.State.IncomingReceived
                                 || state == State.IncomingEarlyMedia) {
-                            if (!mLinphoneManager.getCallGsmON()) onIncomingReceived();
+                            // Now we rely on the fullscreen intent of the  call incoming
+                            // notification
+                            // if (!mLinphoneManager.getCallGsmON()) onIncomingReceived();
                         } else if (state == State.OutgoingInit) {
                             onOutgoingStarted();
                         } else if (state == State.End

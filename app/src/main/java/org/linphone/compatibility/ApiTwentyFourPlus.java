@@ -119,6 +119,7 @@ class ApiTwentyFourPlus {
                         .addAction(getCallDeclineAction(context, callId));
 
         if (showAnswerAction) {
+            builder.setFullScreenIntent(intent, true);
             builder.addAction(getCallAnswerAction(context, callId));
         }
 

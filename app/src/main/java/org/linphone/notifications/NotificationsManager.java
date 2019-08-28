@@ -54,6 +54,7 @@ import org.linphone.core.Reason;
 import org.linphone.core.tools.Log;
 import org.linphone.history.HistoryActivity;
 import org.linphone.settings.LinphonePreferences;
+import org.linphone.utils.DeviceUtils;
 import org.linphone.utils.FileUtils;
 import org.linphone.utils.ImageUtils;
 import org.linphone.utils.LinphoneUtils;
@@ -114,6 +115,8 @@ public class NotificationsManager {
                         true);
 
         if (isServiceNotificationDisplayed()) {
+            Log.i(
+                    "[Notifications Manager] Background service mode enabled, displaying notification");
             startForeground();
         }
 
@@ -219,6 +222,7 @@ public class NotificationsManager {
         // When a message is received by a push, it will create a LinphoneService
         // but it might be getting killed quite quickly after that
         // causing the notification to be missed by the user...
+        Log.i("[Notifications Manager] Getting destroyed, clearing Service & Call notifications");
 
         if (mCurrentForegroundServiceNotification > 0) {
             mNM.cancel(mCurrentForegroundServiceNotification);
@@ -239,16 +243,19 @@ public class NotificationsManager {
     }
 
     public void startForeground() {
+        Log.i("[Notifications Manager] Starting Service as foreground");
         LinphoneService.instance().startForeground(SERVICE_NOTIF_ID, mServiceNotification);
         mCurrentForegroundServiceNotification = SERVICE_NOTIF_ID;
     }
 
     private void startForeground(Notification notification, int id) {
+        Log.i("[Notifications Manager] Starting Service as foreground while in call");
         LinphoneService.instance().startForeground(id, notification);
         mCurrentForegroundServiceNotification = id;
     }
 
     public void stopForeground() {
+        Log.i("[Notifications Manager] Stopping Service as foreground");
         LinphoneService.instance().stopForeground(true);
         mCurrentForegroundServiceNotification = 0;
     }
@@ -256,6 +263,8 @@ public class NotificationsManager {
     public void removeForegroundServiceNotificationIfPossible() {
         if (mCurrentForegroundServiceNotification == SERVICE_NOTIF_ID
                 && !isServiceNotificationDisplayed()) {
+            Log.i(
+                    "[Notifications Manager] Linphone has started after device boot, stopping Service as foreground");
             stopForeground();
         }
     }
@@ -268,7 +277,13 @@ public class NotificationsManager {
     }
 
     public void sendNotification(int id, Notification notif) {
+        Log.i("[Notifications Manager] Notifying " + id);
         mNM.notify(id, notif);
+    }
+
+    public void dismissNotification(int notifId) {
+        Log.i("[Notifications Manager] Dismissing " + notifId);
+        mNM.cancel(notifId);
     }
 
     public void resetMessageNotifCount(String address) {
@@ -312,6 +327,7 @@ public class NotificationsManager {
             mLastNotificationId += 1;
             mChatNotifMap.put(conferenceAddress, notif);
         }
+        Log.i("[Notifications Manager] Creating group chat message notifiable " + notif);
 
         notifMessage.setSenderBitmap(bm);
         notif.addMessage(notifMessage);
@@ -367,6 +383,7 @@ public class NotificationsManager {
             mLastNotificationId += 1;
             mChatNotifMap.put(fromSipUri, notif);
         }
+        Log.i("[Notifications Manager] Creating chat message notifiable " + notif);
 
         notifMessage.setSenderBitmap(bm);
         notif.addMessage(notifMessage);
@@ -409,6 +426,7 @@ public class NotificationsManager {
             body =
                     mContext.getString(R.string.missed_calls_notif_body)
                             .replace("%i", String.valueOf(missedCallCount));
+            Log.i("[Notifications Manager] Creating missed calls notification");
         } else {
             Address address = call.getRemoteAddress();
             LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(address);
@@ -420,6 +438,7 @@ public class NotificationsManager {
                     body = address.asStringUriOnly();
                 }
             }
+            Log.i("[Notifications Manager] Creating missed call notification");
         }
 
         Notification notif =
@@ -434,18 +453,17 @@ public class NotificationsManager {
     public void displayCallNotification(Call call) {
         if (call == null) return;
 
-        Intent callNotifIntent;
+        Class callNotifIntentClass = CallActivity.class;
         if (call.getState() == Call.State.IncomingReceived
                 || call.getState() == Call.State.IncomingEarlyMedia) {
-            callNotifIntent = new Intent(mContext, CallIncomingActivity.class);
+            callNotifIntentClass = CallIncomingActivity.class;
         } else if (call.getState() == Call.State.OutgoingInit
                 || call.getState() == Call.State.OutgoingProgress
                 || call.getState() == Call.State.OutgoingRinging
                 || call.getState() == Call.State.OutgoingEarlyMedia) {
-            callNotifIntent = new Intent(mContext, CallOutgoingActivity.class);
-        } else {
-            callNotifIntent = new Intent(mContext, CallActivity.class);
+            callNotifIntentClass = CallOutgoingActivity.class;
         }
+        Intent callNotifIntent = new Intent(mContext, callNotifIntentClass);
         callNotifIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         PendingIntent pendingIntent =
@@ -467,6 +485,8 @@ public class NotificationsManager {
             case Released:
             case End:
                 if (mCurrentForegroundServiceNotification == notif.getNotificationId()) {
+                    Log.i(
+                            "[Notifications Manager] Call ended, stopping notification used to keep service alive");
                     // Call is released, remove service notification to allow for an other call to
                     // be service notification
                     stopForeground();
@@ -507,39 +527,59 @@ public class NotificationsManager {
                 && notif.getTextResourceId() == notificationTextId) {
             // Notification hasn't changed, do not "update" it to avoid blinking
             return;
+        } else if (notif.getTextResourceId() == R.string.incall_notif_incoming) {
+            // If previous notif was incoming call, as we will switch channels, dismiss it first
+            dismissNotification(notif.getNotificationId());
         }
+
         notif.setIconResourceId(iconId);
         notif.setTextResourceId(notificationTextId);
+        Log.i(
+                "[Notifications Manager] Call notification notifiable is "
+                        + notif
+                        + ", pending intent "
+                        + callNotifIntentClass);
 
         LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
         Uri pictureUri = contact != null ? contact.getPhotoUri() : null;
         Bitmap bm = ImageUtils.getRoundBitmapFromUri(mContext, pictureUri);
         String name = LinphoneUtils.getAddressDisplayName(address);
+        boolean isIncoming = callNotifIntentClass == CallIncomingActivity.class;
 
-        boolean showAnswerAction =
-                call.getState() == Call.State.IncomingReceived
-                        || call.getState() == Call.State.IncomingEarlyMedia;
         Notification notification =
                 Compatibility.createInCallNotification(
                         mContext,
                         notif.getNotificationId(),
-                        showAnswerAction,
+                        isIncoming,
                         mContext.getString(notificationTextId),
                         iconId,
                         bm,
                         name,
                         pendingIntent);
 
-        if (!isServiceNotificationDisplayed()) {
+        // Don't use incoming call notification as foreground service notif !
+        if (!isServiceNotificationDisplayed() && !isIncoming) {
             if (call.getCore().getCallsNb() == 0) {
+                Log.i(
+                        "[Notifications Manager] Foreground service mode is disabled, stopping call notification used to keep it alive");
                 stopForeground();
             } else {
                 if (mCurrentForegroundServiceNotification == 0) {
-                    startForeground(notification, notif.getNotificationId());
+                    if (DeviceUtils.isAppUserRestricted(mContext)) {
+                        Log.w(
+                                "[Notifications Manager] App has been restricted, can't use call notification to keep service alive !");
+                        sendNotification(notif.getNotificationId(), notification);
+                    } else {
+                        Log.i(
+                                "[Notifications Manager] Foreground service mode is disabled, using call notification to keep it alive");
+                        startForeground(notification, notif.getNotificationId());
+                    }
                 } else {
                     sendNotification(notif.getNotificationId(), notification);
                 }
             }
+        } else {
+            sendNotification(notif.getNotificationId(), notification);
         }
     }
 
@@ -550,25 +590,6 @@ public class NotificationsManager {
             }
         }
         return null;
-    }
-
-    /*public void displayInappNotification(String message) {
-        Intent notifIntent = new Intent(mContext, InAppPurchaseActivity.class);
-        PendingIntent pendingIntent =
-                PendingIntent.getActivity(
-                        mContext, IN_APP_NOTIF_ID, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Notification notif =
-                Compatibility.createSimpleNotification(
-                        mContext,
-                        mContext.getString(R.string.inapp_notification_title),
-                        message,
-                        pendingIntent);
-        sendNotification(IN_APP_NOTIF_ID, notif);
-    }*/
-
-    public void dismissNotification(int notifId) {
-        mNM.cancel(notifId);
     }
 
     private void createNotification(

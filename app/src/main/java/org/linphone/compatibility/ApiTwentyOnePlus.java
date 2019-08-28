@@ -75,28 +75,36 @@ class ApiTwentyOnePlus {
 
     public static Notification createInCallNotification(
             Context context,
+            boolean isIncoming,
             String msg,
             int iconID,
             Bitmap contactIcon,
             String contactName,
             PendingIntent intent) {
 
-        return new Notification.Builder(context)
-                .setContentTitle(contactName)
-                .setContentText(msg)
-                .setSmallIcon(iconID)
-                .setAutoCancel(false)
-                .setContentIntent(intent)
-                .setLargeIcon(contactIcon)
-                .setCategory(Notification.CATEGORY_CALL)
-                .setVisibility(Notification.VISIBILITY_PUBLIC)
-                .setPriority(Notification.PRIORITY_HIGH)
-                .setLights(
-                        ContextCompat.getColor(context, R.color.notification_led_color),
-                        context.getResources().getInteger(R.integer.notification_ms_on),
-                        context.getResources().getInteger(R.integer.notification_ms_off))
-                .setShowWhen(true)
-                .build();
+        Notification.Builder builder =
+                new Notification.Builder(context)
+                        .setContentTitle(contactName)
+                        .setContentText(msg)
+                        .setSmallIcon(iconID)
+                        .setAutoCancel(false)
+                        .setContentIntent(intent)
+                        .setLargeIcon(contactIcon)
+                        .setCategory(Notification.CATEGORY_CALL)
+                        .setVisibility(Notification.VISIBILITY_PUBLIC)
+                        .setPriority(Notification.PRIORITY_HIGH)
+                        .setOngoing(true)
+                        .setLights(
+                                ContextCompat.getColor(context, R.color.notification_led_color),
+                                context.getResources().getInteger(R.integer.notification_ms_on),
+                                context.getResources().getInteger(R.integer.notification_ms_off))
+                        .setShowWhen(true);
+
+        if (isIncoming) {
+            builder.setFullScreenIntent(intent, true);
+        }
+
+        return builder.build();
     }
 
     public static Notification createNotification(
