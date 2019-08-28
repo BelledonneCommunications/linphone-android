@@ -62,7 +62,6 @@ import org.linphone.utils.MediaScannerListener;
 public class NotificationsManager {
     private static final int SERVICE_NOTIF_ID = 1;
     private static final int MISSED_CALLS_NOTIF_ID = 2;
-    private static final int IN_APP_NOTIF_ID = 3;
 
     private final Context mContext;
     private final NotificationManager mNM;
@@ -215,7 +214,20 @@ public class NotificationsManager {
     }
 
     public void destroy() {
-        mNM.cancelAll();
+        // mNM.cancelAll();
+        // Don't use cancelAll to keep message notifications !
+        // When a message is received by a push, it will create a LinphoneService
+        // but it might be getting killed quite quickly after that
+        // causing the notification to be missed by the user...
+
+        if (mCurrentForegroundServiceNotification > 0) {
+            mNM.cancel(mCurrentForegroundServiceNotification);
+        }
+
+        for (Notifiable notifiable : mCallNotifMap.values()) {
+            mNM.cancel(notifiable.getNotificationId());
+        }
+
         Core core = LinphoneManager.getCore();
         if (core != null) {
             core.removeListener(mListener);
