@@ -143,7 +143,7 @@ class ApiTwentySixPlus {
     public static Notification createInCallNotification(
             Context context,
             int callId,
-            boolean showAnswerAction,
+            boolean isIncoming,
             String msg,
             int iconID,
             Bitmap contactIcon,
@@ -153,7 +153,10 @@ class ApiTwentySixPlus {
         Notification.Builder builder =
                 new Notification.Builder(
                                 context,
-                                context.getString(R.string.notification_service_channel_id))
+                                isIncoming
+                                        ? context.getString(R.string.notification_channel_id)
+                                        : context.getString(
+                                                R.string.notification_service_channel_id))
                         .setContentTitle(contactName)
                         .setContentText(msg)
                         .setSmallIcon(iconID)
@@ -162,14 +165,16 @@ class ApiTwentySixPlus {
                         .setLargeIcon(contactIcon)
                         .setCategory(Notification.CATEGORY_CALL)
                         .setVisibility(Notification.VISIBILITY_PUBLIC)
-                        .setPriority(Notification.PRIORITY_HIGH)
+                        .setPriority(
+                                isIncoming ? Notification.PRIORITY_HIGH : Notification.PRIORITY_LOW)
                         .setWhen(System.currentTimeMillis())
                         .setShowWhen(true)
                         .setOngoing(true)
                         .setColor(context.getColor(R.color.notification_led_color))
                         .addAction(ApiTwentyFourPlus.getCallDeclineAction(context, callId));
 
-        if (showAnswerAction) {
+        if (isIncoming) {
+            builder.setFullScreenIntent(intent, true);
             builder.addAction(ApiTwentyFourPlus.getCallAnswerAction(context, callId));
         }
         return builder.build();
