@@ -32,6 +32,7 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import org.linphone.LinphoneService;
 import org.linphone.R;
+import org.linphone.compatibility.Compatibility;
 import org.linphone.settings.widget.BasicSetting;
 import org.linphone.settings.widget.SettingListenerBase;
 import org.linphone.settings.widget.SwitchSetting;
@@ -205,6 +206,11 @@ public class AdvancedSettingsFragment extends SettingsFragment {
         mLogUploadUrl.setValue(mPrefs.getLogCollectionUploadServerUrl());
 
         mBackgroundMode.setChecked(mPrefs.getServiceNotificationVisibility());
+        if (Compatibility.isAppUserRestricted(getActivity())) {
+            mBackgroundMode.setChecked(false);
+            mBackgroundMode.setEnabled(false);
+            mBackgroundMode.setSubtitle(getString(R.string.pref_background_mode_warning_desc));
+        }
 
         mStartAtBoot.setChecked(mPrefs.isAutoStartEnabled());
 
