@@ -499,6 +499,7 @@
     <string name="pref_friendlist_subscribe">Friendlist subscribe</string>
     <string name="pref_background_mode">Background mode</string>
     <string name="pref_background_mode_desc">Show a notification to keep the app alive</string>
+    <string name="pref_background_mode_warning_desc">Linphone has been restricted for background usage, please authorize it first</string>
     <string name="pref_animation_enable_title">Enable Animations</string>
     <string name="pref_service_notification">Enable service notification</string>
     <string name="pref_autostart">Start at boot time</string>
