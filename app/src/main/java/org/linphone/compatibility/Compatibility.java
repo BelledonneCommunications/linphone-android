@@ -73,14 +73,6 @@ public class Compatibility {
         return ApiTwentyOnePlus.createSimpleNotification(context, title, text, intent);
     }
 
-    public static Notification createMissedCallNotification(
-            Context context, String title, String text, PendingIntent intent) {
-        if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
-            return ApiTwentySixPlus.createMissedCallNotification(context, title, text, intent);
-        }
-        return ApiTwentyOnePlus.createMissedCallNotification(context, title, text, intent);
-    }
-
     public static Notification createMessageNotification(
             Context context,
             Notifiable notif,
@@ -109,10 +101,18 @@ public class Compatibility {
         return null;
     }
 
+    public static Notification createMissedCallNotification(
+            Context context, String title, String text, PendingIntent intent) {
+        if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
+            return ApiTwentySixPlus.createMissedCallNotification(context, title, text, intent);
+        }
+        return ApiTwentyOnePlus.createMissedCallNotification(context, title, text, intent);
+    }
+
     public static Notification createInCallNotification(
             Context context,
             int callId,
-            boolean showAnswerAction,
+            boolean isIncoming,
             String msg,
             int iconID,
             Bitmap contactIcon,
@@ -120,27 +120,13 @@ public class Compatibility {
             PendingIntent intent) {
         if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
             return ApiTwentySixPlus.createInCallNotification(
-                    context,
-                    callId,
-                    showAnswerAction,
-                    msg,
-                    iconID,
-                    contactIcon,
-                    contactName,
-                    intent);
+                    context, callId, isIncoming, msg, iconID, contactIcon, contactName, intent);
         } else if (Version.sdkAboveOrEqual(Version.API24_NOUGAT_70)) {
             return ApiTwentyFourPlus.createInCallNotification(
-                    context,
-                    callId,
-                    showAnswerAction,
-                    msg,
-                    iconID,
-                    contactIcon,
-                    contactName,
-                    intent);
+                    context, callId, isIncoming, msg, iconID, contactIcon, contactName, intent);
         }
         return ApiTwentyOnePlus.createInCallNotification(
-                context, msg, iconID, contactIcon, contactName, intent);
+                context, isIncoming, msg, iconID, contactIcon, contactName, intent);
     }
 
     public static Notification createNotification(
