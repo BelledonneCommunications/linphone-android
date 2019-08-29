@@ -52,6 +52,7 @@ public class PhoneAccountLinkingAssistantActivity extends AssistantActivity {
         if (mAbortCreation) {
             return;
         }
+        mAccountCreator.setAlgorithm(getString(R.string.default_algorithm_for_account_creation));
 
         setContentView(R.layout.assistant_phone_account_linking);
 

@@ -33,5 +33,6 @@
     <entry name="username_max_length" overwrite="true">64</entry>
     <entry name="username_min_length" overwrite="true">1</entry>
     <entry name="username_regex" overwrite="true">^[a-z0-9+_.\-]*$</entry>
+    <entry name="algorithm" overwrite="true">SHA-256</entry>
   </section>
 </config>

@@ -33,5 +33,6 @@
     <entry name="username_max_length" overwrite="true">128</entry>
     <entry name="username_min_length" overwrite="true">1</entry>
     <entry name="username_regex" overwrite="true">^[a-zA-Z0-9+_.\-]*$</entry>
+    <entry name="algorithm" overwrite="true">MD5</entry>
   </section>
 </config>

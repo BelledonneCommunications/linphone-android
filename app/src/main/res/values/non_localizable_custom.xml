@@ -68,6 +68,7 @@
     <bool name="assistant_account_validation_mandatory">false</bool>
     <bool name="display_account_assistant_at_first_start">true</bool>
     <bool name="forbid_to_leave_assistant_before_account_configuration">false</bool>
+    <string name="default_algorithm_for_account_creation" translatable="false">SHA-256</string> <!-- Can be MD5 -->
 
     <!-- Call -->
     <bool name="forbid_self_call">false</bool>
