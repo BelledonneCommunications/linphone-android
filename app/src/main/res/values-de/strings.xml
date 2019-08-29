@@ -89,7 +89,6 @@
   <string name="assistant_ec_calibration">Kalibrierung der Echounterdrückung läuft</string>
   <string name="assistant_remote_provisioning_login">Geben Sie Ihre Anmeldung ein</string>
   <string name="assistant_account_not_validated">Ihr Konto wurde noch nicht überprüft.</string>
-  <string name="assistant_error_confirmation_code">Der Bestätigungscode ist ungültig.\r\nBitte versuchen Sie es erneut.</string>
   <string name="assistant_account_validated">Ihr Konto wurde überprüft.</string>
   <string name="assistant_error_bad_credentials">Falscher Benutzername oder Passwort</string>
   <string name="assistant_codec_down_question">Sind Sie mit dem Herunterladen des OpenH264-Videocodecs, bereitgestellt von Cisco Systems, Inc., einverstanden?</string>
@@ -101,13 +100,11 @@
   <string name="wizard_failed">Es ist ein Fehler aufgetreten, versuchen Sie es später nochmal</string>
   <string name="wizard_server_unavailable">Server nicht erreichbar, überprüfen Sie Ihre Netzwerkverbindung.</string>
   <string name="wizard_username_unavailable">Dieser Benutzername ist bereits vergeben.</string>
-  <string name="assistant_phone_number_unavailable">Diese Telefonnummer wird bereits verwendet.\r\nBitte geben Sie eine andere Nummer ein.\r\nSie können Ihr vorhandenes Benutzerkonto löschen, wenn Sie Ihre Telefonnummer wiederverwenden möchten.</string>
   <string name="wizard_username_incorrect">Ihr Benutzername ist ungültig.</string>
   <string name="assistant_phone_number_incorrect">Ihre Telefonnummer ist ungültig.</string>
   <string name="wizard_email_incorrect">Ihre E-Mail-Adresse ist ungültig.</string>
   <string name="wizard_password_incorrect">Ihr Passwort ist ungültig.</string>
   <string name="wizard_passwords_unmatched">Passwörter stimmen nicht überein.</string>
-  <string name="setup_confirm_username">Ihr Benutzername wird %s sein.\r\n\r\nEs kann von Ihrer Eingabe abweichen, um den Anforderungen zu entsprechen.\r\nAnnehmen?</string>
   <string name="first_launch_no_login_password">Bitte geben Sie Ihren Benutzername und Ihr Passwort ein</string>
   <string name="forgot_password">Passwort vergessen?</string>
   <string name="assistant_choose_country">Wählen Sie ein Land aus</string>
@@ -134,11 +131,13 @@
   <string name="phone_number_too_long">Telefonnummer zu lang</string>
   <string name="phone_number_too_short">Telefonnummer zu kurz</string>
   <string name="phone_number_invalid">Ungültige Telefonnummer</string>
+  <string name="activation_code_invalid">Ungültiger Aktivierungscode</string>
   <string name="password_too_short">Passwort zu kurz</string>
   <string name="password_too_long">Passwort zu lang</string>
   <string name="request_failed">Fehler beim Abfragen des Servers. Bitte versuchen Sie es später erneut</string>
   <string name="transport_unsupported">Nicht unterstütztes Transportprotokoll</string>
   <string name="country_code_invalid">Landesvorwahl ungültig</string>
+  <string name="invalid_characters">Ungültige(s) Zeichen gefunden</string>
   <!--In-app-->
   <string name="inapp">In-App</string>
   <string name="inapp_notification_title">In-App-Kauf</string>
@@ -166,6 +165,8 @@
   <string name="no_chat_history">Keine Gespräche</string>
   <string name="delete_conversation">Möchten Sie das ausgewählte Gespräch löschen?</string>
   <string name="delete_message">Möchten Sie die ausgewählte Nachricht löschen?</string>
+  <string name="remote_composing_single">%s schreibt…</string>
+  <string name="remote_composing_multiple">%s schreiben…</string>
   <string name="share_picture_size_small">Klein</string>
   <string name="share_picture_size_medium">Mittel</string>
   <string name="share_picture_size_large">Groß</string>
@@ -371,6 +372,8 @@
   <string name="pref_preferred_fps">Bevorzugte FPS</string>
   <string name="pref_bandwidth_limit">Bandbreitenbegrenzung in kbits/s</string>
   <string name="pref_video_codecs_title">Codecs</string>
+  <!--Contact settings-->
+  <string name="pref_contact_title">Kontakt</string>
   <!--Call settings-->
   <string name="pref_call_title">Anruf</string>
   <string name="pref_device_ringtone">Geräteklingelton verwenden</string>
@@ -431,6 +434,7 @@
   <string name="pref_primary_account_title">Primäres Konto</string>
   <string name="pref_display_name_title">Anzeigename</string>
   <string name="pref_user_name_title">Benutzername</string>
+  <string name="pref_log_collection_sharing_server_desc">Nicht bearbeiten, außer Sie wissen, was Sie tun!</string>
   <!--Audio hack settings-->
   <string name="pref_audio_hacks_title">Audio Hacks</string>
   <string name="pref_audio_use_specific_mode_title">Speziellen Modus Hack verwenden</string>
@@ -443,6 +447,9 @@
   <string name="device_power_saver_dialog_button_later">Später</string>
   <!--Debug popup-->
   <string name="debug_popup_title">Debug</string>
+  <string name="debug_popup_enable_logs">Protokolle aktivieren</string>
+  <string name="debug_popup_disable_logs">Protokolle deaktivieren</string>
+  <string name="debug_popup_send_logs">Protokolle senden</string>
   <!--Content description-->
   <string name="content_description_back">Zurück</string>
   <string name="content_description_dialer">Wählgerät</string>

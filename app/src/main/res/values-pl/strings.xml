@@ -77,7 +77,6 @@
   <string name="assistant_ec_calibration">Anulacja kalibracji echo w trakcie</string>
   <string name="assistant_remote_provisioning_login">Podaj login</string>
   <string name="assistant_account_not_validated">Twoje konto nie zostało jeszcze zatwierdzone.</string>
-  <string name="assistant_error_confirmation_code">Kod potwierdzenia jest nieprawidłowy.\r\nSpróbuj ponownie.</string>
   <string name="assistant_account_validated">Twoje konto zostało zatwierdzone.</string>
   <string name="assistant_error_bad_credentials">Niepoprawna nazwa użytkownika lub hasło</string>
   <string name="assistant_codec_down_question">Czy zgadzają się Państwo na pobranie OpenH264 Video Codec dostarczonego przez Cisco Systems, Inc.?</string>
@@ -90,7 +89,6 @@
   <string name="wizard_email_incorrect">Twój email jest niepoprawny.</string>
   <string name="wizard_password_incorrect">Twoje hasło jest nieprawidłowe</string>
   <string name="wizard_passwords_unmatched">Hasła nie pasują do siebie.</string>
-  <string name="setup_confirm_username">Twoja nazwa użytkownika będzie %s.\r\n\r\nIt  może różnić się od danych wejściowych w celu dopasowania wymagań. \ Czy akceptujesz?</string>
   <string name="first_launch_no_login_password">Podaj swój login i hasło</string>
   <string name="forgot_password">Zapomniałeś hasła ?</string>
   <string name="assistant_choose_country">Wybierz kraj</string>
@@ -258,7 +256,6 @@ Wpisz wyświetlaną nazwę (opcjonalnie)</string>
   <!--do not change order without changing corresponding entry_values in non_localizable_strings.xml-->
   <string name="pref_none">Żaden</string>
   <string name="pref_preferences_title">Preferencje</string>
-  <string name="pref_video_enable_title">Włącz wideo</string>
   <!--Audio settings-->
   <string name="pref_audio_title">Audio </string>
   <string name="pref_echo_cancellation">Redukcja szumów</string>
@@ -286,6 +283,7 @@ Wpisz wyświetlaną nazwę (opcjonalnie)</string>
   <string name="pref_preferred_fps">Preferowany FPS</string>
   <string name="pref_bandwidth_limit">Limit przepustowości w kbits/s</string>
   <string name="pref_video_codecs_title">Kodeki </string>
+  <!--Contact settings-->
   <!--Call settings-->
   <string name="pref_call_title">Połączenie </string>
   <string name="pref_device_ringtone">Zastosowanie urządzenia dzwonka</string>
@@ -332,6 +330,7 @@ Wpisz wyświetlaną nazwę (opcjonalnie)</string>
   <string name="pref_primary_account_title">Pierwotne konto</string>
   <string name="pref_display_name_title">Nazwa wyświetlana</string>
   <string name="pref_user_name_title">Nazwa użytkownika</string>
+  <string name="pref_log_collection_sharing_server_desc">Nie edytuj, chyba że wiesz co robisz!</string>
   <!--Audio hack settings-->
   <string name="pref_audio_hacks_title">Hacki audio</string>
   <string name="pref_audio_use_specific_mode_title">Użyj szczególnego trybu Hack</string>

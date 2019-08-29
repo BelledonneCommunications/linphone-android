@@ -76,7 +76,6 @@
   <string name="assistant_ec_calibration">正在进行回音消除校正</string>
   <string name="assistant_remote_provisioning_login">登录</string>
   <string name="assistant_account_not_validated">您的帐户还未激活</string>
-  <string name="assistant_error_confirmation_code">确认码无效。请重试</string>
   <string name="assistant_account_validated">您的帐户已生效</string>
   <string name="assistant_error_bad_credentials">用户名或密码不正确</string>
   <string name="assistant_codec_down_question">您是否同意下载由Cisco Systems公司提供的OpenH264 Video Code</string>
@@ -91,7 +90,6 @@
   <string name="wizard_email_incorrect">有效的邮箱</string>
   <string name="wizard_password_incorrect">有效的密码</string>
   <string name="wizard_passwords_unmatched">密码错误</string>
-  <string name="setup_confirm_username">您的用户名将为%s .\r\n\r\n可能与您的输入不同 \r\n您确定吗？</string>
   <string name="first_launch_no_login_password">请输入您的用户名和密码</string>
   <string name="forgot_password">忘记密码？</string>
   <string name="assistant_choose_country">选择国家</string>
@@ -275,7 +273,6 @@
   </string-array>
   <string name="pref_none">没有</string>
   <string name="pref_preferences_title">偏好</string>
-  <string name="pref_video_enable_title">允许视频</string>
   <!--Audio settings-->
   <string name="pref_audio_title">音频</string>
   <string name="pref_echo_cancellation">回声消除</string>
@@ -303,6 +300,7 @@
   <string name="pref_preferred_fps">FPS优先</string>
   <string name="pref_bandwidth_limit">带宽限制在kbits/s</string>
   <string name="pref_video_codecs_title">编解码器</string>
+  <!--Contact settings-->
   <!--Call settings-->
   <string name="pref_call_title">聊天</string>
   <string name="pref_device_ringtone">使用手机铃声</string>
@@ -347,6 +345,7 @@
   <string name="pref_primary_account_title">初始帐户</string>
   <string name="pref_display_name_title">显示名</string>
   <string name="pref_user_name_title">用户名</string>
+  <string name="pref_log_collection_sharing_server_desc">请勿随意编辑</string>
   <!--Audio hack settings-->
   <string name="pref_audio_hacks_title">音频插件</string>
   <string name="pref_audio_use_specific_mode_title">使用特定的模式破解</string>

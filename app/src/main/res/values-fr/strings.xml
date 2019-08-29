@@ -97,7 +97,7 @@
   <string name="assistant_ec_calibration">Calibration de l\'annulateur d\'écho en cours</string>
   <string name="assistant_remote_provisioning_login">Entrez vos identifiants</string>
   <string name="assistant_account_not_validated">Votre compte n\'a pas encore été validé.</string>
-  <string name="assistant_error_confirmation_code">Le code d\'activation est invalide.\r\nVeuillez réessayer.</string>
+  <string name="assistant_error_confirmation_code">Le code de confirmation est invalide.\nMerci de réessayer.</string>
   <string name="assistant_account_validated">Votre compte à été validé.</string>
   <string name="assistant_error_bad_credentials">Nom d\'utilisateur ou mot de passe invalide</string>
   <string name="assistant_codec_down_question">Voulez-vous télécharger le codec vidéo OpenH264 fourni par Cisco Systems, Inc. ? </string>
@@ -109,13 +109,13 @@
   <string name="wizard_failed">Une erreur est survenue, réessayez plus tard.</string>
   <string name="wizard_server_unavailable">Serveur indisponible, veuillez vérifier votre connexion réseau.</string>
   <string name="wizard_username_unavailable">Ce nom d\'utilisateur est déjà pris.</string>
-  <string name="assistant_phone_number_unavailable">Ce numéro de téléphone est déjà utilisé.\r\nMerci d\'en utiliser un différent.\r\nVous pouvez supprimer un compte existant si vous voulez réutiliser votre numéro.</string>
+  <string name="assistant_phone_number_unavailable">Ce numéro de téléphone est déjà utilisé.\nMerci d\'utiliser un numéro différent.\nVous pouvez supprimer votre compte existant si vous voulez réutiliser votre numéro de téléphone.</string>
   <string name="wizard_username_incorrect">Votre nom d\'utilisateur est invalide.</string>
   <string name="assistant_phone_number_incorrect">Votre numéro de téléphone est invalide.</string>
   <string name="wizard_email_incorrect">Votre email est invalide.</string>
   <string name="wizard_password_incorrect">Votre mot de passe n\'est pas valide.</string>
   <string name="wizard_passwords_unmatched">Les mots de passes ne correspondent pas.</string>
-  <string name="setup_confirm_username">Votre nom d\'utilisateur sera %s.\r\n\r\nIl peut différer de votre saisie.\r\nContinuer ?</string>
+  <string name="setup_confirm_username">Votre nom d\'utilisateur sera %s.\n\nIl peut différer par rapport à votre choix pour des raisons techniques.\nAcceptez-vous ?</string>
   <string name="first_launch_no_login_password">Entrez votre nom d\'utilisateur et votre mot de passe</string>
   <string name="forgot_password">Mot de passe oublié ?</string>
   <string name="assistant_choose_country">Choisir un pays</string>
@@ -129,6 +129,7 @@
   <string name="phone_number_link_info_content">
 Vos amis pourront vous joindre plus facilement si vous associez votre compte à votre numéro de téléphone\n\nVous verrez dans votre carnet d\'adresses les contacts qui utilisent Linphone et vos amis sauront qu\'ils peuvent vous contacter.\n</string>
   <string name="phone_number_link_info_content_already_account">Vous ne pouvez associer votre numéro qu\'à un seul compte Linphone.\n\nSi vous avez déjà associé votre numéro à un autre compte mais préférez utiliser ce compte-ci, suivez la procédure d\'association et votre numéro sera automatiquement transféré à ce compte.</string>
+  <string name="phone_number_overuse">Trop de SMS ont été envoyés vers ce numéro en un court laps de temps, veuillez attendre 24h avant de réessayer.</string>
   <!--Status-->
   <string name="invalid_email">Mail non valide</string>
   <string name="account_already_exist">Ce compte existe déjà</string>
@@ -143,11 +144,13 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="phone_number_too_long">Numéro de téléphone trop long</string>
   <string name="phone_number_too_short">Numéro de téléphone trop court</string>
   <string name="phone_number_invalid">Numéro de téléphone non valide</string>
+  <string name="activation_code_invalid">Code d\'activation invalide</string>
   <string name="password_too_short">Mot de passe trop court</string>
   <string name="password_too_long">Mot de passe trop long</string>
   <string name="request_failed">Erreur de communication avec le serveur. Veuillez réessayer plus tard.</string>
   <string name="transport_unsupported">Transport non supporté</string>
   <string name="country_code_invalid">Indicatif de pays non valide</string>
+  <string name="invalid_characters">Contient au moins un caractère non valide</string>
   <!--In-app-->
   <string name="inapp">In-app</string>
   <string name="inapp_notification_title">Achat In-app</string>
@@ -347,6 +350,7 @@ Disponible gratuitement ici : %s</string>
   <string name="pref_display_name">Nom d\'affichage</string>
   <string name="pref_help_display_name">Entrez un nom d\'affichage (optionnel)</string>
   <string name="pref_prefix">Préfixe</string>
+  <string name="pref_prefix_desc">Préfixe de votre pays (sans le +)</string>
   <string name="pref_transport">Transport</string>
   <string name="pref_transport_udp">UDP</string>
   <string name="pref_transport_tcp">TCP</string>
@@ -402,8 +406,15 @@ Disponible gratuitement ici : %s</string>
   <string name="pref_video_preset">Profil vidéo</string>
   <string name="pref_preferred_video_size">Taille de vidéo préférée</string>
   <string name="pref_preferred_fps">Nombre d\'images par seconde souhaité</string>
+  <string name="pref_preview_video">Afficher la caméra sur la vue d\'accueil</string>
   <string name="pref_bandwidth_limit">Bande passante maximale en kb/s</string>
   <string name="pref_video_codecs_title">Codecs</string>
+  <!--Contact settings-->
+  <string name="pref_contact_sync_title">Information de présence dans le contact natif</string>
+  <string name="pref_contact_sync_subtitle">Ajoute un raccourci vers le contact Linphone dans le contact natif.</string>
+  <string name="pref_contact_title">Contact</string>
+  <string name="pref_contact_display_contact_organization_title">Afficher l\'entreprise du contact</string>
+  <string name="pref_create_contact_shortcuts">Créer des raccourcis dans le lanceur d\'application</string>
   <!--Call settings-->
   <string name="pref_call_title">Appel</string>
   <string name="pref_device_ringtone">Utiliser la sonnerie du téléphone</string>
@@ -416,6 +427,9 @@ Disponible gratuitement ici : %s</string>
   <string name="pref_voice_mail">URI de boîte vocale</string>
   <string name="pref_dialer_call">Utiliser Linphone comme application de téléphonie par défaut</string>
   <string name="pref_accept_early_media">Proposer early-media</string>
+  <string name="pref_grant_read_dnd_settings_permission_title">Paramètres Ne Pas Déranger</string>
+  <string name="pref_grant_read_dnd_settings_permission_desc">Vous devez autoriser l\'application a accéder aux paramètres Ne Pas Déranger pour que le comportement de la sonnerie soit cohérent avec la politique du téléphone.</string>
+  <string name="pref_media_encryption_mandatory_title">Chiffrement obligatoire</string>
   <!--Chat settings-->
   <string name="pref_chat_title">Chat</string>
   <string name="pref_image_sharing_server_title">Serveur de partage</string>
@@ -460,6 +474,7 @@ Disponible gratuitement ici : %s</string>
   <string name="pref_friendlist_subscribe">Souscrire à la liste d\'amis</string>
   <string name="pref_background_mode">Actif en arrière plan</string>
   <string name="pref_background_mode_desc">Affiche une notification pour garder l\'application en vie</string>
+  <string name="pref_background_mode_warning_desc">Linphone est limitée pour une utilisation en tâche de fond, merci de l\'autoriser.</string>
   <string name="pref_animation_enable_title">Activer les animations</string>
   <string name="pref_service_notification">Notification de service</string>
   <string name="pref_autostart">Démarrer au lancement du téléphone</string>
@@ -472,6 +487,8 @@ Disponible gratuitement ici : %s</string>
   <string name="pref_primary_account_title">Compte principal</string>
   <string name="pref_display_name_title">Nom d\'affichage</string>
   <string name="pref_user_name_title">Nom d\'utilisateur</string>
+  <string name="pref_log_collection_sharing_server_title">Serveur de téléversement des logs</string>
+  <string name="pref_log_collection_sharing_server_desc">Ne changez pas cette valeur sans savoir ce que vous faites !</string>
   <!--Audio hack settings-->
   <string name="pref_audio_hacks_title">Bidouilles audio</string>
   <string name="pref_audio_use_specific_mode_title">Utiliser la bidouille de mode spécifique</string>
