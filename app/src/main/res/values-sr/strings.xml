@@ -143,7 +143,6 @@
   </string-array>
   <string name="pref_none">Ништа</string>
   <string name="pref_preferences_title">Поставке</string>
-  <string name="pref_video_enable_title">Укључи видео</string>
   <!--Audio settings-->
   <string name="pref_audio_title">Звук</string>
   <string name="pref_echo_cancellation">Брисање одјека</string>
@@ -164,6 +163,8 @@
   <string name="pref_preferred_video_size">Жељена величина снимка</string>
   <string name="pref_bandwidth_limit">Ограничење опсега у kb/s</string>
   <string name="pref_video_codecs_title">Кодеци</string>
+  <!--Contact settings-->
+  <string name="pref_contact_title">Контакт</string>
   <!--Call settings-->
   <string name="pref_call_title">Позови</string>
   <!--Chat settings-->

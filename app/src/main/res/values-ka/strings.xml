@@ -81,7 +81,6 @@
   <string name="assistant_ec_calibration">მიმდინარეობს ექოს გამაუქმებელის კალიბრაცია</string>
   <string name="assistant_remote_provisioning_login">შეიყვანეთ თქვენი მომხმარებლის სახელი</string>
   <string name="assistant_account_not_validated">თქვენი ანგარიში ჯერ არ იქნა დადასტურებული.</string>
-  <string name="assistant_error_confirmation_code">დასტურის კოდი არასწორია.\r\nგთხოვთ, სცადოთ თავიდან.</string>
   <string name="assistant_account_validated">თქვენი ანგარიში იქნა დადასტურებული</string>
   <string name="assistant_error_bad_credentials">არასწორი მომხმარებლის სახელი ან პაროლი</string>
   <string name="assistant_codec_down_question">ეთანხმებით Cisco Systems, Inc. მოერ მოწოდებული OpenH264 ვიდეო კოდეკის გადმოწერას?</string>
@@ -96,7 +95,6 @@
   <string name="wizard_email_incorrect">თქვენი ელფოსტა არასწორია.</string>
   <string name="wizard_password_incorrect">თქვენი პაროლი არასწორია</string>
   <string name="wizard_passwords_unmatched">პაროლები არ ემთხვევა.</string>
-  <string name="setup_confirm_username">თქვენი მომხმარებლის სახელი იქნება %s.\r\n\r\nიგი შეიძლება იყოს თქვენს მიერ შეყვანილისგან განსხვავებული, რომ დააკმაყოფილოს მოთხოვნები.\r\nთანახმა ხართ?</string>
   <string name="first_launch_no_login_password">გთხოვთ, შეიყვანოთ თქვენი მომხმარებლის სახელი და პაროლი</string>
   <string name="forgot_password">დაგავიწყდათ პაროლი?</string>
   <string name="assistant_choose_country">აირჩიეთ ქვეყანა</string>
@@ -314,7 +312,6 @@
   </string-array>
   <string name="pref_none">არცერთი</string>
   <string name="pref_preferences_title">პარამეტრები</string>
-  <string name="pref_video_enable_title">ვიდეოს ჩართვა</string>
   <!--Audio settings-->
   <string name="pref_audio_title">ხმა</string>
   <string name="pref_echo_cancellation">ექოს გაუქმება</string>
@@ -342,6 +339,7 @@
   <string name="pref_preferred_fps">არჩეული კადრი/წმ</string>
   <string name="pref_bandwidth_limit">გამტარი უნარის შეზღუდვა კბიტ/წმ-ში</string>
   <string name="pref_video_codecs_title">კოდეკები</string>
+  <!--Contact settings-->
   <!--Call settings-->
   <string name="pref_call_title">ზარი</string>
   <string name="pref_device_ringtone">მოწყობილობის რეკვის ხმის გამოყენება</string>
@@ -392,6 +390,7 @@
   <string name="pref_primary_account_title">პირველადი ანგარიში</string>
   <string name="pref_display_name_title">სახელი</string>
   <string name="pref_user_name_title">მომხმარებლის სახელი</string>
+  <string name="pref_log_collection_sharing_server_desc">არ დაარედაკტიროთ, თუ არ იცით, რას აკეთებთ!</string>
   <!--Audio hack settings-->
   <string name="pref_audio_hacks_title">ხმის ჰაკები</string>
   <string name="pref_audio_use_specific_mode_title">სპეციფიური რეჟიმის ჰაკის გამოყენება</string>

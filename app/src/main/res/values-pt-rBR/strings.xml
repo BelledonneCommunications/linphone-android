@@ -82,7 +82,6 @@
   <string name="assistant_ec_calibration">Eco cancelar  calibragem</string>
   <string name="assistant_remote_provisioning_login">Digite seu login</string>
   <string name="assistant_account_not_validated">Sua conta ainda não foi validada.</string>
-  <string name="assistant_error_confirmation_code">O código de confirmação é inválido. \r\nPor favor, tente novamente.</string>
   <string name="assistant_account_validated">Sua conta foi validada.</string>
   <string name="assistant_error_bad_credentials">Usuário ou senha incorretos</string>
   <string name="assistant_codec_down_question">Você concorda com download OpenH264 Vídeo Codec fornecido por Cisco Systems, Inc?</string>
@@ -94,13 +93,11 @@
   <string name="wizard_failed">Ocorreu um erro, tente novamente mais tarde.</string>
   <string name="wizard_server_unavailable">Servido inacessível, verifique sua conexão de rede.</string>
   <string name="wizard_username_unavailable">Este nome de usuário já está em uso.</string>
-  <string name="assistant_phone_number_unavailable">Este número de telefone já está em uso.\r\nPor favor, digite um número diferente.\r\nVocê pode deletar sua conta existente se quiser reutilizar seu número de telefone.</string>
   <string name="wizard_username_incorrect">Seu nome de usuário é inválido.</string>
   <string name="assistant_phone_number_incorrect">Seu número de telefone é inválido.</string>
   <string name="wizard_email_incorrect">Seu email é inválido</string>
   <string name="wizard_password_incorrect">Sua senha é inválido</string>
   <string name="wizard_passwords_unmatched">Senha incorreta</string>
-  <string name="setup_confirm_username">Seu usuário será  %s.\r\n\r\nIt , pode não ser o mesmo que você digitou.\r\nVocê aceita?</string>
   <string name="first_launch_no_login_password">Por favor, digite seu usuário e senha</string>
   <string name="forgot_password">Esqueceu a senha?</string>
   <string name="assistant_choose_country">Selecione um país</string>
@@ -321,7 +318,6 @@
   </string-array>
   <string name="pref_none">Nenhum</string>
   <string name="pref_preferences_title">Preferências</string>
-  <string name="pref_video_enable_title">Habilitar Vídeo</string>
   <!--Audio settings-->
   <string name="pref_audio_title">Audio</string>
   <string name="pref_echo_cancellation">Cancelamento de eco</string>
@@ -349,6 +345,8 @@
   <string name="pref_preferred_fps">FPS preferida</string>
   <string name="pref_bandwidth_limit">Limitar banda em kbits/s</string>
   <string name="pref_video_codecs_title">Codecs</string>
+  <!--Contact settings-->
+  <string name="pref_contact_title">Contato</string>
   <!--Call settings-->
   <string name="pref_call_title">Ligar</string>
   <string name="pref_device_ringtone">Use ringtone do dispositivo</string>
@@ -399,6 +397,7 @@
   <string name="pref_primary_account_title">Conta primária</string>
   <string name="pref_display_name_title">Mostrar nome</string>
   <string name="pref_user_name_title">Usuário</string>
+  <string name="pref_log_collection_sharing_server_desc">Por favor não edite a menos que você saiba o que está fazendo!</string>
   <!--Audio hack settings-->
   <string name="pref_audio_hacks_title">Audio hacks</string>
   <string name="pref_audio_use_specific_mode_title">Use modo hack específico</string>

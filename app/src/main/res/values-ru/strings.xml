@@ -97,7 +97,7 @@
   <string name="assistant_ec_calibration">Выполняется калибровка эхоподавления</string>
   <string name="assistant_remote_provisioning_login">Введите имя пользователя</string>
   <string name="assistant_account_not_validated">Ваш аккаунт ещё не проверен.</string>
-  <string name="assistant_error_confirmation_code">Недопустимый код подтверждения.\r\nПожалуйста, повторите попытку.</string>
+  <string name="assistant_error_confirmation_code">Недопустимый код подтверждения.\nПожалуйста, повторите попытку.</string>
   <string name="assistant_account_validated">Ваш аккаунт проверен.</string>
   <string name="assistant_error_bad_credentials">Неверное имя пользователя или пароль</string>
   <string name="assistant_codec_down_question">Вы согласны загрузить видео кодек OpenH264, предоставленный компанией Cisco Systems, Inc.?</string>
@@ -109,13 +109,13 @@
   <string name="wizard_failed">Произошла ошибка, повторите попытку позже.</string>
   <string name="wizard_server_unavailable">Сервер недоступен, проверьте сетевое подключение.</string>
   <string name="wizard_username_unavailable">Это имя пользователя уже занято.</string>
-  <string name="assistant_phone_number_unavailable">Этот номер телефона уже используется.\r\nВведите другой номер.\r\nВы можете удалить свой существующий аккаунт, если хотите повторно использовать свой номер телефона.</string>
+  <string name="assistant_phone_number_unavailable">Этот номер телефона уже используется.\nВведите другой номер.\nВы можете удалить свой существующий аккаунт, если хотите повторно использовать свой номер телефона.</string>
   <string name="wizard_username_incorrect">Недопустимое имя пользователя.</string>
   <string name="assistant_phone_number_incorrect">Недопустимый номер телефона.</string>
   <string name="wizard_email_incorrect">Недопустимый адрес электронной почты.</string>
   <string name="wizard_password_incorrect">Недопустимый пароль</string>
   <string name="wizard_passwords_unmatched">Пароли не совпадают.</string>
-  <string name="setup_confirm_username">Ваше имя пользователя будет %s.\r\n\r\nОно может отличаться от выбранного вами для соответствия требованиям.\r\nВы согласны?</string>
+  <string name="setup_confirm_username">Ваше имя пользователя будет %s.\n\nОно может отличаться от выбранного вами для соответствия требованиям.\nВы согласны?</string>
   <string name="first_launch_no_login_password">Введите имя пользователя и пароль</string>
   <string name="forgot_password">Забыли пароль ?</string>
   <string name="assistant_choose_country">Выберите страну</string>
@@ -128,6 +128,7 @@
   <string name="phone_number_info_content">\nВашим друзьям будет проще связаться с вами, если вы свяжете свой аккаунт со своим номером телефона.\n\n В вашей адресной книге вы увидите, кто использует Linphone, а ваши друзья смогут узнать, что вы также зарегистрированы в Linphone.\n</string>
   <string name="phone_number_link_info_content">\nВашим друзьям будет проще связаться с вами, если вы свяжете свой аккаунт со своим номером телефона.\n\nВ вашей адресной книге вы увидите, кто использует Linphone, а ваши друзья смогут узнать, что вы также зарегистрированы в Linphone.\n</string>
   <string name="phone_number_link_info_content_already_account">Номер телефона можно использовать только с одним аккаунтом Linphone.\n\nЕсли ваш номер уже был связан с другим аккаунтом, но вы предпочитаете использовать его, просто свяжите его сейчас, и ваш номер будет автоматически перенесен в этот аккаунт.</string>
+  <string name="phone_number_overuse">Слишком много SMS было отправлено на этот номер за короткий промежуток времени, повторите попытку через 24 часа.</string>
   <!--Status-->
   <string name="invalid_email">Недопустимый адрес электронной почты</string>
   <string name="account_already_exist">Аккаунт уже существует</string>
@@ -142,11 +143,13 @@
   <string name="phone_number_too_long">Слишком длинный номер телефона</string>
   <string name="phone_number_too_short">Слишком короткий номер телефона</string>
   <string name="phone_number_invalid">Недопустимый номер телефона</string>
+  <string name="activation_code_invalid">Неверный код активации</string>
   <string name="password_too_short">Слишком короткий пароль</string>
   <string name="password_too_long">Слишком длинный пароль</string>
   <string name="request_failed">Не удалось запросить сервер. Повторите попытку позже</string>
   <string name="transport_unsupported">Неподдерживаемый транспорт</string>
   <string name="country_code_invalid">Недопустимый код страны</string>
+  <string name="invalid_characters">Недопустимый символ(ы) найден(ы)</string>
   <!--In-app-->
   <string name="inapp">В приложении</string>
   <string name="inapp_notification_title">Покупка в приложении</string>
@@ -345,6 +348,7 @@
   <string name="pref_display_name">Отображаемое имя</string>
   <string name="pref_help_display_name">Введите отображаемое имя (необязательно)</string>
   <string name="pref_prefix">Префикс</string>
+  <string name="pref_prefix_desc">Префикс для вашей страны (без +)</string>
   <string name="pref_transport">Транспорт</string>
   <string name="pref_transport_udp">UDP</string>
   <string name="pref_transport_tcp">TCP</string>
@@ -400,8 +404,15 @@
   <string name="pref_video_preset">Параметры видео</string>
   <string name="pref_preferred_video_size">Предпочитаемый размер видео</string>
   <string name="pref_preferred_fps">Предпочитаемый FPS</string>
+  <string name="pref_preview_video">Отображать предпросмотр камеры на номеронабирателе</string>
   <string name="pref_bandwidth_limit">Ограничение пропускной способности в кбит/с</string>
   <string name="pref_video_codecs_title">Кодеки</string>
+  <!--Contact settings-->
+  <string name="pref_contact_sync_title">Информация о присутствии в родном контакте</string>
+  <string name="pref_contact_sync_subtitle">Вставка информационных ярлыков из контакта Linphone в родные контакты Android</string>
+  <string name="pref_contact_title">Контакт</string>
+  <string name="pref_contact_display_contact_organization_title">Отображать контактную организацию</string>
+  <string name="pref_create_contact_shortcuts">Создать ярлыки в лаунчере</string>
   <!--Call settings-->
   <string name="pref_call_title">Вызов</string>
   <string name="pref_device_ringtone">Использовать мелодию звонка устройства</string>
@@ -414,6 +425,9 @@
   <string name="pref_voice_mail">URI голосовой почты</string>
   <string name="pref_dialer_call">Использовать Linphone в качестве приложения для звонков по умолчанию.</string>
   <string name="pref_accept_early_media">Принимать ранний поток</string>
+  <string name="pref_grant_read_dnd_settings_permission_title">Настройки «Не беспокоить»</string>
+  <string name="pref_grant_read_dnd_settings_permission_desc">Нам нужно, чтобы вы разрешили использовать доступ к настройкам «Не беспокоить», чтобы звонить правильно или нет в зависимости от текущей политики</string>
+  <string name="pref_media_encryption_mandatory_title">Шифрование потока обязательно</string>
   <!--Chat settings-->
   <string name="pref_chat_title">Чат</string>
   <string name="pref_image_sharing_server_title">Сервер обмена</string>
@@ -458,6 +472,7 @@
   <string name="pref_friendlist_subscribe">Подписка</string>
   <string name="pref_background_mode">Фоновый режим</string>
   <string name="pref_background_mode_desc">Показывать уведомление, чтобы сохранить приложение рабочим</string>
+  <string name="pref_background_mode_warning_desc">Linphone был ограничен для фонового использования, пожалуйста, сначала авторизуйтесь</string>
   <string name="pref_animation_enable_title">Включить анимацию</string>
   <string name="pref_service_notification">Включить сервисное уведомление</string>
   <string name="pref_autostart">Запуск во время загрузки</string>
@@ -470,6 +485,8 @@
   <string name="pref_primary_account_title">Основной аккаунт</string>
   <string name="pref_display_name_title">Отображаемое имя</string>
   <string name="pref_user_name_title">Имя пользователя</string>
+  <string name="pref_log_collection_sharing_server_title">Сервер выгрузки логов</string>
+  <string name="pref_log_collection_sharing_server_desc">Не изменяйте, если вы не знаете, что делаете!</string>
   <!--Audio hack settings-->
   <string name="pref_audio_hacks_title">Аудио хаки</string>
   <string name="pref_audio_use_specific_mode_title">Использовать хаки определенного режима</string>

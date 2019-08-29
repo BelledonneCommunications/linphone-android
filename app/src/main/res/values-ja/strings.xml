@@ -79,7 +79,6 @@
   <string name="assistant_ec_calibration">エコーキャンセルを設定しています</string>
   <string name="assistant_remote_provisioning_login">ログインしてください</string>
   <string name="assistant_account_not_validated">未確認のアカウントです。</string>
-  <string name="assistant_error_confirmation_code">無効な確認コードです。\r\nやり直してください。</string>
   <string name="assistant_account_validated">確認済みのアカウントです。</string>
   <string name="assistant_error_bad_credentials">ユーザー名かパスワードが異なります</string>
   <string name="assistant_codec_down_question">Cisco Systems,Incが提供するOpenH264ビデオコーデックをダウンロードしますか？</string>
@@ -93,7 +92,6 @@
   <string name="wizard_email_incorrect">不正なメールアドレスです</string>
   <string name="wizard_password_incorrect">不正なパスワードです</string>
   <string name="wizard_passwords_unmatched">パスワードが一致しません</string>
-  <string name="setup_confirm_username">あなたのユーザー名は %s になりますが\r\n\r\n要件と一致させるために入力内容とは異なる場合があります。\r\nよろしいですか？</string>
   <string name="first_launch_no_login_password">ユーザー名とパスワードを入力してください</string>
   <string name="forgot_password">パスワードを忘れましたか？</string>
   <string name="assistant_choose_country">国を選択してください</string>
@@ -273,7 +271,6 @@
   </string-array>
   <string name="pref_none">なし</string>
   <string name="pref_preferences_title">設定</string>
-  <string name="pref_video_enable_title">ビデオを有効にする</string>
   <!--Audio settings-->
   <string name="pref_audio_title">オーディオ</string>
   <string name="pref_echo_cancellation">エコーキャンセル</string>
@@ -301,6 +298,8 @@
   <string name="pref_preferred_fps">FPSの値</string>
   <string name="pref_bandwidth_limit">帯域限度 in kbits/s</string>
   <string name="pref_video_codecs_title">コーデック</string>
+  <!--Contact settings-->
+  <string name="pref_contact_title">連絡先</string>
   <!--Call settings-->
   <string name="pref_call_title">発信</string>
   <string name="pref_device_ringtone">設定してある着信音を使用する</string>
@@ -348,6 +347,7 @@
   <string name="pref_primary_account_title">優先アカウント</string>
   <string name="pref_display_name_title">表示名</string>
   <string name="pref_user_name_title">ユーザー名</string>
+  <string name="pref_log_collection_sharing_server_desc">分からない場合は編集しないでください！</string>
   <!--Audio hack settings-->
   <string name="pref_audio_hacks_title">オーディオ設定</string>
   <string name="pref_audio_use_specific_mode_title">特定のハックを使用する</string>

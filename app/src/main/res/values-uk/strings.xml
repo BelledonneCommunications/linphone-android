@@ -97,7 +97,6 @@
   <string name="assistant_ec_calibration">Виконується калібрування пригнічення луни</string>
   <string name="assistant_remote_provisioning_login">Уведіть ім\'я користувача</string>
   <string name="assistant_account_not_validated">Вашу обліківку ще не перевірено.</string>
-  <string name="assistant_error_confirmation_code">Неприпустимий код підтвердження.\r\nБудь ласка, повторіть спробу.</string>
   <string name="assistant_account_validated">Вашу обліківку перевірено.</string>
   <string name="assistant_error_bad_credentials">Неправильне ім\'я користувача чи пароль</string>
   <string name="assistant_codec_down_question">Ви згодні завантажити OpenH264 Video Codec, наданий компанією Cisco Systems, Inc.?</string>
@@ -109,13 +108,11 @@
   <string name="wizard_failed">Сталася помилка, повторіть спробу пізніше.</string>
   <string name="wizard_server_unavailable">Сервер недоступний, перевірте мережеве з\'єднання.</string>
   <string name="wizard_username_unavailable">Це ім\'я користувача вже прийнято.</string>
-  <string name="assistant_phone_number_unavailable">Цей номер телефону вже використовується.\r\nБудь ласка, введіть инший номер.\r\nВи можете вилучити наявний обліковий запис, якщо ви бажаєте повторно використовувати свій номер телефону.</string>
   <string name="wizard_username_incorrect">Неприпустиме ім\'я користувача.</string>
   <string name="assistant_phone_number_incorrect">Неприпустимий номер телефону.</string>
   <string name="wizard_email_incorrect">Неприпустима адреса електронної пошти.</string>
   <string name="wizard_password_incorrect">Неприпустимий пароль</string>
   <string name="wizard_passwords_unmatched">Паролі не збігаються.</string>
-  <string name="setup_confirm_username">Ваше ім\'я користувача буде %s.\r\n\r\nВоно може відрізнятися від обраного вами для відповідности вимогам.\r\nВи згідні?</string>
   <string name="first_launch_no_login_password">Уведіть ім\'я користувача та пароль</string>
   <string name="forgot_password">Забули пароль ?</string>
   <string name="assistant_choose_country">Оберіть країну</string>
@@ -372,7 +369,6 @@
   </string-array>
   <string name="pref_none">Ні</string>
   <string name="pref_preferences_title">Уподобання</string>
-  <string name="pref_video_enable_title">Увімкнути відео</string>
   <!--Audio settings-->
   <string name="pref_audio_title">Авдіо</string>
   <string name="pref_echo_cancellation">Пригнічення луни</string>
@@ -402,6 +398,7 @@
   <string name="pref_preferred_fps">Бажаний FPS</string>
   <string name="pref_bandwidth_limit">Обмеження пропускної здатности в кбит/с</string>
   <string name="pref_video_codecs_title">Кодеки</string>
+  <!--Contact settings-->
   <!--Call settings-->
   <string name="pref_call_title">Виклик</string>
   <string name="pref_device_ringtone">Використовувати мелодію дзвінка пристрою</string>
@@ -470,6 +467,7 @@
   <string name="pref_primary_account_title">Основна обліківка</string>
   <string name="pref_display_name_title">Показуване ім\'я</string>
   <string name="pref_user_name_title">Ім\'я користувача</string>
+  <string name="pref_log_collection_sharing_server_desc">Не змінюйте, якщо ви не знаєте, що робите!</string>
   <!--Audio hack settings-->
   <string name="pref_audio_hacks_title">Авдіо хаки</string>
   <string name="pref_audio_use_specific_mode_title">Використовувати хаки певного режиму</string>

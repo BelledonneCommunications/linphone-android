@@ -45,7 +45,6 @@
   <string name="assistant_error_bad_credentials">Identificador de usuario o contraseña incorrectos</string>
   <string name="wizard_failed">Ha ocurrido un error, pruebe más tarde.</string>
   <string name="wizard_username_incorrect">Su identificador de usuario no es válido</string>
-  <string name="setup_confirm_username">Su identificador de usuario será %s.\r\n\r\nPuede ser diferente al que ha introducido para cumplir con los requisitos.\r\n¿Acepta?</string>
   <string name="first_launch_no_login_password">Por favor, introduzca su usuario y contraseña</string>
   <string name="use_username_instead_or_phone_number">Utilizar un identificador de usuario (opcional)</string>
   <string name="use_email_for_validation">Use la dirección de correo electrónico para la validación de la cuenta</string>
@@ -160,7 +159,6 @@
   </string-array>
   <string name="pref_none">Ninguno.</string>
   <string name="pref_preferences_title">Preferencias</string>
-  <string name="pref_video_enable_title">Habilitar Vídeo</string>
   <!--Audio settings-->
   <string name="pref_audio_title">Audio</string>
   <string name="pref_echo_cancellation">Cancelación de eco</string>
@@ -188,6 +186,8 @@
   <string name="pref_preferred_fps">Frecuencia de refresco preferida</string>
   <string name="pref_bandwidth_limit">Limite de ancho de banda en kbits/s</string>
   <string name="pref_video_codecs_title">Codecs</string>
+  <!--Contact settings-->
+  <string name="pref_contact_title">Contacto</string>
   <!--Call settings-->
   <string name="pref_call_title">Llamar</string>
   <string name="pref_device_ringtone">Usar el tono de llamada del dispositivo</string>
@@ -236,6 +236,7 @@
   <string name="pref_primary_account_title">Cuenta principal</string>
   <string name="pref_display_name_title">Nombre a mostrar</string>
   <string name="pref_user_name_title">Identificador de usuario</string>
+  <string name="pref_log_collection_sharing_server_desc">¡No editar excepto si sabe lo que está haciendo!</string>
   <!--Audio hack settings-->
   <string name="pref_audio_hacks_title">Hacks de audio</string>
   <string name="pref_audio_use_specific_mode_title">Usar hack de modo específico</string>

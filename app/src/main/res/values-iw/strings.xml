@@ -66,12 +66,13 @@
   <!--do not change order without changing corresponding entry_values in non_localizable_strings.xml-->
   <string name="pref_none">בלי</string>
   <string name="pref_preferences_title">העדפות</string>
-  <string name="pref_video_enable_title">אפשר וידאו</string>
   <!--Audio settings-->
   <string name="pref_audio_title">שמע</string>
   <string name="failed">נכשל</string>
   <!--Video settings-->
   <string name="pref_video_title">וידאו</string>
+  <!--Contact settings-->
+  <string name="pref_contact_title">איש קשר</string>
   <!--Call settings-->
   <string name="pref_call_title">קריאה</string>
   <!--Chat settings-->

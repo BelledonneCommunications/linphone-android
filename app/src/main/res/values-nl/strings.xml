@@ -135,7 +135,6 @@
   <!--do not change order without changing corresponding entry_values in non_localizable_strings.xml-->
   <string name="pref_none">Geen</string>
   <string name="pref_preferences_title">Voorkeuren</string>
-  <string name="pref_video_enable_title">Video inschakelen</string>
   <!--Audio settings-->
   <string name="pref_audio_title">Audio</string>
   <string name="failed">gefaald</string>
@@ -143,6 +142,8 @@
   <!--Video settings-->
   <string name="pref_video_title">Video</string>
   <string name="pref_video_codecs_title">Codecs</string>
+  <!--Contact settings-->
+  <string name="pref_contact_title">Contact</string>
   <!--Call settings-->
   <string name="pref_call_title">Oproep</string>
   <!--Chat settings-->

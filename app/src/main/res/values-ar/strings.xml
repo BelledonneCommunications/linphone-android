@@ -79,7 +79,6 @@
   <string name="assistant_ec_calibration">معايرة مزيل الصدى في طور الإنجاز</string>
   <string name="assistant_remote_provisioning_login">أدخل اسم الولوج</string>
   <string name="assistant_account_not_validated">لم يتم تأكيد حسابك بعد.</string>
-  <string name="assistant_error_confirmation_code">رمز التأكيد غير صحيح.\r\nيُرجى محاولة مرة أخرى.</string>
   <string name="assistant_account_validated">تم تأكيد حسابك.</string>
   <string name="assistant_error_bad_credentials">اسم المسخدم أو كلمة السر غير صحيحة</string>
   <string name="assistant_codec_down_question">أأنت موافق على تنزيل مرماز الفيديو OpenH264 المُقدَّم من طرف شركة Cisco Systems, Inc. ؟</string>
@@ -94,7 +93,6 @@
   <string name="wizard_email_incorrect">عنوانك الإلكتروني غير صحيح.</string>
   <string name="wizard_password_incorrect">كلمة السر غير صحيحة.</string>
   <string name="wizard_passwords_unmatched">كلمتا السر غير متطابقتين.</string>
-  <string name="setup_confirm_username">سيكون اسم المستخدم هو %s.\r\n\r\nقد يختلف عما أدخلته ليوافق المعايير.\r\nأتقبل ذلك ؟</string>
   <string name="first_launch_no_login_password">يُرجى إدخال اسم المستخدم وكلمة السر</string>
   <string name="forgot_password">أنسيت كلمة سرك ؟</string>
   <string name="assistant_choose_country">اختر البلد</string>
@@ -286,7 +284,6 @@
   </string-array>
   <string name="pref_none">بدون</string>
   <string name="pref_preferences_title">التفضيلات</string>
-  <string name="pref_video_enable_title">تشغيل الفيديو</string>
   <!--Audio settings-->
   <string name="pref_audio_title">الصوت</string>
   <string name="pref_echo_cancellation">إزالة الصدى</string>
@@ -314,6 +311,8 @@
   <string name="pref_preferred_fps">معدل الإطارات المفضل</string>
   <string name="pref_bandwidth_limit">حد سعة القناة بـ ك.بِتْ/ثانية</string>
   <string name="pref_video_codecs_title">المراميز</string>
+  <!--Contact settings-->
+  <string name="pref_contact_title">جهة الاتصال</string>
   <!--Call settings-->
   <string name="pref_call_title">المكالمة</string>
   <string name="pref_device_ringtone">استخدم رنة الجهاز</string>
@@ -363,6 +362,7 @@
   <string name="pref_primary_account_title">الحساب اﻷوَّلي</string>
   <string name="pref_display_name_title">الإسم المعروض</string>
   <string name="pref_user_name_title">إسم المستخدم</string>
+  <string name="pref_log_collection_sharing_server_desc">لا تقم بالتحرير إلا إذا كنت متيقنا مما تفعل !</string>
   <!--Audio hack settings-->
   <string name="pref_audio_hacks_title">تطويعات الصوت</string>
   <string name="pref_audio_use_specific_mode_title">استخدم وضع محددا للتطويع</string>

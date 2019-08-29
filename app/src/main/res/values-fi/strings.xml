@@ -63,7 +63,6 @@
   <string name="wizard_username_incorrect">Sinun käyttäjätunnus ei ole kelvollinen.</string>
   <string name="wizard_email_incorrect">Sähkpostisi ei ole kelvollinen.</string>
   <string name="wizard_passwords_unmatched">Antamasi salasanat ovat erillaiset.</string>
-  <string name="setup_confirm_username">Sinun käyttäjätunnus tulee olemaan %s.\r\n\r\nIt voiden muuttua, jotta vaatiukset täyttyisivät .\r\nHyväksytkö?</string>
   <string name="first_launch_no_login_password">Anna käyttäjätunnus ja salasana</string>
   <!--Status-->
   <!--In-app-->
@@ -190,7 +189,6 @@
   </string-array>
   <string name="pref_none">Ei mitään</string>
   <string name="pref_preferences_title">Toivotut säädöt</string>
-  <string name="pref_video_enable_title">Salli video</string>
   <!--Audio settings-->
   <string name="pref_audio_title">Ääni</string>
   <string name="pref_echo_cancellation">Kaiun poisto</string>
@@ -215,6 +213,8 @@
   <string name="pref_preferred_fps">Toivottu FPS \'kuvaa per sekuntti\'</string>
   <string name="pref_bandwidth_limit">Kaistaleveys raja kbits/s</string>
   <string name="pref_video_codecs_title">Kodekit</string>
+  <!--Contact settings-->
+  <string name="pref_contact_title">Yhteys</string>
   <!--Call settings-->
   <string name="pref_call_title">Puhelu</string>
   <string name="pref_voice_mail">Ääni postin URI-osoite</string>
