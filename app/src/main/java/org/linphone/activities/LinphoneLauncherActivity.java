@@ -28,6 +28,7 @@ import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.assistant.MenuAssistantActivity;
 import org.linphone.chat.ChatActivity;
+import org.linphone.contacts.ContactsActivity;
 import org.linphone.history.HistoryActivity;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.LinphoneUtils;
@@ -74,6 +75,8 @@ public class LinphoneLauncherActivity extends Activity {
                     classToStart = ChatActivity.class;
                 } else if (HistoryActivity.NAME.equals(activity)) {
                     classToStart = HistoryActivity.class;
+                } else if (ContactsActivity.NAME.equals(activity)) {
+                    classToStart = ContactsActivity.class;
                 } else {
                     classToStart = DialerActivity.class;
                 }
@@ -97,6 +100,7 @@ public class LinphoneLauncherActivity extends Activity {
                         }
                         intent.setAction(getIntent().getAction());
                         intent.setType(getIntent().getType());
+                        intent.setData(getIntent().getData());
                         startActivity(intent);
                     }
                 },

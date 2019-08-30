@@ -57,6 +57,7 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
     private boolean mIsTransfer;
     private CoreListenerStub mListener;
     private boolean mInterfaceLoaded;
+    private String mAddressToCallOnLayoutReady;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +85,10 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
                                 fragmentContainer.addView(view, params);
                                 initUI(view);
                                 mInterfaceLoaded = true;
+                                if (mAddressToCallOnLayoutReady != null) {
+                                    mAddress.setText(mAddressToCallOnLayoutReady);
+                                    mAddressToCallOnLayoutReady = null;
+                                }
                             }
                         });
 
@@ -318,7 +323,11 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
         }
 
         if (addressToCall != null) {
-            mAddress.setText(addressToCall);
+            if (mAddress != null) {
+                mAddress.setText(addressToCall);
+            } else {
+                mAddressToCallOnLayoutReady = addressToCall;
+            }
         }
     }
 
