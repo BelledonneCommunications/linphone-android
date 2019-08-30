@@ -28,13 +28,17 @@ import android.view.View;
 import android.widget.Toast;
 import org.linphone.R;
 import org.linphone.activities.MainActivity;
+import org.linphone.core.tools.Log;
 
 public class ContactsActivity extends MainActivity {
+    public static final String NAME = "Contacts";
+
     private boolean mEditOnClick;
     private String mEditSipUri, mEditDisplayName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getIntent().putExtra("Activity", NAME);
         super.onCreate(savedInstanceState);
 
         mPermissionsToHave =
@@ -53,6 +57,10 @@ public class ContactsActivity extends MainActivity {
 
             if (getIntent() != null && getIntent().getExtras() != null) {
                 Bundle extras = getIntent().getExtras();
+                Uri uri = getIntent().getData();
+                if (uri != null) {
+                    extras.putString("ContactUri", uri.toString());
+                }
                 handleIntentExtras(extras);
             } else if (getIntent() != null && getIntent().getData() != null) {
                 Uri uri = getIntent().getData();
@@ -132,6 +140,7 @@ public class ContactsActivity extends MainActivity {
 
         if (extras.containsKey("ContactUri")) {
             String uri = extras.getString("ContactUri");
+            Log.i("[Contacts Activity] Found ContactUri " + uri);
             Uri contactUri = Uri.parse(uri);
             String id = ContactsManager.getInstance().getAndroidContactIdFromUri(contactUri);
 
@@ -142,6 +151,7 @@ public class ContactsActivity extends MainActivity {
             }
         } else if (extras.containsKey("Contact")) {
             LinphoneContact contact = (LinphoneContact) extras.get("Contact");
+            Log.i("[Contacts Activity] Found Contact " + contact);
             if (extras.containsKey("Edit")) {
                 showContactEdit(contact, extras, true);
             } else {
@@ -151,6 +161,11 @@ public class ContactsActivity extends MainActivity {
             mEditOnClick = extras.getBoolean("CreateOrEdit");
             mEditSipUri = extras.getString("SipUri", null);
             mEditDisplayName = extras.getString("DisplayName", null);
+            Log.i(
+                    "[Contacts Activity] CreateOrEdit with values "
+                            + mEditSipUri
+                            + " / "
+                            + mEditDisplayName);
 
             Toast.makeText(this, R.string.toast_choose_contact_for_edition, Toast.LENGTH_LONG)
                     .show();
@@ -179,6 +194,7 @@ public class ContactsActivity extends MainActivity {
         Bundle extras = new Bundle();
         if (contact != null) {
             extras.putSerializable("Contact", contact);
+            Log.i("[Contacts Activity] Displaying Contact " + contact);
         }
 
         ContactDetailsFragment fragment = new ContactDetailsFragment();
@@ -193,6 +209,7 @@ public class ContactsActivity extends MainActivity {
     private void showContactEdit(LinphoneContact contact, Bundle extras, boolean isChild) {
         if (contact != null) {
             extras.putSerializable("Contact", contact);
+            Log.i("[Contacts Activity] Editing Contact " + contact);
         }
         if (mEditOnClick) {
             mEditOnClick = false;
