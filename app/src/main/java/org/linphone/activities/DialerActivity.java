@@ -31,6 +31,8 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.asynclayoutinflater.view.AsyncLayoutInflater;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.linphone.LinphoneManager;
@@ -297,9 +299,15 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
             if (uri != null) {
                 Log.i("[Dialer] Intent data is: " + uri.toString());
                 if (Intent.ACTION_CALL.equals(action)) {
-                    addressToCall = intent.getData().toString();
-                    addressToCall = addressToCall.replace("%40", "@");
-                    addressToCall = addressToCall.replace("%3A", ":");
+                    String dataString = intent.getDataString();
+
+                    try {
+                        addressToCall = URLDecoder.decode(dataString, "UTF-8");
+                    } catch (UnsupportedEncodingException e) {
+                        Log.e("[Dialer] Unable to decode URI " + dataString);
+                        addressToCall = dataString;
+                    }
+
                     if (addressToCall.startsWith("sip:")) {
                         addressToCall = addressToCall.substring("sip:".length());
                     } else if (addressToCall.startsWith("tel:")) {
