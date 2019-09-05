@@ -150,7 +150,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="left"
             android:layout_marginTop="40dp"
-            android:background="@color/white_color">
+            android:background="?attr/backgroundColor">
 
             <fragment
                 android:id="@+id/call_stats_fragment"

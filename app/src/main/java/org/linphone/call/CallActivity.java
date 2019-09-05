@@ -771,8 +771,8 @@ public class CallActivity extends LinphoneGenericActivity
 
     private void updateButtonsVisibility(boolean visible) {
         findViewById(R.id.status_bar_fragment).setVisibility(visible ? View.VISIBLE : View.GONE);
-        mActiveCalls.setVisibility(visible ? View.VISIBLE : View.GONE);
-        mButtons.setVisibility(visible ? View.VISIBLE : View.GONE);
+        if (mActiveCalls != null) mActiveCalls.setVisibility(visible ? View.VISIBLE : View.GONE);
+        if (mButtons != null) mButtons.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     private void makeButtonsVisibleTemporary() {
