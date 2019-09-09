@@ -29,13 +29,15 @@ import org.linphone.R;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.widget.ListSetting;
 import org.linphone.settings.widget.SettingListenerBase;
+import org.linphone.settings.widget.SwitchSetting;
 import org.linphone.settings.widget.TextSetting;
 
 public class TunnelSettingsFragment extends SettingsFragment {
     private View mRootView;
     private LinphonePreferences mPrefs;
 
-    private TextSetting mHost, mPort;
+    private TextSetting mHost, mPort, mHost2, mPort2;
+    private SwitchSetting mDualMode;
     private ListSetting mMode;
 
     @Nullable
@@ -64,7 +66,14 @@ public class TunnelSettingsFragment extends SettingsFragment {
         mPort = mRootView.findViewById(R.id.pref_tunnel_port);
         mPort.setInputType(InputType.TYPE_CLASS_NUMBER);
 
+        mHost2 = mRootView.findViewById(R.id.pref_tunnel_host_2);
+
+        mPort2 = mRootView.findViewById(R.id.pref_tunnel_port_2);
+        mPort2.setInputType(InputType.TYPE_CLASS_NUMBER);
+
         mMode = mRootView.findViewById(R.id.pref_tunnel_mode);
+
+        mDualMode = mRootView.findViewById(R.id.pref_tunnel_dual_mode);
     }
 
     private void setListeners() {
@@ -88,11 +97,39 @@ public class TunnelSettingsFragment extends SettingsFragment {
                     }
                 });
 
+        mHost2.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onTextValueChanged(String newValue) {
+                        mPrefs.setTunnelHost2(newValue);
+                    }
+                });
+
+        mPort2.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onTextValueChanged(String newValue) {
+                        try {
+                            mPrefs.setTunnelPort2(Integer.valueOf(newValue));
+                        } catch (NumberFormatException nfe) {
+                            Log.e(nfe);
+                        }
+                    }
+                });
+
         mMode.setListener(
                 new SettingListenerBase() {
                     @Override
                     public void onListValueChanged(int position, String newLabel, String newValue) {
                         mPrefs.setTunnelMode(newValue);
+                    }
+                });
+
+        mDualMode.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onBoolValueChanged(boolean newValue) {
+                        mPrefs.enableTunnelDualMode(newValue);
                     }
                 });
     }
@@ -102,7 +139,13 @@ public class TunnelSettingsFragment extends SettingsFragment {
 
         mPort.setValue(mPrefs.getTunnelPort());
 
+        mHost2.setValue(mPrefs.getTunnelHost2());
+
+        mPort2.setValue(mPrefs.getTunnelPort2());
+
         mMode.setValue(mPrefs.getTunnelMode());
+
+        mDualMode.setChecked(mPrefs.isTunnelDualModeEnabled());
 
         setListeners();
     }

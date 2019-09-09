@@ -900,6 +900,53 @@ public class LinphonePreferences {
         }
     }
 
+    public String getTunnelHost2() {
+        TunnelConfig config = getTunnelConfig();
+        if (config != null) {
+            return config.getHost2();
+        } else {
+            return null;
+        }
+    }
+
+    public void setTunnelHost2(String host) {
+        TunnelConfig config = getTunnelConfig();
+        if (config != null) {
+            config.setHost2(host);
+            LinphoneManager.getInstance().initTunnelFromConf();
+        }
+    }
+
+    public int getTunnelPort2() {
+        TunnelConfig config = getTunnelConfig();
+        if (config != null) {
+            return config.getPort2();
+        } else {
+            return -1;
+        }
+    }
+
+    public void setTunnelPort2(int port) {
+        TunnelConfig config = getTunnelConfig();
+        if (config != null) {
+            config.setPort2(port);
+            LinphoneManager.getInstance().initTunnelFromConf();
+        }
+    }
+
+    public void enableTunnelDualMode(boolean enable) {
+        LinphoneManager.getInstance().initTunnelFromConf();
+        getLc().getTunnel().enableDualMode(enable);
+    }
+
+    public boolean isTunnelDualModeEnabled() {
+        Tunnel tunnel = getLc().getTunnel();
+        if (tunnel != null) {
+            return tunnel.dualModeEnabled();
+        }
+        return false;
+    }
+
     public String getTunnelMode() {
         return getConfig().getString("app", "tunnel", null);
     }
