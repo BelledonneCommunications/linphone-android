@@ -125,11 +125,13 @@ public class ActivityMonitor implements Application.ActivityLifecycleCallbacks {
 
         @Override
         public void run() {
-            synchronized (LinphoneService.instance()) {
-                if (!isCanceled) {
-                    if (ActivityMonitor.this.mRunningActivities == 0 && mActive) {
-                        mActive = false;
-                        onBackgroundMode();
+            if (LinphoneService.isReady()) {
+                synchronized (LinphoneService.instance()) {
+                    if (!isCanceled) {
+                        if (ActivityMonitor.this.mRunningActivities == 0 && mActive) {
+                            mActive = false;
+                            onBackgroundMode();
+                        }
                     }
                 }
             }

@@ -194,6 +194,9 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
                 Log.w("[Contacts Manager] Task cancelled");
                 return data;
             }
+            if (contact.getNumbersOrAddresses().isEmpty()) {
+                continue;
+            }
 
             if (contact.getFullName() == null) {
                 for (LinphoneNumberOrAddress noa : contact.getNumbersOrAddresses()) {
@@ -224,6 +227,7 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
                     data.sipContacts.add(contact);
                 }
             }
+
             data.contacts.add(contact);
         }
 
