@@ -386,6 +386,9 @@
     <string name="pref_tunnel_title">Tunnel</string>
     <string name="pref_tunnel_host">Hostname</string>
     <string name="pref_tunnel_port">Port</string>
+    <string name="pref_tunnel_dual_mode">Enable dual mode</string>
+    <string name="pref_tunnel_host_2">Hostname (2nd server for dual mode)</string>
+    <string name="pref_tunnel_port_2">Port (2nd server for dual mode)</string>
     <string name="pref_tunnel_mode">Mode</string>
     <!--do not change order without changing corresponding entry_values in non_localizable_strings.xml-->
     <string-array name="tunnel_mode_entries">
