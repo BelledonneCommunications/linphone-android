@@ -58,7 +58,6 @@
                     android:paddingLeft="5dp"
                     android:text="@string/call_stats_encoder_name" />
 
-
                 <TextView
                     android:id="@+id/decoder_audio"
                     style="@style/call_stats_font"
@@ -68,6 +67,21 @@
                     android:paddingLeft="5dp"
                     android:text="@string/call_stats_decoder_name" />
 
+                <TextView
+                    android:id="@+id/audio_capture_filter"
+                    style="@style/call_stats_font"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingLeft="5dp" />
+
+                <TextView
+                    android:id="@+id/audio_player_filter"
+                    style="@style/call_stats_font"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingLeft="5dp" />
 
                 <TextView
                     android:id="@+id/uploadBandwith_audio"
@@ -86,7 +100,6 @@
                     android:gravity="center"
                     android:paddingLeft="5dp"
                     android:text="@string/call_stats_download" />
-
 
                 <TextView
                     android:id="@+id/ice_audio"
@@ -115,7 +128,6 @@
                     android:paddingLeft="5dp"
                     android:text="@string/call_stats_sender_loss_rate" />
 
-
                 <TextView
                     android:id="@+id/receiverLossRateAudio"
                     style="@style/call_stats_font"
@@ -135,6 +147,7 @@
                     android:text="@string/call_stats_jitter_buffer" />
 
             </TableLayout>
+
         </LinearLayout>
 
         <LinearLayout
@@ -161,7 +174,6 @@
                 android:paddingRight="5dp"
                 android:paddingBottom="10dp">
 
-
                 <TextView
                     android:id="@+id/codec_video"
                     style="@style/call_stats_font"
@@ -170,7 +182,6 @@
                     android:gravity="center"
                     android:paddingLeft="5dp"
                     android:text="@string/call_stats_codec" />
-
 
                 <TextView
                     android:id="@+id/encoder_video"
@@ -196,8 +207,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:paddingLeft="5dp"
-                    android:text="@string/call_stats_decoder_name" />
+                    android:paddingLeft="5dp" />
+
+                <TextView
+                    android:id="@+id/video_capture_device"
+                    style="@style/call_stats_font"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingLeft="5dp" />
 
                 <TextView
                     android:id="@+id/uploadBandwith_video"
@@ -207,7 +225,6 @@
                     android:gravity="center"
                     android:paddingLeft="5dp"
                     android:text="@string/call_stats_upload" />
-
 
                 <TextView
                     android:id="@+id/downloadBandwith_video"
@@ -253,7 +270,6 @@
                     android:gravity="center"
                     android:paddingLeft="5dp"
                     android:text="@string/call_stats_sender_loss_rate" />
-
 
                 <TextView
                     android:id="@+id/receiverLossRateVideo"
@@ -301,6 +317,9 @@
                     android:text="@string/call_stats_video_fps_received" />
 
             </TableLayout>
+
         </LinearLayout>
+
     </LinearLayout>
+
 </ScrollView>
