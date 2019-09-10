@@ -54,7 +54,10 @@ public class CallStatsChildViewHolder {
     private TextView mDecoderAudio;
     private TextView mEncoderVideo;
     private TextView mDecoderVideo;
-    private TextView mDisplayFilter;
+    private TextView mAudioCaptureFilter;
+    private TextView mAudioPlayerFilter;
+    private TextView mVideoCaptureFilter;
+    private TextView mVideoDisplayFilter;
     private TextView mDlAudio;
     private TextView mUlAudio;
     private TextView mDlVideo;
@@ -90,7 +93,10 @@ public class CallStatsChildViewHolder {
         mDecoderAudio = view.findViewById(R.id.decoder_audio);
         mEncoderVideo = view.findViewById(R.id.encoder_video);
         mDecoderVideo = view.findViewById(R.id.decoder_video);
-        mDisplayFilter = view.findViewById(R.id.display_filter);
+        mAudioCaptureFilter = view.findViewById(R.id.audio_capture_filter);
+        mAudioPlayerFilter = view.findViewById(R.id.audio_player_filter);
+        mVideoCaptureFilter = view.findViewById(R.id.video_capture_device);
+        mVideoDisplayFilter = view.findViewById(R.id.display_filter);
         mDlAudio = view.findViewById(R.id.downloadBandwith_audio);
         mUlAudio = view.findViewById(R.id.uploadBandwith_audio);
         mDlVideo = view.findViewById(R.id.downloadBandwith_video);
@@ -193,10 +199,28 @@ public class CallStatsChildViewHolder {
                                                         params.getUsedVideoPayloadType();
 
                                                 formatText(
-                                                        mDisplayFilter,
+                                                        mAudioPlayerFilter,
+                                                        mContext.getString(
+                                                                R.string.call_stats_player_filter),
+                                                        mCall.getCore().getPlaybackDevice());
+
+                                                formatText(
+                                                        mAudioCaptureFilter,
+                                                        mContext.getString(
+                                                                R.string.call_stats_capture_filter),
+                                                        mCall.getCore().getCaptureDevice());
+
+                                                formatText(
+                                                        mVideoDisplayFilter,
                                                         mContext.getString(
                                                                 R.string.call_stats_display_filter),
                                                         mCall.getCore().getVideoDisplayFilter());
+
+                                                formatText(
+                                                        mVideoCaptureFilter,
+                                                        mContext.getString(
+                                                                R.string.call_stats_capture_filter),
+                                                        mCall.getCore().getVideoDevice());
 
                                                 displayMediaStats(
                                                         params,
