@@ -22,7 +22,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import android.Manifest;
 import android.app.KeyguardManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -126,8 +125,9 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
                             Core core, Call call, State state, String message) {
                         if (call == mCall) {
                             if (state == State.Connected) {
-                                startActivity(
-                                        new Intent(CallIncomingActivity.this, CallActivity.class));
+                                // This is done by the Service listener now
+                                // startActivity(new Intent(CallOutgoingActivity.this,
+                                // CallActivity.class));
                             }
                         }
 
