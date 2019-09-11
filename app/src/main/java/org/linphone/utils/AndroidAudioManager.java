@@ -65,6 +65,7 @@ public class AndroidAudioManager {
     private BluetoothHeadset mBluetoothHeadset;
     private BluetoothReceiver mBluetoothReceiver;
     private HeadsetReceiver mHeadsetReceiver;
+    private boolean mHeadsetReceiverRegistered;
 
     private boolean mIsRinging;
     private boolean mAudioFocused;
@@ -79,6 +80,7 @@ public class AndroidAudioManager {
         mAudioManager = ((AudioManager) context.getSystemService(Context.AUDIO_SERVICE));
         mVibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         mEchoTesterIsRunning = false;
+        mHeadsetReceiverRegistered = false;
 
         startBluetooth();
 
@@ -131,6 +133,7 @@ public class AndroidAudioManager {
                                     }
                                 }
                                 // Only register this one when a call is active
+
                                 enableHeadsetReceiver();
                             }
                         } else if (state == Call.State.End || state == Call.State.Error) {
@@ -148,9 +151,10 @@ public class AndroidAudioManager {
                                 }
 
                                 // Only register this one when a call is active
-                                if (mHeadsetReceiver != null) {
+                                if (mHeadsetReceiver != null && mHeadsetReceiverRegistered) {
                                     Log.i("[Audio Manager] Unregistering headset receiver");
                                     mContext.unregisterReceiver(mHeadsetReceiver);
+                                    mHeadsetReceiverRegistered = false;
                                 }
 
                                 TelephonyManager tm =
@@ -595,5 +599,6 @@ public class AndroidAudioManager {
                 mHeadsetReceiver, new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY));
         mContext.registerReceiver(
                 mHeadsetReceiver, new IntentFilter(AudioManager.ACTION_HEADSET_PLUG));
+        mHeadsetReceiverRegistered = true;
     }
 }
