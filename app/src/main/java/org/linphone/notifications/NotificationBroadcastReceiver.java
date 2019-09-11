@@ -32,7 +32,6 @@ import org.linphone.compatibility.Compatibility;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.ChatMessage;
-import org.linphone.core.ChatMessageListenerStub;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.Core;
 import org.linphone.core.tools.Log;
@@ -97,25 +96,11 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
                 }
 
                 ChatMessage msg = room.createMessage(reply);
-                msg.send();
+                msg.setUserData(notifId);
                 msg.addListener(
-                        new ChatMessageListenerStub() {
-                            @Override
-                            public void onMsgStateChanged(
-                                    ChatMessage msg, ChatMessage.State state) {
-                                if (state == ChatMessage.State.Delivered) {
-                                    Notification replied =
-                                            Compatibility.createRepliedNotification(context, reply);
-                                    LinphoneService.instance()
-                                            .getNotificationManager()
-                                            .sendNotification(notifId, replied);
-                                } else if (state == ChatMessage.State.NotDelivered) {
-                                    Log.e(
-                                            "[Notification Broadcast Receiver] Couldn't send reply, message is not delivered");
-                                    onError(context, notifId);
-                                }
-                            }
-                        });
+                        LinphoneService.instance().getNotificationManager().getMessageListener());
+                msg.send();
+                Log.i("[Notification Broadcast Receiver] Reply sent for notif id " + notifId);
             } else {
                 LinphoneService.instance().getNotificationManager().dismissNotification(notifId);
             }

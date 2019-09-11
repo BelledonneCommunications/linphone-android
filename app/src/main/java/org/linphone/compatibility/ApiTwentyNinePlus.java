@@ -1,8 +1,8 @@
 package org.linphone.compatibility;
 
 /*
-ApiTwentyFourPlus.java
-Copyright (C) 2017 Belledonne Communications, Grenoble, France
+ApiTwentyNinePlus.java
+Copyright (C) 2019 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -19,7 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import static org.linphone.compatibility.Compatibility.CHAT_NOTIFICATIONS_GROUP;
 import static org.linphone.compatibility.Compatibility.INTENT_ANSWER_CALL_NOTIF_ACTION;
 import static org.linphone.compatibility.Compatibility.INTENT_HANGUP_CALL_NOTIF_ACTION;
 import static org.linphone.compatibility.Compatibility.INTENT_LOCAL_IDENTITY;
@@ -32,100 +31,14 @@ import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.RemoteInput;
-import android.content.ContentProviderClient;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import org.linphone.R;
 import org.linphone.notifications.Notifiable;
-import org.linphone.notifications.NotifiableMessage;
 import org.linphone.notifications.NotificationBroadcastReceiver;
 
-@TargetApi(24)
-class ApiTwentyFourPlus {
-
-    public static Notification createRepliedNotification(Context context, String reply) {
-        return new Notification.Builder(context)
-                .setSmallIcon(R.drawable.topbar_chat_notification)
-                .setContentText(
-                        context.getString(R.string.notification_replied_label).replace("%s", reply))
-                .build();
-    }
-
-    public static Notification createMessageNotification(
-            Context context, Notifiable notif, Bitmap contactIcon, PendingIntent intent) {
-
-        Notification.MessagingStyle style = new Notification.MessagingStyle(notif.getMyself());
-        for (NotifiableMessage message : notif.getMessages()) {
-            Notification.MessagingStyle.Message msg =
-                    new Notification.MessagingStyle.Message(
-                            message.getMessage(), message.getTime(), message.getSender());
-            if (message.getFilePath() != null)
-                msg.setData(message.getFileMime(), message.getFilePath());
-            style.addMessage(msg);
-        }
-        if (notif.isGroup()) {
-            style.setConversationTitle(notif.getGroupTitle());
-        }
-
-        return new Notification.Builder(context)
-                .setSmallIcon(R.drawable.topbar_chat_notification)
-                .setAutoCancel(true)
-                .setContentIntent(intent)
-                .setDefaults(
-                        Notification.DEFAULT_SOUND
-                                | Notification.DEFAULT_VIBRATE
-                                | Notification.DEFAULT_LIGHTS)
-                .setLargeIcon(contactIcon)
-                .setCategory(Notification.CATEGORY_MESSAGE)
-                .setGroup(CHAT_NOTIFICATIONS_GROUP)
-                .setVisibility(Notification.VISIBILITY_PRIVATE)
-                .setPriority(Notification.PRIORITY_HIGH)
-                .setNumber(notif.getMessages().size())
-                .setWhen(System.currentTimeMillis())
-                .setShowWhen(true)
-                .setColor(context.getColor(R.color.notification_led_color))
-                .setStyle(style)
-                .addAction(Compatibility.getReplyMessageAction(context, notif))
-                .addAction(Compatibility.getMarkMessageAsReadAction(context, notif))
-                .build();
-    }
-
-    public static Notification createInCallNotification(
-            Context context,
-            int callId,
-            boolean showAnswerAction,
-            String msg,
-            int iconID,
-            Bitmap contactIcon,
-            String contactName,
-            PendingIntent intent) {
-
-        Notification.Builder builder =
-                new Notification.Builder(context)
-                        .setContentTitle(contactName)
-                        .setContentText(msg)
-                        .setSmallIcon(iconID)
-                        .setAutoCancel(false)
-                        .setContentIntent(intent)
-                        .setLargeIcon(contactIcon)
-                        .setCategory(Notification.CATEGORY_CALL)
-                        .setVisibility(Notification.VISIBILITY_PUBLIC)
-                        .setPriority(Notification.PRIORITY_HIGH)
-                        .setWhen(System.currentTimeMillis())
-                        .setShowWhen(true)
-                        .setOngoing(true)
-                        .setColor(context.getColor(R.color.notification_led_color))
-                        .addAction(Compatibility.getCallDeclineAction(context, callId));
-
-        if (showAnswerAction) {
-            builder.setFullScreenIntent(intent, true);
-            builder.addAction(Compatibility.getCallAnswerAction(context, callId));
-        }
-
-        return builder.build();
-    }
-
+@TargetApi(29)
+public class ApiTwentyNinePlus {
     public static Notification.Action getReplyMessageAction(Context context, Notifiable notif) {
         String replyLabel = context.getResources().getString(R.string.notification_reply_label);
         RemoteInput remoteInput =
@@ -149,6 +62,8 @@ class ApiTwentyFourPlus {
                         replyPendingIntent)
                 .addRemoteInput(remoteInput)
                 .setAllowGeneratedReplies(true)
+                .setSemanticAction(Notification.Action.SEMANTIC_ACTION_REPLY)
+                .setContextual(true)
                 .build();
     }
 
@@ -170,6 +85,8 @@ class ApiTwentyFourPlus {
                         R.drawable.chat_send_over,
                         context.getString(R.string.notification_mark_as_read_label),
                         markAsReadPendingIntent)
+                .setSemanticAction(Notification.Action.SEMANTIC_ACTION_MARK_AS_READ)
+                .setContextual(true)
                 .build();
     }
 
@@ -186,6 +103,7 @@ class ApiTwentyFourPlus {
                         R.drawable.call_audio_start,
                         context.getString(R.string.notification_call_answer_label),
                         answerPendingIntent)
+                .setContextual(true)
                 .build();
     }
 
@@ -202,10 +120,7 @@ class ApiTwentyFourPlus {
                         R.drawable.call_hangup,
                         context.getString(R.string.notification_call_hangup_label),
                         hangupPendingIntent)
+                .setContextual(true)
                 .build();
-    }
-
-    public static void closeContentProviderClient(ContentProviderClient client) {
-        client.close();
     }
 }

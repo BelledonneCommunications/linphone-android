@@ -20,7 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -129,8 +128,9 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
                                         .show();
                             }
                         } else if (state == State.Connected) {
-                            startActivity(
-                                    new Intent(CallOutgoingActivity.this, CallActivity.class));
+                            // This is done by the Service listener now
+                            // startActivity(new Intent(CallOutgoingActivity.this,
+                            // CallActivity.class));
                         }
 
                         if (LinphoneManager.getCore().getCallsNb() == 0) {

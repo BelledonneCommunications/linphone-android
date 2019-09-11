@@ -135,8 +135,8 @@ class ApiTwentySixPlus {
                 .setShowWhen(true)
                 .setColor(context.getColor(R.color.notification_led_color))
                 .setStyle(style)
-                .addAction(ApiTwentyFourPlus.getReplyMessageAction(context, notif))
-                .addAction(ApiTwentyFourPlus.getMarkMessageAsReadAction(context, notif))
+                .addAction(Compatibility.getReplyMessageAction(context, notif))
+                .addAction(Compatibility.getMarkMessageAsReadAction(context, notif))
                 .build();
     }
 
@@ -171,11 +171,11 @@ class ApiTwentySixPlus {
                         .setShowWhen(true)
                         .setOngoing(true)
                         .setColor(context.getColor(R.color.notification_led_color))
-                        .addAction(ApiTwentyFourPlus.getCallDeclineAction(context, callId));
+                        .addAction(Compatibility.getCallDeclineAction(context, callId));
 
         if (isIncoming) {
             builder.setFullScreenIntent(intent, true);
-            builder.addAction(ApiTwentyFourPlus.getCallAnswerAction(context, callId));
+            builder.addAction(Compatibility.getCallAnswerAction(context, callId));
         }
         return builder.build();
     }
