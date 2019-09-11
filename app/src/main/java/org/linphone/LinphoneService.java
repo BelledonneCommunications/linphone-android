@@ -30,6 +30,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.provider.ContactsContract;
 import android.view.WindowManager;
+import org.linphone.call.CallActivity;
 import org.linphone.call.CallIncomingActivity;
 import org.linphone.call.CallOutgoingActivity;
 import org.linphone.contacts.ContactsManager;
@@ -159,6 +160,8 @@ public final class LinphoneService extends Service {
                             // if (!mLinphoneManager.getCallGsmON()) onIncomingReceived();
                         } else if (state == State.OutgoingInit) {
                             onOutgoingStarted();
+                        } else if (state == State.Connected) {
+                            onCallStarted();
                         } else if (state == State.End
                                 || state == State.Released
                                 || state == State.Error) {
@@ -380,6 +383,13 @@ public final class LinphoneService extends Service {
 
     private void onOutgoingStarted() {
         Intent intent = new Intent(LinphoneService.this, CallOutgoingActivity.class);
+        // This flag is required to start an Activity from a Service context
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    private void onCallStarted() {
+        Intent intent = new Intent(LinphoneService.this, CallActivity.class);
         // This flag is required to start an Activity from a Service context
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
