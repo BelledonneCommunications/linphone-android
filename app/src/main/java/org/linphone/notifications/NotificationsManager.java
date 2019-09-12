@@ -616,7 +616,10 @@ public class NotificationsManager {
         LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
         Uri pictureUri = contact != null ? contact.getThumbnailUri() : null;
         Bitmap bm = ImageUtils.getRoundBitmapFromUri(mContext, pictureUri);
-        String name = LinphoneUtils.getAddressDisplayName(address);
+        String name =
+                contact != null
+                        ? contact.getFullName()
+                        : LinphoneUtils.getAddressDisplayName(address);
         boolean isIncoming = callNotifIntentClass == CallIncomingActivity.class;
 
         Notification notification;
