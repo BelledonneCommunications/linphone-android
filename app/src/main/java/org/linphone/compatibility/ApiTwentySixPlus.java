@@ -35,6 +35,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.provider.Settings;
+import android.widget.RemoteViews;
 import org.linphone.R;
 import org.linphone.core.tools.Log;
 import org.linphone.notifications.Notifiable;
@@ -143,41 +144,67 @@ class ApiTwentySixPlus {
     public static Notification createInCallNotification(
             Context context,
             int callId,
-            boolean isIncoming,
             String msg,
             int iconID,
             Bitmap contactIcon,
             String contactName,
             PendingIntent intent) {
 
-        Notification.Builder builder =
-                new Notification.Builder(
-                                context,
-                                isIncoming
-                                        ? context.getString(R.string.notification_channel_id)
-                                        : context.getString(
-                                                R.string.notification_service_channel_id))
-                        .setContentTitle(contactName)
-                        .setContentText(msg)
-                        .setSmallIcon(iconID)
-                        .setAutoCancel(false)
-                        .setContentIntent(intent)
-                        .setLargeIcon(contactIcon)
-                        .setCategory(Notification.CATEGORY_CALL)
-                        .setVisibility(Notification.VISIBILITY_PUBLIC)
-                        .setPriority(
-                                isIncoming ? Notification.PRIORITY_HIGH : Notification.PRIORITY_LOW)
-                        .setWhen(System.currentTimeMillis())
-                        .setShowWhen(true)
-                        .setOngoing(true)
-                        .setColor(context.getColor(R.color.notification_led_color))
-                        .addAction(Compatibility.getCallDeclineAction(context, callId));
+        return new Notification.Builder(
+                        context, context.getString(R.string.notification_service_channel_id))
+                .setContentTitle(contactName)
+                .setContentText(msg)
+                .setSmallIcon(iconID)
+                .setAutoCancel(false)
+                .setContentIntent(intent)
+                .setLargeIcon(contactIcon)
+                .setCategory(Notification.CATEGORY_CALL)
+                .setVisibility(Notification.VISIBILITY_PUBLIC)
+                .setPriority(Notification.PRIORITY_LOW)
+                .setWhen(System.currentTimeMillis())
+                .setShowWhen(true)
+                .setOngoing(true)
+                .setColor(context.getColor(R.color.notification_led_color))
+                .addAction(Compatibility.getCallDeclineAction(context, callId))
+                .build();
+    }
 
-        if (isIncoming) {
-            builder.setFullScreenIntent(intent, true);
-            builder.addAction(Compatibility.getCallAnswerAction(context, callId));
+    public static Notification createIncomingCallNotification(
+            Context context,
+            int callId,
+            Bitmap contactIcon,
+            String contactName,
+            String sipUri,
+            PendingIntent intent) {
+        RemoteViews notificationLayoutHeadsUp =
+                new RemoteViews(
+                        context.getPackageName(), R.layout.call_incoming_notification_heads_up);
+        notificationLayoutHeadsUp.setTextViewText(R.id.caller, contactName);
+        notificationLayoutHeadsUp.setTextViewText(R.id.sip_uri, sipUri);
+        notificationLayoutHeadsUp.setTextViewText(
+                R.id.incoming_call_info, context.getString(R.string.incall_notif_incoming));
+        if (contactIcon != null) {
+            notificationLayoutHeadsUp.setImageViewBitmap(R.id.caller_picture, contactIcon);
         }
-        return builder.build();
+
+        return new Notification.Builder(
+                        context, context.getString(R.string.notification_channel_id))
+                .setStyle(new Notification.DecoratedCustomViewStyle())
+                .setSmallIcon(R.drawable.topbar_call_notification)
+                .setContentIntent(intent)
+                .setCategory(Notification.CATEGORY_CALL)
+                .setVisibility(Notification.VISIBILITY_PUBLIC)
+                .setPriority(Notification.PRIORITY_HIGH)
+                .setWhen(System.currentTimeMillis())
+                .setAutoCancel(false)
+                .setShowWhen(true)
+                .setOngoing(true)
+                .setColor(context.getColor(R.color.notification_led_color))
+                .setFullScreenIntent(intent, true)
+                .addAction(Compatibility.getCallDeclineAction(context, callId))
+                .addAction(Compatibility.getCallAnswerAction(context, callId))
+                .setCustomHeadsUpContentView(notificationLayoutHeadsUp)
+                .build();
     }
 
     public static Notification createNotification(

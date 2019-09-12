@@ -155,9 +155,11 @@ public final class LinphoneService extends Service {
 
                         if (state == Call.State.IncomingReceived
                                 || state == State.IncomingEarlyMedia) {
-                            // Now we rely on the fullscreen intent of the  call incoming
-                            // notification
-                            // if (!mLinphoneManager.getCallGsmON()) onIncomingReceived();
+                            // Starting SDK 24 (Android 7.0) we rely on the fullscreen intent of the
+                            // call incoming notification
+                            if (Version.sdkStrictlyBelow(Version.API24_NOUGAT_70)) {
+                                if (!mLinphoneManager.getCallGsmON()) onIncomingReceived();
+                            }
                         } else if (state == State.OutgoingInit) {
                             onOutgoingStarted();
                         } else if (state == State.Connected) {

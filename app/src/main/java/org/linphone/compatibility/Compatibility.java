@@ -112,7 +112,6 @@ public class Compatibility {
     public static Notification createInCallNotification(
             Context context,
             int callId,
-            boolean isIncoming,
             String msg,
             int iconID,
             Bitmap contactIcon,
@@ -120,13 +119,31 @@ public class Compatibility {
             PendingIntent intent) {
         if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
             return ApiTwentySixPlus.createInCallNotification(
-                    context, callId, isIncoming, msg, iconID, contactIcon, contactName, intent);
+                    context, callId, msg, iconID, contactIcon, contactName, intent);
         } else if (Version.sdkAboveOrEqual(Version.API24_NOUGAT_70)) {
             return ApiTwentyFourPlus.createInCallNotification(
-                    context, callId, isIncoming, msg, iconID, contactIcon, contactName, intent);
+                    context, callId, msg, iconID, contactIcon, contactName, intent);
         }
         return ApiTwentyOnePlus.createInCallNotification(
-                context, isIncoming, msg, iconID, contactIcon, contactName, intent);
+                context, msg, iconID, contactIcon, contactName, intent);
+    }
+
+    public static Notification createIncomingCallNotification(
+            Context context,
+            int callId,
+            Bitmap contactIcon,
+            String contactName,
+            String sipUri,
+            PendingIntent intent) {
+        if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
+            return ApiTwentySixPlus.createIncomingCallNotification(
+                    context, callId, contactIcon, contactName, sipUri, intent);
+        } else if (Version.sdkAboveOrEqual(Version.API24_NOUGAT_70)) {
+            return ApiTwentyFourPlus.createIncomingCallNotification(
+                    context, callId, contactIcon, contactName, sipUri, intent);
+        }
+        return ApiTwentyOnePlus.createIncomingCallNotification(
+                context, contactIcon, contactName, sipUri, intent);
     }
 
     public static Notification createNotification(

@@ -614,21 +614,32 @@ public class NotificationsManager {
                         + callNotifIntentClass);
 
         LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
-        Uri pictureUri = contact != null ? contact.getPhotoUri() : null;
+        Uri pictureUri = contact != null ? contact.getThumbnailUri() : null;
         Bitmap bm = ImageUtils.getRoundBitmapFromUri(mContext, pictureUri);
         String name = LinphoneUtils.getAddressDisplayName(address);
         boolean isIncoming = callNotifIntentClass == CallIncomingActivity.class;
 
-        Notification notification =
-                Compatibility.createInCallNotification(
-                        mContext,
-                        notif.getNotificationId(),
-                        isIncoming,
-                        mContext.getString(notificationTextId),
-                        iconId,
-                        bm,
-                        name,
-                        pendingIntent);
+        Notification notification;
+        if (isIncoming) {
+            notification =
+                    Compatibility.createIncomingCallNotification(
+                            mContext,
+                            notif.getNotificationId(),
+                            bm,
+                            name,
+                            addressAsString,
+                            pendingIntent);
+        } else {
+            notification =
+                    Compatibility.createInCallNotification(
+                            mContext,
+                            notif.getNotificationId(),
+                            mContext.getString(notificationTextId),
+                            iconId,
+                            bm,
+                            name,
+                            pendingIntent);
+        }
 
         // Don't use incoming call notification as foreground service notif !
         if (!isServiceNotificationDisplayed() && !isIncoming) {
