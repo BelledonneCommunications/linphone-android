@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Locale;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
+import org.linphone.LinphoneStatic;
 import org.linphone.R;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.Address;
@@ -64,7 +65,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
     private boolean mInitialized = false;
 
     public static ContactsManager getInstance() {
-        return LinphoneService.instance().getContactsManager();
+        return LinphoneStatic.instance().getContactsManager();
     }
 
     public ContactsManager(Context context, Handler handler) {

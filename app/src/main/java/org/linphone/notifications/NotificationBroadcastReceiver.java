@@ -26,7 +26,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneService;
+import org.linphone.LinphoneStatic;
 import org.linphone.R;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.Address;
@@ -45,7 +45,7 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
         if (intent.getAction().equals(Compatibility.INTENT_REPLY_NOTIF_ACTION)
                 || intent.getAction().equals(Compatibility.INTENT_MARK_AS_READ_ACTION)) {
             String remoteSipAddr =
-                    LinphoneService.instance()
+                    LinphoneStatic.instance()
                             .getNotificationManager()
                             .getSipUriForNotificationId(notifId);
 
@@ -98,16 +98,16 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
                 ChatMessage msg = room.createMessage(reply);
                 msg.setUserData(notifId);
                 msg.addListener(
-                        LinphoneService.instance().getNotificationManager().getMessageListener());
+                        LinphoneStatic.instance().getNotificationManager().getMessageListener());
                 msg.send();
                 Log.i("[Notification Broadcast Receiver] Reply sent for notif id " + notifId);
             } else {
-                LinphoneService.instance().getNotificationManager().dismissNotification(notifId);
+                LinphoneStatic.instance().getNotificationManager().dismissNotification(notifId);
             }
         } else if (intent.getAction().equals(Compatibility.INTENT_ANSWER_CALL_NOTIF_ACTION)
                 || intent.getAction().equals(Compatibility.INTENT_HANGUP_CALL_NOTIF_ACTION)) {
             String remoteAddr =
-                    LinphoneService.instance()
+                    LinphoneStatic.instance()
                             .getNotificationManager()
                             .getSipUriForCallNotificationId(notifId);
 
@@ -135,7 +135,7 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
     private void onError(Context context, int notifId) {
         Notification replyError =
                 Compatibility.createRepliedNotification(context, context.getString(R.string.error));
-        LinphoneService.instance().getNotificationManager().sendNotification(notifId, replyError);
+        LinphoneStatic.instance().getNotificationManager().sendNotification(notifId, replyError);
     }
 
     private CharSequence getMessageText(Intent intent) {

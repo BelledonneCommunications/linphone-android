@@ -44,6 +44,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
+import org.linphone.LinphoneStatic;
 import org.linphone.R;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
@@ -74,13 +75,13 @@ public final class LinphoneUtils {
                 if (LinphoneService.isReady()) {
                     Factory.instance()
                             .getLoggingService()
-                            .addListener(LinphoneService.instance().getJavaLoggingService());
+                            .addListener(LinphoneStatic.instance().getJavaLoggingService());
                 }
             } else {
                 if (LinphoneService.isReady()) {
                     Factory.instance()
                             .getLoggingService()
-                            .removeListener(LinphoneService.instance().getJavaLoggingService());
+                            .removeListener(LinphoneStatic.instance().getJavaLoggingService());
                 }
             }
         }

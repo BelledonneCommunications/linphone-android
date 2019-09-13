@@ -345,7 +345,7 @@ public class LinphoneManager implements SensorEventListener {
     }
 
     public static synchronized LinphoneManager getInstance() {
-        LinphoneManager manager = LinphoneService.instance().getLinphoneManager();
+        LinphoneManager manager = LinphoneStatic.instance().getLinphoneManager();
         if (manager == null) {
             throw new RuntimeException(
                     "[Manager] Linphone Manager should be created before accessed");

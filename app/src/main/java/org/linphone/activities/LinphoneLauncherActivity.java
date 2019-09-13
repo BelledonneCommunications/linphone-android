@@ -31,10 +31,11 @@ import org.linphone.chat.ChatActivity;
 import org.linphone.contacts.ContactsActivity;
 import org.linphone.history.HistoryActivity;
 import org.linphone.settings.LinphonePreferences;
-import org.linphone.utils.LinphoneUtils;
+import org.linphone.utils.ServiceWaitThread;
+import org.linphone.utils.ServiceWaitThreadListener;
 
 /** Creates LinphoneService and wait until Core is ready to start main Activity */
-public class LinphoneLauncherActivity extends Activity {
+public class LinphoneLauncherActivity extends Activity implements ServiceWaitThreadListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,11 +58,12 @@ public class LinphoneLauncherActivity extends Activity {
         } else {
             startService(
                     new Intent().setClass(LinphoneLauncherActivity.this, LinphoneService.class));
-            new ServiceWaitThread().start();
+            new ServiceWaitThread(this).start();
         }
     }
 
-    private void onServiceReady() {
+    @Override
+    public void onServiceReady() {
         final Class<? extends Activity> classToStart;
 
         boolean useFirstLoginActivity =
@@ -89,42 +91,16 @@ public class LinphoneLauncherActivity extends Activity {
             LinphoneManager.getInstance().checkForUpdate();
         }
 
-        LinphoneUtils.dispatchOnUIThreadAfter(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent intent = new Intent();
-                        intent.setClass(LinphoneLauncherActivity.this, classToStart);
-                        if (getIntent() != null && getIntent().getExtras() != null) {
-                            intent.putExtras(getIntent().getExtras());
-                        }
-                        intent.setAction(getIntent().getAction());
-                        intent.setType(getIntent().getType());
-                        intent.setData(getIntent().getData());
-                        startActivity(intent);
-                    }
-                },
-                100);
+        Intent intent = new Intent();
+        intent.setClass(LinphoneLauncherActivity.this, classToStart);
+        if (getIntent() != null && getIntent().getExtras() != null) {
+            intent.putExtras(getIntent().getExtras());
+        }
+        intent.setAction(getIntent().getAction());
+        intent.setType(getIntent().getType());
+        intent.setData(getIntent().getData());
+        startActivity(intent);
 
         LinphoneManager.getInstance().changeStatusToOnline();
-    }
-
-    private class ServiceWaitThread extends Thread {
-        public void run() {
-            while (!LinphoneService.isReady()) {
-                try {
-                    sleep(30);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException("waiting thread sleep() has been interrupted");
-                }
-            }
-            LinphoneUtils.dispatchOnUIThread(
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            onServiceReady();
-                        }
-                    });
-        }
     }
 }

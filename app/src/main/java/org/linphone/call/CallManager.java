@@ -25,6 +25,7 @@ import android.provider.Settings;
 import android.widget.Toast;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
+import org.linphone.LinphoneStatic;
 import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
@@ -362,7 +363,7 @@ public class CallManager {
         if (call != null) {
             call.enableCamera(enable);
             if (mContext.getResources().getBoolean(R.bool.enable_call_notification))
-                LinphoneService.instance()
+                LinphoneStatic.instance()
                         .getNotificationManager()
                         .displayCallNotification(LinphoneManager.getCore().getCurrentCall());
         }

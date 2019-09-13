@@ -32,6 +32,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
+import org.linphone.LinphoneStatic;
 import org.linphone.R;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.Address;
@@ -150,7 +151,7 @@ public class LinphonePreferences {
     }
 
     private Core getLc() {
-        if (!LinphoneService.isReady()) return null;
+        if (!LinphoneStatic.isReady()) return null;
 
         return LinphoneManager.getCore();
     }
