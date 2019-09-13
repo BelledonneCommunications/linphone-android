@@ -23,8 +23,8 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.provider.Settings;
 import android.widget.Toast;
+import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
@@ -122,7 +122,8 @@ public class CallManager {
         CallParams params = core.createCallParams(call);
 
         boolean isLowBandwidthConnection =
-                !LinphoneUtils.isHighBandwidthConnection(LinphoneService.instance());
+                !LinphoneUtils.isHighBandwidthConnection(
+                        LinphoneContext.instance().getApplicationContext());
 
         if (params != null) {
             params.enableLowBandwidth(isLowBandwidthConnection);
@@ -156,7 +157,8 @@ public class CallManager {
 
     public void inviteAddress(Address address, boolean forceZRTP) {
         boolean isLowBandwidthConnection =
-                !LinphoneUtils.isHighBandwidthConnection(LinphoneService.instance());
+                !LinphoneUtils.isHighBandwidthConnection(
+                        LinphoneContext.instance().getApplicationContext());
 
         inviteAddress(address, false, isLowBandwidthConnection, forceZRTP);
     }
@@ -202,7 +204,8 @@ public class CallManager {
         address.setDisplayName(displayName);
 
         boolean isLowBandwidthConnection =
-                !LinphoneUtils.isHighBandwidthConnection(LinphoneService.instance());
+                !LinphoneUtils.isHighBandwidthConnection(
+                        LinphoneContext.instance().getApplicationContext());
 
         if (core.isNetworkReachable()) {
             if (Version.isVideoCapable()) {
@@ -324,7 +327,9 @@ public class CallManager {
             params.setMediaEncryption(MediaEncryption.ZRTP);
         }
 
-        String recordFile = FileUtils.getCallRecordingFilename(LinphoneService.instance(), address);
+        String recordFile =
+                FileUtils.getCallRecordingFilename(
+                        LinphoneContext.instance().getApplicationContext(), address);
         params.setRecordFile(recordFile);
 
         core.inviteAddressWithParams(address, params);
@@ -362,7 +367,7 @@ public class CallManager {
         if (call != null) {
             call.enableCamera(enable);
             if (mContext.getResources().getBoolean(R.bool.enable_call_notification))
-                LinphoneService.instance()
+                LinphoneContext.instance()
                         .getNotificationManager()
                         .displayCallNotification(LinphoneManager.getCore().getCurrentCall());
         }

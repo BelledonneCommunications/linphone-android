@@ -299,7 +299,7 @@ public class LinphoneManager implements SensorEventListener {
 
                     @Override
                     public void onFriendListCreated(Core core, FriendList list) {
-                        if (LinphoneService.isReady()) {
+                        if (LinphoneContext.isReady()) {
                             list.addListener(ContactsManager.getInstance());
                         }
                     }
@@ -345,7 +345,7 @@ public class LinphoneManager implements SensorEventListener {
     }
 
     public static synchronized LinphoneManager getInstance() {
-        LinphoneManager manager = LinphoneService.instance().getLinphoneManager();
+        LinphoneManager manager = LinphoneContext.instance().getLinphoneManager();
         if (manager == null) {
             throw new RuntimeException(
                     "[Manager] Linphone Manager should be created before accessed");

@@ -52,9 +52,6 @@ public class RecordingsActivity extends MainActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (mAbortCreation) {
-            return;
-        }
 
         mOnBackPressGoHome = false;
         mAlwaysHideTabBar = true;

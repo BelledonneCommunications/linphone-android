@@ -32,7 +32,7 @@ import android.provider.ContactsContract.Data;
 import android.provider.ContactsContract.RawContacts;
 import java.io.Serializable;
 import java.util.ArrayList;
-import org.linphone.LinphoneService;
+import org.linphone.LinphoneContext;
 import org.linphone.R;
 import org.linphone.core.tools.Log;
 
@@ -67,7 +67,8 @@ class AndroidContact implements Serializable {
     void saveChangesCommited() {
         if (ContactsManager.getInstance().hasReadContactsAccess() && mChangesToCommit.size() > 0) {
             try {
-                ContentResolver contentResolver = LinphoneService.instance().getContentResolver();
+                ContentResolver contentResolver =
+                        LinphoneContext.instance().getApplicationContext().getContentResolver();
                 ContentProviderResult[] results =
                         contentResolver.applyBatch(ContactsContract.AUTHORITY, mChangesToCommit);
                 if (results != null
@@ -110,7 +111,10 @@ class AndroidContact implements Serializable {
     }
 
     void createAndroidContact() {
-        if (LinphoneService.instance().getResources().getBoolean(R.bool.use_linphone_tag)) {
+        if (LinphoneContext.instance()
+                .getApplicationContext()
+                .getResources()
+                .getBoolean(R.bool.use_linphone_tag)) {
             Log.i("[Contact] Creating contact using linphone account type");
             addChangesToCommit(
                     ContentProviderOperation.newInsert(RawContacts.CONTENT_URI)
@@ -229,7 +233,8 @@ class AndroidContact implements Serializable {
     boolean isLinphoneAddressMimeEntryAlreadyExisting(String value) {
         boolean result = false;
 
-        ContentResolver resolver = LinphoneService.instance().getContentResolver();
+        ContentResolver resolver =
+                LinphoneContext.instance().getApplicationContext().getContentResolver();
         String[] projection = {"data1", "data3"};
         String selection =
                 ContactsContract.Data.RAW_CONTACT_ID
@@ -576,7 +581,8 @@ class AndroidContact implements Serializable {
     }
 
     private String findRawContactID() {
-        ContentResolver resolver = LinphoneService.instance().getContentResolver();
+        ContentResolver resolver =
+                LinphoneContext.instance().getApplicationContext().getContentResolver();
         String result = null;
         String[] projection = {ContactsContract.RawContacts._ID};
 
@@ -598,7 +604,10 @@ class AndroidContact implements Serializable {
     }
 
     void createRawLinphoneContactFromExistingAndroidContactIfNeeded() {
-        if (LinphoneService.instance().getResources().getBoolean(R.bool.use_linphone_tag)) {
+        if (LinphoneContext.instance()
+                .getApplicationContext()
+                .getResources()
+                .getBoolean(R.bool.use_linphone_tag)) {
             if (mAndroidId != null && (mAndroidRawId == null || !isAndroidRawIdLinphone)) {
                 if (mAndroidRawId == null) {
                     Log.d("[Contact] RAW ID not found for contact " + mAndroidId);
@@ -659,7 +668,8 @@ class AndroidContact implements Serializable {
     }
 
     private String findLinphoneRawContactId() {
-        ContentResolver resolver = LinphoneService.instance().getContentResolver();
+        ContentResolver resolver =
+                LinphoneContext.instance().getApplicationContext().getContentResolver();
         String result = null;
         String[] projection = {ContactsContract.RawContacts._ID};
 

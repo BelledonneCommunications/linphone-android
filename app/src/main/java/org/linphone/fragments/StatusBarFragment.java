@@ -85,11 +85,9 @@ public class StatusBarFragment extends Fragment {
                             mStatusLed.setVisibility(View.VISIBLE);
                         }
 
-                        if (core.getDefaultProxyConfig() != null
-                                && core.getDefaultProxyConfig().equals(proxy)) {
-                            mStatusLed.setImageResource(getStatusIconResource(state));
-                            mStatusText.setText(getStatusIconText(state));
-                        } else if (core.getDefaultProxyConfig() == null) {
+                        if ((core.getDefaultProxyConfig() != null
+                                        && core.getDefaultProxyConfig().equals(proxy))
+                                || core.getDefaultProxyConfig() == null) {
                             mStatusLed.setImageResource(getStatusIconResource(state));
                             mStatusText.setText(getStatusIconText(state));
                         }
@@ -188,12 +186,7 @@ public class StatusBarFragment extends Fragment {
 
     private int getStatusIconResource(RegistrationState state) {
         try {
-            Core core = LinphoneManager.getCore();
-            boolean defaultAccountConnected =
-                    (core != null
-                            && core.getDefaultProxyConfig() != null
-                            && core.getDefaultProxyConfig().getState() == RegistrationState.Ok);
-            if (state == RegistrationState.Ok && defaultAccountConnected) {
+            if (state == RegistrationState.Ok) {
                 return R.drawable.led_connected;
             } else if (state == RegistrationState.Progress) {
                 return R.drawable.led_inprogress;
@@ -212,9 +205,7 @@ public class StatusBarFragment extends Fragment {
     private String getStatusIconText(RegistrationState state) {
         Context context = getActivity();
         try {
-            if (state == RegistrationState.Ok
-                    && LinphoneManager.getCore().getDefaultProxyConfig().getState()
-                            == RegistrationState.Ok) {
+            if (state == RegistrationState.Ok) {
                 return context.getString(R.string.status_connected);
             } else if (state == RegistrationState.Progress) {
                 return context.getString(R.string.status_in_progress);

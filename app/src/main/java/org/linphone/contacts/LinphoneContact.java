@@ -26,8 +26,8 @@ import android.provider.ContactsContract;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.core.Address;
 import org.linphone.core.Core;
@@ -547,7 +547,8 @@ public class LinphoneContact extends AndroidContact
             Log.d("[Linphone Contact] Found phone number " + data1 + " (" + data4 + ")");
             addNumberOrAddress(new LinphoneNumberOrAddress(data1, data4));
         } else if (ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE.equals(mime)
-                || LinphoneService.instance()
+                || LinphoneContext.instance()
+                        .getApplicationContext()
                         .getString(R.string.linphone_address_mime_type)
                         .equals(mime)) {
             Log.d("[Linphone Contact] Found SIP address " + data1);
@@ -595,7 +596,7 @@ public class LinphoneContact extends AndroidContact
 
     public void save() {
         saveChangesCommited();
-        syncValuesFromAndroidContact(LinphoneService.instance());
+        syncValuesFromAndroidContact(LinphoneContext.instance().getApplicationContext());
         createOrUpdateFriend();
     }
 

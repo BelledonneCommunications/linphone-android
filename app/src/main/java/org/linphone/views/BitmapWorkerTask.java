@@ -33,7 +33,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import org.linphone.LinphoneService;
+import org.linphone.LinphoneContext;
 import org.linphone.core.tools.Log;
 import org.linphone.utils.FileUtils;
 import org.linphone.utils.ImageUtils;
@@ -76,7 +76,7 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
     // Decode image in background.
     @Override
     protected Bitmap doInBackground(String... params) {
-        Context context = LinphoneService.instance();
+        Context context = LinphoneContext.instance().getApplicationContext();
         path = params[0];
         Bitmap bm = null;
         Bitmap thumbnail = null;
@@ -146,7 +146,7 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
             bitmap = null;
         }
         if (mImageViewReference != null && bitmap != null) {
-            Context context = LinphoneService.instance();
+            Context context = LinphoneContext.instance().getApplicationContext();
             final ImageView imageView = mImageViewReference.get();
             final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
             if (this == bitmapWorkerTask && imageView != null) {
