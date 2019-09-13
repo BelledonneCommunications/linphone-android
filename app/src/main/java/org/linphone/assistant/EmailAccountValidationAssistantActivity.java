@@ -37,9 +37,6 @@ public class EmailAccountValidationAssistantActivity extends AssistantActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (mAbortCreation) {
-            return;
-        }
 
         setContentView(R.layout.assistant_email_account_validation);
 

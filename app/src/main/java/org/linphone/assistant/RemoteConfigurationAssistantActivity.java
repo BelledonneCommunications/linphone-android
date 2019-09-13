@@ -56,9 +56,6 @@ public class RemoteConfigurationAssistantActivity extends AssistantActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (mAbortCreation) {
-            return;
-        }
 
         setContentView(R.layout.assistant_remote_configuration);
 
