@@ -59,8 +59,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.activities.MainActivity;
 import org.linphone.contacts.ContactAddress;
@@ -386,7 +386,7 @@ public class ChatMessagesFragment extends Fragment
         displayChatRoomHeader();
         displayChatRoomHistory();
 
-        LinphoneService.instance()
+        LinphoneContext.instance()
                 .getNotificationManager()
                 .setCurrentlyDisplayedChatRoom(
                         mRemoteSipAddress != null ? mRemoteSipAddress.asStringUriOnly() : null);
@@ -401,7 +401,7 @@ public class ChatMessagesFragment extends Fragment
 
         ContactsManager.getInstance().removeContactsListener(this);
         removeVirtualKeyboardVisiblityListener();
-        LinphoneService.instance().getNotificationManager().setCurrentlyDisplayedChatRoom(null);
+        LinphoneContext.instance().getNotificationManager().setCurrentlyDisplayedChatRoom(null);
         if (mChatRoom != null) mChatRoom.removeListener(this);
         if (mChatEventsList.getAdapter() != null)
             ((ChatMessagesGenericAdapter) mChatEventsList.getAdapter()).clear();
