@@ -62,9 +62,6 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (mAbortCreation) {
-            return;
-        }
 
         Compatibility.setShowWhenLocked(this, true);
         Compatibility.setTurnScreenOn(this, true);

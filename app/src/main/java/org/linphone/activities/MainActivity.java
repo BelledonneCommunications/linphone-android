@@ -102,13 +102,6 @@ public abstract class MainActivity extends LinphoneGenericActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (mAbortCreation) {
-            return;
-        }
-
-        if (!LinphoneService.isReady()) {
-            finish();
-        }
 
         setContentView(R.layout.main);
 

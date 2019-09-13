@@ -52,9 +52,6 @@ public abstract class AssistantActivity extends LinphoneGenericActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (mAbortCreation) {
-            return;
-        }
 
         if (mAccountCreator == null) {
             String url = LinphonePreferences.instance().getXmlrpcUrl();

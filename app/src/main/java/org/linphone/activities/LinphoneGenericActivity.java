@@ -19,32 +19,28 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Surface;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
+import org.linphone.LinphoneStatic;
 import org.linphone.core.Core;
 import org.linphone.core.tools.Log;
 
 public abstract class LinphoneGenericActivity extends ThemeableActivity {
-    protected boolean mAbortCreation;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        mAbortCreation = false;
         super.onCreate(savedInstanceState);
-        // After a crash, Android restart the last Activity so we need to check
-        // if all dependencies are loaded
-        if (!LinphoneService.isReady()) {
-            startActivity(getIntent().setClass(this, LinphoneLauncherActivity.class));
-            mAbortCreation = true;
-            finish();
-        }
+
+        ensureServiceIsRunning();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        ensureServiceIsRunning();
 
         if (LinphoneService.isReady()) {
             int degrees = 270;
@@ -76,6 +72,16 @@ public abstract class LinphoneGenericActivity extends ThemeableActivity {
             if (core != null) {
                 core.setDeviceRotation(rotation);
             }
+        }
+    }
+
+    private void ensureServiceIsRunning() {
+        if (!LinphoneService.isReady()) {
+            if (!LinphoneStatic.isReady()) {
+                new LinphoneStatic(getApplicationContext());
+                LinphoneStatic.instance().start(false);
+            }
+            startService(new Intent().setClass(this, LinphoneService.class));
         }
     }
 }
