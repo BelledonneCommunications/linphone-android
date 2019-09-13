@@ -116,12 +116,6 @@ public class NotificationsManager {
                         Notification.PRIORITY_MIN,
                         true);
 
-        if (isServiceNotificationDisplayed()) {
-            Log.i(
-                    "[Notifications Manager] Background service mode enabled, displaying notification");
-            startForeground();
-        }
-
         mListener =
                 new CoreListenerStub() {
                     @Override
@@ -292,29 +286,37 @@ public class NotificationsManager {
     }
 
     public void startForeground() {
-        Log.i("[Notifications Manager] Starting Service as foreground");
-        LinphoneService.instance().startForeground(SERVICE_NOTIF_ID, mServiceNotification);
-        mCurrentForegroundServiceNotification = SERVICE_NOTIF_ID;
+        if (LinphoneService.isReady()) {
+            Log.i("[Notifications Manager] Starting Service as foreground");
+            LinphoneService.instance().startForeground(SERVICE_NOTIF_ID, mServiceNotification);
+            mCurrentForegroundServiceNotification = SERVICE_NOTIF_ID;
+        }
     }
 
     private void startForeground(Notification notification, int id) {
-        Log.i("[Notifications Manager] Starting Service as foreground while in call");
-        LinphoneService.instance().startForeground(id, notification);
-        mCurrentForegroundServiceNotification = id;
+        if (LinphoneService.isReady()) {
+            Log.i("[Notifications Manager] Starting Service as foreground while in call");
+            LinphoneService.instance().startForeground(id, notification);
+            mCurrentForegroundServiceNotification = id;
+        }
     }
 
     public void stopForeground() {
-        Log.i("[Notifications Manager] Stopping Service as foreground");
-        LinphoneService.instance().stopForeground(true);
-        mCurrentForegroundServiceNotification = 0;
+        if (LinphoneService.isReady()) {
+            Log.i("[Notifications Manager] Stopping Service as foreground");
+            LinphoneService.instance().stopForeground(true);
+            mCurrentForegroundServiceNotification = 0;
+        }
     }
 
     public void removeForegroundServiceNotificationIfPossible() {
-        if (mCurrentForegroundServiceNotification == SERVICE_NOTIF_ID
-                && !isServiceNotificationDisplayed()) {
-            Log.i(
-                    "[Notifications Manager] Linphone has started after device boot, stopping Service as foreground");
-            stopForeground();
+        if (LinphoneService.isReady()) {
+            if (mCurrentForegroundServiceNotification == SERVICE_NOTIF_ID
+                    && !isServiceNotificationDisplayed()) {
+                Log.i(
+                        "[Notifications Manager] Linphone has started after device boot, stopping Service as foreground");
+                stopForeground();
+            }
         }
     }
 

@@ -44,6 +44,7 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import java.util.ArrayList;
+import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
@@ -102,13 +103,6 @@ public abstract class MainActivity extends LinphoneGenericActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (mAbortCreation) {
-            return;
-        }
-
-        if (!LinphoneService.isReady()) {
-            finish();
-        }
 
         setContentView(R.layout.main);
 
@@ -304,7 +298,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
     protected void onResume() {
         super.onResume();
 
-        LinphoneService.instance()
+        LinphoneContext.instance()
                 .getNotificationManager()
                 .removeForegroundServiceNotificationIfPossible();
 
