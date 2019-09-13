@@ -44,9 +44,6 @@ public class OpenH264DownloadAssistantActivity extends AssistantActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (mAbortCreation) {
-            return;
-        }
 
         setContentView(R.layout.assistant_openh264_codec_download);
         mHelper = Factory.instance().createOpenH264DownloadHelper(this);

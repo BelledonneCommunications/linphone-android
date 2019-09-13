@@ -28,8 +28,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.core.Call;
 import org.linphone.core.Core;
@@ -99,7 +99,7 @@ public class Digit extends Button implements AddressAware {
         }
 
         private boolean linphoneServiceReady() {
-            if (!LinphoneService.isReady()) {
+            if (!LinphoneContext.isReady()) {
                 Log.e("[Numpad] Service is not ready while pressing digit");
                 return false;
             }

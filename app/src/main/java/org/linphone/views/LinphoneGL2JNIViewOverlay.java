@@ -30,8 +30,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
+import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneService;
 import org.linphone.call.CallActivity;
 import org.linphone.core.Call;
 import org.linphone.core.CallParams;
@@ -100,7 +100,7 @@ public class LinphoneGL2JNIViewOverlay extends org.linphone.mediastream.video.di
                 new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Context context = LinphoneService.instance();
+                        Context context = LinphoneContext.instance().getApplicationContext();
                         Intent intent = new Intent(context, CallActivity.class);
                         // This flag is required to start an Activity from a Service context
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -27,8 +27,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.activities.DialerActivity;
 import org.linphone.activities.LinphoneGenericActivity;
@@ -52,9 +52,6 @@ public abstract class AssistantActivity extends LinphoneGenericActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (mAbortCreation) {
-            return;
-        }
 
         if (mAccountCreator == null) {
             String url = LinphonePreferences.instance().getXmlrpcUrl();
@@ -124,7 +121,7 @@ public abstract class AssistantActivity extends LinphoneGenericActivity
             // If this isn't a sip.linphone.org account, disable push notifications and enable
             // service notification, otherwise incoming calls won't work (most probably)
             LinphonePreferences.instance().setServiceNotificationVisibility(true);
-            LinphoneService.instance().getNotificationManager().startForeground();
+            LinphoneContext.instance().getNotificationManager().startForeground();
         }
 
         if (proxyConfig == null) {
