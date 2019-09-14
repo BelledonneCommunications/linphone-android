@@ -1,7 +1,7 @@
 package org.linphone;
 
 /*
-LinphoneStatic.java
+LinphoneContext.java
 Copyright (C) 2019 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -44,9 +44,9 @@ import org.linphone.notifications.NotificationsManager;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.LinphoneUtils;
 
-public class LinphoneStatic {
+public class LinphoneContext {
     private static final String START_LINPHONE_LOGS = " ==== Phone information dump ====";
-    private static LinphoneStatic sInstance = null;
+    private static LinphoneContext sInstance = null;
 
     private Context mContext;
     public final Handler handler = new Handler();
@@ -88,11 +88,11 @@ public class LinphoneStatic {
         return sInstance != null;
     }
 
-    public static LinphoneStatic instance() {
+    public static LinphoneContext instance() {
         return sInstance;
     }
 
-    public LinphoneStatic(Context context) {
+    public LinphoneContext(Context context) {
         mContext = context;
 
         LinphonePreferences.instance().setContext(context);
@@ -115,19 +115,13 @@ public class LinphoneStatic {
         }
 
         sInstance = this;
+        Log.i("[Context] Ready");
 
         mListener =
                 new CoreListenerStub() {
                     @Override
                     public void onCallStateChanged(
                             Core core, Call call, Call.State state, String message) {
-                        if (sInstance == null) {
-                            Log.i(
-                                    "[Service] Service not ready, discarding call state change to ",
-                                    state.toString());
-                            return;
-                        }
-
                         if (mContext.getResources().getBoolean(R.bool.enable_call_notification)) {
                             mNotificationManager.displayCallNotification(call);
                         }
@@ -163,6 +157,7 @@ public class LinphoneStatic {
     }
 
     public void start(boolean isPush) {
+        Log.i("[Context] Starting");
         mLinphoneManager.startLibLinphone(isPush);
         LinphoneManager.getCore().addListener(mListener);
 
@@ -182,6 +177,7 @@ public class LinphoneStatic {
     }
 
     public void destroy() {
+        Log.i("[Context] Destroying");
         Core core = LinphoneManager.getCore();
         if (core != null) {
             core.removeListener(mListener);
@@ -192,10 +188,15 @@ public class LinphoneStatic {
         if (mNotificationManager != null) {
             mNotificationManager.destroy();
         }
-        mContactsManager.destroy();
+
+        if (mContactsManager != null) {
+            mContactsManager.destroy();
+        }
 
         // Destroy the LinphoneManager second to last to ensure any getCore() call will work
-        mLinphoneManager.destroy();
+        if (mLinphoneManager != null) {
+            mLinphoneManager.destroy();
+        }
 
         // Wait for every other object to be destroyed to make LinphoneService.instance() invalid
         sInstance = null;
@@ -208,6 +209,10 @@ public class LinphoneStatic {
 
     public void updateContext(Context context) {
         mContext = context;
+    }
+
+    public Context getApplicationContext() {
+        return mContext;
     }
 
     /* Managers accessors */
@@ -227,6 +232,8 @@ public class LinphoneStatic {
     public ContactsManager getContactsManager() {
         return mContactsManager;
     }
+
+    /* Log device related information */
 
     private void dumpDeviceInformation() {
         StringBuilder sb = new StringBuilder();
@@ -252,12 +259,14 @@ public class LinphoneStatic {
 
         if (info != null) {
             Log.i(
-                    "[Service] Linphone version is ",
+                    "[Context] Linphone version is ",
                     info.versionName + " (" + info.versionCode + ")");
         } else {
-            Log.i("[Service] Linphone version is unknown");
+            Log.i("[Context] Linphone version is unknown");
         }
     }
+
+    /* Call activities */
 
     private void onIncomingReceived() {
         Intent intent = new Intent().setClass(mContext, mIncomingReceivedActivity);

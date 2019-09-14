@@ -48,9 +48,10 @@ public final class LinphoneService extends Service {
 
         setupActivityMonitor();
 
-        if (!LinphoneStatic.isReady()) {
-            new LinphoneStatic(getApplicationContext());
+        if (!LinphoneContext.isReady()) {
+            new LinphoneContext(getApplicationContext());
         }
+        Log.i("[Service] Created");
 
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
     }
@@ -71,15 +72,16 @@ public final class LinphoneService extends Service {
         }
         sInstance = this;
 
-        LinphoneStatic.instance().updateContext(this);
-        LinphoneStatic.instance().start(isPush);
+        LinphoneContext.instance().updateContext(this);
+        LinphoneContext.instance().start(isPush);
 
         if (Version.sdkAboveOrEqual(Version.API26_O_80)
                 && intent != null
                 && intent.getBooleanExtra("ForceStartForeground", false)) {
             // We need to call this asap after the Service can be accessed through it's singleton
-            LinphoneStatic.instance().getNotificationManager().startForeground();
+            LinphoneContext.instance().getNotificationManager().startForeground();
         }
+        Log.i("[Service] Started");
 
         return START_STICKY;
     }
@@ -108,13 +110,15 @@ public final class LinphoneService extends Service {
     @SuppressWarnings("UnusedAssignment")
     @Override
     public synchronized void onDestroy() {
+        Log.i("[Service] Destroying");
+
         if (mActivityCallbacks != null) {
             getApplication().unregisterActivityLifecycleCallbacks(mActivityCallbacks);
             mActivityCallbacks = null;
         }
         destroyOverlay();
 
-        LinphoneStatic.instance().destroy();
+        LinphoneContext.instance().destroy();
         sInstance = null;
 
         super.onDestroy();
@@ -138,6 +142,7 @@ public final class LinphoneService extends Service {
     /* Managers accessors */
 
     public void createOverlay() {
+        Log.i("[Service] Creating video overlay");
         if (mOverlay != null) destroyOverlay();
 
         Core core = LinphoneManager.getCore();
@@ -156,6 +161,7 @@ public final class LinphoneService extends Service {
     }
 
     public void destroyOverlay() {
+        Log.i("[Service] Destroying video overlay");
         if (mOverlay != null) {
             mOverlay.removeFromWindowManager(mWindowManager);
             mOverlay.destroy();

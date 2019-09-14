@@ -44,9 +44,9 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import java.util.ArrayList;
+import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
-import org.linphone.LinphoneStatic;
 import org.linphone.R;
 import org.linphone.call.CallActivity;
 import org.linphone.call.CallIncomingActivity;
@@ -298,7 +298,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
     protected void onResume() {
         super.onResume();
 
-        LinphoneStatic.instance()
+        LinphoneContext.instance()
                 .getNotificationManager()
                 .removeForegroundServiceNotificationIfPossible();
 

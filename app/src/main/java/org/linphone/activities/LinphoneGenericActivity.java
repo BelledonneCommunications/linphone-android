@@ -22,9 +22,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Surface;
+import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
-import org.linphone.LinphoneStatic;
 import org.linphone.core.Core;
 import org.linphone.core.tools.Log;
 
@@ -42,7 +42,7 @@ public abstract class LinphoneGenericActivity extends ThemeableActivity {
 
         ensureServiceIsRunning();
 
-        if (LinphoneService.isReady()) {
+        if (LinphoneContext.isReady()) {
             int degrees = 270;
             int orientation = getWindowManager().getDefaultDisplay().getRotation();
             switch (orientation) {
@@ -77,9 +77,9 @@ public abstract class LinphoneGenericActivity extends ThemeableActivity {
 
     private void ensureServiceIsRunning() {
         if (!LinphoneService.isReady()) {
-            if (!LinphoneStatic.isReady()) {
-                new LinphoneStatic(getApplicationContext());
-                LinphoneStatic.instance().start(false);
+            if (!LinphoneContext.isReady()) {
+                new LinphoneContext(getApplicationContext());
+                LinphoneContext.instance().start(false);
             }
             startService(new Intent().setClass(this, LinphoneService.class));
         }

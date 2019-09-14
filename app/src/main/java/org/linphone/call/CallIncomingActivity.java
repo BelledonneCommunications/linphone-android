@@ -32,8 +32,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import java.util.ArrayList;
+import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.activities.LinphoneGenericActivity;
 import org.linphone.compatibility.Compatibility;
@@ -203,7 +203,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (LinphoneService.isReady()
+        if (LinphoneContext.isReady()
                 && (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME)) {
             mCall.terminate();
             finish();

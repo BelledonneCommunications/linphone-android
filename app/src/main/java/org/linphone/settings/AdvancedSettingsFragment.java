@@ -30,7 +30,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.Nullable;
-import org.linphone.LinphoneStatic;
+import org.linphone.LinphoneContext;
 import org.linphone.R;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.settings.widget.BasicSetting;
@@ -127,9 +127,9 @@ public class AdvancedSettingsFragment extends SettingsFragment {
                     public void onBoolValueChanged(boolean newValue) {
                         mPrefs.setServiceNotificationVisibility(newValue);
                         if (newValue) {
-                            LinphoneStatic.instance().getNotificationManager().startForeground();
+                            LinphoneContext.instance().getNotificationManager().startForeground();
                         } else {
-                            LinphoneStatic.instance().getNotificationManager().stopForeground();
+                            LinphoneContext.instance().getNotificationManager().stopForeground();
                         }
                     }
                 });

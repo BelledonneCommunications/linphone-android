@@ -42,9 +42,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.regex.Pattern;
+import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneService;
-import org.linphone.LinphoneStatic;
 import org.linphone.R;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
@@ -72,16 +71,16 @@ public final class LinphoneUtils {
             Factory.instance()
                     .enableLogCollection(LogCollectionState.EnabledWithoutPreviousLogHandler);
             if (isDebugEnabled) {
-                if (LinphoneService.isReady()) {
+                if (LinphoneContext.isReady()) {
                     Factory.instance()
                             .getLoggingService()
-                            .addListener(LinphoneStatic.instance().getJavaLoggingService());
+                            .addListener(LinphoneContext.instance().getJavaLoggingService());
                 }
             } else {
-                if (LinphoneService.isReady()) {
+                if (LinphoneContext.isReady()) {
                     Factory.instance()
                             .getLoggingService()
-                            .removeListener(LinphoneStatic.instance().getJavaLoggingService());
+                            .removeListener(LinphoneContext.instance().getJavaLoggingService());
                 }
             }
         }
@@ -266,7 +265,10 @@ public final class LinphoneUtils {
                     return username.split("@")[0];
                 }
             } else {
-                if (domain.equals(LinphoneService.instance().getString(R.string.default_domain))) {
+                if (domain.equals(
+                        LinphoneContext.instance()
+                                .getApplicationContext()
+                                .getString(R.string.default_domain))) {
                     return username.split("@")[0];
                 }
             }
@@ -291,7 +293,9 @@ public final class LinphoneUtils {
                 sipAddress =
                         sipAddress
                                 + "@"
-                                + LinphoneService.instance().getString(R.string.default_domain);
+                                + LinphoneContext.instance()
+                                        .getApplicationContext()
+                                        .getString(R.string.default_domain);
             }
         }
         return sipAddress;
