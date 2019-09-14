@@ -40,6 +40,7 @@ public final class LinphoneService extends Service {
     private LinphoneOverlay mOverlay;
     private WindowManager mWindowManager;
     private Application.ActivityLifecycleCallbacks mActivityCallbacks;
+    private boolean misLinphoneContextOwned;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -48,8 +49,10 @@ public final class LinphoneService extends Service {
 
         setupActivityMonitor();
 
+        misLinphoneContextOwned = false;
         if (!LinphoneContext.isReady()) {
             new LinphoneContext(getApplicationContext());
+            misLinphoneContextOwned = true;
         }
         Log.i("[Service] Created");
 
@@ -72,8 +75,11 @@ public final class LinphoneService extends Service {
         }
         sInstance = this;
 
-        LinphoneContext.instance().updateContext(this);
-        LinphoneContext.instance().start(isPush);
+        if (misLinphoneContextOwned) {
+            LinphoneContext.instance().start(isPush);
+        } else {
+            LinphoneContext.instance().updateContext(this);
+        }
 
         if (Version.sdkAboveOrEqual(Version.API26_O_80)
                 && intent != null
