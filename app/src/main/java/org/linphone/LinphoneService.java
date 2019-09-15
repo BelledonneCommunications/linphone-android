@@ -75,6 +75,11 @@ public final class LinphoneService extends Service {
         }
         sInstance = this;
 
+        if (LinphonePreferences.instance().getServiceNotificationVisibility()) {
+            Log.i("[Service] Background service mode enabled, displaying notification");
+            LinphoneContext.instance().getNotificationManager().startForeground();
+        }
+
         if (misLinphoneContextOwned) {
             LinphoneContext.instance().start(isPush);
         } else {
