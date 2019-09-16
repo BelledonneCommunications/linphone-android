@@ -72,6 +72,10 @@ public class PhoneAccountLinkingAssistantActivity extends AssistantActivity {
                     Log.e("[Account Linking] Proxy doesn't have an identity address");
                     unexpectedError();
                 }
+                if (!mProxyConfig.getDomain().equals(getString(R.string.default_domain))) {
+                    Log.e("[Account Linking] Can't link account on domain " + mProxyConfig.getDomain());
+                    unexpectedError();
+                }
                 mAccountCreator.setUsername(identity.getUsername());
 
                 AuthInfo authInfo = mProxyConfig.findAuthInfo();
