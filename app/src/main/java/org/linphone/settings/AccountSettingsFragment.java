@@ -670,6 +670,9 @@ public class AccountSettingsFragment extends SettingsFragment {
             if (proxy != null) {
                 mTransport.setValue(proxy.getTransport().toInt());
             }
+
+            mLinkAccount.setEnabled(
+                    mProxyConfig.getDomain().equals(getString(R.string.default_domain)));
         }
 
         setListeners();
