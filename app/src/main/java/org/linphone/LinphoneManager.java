@@ -594,6 +594,10 @@ public class LinphoneManager implements SensorEventListener {
         if (LinphonePreferences.instance().getLinkPopupTime() != null
                 && Long.parseLong(LinphonePreferences.instance().getLinkPopupTime()) >= now) return;
 
+        ProxyConfig proxyConfig = mCore.getDefaultProxyConfig();
+        if (proxyConfig == null) return;
+        if (!proxyConfig.getDomain().equals(getString(R.string.default_domain))) return;
+
         long future =
                 new Timestamp(
                                 mContext.getResources()
@@ -609,9 +613,7 @@ public class LinphoneManager implements SensorEventListener {
                         mContext,
                         String.format(
                                 getString(R.string.link_account_popup),
-                                mCore.getDefaultProxyConfig()
-                                        .getIdentityAddress()
-                                        .asStringUriOnly()));
+                                proxyConfig.getIdentityAddress().asStringUriOnly()));
         Button delete = dialog.findViewById(R.id.dialog_delete_button);
         delete.setVisibility(View.GONE);
         Button ok = dialog.findViewById(R.id.dialog_ok_button);
