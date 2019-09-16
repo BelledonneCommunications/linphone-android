@@ -30,6 +30,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.compatibility.Compatibility;
@@ -147,7 +148,10 @@ public class AdvancedSettingsFragment extends SettingsFragment {
                     @Override
                     public void onBoolValueChanged(boolean newValue) {
                         mPrefs.enableDarkMode(newValue);
-                        getActivity().recreate();
+                        AppCompatDelegate.setDefaultNightMode(
+                                newValue
+                                        ? AppCompatDelegate.MODE_NIGHT_YES
+                                        : AppCompatDelegate.MODE_NIGHT_NO);
                     }
                 });
 

@@ -20,56 +20,39 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import org.linphone.R;
-import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 
 public abstract class ThemeableActivity extends AppCompatActivity {
-    private int mTheme;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        mTheme = R.style.LinphoneStyleLight;
-        if (LinphonePreferences.instance().isDarkModeEnabled()) {
-            mTheme = R.style.LinphoneStyleDark;
-            setTheme(R.style.LinphoneStyleDark);
-        }
-
         if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
 
         super.onCreate(savedInstanceState);
-    }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt("Theme", mTheme);
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        mTheme = savedInstanceState.getInt("Theme");
-        super.onRestoreInstanceState(savedInstanceState);
+        int nightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        switch (nightMode) {
+            case Configuration.UI_MODE_NIGHT_NO:
+            case Configuration.UI_MODE_NIGHT_UNDEFINED:
+                if (LinphonePreferences.instance().isDarkModeEnabled()) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                }
+            case Configuration.UI_MODE_NIGHT_YES:
+                if (!LinphonePreferences.instance().isDarkModeEnabled()) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                }
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        if (LinphonePreferences.instance().isDarkModeEnabled()) {
-            if (mTheme != R.style.LinphoneStyleDark) {
-                Log.w("[Themeable Activity] Recreate Activity cause theme doesn't match");
-                recreate();
-            }
-        } else {
-            if (mTheme != R.style.LinphoneStyleLight) {
-                Log.w("[Themeable Activity] Recreate Activity cause theme doesn't match");
-                recreate();
-            }
-        }
     }
 }
