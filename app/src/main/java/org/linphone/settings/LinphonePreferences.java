@@ -592,7 +592,7 @@ public class LinphonePreferences {
         if (getLc() == null) return;
         NatPolicy nat = getOrCreateNatPolicy();
         nat.enableIce(enabled);
-        nat.enableStun(enabled);
+        if (enabled) nat.enableStun(true);
         getLc().setNatPolicy(nat);
     }
 
