@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="LinphoneStyle" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <!-- Disable animations between activities -->
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowBackground">@drawable/launch_screen</item>
+
+        <!-- Android theme override -->
+        <item name="colorAccent">@color/primary_color</item>
+        <item name="android:colorPrimary">@color/primary_color</item>
+        <!-- Comment out the following line to disable system's status bar coloring -->
+        <item name="android:colorPrimaryDark">@color/primary_dark_color</item>
+        <item name="android:textColorPrimary">@color/dark_primary_text_color</item>
+        <item name="android:textColorSecondary">@color/header_background_color</item>
+        <item name="android:textColorHint">@color/toolbar_color</item>
+        <item name="android:colorBackground">@color/dark_grey_color</item>
+        <item name="android:textColorPrimaryInverse">@color/dark_grey_color</item>
+
+        <item name="accentColor">@color/primary_color</item>
+        <item name="accentColorLight30">@color/primary_light_color</item>
+        <item name="accentTextColor">@color/white_color</item>
+        <item name="primaryTextColor">@color/dark_primary_text_color</item>
+        <item name="secondaryTextColor">@color/dark_grey_color</item>
+        <item name="primarySubtextDarkColor">@color/header_background_color</item>
+        <item name="primarySubtextLightColor">@color/toolbar_color</item>
+
+        <item name="backgroundColor">@color/dark_grey_color</item>
+        <item name="backgroundColor2">@color/grey_color</item>
+        <item name="backgroundContastColor">@color/white_color</item>
+        <item name="dividerColor">@color/light_grey_color</item>
+
+        <item name="drawableTintColor">@color/white_color</item>
+        <item name="drawableTintDisabledColor">@color/light_grey_color</item>
+        <item name="drawableTintOverColor">@color/primary_color</item>
+
+        <item name="lighToolbarBackgroundColor">@color/dark_grey_color</item>
+        <item name="lighToolbarBackgroundDisabledColor">@color/light_grey_color</item>
+        <item name="lighToolbarTextColor">@color/white_color</item>
+        <item name="darkToolbarBackgroundColor">@color/dark_grey_color</item>
+        <item name="darkToolbarTextColor">@color/white_color</item>
+
+        <item name="button_background_drawable">@drawable/button_background_dark</item>
+    </style>
+</resources>
