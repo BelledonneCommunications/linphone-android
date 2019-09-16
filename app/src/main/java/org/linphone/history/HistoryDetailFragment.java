@@ -201,6 +201,10 @@ public class HistoryDetailFragment extends Fragment {
                 mContactAddress.setText(LinphoneUtils.getDisplayableAddress(address));
                 mContact = ContactsManager.getInstance().findContactFromAddress(address);
 
+                if (mDisplayName == null) {
+                    mDisplayName = LinphoneUtils.getAddressDisplayName(address);
+                }
+
                 if (mContact != null) {
                     mContactName.setText(mContact.getFullName());
                     ContactAvatar.displayAvatar(mContact, mAvatarLayout);
@@ -213,12 +217,8 @@ public class HistoryDetailFragment extends Fragment {
                         mChatSecured.setVisibility(View.VISIBLE);
                     }
                 } else {
-                    mContactName.setText(
-                            mDisplayName == null
-                                    ? LinphoneUtils.getAddressDisplayName(mSipUri)
-                                    : mDisplayName);
-                    ContactAvatar.displayAvatar(
-                            LinphoneUtils.getAddressDisplayName(address), mAvatarLayout);
+                    mContactName.setText(mDisplayName);
+                    ContactAvatar.displayAvatar(mDisplayName, mAvatarLayout);
                     mAddToContacts.setVisibility(View.VISIBLE);
                     mGoToContact.setVisibility(View.GONE);
                 }

@@ -101,7 +101,7 @@ public class HistoryActivity extends MainActivity {
             String displayName =
                     contact != null
                             ? contact.getFullName()
-                            : LinphoneUtils.getAddressDisplayName(address.asStringUriOnly());
+                            : LinphoneUtils.getAddressDisplayName(address);
             String pictureUri =
                     contact != null && contact.getPhotoUri() != null
                             ? contact.getPhotoUri().toString()
