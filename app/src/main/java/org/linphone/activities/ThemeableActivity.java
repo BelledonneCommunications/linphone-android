@@ -36,6 +36,11 @@ public abstract class ThemeableActivity extends AppCompatActivity {
         }
 
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         int nightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
         switch (nightMode) {
@@ -49,10 +54,5 @@ public abstract class ThemeableActivity extends AppCompatActivity {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 }
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 }
