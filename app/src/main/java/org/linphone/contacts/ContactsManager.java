@@ -34,6 +34,7 @@ import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.RemoteException;
 import android.provider.ContactsContract;
 import java.util.ArrayList;
@@ -67,8 +68,8 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         return LinphoneContext.instance().getContactsManager();
     }
 
-    public ContactsManager(Context context, Handler handler) {
-        super(handler);
+    public ContactsManager(Context context) {
+        super(new Handler(Looper.getMainLooper()));
         mContext = context;
         mContactsUpdatedListeners = new ArrayList<>();
         mContacts = new ArrayList<>();
