@@ -76,6 +76,15 @@ public class LinphoneContact extends AndroidContact
         return contact;
     }
 
+    public String getContactId() {
+        if (isAndroidContact()) {
+            return getAndroidId();
+        } else {
+            // TODO
+        }
+        return null;
+    }
+
     @Override
     public int compareTo(LinphoneContact contact) {
         String fullName = getFullName() != null ? getFullName() : "";
