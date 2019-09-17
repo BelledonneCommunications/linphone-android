@@ -29,6 +29,7 @@ import android.util.ArraySet;
 import java.util.Set;
 import org.linphone.R;
 import org.linphone.chat.ChatActivity;
+import org.linphone.contacts.ContactsActivity;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.tools.Log;
 
@@ -68,6 +69,38 @@ public class LinphoneShortcutManager {
             intent.putExtra("RemoteSipUri", chatRoomAddress);
 
             return new ShortcutInfo.Builder(mContext, chatRoomAddress)
+                    .setShortLabel(contact.getFullName())
+                    .setIcon(icon)
+                    .setCategories(mCategories)
+                    .setIntent(intent)
+                    .build();
+        } catch (Exception e) {
+            Log.e("[Shortcuts Manager] ShortcutInfo.Builder exception: " + e);
+        }
+
+        return null;
+    }
+
+    public ShortcutInfo createContactShortcutInfo(LinphoneContact contact) {
+        if (contact == null) return null;
+
+        Bitmap bm = null;
+        if (contact.getThumbnailUri() != null) {
+            bm = ImageUtils.getRoundBitmapFromUri(mContext, contact.getThumbnailUri());
+        }
+        Icon icon =
+                bm == null
+                        ? Icon.createWithResource(mContext, R.drawable.avatar)
+                        : Icon.createWithBitmap(bm);
+
+        try {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.setClass(mContext, ContactsActivity.class);
+            intent.addFlags(
+                    Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            intent.putExtra("ContactId", contact.getContactId());
+
+            return new ShortcutInfo.Builder(mContext, contact.getContactId())
                     .setShortLabel(contact.getFullName())
                     .setIcon(icon)
                     .setCategories(mCategories)

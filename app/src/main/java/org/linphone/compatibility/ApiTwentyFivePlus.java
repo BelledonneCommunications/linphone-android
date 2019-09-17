@@ -27,6 +27,7 @@ import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
 import java.util.ArrayList;
 import org.linphone.LinphoneManager;
+import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
@@ -70,17 +71,32 @@ class ApiTwentyFivePlus {
                     ContactsManager.getInstance().findContactFromAddress(participantAddress);
 
             if (contact != null && !contacts.contains(contact)) {
-                String peerAddress = room.getPeerAddress().asStringUriOnly();
-                ShortcutInfo shortcut = manager.createChatRoomShortcutInfo(contact, peerAddress);
-                if (shortcut != null) {
-                    Log.i(
-                            "[Shortcut] Creating launcher shortcut "
-                                    + shortcut.getShortLabel()
-                                    + " for room "
-                                    + shortcut.getId());
-                    shortcuts.add(shortcut);
-                    contacts.add(contact);
-                    i += 1;
+                if (context.getResources().getBoolean(R.bool.shortcut_to_contact)) {
+                    ShortcutInfo shortcut = manager.createContactShortcutInfo(contact);
+                    if (shortcut != null) {
+                        Log.i(
+                                "[Shortcut] Creating launcher shortcut "
+                                        + shortcut.getShortLabel()
+                                        + " for contact "
+                                        + shortcut.getShortLabel());
+                        shortcuts.add(shortcut);
+                        contacts.add(contact);
+                        i += 1;
+                    }
+                } else if (context.getResources().getBoolean(R.bool.shortcut_to_chatroom)) {
+                    String peerAddress = room.getPeerAddress().asStringUriOnly();
+                    ShortcutInfo shortcut =
+                            manager.createChatRoomShortcutInfo(contact, peerAddress);
+                    if (shortcut != null) {
+                        Log.i(
+                                "[Shortcut] Creating launcher shortcut "
+                                        + shortcut.getShortLabel()
+                                        + " for room "
+                                        + shortcut.getId());
+                        shortcuts.add(shortcut);
+                        contacts.add(contact);
+                        i += 1;
+                    }
                 }
             }
         }

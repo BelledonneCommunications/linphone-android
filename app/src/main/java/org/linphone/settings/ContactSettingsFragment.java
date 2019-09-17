@@ -82,7 +82,7 @@ public class ContactSettingsFragment extends SettingsFragment {
         }
 
         if (Version.sdkAboveOrEqual(Version.API25_NOUGAT_71)
-                && getResources().getBoolean(R.bool.create_most_recent_chat_rooms_shortcuts)) {
+                && getResources().getBoolean(R.bool.create_shortcuts)) {
             mCreateShortcuts.setChecked(mPrefs.shortcutsCreationEnabled());
         } else {
             mCreateShortcuts.setVisibility(View.GONE);

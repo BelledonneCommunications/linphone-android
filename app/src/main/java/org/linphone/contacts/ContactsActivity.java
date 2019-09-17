@@ -138,14 +138,19 @@ public class ContactsActivity extends MainActivity {
             showContactsList();
         }
 
-        if (extras.containsKey("ContactUri")) {
-            String uri = extras.getString("ContactUri");
-            Log.i("[Contacts Activity] Found ContactUri " + uri);
-            Uri contactUri = Uri.parse(uri);
-            String id = ContactsManager.getInstance().getAndroidContactIdFromUri(contactUri);
+        if (extras.containsKey("ContactUri") || extras.containsKey("ContactId")) {
+            String contactId = extras.getString("ContactId");
+            if (contactId == null) {
+                String uri = extras.getString("ContactUri");
+                Log.i("[Contacts Activity] Found Contact URI " + uri);
+                Uri contactUri = Uri.parse(uri);
+                contactId = ContactsManager.getInstance().getAndroidContactIdFromUri(contactUri);
+            } else {
+                Log.i("[Contacts Activity] Found Contact ID " + contactId);
+            }
 
             LinphoneContact linphoneContact =
-                    ContactsManager.getInstance().findContactFromAndroidId(id);
+                    ContactsManager.getInstance().findContactFromAndroidId(contactId);
             if (linphoneContact != null) {
                 showContactDetails(linphoneContact);
             }
