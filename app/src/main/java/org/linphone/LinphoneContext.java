@@ -19,11 +19,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import static android.content.Intent.ACTION_MAIN;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.os.Handler;
 import android.provider.ContactsContract;
 import org.linphone.call.CallActivity;
 import org.linphone.call.CallIncomingActivity;
@@ -47,7 +48,6 @@ public class LinphoneContext {
     private static LinphoneContext sInstance = null;
 
     private Context mContext;
-    public final Handler handler = new Handler();
 
     private final LoggingServiceListener mJavaLoggingService =
             new LoggingServiceListener() {
@@ -74,12 +74,10 @@ public class LinphoneContext {
                     }
                 }
             };
-
     private CoreListenerStub mListener;
     private NotificationsManager mNotificationManager;
     private LinphoneManager mLinphoneManager;
     private ContactsManager mContactsManager;
-
     private Class<? extends Activity> mIncomingReceivedActivity = CallIncomingActivity.class;
 
     public static boolean isReady() {
@@ -130,6 +128,14 @@ public class LinphoneContext {
                             if (Version.sdkStrictlyBelow(Version.API24_NOUGAT_70)) {
                                 if (!mLinphoneManager.getCallGsmON()) onIncomingReceived();
                             }
+
+                            // In case of push notification Service won't be started until here
+                            if (!LinphoneService.isReady()) {
+                                Log.i("[Context] Service not running, starting it");
+                                Intent intent = new Intent(ACTION_MAIN);
+                                intent.setClass(mContext, LinphoneService.class);
+                                mContext.startService(intent);
+                            }
                         } else if (state == Call.State.OutgoingInit) {
                             onOutgoingStarted();
                         } else if (state == Call.State.Connected) {
@@ -160,7 +166,7 @@ public class LinphoneContext {
 
         mNotificationManager.onCoreReady();
 
-        mContactsManager = new ContactsManager(mContext, handler);
+        mContactsManager = new ContactsManager(mContext);
         if (!Version.sdkAboveOrEqual(Version.API26_O_80)
                 || (mContactsManager.hasReadContactsAccess())) {
             mContext.getContentResolver()
