@@ -22,14 +22,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Handler;
 import android.provider.ContactsContract;
 import org.linphone.call.CallActivity;
 import org.linphone.call.CallIncomingActivity;
 import org.linphone.call.CallOutgoingActivity;
+import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.core.Call;
 import org.linphone.core.Core;
@@ -45,7 +44,6 @@ import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.LinphoneUtils;
 
 public class LinphoneContext {
-    private static final String START_LINPHONE_LOGS = " ==== Phone information dump ====";
     private static LinphoneContext sInstance = null;
 
     private Context mContext;
@@ -101,9 +99,8 @@ public class LinphoneContext {
         LinphoneUtils.configureLoggingService(isDebugEnabled, context.getString(R.string.app_name));
 
         // Dump some debugging information to the logs
-        Log.i(START_LINPHONE_LOGS);
         dumpDeviceInformation();
-        dumpInstalledLinphoneInformation();
+        dumpLinphoneInformation();
 
         String incomingReceivedActivityName =
                 LinphonePreferences.instance().getActivityToLaunchOnIncomingReceived();
@@ -236,34 +233,28 @@ public class LinphoneContext {
     /* Log device related information */
 
     private void dumpDeviceInformation() {
+        Log.i("==== Phone information dump ====");
+        Log.i("DISPLAY NAME=" + Compatibility.getDeviceName(mContext));
+        Log.i("DEVICE=" + Build.DEVICE);
+        Log.i("MODEL=" + Build.MODEL);
+        Log.i("MANUFACTURER=" + Build.MANUFACTURER);
+        Log.i("ANDROID SDK=" + Build.VERSION.SDK_INT);
         StringBuilder sb = new StringBuilder();
-        sb.append("DEVICE=").append(Build.DEVICE).append("\n");
-        sb.append("MODEL=").append(Build.MODEL).append("\n");
-        sb.append("MANUFACTURER=").append(Build.MANUFACTURER).append("\n");
-        sb.append("SDK=").append(Build.VERSION.SDK_INT).append("\n");
-        sb.append("Supported ABIs=");
+        sb.append("ABIs=");
         for (String abi : Version.getCpuAbis()) {
             sb.append(abi).append(", ");
         }
-        sb.append("\n");
-        Log.i(sb.toString());
+        Log.i(sb.substring(0, sb.length() - 2));
     }
 
-    private void dumpInstalledLinphoneInformation() {
-        PackageInfo info = null;
-        try {
-            info = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0);
-        } catch (PackageManager.NameNotFoundException nnfe) {
-            Log.e(nnfe);
-        }
-
-        if (info != null) {
-            Log.i(
-                    "[Context] Linphone version is ",
-                    info.versionName + " (" + info.versionCode + ")");
-        } else {
-            Log.i("[Context] Linphone version is unknown");
-        }
+    private void dumpLinphoneInformation() {
+        Log.i("==== Linphone information dump ====");
+        Log.i("VERSION NAME=" + BuildConfig.VERSION_NAME);
+        Log.i("VERSION CODE=" + BuildConfig.VERSION_CODE);
+        Log.i("PACKAGE=" + BuildConfig.APPLICATION_ID);
+        Log.i("BUILD TYPE=" + BuildConfig.BUILD_TYPE);
+        Log.i("SDK VERSION=" + mContext.getString(R.string.linphone_sdk_version));
+        Log.i("SDK BRANCH=" + mContext.getString(R.string.linphone_sdk_branch));
     }
 
     /* Call activities */
