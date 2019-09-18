@@ -97,6 +97,7 @@
   <string name="assistant_ec_calibration">Ekoeliminerare kalibrering pågår</string>
   <string name="assistant_remote_provisioning_login">Ange din inloggning</string>
   <string name="assistant_account_not_validated">Ditt konto har ännu inte validerats.</string>
+  <string name="assistant_error_confirmation_code">Bekräftelsekoden är ogiltig.\nVänligen försök igen.</string>
   <string name="assistant_account_validated">Ditt konto har validerats.</string>
   <string name="assistant_error_bad_credentials">Felaktigt användarnamn eller lösenord</string>
   <string name="assistant_codec_down_question">Vill du hämta OpenH264 video kodek tillhandahållen av Cisco Systems, Inc.?</string>
@@ -108,11 +109,13 @@
   <string name="wizard_failed">Ett fel inträffade, försök igen senare.</string>
   <string name="wizard_server_unavailable">Server onåbar, verifiera din nätverksanslutning.</string>
   <string name="wizard_username_unavailable">Detta användarnamn används redan.</string>
+  <string name="assistant_phone_number_unavailable">Detta telefonnummer används redan.\nVänligen skriv ett annat nummer.\nDu kan ta bort ditt befintliga konto om du vill återanvända ditt telefonnummer.</string>
   <string name="wizard_username_incorrect">Ditt användarnamn är ogiltigt.</string>
   <string name="assistant_phone_number_incorrect">Ditt telefonnummer är ogiltigt.</string>
   <string name="wizard_email_incorrect">Din e-postadress är ogiltig.</string>
   <string name="wizard_password_incorrect">Ditt lösenord är ogiltigt</string>
   <string name="wizard_passwords_unmatched">Lösenorden matchar inte.</string>
+  <string name="setup_confirm_username">Ditt användarnamn kommer att vara %s.\n\nDet kan skilja sig från din inmatning för att matcha kraven.\nAccepterar du?</string>
   <string name="first_launch_no_login_password">Ange din inloggning och lösenord</string>
   <string name="forgot_password">Glömt lösenord ?</string>
   <string name="assistant_choose_country">Välj ett land</string>
@@ -125,6 +128,7 @@
   <string name="phone_number_info_content">\nTack vare ditt telefonnummer kommer dina vänner att hitta dig lättare.\n\n Du kommer att se i din adressbok vem som använder Linphone och dina vänner kommer veta att de kan nå dig på Linphone också.\n</string>
   <string name="phone_number_link_info_content">\nDina vänner hittar dig lättare om du kopplar ditt konto till ditt telefonnummer\n\nDu ser i din adressbok vilka som använder Linphone och dina vänner vet att de når dig på Linphone också.\n</string>
   <string name="phone_number_link_info_content_already_account">Du kan bara använda ditt telefonnummer med ett Linphone-konto.\n\nOm du redan har länkat ditt nummer till ett annat konto, men du föredrar att använda det här, kopplar du bara det nu och ditt nummer flyttas automatiskt till det här kontot.</string>
+  <string name="phone_number_overuse">För många SMS har skickats till detta nummer på kort tid, försök igen om 24 timmar.</string>
   <!--Status-->
   <string name="invalid_email">Ogiltig e-post</string>
   <string name="account_already_exist">Konto finns redan</string>
@@ -139,11 +143,13 @@
   <string name="phone_number_too_long">Telefonnummer för långt</string>
   <string name="phone_number_too_short">Telefonnummer för kort</string>
   <string name="phone_number_invalid">Ogiltigt telefonnummer</string>
+  <string name="activation_code_invalid">Ogiltig aktiveringskod</string>
   <string name="password_too_short">Lösenordet för kort</string>
   <string name="password_too_long">Lösenord för långt</string>
   <string name="request_failed">Misslyckades med att fråga servern. Vänligen försök igen senare</string>
   <string name="transport_unsupported">Transport stöds inte</string>
   <string name="country_code_invalid">Landskod är ogiltig</string>
+  <string name="invalid_characters">Ogiltigt tecken hittades</string>
   <!--In-app-->
   <string name="inapp">Inom appen</string>
   <string name="inapp_notification_title">Köp inom appen</string>
@@ -342,6 +348,7 @@
   <string name="pref_display_name">Visningsnamn</string>
   <string name="pref_help_display_name">Ange visningsnamn (valfritt)</string>
   <string name="pref_prefix">Prefix</string>
+  <string name="pref_prefix_desc">Prefix för ditt land (utan +)</string>
   <string name="pref_transport">Transport</string>
   <string name="pref_transport_udp">UDP</string>
   <string name="pref_transport_tcp">TCP</string>
@@ -369,6 +376,7 @@
   </string-array>
   <string name="pref_none">Ingen</string>
   <string name="pref_preferences_title">Inställningar</string>
+  <string name="pref_video_enable_title">Aktivera video</string>
   <!--Audio settings-->
   <string name="pref_audio_title">Ljud</string>
   <string name="pref_echo_cancellation">Ekoeliminering</string>
@@ -400,6 +408,7 @@
   <string name="pref_video_codecs_title">Kodek</string>
   <!--Contact settings-->
   <string name="pref_contact_title">Kontakt</string>
+  <string name="pref_contact_display_contact_organization_title">Visa kontaktorganisation</string>
   <!--Call settings-->
   <string name="pref_call_title">Ring</string>
   <string name="pref_device_ringtone">Använd enhetens ringsignal</string>
@@ -412,6 +421,8 @@
   <string name="pref_voice_mail">Röstbrevlåda URI</string>
   <string name="pref_dialer_call">Använd Linphone som standard telefonapp</string>
   <string name="pref_accept_early_media">Acceptera tidig-media</string>
+  <string name="pref_grant_read_dnd_settings_permission_title">Inställningar för Stör ej</string>
+  <string name="pref_media_encryption_mandatory_title">Mediekryptering obligatorisk</string>
   <!--Chat settings-->
   <string name="pref_chat_title">Chatt</string>
   <string name="pref_image_sharing_server_title">Delar server</string>
@@ -456,6 +467,7 @@
   <string name="pref_friendlist_subscribe">Prenumerera på vänlista</string>
   <string name="pref_background_mode">Bakgrundsläge</string>
   <string name="pref_background_mode_desc">Visa en avisering för att hålla appen vid liv</string>
+  <string name="pref_background_mode_warning_desc">Linphone har begränsats för bakgrundsanvändning, vänligen tillåt det först</string>
   <string name="pref_animation_enable_title">Aktivera animeringar</string>
   <string name="pref_service_notification">Aktivera serviceanmälan</string>
   <string name="pref_autostart">Starta vid uppstart</string>
@@ -468,6 +480,7 @@
   <string name="pref_primary_account_title">Primärt konto</string>
   <string name="pref_display_name_title">Visningsnamn</string>
   <string name="pref_user_name_title">Användarnamn</string>
+  <string name="pref_log_collection_sharing_server_title">Uppladdningsserver för loggar</string>
   <string name="pref_log_collection_sharing_server_desc">Redigera inte om du inte vet vad du gör!</string>
   <!--Audio hack settings-->
   <string name="pref_audio_hacks_title">Ljud-hacks</string>

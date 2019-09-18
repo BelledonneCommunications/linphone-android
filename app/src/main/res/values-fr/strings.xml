@@ -288,7 +288,9 @@ Disponible gratuitement ici : %s</string>
   <string name="call_stats_jitter_buffer">Tampon de jigue :</string>
   <string name="call_stats_encoder_name">Encodeur :</string>
   <string name="call_stats_decoder_name">Décodeur :</string>
+  <string name="call_stats_player_filter">Filtre de lecture :</string>
   <string name="call_stats_display_filter">Filtre d\'affichage :</string>
+  <string name="call_stats_capture_filter">Filtre de lecture : </string>
   <string name="call">Appel</string>
   <string name="call_log_delete_dialog">Voulez-vous supprimer les appels sélectionnés ?</string>
   <!--Recordings-->
@@ -368,6 +370,9 @@ Disponible gratuitement ici : %s</string>
   <string name="pref_tunnel_title">Tunnel</string>
   <string name="pref_tunnel_host">Hôte</string>
   <string name="pref_tunnel_port">Port</string>
+  <string name="pref_tunnel_dual_mode">Activer mode double</string>
+  <string name="pref_tunnel_host_2">Nom d\'hôte (2ème serveur pour mode double)</string>
+  <string name="pref_tunnel_port_2">Port (2ème serveur pour mode double)</string>
   <string name="pref_tunnel_mode">Mode</string>
   <!--do not change order without changing corresponding entry_values in non_localizable_strings.xml-->
   <string-array name="tunnel_mode_entries">

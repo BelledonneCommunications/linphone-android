@@ -97,6 +97,7 @@
   <string name="assistant_ec_calibration">Calibrazione del cancellatore dell\'eco in corso</string>
   <string name="assistant_remote_provisioning_login">Inserisci il tuo login</string>
   <string name="assistant_account_not_validated">Il tuo account non è ancora stato convalidato.</string>
+  <string name="assistant_error_confirmation_code">Il codice di conferma non è valido.\nRiprova.</string>
   <string name="assistant_account_validated">Il tuo account è stato convalidato.</string>
   <string name="assistant_error_bad_credentials">Nome utente o password errati</string>
   <string name="assistant_codec_down_question">Accetti di scaricare OpenH264 Video Codec fornito da Cisco Systems, Inc.?</string>
@@ -108,11 +109,13 @@
   <string name="wizard_failed">Si è verificato un errore, riprova più tardi.</string>
   <string name="wizard_server_unavailable">Server non raggiungibile, verifica la connessione di rete.</string>
   <string name="wizard_username_unavailable">Questo nome utente è già in uso.</string>
+  <string name="assistant_phone_number_unavailable">Questo numero di telefono è già in uso.\nDigitare un numero diverso.\nÈ possibile eliminare l\'account esistente se si desidera riutilizzare il numero di telefono.</string>
   <string name="wizard_username_incorrect">Il tuo nome utente non è valido.</string>
   <string name="assistant_phone_number_incorrect">Il tuo numero di telefono non è valido.</string>
   <string name="wizard_email_incorrect">La tua e-mail non è valida.</string>
   <string name="wizard_password_incorrect">La tua password non è valida</string>
   <string name="wizard_passwords_unmatched">Le password non corrispondono.</string>
+  <string name="setup_confirm_username">Il tuo nome utente sarà %s.\n\nPotrebbe differire dal tuo input per soddisfare i requisiti.\nAccetti?</string>
   <string name="first_launch_no_login_password">Inserisci il tuo login e password</string>
   <string name="forgot_password">Password dimenticata?</string>
   <string name="assistant_choose_country">Scegli un paese</string>
@@ -125,6 +128,7 @@
   <string name="phone_number_info_content">\nGrazie al tuo numero di telefono, i tuoi amici ti troveranno più facilmente.\n\nVedrai nella tua rubrica chi usa Linphone e i tuoi amici sapranno che possono contattarti anche su Linphone.\n</string>
   <string name="phone_number_link_info_content">\nI tuoi amici ti troveranno più facilmente se colleghi il tuo account al tuo numero di telefono\n\nSi vedrai nella tua rubrica che sta usando Linphone e i tuoi amici sapranno che possono contattarti anche su Linphone.\n</string>
   <string name="phone_number_link_info_content_already_account">Puoi utilizzare il tuo numero di telefono solo con un account Linphone.\n\nSe avevi già collegato il tuo numero a un altro account ma preferisci utilizzare questo, collegalo semplicemente ora e il tuo numero verrà automaticamente spostato su questo account.</string>
+  <string name="phone_number_overuse">Troppi SMS sono stati inviati a questo numero in un breve periodo di tempo, riprova tra 24 ore.</string>
   <!--Status-->
   <string name="invalid_email">E-mail non valida</string>
   <string name="account_already_exist">Account già esistente</string>
@@ -139,11 +143,13 @@
   <string name="phone_number_too_long">Numero di telefono troppo lungo</string>
   <string name="phone_number_too_short">Numero di telefono troppo corto</string>
   <string name="phone_number_invalid">Numero di telefono non valido</string>
+  <string name="activation_code_invalid">Codice di attivazione non valido</string>
   <string name="password_too_short">Password troppo corta</string>
   <string name="password_too_long">Password troppo lunga</string>
   <string name="request_failed">Impossibile interrogare il server. Per favore riprova più tardi</string>
   <string name="transport_unsupported">Trasporto non supportato</string>
   <string name="country_code_invalid">Codice del paese non valido</string>
+  <string name="invalid_characters">Rilevati caratteri non validi</string>
   <!--In-app-->
   <string name="inapp">In-app</string>
   <string name="inapp_notification_title">Acquisto in-app</string>
@@ -342,6 +348,7 @@
   <string name="pref_display_name">Nome visualizzato</string>
   <string name="pref_help_display_name">Inserisci il nome visualizzato (facoltativo)</string>
   <string name="pref_prefix">Prefisso</string>
+  <string name="pref_prefix_desc">Prefisso per il tuo Paese (senza il +)</string>
   <string name="pref_transport">Trasporto</string>
   <string name="pref_transport_udp">UDP</string>
   <string name="pref_transport_tcp">TCP</string>
@@ -369,6 +376,7 @@
   </string-array>
   <string name="pref_none">Nessuno</string>
   <string name="pref_preferences_title">Preferenze</string>
+  <string name="pref_video_enable_title">Abilita video</string>
   <!--Audio settings-->
   <string name="pref_audio_title">Audio</string>
   <string name="pref_echo_cancellation">Eliminazione dell\'eco</string>
@@ -396,9 +404,15 @@
   <string name="pref_video_preset">Preimpostazioni video</string>
   <string name="pref_preferred_video_size">Dimensione preferita del video</string>
   <string name="pref_preferred_fps">FPS preferito</string>
+  <string name="pref_preview_video">Visualizza l\'anteprima della fotocamera sul tastierino</string>
   <string name="pref_bandwidth_limit">Limite di larghezza di banda in kbits/s</string>
   <string name="pref_video_codecs_title">Codec</string>
   <!--Contact settings-->
+  <string name="pref_contact_sync_title">Informazioni sulla presenza nel contatto nativo</string>
+  <string name="pref_contact_sync_subtitle">Inserimento di collegamenti alle informazioni dal contatto Linphone nei contatti Android nativi</string>
+  <string name="pref_contact_title">Contatto</string>
+  <string name="pref_contact_display_contact_organization_title">Visualizza contatti dell\'organizzazione</string>
+  <string name="pref_create_contact_shortcuts">Crea scorciatoie nel launcher</string>
   <!--Call settings-->
   <string name="pref_call_title">Chiamata</string>
   <string name="pref_device_ringtone">Usa la suoneria del dispositivo</string>
@@ -411,6 +425,9 @@
   <string name="pref_voice_mail">URI della segreteria telefonica</string>
   <string name="pref_dialer_call">Utilizza Linphone come app telefono predefinita</string>
   <string name="pref_accept_early_media">Accetta early-media</string>
+  <string name="pref_grant_read_dnd_settings_permission_title">Impostazioni Non Disturbare (DND)</string>
+  <string name="pref_grant_read_dnd_settings_permission_desc">Abbiamo bisogno che tu conceda l\'utilizzo dell\'accesso alle impostazioni Non Disturbare per suonare correttamente o meno in base alla politica corrente</string>
+  <string name="pref_media_encryption_mandatory_title">Crittografia multimediale obbligatoria</string>
   <!--Chat settings-->
   <string name="pref_chat_title">Chat</string>
   <string name="pref_image_sharing_server_title">Server di condivisione</string>
@@ -455,6 +472,7 @@
   <string name="pref_friendlist_subscribe">Iscrizione ad una lista di amici</string>
   <string name="pref_background_mode">Modalità Background</string>
   <string name="pref_background_mode_desc">Mostra una notifica per tenere la app aperta</string>
+  <string name="pref_background_mode_warning_desc">Linphone è stato limitato per l\'utilizzo in background, si prega di autorizzarlo prima</string>
   <string name="pref_animation_enable_title">Abilita animazioni</string>
   <string name="pref_service_notification">Abilita notifica di servizio</string>
   <string name="pref_autostart">Parti dell\'avvio</string>
@@ -467,6 +485,7 @@
   <string name="pref_primary_account_title">Account principale</string>
   <string name="pref_display_name_title">Nome visualizzato</string>
   <string name="pref_user_name_title">Nome utente</string>
+  <string name="pref_log_collection_sharing_server_title">Server di upload dei log</string>
   <string name="pref_log_collection_sharing_server_desc">Non modificare se non sai cosa stai facendo!</string>
   <!--Audio hack settings-->
   <string name="pref_audio_hacks_title">Hack audio</string>
