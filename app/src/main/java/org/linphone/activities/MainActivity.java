@@ -278,6 +278,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
         requestRequiredPermissions();
 
         if (DeviceUtils.isAppUserRestricted(this)) {
+            // See https://firebase.google.com/docs/cloud-messaging/android/receive#restricted
             Log.w(
                     "[Main Activity] Device has been restricted by user (Android 9+), push notifications won't work !");
         }
