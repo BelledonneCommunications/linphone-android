@@ -1227,4 +1227,20 @@ public class LinphonePreferences {
     public void enableChatRoomsShortcuts(boolean enable) {
         getConfig().setBool("app", "shortcuts", enable);
     }
+
+    public boolean hideEmptyChatRooms() {
+        return getConfig().getBool("misc", "hide_empty_chat_rooms", true);
+    }
+
+    public void setHideEmptyChatRooms(boolean hide) {
+        getConfig().setBool("misc", "hide_empty_chat_rooms", hide);
+    }
+
+    public boolean hideRemovedProxiesChatRooms() {
+        return getConfig().getBool("misc", "hide_chat_rooms_from_removed_proxies", true);
+    }
+
+    public void setHideRemovedProxiesChatRooms(boolean hide) {
+        getConfig().setBool("misc", "hide_chat_rooms_from_removed_proxies", hide);
+    }
 }

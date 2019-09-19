@@ -40,6 +40,19 @@
             android:layout_height="wrap_content"
             linphone:title="@string/pref_android_app_notif_settings_title"/>
 
+        <org.linphone.settings.widget.SwitchSetting
+            android:id="@+id/pref_android_app_hide_empty_chat_rooms"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            linphone:title="@string/pref_android_app_hide_empty_chat_rooms_title" />
+
+        <org.linphone.settings.widget.SwitchSetting
+            android:id="@+id/pref_android_app_hide_chat_rooms_from_removed_proxies"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            linphone:title="@string/pref_android_app_hide_chat_rooms_from_removed_proxies_title"
+            linphone:subtitle="@string/pref_android_app_hide_chat_rooms_from_removed_proxies_desc" />
+
     </LinearLayout>
 
 </ScrollView>

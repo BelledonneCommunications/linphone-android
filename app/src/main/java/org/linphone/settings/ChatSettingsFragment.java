@@ -35,6 +35,7 @@ import org.linphone.mediastream.Version;
 import org.linphone.settings.widget.BasicSetting;
 import org.linphone.settings.widget.ListSetting;
 import org.linphone.settings.widget.SettingListenerBase;
+import org.linphone.settings.widget.SwitchSetting;
 import org.linphone.settings.widget.TextSetting;
 
 public class ChatSettingsFragment extends SettingsFragment {
@@ -43,6 +44,7 @@ public class ChatSettingsFragment extends SettingsFragment {
     private TextSetting mSharingServer, mMaxSizeForAutoDownloadIncomingFiles;
     private BasicSetting mAndroidNotificationSettings;
     private ListSetting mAutoDownloadIncomingFilesPolicy;
+    private SwitchSetting mHideEmptyRooms, mHideRemovedProxiesRooms;
 
     @Nullable
     @Override
@@ -74,6 +76,11 @@ public class ChatSettingsFragment extends SettingsFragment {
         mAutoDownloadIncomingFilesPolicy = mRootView.findViewById(R.id.pref_auto_download_policy);
 
         mAndroidNotificationSettings = mRootView.findViewById(R.id.pref_android_app_notif_settings);
+
+        mHideEmptyRooms = mRootView.findViewById(R.id.pref_android_app_hide_empty_chat_rooms);
+
+        mHideRemovedProxiesRooms =
+                mRootView.findViewById(R.id.pref_android_app_hide_chat_rooms_from_removed_proxies);
     }
 
     private void setListeners() {
@@ -131,6 +138,22 @@ public class ChatSettingsFragment extends SettingsFragment {
                         }
                     }
                 });
+
+        mHideEmptyRooms.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onBoolValueChanged(boolean newValue) {
+                        LinphonePreferences.instance().setHideEmptyChatRooms(newValue);
+                    }
+                });
+
+        mHideRemovedProxiesRooms.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onBoolValueChanged(boolean newValue) {
+                        LinphonePreferences.instance().setHideRemovedProxiesChatRooms(newValue);
+                    }
+                });
     }
 
     private void updateValues() {
@@ -141,6 +164,11 @@ public class ChatSettingsFragment extends SettingsFragment {
         if (Version.sdkStrictlyBelow(Version.API26_O_80)) {
             mAndroidNotificationSettings.setVisibility(View.GONE);
         }
+
+        mHideEmptyRooms.setChecked(LinphonePreferences.instance().hideEmptyChatRooms());
+
+        mHideRemovedProxiesRooms.setChecked(
+                LinphonePreferences.instance().hideRemovedProxiesChatRooms());
 
         setListeners();
     }

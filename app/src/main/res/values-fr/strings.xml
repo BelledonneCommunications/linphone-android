@@ -449,6 +449,9 @@ Disponible gratuitement ici : %s</string>
   <string name="pref_auto_download_disabled">Jamais</string>
   <string name="pref_auto_download_always">Toujours</string>
   <string name="pref_auto_download_under_size">Si inférieur à la taille max</string>
+  <string name="pref_android_app_hide_empty_chat_rooms_title">Cacher les conversations vides</string>
+  <string name="pref_android_app_hide_chat_rooms_from_removed_proxies_title">Cacher les conversations liées aux comptes supprimés</string>
+  <string name="pref_android_app_hide_chat_rooms_from_removed_proxies_desc">S\'il vous manque des conversations, essayez de décocher ce paramètre</string>
   <!--Network settings-->
   <string name="pref_network_title">Réseau</string>
   <string name="pref_wifi_only">Utiliser WiFi uniquement</string>
