@@ -286,7 +286,9 @@
   <string name="call_stats_jitter_buffer">Буфер джиттера:</string>
   <string name="call_stats_encoder_name">Кодер:</string>
   <string name="call_stats_decoder_name">Декодер</string>
+  <string name="call_stats_player_filter">Фильтр плеера:</string>
   <string name="call_stats_display_filter">Отображаемый фильтр:</string>
+  <string name="call_stats_capture_filter">Фильтр захвата:</string>
   <string name="call">Вызов</string>
   <string name="call_log_delete_dialog">Вы действительно хотите удалить выбранные журналы вызовов?</string>
   <!--Recordings-->
@@ -366,6 +368,9 @@
   <string name="pref_tunnel_title">Туннель</string>
   <string name="pref_tunnel_host">Сервер</string>
   <string name="pref_tunnel_port">Порт</string>
+  <string name="pref_tunnel_dual_mode">Включить двойной режим</string>
+  <string name="pref_tunnel_host_2">Имя хоста (2-й сервер для двойного режима)</string>
+  <string name="pref_tunnel_port_2">Порт (2-й сервер для двойного режима)</string>
   <string name="pref_tunnel_mode">Режим</string>
   <!--do not change order without changing corresponding entry_values in non_localizable_strings.xml-->
   <string-array name="tunnel_mode_entries">
