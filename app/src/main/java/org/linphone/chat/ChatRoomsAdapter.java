@@ -122,7 +122,7 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomViewHolder> {
 
         @Override
         public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-            return newChatRooms.get(newItemPosition).getUnreadMessagesCount() > 0;
+            return newChatRooms.get(newItemPosition).getUnreadMessagesCount() == 0;
         }
     }
 }
