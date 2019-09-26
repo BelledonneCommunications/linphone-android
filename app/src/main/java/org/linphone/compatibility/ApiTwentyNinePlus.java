@@ -63,7 +63,6 @@ public class ApiTwentyNinePlus {
                 .addRemoteInput(remoteInput)
                 .setAllowGeneratedReplies(true)
                 .setSemanticAction(Notification.Action.SEMANTIC_ACTION_REPLY)
-                .setContextual(true)
                 .build();
     }
 
@@ -86,7 +85,6 @@ public class ApiTwentyNinePlus {
                         context.getString(R.string.notification_mark_as_read_label),
                         markAsReadPendingIntent)
                 .setSemanticAction(Notification.Action.SEMANTIC_ACTION_MARK_AS_READ)
-                .setContextual(true)
                 .build();
     }
 
@@ -103,7 +101,6 @@ public class ApiTwentyNinePlus {
                         R.drawable.call_audio_start,
                         context.getString(R.string.notification_call_answer_label),
                         answerPendingIntent)
-                .setContextual(true)
                 .build();
     }
 
@@ -120,7 +117,6 @@ public class ApiTwentyNinePlus {
                         R.drawable.call_hangup,
                         context.getString(R.string.notification_call_hangup_label),
                         hangupPendingIntent)
-                .setContextual(true)
                 .build();
     }
 }
