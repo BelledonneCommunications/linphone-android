@@ -23,7 +23,6 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneService;
 import org.linphone.core.Core;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
@@ -34,7 +33,7 @@ public class FirebaseMessaging extends FirebaseMessagingService {
             new Runnable() {
                 @Override
                 public void run() {
-                    if (!LinphoneService.isReady()) {
+                    if (!LinphoneContext.isReady()) {
                         android.util.Log.i(
                                 "FirebaseMessaging", "[Push Notification] Starting context");
                         new LinphoneContext(getApplicationContext());
