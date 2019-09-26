@@ -414,12 +414,14 @@ public class LinphoneManager implements SensorEventListener {
         Log.w("[Manager] Destroying Manager");
         changeStatusToOffline();
 
-        Log.i("[Manager] Unregistering phone state listener");
-        mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
+        if (mTelephonyManager != null) {
+            Log.i("[Manager] Unregistering phone state listener");
+            mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
+        }
 
-        mCallManager.destroy();
-        mMediaScanner.destroy();
-        mAudioManager.destroy();
+        if (mCallManager != null) mCallManager.destroy();
+        if (mMediaScanner != null) mMediaScanner.destroy();
+        if (mAudioManager != null) mAudioManager.destroy();
 
         try {
             mTimer.cancel();
