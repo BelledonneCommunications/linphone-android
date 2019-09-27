@@ -423,13 +423,11 @@ public class LinphoneManager implements SensorEventListener {
         if (mMediaScanner != null) mMediaScanner.destroy();
         if (mAudioManager != null) mAudioManager.destroy();
 
-        try {
-            mTimer.cancel();
-            if (mAutoAnswerTimer != null) mAutoAnswerTimer.cancel();
+        if (mTimer != null) mTimer.cancel();
+        if (mAutoAnswerTimer != null) mAutoAnswerTimer.cancel();
+
+        if (mCore != null) {
             destroyCore();
-        } catch (RuntimeException e) {
-            Log.e("[Manager] Destroy Core Runtime Exception: " + e);
-        } finally {
             mCore = null;
         }
     }
