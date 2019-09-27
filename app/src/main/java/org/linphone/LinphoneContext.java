@@ -255,10 +255,10 @@ public class LinphoneContext {
 
     private void dumpLinphoneInformation() {
         Log.i("==== Linphone information dump ====");
-        Log.i("VERSION NAME=" + BuildConfig.VERSION_NAME);
-        Log.i("VERSION CODE=" + BuildConfig.VERSION_CODE);
-        Log.i("PACKAGE=" + BuildConfig.APPLICATION_ID);
-        Log.i("BUILD TYPE=" + BuildConfig.BUILD_TYPE);
+        Log.i("VERSION NAME=" + org.linphone.BuildConfig.VERSION_NAME);
+        Log.i("VERSION CODE=" + org.linphone.BuildConfig.VERSION_CODE);
+        Log.i("PACKAGE=" + org.linphone.BuildConfig.APPLICATION_ID);
+        Log.i("BUILD TYPE=" + org.linphone.BuildConfig.BUILD_TYPE);
         Log.i("SDK VERSION=" + mContext.getString(R.string.linphone_sdk_version));
         Log.i("SDK BRANCH=" + mContext.getString(R.string.linphone_sdk_branch));
     }

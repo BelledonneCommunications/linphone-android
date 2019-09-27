@@ -33,7 +33,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.core.content.ContextCompat;
-import org.linphone.BuildConfig;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.Core;
@@ -77,7 +76,10 @@ public class AboutActivity extends MainActivity {
         aboutVersion.setText(
                 String.format(
                         getString(R.string.about_version),
-                        BuildConfig.VERSION_NAME + " (" + BuildConfig.BUILD_TYPE + ")"));
+                        org.linphone.BuildConfig.VERSION_NAME
+                                + " ("
+                                + org.linphone.BuildConfig.BUILD_TYPE
+                                + ")"));
 
         TextView privacyPolicy = findViewById(R.id.privacy_policy_link);
         privacyPolicy.setOnClickListener(
