@@ -49,7 +49,6 @@ import org.linphone.call.CallManager;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.core.AccountCreator;
 import org.linphone.core.AccountCreatorListenerStub;
-import org.linphone.core.BuildConfig;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
 import org.linphone.core.ConfiguringState;
@@ -485,7 +484,7 @@ public class LinphoneManager implements SensorEventListener {
 
         String deviceName = mPrefs.getDeviceName(mContext);
         String appName = mContext.getResources().getString(R.string.user_agent);
-        String androidVersion = BuildConfig.VERSION_NAME;
+        String androidVersion = org.linphone.BuildConfig.VERSION_NAME;
         String userAgent = appName + "/" + androidVersion + " (" + deviceName + ") LinphoneSDK";
 
         mCore.setUserAgent(
