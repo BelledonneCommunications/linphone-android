@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
 import android.Manifest;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -38,6 +39,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
@@ -368,7 +370,13 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
             intent.setDataAndType(contentUri, "*/*");
         }
         intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
-        mContext.startActivity(intent);
+
+        try {
+            mContext.startActivity(intent);
+        } catch (ActivityNotFoundException anfe) {
+            Toast.makeText(mContext, R.string.cant_open_file_no_app_found, Toast.LENGTH_LONG)
+                    .show();
+        }
     }
 
     private void loadBitmap(String path, ImageView imageView) {
