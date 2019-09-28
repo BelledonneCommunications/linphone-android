@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
 import android.Manifest;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -38,6 +39,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
@@ -294,7 +296,7 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
                                     FileUtils.getStorageDirectory(mContext),
                                     prefix + "_" + filename);
                     Log.w(
-                            "File with that name already exists, renamed to "
+                            "[Chat Message View] File with that name already exists, renamed to "
                                     + prefix
                                     + "_"
                                     + filename);
@@ -323,7 +325,7 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
                         });
             } else {
                 Log.w(
-                        "WRITE_EXTERNAL_STORAGE permission not granted, won't be able to store the downloaded file");
+                        "[Chat Message View] WRITE_EXTERNAL_STORAGE permission not granted, won't be able to store the downloaded file");
                 ((ChatActivity) mContext)
                         .requestPermissionIfNotGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE);
             }
@@ -353,22 +355,48 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
                                 mContext.getResources().getString(R.string.file_provider),
                                 file);
             } catch (Exception e) {
+                Log.e(
+                        "[Chat Message View] Couldn't get URI for file "
+                                + file
+                                + " using file provider "
+                                + mContext.getResources().getString(R.string.file_provider));
                 contentUri = Uri.parse(path);
             }
         }
 
+        String filePath = contentUri.toString();
+        Log.i("[Chat Message View] Trying to open file: " + filePath);
         String type = null;
-        String extension = MimeTypeMap.getFileExtensionFromUrl(contentUri.toString());
-        if (extension != null) {
+        String extension = FileUtils.getExtensionFromFileName(filePath);
+
+        if (extension != null && !extension.isEmpty()) {
+            Log.i("[Chat Message View] Found extension " + extension);
             type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
-        }
-        if (type != null) {
-            intent.setDataAndType(contentUri, type);
         } else {
-            intent.setDataAndType(contentUri, "*/*");
+            Log.e("[Chat Message View] Couldn't find extension");
         }
+
+        if (type != null) {
+            Log.i("[Chat Message View] Found matching MIME type " + type);
+        } else {
+            type = FileUtils.getMimeFromFile(filePath);
+            Log.e(
+                    "[Chat Message View] Can't get MIME type from extension: "
+                            + extension
+                            + ", will use "
+                            + type);
+        }
+
+        intent.setDataAndType(contentUri, type);
         intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
-        mContext.startActivity(intent);
+
+        try {
+            mContext.startActivity(intent);
+        } catch (ActivityNotFoundException anfe) {
+            Log.e("[Chat Message View] Couldn't find an activity to handle MIME type: " + type);
+            Toast.makeText(mContext, R.string.cant_open_file_no_app_found, Toast.LENGTH_LONG)
+                    .show();
+        }
     }
 
     private void loadBitmap(String path, ImageView imageView) {

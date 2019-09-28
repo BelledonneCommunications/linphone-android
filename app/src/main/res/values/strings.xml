@@ -254,6 +254,7 @@
     <string name="download_file">Download</string>
     <string name="toast_choose_chat_room_for_sharing">Select a conversation or create a new one</string>
     <string name="trust_denied">Trust has been denied. Make a call to start the authentication process again.</string>
+    <string name="cant_open_file_no_app_found">Can\'t open file, no application available for this format.</string>
 
     <!-- Status Bar -->
     <string name="status_connected">Connected</string>
