@@ -197,7 +197,7 @@ public class ContactsFragment extends Fragment
         LinphoneContact contact = (LinphoneContact) mContactAdapter.getItem(position);
 
         if (mContactAdapter.isEditionEnabled()) {
-            mContactAdapter.toggleSelection(position);
+            mContactAdapter.toggleSelection(position)
         } else {
             mLastKnownPosition = mLayoutManager.findFirstVisibleItemPosition();
             ((ContactsActivity) getActivity()).showContactDetails(contact);
@@ -224,6 +224,8 @@ public class ContactsFragment extends Fragment
 
         changeContactsToggle();
         invalidate();
+
+        ((ContactsActivity) (getActivity())).showTabBar();
     }
 
     @Override
