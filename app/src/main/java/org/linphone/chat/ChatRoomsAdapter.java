@@ -70,13 +70,22 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomViewHolder> {
     }
 
     public void refresh() {
+        refresh(false);
+    }
+
+    public void refresh(boolean force) {
         ChatRoom[] rooms = LinphoneManager.getCore().getChatRooms();
         List<ChatRoom> roomsList = Arrays.asList(rooms);
 
-        DiffUtil.DiffResult diffResult =
-                DiffUtil.calculateDiff(new ChatRoomDiffCallback(roomsList, mRooms));
-        diffResult.dispatchUpdatesTo(this);
-        mRooms = roomsList;
+        if (force) {
+            DiffUtil.DiffResult diffResult =
+                    DiffUtil.calculateDiff(new ChatRoomDiffCallback(roomsList, mRooms));
+            diffResult.dispatchUpdatesTo(this);
+            mRooms = roomsList;
+        } else {
+            mRooms = roomsList;
+            notifyDataSetChanged();
+        }
     }
 
     /** Adapter's methods */
