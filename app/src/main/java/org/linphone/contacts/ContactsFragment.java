@@ -224,6 +224,8 @@ public class ContactsFragment extends Fragment
 
         changeContactsToggle();
         invalidate();
+
+        ((ContactsActivity) (getActivity())).showTabBar();
     }
 
     @Override
