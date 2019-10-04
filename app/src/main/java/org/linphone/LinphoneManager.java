@@ -67,8 +67,6 @@ import org.linphone.core.TunnelConfig;
 import org.linphone.core.VersionUpdateCheckResult;
 import org.linphone.core.tools.H264Helper;
 import org.linphone.core.tools.Log;
-import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
-import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration.AndroidCamera;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.AndroidAudioManager;
 import org.linphone.utils.LinphoneUtils;
@@ -541,31 +539,9 @@ public class LinphoneManager implements SensorEventListener {
                         PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK,
                         mContext.getPackageName() + ";manager_proximity_sensor");
 
-        resetCameraFromPreferences();
-
         mAccountCreator = mCore.createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
         mAccountCreator.setListener(mAccountCreatorListener);
         mCallGsmON = false;
-    }
-
-    private void resetCameraFromPreferences() {
-        boolean useFrontCam = mPrefs.useFrontCam();
-        int camId = 0;
-        AndroidCamera[] cameras = AndroidCameraConfiguration.retrieveCameras();
-        for (AndroidCamera androidCamera : cameras) {
-            if (androidCamera.frontFacing == useFrontCam) {
-                camId = androidCamera.id;
-                break;
-            }
-        }
-        String[] devices = mCore.getVideoDevicesList();
-        if (camId >= devices.length) {
-            Log.e(
-                    "[Manager] Trying to use a camera id that's higher than the linphone's devices list, using 0 to prevent crash...");
-            camId = 0;
-        }
-        String newDevice = devices[camId];
-        mCore.setVideoDevice(newDevice);
     }
 
     /* Account linking */

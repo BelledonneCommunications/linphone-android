@@ -77,7 +77,7 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomViewHolder> {
         ChatRoom[] rooms = LinphoneManager.getCore().getChatRooms();
         List<ChatRoom> roomsList = Arrays.asList(rooms);
 
-        if (force) {
+        if (!force) {
             DiffUtil.DiffResult diffResult =
                     DiffUtil.calculateDiff(new ChatRoomDiffCallback(roomsList, mRooms));
             diffResult.dispatchUpdatesTo(this);
