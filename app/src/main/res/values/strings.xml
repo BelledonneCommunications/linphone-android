@@ -421,6 +421,7 @@
 
     <!-- Video settings -->
     <string name="pref_video_title">Video</string>
+    <string name="pref_video_camera_device">Camera</string>
     <string name="pref_overlay">Video overlay</string>
     <string name="pref_overlay_summary">Display call video in overlay when outside the application</string>
     <string name="pref_video_use_front_camera_title">Use front camera</string>

@@ -329,6 +329,14 @@ public class LinphonePreferences {
         getConfig().setBool("app", "front_camera_default", frontcam);
     }
 
+    public String getCameraDevice() {
+        return getLc().getVideoDevice();
+    }
+
+    public void setCameraDevice(String device) {
+        getLc().setVideoDevice(device);
+    }
+
     public boolean isVideoEnabled() {
         if (getLc() == null) return false;
         return getLc().videoSupported() && getLc().videoEnabled();

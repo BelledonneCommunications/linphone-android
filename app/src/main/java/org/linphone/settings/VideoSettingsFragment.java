@@ -52,6 +52,7 @@ public class VideoSettingsFragment extends SettingsFragment {
     private TextSetting mBandwidth;
     private LinearLayout mVideoCodecs;
     private TextView mVideoCodecsHeader;
+    private ListSetting mCameraDevices;
 
     @Nullable
     @Override
@@ -81,6 +82,9 @@ public class VideoSettingsFragment extends SettingsFragment {
         mAutoInitiate = mRootView.findViewById(R.id.pref_video_initiate_call_with_video);
 
         mAutoAccept = mRootView.findViewById(R.id.pref_video_automatically_accept_video);
+
+        mCameraDevices = mRootView.findViewById(R.id.pref_video_camera_device);
+        initCameraDevicesList();
 
         mOverlay = mRootView.findViewById(R.id.pref_overlay);
 
@@ -148,6 +152,14 @@ public class VideoSettingsFragment extends SettingsFragment {
                     }
                 });
 
+        mCameraDevices.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onListValueChanged(int position, String newLabel, String newValue) {
+                        mPrefs.setCameraDevice(newValue);
+                    }
+                });
+
         mOverlay.setListener(
                 new SettingListenerBase() {
                     @Override
@@ -212,6 +224,8 @@ public class VideoSettingsFragment extends SettingsFragment {
         mAutoInitiate.setChecked(mPrefs.shouldInitiateVideoCall());
 
         mAutoAccept.setChecked(mPrefs.shouldAutomaticallyAcceptVideoRequests());
+
+        mCameraDevices.setValue(mPrefs.getCameraDevice());
 
         mOverlay.setChecked(mPrefs.isOverlayEnabled());
         if (Version.sdkAboveOrEqual(Version.API26_O_80)
@@ -305,5 +319,20 @@ public class VideoSettingsFragment extends SettingsFragment {
         mFps.setVisibility(show ? View.VISIBLE : View.GONE);
         mVideoCodecs.setVisibility(show ? View.VISIBLE : View.GONE);
         mVideoCodecsHeader.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
+    private void initCameraDevicesList() {
+        List<String> entries = new ArrayList<>();
+        List<String> values = new ArrayList<>();
+
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            for (String camera : core.getVideoDevicesList()) {
+                entries.add(camera);
+                values.add(camera);
+            }
+        }
+
+        mCameraDevices.setItems(entries, values);
     }
 }
