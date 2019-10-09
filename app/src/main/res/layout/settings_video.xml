@@ -37,6 +37,12 @@
             linphone:subtitle="@string/pref_video_automatically_accept_video"
             linphone:title="@string/pref_video_automatically_accept_video_title" />
 
+        <org.linphone.settings.widget.ListSetting
+            android:id="@+id/pref_video_camera_device"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            linphone:title="@string/pref_video_camera_device" />
+
         <org.linphone.settings.widget.SwitchSetting
             android:id="@+id/pref_overlay"
             android:layout_width="match_parent"

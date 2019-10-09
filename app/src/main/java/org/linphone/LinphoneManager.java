@@ -539,9 +539,35 @@ public class LinphoneManager implements SensorEventListener {
                         PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK,
                         mContext.getPackageName() + ";manager_proximity_sensor");
 
+        resetCameraFromPreferences();
+
         mAccountCreator = mCore.createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
         mAccountCreator.setListener(mAccountCreatorListener);
         mCallGsmON = false;
+    }
+
+    public void resetCameraFromPreferences() {
+        Core core = getCore();
+        if (core == null) return;
+
+        boolean useFrontCam = LinphonePreferences.instance().useFrontCam();
+        String firstDevice = null;
+        for (String camera : core.getVideoDevicesList()) {
+            if (firstDevice == null) {
+                firstDevice = camera;
+            }
+
+            if (useFrontCam) {
+                if (camera.contains("Front")) {
+                    Log.i("[Manager] Found front facing camera: " + camera);
+                    core.setVideoDevice(camera);
+                    return;
+                }
+            }
+        }
+
+        Log.i("[Manager] Using first camera available: " + firstDevice);
+        core.setVideoDevice(firstDevice);
     }
 
     /* Account linking */

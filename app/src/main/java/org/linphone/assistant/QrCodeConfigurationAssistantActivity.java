@@ -30,7 +30,7 @@ import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
-import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
+import org.linphone.core.tools.Log;
 
 public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
     private TextureView mQrcodeView;
@@ -105,19 +105,20 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
         Core core = LinphoneManager.getCore();
         if (core == null) return;
 
-        int camId = 0;
-        AndroidCameraConfiguration.AndroidCamera[] cameras =
-                AndroidCameraConfiguration.retrieveCameras();
-        for (AndroidCameraConfiguration.AndroidCamera androidCamera : cameras) {
-            if (!androidCamera.frontFacing) camId = androidCamera.id;
-        }
-        String[] devices = core.getVideoDevicesList();
-        String newDevice = devices[camId];
+        String firstDevice = null;
+        for (String camera : core.getVideoDevicesList()) {
+            if (firstDevice == null) {
+                firstDevice = camera;
+            }
 
-        String currentDevice = core.getVideoDevice();
-        if (currentDevice != null && currentDevice.equals(newDevice)) {
-            return;
+            if (camera.contains("Back")) {
+                Log.i("[QR Code] Found back facing camera: " + camera);
+                core.setVideoDevice(camera);
+                return;
+            }
         }
-        core.setVideoDevice(newDevice);
+
+        Log.i("[QR Code] Using first camera available: " + firstDevice);
+        core.setVideoDevice(firstDevice);
     }
 }
