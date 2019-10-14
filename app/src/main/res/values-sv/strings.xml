@@ -437,6 +437,9 @@
   <string name="pref_auto_download_disabled">Aldrig</string>
   <string name="pref_auto_download_always">Alltid</string>
   <string name="pref_auto_download_under_size">Om mindre än största storlek</string>
+  <string name="pref_android_app_hide_empty_chat_rooms_title">Dölj tomma chattrum</string>
+  <string name="pref_android_app_hide_chat_rooms_from_removed_proxies_title">Dölj chattrum från borttagna proxykonfigurationer</string>
+  <string name="pref_android_app_hide_chat_rooms_from_removed_proxies_desc">Om du har saknade chattrum, prova att avmarkera den här inställningen</string>
   <!--Network settings-->
   <string name="pref_network_title">Nätverk</string>
   <string name="pref_wifi_only">Använd endast Wi-Fi</string>
