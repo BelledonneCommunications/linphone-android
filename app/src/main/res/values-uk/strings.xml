@@ -97,6 +97,7 @@
   <string name="assistant_ec_calibration">Виконується калібрування пригнічення луни</string>
   <string name="assistant_remote_provisioning_login">Уведіть ім\'я користувача</string>
   <string name="assistant_account_not_validated">Вашу обліківку ще не перевірено.</string>
+  <string name="assistant_error_confirmation_code">Неприпустимий код підтвердження.\nБудь ласка, повторіть спробу. </string>
   <string name="assistant_account_validated">Вашу обліківку перевірено.</string>
   <string name="assistant_error_bad_credentials">Неправильне ім\'я користувача чи пароль</string>
   <string name="assistant_codec_down_question">Ви згодні завантажити OpenH264 Video Codec, наданий компанією Cisco Systems, Inc.?</string>
@@ -108,11 +109,13 @@
   <string name="wizard_failed">Сталася помилка, повторіть спробу пізніше.</string>
   <string name="wizard_server_unavailable">Сервер недоступний, перевірте мережеве з\'єднання.</string>
   <string name="wizard_username_unavailable">Це ім\'я користувача вже прийнято.</string>
+  <string name="assistant_phone_number_unavailable">Цей номер телефону вже використовується.\nУведіть инший номер.\nВи можете вилучити свою наявну обліківку, якщо бажаєте вдруге використовувати свій номер телефону.</string>
   <string name="wizard_username_incorrect">Неприпустиме ім\'я користувача.</string>
   <string name="assistant_phone_number_incorrect">Неприпустимий номер телефону.</string>
   <string name="wizard_email_incorrect">Неприпустима адреса електронної пошти.</string>
   <string name="wizard_password_incorrect">Неприпустимий пароль</string>
   <string name="wizard_passwords_unmatched">Паролі не збігаються.</string>
+  <string name="setup_confirm_username">Ваше ім\'я користувача буде %s.\n\nВоно може відрізнятися від обраного вами для відповідності вимогам.\nВи згодні? </string>
   <string name="first_launch_no_login_password">Уведіть ім\'я користувача та пароль</string>
   <string name="forgot_password">Забули пароль ?</string>
   <string name="assistant_choose_country">Оберіть країну</string>
@@ -125,6 +128,7 @@
   <string name="phone_number_info_content">\nВашим друзям буде простіше зконтактуватися з вами, якщо ви зв\'яжете свою обліківку зі своїм номером телефону.\n\n У вашій адресній книзі ви побачите, хто використовує Linphone, а ваші друзі зможуть дізнатися, що ви також зареєстровані в Linphone.\n</string>
   <string name="phone_number_link_info_content">\nВашим друзям буде простіше зконтактуватися з вами, якщо ви зв\'яжете свою обліківку зі своїм номером телефону.\n\nУ вашій адресній книзі ви побачите, хто використовує Linphone, а ваші друзі зможуть дізнатися, що ви також зареєстровані в Linphone.\n</string>
   <string name="phone_number_link_info_content_already_account">Номер телефону можна використовувати лише з однією обліківкою Linphone.\n\nЯкщо ваш номер вже був зв\'язаний з иншою обліківкою, але ви волієте використовувати його, просто зв\'яжіть його зараз, й ваш номер буде автоматично перенесено в цю обліківку.</string>
+  <string name="phone_number_overuse">Забагато SMS було відправлено на цей номер за короткий проміжок часу, повторіть спробу через 24 години.</string>
   <!--Status-->
   <string name="invalid_email">Неприпустима адреса електронної пошти</string>
   <string name="account_already_exist">Обліківка вже існує</string>
@@ -139,11 +143,13 @@
   <string name="phone_number_too_long">Задовгий номер телефону</string>
   <string name="phone_number_too_short">Закороткий номер телефону</string>
   <string name="phone_number_invalid">Неприпустимий номер телефону</string>
+  <string name="activation_code_invalid">Хибний код активації</string>
   <string name="password_too_short">Закороткий пароль</string>
   <string name="password_too_long">Задовгий пароль</string>
   <string name="request_failed">Не вдалося запитати сервер. Повторіть спробу пізніше</string>
   <string name="transport_unsupported">Непідтримуваний транспорт</string>
   <string name="country_code_invalid">Неприпустимий код країни</string>
+  <string name="invalid_characters">Неприпустимий символ(и) знайдено </string>
   <!--In-app-->
   <string name="inapp">У додатку</string>
   <string name="inapp_notification_title">Купівля у додатку</string>
@@ -280,7 +286,9 @@
   <string name="call_stats_jitter_buffer">Буфер джиттера:</string>
   <string name="call_stats_encoder_name">Кодер:</string>
   <string name="call_stats_decoder_name">Декодер</string>
+  <string name="call_stats_player_filter">Фільтр програвача:</string>
   <string name="call_stats_display_filter">Відображуваний фільтр:</string>
+  <string name="call_stats_capture_filter">Фільтр захоплення: </string>
   <string name="call">Виклик</string>
   <string name="call_log_delete_dialog">Ви справді волієте вилучити обрані журнали викликів?</string>
   <!--Recordings-->
@@ -342,6 +350,7 @@
   <string name="pref_display_name">Показуване ім\'я</string>
   <string name="pref_help_display_name">Уведіть показуване ім\'я (необов\'язково)</string>
   <string name="pref_prefix">Префікс</string>
+  <string name="pref_prefix_desc">Префікс для вашої країни (без +) </string>
   <string name="pref_transport">Транспорт</string>
   <string name="pref_transport_udp">UDP</string>
   <string name="pref_transport_tcp">TCP</string>
@@ -359,6 +368,9 @@
   <string name="pref_tunnel_title">Тунель</string>
   <string name="pref_tunnel_host">Сервер</string>
   <string name="pref_tunnel_port">Порт</string>
+  <string name="pref_tunnel_dual_mode">Увімкнути подвійний режим</string>
+  <string name="pref_tunnel_host_2">Ім\'я хосту (2-й сервер для подвійного режиму)</string>
+  <string name="pref_tunnel_port_2">Порт (2-й сервер для подвійного режиму) </string>
   <string name="pref_tunnel_mode">Режим</string>
   <!--do not change order without changing corresponding entry_values in non_localizable_strings.xml-->
   <string-array name="tunnel_mode_entries">
@@ -369,6 +381,7 @@
   </string-array>
   <string name="pref_none">Ні</string>
   <string name="pref_preferences_title">Уподобання</string>
+  <string name="pref_video_enable_title">Увімкнути відео</string>
   <!--Audio settings-->
   <string name="pref_audio_title">Авдіо</string>
   <string name="pref_echo_cancellation">Пригнічення луни</string>
@@ -396,9 +409,15 @@
   <string name="pref_video_preset">Параметри відео</string>
   <string name="pref_preferred_video_size">Бажаний розмір відео</string>
   <string name="pref_preferred_fps">Бажаний FPS</string>
+  <string name="pref_preview_video">Показувати передогляд камери на номеронабирачі</string>
   <string name="pref_bandwidth_limit">Обмеження пропускної здатности в кбит/с</string>
   <string name="pref_video_codecs_title">Кодеки</string>
   <!--Contact settings-->
+  <string name="pref_contact_sync_title">Інформація про присутність у рідному контакті</string>
+  <string name="pref_contact_sync_subtitle">Вставка інформаційних лейбів з контакту Linphone у рідні контакти Android</string>
+  <string name="pref_contact_title">Контакт</string>
+  <string name="pref_contact_display_contact_organization_title">Показувати контактну організацію</string>
+  <string name="pref_create_contact_shortcuts">Створити лейби у запускачі</string>
   <!--Call settings-->
   <string name="pref_call_title">Виклик</string>
   <string name="pref_device_ringtone">Використовувати мелодію дзвінка пристрою</string>
@@ -411,6 +430,9 @@
   <string name="pref_voice_mail">URI голосової пошти</string>
   <string name="pref_dialer_call">Використовувати Linphone у якости типового застосунку для дзвінків.</string>
   <string name="pref_accept_early_media">Приймати ранній потік</string>
+  <string name="pref_grant_read_dnd_settings_permission_title">Налаштування «Не бентежити»</string>
+  <string name="pref_grant_read_dnd_settings_permission_desc">Нам потрібно, щоб ви дозволити використовувати доступ до налаштувань «Не бентежити», щоб телефонувати правильно або ні залежно від поточної політики </string>
+  <string name="pref_media_encryption_mandatory_title">Шифрування потоку обов\'язкове</string>
   <!--Chat settings-->
   <string name="pref_chat_title">Чат</string>
   <string name="pref_image_sharing_server_title">Сервер обміну</string>
@@ -425,6 +447,9 @@
   <string name="pref_auto_download_disabled">Ніколи</string>
   <string name="pref_auto_download_always">Завжди</string>
   <string name="pref_auto_download_under_size">Якщо він легший щонайбільшого розміру</string>
+  <string name="pref_android_app_hide_empty_chat_rooms_title">Приховати порожні чати</string>
+  <string name="pref_android_app_hide_chat_rooms_from_removed_proxies_title">Приховати чати з вилучених налаштувань проксі</string>
+  <string name="pref_android_app_hide_chat_rooms_from_removed_proxies_desc">Якщо у вас є відсутні чати, то спробуйте зняти цей прапорець</string>
   <!--Network settings-->
   <string name="pref_network_title">Мережа</string>
   <string name="pref_wifi_only">Використовувати лише WiFi</string>
@@ -455,6 +480,7 @@
   <string name="pref_friendlist_subscribe">Підписка</string>
   <string name="pref_background_mode">Тловий режим</string>
   <string name="pref_background_mode_desc">Показувати сповіщення, аби зберегти застосунок робочим</string>
+  <string name="pref_background_mode_warning_desc">Linphone був обмежений для тлового використання, будь ласка, спочатку авторизуйтеся</string>
   <string name="pref_animation_enable_title">Увімкнути анімацію</string>
   <string name="pref_service_notification">Увімкнути сервісне сповіщення</string>
   <string name="pref_autostart">Запуск під час завантаження</string>
@@ -467,6 +493,7 @@
   <string name="pref_primary_account_title">Основна обліківка</string>
   <string name="pref_display_name_title">Показуване ім\'я</string>
   <string name="pref_user_name_title">Ім\'я користувача</string>
+  <string name="pref_log_collection_sharing_server_title">Сервер вивантаження логів </string>
   <string name="pref_log_collection_sharing_server_desc">Не змінюйте, якщо ви не знаєте, що робите!</string>
   <!--Audio hack settings-->
   <string name="pref_audio_hacks_title">Авдіо хаки</string>
