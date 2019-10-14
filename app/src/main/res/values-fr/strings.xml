@@ -401,6 +401,7 @@ Disponible gratuitement ici : %s</string>
   <string name="pref_codecs">Codecs</string>
   <!--Video settings-->
   <string name="pref_video_title">Vidéo</string>
+  <string name="pref_video_camera_device">Caméra</string>
   <string name="pref_overlay">Vidéo détachable</string>
   <string name="pref_overlay_summary">Affiche la video d\'un appel en dehors de l\'application</string>
   <string name="pref_video_use_front_camera_title">Utiliser la caméra en façade</string>
