@@ -24,15 +24,26 @@ static def isLocalAarAvailable() {
 }
 
 task getGitVersion() {
-    def gitVersion = "4.1"
+    def gitVersion = "4.2"
     def gitVersionStream = new ByteArrayOutputStream()
+    def gitCommitsCount = new ByteArrayOutputStream()
+    def gitCommitHash = new ByteArrayOutputStream()
 
     try {
         exec {
-            executable "git" args "describe", "--always"
+            executable "git" args "describe", "--abbrev=0"
             standardOutput = gitVersionStream
         }
-        gitVersion = gitVersionStream.toString().trim()
+        exec {
+            executable "git" args "rev-list", gitVersionStream.toString().trim() + "..HEAD", "--count"
+            standardOutput = gitCommitsCount
+        }
+        exec {
+            executable "git" args "rev-parse", "--short", "HEAD"
+            standardOutput = gitCommitHash
+        }
+
+        gitVersion = gitVersionStream.toString().trim() + "." + gitCommitsCount.toString().trim() + "+" + gitCommitHash.toString().trim()
         println("Git version: " + gitVersion)
     } catch (Exception e) {
         println("Git not found")
