@@ -24,7 +24,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -104,7 +103,7 @@ public class CallActivity extends LinphoneGenericActivity
 
     private final HideControlsRunnable mHideControlsRunnable = new HideControlsRunnable(this);
 
-    private int mPreviewX, mPreviewY;
+    private float mPreviewX, mPreviewY;
     private TextureView mLocalPreview, mRemoteVideo;
     private RelativeLayout mButtons,
             mActiveCalls,
@@ -142,8 +141,7 @@ public class CallActivity extends LinphoneGenericActivity
                 new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
-                        moveLocalPreview(event);
-                        return true;
+                        return moveLocalPreview(v, event);
                     }
                 });
 
@@ -817,48 +815,24 @@ public class CallActivity extends LinphoneGenericActivity
         }
     }
 
-    private void moveLocalPreview(MotionEvent motionEvent) {
+    private boolean moveLocalPreview(View view, MotionEvent motionEvent) {
         switch (motionEvent.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                mPreviewX = (int) motionEvent.getX();
-                mPreviewY = (int) motionEvent.getY();
+                mPreviewX = view.getX() - motionEvent.getRawX();
+                mPreviewY = view.getY() - motionEvent.getRawY();
                 break;
+
             case MotionEvent.ACTION_MOVE:
-                int x = (int) motionEvent.getX();
-                int y = (int) motionEvent.getY();
-
-                RelativeLayout.LayoutParams lp =
-                        (RelativeLayout.LayoutParams) mLocalPreview.getLayoutParams();
-
-                lp.removeRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-                lp.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-
-                int left = lp.leftMargin + (x - mPreviewX);
-                int top = lp.topMargin + (y - mPreviewY);
-
-                int width = lp.width;
-                int height = lp.height;
-
-                Point screenSize = new Point();
-                getWindow().getWindowManager().getDefaultDisplay().getSize(screenSize);
-
-                int statusBarHeight = 0;
-                int resource =
-                        getResources().getIdentifier("status_bar_height", "dimen", "android");
-                if (resource > 0) {
-                    statusBarHeight = getResources().getDimensionPixelSize(resource);
-                }
-
-                if (left < 0
-                        || top < 0
-                        || left + width >= screenSize.x
-                        || top + height + statusBarHeight >= screenSize.y) return;
-
-                lp.leftMargin = left;
-                lp.topMargin = top;
-                mLocalPreview.setLayoutParams(lp);
+                view.animate()
+                        .x(motionEvent.getRawX() + mPreviewX)
+                        .y(motionEvent.getRawY() + mPreviewY)
+                        .setDuration(0)
+                        .start();
                 break;
+            default:
+                return false;
         }
+        return true;
     }
 
     // NAVIGATION
