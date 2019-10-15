@@ -25,6 +25,7 @@ Group changes to describe their impact on the project, as follows:
 - Added our own devices in LIME encrypted chatrooms' security view
 - No longer display incoming call activity from Service, instead use incoming call notification with full screen intent
 - Improved reply notification when replying to a chat message from the notification
+- License changed from GPLv2 to GPLv3
 
 ## [4.1.0] - 2019-05-03
 
