@@ -27,6 +27,7 @@
     <entry name="x3dh_server_url" overwrite="true"></entry>
   </section>
   <section name="assistant">
+    <entry name="algorithm" overwrite="true">MD5</entry>
     <entry name="password_max_length" overwrite="true">-1</entry>
     <entry name="password_min_length" overwrite="true">0</entry>
     <entry name="username_length" overwrite="true">-1</entry>
