@@ -1,23 +1,23 @@
-package org.linphone.settings;
-
 /*
-LinphonePreferences.java
-Copyright (C) 2017  Belledonne Communications, Grenoble, France
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-*/
+ * Copyright (c) 2010-2019 Belledonne Communications SARL.
+ *
+ * This file is part of Linphone Android
+ * (see https://gitlab.linphone.org/BC/public/linphone-android).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.linphone.settings;
 
 import android.Manifest;
 import android.content.Context;
@@ -30,7 +30,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
@@ -50,7 +49,6 @@ import org.linphone.core.VideoActivationPolicy;
 import org.linphone.core.VideoDefinition;
 import org.linphone.core.tools.Log;
 import org.linphone.mediastream.Version;
-import org.linphone.purchase.Purchasable;
 import org.linphone.utils.LinphoneUtils;
 
 public class LinphonePreferences {
@@ -984,54 +982,8 @@ public class LinphonePreferences {
         getConfig().setInt("audio", "codec_bitrate_limit", bitrate);
     }
 
-    public String getInAppPurchaseValidatingServerUrl() {
-        return getConfig().getString("in-app-purchase", "server_url", null);
-    }
-
-    public Purchasable getInAppPurchasedItem() {
-        String id = getConfig().getString("in-app-purchase", "purchase_item_id", null);
-        String payload = getConfig().getString("in-app-purchase", "purchase_item_payload", null);
-        String signature =
-                getConfig().getString("in-app-purchase", "purchase_item_signature", null);
-        String username = getConfig().getString("in-app-purchase", "purchase_item_username", null);
-
-        return new Purchasable(id).setPayloadAndSignature(payload, signature).setUserData(username);
-    }
-
-    public void setInAppPurchasedItem(Purchasable item) {
-        if (item == null) return;
-
-        getConfig().setString("in-app-purchase", "purchase_item_id", item.getId());
-        getConfig().setString("in-app-purchase", "purchase_item_payload", item.getPayload());
-        getConfig()
-                .setString(
-                        "in-app-purchase", "purchase_item_signature", item.getPayloadSignature());
-        getConfig().setString("in-app-purchase", "purchase_item_username", item.getUserData());
-    }
-
-    public ArrayList<String> getInAppPurchasables() {
-        ArrayList<String> purchasables = new ArrayList<>();
-        String list = getConfig().getString("in-app-purchase", "purchasable_items_ids", null);
-        if (list != null) {
-            for (String purchasable : list.split(";")) {
-                if (purchasable.length() > 0) {
-                    purchasables.add(purchasable);
-                }
-            }
-        }
-        return purchasables;
-    }
-
     public String getXmlrpcUrl() {
         return getConfig().getString("assistant", "xmlrpc_url", null);
-    }
-
-    public String getInappPopupTime() {
-        return getConfig().getString("app", "inapp_popup_time", null);
-    }
-
-    public void setInappPopupTime(String date) {
-        getConfig().setString("app", "inapp_popup_time", date);
     }
 
     public String getLinkPopupTime() {
