@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2010-2019 Belledonne Communications SARL.
  *
- * This file is part of linphone-android 
+ * This file is part of linphone-android
  * (see https://www.linphone.org).
  *
  * This program is free software: you can redistribute it and/or modify
@@ -167,7 +167,7 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
             }
         }
         if (mCall == null) {
-            Log.e("Couldn't find outgoing call");
+            Log.e("[Call Outgoing Activity] Couldn't find outgoing call");
             finish();
             return;
         }
@@ -183,6 +183,13 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
             mName.setText(displayName);
         }
         mNumber.setText(LinphoneUtils.getDisplayableAddress(address));
+
+        boolean recordAudioPermissionGranted = checkPermission(Manifest.permission.RECORD_AUDIO);
+        if (!recordAudioPermissionGranted) {
+            Log.w("[Call Outgoing Activity] RECORD_AUDIO permission denied, muting microphone");
+            core.enableMic(false);
+            mMicro.setSelected(true);
+        }
     }
 
     @Override
@@ -289,6 +296,16 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
             permissions = permissionsList.toArray(permissions);
             ActivityCompat.requestPermissions(this, permissions, 0);
         }
+    }
+
+    private boolean checkPermission(String permission) {
+        int granted = getPackageManager().checkPermission(permission, getPackageName());
+        Log.i(
+                "[Permission] "
+                        + permission
+                        + " permission is "
+                        + (granted == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+        return granted == PackageManager.PERMISSION_GRANTED;
     }
 
     @Override

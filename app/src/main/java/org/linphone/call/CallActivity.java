@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2010-2019 Belledonne Communications SARL.
  *
- * This file is part of linphone-android 
+ * This file is part of linphone-android
  * (see https://www.linphone.org).
  *
  * This program is free software: you can redistribute it and/or modify
@@ -424,6 +424,27 @@ public class CallActivity extends LinphoneGenericActivity
                         updateCallsList();
                     }
                 };
+
+        mCore = LinphoneManager.getCore();
+        if (mCore != null) {
+            boolean recordAudioPermissionGranted =
+                    checkPermission(Manifest.permission.RECORD_AUDIO);
+            if (!recordAudioPermissionGranted) {
+                Log.w("[Call Activity] RECORD_AUDIO permission denied, muting microphone");
+                mCore.enableMic(false);
+            }
+
+            Call call = mCore.getCurrentCall();
+            boolean videoEnabled =
+                    LinphonePreferences.instance().isVideoEnabled()
+                            && call.getCurrentParams().videoEnabled();
+
+            if (videoEnabled) {
+                mAudioManager = LinphoneManager.getAudioManager();
+                mAudioManager.routeAudioToSpeaker();
+                mSpeaker.setSelected(true);
+            }
+        }
     }
 
     @Override
@@ -648,8 +669,6 @@ public class CallActivity extends LinphoneGenericActivity
     private void updateButtons() {
         Call call = mCore.getCurrentCall();
 
-        boolean recordAudioPermissionGranted = checkPermission(Manifest.permission.RECORD_AUDIO);
-        mCore.enableMic(recordAudioPermissionGranted);
         mMicro.setSelected(!mCore.micEnabled());
 
         mSpeaker.setSelected(mAudioManager.isAudioRoutedToSpeaker());
@@ -808,11 +827,6 @@ public class CallActivity extends LinphoneGenericActivity
                 LinphonePreferences.instance().isVideoEnabled()
                         && call.getCurrentParams().videoEnabled();
         showVideoControls(videoEnabled);
-
-        if (videoEnabled) {
-            mAudioManager.routeAudioToSpeaker();
-            mSpeaker.setSelected(true);
-        }
     }
 
     private boolean moveLocalPreview(View view, MotionEvent motionEvent) {
