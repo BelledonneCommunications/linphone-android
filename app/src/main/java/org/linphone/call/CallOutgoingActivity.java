@@ -322,6 +322,13 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
             if (permissions[i].equals(Manifest.permission.CAMERA)
                     && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                 LinphoneUtils.reloadVideoDevices();
+            } else if (permissions[i].equals(Manifest.permission.RECORD_AUDIO)
+                    && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                Core core = LinphoneManager.getCore();
+                if (core != null) {
+                    core.enableMic(true);
+                    mMicro.setSelected(!core.micEnabled());
+                }
             }
         }
     }
