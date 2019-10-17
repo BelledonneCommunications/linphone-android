@@ -54,7 +54,7 @@ ln -s <path to linphone-sdk>/linphone-sdk/build/linphone-sdk/bin/outputs/aar/lin
 
 2. In Android-studio go to Run->Edit Configurations->Debugger.
 
-3. Select 'Dual' or 'Native' and add the path to linphone-sdk libraries.
+3. Select 'Dual' or 'Native' and add the path to linphone-sdk debug libraries (build/libs-debug/ for example).
 
 4. Open native file and put your breakpoint on it.
 
