@@ -553,6 +553,11 @@ public class LinphoneContact extends AndroidContact
         }
 
         if (ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE.equals(mime)) {
+            if (data1 == null && data4 == null) {
+                Log.e("[Linphone Contact] Phone number data are both null !");
+                return;
+            }
+
             Log.d("[Linphone Contact] Found phone number " + data1 + " (" + data4 + ")");
             addNumberOrAddress(new LinphoneNumberOrAddress(data1, data4));
         } else if (ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE.equals(mime)
@@ -560,12 +565,27 @@ public class LinphoneContact extends AndroidContact
                         .getApplicationContext()
                         .getString(R.string.linphone_address_mime_type)
                         .equals(mime)) {
+            if (data1 == null) {
+                Log.e("[Linphone Contact] SIP address is null !");
+                return;
+            }
+
             Log.d("[Linphone Contact] Found SIP address " + data1);
             addNumberOrAddress(new LinphoneNumberOrAddress(data1, true));
         } else if (ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE.equals(mime)) {
+            if (data1 == null) {
+                Log.e("[Linphone Contact] Organization is null !");
+                return;
+            }
+
             Log.d("[Linphone Contact] Found organization " + data1);
             setOrganization(data1, false);
         } else if (ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE.equals(mime)) {
+            if (data2 == null && data3 == null) {
+                Log.e("[Linphone Contact] Firstname and lastname are both null !");
+                return;
+            }
+
             Log.d("[Linphone Contact] Found first name " + data2 + " and last name " + data3);
             setFirstNameAndLastName(data2, data3, false);
         } else {
