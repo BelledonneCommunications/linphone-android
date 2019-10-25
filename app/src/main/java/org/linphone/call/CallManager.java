@@ -89,20 +89,16 @@ public class CallManager {
         Core core = LinphoneManager.getCore();
         try {
             String currentDevice = core.getVideoDevice();
+            Log.i("[Call Manager] Current camera device is " + currentDevice);
             String[] devices = core.getVideoDevicesList();
-            int index = 0;
             for (String d : devices) {
-                if (d.equals(currentDevice)) {
+                if (!d.equals(currentDevice) && !d.equals("StaticImage: Static picture")) {
+                    Log.i("[Call Manager] New camera device will be " + d);
+                    core.setVideoDevice(d);
                     break;
                 }
-                index++;
             }
 
-            String newDevice;
-            if (index == 1) newDevice = devices[0];
-            else if (devices.length > 1) newDevice = devices[1];
-            else newDevice = devices[index];
-            core.setVideoDevice(newDevice);
 
             Call call = core.getCurrentCall();
             if (call == null) {
