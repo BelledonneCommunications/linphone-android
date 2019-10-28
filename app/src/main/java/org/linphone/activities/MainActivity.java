@@ -20,7 +20,6 @@
 package org.linphone.activities;
 
 import android.Manifest;
-import android.app.ActivityManager;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -444,9 +443,9 @@ public abstract class MainActivity extends LinphoneGenericActivity
     private void quit() {
         goHomeAndClearStack();
         stopService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));
-        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        /*ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         am.killBackgroundProcesses(getString(R.string.sync_account_type));
-        android.os.Process.killProcess(android.os.Process.myPid());
+        android.os.Process.killProcess(android.os.Process.myPid());*/
     }
 
     // Tab, Top and Status bars
