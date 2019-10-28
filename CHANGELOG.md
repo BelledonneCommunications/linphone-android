@@ -22,6 +22,7 @@ Group changes to describe their impact on the project, as follows:
 - Using new AAudio & Camera2 frameworks for better performances (if available)
 - Android 10 compatibility
 - New plugin loader to be compatible with app bundle distribution mode
+- Restart service if foreground service setting is on when app is updated
 
 ## Changed
 - Improved performances to reduce startup time

@@ -91,7 +91,7 @@ public class CallManager {
 
         String currentDevice = core.getVideoDevice();
         Log.i("[Call Manager] Current camera device is " + currentDevice);
-        
+
         String[] devices = core.getVideoDevicesList();
         for (String d : devices) {
             if (!d.equals(currentDevice) && !d.equals("StaticImage: Static picture")) {
