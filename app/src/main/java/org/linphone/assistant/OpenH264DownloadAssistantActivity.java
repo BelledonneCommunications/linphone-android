@@ -58,7 +58,7 @@ public class OpenH264DownloadAssistantActivity extends AssistantActivity {
                     public void onClick(View v) {
                         mYes.setEnabled(false);
                         mNo.setEnabled(false);
-                        Log.e("[OpenH264 Downloader] Start download");
+                        Log.e("[OpenH264 Downloader Assistant] Start download");
                         mProgress.setVisibility(View.VISIBLE);
                         mHelper.downloadCodec();
                     }
@@ -71,7 +71,7 @@ public class OpenH264DownloadAssistantActivity extends AssistantActivity {
                     public void onClick(View v) {
                         mYes.setEnabled(false);
                         mNo.setEnabled(false);
-                        Log.e("[OpenH264 Downloader] Download refused");
+                        Log.e("[OpenH264 Downloader Assistant] Download refused");
                         goToLinphoneActivity();
                     }
                 });
@@ -96,7 +96,7 @@ public class OpenH264DownloadAssistantActivity extends AssistantActivity {
 
                     @Override
                     public void OnError(String s) {
-                        Log.e("[OpenH264 Downloader] " + s);
+                        Log.e("[OpenH264 Downloader Assistant] " + s);
                         mYes.setEnabled(true);
                         mNo.setEnabled(true);
                     }

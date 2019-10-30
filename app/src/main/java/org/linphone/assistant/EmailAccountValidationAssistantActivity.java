@@ -52,7 +52,9 @@ public class EmailAccountValidationAssistantActivity extends AssistantActivity {
 
                         AccountCreator.Status status = mAccountCreator.isAccountActivated();
                         if (status != AccountCreator.Status.RequestOk) {
-                            Log.e("[Email Account Validation] activateAccount returned " + status);
+                            Log.e(
+                                    "[Email Account Validation Assistant] activateAccount returned "
+                                            + status);
                             mFinishCreation.setEnabled(true);
                             showGenericErrorDialog(status);
                         }
@@ -65,7 +67,7 @@ public class EmailAccountValidationAssistantActivity extends AssistantActivity {
                     public void onIsAccountActivated(
                             AccountCreator creator, AccountCreator.Status status, String resp) {
                         Log.i(
-                                "[Email Account Validation] onIsAccountActivated status is "
+                                "[Email Account Validation Assistant] onIsAccountActivated status is "
                                         + status);
                         if (status.equals(AccountCreator.Status.AccountActivated)) {
                             createProxyConfigAndLeaveAssistant();
