@@ -27,8 +27,11 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
+import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.core.Core;
 import org.linphone.core.TransportType;
+import org.linphone.core.tools.Log;
 
 public class GenericConnectionAssistantActivity extends AssistantActivity implements TextWatcher {
     private TextView mLogin;
@@ -60,6 +63,12 @@ public class GenericConnectionAssistantActivity extends AssistantActivity implem
         mDomain = findViewById(R.id.assistant_domain);
         mDomain.addTextChangedListener(this);
         mTransport = findViewById(R.id.assistant_transports);
+
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            Log.i("[Generic Connection Assistant] Reloading configuration with default");
+            reloadDefaultAccountCreatorConfig();
+        }
     }
 
     private void configureAccount() {

@@ -33,6 +33,7 @@ import org.linphone.R;
 import org.linphone.activities.DialerActivity;
 import org.linphone.activities.LinphoneGenericActivity;
 import org.linphone.core.AccountCreator;
+import org.linphone.core.Config;
 import org.linphone.core.Core;
 import org.linphone.core.DialPlan;
 import org.linphone.core.Factory;
@@ -104,22 +105,52 @@ public abstract class AssistantActivity extends LinphoneGenericActivity
         }
     }
 
+    private void reloadAccountCreatorConfig(String path) {
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            core.loadConfigFromXml(path);
+            if (mAccountCreator != null) {
+                // Below two settings are applied to account creator when it is built.
+                // Reloading Core config after won't change the account creator configuration,
+                // hence the manual reload
+                Config config = LinphonePreferences.instance().getConfig();
+                mAccountCreator.setDomain(config.getString("assistant", "domain", null));
+                mAccountCreator.setAlgorithm(config.getString("assistant", "algorithm", null));
+            }
+        }
+    }
+
+    void reloadDefaultAccountCreatorConfig() {
+        Log.i("[Assistant] Reloading configuration with default");
+        reloadAccountCreatorConfig(LinphonePreferences.instance().getDefaultDynamicConfigFile());
+    }
+
+    void reloadLinphoneAccountCreatorConfig() {
+        Log.i("[Assistant] Reloading configuration with specifics");
+        reloadAccountCreatorConfig(LinphonePreferences.instance().getLinphoneDynamicConfigFile());
+    }
+
     void createProxyConfigAndLeaveAssistant() {
         Core core = LinphoneManager.getCore();
         boolean useLinphoneDefaultValues =
                 getString(R.string.default_domain).equals(mAccountCreator.getDomain());
         if (useLinphoneDefaultValues) {
+            Log.i("[Assistant] Default domain found, reloading configuration");
             core.loadConfigFromXml(LinphonePreferences.instance().getLinphoneDynamicConfigFile());
+        } else {
+            Log.i("[Assistant] Third party domain found, keeping default values");
         }
 
         ProxyConfig proxyConfig = mAccountCreator.createProxyConfig();
 
         if (useLinphoneDefaultValues) {
             // Restore default values
+            Log.i("[Assistant] Restoring default assistant configuration");
             core.loadConfigFromXml(LinphonePreferences.instance().getDefaultDynamicConfigFile());
         } else {
             // If this isn't a sip.linphone.org account, disable push notifications and enable
             // service notification, otherwise incoming calls won't work (most probably)
+            Log.w("[Assistant] Unknown domain used, push probably won't work, enable service mode");
             LinphonePreferences.instance().setServiceNotificationVisibility(true);
             LinphoneContext.instance().getNotificationManager().startForeground();
         }

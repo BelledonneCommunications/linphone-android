@@ -30,9 +30,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
+import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.AccountCreator;
 import org.linphone.core.AccountCreatorListenerStub;
+import org.linphone.core.Core;
 import org.linphone.core.tools.Log;
 
 public class EmailAccountCreationAssistantActivity extends AssistantActivity {
@@ -161,12 +163,13 @@ public class EmailAccountCreationAssistantActivity extends AssistantActivity {
                     @Override
                     public void onClick(View v) {
                         enableButtonsAndFields(false);
-                        mAccountCreator.setDomain(getString(R.string.default_domain));
 
                         AccountCreator.Status status = mAccountCreator.isAccountExist();
                         if (status != AccountCreator.Status.RequestOk) {
                             enableButtonsAndFields(true);
-                            Log.e("[Email Account Creation] isAccountExists returned " + status);
+                            Log.e(
+                                    "[Email Account Creation Assistant] isAccountExists returned "
+                                            + status);
                             showGenericErrorDialog(status);
                         }
                     }
@@ -177,7 +180,9 @@ public class EmailAccountCreationAssistantActivity extends AssistantActivity {
                 new AccountCreatorListenerStub() {
                     public void onIsAccountExist(
                             AccountCreator creator, AccountCreator.Status status, String resp) {
-                        Log.i("[Email Account Creation] onIsAccountExist status is " + status);
+                        Log.i(
+                                "[Email Account Creation Assistant] onIsAccountExist status is "
+                                        + status);
                         if (status.equals(AccountCreator.Status.AccountExist)
                                 || status.equals(AccountCreator.Status.AccountExistWithAlias)) {
                             showAccountAlreadyExistsDialog();
@@ -185,7 +190,9 @@ public class EmailAccountCreationAssistantActivity extends AssistantActivity {
                         } else if (status.equals(AccountCreator.Status.AccountNotExist)) {
                             status = mAccountCreator.createAccount();
                             if (status != AccountCreator.Status.RequestOk) {
-                                Log.e("[Email Account Creation] createAccount returned " + status);
+                                Log.e(
+                                        "[Email Account Creation Assistant] createAccount returned "
+                                                + status);
                                 enableButtonsAndFields(true);
                                 showGenericErrorDialog(status);
                             }
@@ -198,7 +205,9 @@ public class EmailAccountCreationAssistantActivity extends AssistantActivity {
                     @Override
                     public void onCreateAccount(
                             AccountCreator creator, AccountCreator.Status status, String resp) {
-                        Log.i("[Email Account Creation] onCreateAccount status is " + status);
+                        Log.i(
+                                "[Email Account Creation Assistant] onCreateAccount status is "
+                                        + status);
                         if (status.equals(AccountCreator.Status.AccountCreated)) {
                             startActivity(
                                     new Intent(
@@ -210,6 +219,11 @@ public class EmailAccountCreationAssistantActivity extends AssistantActivity {
                         }
                     }
                 };
+
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            reloadLinphoneAccountCreatorConfig();
+        }
     }
 
     private void enableButtonsAndFields(boolean enable) {

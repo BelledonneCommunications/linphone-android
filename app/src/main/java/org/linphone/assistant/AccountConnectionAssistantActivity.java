@@ -31,9 +31,11 @@ import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
+import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.AccountCreator;
 import org.linphone.core.AccountCreatorListenerStub;
+import org.linphone.core.Core;
 import org.linphone.core.DialPlan;
 import org.linphone.core.tools.Log;
 
@@ -70,7 +72,6 @@ public class AccountConnectionAssistantActivity extends AssistantActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mAccountCreator.setDomain(getString(R.string.default_domain));
                         mConnect.setEnabled(false);
 
                         if (mUsernameConnectionSwitch.isChecked()) {
@@ -83,7 +84,9 @@ public class AccountConnectionAssistantActivity extends AssistantActivity {
 
                             AccountCreator.Status status = mAccountCreator.recoverAccount();
                             if (status != AccountCreator.Status.RequestOk) {
-                                Log.e("[Account Connection] recoverAccount returned " + status);
+                                Log.e(
+                                        "[Account Connection Assistant] recoverAccount returned "
+                                                + status);
                                 mConnect.setEnabled(true);
                                 showGenericErrorDialog(status);
                             }
@@ -202,7 +205,9 @@ public class AccountConnectionAssistantActivity extends AssistantActivity {
                     @Override
                     public void onRecoverAccount(
                             AccountCreator creator, AccountCreator.Status status, String resp) {
-                        Log.i("[Account Connection] onRecoverAccount status is " + status);
+                        Log.i(
+                                "[Account Connection Assistant] onRecoverAccount status is "
+                                        + status);
                         if (status.equals(AccountCreator.Status.RequestOk)) {
                             Intent intent =
                                     new Intent(
@@ -216,6 +221,11 @@ public class AccountConnectionAssistantActivity extends AssistantActivity {
                         }
                     }
                 };
+
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            reloadLinphoneAccountCreatorConfig();
+        }
     }
 
     @Override
