@@ -437,7 +437,7 @@ public class CallActivity extends LinphoneGenericActivity
             Call call = mCore.getCurrentCall();
             boolean videoEnabled =
                     LinphonePreferences.instance().isVideoEnabled()
-                            && call.getCurrentParams().videoEnabled();
+                            && call != null && call.getCurrentParams().videoEnabled();
 
             if (videoEnabled) {
                 mAudioManager = LinphoneManager.getAudioManager();
@@ -825,7 +825,7 @@ public class CallActivity extends LinphoneGenericActivity
 
         boolean videoEnabled =
                 LinphonePreferences.instance().isVideoEnabled()
-                        && call.getCurrentParams().videoEnabled();
+                        && call != null && call.getCurrentParams().videoEnabled();
         showVideoControls(videoEnabled);
     }
 
