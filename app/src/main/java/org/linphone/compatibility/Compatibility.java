@@ -103,11 +103,12 @@ public class Compatibility {
     }
 
     public static Notification createMissedCallNotification(
-            Context context, String title, String text, PendingIntent intent) {
+            Context context, String title, String text, PendingIntent intent, int count) {
         if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
-            return ApiTwentySixPlus.createMissedCallNotification(context, title, text, intent);
+            return ApiTwentySixPlus.createMissedCallNotification(
+                    context, title, text, intent, count);
         }
-        return ApiTwentyOnePlus.createMissedCallNotification(context, title, text, intent);
+        return ApiTwentyOnePlus.createMissedCallNotification(context, title, text, intent, count);
     }
 
     public static Notification createInCallNotification(
