@@ -54,8 +54,6 @@ import org.linphone.receivers.HeadsetReceiver;
 import org.linphone.settings.LinphonePreferences;
 
 public class AndroidAudioManager {
-    private static final int LINPHONE_VOLUME_STREAM = STREAM_VOICE_CALL;
-
     private Context mContext;
     private AudioManager mAudioManager;
     private Call mRingingCall;
@@ -415,10 +413,22 @@ public class AndroidAudioManager {
     }
 
     private void adjustVolume(int i) {
-        // starting from ICS, volume must be adjusted by the application, at least for
-        // STREAM_VOICE_CALL volume stream
+        if (mAudioManager.isVolumeFixed()) {
+            Log.e("[Audio Manager] Can't adjust volume, device has it fixed...");
+            // Keep going just in case...
+        }
+
+        int stream = STREAM_VOICE_CALL;
+        if (mIsBluetoothHeadsetScoConnected) {
+            Log.i(
+                    "[Audio Manager] Bluetooth is connected, try to change the volume on STREAM_BLUETOOTH_SCO");
+            stream = 6; // STREAM_BLUETOOTH_SCO, it's hidden...
+        }
+
+        // starting from ICS, volume must be adjusted by the application,
+        // at least for STREAM_VOICE_CALL volume stream
         mAudioManager.adjustStreamVolume(
-                LINPHONE_VOLUME_STREAM,
+                stream,
                 i < 0 ? AudioManager.ADJUST_LOWER : AudioManager.ADJUST_RAISE,
                 AudioManager.FLAG_SHOW_UI);
     }
