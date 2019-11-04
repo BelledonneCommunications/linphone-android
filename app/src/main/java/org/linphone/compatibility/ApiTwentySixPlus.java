@@ -255,7 +255,7 @@ class ApiTwentySixPlus {
     }
 
     public static Notification createMissedCallNotification(
-            Context context, String title, String text, PendingIntent intent) {
+            Context context, String title, String text, PendingIntent intent, int count) {
         return new Notification.Builder(
                         context, context.getString(R.string.notification_channel_id))
                 .setContentTitle(title)
@@ -269,6 +269,7 @@ class ApiTwentySixPlus {
                 .setPriority(Notification.PRIORITY_HIGH)
                 .setWhen(System.currentTimeMillis())
                 .setShowWhen(true)
+                .setNumber(count)
                 .setColor(context.getColor(R.color.notification_led_color))
                 .build();
     }

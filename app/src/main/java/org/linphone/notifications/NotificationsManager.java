@@ -521,7 +521,8 @@ public class NotificationsManager {
                         mContext,
                         mContext.getString(R.string.missed_calls_notif_title),
                         body,
-                        pendingIntent);
+                        pendingIntent,
+                        missedCallCount);
         sendNotification(MISSED_CALLS_NOTIF_ID, notif);
     }
 
