@@ -197,10 +197,9 @@ public class DeviceUtils {
                                 public void onClick(View v) {
                                     Log.w(
                                             "[Hacks] Power saver detected, user is going to settings :)");
-                                    if (doNotAskAgain.isChecked()) {
-                                        LinphonePreferences.instance()
-                                                .powerSaverDialogPrompted(true);
-                                    }
+                                    // If user is going into the settings,
+                                    // assume it will make the change so don't prompt again
+                                    LinphonePreferences.instance().powerSaverDialogPrompted(true);
 
                                     context.startActivity(intent);
                                     dialog.dismiss();
