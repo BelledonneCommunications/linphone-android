@@ -327,6 +327,10 @@ public class NotificationsManager {
         }
     }
 
+    public void dismissMissedCallNotification() {
+        dismissNotification(MISSED_CALLS_NOTIF_ID);
+    }
+
     public void sendNotification(int id, Notification notif) {
         Log.i("[Notifications Manager] Notifying " + id);
         mNM.notify(id, notif);
