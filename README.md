@@ -1,6 +1,34 @@
+
 [![pipeline status](https://gitlab.linphone.org/BC/public/linphone-android/badges/master/pipeline.svg)](https://gitlab.linphone.org/BC/public/linphone-android/commits/master)
 
-Linphone is a free VoIP and video softphone based on the SIP protocol.
+
+Linphone is an open source softphone for voice and video over IP calling and instant messaging.
+
+It is fully SIP-based, for all calling, presence and IM features.
+
+General description is available from [linphone web site](https://www.linphone.org/technical-corner/linphone)
+
+### License
+
+Copyright © Belledonne Communications
+
+Linphone is dual licensed, and is available either :
+
+ - under a [GNU/GPLv3 license](https://www.gnu.org/licenses/gpl-3.0.en.html), for free (open source). Please make sure that you
+
+understand and agree with the terms of this license before using it (see LICENSE file for
+
+details).
+
+ - under a proprietary license, for a fee, to be used in closed source applications. Contact
+
+[Belledonne Communications](https://www.linphone.org/contact) for any question about costs and services.
+
+### Documentation
+
+- Supported features and RFCs : https://www.linphone.org/technical-corner/linphone/features
+
+- Linphone public wiki : https://wiki.linphone.org/xwiki/wiki/public/view/Linphone/
 
 # What's new
 
@@ -69,7 +97,7 @@ Now, simply edit the app/build.gradle file and change the value returned by meth
 The next build will automatically use this value everywhere thanks to ```manifestPlaceholders``` feature of gradle and Android.
 
 You may have already noticed that the app installed by Android Studio has ```org.linphone.debug``` package name.
-If you build the app as release, the package name will be ```org.linphone```. 
+If you build the app as release, the package name will be ```org.linphone```.
 
 ## Firebase push notifications
 
@@ -98,7 +126,7 @@ to push new strings to transifex so they can be translated.
 
 In order to submit a patch for inclusion in linphone's source code:
 
-1.    First make sure your patch applies to latest git sources before submitting: patches made to old versions can't and won't be merged.
-2.    Fill out and send us an email with the link of pullrequest and the [Contributor Agreement](http://www.belledonne-communications.com/downloads/Belledonne_communications_CA.pdf) for your patch to be included in the git tree.
+1. First make sure your patch applies to latest git sources before submitting: patches made to old versions can't and won't be merged.
+2. Fill out and send us an email with the link of pullrequest and the [Contributor Agreement](http://www.belledonne-communications.com/downloads/Belledonne_communications_CA.pdf) for your patch to be included in the git tree.
 
 The goal of this agreement to grant us peaceful exercise of our rights on the linphone source code, while not losing your rights on your contribution.
