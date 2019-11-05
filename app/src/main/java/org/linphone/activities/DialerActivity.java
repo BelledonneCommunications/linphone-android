@@ -259,9 +259,7 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
 
     @Override
     public void onAddressChanged() {
-        Core core = LinphoneManager.getCore();
-        mAddContact.setEnabled(
-                core != null && core.getCallsNb() > 0 || !mAddress.getText().toString().equals(""));
+        mAddContact.setEnabled(!mAddress.getText().toString().isEmpty());
     }
 
     private void updateLayout() {
@@ -273,6 +271,8 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
         boolean atLeastOneCall = core.getCallsNb() > 0;
         mStartCall.setVisibility(atLeastOneCall ? View.GONE : View.VISIBLE);
         mAddContact.setVisibility(atLeastOneCall ? View.GONE : View.VISIBLE);
+        mAddContact.setEnabled(!mAddress.getText().toString().isEmpty());
+
         if (!atLeastOneCall) {
             if (core.getVideoActivationPolicy().getAutomaticallyInitiate()) {
                 mStartCall.setImageResource(R.drawable.call_video_start);
