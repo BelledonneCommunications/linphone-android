@@ -122,7 +122,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
                             Core core, Call call, State state, String message) {
                         if (call == mCall) {
                             if (state == State.Connected) {
-                                // This is done by the Service listener now
+                                // This is done by the LinphoneContext listener now
                                 // startActivity(new Intent(CallOutgoingActivity.this,
                                 // CallActivity.class));
                             }
@@ -230,6 +230,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
         mAlreadyAcceptedOrDeniedCall = true;
 
         mCall.terminate();
+        finish();
     }
 
     private void answer() {

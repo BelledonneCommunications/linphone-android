@@ -125,7 +125,7 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
                                         .show();
                             }
                         } else if (state == State.Connected) {
-                            // This is done by the Service listener now
+                            // This is done by the LinphoneContext listener now
                             // startActivity(new Intent(CallOutgoingActivity.this,
                             // CallActivity.class));
                         }
