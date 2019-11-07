@@ -353,7 +353,7 @@ public class LinphoneContact extends AndroidContact
                 mFriend.getVcard().setFamilyName(mLastName);
                 mFriend.getVcard().setGivenName(mFirstName);
             }
-            if (mOrganization != null) {
+            if ((mOrganization != null) && (mFriend.getVcard() != null)) {
                 mFriend.getVcard().setOrganization(mOrganization);
             }
 
