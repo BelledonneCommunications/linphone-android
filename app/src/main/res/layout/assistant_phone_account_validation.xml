@@ -37,7 +37,7 @@
             android:paddingTop="10dp"/>
 
         <TextView
-            android:id="@+id/title_account_activation"
+            android:id="@+id/title_account_login"
             android:visibility="gone"
             android:text="@string/assistant_login_linphone"
             style="@style/standard_text_font"
