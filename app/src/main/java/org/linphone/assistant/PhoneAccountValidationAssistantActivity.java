@@ -40,7 +40,7 @@ public class PhoneAccountValidationAssistantActivity extends AssistantActivity {
     private ClipboardManager mClipboard;
 
     private int mActivationCodeLength;
-    private boolean mIsLinking;
+    private boolean mIsLinking = false, mIsLogin = false;
     private AccountCreatorListenerStub mListener;
 
     @Override
@@ -50,13 +50,14 @@ public class PhoneAccountValidationAssistantActivity extends AssistantActivity {
         setContentView(R.layout.assistant_phone_account_validation);
 
         if (getIntent() != null && getIntent().getBooleanExtra("isLoginVerification", false)) {
-            findViewById(R.id.title_account_creation).setVisibility(View.VISIBLE);
+            findViewById(R.id.title_account_login).setVisibility(View.VISIBLE);
+            mIsLogin = true;
         } else if (getIntent() != null
                 && getIntent().getBooleanExtra("isLinkingVerification", false)) {
             mIsLinking = true;
             findViewById(R.id.title_account_linking).setVisibility(View.VISIBLE);
         } else {
-            findViewById(R.id.title_account_activation).setVisibility(View.VISIBLE);
+            findViewById(R.id.title_account_creation).setVisibility(View.VISIBLE);
         }
 
         mActivationCodeLength =
@@ -93,6 +94,8 @@ public class PhoneAccountValidationAssistantActivity extends AssistantActivity {
                         AccountCreator.Status status;
                         if (mIsLinking) {
                             status = mAccountCreator.activateAlias();
+                        } else if (mIsLogin) {
+                            status = mAccountCreator.loginLinphoneAccount();
                         } else {
                             status = mAccountCreator.activateAccount();
                         }
@@ -101,7 +104,10 @@ public class PhoneAccountValidationAssistantActivity extends AssistantActivity {
                                     "[Phone Account Validation] "
                                             + (mIsLinking
                                                     ? "linkAccount"
-                                                    : "activateAccount" + " returned ")
+                                                    : (mIsLogin
+                                                                    ? "loginLinphoneAccount"
+                                                                    : "activateAccount")
+                                                            + " returned ")
                                             + status);
                             mFinishCreation.setEnabled(true);
                             showGenericErrorDialog(status);
@@ -118,12 +124,7 @@ public class PhoneAccountValidationAssistantActivity extends AssistantActivity {
                         if (status.equals(AccountCreator.Status.AccountActivated)) {
                             createProxyConfigAndLeaveAssistant();
                         } else {
-                            mFinishCreation.setEnabled(true);
-                            showGenericErrorDialog(status);
-
-                            if (status.equals(AccountCreator.Status.WrongActivationCode)) {
-                                // TODO do something so the server re-send a SMS
-                            }
+                            onError(status);
                         }
                     }
 
@@ -135,12 +136,20 @@ public class PhoneAccountValidationAssistantActivity extends AssistantActivity {
                             LinphonePreferences.instance().setLinkPopupTime("");
                             goToLinphoneActivity();
                         } else {
-                            mFinishCreation.setEnabled(true);
-                            showGenericErrorDialog(status);
+                            onError(status);
+                        }
+                    }
 
-                            if (status.equals(AccountCreator.Status.WrongActivationCode)) {
-                                // TODO do something so the server re-send a SMS
-                            }
+                    @Override
+                    public void onLoginLinphoneAccount(
+                            AccountCreator creator, AccountCreator.Status status, String resp) {
+                        Log.i(
+                                "[Phone Account Validation] onLoginLinphoneAccount status is "
+                                        + status);
+                        if (status.equals(AccountCreator.Status.RequestOk)) {
+                            createProxyConfigAndLeaveAssistant();
+                        } else {
+                           onError(status);
                         }
                     }
                 };
@@ -174,5 +183,14 @@ public class PhoneAccountValidationAssistantActivity extends AssistantActivity {
     protected void onPause() {
         super.onPause();
         mAccountCreator.removeListener(mListener);
+    }
+
+    private void onError(AccountCreator.Status status) {
+        mFinishCreation.setEnabled(true);
+        showGenericErrorDialog(status);
+
+        if (status.equals(AccountCreator.Status.WrongActivationCode)) {
+            // TODO do something so the server re-send a SMS
+        }
     }
 }
