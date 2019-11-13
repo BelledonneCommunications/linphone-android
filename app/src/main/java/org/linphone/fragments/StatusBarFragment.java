@@ -79,10 +79,8 @@ public class StatusBarFragment extends Fragment {
                             final RegistrationState state,
                             String smessage) {
                         if (core.getProxyConfigList() == null) {
-                            mStatusLed.setImageResource(R.drawable.led_disconnected);
-                            mStatusText.setText(getString(R.string.no_account));
-                        } else {
-                            mStatusLed.setVisibility(View.VISIBLE);
+                            showNoAccountConfigured();
+                            return;
                         }
 
                         if ((core.getDefaultProxyConfig() != null
@@ -152,6 +150,8 @@ public class StatusBarFragment extends Fragment {
             ProxyConfig lpc = core.getDefaultProxyConfig();
             if (lpc != null) {
                 mListener.onRegistrationStateChanged(core, lpc, lpc.getState(), null);
+            } else {
+                showNoAccountConfigured();
             }
         } else {
             mStatusText.setVisibility(View.VISIBLE);
@@ -178,10 +178,14 @@ public class StatusBarFragment extends Fragment {
             mVoicemailCount.setVisibility(View.VISIBLE);
 
             if (core.getProxyConfigList().length == 0) {
-                mStatusLed.setImageResource(R.drawable.led_disconnected);
-                mStatusText.setText(getString(R.string.no_account));
+                showNoAccountConfigured();
             }
         }
+    }
+
+    private void showNoAccountConfigured() {
+        mStatusLed.setImageResource(R.drawable.led_disconnected);
+        mStatusText.setText(getString(R.string.no_account));
     }
 
     private int getStatusIconResource(RegistrationState state) {
