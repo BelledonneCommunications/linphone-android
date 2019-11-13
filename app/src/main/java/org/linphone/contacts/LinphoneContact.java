@@ -352,9 +352,10 @@ public class LinphoneContact extends AndroidContact
             if (mFriend.getVcard() != null) {
                 mFriend.getVcard().setFamilyName(mLastName);
                 mFriend.getVcard().setGivenName(mFirstName);
-            }
-            if (mOrganization != null) {
-                mFriend.getVcard().setOrganization(mOrganization);
+
+                if (mOrganization != null) {
+                    mFriend.getVcard().setOrganization(mOrganization);
+                }
             }
 
             if (!created) {
