@@ -79,21 +79,6 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
     protected AsyncContactsData doInBackground(Void... params) {
         Log.i("[Contacts Manager] Background synchronization started");
 
-        String selection = null;
-        if (mContext.getResources().getBoolean(R.bool.fetch_contacts_from_default_directory)) {
-            Log.i("[Contacts Manager] Only fetching contacts in default directory");
-            selection = ContactsContract.Data.IN_DEFAULT_DIRECTORY + " == 1";
-        }
-
-        Cursor c =
-                mContext.getContentResolver()
-                        .query(
-                                ContactsContract.Data.CONTENT_URI,
-                                PROJECTION,
-                                selection,
-                                null,
-                                null);
-
         HashMap<String, LinphoneContact> androidContactsCache = new HashMap<>();
         AsyncContactsData data = new AsyncContactsData();
         List<String> nativeIds = new ArrayList<>();
@@ -110,9 +95,12 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
                     }
 
                     LinphoneContact contact = (LinphoneContact) friend.getUserData();
+                    // A previously fetched friend from rc file will have a user data,
+                    // so the next fetches won't add it in data.contacts
+                    // and thus the "new friends" count in log will be different /!\
                     if (contact != null) {
-                        contact.clearAddresses();
                         if (contact.getAndroidId() != null) {
+                            contact.clearAddresses();
                             androidContactsCache.put(contact.getAndroidId(), contact);
                             nativeIds.add(contact.getAndroidId());
                         }
@@ -134,35 +122,51 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
             }
         }
 
-        if (c != null) {
-            Log.i("[Contacts Manager] Found " + c.getCount() + " entries in cursor");
-            while (c.moveToNext()) {
-                if (isCancelled()) {
-                    Log.w("[Contacts Manager] Task cancelled");
-                    return data;
-                }
-
-                String id = c.getString(c.getColumnIndex(ContactsContract.Data.CONTACT_ID));
-                boolean starred =
-                        c.getInt(c.getColumnIndex(ContactsContract.Contacts.STARRED)) == 1;
-
-                LinphoneContact contact = androidContactsCache.get(id);
-                if (contact == null) {
-                    Log.d(
-                            "[Contacts Manager] Creating LinphoneContact with native ID "
-                                    + id
-                                    + ", favorite flag is "
-                                    + starred);
-                    nativeIds.add(id);
-                    contact = new LinphoneContact();
-                    contact.setAndroidId(id);
-                    contact.setIsFavourite(starred);
-                    androidContactsCache.put(id, contact);
-                }
-
-                contact.syncValuesFromAndroidCusor(c);
+        if (ContactsManager.getInstance().hasReadContactsAccess()) {
+            String selection = null;
+            if (mContext.getResources().getBoolean(R.bool.fetch_contacts_from_default_directory)) {
+                Log.i("[Contacts Manager] Only fetching contacts in default directory");
+                selection = ContactsContract.Data.IN_DEFAULT_DIRECTORY + " == 1";
             }
-            c.close();
+
+            Cursor c =
+                    mContext.getContentResolver()
+                            .query(
+                                    ContactsContract.Data.CONTENT_URI,
+                                    PROJECTION,
+                                    selection,
+                                    null,
+                                    null);
+            if (c != null) {
+                Log.i("[Contacts Manager] Found " + c.getCount() + " entries in cursor");
+                while (c.moveToNext()) {
+                    if (isCancelled()) {
+                        Log.w("[Contacts Manager] Task cancelled");
+                        return data;
+                    }
+
+                    String id = c.getString(c.getColumnIndex(ContactsContract.Data.CONTACT_ID));
+                    boolean starred =
+                            c.getInt(c.getColumnIndex(ContactsContract.Contacts.STARRED)) == 1;
+
+                    LinphoneContact contact = androidContactsCache.get(id);
+                    if (contact == null) {
+                        Log.d(
+                                "[Contacts Manager] Creating LinphoneContact with native ID "
+                                        + id
+                                        + ", favorite flag is "
+                                        + starred);
+                        nativeIds.add(id);
+                        contact = new LinphoneContact();
+                        contact.setAndroidId(id);
+                        contact.setIsFavourite(starred);
+                        androidContactsCache.put(id, contact);
+                    }
+
+                    contact.syncValuesFromAndroidCusor(c);
+                }
+                c.close();
+            }
 
             FriendList[] friendLists = core.getFriendsLists();
             for (FriendList list : friendLists) {
@@ -188,7 +192,13 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
         }
 
         Collection<LinphoneContact> contacts = androidContactsCache.values();
-        Log.i("[Contacts Manager] Found " + contacts.size() + " contacts");
+        // New friends count will be 0 after the first contacts fetch
+        Log.i(
+                "[Contacts Manager] Found "
+                        + contacts.size()
+                        + " native contacts plus "
+                        + data.contacts.size()
+                        + " new friends in the configuration file");
         for (LinphoneContact contact : contacts) {
             if (isCancelled()) {
                 Log.w("[Contacts Manager] Task cancelled");
