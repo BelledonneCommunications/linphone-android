@@ -53,6 +53,7 @@ import org.linphone.core.Call;
 import org.linphone.core.Call.State;
 import org.linphone.core.ConfiguringState;
 import org.linphone.core.Core;
+import org.linphone.core.CoreListener;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.Factory;
 import org.linphone.core.FriendList;
@@ -163,7 +164,7 @@ public class LinphoneManager implements SensorEventListener {
                     @Override
                     public void onGlobalStateChanged(
                             final Core core, final GlobalState state, final String message) {
-                        Log.i("New global state [", state, "]");
+                        Log.i("[Manager] New global state [", state, "]");
                         if (state == GlobalState.On) {
                             try {
                                 initLiblinphone(core);
@@ -429,7 +430,7 @@ public class LinphoneManager implements SensorEventListener {
         }
     }
 
-    public synchronized void startLibLinphone(boolean isPush) {
+    public synchronized void startLibLinphone(boolean isPush, CoreListener listener) {
         try {
             mCore =
                     Factory.instance()
@@ -437,6 +438,7 @@ public class LinphoneManager implements SensorEventListener {
                                     mPrefs.getLinphoneDefaultConfig(),
                                     mPrefs.getLinphoneFactoryConfig(),
                                     mContext);
+            mCore.addListener(listener);
             mCore.addListener(mCoreListener);
 
             if (isPush) {

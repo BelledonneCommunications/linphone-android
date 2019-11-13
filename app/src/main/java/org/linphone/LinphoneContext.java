@@ -26,12 +26,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.provider.ContactsContract;
+import java.util.ArrayList;
 import org.linphone.call.CallActivity;
 import org.linphone.call.CallIncomingActivity;
 import org.linphone.call.CallOutgoingActivity;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.core.Call;
+import org.linphone.core.ConfiguringState;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.Factory;
@@ -79,6 +81,7 @@ public class LinphoneContext {
     private LinphoneManager mLinphoneManager;
     private ContactsManager mContactsManager;
     private Class<? extends Activity> mIncomingReceivedActivity = CallIncomingActivity.class;
+    private final ArrayList<CoreReloadedListener> mCoreReloadedListeners;
 
     public static boolean isReady() {
         return sInstance != null;
@@ -90,6 +93,7 @@ public class LinphoneContext {
 
     public LinphoneContext(Context context) {
         mContext = context;
+        mCoreReloadedListeners = new ArrayList<>();
 
         LinphonePreferences.instance().setContext(context);
         Factory.instance().setLogCollectionPath(context.getFilesDir().getAbsolutePath());
@@ -115,8 +119,22 @@ public class LinphoneContext {
         mListener =
                 new CoreListenerStub() {
                     @Override
+                    public void onConfiguringStatus(
+                            Core core, ConfiguringState status, String message) {
+                        Log.i("[Context] Configuring state is [" + status.toString() + "]");
+
+                        if (status == ConfiguringState.Successful) {
+                            for (CoreReloadedListener listener : mCoreReloadedListeners) {
+                                listener.onCoreReloaded();
+                            }
+                        }
+                    }
+
+                    @Override
                     public void onCallStateChanged(
                             Core core, Call call, Call.State state, String message) {
+                        Log.i("[Context] Call state is [" + state.toString() + "]");
+
                         if (mContext.getResources().getBoolean(R.bool.enable_call_notification)) {
                             mNotificationManager.displayCallNotification(call);
                         }
@@ -161,8 +179,7 @@ public class LinphoneContext {
 
     public void start(boolean isPush) {
         Log.i("[Context] Starting");
-        mLinphoneManager.startLibLinphone(isPush);
-        LinphoneManager.getCore().addListener(mListener);
+        mLinphoneManager.startLibLinphone(isPush, mListener);
 
         mNotificationManager.onCoreReady();
 
@@ -176,6 +193,7 @@ public class LinphoneContext {
         if (mContactsManager.hasReadContactsAccess()) {
             mContactsManager.enableContactsAccess();
         }
+
         mContactsManager.initializeContactManager();
     }
 
@@ -236,6 +254,14 @@ public class LinphoneContext {
         return mContactsManager;
     }
 
+    public void addCoreReloadedListener(CoreReloadedListener listener) {
+        mCoreReloadedListeners.add(listener);
+    }
+
+    public void removeCoreReloadedListener(CoreReloadedListener listener) {
+        mCoreReloadedListeners.remove(listener);
+    }
+
     /* Log device related information */
 
     private void dumpDeviceInformation() {
@@ -284,5 +310,9 @@ public class LinphoneContext {
         // This flag is required to start an Activity from a Service context
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mContext.startActivity(intent);
+    }
+
+    public interface CoreReloadedListener {
+        void onCoreReloaded();
     }
 }
