@@ -35,6 +35,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
@@ -51,7 +52,8 @@ public class HistoryFragment extends Fragment
                 OnItemClickListener,
                 HistoryViewHolder.ClickListener,
                 ContactsUpdatedListener,
-                SelectableHelper.DeleteListener {
+                SelectableHelper.DeleteListener,
+                LinphoneContext.CoreReloadedListener {
     private RecyclerView mHistoryList;
     private TextView mNoCallHistory, mNoMissedCallHistory;
     private ImageView mMissedCalls, mAllCalls;
@@ -101,19 +103,16 @@ public class HistoryFragment extends Fragment
     public void onResume() {
         super.onResume();
         ContactsManager.getInstance().addContactsListener(this);
+        LinphoneContext.instance().addCoreReloadedListener(this);
 
-        mLogs = Arrays.asList(LinphoneManager.getCore().getCallLogs());
-        hideHistoryListAndDisplayMessageIfEmpty();
-        mHistoryAdapter =
-                new HistoryAdapter((HistoryActivity) getActivity(), mLogs, this, mSelectionHelper);
-        mHistoryList.setAdapter(mHistoryAdapter);
-        mSelectionHelper.setAdapter(mHistoryAdapter);
-        mSelectionHelper.setDialogMessage(R.string.call_log_delete_dialog);
+        reloadData();
     }
 
     @Override
     public void onPause() {
         ContactsManager.getInstance().removeContactsListener(this);
+        LinphoneContext.instance().removeCoreReloadedListener(this);
+
         super.onPause();
     }
 
@@ -123,6 +122,11 @@ public class HistoryFragment extends Fragment
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void onCoreReloaded() {
+        reloadData();
     }
 
     @Override
@@ -216,6 +220,16 @@ public class HistoryFragment extends Fragment
         } else {
             ((HistoryActivity) getActivity()).showEmptyChildFragment();
         }
+    }
+
+    private void reloadData() {
+        mLogs = Arrays.asList(LinphoneManager.getCore().getCallLogs());
+        hideHistoryListAndDisplayMessageIfEmpty();
+        mHistoryAdapter =
+                new HistoryAdapter((HistoryActivity) getActivity(), mLogs, this, mSelectionHelper);
+        mHistoryList.setAdapter(mHistoryAdapter);
+        mSelectionHelper.setAdapter(mHistoryAdapter);
+        mSelectionHelper.setDialogMessage(R.string.call_log_delete_dialog);
     }
 
     private void removeNotMissedCallsFromLogs() {

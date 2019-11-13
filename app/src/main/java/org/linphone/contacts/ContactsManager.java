@@ -55,7 +55,8 @@ import org.linphone.core.ProxyConfig;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 
-public class ContactsManager extends ContentObserver implements FriendListListener {
+public class ContactsManager extends ContentObserver
+        implements FriendListListener, LinphoneContext.CoreReloadedListener {
     private List<LinphoneContact> mContacts, mSipContacts;
     private final ArrayList<ContactsUpdatedListener> mContactsUpdatedListeners;
     private MagicSearch mMagicSearch;
@@ -79,6 +80,8 @@ public class ContactsManager extends ContentObserver implements FriendListListen
             mMagicSearch = LinphoneManager.getCore().createMagicSearch();
             mMagicSearch.setLimitedSearch(false); // Do not limit the number of results
         }
+
+        LinphoneContext.instance().addCoreReloadedListener(this);
     }
 
     public void addContactsListener(ContactsUpdatedListener listener) {
@@ -104,6 +107,12 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         fetchContactsAsync();
     }
 
+    @Override
+    public void onCoreReloaded() {
+        Log.i("[Contacts Manager] Core has been reloaded, fetch contacts from RC just in case");
+        fetchLinphoneRcContactsOnlyAsync();
+    }
+
     public synchronized List<LinphoneContact> getContacts() {
         return mContacts;
     }
@@ -122,6 +131,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
 
     public void destroy() {
         mContext.getContentResolver().unregisterContentObserver(this);
+        LinphoneContext.instance().removeCoreReloadedListener(this);
 
         if (mLoadContactTask != null) {
             mLoadContactTask.cancel(true);
@@ -149,11 +159,13 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         if (mLoadContactTask != null) {
             mLoadContactTask.cancel(true);
         }
+
         if (!hasReadContactsAccess()) {
             Log.w("[Contacts Manager] Can't fetch contact without READ permission");
             return;
         }
-        mLoadContactTask = new AsyncContactsLoader(mContext);
+
+        mLoadContactTask = new AsyncContactsLoader(mContext, false);
         mContactsFetchedOnce = true;
         mLoadContactTask.executeOnExecutor(THREAD_POOL_EXECUTOR);
     }
@@ -506,6 +518,16 @@ public class ContactsManager extends ContentObserver implements FriendListListen
     public String getString(int resourceID) {
         if (mContext == null) return null;
         return mContext.getString(resourceID);
+    }
+
+    private void fetchLinphoneRcContactsOnlyAsync() {
+        if (mLoadContactTask != null) {
+            mLoadContactTask.cancel(false);
+        }
+
+        mLoadContactTask = new AsyncContactsLoader(mContext, true);
+        mContactsFetchedOnce = true;
+        mLoadContactTask.executeOnExecutor(THREAD_POOL_EXECUTOR);
     }
 
     @Override
