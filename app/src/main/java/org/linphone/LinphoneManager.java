@@ -51,12 +51,11 @@ import org.linphone.core.AccountCreator;
 import org.linphone.core.AccountCreatorListenerStub;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
-import org.linphone.core.ConfiguringState;
 import org.linphone.core.Core;
+import org.linphone.core.CoreListener;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.Factory;
 import org.linphone.core.FriendList;
-import org.linphone.core.GlobalState;
 import org.linphone.core.PresenceActivity;
 import org.linphone.core.PresenceBasicStatus;
 import org.linphone.core.PresenceModel;
@@ -160,37 +159,6 @@ public class LinphoneManager implements SensorEventListener {
 
         mCoreListener =
                 new CoreListenerStub() {
-                    @Override
-                    public void onGlobalStateChanged(
-                            final Core core, final GlobalState state, final String message) {
-                        Log.i("New global state [", state, "]");
-                        if (state == GlobalState.On) {
-                            try {
-                                initLiblinphone(core);
-                            } catch (IllegalArgumentException iae) {
-                                Log.e(
-                                        "[Manager] Global State Changed Illegal Argument Exception: "
-                                                + iae);
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onConfiguringStatus(
-                            Core core, ConfiguringState state, String message) {
-                        Log.d(
-                                "[Manager] Remote provisioning status = "
-                                        + state.toString()
-                                        + " ("
-                                        + message
-                                        + ")");
-
-                        LinphonePreferences prefs = LinphonePreferences.instance();
-                        if (state == ConfiguringState.Successful) {
-                            prefs.setPushNotificationEnabled(prefs.isPushNotificationEnabled());
-                        }
-                    }
-
                     @SuppressLint("Wakelock")
                     @Override
                     public void onCallStateChanged(
@@ -198,7 +166,7 @@ public class LinphoneManager implements SensorEventListener {
                             final Call call,
                             final State state,
                             final String message) {
-                        Log.i("[Manager] New call state [", state, "]");
+                        Log.i("[Manager] Call state is [", state, "]");
                         if (state == State.IncomingReceived
                                 && !call.equals(core.getCurrentCall())) {
                             if (call.getReplacedCall() != null) {
@@ -429,7 +397,7 @@ public class LinphoneManager implements SensorEventListener {
         }
     }
 
-    public synchronized void startLibLinphone(boolean isPush) {
+    public synchronized void startLibLinphone(boolean isPush, CoreListener listener) {
         try {
             mCore =
                     Factory.instance()
@@ -437,6 +405,7 @@ public class LinphoneManager implements SensorEventListener {
                                     mPrefs.getLinphoneDefaultConfig(),
                                     mPrefs.getLinphoneFactoryConfig(),
                                     mContext);
+            mCore.addListener(listener);
             mCore.addListener(mCoreListener);
 
             if (isPush) {
@@ -466,6 +435,8 @@ public class LinphoneManager implements SensorEventListener {
             /*use schedule instead of scheduleAtFixedRate to avoid iterate from being call in burst after cpu wake up*/
             mTimer = new Timer("Linphone scheduler");
             mTimer.schedule(lTask, 0, 20);
+
+            initLiblinphone(mCore);
         } catch (Exception e) {
             Log.e(e, "[Manager] Cannot start linphone");
         }
