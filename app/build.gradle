@@ -73,8 +73,7 @@ excludePackage.add('**/LICENSE.txt')
 
 repositories {
     maven {
-        // Replace snapshots by releases for releases !
-        url "https://linphone.org/releases/maven_repository"
+        url "https://linphone.org/maven_repository"
     }
 }
 
