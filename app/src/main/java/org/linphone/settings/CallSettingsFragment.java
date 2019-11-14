@@ -167,8 +167,15 @@ public class CallSettingsFragment extends SettingsFragment {
                     @Override
                     public void onListValueChanged(int position, String newLabel, String newValue) {
                         try {
-                            mPrefs.setMediaEncryption(
-                                    MediaEncryption.fromInt(Integer.parseInt(newValue)));
+                            MediaEncryption encryption =
+                                    MediaEncryption.fromInt(Integer.parseInt(newValue));
+                            mPrefs.setMediaEncryption(encryption);
+
+                            if (encryption == MediaEncryption.None) {
+                                mMediaEncryptionMandatory.setChecked(false);
+                            }
+                            mMediaEncryptionMandatory.setEnabled(
+                                    encryption != MediaEncryption.None);
                         } catch (NumberFormatException nfe) {
                             Log.e(nfe);
                         }
@@ -248,7 +255,8 @@ public class CallSettingsFragment extends SettingsFragment {
         mDndPermissionSettings.setVisibility(
                 Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60) ? View.VISIBLE : View.GONE);
 
-        mMediaEncryptionMandatory.setChecked(mPrefs.acceptMediaEncryptionMandatory());
+        mMediaEncryptionMandatory.setChecked(mPrefs.isMediaEncryptionMandatory());
+        mMediaEncryptionMandatory.setEnabled(mPrefs.getMediaEncryption() != MediaEncryption.None);
 
         setListeners();
     }
