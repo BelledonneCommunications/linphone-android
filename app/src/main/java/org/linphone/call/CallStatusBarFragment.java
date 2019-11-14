@@ -288,9 +288,19 @@ public class CallStatusBarFragment extends Fragment {
 
     public void refreshStatusItems(final Call call) {
         if (call != null) {
-            MediaEncryption mediaEncryption = call.getCurrentParams().getMediaEncryption();
+            if (call.getDir() == Call.Dir.Incoming
+                    && call.getState() == Call.State.IncomingReceived
+                    && LinphonePreferences.instance().isMediaEncryptionMandatory()) {
+                // If the incoming call view is displayed while encryption is mandatory,
+                // we can safely show the security_ok icon
+                mEncryption.setImageResource(R.drawable.security_ok);
+                mEncryption.setVisibility(View.VISIBLE);
+                return;
+            }
 
+            MediaEncryption mediaEncryption = call.getCurrentParams().getMediaEncryption();
             mEncryption.setVisibility(View.VISIBLE);
+
             if (mediaEncryption == MediaEncryption.SRTP
                     || (mediaEncryption == MediaEncryption.ZRTP
                             && call.getAuthenticationTokenVerified())

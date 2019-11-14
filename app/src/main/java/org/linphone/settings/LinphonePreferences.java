@@ -459,7 +459,7 @@ public class LinphonePreferences {
     // End of contact settings
 
     // Call settings
-    public boolean acceptMediaEncryptionMandatory() {
+    public boolean isMediaEncryptionMandatory() {
         return getLc().isMediaEncryptionMandatory();
     }
 
