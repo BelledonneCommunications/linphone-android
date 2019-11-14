@@ -1136,6 +1136,7 @@ public class LinphonePreferences {
 
     public boolean isDarkModeEnabled() {
         if (getConfig() == null) return false;
+        if (!mContext.getResources().getBoolean(R.bool.allow_dark_mode)) return false;
 
         boolean useNightModeDefault =
                 AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES;

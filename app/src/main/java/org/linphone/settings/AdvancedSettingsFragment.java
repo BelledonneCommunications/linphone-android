@@ -83,6 +83,8 @@ public class AdvancedSettingsFragment extends SettingsFragment {
         mStartAtBoot = mRootView.findViewById(R.id.pref_autostart);
 
         mDarkMode = mRootView.findViewById(R.id.pref_dark_mode);
+        mDarkMode.setVisibility(
+                getResources().getBoolean(R.bool.allow_dark_mode) ? View.VISIBLE : View.GONE);
 
         mRemoteProvisioningUrl = mRootView.findViewById(R.id.pref_remote_provisioning);
         mRemoteProvisioningUrl.setInputType(
