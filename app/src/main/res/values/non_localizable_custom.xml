@@ -132,6 +132,9 @@
     <integer name="notification_ms_on">1000</integer>
     <integer name="notification_ms_off">7000</integer>
 
+    <!-- Only for Android >= 23 -->
+    <bool name="keep_missed_call_notification_upon_restart">false</bool>
+
     <!-- Inapp -->
     <bool name="enable_in_app_purchase">false</bool>
     <!-- Notification shown before end of trial version in days -->

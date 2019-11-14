@@ -29,6 +29,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.service.notification.StatusBarNotification;
 import java.io.File;
 import java.util.HashMap;
 import org.linphone.LinphoneManager;
@@ -84,7 +85,19 @@ public class NotificationsManager {
         mCurrentChatRoomAddress = null;
 
         mNM = (NotificationManager) mContext.getSystemService(NOTIFICATION_SERVICE);
-        mNM.cancelAll();
+
+        if (mContext.getResources().getBoolean(R.bool.keep_missed_call_notification_upon_restart)) {
+            StatusBarNotification[] notifs = Compatibility.getActiveNotifications(mNM);
+            if (notifs != null && notifs.length > 1) {
+                for (StatusBarNotification notif : notifs) {
+                    if (notif.getId() != MISSED_CALLS_NOTIF_ID) {
+                        dismissNotification(notif.getId());
+                    }
+                }
+            }
+        } else {
+            mNM.cancelAll();
+        }
 
         mLastNotificationId = 5; // Do not conflict with hardcoded notifications ids !
 
