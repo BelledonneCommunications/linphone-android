@@ -76,7 +76,7 @@ class ApiTwentySixPlus {
         CharSequence name = context.getString(R.string.content_title_notification_service);
         String description = context.getString(R.string.content_title_notification_service);
         NotificationChannel channel =
-                new NotificationChannel(id, name, NotificationManager.IMPORTANCE_NONE);
+                new NotificationChannel(id, name, NotificationManager.IMPORTANCE_LOW);
         channel.setDescription(description);
         channel.enableVibration(false);
         channel.enableLights(false);
