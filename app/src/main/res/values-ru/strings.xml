@@ -450,8 +450,8 @@
   <string name="pref_auto_download_always">Всегда</string>
   <string name="pref_auto_download_under_size">Если он легче максимального размера</string>
   <string name="pref_android_app_hide_empty_chat_rooms_title">Скрыть пустые чаты</string>
-  <string name="pref_android_app_hide_chat_rooms_from_removed_proxies_title">Скрыть чаты из удалённых настроек прокси</string>
-  <string name="pref_android_app_hide_chat_rooms_from_removed_proxies_desc">Если у вас есть отсутствующие чаты, то попробуйте снять этот флажок</string>
+  <string name="pref_android_app_hide_chat_rooms_from_removed_proxies_title">Скрыть чаты из удаленных настроек прокси</string>
+  <string name="pref_android_app_hide_chat_rooms_from_removed_proxies_desc">Если у вас есть отсутствующие чаты, попробуйте снять флажок с этого параметра.</string>
   <!--Network settings-->
   <string name="pref_network_title">Сеть</string>
   <string name="pref_wifi_only">Использовать только WiFi</string>
