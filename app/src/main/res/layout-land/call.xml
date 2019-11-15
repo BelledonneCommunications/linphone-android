@@ -109,6 +109,7 @@
                 android:id="@+id/buttons"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="40dp"
                 android:gravity="bottom">
 
                 <!-- This is a better way of splitting screen 50/50 than using weights -->
@@ -119,28 +120,29 @@
                     android:layout_centerHorizontal="true" />
 
                 <include layout="@layout/call_primary_buttons"
+                    android:id="@+id/call_primary_buttons"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:layout_alignParentBottom="true"
                     android:layout_toLeftOf="@id/vertical_divider" />
 
                 <include layout="@layout/call_secondary_buttons"
+                    android:id="@+id/call_secondary_buttons"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_toRightOf="@id/vertical_divider" />
 
-            </RelativeLayout>
+                <ViewStub
+                    android:id="@+id/numpad"
+                    android:inflatedId="@+id/numpad"
+                    android:layout="@layout/numpad"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:layout_above="@id/call_primary_buttons"
+                    android:background="@color/toolbar_color" />
 
-            <ViewStub
-                android:id="@+id/numpad"
-                android:inflatedId="@+id/numpad"
-                android:layout="@layout/numpad"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:background="@color/toolbar_color" />
+            </RelativeLayout>
 
         </RelativeLayout>
 
