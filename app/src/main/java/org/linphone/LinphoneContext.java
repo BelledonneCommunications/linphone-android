@@ -42,7 +42,9 @@ import org.linphone.core.tools.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.notifications.NotificationsManager;
 import org.linphone.settings.LinphonePreferences;
+import org.linphone.utils.DeviceUtils;
 import org.linphone.utils.LinphoneUtils;
+import org.linphone.utils.PushNotificationUtils;
 
 public class LinphoneContext {
     private static LinphoneContext sInstance = null;
@@ -157,6 +159,23 @@ public class LinphoneContext {
 
         mLinphoneManager = new LinphoneManager(context);
         mNotificationManager = new NotificationsManager(context);
+
+        if (DeviceUtils.isAppUserRestricted(mContext)) {
+            // See https://firebase.google.com/docs/cloud-messaging/android/receive#restricted
+            Log.w(
+                    "[Main Activity] Device has been restricted by user (Android 9+), push notifications won't work !");
+        }
+
+        int bucket = DeviceUtils.getAppStandbyBucket(mContext);
+        if (bucket > 0) {
+            Log.w(
+                    "[Main Activity] Device is in bucket "
+                            + Compatibility.getAppStandbyBucketNameFromValue(bucket));
+        }
+
+        if (!PushNotificationUtils.isAvailable(mContext)) {
+            Log.w("[Main Activity] Push notifications won't work !");
+        }
     }
 
     public void start(boolean isPush) {
