@@ -243,6 +243,7 @@
   <string name="download_file">Scarica</string>
   <string name="toast_choose_chat_room_for_sharing">Scegli una conversazione o creane una nuova</string>
   <string name="trust_denied">Il trust è stato negato. Effettua una chiamata per avviare nuovamente la procedura di autenticazione.</string>
+  <string name="cant_open_file_no_app_found">Impossibile aprire il file, nessuna applicazione disponibile per questo formato.</string>
   <!--Status Bar-->
   <string name="status_connected">Connesso</string>
   <string name="status_not_connected">Non connesso</string>
@@ -286,7 +287,9 @@
   <string name="call_stats_jitter_buffer">Buffer jitter:</string>
   <string name="call_stats_encoder_name">Encoder:</string>
   <string name="call_stats_decoder_name">Decoder:</string>
+  <string name="call_stats_player_filter">Filtro di riproduzione:</string>
   <string name="call_stats_display_filter">Filtro di visualizzazione:</string>
+  <string name="call_stats_capture_filter">Filtro di acquisizione:</string>
   <string name="call">Chiamata</string>
   <string name="call_log_delete_dialog">Vuoi cancellare il registro delle chiamate selezionate?</string>
   <!--Recordings-->
@@ -366,6 +369,9 @@
   <string name="pref_tunnel_title">Tunnel</string>
   <string name="pref_tunnel_host">Nome host</string>
   <string name="pref_tunnel_port">Porta</string>
+  <string name="pref_tunnel_dual_mode">Abilita modalità doppia</string>
+  <string name="pref_tunnel_host_2">Nome host (2° server per la modalità doppia)</string>
+  <string name="pref_tunnel_port_2">Porta (2° server per la modalità doppia)</string>
   <string name="pref_tunnel_mode">Modalità</string>
   <!--do not change order without changing corresponding entry_values in non_localizable_strings.xml-->
   <string-array name="tunnel_mode_entries">
@@ -394,6 +400,7 @@
   <string name="pref_codecs">Codec</string>
   <!--Video settings-->
   <string name="pref_video_title">Video</string>
+  <string name="pref_video_camera_device">Fotocamera</string>
   <string name="pref_overlay">Sovrapposizione video</string>
   <string name="pref_overlay_summary">Mostra video di chiamata sul display quando ci si trova all\'esterno dell\'applicazione</string>
   <string name="pref_video_use_front_camera_title">Usa la fotocamera frontale</string>
@@ -442,6 +449,8 @@
   <string name="pref_auto_download_disabled">Mai</string>
   <string name="pref_auto_download_always">Sempre</string>
   <string name="pref_auto_download_under_size">Se minore della grandezza massima</string>
+  <string name="pref_android_app_hide_empty_chat_rooms_title">Nascondi chat room vuote</string>
+  <string name="pref_android_app_hide_chat_rooms_from_removed_proxies_desc">Se mancano le chat room, prova a deselezionare questa impostazione</string>
   <!--Network settings-->
   <string name="pref_network_title">Rete</string>
   <string name="pref_wifi_only">Usa solo Wi-Fi</string>

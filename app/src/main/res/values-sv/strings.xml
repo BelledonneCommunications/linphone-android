@@ -243,6 +243,7 @@
   <string name="download_file">Ladda ner</string>
   <string name="toast_choose_chat_room_for_sharing">Välj en konversation eller skapa en ny</string>
   <string name="trust_denied">Förtroende har nekats. Ring ett samtal för att starta autentiseringsprocessen igen.</string>
+  <string name="cant_open_file_no_app_found">Kan inte öppna filen, inget program tillgängligt för detta format.</string>
   <!--Status Bar-->
   <string name="status_connected">Ansluten</string>
   <string name="status_not_connected">Inte ansluten</string>
@@ -286,6 +287,7 @@
   <string name="call_stats_jitter_buffer">Jitterbuffert:</string>
   <string name="call_stats_encoder_name">Kodare:</string>
   <string name="call_stats_decoder_name">Avkodare:</string>
+  <string name="call_stats_player_filter">Spelarfilter:</string>
   <string name="call_stats_display_filter">Visningsfilter:</string>
   <string name="call">Ring</string>
   <string name="call_log_delete_dialog">Vill du ta bort de valda samtalsloggarna?</string>
@@ -394,6 +396,7 @@
   <string name="pref_codecs">Kodek</string>
   <!--Video settings-->
   <string name="pref_video_title">Video</string>
+  <string name="pref_video_camera_device">Kamera</string>
   <string name="pref_overlay">Videoöverlagring</string>
   <string name="pref_overlay_summary">Visningsvideo i överlagring när det är utanför applikationen</string>
   <string name="pref_video_use_front_camera_title">Använd front-kamera</string>
@@ -407,6 +410,8 @@
   <string name="pref_bandwidth_limit">Bandbreddsgräns i kbit/s</string>
   <string name="pref_video_codecs_title">Kodek</string>
   <!--Contact settings-->
+  <string name="pref_contact_sync_title">Närvaroinformation i lokal kontakt</string>
+  <string name="pref_contact_sync_subtitle">Infogar informationsgenvägar från Linphone-kontakten i lokala Android-kontakter</string>
   <string name="pref_contact_title">Kontakt</string>
   <string name="pref_contact_display_contact_organization_title">Visa kontaktorganisation</string>
   <!--Call settings-->
