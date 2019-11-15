@@ -306,13 +306,13 @@ public class CallActivity extends LinphoneGenericActivity
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        findViewById(R.id.numpad)
-                                .setVisibility(
-                                        findViewById(R.id.numpad).getVisibility() == View.VISIBLE
-                                                ? View.GONE
-                                                : View.VISIBLE);
+                        View numpad = findViewById(R.id.numpad);
+                        boolean isNumpadVisible = numpad.getVisibility() == View.VISIBLE;
+                        numpad.setVisibility(isNumpadVisible ? View.GONE : View.VISIBLE);
+                        v.setSelected(!isNumpadVisible);
                     }
                 });
+        numpadButton.setSelected(false);
 
         ImageView hangUp = findViewById(R.id.hang_up);
         hangUp.setOnClickListener(
