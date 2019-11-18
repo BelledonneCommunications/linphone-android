@@ -72,17 +72,18 @@ public class AccountConnectionAssistantActivity extends AssistantActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        AccountCreator accountCreator = getAccountCreator();
                         mConnect.setEnabled(false);
 
                         if (mUsernameConnectionSwitch.isChecked()) {
-                            mAccountCreator.setUsername(mUsername.getText().toString());
-                            mAccountCreator.setPassword(mPassword.getText().toString());
+                            accountCreator.setUsername(mUsername.getText().toString());
+                            accountCreator.setPassword(mPassword.getText().toString());
 
                             createProxyConfigAndLeaveAssistant();
                         } else {
-                            mAccountCreator.setUsername(mPhoneNumber.getText().toString());
+                            accountCreator.setUsername(mPhoneNumber.getText().toString());
 
-                            AccountCreator.Status status = mAccountCreator.recoverAccount();
+                            AccountCreator.Status status = accountCreator.recoverAccount();
                             if (status != AccountCreator.Status.RequestOk) {
                                 Log.e(
                                         "[Account Connection Assistant] recoverAccount returned "
@@ -221,18 +222,18 @@ public class AccountConnectionAssistantActivity extends AssistantActivity {
                         }
                     }
                 };
-
-        Core core = LinphoneManager.getCore();
-        if (core != null) {
-            reloadLinphoneAccountCreatorConfig();
-        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        mAccountCreator.addListener(mListener);
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            reloadLinphoneAccountCreatorConfig();
+        }
+
+        getAccountCreator().addListener(mListener);
 
         DialPlan dp = getDialPlanForCurrentCountry();
         displayDialPlan(dp);
@@ -246,7 +247,7 @@ public class AccountConnectionAssistantActivity extends AssistantActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        mAccountCreator.removeListener(mListener);
+        getAccountCreator().removeListener(mListener);
     }
 
     @Override
