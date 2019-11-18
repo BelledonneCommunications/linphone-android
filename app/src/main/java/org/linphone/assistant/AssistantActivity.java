@@ -21,19 +21,18 @@ package org.linphone.assistant;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import java.util.Locale;
 import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.activities.DialerActivity;
 import org.linphone.activities.LinphoneGenericActivity;
 import org.linphone.core.AccountCreator;
-import org.linphone.core.Config;
 import org.linphone.core.Core;
 import org.linphone.core.DialPlan;
 import org.linphone.core.Factory;
@@ -43,24 +42,10 @@ import org.linphone.settings.LinphonePreferences;
 
 public abstract class AssistantActivity extends LinphoneGenericActivity
         implements CountryPicker.CountryPickedListener {
-    static AccountCreator mAccountCreator;
-
     protected ImageView mBack;
     private AlertDialog mCountryPickerDialog;
 
     private CountryPicker mCountryPicker;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        if (mAccountCreator == null) {
-            String url = LinphonePreferences.instance().getXmlrpcUrl();
-            Core core = LinphoneManager.getCore();
-            core.loadConfigFromXml(LinphonePreferences.instance().getDefaultDynamicConfigFile());
-            mAccountCreator = core.createAccountCreator(url);
-        }
-    }
 
     @Override
     protected void onResume() {
@@ -105,18 +90,17 @@ public abstract class AssistantActivity extends LinphoneGenericActivity
         }
     }
 
+    public AccountCreator getAccountCreator() {
+        return LinphoneManager.getInstance().getAccountCreator();
+    }
+
     private void reloadAccountCreatorConfig(String path) {
         Core core = LinphoneManager.getCore();
         if (core != null) {
             core.loadConfigFromXml(path);
-            if (mAccountCreator != null) {
-                // Below two settings are applied to account creator when it is built.
-                // Reloading Core config after won't change the account creator configuration,
-                // hence the manual reload
-                Config config = LinphonePreferences.instance().getConfig();
-                mAccountCreator.setDomain(config.getString("assistant", "domain", null));
-                mAccountCreator.setAlgorithm(config.getString("assistant", "algorithm", null));
-            }
+            AccountCreator accountCreator = getAccountCreator();
+            accountCreator.reset();
+            accountCreator.setLanguage(Locale.getDefault().getLanguage());
         }
     }
 
@@ -131,28 +115,41 @@ public abstract class AssistantActivity extends LinphoneGenericActivity
     }
 
     void createProxyConfigAndLeaveAssistant() {
+        createProxyConfigAndLeaveAssistant(false);
+    }
+
+    void createProxyConfigAndLeaveAssistant(boolean isGenericAccount) {
         Core core = LinphoneManager.getCore();
         boolean useLinphoneDefaultValues =
-                getString(R.string.default_domain).equals(mAccountCreator.getDomain());
-        if (useLinphoneDefaultValues) {
-            Log.i("[Assistant] Default domain found, reloading configuration");
-            core.loadConfigFromXml(LinphonePreferences.instance().getLinphoneDynamicConfigFile());
-        } else {
-            Log.i("[Assistant] Third party domain found, keeping default values");
+                getString(R.string.default_domain).equals(getAccountCreator().getDomain());
+
+        if (isGenericAccount) {
+            if (useLinphoneDefaultValues) {
+                Log.i(
+                        "[Assistant] Default domain found for generic connection, reloading configuration");
+                core.loadConfigFromXml(
+                        LinphonePreferences.instance().getLinphoneDynamicConfigFile());
+            } else {
+                Log.i("[Assistant] Third party domain found, keeping default values");
+            }
         }
 
-        ProxyConfig proxyConfig = mAccountCreator.createProxyConfig();
+        ProxyConfig proxyConfig = getAccountCreator().createProxyConfig();
 
-        if (useLinphoneDefaultValues) {
-            // Restore default values
-            Log.i("[Assistant] Restoring default assistant configuration");
-            core.loadConfigFromXml(LinphonePreferences.instance().getDefaultDynamicConfigFile());
-        } else {
-            // If this isn't a sip.linphone.org account, disable push notifications and enable
-            // service notification, otherwise incoming calls won't work (most probably)
-            Log.w("[Assistant] Unknown domain used, push probably won't work, enable service mode");
-            LinphonePreferences.instance().setServiceNotificationVisibility(true);
-            LinphoneContext.instance().getNotificationManager().startForeground();
+        if (isGenericAccount) {
+            if (useLinphoneDefaultValues) {
+                // Restore default values
+                Log.i("[Assistant] Restoring default assistant configuration");
+                core.loadConfigFromXml(
+                        LinphonePreferences.instance().getDefaultDynamicConfigFile());
+            } else {
+                // If this isn't a sip.linphone.org account, disable push notifications and enable
+                // service notification, otherwise incoming calls won't work (most probably)
+                Log.w(
+                        "[Assistant] Unknown domain used, push probably won't work, enable service mode");
+                LinphonePreferences.instance().setServiceNotificationVisibility(true);
+                LinphoneContext.instance().getNotificationManager().startForeground();
+            }
         }
 
         if (proxyConfig == null) {
@@ -237,6 +234,9 @@ public abstract class AssistantActivity extends LinphoneGenericActivity
             case PhoneNumberOverused:
                 message = getString(R.string.phone_number_overuse);
                 break;
+            case AccountNotExist:
+                message = getString(R.string.account_doesnt_exist);
+                break;
             default:
                 message = getString(R.string.error_unknown);
                 break;
@@ -302,7 +302,7 @@ public abstract class AssistantActivity extends LinphoneGenericActivity
         }
 
         String phoneNumber = phoneNumberEditText.getText().toString();
-        return mAccountCreator.setPhoneNumber(phoneNumber, prefix);
+        return getAccountCreator().setPhoneNumber(phoneNumber, prefix);
     }
 
     String getErrorFromPhoneNumberStatus(int status) {

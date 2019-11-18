@@ -63,6 +63,7 @@ public class PhoneAccountLinkingAssistantActivity extends AssistantActivity {
             ProxyConfig[] proxyConfigs = core.getProxyConfigList();
             if (proxyConfigIndex >= 0 && proxyConfigIndex < proxyConfigs.length) {
                 ProxyConfig mProxyConfig = proxyConfigs[proxyConfigIndex];
+                AccountCreator accountCreator = getAccountCreator();
 
                 Address identity = mProxyConfig.getIdentityAddress();
                 if (identity == null) {
@@ -75,14 +76,15 @@ public class PhoneAccountLinkingAssistantActivity extends AssistantActivity {
                                     + mProxyConfig.getDomain());
                     unexpectedError();
                 }
-                mAccountCreator.setUsername(identity.getUsername());
+                accountCreator.setUsername(identity.getUsername());
 
                 AuthInfo authInfo = mProxyConfig.findAuthInfo();
                 if (authInfo == null) {
                     Log.e("[Account Linking Assistant] Auth info not found");
                     unexpectedError();
                 }
-                mAccountCreator.setHa1(authInfo.getHa1());
+                accountCreator.setHa1(authInfo.getHa1());
+                accountCreator.setAlgorithm((authInfo.getAlgorithm()));
             } else {
                 Log.e(
                         "[Account Linking Assistant] Proxy config index out of bounds: "
@@ -112,7 +114,7 @@ public class PhoneAccountLinkingAssistantActivity extends AssistantActivity {
                     public void onClick(View v) {
                         enableButtonsAndFields(false);
 
-                        AccountCreator.Status status = mAccountCreator.isAliasUsed();
+                        AccountCreator.Status status = getAccountCreator().isAliasUsed();
                         if (status != AccountCreator.Status.RequestOk) {
                             Log.e(
                                     "[Phone Account Linking Assistant] isAliasUsed returned "
@@ -184,7 +186,7 @@ public class PhoneAccountLinkingAssistantActivity extends AssistantActivity {
                                 "[Phone Account Linking Assistant] onIsAliasUsed status is "
                                         + status);
                         if (status.equals(AccountCreator.Status.AliasNotExist)) {
-                            status = mAccountCreator.linkAccount();
+                            status = getAccountCreator().linkAccount();
                             if (status != AccountCreator.Status.RequestOk) {
                                 Log.e(
                                         "[Phone Account Linking Assistant] linkAccount returned "
@@ -222,18 +224,18 @@ public class PhoneAccountLinkingAssistantActivity extends AssistantActivity {
                         }
                     }
                 };
-
-        Core core = LinphoneManager.getCore();
-        if (core != null) {
-            reloadLinphoneAccountCreatorConfig();
-        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        mAccountCreator.addListener(mListener);
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            reloadLinphoneAccountCreatorConfig();
+        }
+
+        getAccountCreator().addListener(mListener);
 
         DialPlan dp = getDialPlanForCurrentCountry();
         displayDialPlan(dp);
@@ -247,7 +249,7 @@ public class PhoneAccountLinkingAssistantActivity extends AssistantActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        mAccountCreator.removeListener(mListener);
+        getAccountCreator().removeListener(mListener);
     }
 
     @Override

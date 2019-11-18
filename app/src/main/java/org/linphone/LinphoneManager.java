@@ -436,7 +436,7 @@ public class LinphoneManager implements SensorEventListener {
             mTimer = new Timer("Linphone scheduler");
             mTimer.schedule(lTask, 0, 20);
 
-            initLiblinphone(mCore);
+            initLiblinphone();
         } catch (Exception e) {
             Log.e(e, "[Manager] Cannot start linphone");
         }
@@ -445,8 +445,7 @@ public class LinphoneManager implements SensorEventListener {
         H264Helper.setH264Mode(H264Helper.MODE_AUTO, mCore);
     }
 
-    private synchronized void initLiblinphone(Core core) {
-        mCore = core;
+    private synchronized void initLiblinphone() {
         mAudioManager = new AndroidAudioManager(mContext);
 
         mCore.setZrtpSecretsFile(mBasePath + "/zrtp_secrets");
@@ -543,16 +542,28 @@ public class LinphoneManager implements SensorEventListener {
 
     /* Account linking */
 
+    public AccountCreator getAccountCreator() {
+        if (mAccountCreator == null) {
+            Log.w("[Manager] Account creator shouldn't be null !");
+            mAccountCreator =
+                    mCore.createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
+            mAccountCreator.setListener(mAccountCreatorListener);
+        }
+        return mAccountCreator;
+    }
+
     public void isAccountWithAlias() {
         if (mCore.getDefaultProxyConfig() != null) {
             long now = new Timestamp(new Date().getTime()).getTime();
-            if (mAccountCreator != null && LinphonePreferences.instance().getLinkPopupTime() == null
+            AccountCreator accountCreator = getAccountCreator();
+            if (LinphonePreferences.instance().getLinkPopupTime() == null
                     || Long.parseLong(LinphonePreferences.instance().getLinkPopupTime()) < now) {
-                mAccountCreator.setUsername(
+                accountCreator.reset();
+                accountCreator.setUsername(
                         LinphonePreferences.instance()
                                 .getAccountUsername(
                                         LinphonePreferences.instance().getDefaultAccountIndex()));
-                mAccountCreator.isAccountExist();
+                accountCreator.isAccountExist();
             }
         } else {
             LinphonePreferences.instance().setLinkPopupTime(null);

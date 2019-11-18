@@ -29,6 +29,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.core.AccountCreator;
 import org.linphone.core.Core;
 import org.linphone.core.TransportType;
 import org.linphone.core.tools.Log;
@@ -63,33 +64,34 @@ public class GenericConnectionAssistantActivity extends AssistantActivity implem
         mDomain = findViewById(R.id.assistant_domain);
         mDomain.addTextChangedListener(this);
         mTransport = findViewById(R.id.assistant_transports);
+    }
 
+    private void configureAccount() {
         Core core = LinphoneManager.getCore();
         if (core != null) {
             Log.i("[Generic Connection Assistant] Reloading configuration with default");
             reloadDefaultAccountCreatorConfig();
         }
-    }
 
-    private void configureAccount() {
-        mAccountCreator.setUsername(mUsername.getText().toString());
-        mAccountCreator.setDomain(mDomain.getText().toString());
-        mAccountCreator.setPassword(mPassword.getText().toString());
-        mAccountCreator.setDisplayName(mDisplayName.getText().toString());
+        AccountCreator accountCreator = getAccountCreator();
+        accountCreator.setUsername(mUsername.getText().toString());
+        accountCreator.setDomain(mDomain.getText().toString());
+        accountCreator.setPassword(mPassword.getText().toString());
+        accountCreator.setDisplayName(mDisplayName.getText().toString());
 
         switch (mTransport.getCheckedRadioButtonId()) {
             case R.id.transport_udp:
-                mAccountCreator.setTransport(TransportType.Udp);
+                accountCreator.setTransport(TransportType.Udp);
                 break;
             case R.id.transport_tcp:
-                mAccountCreator.setTransport(TransportType.Tcp);
+                accountCreator.setTransport(TransportType.Tcp);
                 break;
             case R.id.transport_tls:
-                mAccountCreator.setTransport(TransportType.Tls);
+                accountCreator.setTransport(TransportType.Tls);
                 break;
         }
 
-        createProxyConfigAndLeaveAssistant();
+        createProxyConfigAndLeaveAssistant(true);
     }
 
     @Override
