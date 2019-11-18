@@ -69,15 +69,16 @@ public class PhoneAccountCreationAssistantActivity extends AssistantActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        AccountCreator accountCreator = getAccountCreator();
                         enableButtonsAndFields(false);
 
                         if (mUseUsernameInsteadOfPhoneNumber.isChecked()) {
-                            mAccountCreator.setUsername(mUsername.getText().toString());
+                            accountCreator.setUsername(mUsername.getText().toString());
                         } else {
-                            mAccountCreator.setUsername(mAccountCreator.getPhoneNumber());
+                            accountCreator.setUsername(accountCreator.getPhoneNumber());
                         }
 
-                        AccountCreator.Status status = mAccountCreator.isAccountExist();
+                        AccountCreator.Status status = accountCreator.isAccountExist();
                         if (status != AccountCreator.Status.RequestOk) {
                             Log.e(
                                     "[Phone Account Creation Assistant] isAccountExists returned "
@@ -178,7 +179,7 @@ public class PhoneAccountCreationAssistantActivity extends AssistantActivity {
                             showAccountAlreadyExistsDialog();
                             enableButtonsAndFields(true);
                         } else if (status.equals(AccountCreator.Status.AccountNotExist)) {
-                            status = mAccountCreator.createAccount();
+                            status = getAccountCreator().createAccount();
                             if (status != AccountCreator.Status.RequestOk) {
                                 Log.e(
                                         "[Phone Account Creation Assistant] createAccount returned "
@@ -209,18 +210,18 @@ public class PhoneAccountCreationAssistantActivity extends AssistantActivity {
                         }
                     }
                 };
-
-        Core core = LinphoneManager.getCore();
-        if (core != null) {
-            reloadLinphoneAccountCreatorConfig();
-        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        mAccountCreator.addListener(mListener);
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            reloadLinphoneAccountCreatorConfig();
+        }
+
+        getAccountCreator().addListener(mListener);
 
         DialPlan dp = getDialPlanForCurrentCountry();
         displayDialPlan(dp);
@@ -234,7 +235,7 @@ public class PhoneAccountCreationAssistantActivity extends AssistantActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        mAccountCreator.removeListener(mListener);
+        getAccountCreator().removeListener(mListener);
     }
 
     @Override
@@ -261,7 +262,7 @@ public class PhoneAccountCreationAssistantActivity extends AssistantActivity {
         if (status == AccountCreator.PhoneNumberStatus.Ok.toInt()) {
             if (mUseUsernameInsteadOfPhoneNumber.isChecked()) {
                 AccountCreator.UsernameStatus usernameStatus =
-                        mAccountCreator.setUsername(mUsername.getText().toString());
+                        getAccountCreator().setUsername(mUsername.getText().toString());
                 if (usernameStatus != AccountCreator.UsernameStatus.Ok) {
                     mCreate.setEnabled(false);
                     mError.setText(getErrorFromUsernameStatus(usernameStatus));
@@ -278,7 +279,7 @@ public class PhoneAccountCreationAssistantActivity extends AssistantActivity {
         if (mUseUsernameInsteadOfPhoneNumber.isChecked()) {
             username = mUsername.getText().toString();
         } else {
-            username = mAccountCreator.getPhoneNumber();
+            username = getAccountCreator().getPhoneNumber();
         }
 
         if (username != null) {

@@ -64,7 +64,7 @@ public class PhoneAccountValidationAssistantActivity extends AssistantActivity {
                 getResources().getInteger(R.integer.phone_number_validation_code_length);
 
         TextView phoneNumber = findViewById(R.id.phone_number);
-        phoneNumber.setText(mAccountCreator.getPhoneNumber());
+        phoneNumber.setText(getAccountCreator().getPhoneNumber());
 
         mSmsCode = findViewById(R.id.sms_code);
         mSmsCode.addTextChangedListener(
@@ -88,16 +88,17 @@ public class PhoneAccountValidationAssistantActivity extends AssistantActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        AccountCreator accountCreator = getAccountCreator();
                         mFinishCreation.setEnabled(false);
-                        mAccountCreator.setActivationCode(mSmsCode.getText().toString());
+                        accountCreator.setActivationCode(mSmsCode.getText().toString());
 
                         AccountCreator.Status status;
                         if (mIsLinking) {
-                            status = mAccountCreator.activateAlias();
+                            status = accountCreator.activateAlias();
                         } else if (mIsLogin) {
-                            status = mAccountCreator.loginLinphoneAccount();
+                            status = accountCreator.loginLinphoneAccount();
                         } else {
-                            status = mAccountCreator.activateAccount();
+                            status = accountCreator.activateAccount();
                         }
                         if (status != AccountCreator.Status.RequestOk) {
                             Log.e(
@@ -173,7 +174,7 @@ public class PhoneAccountValidationAssistantActivity extends AssistantActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mAccountCreator.addListener(mListener);
+        getAccountCreator().addListener(mListener);
 
         // Prevent user to go back, it won't be able to come back here after...
         mBack.setEnabled(false);
@@ -182,7 +183,7 @@ public class PhoneAccountValidationAssistantActivity extends AssistantActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        mAccountCreator.removeListener(mListener);
+        getAccountCreator().removeListener(mListener);
     }
 
     private void onError(AccountCreator.Status status) {

@@ -67,7 +67,7 @@ public class EmailAccountCreationAssistantActivity extends AssistantActivity {
                     @Override
                     public void afterTextChanged(Editable s) {
                         AccountCreator.UsernameStatus status =
-                                mAccountCreator.setUsername(s.toString());
+                                getAccountCreator().setUsername(s.toString());
                         mUsernameError.setVisibility(
                                 status == AccountCreator.UsernameStatus.Ok
                                         ? View.INVISIBLE
@@ -90,7 +90,7 @@ public class EmailAccountCreationAssistantActivity extends AssistantActivity {
                     @Override
                     public void afterTextChanged(Editable s) {
                         AccountCreator.PasswordStatus status =
-                                mAccountCreator.setPassword(s.toString());
+                                getAccountCreator().setPassword(s.toString());
                         mPasswordError.setVisibility(
                                 status == AccountCreator.PasswordStatus.Ok
                                         ? View.INVISIBLE
@@ -148,7 +148,8 @@ public class EmailAccountCreationAssistantActivity extends AssistantActivity {
 
                     @Override
                     public void afterTextChanged(Editable s) {
-                        AccountCreator.EmailStatus status = mAccountCreator.setEmail(s.toString());
+                        AccountCreator.EmailStatus status =
+                                getAccountCreator().setEmail(s.toString());
                         mEmailError.setVisibility(
                                 status == AccountCreator.EmailStatus.Ok
                                         ? View.INVISIBLE
@@ -164,7 +165,7 @@ public class EmailAccountCreationAssistantActivity extends AssistantActivity {
                     public void onClick(View v) {
                         enableButtonsAndFields(false);
 
-                        AccountCreator.Status status = mAccountCreator.isAccountExist();
+                        AccountCreator.Status status = getAccountCreator().isAccountExist();
                         if (status != AccountCreator.Status.RequestOk) {
                             enableButtonsAndFields(true);
                             Log.e(
@@ -188,7 +189,7 @@ public class EmailAccountCreationAssistantActivity extends AssistantActivity {
                             showAccountAlreadyExistsDialog();
                             enableButtonsAndFields(true);
                         } else if (status.equals(AccountCreator.Status.AccountNotExist)) {
-                            status = mAccountCreator.createAccount();
+                            status = getAccountCreator().createAccount();
                             if (status != AccountCreator.Status.RequestOk) {
                                 Log.e(
                                         "[Email Account Creation Assistant] createAccount returned "
@@ -219,11 +220,6 @@ public class EmailAccountCreationAssistantActivity extends AssistantActivity {
                         }
                     }
                 };
-
-        Core core = LinphoneManager.getCore();
-        if (core != null) {
-            reloadLinphoneAccountCreatorConfig();
-        }
     }
 
     private void enableButtonsAndFields(boolean enable) {
@@ -249,7 +245,12 @@ public class EmailAccountCreationAssistantActivity extends AssistantActivity {
     protected void onResume() {
         super.onResume();
 
-        mAccountCreator.addListener(mListener);
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            reloadLinphoneAccountCreatorConfig();
+        }
+
+        getAccountCreator().addListener(mListener);
 
         if (getResources().getBoolean(R.bool.pre_fill_email_in_assistant)) {
             Account[] accounts = AccountManager.get(this).getAccountsByType("com.google");
@@ -266,6 +267,6 @@ public class EmailAccountCreationAssistantActivity extends AssistantActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        mAccountCreator.removeListener(mListener);
+        getAccountCreator().removeListener(mListener);
     }
 }

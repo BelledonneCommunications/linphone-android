@@ -130,6 +130,7 @@
 Vos amis pourront vous joindre plus facilement si vous associez votre compte à votre numéro de téléphone\n\nVous verrez dans votre carnet d\'adresses les contacts qui utilisent Linphone et vos amis sauront qu\'ils peuvent vous contacter.\n</string>
   <string name="phone_number_link_info_content_already_account">Vous ne pouvez associer votre numéro qu\'à un seul compte Linphone.\n\nSi vous avez déjà associé votre numéro à un autre compte mais préférez utiliser ce compte-ci, suivez la procédure d\'association et votre numéro sera automatiquement transféré à ce compte.</string>
   <string name="phone_number_overuse">Trop de SMS ont été envoyés vers ce numéro en un court laps de temps, veuillez attendre 24h avant de réessayer.</string>
+  <string name="account_doesnt_exist">Ce compte n\'existe pas</string>
   <!--Status-->
   <string name="invalid_email">Mail non valide</string>
   <string name="account_already_exist">Ce compte existe déjà</string>
