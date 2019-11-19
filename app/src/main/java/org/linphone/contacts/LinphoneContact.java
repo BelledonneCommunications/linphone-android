@@ -401,11 +401,22 @@ public class LinphoneContact extends AndroidContact
     }
 
     public void deleteFriend() {
+        if (mFriend == null) return;
         Core core = LinphoneManager.getCore();
-        if (mFriend != null && core != null) {
-            for (FriendList list : core.getFriendsLists()) {
-                list.removeFriend(mFriend);
+        if (core == null) return;
+
+        boolean found = false;
+        Log.i("[Contact] Deleting friend ", mFriend.getName(), " for contact ", this);
+        for (FriendList list : core.getFriendsLists()) {
+            FriendList.Status status = list.removeFriend(mFriend);
+            if (status == FriendList.Status.OK) {
+                Log.w("[Contact] Friend found in list " + list.getDisplayName());
+                found = true;
             }
+        }
+
+        if (!found) {
+            Log.w("[Contact] Friend removal failed, friend doesn't belong to any friend list");
         }
     }
 
@@ -645,7 +656,10 @@ public class LinphoneContact extends AndroidContact
     }
 
     public void delete() {
-        deleteAndroidContact();
+        Log.i("[Contact] Deleting contact ", this);
+        if (isAndroidContact()) {
+            deleteAndroidContact();
+        }
         if (isFriend()) {
             deleteFriend();
         }
