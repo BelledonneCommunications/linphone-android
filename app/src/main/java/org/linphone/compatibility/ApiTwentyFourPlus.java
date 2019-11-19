@@ -140,7 +140,6 @@ class ApiTwentyFourPlus {
         return new Notification.Builder(context)
                 .setStyle(new Notification.DecoratedCustomViewStyle())
                 .setSmallIcon(R.drawable.topbar_call_notification)
-                .setLargeIcon(contactIcon)
                 .setContentTitle(contactName)
                 .setContentText(context.getString(R.string.incall_notif_incoming))
                 .setContentIntent(intent)
