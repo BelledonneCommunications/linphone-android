@@ -90,6 +90,11 @@ public class ContactDetailsFragment extends Fragment implements ContactsUpdatedL
                     }
                 });
 
+        if (mContact != null
+                && getResources().getBoolean(R.bool.forbid_pure_linphone_contacts_edition)) {
+            editContact.setVisibility(mContact.isAndroidContact() ? View.VISIBLE : View.GONE);
+        }
+
         ImageView deleteContact = mView.findViewById(R.id.deleteContact);
         deleteContact.setOnClickListener(
                 new OnClickListener() {
