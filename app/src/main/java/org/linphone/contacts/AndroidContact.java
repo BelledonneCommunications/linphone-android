@@ -146,6 +146,7 @@ class AndroidContact implements Serializable {
     }
 
     void deleteAndroidContact() {
+        Log.i("[Contact] Deleting Android contact ", this);
         ContactsManager.getInstance().delete(mAndroidId);
     }
 

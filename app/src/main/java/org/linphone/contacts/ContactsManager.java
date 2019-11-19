@@ -495,6 +495,7 @@ public class ContactsManager extends ContentObserver
         ArrayList<ContentProviderOperation> ops = new ArrayList<>();
 
         for (String id : ids) {
+            Log.i("[Contacts Manager] Adding Android contact id ", id, " to batch removal");
             String[] args = new String[] {id};
             ops.add(
                     ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI)

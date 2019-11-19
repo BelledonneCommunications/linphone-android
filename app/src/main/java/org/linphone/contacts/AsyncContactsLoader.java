@@ -95,14 +95,13 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
                     }
 
                     LinphoneContact contact = (LinphoneContact) friend.getUserData();
-                    // A previously fetched friend from rc file will have a user data,
-                    // so the next fetches won't add it in data.contacts
-                    // and thus the "new friends" count in log will be different /!\
                     if (contact != null) {
                         if (contact.getAndroidId() != null) {
                             contact.clearAddresses();
                             androidContactsCache.put(contact.getAndroidId(), contact);
                             nativeIds.add(contact.getAndroidId());
+                        } else {
+                            data.contacts.add(contact);
                         }
                     } else {
                         if (friend.getRefKey() != null) {
@@ -198,7 +197,7 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
                         + contacts.size()
                         + " native contacts plus "
                         + data.contacts.size()
-                        + " new friends in the configuration file");
+                        + " friends in the configuration file");
         for (LinphoneContact contact : contacts) {
             if (isCancelled()) {
                 Log.w("[Contacts Manager] Task cancelled");
