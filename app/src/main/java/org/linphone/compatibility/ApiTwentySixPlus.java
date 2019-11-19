@@ -191,7 +191,6 @@ class ApiTwentySixPlus {
                         context, context.getString(R.string.notification_channel_id))
                 .setStyle(new Notification.DecoratedCustomViewStyle())
                 .setSmallIcon(R.drawable.topbar_call_notification)
-                .setLargeIcon(contactIcon)
                 .setContentTitle(contactName)
                 .setContentText(context.getString(R.string.incall_notif_incoming))
                 .setContentIntent(intent)
