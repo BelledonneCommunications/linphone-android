@@ -405,19 +405,8 @@ public class LinphoneContact extends AndroidContact
         Core core = LinphoneManager.getCore();
         if (core == null) return;
 
-        boolean found = false;
         Log.i("[Contact] Deleting friend ", mFriend.getName(), " for contact ", this);
-        for (FriendList list : core.getFriendsLists()) {
-            FriendList.Status status = list.removeFriend(mFriend);
-            if (status == FriendList.Status.OK) {
-                Log.w("[Contact] Friend found in list " + list.getDisplayName());
-                found = true;
-            }
-        }
-
-        if (!found) {
-            Log.w("[Contact] Friend removal failed, friend doesn't belong to any friend list");
-        }
+        mFriend.remove();
     }
 
     public void createOrUpdateFriendFromNativeContact() {
