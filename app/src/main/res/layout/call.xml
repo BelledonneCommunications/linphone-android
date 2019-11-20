@@ -118,12 +118,6 @@
                     android:layout_height="60dp"
                     android:layout_alignParentBottom="true" />
 
-                <include layout="@layout/call_secondary_buttons"
-                    android:id="@+id/call_secondary_buttons"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_above="@id/call_primary_buttons" />
-
                 <ViewStub
                     android:id="@+id/numpad"
                     android:inflatedId="@+id/numpad"
@@ -134,6 +128,12 @@
                     android:layout_above="@id/call_primary_buttons"
                     android:layout_marginBottom="60dp"
                     android:background="@color/toolbar_color" />
+
+                <include layout="@layout/call_secondary_buttons"
+                    android:id="@+id/call_secondary_buttons"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@id/call_primary_buttons" />
 
             </RelativeLayout>
 

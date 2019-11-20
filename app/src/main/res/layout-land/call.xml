@@ -126,12 +126,6 @@
                     android:layout_alignParentBottom="true"
                     android:layout_toLeftOf="@id/vertical_divider" />
 
-                <include layout="@layout/call_secondary_buttons"
-                    android:id="@+id/call_secondary_buttons"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_toRightOf="@id/vertical_divider" />
-
                 <ViewStub
                     android:id="@+id/numpad"
                     android:inflatedId="@+id/numpad"
@@ -141,6 +135,12 @@
                     android:layout_centerInParent="true"
                     android:layout_above="@id/call_primary_buttons"
                     android:background="@color/toolbar_color" />
+
+                <include layout="@layout/call_secondary_buttons"
+                    android:id="@+id/call_secondary_buttons"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toRightOf="@id/vertical_divider" />
 
             </RelativeLayout>
 
