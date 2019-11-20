@@ -45,6 +45,7 @@ import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.CallLog;
 import org.linphone.core.Core;
+import org.linphone.core.CoreListenerStub;
 import org.linphone.utils.SelectableHelper;
 
 public class HistoryFragment extends Fragment
@@ -62,6 +63,7 @@ public class HistoryFragment extends Fragment
     private List<CallLog> mLogs;
     private HistoryAdapter mHistoryAdapter;
     private SelectableHelper mSelectionHelper;
+    private CoreListenerStub mListener;
 
     @Override
     public View onCreateView(
@@ -96,14 +98,27 @@ public class HistoryFragment extends Fragment
         mAllCalls.setEnabled(false);
         mOnlyDisplayMissedCalls = false;
 
+        mListener =
+                new CoreListenerStub() {
+                    @Override
+                    public void onCallStateChanged(
+                            Core core, Call call, Call.State state, String message) {
+                        if (state == Call.State.End || state == Call.State.Error) {
+                            reloadData();
+                        }
+                    }
+                };
+
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
         ContactsManager.getInstance().addContactsListener(this);
         LinphoneContext.instance().addCoreStartedListener(this);
+        LinphoneManager.getCore().addListener(mListener);
 
         reloadData();
     }
@@ -112,6 +127,7 @@ public class HistoryFragment extends Fragment
     public void onPause() {
         ContactsManager.getInstance().removeContactsListener(this);
         LinphoneContext.instance().removeCoreStartedListener(this);
+        LinphoneManager.getCore().removeListener(mListener);
 
         super.onPause();
     }
