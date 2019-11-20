@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.activities;
+package org.linphone.dialer;
 
 import android.Manifest;
 import android.content.Intent;
@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.activities.MainActivity;
 import org.linphone.call.views.CallButton;
 import org.linphone.contacts.ContactsActivity;
 import org.linphone.contacts.ContactsManager;
@@ -44,10 +45,10 @@ import org.linphone.core.Call;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.tools.Log;
+import org.linphone.dialer.views.AddressText;
+import org.linphone.dialer.views.Digit;
+import org.linphone.dialer.views.EraseButton;
 import org.linphone.settings.LinphonePreferences;
-import org.linphone.views.AddressText;
-import org.linphone.views.Digit;
-import org.linphone.views.EraseButton;
 
 public class DialerActivity extends MainActivity implements AddressText.AddressChangedListener {
     private static final String ACTION_CALL_LINPHONE = "org.linphone.intent.action.CallLaunched";

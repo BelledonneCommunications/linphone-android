@@ -30,9 +30,9 @@ import org.linphone.core.Call;
 import org.linphone.core.CallLog;
 import org.linphone.core.Core;
 import org.linphone.core.ProxyConfig;
+import org.linphone.dialer.views.AddressAware;
+import org.linphone.dialer.views.AddressText;
 import org.linphone.settings.LinphonePreferences;
-import org.linphone.views.AddressAware;
-import org.linphone.views.AddressText;
 
 @SuppressLint("AppCompatCustomView")
 public class CallButton extends ImageView implements OnClickListener, AddressAware {

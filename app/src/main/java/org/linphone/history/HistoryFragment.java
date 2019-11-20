@@ -38,6 +38,7 @@ import java.util.List;
 import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.call.views.LinphoneLinearLayoutManager;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.core.Address;
@@ -45,7 +46,6 @@ import org.linphone.core.Call;
 import org.linphone.core.CallLog;
 import org.linphone.core.Core;
 import org.linphone.utils.SelectableHelper;
-import org.linphone.views.LinphoneLinearLayoutManager;
 
 public class HistoryFragment extends Fragment
         implements OnClickListener,

@@ -42,6 +42,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.call.views.LinphoneLinearLayoutManager;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
@@ -56,7 +57,6 @@ import org.linphone.core.Factory;
 import org.linphone.core.Participant;
 import org.linphone.core.tools.Log;
 import org.linphone.utils.LinphoneUtils;
-import org.linphone.views.LinphoneLinearLayoutManager;
 
 public class GroupInfoFragment extends Fragment {
     private ImageView mConfirmButton;

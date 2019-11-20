@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.views;
+package org.linphone.dialer.views;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;

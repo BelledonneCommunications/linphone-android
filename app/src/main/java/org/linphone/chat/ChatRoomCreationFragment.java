@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.call.views.LinphoneLinearLayoutManager;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.ContactsUpdatedListener;
@@ -62,7 +63,6 @@ import org.linphone.core.ProxyConfig;
 import org.linphone.core.SearchResult;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
-import org.linphone.views.LinphoneLinearLayoutManager;
 
 public class ChatRoomCreationFragment extends Fragment
         implements View.OnClickListener,

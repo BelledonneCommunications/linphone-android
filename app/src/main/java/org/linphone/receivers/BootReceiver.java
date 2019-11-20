@@ -22,8 +22,8 @@ package org.linphone.receivers;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import org.linphone.LinphoneService;
 import org.linphone.compatibility.Compatibility;
+import org.linphone.service.LinphoneService;
 import org.linphone.settings.LinphonePreferences;
 
 public class BootReceiver extends BroadcastReceiver {

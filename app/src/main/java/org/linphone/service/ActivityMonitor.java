@@ -17,15 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.utils;
+package org.linphone.service;
 
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 import java.util.ArrayList;
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneService;
 import org.linphone.core.tools.Log;
+import org.linphone.utils.LinphoneUtils;
 
 /**
  * Believe me or not, but knowing the application visibility state on Android is a nightmare. After

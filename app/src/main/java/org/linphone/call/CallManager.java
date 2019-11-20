@@ -35,11 +35,11 @@ import org.linphone.core.Core;
 import org.linphone.core.MediaEncryption;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.tools.Log;
+import org.linphone.dialer.views.AddressType;
 import org.linphone.mediastream.Version;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.FileUtils;
 import org.linphone.utils.LinphoneUtils;
-import org.linphone.views.AddressType;
 
 /** Handle call updating, reinvites. */
 public class CallManager {

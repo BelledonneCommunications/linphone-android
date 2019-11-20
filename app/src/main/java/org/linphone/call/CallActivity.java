@@ -49,9 +49,7 @@ import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import java.lang.ref.WeakReference;
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneService;
 import org.linphone.R;
-import org.linphone.activities.DialerActivity;
 import org.linphone.activities.LinphoneGenericActivity;
 import org.linphone.chat.ChatActivity;
 import org.linphone.compatibility.Compatibility;
@@ -67,8 +65,9 @@ import org.linphone.core.Core;
 import org.linphone.core.CoreListener;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.tools.Log;
+import org.linphone.dialer.DialerActivity;
+import org.linphone.service.LinphoneService;
 import org.linphone.settings.LinphonePreferences;
-import org.linphone.utils.AndroidAudioManager;
 import org.linphone.utils.LinphoneUtils;
 
 public class CallActivity extends LinphoneGenericActivity
