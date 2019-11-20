@@ -81,7 +81,7 @@
         <!-- Main activities -->
 
         <activity
-            android:name=".activities.DialerActivity"
+            android:name=".dialer.DialerActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.DIAL" />
@@ -211,7 +211,7 @@
         <!-- Services -->
 
         <service
-            android:name=".LinphoneService"
+            android:name=".service.LinphoneService"
             android:label="@string/service_name" />
 
         <service

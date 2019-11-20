@@ -24,15 +24,16 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.assistant.MenuAssistantActivity;
 import org.linphone.chat.ChatActivity;
 import org.linphone.contacts.ContactsActivity;
+import org.linphone.dialer.DialerActivity;
 import org.linphone.history.HistoryActivity;
+import org.linphone.service.LinphoneService;
+import org.linphone.service.ServiceWaitThread;
+import org.linphone.service.ServiceWaitThreadListener;
 import org.linphone.settings.LinphonePreferences;
-import org.linphone.utils.ServiceWaitThread;
-import org.linphone.utils.ServiceWaitThreadListener;
 
 /** Creates LinphoneService and wait until Core is ready to start main Activity */
 public class LinphoneLauncherActivity extends Activity implements ServiceWaitThreadListener {

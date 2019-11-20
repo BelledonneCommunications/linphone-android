@@ -17,16 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.views;
+package org.linphone.dialer.views;
 
-import android.view.WindowManager;
+public interface AddressType {
+    CharSequence getText();
 
-public interface LinphoneOverlay {
-    WindowManager.LayoutParams getWindowManagerLayoutParams();
-
-    void addToWindowManager(WindowManager mWindowManager, WindowManager.LayoutParams params);
-
-    void removeFromWindowManager(WindowManager mWindowManager);
-
-    void destroy();
+    String getDisplayedName();
 }

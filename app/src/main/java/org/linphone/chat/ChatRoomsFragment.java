@@ -35,6 +35,7 @@ import java.util.List;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.activities.MainActivity;
+import org.linphone.call.views.LinphoneLinearLayoutManager;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.core.ChatMessage;
@@ -44,7 +45,6 @@ import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.ProxyConfig;
 import org.linphone.utils.SelectableHelper;
-import org.linphone.views.LinphoneLinearLayoutManager;
 
 public class ChatRoomsFragment extends Fragment
         implements ContactsUpdatedListener,

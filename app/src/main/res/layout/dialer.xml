@@ -10,7 +10,7 @@
         android:layout_alignParentTop="true"
         android:background="?attr/lighToolbarBackgroundColor">
 
-        <org.linphone.views.EraseButton
+        <org.linphone.dialer.views.EraseButton
             android:id="@+id/erase"
             android:layout_width="40dp"
             android:layout_height="wrap_content"
@@ -22,7 +22,7 @@
             android:contentDescription="@string/content_description_backspace"
             android:src="@drawable/backspace" />
 
-        <org.linphone.views.AddressText
+        <org.linphone.dialer.views.AddressText
             android:id="@+id/address"
             style="@style/numpad_composed_number_font"
             android:layout_width="wrap_content"

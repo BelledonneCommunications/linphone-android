@@ -44,6 +44,7 @@ import org.linphone.core.LoggingServiceListener;
 import org.linphone.core.tools.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.notifications.NotificationsManager;
+import org.linphone.service.LinphoneService;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.DeviceUtils;
 import org.linphone.utils.LinphoneUtils;
