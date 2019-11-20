@@ -30,9 +30,9 @@ import org.linphone.LinphoneContext;
 import org.linphone.R;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.contacts.LinphoneContact;
+import org.linphone.contacts.views.ContactAvatar;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.Participant;
-import org.linphone.views.ContactAvatar;
 
 class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoViewHolder> {
     private List<ContactAddress> mItems;

@@ -53,12 +53,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.linphone.R;
+import org.linphone.contacts.views.ContactAvatar;
 import org.linphone.core.tools.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.FileUtils;
 import org.linphone.utils.LinphoneUtils;
-import org.linphone.views.ContactAvatar;
 
 public class ContactEditorFragment extends Fragment {
     private static final int ADD_PHOTO = 1337;

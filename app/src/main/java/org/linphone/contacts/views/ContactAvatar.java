@@ -17,49 +17,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.views;
+package org.linphone.contacts.views;
 
 import android.graphics.Bitmap;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 import org.linphone.R;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.ChatRoomSecurityLevel;
 import org.linphone.utils.ImageUtils;
-
-class ContactAvatarHolder {
-    public final ImageView contactPicture;
-    public final ImageView avatarBorder;
-    public final ImageView securityLevel;
-    public final TextView generatedAvatar;
-    public final ImageView generatedAvatarBackground;
-
-    public ContactAvatarHolder(View v) {
-        contactPicture = v.findViewById(R.id.contact_picture);
-        securityLevel = v.findViewById(R.id.security_level);
-        generatedAvatar = v.findViewById(R.id.generated_avatar);
-        generatedAvatarBackground = v.findViewById(R.id.generated_avatar_background);
-        avatarBorder = v.findViewById(R.id.border);
-    }
-
-    public void init() {
-        contactPicture.setVisibility(View.VISIBLE);
-        generatedAvatar.setVisibility(View.VISIBLE);
-        generatedAvatarBackground.setVisibility(View.VISIBLE);
-        securityLevel.setVisibility(View.GONE);
-        avatarBorder.setVisibility(View.GONE);
-    }
-}
 
 public class ContactAvatar {
 
     private static String generateAvatar(String displayName) {
         String[] names = displayName.split(" ");
         StringBuilder generatedAvatarText = new StringBuilder();
+        int count = 0;
         for (String name : names) {
-            if (name != null && name.length() > 0) {
+            if (name != null && name.length() > 0 && count < 2) {
                 generatedAvatarText.append(name.charAt(0));
+                count += 1;
             }
         }
         return generatedAvatarText.toString().toUpperCase();

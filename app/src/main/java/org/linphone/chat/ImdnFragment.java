@@ -32,6 +32,7 @@ import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
+import org.linphone.contacts.views.ContactAvatar;
 import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatMessageListenerStub;
@@ -40,7 +41,6 @@ import org.linphone.core.Core;
 import org.linphone.core.Factory;
 import org.linphone.core.ParticipantImdnState;
 import org.linphone.utils.LinphoneUtils;
-import org.linphone.views.ContactAvatar;
 
 public class ImdnFragment extends Fragment {
     private LayoutInflater mInflater;

@@ -58,6 +58,7 @@ import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.contacts.LinphoneContact;
+import org.linphone.contacts.views.ContactAvatar;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.ChatMessage;
@@ -69,7 +70,6 @@ import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.AndroidAudioManager;
 import org.linphone.utils.LinphoneUtils;
-import org.linphone.views.ContactAvatar;
 
 public class CallActivity extends LinphoneGenericActivity
         implements CallStatusBarFragment.StatsClikedListener,

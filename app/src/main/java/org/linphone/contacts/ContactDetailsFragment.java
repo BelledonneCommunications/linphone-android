@@ -36,6 +36,7 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.contacts.views.ContactAvatar;
 import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomBackend;
@@ -50,7 +51,6 @@ import org.linphone.core.ProxyConfig;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.LinphoneUtils;
-import org.linphone.views.ContactAvatar;
 
 public class ContactDetailsFragment extends Fragment implements ContactsUpdatedListener {
     private LinphoneContact mContact;
