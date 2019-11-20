@@ -476,7 +476,9 @@ public class GroupInfoFragment extends Fragment {
             }
             Address[] participantsToAdd = new Address[toAdd.size()];
             toAdd.toArray(participantsToAdd);
-            mChatRoom.addParticipants(participantsToAdd);
+            if (!mChatRoom.addParticipants(participantsToAdd)) {
+                // TODO error
+            }
             // Pop back stack to go back to the Messages fragment
             getFragmentManager().popBackStack();
         }
