@@ -50,6 +50,7 @@ import java.util.List;
 import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
+import org.linphone.contacts.views.ContactAvatar;
 import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.Content;
@@ -57,7 +58,6 @@ import org.linphone.core.tools.Log;
 import org.linphone.utils.FileUtils;
 import org.linphone.utils.ImageUtils;
 import org.linphone.utils.LinphoneUtils;
-import org.linphone.views.ContactAvatar;
 
 public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 

@@ -29,12 +29,12 @@ import java.util.List;
 import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
+import org.linphone.contacts.views.ContactAvatar;
 import org.linphone.core.Address;
 import org.linphone.core.ChatRoomSecurityLevel;
 import org.linphone.core.Participant;
 import org.linphone.core.ParticipantDevice;
 import org.linphone.utils.LinphoneUtils;
-import org.linphone.views.ContactAvatar;
 
 class DevicesAdapter extends BaseExpandableListAdapter {
     private final Context mContext;

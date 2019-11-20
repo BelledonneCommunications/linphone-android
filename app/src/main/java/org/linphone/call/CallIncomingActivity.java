@@ -36,9 +36,13 @@ import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.activities.LinphoneGenericActivity;
+import org.linphone.call.views.CallIncomingAnswerButton;
+import org.linphone.call.views.CallIncomingButtonListener;
+import org.linphone.call.views.CallIncomingDeclineButton;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
+import org.linphone.contacts.views.ContactAvatar;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
@@ -47,10 +51,6 @@ import org.linphone.core.CoreListenerStub;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.LinphoneUtils;
-import org.linphone.views.CallIncomingAnswerButton;
-import org.linphone.views.CallIncomingButtonListener;
-import org.linphone.views.CallIncomingDeclineButton;
-import org.linphone.views.ContactAvatar;
 
 public class CallIncomingActivity extends LinphoneGenericActivity {
     private TextView mName, mNumber;

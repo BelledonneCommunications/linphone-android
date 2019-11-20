@@ -35,6 +35,7 @@ import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
+import org.linphone.contacts.views.ContactAvatar;
 import org.linphone.core.Address;
 import org.linphone.core.CallLog;
 import org.linphone.core.ChatRoom;
@@ -48,7 +49,6 @@ import org.linphone.core.ProxyConfig;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.LinphoneUtils;
-import org.linphone.views.ContactAvatar;
 
 public class HistoryDetailFragment extends Fragment {
     private ImageView mAddToContacts;

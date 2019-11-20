@@ -49,6 +49,7 @@ import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.contacts.SearchContactViewHolder;
 import org.linphone.contacts.SearchContactsAdapter;
+import org.linphone.contacts.views.ContactSelectView;
 import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomBackend;
@@ -61,7 +62,6 @@ import org.linphone.core.ProxyConfig;
 import org.linphone.core.SearchResult;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
-import org.linphone.views.ContactSelectView;
 import org.linphone.views.LinphoneLinearLayoutManager;
 
 public class ChatRoomCreationFragment extends Fragment

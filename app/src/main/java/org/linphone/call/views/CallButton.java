@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.views;
+package org.linphone.call.views;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -31,6 +31,8 @@ import org.linphone.core.CallLog;
 import org.linphone.core.Core;
 import org.linphone.core.ProxyConfig;
 import org.linphone.settings.LinphonePreferences;
+import org.linphone.views.AddressAware;
+import org.linphone.views.AddressText;
 
 @SuppressLint("AppCompatCustomView")
 public class CallButton extends ImageView implements OnClickListener, AddressAware {

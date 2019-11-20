@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.call.views.CallButton;
 import org.linphone.contacts.ContactsActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.core.Call;
@@ -45,7 +46,6 @@ import org.linphone.core.CoreListenerStub;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.views.AddressText;
-import org.linphone.views.CallButton;
 import org.linphone.views.Digit;
 import org.linphone.views.EraseButton;
 

@@ -30,13 +30,13 @@ import java.util.Objects;
 import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.contacts.views.ContactAvatar;
 import org.linphone.core.Address;
 import org.linphone.core.FriendCapability;
 import org.linphone.core.PresenceBasicStatus;
 import org.linphone.core.PresenceModel;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.SearchResult;
-import org.linphone.views.ContactAvatar;
 
 public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactViewHolder> {
     private List<SearchResult> mContacts;

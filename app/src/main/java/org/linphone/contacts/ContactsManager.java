@@ -375,6 +375,11 @@ public class ContactsManager extends ContentObserver
         }
 
         String username = address.getUsername();
+        if (username == null) {
+            Log.w("[Contacts Manager] Address ", address.asString(), " doesn't have a username!");
+            return null;
+        }
+
         if (android.util.Patterns.PHONE.matcher(username).matches()) {
             return findContactFromPhoneNumber(username);
         }

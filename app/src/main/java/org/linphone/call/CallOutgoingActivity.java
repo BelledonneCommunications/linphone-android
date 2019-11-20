@@ -37,6 +37,7 @@ import org.linphone.R;
 import org.linphone.activities.LinphoneGenericActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
+import org.linphone.contacts.views.ContactAvatar;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
@@ -46,7 +47,6 @@ import org.linphone.core.Reason;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.LinphoneUtils;
-import org.linphone.views.ContactAvatar;
 
 public class CallOutgoingActivity extends LinphoneGenericActivity implements OnClickListener {
     private TextView mName, mNumber;
