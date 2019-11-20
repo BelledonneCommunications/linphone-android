@@ -108,7 +108,7 @@ public class ChatRoomsFragment extends Fragment
                     @Override
                     public void onClick(View v) {
                         ((ChatActivity) getActivity())
-                                .showChatRoomCreation(null, null, null, false, false);
+                                .showChatRoomCreation(null, null, null, false, false, false);
                     }
                 });
 
@@ -117,7 +117,7 @@ public class ChatRoomsFragment extends Fragment
                     @Override
                     public void onClick(View v) {
                         ((ChatActivity) getActivity())
-                                .showChatRoomCreation(null, null, null, false, true);
+                                .showChatRoomCreation(null, null, null, false, true, false);
                     }
                 });
 
