@@ -23,7 +23,6 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 
 import android.app.Dialog;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -146,7 +145,11 @@ public class GroupInfoFragment extends Fragment {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        ((ChatActivity) getActivity()).goBack();
+                        if (mIsAlreadyCreatedGroup) {
+                            ((ChatActivity) getActivity()).goBack();
+                        } else {
+                            goBackToChatCreationFragment();
+                        }
                     }
                 });
 
@@ -300,26 +303,14 @@ public class GroupInfoFragment extends Fragment {
     }
 
     private void goBackToChatCreationFragment() {
-        boolean previousFragmentInBackStackIsChatRoomCreation = false;
-        FragmentManager fragmentManager = getActivity().getFragmentManager();
-        int count = fragmentManager.getBackStackEntryCount();
-        if (count > 1) {
-            FragmentManager.BackStackEntry entry = fragmentManager.getBackStackEntryAt(count - 1);
-            if ("Chat room creation".equals(entry.getName())) {
-                previousFragmentInBackStackIsChatRoomCreation = true;
-                ((ChatActivity) getActivity()).goBack();
-            }
-        }
-
-        if (!previousFragmentInBackStackIsChatRoomCreation) {
-            ((ChatActivity) getActivity())
-                    .showChatRoomCreation(
-                            mGroupChatRoomAddress,
-                            mParticipants,
-                            mSubject,
-                            mIsEncryptionEnabled,
-                            true);
-        }
+        ((ChatActivity) getActivity())
+                .showChatRoomCreation(
+                        mGroupChatRoomAddress,
+                        mParticipants,
+                        mSubject,
+                        mIsEncryptionEnabled,
+                        true,
+                        !mIsAlreadyCreatedGroup);
     }
 
     private void refreshParticipantsList() {
