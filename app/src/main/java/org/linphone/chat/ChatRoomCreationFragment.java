@@ -143,8 +143,8 @@ public class ChatRoomCreationFragment extends Fragment
                         if (mChatRoomAddress == null && mChatRoomSubject == null) {
                             mContactsSelectedLayout.removeAllViews();
                         } else {
-                            // Pop the back stack twice so we don't have in stack Group -> Creation
-                            // -> Group
+                            // Pop the back stack twice so we don't have in stack
+                            // Group -> Creation -> Group
                             getFragmentManager().popBackStack();
                             getFragmentManager().popBackStack();
                         }
