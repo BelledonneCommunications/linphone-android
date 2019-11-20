@@ -37,12 +37,14 @@ import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.contacts.views.ContactAvatar;
 import org.linphone.core.Address;
+import org.linphone.core.Call;
 import org.linphone.core.CallLog;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomBackend;
 import org.linphone.core.ChatRoomListenerStub;
 import org.linphone.core.ChatRoomParams;
 import org.linphone.core.Core;
+import org.linphone.core.CoreListenerStub;
 import org.linphone.core.Factory;
 import org.linphone.core.FriendCapability;
 import org.linphone.core.ProxyConfig;
@@ -60,6 +62,7 @@ public class HistoryDetailFragment extends Fragment {
     private ChatRoom mChatRoom;
     private ChatRoomListenerStub mChatRoomCreationListener;
     private ListView mLogsList;
+    private CoreListenerStub mListener;
 
     @Override
     public View onCreateView(
@@ -167,7 +170,25 @@ public class HistoryDetailFragment extends Fragment {
         mLogsList = view.findViewById(R.id.logs_list);
         displayHistory();
 
+        mListener =
+                new CoreListenerStub() {
+                    @Override
+                    public void onCallStateChanged(
+                            Core core, Call call, Call.State state, String message) {
+                        if (state == Call.State.End || state == Call.State.Error) {
+                            displayHistory();
+                        }
+                    }
+                };
+
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        LinphoneManager.getCore().addListener(mListener);
     }
 
     @Override
@@ -175,6 +196,8 @@ public class HistoryDetailFragment extends Fragment {
         if (mChatRoom != null) {
             mChatRoom.removeListener(mChatRoomCreationListener);
         }
+        LinphoneManager.getCore().removeListener(mListener);
+
         super.onPause();
     }
 
