@@ -325,7 +325,7 @@ public class NotificationsManager {
     public void removeForegroundServiceNotificationIfPossible() {
         if (LinphoneService.isReady()) {
             if (mCurrentForegroundServiceNotification == SERVICE_NOTIF_ID
-                    && !isServiceNotificationDisplayed()) {
+                    && !LinphonePreferences.instance().isForegroundServiceEnabled()) {
                 Log.i(
                         "[Notifications Manager] Linphone has started after device boot, stopping Service as foreground");
                 stopForeground();
@@ -364,10 +364,6 @@ public class NotificationsManager {
 
     public ChatMessageListenerStub getMessageListener() {
         return mMessageListener;
-    }
-
-    private boolean isServiceNotificationDisplayed() {
-        return LinphonePreferences.instance().getServiceNotificationVisibility();
     }
 
     public String getSipUriForNotificationId(int notificationId) {
@@ -665,7 +661,7 @@ public class NotificationsManager {
         }
 
         // Don't use incoming call notification as foreground service notif !
-        if (!isServiceNotificationDisplayed() && !isIncoming) {
+        if (!LinphonePreferences.instance().isForegroundServiceEnabled() && !isIncoming) {
             if (call.getCore().getCallsNb() == 0) {
                 Log.i(
                         "[Notifications Manager] Foreground service mode is disabled, stopping call notification used to keep it alive");

@@ -77,7 +77,7 @@ public final class LinphoneService extends Service {
         }
         sInstance = this;
 
-        if (LinphonePreferences.instance().getServiceNotificationVisibility()) {
+        if (LinphonePreferences.instance().isForegroundServiceEnabled()) {
             Log.i("[Service] Background service mode enabled, displaying notification");
             LinphoneContext.instance().getNotificationManager().startForeground();
         }
@@ -101,7 +101,7 @@ public final class LinphoneService extends Service {
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
-        boolean serviceNotif = LinphonePreferences.instance().getServiceNotificationVisibility();
+        boolean serviceNotif = LinphonePreferences.instance().isForegroundServiceEnabled();
         if (serviceNotif) {
             Log.i("[Service] Service is running in foreground, don't stop it");
         } else if (getResources().getBoolean(R.bool.kill_service_with_task_manager)) {
@@ -109,11 +109,6 @@ public final class LinphoneService extends Service {
             Core core = LinphoneManager.getCore();
             if (core != null) {
                 core.terminateAllCalls();
-            }
-
-            // If push is enabled, don't unregister account, otherwise do unregister
-            if (LinphonePreferences.instance().isPushNotificationEnabled()) {
-                if (core != null) core.setNetworkReachable(false);
             }
             stopSelf();
         }

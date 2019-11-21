@@ -47,8 +47,7 @@ public class BootReceiver extends BroadcastReceiver {
             }
         } else if (intent.getAction().equalsIgnoreCase(Intent.ACTION_MY_PACKAGE_REPLACED)) {
             LinphonePreferences.instance().setContext(context);
-            boolean foregroundService =
-                    LinphonePreferences.instance().getServiceNotificationVisibility();
+            boolean foregroundService = LinphonePreferences.instance().isForegroundServiceEnabled();
             android.util.Log.i(
                     "Linphone",
                     "[Boot Receiver] App has been updated, foreground service is "

@@ -128,7 +128,7 @@ public class AdvancedSettingsFragment extends SettingsFragment {
                 new SettingListenerBase() {
                     @Override
                     public void onBoolValueChanged(boolean newValue) {
-                        mPrefs.setServiceNotificationVisibility(newValue);
+                        mPrefs.enableForegroundService(newValue);
                         if (newValue) {
                             LinphoneContext.instance().getNotificationManager().startForeground();
                         } else {
@@ -211,7 +211,7 @@ public class AdvancedSettingsFragment extends SettingsFragment {
 
         mLogUploadUrl.setValue(mPrefs.getLogCollectionUploadServerUrl());
 
-        mBackgroundMode.setChecked(mPrefs.getServiceNotificationVisibility());
+        mBackgroundMode.setChecked(mPrefs.isForegroundServiceEnabled());
         if (Compatibility.isAppUserRestricted(getActivity())) {
             mBackgroundMode.setChecked(false);
             mBackgroundMode.setEnabled(false);

@@ -148,7 +148,7 @@ public abstract class AssistantActivity extends LinphoneGenericActivity
                 proxyConfig.setPushNotificationAllowed(false);
                 Log.w(
                         "[Assistant] Unknown domain used, push probably won't work, enable service mode");
-                LinphonePreferences.instance().setServiceNotificationVisibility(true);
+                LinphonePreferences.instance().enableForegroundService(true);
                 LinphoneContext.instance().getNotificationManager().startForeground();
             }
         }

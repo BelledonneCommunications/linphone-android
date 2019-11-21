@@ -1032,11 +1032,11 @@ public class LinphonePreferences {
         getConfig().setString("app", "incoming_call_activity", name);
     }
 
-    public boolean getServiceNotificationVisibility() {
+    public boolean isForegroundServiceEnabled() {
         return getConfig().getBool("app", "show_service_notification", false);
     }
 
-    public void setServiceNotificationVisibility(boolean enable) {
+    public void enableForegroundService(boolean enable) {
         getConfig().setBool("app", "show_service_notification", enable);
     }
 

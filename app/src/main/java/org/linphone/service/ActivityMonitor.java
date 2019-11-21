@@ -24,7 +24,9 @@ import android.app.Application;
 import android.os.Bundle;
 import java.util.ArrayList;
 import org.linphone.LinphoneManager;
+import org.linphone.core.Core;
 import org.linphone.core.tools.Log;
+import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.LinphoneUtils;
 
 /**
@@ -104,8 +106,19 @@ public class ActivityMonitor implements Application.ActivityLifecycleCallbacks {
 
     private void onBackgroundMode() {
         Log.i("[Activity Monitor] App has entered background mode");
-        if (LinphoneManager.getCore() != null) {
-            LinphoneManager.getCore().enterBackground();
+
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            core.enterBackground();
+        }
+
+        if (core.getCallsNb() == 0
+                && !LinphonePreferences.instance().isForegroundServiceEnabled()) {
+            if (LinphoneService.isReady()) {
+                Log.i(
+                        "[Activity Monitor] App in background, service isn't foreground so killing it");
+                LinphoneService.instance().stopSelf();
+            }
         }
     }
 
