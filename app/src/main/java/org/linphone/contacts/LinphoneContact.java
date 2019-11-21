@@ -33,7 +33,6 @@ import org.linphone.core.Address;
 import org.linphone.core.Core;
 import org.linphone.core.Friend;
 import org.linphone.core.FriendCapability;
-import org.linphone.core.FriendList;
 import org.linphone.core.PresenceBasicStatus;
 import org.linphone.core.PresenceModel;
 import org.linphone.core.SubscribePolicy;

@@ -55,8 +55,8 @@ public class CallStatsFragment extends Fragment {
                 new CoreListenerStub() {
                     @Override
                     public void onCallStateChanged(
-                            Core lc, Call call, Call.State cstate, String message) {
-                        if (cstate == Call.State.End || cstate == Call.State.Error) {
+                            Core core, Call call, Call.State state, String message) {
+                        if (state == Call.State.End || state == Call.State.Error) {
                             mAdapter.updateListItems(
                                     Arrays.asList(LinphoneManager.getCore().getCalls()));
                         }
