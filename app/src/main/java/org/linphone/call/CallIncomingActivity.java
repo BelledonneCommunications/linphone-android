@@ -277,8 +277,8 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
             Log.i("[Permission] Asking for read phone state");
             permissionsList.add(Manifest.permission.READ_PHONE_STATE);
         }
-        if (LinphonePreferences.instance().shouldInitiateVideoCall()
-                || LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests()) {
+        if (LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests()
+                && mCall.getRemoteParams().videoEnabled()) {
             if (camera != PackageManager.PERMISSION_GRANTED) {
                 Log.i("[Permission] Asking for camera");
                 permissionsList.add(Manifest.permission.CAMERA);

@@ -283,8 +283,7 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
             Log.i("[Permission] Asking for read phone state");
             permissionsList.add(Manifest.permission.READ_PHONE_STATE);
         }
-        if (LinphonePreferences.instance().shouldInitiateVideoCall()
-                || LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests()) {
+        if (LinphonePreferences.instance().shouldInitiateVideoCall()) {
             if (camera != PackageManager.PERMISSION_GRANTED) {
                 Log.i("[Permission] Asking for camera");
                 permissionsList.add(Manifest.permission.CAMERA);
