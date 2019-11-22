@@ -485,8 +485,10 @@ public class AndroidAudioManager {
         new Thread() {
             @Override
             public void run() {
-                boolean resultAcknoledged;
+                Log.i("[Audio Manager] [Bluetooth] SCO start/stop thread started");
+                boolean resultAcknowledged;
                 int retries = 0;
+
                 do {
                     try {
                         Thread.sleep(200);
@@ -506,10 +508,10 @@ public class AndroidAudioManager {
                                             + retries);
                             mAudioManager.stopBluetoothSco();
                         }
-                        resultAcknoledged = isUsingBluetoothAudioRoute() == enable;
+                        resultAcknowledged = isUsingBluetoothAudioRoute() == enable;
                         retries++;
                     }
-                } while (!resultAcknoledged && retries < 10);
+                } while (!resultAcknowledged && retries < 10);
             }
         }.start();
     }
@@ -523,6 +525,7 @@ public class AndroidAudioManager {
             } else {
                 Log.w("[Audio Manager] [Bluetooth] SCO not available off call !");
             }
+
             if (mBluetoothAdapter.isEnabled()) {
                 Log.i("[Audio Manager] [Bluetooth] Adapter enabled");
                 mBluetoothReceiver = new BluetoothReceiver();
@@ -557,6 +560,8 @@ public class AndroidAudioManager {
 
                                     Intent sticky =
                                             mContext.registerReceiver(mBluetoothReceiver, filter);
+                                    Log.i(
+                                            "[Audio Manager] [Bluetooth] Bluetooth receiver registered");
                                     int state =
                                             sticky.getIntExtra(
                                                     AudioManager.EXTRA_SCO_AUDIO_STATE,
@@ -593,6 +598,7 @@ public class AndroidAudioManager {
                                 }
                             }
                         };
+
                 mBluetoothAdapter.getProfileProxy(
                         mContext, bluetoothServiceListener, BluetoothProfile.HEADSET);
             }
