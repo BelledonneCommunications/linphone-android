@@ -28,9 +28,16 @@ import org.linphone.LinphoneManager;
 import org.linphone.core.tools.Log;
 
 public class BluetoothReceiver extends BroadcastReceiver {
+    public BluetoothReceiver() {
+        super();
+        Log.i("[Bluetooth] Bluetooth receiver created");
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
+        Log.i("[Bluetooth] Bluetooth broadcast received");
+
         if (action.equals(BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED)) {
             int state =
                     intent.getIntExtra(
@@ -55,6 +62,8 @@ public class BluetoothReceiver extends BroadcastReceiver {
             } else if (state == BluetoothHeadset.STATE_AUDIO_DISCONNECTED) {
                 Log.i("[Bluetooth] Bluetooth headset audio disconnected");
                 LinphoneManager.getAudioManager().bluetoothHeadetAudioConnectionChanged(false);
+            } else if (state == BluetoothHeadset.STATE_AUDIO_CONNECTING) {
+                Log.i("[Bluetooth] Bluetooth headset audio connecting");
             } else {
                 Log.w("[Bluetooth] Bluetooth headset unknown audio state changed: " + state);
             }
