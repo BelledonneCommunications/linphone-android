@@ -565,11 +565,6 @@ public class CallActivity extends LinphoneGenericActivity
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-    }
-
-    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (mAudioManager.onKeyVolumeAdjust(keyCode)) return true;
         return super.onKeyDown(keyCode, event);

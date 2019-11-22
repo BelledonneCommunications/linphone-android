@@ -67,6 +67,8 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
         super.onCreate(savedInstanceState);
 
         mInterfaceLoaded = false;
+        mIsTransfer = false;
+
         // Uses the fragment container layout to inflate the dialer view instead of using a fragment
         new AsyncLayoutInflater(this)
                 .inflate(
@@ -122,6 +124,8 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+
+        setIntent(intent);
         handleIntentParams(intent);
     }
 
@@ -207,12 +211,6 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
                     }
                 });
 
-        mIsTransfer = false;
-        if (getIntent() != null) {
-            mIsTransfer = getIntent().getBooleanExtra("Transfer", false);
-            mAddress.setText(getIntent().getStringExtra("SipUri"));
-        }
-
         setUpNumpad(view);
         updateLayout();
         enableVideoPreviewIfTablet(true);
@@ -280,6 +278,11 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
             } else {
                 mStartCall.setImageResource(R.drawable.call_audio_start);
             }
+        }
+
+        if (getIntent() != null) {
+            mIsTransfer = getIntent().getBooleanExtra("Transfer", false);
+            mAddress.setText(getIntent().getStringExtra("SipUri"));
         }
 
         mBackToCall.setVisibility(atLeastOneCall ? View.VISIBLE : View.GONE);
