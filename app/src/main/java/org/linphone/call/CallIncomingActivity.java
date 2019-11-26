@@ -128,7 +128,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
                             }
                         }
 
-                        if (LinphoneManager.getCore().getCallsNb() == 0) {
+                        if (state == State.End || state == State.Released) {
                             finish();
                         }
                     }
