@@ -388,6 +388,8 @@ public class CallActivity extends LinphoneGenericActivity
                         if (state == Call.State.End || state == Call.State.Released) {
                             if (core.getCallsNb() == 0) {
                                 finish();
+                            } else {
+                                showVideoControls(false);
                             }
                         } else if (state == Call.State.PausedByRemote) {
                             if (core.getCurrentCall() != null) {
@@ -1092,7 +1094,7 @@ public class CallActivity extends LinphoneGenericActivity
         mConferenceList.removeAllViews();
 
         for (Call call : mCore.getCalls()) {
-            if (call.getConference() != null) {
+            if (call != null && call.getConference() != null) {
                 if (mCore.isInConference()) {
                     displayConferenceCall(call);
                     conferenceDisplayed = true;
@@ -1100,9 +1102,14 @@ public class CallActivity extends LinphoneGenericActivity
                     displayPausedConference();
                     pausedConferenceDisplayed = true;
                 }
-            } else if (call != currentCall) {
-                displayPausedCall(call);
-                callThatIsNotCurrentFound = true;
+            } else if (call != null && call != currentCall) {
+                Call.State state = call.getState();
+                if (state == Call.State.Paused
+                        || state == Call.State.PausedByRemote
+                        || state == Call.State.Pausing) {
+                    displayPausedCall(call);
+                    callThatIsNotCurrentFound = true;
+                }
             }
         }
 

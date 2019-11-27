@@ -130,7 +130,7 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
                             // CallActivity.class));
                         }
 
-                        if (LinphoneManager.getCore().getCallsNb() == 0) {
+                        if (state == State.End || state == State.Released) {
                             finish();
                         }
                     }
