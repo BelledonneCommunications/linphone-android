@@ -136,12 +136,15 @@ public class ContactEditorFragment extends Fragment {
                         if (mIsNewContact) {
                             boolean areAllFielsEmpty = true;
                             for (LinphoneNumberOrAddress nounoa : mNumbersAndAddresses) {
-                                if (nounoa.getValue() != null && !nounoa.getValue().equals("")) {
+                                String value = nounoa.getValue();
+                                if (value != null && !value.trim().isEmpty()) {
                                     areAllFielsEmpty = false;
                                     break;
                                 }
                             }
                             if (areAllFielsEmpty) {
+                                Log.i(
+                                        "[Contact Editor] All SIP and phone fields are empty, aborting");
                                 getFragmentManager().popBackStackImmediate();
                                 return;
                             }
@@ -158,27 +161,24 @@ public class ContactEditorFragment extends Fragment {
                         }
 
                         for (LinphoneNumberOrAddress noa : mNumbersAndAddresses) {
-                            if (noa.getValue() == null || noa.getValue().isEmpty()) {
-                                if (noa.getOldValue() != null && !noa.getOldValue().isEmpty()) {
-                                    Log.i("[Contact Editor] Removing number " + noa.getOldValue());
+                            String value = noa.getValue();
+                            String oldValue = noa.getOldValue();
+
+                            if (value == null || value.trim().isEmpty()) {
+                                if (oldValue != null && !oldValue.isEmpty()) {
+                                    Log.i("[Contact Editor] Removing number " + oldValue);
                                     mContact.removeNumberOrAddress(noa);
                                 }
                             } else {
-                                if (noa.getOldValue() != null
-                                        && noa.getOldValue().equals(noa.getValue())) {
-                                    Log.i(
-                                            "[Contact Editor] Keeping existing number "
-                                                    + noa.getValue());
+                                if (oldValue != null && oldValue.equals(value)) {
+                                    Log.i("[Contact Editor] Keeping existing number " + value);
                                     continue;
                                 }
 
                                 if (noa.isSIPAddress()) {
-
-                                    noa.setValue(
-                                            LinphoneUtils.getFullAddressFromUsername(
-                                                    noa.getValue()));
+                                    noa.setValue(LinphoneUtils.getFullAddressFromUsername(value));
                                 }
-                                Log.i("[Contact Editor] Adding new number " + noa.getValue());
+                                Log.i("[Contact Editor] Adding new number " + value);
 
                                 mContact.addOrUpdateNumberOrAddress(noa);
                             }

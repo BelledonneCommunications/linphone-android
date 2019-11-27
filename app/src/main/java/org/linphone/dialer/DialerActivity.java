@@ -221,14 +221,15 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
     private void enableVideoPreviewIfTablet(boolean enable) {
         Core core = LinphoneManager.getCore();
         TextureView preview = findViewById(R.id.video_preview);
-        if (preview != null && core != null) {
+        ImageView changeCamera = findViewById(R.id.video_preview_change_camera);
+
+        if (preview != null && changeCamera != null && core != null) {
             if (enable && isTablet() && LinphonePreferences.instance().isVideoPreviewEnabled()) {
                 preview.setVisibility(View.VISIBLE);
                 core.setNativePreviewWindowId(preview);
                 core.enableVideoPreview(true);
 
-                ImageView changeCamera = findViewById(R.id.video_preview_change_camera);
-                if (changeCamera != null && core.getVideoDevicesList().length > 1) {
+                if (core.getVideoDevicesList().length > 1) {
                     changeCamera.setVisibility(View.VISIBLE);
                     changeCamera.setOnClickListener(
                             new View.OnClickListener() {
@@ -240,6 +241,7 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
                 }
             } else {
                 preview.setVisibility(View.GONE);
+                changeCamera.setVisibility(View.GONE);
                 core.setNativePreviewWindowId(null);
                 core.enableVideoPreview(false);
             }
