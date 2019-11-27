@@ -265,6 +265,16 @@ public class GroupInfoFragment extends Fragment {
                     public void onSubjectChanged(ChatRoom cr, EventLog event_log) {
                         mSubjectField.setText(event_log.getSubject());
                     }
+
+                    @Override
+                    public void onParticipantAdded(ChatRoom cr, EventLog eventLog) {
+                        refreshParticipantsList();
+                    }
+
+                    @Override
+                    public void onParticipantRemoved(ChatRoom cr, EventLog eventLog) {
+                        refreshParticipantsList();
+                    }
                 };
 
         if (mChatRoom != null) {
