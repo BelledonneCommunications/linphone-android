@@ -55,7 +55,7 @@ public class ImageUtils {
         return bm;
     }
 
-    private static Bitmap getRoundBitmap(Bitmap bitmap) {
+    public static Bitmap getRoundBitmap(Bitmap bitmap) {
         Bitmap output =
                 Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(output);

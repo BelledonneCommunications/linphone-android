@@ -137,10 +137,7 @@ public class ContactAvatar {
 
         Bitmap bm = ImageUtils.getRoundBitmapFromUri(v.getContext(), contact.getThumbnailUri());
         if (bm != null) {
-            holder.contactPicture.setImageBitmap(bm);
-            holder.contactPicture.setVisibility(View.VISIBLE);
-            holder.generatedAvatar.setVisibility(View.GONE);
-            holder.generatedAvatarBackground.setVisibility(View.GONE);
+            displayAvatar(bm, holder);
         } else if (generated_avatars) {
             holder.generatedAvatar.setVisibility(View.VISIBLE);
             holder.generatedAvatarBackground.setVisibility(View.VISIBLE);
@@ -149,6 +146,27 @@ public class ContactAvatar {
         if (showBorder) {
             holder.avatarBorder.setVisibility(View.VISIBLE);
         }
+    }
+
+    private static void displayAvatar(Bitmap bm, ContactAvatarHolder holder) {
+        holder.contactPicture.setImageBitmap(bm);
+        holder.contactPicture.setVisibility(View.VISIBLE);
+        holder.generatedAvatar.setVisibility(View.GONE);
+        holder.generatedAvatarBackground.setVisibility(View.GONE);
+    }
+
+    public static void displayAvatar(Bitmap bm, View v) {
+        if (bm == null || v == null) return;
+
+        ContactAvatarHolder holder = new ContactAvatarHolder(v);
+        holder.init();
+
+        holder.generatedAvatar.setVisibility(View.GONE);
+        holder.generatedAvatarBackground.setVisibility(View.GONE);
+        holder.contactPicture.setVisibility(View.VISIBLE);
+        holder.securityLevel.setVisibility(View.GONE);
+
+        displayAvatar(bm, holder);
     }
 
     public static void displayAvatar(LinphoneContact contact, View v) {
