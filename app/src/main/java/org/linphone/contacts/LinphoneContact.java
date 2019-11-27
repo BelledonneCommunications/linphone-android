@@ -559,7 +559,8 @@ public class LinphoneContact extends AndroidContact
         String data3 = c.getString(c.getColumnIndex("data3"));
         String data4 = c.getString(c.getColumnIndex("data4"));
 
-        if (getFullName() == null) {
+        String fullName = getFullName();
+        if (fullName == null || !fullName.equals(displayName)) {
             Log.d("[Linphone Contact] Setting display name " + displayName);
             setFullName(displayName);
         }
