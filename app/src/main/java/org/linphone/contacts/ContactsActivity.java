@@ -103,6 +103,15 @@ public class ContactsActivity extends MainActivity {
     }
 
     @Override
+    protected void onPause() {
+        // From the moment this activity is leaved, clear these values
+        mEditDisplayName = null;
+        mEditSipUri = null;
+        mEditOnClick = false;
+        super.onPause();
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("EditSipUri", mEditSipUri);
