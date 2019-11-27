@@ -22,6 +22,7 @@ package org.linphone.assistant;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.telephony.TelephonyManager;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -88,6 +89,14 @@ public abstract class AssistantActivity extends LinphoneGenericActivity
             mCountryPickerDialog.dismiss();
             mCountryPickerDialog = null;
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (!mBack.isEnabled()) return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     public AccountCreator getAccountCreator() {
