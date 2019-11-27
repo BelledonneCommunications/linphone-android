@@ -58,6 +58,7 @@ import org.linphone.core.tools.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.FileUtils;
+import org.linphone.utils.ImageUtils;
 import org.linphone.utils.LinphoneUtils;
 
 public class ContactEditorFragment extends Fragment {
@@ -426,10 +427,12 @@ public class ContactEditorFragment extends Fragment {
             }
         }
 
-        if (mContact != null) {
-            ContactAvatar.displayAvatar(mContact, mView.findViewById(R.id.avatar_layout));
-        } else {
-            ContactAvatar.displayAvatar("", mView.findViewById(R.id.avatar_layout));
+        if (mPhotoToAdd == null) {
+            if (mContact != null) {
+                ContactAvatar.displayAvatar(mContact, mView.findViewById(R.id.avatar_layout));
+            } else {
+                ContactAvatar.displayAvatar("", mView.findViewById(R.id.avatar_layout));
+            }
         }
 
         mSipAddresses = initSipAddressFields(mContact);
@@ -438,27 +441,24 @@ public class ContactEditorFragment extends Fragment {
 
     private void pickImage() {
         mPickedPhotoForContactUri = null;
-        final List<Intent> cameraIntents = new ArrayList<>();
-        final Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        List<Intent> cameraIntents = new ArrayList<>();
+
+        // Handles image & video picking
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK);
+        galleryIntent.setType("image/*");
+
+        // Allows to capture directly from the camera
+        Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         File file =
                 new File(
                         FileUtils.getStorageDirectory(getActivity()),
-                        getString(R.string.temp_photo_name));
+                        getString(R.string.temp_photo_name_with_date)
+                                .replace("%s", System.currentTimeMillis() + ".jpeg"));
         mPickedPhotoForContactUri = Uri.fromFile(file);
-        captureIntent.putExtra("outputX", PHOTO_SIZE);
-        captureIntent.putExtra("outputY", PHOTO_SIZE);
-        captureIntent.putExtra("aspectX", 0);
-        captureIntent.putExtra("aspectY", 0);
-        captureIntent.putExtra("scale", true);
-        captureIntent.putExtra("return-data", false);
         captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mPickedPhotoForContactUri);
         cameraIntents.add(captureIntent);
 
-        final Intent galleryIntent = new Intent();
-        galleryIntent.setType("image/*");
-        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-
-        final Intent chooserIntent =
+        Intent chooserIntent =
                 Intent.createChooser(galleryIntent, getString(R.string.image_picker_title));
         chooserIntent.putExtra(
                 Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(new Parcelable[] {}));
@@ -471,40 +471,13 @@ public class ContactEditorFragment extends Fragment {
             image = BitmapFactory.decodeFile(filePath);
         }
 
-        Bitmap scaledPhoto;
-        int size = getThumbnailSize();
-        if (size > 0) {
-            scaledPhoto = Bitmap.createScaledBitmap(image, size, size, false);
-        } else {
-            scaledPhoto = Bitmap.createBitmap(image);
-        }
-        image.recycle();
-
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        scaledPhoto.compress(Bitmap.CompressFormat.PNG, 0, stream);
-        mContactPicture.setImageBitmap(scaledPhoto);
+        image.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         mPhotoToAdd = stream.toByteArray();
-    }
 
-    private int getThumbnailSize() {
-        int value = -1;
-        Cursor c =
-                getActivity()
-                        .getContentResolver()
-                        .query(
-                                DisplayPhoto.CONTENT_MAX_DIMENSIONS_URI,
-                                new String[] {DisplayPhoto.THUMBNAIL_MAX_DIM},
-                                null,
-                                null,
-                                null);
-        try {
-            c.moveToFirst();
-            value = c.getInt(0);
-        } catch (Exception e) {
-            Log.e(e);
-        }
-        c.close();
-        return value;
+        Bitmap roundPicture = ImageUtils.getRoundBitmap(image);
+        ContactAvatar.displayAvatar(roundPicture, mView.findViewById(R.id.avatar_layout));
+        image.recycle();
     }
 
     private LinearLayout initNumbersFields(final LinphoneContact contact) {
