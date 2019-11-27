@@ -168,7 +168,6 @@ public class HistoryDetailFragment extends Fragment {
                 };
 
         mLogsList = view.findViewById(R.id.logs_list);
-        displayHistory();
 
         mListener =
                 new CoreListenerStub() {
@@ -189,6 +188,7 @@ public class HistoryDetailFragment extends Fragment {
         super.onResume();
 
         LinphoneManager.getCore().addListener(mListener);
+        displayHistory();
     }
 
     @Override
