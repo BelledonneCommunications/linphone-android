@@ -157,6 +157,7 @@ public class ChatRoomsFragment extends Fragment
                             Core core, ChatRoom cr, ChatRoom.State state) {
                         if (state == ChatRoom.State.Created) {
                             refreshChatRoom(cr);
+                            scrollToTop();
                         }
                     }
                 };
@@ -261,6 +262,10 @@ public class ChatRoomsFragment extends Fragment
         if (adapter != null) {
             adapter.refresh(true);
         }
+    }
+
+    private void scrollToTop() {
+        mChatRoomsList.getLayoutManager().scrollToPosition(0);
     }
 
     private void refreshChatRoom(ChatRoom cr) {
