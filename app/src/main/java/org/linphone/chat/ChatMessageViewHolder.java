@@ -82,6 +82,7 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
     private final RelativeLayout singleFileContent;
 
     public final CheckBox delete;
+    public boolean isEditionEnabled;
 
     private Context mContext;
     private ChatMessageViewHolderClickListener mListener;
@@ -275,7 +276,11 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            openFile(filePath);
+                            if (isEditionEnabled) {
+                                ChatMessageViewHolder.this.onClick(v);
+                            } else {
+                                openFile(filePath);
+                            }
                         }
                     });
         } else {
@@ -315,11 +320,15 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Content c = (Content) v.getTag();
-                                if (!message.isFileTransferInProgress()) {
-                                    message.downloadContent(c);
+                                if (isEditionEnabled) {
+                                    ChatMessageViewHolder.this.onClick(v);
                                 } else {
-                                    message.cancelFileTransfer();
+                                    Content c = (Content) v.getTag();
+                                    if (!message.isFileTransferInProgress()) {
+                                        message.downloadContent(c);
+                                    } else {
+                                        message.cancelFileTransfer();
+                                    }
                                 }
                             }
                         });
