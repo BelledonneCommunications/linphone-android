@@ -312,6 +312,7 @@ public class VideoSettingsFragment extends SettingsFragment {
                         : View.GONE);
         mAutoInitiate.setVisibility(show ? View.VISIBLE : View.GONE);
         mAutoAccept.setVisibility(show ? View.VISIBLE : View.GONE);
+        mCameraDevices.setVisibility(show ? View.VISIBLE : View.GONE);
         mOverlay.setVisibility(show ? View.VISIBLE : View.GONE);
         mBandwidth.setVisibility(show ? View.VISIBLE : View.GONE);
         mPreset.setVisibility(show ? View.VISIBLE : View.GONE);
@@ -319,6 +320,17 @@ public class VideoSettingsFragment extends SettingsFragment {
         mFps.setVisibility(show ? View.VISIBLE : View.GONE);
         mVideoCodecs.setVisibility(show ? View.VISIBLE : View.GONE);
         mVideoCodecsHeader.setVisibility(show ? View.VISIBLE : View.GONE);
+
+        if (show) {
+            if (Version.sdkAboveOrEqual(Version.API26_O_80)
+                    && getResources().getBoolean(R.bool.allow_pip_while_video_call)) {
+                // Disable overlay and use PIP feature
+                mOverlay.setVisibility(View.GONE);
+            }
+            mBandwidth.setVisibility(
+                    mPrefs.getVideoPreset().equals("custom") ? View.VISIBLE : View.GONE);
+            mFps.setVisibility(mPrefs.getVideoPreset().equals("custom") ? View.VISIBLE : View.GONE);
+        }
     }
 
     private void initCameraDevicesList() {
