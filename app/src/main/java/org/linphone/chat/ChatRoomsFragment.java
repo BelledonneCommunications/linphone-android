@@ -137,8 +137,13 @@ public class ChatRoomsFragment extends Fragment
                     }
 
                     @Override
-                    public void onMessageReceived(Core core, ChatRoom cr, ChatMessage message) {
-                        refreshChatRoom(cr);
+                    public void onMessageReceived(Core core, ChatRoom room, ChatMessage message) {
+                        refreshChatRoom(room);
+                    }
+
+                    @Override
+                    public void onChatRoomSubjectChanged(Core core, ChatRoom room) {
+                        refreshChatRoom(room);
                     }
 
                     @Override
@@ -154,9 +159,9 @@ public class ChatRoomsFragment extends Fragment
 
                     @Override
                     public void onChatRoomStateChanged(
-                            Core core, ChatRoom cr, ChatRoom.State state) {
+                            Core core, ChatRoom room, ChatRoom.State state) {
                         if (state == ChatRoom.State.Created) {
-                            refreshChatRoom(cr);
+                            refreshChatRoom(room);
                             scrollToTop();
                         }
                     }
@@ -254,6 +259,9 @@ public class ChatRoomsFragment extends Fragment
             mWaitLayout.setVisibility(View.VISIBLE);
         }
         ((ChatActivity) getActivity()).displayMissedChats();
+
+        if (getResources().getBoolean(R.bool.isTablet))
+            ((ChatActivity) getActivity()).showEmptyChildFragment();
     }
 
     @Override
