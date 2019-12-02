@@ -19,6 +19,7 @@
  */
 package org.linphone.receivers;
 
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothHeadset;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -38,7 +39,30 @@ public class BluetoothReceiver extends BroadcastReceiver {
         String action = intent.getAction();
         Log.i("[Bluetooth] Bluetooth broadcast received");
 
-        if (action.equals(BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED)) {
+        if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+            int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+            switch (state) {
+                case BluetoothAdapter.STATE_OFF:
+                    Log.w("[Bluetooth] Adapter has been turned off");
+                    break;
+                case BluetoothAdapter.STATE_TURNING_OFF:
+                    Log.w("[Bluetooth] Adapter is being turned off");
+                    break;
+                case BluetoothAdapter.STATE_ON:
+                    Log.i("[Bluetooth] Adapter has been turned on");
+                    LinphoneManager.getAudioManager().bluetoothAdapterStateChanged();
+                    break;
+                case BluetoothAdapter.STATE_TURNING_ON:
+                    Log.i("[Bluetooth] Adapter is being turned on");
+                    break;
+                case BluetoothAdapter.ERROR:
+                    Log.e("[Bluetooth] Adapter is in error state !");
+                    break;
+                default:
+                    Log.w("[Bluetooth] Unknown adapter state: ", state);
+                    break;
+            }
+        } else if (action.equals(BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED)) {
             int state =
                     intent.getIntExtra(
                             BluetoothHeadset.EXTRA_STATE, BluetoothHeadset.STATE_DISCONNECTED);
