@@ -77,8 +77,12 @@ public final class LinphoneService extends Service {
         }
         sInstance = this;
 
-        if (LinphonePreferences.instance().getServiceNotificationVisibility()) {
+        if (LinphonePreferences.instance().getServiceNotificationVisibility()
+                || (Version.sdkAboveOrEqual(Version.API26_O_80)
+                        && intent != null
+                        && intent.getBooleanExtra("ForceStartForeground", false))) {
             Log.i("[Service] Background service mode enabled, displaying notification");
+            // We need to call this asap after the Service can be accessed through it's singleton
             LinphoneContext.instance().getNotificationManager().startForeground();
         }
 
@@ -88,14 +92,7 @@ public final class LinphoneService extends Service {
             LinphoneContext.instance().updateContext(this);
         }
 
-        if (Version.sdkAboveOrEqual(Version.API26_O_80)
-                && intent != null
-                && intent.getBooleanExtra("ForceStartForeground", false)) {
-            // We need to call this asap after the Service can be accessed through it's singleton
-            LinphoneContext.instance().getNotificationManager().startForeground();
-        }
         Log.i("[Service] Started");
-
         return START_STICKY;
     }
 
