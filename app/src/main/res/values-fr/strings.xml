@@ -7,18 +7,18 @@
 <resources>
   <!--Custom-->
   <string name="app_name">&appName;</string>
-  <string name="service_name">Linphone Service</string>
-  <string name="addressbook_label">Linphone</string>
-  <string name="notification_title">Linphone</string>
+  <string name="service_name">&appName; Service</string>
+  <string name="addressbook_label">&appName;</string>
+  <string name="notification_title">&appName;</string>
   <string name="wait_dialog_text">Démarrage</string>
   <string name="notification_registered">%s connecté</string>
   <string name="notification_register_failure">%s connexion échouée</string>
   <string name="tunnel_host"></string>
-  <string name="about_version">Linphone Android %s</string>
-  <string name="about_liblinphone_version">Linphone Core %s</string>
-  <string name="about_liblinphone_sdk_version">Linphone SDK %s</string>
+  <string name="about_version">&appName; Android %s</string>
+  <string name="about_liblinphone_version">&appName; Core %s</string>
+  <string name="about_liblinphone_sdk_version">&appName; SDK %s</string>
   <string name="about_privacy_policy">Politique de confidentialité</string>
-  <string name="sync_account_name">contacts linphone</string>
+  <string name="sync_account_name">contacts &appName;</string>
   <!--Notifications-->
   <string name="notification_reply_label">Répondre</string>
   <string name="notification_replied_label">Réponse envoyée : %s</string>
@@ -80,20 +80,20 @@
   <string name="assistant_validate_account_1">Nous avons envoyé un mail avec un code d\'activation au mail :</string>
   <string name="assistant_validate_account_2">Pour valider votre compte veuillez suivre les instructions du mail et cliquez sur le bouton.</string>
   <string name="assistant_welcome_desc">Cet assistant va vous aider à configurer et utiliser votre compte SIP.</string>
-  <string name="assistant_linphone_login_desc">Veuillez saisir votre nom d\'utilisateur et votre mot de passe de votre compte Linphone</string>
+  <string name="assistant_linphone_login_desc">Veuillez saisir votre nom d\'utilisateur et votre mot de passe de votre compte &appName;</string>
   <string name="assistant_login_desc">Veuillez saisir votre nom d\'utilisateur et votre mot de passe avec le domaine SIP</string>
   <string name="assistant_remote_provisioning_desc">Veuillez fournir votre URL de configuration.</string>
   <string name="transport">Transport</string>
   <string name="assistant_create_account_phone_number_address">Votre adresse SIP sera</string>
-  <string name="assistant_login_linphone">Utiliser un compte Linphone</string>
+  <string name="assistant_login_linphone">Utiliser un compte &appName;</string>
   <string name="assistant_login_generic">Utiliser un compte SIP</string>
   <string name="assistant_remote_provisioning">Télécharger la configuration</string>
   <string name="assistant_create_account_part_1">Confirmez l\'indicatif téléphonique de votre pays et saisissez votre numéro de téléphone</string>
   <string name="assistant_create_account_part_2">Nous avons envoyé un SMS avec un code d\'activation au numéro :</string>
   <string name="assistant_create_account_part_3">Pour valider votre numéro veuillez enter le code à 4 chiffres ci-dessous :</string>
-  <string name="assistant_create_account_part_email">Veuillez saisir un nom d\'utilisateur, un mail et un mot de passe pour votre compte Linphone</string>
+  <string name="assistant_create_account_part_email">Veuillez saisir un nom d\'utilisateur, un mail et un mot de passe pour votre compte &appName;</string>
   <string name="assistant_display_name_optional">Nom d\'affichage (optionnel)</string>
-  <string name="assistant_linphone_account">Utiliser un compte Linphone</string>
+  <string name="assistant_linphone_account">Utiliser un compte &appName;</string>
   <string name="assistant_generic_account">Utiliser un compte SIP</string>
   <string name="assistant_remote_provisioning_title">Télécharger la configuration</string>
   <string name="assistant_fetch_apply">Télécharger et appliquer</string>
@@ -130,10 +130,10 @@
   <string name="use_email_for_validation">Utiliser une adresse mail pour créer un compte</string>
   <string name="login_with_username">Utiliser votre nom d\'utilisateur et votre mot de passe plutôt que votre numéro</string>
   <string name="phone_number_info_title">Comment mon numéro de téléphone sera-t-il utilisé ?</string>
-  <string name="phone_number_info_content">\nGrâce à votre numéro de téléphone, vos amis vous trouverons plus facilement.\n\nVous verrez dans votre carnet d\'adresses qui utilise Linphone and vos amis verront également qu\'ils peuvent vous contacter via Linphone.\n</string>
+  <string name="phone_number_info_content">\nGrâce à votre numéro de téléphone, vos amis vous trouverons plus facilement.\n\nVous verrez dans votre carnet d\'adresses qui utilise &appName; and vos amis verront également qu\'ils peuvent vous contacter via &appName;.\n</string>
   <string name="phone_number_link_info_content">
-Vos amis pourront vous joindre plus facilement si vous associez votre compte à votre numéro de téléphone\n\nVous verrez dans votre carnet d\'adresses les contacts qui utilisent Linphone et vos amis sauront qu\'ils peuvent vous contacter.\n</string>
-  <string name="phone_number_link_info_content_already_account">Vous ne pouvez associer votre numéro qu\'à un seul compte Linphone.\n\nSi vous avez déjà associé votre numéro à un autre compte mais préférez utiliser ce compte-ci, suivez la procédure d\'association et votre numéro sera automatiquement transféré à ce compte.</string>
+Vos amis pourront vous joindre plus facilement si vous associez votre compte à votre numéro de téléphone\n\nVous verrez dans votre carnet d\'adresses les contacts qui utilisent &appName; et vos amis sauront qu\'ils peuvent vous contacter.\n</string>
+  <string name="phone_number_link_info_content_already_account">Vous ne pouvez associer votre numéro qu\'à un seul compte &appName;.\n\nSi vous avez déjà associé votre numéro à un autre compte mais préférez utiliser ce compte-ci, suivez la procédure d\'association et votre numéro sera automatiquement transféré à ce compte.</string>
   <!--Status-->
   <string name="invalid_email">Mail non valide</string>
   <string name="account_already_exist">Ce compte existe déjà</string>
@@ -177,7 +177,7 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="contact_last_name">Nom</string>
   <string name="contact_organization">Société</string>
   <string name="invite_friend">Inviter</string>
-  <string name="invite_friend_text">Bonjour ! Rejoins-moi sur Linphone !
+  <string name="invite_friend_text">Bonjour ! Rejoins-moi sur &appName; !
 Disponible gratuitement ici : %s</string>
   <string name="toast_choose_contact_for_edition">Choisissez un contact ou créez-en un nouveau</string>
   <!--Chat-->
@@ -419,7 +419,7 @@ Disponible gratuitement ici : %s</string>
   <string name="pref_sipinfo_dtmf">Envoyer les DTMFs hors flux (SIP INFO)</string>
   <string name="pref_call_timeout_title">Délai après lequel terminer l\'appel (en secondes)</string>
   <string name="pref_voice_mail">URI de boîte vocale</string>
-  <string name="pref_dialer_call">Utiliser Linphone comme application de téléphonie par défaut</string>
+  <string name="pref_dialer_call">Utiliser &appName; comme application de téléphonie par défaut</string>
   <string name="pref_accept_early_media">Proposer early-media</string>
   <!--Chat settings-->
   <string name="pref_chat_title">Chat</string>
@@ -522,7 +522,7 @@ Disponible gratuitement ici : %s</string>
   <string name="content_description_search_contact">Recherche d\'un contact</string>
   <string name="content_description_search_country">Rechercher</string>
   <string name="content_description_all_contacts">Tous les contacts</string>
-  <string name="content_description_linphone_contacts">Contacts Linphone</string>
+  <string name="content_description_linphone_contacts">Contacts &appName;</string>
   <string name="content_description_call_direction">Direction d\'appel</string>
   <string name="content_description_all_calls">Tous les appels</string>
   <string name="content_description_missed_calls">Appels manqués </string>
@@ -565,8 +565,8 @@ Disponible gratuitement ici : %s</string>
   <string name="content_description_call_options">Options d\'appel</string>
   <string name="content_description_audio_route">Route audio</string>
   <string name="content_description_exit_conference">Quitter la conférence</string>
-  <string name="content_title_notification_service">Notification de service Linphone</string>
-  <string name="content_title_notification">Notifications des messages Linphone</string>
+  <string name="content_title_notification_service">Notification de service &appName;</string>
+  <string name="content_title_notification">Notifications des messages &appName;</string>
   <string name="content_description_conversation_subject">Sujet de la conversation de groupe</string>
   <string name="content_description_conversation_infos">Informations de la conversation de groupe</string>
   <string name="content_description_record_call">Enregistrer l\'appel</string>
