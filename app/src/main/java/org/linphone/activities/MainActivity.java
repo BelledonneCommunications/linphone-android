@@ -477,6 +477,14 @@ public abstract class MainActivity extends LinphoneGenericActivity
         return granted == PackageManager.PERMISSION_GRANTED;
     }
 
+    public boolean checkPermissions(String[] permissions) {
+        boolean allGranted = true;
+        for (String permission : permissions) {
+            allGranted &= checkPermission(permission);
+        }
+        return allGranted;
+    }
+
     public void requestPermissionIfNotGranted(String permission) {
         if (!checkPermission(permission)) {
             Log.i("[Permission] Requesting " + permission + " permission");

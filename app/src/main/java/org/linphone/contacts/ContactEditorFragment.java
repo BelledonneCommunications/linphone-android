@@ -309,9 +309,18 @@ public class ContactEditorFragment extends Fragment {
                 new OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        pickImage();
-                        ((ContactsActivity) getActivity())
-                                .requestPermissionIfNotGranted(Manifest.permission.CAMERA);
+                        ContactsActivity contactsActivity = ((ContactsActivity) getActivity());
+                        if (contactsActivity != null) {
+                            String[] permissions = {
+                                Manifest.permission.READ_EXTERNAL_STORAGE,
+                                Manifest.permission.CAMERA
+                            };
+                            if (contactsActivity.checkPermissions(permissions)) {
+                                pickImage();
+                            } else {
+                                contactsActivity.requestPermissionsIfNotGranted(permissions);
+                            }
+                        }
                     }
                 });
 
