@@ -156,6 +156,7 @@ public class ContactEditorFragment extends Fragment {
                                 true);
 
                         if (mPhotoToAdd != null) {
+                            Log.i("[Contact Editor] Found picture to set to contact");
                             mContact.setPhoto(mPhotoToAdd);
                         }
 
@@ -165,25 +166,26 @@ public class ContactEditorFragment extends Fragment {
 
                             if (value == null || value.trim().isEmpty()) {
                                 if (oldValue != null && !oldValue.isEmpty()) {
-                                    Log.i("[Contact Editor] Removing number " + oldValue);
+                                    Log.i("[Contact Editor] Removing number: ", oldValue);
                                     mContact.removeNumberOrAddress(noa);
                                 }
                             } else {
                                 if (oldValue != null && oldValue.equals(value)) {
-                                    Log.i("[Contact Editor] Keeping existing number " + value);
+                                    Log.i("[Contact Editor] Keeping existing number: ", value);
                                     continue;
                                 }
 
                                 if (noa.isSIPAddress()) {
                                     noa.setValue(LinphoneUtils.getFullAddressFromUsername(value));
                                 }
-                                Log.i("[Contact Editor] Adding new number " + value);
+                                Log.i("[Contact Editor] Adding new number: ", value);
 
                                 mContact.addOrUpdateNumberOrAddress(noa);
                             }
                         }
 
                         if (!mOrganization.getText().toString().isEmpty() || !mIsNewContact) {
+                            Log.i("[Contact Editor] Setting organization field: ", mOrganization);
                             mContact.setOrganization(mOrganization.getText().toString(), true);
                         }
 
@@ -193,6 +195,8 @@ public class ContactEditorFragment extends Fragment {
                             // Ensure fetch will be done so the new contact appears in the contacts
                             // list: contacts content observer may not be notified if contacts sync
                             // is disabled at system level
+                            Log.i(
+                                    "[Contact Editor] New contact created, starting fetch contacts task");
                             ContactsManager.getInstance().fetchContactsAsync();
                         }
 
@@ -466,7 +470,20 @@ public class ContactEditorFragment extends Fragment {
 
     private void editContactPicture(String filePath, Bitmap image) {
         if (image == null) {
+            Log.i(
+                    "[Contact Editor] Bitmap is null, trying to decode image from file [",
+                    filePath,
+                    "]");
             image = BitmapFactory.decodeFile(filePath);
+        }
+        if (image == null) {
+            Log.e(
+                    "[Contact Editor] Couldn't get bitmap from either filePath [",
+                    filePath,
+                    "] nor image [",
+                    image,
+                    "]");
+            return;
         }
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
