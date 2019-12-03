@@ -640,6 +640,10 @@ public class LinphoneContact extends AndroidContact
 
     public void save() {
         saveChangesCommited();
+        if (getAndroidId() != null) {
+            setThumbnailUri(getContactThumbnailPictureUri());
+            setPhotoUri(getContactPictureUri());
+        }
         syncValuesFromAndroidContact(LinphoneContext.instance().getApplicationContext());
         createOrUpdateFriend();
     }
