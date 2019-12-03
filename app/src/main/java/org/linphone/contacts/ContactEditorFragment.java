@@ -28,6 +28,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -398,15 +399,18 @@ public class ContactEditorFragment extends Fragment {
                 editContactPicture(null, bm);
             } else if (data != null && data.getData() != null) {
                 Uri selectedImageUri = data.getData();
-                try {
-                    Bitmap selectedImage =
-                            MediaStore.Images.Media.getBitmap(
-                                    getActivity().getContentResolver(), selectedImageUri);
-                    selectedImage =
-                            Bitmap.createScaledBitmap(selectedImage, PHOTO_SIZE, PHOTO_SIZE, false);
-                    editContactPicture(null, selectedImage);
-                } catch (IOException e) {
-                    Log.e(e);
+                String filePath = FileUtils.getRealPathFromURI(getActivity(), selectedImageUri);
+                if (filePath != null) {
+                    editContactPicture(filePath, null);
+                } else {
+                    try {
+                        Bitmap selectedImage =
+                                MediaStore.Images.Media.getBitmap(
+                                        getActivity().getContentResolver(), selectedImageUri);
+                        editContactPicture(null, selectedImage);
+                    } catch (IOException e) {
+                        Log.e("[Contact Editor] IO error: ", e);
+                    }
                 }
             } else if (mPickedPhotoForContactUri != null) {
                 String filePath = mPickedPhotoForContactUri.getPath();
@@ -478,21 +482,50 @@ public class ContactEditorFragment extends Fragment {
     }
 
     private void editContactPicture(String filePath, Bitmap image) {
+        int orientation = ExifInterface.ORIENTATION_NORMAL;
+
         if (image == null) {
             Log.i(
                     "[Contact Editor] Bitmap is null, trying to decode image from file [",
                     filePath,
                     "]");
             image = BitmapFactory.decodeFile(filePath);
+
+            try {
+                ExifInterface ei = new ExifInterface(filePath);
+                orientation =
+                        ei.getAttributeInt(
+                                ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+                Log.i("[Contact Editor] Exif rotation is ", orientation);
+            } catch (IOException e) {
+                Log.e("[Contact Editor] Failed to get Exif rotation, error is ", e);
+            }
+        } else {
+
         }
         if (image == null) {
             Log.e(
                     "[Contact Editor] Couldn't get bitmap from either filePath [",
                     filePath,
-                    "] nor image [",
-                    image,
-                    "]");
+                    "] nor image");
             return;
+        }
+
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                image = ImageUtils.rotateImage(image, 90);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                image = ImageUtils.rotateImage(image, 180);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                image = ImageUtils.rotateImage(image, 270);
+                break;
+            case ExifInterface.ORIENTATION_NORMAL:
+                // Nothing to do
+                break;
+            default:
+                Log.w("[Contact Editor] Unexpected orientation ", orientation);
         }
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
