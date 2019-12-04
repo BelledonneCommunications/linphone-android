@@ -37,7 +37,7 @@ public class FirebaseMessaging extends FirebaseMessagingService {
                         android.util.Log.i(
                                 "FirebaseMessaging", "[Push Notification] Starting context");
                         new LinphoneContext(getApplicationContext());
-                        LinphoneContext.instance().start(false);
+                        LinphoneContext.instance().start(true);
                     } else {
                         Log.i("[Push Notification] Notifying Core");
                         if (LinphoneManager.getInstance() != null) {
