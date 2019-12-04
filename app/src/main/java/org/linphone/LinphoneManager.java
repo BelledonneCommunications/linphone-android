@@ -437,7 +437,7 @@ public class LinphoneManager implements SensorEventListener {
             mTimer = new Timer("Linphone scheduler");
             mTimer.schedule(lTask, 0, 20);
 
-            initLiblinphone();
+            configureCore();
         } catch (Exception e) {
             Log.e(e, "[Manager] Cannot start linphone");
         }
@@ -446,7 +446,8 @@ public class LinphoneManager implements SensorEventListener {
         H264Helper.setH264Mode(H264Helper.MODE_AUTO, mCore);
     }
 
-    private synchronized void initLiblinphone() {
+    private synchronized void configureCore() {
+        Log.i("[Manager] Configuring Core");
         mAudioManager = new AndroidAudioManager(mContext);
 
         mCore.setZrtpSecretsFile(mBasePath + "/zrtp_secrets");
@@ -515,6 +516,8 @@ public class LinphoneManager implements SensorEventListener {
         mAccountCreator = mCore.createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
         mAccountCreator.setListener(mAccountCreatorListener);
         mCallGsmON = false;
+
+        Log.i("[Manager] Core configured");
     }
 
     public void resetCameraFromPreferences() {

@@ -84,7 +84,6 @@ public class LinphoneContext {
     private NotificationsManager mNotificationManager;
     private LinphoneManager mLinphoneManager;
     private ContactsManager mContactsManager;
-    private Class<? extends Activity> mIncomingReceivedActivity = CallIncomingActivity.class;
     private final ArrayList<CoreStartedListener> mCoreStartedListeners;
 
     public static boolean isReady() {
@@ -107,15 +106,6 @@ public class LinphoneContext {
         // Dump some debugging information to the logs
         dumpDeviceInformation();
         dumpLinphoneInformation();
-
-        String incomingReceivedActivityName =
-                LinphonePreferences.instance().getActivityToLaunchOnIncomingReceived();
-        try {
-            mIncomingReceivedActivity =
-                    (Class<? extends Activity>) Class.forName(incomingReceivedActivityName);
-        } catch (ClassNotFoundException e) {
-            Log.e(e);
-        }
 
         sInstance = this;
         Log.i("[Context] Ready");
@@ -195,23 +185,23 @@ public class LinphoneContext {
         if (DeviceUtils.isAppUserRestricted(mContext)) {
             // See https://firebase.google.com/docs/cloud-messaging/android/receive#restricted
             Log.w(
-                    "[Main Activity] Device has been restricted by user (Android 9+), push notifications won't work !");
+                    "[Context] Device has been restricted by user (Android 9+), push notifications won't work !");
         }
 
         int bucket = DeviceUtils.getAppStandbyBucket(mContext);
         if (bucket > 0) {
             Log.w(
-                    "[Main Activity] Device is in bucket "
+                    "[Context] Device is in bucket "
                             + Compatibility.getAppStandbyBucketNameFromValue(bucket));
         }
 
         if (!PushNotificationUtils.isAvailable(mContext)) {
-            Log.w("[Main Activity] Push notifications won't work !");
+            Log.w("[Context] Push notifications won't work !");
         }
     }
 
     public void start(boolean isPush) {
-        Log.i("[Context] Starting");
+        Log.i("[Context] Starting, push status is ", isPush);
         mLinphoneManager.startLibLinphone(isPush, mListener);
 
         mNotificationManager.onCoreReady();
@@ -226,7 +216,6 @@ public class LinphoneContext {
         if (mContactsManager.hasReadContactsAccess()) {
             mContactsManager.enableContactsAccess();
         }
-
         mContactsManager.initializeContactManager();
     }
 
@@ -325,7 +314,7 @@ public class LinphoneContext {
     /* Call activities */
 
     private void onIncomingReceived() {
-        Intent intent = new Intent().setClass(mContext, mIncomingReceivedActivity);
+        Intent intent = new Intent(mContext, CallIncomingActivity.class);
         // This flag is required to start an Activity from a Service context
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mContext.startActivity(intent);
