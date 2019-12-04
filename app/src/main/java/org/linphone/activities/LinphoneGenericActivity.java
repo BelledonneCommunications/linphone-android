@@ -80,7 +80,10 @@ public abstract class LinphoneGenericActivity extends ThemeableActivity {
             if (!LinphoneContext.isReady()) {
                 new LinphoneContext(getApplicationContext());
                 LinphoneContext.instance().start(false);
+                Log.i("[Generic Activity] Context created & started");
             }
+
+            Log.i("[Generic Activity] Starting Service");
             startService(new Intent().setClass(this, LinphoneService.class));
         }
     }
