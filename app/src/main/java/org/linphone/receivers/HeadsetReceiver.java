@@ -29,9 +29,15 @@ import org.linphone.core.tools.Log;
 public class HeadsetReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
+        if (isInitialStickyBroadcast()) {
+            Log.i("[Headset] Received broadcast from sticky cache, ignoring...");
+            return;
+        }
+
         String action = intent.getAction();
         if (action.equals(AudioManager.ACTION_HEADSET_PLUG)) {
             // This happens when the user plugs a Jack headset to the device for example
+            // https://developer.android.com/reference/android/media/AudioManager.html#ACTION_HEADSET_PLUG
             int state = intent.getIntExtra("state", 0);
             String name = intent.getStringExtra("name");
             int hasMicrophone = intent.getIntExtra("microphone", 0);
@@ -44,7 +50,7 @@ public class HeadsetReceiver extends BroadcastReceiver {
                     Log.i("[Headset] Headset " + name + " has a microphone");
                 }
             } else {
-                Log.w("[Headset] Unknow headset plugged state: " + state);
+                Log.w("[Headset] Unknown headset plugged state: " + state);
             }
 
             LinphoneManager.getAudioManager().routeAudioToEarPiece();
@@ -55,7 +61,7 @@ public class HeadsetReceiver extends BroadcastReceiver {
             LinphoneManager.getAudioManager().routeAudioToEarPiece();
             LinphoneManager.getCallManager().refreshInCallActions();
         } else {
-            Log.w("[Headset] Unknow action: " + action);
+            Log.w("[Headset] Unknown action: " + action);
         }
     }
 }
