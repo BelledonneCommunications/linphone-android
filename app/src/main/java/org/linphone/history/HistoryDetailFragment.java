@@ -160,7 +160,7 @@ public class HistoryDetailFragment extends Fragment {
                             mWaitLayout.setVisibility(View.GONE);
                             ((HistoryActivity) getActivity()).displayChatRoomError();
                             Log.e(
-                                    "Group mChat room for address "
+                                    "[History Detail Fragment] Group mChat room for address "
                                             + cr.getPeerAddress()
                                             + " has failed !");
                         }
@@ -257,44 +257,64 @@ public class HistoryDetailFragment extends Fragment {
 
     private void goToChat(boolean isSecured) {
         Core core = LinphoneManager.getCore();
+        if (core == null) return;
+
         Address participant = Factory.instance().createAddress(mSipUri);
-        ChatRoom room =
-                core.findOneToOneChatRoom(
-                        core.getDefaultProxyConfig().getContact(), participant, isSecured);
-        if (room != null) {
-            ((HistoryActivity) getActivity())
-                    .showChatRoom(room.getLocalAddress(), room.getPeerAddress());
-        } else {
-            ProxyConfig lpc = core.getDefaultProxyConfig();
-            if (lpc != null
-                    && lpc.getConferenceFactoryUri() != null
-                    && (isSecured || !LinphonePreferences.instance().useBasicChatRoomFor1To1())) {
-                mWaitLayout.setVisibility(View.VISIBLE);
+        ProxyConfig defaultProxyConfig = core.getDefaultProxyConfig();
 
-                ChatRoomParams params = core.createDefaultChatRoomParams();
-                params.enableEncryption(isSecured);
-                params.enableGroup(false);
-                // We don't want a basic chat room
-                params.setBackend(ChatRoomBackend.FlexisipChat);
-
-                Address[] participants = new Address[1];
-                participants[0] = participant;
-
-                mChatRoom =
-                        core.createChatRoom(
-                                params, getString(R.string.dummy_group_chat_subject), participants);
-                if (mChatRoom != null) {
-                    mChatRoom.addListener(mChatRoomCreationListener);
-                } else {
-                    Log.w("[History Detail Fragment] createChatRoom returned null...");
-                    mWaitLayout.setVisibility(View.GONE);
-                }
+        if (defaultProxyConfig != null) {
+            ChatRoom room =
+                    core.findOneToOneChatRoom(
+                            defaultProxyConfig.getContact(), participant, isSecured);
+            if (room != null) {
+                ((HistoryActivity) getActivity())
+                        .showChatRoom(room.getLocalAddress(), room.getPeerAddress());
             } else {
-                room = core.getChatRoom(participant);
-                if (room != null) {
-                    ((HistoryActivity) getActivity())
-                            .showChatRoom(room.getLocalAddress(), room.getPeerAddress());
+                if (defaultProxyConfig.getConferenceFactoryUri() != null
+                        && (isSecured
+                                || !LinphonePreferences.instance().useBasicChatRoomFor1To1())) {
+                    mWaitLayout.setVisibility(View.VISIBLE);
+
+                    ChatRoomParams params = core.createDefaultChatRoomParams();
+                    params.enableEncryption(isSecured);
+                    params.enableGroup(false);
+                    // We don't want a basic chat room,
+                    // so if isSecured is false we have to set this manually
+                    params.setBackend(ChatRoomBackend.FlexisipChat);
+
+                    Address[] participants = new Address[1];
+                    participants[0] = participant;
+
+                    mChatRoom =
+                            core.createChatRoom(
+                                    params,
+                                    getString(R.string.dummy_group_chat_subject),
+                                    participants);
+                    if (mChatRoom != null) {
+                        mChatRoom.addListener(mChatRoomCreationListener);
+                    } else {
+                        Log.w("[History Detail Fragment] createChatRoom returned null...");
+                        mWaitLayout.setVisibility(View.GONE);
+                    }
+                } else {
+                    room = core.getChatRoom(participant);
+                    if (room != null) {
+                        ((HistoryActivity) getActivity())
+                                .showChatRoom(room.getLocalAddress(), room.getPeerAddress());
+                    }
                 }
+            }
+        } else {
+            if (isSecured) {
+                Log.e(
+                        "[History Detail Fragment] Can't create a secured chat room without proxy config");
+                return;
+            }
+
+            ChatRoom room = core.getChatRoom(participant);
+            if (room != null) {
+                ((HistoryActivity) getActivity())
+                        .showChatRoom(room.getLocalAddress(), room.getPeerAddress());
             }
         }
     }
