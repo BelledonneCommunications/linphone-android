@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.TextureView;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -63,6 +64,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         Compatibility.setShowWhenLocked(this, true);
         Compatibility.setTurnScreenOn(this, true);
 
