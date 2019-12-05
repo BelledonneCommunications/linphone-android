@@ -448,7 +448,10 @@ public class ChatRoomCreationFragment extends Fragment
                                         mChatRoom.getLocalAddress(), mChatRoom.getPeerAddress());
                     }
                 } else {
-                    ChatRoom chatRoom = core.getChatRoom(address, lpc.getIdentityAddress());
+                    ChatRoom chatRoom = null;
+                    if (lpc != null) chatRoom = core.getChatRoom(address, lpc.getIdentityAddress());
+                    else chatRoom = core.getChatRoom(address);
+
                     if (chatRoom != null) {
                         // Pop back stack so back button takes to the chat rooms list
                         getFragmentManager().popBackStack();
