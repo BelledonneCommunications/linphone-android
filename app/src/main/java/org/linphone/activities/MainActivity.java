@@ -69,7 +69,6 @@ import org.linphone.fragments.EmptyFragment;
 import org.linphone.fragments.StatusBarFragment;
 import org.linphone.history.HistoryActivity;
 import org.linphone.menu.SideMenuFragment;
-import org.linphone.service.LinphoneService;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.settings.SettingsActivity;
 import org.linphone.utils.DeviceUtils;
@@ -424,11 +423,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
     }
 
     private void quit() {
-        stopService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));
         goHomeAndClearStack();
-        /*ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        am.killBackgroundProcesses(getString(R.string.sync_account_type));
-        android.os.Process.killProcess(android.os.Process.myPid());*/
     }
 
     // Tab, Top and Status bars
