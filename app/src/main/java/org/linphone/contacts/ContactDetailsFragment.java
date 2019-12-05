@@ -364,6 +364,8 @@ public class ContactDetailsFragment extends Fragment implements ContactsUpdatedL
 
     private void goToChat(String tag, boolean isSecured) {
         Core core = LinphoneManager.getCore();
+        if (core == null) return;
+
         Address participant = Factory.instance().createAddress(tag);
         ProxyConfig defaultProxyConfig = core.getDefaultProxyConfig();
 
@@ -408,6 +410,18 @@ public class ContactDetailsFragment extends Fragment implements ContactsUpdatedL
                                 .showChatRoom(room.getLocalAddress(), room.getPeerAddress());
                     }
                 }
+            }
+        } else {
+            if (isSecured) {
+                Log.e(
+                        "[Contact Details Fragment] Can't create a secured chat room without proxy config");
+                return;
+            }
+
+            ChatRoom room = core.getChatRoom(participant);
+            if (room != null) {
+                ((ContactsActivity) getActivity())
+                        .showChatRoom(room.getLocalAddress(), room.getPeerAddress());
             }
         }
     }
