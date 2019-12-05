@@ -225,6 +225,7 @@ public class ContactsManager extends ContentObserver
         if (mContext == null) {
             return false;
         }
+
         boolean contactsR =
                 (PackageManager.PERMISSION_GRANTED
                         == mContext.getPackageManager()
@@ -239,6 +240,7 @@ public class ContactsManager extends ContentObserver
         if (mContext == null) {
             return false;
         }
+
         return (PackageManager.PERMISSION_GRANTED
                 == mContext.getPackageManager()
                         .checkPermission(
@@ -249,6 +251,7 @@ public class ContactsManager extends ContentObserver
         if (mContext == null) {
             return false;
         }
+
         return (PackageManager.PERMISSION_GRANTED
                 == mContext.getPackageManager()
                         .checkPermission(
@@ -435,6 +438,8 @@ public class ContactsManager extends ContentObserver
     }
 
     public String getAddressOrNumberForAndroidContact(ContentResolver resolver, Uri contactUri) {
+        if (resolver == null || contactUri == null) return null;
+
         // Phone Numbers
         String[] projection = new String[] {ContactsContract.CommonDataKinds.Phone.NUMBER};
         Cursor c = resolver.query(contactUri, projection, null, null, null);
@@ -445,8 +450,8 @@ public class ContactsManager extends ContentObserver
                 c.close();
                 return number;
             }
+            c.close();
         }
-        c.close();
 
         projection = new String[] {ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS};
         c = resolver.query(contactUri, projection, null, null, null);
@@ -458,12 +463,14 @@ public class ContactsManager extends ContentObserver
                 c.close();
                 return address;
             }
+            c.close();
         }
-        c.close();
+
         return null;
     }
 
     private synchronized boolean refreshSipContact(Friend lf) {
+        if (lf == null) return false;
         LinphoneContact contact = (LinphoneContact) lf.getUserData();
 
         if (contact != null) {

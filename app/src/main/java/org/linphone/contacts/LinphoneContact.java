@@ -456,18 +456,21 @@ public class LinphoneContact extends AndroidContact
     }
 
     public boolean hasPresenceModelForUriOrTelCapability(String uri, FriendCapability capability) {
-        if (mFriend == null) return false;
+        if (mFriend == null || uri == null) return false;
 
         PresenceModel presence = mFriend.getPresenceModelForUriOrTel(uri);
         if (presence != null) {
             return presence.hasCapability(capability);
         } else {
             for (LinphoneNumberOrAddress noa : getNumbersOrAddresses()) {
-                String contact = getContactFromPresenceModelForUriOrTel(noa.getValue());
-                if (contact != null && contact.equals(uri)) {
-                    presence = mFriend.getPresenceModelForUriOrTel(noa.getValue());
-                    if (presence != null) {
-                        return presence.hasCapability(capability);
+                String value = noa.getValue();
+                if (value != null) {
+                    String contact = getContactFromPresenceModelForUriOrTel(value);
+                    if (contact != null && contact.equals(uri)) {
+                        presence = mFriend.getPresenceModelForUriOrTel(value);
+                        if (presence != null) {
+                            return presence.hasCapability(capability);
+                        }
                     }
                 }
             }

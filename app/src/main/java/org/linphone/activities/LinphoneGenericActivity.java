@@ -84,7 +84,11 @@ public abstract class LinphoneGenericActivity extends ThemeableActivity {
             }
 
             Log.i("[Generic Activity] Starting Service");
-            startService(new Intent().setClass(this, LinphoneService.class));
+            try {
+                startService(new Intent().setClass(this, LinphoneService.class));
+            } catch (IllegalStateException ise) {
+                Log.e("[Generic Activity] Couldn't start service, exception: ", ise);
+            }
         }
     }
 }

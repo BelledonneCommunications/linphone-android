@@ -280,6 +280,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
             permissionsList.add(Manifest.permission.READ_PHONE_STATE);
         }
         if (LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests()
+                && mCall != null
                 && mCall.getRemoteParams().videoEnabled()) {
             if (camera != PackageManager.PERMISSION_GRANTED) {
                 Log.i("[Permission] Asking for camera");
