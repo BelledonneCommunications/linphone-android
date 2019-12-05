@@ -144,25 +144,31 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
                         return data;
                     }
 
-                    String id = c.getString(c.getColumnIndex(ContactsContract.Data.CONTACT_ID));
-                    boolean starred =
-                            c.getInt(c.getColumnIndex(ContactsContract.Contacts.STARRED)) == 1;
+                    try {
+                        String id = c.getString(c.getColumnIndex(ContactsContract.Data.CONTACT_ID));
+                        boolean starred =
+                                c.getInt(c.getColumnIndex(ContactsContract.Contacts.STARRED)) == 1;
 
-                    LinphoneContact contact = androidContactsCache.get(id);
-                    if (contact == null) {
-                        Log.d(
-                                "[Contacts Manager] Creating LinphoneContact with native ID "
-                                        + id
-                                        + ", favorite flag is "
-                                        + starred);
-                        nativeIds.add(id);
-                        contact = new LinphoneContact();
-                        contact.setAndroidId(id);
-                        contact.setIsFavourite(starred);
-                        androidContactsCache.put(id, contact);
+                        LinphoneContact contact = androidContactsCache.get(id);
+                        if (contact == null) {
+                            Log.d(
+                                    "[Contacts Manager] Creating LinphoneContact with native ID "
+                                            + id
+                                            + ", favorite flag is "
+                                            + starred);
+                            nativeIds.add(id);
+                            contact = new LinphoneContact();
+                            contact.setAndroidId(id);
+                            contact.setIsFavourite(starred);
+                            androidContactsCache.put(id, contact);
+                        }
+
+                        contact.syncValuesFromAndroidCusor(c);
+                    } catch (IllegalStateException ise) {
+                        Log.e(
+                                "[Contacts Manager] Couldn't get values from cursor, exception: ",
+                                ise);
                     }
-
-                    contact.syncValuesFromAndroidCusor(c);
                 }
                 c.close();
             }

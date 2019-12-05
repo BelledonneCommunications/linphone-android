@@ -825,7 +825,7 @@ public class LinphoneManager implements SensorEventListener {
 
     public void setCallGsmON(boolean on) {
         mCallGsmON = on;
-        if (on) {
+        if (on && mCore != null) {
             mCore.pauseAllCalls();
         }
     }

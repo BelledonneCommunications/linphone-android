@@ -424,8 +424,8 @@ public abstract class MainActivity extends LinphoneGenericActivity
     }
 
     private void quit() {
-        goHomeAndClearStack();
         stopService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));
+        goHomeAndClearStack();
         /*ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         am.killBackgroundProcesses(getString(R.string.sync_account_type));
         android.os.Process.killProcess(android.os.Process.myPid());*/
