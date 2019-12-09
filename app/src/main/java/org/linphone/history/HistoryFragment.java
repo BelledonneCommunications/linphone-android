@@ -35,23 +35,26 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.call.views.LinphoneLinearLayoutManager;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.CallLog;
 import org.linphone.core.Core;
+import org.linphone.core.CoreListenerStub;
 import org.linphone.utils.SelectableHelper;
-import org.linphone.views.LinphoneLinearLayoutManager;
 
 public class HistoryFragment extends Fragment
         implements OnClickListener,
                 OnItemClickListener,
                 HistoryViewHolder.ClickListener,
                 ContactsUpdatedListener,
-                SelectableHelper.DeleteListener {
+                SelectableHelper.DeleteListener,
+                LinphoneContext.CoreStartedListener {
     private RecyclerView mHistoryList;
     private TextView mNoCallHistory, mNoMissedCallHistory;
     private ImageView mMissedCalls, mAllCalls;
@@ -60,6 +63,7 @@ public class HistoryFragment extends Fragment
     private List<CallLog> mLogs;
     private HistoryAdapter mHistoryAdapter;
     private SelectableHelper mSelectionHelper;
+    private CoreListenerStub mListener;
 
     @Override
     public View onCreateView(
@@ -94,26 +98,37 @@ public class HistoryFragment extends Fragment
         mAllCalls.setEnabled(false);
         mOnlyDisplayMissedCalls = false;
 
+        mListener =
+                new CoreListenerStub() {
+                    @Override
+                    public void onCallStateChanged(
+                            Core core, Call call, Call.State state, String message) {
+                        if (state == Call.State.End || state == Call.State.Error) {
+                            reloadData();
+                        }
+                    }
+                };
+
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        ContactsManager.getInstance().addContactsListener(this);
 
-        mLogs = Arrays.asList(LinphoneManager.getCore().getCallLogs());
-        hideHistoryListAndDisplayMessageIfEmpty();
-        mHistoryAdapter =
-                new HistoryAdapter((HistoryActivity) getActivity(), mLogs, this, mSelectionHelper);
-        mHistoryList.setAdapter(mHistoryAdapter);
-        mSelectionHelper.setAdapter(mHistoryAdapter);
-        mSelectionHelper.setDialogMessage(R.string.call_log_delete_dialog);
+        ContactsManager.getInstance().addContactsListener(this);
+        LinphoneContext.instance().addCoreStartedListener(this);
+        LinphoneManager.getCore().addListener(mListener);
+
+        reloadData();
     }
 
     @Override
     public void onPause() {
         ContactsManager.getInstance().removeContactsListener(this);
+        LinphoneContext.instance().removeCoreStartedListener(this);
+        LinphoneManager.getCore().removeListener(mListener);
+
         super.onPause();
     }
 
@@ -123,6 +138,11 @@ public class HistoryFragment extends Fragment
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void onCoreStarted() {
+        reloadData();
     }
 
     @Override
@@ -177,15 +197,18 @@ public class HistoryFragment extends Fragment
         if (mHistoryAdapter.isEditionEnabled()) {
             mHistoryAdapter.toggleSelection(position);
         } else {
-            CallLog log = mLogs.get(position);
-            Address address;
-            if (log.getDir() == Call.Dir.Incoming) {
-                address = log.getFromAddress();
-            } else {
-                address = log.getToAddress();
-            }
-            if (address != null) {
-                LinphoneManager.getCallManager().newOutgoingCall(address.asStringUriOnly(), null);
+            if (position >= 0 && position < mLogs.size()) {
+                CallLog log = mLogs.get(position);
+                Address address;
+                if (log.getDir() == Call.Dir.Incoming) {
+                    address = log.getFromAddress();
+                } else {
+                    address = log.getToAddress();
+                }
+                if (address != null) {
+                    LinphoneManager.getCallManager()
+                            .newOutgoingCall(address.asStringUriOnly(), null);
+                }
             }
         }
     }
@@ -216,6 +239,16 @@ public class HistoryFragment extends Fragment
         } else {
             ((HistoryActivity) getActivity()).showEmptyChildFragment();
         }
+    }
+
+    private void reloadData() {
+        mLogs = Arrays.asList(LinphoneManager.getCore().getCallLogs());
+        hideHistoryListAndDisplayMessageIfEmpty();
+        mHistoryAdapter =
+                new HistoryAdapter((HistoryActivity) getActivity(), mLogs, this, mSelectionHelper);
+        mHistoryList.setAdapter(mHistoryAdapter);
+        mSelectionHelper.setAdapter(mHistoryAdapter);
+        mSelectionHelper.setDialogMessage(R.string.call_log_delete_dialog);
     }
 
     private void removeNotMissedCallsFromLogs() {

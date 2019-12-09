@@ -45,18 +45,18 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import org.linphone.assistant.PhoneAccountLinkingAssistantActivity;
+import org.linphone.call.AndroidAudioManager;
 import org.linphone.call.CallManager;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.core.AccountCreator;
 import org.linphone.core.AccountCreatorListenerStub;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
-import org.linphone.core.ConfiguringState;
 import org.linphone.core.Core;
+import org.linphone.core.CoreListener;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.Factory;
 import org.linphone.core.FriendList;
-import org.linphone.core.GlobalState;
 import org.linphone.core.PresenceActivity;
 import org.linphone.core.PresenceBasicStatus;
 import org.linphone.core.PresenceModel;
@@ -68,7 +68,6 @@ import org.linphone.core.VersionUpdateCheckResult;
 import org.linphone.core.tools.H264Helper;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
-import org.linphone.utils.AndroidAudioManager;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.utils.MediaScanner;
 import org.linphone.utils.PushNotificationUtils;
@@ -160,37 +159,6 @@ public class LinphoneManager implements SensorEventListener {
 
         mCoreListener =
                 new CoreListenerStub() {
-                    @Override
-                    public void onGlobalStateChanged(
-                            final Core core, final GlobalState state, final String message) {
-                        Log.i("New global state [", state, "]");
-                        if (state == GlobalState.On) {
-                            try {
-                                initLiblinphone(core);
-                            } catch (IllegalArgumentException iae) {
-                                Log.e(
-                                        "[Manager] Global State Changed Illegal Argument Exception: "
-                                                + iae);
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onConfiguringStatus(
-                            Core core, ConfiguringState state, String message) {
-                        Log.d(
-                                "[Manager] Remote provisioning status = "
-                                        + state.toString()
-                                        + " ("
-                                        + message
-                                        + ")");
-
-                        LinphonePreferences prefs = LinphonePreferences.instance();
-                        if (state == ConfiguringState.Successful) {
-                            prefs.setPushNotificationEnabled(prefs.isPushNotificationEnabled());
-                        }
-                    }
-
                     @SuppressLint("Wakelock")
                     @Override
                     public void onCallStateChanged(
@@ -198,7 +166,7 @@ public class LinphoneManager implements SensorEventListener {
                             final Call call,
                             final State state,
                             final String message) {
-                        Log.i("[Manager] New call state [", state, "]");
+                        Log.i("[Manager] Call state is [", state, "]");
                         if (state == State.IncomingReceived
                                 && !call.equals(core.getCurrentCall())) {
                             if (call.getReplacedCall() != null) {
@@ -388,6 +356,7 @@ public class LinphoneManager implements SensorEventListener {
     }
 
     public void restartCore() {
+        Log.w("[Manager] Restarting Core");
         mCore.stop();
         mCore.start();
     }
@@ -395,8 +364,8 @@ public class LinphoneManager implements SensorEventListener {
     private void destroyCore() {
         Log.w("[Manager] Destroying Core");
         if (LinphonePreferences.instance() != null) {
-            // We set network reachable at false before destroy LC to not send register with expires
-            // at 0
+            // We set network reachable at false before destroying the Core
+            // to not send a register with expires at 0
             if (LinphonePreferences.instance().isPushNotificationEnabled()) {
                 Log.w(
                         "[Manager] Setting network reachability to False to prevent unregister and allow incoming push notifications");
@@ -429,7 +398,7 @@ public class LinphoneManager implements SensorEventListener {
         }
     }
 
-    public synchronized void startLibLinphone(boolean isPush) {
+    public synchronized void startLibLinphone(boolean isPush, CoreListener listener) {
         try {
             mCore =
                     Factory.instance()
@@ -437,6 +406,7 @@ public class LinphoneManager implements SensorEventListener {
                                     mPrefs.getLinphoneDefaultConfig(),
                                     mPrefs.getLinphoneFactoryConfig(),
                                     mContext);
+            mCore.addListener(listener);
             mCore.addListener(mCoreListener);
 
             if (isPush) {
@@ -466,6 +436,8 @@ public class LinphoneManager implements SensorEventListener {
             /*use schedule instead of scheduleAtFixedRate to avoid iterate from being call in burst after cpu wake up*/
             mTimer = new Timer("Linphone scheduler");
             mTimer.schedule(lTask, 0, 20);
+
+            configureCore();
         } catch (Exception e) {
             Log.e(e, "[Manager] Cannot start linphone");
         }
@@ -474,8 +446,8 @@ public class LinphoneManager implements SensorEventListener {
         H264Helper.setH264Mode(H264Helper.MODE_AUTO, mCore);
     }
 
-    private synchronized void initLiblinphone(Core core) {
-        mCore = core;
+    private synchronized void configureCore() {
+        Log.i("[Manager] Configuring Core");
         mAudioManager = new AndroidAudioManager(mContext);
 
         mCore.setZrtpSecretsFile(mBasePath + "/zrtp_secrets");
@@ -544,6 +516,8 @@ public class LinphoneManager implements SensorEventListener {
         mAccountCreator = mCore.createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
         mAccountCreator.setListener(mAccountCreatorListener);
         mCallGsmON = false;
+
+        Log.i("[Manager] Core configured");
     }
 
     public void resetCameraFromPreferences() {
@@ -572,16 +546,28 @@ public class LinphoneManager implements SensorEventListener {
 
     /* Account linking */
 
+    public AccountCreator getAccountCreator() {
+        if (mAccountCreator == null) {
+            Log.w("[Manager] Account creator shouldn't be null !");
+            mAccountCreator =
+                    mCore.createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
+            mAccountCreator.setListener(mAccountCreatorListener);
+        }
+        return mAccountCreator;
+    }
+
     public void isAccountWithAlias() {
         if (mCore.getDefaultProxyConfig() != null) {
             long now = new Timestamp(new Date().getTime()).getTime();
-            if (mAccountCreator != null && LinphonePreferences.instance().getLinkPopupTime() == null
+            AccountCreator accountCreator = getAccountCreator();
+            if (LinphonePreferences.instance().getLinkPopupTime() == null
                     || Long.parseLong(LinphonePreferences.instance().getLinkPopupTime()) < now) {
-                mAccountCreator.setUsername(
+                accountCreator.reset();
+                accountCreator.setUsername(
                         LinphonePreferences.instance()
                                 .getAccountUsername(
                                         LinphonePreferences.instance().getDefaultAccountIndex()));
-                mAccountCreator.isAccountExist();
+                accountCreator.isAccountExist();
             }
         } else {
             LinphonePreferences.instance().setLinkPopupTime(null);
@@ -839,7 +825,7 @@ public class LinphoneManager implements SensorEventListener {
 
     public void setCallGsmON(boolean on) {
         mCallGsmON = on;
-        if (on) {
+        if (on && mCore != null) {
             mCore.pauseAllCalls();
         }
     }

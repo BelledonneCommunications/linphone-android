@@ -26,13 +26,12 @@ import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.provider.ContactsContract.DisplayPhoto;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.InputType;
@@ -53,12 +52,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.linphone.R;
+import org.linphone.contacts.views.ContactAvatar;
 import org.linphone.core.tools.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.FileUtils;
+import org.linphone.utils.ImageUtils;
 import org.linphone.utils.LinphoneUtils;
-import org.linphone.views.ContactAvatar;
 
 public class ContactEditorFragment extends Fragment {
     private static final int ADD_PHOTO = 1337;
@@ -136,12 +136,15 @@ public class ContactEditorFragment extends Fragment {
                         if (mIsNewContact) {
                             boolean areAllFielsEmpty = true;
                             for (LinphoneNumberOrAddress nounoa : mNumbersAndAddresses) {
-                                if (nounoa.getValue() != null && !nounoa.getValue().equals("")) {
+                                String value = nounoa.getValue();
+                                if (value != null && !value.trim().isEmpty()) {
                                     areAllFielsEmpty = false;
                                     break;
                                 }
                             }
                             if (areAllFielsEmpty) {
+                                Log.i(
+                                        "[Contact Editor] All SIP and phone fields are empty, aborting");
                                 getFragmentManager().popBackStackImmediate();
                                 return;
                             }
@@ -154,37 +157,36 @@ public class ContactEditorFragment extends Fragment {
                                 true);
 
                         if (mPhotoToAdd != null) {
+                            Log.i("[Contact Editor] Found picture to set to contact");
                             mContact.setPhoto(mPhotoToAdd);
                         }
 
                         for (LinphoneNumberOrAddress noa : mNumbersAndAddresses) {
-                            if (noa.getValue() == null || noa.getValue().isEmpty()) {
-                                if (noa.getOldValue() != null && !noa.getOldValue().isEmpty()) {
-                                    Log.i("[Contact Editor] Removing number " + noa.getOldValue());
+                            String value = noa.getValue();
+                            String oldValue = noa.getOldValue();
+
+                            if (value == null || value.trim().isEmpty()) {
+                                if (oldValue != null && !oldValue.isEmpty()) {
+                                    Log.i("[Contact Editor] Removing number: ", oldValue);
                                     mContact.removeNumberOrAddress(noa);
                                 }
                             } else {
-                                if (noa.getOldValue() != null
-                                        && noa.getOldValue().equals(noa.getValue())) {
-                                    Log.i(
-                                            "[Contact Editor] Keeping existing number "
-                                                    + noa.getValue());
+                                if (oldValue != null && oldValue.equals(value)) {
+                                    Log.i("[Contact Editor] Keeping existing number: ", value);
                                     continue;
                                 }
 
                                 if (noa.isSIPAddress()) {
-
-                                    noa.setValue(
-                                            LinphoneUtils.getFullAddressFromUsername(
-                                                    noa.getValue()));
+                                    noa.setValue(LinphoneUtils.getFullAddressFromUsername(value));
                                 }
-                                Log.i("[Contact Editor] Adding new number " + noa.getValue());
+                                Log.i("[Contact Editor] Adding new number: ", value);
 
                                 mContact.addOrUpdateNumberOrAddress(noa);
                             }
                         }
 
                         if (!mOrganization.getText().toString().isEmpty() || !mIsNewContact) {
+                            Log.i("[Contact Editor] Setting organization field: ", mOrganization);
                             mContact.setOrganization(mOrganization.getText().toString(), true);
                         }
 
@@ -194,6 +196,8 @@ public class ContactEditorFragment extends Fragment {
                             // Ensure fetch will be done so the new contact appears in the contacts
                             // list: contacts content observer may not be notified if contacts sync
                             // is disabled at system level
+                            Log.i(
+                                    "[Contact Editor] New contact created, starting fetch contacts task");
                             ContactsManager.getInstance().fetchContactsAsync();
                         }
 
@@ -306,9 +310,18 @@ public class ContactEditorFragment extends Fragment {
                 new OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        pickImage();
-                        ((ContactsActivity) getActivity())
-                                .requestPermissionIfNotGranted(Manifest.permission.CAMERA);
+                        ContactsActivity contactsActivity = ((ContactsActivity) getActivity());
+                        if (contactsActivity != null) {
+                            String[] permissions = {
+                                Manifest.permission.READ_EXTERNAL_STORAGE,
+                                Manifest.permission.CAMERA
+                            };
+                            if (contactsActivity.checkPermissions(permissions)) {
+                                pickImage();
+                            } else {
+                                contactsActivity.requestPermissionsIfNotGranted(permissions);
+                            }
+                        }
                     }
                 });
 
@@ -386,15 +399,18 @@ public class ContactEditorFragment extends Fragment {
                 editContactPicture(null, bm);
             } else if (data != null && data.getData() != null) {
                 Uri selectedImageUri = data.getData();
-                try {
-                    Bitmap selectedImage =
-                            MediaStore.Images.Media.getBitmap(
-                                    getActivity().getContentResolver(), selectedImageUri);
-                    selectedImage =
-                            Bitmap.createScaledBitmap(selectedImage, PHOTO_SIZE, PHOTO_SIZE, false);
-                    editContactPicture(null, selectedImage);
-                } catch (IOException e) {
-                    Log.e(e);
+                String filePath = FileUtils.getRealPathFromURI(getActivity(), selectedImageUri);
+                if (filePath != null) {
+                    editContactPicture(filePath, null);
+                } else {
+                    try {
+                        Bitmap selectedImage =
+                                MediaStore.Images.Media.getBitmap(
+                                        getActivity().getContentResolver(), selectedImageUri);
+                        editContactPicture(null, selectedImage);
+                    } catch (IOException e) {
+                        Log.e("[Contact Editor] IO error: ", e);
+                    }
                 }
             } else if (mPickedPhotoForContactUri != null) {
                 String filePath = mPickedPhotoForContactUri.getPath();
@@ -426,10 +442,12 @@ public class ContactEditorFragment extends Fragment {
             }
         }
 
-        if (mContact != null) {
-            ContactAvatar.displayAvatar(mContact, mView.findViewById(R.id.avatar_layout));
-        } else {
-            ContactAvatar.displayAvatar("", mView.findViewById(R.id.avatar_layout));
+        if (mPhotoToAdd == null) {
+            if (mContact != null) {
+                ContactAvatar.displayAvatar(mContact, mView.findViewById(R.id.avatar_layout));
+            } else {
+                ContactAvatar.displayAvatar("", mView.findViewById(R.id.avatar_layout));
+            }
         }
 
         mSipAddresses = initSipAddressFields(mContact);
@@ -438,27 +456,24 @@ public class ContactEditorFragment extends Fragment {
 
     private void pickImage() {
         mPickedPhotoForContactUri = null;
-        final List<Intent> cameraIntents = new ArrayList<>();
-        final Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        List<Intent> cameraIntents = new ArrayList<>();
+
+        // Handles image & video picking
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK);
+        galleryIntent.setType("image/*");
+
+        // Allows to capture directly from the camera
+        Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         File file =
                 new File(
                         FileUtils.getStorageDirectory(getActivity()),
-                        getString(R.string.temp_photo_name));
+                        getString(R.string.temp_photo_name_with_date)
+                                .replace("%s", System.currentTimeMillis() + ".jpeg"));
         mPickedPhotoForContactUri = Uri.fromFile(file);
-        captureIntent.putExtra("outputX", PHOTO_SIZE);
-        captureIntent.putExtra("outputY", PHOTO_SIZE);
-        captureIntent.putExtra("aspectX", 0);
-        captureIntent.putExtra("aspectY", 0);
-        captureIntent.putExtra("scale", true);
-        captureIntent.putExtra("return-data", false);
         captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mPickedPhotoForContactUri);
         cameraIntents.add(captureIntent);
 
-        final Intent galleryIntent = new Intent();
-        galleryIntent.setType("image/*");
-        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-
-        final Intent chooserIntent =
+        Intent chooserIntent =
                 Intent.createChooser(galleryIntent, getString(R.string.image_picker_title));
         chooserIntent.putExtra(
                 Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(new Parcelable[] {}));
@@ -467,44 +482,59 @@ public class ContactEditorFragment extends Fragment {
     }
 
     private void editContactPicture(String filePath, Bitmap image) {
+        int orientation = ExifInterface.ORIENTATION_NORMAL;
+
         if (image == null) {
+            Log.i(
+                    "[Contact Editor] Bitmap is null, trying to decode image from file [",
+                    filePath,
+                    "]");
             image = BitmapFactory.decodeFile(filePath);
+
+            try {
+                ExifInterface ei = new ExifInterface(filePath);
+                orientation =
+                        ei.getAttributeInt(
+                                ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+                Log.i("[Contact Editor] Exif rotation is ", orientation);
+            } catch (IOException e) {
+                Log.e("[Contact Editor] Failed to get Exif rotation, error is ", e);
+            }
+        } else {
+
+        }
+        if (image == null) {
+            Log.e(
+                    "[Contact Editor] Couldn't get bitmap from either filePath [",
+                    filePath,
+                    "] nor image");
+            return;
         }
 
-        Bitmap scaledPhoto;
-        int size = getThumbnailSize();
-        if (size > 0) {
-            scaledPhoto = Bitmap.createScaledBitmap(image, size, size, false);
-        } else {
-            scaledPhoto = Bitmap.createBitmap(image);
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                image = ImageUtils.rotateImage(image, 90);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                image = ImageUtils.rotateImage(image, 180);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                image = ImageUtils.rotateImage(image, 270);
+                break;
+            case ExifInterface.ORIENTATION_NORMAL:
+                // Nothing to do
+                break;
+            default:
+                Log.w("[Contact Editor] Unexpected orientation ", orientation);
         }
-        image.recycle();
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        scaledPhoto.compress(Bitmap.CompressFormat.PNG, 0, stream);
-        mContactPicture.setImageBitmap(scaledPhoto);
+        image.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         mPhotoToAdd = stream.toByteArray();
-    }
 
-    private int getThumbnailSize() {
-        int value = -1;
-        Cursor c =
-                getActivity()
-                        .getContentResolver()
-                        .query(
-                                DisplayPhoto.CONTENT_MAX_DIMENSIONS_URI,
-                                new String[] {DisplayPhoto.THUMBNAIL_MAX_DIM},
-                                null,
-                                null,
-                                null);
-        try {
-            c.moveToFirst();
-            value = c.getInt(0);
-        } catch (Exception e) {
-            Log.e(e);
-        }
-        c.close();
-        return value;
+        Bitmap roundPicture = ImageUtils.getRoundBitmap(image);
+        ContactAvatar.displayAvatar(roundPicture, mView.findViewById(R.id.avatar_layout));
+        image.recycle();
     }
 
     private LinearLayout initNumbersFields(final LinphoneContact contact) {

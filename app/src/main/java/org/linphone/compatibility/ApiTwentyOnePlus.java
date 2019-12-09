@@ -183,7 +183,7 @@ class ApiTwentyOnePlus {
     }
 
     public static Notification createMissedCallNotification(
-            Context context, String title, String text, PendingIntent intent) {
+            Context context, String title, String text, PendingIntent intent, int count) {
 
         return new Notification.Builder(context)
                 .setContentTitle(title)
@@ -201,6 +201,7 @@ class ApiTwentyOnePlus {
                 .setPriority(Notification.PRIORITY_HIGH)
                 .setWhen(System.currentTimeMillis())
                 .setShowWhen(true)
+                .setNumber(count)
                 .build();
     }
 

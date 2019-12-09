@@ -36,6 +36,7 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.contacts.views.ContactAvatar;
 import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomBackend;
@@ -50,7 +51,6 @@ import org.linphone.core.ProxyConfig;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.LinphoneUtils;
-import org.linphone.views.ContactAvatar;
 
 public class ContactDetailsFragment extends Fragment implements ContactsUpdatedListener {
     private LinphoneContact mContact;
@@ -89,6 +89,11 @@ public class ContactDetailsFragment extends Fragment implements ContactsUpdatedL
                         ((ContactsActivity) getActivity()).showContactEdit(mContact);
                     }
                 });
+
+        if (mContact != null
+                && getResources().getBoolean(R.bool.forbid_pure_linphone_contacts_edition)) {
+            editContact.setVisibility(mContact.isAndroidContact() ? View.VISIBLE : View.GONE);
+        }
 
         ImageView deleteContact = mView.findViewById(R.id.deleteContact);
         deleteContact.setOnClickListener(
@@ -359,6 +364,8 @@ public class ContactDetailsFragment extends Fragment implements ContactsUpdatedL
 
     private void goToChat(String tag, boolean isSecured) {
         Core core = LinphoneManager.getCore();
+        if (core == null) return;
+
         Address participant = Factory.instance().createAddress(tag);
         ProxyConfig defaultProxyConfig = core.getDefaultProxyConfig();
 
@@ -403,6 +410,18 @@ public class ContactDetailsFragment extends Fragment implements ContactsUpdatedL
                                 .showChatRoom(room.getLocalAddress(), room.getPeerAddress());
                     }
                 }
+            }
+        } else {
+            if (isSecured) {
+                Log.e(
+                        "[Contact Details Fragment] Can't create a secured chat room without proxy config");
+                return;
+            }
+
+            ChatRoom room = core.getChatRoom(participant);
+            if (room != null) {
+                ((ContactsActivity) getActivity())
+                        .showChatRoom(room.getLocalAddress(), room.getPeerAddress());
             }
         }
     }

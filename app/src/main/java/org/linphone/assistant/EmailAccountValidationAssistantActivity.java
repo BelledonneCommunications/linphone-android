@@ -41,7 +41,7 @@ public class EmailAccountValidationAssistantActivity extends AssistantActivity {
         setContentView(R.layout.assistant_email_account_validation);
 
         TextView email = findViewById(R.id.send_email);
-        email.setText(mAccountCreator.getEmail());
+        email.setText(getAccountCreator().getEmail());
 
         mFinishCreation = findViewById(R.id.assistant_check);
         mFinishCreation.setOnClickListener(
@@ -50,9 +50,11 @@ public class EmailAccountValidationAssistantActivity extends AssistantActivity {
                     public void onClick(View v) {
                         mFinishCreation.setEnabled(false);
 
-                        AccountCreator.Status status = mAccountCreator.isAccountActivated();
+                        AccountCreator.Status status = getAccountCreator().isAccountActivated();
                         if (status != AccountCreator.Status.RequestOk) {
-                            Log.e("[Email Account Validation] activateAccount returned " + status);
+                            Log.e(
+                                    "[Email Account Validation Assistant] activateAccount returned "
+                                            + status);
                             mFinishCreation.setEnabled(true);
                             showGenericErrorDialog(status);
                         }
@@ -65,7 +67,7 @@ public class EmailAccountValidationAssistantActivity extends AssistantActivity {
                     public void onIsAccountActivated(
                             AccountCreator creator, AccountCreator.Status status, String resp) {
                         Log.i(
-                                "[Email Account Validation] onIsAccountActivated status is "
+                                "[Email Account Validation Assistant] onIsAccountActivated status is "
                                         + status);
                         if (status.equals(AccountCreator.Status.AccountActivated)) {
                             createProxyConfigAndLeaveAssistant();
@@ -87,7 +89,7 @@ public class EmailAccountValidationAssistantActivity extends AssistantActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mAccountCreator.addListener(mListener);
+        getAccountCreator().addListener(mListener);
 
         // Prevent user to go back, it won't be able to come back here after...
         mBack.setEnabled(false);
@@ -96,6 +98,6 @@ public class EmailAccountValidationAssistantActivity extends AssistantActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        mAccountCreator.removeListener(mListener);
+        getAccountCreator().removeListener(mListener);
     }
 }

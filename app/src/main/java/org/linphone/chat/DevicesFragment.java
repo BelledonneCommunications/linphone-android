@@ -26,16 +26,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
-import android.widget.TextView;
 import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
-import org.linphone.contacts.ContactsManager;
-import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
-import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.Core;
 import org.linphone.core.Factory;
 import org.linphone.core.Participant;
@@ -43,7 +39,6 @@ import org.linphone.core.ParticipantDevice;
 import org.linphone.utils.LinphoneUtils;
 
 public class DevicesFragment extends Fragment {
-    private TextView mTitle;
     private ExpandableListView mExpandableList;
     private DevicesAdapter mAdapter;
 
@@ -114,9 +109,6 @@ public class DevicesFragment extends Fragment {
 
         initChatRoom();
 
-        mTitle = view.findViewById(R.id.title);
-        initHeader();
-
         ImageView backButton = view.findViewById(R.id.back);
         backButton.setOnClickListener(
                 new View.OnClickListener() {
@@ -144,24 +136,6 @@ public class DevicesFragment extends Fragment {
     private void initChatRoom() {
         Core core = LinphoneManager.getCore();
         mRoom = core.getChatRoom(mRoomAddr, mLocalSipAddr);
-    }
-
-    private void initHeader() {
-        if (mRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
-            Address remoteParticipantAddr = mRoomAddr;
-            if (mRoom.getParticipants().length > 0) {
-                remoteParticipantAddr = mRoom.getParticipants()[0].getAddress();
-            }
-            LinphoneContact c =
-                    ContactsManager.getInstance().findContactFromAddress(remoteParticipantAddr);
-            String displayName;
-            if (c != null) {
-                displayName = c.getFullName();
-            } else {
-                displayName = LinphoneUtils.getAddressDisplayName(remoteParticipantAddr);
-            }
-            mTitle.setText(getString(R.string.chat_room_devices).replace("%s", displayName));
-        }
     }
 
     private void initValues() {

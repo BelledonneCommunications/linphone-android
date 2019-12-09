@@ -20,7 +20,6 @@
 package org.linphone.activities;
 
 import android.Manifest;
-import android.app.ActivityManager;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -46,7 +45,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import java.util.ArrayList;
 import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.call.CallActivity;
 import org.linphone.call.CallIncomingActivity;
@@ -66,6 +64,7 @@ import org.linphone.core.CoreListenerStub;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.RegistrationState;
 import org.linphone.core.tools.Log;
+import org.linphone.dialer.DialerActivity;
 import org.linphone.fragments.EmptyFragment;
 import org.linphone.fragments.StatusBarFragment;
 import org.linphone.history.HistoryActivity;
@@ -74,7 +73,6 @@ import org.linphone.settings.LinphonePreferences;
 import org.linphone.settings.SettingsActivity;
 import org.linphone.utils.DeviceUtils;
 import org.linphone.utils.LinphoneUtils;
-import org.linphone.utils.PushNotificationUtils;
 
 public abstract class MainActivity extends LinphoneGenericActivity
         implements StatusBarFragment.MenuClikedListener, SideMenuFragment.QuitClikedListener {
@@ -276,23 +274,6 @@ public abstract class MainActivity extends LinphoneGenericActivity
         super.onStart();
 
         requestRequiredPermissions();
-
-        if (DeviceUtils.isAppUserRestricted(this)) {
-            // See https://firebase.google.com/docs/cloud-messaging/android/receive#restricted
-            Log.w(
-                    "[Main Activity] Device has been restricted by user (Android 9+), push notifications won't work !");
-        }
-
-        int bucket = DeviceUtils.getAppStandbyBucket(this);
-        if (bucket > 0) {
-            Log.w(
-                    "[Main Activity] Device is in bucket "
-                            + Compatibility.getAppStandbyBucketNameFromValue(bucket));
-        }
-
-        if (!PushNotificationUtils.isAvailable(this)) {
-            Log.w("[Main Activity] Push notifications won't work !");
-        }
     }
 
     @Override
@@ -443,10 +424,6 @@ public abstract class MainActivity extends LinphoneGenericActivity
 
     private void quit() {
         goHomeAndClearStack();
-        stopService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));
-        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        am.killBackgroundProcesses(getString(R.string.sync_account_type));
-        android.os.Process.killProcess(android.os.Process.myPid());
     }
 
     // Tab, Top and Status bars
@@ -493,6 +470,14 @@ public abstract class MainActivity extends LinphoneGenericActivity
                         + " permission is "
                         + (granted == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
         return granted == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public boolean checkPermissions(String[] permissions) {
+        boolean allGranted = true;
+        for (String permission : permissions) {
+            allGranted &= checkPermission(permission);
+        }
+        return allGranted;
     }
 
     public void requestPermissionIfNotGranted(String permission) {

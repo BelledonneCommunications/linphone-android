@@ -43,12 +43,14 @@ import java.util.ArrayList;
 import java.util.List;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.call.views.LinphoneLinearLayoutManager;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.contacts.SearchContactViewHolder;
 import org.linphone.contacts.SearchContactsAdapter;
+import org.linphone.contacts.views.ContactSelectView;
 import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomBackend;
@@ -61,8 +63,6 @@ import org.linphone.core.ProxyConfig;
 import org.linphone.core.SearchResult;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
-import org.linphone.views.ContactSelectView;
-import org.linphone.views.LinphoneLinearLayoutManager;
 
 public class ChatRoomCreationFragment extends Fragment
         implements View.OnClickListener,
@@ -143,8 +143,8 @@ public class ChatRoomCreationFragment extends Fragment
                         if (mChatRoomAddress == null && mChatRoomSubject == null) {
                             mContactsSelectedLayout.removeAllViews();
                         } else {
-                            // Pop the back stack twice so we don't have in stack Group -> Creation
-                            // -> Group
+                            // Pop the back stack twice so we don't have in stack
+                            // Group -> Creation -> Group
                             getFragmentManager().popBackStack();
                             getFragmentManager().popBackStack();
                         }
@@ -448,7 +448,10 @@ public class ChatRoomCreationFragment extends Fragment
                                         mChatRoom.getLocalAddress(), mChatRoom.getPeerAddress());
                     }
                 } else {
-                    ChatRoom chatRoom = core.getChatRoom(address);
+                    ChatRoom chatRoom = null;
+                    if (lpc != null) chatRoom = core.getChatRoom(address, lpc.getIdentityAddress());
+                    else chatRoom = core.getChatRoom(address);
+
                     if (chatRoom != null) {
                         // Pop back stack so back button takes to the chat rooms list
                         getFragmentManager().popBackStack();

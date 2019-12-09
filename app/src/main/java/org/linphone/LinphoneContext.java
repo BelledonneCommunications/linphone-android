@@ -21,28 +21,33 @@ package org.linphone;
 
 import static android.content.Intent.ACTION_MAIN;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.provider.ContactsContract;
+import java.util.ArrayList;
 import org.linphone.call.CallActivity;
 import org.linphone.call.CallIncomingActivity;
 import org.linphone.call.CallOutgoingActivity;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.core.Call;
+import org.linphone.core.ConfiguringState;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.Factory;
+import org.linphone.core.GlobalState;
 import org.linphone.core.LogLevel;
 import org.linphone.core.LoggingService;
 import org.linphone.core.LoggingServiceListener;
 import org.linphone.core.tools.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.notifications.NotificationsManager;
+import org.linphone.service.LinphoneService;
 import org.linphone.settings.LinphonePreferences;
+import org.linphone.utils.DeviceUtils;
 import org.linphone.utils.LinphoneUtils;
+import org.linphone.utils.PushNotificationUtils;
 
 public class LinphoneContext {
     private static LinphoneContext sInstance = null;
@@ -78,7 +83,7 @@ public class LinphoneContext {
     private NotificationsManager mNotificationManager;
     private LinphoneManager mLinphoneManager;
     private ContactsManager mContactsManager;
-    private Class<? extends Activity> mIncomingReceivedActivity = CallIncomingActivity.class;
+    private final ArrayList<CoreStartedListener> mCoreStartedListeners;
 
     public static boolean isReady() {
         return sInstance != null;
@@ -90,6 +95,7 @@ public class LinphoneContext {
 
     public LinphoneContext(Context context) {
         mContext = context;
+        mCoreStartedListeners = new ArrayList<>();
 
         LinphonePreferences.instance().setContext(context);
         Factory.instance().setLogCollectionPath(context.getFilesDir().getAbsolutePath());
@@ -100,23 +106,40 @@ public class LinphoneContext {
         dumpDeviceInformation();
         dumpLinphoneInformation();
 
-        String incomingReceivedActivityName =
-                LinphonePreferences.instance().getActivityToLaunchOnIncomingReceived();
-        try {
-            mIncomingReceivedActivity =
-                    (Class<? extends Activity>) Class.forName(incomingReceivedActivityName);
-        } catch (ClassNotFoundException e) {
-            Log.e(e);
-        }
-
         sInstance = this;
         Log.i("[Context] Ready");
 
         mListener =
                 new CoreListenerStub() {
                     @Override
+                    public void onGlobalStateChanged(Core core, GlobalState state, String message) {
+                        Log.i("[Context] Global state is [", state, "]");
+
+                        if (state == GlobalState.On) {
+                            for (CoreStartedListener listener : mCoreStartedListeners) {
+                                listener.onCoreStarted();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onConfiguringStatus(
+                            Core core, ConfiguringState status, String message) {
+                        Log.i("[Context] Configuring state is [", status, "]");
+
+                        if (status == ConfiguringState.Successful) {
+                            LinphonePreferences.instance()
+                                    .setPushNotificationEnabled(
+                                            LinphonePreferences.instance()
+                                                    .isPushNotificationEnabled());
+                        }
+                    }
+
+                    @Override
                     public void onCallStateChanged(
                             Core core, Call call, Call.State state, String message) {
+                        Log.i("[Context] Call state is [", state, "]");
+
                         if (mContext.getResources().getBoolean(R.bool.enable_call_notification)) {
                             mNotificationManager.displayCallNotification(call);
                         }
@@ -157,12 +180,28 @@ public class LinphoneContext {
 
         mLinphoneManager = new LinphoneManager(context);
         mNotificationManager = new NotificationsManager(context);
+
+        if (DeviceUtils.isAppUserRestricted(mContext)) {
+            // See https://firebase.google.com/docs/cloud-messaging/android/receive#restricted
+            Log.w(
+                    "[Context] Device has been restricted by user (Android 9+), push notifications won't work !");
+        }
+
+        int bucket = DeviceUtils.getAppStandbyBucket(mContext);
+        if (bucket > 0) {
+            Log.w(
+                    "[Context] Device is in bucket "
+                            + Compatibility.getAppStandbyBucketNameFromValue(bucket));
+        }
+
+        if (!PushNotificationUtils.isAvailable(mContext)) {
+            Log.w("[Context] Push notifications won't work !");
+        }
     }
 
     public void start(boolean isPush) {
-        Log.i("[Context] Starting");
-        mLinphoneManager.startLibLinphone(isPush);
-        LinphoneManager.getCore().addListener(mListener);
+        Log.i("[Context] Starting, push status is ", isPush);
+        mLinphoneManager.startLibLinphone(isPush, mListener);
 
         mNotificationManager.onCoreReady();
 
@@ -236,6 +275,14 @@ public class LinphoneContext {
         return mContactsManager;
     }
 
+    public void addCoreStartedListener(CoreStartedListener listener) {
+        mCoreStartedListeners.add(listener);
+    }
+
+    public void removeCoreStartedListener(CoreStartedListener listener) {
+        mCoreStartedListeners.remove(listener);
+    }
+
     /* Log device related information */
 
     private void dumpDeviceInformation() {
@@ -266,7 +313,7 @@ public class LinphoneContext {
     /* Call activities */
 
     private void onIncomingReceived() {
-        Intent intent = new Intent().setClass(mContext, mIncomingReceivedActivity);
+        Intent intent = new Intent(mContext, CallIncomingActivity.class);
         // This flag is required to start an Activity from a Service context
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mContext.startActivity(intent);
@@ -284,5 +331,9 @@ public class LinphoneContext {
         // This flag is required to start an Activity from a Service context
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mContext.startActivity(intent);
+    }
+
+    public interface CoreStartedListener {
+        void onCoreStarted();
     }
 }

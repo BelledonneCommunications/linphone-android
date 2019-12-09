@@ -30,13 +30,14 @@ import java.util.Objects;
 import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.contacts.views.ContactAvatar;
 import org.linphone.core.Address;
+import org.linphone.core.Core;
 import org.linphone.core.FriendCapability;
 import org.linphone.core.PresenceBasicStatus;
 import org.linphone.core.PresenceModel;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.SearchResult;
-import org.linphone.views.ContactAvatar;
 
 public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactViewHolder> {
     private List<SearchResult> mContacts;
@@ -118,8 +119,20 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
                 holder.name.setText(searchResult.getAddress().getDisplayName());
             }
         }
-
         holder.disabled.setVisibility(View.GONE);
+
+        if (mSecurityEnabled || !mIsOnlyOnePersonSelection) {
+            Core core = LinphoneManager.getCore();
+            ProxyConfig defaultProxyConfig = core.getDefaultProxyConfig();
+            if (defaultProxyConfig != null) {
+                // SDK won't accept ourselves in the list of participants
+                if (defaultProxyConfig.getIdentityAddress().weakEqual(searchResult.getAddress())) {
+                    // Disable row, we can't use our own address in a group chat room
+                    holder.disabled.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+
         if (contact != null) {
             if (contact.getFullName() == null
                     && contact.getFirstName() == null
@@ -137,15 +150,6 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
                             && !searchResult.hasCapability(FriendCapability.LimeX3Dh))) {
                 // Disable row, contact doesn't have the required capabilities
                 holder.disabled.setVisibility(View.VISIBLE);
-            } else if (mSecurityEnabled || !mIsOnlyOnePersonSelection) {
-                ProxyConfig lpc =
-                        Objects.requireNonNull(LinphoneManager.getCore()).getDefaultProxyConfig();
-                if (lpc != null
-                        && searchResult.getAddress() != null
-                        && lpc.getIdentityAddress().weakEqual(searchResult.getAddress())) {
-                    // Disable row, we can't use our own address in a group chat room
-                    holder.disabled.setVisibility(View.VISIBLE);
-                }
             }
         } else {
             ContactAvatar.displayAvatar(holder.name.getText().toString(), holder.avatarLayout);

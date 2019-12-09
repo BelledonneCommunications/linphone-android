@@ -349,7 +349,7 @@ public class ChatMessagesFragment extends Fragment
                 new CoreListenerStub() {
                     @Override
                     public void onCallStateChanged(
-                            Core lc, Call call, Call.State state, String message) {
+                            Core core, Call call, Call.State state, String message) {
                         displayChatRoomHeader();
                     }
                 };

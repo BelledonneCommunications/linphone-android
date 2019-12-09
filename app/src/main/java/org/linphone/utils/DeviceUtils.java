@@ -151,9 +151,10 @@ public class DeviceUtils {
         for (final Intent intent : POWERMANAGER_INTENTS) {
             if (DeviceUtils.isIntentCallable(context, intent)) {
                 Log.w(
-                        "[Hacks] "
-                                + android.os.Build.MANUFACTURER
-                                + " device with power saver detected !");
+                        "[Hacks] ",
+                        android.os.Build.MANUFACTURER,
+                        " device with power saver detected: ",
+                        intent.getComponent().getClassName());
                 if (!LinphonePreferences.instance().hasPowerSaverDialogBeenPrompted()) {
                     Log.w("[Hacks] Asking power saver for whitelist !");
 
@@ -197,12 +198,19 @@ public class DeviceUtils {
                                 public void onClick(View v) {
                                     Log.w(
                                             "[Hacks] Power saver detected, user is going to settings :)");
-                                    if (doNotAskAgain.isChecked()) {
-                                        LinphonePreferences.instance()
-                                                .powerSaverDialogPrompted(true);
-                                    }
+                                    // If user is going into the settings,
+                                    // assume it will make the change so don't prompt again
+                                    LinphonePreferences.instance().powerSaverDialogPrompted(true);
 
-                                    context.startActivity(intent);
+                                    try {
+                                        context.startActivity(intent);
+                                    } catch (SecurityException se) {
+                                        Log.e(
+                                                "[Hacks] Couldn't start intent [",
+                                                intent.getComponent().getClassName(),
+                                                "], security exception was thrown: ",
+                                                se);
+                                    }
                                     dialog.dismiss();
                                 }
                             });

@@ -30,13 +30,13 @@ import java.util.List;
 import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
+import org.linphone.contacts.views.ContactAvatar;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.CallLog;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.utils.SelectableAdapter;
 import org.linphone.utils.SelectableHelper;
-import org.linphone.views.ContactAvatar;
 
 public class HistoryAdapter extends SelectableAdapter<HistoryViewHolder> {
     private final List<CallLog> mLogs;

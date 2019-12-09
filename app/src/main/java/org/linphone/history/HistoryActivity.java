@@ -23,6 +23,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.activities.MainActivity;
@@ -71,6 +72,7 @@ public class HistoryActivity extends MainActivity {
         mHistorySelected.setVisibility(View.VISIBLE);
         LinphoneManager.getCore().resetMissedCallsCount();
         displayMissedCalls();
+        LinphoneContext.instance().getNotificationManager().dismissMissedCallNotification();
     }
 
     @Override

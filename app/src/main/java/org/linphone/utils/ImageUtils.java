@@ -22,6 +22,7 @@ package org.linphone.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -55,7 +56,7 @@ public class ImageUtils {
         return bm;
     }
 
-    private static Bitmap getRoundBitmap(Bitmap bitmap) {
+    public static Bitmap getRoundBitmap(Bitmap bitmap) {
         Bitmap output =
                 Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(output);
@@ -84,5 +85,15 @@ public class ImageUtils {
         return pixels
                 / ((float) context.getResources().getDisplayMetrics().densityDpi
                         / DisplayMetrics.DENSITY_DEFAULT);
+    }
+
+    public static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        Bitmap rotatedBitmap =
+                Bitmap.createBitmap(
+                        source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+        source.recycle();
+        return rotatedBitmap;
     }
 }

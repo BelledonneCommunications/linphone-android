@@ -17,8 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.views;
+package org.linphone.call.views;
 
-public interface CallIncomingButtonListener {
-    void onAction();
+import android.view.WindowManager;
+
+public interface LinphoneOverlay {
+    WindowManager.LayoutParams getWindowManagerLayoutParams();
+
+    void addToWindowManager(WindowManager mWindowManager, WindowManager.LayoutParams params);
+
+    void removeFromWindowManager(WindowManager mWindowManager);
+
+    void destroy();
 }

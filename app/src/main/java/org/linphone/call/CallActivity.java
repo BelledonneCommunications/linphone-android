@@ -48,16 +48,16 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneService;
 import org.linphone.R;
-import org.linphone.activities.DialerActivity;
 import org.linphone.activities.LinphoneGenericActivity;
 import org.linphone.chat.ChatActivity;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.contacts.LinphoneContact;
+import org.linphone.contacts.views.ContactAvatar;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.ChatMessage;
@@ -66,10 +66,10 @@ import org.linphone.core.Core;
 import org.linphone.core.CoreListener;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.tools.Log;
+import org.linphone.dialer.DialerActivity;
+import org.linphone.service.LinphoneService;
 import org.linphone.settings.LinphonePreferences;
-import org.linphone.utils.AndroidAudioManager;
 import org.linphone.utils.LinphoneUtils;
-import org.linphone.views.ContactAvatar;
 
 public class CallActivity extends LinphoneGenericActivity
         implements CallStatusBarFragment.StatsClikedListener,
@@ -82,6 +82,7 @@ public class CallActivity extends LinphoneGenericActivity
     private static final int MIC_TO_DISABLE_MUTE = 1;
     private static final int WRITE_EXTERNAL_STORAGE_FOR_RECORDING = 2;
     private static final int CAMERA_TO_ACCEPT_UPDATE = 3;
+    private static final int ALL_PERMISSIONS = 4;
 
     private static class HideControlsRunnable implements Runnable {
         private WeakReference<CallActivity> mWeakCallActivity;
@@ -306,13 +307,13 @@ public class CallActivity extends LinphoneGenericActivity
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        findViewById(R.id.numpad)
-                                .setVisibility(
-                                        findViewById(R.id.numpad).getVisibility() == View.VISIBLE
-                                                ? View.GONE
-                                                : View.VISIBLE);
+                        View numpad = findViewById(R.id.numpad);
+                        boolean isNumpadVisible = numpad.getVisibility() == View.VISIBLE;
+                        numpad.setVisibility(isNumpadVisible ? View.GONE : View.VISIBLE);
+                        v.setSelected(!isNumpadVisible);
                     }
                 });
+        numpadButton.setSelected(false);
 
         ImageView hangUp = findViewById(R.id.hang_up);
         hangUp.setOnClickListener(
@@ -387,6 +388,8 @@ public class CallActivity extends LinphoneGenericActivity
                         if (state == Call.State.End || state == Call.State.Released) {
                             if (core.getCallsNb() == 0) {
                                 finish();
+                            } else {
+                                showVideoControls(false);
                             }
                         } else if (state == Call.State.PausedByRemote) {
                             if (core.getCurrentCall() != null) {
@@ -437,6 +440,7 @@ public class CallActivity extends LinphoneGenericActivity
             Call call = mCore.getCurrentCall();
             boolean videoEnabled =
                     LinphonePreferences.instance().isVideoEnabled()
+                            && call != null
                             && call.getCurrentParams().videoEnabled();
 
             if (videoEnabled) {
@@ -450,6 +454,11 @@ public class CallActivity extends LinphoneGenericActivity
     @Override
     protected void onStart() {
         super.onStart();
+
+        // This also must be done here in case of an outgoing call accepted
+        // before user granted or denied permissions
+        // or if an incoming call was answer from the notification
+        checkAndRequestCallPermissions();
 
         mCore = LinphoneManager.getCore();
         if (mCore != null) {
@@ -558,11 +567,6 @@ public class CallActivity extends LinphoneGenericActivity
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-    }
-
-    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (mAudioManager.onKeyVolumeAdjust(keyCode)) return true;
         return super.onKeyDown(keyCode, event);
@@ -581,23 +585,37 @@ public class CallActivity extends LinphoneGenericActivity
     public void onRequestPermissionsResult(
             int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         // Permission not granted, won't change anything
-        if (grantResults[0] != PackageManager.PERMISSION_GRANTED) return;
 
-        switch (requestCode) {
-            case CAMERA_TO_TOGGLE_VIDEO:
-                LinphoneUtils.reloadVideoDevices();
-                toggleVideo();
-                break;
-            case MIC_TO_DISABLE_MUTE:
-                toggleMic();
-                break;
-            case WRITE_EXTERNAL_STORAGE_FOR_RECORDING:
-                toggleRecording();
-                break;
-            case CAMERA_TO_ACCEPT_UPDATE:
-                LinphoneUtils.reloadVideoDevices();
-                acceptCallUpdate(true);
-                break;
+        if (requestCode == ALL_PERMISSIONS) {
+            for (int index = 0; index < permissions.length; index++) {
+                int granted = grantResults[index];
+                if (granted == PackageManager.PERMISSION_GRANTED) {
+                    String permission = permissions[index];
+                    if (Manifest.permission.RECORD_AUDIO.equals(permission)) {
+                        toggleMic();
+                    } else if (Manifest.permission.CAMERA.equals(permission)) {
+                        LinphoneUtils.reloadVideoDevices();
+                    }
+                }
+            }
+        } else {
+            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) return;
+            switch (requestCode) {
+                case CAMERA_TO_TOGGLE_VIDEO:
+                    LinphoneUtils.reloadVideoDevices();
+                    toggleVideo();
+                    break;
+                case MIC_TO_DISABLE_MUTE:
+                    toggleMic();
+                    break;
+                case WRITE_EXTERNAL_STORAGE_FOR_RECORDING:
+                    toggleRecording();
+                    break;
+                case CAMERA_TO_ACCEPT_UPDATE:
+                    LinphoneUtils.reloadVideoDevices();
+                    acceptCallUpdate(true);
+                    break;
+            }
         }
     }
 
@@ -618,6 +636,57 @@ public class CallActivity extends LinphoneGenericActivity
             return false;
         }
         return true;
+    }
+
+    private void checkAndRequestCallPermissions() {
+        ArrayList<String> permissionsList = new ArrayList<>();
+
+        int recordAudio =
+                getPackageManager()
+                        .checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName());
+        Log.i(
+                "[Permission] Record audio permission is "
+                        + (recordAudio == PackageManager.PERMISSION_GRANTED
+                                ? "granted"
+                                : "denied"));
+        int camera =
+                getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName());
+        Log.i(
+                "[Permission] Camera permission is "
+                        + (camera == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+
+        int readPhoneState =
+                getPackageManager()
+                        .checkPermission(Manifest.permission.READ_PHONE_STATE, getPackageName());
+        Log.i(
+                "[Permission] Read phone state permission is "
+                        + (camera == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+
+        if (recordAudio != PackageManager.PERMISSION_GRANTED) {
+            Log.i("[Permission] Asking for record audio");
+            permissionsList.add(Manifest.permission.RECORD_AUDIO);
+        }
+        if (readPhoneState != PackageManager.PERMISSION_GRANTED) {
+            Log.i("[Permission] Asking for read phone state");
+            permissionsList.add(Manifest.permission.READ_PHONE_STATE);
+        }
+
+        Call call = mCore.getCurrentCall();
+        if (LinphonePreferences.instance().shouldInitiateVideoCall()
+                || (LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests()
+                        && call != null
+                        && call.getRemoteParams().videoEnabled())) {
+            if (camera != PackageManager.PERMISSION_GRANTED) {
+                Log.i("[Permission] Asking for camera");
+                permissionsList.add(Manifest.permission.CAMERA);
+            }
+        }
+
+        if (permissionsList.size() > 0) {
+            String[] permissions = new String[permissionsList.size()];
+            permissions = permissionsList.toArray(permissions);
+            ActivityCompat.requestPermissions(this, permissions, ALL_PERMISSIONS);
+        }
     }
 
     @Override
@@ -825,6 +894,7 @@ public class CallActivity extends LinphoneGenericActivity
 
         boolean videoEnabled =
                 LinphonePreferences.instance().isVideoEnabled()
+                        && call != null
                         && call.getCurrentParams().videoEnabled();
         showVideoControls(videoEnabled);
     }
@@ -1024,7 +1094,7 @@ public class CallActivity extends LinphoneGenericActivity
         mConferenceList.removeAllViews();
 
         for (Call call : mCore.getCalls()) {
-            if (call.getConference() != null) {
+            if (call != null && call.getConference() != null) {
                 if (mCore.isInConference()) {
                     displayConferenceCall(call);
                     conferenceDisplayed = true;
@@ -1032,9 +1102,14 @@ public class CallActivity extends LinphoneGenericActivity
                     displayPausedConference();
                     pausedConferenceDisplayed = true;
                 }
-            } else if (call != currentCall) {
-                displayPausedCall(call);
-                callThatIsNotCurrentFound = true;
+            } else if (call != null && call != currentCall) {
+                Call.State state = call.getState();
+                if (state == Call.State.Paused
+                        || state == Call.State.PausedByRemote
+                        || state == Call.State.Pausing) {
+                    displayPausedCall(call);
+                    callThatIsNotCurrentFound = true;
+                }
             }
         }
 

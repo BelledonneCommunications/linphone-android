@@ -54,7 +54,9 @@ public class SearchContactViewHolder extends RecyclerView.ViewHolder
     @Override
     public void onClick(View view) {
         if (mListener != null) {
-            mListener.onItemClicked(getAdapterPosition());
+            if (disabled.getVisibility() == View.GONE) {
+                mListener.onItemClicked(getAdapterPosition());
+            }
         }
     }
 

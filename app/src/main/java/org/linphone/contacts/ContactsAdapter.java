@@ -31,10 +31,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import org.linphone.R;
+import org.linphone.contacts.views.ContactAvatar;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.SelectableAdapter;
 import org.linphone.utils.SelectableHelper;
-import org.linphone.views.ContactAvatar;
 
 public class ContactsAdapter extends SelectableAdapter<ContactViewHolder>
         implements SectionIndexer {

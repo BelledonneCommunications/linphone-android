@@ -17,22 +17,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone;
+package org.linphone.service;
 
 import android.app.Application;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.view.WindowManager;
+import org.linphone.LinphoneContext;
+import org.linphone.LinphoneManager;
+import org.linphone.R;
+import org.linphone.call.views.LinphoneGL2JNIViewOverlay;
+import org.linphone.call.views.LinphoneOverlay;
+import org.linphone.call.views.LinphoneTextureViewOverlay;
 import org.linphone.core.Call;
 import org.linphone.core.Core;
 import org.linphone.core.tools.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.settings.LinphonePreferences;
-import org.linphone.utils.ActivityMonitor;
-import org.linphone.views.LinphoneGL2JNIViewOverlay;
-import org.linphone.views.LinphoneOverlay;
-import org.linphone.views.LinphoneTextureViewOverlay;
 
 public final class LinphoneService extends Service {
     private static LinphoneService sInstance;
@@ -75,8 +77,12 @@ public final class LinphoneService extends Service {
         }
         sInstance = this;
 
-        if (LinphonePreferences.instance().getServiceNotificationVisibility()) {
+        if (LinphonePreferences.instance().getServiceNotificationVisibility()
+                || (Version.sdkAboveOrEqual(Version.API26_O_80)
+                        && intent != null
+                        && intent.getBooleanExtra("ForceStartForeground", false))) {
             Log.i("[Service] Background service mode enabled, displaying notification");
+            // We need to call this asap after the Service can be accessed through it's singleton
             LinphoneContext.instance().getNotificationManager().startForeground();
         }
 
@@ -86,14 +92,7 @@ public final class LinphoneService extends Service {
             LinphoneContext.instance().updateContext(this);
         }
 
-        if (Version.sdkAboveOrEqual(Version.API26_O_80)
-                && intent != null
-                && intent.getBooleanExtra("ForceStartForeground", false)) {
-            // We need to call this asap after the Service can be accessed through it's singleton
-            LinphoneContext.instance().getNotificationManager().startForeground();
-        }
         Log.i("[Service] Started");
-
         return START_STICKY;
     }
 

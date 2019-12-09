@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.TextureView;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,9 +37,13 @@ import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.activities.LinphoneGenericActivity;
+import org.linphone.call.views.CallIncomingAnswerButton;
+import org.linphone.call.views.CallIncomingButtonListener;
+import org.linphone.call.views.CallIncomingDeclineButton;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
+import org.linphone.contacts.views.ContactAvatar;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
@@ -47,10 +52,6 @@ import org.linphone.core.CoreListenerStub;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.LinphoneUtils;
-import org.linphone.views.CallIncomingAnswerButton;
-import org.linphone.views.CallIncomingButtonListener;
-import org.linphone.views.CallIncomingDeclineButton;
-import org.linphone.views.ContactAvatar;
 
 public class CallIncomingActivity extends LinphoneGenericActivity {
     private TextView mName, mNumber;
@@ -63,6 +64,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         Compatibility.setShowWhenLocked(this, true);
         Compatibility.setTurnScreenOn(this, true);
 
@@ -122,13 +124,13 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
                             Core core, Call call, State state, String message) {
                         if (call == mCall) {
                             if (state == State.Connected) {
-                                // This is done by the Service listener now
+                                // This is done by the LinphoneContext listener now
                                 // startActivity(new Intent(CallOutgoingActivity.this,
                                 // CallActivity.class));
                             }
                         }
 
-                        if (LinphoneManager.getCore().getCallsNb() == 0) {
+                        if (state == State.End || state == State.Released) {
                             finish();
                         }
                     }
@@ -230,6 +232,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
         mAlreadyAcceptedOrDeniedCall = true;
 
         mCall.terminate();
+        finish();
     }
 
     private void answer() {
@@ -276,8 +279,9 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
             Log.i("[Permission] Asking for read phone state");
             permissionsList.add(Manifest.permission.READ_PHONE_STATE);
         }
-        if (LinphonePreferences.instance().shouldInitiateVideoCall()
-                || LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests()) {
+        if (LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests()
+                && mCall != null
+                && mCall.getRemoteParams().videoEnabled()) {
             if (camera != PackageManager.PERMISSION_GRANTED) {
                 Log.i("[Permission] Asking for camera");
                 permissionsList.add(Manifest.permission.CAMERA);

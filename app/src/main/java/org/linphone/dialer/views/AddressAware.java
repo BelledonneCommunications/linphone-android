@@ -17,22 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.views;
+package org.linphone.dialer.views;
 
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import java.lang.ref.WeakReference;
-
-class AsyncBitmap extends BitmapDrawable {
-    private final WeakReference<BitmapWorkerTask> mBitmapWorkerTaskReference;
-
-    public AsyncBitmap(Resources res, Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
-        super(res, bitmap);
-        mBitmapWorkerTaskReference = new WeakReference<>(bitmapWorkerTask);
-    }
-
-    public BitmapWorkerTask getBitmapWorkerTask() {
-        return mBitmapWorkerTaskReference.get();
-    }
+public interface AddressAware {
+    void setAddressWidget(AddressText address);
 }

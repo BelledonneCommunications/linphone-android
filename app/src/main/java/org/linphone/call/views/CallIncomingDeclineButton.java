@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.views;
+package org.linphone.call.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -27,28 +27,26 @@ import android.widget.LinearLayout;
 import androidx.annotation.Nullable;
 import org.linphone.R;
 
-public class CallIncomingAnswerButton extends LinearLayout
+public class CallIncomingDeclineButton extends LinearLayout
         implements View.OnClickListener, View.OnTouchListener {
-    private LinearLayout mRoot;
     private boolean mUseSliderMode = false;
     private CallIncomingButtonListener mListener;
-    private View mDeclineButton;
+    private View mAnswerButton;
 
     private int mScreenWidth;
-    private boolean mBegin;
-    private float mAnswerX, mOldSize;
+    private float mDeclineX;
 
-    public CallIncomingAnswerButton(Context context) {
+    public CallIncomingDeclineButton(Context context) {
         super(context);
         init();
     }
 
-    public CallIncomingAnswerButton(Context context, @Nullable AttributeSet attrs) {
+    public CallIncomingDeclineButton(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public CallIncomingAnswerButton(
+    public CallIncomingDeclineButton(
             Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
@@ -56,22 +54,22 @@ public class CallIncomingAnswerButton extends LinearLayout
 
     public void setSliderMode(boolean enabled) {
         mUseSliderMode = enabled;
-        findViewById(R.id.acceptUnlock).setVisibility(enabled ? VISIBLE : GONE);
+        findViewById(R.id.declineUnlock).setVisibility(enabled ? VISIBLE : GONE);
     }
 
     public void setListener(CallIncomingButtonListener listener) {
         mListener = listener;
     }
 
-    public void setDeclineButton(View decline) {
-        mDeclineButton = decline;
+    public void setAnswerButton(View answer) {
+        mAnswerButton = answer;
     }
 
     private void init() {
-        inflate(getContext(), R.layout.call_incoming_answer_button, this);
-        mRoot = findViewById(R.id.root);
-        mRoot.setOnClickListener(this);
-        mRoot.setOnTouchListener(this);
+        inflate(getContext(), R.layout.call_incoming_decline_button, this);
+        LinearLayout root = findViewById(R.id.root);
+        root.setOnClickListener(this);
+        root.setOnTouchListener(this);
         mScreenWidth = getResources().getDisplayMetrics().widthPixels;
     }
 
@@ -88,24 +86,20 @@ public class CallIncomingAnswerButton extends LinearLayout
             float curX;
             switch (motionEvent.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    mDeclineButton.setVisibility(View.GONE);
-                    mAnswerX = motionEvent.getX() - mRoot.getWidth();
-                    mBegin = true;
-                    mOldSize = 0;
+                    mAnswerButton.setVisibility(View.GONE);
+                    mDeclineX = motionEvent.getX();
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    curX = motionEvent.getX() - mRoot.getWidth();
-                    view.scrollBy((int) (mAnswerX - curX), view.getScrollY());
-                    mOldSize -= mAnswerX - curX;
-                    mAnswerX = curX;
-                    if (mOldSize < -25) mBegin = false;
-                    if (curX < (mScreenWidth / 4) - mRoot.getWidth() && !mBegin) {
+                    curX = motionEvent.getX();
+                    view.scrollBy((int) (mDeclineX - curX), view.getScrollY());
+                    mDeclineX = curX;
+                    if (curX > (3 * mScreenWidth / 4)) {
                         performClick();
                         return true;
                     }
                     break;
                 case MotionEvent.ACTION_UP:
-                    mDeclineButton.setVisibility(View.VISIBLE);
+                    mAnswerButton.setVisibility(View.VISIBLE);
                     view.scrollTo(0, view.getScrollY());
                     break;
             }

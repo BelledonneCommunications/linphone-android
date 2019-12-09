@@ -37,6 +37,7 @@ import org.linphone.R;
 import org.linphone.activities.LinphoneGenericActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
+import org.linphone.contacts.views.ContactAvatar;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
@@ -46,7 +47,6 @@ import org.linphone.core.Reason;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.LinphoneUtils;
-import org.linphone.views.ContactAvatar;
 
 public class CallOutgoingActivity extends LinphoneGenericActivity implements OnClickListener {
     private TextView mName, mNumber;
@@ -125,12 +125,12 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
                                         .show();
                             }
                         } else if (state == State.Connected) {
-                            // This is done by the Service listener now
+                            // This is done by the LinphoneContext listener now
                             // startActivity(new Intent(CallOutgoingActivity.this,
                             // CallActivity.class));
                         }
 
-                        if (LinphoneManager.getCore().getCallsNb() == 0) {
+                        if (state == State.End || state == State.Released) {
                             finish();
                         }
                     }
@@ -283,8 +283,7 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
             Log.i("[Permission] Asking for read phone state");
             permissionsList.add(Manifest.permission.READ_PHONE_STATE);
         }
-        if (LinphonePreferences.instance().shouldInitiateVideoCall()
-                || LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests()) {
+        if (LinphonePreferences.instance().shouldInitiateVideoCall()) {
             if (camera != PackageManager.PERMISSION_GRANTED) {
                 Log.i("[Permission] Asking for camera");
                 permissionsList.add(Manifest.permission.CAMERA);

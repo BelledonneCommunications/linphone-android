@@ -17,9 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.utils;
+package org.linphone.service;
 
-import org.linphone.LinphoneService;
+import org.linphone.utils.LinphoneUtils;
 
 public class ServiceWaitThread extends Thread {
     private ServiceWaitThreadListener mListener;

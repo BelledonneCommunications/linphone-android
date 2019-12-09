@@ -23,7 +23,6 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 
 import android.app.Dialog;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -42,6 +41,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.call.views.LinphoneLinearLayoutManager;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
@@ -56,7 +56,6 @@ import org.linphone.core.Factory;
 import org.linphone.core.Participant;
 import org.linphone.core.tools.Log;
 import org.linphone.utils.LinphoneUtils;
-import org.linphone.views.LinphoneLinearLayoutManager;
 
 public class GroupInfoFragment extends Fragment {
     private ImageView mConfirmButton;
@@ -146,7 +145,11 @@ public class GroupInfoFragment extends Fragment {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        ((ChatActivity) getActivity()).goBack();
+                        if (mIsAlreadyCreatedGroup) {
+                            ((ChatActivity) getActivity()).goBack();
+                        } else {
+                            goBackToChatCreationFragment();
+                        }
                     }
                 });
 
@@ -262,6 +265,16 @@ public class GroupInfoFragment extends Fragment {
                     public void onSubjectChanged(ChatRoom cr, EventLog event_log) {
                         mSubjectField.setText(event_log.getSubject());
                     }
+
+                    @Override
+                    public void onParticipantAdded(ChatRoom cr, EventLog eventLog) {
+                        refreshParticipantsList();
+                    }
+
+                    @Override
+                    public void onParticipantRemoved(ChatRoom cr, EventLog eventLog) {
+                        refreshParticipantsList();
+                    }
                 };
 
         if (mChatRoom != null) {
@@ -300,26 +313,14 @@ public class GroupInfoFragment extends Fragment {
     }
 
     private void goBackToChatCreationFragment() {
-        boolean previousFragmentInBackStackIsChatRoomCreation = false;
-        FragmentManager fragmentManager = getActivity().getFragmentManager();
-        int count = fragmentManager.getBackStackEntryCount();
-        if (count > 1) {
-            FragmentManager.BackStackEntry entry = fragmentManager.getBackStackEntryAt(count - 1);
-            if ("Chat room creation".equals(entry.getName())) {
-                previousFragmentInBackStackIsChatRoomCreation = true;
-                ((ChatActivity) getActivity()).goBack();
-            }
-        }
-
-        if (!previousFragmentInBackStackIsChatRoomCreation) {
-            ((ChatActivity) getActivity())
-                    .showChatRoomCreation(
-                            mGroupChatRoomAddress,
-                            mParticipants,
-                            mSubject,
-                            mIsEncryptionEnabled,
-                            true);
-        }
+        ((ChatActivity) getActivity())
+                .showChatRoomCreation(
+                        mGroupChatRoomAddress,
+                        mParticipants,
+                        mSubject,
+                        mIsEncryptionEnabled,
+                        true,
+                        !mIsAlreadyCreatedGroup);
     }
 
     private void refreshParticipantsList() {
@@ -485,7 +486,9 @@ public class GroupInfoFragment extends Fragment {
             }
             Address[] participantsToAdd = new Address[toAdd.size()];
             toAdd.toArray(participantsToAdd);
-            mChatRoom.addParticipants(participantsToAdd);
+            if (!mChatRoom.addParticipants(participantsToAdd)) {
+                // TODO error
+            }
             // Pop back stack to go back to the Messages fragment
             getFragmentManager().popBackStack();
         }
