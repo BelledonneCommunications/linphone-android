@@ -197,15 +197,18 @@ public class HistoryFragment extends Fragment
         if (mHistoryAdapter.isEditionEnabled()) {
             mHistoryAdapter.toggleSelection(position);
         } else {
-            CallLog log = mLogs.get(position);
-            Address address;
-            if (log.getDir() == Call.Dir.Incoming) {
-                address = log.getFromAddress();
-            } else {
-                address = log.getToAddress();
-            }
-            if (address != null) {
-                LinphoneManager.getCallManager().newOutgoingCall(address.asStringUriOnly(), null);
+            if (position >= 0 && position < mLogs.size()) {
+                CallLog log = mLogs.get(position);
+                Address address;
+                if (log.getDir() == Call.Dir.Incoming) {
+                    address = log.getFromAddress();
+                } else {
+                    address = log.getToAddress();
+                }
+                if (address != null) {
+                    LinphoneManager.getCallManager()
+                            .newOutgoingCall(address.asStringUriOnly(), null);
+                }
             }
         }
     }
