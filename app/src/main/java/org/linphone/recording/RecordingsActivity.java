@@ -37,9 +37,9 @@ import java.util.List;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.activities.MainActivity;
+import org.linphone.call.views.LinphoneLinearLayoutManager;
 import org.linphone.utils.FileUtils;
 import org.linphone.utils.SelectableHelper;
-import org.linphone.views.LinphoneLinearLayoutManager;
 
 public class RecordingsActivity extends MainActivity
         implements SelectableHelper.DeleteListener, RecordingViewHolder.ClickListener {

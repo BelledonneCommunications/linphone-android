@@ -320,10 +320,12 @@ public class LinphonePreferences {
 
     // Video settings
     public boolean useFrontCam() {
+        if (getConfig() == null) return false;
         return getConfig().getBool("app", "front_camera_default", true);
     }
 
     public void setFrontCamAsDefault(boolean frontcam) {
+        if (getConfig() == null) return;
         getConfig().setBool("app", "front_camera_default", frontcam);
     }
 
@@ -425,6 +427,7 @@ public class LinphonePreferences {
 
     // Contact settings
     public boolean isFriendlistsubscriptionEnabled() {
+        if (getConfig() == null) return false;
         if (getConfig().getBool("app", "friendlist_subscription_enabled", false)) {
             // Old setting, do migration
             getConfig().setBool("app", "friendlist_subscription_enabled", false);
@@ -434,18 +437,22 @@ public class LinphonePreferences {
     }
 
     public void enabledFriendlistSubscription(boolean enabled) {
+        if (getLc() == null) return;
         getLc().enableFriendListSubscription(enabled);
     }
 
     public boolean isPresenceStorageInNativeAndroidContactEnabled() {
+        if (getConfig() == null) return false;
         return getConfig().getBool("app", "store_presence_in_native_contact", false);
     }
 
     public void enabledPresenceStorageInNativeAndroidContact(boolean enabled) {
+        if (getConfig() == null) return;
         getConfig().setBool("app", "store_presence_in_native_contact", enabled);
     }
 
     public boolean isDisplayContactOrganization() {
+        if (getConfig() == null) return false;
         return getConfig()
                 .getBool(
                         "app",
@@ -454,24 +461,29 @@ public class LinphonePreferences {
     }
 
     public void enabledDisplayContactOrganization(boolean enabled) {
+        if (getConfig() == null) return;
         getConfig().setBool("app", "display_contact_organization", enabled);
     }
     // End of contact settings
 
     // Call settings
-    public boolean acceptMediaEncryptionMandatory() {
+    public boolean isMediaEncryptionMandatory() {
+        if (getLc() == null) return false;
         return getLc().isMediaEncryptionMandatory();
     }
 
     public void setMediaEncryptionMandatory(boolean accept) {
+        if (getLc() == null) return;
         getLc().setMediaEncryptionMandatory(accept);
     }
 
     public boolean acceptIncomingEarlyMedia() {
+        if (getConfig() == null) return false;
         return getConfig().getBool("sip", "incoming_calls_early_media", false);
     }
 
     public void setAcceptIncomingEarlyMedia(boolean accept) {
+        if (getConfig() == null) return;
         getConfig().setBool("sip", "incoming_calls_early_media", accept);
     }
 
@@ -506,28 +518,34 @@ public class LinphonePreferences {
     }
 
     public String getVoiceMailUri() {
+        if (getConfig() == null) return null;
         return getConfig().getString("app", "voice_mail", null);
     }
 
     public void setVoiceMailUri(String uri) {
+        if (getConfig() == null) return;
         getConfig().setString("app", "voice_mail", uri);
     }
 
     public boolean getNativeDialerCall() {
+        if (getConfig() == null) return false;
         return getConfig().getBool("app", "native_dialer_call", false);
     }
 
     public void setNativeDialerCall(boolean use) {
+        if (getConfig() == null) return;
         getConfig().setBool("app", "native_dialer_call", use);
     }
     // End of call settings
 
     public boolean isWifiOnlyEnabled() {
+        if (getLc() == null) return false;
         return getLc().wifiOnlyEnabled();
     }
 
     // Network settings
     public void setWifiOnlyEnabled(Boolean enable) {
+        if (getLc() == null) return;
         getLc().enableWifiOnly(enable);
     }
 
@@ -536,6 +554,7 @@ public class LinphonePreferences {
     }
 
     private void useRandomPort(boolean enabled, boolean apply) {
+        if (getConfig() == null) return;
         getConfig().setBool("app", "random_port", enabled);
         if (apply) {
             if (enabled) {
@@ -547,6 +566,7 @@ public class LinphonePreferences {
     }
 
     public boolean isUsingRandomPort() {
+        if (getConfig() == null) return true;
         return getConfig().getBool("app", "random_port", true);
     }
 
@@ -677,10 +697,12 @@ public class LinphonePreferences {
     }
 
     public boolean isPushNotificationEnabled() {
+        if (getConfig() == null) return true;
         return getConfig().getBool("app", "push_notification", true);
     }
 
     public void setPushNotificationEnabled(boolean enable) {
+        if (getConfig() == null) return;
         getConfig().setBool("app", "push_notification", enable);
 
         Core core = getLc();
@@ -748,6 +770,7 @@ public class LinphonePreferences {
     }
 
     private String getPushNotificationRegistrationID() {
+        if (getConfig() == null) return null;
         return getConfig().getString("app", "push_notification_regid", null);
     }
 
@@ -770,30 +793,36 @@ public class LinphonePreferences {
     // End of network settings
 
     public boolean isDebugEnabled() {
+        if (getConfig() == null) return false;
         return getConfig().getBool("app", "debug", false);
     }
 
     // Advanced settings
     public void setDebugEnabled(boolean enabled) {
+        if (getConfig() == null) return;
         getConfig().setBool("app", "debug", enabled);
         LinphoneUtils.configureLoggingService(enabled, mContext.getString(R.string.app_name));
     }
 
     public void setJavaLogger(boolean enabled) {
+        if (getConfig() == null) return;
         getConfig().setBool("app", "java_logger", enabled);
         LinphoneUtils.configureLoggingService(
                 isDebugEnabled(), mContext.getString(R.string.app_name));
     }
 
     public boolean useJavaLogger() {
+        if (getConfig() == null) return false;
         return getConfig().getBool("app", "java_logger", false);
     }
 
     public boolean isAutoStartEnabled() {
+        if (getConfig() == null) return false;
         return getConfig().getBool("app", "auto_start", false);
     }
 
     public void setAutoStart(boolean autoStartEnabled) {
+        if (getConfig() == null) return;
         getConfig().setBool("app", "auto_start", autoStartEnabled);
     }
 
@@ -975,80 +1004,99 @@ public class LinphonePreferences {
     }
 
     public int getCodecBitrateLimit() {
+        if (getConfig() == null) return 36;
         return getConfig().getInt("audio", "codec_bitrate_limit", 36);
     }
 
     public void setCodecBitrateLimit(int bitrate) {
+        if (getConfig() == null) return;
         getConfig().setInt("audio", "codec_bitrate_limit", bitrate);
     }
 
     public String getXmlrpcUrl() {
+        if (getConfig() == null) return null;
         return getConfig().getString("assistant", "xmlrpc_url", null);
     }
 
     public String getLinkPopupTime() {
+        if (getConfig() == null) return null;
         return getConfig().getString("app", "link_popup_time", null);
     }
 
     public void setLinkPopupTime(String date) {
+        if (getConfig() == null) return;
         getConfig().setString("app", "link_popup_time", date);
     }
 
     public boolean isLinkPopupEnabled() {
+        if (getConfig() == null) return true;
         return getConfig().getBool("app", "link_popup_enabled", true);
     }
 
     public void enableLinkPopup(boolean enable) {
+        if (getConfig() == null) return;
         getConfig().setBool("app", "link_popup_enabled", enable);
     }
 
     public boolean isDNDSettingsPopupEnabled() {
+        if (getConfig() == null) return true;
         return getConfig().getBool("app", "dnd_settings_popup_enabled", true);
     }
 
     public void enableDNDSettingsPopup(boolean enable) {
+        if (getConfig() == null) return;
         getConfig().setBool("app", "dnd_settings_popup_enabled", enable);
     }
 
     public boolean isLimeSecurityPopupEnabled() {
+        if (getConfig() == null) return true;
         return getConfig().getBool("app", "lime_security_popup_enabled", true);
     }
 
     public void enableLimeSecurityPopup(boolean enable) {
+        if (getConfig() == null) return;
         getConfig().setBool("app", "lime_security_popup_enabled", enable);
     }
 
     public String getDebugPopupAddress() {
+        if (getConfig() == null) return null;
         return getConfig().getString("app", "debug_popup_magic", null);
     }
 
     public String getActivityToLaunchOnIncomingReceived() {
+        if (getConfig() == null) return "org.linphone.call.CallIncomingActivity";
         return getConfig()
                 .getString(
                         "app", "incoming_call_activity", "org.linphone.call.CallIncomingActivity");
     }
 
     public void setActivityToLaunchOnIncomingReceived(String name) {
+        if (getConfig() == null) return;
         getConfig().setString("app", "incoming_call_activity", name);
     }
 
     public boolean getServiceNotificationVisibility() {
+        if (getConfig() == null) return false;
         return getConfig().getBool("app", "show_service_notification", false);
     }
 
     public void setServiceNotificationVisibility(boolean enable) {
+        if (getConfig() == null) return;
         getConfig().setBool("app", "show_service_notification", enable);
     }
 
     public String getCheckReleaseUrl() {
+        if (getConfig() == null) return null;
         return getConfig().getString("misc", "version_check_url_root", null);
     }
 
     public int getLastCheckReleaseTimestamp() {
+        if (getConfig() == null) return 0;
         return getConfig().getInt("app", "version_check_url_last_timestamp", 0);
     }
 
     public void setLastCheckReleaseTimestamp(int timestamp) {
+        if (getConfig() == null) return;
         getConfig().setInt("app", "version_check_url_last_timestamp", timestamp);
     }
 
@@ -1058,10 +1106,12 @@ public class LinphonePreferences {
             // Disable overlay and use PIP feature
             return false;
         }
+        if (getConfig() == null) return false;
         return getConfig().getBool("app", "display_overlay", false);
     }
 
     public void enableOverlay(boolean enable) {
+        if (getConfig() == null) return;
         getConfig().setBool("app", "display_overlay", enable);
     }
 
@@ -1071,71 +1121,87 @@ public class LinphonePreferences {
                         .checkPermission(
                                 Manifest.permission.READ_EXTERNAL_STORAGE,
                                 mContext.getPackageName());
+        if (getConfig() == null) return readExternalStorage == PackageManager.PERMISSION_GRANTED;
         return getConfig().getBool("app", "device_ringtone", true)
                 && readExternalStorage == PackageManager.PERMISSION_GRANTED;
     }
 
     public void enableDeviceRingtone(boolean enable) {
+        if (getConfig() == null) return;
         getConfig().setBool("app", "device_ringtone", enable);
         LinphoneManager.getInstance().enableDeviceRingtone(enable);
     }
 
     public boolean isIncomingCallVibrationEnabled() {
+        if (getConfig() == null) return true;
         return getConfig().getBool("app", "incoming_call_vibration", true);
     }
 
     public void enableIncomingCallVibration(boolean enable) {
+        if (getConfig() == null) return;
         getConfig().setBool("app", "incoming_call_vibration", enable);
     }
 
     public boolean isBisFeatureEnabled() {
+        if (getConfig() == null) return true;
         return getConfig().getBool("app", "bis_feature", true);
     }
 
     public boolean isAutoAnswerEnabled() {
+        if (getConfig() == null) return false;
         return getConfig().getBool("app", "auto_answer", false);
     }
 
     public void enableAutoAnswer(boolean enable) {
+        if (getConfig() == null) return;
         getConfig().setBool("app", "auto_answer", enable);
     }
 
     public int getAutoAnswerTime() {
+        if (getConfig() == null) return 0;
         return getConfig().getInt("app", "auto_answer_delay", 0);
     }
 
     public void setAutoAnswerTime(int time) {
+        if (getConfig() == null) return;
         getConfig().setInt("app", "auto_answer_delay", time);
     }
 
     public void disableFriendsStorage() {
+        if (getConfig() == null) return;
         getConfig().setBool("misc", "store_friends", false);
     }
 
     public boolean useBasicChatRoomFor1To1() {
+        if (getConfig() == null) return false;
         return getConfig().getBool("app", "prefer_basic_chat_room", false);
     }
 
     // 0 is download all, -1 is disable feature, else size is bytes
     public int getAutoDownloadFileMaxSize() {
+        if (getLc() == null) return -1;
         return getLc().getMaxSizeForAutoDownloadIncomingFiles();
     }
 
     // 0 is download all, -1 is disable feature, else size is bytes
     public void setAutoDownloadFileMaxSize(int size) {
+        if (getLc() == null) return;
         getLc().setMaxSizeForAutoDownloadIncomingFiles(size);
     }
 
     public boolean hasPowerSaverDialogBeenPrompted() {
+        if (getConfig() == null) return false;
         return getConfig().getBool("app", "android_power_saver_dialog", false);
     }
 
     public void powerSaverDialogPrompted(boolean b) {
+        if (getConfig() == null) return;
         getConfig().setBool("app", "android_power_saver_dialog", b);
     }
 
     public boolean isDarkModeEnabled() {
         if (getConfig() == null) return false;
+        if (!mContext.getResources().getBoolean(R.bool.allow_dark_mode)) return false;
 
         boolean useNightModeDefault =
                 AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES;
@@ -1152,63 +1218,78 @@ public class LinphonePreferences {
     }
 
     public void enableDarkMode(boolean enable) {
+        if (getConfig() == null) return;
         getConfig().setBool("app", "dark_mode", enable);
     }
 
     public String getDeviceName(Context context) {
         String defaultValue = Compatibility.getDeviceName(context);
+        if (getConfig() == null) return defaultValue;
         return getConfig().getString("app", "device_name", defaultValue);
     }
 
     public void setDeviceName(String name) {
+        if (getConfig() == null) return;
         getConfig().setString("app", "device_name", name);
     }
 
     public boolean isEchoCancellationCalibrationDone() {
+        if (getConfig() == null) return false;
         return getConfig().getBool("app", "echo_cancellation_calibration_done", false);
     }
 
     public void setEchoCancellationCalibrationDone(boolean done) {
+        if (getConfig() == null) return;
         getConfig().setBool("app", "echo_cancellation_calibration_done", done);
     }
 
     public boolean isOpenH264CodecDownloadEnabled() {
+        if (getConfig() == null) return true;
         return getConfig().getBool("app", "open_h264_download_enabled", true);
     }
 
     public void setOpenH264CodecDownloadEnabled(boolean enable) {
+        if (getConfig() == null) return;
         getConfig().setBool("app", "open_h264_download_enabled", enable);
     }
 
     public boolean isVideoPreviewEnabled() {
+        if (getConfig() == null) return false;
         return isVideoEnabled() && getConfig().getBool("app", "video_preview", false);
     }
 
     public void setVideoPreviewEnabled(boolean enabled) {
+        if (getConfig() == null) return;
         getConfig().setBool("app", "video_preview", enabled);
     }
 
     public boolean shortcutsCreationEnabled() {
+        if (getConfig() == null) return false;
         return getConfig().getBool("app", "shortcuts", false);
     }
 
     public void enableChatRoomsShortcuts(boolean enable) {
+        if (getConfig() == null) return;
         getConfig().setBool("app", "shortcuts", enable);
     }
 
     public boolean hideEmptyChatRooms() {
+        if (getConfig() == null) return true;
         return getConfig().getBool("misc", "hide_empty_chat_rooms", true);
     }
 
     public void setHideEmptyChatRooms(boolean hide) {
+        if (getConfig() == null) return;
         getConfig().setBool("misc", "hide_empty_chat_rooms", hide);
     }
 
     public boolean hideRemovedProxiesChatRooms() {
+        if (getConfig() == null) return true;
         return getConfig().getBool("misc", "hide_chat_rooms_from_removed_proxies", true);
     }
 
     public void setHideRemovedProxiesChatRooms(boolean hide) {
+        if (getConfig() == null) return;
         getConfig().setBool("misc", "hide_chat_rooms_from_removed_proxies", hide);
     }
 }

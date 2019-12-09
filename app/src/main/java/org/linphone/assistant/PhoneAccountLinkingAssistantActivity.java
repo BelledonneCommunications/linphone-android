@@ -56,42 +56,50 @@ public class PhoneAccountLinkingAssistantActivity extends AssistantActivity {
             int proxyConfigIndex = getIntent().getExtras().getInt("AccountNumber");
             Core core = LinphoneManager.getCore();
             if (core == null) {
-                Log.e("[Account Linking] Core not available");
+                Log.e("[Account Linking Assistant] Core not available");
                 unexpectedError();
+                return;
             }
 
             ProxyConfig[] proxyConfigs = core.getProxyConfigList();
             if (proxyConfigIndex >= 0 && proxyConfigIndex < proxyConfigs.length) {
                 ProxyConfig mProxyConfig = proxyConfigs[proxyConfigIndex];
+                AccountCreator accountCreator = getAccountCreator();
 
                 Address identity = mProxyConfig.getIdentityAddress();
                 if (identity == null) {
-                    Log.e("[Account Linking] Proxy doesn't have an identity address");
+                    Log.e("[Account Linking Assistant] Proxy doesn't have an identity address");
                     unexpectedError();
+                    return;
                 }
                 if (!mProxyConfig.getDomain().equals(getString(R.string.default_domain))) {
                     Log.e(
-                            "[Account Linking] Can't link account on domain "
+                            "[Account Linking Assistant] Can't link account on domain "
                                     + mProxyConfig.getDomain());
                     unexpectedError();
+                    return;
                 }
-                mAccountCreator.setUsername(identity.getUsername());
+                accountCreator.setUsername(identity.getUsername());
 
                 AuthInfo authInfo = mProxyConfig.findAuthInfo();
                 if (authInfo == null) {
-                    Log.e("[Account Linking] Auth info not found");
+                    Log.e("[Account Linking Assistant] Auth info not found");
                     unexpectedError();
+                    return;
                 }
-                mAccountCreator.setHa1(authInfo.getHa1());
-
-                mAccountCreator.setDomain(getString(R.string.default_domain));
+                accountCreator.setHa1(authInfo.getHa1());
+                accountCreator.setAlgorithm((authInfo.getAlgorithm()));
             } else {
-                Log.e("[Account Linking] Proxy config index out of bounds: " + proxyConfigIndex);
+                Log.e(
+                        "[Account Linking Assistant] Proxy config index out of bounds: "
+                                + proxyConfigIndex);
                 unexpectedError();
+                return;
             }
         } else {
-            Log.e("[Account Linking] Proxy config index not found");
+            Log.e("[Account Linking Assistant] Proxy config index not found");
             unexpectedError();
+            return;
         }
 
         mCountryPicker = findViewById(R.id.select_country);
@@ -112,9 +120,11 @@ public class PhoneAccountLinkingAssistantActivity extends AssistantActivity {
                     public void onClick(View v) {
                         enableButtonsAndFields(false);
 
-                        AccountCreator.Status status = mAccountCreator.isAliasUsed();
+                        AccountCreator.Status status = getAccountCreator().isAliasUsed();
                         if (status != AccountCreator.Status.RequestOk) {
-                            Log.e("[Phone Account Linking] isAliasUsed returned " + status);
+                            Log.e(
+                                    "[Phone Account Linking Assistant] isAliasUsed returned "
+                                            + status);
                             enableButtonsAndFields(true);
                             showGenericErrorDialog(status);
                         }
@@ -178,11 +188,15 @@ public class PhoneAccountLinkingAssistantActivity extends AssistantActivity {
                     @Override
                     public void onIsAliasUsed(
                             AccountCreator creator, AccountCreator.Status status, String resp) {
-                        Log.i("[Phone Account Linking] onIsAliasUsed status is " + status);
+                        Log.i(
+                                "[Phone Account Linking Assistant] onIsAliasUsed status is "
+                                        + status);
                         if (status.equals(AccountCreator.Status.AliasNotExist)) {
-                            status = mAccountCreator.linkAccount();
+                            status = getAccountCreator().linkAccount();
                             if (status != AccountCreator.Status.RequestOk) {
-                                Log.e("[Phone Account Linking] linkAccount returned " + status);
+                                Log.e(
+                                        "[Phone Account Linking Assistant] linkAccount returned "
+                                                + status);
                                 enableButtonsAndFields(true);
                                 showGenericErrorDialog(status);
                             }
@@ -200,7 +214,9 @@ public class PhoneAccountLinkingAssistantActivity extends AssistantActivity {
                     @Override
                     public void onLinkAccount(
                             AccountCreator creator, AccountCreator.Status status, String resp) {
-                        Log.i("[Phone Account Linking] onLinkAccount status is " + status);
+                        Log.i(
+                                "[Phone Account Linking Assistant] onLinkAccount status is "
+                                        + status);
                         if (status.equals(AccountCreator.Status.RequestOk)) {
                             Intent intent =
                                     new Intent(
@@ -220,7 +236,12 @@ public class PhoneAccountLinkingAssistantActivity extends AssistantActivity {
     protected void onResume() {
         super.onResume();
 
-        mAccountCreator.addListener(mListener);
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            reloadLinphoneAccountCreatorConfig();
+        }
+
+        getAccountCreator().addListener(mListener);
 
         DialPlan dp = getDialPlanForCurrentCountry();
         displayDialPlan(dp);
@@ -234,7 +255,7 @@ public class PhoneAccountLinkingAssistantActivity extends AssistantActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        mAccountCreator.removeListener(mListener);
+        getAccountCreator().removeListener(mListener);
     }
 
     @Override

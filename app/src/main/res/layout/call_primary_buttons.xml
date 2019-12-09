@@ -38,7 +38,7 @@
             android:background="@drawable/button_background_dark"
             android:contentDescription="@string/content_description_numpad"
             android:padding="15dp"
-            android:src="@drawable/footer_dialer" />
+            android:src="@drawable/call_numpad" />
 
     </RelativeLayout>
 

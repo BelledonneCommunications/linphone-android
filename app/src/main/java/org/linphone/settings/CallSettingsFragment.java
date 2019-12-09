@@ -20,9 +20,12 @@
 package org.linphone.settings;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,7 +57,7 @@ public class CallSettingsFragment extends SettingsFragment {
             mAutoAnswer;
     private ListSetting mMediaEncryption;
     private TextSetting mAutoAnswerTime, mIncomingCallTimeout, mVoiceMailUri;
-    private BasicSetting mDndPermissionSettings;
+    private BasicSetting mDndPermissionSettings, mAndroidNotificationSettings;
 
     @Nullable
     @Override
@@ -89,6 +92,8 @@ public class CallSettingsFragment extends SettingsFragment {
 
         mMediaEncryption = mRootView.findViewById(R.id.pref_media_encryption);
         initMediaEncryptionList();
+
+        mAndroidNotificationSettings = mRootView.findViewById(R.id.pref_android_app_notif_settings);
 
         mAutoAnswerTime = mRootView.findViewById(R.id.pref_auto_answer_time);
         mAutoAnswerTime.setInputType(InputType.TYPE_CLASS_NUMBER);
@@ -167,8 +172,15 @@ public class CallSettingsFragment extends SettingsFragment {
                     @Override
                     public void onListValueChanged(int position, String newLabel, String newValue) {
                         try {
-                            mPrefs.setMediaEncryption(
-                                    MediaEncryption.fromInt(Integer.parseInt(newValue)));
+                            MediaEncryption encryption =
+                                    MediaEncryption.fromInt(Integer.parseInt(newValue));
+                            mPrefs.setMediaEncryption(encryption);
+
+                            if (encryption == MediaEncryption.None) {
+                                mMediaEncryptionMandatory.setChecked(false);
+                            }
+                            mMediaEncryptionMandatory.setEnabled(
+                                    encryption != MediaEncryption.None);
                         } catch (NumberFormatException nfe) {
                             Log.e(nfe);
                         }
@@ -223,6 +235,27 @@ public class CallSettingsFragment extends SettingsFragment {
                         mPrefs.setMediaEncryptionMandatory(newValue);
                     }
                 });
+
+        mAndroidNotificationSettings.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onClicked() {
+                        if (Build.VERSION.SDK_INT >= Version.API26_O_80) {
+                            Context context = getActivity();
+                            Intent i = new Intent();
+                            i.setAction(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS);
+                            i.putExtra(Settings.EXTRA_APP_PACKAGE, context.getPackageName());
+                            i.putExtra(
+                                    Settings.EXTRA_CHANNEL_ID,
+                                    context.getString(R.string.notification_service_channel_id));
+                            i.addCategory(Intent.CATEGORY_DEFAULT);
+                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                            i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                            startActivity(i);
+                        }
+                    }
+                });
     }
 
     private void updateValues() {
@@ -248,7 +281,12 @@ public class CallSettingsFragment extends SettingsFragment {
         mDndPermissionSettings.setVisibility(
                 Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60) ? View.VISIBLE : View.GONE);
 
-        mMediaEncryptionMandatory.setChecked(mPrefs.acceptMediaEncryptionMandatory());
+        mMediaEncryptionMandatory.setChecked(mPrefs.isMediaEncryptionMandatory());
+        mMediaEncryptionMandatory.setEnabled(mPrefs.getMediaEncryption() != MediaEncryption.None);
+
+        if (Version.sdkStrictlyBelow(Version.API26_O_80)) {
+            mAndroidNotificationSettings.setVisibility(View.GONE);
+        }
 
         setListeners();
     }

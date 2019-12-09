@@ -83,13 +83,13 @@
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
 
-        <org.linphone.views.CallIncomingDeclineButton
+        <org.linphone.call.views.CallIncomingDeclineButton
             android:id="@+id/decline_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
-        <org.linphone.views.CallIncomingAnswerButton
+        <org.linphone.call.views.CallIncomingAnswerButton
             android:id="@+id/answer_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"

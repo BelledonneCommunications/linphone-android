@@ -39,8 +39,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.call.views.LinphoneLinearLayoutManager;
 import org.linphone.utils.SelectableHelper;
-import org.linphone.views.LinphoneLinearLayoutManager;
 
 public class ContactsFragment extends Fragment
         implements OnItemClickListener,

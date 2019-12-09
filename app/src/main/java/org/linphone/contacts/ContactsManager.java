@@ -55,7 +55,8 @@ import org.linphone.core.ProxyConfig;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 
-public class ContactsManager extends ContentObserver implements FriendListListener {
+public class ContactsManager extends ContentObserver
+        implements FriendListListener, LinphoneContext.CoreStartedListener {
     private List<LinphoneContact> mContacts, mSipContacts;
     private final ArrayList<ContactsUpdatedListener> mContactsUpdatedListeners;
     private MagicSearch mMagicSearch;
@@ -79,6 +80,8 @@ public class ContactsManager extends ContentObserver implements FriendListListen
             mMagicSearch = LinphoneManager.getCore().createMagicSearch();
             mMagicSearch.setLimitedSearch(false); // Do not limit the number of results
         }
+
+        LinphoneContext.instance().addCoreStartedListener(this);
     }
 
     public void addContactsListener(ContactsUpdatedListener listener) {
@@ -104,6 +107,13 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         fetchContactsAsync();
     }
 
+    @Override
+    public void onCoreStarted() {
+        // Core has been started, fetch contacts again in case there are some
+        // in the configuration file or remote provisioning
+        fetchContactsAsync();
+    }
+
     public synchronized List<LinphoneContact> getContacts() {
         return mContacts;
     }
@@ -122,6 +132,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
 
     public void destroy() {
         mContext.getContentResolver().unregisterContentObserver(this);
+        LinphoneContext.instance().removeCoreStartedListener(this);
 
         if (mLoadContactTask != null) {
             mLoadContactTask.cancel(true);
@@ -149,10 +160,12 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         if (mLoadContactTask != null) {
             mLoadContactTask.cancel(true);
         }
+
         if (!hasReadContactsAccess()) {
-            Log.w("[Contacts Manager] Can't fetch contact without READ permission");
-            return;
+            Log.w(
+                    "[Contacts Manager] Can't fetch native contacts without READ_CONTACTS permission");
         }
+
         mLoadContactTask = new AsyncContactsLoader(mContext);
         mContactsFetchedOnce = true;
         mLoadContactTask.executeOnExecutor(THREAD_POOL_EXECUTOR);
@@ -212,6 +225,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         if (mContext == null) {
             return false;
         }
+
         boolean contactsR =
                 (PackageManager.PERMISSION_GRANTED
                         == mContext.getPackageManager()
@@ -226,6 +240,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         if (mContext == null) {
             return false;
         }
+
         return (PackageManager.PERMISSION_GRANTED
                 == mContext.getPackageManager()
                         .checkPermission(
@@ -236,6 +251,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         if (mContext == null) {
             return false;
         }
+
         return (PackageManager.PERMISSION_GRANTED
                 == mContext.getPackageManager()
                         .checkPermission(
@@ -263,10 +279,6 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                     }
                 }
             }
-        }
-
-        if (mContext != null && getContacts().isEmpty() && hasReadContactsAccess()) {
-            fetchContactsAsync();
         }
     }
 
@@ -366,6 +378,11 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         }
 
         String username = address.getUsername();
+        if (username == null) {
+            Log.w("[Contacts Manager] Address ", address.asString(), " doesn't have a username!");
+            return null;
+        }
+
         if (android.util.Patterns.PHONE.matcher(username).matches()) {
             return findContactFromPhoneNumber(username);
         }
@@ -421,6 +438,8 @@ public class ContactsManager extends ContentObserver implements FriendListListen
     }
 
     public String getAddressOrNumberForAndroidContact(ContentResolver resolver, Uri contactUri) {
+        if (resolver == null || contactUri == null) return null;
+
         // Phone Numbers
         String[] projection = new String[] {ContactsContract.CommonDataKinds.Phone.NUMBER};
         Cursor c = resolver.query(contactUri, projection, null, null, null);
@@ -431,8 +450,8 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                 c.close();
                 return number;
             }
+            c.close();
         }
-        c.close();
 
         projection = new String[] {ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS};
         c = resolver.query(contactUri, projection, null, null, null);
@@ -444,12 +463,14 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                 c.close();
                 return address;
             }
+            c.close();
         }
-        c.close();
+
         return null;
     }
 
     private synchronized boolean refreshSipContact(Friend lf) {
+        if (lf == null) return false;
         LinphoneContact contact = (LinphoneContact) lf.getUserData();
 
         if (contact != null) {
@@ -486,6 +507,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         ArrayList<ContentProviderOperation> ops = new ArrayList<>();
 
         for (String id : ids) {
+            Log.i("[Contacts Manager] Adding Android contact id ", id, " to batch removal");
             String[] args = new String[] {id};
             ops.add(
                     ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI)

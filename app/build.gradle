@@ -73,8 +73,7 @@ excludePackage.add('**/LICENSE.txt')
 
 repositories {
     maven {
-        // Replace snapshots by releases for releases !
-        url "https://linphone.org/snapshots/maven_repository"
+        url "https://linphone.org/maven_repository"
     }
 }
 
@@ -89,7 +88,7 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 4129
+        versionCode 4213
         versionName "${project.version}"
         applicationId getPackageName()
         multiDexEnabled true

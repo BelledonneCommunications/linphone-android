@@ -23,6 +23,7 @@ import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
@@ -30,6 +31,8 @@ import android.provider.ContactsContract.CommonDataKinds;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Data;
 import android.provider.ContactsContract.RawContacts;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import org.linphone.LinphoneContext;
@@ -41,10 +44,12 @@ class AndroidContact implements Serializable {
     private String mAndroidRawId;
     private boolean isAndroidRawIdLinphone;
     private final transient ArrayList<ContentProviderOperation> mChangesToCommit;
+    private byte[] mTempPicture;
 
     AndroidContact() {
         mChangesToCommit = new ArrayList<>();
         isAndroidRawIdLinphone = false;
+        mTempPicture = null;
     }
 
     String getAndroidId() {
@@ -78,6 +83,12 @@ class AndroidContact implements Serializable {
                     String rawId = String.valueOf(ContentUris.parseId(results[0].uri));
                     if (mAndroidId == null) {
                         Log.i("[Contact] Contact created with RAW ID " + rawId);
+                        mAndroidRawId = rawId;
+                        if (mTempPicture != null) {
+                            Log.i(
+                                    "[Contact] Contact has been created, raw is is available, time to set the photo");
+                            setPhoto(mTempPicture);
+                        }
 
                         final String[] projection =
                                 new String[] {ContactsContract.RawContacts.CONTACT_ID};
@@ -146,6 +157,7 @@ class AndroidContact implements Serializable {
     }
 
     void deleteAndroidContact() {
+        Log.i("[Contact] Deleting Android contact ", this);
         ContactsManager.getInstance().delete(mAndroidId);
     }
 
@@ -550,33 +562,44 @@ class AndroidContact implements Serializable {
             return;
         }
 
-        if (mAndroidId == null) {
-            Log.i("[Contact] Setting picture to new contact.");
-            addChangesToCommit(
-                    ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-                            .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
-                            .withValue(
-                                    ContactsContract.Data.MIMETYPE,
-                                    ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
-                            .withValue(ContactsContract.CommonDataKinds.Photo.PHOTO, photo)
-                            .build());
+        if (mAndroidRawId == null) {
+            Log.w("[Contact] Can't set picture for not already created contact, will do it later");
+            mTempPicture = photo;
         } else {
             Log.i(
-                    "[Contact] Setting picture to existing contact "
-                            + mAndroidId
-                            + " ("
-                            + mAndroidRawId
-                            + ")");
-            addChangesToCommit(
-                    ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-                            .withValue(ContactsContract.Data.RAW_CONTACT_ID, mAndroidRawId)
-                            .withValue(
-                                    ContactsContract.Data.MIMETYPE,
-                                    ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
-                            .withValue(ContactsContract.CommonDataKinds.Photo.PHOTO, photo)
-                            .withValue(ContactsContract.Data.IS_PRIMARY, 1)
-                            .withValue(ContactsContract.Data.IS_SUPER_PRIMARY, 1)
-                            .build());
+                    "[Contact] Setting picture to an already created raw contact [",
+                    mAndroidRawId,
+                    "]");
+            try {
+                long rawId = Long.parseLong(mAndroidRawId);
+
+                Uri rawContactPhotoUri =
+                        Uri.withAppendedPath(
+                                ContentUris.withAppendedId(RawContacts.CONTENT_URI, rawId),
+                                RawContacts.DisplayPhoto.CONTENT_DIRECTORY);
+
+                if (rawContactPhotoUri != null) {
+                    ContentResolver resolver =
+                            LinphoneContext.instance().getApplicationContext().getContentResolver();
+                    AssetFileDescriptor fd =
+                            resolver.openAssetFileDescriptor(rawContactPhotoUri, "rw");
+                    OutputStream os = fd.createOutputStream();
+                    os.write(photo);
+                    os.close();
+                    fd.close();
+                } else {
+                    Log.e(
+                            "[Contact] Failed to get raw contact photo URI for raw contact id [",
+                            rawId,
+                            "], aborting");
+                }
+            } catch (NumberFormatException nfe) {
+                Log.e("[Contact] Couldn't parse raw id [", mAndroidId, "], aborting");
+            } catch (IOException ioe) {
+                Log.e("[Contact] Couldn't set picture, IO error: ", ioe);
+            } catch (Exception e) {
+                Log.e("[Contact] Couldn't set picture, unknown error: ", e);
+            }
         }
     }
 

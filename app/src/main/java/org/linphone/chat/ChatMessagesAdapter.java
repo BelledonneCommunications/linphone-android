@@ -119,6 +119,7 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
         holder.bubbleLayout.setVisibility(View.GONE);
         holder.sendInProgress.setVisibility(View.GONE);
 
+        holder.isEditionEnabled = isEditionEnabled();
         if (isEditionEnabled()) {
             holder.delete.setVisibility(View.VISIBLE);
             holder.delete.setChecked(isSelected(position));

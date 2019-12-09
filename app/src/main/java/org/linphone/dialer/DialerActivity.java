@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.activities;
+package org.linphone.dialer;
 
 import android.Manifest;
 import android.content.Intent;
@@ -37,17 +37,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.activities.MainActivity;
+import org.linphone.call.views.CallButton;
 import org.linphone.contacts.ContactsActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.core.Call;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.tools.Log;
+import org.linphone.dialer.views.AddressText;
+import org.linphone.dialer.views.Digit;
+import org.linphone.dialer.views.EraseButton;
 import org.linphone.settings.LinphonePreferences;
-import org.linphone.views.AddressText;
-import org.linphone.views.CallButton;
-import org.linphone.views.Digit;
-import org.linphone.views.EraseButton;
 
 public class DialerActivity extends MainActivity implements AddressText.AddressChangedListener {
     private static final String ACTION_CALL_LINPHONE = "org.linphone.intent.action.CallLaunched";
@@ -220,14 +221,15 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
     private void enableVideoPreviewIfTablet(boolean enable) {
         Core core = LinphoneManager.getCore();
         TextureView preview = findViewById(R.id.video_preview);
-        if (preview != null && core != null) {
+        ImageView changeCamera = findViewById(R.id.video_preview_change_camera);
+
+        if (preview != null && changeCamera != null && core != null) {
             if (enable && isTablet() && LinphonePreferences.instance().isVideoPreviewEnabled()) {
                 preview.setVisibility(View.VISIBLE);
                 core.setNativePreviewWindowId(preview);
                 core.enableVideoPreview(true);
 
-                ImageView changeCamera = findViewById(R.id.video_preview_change_camera);
-                if (changeCamera != null && core.getVideoDevicesList().length > 1) {
+                if (core.getVideoDevicesList().length > 1) {
                     changeCamera.setVisibility(View.VISIBLE);
                     changeCamera.setOnClickListener(
                             new View.OnClickListener() {
@@ -239,6 +241,7 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
                 }
             } else {
                 preview.setVisibility(View.GONE);
+                changeCamera.setVisibility(View.GONE);
                 core.setNativePreviewWindowId(null);
                 core.enableVideoPreview(false);
             }
@@ -259,9 +262,7 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
 
     @Override
     public void onAddressChanged() {
-        Core core = LinphoneManager.getCore();
-        mAddContact.setEnabled(
-                core != null && core.getCallsNb() > 0 || !mAddress.getText().toString().equals(""));
+        mAddContact.setEnabled(!mAddress.getText().toString().isEmpty());
     }
 
     private void updateLayout() {
@@ -273,6 +274,8 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
         boolean atLeastOneCall = core.getCallsNb() > 0;
         mStartCall.setVisibility(atLeastOneCall ? View.GONE : View.VISIBLE);
         mAddContact.setVisibility(atLeastOneCall ? View.GONE : View.VISIBLE);
+        mAddContact.setEnabled(!mAddress.getText().toString().isEmpty());
+
         if (!atLeastOneCall) {
             if (core.getVideoActivationPolicy().getAutomaticallyInitiate()) {
                 mStartCall.setImageResource(R.drawable.call_video_start);

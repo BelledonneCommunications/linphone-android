@@ -24,9 +24,9 @@ import android.os.Bundle;
 import android.view.Surface;
 import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneService;
 import org.linphone.core.Core;
 import org.linphone.core.tools.Log;
+import org.linphone.service.LinphoneService;
 
 public abstract class LinphoneGenericActivity extends ThemeableActivity {
     @Override
@@ -80,8 +80,15 @@ public abstract class LinphoneGenericActivity extends ThemeableActivity {
             if (!LinphoneContext.isReady()) {
                 new LinphoneContext(getApplicationContext());
                 LinphoneContext.instance().start(false);
+                Log.i("[Generic Activity] Context created & started");
             }
-            startService(new Intent().setClass(this, LinphoneService.class));
+
+            Log.i("[Generic Activity] Starting Service");
+            try {
+                startService(new Intent().setClass(this, LinphoneService.class));
+            } catch (IllegalStateException ise) {
+                Log.e("[Generic Activity] Couldn't start service, exception: ", ise);
+            }
         }
     }
 }

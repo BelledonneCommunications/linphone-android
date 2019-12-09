@@ -64,7 +64,8 @@
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:resizeableActivity="true"
-        android:theme="@style/LinphoneStyle">
+        android:theme="@style/LinphoneStyle"
+        android:requestLegacyExternalStorage="true">
 
         <!-- Starting activities -->
 
@@ -81,7 +82,7 @@
         <!-- Main activities -->
 
         <activity
-            android:name=".activities.DialerActivity"
+            android:name=".dialer.DialerActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.DIAL" />
@@ -211,7 +212,7 @@
         <!-- Services -->
 
         <service
-            android:name=".LinphoneService"
+            android:name=".service.LinphoneService"
             android:label="@string/service_name" />
 
         <service
@@ -252,9 +253,8 @@
         <receiver android:name=".receivers.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-            <intent-filter>
                 <action android:name="android.intent.action.ACTION_SHUTDOWN" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
         </receiver>
 

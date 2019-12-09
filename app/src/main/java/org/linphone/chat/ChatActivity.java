@@ -20,6 +20,7 @@
 package org.linphone.chat;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -258,7 +259,18 @@ public class ChatActivity extends MainActivity {
             ArrayList<ContactAddress> participants,
             String subject,
             boolean encrypted,
-            boolean isGroupChatRoom) {
+            boolean isGroupChatRoom,
+            boolean cleanBackStack) {
+        if (cleanBackStack) {
+            FragmentManager fm = getFragmentManager();
+            while (fm.getBackStackEntryCount() > 0) {
+                fm.popBackStackImmediate();
+            }
+            if (isTablet()) {
+                showEmptyChildFragment();
+            }
+        }
+
         Bundle extras = new Bundle();
         if (peerAddress != null) {
             extras.putSerializable("RemoteSipUri", peerAddress.asStringUriOnly());

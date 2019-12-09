@@ -33,7 +33,6 @@ import org.linphone.core.Address;
 import org.linphone.core.Core;
 import org.linphone.core.Friend;
 import org.linphone.core.FriendCapability;
-import org.linphone.core.FriendList;
 import org.linphone.core.PresenceBasicStatus;
 import org.linphone.core.PresenceModel;
 import org.linphone.core.SubscribePolicy;
@@ -195,7 +194,7 @@ public class LinphoneContact extends AndroidContact
     }
 
     private void setPhotoUri(Uri uri) {
-        if (uri.equals(mPhotoUri)) return;
+        if (uri != null && uri.equals(mPhotoUri)) return;
         mPhotoUri = uri;
     }
 
@@ -204,7 +203,7 @@ public class LinphoneContact extends AndroidContact
     }
 
     private void setThumbnailUri(Uri uri) {
-        if (uri.equals(mThumbnailUri)) return;
+        if (uri != null && uri.equals(mThumbnailUri)) return;
         mThumbnailUri = uri;
     }
 
@@ -216,14 +215,16 @@ public class LinphoneContact extends AndroidContact
         if (noa == null) return;
 
         boolean found = false;
+        String normalizedPhone = noa.getNormalizedPhone();
         // Check for duplicated phone numbers but with different formats
         for (LinphoneNumberOrAddress number : mAddresses) {
             if (!number.isSIPAddress()) {
                 if ((!noa.isSIPAddress()
-                                && noa.getNormalizedPhone().equals(number.getNormalizedPhone()))
+                                && normalizedPhone != null
+                                && normalizedPhone.equals(number.getNormalizedPhone()))
                         || (noa.isSIPAddress()
                                 && noa.getValue().equals(number.getNormalizedPhone()))
-                        || (noa.getNormalizedPhone().equals(number.getValue()))) {
+                        || (normalizedPhone != null && normalizedPhone.equals(number.getValue()))) {
                     Log.d("[Linphone Contact] Duplicated entry detected: " + noa);
                     found = true;
                     break;
@@ -247,7 +248,8 @@ public class LinphoneContact extends AndroidContact
         for (LinphoneNumberOrAddress noa : getNumbersOrAddresses()) {
             if (noa.isSIPAddress()) {
                 String value = noa.getValue();
-                if (address.startsWith(value) || value.equals("sip:" + address)) {
+                if (value != null
+                        && (address.startsWith(value) || value.equals("sip:" + address))) {
                     // Startswith is to workaround the fact that the
                     // address may have a ;gruu= at the end...
                     return true;
@@ -274,7 +276,8 @@ public class LinphoneContact extends AndroidContact
                 }
                 LinphoneNumberOrAddress toRemove = null;
                 for (LinphoneNumberOrAddress address : mAddresses) {
-                    if (noa.getOldValue().equals(address.getValue())
+                    if (noa.getOldValue() != null
+                            && noa.getOldValue().equals(address.getValue())
                             && noa.isSIPAddress() == address.isSIPAddress()) {
                         toRemove = address;
                         break;
@@ -305,7 +308,8 @@ public class LinphoneContact extends AndroidContact
                         }
                     }
                     for (LinphoneNumberOrAddress address : mAddresses) {
-                        if (noa.getOldValue().equals(address.getValue())
+                        if (noa.getOldValue() != null
+                                && noa.getOldValue().equals(address.getValue())
                                 && noa.isSIPAddress() == address.isSIPAddress()) {
                             address.setValue(noa.getValue());
                             break;
@@ -352,9 +356,10 @@ public class LinphoneContact extends AndroidContact
             if (mFriend.getVcard() != null) {
                 mFriend.getVcard().setFamilyName(mLastName);
                 mFriend.getVcard().setGivenName(mFirstName);
-            }
-            if (mOrganization != null) {
-                mFriend.getVcard().setOrganization(mOrganization);
+
+                if (mOrganization != null) {
+                    mFriend.getVcard().setOrganization(mOrganization);
+                }
             }
 
             if (!created) {
@@ -395,12 +400,12 @@ public class LinphoneContact extends AndroidContact
     }
 
     public void deleteFriend() {
+        if (mFriend == null) return;
         Core core = LinphoneManager.getCore();
-        if (mFriend != null && core != null) {
-            for (FriendList list : core.getFriendsLists()) {
-                list.removeFriend(mFriend);
-            }
-        }
+        if (core == null) return;
+
+        Log.i("[Contact] Deleting friend ", mFriend.getName(), " for contact ", this);
+        mFriend.remove();
     }
 
     public void createOrUpdateFriendFromNativeContact() {
@@ -427,7 +432,9 @@ public class LinphoneContact extends AndroidContact
         if (mFriend == null) return false;
         for (LinphoneNumberOrAddress noa : getNumbersOrAddresses()) {
             PresenceModel pm = mFriend.getPresenceModelForUriOrTel(noa.getValue());
-            if (pm != null && pm.getBasicStatus().equals(PresenceBasicStatus.Open)) {
+            if (pm != null
+                    && pm.getBasicStatus() != null
+                    && pm.getBasicStatus().equals(PresenceBasicStatus.Open)) {
                 return true;
             }
         }
@@ -449,14 +456,22 @@ public class LinphoneContact extends AndroidContact
     }
 
     public boolean hasPresenceModelForUriOrTelCapability(String uri, FriendCapability capability) {
-        if (mFriend == null) return false;
-        if (mFriend.getPresenceModelForUriOrTel(uri) != null) {
-            return mFriend.getPresenceModelForUriOrTel(uri).hasCapability(capability);
+        if (mFriend == null || uri == null) return false;
+
+        PresenceModel presence = mFriend.getPresenceModelForUriOrTel(uri);
+        if (presence != null) {
+            return presence.hasCapability(capability);
         } else {
             for (LinphoneNumberOrAddress noa : getNumbersOrAddresses()) {
-                if (getContactFromPresenceModelForUriOrTel(noa.getValue()).equals(uri)) {
-                    return mFriend.getPresenceModelForUriOrTel(noa.getValue())
-                            .hasCapability(capability);
+                String value = noa.getValue();
+                if (value != null) {
+                    String contact = getContactFromPresenceModelForUriOrTel(value);
+                    if (contact != null && contact.equals(uri)) {
+                        presence = mFriend.getPresenceModelForUriOrTel(value);
+                        if (presence != null) {
+                            return presence.hasCapability(capability);
+                        }
+                    }
                 }
             }
         }
@@ -547,12 +562,18 @@ public class LinphoneContact extends AndroidContact
         String data3 = c.getString(c.getColumnIndex("data3"));
         String data4 = c.getString(c.getColumnIndex("data4"));
 
-        if (getFullName() == null) {
+        String fullName = getFullName();
+        if (fullName == null || !fullName.equals(displayName)) {
             Log.d("[Linphone Contact] Setting display name " + displayName);
             setFullName(displayName);
         }
 
         if (ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE.equals(mime)) {
+            if (data1 == null && data4 == null) {
+                Log.e("[Linphone Contact] Phone number data are both null !");
+                return;
+            }
+
             Log.d("[Linphone Contact] Found phone number " + data1 + " (" + data4 + ")");
             addNumberOrAddress(new LinphoneNumberOrAddress(data1, data4));
         } else if (ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE.equals(mime)
@@ -560,12 +581,27 @@ public class LinphoneContact extends AndroidContact
                         .getApplicationContext()
                         .getString(R.string.linphone_address_mime_type)
                         .equals(mime)) {
+            if (data1 == null) {
+                Log.e("[Linphone Contact] SIP address is null !");
+                return;
+            }
+
             Log.d("[Linphone Contact] Found SIP address " + data1);
             addNumberOrAddress(new LinphoneNumberOrAddress(data1, true));
         } else if (ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE.equals(mime)) {
+            if (data1 == null) {
+                Log.e("[Linphone Contact] Organization is null !");
+                return;
+            }
+
             Log.d("[Linphone Contact] Found organization " + data1);
             setOrganization(data1, false);
         } else if (ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE.equals(mime)) {
+            if (data2 == null && data3 == null) {
+                Log.e("[Linphone Contact] Firstname and lastname are both null !");
+                return;
+            }
+
             Log.d("[Linphone Contact] Found first name " + data2 + " and last name " + data3);
             setFirstNameAndLastName(data2, data3, false);
         } else {
@@ -592,7 +628,9 @@ public class LinphoneContact extends AndroidContact
             // Test presence of the value
             PresenceModel pm = getFriend().getPresenceModelForUriOrTel(value);
             // If presence is not null
-            if (pm != null && pm.getBasicStatus().equals(PresenceBasicStatus.Open)) {
+            if (pm != null
+                    && pm.getBasicStatus() != null
+                    && pm.getBasicStatus().equals(PresenceBasicStatus.Open)) {
                 Log.d("[Contact] Found presence information for phone number " + value);
                 if (!isLinphoneAddressMimeEntryAlreadyExisting(value)) {
                     // Do the action on the contact only once if it has not been done yet
@@ -605,12 +643,19 @@ public class LinphoneContact extends AndroidContact
 
     public void save() {
         saveChangesCommited();
+        if (getAndroidId() != null) {
+            setThumbnailUri(getContactThumbnailPictureUri());
+            setPhotoUri(getContactPictureUri());
+        }
         syncValuesFromAndroidContact(LinphoneContext.instance().getApplicationContext());
         createOrUpdateFriend();
     }
 
     public void delete() {
-        deleteAndroidContact();
+        Log.i("[Contact] Deleting contact ", this);
+        if (isAndroidContact()) {
+            deleteAndroidContact();
+        }
         if (isFriend()) {
             deleteFriend();
         }

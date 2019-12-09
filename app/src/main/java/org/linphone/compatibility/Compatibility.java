@@ -22,6 +22,7 @@ package org.linphone.compatibility;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ContentProviderClient;
@@ -30,6 +31,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.provider.Settings;
+import android.service.notification.StatusBarNotification;
 import org.linphone.core.Address;
 import org.linphone.mediastream.Version;
 import org.linphone.notifications.Notifiable;
@@ -103,11 +105,12 @@ public class Compatibility {
     }
 
     public static Notification createMissedCallNotification(
-            Context context, String title, String text, PendingIntent intent) {
+            Context context, String title, String text, PendingIntent intent, int count) {
         if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
-            return ApiTwentySixPlus.createMissedCallNotification(context, title, text, intent);
+            return ApiTwentySixPlus.createMissedCallNotification(
+                    context, title, text, intent, count);
         }
-        return ApiTwentyOnePlus.createMissedCallNotification(context, title, text, intent);
+        return ApiTwentyOnePlus.createMissedCallNotification(context, title, text, intent, count);
     }
 
     public static Notification createInCallNotification(
@@ -307,5 +310,13 @@ public class Compatibility {
             return ApiTwentyFourPlus.getCallDeclineAction(context, callId);
         }
         return null;
+    }
+
+    public static StatusBarNotification[] getActiveNotifications(NotificationManager manager) {
+        if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
+            return ApiTwentyThreePlus.getActiveNotifications(manager);
+        }
+
+        return new StatusBarNotification[0];
     }
 }

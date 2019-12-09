@@ -35,6 +35,7 @@ import java.util.List;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.activities.MainActivity;
+import org.linphone.call.views.LinphoneLinearLayoutManager;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.core.ChatMessage;
@@ -44,7 +45,6 @@ import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.ProxyConfig;
 import org.linphone.utils.SelectableHelper;
-import org.linphone.views.LinphoneLinearLayoutManager;
 
 public class ChatRoomsFragment extends Fragment
         implements ContactsUpdatedListener,
@@ -108,7 +108,7 @@ public class ChatRoomsFragment extends Fragment
                     @Override
                     public void onClick(View v) {
                         ((ChatActivity) getActivity())
-                                .showChatRoomCreation(null, null, null, false, false);
+                                .showChatRoomCreation(null, null, null, false, false, false);
                     }
                 });
 
@@ -117,7 +117,7 @@ public class ChatRoomsFragment extends Fragment
                     @Override
                     public void onClick(View v) {
                         ((ChatActivity) getActivity())
-                                .showChatRoomCreation(null, null, null, false, true);
+                                .showChatRoomCreation(null, null, null, false, true, false);
                     }
                 });
 
@@ -137,8 +137,13 @@ public class ChatRoomsFragment extends Fragment
                     }
 
                     @Override
-                    public void onMessageReceived(Core core, ChatRoom cr, ChatMessage message) {
-                        refreshChatRoom(cr);
+                    public void onMessageReceived(Core core, ChatRoom room, ChatMessage message) {
+                        refreshChatRoom(room);
+                    }
+
+                    @Override
+                    public void onChatRoomSubjectChanged(Core core, ChatRoom room) {
+                        refreshChatRoom(room);
                     }
 
                     @Override
@@ -154,9 +159,10 @@ public class ChatRoomsFragment extends Fragment
 
                     @Override
                     public void onChatRoomStateChanged(
-                            Core core, ChatRoom cr, ChatRoom.State state) {
+                            Core core, ChatRoom room, ChatRoom.State state) {
                         if (state == ChatRoom.State.Created) {
-                            refreshChatRoom(cr);
+                            refreshChatRoom(room);
+                            scrollToTop();
                         }
                     }
                 };
@@ -253,6 +259,9 @@ public class ChatRoomsFragment extends Fragment
             mWaitLayout.setVisibility(View.VISIBLE);
         }
         ((ChatActivity) getActivity()).displayMissedChats();
+
+        if (getResources().getBoolean(R.bool.isTablet))
+            ((ChatActivity) getActivity()).showEmptyChildFragment();
     }
 
     @Override
@@ -261,6 +270,10 @@ public class ChatRoomsFragment extends Fragment
         if (adapter != null) {
             adapter.refresh(true);
         }
+    }
+
+    private void scrollToTop() {
+        mChatRoomsList.getLayoutManager().scrollToPosition(0);
     }
 
     private void refreshChatRoom(ChatRoom cr) {

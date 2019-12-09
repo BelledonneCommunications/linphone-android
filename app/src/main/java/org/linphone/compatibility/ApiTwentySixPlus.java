@@ -76,7 +76,7 @@ class ApiTwentySixPlus {
         CharSequence name = context.getString(R.string.content_title_notification_service);
         String description = context.getString(R.string.content_title_notification_service);
         NotificationChannel channel =
-                new NotificationChannel(id, name, NotificationManager.IMPORTANCE_NONE);
+                new NotificationChannel(id, name, NotificationManager.IMPORTANCE_LOW);
         channel.setDescription(description);
         channel.enableVibration(false);
         channel.enableLights(false);
@@ -191,7 +191,6 @@ class ApiTwentySixPlus {
                         context, context.getString(R.string.notification_channel_id))
                 .setStyle(new Notification.DecoratedCustomViewStyle())
                 .setSmallIcon(R.drawable.topbar_call_notification)
-                .setLargeIcon(contactIcon)
                 .setContentTitle(contactName)
                 .setContentText(context.getString(R.string.incall_notif_incoming))
                 .setContentIntent(intent)
@@ -255,7 +254,7 @@ class ApiTwentySixPlus {
     }
 
     public static Notification createMissedCallNotification(
-            Context context, String title, String text, PendingIntent intent) {
+            Context context, String title, String text, PendingIntent intent, int count) {
         return new Notification.Builder(
                         context, context.getString(R.string.notification_channel_id))
                 .setContentTitle(title)
@@ -269,6 +268,7 @@ class ApiTwentySixPlus {
                 .setPriority(Notification.PRIORITY_HIGH)
                 .setWhen(System.currentTimeMillis())
                 .setShowWhen(true)
+                .setNumber(count)
                 .setColor(context.getColor(R.color.notification_led_color))
                 .build();
     }

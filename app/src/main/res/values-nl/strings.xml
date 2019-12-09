@@ -6,10 +6,20 @@
   <string name="addressbook_label">Linphone</string>
   <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">Bezig met opstarten</string>
+  <string name="notification_registered">%s verbonden</string>
+  <string name="notification_register_failure">%s verbinding kon niet tot stand gebracht worden</string>
   <string name="tunnel_host"></string>
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone Core %s</string>
+  <string name="about_liblinphone_sdk_version">Linphone SDK %s</string>
+  <string name="about_privacy_policy">Lees onze privacy verklaring</string>
+  <string name="sync_account_name">linphone contacten</string>
   <!--Notifications-->
+  <string name="notification_reply_label">Antwoord</string>
+  <string name="notification_replied_label">Verstuurd antwoord: %s</string>
+  <string name="notification_call_hangup_label">Verbinding verbreken</string>
+  <string name="notification_call_answer_label">Beantwoorden</string>
+  <string name="notification_mark_as_read_label">Aanduiden als gelezen</string>
   <!--Common-->
   <string name="username">Gebruikersnaam</string>
   <string name="phone_number">Telefoonnummer</string>
@@ -42,6 +52,7 @@
   <string name="no">Nee</string>
   <string name="ok">prima</string>
   <string name="yes">Ja</string>
+  <string name="do_not_ask_again">Niet opnieuw tonen</string>
   <!--Launch screen-->
   <string name="app_description">omschrijving</string>
   <!--Assistant-->
@@ -54,6 +65,7 @@
   <string name="assistant_validate_account_1">geldig account_1</string>
   <string name="assistant_linphone_login_desc">linphoen</string>
   <string name="transport">Transport</string>
+  <string name="assistant_create_account_phone_number_address">Uw SIP adres is</string>
   <!--Status-->
   <string name="password_too_short">Wachtwoord is te kort</string>
   <string name="password_too_long">Wachtwoiord is te lang</string>

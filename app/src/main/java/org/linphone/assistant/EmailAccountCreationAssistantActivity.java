@@ -30,9 +30,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
+import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.AccountCreator;
 import org.linphone.core.AccountCreatorListenerStub;
+import org.linphone.core.Core;
 import org.linphone.core.tools.Log;
 
 public class EmailAccountCreationAssistantActivity extends AssistantActivity {
@@ -65,7 +67,7 @@ public class EmailAccountCreationAssistantActivity extends AssistantActivity {
                     @Override
                     public void afterTextChanged(Editable s) {
                         AccountCreator.UsernameStatus status =
-                                mAccountCreator.setUsername(s.toString());
+                                getAccountCreator().setUsername(s.toString());
                         mUsernameError.setVisibility(
                                 status == AccountCreator.UsernameStatus.Ok
                                         ? View.INVISIBLE
@@ -88,7 +90,7 @@ public class EmailAccountCreationAssistantActivity extends AssistantActivity {
                     @Override
                     public void afterTextChanged(Editable s) {
                         AccountCreator.PasswordStatus status =
-                                mAccountCreator.setPassword(s.toString());
+                                getAccountCreator().setPassword(s.toString());
                         mPasswordError.setVisibility(
                                 status == AccountCreator.PasswordStatus.Ok
                                         ? View.INVISIBLE
@@ -146,7 +148,8 @@ public class EmailAccountCreationAssistantActivity extends AssistantActivity {
 
                     @Override
                     public void afterTextChanged(Editable s) {
-                        AccountCreator.EmailStatus status = mAccountCreator.setEmail(s.toString());
+                        AccountCreator.EmailStatus status =
+                                getAccountCreator().setEmail(s.toString());
                         mEmailError.setVisibility(
                                 status == AccountCreator.EmailStatus.Ok
                                         ? View.INVISIBLE
@@ -161,12 +164,13 @@ public class EmailAccountCreationAssistantActivity extends AssistantActivity {
                     @Override
                     public void onClick(View v) {
                         enableButtonsAndFields(false);
-                        mAccountCreator.setDomain(getString(R.string.default_domain));
 
-                        AccountCreator.Status status = mAccountCreator.isAccountExist();
+                        AccountCreator.Status status = getAccountCreator().isAccountExist();
                         if (status != AccountCreator.Status.RequestOk) {
                             enableButtonsAndFields(true);
-                            Log.e("[Email Account Creation] isAccountExists returned " + status);
+                            Log.e(
+                                    "[Email Account Creation Assistant] isAccountExists returned "
+                                            + status);
                             showGenericErrorDialog(status);
                         }
                     }
@@ -177,15 +181,19 @@ public class EmailAccountCreationAssistantActivity extends AssistantActivity {
                 new AccountCreatorListenerStub() {
                     public void onIsAccountExist(
                             AccountCreator creator, AccountCreator.Status status, String resp) {
-                        Log.i("[Email Account Creation] onIsAccountExist status is " + status);
+                        Log.i(
+                                "[Email Account Creation Assistant] onIsAccountExist status is "
+                                        + status);
                         if (status.equals(AccountCreator.Status.AccountExist)
                                 || status.equals(AccountCreator.Status.AccountExistWithAlias)) {
                             showAccountAlreadyExistsDialog();
                             enableButtonsAndFields(true);
                         } else if (status.equals(AccountCreator.Status.AccountNotExist)) {
-                            status = mAccountCreator.createAccount();
+                            status = getAccountCreator().createAccount();
                             if (status != AccountCreator.Status.RequestOk) {
-                                Log.e("[Email Account Creation] createAccount returned " + status);
+                                Log.e(
+                                        "[Email Account Creation Assistant] createAccount returned "
+                                                + status);
                                 enableButtonsAndFields(true);
                                 showGenericErrorDialog(status);
                             }
@@ -198,7 +206,9 @@ public class EmailAccountCreationAssistantActivity extends AssistantActivity {
                     @Override
                     public void onCreateAccount(
                             AccountCreator creator, AccountCreator.Status status, String resp) {
-                        Log.i("[Email Account Creation] onCreateAccount status is " + status);
+                        Log.i(
+                                "[Email Account Creation Assistant] onCreateAccount status is "
+                                        + status);
                         if (status.equals(AccountCreator.Status.AccountCreated)) {
                             startActivity(
                                     new Intent(
@@ -235,7 +245,12 @@ public class EmailAccountCreationAssistantActivity extends AssistantActivity {
     protected void onResume() {
         super.onResume();
 
-        mAccountCreator.addListener(mListener);
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            reloadLinphoneAccountCreatorConfig();
+        }
+
+        getAccountCreator().addListener(mListener);
 
         if (getResources().getBoolean(R.bool.pre_fill_email_in_assistant)) {
             Account[] accounts = AccountManager.get(this).getAccountsByType("com.google");
@@ -252,6 +267,6 @@ public class EmailAccountCreationAssistantActivity extends AssistantActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        mAccountCreator.removeListener(mListener);
+        getAccountCreator().removeListener(mListener);
     }
 }

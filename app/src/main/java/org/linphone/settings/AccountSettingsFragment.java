@@ -240,6 +240,9 @@ public class AccountSettingsFragment extends SettingsFragment {
                         if (mAuthInfo != null) {
                             mAuthInfo.setHa1(null);
                             mAuthInfo.setPassword(newValue);
+                            // Reset algorithm to generate correct hash depending on
+                            // algorithm set in next to come 401
+                            mAuthInfo.setAlgorithm(null);
                             Core core = LinphoneManager.getCore();
                             if (core != null) {
                                 core.addAuthInfo(mAuthInfo);

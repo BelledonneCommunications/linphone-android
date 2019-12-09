@@ -23,6 +23,7 @@ import android.annotation.TargetApi;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.os.PowerManager;
+import android.service.notification.StatusBarNotification;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
@@ -110,5 +111,9 @@ class ApiTwentyThreePlus {
         }
 
         return true;
+    }
+
+    public static StatusBarNotification[] getActiveNotifications(NotificationManager manager) {
+        return manager.getActiveNotifications();
     }
 }

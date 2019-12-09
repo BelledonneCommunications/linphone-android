@@ -129,6 +129,7 @@
   <string name="phone_number_link_info_content">\nВашим друзям буде простіше зконтактуватися з вами, якщо ви зв\'яжете свою обліківку зі своїм номером телефону.\n\nУ вашій адресній книзі ви побачите, хто використовує Linphone, а ваші друзі зможуть дізнатися, що ви також зареєстровані в Linphone.\n</string>
   <string name="phone_number_link_info_content_already_account">Номер телефону можна використовувати лише з однією обліківкою Linphone.\n\nЯкщо ваш номер вже був зв\'язаний з иншою обліківкою, але ви волієте використовувати його, просто зв\'яжіть його зараз, й ваш номер буде автоматично перенесено в цю обліківку.</string>
   <string name="phone_number_overuse">Забагато SMS було відправлено на цей номер за короткий проміжок часу, повторіть спробу через 24 години.</string>
+  <string name="account_doesnt_exist">Обліківки не існує</string>
   <!--Status-->
   <string name="invalid_email">Неприпустима адреса електронної пошти</string>
   <string name="account_already_exist">Обліківка вже існує</string>
@@ -243,6 +244,7 @@
   <string name="download_file">Стягнути</string>
   <string name="toast_choose_chat_room_for_sharing">Оберіть бесіду або створіть нову</string>
   <string name="trust_denied">У довірі було відмовлено. Зробіть виклик, аби почати процес автентифікації знову.</string>
+  <string name="cant_open_file_no_app_found">Не вдається відкрити файл, немає додатків для цього формату.</string>
   <!--Status Bar-->
   <string name="status_connected">З\'єднано</string>
   <string name="status_not_connected">Не з\'єднано</string>
@@ -399,6 +401,7 @@
   <string name="pref_codecs">Кодеки</string>
   <!--Video settings-->
   <string name="pref_video_title">Відео</string>
+  <string name="pref_video_camera_device">Камера</string>
   <string name="pref_overlay">Накладення відео</string>
   <string name="pref_overlay_summary">Показувати відеовиклик накладуванням на сторонньому застосунку</string>
   <string name="pref_video_use_front_camera_title">Використовувати фронтальну камеру</string>

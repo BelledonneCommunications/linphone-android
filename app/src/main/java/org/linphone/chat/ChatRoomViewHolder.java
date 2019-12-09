@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
+import org.linphone.contacts.views.ContactAvatar;
 import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
@@ -35,7 +36,6 @@ import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.Content;
 import org.linphone.core.Participant;
 import org.linphone.utils.LinphoneUtils;
-import org.linphone.views.ContactAvatar;
 
 public class ChatRoomViewHolder extends RecyclerView.ViewHolder
         implements View.OnClickListener, View.OnLongClickListener {

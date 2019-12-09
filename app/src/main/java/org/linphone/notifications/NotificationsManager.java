@@ -29,12 +29,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.service.notification.StatusBarNotification;
 import java.io.File;
 import java.util.HashMap;
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneService;
 import org.linphone.R;
-import org.linphone.activities.DialerActivity;
 import org.linphone.call.CallActivity;
 import org.linphone.call.CallIncomingActivity;
 import org.linphone.call.CallOutgoingActivity;
@@ -53,7 +52,9 @@ import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.Reason;
 import org.linphone.core.tools.Log;
+import org.linphone.dialer.DialerActivity;
 import org.linphone.history.HistoryActivity;
+import org.linphone.service.LinphoneService;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.DeviceUtils;
 import org.linphone.utils.FileUtils;
@@ -84,7 +85,19 @@ public class NotificationsManager {
         mCurrentChatRoomAddress = null;
 
         mNM = (NotificationManager) mContext.getSystemService(NOTIFICATION_SERVICE);
-        mNM.cancelAll();
+
+        if (mContext.getResources().getBoolean(R.bool.keep_missed_call_notification_upon_restart)) {
+            StatusBarNotification[] notifs = Compatibility.getActiveNotifications(mNM);
+            if (notifs != null && notifs.length > 1) {
+                for (StatusBarNotification notif : notifs) {
+                    if (notif.getId() != MISSED_CALLS_NOTIF_ID) {
+                        dismissNotification(notif.getId());
+                    }
+                }
+            }
+        } else {
+            mNM.cancelAll();
+        }
 
         mLastNotificationId = 5; // Do not conflict with hardcoded notifications ids !
 
@@ -327,6 +340,10 @@ public class NotificationsManager {
         }
     }
 
+    public void dismissMissedCallNotification() {
+        dismissNotification(MISSED_CALLS_NOTIF_ID);
+    }
+
     public void sendNotification(int id, Notification notif) {
         Log.i("[Notifications Manager] Notifying " + id);
         mNM.notify(id, notif);
@@ -521,7 +538,8 @@ public class NotificationsManager {
                         mContext,
                         mContext.getString(R.string.missed_calls_notif_title),
                         body,
-                        pendingIntent);
+                        pendingIntent,
+                        missedCallCount);
         sendNotification(MISSED_CALLS_NOTIF_ID, notif);
     }
 

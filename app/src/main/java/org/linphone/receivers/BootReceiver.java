@@ -22,8 +22,8 @@ package org.linphone.receivers;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import org.linphone.LinphoneService;
 import org.linphone.compatibility.Compatibility;
+import org.linphone.service.LinphoneService;
 import org.linphone.settings.LinphonePreferences;
 
 public class BootReceiver extends BroadcastReceiver {
@@ -36,17 +36,34 @@ public class BootReceiver extends BroadcastReceiver {
                     "[Boot Receiver] Device is shutting down, destroying Core to unregister");
             context.stopService(
                     new Intent(Intent.ACTION_MAIN).setClass(context, LinphoneService.class));
-        } else {
+        } else if (intent.getAction().equalsIgnoreCase(Intent.ACTION_BOOT_COMPLETED)) {
             LinphonePreferences.instance().setContext(context);
             boolean autostart = LinphonePreferences.instance().isAutoStartEnabled();
             android.util.Log.i(
                     "Linphone", "[Boot Receiver] Device is starting, auto_start is " + autostart);
+
             if (autostart && !LinphoneService.isReady()) {
-                Intent serviceIntent = new Intent(Intent.ACTION_MAIN);
-                serviceIntent.setClass(context, LinphoneService.class);
-                serviceIntent.putExtra("ForceStartForeground", true);
-                Compatibility.startService(context, serviceIntent);
+                startService(context);
+            }
+        } else if (intent.getAction().equalsIgnoreCase(Intent.ACTION_MY_PACKAGE_REPLACED)) {
+            LinphonePreferences.instance().setContext(context);
+            boolean foregroundService =
+                    LinphonePreferences.instance().getServiceNotificationVisibility();
+            android.util.Log.i(
+                    "Linphone",
+                    "[Boot Receiver] App has been updated, foreground service is "
+                            + foregroundService);
+
+            if (foregroundService && !LinphoneService.isReady()) {
+                startService(context);
             }
         }
+    }
+
+    private void startService(Context context) {
+        Intent serviceIntent = new Intent(Intent.ACTION_MAIN);
+        serviceIntent.setClass(context, LinphoneService.class);
+        serviceIntent.putExtra("ForceStartForeground", true);
+        Compatibility.startService(context, serviceIntent);
     }
 }
