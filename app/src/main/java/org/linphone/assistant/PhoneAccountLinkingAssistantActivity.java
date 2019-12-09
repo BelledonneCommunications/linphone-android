@@ -58,6 +58,7 @@ public class PhoneAccountLinkingAssistantActivity extends AssistantActivity {
             if (core == null) {
                 Log.e("[Account Linking Assistant] Core not available");
                 unexpectedError();
+                return;
             }
 
             ProxyConfig[] proxyConfigs = core.getProxyConfigList();
@@ -69,12 +70,14 @@ public class PhoneAccountLinkingAssistantActivity extends AssistantActivity {
                 if (identity == null) {
                     Log.e("[Account Linking Assistant] Proxy doesn't have an identity address");
                     unexpectedError();
+                    return;
                 }
                 if (!mProxyConfig.getDomain().equals(getString(R.string.default_domain))) {
                     Log.e(
                             "[Account Linking Assistant] Can't link account on domain "
                                     + mProxyConfig.getDomain());
                     unexpectedError();
+                    return;
                 }
                 accountCreator.setUsername(identity.getUsername());
 
@@ -82,6 +85,7 @@ public class PhoneAccountLinkingAssistantActivity extends AssistantActivity {
                 if (authInfo == null) {
                     Log.e("[Account Linking Assistant] Auth info not found");
                     unexpectedError();
+                    return;
                 }
                 accountCreator.setHa1(authInfo.getHa1());
                 accountCreator.setAlgorithm((authInfo.getAlgorithm()));
@@ -90,10 +94,12 @@ public class PhoneAccountLinkingAssistantActivity extends AssistantActivity {
                         "[Account Linking Assistant] Proxy config index out of bounds: "
                                 + proxyConfigIndex);
                 unexpectedError();
+                return;
             }
         } else {
             Log.e("[Account Linking Assistant] Proxy config index not found");
             unexpectedError();
+            return;
         }
 
         mCountryPicker = findViewById(R.id.select_country);
