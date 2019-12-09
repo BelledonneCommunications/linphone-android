@@ -13,6 +13,14 @@ Group changes to describe their impact on the project, as follows:
 ## [Unreleased]
 
 ### Added
+- 
+
+### Changed
+-  
+
+## [4.2.0] - 2019-12-09
+
+### Added
 - Added shortcuts to contacts' latest chat rooms
 - Improved device's do not disturb policy compliance
 - Added sample application to help developpers getting started with our SDK
@@ -25,7 +33,7 @@ Group changes to describe their impact on the project, as follows:
 - Restart service if foreground service setting is on when app is updated
 - Change bluetooth volume while in call if BT device connected and used
 
-## Changed
+### Changed
 - Improved performances to reduce startup time
 - Call statistics are now available for each call & conference
 - Added our own devices in LIME encrypted chatrooms' security view
