@@ -332,6 +332,8 @@ public class LinphoneManager implements SensorEventListener {
     }
 
     public static synchronized Core getCore() {
+        if (!LinphoneContext.isReady()) return null;
+
         if (getInstance().mExited) {
             // Can occur if the UI thread play a posted event but in the meantime the
             // LinphoneManager was destroyed

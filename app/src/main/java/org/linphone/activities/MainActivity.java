@@ -419,7 +419,11 @@ public abstract class MainActivity extends LinphoneGenericActivity
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
+        try {
+            startActivity(intent);
+        } catch (IllegalStateException ise) {
+            Log.e("[Main Activity] Can't start home activity: ", ise);
+        }
     }
 
     private void quit() {

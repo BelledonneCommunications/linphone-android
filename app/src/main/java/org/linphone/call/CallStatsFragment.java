@@ -89,7 +89,11 @@ public class CallStatsFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        LinphoneManager.getCore().removeListener(mListener);
+
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            core.removeListener(mListener);
+        }
     }
 
     public void setDrawer(DrawerLayout drawer, RelativeLayout content) {
