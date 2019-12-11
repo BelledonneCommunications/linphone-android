@@ -198,7 +198,11 @@ public class NetworkSettingsFragment extends SettingsFragment {
                         mPrefs.powerSaverDialogPrompted(true);
                         Intent intent = DeviceUtils.getDevicePowerManagerIntent(getActivity());
                         if (intent != null) {
-                            startActivity(intent);
+                            try {
+                                startActivity(intent);
+                            } catch (SecurityException se) {
+                                Log.e("[Network Settings] Security exception: ", se);
+                            }
                         }
                     }
                 });
