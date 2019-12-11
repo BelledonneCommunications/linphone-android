@@ -260,12 +260,16 @@ public class HistoryDetailFragment extends Fragment {
         if (core == null) return;
 
         Address participant = Factory.instance().createAddress(mSipUri);
+        if (participant == null) {
+            Log.e("[History Detail] Couldn't parse ", mSipUri);
+            return;
+        }
         ProxyConfig defaultProxyConfig = core.getDefaultProxyConfig();
 
         if (defaultProxyConfig != null) {
             ChatRoom room =
                     core.findOneToOneChatRoom(
-                            defaultProxyConfig.getContact(), participant, isSecured);
+                            defaultProxyConfig.getIdentityAddress(), participant, isSecured);
             if (room != null) {
                 ((HistoryActivity) getActivity())
                         .showChatRoom(room.getLocalAddress(), room.getPeerAddress());

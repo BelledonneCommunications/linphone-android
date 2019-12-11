@@ -531,18 +531,24 @@ public class LinphoneContact extends AndroidContact
     }
 
     private synchronized void syncValuesFromAndroidContact(Context context) {
-        Cursor c =
-                context.getContentResolver()
-                        .query(
-                                ContactsContract.Data.CONTENT_URI,
-                                AsyncContactsLoader.PROJECTION,
-                                ContactsContract.Data.IN_DEFAULT_DIRECTORY
-                                        + " == 1 AND "
-                                        + ContactsContract.Data.CONTACT_ID
-                                        + " == "
-                                        + mAndroidId,
-                                null,
-                                null);
+        Cursor c = null;
+        try {
+            c =
+                    context.getContentResolver()
+                            .query(
+                                    ContactsContract.Data.CONTENT_URI,
+                                    AsyncContactsLoader.PROJECTION,
+                                    ContactsContract.Data.IN_DEFAULT_DIRECTORY
+                                            + " == 1 AND "
+                                            + ContactsContract.Data.CONTACT_ID
+                                            + " == "
+                                            + mAndroidId,
+                                    null,
+                                    null);
+        } catch (SecurityException se) {
+            Log.e("[Contact] Security exception: ", se);
+        }
+
         if (c != null) {
             mAddresses = new ArrayList<>();
             while (c.moveToNext()) {

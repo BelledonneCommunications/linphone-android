@@ -367,12 +367,16 @@ public class ContactDetailsFragment extends Fragment implements ContactsUpdatedL
         if (core == null) return;
 
         Address participant = Factory.instance().createAddress(tag);
+        if (participant == null) {
+            Log.e("[Contact Detail] Couldn't parse ", tag);
+            return;
+        }
         ProxyConfig defaultProxyConfig = core.getDefaultProxyConfig();
 
         if (defaultProxyConfig != null) {
             ChatRoom room =
                     core.findOneToOneChatRoom(
-                            defaultProxyConfig.getContact(), participant, isSecured);
+                            defaultProxyConfig.getIdentityAddress(), participant, isSecured);
             if (room != null) {
                 ((ContactsActivity) getActivity())
                         .showChatRoom(room.getLocalAddress(), room.getPeerAddress());
