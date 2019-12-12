@@ -747,6 +747,11 @@ public class CallActivity extends LinphoneGenericActivity
         boolean isBluetoothAvailable = mAudioManager.isBluetoothHeadsetConnected();
         mSpeaker.setVisibility(isBluetoothAvailable ? View.GONE : View.VISIBLE);
         mAudioRoute.setVisibility(isBluetoothAvailable ? View.VISIBLE : View.GONE);
+        if (!isBluetoothAvailable) {
+            mRouteBluetooth.setVisibility(View.GONE);
+            mRouteSpeaker.setVisibility(View.GONE);
+            mRouteEarpiece.setVisibility(View.GONE);
+        }
 
         mVideo.setEnabled(
                 LinphonePreferences.instance().isVideoEnabled()
