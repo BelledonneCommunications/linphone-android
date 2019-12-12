@@ -487,7 +487,7 @@ public class CallActivity extends LinphoneGenericActivity
             finish();
         }
 
-        LinphoneService.instance().destroyOverlay();
+        if (LinphoneService.isReady()) LinphoneService.instance().destroyOverlay();
     }
 
     @Override
@@ -502,7 +502,7 @@ public class CallActivity extends LinphoneGenericActivity
             Call call = core.getCurrentCall();
             if (call.getState() == Call.State.StreamsRunning) {
                 // Prevent overlay creation if video call is paused by remote
-                LinphoneService.instance().createOverlay();
+                if (LinphoneService.isReady()) LinphoneService.instance().createOverlay();
             }
         }
 

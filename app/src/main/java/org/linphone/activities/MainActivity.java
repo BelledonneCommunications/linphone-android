@@ -25,6 +25,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.KeyguardManager;
+import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -550,8 +551,10 @@ public abstract class MainActivity extends LinphoneGenericActivity
             if (permissions[i].equals(Manifest.permission.READ_CONTACTS)
                     || permissions[i].equals(Manifest.permission.WRITE_CONTACTS)) {
                 if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                    ContactsManager.getInstance().enableContactsAccess();
-                    ContactsManager.getInstance().initializeContactManager();
+                    if (LinphoneContext.isReady()) {
+                        ContactsManager.getInstance().enableContactsAccess();
+                        ContactsManager.getInstance().initializeContactManager();
+                    }
                 }
             } else if (permissions[i].equals(Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 boolean enableRingtone = grantResults[i] == PackageManager.PERMISSION_GRANTED;
@@ -778,8 +781,13 @@ public abstract class MainActivity extends LinphoneGenericActivity
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startActivity(
-                                new Intent("android.settings.NOTIFICATION_POLICY_ACCESS_SETTINGS"));
+                        try {
+                            startActivity(
+                                    new Intent(
+                                            "android.settings.NOTIFICATION_POLICY_ACCESS_SETTINGS"));
+                        } catch (ActivityNotFoundException anfe) {
+                            Log.e("[Main Activity] Activity not found exception: ", anfe);
+                        }
                         dialog.dismiss();
                     }
                 });

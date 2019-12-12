@@ -35,6 +35,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.core.content.ContextCompat;
+import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.Call;
@@ -184,9 +185,11 @@ public class CallStatusBarFragment extends Fragment {
     public void onPause() {
         super.onPause();
 
-        Core core = LinphoneManager.getCore();
-        if (core != null) {
-            core.removeListener(mListener);
+        if (LinphoneContext.isReady()) {
+            Core core = LinphoneManager.getCore();
+            if (core != null) {
+                core.removeListener(mListener);
+            }
         }
 
         if (mCallQualityUpdater != null) {

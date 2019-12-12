@@ -222,7 +222,7 @@ public class ContactsManager extends ContentObserver
     }
 
     public boolean hasReadContactsAccess() {
-        if (mContext == null) {
+        if (mContext == null || mContext.getPackageManager() == null) {
             return false;
         }
 

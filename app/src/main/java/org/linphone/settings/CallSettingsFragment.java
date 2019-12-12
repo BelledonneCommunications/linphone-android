@@ -20,6 +20,7 @@
 package org.linphone.settings;
 
 import android.Manifest;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -223,8 +224,13 @@ public class CallSettingsFragment extends SettingsFragment {
                 new SettingListenerBase() {
                     @Override
                     public void onClicked() {
-                        startActivity(
-                                new Intent("android.settings.NOTIFICATION_POLICY_ACCESS_SETTINGS"));
+                        try {
+                            startActivity(
+                                    new Intent(
+                                            "android.settings.NOTIFICATION_POLICY_ACCESS_SETTINGS"));
+                        } catch (ActivityNotFoundException anfe) {
+                            Log.e("[Call Settings] Activity not found: ", anfe);
+                        }
                     }
                 });
 

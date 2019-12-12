@@ -122,15 +122,8 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
                     @Override
                     public void onCallStateChanged(
                             Core core, Call call, State state, String message) {
-                        if (call == mCall) {
-                            if (state == State.Connected) {
-                                // This is done by the LinphoneContext listener now
-                                // startActivity(new Intent(CallOutgoingActivity.this,
-                                // CallActivity.class));
-                            }
-                        }
-
                         if (state == State.End || state == State.Released) {
+                            mCall = null;
                             finish();
                         }
                     }
@@ -176,7 +169,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
         mNumber.setText(address.asStringUriOnly());
 
         if (LinphonePreferences.instance().acceptIncomingEarlyMedia()) {
-            if (mCall.getCurrentParams().videoEnabled()) {
+            if (mCall.getCurrentParams() != null && mCall.getCurrentParams().videoEnabled()) {
                 findViewById(R.id.avatar_layout).setVisibility(View.GONE);
                 mCall.getCore().setNativeVideoWindowId(mVideoDisplay);
             }
@@ -206,7 +199,8 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (LinphoneContext.isReady()
-                && (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME)) {
+                && (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME)
+                && mCall != null) {
             mCall.terminate();
             finish();
         }
@@ -231,7 +225,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
         }
         mAlreadyAcceptedOrDeniedCall = true;
 
-        mCall.terminate();
+        if (mCall != null) mCall.terminate();
         finish();
     }
 
@@ -281,6 +275,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
         }
         if (LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests()
                 && mCall != null
+                && mCall.getRemoteParams() != null
                 && mCall.getRemoteParams().videoEnabled()) {
             if (camera != PackageManager.PERMISSION_GRANTED) {
                 Log.i("[Permission] Asking for camera");
