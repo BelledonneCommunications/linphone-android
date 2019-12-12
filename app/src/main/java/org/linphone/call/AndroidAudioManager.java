@@ -40,6 +40,7 @@ import android.view.KeyEvent;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
+import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.compatibility.Compatibility;
@@ -438,7 +439,7 @@ public class AndroidAudioManager {
     public synchronized void bluetoothHeadetConnectionChanged(boolean connected) {
         mIsBluetoothHeadsetConnected = connected;
         mAudioManager.setBluetoothScoOn(connected);
-        LinphoneManager.getCallManager().refreshInCallActions();
+        if (LinphoneContext.isReady()) LinphoneManager.getCallManager().refreshInCallActions();
     }
 
     public synchronized void bluetoothHeadetAudioConnectionChanged(boolean connected) {
@@ -452,7 +453,7 @@ public class AndroidAudioManager {
 
     public synchronized void bluetoothHeadetScoConnectionChanged(boolean connected) {
         mIsBluetoothHeadsetScoConnected = connected;
-        LinphoneManager.getCallManager().refreshInCallActions();
+        if (LinphoneContext.isReady()) LinphoneManager.getCallManager().refreshInCallActions();
     }
 
     public synchronized boolean isUsingBluetoothAudioRoute() {

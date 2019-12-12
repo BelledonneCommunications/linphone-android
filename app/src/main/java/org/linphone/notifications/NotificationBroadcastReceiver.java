@@ -42,6 +42,11 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
         final int notifId = intent.getIntExtra(Compatibility.INTENT_NOTIF_ID, 0);
         final String localyIdentity = intent.getStringExtra(Compatibility.INTENT_LOCAL_IDENTITY);
 
+        if (!LinphoneContext.isReady()) {
+            Log.e("[Notification Broadcast Receiver] Context not ready, aborting...");
+            return;
+        }
+
         if (intent.getAction().equals(Compatibility.INTENT_REPLY_NOTIF_ACTION)
                 || intent.getAction().equals(Compatibility.INTENT_MARK_AS_READ_ACTION)) {
             String remoteSipAddr =
