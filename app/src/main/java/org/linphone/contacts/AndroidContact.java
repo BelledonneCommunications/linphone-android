@@ -43,7 +43,7 @@ class AndroidContact implements Serializable {
     String mAndroidId;
     private String mAndroidRawId;
     private boolean isAndroidRawIdLinphone;
-    private final transient ArrayList<ContentProviderOperation> mChangesToCommit;
+    private transient ArrayList<ContentProviderOperation> mChangesToCommit;
     private byte[] mTempPicture;
 
     AndroidContact() {
@@ -66,6 +66,9 @@ class AndroidContact implements Serializable {
 
     private void addChangesToCommit(ContentProviderOperation operation) {
         Log.i("[Contact] Added operation " + operation);
+        if (mChangesToCommit == null) {
+            mChangesToCommit = new ArrayList<>();
+        }
         mChangesToCommit.add(operation);
     }
 

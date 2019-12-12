@@ -28,6 +28,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.Content;
@@ -162,9 +163,11 @@ public class StatusBarFragment extends Fragment {
     public void onPause() {
         super.onPause();
 
-        Core core = LinphoneManager.getCore();
-        if (core != null) {
-            core.removeListener(mListener);
+        if (LinphoneContext.isReady()) {
+            Core core = LinphoneManager.getCore();
+            if (core != null) {
+                core.removeListener(mListener);
+            }
         }
     }
 

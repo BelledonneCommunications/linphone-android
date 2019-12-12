@@ -36,6 +36,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import java.util.ArrayList;
 import java.util.List;
+import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.activities.AboutActivity;
@@ -181,6 +182,8 @@ public class SideMenuFragment extends Fragment {
         ImageView status = mDefaultAccount.findViewById(R.id.main_account_status);
         TextView address = mDefaultAccount.findViewById(R.id.main_account_address);
         TextView displayName = mDefaultAccount.findViewById(R.id.main_account_display_name);
+
+        if (!LinphoneContext.isReady() || LinphoneManager.getCore() == null) return;
 
         ProxyConfig proxy = LinphoneManager.getCore().getDefaultProxyConfig();
         if (proxy == null) {
