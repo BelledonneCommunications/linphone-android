@@ -924,7 +924,7 @@ public class CallActivity extends LinphoneGenericActivity
     private void goBackToDialer() {
         Intent intent = new Intent();
         intent.setClass(this, DialerActivity.class);
-        intent.putExtra("Transfer", false);
+        intent.putExtra("isTransfer", false);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         startActivity(intent);
     }
@@ -932,7 +932,7 @@ public class CallActivity extends LinphoneGenericActivity
     private void goBackToDialerAndDisplayTransferButton() {
         Intent intent = new Intent();
         intent.setClass(this, DialerActivity.class);
-        intent.putExtra("Transfer", true);
+        intent.putExtra("isTransfer", true);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         startActivity(intent);
     }
