@@ -116,13 +116,26 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
                     Manifest.permission.READ_CONTACTS
                 };
 
+        mIsTransfer = false;
+        if (getIntent() != null) {
+            mIsTransfer = getIntent().getBooleanExtra("isTransfer", false);
+        }
+
         handleIntentParams(getIntent());
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+
         handleIntentParams(intent);
+
+        if (intent != null) {
+            mIsTransfer = intent.getBooleanExtra("isTransfer", mIsTransfer);
+            if (mAddress != null && intent.getStringExtra("SipUri") != null) {
+                mAddress.setText(intent.getStringExtra("SipUri"));
+            }
+        }
     }
 
     @Override
@@ -207,9 +220,7 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
                     }
                 });
 
-        mIsTransfer = false;
         if (getIntent() != null) {
-            mIsTransfer = getIntent().getBooleanExtra("Transfer", false);
             mAddress.setText(getIntent().getStringExtra("SipUri"));
         }
 
