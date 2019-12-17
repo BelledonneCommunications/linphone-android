@@ -33,6 +33,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.activities.MainActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.contacts.views.ContactAvatar;
@@ -80,7 +81,7 @@ public class HistoryDetailFragment extends Fragment {
                 new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        LinphoneManager.getCallManager().newOutgoingCall(mSipUri, mDisplayName);
+                        ((MainActivity) getActivity()).newOutgoingCall(mSipUri);
                     }
                 });
 

@@ -633,6 +633,18 @@ public abstract class MainActivity extends LinphoneGenericActivity
         }
     }
 
+    public void newOutgoingCall(String to) {
+        if (LinphoneManager.getCore().getCallsNb() > 0) {
+            Intent intent = new Intent(this, DialerActivity.class);
+            intent.addFlags(
+                    Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            intent.putExtra("SipUri", to);
+            this.startActivity(intent);
+        } else {
+            LinphoneManager.getCallManager().newOutgoingCall(to, null);
+        }
+    }
+
     private void addFlagsToIntent(Intent intent) {
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
     }

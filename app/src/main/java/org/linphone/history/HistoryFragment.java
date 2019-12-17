@@ -38,6 +38,7 @@ import java.util.List;
 import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.activities.MainActivity;
 import org.linphone.call.views.LinphoneLinearLayoutManager;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.ContactsUpdatedListener;
@@ -206,8 +207,7 @@ public class HistoryFragment extends Fragment
                     address = log.getToAddress();
                 }
                 if (address != null) {
-                    LinphoneManager.getCallManager()
-                            .newOutgoingCall(address.asStringUriOnly(), null);
+                    ((MainActivity) getActivity()).newOutgoingCall(address.asStringUriOnly());
                 }
             }
         }

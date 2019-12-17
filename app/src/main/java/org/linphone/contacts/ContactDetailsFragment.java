@@ -36,6 +36,7 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.activities.MainActivity;
 import org.linphone.contacts.views.ContactAvatar;
 import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
@@ -304,7 +305,7 @@ public class ContactDetailsFragment extends Fragment implements ContactsUpdatedL
                                     @Override
                                     public void onClick(View v) {
                                         String tag = (String) v.getTag();
-                                        LinphoneManager.getCallManager().newOutgoingCall(tag, null);
+                                        ((MainActivity) getActivity()).newOutgoingCall(tag);
                                     }
                                 });
                 if (contactAddress != null) {
