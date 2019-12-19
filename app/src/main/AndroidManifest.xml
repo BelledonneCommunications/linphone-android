@@ -209,6 +209,7 @@
         <activity
             android:name=".assistant.OpenH264DownloadAssistantActivity"/>
 
+
         <!-- Services -->
 
         <service
@@ -262,6 +263,13 @@
             android:name=".notifications.NotificationBroadcastReceiver"
             android:enabled="true"
             android:exported="false" />
+
+        <receiver
+            android:name=".receivers.AccountEnableReceiver">
+            <intent-filter>
+                <action android:name="org.linphone.intent.ACCOUNTACTIVATE" />
+            </intent-filter>
+        </receiver>
 
         <!-- Providers -->
 
