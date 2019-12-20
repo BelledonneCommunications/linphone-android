@@ -48,7 +48,10 @@ class ApiTwentySixPlus {
                 Settings.Global.getString(
                         context.getContentResolver(), Settings.Global.DEVICE_NAME);
         if (name == null) {
-            name = BluetoothAdapter.getDefaultAdapter().getName();
+            BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+            if (adapter != null) {
+                name = adapter.getName();
+            }
         }
         if (name == null) {
             name = Settings.Secure.getString(context.getContentResolver(), "bluetooth_name");
