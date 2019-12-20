@@ -51,7 +51,12 @@ public class Compatibility {
             return ApiTwentySixPlus.getDeviceName(context);
         }
 
-        String name = BluetoothAdapter.getDefaultAdapter().getName();
+        String name = null;
+        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+        if (adapter != null) {
+            name = adapter.getName();
+        }
+
         if (name == null) {
             name = Settings.Secure.getString(context.getContentResolver(), "bluetooth_name");
         }
