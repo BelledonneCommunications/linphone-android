@@ -24,7 +24,7 @@ static def isLocalAarAvailable() {
 }
 
 task getGitVersion() {
-    def gitVersion = "4.2"
+    def gitVersion = "4.2.1"
     def gitVersionStream = new ByteArrayOutputStream()
     def gitCommitsCount = new ByteArrayOutputStream()
     def gitCommitHash = new ByteArrayOutputStream()
@@ -88,7 +88,7 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 4213
+        versionCode 4214
         versionName "${project.version}"
         applicationId getPackageName()
         multiDexEnabled true
