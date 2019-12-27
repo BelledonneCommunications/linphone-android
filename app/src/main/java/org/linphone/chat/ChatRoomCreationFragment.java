@@ -393,7 +393,7 @@ public class ChatRoomCreationFragment extends Fragment
                             .showChatRoom(mChatRoom.getLocalAddress(), mChatRoom.getPeerAddress());
                 } else {
                     ChatRoomParams params = core.createDefaultChatRoomParams();
-                    // This will set the backend to FlexisipChat automatically
+                    // This will set the backend to FlexisipChat automaticall
                     params.enableEncryption(true);
                     params.enableGroup(false);
 
