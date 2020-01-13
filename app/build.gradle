@@ -43,7 +43,11 @@ task getGitVersion() {
             standardOutput = gitCommitHash
         }
 
-        gitVersion = gitVersionStream.toString().trim() + "." + gitCommitsCount.toString().trim() + "+" + gitCommitHash.toString().trim()
+        if (gitCommitsCount.toString().toInteger() == 0) {
+            gitVersion = gitVersionStream.toString().trim()
+        } else {
+            gitVersion = gitVersionStream.toString().trim() + "." + gitCommitsCount.toString().trim() + "+" + gitCommitHash.toString().trim()
+        }
         println("Git version: " + gitVersion)
     } catch (Exception e) {
         println("Git not found")
