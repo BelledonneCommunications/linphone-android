@@ -429,11 +429,11 @@ public abstract class MainActivity extends LinphoneGenericActivity
     }
 
     private void quit() {
+        goHomeAndClearStack();
         if (LinphoneService.isReady()
                 && LinphonePreferences.instance().getServiceNotificationVisibility()) {
             LinphoneService.instance().stopSelf();
         }
-        goHomeAndClearStack();
     }
 
     // Tab, Top and Status bars
