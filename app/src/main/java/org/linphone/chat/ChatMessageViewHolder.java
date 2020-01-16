@@ -27,6 +27,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.CountDownTimer;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
@@ -81,6 +82,11 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
     private final FlexboxLayout multiFileContents;
     private final RelativeLayout singleFileContent;
 
+    private final LinearLayout forwardLayout;
+    private final LinearLayout ephemeralLayout;
+    private final TextView ephemeralCountdown;
+    private CountDownTimer countDownTimer;
+
     public final CheckBox delete;
     public boolean isEditionEnabled;
 
@@ -117,6 +123,11 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
         singleFileContent = view.findViewById(R.id.single_content);
         multiFileContents = view.findViewById(R.id.multi_content);
 
+        forwardLayout = view.findViewById(R.id.forward_layout);
+        ephemeralLayout = view.findViewById(R.id.ephemeral_layout);
+        ephemeralCountdown = view.findViewById(R.id.ephemeral_time);
+        countDownTimer = null;
+
         delete = view.findViewById(R.id.delete_event);
     }
 
@@ -140,6 +151,10 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
         downloadInProgress.setVisibility(View.GONE);
         singleFileContent.setVisibility(View.GONE);
         multiFileContents.setVisibility(View.GONE);
+
+        forwardLayout.setVisibility(message.isForward() ? View.VISIBLE : View.GONE);
+        ephemeralLayout.setVisibility(message.isEphemeral() ? View.VISIBLE : View.GONE);
+        updateEphemeralTimer(message);
 
         ChatMessage.State status = message.getState();
         Address remoteSender = message.getFromAddress();
@@ -410,5 +425,55 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
 
     private void loadBitmap(String path, ImageView imageView) {
         Glide.with(mContext).load(path).into(imageView);
+    }
+
+    private void updateEphemeralTimer(ChatMessage message) {
+        if (!message.isEphemeral()) {
+            if (countDownTimer != null) {
+                countDownTimer.cancel();
+                countDownTimer = null;
+            }
+            return;
+        }
+
+        if (message.getEphemeralExpireTime() == 0) {
+            // This means the message hasn't been read by all participants yet, so the countdown
+            // hasn't started
+            // In this case we simply display the configured value for lifetime
+            ephemeralCountdown.setText(formatLifetime(message.getEphemeralLifetime()));
+            if (countDownTimer != null) {
+                countDownTimer.cancel();
+                countDownTimer = null;
+            }
+        } else {
+            // Countdown has started, display remaining time
+            long remaining = message.getEphemeralExpireTime() - (System.currentTimeMillis() / 1000);
+            ephemeralCountdown.setText(formatLifetime(remaining));
+
+            if (countDownTimer == null) {
+                countDownTimer =
+                        new CountDownTimer(remaining * 1000, 1000) {
+                            @Override
+                            public void onTick(long millisUntilFinished) {
+                                ephemeralCountdown.setText(
+                                        formatLifetime(millisUntilFinished / 1000));
+                            }
+
+                            @Override
+                            public void onFinish() {}
+                        };
+                countDownTimer.start();
+            }
+        }
+    }
+
+    private String formatLifetime(long seconds) {
+        long days = seconds / 86400;
+        if (days == 0) {
+            return String.format(
+                    "%02d:%02d:%02d", seconds / 3600, (seconds % 3600) / 60, (seconds % 60));
+        } else {
+            return mContext.getResources().getQuantityString(R.plurals.days, (int) days, days);
+        }
     }
 }

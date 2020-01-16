@@ -187,6 +187,10 @@ public class SelectableHelper {
         return objects;
     }
 
+    public void setEditButtonVisibility(boolean visible) {
+        mEditButton.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
     public interface DeleteListener {
         void onDeleteSelection(Object[] objectsToDelete);
     }
