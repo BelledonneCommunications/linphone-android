@@ -214,6 +214,30 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
                     holder.eventMessage.setText(
                             mContext.getString(R.string.device_removed).replace("%s", displayName));
                     break;
+
+                case ConferenceEphemeralMessageDisabled:
+                    holder.eventLayout.setVisibility(View.VISIBLE);
+                    holder.eventMessage.setText(
+                            mContext.getString(R.string.chat_event_ephemeral_disabled));
+                    break;
+                case ConferenceEphemeralMessageEnabled:
+                    holder.eventLayout.setVisibility(View.VISIBLE);
+                    holder.eventMessage.setText(
+                            mContext.getString(R.string.chat_event_ephemeral_enabled)
+                                    .replace(
+                                            "%s",
+                                            formatEphemeralExpiration(
+                                                    event.getEphemeralMessageLifetime())));
+                    break;
+                case ConferenceEphemeralMessageLifetimeChanged:
+                    holder.eventLayout.setVisibility(View.VISIBLE);
+                    holder.eventMessage.setText(
+                            mContext.getString(R.string.chat_event_ephemeral_lifetime_changed)
+                                    .replace(
+                                            "%s",
+                                            formatEphemeralExpiration(
+                                                    event.getEphemeralMessageLifetime())));
+                    break;
                 case ConferenceSecurityEvent:
                     holder.securityEventLayout.setVisibility(View.VISIBLE);
 
@@ -252,6 +276,24 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
                                     .replace("%i", String.valueOf(event.getType().toInt())));
                     break;
             }
+        }
+    }
+
+    private String formatEphemeralExpiration(long duration) {
+        if (duration == 0) {
+            return mContext.getString(R.string.chat_room_ephemeral_message_disabled);
+        } else if (duration == 60) {
+            return mContext.getString(R.string.chat_room_ephemeral_message_one_minute);
+        } else if (duration == 3600) {
+            return mContext.getString(R.string.chat_room_ephemeral_message_one_hour);
+        } else if (duration == 86400) {
+            return mContext.getString(R.string.chat_room_ephemeral_message_one_day);
+        } else if (duration == 259200) {
+            return mContext.getString(R.string.chat_room_ephemeral_message_three_days);
+        } else if (duration == 604800) {
+            return mContext.getString(R.string.chat_room_ephemeral_message_one_week);
+        } else {
+            return "Unexpected duration";
         }
     }
 
@@ -301,6 +343,14 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
     public void removeItem(int i) {
         mHistory.remove(i);
         notifyItemRemoved(i);
+    }
+
+    @Override
+    public void removeFromHistory(EventLog eventLog) {
+        int index = mHistory.indexOf(eventLog);
+        if (index >= 0) {
+            removeItem(index);
+        }
     }
 
     private void changeBackgroundDependingOnPreviousAndNextEvents(

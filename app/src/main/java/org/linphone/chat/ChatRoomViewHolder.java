@@ -22,6 +22,7 @@ package org.linphone.chat;
 import android.content.Context;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,6 +46,7 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder
     public final TextView unreadMessages;
     public final CheckBox delete;
     private final RelativeLayout avatarLayout;
+    public final ImageView ephemeral;
 
     private final Context mContext;
     private final ClickListener mListener;
@@ -59,6 +61,7 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder
         unreadMessages = itemView.findViewById(R.id.unreadMessages);
         delete = itemView.findViewById(R.id.delete_chatroom);
         avatarLayout = itemView.findViewById(R.id.avatar_layout);
+        ephemeral = itemView.findViewById(R.id.ephemeral);
         mListener = listener;
 
         itemView.setOnClickListener(this);
@@ -88,6 +91,7 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder
             lastMessageView.setText("");
         }
 
+        ephemeral.setVisibility(room.ephemeralEnabled() ? View.VISIBLE : View.GONE);
         displayName.setText(getContact(room));
         unreadMessages.setText(String.valueOf(room.getUnreadMessagesCount()));
         getAvatar(room);

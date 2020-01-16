@@ -101,6 +101,39 @@
         <item name="android:lineSpacingExtra">0sp</item>
     </style>
 
+    <style name="chat_bubble_forward_font" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/chat_bubble_text_color</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:lineSpacingExtra">3.3sp</item>
+    </style>
+
+    <style name="chat_bubble_ephemeral_font" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/primary_color</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:lineSpacingExtra">3.3sp</item>
+    </style>
+
+    <style name="chat_room_ephemeral_desc_font" parent="android:style/TextAppearance.Large">
+        <item name="android:textColor">?attr/primaryTextColor</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="chat_room_ephemeral_item_font" parent="android:style/TextAppearance.Large">
+        <item name="android:textColor">?attr/primaryTextColor</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="chat_room_ephemeral_selected_item_font" parent="android:style/TextAppearance.Large">
+        <item name="android:textColor">?attr/primaryTextColor</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
     <style name="chat_bubble_message_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">@color/dark_grey_color</item>
         <item name="android:textSize">15sp</item>

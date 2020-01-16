@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/chat_room_group_info"
+        android:icon="@drawable/chat_room_menu_group_info"
+        android:title="@string/chat_room_context_menu_group_info" />
+
+    <item
+        android:id="@+id/chat_room_participants_devices"
+        android:icon="@drawable/chat_room_menu_security"
+        android:title="@string/chat_room_context_menu_participants_devices" />
+
+    <item
+        android:id="@+id/chat_room_ephemeral_messages"
+        android:icon="@drawable/chat_room_menu_ephemeral"
+        android:title="@string/chat_message_context_menu_ephemeral_messages" />
+
+    <item
+        android:id="@+id/chat_room_delete_messages"
+        android:icon="@drawable/chat_room_menu_delete"
+        android:title="@string/chat_message_context_menu_delete_messages" />
+
+</menu>

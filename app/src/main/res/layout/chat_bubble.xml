@@ -88,6 +88,31 @@
             android:paddingTop="5dp"
             android:paddingBottom="5dp">
 
+            <LinearLayout
+                android:id="@+id/forward_layout"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical|right"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp">
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/forwarded_message_default"
+                    android:layout_marginRight="3dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/chat_bubble_forward_font"
+                    android:text="@string/chat_message_forwarded" />
+
+            </LinearLayout>
+
             <com.google.android.flexbox.FlexboxLayout
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/multi_content"
@@ -117,6 +142,32 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginBottom="5dp"
                 android:textAppearance="@style/chat_bubble_message_font" />
+
+            <LinearLayout
+                android:id="@+id/ephemeral_layout"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="right"
+                android:gravity="center_vertical|right"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp">
+
+                <TextView
+                    android:id="@+id/ephemeral_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:textAppearance="@style/chat_bubble_ephemeral_font" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="13dp"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/ephemeral_messages_small_default"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
