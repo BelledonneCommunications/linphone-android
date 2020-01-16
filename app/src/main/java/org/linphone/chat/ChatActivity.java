@@ -27,10 +27,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 import java.util.ArrayList;
+import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.activities.MainActivity;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.core.Address;
+import org.linphone.core.ChatMessage;
+import org.linphone.core.ChatRoom;
 import org.linphone.core.Factory;
 import org.linphone.core.tools.Log;
 import org.linphone.utils.FileUtils;
@@ -39,6 +42,7 @@ public class ChatActivity extends MainActivity {
     public static final String NAME = "Chat";
 
     private String mSharedText, mSharedFiles;
+    private ChatMessage mForwardMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -212,6 +216,18 @@ public class ChatActivity extends MainActivity {
             mSharedFiles = null;
         }
 
+        if (mForwardMessage != null) {
+            Log.i("[Chat] Found message to forward");
+            ChatRoom room = LinphoneManager.getCore().getChatRoom(peerAddress, localAddress);
+            if (room != null) {
+                Log.i("[Chat] Found chat room in which to forward message");
+                ChatMessage message = room.createForwardMessage(mForwardMessage);
+                message.send();
+                mForwardMessage = null;
+                Log.i("[Chat] Message forwarded");
+            }
+        }
+
         ChatMessagesFragment fragment = new ChatMessagesFragment();
         fragment.setArguments(extras);
         changeFragment(fragment, "Chat room", isChild);
@@ -301,5 +317,22 @@ public class ChatActivity extends MainActivity {
         GroupInfoFragment fragment = new GroupInfoFragment();
         fragment.setArguments(extras);
         changeFragment(fragment, "Chat room group info", true);
+    }
+
+    public void showChatRoomEphemeral(Address peerAddress) {
+        Bundle extras = new Bundle();
+        if (peerAddress != null) {
+            extras.putSerializable("RemoteSipUri", peerAddress.asStringUriOnly());
+        }
+        EphemeralFragment fragment = new EphemeralFragment();
+        fragment.setArguments(extras);
+        changeFragment(fragment, "Chat room ephemeral", true);
+    }
+
+    public void forwardMessage(ChatMessage message) {
+        Log.i("[Chat] Message forwarding enabled");
+        goBack();
+        mForwardMessage = message;
+        Toast.makeText(this, R.string.toast_choose_chat_room_for_sharing, Toast.LENGTH_LONG).show();
     }
 }

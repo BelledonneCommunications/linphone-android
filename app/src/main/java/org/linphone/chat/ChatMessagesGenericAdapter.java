@@ -37,4 +37,6 @@ interface ChatMessagesGenericAdapter {
     Object getItem(int i);
 
     void removeItem(int i);
+
+    void removeFromHistory(EventLog eventLog);
 }
