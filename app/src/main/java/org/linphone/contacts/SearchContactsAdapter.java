@@ -124,7 +124,7 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
         if (mSecurityEnabled || !mIsOnlyOnePersonSelection) {
             Core core = LinphoneManager.getCore();
             ProxyConfig defaultProxyConfig = core.getDefaultProxyConfig();
-            if (defaultProxyConfig != null) {
+            if (defaultProxyConfig != null && searchResult.getAddress() != null) {
                 // SDK won't accept ourselves in the list of participants
                 if (defaultProxyConfig.getIdentityAddress().weakEqual(searchResult.getAddress())) {
                     // Disable row, we can't use our own address in a group chat room
