@@ -79,17 +79,17 @@
                 android:src="@drawable/call_alt_start" />
 
             <ImageView
-                android:id="@+id/group_infos"
+                android:id="@+id/menu"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.2"
                 android:background="?attr/button_background_drawable"
-                android:contentDescription="@string/content_description_conversation_infos"
                 android:padding="15dp"
-                android:src="@drawable/chat_room_group_infos" />
+                android:src="@drawable/menu_more"/>
 
             <ImageView
                 android:id="@+id/edit"
+                android:visibility="gone"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.2"
@@ -97,6 +97,7 @@
                 android:contentDescription="@string/content_description_edit_list"
                 android:padding="15dp"
                 android:src="@drawable/delete" />
+
         </LinearLayout>
 
         <include layout="@layout/edit_list" android:visibility="gone" />
@@ -159,13 +160,29 @@
                 android:textColor="@color/black_color"
                 android:textCursorDrawable="@null" />
 
-            <ImageView
-                android:id="@+id/send_message"
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/content_description_send_message"
-                android:padding="5dp"
-                android:src="@drawable/chat_send_message" />
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/send_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:src="@drawable/chat_send_message" />
+
+                <ImageView
+                    android:id="@+id/send_ephemeral_message"
+                    android:clickable="false"
+                    android:layout_width="20dp"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:layout_alignRight="@id/send_message"
+                    android:layout_alignBottom="@id/send_message"
+                    android:padding="5dp"
+                    android:src="@drawable/chat_send_ephemeral_message" />
+
+            </RelativeLayout>
 
         </LinearLayout>
 
