@@ -19,7 +19,9 @@
  */
 package org.linphone.chat;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,8 +36,11 @@ import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatMessageListenerStub;
+import org.linphone.core.Content;
 import org.linphone.core.EventLog;
 import org.linphone.core.tools.Log;
+import org.linphone.settings.LinphonePreferences;
+import org.linphone.utils.FileUtils;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.utils.SelectableAdapter;
 import org.linphone.utils.SelectableHelper;
@@ -94,10 +99,32 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
                             mTransientMessages.remove(message);
                         } else if (state == ChatMessage.State.FileTransferDone) {
                             Log.i("[Chat Message] File transfer done");
-                            // TODO: make picture public
+
+                            // Do not do it for ephemeral messages of if setting is disabled
+                            if (!message.isEphemeral()
+                                    && LinphonePreferences.instance()
+                                            .makeDownloadedImagesVisibleInNativeGallery()) {
+                                for (Content content : message.getContents()) {
+                                    if (content.isFile() && content.getFilePath() != null) {
+                                        addImageToNativeGalery(content.getFilePath());
+                                    }
+                                }
+                            }
                         }
                     }
                 };
+    }
+
+    private void addImageToNativeGalery(String filePath) {
+        if (!FileUtils.isExtensionImage(filePath)) return;
+
+        String mime = FileUtils.getMimeFromFile(filePath);
+        Log.i("[Chat Message] Adding file ", filePath, " to native gallery with MIME ", mime);
+
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.DATA, filePath);
+        values.put(MediaStore.Images.Media.MIME_TYPE, mime);
+        mContext.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
     }
 
     @Override
