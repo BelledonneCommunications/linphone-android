@@ -44,7 +44,7 @@ public class ChatSettingsFragment extends SettingsFragment {
     private TextSetting mSharingServer, mMaxSizeForAutoDownloadIncomingFiles;
     private BasicSetting mAndroidNotificationSettings;
     private ListSetting mAutoDownloadIncomingFilesPolicy;
-    private SwitchSetting mHideEmptyRooms, mHideRemovedProxiesRooms;
+    private SwitchSetting mHideEmptyRooms, mHideRemovedProxiesRooms, mMakeDownloadedImagesPublic;
 
     @Nullable
     @Override
@@ -74,6 +74,10 @@ public class ChatSettingsFragment extends SettingsFragment {
                 mRootView.findViewById(R.id.pref_auto_download_max_size);
 
         mAutoDownloadIncomingFilesPolicy = mRootView.findViewById(R.id.pref_auto_download_policy);
+
+        mMakeDownloadedImagesPublic =
+                mRootView.findViewById(
+                        R.id.pref_android_app_make_downloaded_images_visible_in_native_gallery);
 
         mAndroidNotificationSettings = mRootView.findViewById(R.id.pref_android_app_notif_settings);
 
@@ -115,6 +119,14 @@ public class ChatSettingsFragment extends SettingsFragment {
                         } catch (NumberFormatException nfe) {
                             Log.e(nfe);
                         }
+                    }
+                });
+
+        mMakeDownloadedImagesPublic.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onBoolValueChanged(boolean newValue) {
+                        mPrefs.setDownloadedImagesVisibleInNativeGallery(newValue);
                     }
                 });
 
@@ -164,6 +176,8 @@ public class ChatSettingsFragment extends SettingsFragment {
         if (Version.sdkStrictlyBelow(Version.API26_O_80)) {
             mAndroidNotificationSettings.setVisibility(View.GONE);
         }
+
+        mMakeDownloadedImagesPublic.setChecked(mPrefs.makeDownloadedImagesVisibleInNativeGallery());
 
         mHideEmptyRooms.setChecked(LinphonePreferences.instance().hideEmptyChatRooms());
 
