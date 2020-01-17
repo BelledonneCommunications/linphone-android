@@ -1395,7 +1395,13 @@ public class ChatMessagesFragment extends Fragment
 
     @Override
     public void onEphemeralMessageDeleted(ChatRoom chatRoom, EventLog eventLog) {
-        ((ChatMessagesGenericAdapter) mChatEventsList.getAdapter()).removeFromHistory(eventLog);
+        Log.i("[Chat Room] Ephemeral message expired");
+        if (!((ChatMessagesGenericAdapter) mChatEventsList.getAdapter())
+                .removeFromHistory(eventLog)) {
+            Log.w("[Chat Room] Ephemeral message not found, refresh list");
+            ((ChatMessagesGenericAdapter) mChatEventsList.getAdapter())
+                    .refresh(mChatRoom.getHistoryEvents(MESSAGES_PER_PAGE));
+        }
     }
 
     @Override

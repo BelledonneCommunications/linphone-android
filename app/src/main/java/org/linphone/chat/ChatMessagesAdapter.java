@@ -346,11 +346,13 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
     }
 
     @Override
-    public void removeFromHistory(EventLog eventLog) {
+    public boolean removeFromHistory(EventLog eventLog) {
         int index = mHistory.indexOf(eventLog);
         if (index >= 0) {
             removeItem(index);
+            return true;
         }
+        return false;
     }
 
     private void changeBackgroundDependingOnPreviousAndNextEvents(
