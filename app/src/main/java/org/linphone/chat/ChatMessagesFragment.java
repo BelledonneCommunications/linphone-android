@@ -824,26 +824,14 @@ public class ChatMessagesFragment extends Fragment
 
     private void displayChatRoomHistory() {
         if (mChatRoom == null) return;
-        ChatMessagesAdapter mEventsAdapter;
-        if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
-            mEventsAdapter =
-                    new ChatMessagesAdapter(
-                            this,
-                            mSelectionHelper,
-                            R.layout.chat_bubble,
-                            mChatRoom.getHistoryMessageEvents(MESSAGES_PER_PAGE),
-                            mParticipants,
-                            this);
-        } else {
-            mEventsAdapter =
-                    new ChatMessagesAdapter(
-                            this,
-                            mSelectionHelper,
-                            R.layout.chat_bubble,
-                            mChatRoom.getHistoryEvents(MESSAGES_PER_PAGE),
-                            mParticipants,
-                            this);
-        }
+        ChatMessagesAdapter mEventsAdapter =
+                new ChatMessagesAdapter(
+                        this,
+                        mSelectionHelper,
+                        R.layout.chat_bubble,
+                        mChatRoom.getHistoryEvents(MESSAGES_PER_PAGE),
+                        mParticipants,
+                        this);
         mSelectionHelper.setAdapter(mEventsAdapter);
         mChatEventsList.setAdapter(mEventsAdapter);
         scrollToBottom();
@@ -1388,6 +1376,7 @@ public class ChatMessagesFragment extends Fragment
     @Override
     public void onEphemeralEvent(ChatRoom chatRoom, EventLog eventLog) {
         ((ChatMessagesGenericAdapter) mChatEventsList.getAdapter()).addToHistory(eventLog);
+        scrollToBottom();
     }
 
     @Override
