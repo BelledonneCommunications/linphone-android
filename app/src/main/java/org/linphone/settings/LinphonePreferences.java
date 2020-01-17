@@ -1199,6 +1199,16 @@ public class LinphonePreferences {
         getLc().setMaxSizeForAutoDownloadIncomingFiles(size);
     }
 
+    public void setDownloadedImagesVisibleInNativeGallery(boolean visible) {
+        if (getConfig() == null) return;
+        getConfig().setBool("app", "make_downloaded_images_public_in_gallery", visible);
+    }
+
+    public boolean makeDownloadedImagesVisibleInNativeGallery() {
+        if (getConfig() == null) return false;
+        return getConfig().getBool("app", "make_downloaded_images_public_in_gallery", true);
+    }
+
     public boolean hasPowerSaverDialogBeenPrompted() {
         if (getConfig() == null) return false;
         return getConfig().getBool("app", "android_power_saver_dialog", false);
