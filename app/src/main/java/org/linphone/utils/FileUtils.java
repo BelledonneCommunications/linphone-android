@@ -38,7 +38,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import org.linphone.LinphoneManager;
-import org.linphone.R;
 import org.linphone.core.Address;
 import org.linphone.core.Friend;
 import org.linphone.core.FriendList;
@@ -190,53 +189,42 @@ public class FileUtils {
         return null;
     }
 
-    public static String getStorageDirectory(Context mContext) {
-        String storageDir =
-                Environment.getExternalStorageDirectory().getAbsolutePath()
-                        + "/"
-                        + mContext.getString(R.string.app_name);
-        File file = new File(storageDir);
-        if (!file.isDirectory() || !file.exists()) {
-            Log.w(
-                    "[File Utils] Directory "
-                            + file
-                            + " doesn't seem to exists yet, let's create it");
-            boolean result = file.mkdirs();
-            if (!result) {
-                Log.e(
-                        "[File Utils] Couldn't create media directory "
-                                + file.getAbsolutePath()
-                                + ", using external storage dir instead");
-                return Environment.getExternalStorageDirectory().getAbsolutePath();
+    public static void deleteFile(String filePath) {
+        if (filePath == null || filePath.isEmpty()) return;
+        File file = new File(filePath);
+        if (file.exists()) {
+            try {
+                if (file.delete()) {
+                    Log.i("[File Utils] File deleted: ", filePath);
+                } else {
+                    Log.e("[File Utils] Can't delete ", filePath);
+                }
+            } catch (Exception e) {
+                Log.e("[File Utils] Can't delete ", filePath, ", exception: ", e);
             }
-            LinphoneManager.getInstance().getMediaScanner().scanFile(file, null);
+        } else {
+            Log.e("[File Utils] File ", filePath, " doesn't exists");
         }
-        return storageDir;
+    }
+
+    public static String getStorageDirectory(Context mContext) {
+        File path = null;
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            Log.w("[File Utils] External storage is mounted");
+            String directory = Environment.DIRECTORY_DOCUMENTS;
+            path = mContext.getExternalFilesDir(directory);
+        }
+
+        if (path == null) {
+            Log.w("[File Utils] Couldn't get external storage path, using internal");
+            path = mContext.getFilesDir();
+        }
+
+        return path.getAbsolutePath();
     }
 
     public static String getRecordingsDirectory(Context mContext) {
-        String recordingsDir =
-                Environment.getExternalStorageDirectory()
-                        + "/"
-                        + mContext.getString(R.string.app_name)
-                        + "/recordings";
-        File file = new File(recordingsDir);
-        if (!file.isDirectory() || !file.exists()) {
-            Log.w(
-                    "[File Utils] Directory "
-                            + file
-                            + " doesn't seem to exists yet, let's create it");
-            boolean result = file.mkdirs();
-            if (!result) {
-                Log.e(
-                        "[File Utils] Couldn't create recordings directory "
-                                + file.getAbsolutePath()
-                                + ", using external storage dir instead");
-                return Environment.getExternalStorageDirectory().getAbsolutePath();
-            }
-            LinphoneManager.getInstance().getMediaScanner().scanFile(file, null);
-        }
-        return recordingsDir;
+        return getStorageDirectory(mContext);
     }
 
     @SuppressLint("SimpleDateFormat")

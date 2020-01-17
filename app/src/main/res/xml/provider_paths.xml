@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
-    <external-path
-        name="external_files"
-        path="." />
+    <files-path name="internal" path="." />
+    <external-files-path name="external_documents" path="Documents/" />
+    <external-files-path name="external_files" path="." />
 </paths>
