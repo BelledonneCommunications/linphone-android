@@ -277,6 +277,7 @@
     <string name="chat_event_ephemeral_disabled">You disabled ephemeral messages</string>
     <string name="chat_event_ephemeral_enabled">You enabled ephemeral messages: %s</string>
     <string name="chat_event_ephemeral_lifetime_changed">Ephemeral messages expiry date: %s</string>
+    <string name="chat_message_forward_confirmation_dialog">Do you want to forward the message in this room?</string>
 
     <!-- Status Bar -->
     <string name="status_connected">Connected</string>
