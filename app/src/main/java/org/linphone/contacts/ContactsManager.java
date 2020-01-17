@@ -286,6 +286,12 @@ public class ContactsManager extends ContentObserver
         ContentProviderClient client =
                 mContext.getContentResolver()
                         .acquireContentProviderClient(ContactsContract.AUTHORITY_URI);
+        if (client == null) {
+            Log.e(
+                    "[Contacts Manager] Failed to get content provider client for contacts authority!");
+            return;
+        }
+
         ContentValues values = new ContentValues();
         values.put(
                 ContactsContract.Settings.ACCOUNT_NAME,
@@ -294,6 +300,7 @@ public class ContactsManager extends ContentObserver
                 ContactsContract.Settings.ACCOUNT_TYPE,
                 mContext.getString(R.string.sync_account_type));
         values.put(ContactsContract.Settings.UNGROUPED_VISIBLE, true);
+
         try {
             client.insert(
                     ContactsContract.Settings.CONTENT_URI
