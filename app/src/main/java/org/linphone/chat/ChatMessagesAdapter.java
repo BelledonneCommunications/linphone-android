@@ -35,6 +35,7 @@ import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatMessageListenerStub;
 import org.linphone.core.EventLog;
+import org.linphone.core.tools.Log;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.utils.SelectableAdapter;
 import org.linphone.utils.SelectableHelper;
@@ -91,6 +92,9 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
                         }
                         if (state == ChatMessage.State.Displayed) {
                             mTransientMessages.remove(message);
+                        } else if (state == ChatMessage.State.FileTransferDone) {
+                            Log.i("[Chat Message] File transfer done");
+                            // TODO: make picture public
                         }
                     }
                 };
