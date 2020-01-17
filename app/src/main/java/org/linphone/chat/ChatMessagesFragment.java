@@ -468,6 +468,7 @@ public class ChatMessagesFragment extends Fragment
     public void onDeleteSelection(Object[] objectsToDelete) {
         for (Object obj : objectsToDelete) {
             EventLog eventLog = (EventLog) obj;
+            LinphoneUtils.deleteFileContentIfExists(eventLog);
             eventLog.deleteFromDatabase();
         }
         ((ChatMessagesGenericAdapter) mChatEventsList.getAdapter())
@@ -559,6 +560,7 @@ public class ChatMessagesFragment extends Fragment
             return true;
         }
         if (item.getItemId() == R.id.delete_message) {
+            LinphoneUtils.deleteFileContentIfExists(event);
             mChatRoom.deleteMessage(message);
             ((ChatMessagesGenericAdapter) mChatEventsList.getAdapter())
                     .removeItem(mContextMenuMessagePosition);
@@ -1385,6 +1387,8 @@ public class ChatMessagesFragment extends Fragment
     @Override
     public void onEphemeralMessageDeleted(ChatRoom chatRoom, EventLog eventLog) {
         Log.i("[Chat Room] Ephemeral message expired");
+        LinphoneUtils.deleteFileContentIfExists(eventLog);
+
         if (!((ChatMessagesGenericAdapter) mChatEventsList.getAdapter())
                 .removeFromHistory(eventLog)) {
             Log.w("[Chat Room] Ephemeral message not found, refresh list");

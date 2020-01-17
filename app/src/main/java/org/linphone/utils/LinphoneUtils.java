@@ -48,7 +48,10 @@ import org.linphone.R;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.CallLog;
+import org.linphone.core.ChatMessage;
+import org.linphone.core.Content;
 import org.linphone.core.Core;
+import org.linphone.core.EventLog;
 import org.linphone.core.Factory;
 import org.linphone.core.LogCollectionState;
 import org.linphone.core.ProxyConfig;
@@ -409,5 +412,22 @@ public final class LinphoneUtils {
         TextView customText = dialog.findViewById(R.id.dialog_message);
         customText.setText(text);
         return dialog;
+    }
+
+    public static void deleteFileContentIfExists(EventLog eventLog) {
+        if (eventLog.getType() == EventLog.Type.ConferenceChatMessage) {
+            ChatMessage message = eventLog.getChatMessage();
+            if (message != null) {
+                for (Content content : message.getContents()) {
+                    if (content.isFile() && content.getFilePath() != null) {
+                        Log.w(
+                                "[Linphone Utils] Chat message is being deleted, file ",
+                                content.getFilePath(),
+                                " will also be deleted");
+                        FileUtils.deleteFile(content.getFilePath());
+                    }
+                }
+            }
+        }
     }
 }
