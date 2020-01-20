@@ -66,10 +66,13 @@ class ApiTwentyFivePlus {
             Address participantAddress =
                     room.hasCapability(ChatRoomCapabilities.Basic.toInt())
                             ? room.getPeerAddress()
-                            : room.getParticipants()[0].getAddress();
+                            : room.getParticipants().length == 0
+                                    ? null
+                                    : room.getParticipants()[0].getAddress();
+            if (participantAddress == null) continue;
+
             LinphoneContact contact =
                     ContactsManager.getInstance().findContactFromAddress(participantAddress);
-
             if (contact != null && !contacts.contains(contact)) {
                 if (context.getResources().getBoolean(R.bool.shortcut_to_contact)) {
                     ShortcutInfo shortcut = manager.createContactShortcutInfo(contact);
