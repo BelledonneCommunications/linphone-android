@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="?attr/backgroundColor">
+
+    <fragment
+        android:id="@+id/status"
+        android:name="org.linphone.fragments.StatusBarFragment"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        tools:layout="@layout/status_bar" />
+
+    <include
+        android:id="@+id/top_bar"
+        layout="@layout/assistant_topbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/standard_text_font"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/assistant_create_account"
+                android:paddingTop="10dp"
+                android:textAllCaps="true" />
+
+            <TextView
+                style="@style/standard_small_text_font"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="top"
+                android:paddingTop="10dp"
+                android:text="@string/assistant_create_account_part_email" />
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:columnCount="2">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="fill"
+                    android:layout_columnWeight="1"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/assistant_input_field_header_font"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/username"
+                        android:textAllCaps="true" />
+
+                    <EditText
+                        android:id="@+id/assistant_username"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/resizable_textfield"
+                        android:contentDescription="@string/content_description_username_field"
+                        android:inputType="text|textNoSuggestions"
+                        android:maxLines="1"
+                        android:hint="@string/username"
+                        android:textColor="@color/black_color" />
+
+                    <TextView
+                        android:id="@+id/username_error"
+                        android:text="@string/error"
+                        style="@style/assistant_input_field_error_font"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="invisible"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="fill"
+                    android:layout_columnWeight="1"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/assistant_input_field_header_font"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/email"
+                        android:textAllCaps="true" />
+
+                    <EditText
+                        android:id="@+id/assistant_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/resizable_textfield"
+                        android:inputType="text|textEmailAddress"
+                        android:maxLines="1"
+                        android:hint="@string/email"
+                        android:textColor="@color/black_color" />
+
+                    <TextView
+                        android:id="@+id/email_error"
+                        android:text="@string/invalid_email"
+                        style="@style/assistant_input_field_error_font"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="invisible"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="fill"
+                    android:layout_columnWeight="1"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/assistant_input_field_header_font"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/password"
+                        android:textAllCaps="true" />
+
+                    <EditText
+                        android:id="@+id/assistant_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/resizable_textfield"
+                        android:inputType="textPassword"
+                        android:maxLines="1"
+                        android:hint="@string/password"
+                        android:textColor="@color/black_color" />
+
+                    <TextView
+                        android:id="@+id/password_error"
+                        android:text="@string/error"
+                        style="@style/assistant_input_field_error_font"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="invisible"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="fill"
+                    android:layout_columnWeight="1"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/assistant_input_field_header_font"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/confirm_password"
+                        android:textAllCaps="true" />
+
+                    <EditText
+                        android:id="@+id/assistant_password_confirmation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/resizable_textfield"
+                        android:inputType="textPassword"
+                        android:maxLines="1"
+                        android:hint="@string/confirm_password"
+                        android:textColor="@color/black_color" />
+
+                    <TextView
+                        android:id="@+id/confirm_password_error"
+                        android:text="@string/wizard_passwords_unmatched"
+                        style="@style/assistant_input_field_error_font"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="invisible"/>
+
+                </LinearLayout>
+
+            </GridLayout>
+
+            <TextView
+                android:id="@+id/assistant_create"
+                android:text="@string/assistant_create_account"
+                android:background="@drawable/assistant_button"
+                android:textColor="@drawable/assistant_button_text_color"
+                android:layout_gravity="center"
+                style="@style/button_font"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:padding="10dp"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

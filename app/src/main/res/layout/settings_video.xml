@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:linphone="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:orientation="vertical">
+
+        <org.linphone.settings.widget.SwitchSetting
+            android:id="@+id/pref_video_enable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            linphone:title="@string/pref_video_enable_title" />
+
+        <org.linphone.settings.widget.SwitchSetting
+            android:id="@+id/pref_video_preview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            linphone:title="@string/pref_preview_video" />
+
+        <org.linphone.settings.widget.SwitchSetting
+            android:id="@+id/pref_video_initiate_call_with_video"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            linphone:subtitle="@string/pref_video_initiate_call_with_video"
+            linphone:title="@string/pref_video_initiate_call_with_video_title" />
+
+        <org.linphone.settings.widget.SwitchSetting
+            android:id="@+id/pref_video_automatically_accept_video"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            linphone:subtitle="@string/pref_video_automatically_accept_video"
+            linphone:title="@string/pref_video_automatically_accept_video_title" />
+
+        <org.linphone.settings.widget.ListSetting
+            android:id="@+id/pref_video_camera_device"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            linphone:title="@string/pref_video_camera_device" />
+
+        <org.linphone.settings.widget.SwitchSetting
+            android:id="@+id/pref_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            linphone:subtitle="@string/pref_overlay_summary"
+            linphone:title="@string/pref_overlay" />
+
+        <org.linphone.settings.widget.ListSetting
+            android:id="@+id/pref_preferred_video_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            linphone:title="@string/pref_preferred_video_size" />
+
+        <org.linphone.settings.widget.ListSetting
+            android:id="@+id/pref_video_preset"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            linphone:list_items_names="@array/video_preset_entries"
+            linphone:list_items_values="@array/video_preset_entries"
+            linphone:title="@string/pref_video_preset" />
+
+        <org.linphone.settings.widget.ListSetting
+            android:id="@+id/pref_preferred_fps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            linphone:title="@string/pref_preferred_fps" />
+
+        <org.linphone.settings.widget.TextSetting
+            android:id="@+id/pref_bandwidth_limit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            linphone:hint="@string/pref_bandwidth_limit"
+            linphone:title="@string/pref_bandwidth_limit" />
+
+        <TextView
+            style="@style/settings_category_font"
+            android:id="@+id/pref_video_codecs_header"
+            android:text="@string/pref_codecs"
+            android:paddingTop="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:id="@+id/pref_video_codecs"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"/>
+
+    </LinearLayout>
+
+</ScrollView>

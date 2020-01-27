@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/topLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/backgroundColor">
+
+    <fragment
+        android:id="@+id/status"
+        android:name="org.linphone.call.CallStatusBarFragment"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        tools:layout="@layout/status_bar" />
+
+    <RelativeLayout
+        android:id="@+id/top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_below="@id/status"
+        android:background="?attr/lighToolbarBackgroundColor">
+
+        <TextView
+            style="@style/toolbar_title_font"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:text="@string/outgoing_call" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/contact_detail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/menu"
+        android:layout_below="@id/top_bar"
+        android:paddingTop="10dp">
+
+        <TextView
+            android:id="@+id/contact_name"
+            style="@style/big_contact_name_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_vertical|center_horizontal"
+            android:paddingTop="5dp" />
+
+        <org.linphone.views.MarqueeTextView
+            android:id="@+id/contact_number"
+            style="@style/sip_uri_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/contact_name"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:singleLine="true"
+            android:paddingBottom="10dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/contact_number"
+            android:layout_margin="5dp"
+            android:gravity="center">
+
+            <include layout="@layout/contact_avatar_200" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/menu"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/micro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?attr/button_background_drawable"
+            android:contentDescription="@string/content_description_toggle_micro"
+            android:padding="10dp"
+            android:src="@drawable/micro" />
+
+        <ImageView
+            android:id="@+id/speaker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?attr/button_background_drawable"
+            android:contentDescription="@string/content_description_toggle_speaker"
+            android:padding="15dp"
+            android:src="@drawable/speaker" />
+
+        <ImageView
+            android:id="@+id/outgoing_hang_up"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7"
+            android:background="@drawable/hangup"
+            android:contentDescription="@string/content_description_hang_up"
+            android:padding="12dp"
+            android:src="@drawable/call_hangup" />
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.linphone"
+    android:installLocation="auto">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <!-- Needed for bluetooth headset -->
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- Needed to allow Linphone to install on tablets, since android.permission.CAMERA implies android.hardware.camera and android.hardware.camera.autofocus are required -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <!-- Needed to be able to detect a GSM call and thus pause any active SIP call, and auto fill the phone number field in assistant -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- Needed to be able to pick images from SD card to share in chat message -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- Needed to store received images if the user wants to -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- Needed to use our own Contact editor -->
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <!-- Needed to route the audio to the bluetooth headset if available -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <!-- Needed to pre fill the wizard email field (only if enabled in custom settings) -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- Needed by the SDK to be able to use WifiManager.MulticastLock -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <!-- Required for contacts sync account -->
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+    <!-- Required if Android < 6.0 to be able to use AccountManager for contacts & email auto-fill in assistant -->
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <!-- Needed for overlay widget and floating notifications -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <!-- Needed for kill application yourself -->
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
+    <!-- Needed for auto start at boot and to ensure the service won't be killed by OS while in call -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- Needed to get the current Do Not Disturb policy -->
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+    <!-- Needed for full screen intent in notifications -->
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
+
+    <application
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:resizeableActivity="true"
+        android:theme="@style/LinphoneStyle"
+        android:requestLegacyExternalStorage="true">
+
+        <!-- Starting activities -->
+
+        <activity
+            android:name=".activities.LinphoneLauncherActivity"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Main activities -->
+
+        <activity
+            android:name=".dialer.DialerActivity"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.DIAL" />
+                <action android:name="android.intent.action.CALL" />
+                <action android:name="android.intent.action.CALL_PRIVILEGED" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="tel" />
+                <data android:scheme="sip" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SENDTO" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="sip" />
+                <data android:scheme="imto" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.linphone.intent.action.CallLaunched" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activities.AboutActivity"
+            android:noHistory="true"/>
+
+        <activity
+            android:name=".recording.RecordingsActivity"
+            android:noHistory="true"/>
+
+        <activity
+            android:name=".settings.SettingsActivity"/>
+
+        <activity
+            android:name=".chat.ChatActivity"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.OPENABLE" />
+
+                <data android:mimeType="text/*" />
+                <data android:mimeType="image/*" />
+                <data android:mimeType="audio/*" />
+                <data android:mimeType="video/*" />
+                <data android:mimeType="application/*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.OPENABLE" />
+
+                <data android:mimeType="image/*" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".contacts.ContactsActivity"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="${linphone_address_mime_type}" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".history.HistoryActivity"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+
+        <!-- Call activities -->
+
+        <activity
+            android:name=".call.CallIncomingActivity"
+            android:launchMode="singleTop"
+            android:noHistory="true"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"/>
+
+        <activity
+            android:name=".call.CallOutgoingActivity"
+            android:launchMode="singleTop"
+            android:noHistory="true"/>
+
+        <activity
+            android:name=".call.CallActivity"
+            android:launchMode="singleTop"
+            android:showWhenLocked="true"
+            android:supportsPictureInPicture="true"/>
+
+        <!-- Assistant activities -->
+
+        <activity
+            android:name=".assistant.MenuAssistantActivity"/>
+        <activity
+            android:name=".assistant.AccountConnectionAssistantActivity"/>
+        <activity
+            android:name=".assistant.EmailAccountCreationAssistantActivity"/>
+        <activity
+            android:name=".assistant.EmailAccountValidationAssistantActivity"/>
+        <activity
+            android:name=".assistant.PhoneAccountCreationAssistantActivity"/>
+        <activity
+            android:name=".assistant.PhoneAccountValidationAssistantActivity"/>
+        <activity
+            android:name=".assistant.PhoneAccountLinkingAssistantActivity"/>
+        <activity
+            android:name=".assistant.GenericConnectionAssistantActivity"/>
+        <activity
+            android:name=".assistant.QrCodeConfigurationAssistantActivity"/>
+        <activity
+            android:name=".assistant.RemoteConfigurationAssistantActivity"/>
+        <activity
+            android:name=".assistant.EchoCancellerCalibrationAssistantActivity"/>
+        <activity
+            android:name=".assistant.OpenH264DownloadAssistantActivity"/>
+
+        <!-- Services -->
+
+        <service
+            android:name=".service.LinphoneService"
+            android:label="@string/service_name" />
+
+        <service
+            android:name=".sync.SyncService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/syncadapter" />
+            <meta-data
+                android:name="android.provider.CONTACTS_STRUCTURE"
+                android:resource="@xml/contacts" />
+        </service>
+
+        <service android:name=".sync.AuthenticationService">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
+        </service>
+
+        <service android:name=".firebase.FirebaseMessaging"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <!-- Receivers -->
+
+        <receiver android:name=".receivers.BootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.ACTION_SHUTDOWN" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".notifications.NotificationBroadcastReceiver"
+            android:enabled="true"
+            android:exported="false" />
+
+        <!-- Providers -->
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${linphone_file_provider}"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
+    </application>
+</manifest>

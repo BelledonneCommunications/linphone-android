@@ -1,0 +1,211 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--Custom-->
+  <string name="app_name">Linphone</string>
+  <string name="service_name">Linphone-dienst</string>
+  <string name="addressbook_label">Linphone</string>
+  <string name="notification_title">Linphone</string>
+  <string name="wait_dialog_text">Bezig met opstarten</string>
+  <string name="notification_registered">%s verbonden</string>
+  <string name="notification_register_failure">%s verbinding kon niet tot stand gebracht worden</string>
+  <string name="tunnel_host"></string>
+  <string name="about_version">Linphone Android %s</string>
+  <string name="about_liblinphone_version">Linphone Core %s</string>
+  <string name="about_liblinphone_sdk_version">Linphone SDK %s</string>
+  <string name="about_privacy_policy">Lees onze privacy verklaring</string>
+  <string name="sync_account_name">linphone contacten</string>
+  <!--Notifications-->
+  <string name="notification_reply_label">Antwoord</string>
+  <string name="notification_replied_label">Verstuurd antwoord: %s</string>
+  <string name="notification_call_hangup_label">Verbinding verbreken</string>
+  <string name="notification_call_answer_label">Beantwoorden</string>
+  <string name="notification_mark_as_read_label">Aanduiden als gelezen</string>
+  <!--Common-->
+  <string name="username">Gebruikersnaam</string>
+  <string name="phone_number">Telefoonnummer</string>
+  <string name="display_name">Weergavenaam</string>
+  <string name="password">Wachtwoord</string>
+  <string name="confirm_password">Bevestig wachtwoord</string>
+  <string name="domain">Domein</string>
+  <string name="remote_provisioning_url">URL</string>
+  <string name="email">Email</string>
+  <string name="delete_text">Weet u zeker dat u de selectie wilt verwijderen?</string>
+  <string name="delete">Verwijderen</string>
+  <string name="retry">Probeer opnieuw</string>
+  <string name="cancel">Annuleren</string>
+  <string name="accept">Accepteren</string>
+  <string name="open">Openen</string>
+  <string name="continue_text">Ga door</string>
+  <string name="about">Over</string>
+  <string name="deny">Weigeren</string>
+  <string name="no_account">Geen account geconfigureerd</string>
+  <string name="search">Zoeken</string>
+  <string name="outgoing">Uitgaande</string>
+  <string name="incoming">Inkomende</string>
+  <string name="missed">Gemiste</string>
+  <string name="settings">Instellingen</string>
+  <string name="connect">Connectie</string>
+  <string name="decline">Weigeren</string>
+  <string name="conference">Conference</string>
+  <string name="maybe_later">later misscxhien</string>
+  <string name="later">later</string>
+  <string name="no">Nee</string>
+  <string name="ok">prima</string>
+  <string name="yes">Ja</string>
+  <string name="do_not_ask_again">Niet opnieuw tonen</string>
+  <!--Launch screen-->
+  <string name="app_description">omschrijving</string>
+  <!--Assistant-->
+  <string name="welcome">Welkom</string>
+  <string name="assistant">Assistent</string>
+  <string name="assistant_create_account">Creëer account</string>
+  <string name="assistant_continue">Ga door</string>
+  <string name="assistant_activate">activeer</string>
+  <string name="assistant_finish">Beëindig configuratie</string>
+  <string name="assistant_validate_account_1">geldig account_1</string>
+  <string name="assistant_linphone_login_desc">linphoen</string>
+  <string name="transport">Transport</string>
+  <string name="assistant_create_account_phone_number_address">Uw SIP adres is</string>
+  <!--Status-->
+  <string name="password_too_short">Wachtwoord is te kort</string>
+  <string name="password_too_long">Wachtwoiord is te lang</string>
+  <string name="request_failed">aanvraag mislukt</string>
+  <string name="country_code_invalid">verkeerde landcode</string>
+  <!--In-app-->
+  <!--Dailer-->
+  <string name="address_bar_hint">adresbalk tip</string>
+  <!--History-->
+  <string name="today">Vandaag</string>
+  <string name="yesterday">Gisteren</string>
+  <!--Contacts-->
+  <string name="sip_address">SIP-adres</string>
+  <string name="contact_first_name">Voornaam</string>
+  <string name="contact_last_name">Achternaam</string>
+  <!--Chat-->
+  <string name="share_picture_size_small">Klein</string>
+  <string name="share_picture_size_medium">Middel</string>
+  <string name="share_picture_size_large">Groot</string>
+  <!--Status Bar-->
+  <string name="voicemail_unread">ongelezen voicemail</string>
+  <!--Side Menu-->
+  <string name="menu_assistant">Assistent</string>
+  <string name="menu_settings">Instellingen</string>
+  <string name="menu_about">Over</string>
+  <!--Call-->
+  <string name="incoming_call">inkomende gesprek</string>
+  <string name="outgoing_call">uitgaand gesprek</string>
+  <string name="call_paused_by_remote">gesprek in de wacht op afstand</string>
+  <string name="couldnt_accept_call">kon gesprek niet aannemen</string>
+  <string name="unknown_incoming_call_name">Onbekend</string>
+  <string name="call_stats_audio">Audio</string>
+  <string name="call_stats_video">Video</string>
+  <string name="call_stats_codec">Codec:</string>
+  <string name="call_stats_ip">IP</string>
+  <string name="call_stats_upload">Uploadbandbreedte:</string>
+  <string name="call_stats_download">Downloadbandbreedte:</string>
+  <string name="call">Oproep</string>
+  <!--Recordings-->
+  <!--About-->
+  <string name="menu_send_log">Logbestand versturen</string>
+  <string name="menu_reset_log">Logbestand verwijderen</string>
+  <!--Service-->
+  <!--Errors-->
+  <string name="error">Fout</string>
+  <string name="error_unknown">onbekend</string>
+  <string name="error_call_declined">oproep</string>
+  <string name="error_user_busy">gebruiker in gesprek</string>
+  <string name="error_user_not_found">gebruiker niet gevonden</string>
+  <string name="error_low_bandwidth">lage bandbreedte</string>
+  <string name="error_network_unreachable">netwerk niet bereikbaar</string>
+  <string name="error_unauthorized">niet toegestaan</string>
+  <string name="error_io_error">IO fout</string>
+  <!--Account Settings-->
+  <string name="pref_sipaccount">SIP-account</string>
+  <string name="pref_manage_title">Beheren</string>
+  <string name="pref_disable_account">Uitschakelen</string>
+  <string name="pref_proxy">Proxy</string>
+  <string name="pref_domain">Domein*</string>
+  <string name="pref_passwd">Wachtwoord*</string>
+  <string name="pref_username">Gebruikersnaam*</string>
+  <string name="pref_enable_outbound_proxy">schakel outbound proxy in</string>
+  <string name="pref_avpf">AVPF</string>
+  <string name="pref_escape_plus">+ door 00 vervangen</string>
+  <string name="pref_display_name">Weergavenaam</string>
+  <string name="pref_prefix">Voorvoegsel</string>
+  <string name="pref_transport">Transport</string>
+  <string name="pref_transport_udp">UDP</string>
+  <string name="pref_transport_tcp">TCP</string>
+  <string name="pref_transport_tls">TLS</string>
+  <!--Settings-->
+  <string name="pref_sipaccounts">SIP-accounts</string>
+  <string name="default_account_flag">Standaard account</string>
+  <string name="pref_add_account">Account toevoegen</string>
+  <string name="pref_tunnel_title">Tunnel</string>
+  <string name="pref_tunnel_host">Hostnaam</string>
+  <string name="pref_tunnel_port">Poort</string>
+  <string name="pref_tunnel_mode">Modus</string>
+  <!--do not change order without changing corresponding entry_values in non_localizable_strings.xml-->
+  <string name="pref_none">Geen</string>
+  <string name="pref_preferences_title">Voorkeuren</string>
+  <!--Audio settings-->
+  <string name="pref_audio_title">Audio</string>
+  <string name="failed">gefaald</string>
+  <string name="pref_codecs">Codecs</string>
+  <!--Video settings-->
+  <string name="pref_video_title">Video</string>
+  <string name="pref_video_codecs_title">Codecs</string>
+  <!--Contact settings-->
+  <string name="pref_contact_title">Contact</string>
+  <!--Call settings-->
+  <string name="pref_call_title">Oproep</string>
+  <!--Chat settings-->
+  <string name="pref_chat_title">Chat</string>
+  <!--Network settings-->
+  <string name="pref_network_title">Netwerk</string>
+  <string name="pref_ice_enable">ICE inschakelen</string>
+  <string name="pref_upnp_enable">UPNP inschakelen</string>
+  <string name="pref_transport_use_random_ports">Willekeurige poorten gebruiken</string>
+  <string name="pref_media_encryption">Mediaversleuteling</string>
+  <!--Advanced settings-->
+  <string name="pref_advanced_title">Geavanceerd</string>
+  <string name="pref_debug_title">Foutopsporing</string>
+  <string name="pref_debug">Foutopsporing</string>
+  <string name="pref_background_mode">Achtergrondsmodus</string>
+  <string name="pref_animation_enable_title">Animaties inschakelen</string>
+  <string name="pref_primary_account_title">Primaire account</string>
+  <string name="pref_display_name_title">Weergavenaam</string>
+  <string name="pref_user_name_title">Gebruikersnaam</string>
+  <!--Audio hack settings-->
+  <string name="pref_audio_hacks_title">Audiohacks</string>
+  <string name="pref_audio_use_specific_mode_summary">0=MODE_NORMAL (standaard), 2=MODE_IN_CALL</string>
+  <string name="pref_audio_hacks_use_routing_api_title">Routing API-hack gebruiken</string>
+  <string name="pref_audio_hacks_use_galaxys_hack_title">Galaxy S-audiohack gebruiken</string>
+  <!--Device specifics-->
+  <string name="device_power_saver_dialog_button_go_to_settings">Instellingen</string>
+  <string name="device_power_saver_dialog_button_later">later</string>
+  <!--Debug popup-->
+  <string name="debug_popup_title">Foutopsporing</string>
+  <!--Content description-->
+  <string name="content_description_decline">Weigeren</string>
+  <string name="content_description_hang_up">Ophangen</string>
+  <string name="content_description_accept">Accepteren</string>
+  <string name="content_description_new_contact">Nieuw contact</string>
+  <string name="content_description_call">Oproep</string>
+  <string name="content_description_chat">Chat</string>
+  <string name="content_description_delete">Verwijderen</string>
+  <string name="content_description_add">Oproep toevoegen</string>
+  <string name="content_description_search">Zoeken</string>
+  <string name="content_description_add_call">Oproep toevoegen</string>
+  <string name="content_description_pause">Pauze</string>
+  <string name="content_description_numpad">nummeriek toetsenbord</string>
+  <string name="content_description_history">geschiedenis</string>
+  <string name="content_description_chat_button">chat knop</string>
+  <string name="content_description_contacts">Contactpersoenen</string>
+  <string name="content_description_switch_camera">verander kamera</string>
+  <string name="content_description_cancel_button">wijzig knop</string>
+  <string name="content_description_conference">Conference</string>
+  <string name="content_description_default_account">Standaard account</string>
+  <string name="content_description_contact_first_name">Voornaam</string>
+  <string name="content_description_contact_last_name">Achternaam</string>
+  <string name="content_description_bluetooth">Bluetooth</string>
+</resources>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="100dp"
+    android:layout_height="100dp"
+    android:layout_margin="5dp"
+    android:background="?attr/accentColor"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/pendingFileForUpload"
+        android:textColor="?attr/secondaryTextColor"
+        android:textSize="21sp"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textAlignment="center" />
+
+    <ImageView
+        android:id="@+id/remove"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/clean_field" />
+
+</RelativeLayout>

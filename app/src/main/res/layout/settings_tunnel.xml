@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:linphone="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:orientation="vertical">
+
+        <org.linphone.settings.widget.TextSetting
+            android:id="@+id/pref_tunnel_host"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            linphone:hint="@string/pref_tunnel_host"
+            linphone:title="@string/pref_tunnel_host" />
+
+        <org.linphone.settings.widget.TextSetting
+            android:id="@+id/pref_tunnel_port"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            linphone:hint="@string/pref_tunnel_port"
+            linphone:title="@string/pref_tunnel_port" />
+
+        <org.linphone.settings.widget.SwitchSetting
+            android:id="@+id/pref_tunnel_dual_mode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            linphone:hint="@string/pref_tunnel_dual_mode"
+            linphone:title="@string/pref_tunnel_dual_mode" />
+
+        <org.linphone.settings.widget.TextSetting
+            android:id="@+id/pref_tunnel_host_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            linphone:hint="@string/pref_tunnel_host_2"
+            linphone:title="@string/pref_tunnel_host_2" />
+
+        <org.linphone.settings.widget.TextSetting
+            android:id="@+id/pref_tunnel_port_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            linphone:hint="@string/pref_tunnel_port_2"
+            linphone:title="@string/pref_tunnel_port_2" />
+
+        <org.linphone.settings.widget.ListSetting
+            android:id="@+id/pref_tunnel_mode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            linphone:list_items_names="@array/tunnel_mode_entries"
+            linphone:list_items_values="@array/tunnel_mode_entry_values"
+            linphone:title="@string/pref_tunnel_mode" />
+
+    </LinearLayout>
+
+</ScrollView>

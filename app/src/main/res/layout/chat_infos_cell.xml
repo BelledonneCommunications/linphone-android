@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:layout_margin="5dp"
+    android:gravity="center_vertical">
+
+    <RelativeLayout
+        android:id="@+id/avatar"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center">
+
+        <include layout="@layout/contact_avatar" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
+        android:contentDescription="@string/content_description_delete"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:src="@drawable/chat_group_delete" />
+
+    <LinearLayout
+        android:id="@+id/adminLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/delete">
+
+        <LinearLayout
+            android:id="@+id/isAdminLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:paddingRight="5dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/check_selected" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/chat_room_infos_admin"
+                android:textColor="?attr/primaryTextColor"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/isNotAdminLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:paddingRight="5dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/check_unselected" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/chat_room_infos_admin"
+                android:textColor="?attr/primarySubtextLightColor" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_toLeftOf="@id/adminLayout"
+        android:layout_toRightOf="@id/avatar"
+        android:orientation="vertical">
+
+        <org.linphone.views.MarqueeTextView
+            android:id="@+id/name"
+            style="@style/contact_name_list_cell_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true" />
+
+        <org.linphone.views.MarqueeTextView
+            android:id="@+id/sipUri"
+            style="@style/sip_uri_small_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true" />
+
+    </LinearLayout>
+
+</RelativeLayout>

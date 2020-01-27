@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="?attr/lighToolbarBackgroundColor"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2">
+
+            <ImageView
+                android:id="@+id/all_contacts"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?attr/button_background_drawable"
+                android:contentDescription="@string/content_description_all_contacts"
+                android:padding="15dp"
+                android:src="@drawable/contacts_all" />
+
+            <View
+                android:id="@+id/all_contacts_select"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_alignParentBottom="true"
+                android:background="?attr/accentColor" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2">
+
+            <ImageView
+                android:id="@+id/linphone_contacts"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?attr/button_background_drawable"
+                android:contentDescription="@string/content_description_linphone_contacts"
+                android:gravity="center"
+                android:padding="15dp"
+                android:src="@drawable/contacts_sip" />
+
+            <View
+                android:id="@+id/linphone_contacts_select"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_alignParentBottom="true"
+                android:background="?attr/accentColor"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2" />
+
+        <ImageView
+            android:id="@+id/newContact"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:background="?attr/button_background_drawable"
+            android:contentDescription="@string/content_description_new_contact"
+            android:padding="15dp"
+            android:src="@drawable/contact_add" />
+
+        <ImageView
+            android:id="@+id/edit"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:background="?attr/button_background_drawable"
+            android:contentDescription="@string/content_description_edit_list"
+            android:padding="15dp"
+            android:src="@drawable/delete" />
+
+    </LinearLayout>
+
+    <include layout="@layout/edit_list" android:visibility="gone" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusableInTouchMode="true"
+        android:layout_margin="10dp">
+
+        <SearchView
+            android:id="@+id/searchField"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:iconifiedByDefault="false"
+            android:inputType="textPersonName"
+            android:paddingRight="5dp"
+            android:queryBackground="@color/transparent_color"
+            android:queryHint="@string/chat_room_creation_filter_hint"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/contactsListRefresher"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/contactsList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="?attr/dividerColor"
+                android:dividerHeight="1dp" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <ProgressBar
+            android:id="@+id/contactsFetchInProgress"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/noSipContact"
+            style="@style/empty_list_font"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="@string/no_sip_contact"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/noContact"
+            style="@style/empty_list_font"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="@string/no_contact"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="?attr/lighToolbarBackgroundColor"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:background="?attr/button_background_drawable"
+            android:contentDescription="@string/content_description_back"
+            android:padding="18dp"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:id="@+id/title"
+            style="@style/toolbar_small_title_font"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.8"
+            android:gravity="center"
+            android:padding="15dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@string/group_chat_room_devices" />
+
+    </LinearLayout>
+
+    <ExpandableListView
+        android:id="@+id/devices_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/top_bar"
+        android:divider="?attr/dividerColor"
+        android:childDivider="?attr/dividerColor"
+        android:dividerHeight="1dp"
+        android:groupIndicator="@null" />
+
+</RelativeLayout>

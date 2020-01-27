@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/topLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/backgroundColor">
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/side_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextureView
+                android:id="@+id/remote_video_texture"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <org.linphone.mediastream.video.capture.CaptureTextureView
+                android:id="@+id/local_preview_texture"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true" />
+
+            <RelativeLayout
+                android:id="@+id/active_calls"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="60dp"
+                android:layout_marginTop="40dp">
+
+                <include layout="@layout/call_conference_header" android:visibility="gone" />
+
+                <RelativeLayout
+                    android:id="@+id/active_call"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <include layout="@layout/call_active_header" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/active_call_info"
+                        android:layout_centerInParent="true"
+                        android:layout_margin="5dp"
+                        android:gravity="center">
+
+                        <include layout="@layout/contact_avatar_200" />
+
+                    </RelativeLayout>
+
+                    <include layout="@layout/call_paused_by_remote" android:visibility="gone" />
+
+                    <ImageView
+                        android:id="@+id/pause"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_below="@id/active_call_info"
+                        android:layout_alignParentRight="true"
+                        android:contentDescription="@string/content_description_pause"
+                        android:padding="20dp"
+                        android:src="@drawable/pause" />
+
+                    <ImageView
+                        android:id="@+id/switchCamera"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_below="@id/active_call_info"
+                        android:layout_alignParentLeft="true"
+                        android:contentDescription="@string/content_description_switch_camera"
+                        android:padding="20dp"
+                        android:src="@drawable/switch_camera"
+                        android:visibility="invisible" />
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/calls_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_gravity="bottom"
+                    android:background="@color/white_color"
+                    android:orientation="vertical"/>
+
+                <ImageView
+                    android:id="@+id/recording"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/round_orange_button_background"
+                    android:contentDescription="@string/content_description_record_call"
+                    android:padding="8dp"
+                    android:src="@drawable/options_rec"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:baselineAligned="false"
+                android:id="@+id/buttons"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="40dp"
+                android:gravity="bottom">
+
+                <!-- This is a better way of splitting screen 50/50 than using weights -->
+                <View
+                    android:id="@+id/vertical_divider"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true" />
+
+                <include layout="@layout/call_primary_buttons"
+                    android:id="@+id/call_primary_buttons"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_toLeftOf="@id/vertical_divider" />
+
+                <ViewStub
+                    android:id="@+id/numpad"
+                    android:inflatedId="@+id/numpad"
+                    android:layout="@layout/numpad"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:layout_above="@id/call_primary_buttons"
+                    android:background="@color/toolbar_color" />
+
+                <include layout="@layout/call_secondary_buttons"
+                    android:id="@+id/call_secondary_buttons"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toRightOf="@id/vertical_divider" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/side_menu_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:layout_marginTop="40dp"
+            android:background="?attr/backgroundColor">
+
+            <fragment
+                android:id="@+id/call_stats_fragment"
+                android:name="org.linphone.call.CallStatsFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:layout="@layout/call_stats" />
+
+        </RelativeLayout>
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+
+    <fragment
+        android:id="@+id/status_bar_fragment"
+        android:name="org.linphone.call.CallStatusBarFragment"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        tools:layout="@layout/status_bar" />
+
+</RelativeLayout>

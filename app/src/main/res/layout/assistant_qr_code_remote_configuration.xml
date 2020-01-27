@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="?attr/backgroundColor">
+
+    <fragment
+        android:id="@+id/status"
+        android:name="org.linphone.fragments.StatusBarFragment"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        tools:layout="@layout/status_bar" />
+
+    <include
+        android:id="@+id/top_bar"
+        layout="@layout/assistant_topbar" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_color">
+
+        <TextureView
+            android:id="@+id/qr_code_capture_texture"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"/>
+
+        <ImageView
+            android:id="@+id/qr_code_capture_change_camera"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="5dp"
+            android:src="@drawable/switch_camera"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

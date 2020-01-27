@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:alpha="0.5"
+    android:background="?attr/accentColor"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="5dp">
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/conference_start" />
+
+    <TextView
+        style="@style/call_contact_name_paused_font"
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_vertical|left"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:paddingLeft="20dp"
+        android:paddingRight="10dp"
+        android:text="@string/conference" />
+
+    <ImageView
+        android:id="@+id/conference_resume"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:contentDescription="@string/content_description_pause"
+        android:gravity="center_vertical"
+        android:src="@drawable/pause" />
+
+</LinearLayout>

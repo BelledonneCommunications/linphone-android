@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="?attr/backgroundColor">
+
+    <fragment
+        android:id="@+id/status"
+        android:name="org.linphone.fragments.StatusBarFragment"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        tools:layout="@layout/status_bar" />
+
+    <include
+        android:id="@+id/top_bar"
+        layout="@layout/assistant_topbar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/title_account_creation"
+            android:visibility="gone"
+            android:text="@string/assistant_create_account"
+            style="@style/standard_text_font"
+            android:textAllCaps="true"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"/>
+
+        <TextView
+            android:id="@+id/title_account_login"
+            android:visibility="gone"
+            android:text="@string/assistant_login_linphone"
+            style="@style/standard_text_font"
+            android:textAllCaps="true"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"/>
+
+        <TextView
+            android:id="@+id/title_account_linking"
+            android:visibility="gone"
+            android:text="@string/assistant_link_account"
+            style="@style/standard_text_font"
+            android:textAllCaps="true"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"/>
+
+        <TextView
+            android:text="@string/assistant_create_account_part_2"
+            style="@style/standard_small_text_font"
+            android:paddingTop="10dp"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/phone_number"
+            style="@style/standard_text_font"
+            android:paddingTop="10dp"
+            android:gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="@string/assistant_create_account_part_3"
+            style="@style/standard_small_text_font"
+            android:paddingTop="10dp"
+            android:gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/sms_code"
+            android:background="@drawable/resizable_textfield"
+            android:textColor="@color/black_color"
+            android:contentDescription="@string/content_description_activation_code_field"
+            android:inputType="number"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/confirmation_code"
+            android:maxLines="1"/>
+
+        <TextView
+            android:id="@+id/finish_account_creation"
+            android:text="@string/assistant_finish"
+            android:background="@drawable/assistant_button"
+            android:textColor="@drawable/assistant_button_text_color"
+            style="@style/button_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:padding="10dp"/>
+
+    </LinearLayout>
+
+</LinearLayout>

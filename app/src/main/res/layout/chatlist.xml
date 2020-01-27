@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="?attr/lighToolbarBackgroundColor"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/new_discussion"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:background="?attr/button_background_drawable"
+                android:contentDescription="@string/content_description_new_discussion"
+                android:padding="15dp"
+                android:src="@drawable/chat_new" />
+
+            <ImageView
+                android:id="@+id/new_group_discussion"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:background="?attr/button_background_drawable"
+                android:contentDescription="@string/content_description_new_discussion"
+                android:padding="15dp"
+                android:src="@drawable/chat_group_new" />
+
+            <ImageView
+                android:id="@+id/back_in_call"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:background="?attr/button_background_drawable"
+                android:contentDescription="@string/content_description_back_call"
+                android:padding="15dp"
+                android:src="@drawable/call_back"
+                android:visibility="invisible" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2" />
+
+            <ImageView
+                android:id="@+id/edit"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:background="?attr/button_background_drawable"
+                android:contentDescription="@string/content_description_edit_list"
+                android:padding="15dp"
+                android:src="@drawable/delete" />
+        </LinearLayout>
+
+        <include layout="@layout/edit_list" android:visibility="gone" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/chatList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:cacheColorHint="@color/transparent_color"
+            android:divider="?attr/dividerColor"
+            android:dividerHeight="1dp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/noChatHistory"
+        style="@style/empty_list_font"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/no_chat_history"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/waitScreen"
+        layout="@layout/wait_layout" />
+
+</RelativeLayout>

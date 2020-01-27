@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="?attr/lighToolbarBackgroundColor"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:background="?attr/button_background_drawable"
+            android:contentDescription="@string/content_description_back"
+            android:padding="18dp"
+            android:src="@drawable/back" />
+
+        <TextView
+            style="@style/toolbar_small_title_font"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.8"
+            android:gravity="center"
+            android:padding="15dp"
+            android:text="@string/imdn_info" />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_below="@id/top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/bubble"
+                layout="@layout/chat_bubble"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp" />
+
+            <LinearLayout
+                android:id="@+id/read_layout_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/header_background_color"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/imdn_read_font"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/displayed" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:src="@drawable/message_read" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/read_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:id="@+id/delivered_layout_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/header_background_color"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/imdn_delivered_sent_font"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/delivered" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:src="@drawable/message_delivered" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/delivered_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:id="@+id/sent_layout_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/header_background_color"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/imdn_delivered_sent_font"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sent" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:src="@drawable/message_delivered"
+                    android:visibility="invisible" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/sent_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:id="@+id/undelivered_layout_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/header_background_color"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/imdn_undelivered_font"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/error" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:src="@drawable/message_undelivered" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/undelivered_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

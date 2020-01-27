@@ -5,6 +5,7 @@ minimum_perc = 1
 type = ANDROID
 
 [linphone-android.stringsxml]
-file_filter = res/values-<lang>/strings.xml
-source_file = res/values/strings.xml
+file_filter = app/src/main/res/values-<lang>/strings.xml
+source_file = app/src/main/res/values/strings.xml
 source_lang = en
+

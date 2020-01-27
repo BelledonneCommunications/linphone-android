@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="?attr/backgroundColor">
+
+    <fragment
+        android:id="@+id/status"
+        android:name="org.linphone.fragments.StatusBarFragment"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        tools:layout="@layout/status_bar" />
+
+    <include
+        android:id="@+id/top_bar"
+        layout="@layout/assistant_topbar" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/standard_text_font"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/assistant_remote_provisioning_title"
+                android:paddingTop="10dp"
+                android:textAllCaps="true" />
+
+            <TextView
+                style="@style/standard_small_text_font"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="top"
+                android:paddingTop="10dp"
+                android:text="@string/assistant_remote_provisioning_desc" />
+
+            <TextView
+                android:text="@string/remote_provisioning_url"
+                style="@style/assistant_input_field_header_font"
+                android:textAllCaps="true"
+                android:paddingTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <EditText
+                android:id="@+id/remote_configuration_url"
+                android:background="@drawable/resizable_textfield"
+                android:textColor="@color/black_color"
+                android:inputType="textUri"
+                android:contentDescription="@string/content_description_url_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/remote_provisioning_url"
+                android:maxLines="1"/>
+
+            <TextView
+                android:id="@+id/fetch_and_apply_remote_configuration"
+                android:text="@string/assistant_fetch_apply"
+                android:background="@drawable/assistant_button"
+                android:textColor="@drawable/assistant_button_text_color"
+                style="@style/button_font"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_marginTop="20dp"/>
+
+            <TextView
+                android:id="@+id/qr_code"
+                android:text="@string/assistant_launch_qrcode"
+                android:background="@drawable/assistant_button"
+                android:textColor="@drawable/assistant_button_text_color"
+                style="@style/button_font"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_marginTop="20dp"/>
+
+        </LinearLayout>
+
+        <include
+            android:id="@+id/waitScreen"
+            layout="@layout/wait_layout" />
+
+    </RelativeLayout>
+
+</LinearLayout>

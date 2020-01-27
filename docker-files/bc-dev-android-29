@@ -1,0 +1,52 @@
+FROM debian:stretch
+
+MAINTAINER Ghislain MARY <ghislain.mary@belledonne-communications.com>
+
+
+# Configure locale
+RUN apt-get update && \
+    apt-get install -y locales && \
+    apt-get clean && \
+    echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
+    locale-gen
+ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
+
+ENV SHELL=/bin/bash
+
+# Define environment
+ENV ANDROID_SDK 25.2.5
+ENV ANDROID_HOME /opt/android-sdk-linux
+
+# Install common general tools
+RUN apt-get update && \
+    apt-get install -y curl nano sudo unzip vim wget openjdk-8-jdk-headless rsync ssh git && \
+    apt-get clean
+
+# Get the Android tools
+RUN wget https://dl.google.com/android/repository/tools_r$ANDROID_SDK-linux.zip && \
+    unzip tools_r$ANDROID_SDK-linux.zip -d $ANDROID_HOME && \
+    rm -f tools_r$ANDROID_SDK-linux.zip
+ENV PATH $ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$PATH
+
+# Get the Android SDK
+RUN echo "y" | sdkmanager "platforms;android-28" "build-tools;28.0.3" "platforms;android-29" "build-tools;29.0.2" "extras;android;m2repository" "extras;google;m2repository" "platform-tools" "tools"
+
+# Accept Android SDK licenses
+RUN yes | sdkmanager --licenses
+
+# Update if needed
+RUN echo y | android update sdk --no-ui --all --filter platform-tools
+RUN echo y | android update sdk --no-ui --all --filter android-28
+RUN echo y | android update sdk --no-ui --all --filter build-tools-28.0.3
+RUN echo y | android update sdk --no-ui --all --filter android-29
+RUN echo y | android update sdk --no-ui --all --filter build-tools-29.0.2
+
+# Configure user bc
+RUN useradd -ms /bin/bash bc && \
+    echo 'bc:cotcot' | chpasswd && \
+    echo 'bc ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+USER bc
+WORKDIR /home/bc
+ENV PS1='\[\e[34m\]\u@bc-dev-android>\[\e[0m\] '
+CMD bash

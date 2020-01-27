@@ -1,0 +1,219 @@
+apply plugin: 'com.android.application'
+
+static def getPackageName() {
+    return "org.linphone"
+}
+
+static def firebaseEnabled() {
+    File googleFile = new File('app/google-services.json')
+    return googleFile.exists()
+}
+
+static def isLocalDebugAarAvailable() {
+    File debugAar = new File('linphone-sdk-android/linphone-sdk-android-debug.aar')
+    return debugAar.exists()
+}
+
+static def isLocalReleaseAarAvailable() {
+    File releaseAar = new File('linphone-sdk-android/linphone-sdk-android-release.aar')
+    return releaseAar.exists()
+}
+
+static def isLocalAarAvailable() {
+    return isLocalDebugAarAvailable() || isLocalReleaseAarAvailable()
+}
+
+task getGitVersion() {
+    def gitVersion = "4.2.1"
+    def gitVersionStream = new ByteArrayOutputStream()
+    def gitCommitsCount = new ByteArrayOutputStream()
+    def gitCommitHash = new ByteArrayOutputStream()
+
+    try {
+        exec {
+            executable "git" args "describe", "--abbrev=0"
+            standardOutput = gitVersionStream
+        }
+        exec {
+            executable "git" args "rev-list", gitVersionStream.toString().trim() + "..HEAD", "--count"
+            standardOutput = gitCommitsCount
+        }
+        exec {
+            executable "git" args "rev-parse", "--short", "HEAD"
+            standardOutput = gitCommitHash
+        }
+
+        if (gitCommitsCount.toString().toInteger() == 0) {
+            gitVersion = gitVersionStream.toString().trim()
+        } else {
+            gitVersion = gitVersionStream.toString().trim() + "." + gitCommitsCount.toString().trim() + "+" + gitCommitHash.toString().trim()
+        }
+        println("Git version: " + gitVersion)
+    } catch (Exception e) {
+        println("Git not found")
+    }
+    project.version = gitVersion
+}
+
+///// Exclude Files /////
+
+def excludeFiles = []
+if (!firebaseEnabled()) {
+    excludeFiles.add('**/Firebase*')
+    println '[Push Notification] Firebase disabled'
+}
+// Remove or comment if you want to use those
+excludeFiles.add('**/XmlRpc*')
+excludeFiles.add('**/InAppPurchase*')
+
+def excludePackage = []
+
+excludePackage.add('**/gdb.*')
+excludePackage.add('**/libopenh264**')
+excludePackage.add('**/**tester**')
+excludePackage.add('**/LICENSE.txt')
+
+/////////////////////////
+
+repositories {
+    maven {
+        url "https://linphone.org/maven_repository"
+    }
+}
+
+project.tasks['preBuild'].dependsOn 'getGitVersion'
+
+android {
+    lintOptions {
+        abortOnError false
+    }
+
+    compileSdkVersion 29
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 4215
+        versionName "${project.version}"
+        applicationId getPackageName()
+        multiDexEnabled true
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "linphone-android-${variant.buildType.name}-${project.version}.apk"
+        }
+
+        if (variant.buildType.name.equals("release")) {
+            variant.getMergedFlavor().manifestPlaceholders = [linphone_address_mime_type: "vnd.android.cursor.item/vnd." + getPackageName() + ".provider.sip_address",
+                                    linphone_file_provider: getPackageName() + ".provider"]
+        } else {
+            variant.getMergedFlavor().manifestPlaceholders = [linphone_address_mime_type: "vnd.android.cursor.item/vnd." + getPackageName() + ".provider.sip_address",
+                                    linphone_file_provider: getPackageName() + ".debug.provider"]
+        }
+    }
+
+    def keystorePropertiesFile = rootProject.file("keystore.properties")
+    def keystoreProperties = new Properties()
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+    signingConfigs {
+        release {
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            resValue "string", "sync_account_type", getPackageName() + ".sync"
+            resValue "string", "file_provider", getPackageName() + ".provider"
+            resValue "string", "linphone_address_mime_type", "vnd.android.cursor.item/vnd." + getPackageName() + ".provider.sip_address"
+
+            if (!firebaseEnabled()) {
+                resValue "string", "gcm_defaultSenderId", "none"
+            }
+        }
+        debug {
+            applicationIdSuffix ".debug"
+            debuggable true
+            jniDebuggable true
+
+            resValue "string", "sync_account_type", getPackageName() + ".sync"
+            resValue "string", "file_provider", getPackageName() + ".debug.provider"
+            resValue "string", "linphone_address_mime_type", "vnd.android.cursor.item/vnd." + getPackageName() + ".provider.sip_address"
+
+            if (!firebaseEnabled()) {
+                resValue "string", "gcm_defaultSenderId", "none"
+            }
+        }
+    }
+
+    sourceSets {
+        main {
+            java.excludes = excludeFiles
+
+            packagingOptions {
+                excludes = excludePackage
+            }
+        }
+    }
+
+    packagingOptions {
+        pickFirst 'META-INF/NOTICE'
+        pickFirst 'META-INF/LICENSE'
+        exclude 'META-INF/MANIFEST.MF'
+    }
+}
+
+dependencies {
+    if (firebaseEnabled()) {
+        implementation 'com.google.firebase:firebase-messaging:19.0.1'
+    }
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'com.google.android:flexbox:1.1.0'
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+
+    if (isLocalAarAvailable()) {
+        if (isLocalReleaseAarAvailable()) {
+            //debug AAR is a lot bigger than release one, and APK install time will be much longer so use release one for day-to-day development
+            implementation project(path: ":linphone-sdk-android", configuration: 'release')
+        } else {
+            releaseImplementation project(path: ":linphone-sdk-android", configuration: 'release')
+            debugImplementation project(path: ":linphone-sdk-android", configuration: 'debug')
+        }
+    } else {
+        implementation "org.linphone:linphone-sdk-android:4.3+"
+    }
+}
+if (firebaseEnabled()) {
+    apply plugin: 'com.google.gms.google-services'
+}
+
+task generateContactsXml(type: Copy) {
+    from 'contacts.xml'
+    into "src/main/res/xml/"
+    filter {
+        line -> line
+                .replaceAll('%%AUTO_GENERATED%%', 'This file has been automatically generated, do not edit or commit !')
+                .replaceAll('%%PACKAGE_NAME%%', getPackageName())
+
+    }
+}
+project.tasks['preBuild'].dependsOn 'generateContactsXml'
+
+apply plugin: "com.diffplug.gradle.spotless"
+spotless {
+    java {
+        target '**/*.java'
+        googleJavaFormat('1.6').aosp()
+        removeUnusedImports()
+    }
+}
+project.tasks['preBuild'].dependsOn 'spotlessApply'

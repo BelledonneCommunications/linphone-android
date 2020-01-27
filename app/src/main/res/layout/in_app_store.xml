@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="30dp">
+
+        <LinearLayout
+            android:id="@+id/username_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/username_label"
+                style="@style/assistant_input_field_header_font"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/username"
+                android:textAllCaps="true" />
+
+            <EditText
+                android:id="@+id/username"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/resizable_textfield"
+                android:contentDescription="@string/content_description_username_field"
+                android:inputType="text|textEmailAddress"
+                android:maxLines="1"
+                android:textColor="@color/black_color" />
+
+            <TextView
+                android:id="@+id/username_error"
+                style="@style/assistant_input_field_error_font"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/error"
+                android:visibility="invisible" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/email_label"
+                style="@style/assistant_input_field_header_font"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/email"
+                android:textAllCaps="true" />
+
+            <EditText
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/resizable_textfield"
+                android:contentDescription="@string/content_description_email_field"
+                android:inputType="text|textEmailAddress"
+                android:maxLines="1"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:textColor="@color/black_color"
+                android:textCursorDrawable="@null" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/inapp_button"
+        style="@style/button_font"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:background="@drawable/assistant_button"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="@string/assistant_create_account" />
+
+</LinearLayout>
