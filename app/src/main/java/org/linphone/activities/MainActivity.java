@@ -496,7 +496,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
 
             String[] permissions = new String[] {permission};
             KeyguardManager km = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-            boolean locked = km.inKeyguardRestrictedInputMode();
+            boolean locked = km.isKeyguardLocked();
             if (!locked) {
                 // This is to workaround an infinite loop of pause/start in Activity issue
                 // if incoming call ends while screen if off and locked
@@ -527,7 +527,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
             permissions = permissionsToAskFor.toArray(permissions);
 
             KeyguardManager km = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-            boolean locked = km.inKeyguardRestrictedInputMode();
+            boolean locked = km.isKeyguardLocked();
             if (!locked) {
                 // This is to workaround an infinite loop of pause/start in Activity issue
                 // if incoming call ends while screen if off and locked
