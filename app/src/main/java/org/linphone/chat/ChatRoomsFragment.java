@@ -45,6 +45,7 @@ import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.EventLog;
 import org.linphone.core.ProxyConfig;
+import org.linphone.core.tools.Log;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.utils.SelectableHelper;
 
@@ -155,6 +156,7 @@ public class ChatRoomsFragment extends Fragment
                     }
 
                     public void onChatRoomEphemeralMessageDeleted(Core lc, ChatRoom cr) {
+                        Log.i("[Chat Rooms] Ephemeral message expired, update last message displayed");
                         refreshChatRoom(cr);
                     }
 
