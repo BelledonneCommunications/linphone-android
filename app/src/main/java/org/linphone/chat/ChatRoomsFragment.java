@@ -154,6 +154,7 @@ public class ChatRoomsFragment extends Fragment
                         refreshChatRoom(room);
                     }
 
+                    @Override
                     public void onChatRoomEphemeralMessageDeleted(Core lc, ChatRoom cr) {
                         refreshChatRoom(cr);
                     }
