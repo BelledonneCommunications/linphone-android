@@ -189,7 +189,7 @@ dependencies {
             debugImplementation project(path: ":linphone-sdk-android", configuration: 'debug')
         }
     } else {
-        implementation "org.linphone:linphone-sdk-android:4.3+"
+        implementation "org.linphone:linphone-sdk-android:4.4+"
     }
 }
 if (firebaseEnabled()) {
