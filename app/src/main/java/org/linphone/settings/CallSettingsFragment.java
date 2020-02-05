@@ -144,8 +144,10 @@ public class CallSettingsFragment extends SettingsFragment {
                 new SettingListenerBase() {
                     @Override
                     public void onBoolValueChanged(boolean newValue) {
-                        if (newValue) mDtmfRfc2833.setChecked(false);
                         mPrefs.sendDTMFsAsSipInfo(newValue);
+                        if (!newValue && !mDtmfRfc2833.isChecked()) {
+                            mDtmfRfc2833.setChecked(true);
+                        }
                     }
                 });
 
@@ -153,8 +155,10 @@ public class CallSettingsFragment extends SettingsFragment {
                 new SettingListenerBase() {
                     @Override
                     public void onBoolValueChanged(boolean newValue) {
-                        if (newValue) mDtmfSipInfo.setChecked(false);
                         mPrefs.sendDtmfsAsRfc2833(newValue);
+                        if (!newValue && !mDtmfSipInfo.isChecked()) {
+                            mDtmfRfc2833.setChecked(true);
+                        }
                     }
                 });
 
