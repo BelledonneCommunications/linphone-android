@@ -24,7 +24,7 @@ static def isLocalAarAvailable() {
 }
 
 task getGitVersion() {
-    def gitVersion = "4.2.1"
+    def gitVersion = "4.3.0"
     def gitVersionStream = new ByteArrayOutputStream()
     def gitCommitsCount = new ByteArrayOutputStream()
     def gitCommitHash = new ByteArrayOutputStream()
@@ -92,7 +92,7 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 4215
+        versionCode 4216
         versionName "${project.version}"
         applicationId getPackageName()
         multiDexEnabled true
@@ -189,7 +189,7 @@ dependencies {
             debugImplementation project(path: ":linphone-sdk-android", configuration: 'debug')
         }
     } else {
-        implementation "org.linphone:linphone-sdk-android:4.3+"
+        implementation "org.linphone:linphone-sdk-android:4.4+"
     }
 }
 if (firebaseEnabled()) {

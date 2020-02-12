@@ -19,7 +19,9 @@
  */
 package org.linphone.chat;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +36,11 @@ import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatMessageListenerStub;
+import org.linphone.core.Content;
 import org.linphone.core.EventLog;
+import org.linphone.core.tools.Log;
+import org.linphone.settings.LinphonePreferences;
+import org.linphone.utils.FileUtils;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.utils.SelectableAdapter;
 import org.linphone.utils.SelectableHelper;
@@ -91,9 +97,34 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
                         }
                         if (state == ChatMessage.State.Displayed) {
                             mTransientMessages.remove(message);
+                        } else if (state == ChatMessage.State.FileTransferDone) {
+                            Log.i("[Chat Message] File transfer done");
+
+                            // Do not do it for ephemeral messages of if setting is disabled
+                            if (!message.isEphemeral()
+                                    && LinphonePreferences.instance()
+                                            .makeDownloadedImagesVisibleInNativeGallery()) {
+                                for (Content content : message.getContents()) {
+                                    if (content.isFile() && content.getFilePath() != null) {
+                                        addImageToNativeGalery(content.getFilePath());
+                                    }
+                                }
+                            }
                         }
                     }
                 };
+    }
+
+    private void addImageToNativeGalery(String filePath) {
+        if (!FileUtils.isExtensionImage(filePath)) return;
+
+        String mime = FileUtils.getMimeFromFile(filePath);
+        Log.i("[Chat Message] Adding file ", filePath, " to native gallery with MIME ", mime);
+
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.DATA, filePath);
+        values.put(MediaStore.Images.Media.MIME_TYPE, mime);
+        mContext.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
     }
 
     @Override
@@ -214,6 +245,30 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
                     holder.eventMessage.setText(
                             mContext.getString(R.string.device_removed).replace("%s", displayName));
                     break;
+
+                case ConferenceEphemeralMessageDisabled:
+                    holder.eventLayout.setVisibility(View.VISIBLE);
+                    holder.eventMessage.setText(
+                            mContext.getString(R.string.chat_event_ephemeral_disabled));
+                    break;
+                case ConferenceEphemeralMessageEnabled:
+                    holder.eventLayout.setVisibility(View.VISIBLE);
+                    holder.eventMessage.setText(
+                            mContext.getString(R.string.chat_event_ephemeral_enabled)
+                                    .replace(
+                                            "%s",
+                                            formatEphemeralExpiration(
+                                                    event.getEphemeralMessageLifetime())));
+                    break;
+                case ConferenceEphemeralMessageLifetimeChanged:
+                    holder.eventLayout.setVisibility(View.VISIBLE);
+                    holder.eventMessage.setText(
+                            mContext.getString(R.string.chat_event_ephemeral_lifetime_changed)
+                                    .replace(
+                                            "%s",
+                                            formatEphemeralExpiration(
+                                                    event.getEphemeralMessageLifetime())));
+                    break;
                 case ConferenceSecurityEvent:
                     holder.securityEventLayout.setVisibility(View.VISIBLE);
 
@@ -252,6 +307,24 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
                                     .replace("%i", String.valueOf(event.getType().toInt())));
                     break;
             }
+        }
+    }
+
+    private String formatEphemeralExpiration(long duration) {
+        if (duration == 0) {
+            return mContext.getString(R.string.chat_room_ephemeral_message_disabled);
+        } else if (duration == 60) {
+            return mContext.getString(R.string.chat_room_ephemeral_message_one_minute);
+        } else if (duration == 3600) {
+            return mContext.getString(R.string.chat_room_ephemeral_message_one_hour);
+        } else if (duration == 86400) {
+            return mContext.getString(R.string.chat_room_ephemeral_message_one_day);
+        } else if (duration == 259200) {
+            return mContext.getString(R.string.chat_room_ephemeral_message_three_days);
+        } else if (duration == 604800) {
+            return mContext.getString(R.string.chat_room_ephemeral_message_one_week);
+        } else {
+            return "Unexpected duration";
         }
     }
 
@@ -301,6 +374,16 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
     public void removeItem(int i) {
         mHistory.remove(i);
         notifyItemRemoved(i);
+    }
+
+    @Override
+    public boolean removeFromHistory(EventLog eventLog) {
+        int index = mHistory.indexOf(eventLog);
+        if (index >= 0) {
+            removeItem(index);
+            return true;
+        }
+        return false;
     }
 
     private void changeBackgroundDependingOnPreviousAndNextEvents(

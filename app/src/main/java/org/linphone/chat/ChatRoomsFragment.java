@@ -43,7 +43,9 @@ import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomListenerStub;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
+import org.linphone.core.EventLog;
 import org.linphone.core.ProxyConfig;
+import org.linphone.utils.LinphoneUtils;
 import org.linphone.utils.SelectableHelper;
 
 public class ChatRoomsFragment extends Fragment
@@ -153,6 +155,11 @@ public class ChatRoomsFragment extends Fragment
                     }
 
                     @Override
+                    public void onChatRoomEphemeralMessageDeleted(Core lc, ChatRoom cr) {
+                        refreshChatRoom(cr);
+                    }
+
+                    @Override
                     public void onChatRoomRead(Core core, ChatRoom room) {
                         refreshChatRoom(room);
                     }
@@ -253,6 +260,11 @@ public class ChatRoomsFragment extends Fragment
         for (Object obj : objectsToDelete) {
             ChatRoom room = (ChatRoom) obj;
             room.addListener(mChatRoomListener);
+
+            for (EventLog eventLog : room.getHistoryMessageEvents(0)) {
+                LinphoneUtils.deleteFileContentIfExists(eventLog);
+            }
+
             core.deleteChatRoom(room);
         }
         if (mChatRoomDeletionPendingCount > 0) {

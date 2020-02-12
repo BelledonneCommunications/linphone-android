@@ -6,6 +6,10 @@
         android:title="@string/copy_text" />
 
     <item
+        android:id="@+id/forward"
+        android:title="@string/chat_message_context_menu_forward" />
+
+    <item
         android:id="@+id/imdn_infos"
         android:title="@string/imdn_info" />
 

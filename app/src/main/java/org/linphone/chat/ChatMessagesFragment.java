@@ -50,6 +50,8 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.view.menu.MenuPopupHelper;
 import androidx.core.view.inputmethod.InputConnectionCompat;
 import androidx.core.view.inputmethod.InputContentInfoCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -102,8 +104,8 @@ public class ChatMessagesFragment extends Fragment
 
     private ImageView mCallButton;
     private ImageView mBackToCallButton;
-    private ImageView mGroupInfosButton;
-    private ImageView mAttachImageButton, mSendMessageButton;
+    private ImageView mPopupMenu;
+    private ImageView mAttachImageButton, mSendMessageButton, mSendEphemeralIcon;
     private TextView mRoomLabel, mParticipantsLabel, mSipUriLabel, mRemoteComposing;
     private RichEditText mMessageTextToSend;
     private LayoutInflater mInflater;
@@ -153,30 +155,7 @@ public class ChatMessagesFragment extends Fragment
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        boolean oneParticipantOneDevice = false;
-                        if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
-                            ParticipantDevice[] devices =
-                                    mChatRoom.getParticipants()[0].getDevices();
-                            // Only start a call automatically if both ourselves and the remote
-                            // have 1 device exactly, otherwise show devices list.
-                            oneParticipantOneDevice =
-                                    devices.length == 1
-                                            && mChatRoom.getMe().getDevices().length == 1;
-                        }
-
-                        if (LinphonePreferences.instance().isLimeSecurityPopupEnabled()) {
-                            showSecurityDialog(oneParticipantOneDevice);
-                        } else {
-                            if (oneParticipantOneDevice) {
-                                ParticipantDevice device =
-                                        mChatRoom.getParticipants()[0].getDevices()[0];
-                                LinphoneManager.getCallManager()
-                                        .inviteAddress(device.getAddress(), true);
-                            } else {
-                                ((ChatActivity) getActivity())
-                                        .showDevices(mLocalSipAddress, mRemoteSipAddress);
-                            }
-                        }
+                        goToDevices();
                     }
                 });
 
@@ -210,35 +189,12 @@ public class ChatMessagesFragment extends Fragment
                     }
                 });
 
-        mGroupInfosButton = view.findViewById(R.id.group_infos);
-        mGroupInfosButton.setOnClickListener(
+        mPopupMenu = view.findViewById(R.id.menu);
+        mPopupMenu.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (mChatRoom == null) return;
-                        ArrayList<ContactAddress> participants = new ArrayList<>();
-                        for (Participant p : mChatRoom.getParticipants()) {
-                            Address a = p.getAddress();
-                            LinphoneContact c =
-                                    ContactsManager.getInstance().findContactFromAddress(a);
-                            if (c == null) {
-                                c = new LinphoneContact();
-                                String displayName = LinphoneUtils.getAddressDisplayName(a);
-                                c.setFullName(displayName);
-                            }
-                            ContactAddress ca =
-                                    new ContactAddress(c, a.asString(), "", p.isAdmin());
-                            participants.add(ca);
-                        }
-
-                        boolean encrypted =
-                                mChatRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt());
-                        ((ChatActivity) getActivity())
-                                .showChatRoomGroupInfo(
-                                        mRemoteSipAddress,
-                                        participants,
-                                        mChatRoom.getSubject(),
-                                        encrypted);
+                        showPopupMenu();
                     }
                 });
 
@@ -265,8 +221,10 @@ public class ChatMessagesFragment extends Fragment
             mAttachImageButton.setVisibility(View.GONE);
         }
 
+        mSendEphemeralIcon = view.findViewById(R.id.send_ephemeral_message);
         mSendMessageButton = view.findViewById(R.id.send_message);
         mSendMessageButton.setEnabled(false);
+        mSendEphemeralIcon.setEnabled(mSendMessageButton.isEnabled());
         mSendMessageButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -287,6 +245,7 @@ public class ChatMessagesFragment extends Fragment
                         mSendMessageButton.setEnabled(
                                 mMessageTextToSend.getText().length() > 0
                                         || mFilesUploadLayout.getChildCount() > 0);
+                        mSendEphemeralIcon.setEnabled(mSendMessageButton.isEnabled());
                         if (mChatRoom != null && mMessageTextToSend.getText().length() > 0) {
                             if (!getResources().getBoolean(R.bool.allow_multiple_images_and_text)) {
                                 mAttachImageButton.setEnabled(false);
@@ -509,15 +468,11 @@ public class ChatMessagesFragment extends Fragment
     public void onDeleteSelection(Object[] objectsToDelete) {
         for (Object obj : objectsToDelete) {
             EventLog eventLog = (EventLog) obj;
+            LinphoneUtils.deleteFileContentIfExists(eventLog);
             eventLog.deleteFromDatabase();
         }
-        if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
-            ((ChatMessagesGenericAdapter) mChatEventsList.getAdapter())
-                    .refresh(mChatRoom.getHistoryMessageEvents(MESSAGES_PER_PAGE));
-        } else {
-            ((ChatMessagesGenericAdapter) mChatEventsList.getAdapter())
-                    .refresh(mChatRoom.getHistoryEvents(MESSAGES_PER_PAGE));
-        }
+        ((ChatMessagesGenericAdapter) mChatEventsList.getAdapter())
+                .refresh(mChatRoom.getHistoryEvents(MESSAGES_PER_PAGE));
     }
 
     @Override
@@ -590,6 +545,10 @@ public class ChatMessagesFragment extends Fragment
             ((ChatActivity) getActivity()).showImdn(mLocalSipAddress, mRemoteSipAddress, messageId);
             return true;
         }
+        if (item.getItemId() == R.id.forward) {
+            ((ChatActivity) getActivity()).forwardMessage(message);
+            return true;
+        }
         if (item.getItemId() == R.id.copy_text) {
             if (message.hasTextContent()) {
                 ClipboardManager clipboard =
@@ -601,6 +560,7 @@ public class ChatMessagesFragment extends Fragment
             return true;
         }
         if (item.getItemId() == R.id.delete_message) {
+            LinphoneUtils.deleteFileContentIfExists(event);
             mChatRoom.deleteMessage(message);
             ((ChatMessagesGenericAdapter) mChatEventsList.getAdapter())
                     .removeItem(mContextMenuMessagePosition);
@@ -636,27 +596,14 @@ public class ChatMessagesFragment extends Fragment
                 new Runnable() {
                     @Override
                     public void run() {
-                        int maxSize;
-                        if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
-                            maxSize = mChatRoom.getHistorySize();
-                        } else {
-                            maxSize = mChatRoom.getHistoryEventsSize();
-                        }
+                        int maxSize = mChatRoom.getHistoryEventsSize();
                         if (totalItemsCount < maxSize) {
                             int upperBound = totalItemsCount + MESSAGES_PER_PAGE;
                             if (upperBound > maxSize) {
                                 upperBound = maxSize;
                             }
                             EventLog[] newLogs;
-                            if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
-                                newLogs =
-                                        mChatRoom.getHistoryRangeMessageEvents(
-                                                totalItemsCount, upperBound);
-                            } else {
-                                newLogs =
-                                        mChatRoom.getHistoryRangeEvents(
-                                                totalItemsCount, upperBound);
-                            }
+                            newLogs = mChatRoom.getHistoryRangeEvents(totalItemsCount, upperBound);
                             ArrayList<EventLog> logsList = new ArrayList<>(Arrays.asList(newLogs));
                             ((ChatMessagesGenericAdapter) mChatEventsList.getAdapter())
                                     .addAllToHistory(logsList);
@@ -722,6 +669,7 @@ public class ChatMessagesFragment extends Fragment
         mMessageTextToSend.setEnabled(false);
         mAttachImageButton.setEnabled(false);
         mSendMessageButton.setEnabled(false);
+        mSendEphemeralIcon.setEnabled(mSendMessageButton.isEnabled());
     }
 
     private void getContactsForParticipants() {
@@ -798,7 +746,15 @@ public class ChatMessagesFragment extends Fragment
 
         if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
             mCallButton.setVisibility(View.VISIBLE);
-            mGroupInfosButton.setVisibility(View.GONE);
+
+            if (mChatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt())) {
+                mPopupMenu.setVisibility(View.GONE);
+                mSelectionHelper.setEditButtonVisibility(true);
+            } else {
+                mPopupMenu.setVisibility(View.VISIBLE);
+                mSelectionHelper.setEditButtonVisibility(false);
+            }
+
             mParticipantsLabel.setVisibility(View.GONE);
 
             if (mContext.getResources().getBoolean(R.bool.show_sip_uri_in_chat)) {
@@ -827,7 +783,8 @@ public class ChatMessagesFragment extends Fragment
             mSipUriLabel.setText(mRemoteParticipantAddress.asStringUriOnly());
         } else {
             mCallButton.setVisibility(View.GONE);
-            mGroupInfosButton.setVisibility(View.VISIBLE);
+            mPopupMenu.setVisibility(View.VISIBLE);
+            mSelectionHelper.setEditButtonVisibility(false);
             mRoomLabel.setText(mChatRoom.getSubject());
             mParticipantsLabel.setVisibility(View.VISIBLE);
             mSipUriLabel.setVisibility(View.GONE);
@@ -838,6 +795,7 @@ public class ChatMessagesFragment extends Fragment
             mBackToCallButton.setVisibility(View.VISIBLE);
         }
 
+        mSendEphemeralIcon.setVisibility(mChatRoom.ephemeralEnabled() ? View.VISIBLE : View.GONE);
         if (mChatRoom.hasBeenLeft()) {
             setReadOnly();
         }
@@ -868,26 +826,14 @@ public class ChatMessagesFragment extends Fragment
 
     private void displayChatRoomHistory() {
         if (mChatRoom == null) return;
-        ChatMessagesAdapter mEventsAdapter;
-        if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
-            mEventsAdapter =
-                    new ChatMessagesAdapter(
-                            this,
-                            mSelectionHelper,
-                            R.layout.chat_bubble,
-                            mChatRoom.getHistoryMessageEvents(MESSAGES_PER_PAGE),
-                            mParticipants,
-                            this);
-        } else {
-            mEventsAdapter =
-                    new ChatMessagesAdapter(
-                            this,
-                            mSelectionHelper,
-                            R.layout.chat_bubble,
-                            mChatRoom.getHistoryEvents(MESSAGES_PER_PAGE),
-                            mParticipants,
-                            this);
-        }
+        ChatMessagesAdapter mEventsAdapter =
+                new ChatMessagesAdapter(
+                        this,
+                        mSelectionHelper,
+                        R.layout.chat_bubble,
+                        mChatRoom.getHistoryEvents(MESSAGES_PER_PAGE),
+                        mParticipants,
+                        this);
         mSelectionHelper.setAdapter(mEventsAdapter);
         mChatEventsList.setAdapter(mEventsAdapter);
         scrollToBottom();
@@ -1044,6 +990,7 @@ public class ChatMessagesFragment extends Fragment
                         mSendMessageButton.setEnabled(
                                 mMessageTextToSend.getText().length() > 0
                                         || mFilesUploadLayout.getChildCount() > 0);
+                        mSendEphemeralIcon.setEnabled(mSendMessageButton.isEnabled());
                     }
                 });
 
@@ -1054,6 +1001,7 @@ public class ChatMessagesFragment extends Fragment
             mMessageTextToSend.setEnabled(false);
         }
         mSendMessageButton.setEnabled(true);
+        mSendEphemeralIcon.setEnabled(mSendMessageButton.isEnabled());
     }
 
     private void addImageToPendingList(String path) {
@@ -1083,6 +1031,7 @@ public class ChatMessagesFragment extends Fragment
                         mSendMessageButton.setEnabled(
                                 mMessageTextToSend.getText().length() > 0
                                         || mFilesUploadLayout.getChildCount() > 0);
+                        mSendEphemeralIcon.setEnabled(mSendMessageButton.isEnabled());
                     }
                 });
 
@@ -1093,6 +1042,7 @@ public class ChatMessagesFragment extends Fragment
             mMessageTextToSend.setEnabled(false);
         }
         mSendMessageButton.setEnabled(true);
+        mSendEphemeralIcon.setEnabled(mSendMessageButton.isEnabled());
     }
 
     /** Message sending */
@@ -1158,6 +1108,97 @@ public class ChatMessagesFragment extends Fragment
         mAttachImageButton.setEnabled(true);
         mMessageTextToSend.setEnabled(true);
         mMessageTextToSend.setText("");
+    }
+
+    private void showPopupMenu() {
+        MenuBuilder builder = new MenuBuilder(getActivity());
+        MenuPopupHelper popupMenu = new MenuPopupHelper(getActivity(), builder, mPopupMenu);
+        popupMenu.setForceShowIcon(true);
+
+        new MenuInflater(getActivity()).inflate(R.menu.chat_room_menu, builder);
+
+        if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
+            builder.removeItem(R.id.chat_room_group_info);
+        }
+
+        if (!mChatRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt())) {
+            builder.removeItem(R.id.chat_room_participants_devices);
+            builder.removeItem(R.id.chat_room_ephemeral_messages);
+        }
+
+        builder.setCallback(
+                new MenuBuilder.Callback() {
+                    @Override
+                    public boolean onMenuItemSelected(MenuBuilder menu, MenuItem item) {
+                        if (item.getItemId() == R.id.chat_room_group_info) {
+                            goToGroupInfo();
+                            return true;
+                        } else if (item.getItemId() == R.id.chat_room_participants_devices) {
+                            goToDevices();
+                            return true;
+                        } else if (item.getItemId() == R.id.chat_room_ephemeral_messages) {
+                            goToEphemeral();
+                            return true;
+                        } else if (item.getItemId() == R.id.chat_room_delete_messages) {
+                            mSelectionHelper.enterEditionMode();
+                            return true;
+                        }
+                        return false;
+                    }
+
+                    @Override
+                    public void onMenuModeChange(MenuBuilder menu) {}
+                });
+
+        popupMenu.show();
+    }
+
+    private void goToDevices() {
+        boolean oneParticipantOneDevice = false;
+        if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
+            ParticipantDevice[] devices = mChatRoom.getParticipants()[0].getDevices();
+            // Only start a call automatically if both ourselves and the remote
+            // have 1 device exactly, otherwise show devices list.
+            oneParticipantOneDevice =
+                    devices.length == 1 && mChatRoom.getMe().getDevices().length == 1;
+        }
+
+        if (LinphonePreferences.instance().isLimeSecurityPopupEnabled()) {
+            showSecurityDialog(oneParticipantOneDevice);
+        } else {
+            if (oneParticipantOneDevice) {
+                ParticipantDevice device = mChatRoom.getParticipants()[0].getDevices()[0];
+                LinphoneManager.getCallManager().inviteAddress(device.getAddress(), true);
+            } else {
+                ((ChatActivity) getActivity()).showDevices(mLocalSipAddress, mRemoteSipAddress);
+            }
+        }
+    }
+
+    private void goToGroupInfo() {
+        if (mChatRoom == null) return;
+        ArrayList<ContactAddress> participants = new ArrayList<>();
+        for (Participant p : mChatRoom.getParticipants()) {
+            Address a = p.getAddress();
+            LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(a);
+            if (c == null) {
+                c = new LinphoneContact();
+                String displayName = LinphoneUtils.getAddressDisplayName(a);
+                c.setFullName(displayName);
+            }
+            ContactAddress ca = new ContactAddress(c, a.asString(), "", p.isAdmin());
+            participants.add(ca);
+        }
+
+        boolean encrypted = mChatRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt());
+        ((ChatActivity) getActivity())
+                .showChatRoomGroupInfo(
+                        mRemoteSipAddress, participants, mChatRoom.getSubject(), encrypted);
+    }
+
+    private void goToEphemeral() {
+        if (mChatRoom == null) return;
+        ((ChatActivity) getActivity()).showChatRoomEphemeral(mRemoteSipAddress);
     }
 
     /*
@@ -1332,6 +1373,28 @@ public class ChatMessagesFragment extends Fragment
         if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) return;
         ((ChatMessagesGenericAdapter) mChatEventsList.getAdapter()).addToHistory(event);
         scrollToBottom();
+    }
+
+    @Override
+    public void onEphemeralEvent(ChatRoom chatRoom, EventLog eventLog) {
+        ((ChatMessagesGenericAdapter) mChatEventsList.getAdapter()).addToHistory(eventLog);
+        scrollToBottom();
+    }
+
+    @Override
+    public void onEphemeralMessageTimerStarted(ChatRoom chatRoom, EventLog eventLog) {}
+
+    @Override
+    public void onEphemeralMessageDeleted(ChatRoom chatRoom, EventLog eventLog) {
+        Log.i("[Chat Room] Ephemeral message expired");
+        LinphoneUtils.deleteFileContentIfExists(eventLog);
+
+        if (!((ChatMessagesGenericAdapter) mChatEventsList.getAdapter())
+                .removeFromHistory(eventLog)) {
+            Log.w("[Chat Room] Ephemeral message not found, refresh list");
+            ((ChatMessagesGenericAdapter) mChatEventsList.getAdapter())
+                    .refresh(mChatRoom.getHistoryEvents(MESSAGES_PER_PAGE));
+        }
     }
 
     @Override

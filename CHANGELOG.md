@@ -10,6 +10,15 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [4.3.0] - Unreleased
+
+### Added
+- Forward message between chat rooms
+- Ephemeral messages (auto destroy after a given timeout once read) for encrypted chat rooms
+
+### Changed
+- Files from chat messages are now stored in a private space and will be deleted when the message or room will be deleted
+
 ## [4.2.1] - 2020-01-13
 
 ### Changed
