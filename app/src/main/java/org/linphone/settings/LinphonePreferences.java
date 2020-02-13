@@ -1312,4 +1312,14 @@ public class LinphonePreferences {
         if (getConfig() == null) return;
         getConfig().setBool("misc", "hide_chat_rooms_from_removed_proxies", hide);
     }
+
+    public void enableEphemeralMessages(boolean enable) {
+        if (getConfig() == null) return;
+        getConfig().setBool("app", "ephemeral", enable);
+    }
+
+    public boolean isEphemeralMessagesEnabled() {
+        if (getConfig() == null) return true;
+        return getConfig().getBool("app", "ephemeral", false);
+    }
 }

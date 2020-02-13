@@ -502,6 +502,7 @@
     <string name="pref_android_app_hide_chat_rooms_from_removed_proxies_desc">If you have missing chat rooms, try to uncheck this setting</string>
     <string name="pref_android_app_make_downloaded_images_visible_in_native_gallery_title">Make downloaded images visible in native gallery</string>
     <string name="pref_android_app_make_downloaded_images_visible_in_native_gallery_desc">Images in ephemeral messages won\'t be</string>
+    <string name="pref_android_app_enable_ephemeral_messages_beta">Enable ephemeral messages (beta)</string>
 
     <!-- Network settings -->
     <string name="pref_network_title">Network</string>
