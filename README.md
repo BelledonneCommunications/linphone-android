@@ -90,6 +90,14 @@ ln -s <path to linphone-sdk>/linphone-sdk/build/linphone-sdk/bin/outputs/aar/lin
 
 6. Debug app.
 
+## Troubleshouting
+
+If you encounter the `couldn't find "libc++_shared.so"` crash when the app starts, simply clean the project in Android Studio (under Build menu) and build again.
+
+When submitting an issue, please attach the matching library logs. To enable them, go to Settings -> Advanced and toggle "Debug Mode".
+
+Then restart the app, reproduce the issue and upload the logs using the "Upload logs" button on the About page.
+
 ## Create an APK with a different package name
 
 Before the 4.1 release, there were a lot of files to edit to change the package name.
