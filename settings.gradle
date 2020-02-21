@@ -1,1 +1,1 @@
-include ':app', ':linphone-sdk-android'
+include ':app'
