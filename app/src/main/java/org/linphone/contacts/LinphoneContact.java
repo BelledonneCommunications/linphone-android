@@ -90,26 +90,29 @@ public class LinphoneContact extends AndroidContact
         String contactFullName = contact.getFullName() != null ? contact.getFullName() : "";
 
         if (fullName.equals(contactFullName)) {
-            if (getAndroidId() != null) {
-                if (contact.getAndroidId() != null) {
-                    int idComp = getAndroidId().compareTo(contact.getAndroidId());
-                    if (idComp == 0) return 0;
-                    List<LinphoneNumberOrAddress> noas1 = getNumbersOrAddresses();
+            String id = getAndroidId() != null ? getAndroidId() : "";
+            String contactId = contact.getAndroidId() != null ? contact.getAndroidId() : "";
 
-                    List<LinphoneNumberOrAddress> noas2 = contact.getNumbersOrAddresses();
-
-                    if (noas1.size() == noas2.size()) {
-                        if (noas1.containsAll(noas2) && noas2.containsAll(noas1)) {
-                            return 0;
+            if (id.equals(contactId)) {
+                List<LinphoneNumberOrAddress> noas1 = getNumbersOrAddresses();
+                List<LinphoneNumberOrAddress> noas2 = contact.getNumbersOrAddresses();
+                if (noas1.size() == noas2.size() && noas1.size() > 0) {
+                    if (!noas1.containsAll(noas2) || !noas2.containsAll(noas1)) {
+                        for (int i = 0; i < noas1.size(); i++) {
+                            int compare = noas1.get(i).compareTo(noas2.get(i));
+                            if (compare != 0) return compare;
                         }
-                        return -1;
                     }
+                } else {
                     return Integer.compare(noas1.size(), noas2.size());
                 }
-                return -1;
+
+                String org = getOrganization() != null ? getOrganization() : "";
+                String contactOrg =
+                        contact.getOrganization() != null ? contact.getOrganization() : "";
+                return org.compareTo(contactOrg);
             }
-            if (contact.getAndroidId() != null) return 1;
-            return 0;
+            return id.compareTo(contactId);
         }
         return fullName.compareTo(contactFullName);
     }
