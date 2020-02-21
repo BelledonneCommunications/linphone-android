@@ -67,12 +67,7 @@ git clone https://gitlab.linphone.org/BC/public/linphone-sdk.git --recursive
 
 2. Follow the instructions in the linphone-sdk/README file to build the SDK.
 
-3. Edit in the linphone-sdk-android folder of this project the symbolic link (debug and/or release) to the generated AAR.
-We recommend to at least create the link for the release AAR that can be used for debug APK flavor because it is smaller and will reduce the time required to install the APK.
-```
-ln -s <path to linphone-sdk>/linphone-sdk/build/linphone-sdk/bin/outputs/aar/linphone-sdk-android-release.aar linphone-sdk-android/linphone-sdk-android-release.aar
-ln -s <path to linphone-sdk>/linphone-sdk/build/linphone-sdk/bin/outputs/aar/linphone-sdk-android-debug.aar linphone-sdk-android/linphone-sdk-android-debug.aar
-```
+3. Edit the app/build.gradle file and replace `url "https://linphone.org/maven_repository"` by `url file('<path to linphone sdk>/build/maven_repository/')`.
 
 4. Rebuild the app in Android Studio.
 
