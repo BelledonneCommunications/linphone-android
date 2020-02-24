@@ -10,6 +10,13 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [4.2.2] - 2020-02-24
+
+### Changed
+- Fixed various issues
+- Updated SDK to 4.3.1
+- Removed AAudio plugin for now (we have observed quality issues on some popular devices with their latest updates)
+
 ## [4.2.1] - 2020-01-13
 
 ### Changed
