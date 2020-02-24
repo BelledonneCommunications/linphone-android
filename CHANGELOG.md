@@ -19,6 +19,13 @@ Group changes to describe their impact on the project, as follows:
 ### Changed
 - Files from chat messages are now stored in a private space and will be deleted when the message or room will be deleted
 
+## [4.2.2] - 2020-02-24
+
+### Changed
+- Fixed various issues
+- Updated SDK to 4.3.1
+- Removed AAudio plugin for now (we have observed quality issues on some popular devices with their latest updates)
+
 ## [4.2.1] - 2020-01-13
 
 ### Changed
