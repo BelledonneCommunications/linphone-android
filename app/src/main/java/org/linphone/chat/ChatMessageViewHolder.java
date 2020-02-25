@@ -250,7 +250,7 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
         final TextView fileName = content.findViewById(R.id.file);
         fileName.setVisibility(View.GONE);
 
-        if (c.isFile() || (c.isFileTransfer() && message.isOutgoing())) {
+        if (c.isFile() || (c.isFileTransfer() && !c.getFilePath().isEmpty())) {
             // If message is outgoing, even if content
             // is file transfer we have the file available
             final String filePath = c.getFilePath();
