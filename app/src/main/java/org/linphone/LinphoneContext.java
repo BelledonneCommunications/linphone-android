@@ -90,6 +90,9 @@ public class LinphoneContext {
     }
 
     public static LinphoneContext instance() {
+        if (sInstance == null) {
+            throw new RuntimeException("[Context] Linphone Context not available!");
+        }
         return sInstance;
     }
 
