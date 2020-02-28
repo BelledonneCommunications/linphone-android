@@ -49,6 +49,7 @@ import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.activities.LinphoneGenericActivity;
@@ -94,6 +95,8 @@ public class CallActivity extends LinphoneGenericActivity
         @Override
         public void run() {
             // Make sure that at the time this is executed this is still required
+            if (!LinphoneContext.isReady()) return;
+
             Call call = LinphoneManager.getCore().getCurrentCall();
             if (call != null && call.getCurrentParams().videoEnabled()) {
                 CallActivity activity = mWeakCallActivity.get();

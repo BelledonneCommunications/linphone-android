@@ -242,20 +242,24 @@ public final class LinphoneUtils {
         }
 
         if (username.contains("@")) {
-            String domain = username.split("@")[1];
-            ProxyConfig lpc = core.getDefaultProxyConfig();
-            if (lpc != null) {
-                if (domain.equals(lpc.getDomain())) {
-                    return username.split("@")[0];
-                }
-            } else {
-                if (domain.equals(
-                        LinphoneContext.instance()
-                                .getApplicationContext()
-                                .getString(R.string.default_domain))) {
-                    return username.split("@")[0];
+            String[] split = username.split("@");
+            if (split.length > 1) {
+                String domain = split[1];
+                ProxyConfig lpc = core.getDefaultProxyConfig();
+                if (lpc != null) {
+                    if (domain.equals(lpc.getDomain())) {
+                        return split[0];
+                    }
+                } else {
+                    if (domain.equals(
+                            LinphoneContext.instance()
+                                    .getApplicationContext()
+                                    .getString(R.string.default_domain))) {
+                        return split[0];
+                    }
                 }
             }
+            return split[0];
         }
         return username;
     }
