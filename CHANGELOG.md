@@ -10,6 +10,12 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [4.2.3] - 2020-03-03
+
+### Changed
+- Fixed various crashes
+- Updated SDK to 4.3.3
+
 ## [4.2.2] - 2020-02-24
 
 ### Changed
