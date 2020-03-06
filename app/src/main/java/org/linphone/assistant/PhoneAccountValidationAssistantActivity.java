@@ -162,9 +162,12 @@ public class PhoneAccountValidationAssistantActivity extends AssistantActivity {
                     public void onPrimaryClipChanged() {
                         ClipData data = mClipboard.getPrimaryClip();
                         if (data != null && data.getItemCount() > 0) {
-                            String clip = data.getItemAt(0).getText().toString();
-                            if (clip.length() == mActivationCodeLength) {
-                                mSmsCode.setText(clip);
+                            ClipData.Item item = data.getItemAt(0);
+                            if (item != null && item.getText() != null) {
+                                String clip = item.getText().toString();
+                                if (clip.length() == mActivationCodeLength) {
+                                    mSmsCode.setText(clip);
+                                }
                             }
                         }
                     }
