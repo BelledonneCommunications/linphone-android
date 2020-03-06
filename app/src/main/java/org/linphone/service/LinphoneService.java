@@ -44,7 +44,6 @@ public final class LinphoneService extends Service {
     private Application.ActivityLifecycleCallbacks mActivityCallbacks;
     private boolean misLinphoneContextOwned;
 
-    @SuppressWarnings("unchecked")
     @Override
     public void onCreate() {
         super.onCreate();

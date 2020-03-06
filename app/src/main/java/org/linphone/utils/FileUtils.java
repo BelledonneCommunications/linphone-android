@@ -180,12 +180,16 @@ public class FileUtils {
 
     public static String getRealPathFromURI(Context context, Uri contentUri) {
         String[] proj = {MediaStore.Images.Media.DATA};
-        Cursor cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
-        if (cursor != null && cursor.moveToFirst()) {
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            String result = cursor.getString(column_index);
-            cursor.close();
-            return result;
+        try {
+            Cursor cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                String result = cursor.getString(column_index);
+                cursor.close();
+                return result;
+            }
+        } catch (IllegalArgumentException iae) {
+            Log.e("[File Utils] Failed to get real path from uri: ", iae);
         }
         return null;
     }
