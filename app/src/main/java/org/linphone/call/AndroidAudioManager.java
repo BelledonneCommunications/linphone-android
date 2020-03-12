@@ -222,7 +222,7 @@ public class AndroidAudioManager {
     }
 
     /* Device ID */
-    public int getPlayerDeviceId(String streamType) {
+    public int getDefaultPlayerDeviceId(String streamType) {
         AudioDeviceInfo[] devices = mAudioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS);
         int numDeviceType = 2;
         int[] deviceType = new int[numDeviceType];
@@ -281,11 +281,11 @@ public class AndroidAudioManager {
         return preferredDeviceID;
     }
 
-    public int getDeviceId(String deviceDirection, String streamType) {
+    public int getDefaultDeviceId(String deviceDirection, String streamType) {
         int deviceId = -1;
 
         if (deviceDirection.equals("output")) {
-            deviceId = getPlayerDeviceId(streamType);
+            deviceId = getDefaultPlayerDeviceId(streamType);
         } else if (deviceDirection.equals("input")) {
             // AudioDeviceInfo[] devices =
             // mAudioManager.getDevices(AudioManager.GET_DEVICES_INPUTS);
