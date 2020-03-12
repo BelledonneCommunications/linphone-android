@@ -222,56 +222,71 @@ public class AndroidAudioManager {
     }
 
     /* Device ID */
-    public int getDefaultPlayerDeviceId(String streamType) {
-        AudioDeviceInfo[] devices = mAudioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS);
-        int numDeviceType = 2;
-        int[] deviceType = new int[numDeviceType];
-        int[] deviceID = new int[numDeviceType];
-        for (int idx = 0; idx < deviceType.length; idx++) {
-            // Initialize device type to unknown
-            deviceType[idx] = AudioDeviceInfo.TYPE_UNKNOWN;
+
+    public static int[] fillDeviceIdArray(final AudioDeviceInfo[] devices, final int[] type) {
+        int[] id = new int[type.length];
+        for (int idx = 0; idx < id.length; idx++) {
             // Initialize device ID to -1
-            deviceID[idx] = -1;
+            id[idx] = -1;
+        }
+        for (AudioDeviceInfo device : devices) {
+            for (int idx = 0; idx < type.length; idx++) {
+                if (device.getType() == type[idx]) {
+                    id[idx] = device.getId();
+                }
+            }
+        }
+
+        return id;
+    }
+
+    // Choose device type for the player based on the streamType
+    public static int[] fillPlayerDeviceTypeArray(final String streamType) {
+        int numDeviceType = 2;
+        int[] type = new int[numDeviceType];
+        for (int idx = 0; idx < type.length; idx++) {
+            // Initialize device type to unknown
+            type[idx] = AudioDeviceInfo.TYPE_UNKNOWN;
         }
 
         switch (streamType) {
             case "VOICE":
-                deviceType[0] = AudioDeviceInfo.TYPE_BLUETOOTH_SCO;
-                deviceType[1] = AudioDeviceInfo.TYPE_BUILTIN_EARPIECE;
+                type[0] = AudioDeviceInfo.TYPE_BLUETOOTH_SCO;
+                type[1] = AudioDeviceInfo.TYPE_BUILTIN_EARPIECE;
                 break;
             case "RING":
-                deviceType[0] = AudioDeviceInfo.TYPE_BLUETOOTH_SCO;
+                type[0] = AudioDeviceInfo.TYPE_BLUETOOTH_SCO;
                 // Speaker specifically tuned for outputting sounds like notifiations and alarms
-                deviceType[1] = AudioDeviceInfo.TYPE_BUILTIN_SPEAKER;
-                // deviceType[1] = AudioDeviceInfo.TYPE_BUILTIN_SPEAKER_SAFE;
+                type[1] = AudioDeviceInfo.TYPE_BUILTIN_SPEAKER;
+                // type[1] = AudioDeviceInfo.TYPE_BUILTIN_SPEAKER_SAFE;
                 break;
             case "MEDIA":
-                deviceType[0] = AudioDeviceInfo.TYPE_BLUETOOTH_SCO;
-                deviceType[1] = AudioDeviceInfo.TYPE_BUILTIN_SPEAKER;
+                type[0] = AudioDeviceInfo.TYPE_BLUETOOTH_SCO;
+                type[1] = AudioDeviceInfo.TYPE_BUILTIN_SPEAKER;
                 break;
             case "DTMF":
-                deviceType[0] = AudioDeviceInfo.TYPE_BUILTIN_SPEAKER;
-                // deviceType[1] = AudioDeviceInfo.TYPE_BUILTIN_SPEAKER_SAFE;
-                deviceType[1] = AudioDeviceInfo.TYPE_BUILTIN_EARPIECE;
+                type[0] = AudioDeviceInfo.TYPE_BUILTIN_SPEAKER;
+                // type[1] = AudioDeviceInfo.TYPE_BUILTIN_SPEAKER_SAFE;
+                type[1] = AudioDeviceInfo.TYPE_BUILTIN_EARPIECE;
                 break;
             default:
                 Log.e("[Audio Manager] [Get Player Device ID] Invalid stream type " + streamType);
                 break;
         }
 
-        for (AudioDeviceInfo device : devices) {
-            for (int idx = 0; idx < deviceType.length; idx++) {
-                if (device.getType() == deviceType[idx]) {
-                    deviceID[idx] = device.getId();
-                }
-            }
-        }
+        return type;
+    }
+
+    public static int getDeviceId(final AudioDeviceInfo[] devices, final int[] type) {
+
+        // fill devince id array based on device list and device type
+        final int[] deviceID = fillDeviceIdArray(devices, type);
 
         int preferredDeviceID = -1;
 
         // Devices are sorted by preference, therefore going through the list in reverse order in
         // order to store the preferred one as last
-        for (int idx = (deviceType.length - 1); idx >= 0; idx--) {
+        for (int idx = (deviceID.length - 1); idx >= 0; idx--) {
             int ID = deviceID[idx];
             if (ID != -1) {
                 preferredDeviceID = ID;
@@ -281,31 +296,12 @@ public class AndroidAudioManager {
         return preferredDeviceID;
     }
 
-    public int getDefaultDeviceId(String deviceDirection, String streamType) {
-        int deviceId = -1;
+    public int getDefaultDeviceId(final String deviceDirection, final String streamType) {
+        final AudioDeviceInfo[] devices =
+                mAudioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS);
+        final int[] deviceType = fillPlayerDeviceTypeArray(streamType);
+        final int deviceId = getDeviceId(devices, deviceType);
 
-        if (deviceDirection.equals("output")) {
-            deviceId = getDefaultPlayerDeviceId(streamType);
-        } else if (deviceDirection.equals("input")) {
-            // AudioDeviceInfo[] devices =
-            // mAudioManager.getDevices(AudioManager.GET_DEVICES_INPUTS);
-            Log.i(
-                    "[Audio Manager] [Get Device ID] getDeviceID is not implemented for deviceDirection "
-                            + deviceDirection);
-            deviceId = -1;
-        } else if (deviceDirection.equals("all")) {
-            // AudioDeviceInfo[] devices = mAudioManager.getDevices(AudioManager.GET_DEVICES_ALL);
-            Log.i(
-                    "[Audio Manager] [Get Device ID] getDeviceID is not implemented for deviceDirection "
-                            + deviceDirection);
-            deviceId = -1;
-        } else {
-            Log.e(
-                    "[Audio Manager] [Get Device ID] deviceDirection "
-                            + deviceDirection
-                            + " is invalid");
-            deviceId = -1;
-        }
         Log.i(
                 "[Audio Manager] [Get Device ID] direction "
                         + deviceDirection
