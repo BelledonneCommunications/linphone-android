@@ -30,6 +30,7 @@ import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -218,6 +219,101 @@ public class AndroidAudioManager {
         if (core != null) {
             core.removeListener(mListener);
         }
+    }
+
+    /* Device ID */
+    public int getPlayerDeviceId(String streamType) {
+        AudioDeviceInfo[] devices = mAudioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS);
+        int numDeviceType = 2;
+        int[] deviceType = new int[numDeviceType];
+        int[] deviceID = new int[numDeviceType];
+        for (int idx = 0; idx < deviceType.length; idx++) {
+            // Initialize device type to unknown
+            deviceType[idx] = AudioDeviceInfo.TYPE_UNKNOWN;
+            // Initialize device ID to -1
+            deviceID[idx] = -1;
+        }
+
+        switch (streamType) {
+            case "VOICE":
+                deviceType[0] = AudioDeviceInfo.TYPE_BLUETOOTH_SCO;
+                deviceType[1] = AudioDeviceInfo.TYPE_BUILTIN_EARPIECE;
+                break;
+            case "RING":
+                deviceType[0] = AudioDeviceInfo.TYPE_BLUETOOTH_SCO;
+                // Speaker specifically tuned for outputting sounds like notifiations and alarms
+                deviceType[1] = AudioDeviceInfo.TYPE_BUILTIN_SPEAKER;
+                // deviceType[1] = AudioDeviceInfo.TYPE_BUILTIN_SPEAKER_SAFE;
+                break;
+            case "MEDIA":
+                deviceType[0] = AudioDeviceInfo.TYPE_BLUETOOTH_SCO;
+                deviceType[1] = AudioDeviceInfo.TYPE_BUILTIN_SPEAKER;
+                break;
+            case "DTMF":
+                deviceType[0] = AudioDeviceInfo.TYPE_BUILTIN_SPEAKER;
+                // deviceType[1] = AudioDeviceInfo.TYPE_BUILTIN_SPEAKER_SAFE;
+                deviceType[1] = AudioDeviceInfo.TYPE_BUILTIN_EARPIECE;
+                break;
+            default:
+                Log.e("[Audio Manager] [Get Player Device ID] Invalid stream type " + streamType);
+                break;
+        }
+
+        for (AudioDeviceInfo device : devices) {
+            for (int idx = 0; idx < deviceType.length; idx++) {
+                if (device.getType() == deviceType[idx]) {
+                    deviceID[idx] = device.getId();
+                }
+            }
+        }
+
+        int preferredDeviceID = -1;
+
+        // Devices are sorted by preference, therefore going through the list in reverse order in
+        // order to store the preferred one as last
+        for (int idx = (deviceType.length - 1); idx >= 0; idx--) {
+            int ID = deviceID[idx];
+            if (ID != -1) {
+                preferredDeviceID = ID;
+            }
+        }
+
+        return preferredDeviceID;
+    }
+
+    public int getDeviceId(String deviceDirection, String streamType) {
+        int deviceId = -1;
+
+        if (deviceDirection.equals("output")) {
+            deviceId = getPlayerDeviceId(streamType);
+        } else if (deviceDirection.equals("input")) {
+            // AudioDeviceInfo[] devices =
+            // mAudioManager.getDevices(AudioManager.GET_DEVICES_INPUTS);
+            Log.i(
+                    "[Audio Manager] [Get Device ID] getDeviceID is not implemented for deviceDirection "
+                            + deviceDirection);
+            deviceId = -1;
+        } else if (deviceDirection.equals("all")) {
+            // AudioDeviceInfo[] devices = mAudioManager.getDevices(AudioManager.GET_DEVICES_ALL);
+            Log.i(
+                    "[Audio Manager] [Get Device ID] getDeviceID is not implemented for deviceDirection "
+                            + deviceDirection);
+            deviceId = -1;
+        } else {
+            Log.e(
+                    "[Audio Manager] [Get Device ID] deviceDirection "
+                            + deviceDirection
+                            + " is invalid");
+            deviceId = -1;
+        }
+        Log.i(
+                "[Audio Manager] [Get Device ID] direction "
+                        + deviceDirection
+                        + " stream type "
+                        + streamType
+                        + " device ID "
+                        + deviceId);
+        return deviceId;
     }
 
     /* Audio routing */
