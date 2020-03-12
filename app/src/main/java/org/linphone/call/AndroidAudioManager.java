@@ -296,16 +296,14 @@ public class AndroidAudioManager {
         return preferredDeviceID;
     }
 
-    public int getDefaultDeviceId(final String deviceDirection, final String streamType) {
+    public int getDefaultPlayerDeviceId(final String streamType) {
         final AudioDeviceInfo[] devices =
                 mAudioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS);
         final int[] deviceType = fillPlayerDeviceTypeArray(streamType);
         final int deviceId = getDeviceId(devices, deviceType);
 
         Log.i(
-                "[Audio Manager] [Get Device ID] direction "
-                        + deviceDirection
-                        + " stream type "
+                "[Audio Manager] [Get Device ID] stream type "
                         + streamType
                         + " device ID "
                         + deviceId);
