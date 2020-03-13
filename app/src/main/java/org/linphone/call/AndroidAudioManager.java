@@ -73,8 +73,6 @@ public class AndroidAudioManager {
     private boolean mIsBluetoothHeadsetConnected;
     private boolean mIsBluetoothHeadsetScoConnected;
 
-    private int deviceId;
-
     private CoreListenerStub mListener;
 
     public AndroidAudioManager(Context context) {
@@ -298,20 +296,18 @@ public class AndroidAudioManager {
         return preferredDeviceID;
     }
 
-    public void getDefaultPlayerDeviceId(final String streamType) {
+    public int getDefaultPlayerDeviceId(final String streamType) {
         final AudioDeviceInfo[] devices =
                 mAudioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS);
         final int[] deviceType = fillPlayerDeviceTypeArray(streamType);
-        deviceId = chooseDeviceId(devices, deviceType);
+        final int deviceId = chooseDeviceId(devices, deviceType);
 
         Log.i(
                 "[Audio Manager] [Get Device ID] stream type "
                         + streamType
                         + " device ID "
                         + deviceId);
-    }
 
-    public int getDeviceId() {
         return deviceId;
     }
 
@@ -335,6 +331,29 @@ public class AndroidAudioManager {
 
     public boolean isAudioRoutedToEarpiece() {
         return !mAudioManager.isSpeakerphoneOn() && !isUsingBluetoothAudioRoute();
+    }
+
+    public int getOutputAudioDeviceId() {
+        int deviceId = -1;
+
+        int[] deviceType = new int[1];
+
+        if (isAudioRoutedToSpeaker()) {
+            deviceType[0] = AudioDeviceInfo.TYPE_BUILTIN_SPEAKER;
+        } else if (isAudioRoutedToEarpiece()) {
+            deviceType[0] = AudioDeviceInfo.TYPE_BUILTIN_EARPIECE;
+        } else if (isUsingBluetoothAudioRoute()) {
+            deviceType[0] = AudioDeviceInfo.TYPE_BLUETOOTH_SCO;
+        } else {
+            Log.e("[Audio Manager] Unknown Audio routing");
+            deviceType[0] = AudioDeviceInfo.TYPE_UNKNOWN;
+        }
+
+        final AudioDeviceInfo[] devices =
+                mAudioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS);
+        deviceId = chooseDeviceId(devices, deviceType);
+
+        return deviceId;
     }
 
     /* Echo cancellation */
@@ -506,19 +525,7 @@ public class AndroidAudioManager {
 
         mAudioManager.setSpeakerphoneOn(speakerOn);
 
-        int[] deviceType = new int[1];
-
-        if (speakerOn) {
-            Log.w("[Audio Manager] Routing audio to speaker");
-            deviceType[0] = AudioDeviceInfo.TYPE_BUILTIN_SPEAKER;
-        } else {
-            Log.w("[Audio Manager] Routing audio to earpiece");
-            deviceType[0] = AudioDeviceInfo.TYPE_BUILTIN_EARPIECE;
-        }
-
-        final AudioDeviceInfo[] devices =
-                mAudioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS);
-        deviceId = chooseDeviceId(devices, deviceType);
+        Log.w("[Audio Manager] Routing audio to " + ((speakerOn) ? "speaker" : "earpiece"));
     }
 
     private void adjustVolume(int i) {
@@ -569,11 +576,6 @@ public class AndroidAudioManager {
     }
 
     public synchronized void routeAudioToBluetooth() {
-        int[] deviceType = {AudioDeviceInfo.TYPE_BLUETOOTH_SCO};
-        final AudioDeviceInfo[] devices =
-                mAudioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS);
-        deviceId = chooseDeviceId(devices, deviceType);
-
         if (!isBluetoothHeadsetConnected()) {
             Log.w("[Audio Manager] [Bluetooth] No headset connected");
             return;
