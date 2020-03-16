@@ -130,7 +130,7 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
             }
 
             if (intent.getAction().equals(Compatibility.INTENT_ANSWER_CALL_NOTIF_ACTION)) {
-                call.accept();
+                LinphoneManager.getCallManager().acceptCall(call);
             } else {
                 call.terminate();
             }
