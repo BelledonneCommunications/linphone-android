@@ -237,9 +237,18 @@ public class PhoneAccountLinkingAssistantActivity extends AssistantActivity {
         super.onResume();
 
         Core core = LinphoneManager.getCore();
+
+        // Save & restore username & password informations, reload will reset
+        String username = getAccountCreator().getUsername();
+        String ha1 = getAccountCreator().getHa1();
+        String algo = getAccountCreator().getAlgorithm();
         if (core != null) {
             reloadLinphoneAccountCreatorConfig();
         }
+        AccountCreator creator = getAccountCreator();
+        creator.setUsername(username);
+        creator.setHa1(ha1);
+        creator.setAlgorithm(algo);
 
         getAccountCreator().addListener(mListener);
 
