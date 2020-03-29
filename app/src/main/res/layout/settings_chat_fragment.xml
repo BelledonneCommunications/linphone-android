@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:linphone="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"/>
+        <import type="android.text.InputType"/>
+        <variable
+            name="backClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.main.settings.viewmodels.ChatSettingsViewModel"/>
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_gravity="center_horizontal"
+            android:background="?attr/lightToolbarBackgroundColor"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/back"
+                android:onClick="@{backClickListener}"
+                android:contentDescription="@string/content_description_go_back"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:background="?attr/button_background_drawable"
+                android:padding="18dp"
+                android:src="@drawable/back" />
+
+            <TextView
+                style="@style/accent_colored_title_font"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.6"
+                android:gravity="center"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:padding="15dp"
+                android:text="@string/settings_chat_title"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:visibility="invisible" />
+
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/top_bar">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/chat_settings_file_sharing_url_title}"
+                    linphone:subtitle="@{@string/chat_settings_file_sharing_url_summary}"
+                    linphone:listener="@{viewModel.fileSharingUrlListener}"
+                    linphone:defaultValue="@{viewModel.fileSharingUrl}"
+                    linphone:inputType="@{InputType.TYPE_TEXT_VARIATION_URI}"/>
+
+                <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/chat_settings_downloaded_images_public_title}"
+                    linphone:subtitle="@{@string/chat_settings_downloaded_images_public_summary}"
+                    linphone:listener="@{viewModel.downloadedImagesPublicListener}"
+                    linphone:checked="@={viewModel.downloadedImagesPublic}"/>
+
+                <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/chat_settings_hide_empty_rooms_title}"
+                    linphone:subtitle="@{@string/chat_settings_hide_empty_rooms_summary}"
+                    linphone:listener="@{viewModel.hideEmptyRoomsListener}"
+                    linphone:checked="@={viewModel.hideEmptyRooms}"/>
+
+                <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/chat_settings_hide_rooms_removed_proxies_title}"
+                    linphone:subtitle="@{@string/chat_settings_hide_rooms_removed_proxies_summary}"
+                    linphone:listener="@{viewModel.hideRoomsRemovedProxiesListener}"
+                    linphone:checked="@={viewModel.hideRoomsRemovedProxies}"/>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </RelativeLayout>
+
+</layout>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="data"
+            type="org.linphone.activities.main.chat.viewmodels.ChatMessageContentViewModel" />
+        <variable
+            name="longClickListener"
+            type="android.view.View.OnLongClickListener"/>
+    </data>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:onClick="@{() -> data.openFile()}"
+            android:onLongClick="@{longClickListener}"
+            android:contentDescription="@string/content_description_downloaded_file_transfer"
+            android:layout_width="wrap_content"
+            android:layout_height="@{data.alone ? @dimen/chat_message_bubble_image_height_big : @dimen/chat_message_bubble_image_height_small, default=wrap_content}"
+            android:layout_margin="5dp"
+            app:glidePath="@{data.content.filePath}"
+            android:visibility="@{data.isImage() ? View.VISIBLE : View.GONE}"
+            android:adjustViewBounds="true" />
+
+        <TextView
+            android:onClick="@{() -> data.openFile()}"
+            android:onLongClick="@{longClickListener}"
+            android:textColor="?attr/secondaryTextColor"
+            android:textSize="11.7sp"
+            android:fontFamily="sans-serif"
+            android:textStyle="normal"
+            android:text="@{data.content.name}"
+            android:visibility="@{data.downloadable || data.isImage() ? View.GONE : View.VISIBLE}"
+            android:layout_width="150dp"
+            android:layout_height="100dp"
+            android:layout_margin="5dp"
+            android:background="@color/chat_bubble_text_color"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:textAlignment="center" />
+
+        <Button
+            style="@style/button_font"
+            android:onClick="@{() -> data.download()}"
+            android:onLongClick="@{longClickListener}"
+            android:enabled="@{data.downloadEnabled}"
+            android:text="@string/chat_message_download_file"
+            android:visibility="@{data.downloadable ? View.VISIBLE : View.GONE}"
+            android:layout_width="137dp"
+            android:layout_height="40dp"
+            android:layout_margin="5dp"
+            android:textColor="@drawable/assistant_button_text_color"
+            android:background="@drawable/resizable_assistant_button"
+            android:ellipsize="end"
+            android:padding="10dp" />
+
+    </RelativeLayout>
+
+</layout>

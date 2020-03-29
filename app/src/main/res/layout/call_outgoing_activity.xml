@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="toggleMicrophoneClickListener"
+            type="android.view.View.OnClickListener" />
+        <variable
+            name="toggleSpeakerClickListener"
+            type="android.view.View.OnClickListener" />
+        <variable
+            name="terminateCallClickListener"
+            type="android.view.View.OnClickListener" />
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.call.viewmodels.CallViewModel" />
+        <variable
+            name="controlsViewModel"
+            type="org.linphone.activities.call.viewmodels.ControlsViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/backgroundColor">
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/status_fragment"
+            android:name="org.linphone.activities.call.fragments.StatusFragment"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            tools:layout="@layout/call_status_fragment" />
+
+        <RelativeLayout
+            android:id="@+id/top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_below="@id/status_fragment"
+            android:background="?attr/lightToolbarBackgroundColor">
+
+            <TextView
+                style="@style/toolbar_title_font"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/call_outgoing_title" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/contact_name"
+            android:text="@{viewModel.contact.fullName ?? viewModel.displayName}"
+            style="@style/big_contact_name_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/top_bar"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_vertical|center_horizontal"
+            android:paddingTop="5dp" />
+
+        <org.linphone.views.MarqueeTextView
+            android:id="@+id/contact_number"
+            android:text="@{viewModel.address}"
+            style="@style/sip_uri_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/contact_name"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:singleLine="true"
+            android:paddingBottom="10dp" />
+
+        <org.linphone.contact.BigContactAvatarView
+            android:id="@+id/avatar"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_margin="5dp"
+            android:layout_below="@id/contact_number"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            tools:layout="@layout/contact_avatar_big"
+            app:viewModel="@{viewModel}"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:onClick="@{toggleMicrophoneClickListener}"
+                android:selected="@{controlsViewModel.isMicrophoneMuted}"
+                android:contentDescription="@{controlsViewModel.isMicrophoneMuted ? @string/content_description_disable_mic_mute : @string/content_description_enable_mic_mute}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/button_background_drawable"
+                android:padding="10dp"
+                android:src="@drawable/micro" />
+
+            <ImageView
+                android:onClick="@{toggleSpeakerClickListener}"
+                android:selected="@{controlsViewModel.isSpeakerSelected}"
+                android:contentDescription="@{controlsViewModel.isSpeakerSelected ? @string/content_description_disable_speaker : @string/content_description_enable_speaker}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/button_background_drawable"
+                android:padding="15dp"
+                android:src="@drawable/speaker" />
+
+            <ImageView
+                android:onClick="@{terminateCallClickListener}"
+                android:contentDescription="@string/content_description_terminate_call"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.7"
+                android:background="@drawable/call_hangup_background"
+                android:padding="12dp"
+                android:src="@drawable/call_hangup" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</layout>

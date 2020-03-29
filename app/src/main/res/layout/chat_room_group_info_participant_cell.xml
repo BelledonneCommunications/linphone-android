@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+        <import type="org.linphone.core.ChatRoomSecurityLevel"/>
+        <variable
+            name="removeClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.main.chat.viewmodels.GroupInfoParticipantViewModel" />
+        <variable
+            name="isEncrypted"
+            type="Boolean" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_margin="5dp"
+        android:gravity="center_vertical">
+
+        <org.linphone.contact.ContactAvatarView
+            android:id="@+id/avatar"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            app:showSecurityLevel="@{isEncrypted &amp;&amp; viewModel.securityLevel != ChatRoomSecurityLevel.ClearText}"
+            app:showLimeCapability="@{isEncrypted &amp;&amp; viewModel.securityLevel == ChatRoomSecurityLevel.ClearText}"
+            app:viewModel="@{viewModel}"
+            tools:layout="@layout/contact_avatar"/>
+
+        <ImageView
+            android:onClick="@{removeClickListener}"
+            android:visibility="@{viewModel.showAdminControls ? View.VISIBLE : View.GONE}"
+            android:contentDescription="@string/content_description_remove_contact_from_chat_room"
+            android:id="@+id/delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:src="@drawable/chat_group_delete" />
+
+        <LinearLayout
+            android:visibility="@{viewModel.showAdminControls ? View.VISIBLE : View.GONE}"
+            android:id="@+id/adminLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/delete">
+
+            <LinearLayout
+                android:id="@+id/isAdminLayout"
+                android:onClick="@{() -> viewModel.unSetAdmin()}"
+                android:visibility="@{viewModel.admin ? View.VISIBLE : View.GONE}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:paddingRight="5dp"
+                    android:scaleType="centerInside"
+                    android:contentDescription="@string/content_description_contact_is_admin"
+                    android:src="@drawable/check_selected" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/chat_room_group_info_admin"
+                    android:textColor="?attr/primaryTextColor"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/isNotAdminLayout"
+                android:onClick="@{() -> viewModel.setAdmin()}"
+                android:visibility="@{viewModel.admin ? View.GONE : View.VISIBLE}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:paddingRight="5dp"
+                    android:scaleType="centerInside"
+                    android:contentDescription="@string/content_description_contact_is_not_admin"
+                    android:src="@drawable/check_unselected" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/chat_room_group_info_admin"
+                    android:textColor="?attr/primarySubtextLightColor" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toLeftOf="@id/adminLayout"
+            android:layout_toRightOf="@id/avatar"
+            android:orientation="vertical">
+
+            <org.linphone.views.MarqueeTextView
+                android:text="@{viewModel.contact.fullName ?? viewModel.displayName}"
+                style="@style/contact_name_list_cell_font"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true" />
+
+            <org.linphone.views.MarqueeTextView
+                android:text="@{viewModel.sipUri}"
+                android:id="@+id/sipUri"
+                style="@style/sip_uri_small_font"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</layout>

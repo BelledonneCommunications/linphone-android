@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="generatedAvatarVisibility"
+            type="Boolean" />
+        <variable
+            name="initials"
+            type="String" />
+        <variable
+            name="imagePath"
+            type="android.net.Uri" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/content_description_contact_avatar"
+            android:src="@drawable/avatar"/>
+
+        <ImageView
+            android:visibility="@{generatedAvatarVisibility ? View.VISIBLE : View.GONE}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/content_description_contact_avatar"
+            android:src="@drawable/generated_avatar_bg" />
+
+        <TextView
+            android:text="@{initials}"
+            android:visibility="@{generatedAvatarVisibility ? View.VISIBLE : View.GONE}"
+            android:textColor="?attr/secondaryTextColor"
+            android:textSize="60sp"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:gravity="center"
+            android:singleLine="true"
+            android:ellipsize="none" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/content_description_contact_avatar"
+            app:glideAvatar="@{imagePath}" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:adjustViewBounds="true"
+            android:src="@drawable/avatar_border" />
+
+    </RelativeLayout>
+
+</layout>

@@ -1,50 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/avatar_layout"
-    android:layout_width="45dp"
-    android:layout_height="35dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ImageView
-        android:id="@+id/contact_picture"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_alignParentLeft="true"
-        android:adjustViewBounds="true"
-        android:src="@drawable/avatar" />
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="generatedAvatarVisibility"
+            type="Boolean" />
+        <variable
+            name="groupChatAvatarVisibility"
+            type="Boolean" />
+        <variable
+            name="securityBadgeVisibility"
+            type="Boolean" />
+        <variable
+            name="showLimeCapability"
+            type="Boolean" />
+        <variable
+            name="securityIcon"
+            type="Integer" />
+        <variable
+            name="securityContentDescription"
+            type="Integer" />
+        <variable
+            name="initials"
+            type="String" />
+        <variable
+            name="imagePath"
+            type="android.net.Uri" />
+    </data>
 
-    <ImageView
-        android:id="@+id/generated_avatar_background"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_alignParentLeft="true"
-        android:adjustViewBounds="true"
-        android:src="@drawable/generated_avatar_bg" />
+    <RelativeLayout
+        android:layout_width="45dp"
+        android:layout_height="35dp">
 
-    <TextView
-        android:id="@+id/generated_avatar"
-        style="@style/generated_contact_avatar_font"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_alignParentLeft="true"
-        android:gravity="center"
-        android:singleLine="true"
-        android:ellipsize="none" />
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentLeft="true"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/content_description_group_chat_logo"
+            android:src="@{groupChatAvatarVisibility ? @drawable/chat_group_avatar : @drawable/avatar}"/>
 
-    <ImageView
-        android:id="@+id/border"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_alignParentLeft="true"
-        android:adjustViewBounds="true"
-        android:src="@drawable/avatar_border" />
+        <ImageView
+            android:visibility="@{generatedAvatarVisibility &amp;&amp; !groupChatAvatarVisibility ? View.VISIBLE : View.GONE}"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentLeft="true"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/content_description_contact_avatar"
+            android:src="@drawable/generated_avatar_bg" />
 
-    <ImageView
-        android:id="@+id/security_level"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:src="@drawable/security_alert_indicator"
-        android:visibility="gone" />
+        <TextView
+            android:text="@{initials}"
+            android:visibility="@{generatedAvatarVisibility &amp;&amp; !groupChatAvatarVisibility ? View.VISIBLE : View.GONE}"
+            android:textColor="?attr/secondaryTextColor"
+            android:textSize="21sp"
+            android:textStyle="bold"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentLeft="true"
+            android:gravity="center"
+            android:singleLine="true"
+            android:ellipsize="none" />
 
-</RelativeLayout>
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentLeft="true"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/content_description_contact_avatar"
+            app:glideAvatar="@{imagePath}" />
+
+        <ImageView
+            android:visibility="@{securityBadgeVisibility ? View.VISIBLE : View.GONE, default=gone}"
+            android:contentDescription="@{securityContentDescription}"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:src="@{securityIcon, default=@drawable/security_alert_indicator}" />
+
+        <ImageView
+            android:visibility="@{showLimeCapability ? View.VISIBLE : View.GONE, default=gone}"
+            android:contentDescription="@string/content_description_contact_can_do_encryption"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/security_toogle_icon_green" />
+
+    </RelativeLayout>
+
+</layout>
