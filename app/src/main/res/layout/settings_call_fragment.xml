@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:linphone="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"/>
+        <import type="android.text.InputType"/>
+        <variable
+            name="backClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.main.settings.viewmodels.CallSettingsViewModel"/>
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_gravity="center_horizontal"
+            android:background="?attr/lightToolbarBackgroundColor"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/back"
+                android:onClick="@{backClickListener}"
+                android:contentDescription="@string/content_description_go_back"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:background="?attr/button_background_drawable"
+                android:padding="18dp"
+                android:src="@drawable/back" />
+
+            <TextView
+                style="@style/accent_colored_title_font"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.6"
+                android:gravity="center"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:padding="15dp"
+                android:text="@string/settings_call_title"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:visibility="invisible" />
+
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/top_bar">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/call_settings_device_ringtone_title}"
+                    linphone:subtitle="@{@string/call_settings_device_ringtone_summary}"
+                    linphone:listener="@{viewModel.deviceRingtoneListener}"
+                    linphone:checked="@={viewModel.deviceRingtone}"/>
+
+                <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/call_settings_vibrate_title}"
+                    linphone:subtitle="@{@string/call_settings_vibrate_summary}"
+                    linphone:listener="@{viewModel.vibrateOnIncomingCallListener}"
+                    linphone:checked="@={viewModel.vibrateOnIncomingCall}"/>
+
+                <include
+                    layout="@layout/settings_widget_list"
+                    linphone:title="@{@string/call_settings_encryption_title}"
+                    linphone:subtitle="@{@string/call_settings_encryption_summary}"
+                    linphone:listener="@{viewModel.encryptionListener}"
+                    linphone:selectedIndex="@{viewModel.encryptionIndex}"
+                    linphone:labels="@{viewModel.encryptionLabels}"/>
+
+                <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/call_settings_encryption_mandatory_title}"
+                    linphone:subtitle="@{@string/call_settings_encryption_mandatory_summary}"
+                    linphone:listener="@{viewModel.encryptionMandatoryListener}"
+                    linphone:checked="@={viewModel.encryptionMandatory}"
+                    linphone:enabled="@{viewModel.encryptionIndex != 0}"
+                    android:visibility="@{viewModel.encryptionIndex != 0 ? View.VISIBLE : View.GONE}"/>
+
+                <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/call_settings_overlay_title}"
+                    linphone:subtitle="@{@string/call_settings_overlay_summary}"
+                    linphone:listener="@{viewModel.overlayListener}"
+                    linphone:checked="@={viewModel.overlay}"/>
+
+                <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/call_settings_sipinfo_dtmf_title}"
+                    linphone:subtitle="@{@string/call_settings_sipinfo_dtmf_summary}"
+                    linphone:listener="@{viewModel.sipInfoDtmfListener}"
+                    linphone:checked="@={viewModel.sipInfoDtmf}"/>
+
+                <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/call_settings_rfc2833_dtmf_title}"
+                    linphone:subtitle="@{@string/call_settings_rfc2833_dtmf_summary}"
+                    linphone:listener="@{viewModel.rfc2833DtmfListener}"
+                    linphone:checked="@={viewModel.rfc2833Dtmf}"/>
+
+                <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/call_settings_auto_answer_title}"
+                    linphone:subtitle="@{@string/call_settings_auto_answer_summary}"
+                    linphone:listener="@{viewModel.autoAnswerListener}"
+                    linphone:checked="@={viewModel.autoAnswer}"/>
+
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/call_settings_auto_answer_delay_title}"
+                    linphone:subtitle="@{@string/call_settings_auto_answer_delay_summary}"
+                    linphone:listener="@{viewModel.autoAnswerDelayListener}"
+                    linphone:defaultValue="@{viewModel.autoAnswerDelay.toString()}"
+                    linphone:inputType="@{InputType.TYPE_CLASS_NUMBER}"
+                    linphone:enabled="@{viewModel.autoAnswer}"
+                    android:visibility="@{viewModel.autoAnswer ? View.VISIBLE : View.GONE}"/>
+
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/call_settings_incoming_timeout_title}"
+                    linphone:subtitle="@{@string/call_settings_incoming_timeout_summary}"
+                    linphone:listener="@{viewModel.incomingTimeoutListener}"
+                    linphone:defaultValue="@{viewModel.incomingTimeout.toString()}"
+                    linphone:inputType="@{InputType.TYPE_CLASS_NUMBER}"/>
+
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/call_settings_voice_mail_uri_title}"
+                    linphone:subtitle="@{@string/call_settings_voice_mail_uri_summary}"
+                    linphone:listener="@{viewModel.voiceMailUriListener}"
+                    linphone:defaultValue="@{viewModel.voiceMailUri}"
+                    linphone:inputType="@{InputType.TYPE_TEXT_VARIATION_URI}"/>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </RelativeLayout>
+
+</layout>

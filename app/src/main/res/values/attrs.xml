@@ -19,13 +19,20 @@
         <attr name="drawableTintDisabledColor" format="color"/>
         <attr name="drawableTintOverColor" format="color"/>
 
-        <attr name="lighToolbarBackgroundColor" format="color"/>
-        <attr name="lighToolbarBackgroundDisabledColor" format="color"/>
-        <attr name="lighToolbarTextColor" format="color"/>
+        <attr name="lightToolbarBackgroundColor" format="color"/>
+        <attr name="lightToolbarBackgroundDisabledColor" format="color"/>
+        <attr name="lightToolbarTextColor" format="color"/>
         <attr name="darkToolbarBackgroundColor" format="color"/>
         <attr name="darkToolbarTextColor" format="color"/>
 
         <attr name="button_background_drawable" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="TabsFragment">
+        <attr name="history_selected" format="boolean"/>
+        <attr name="contacts_selected" format="boolean"/>
+        <attr name="dialer_selected" format="boolean"/>
+        <attr name="chat_selected" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="Settings">
@@ -34,5 +41,8 @@
         <attr name="hint" format="string" />
         <attr name="list_items_names" format="reference" />
         <attr name="list_items_values" format="reference" />
+        <attr name="checked" format="boolean" />
+        <attr name="value" format="string" />
+        <attr name="image" format="reference" />
     </declare-styleable>
 </resources>

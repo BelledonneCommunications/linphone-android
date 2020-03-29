@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:linphone="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"/>
+        <import type="android.text.InputType"/>
+        <variable
+            name="backClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.main.settings.viewmodels.AdvancedSettingsViewModel"/>
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_gravity="center_horizontal"
+            android:background="?attr/lightToolbarBackgroundColor"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/back"
+                android:onClick="@{backClickListener}"
+                android:contentDescription="@string/content_description_go_back"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:background="?attr/button_background_drawable"
+                android:padding="18dp"
+                android:src="@drawable/back" />
+
+            <TextView
+                style="@style/accent_colored_title_font"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.6"
+                android:gravity="center"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:padding="15dp"
+                android:text="@string/settings_advanced_title"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:visibility="invisible" />
+
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/top_bar">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/advanced_settings_debug_mode_title}"
+                    linphone:subtitle="@{@string/advanced_settings_debug_mode_summary}"
+                    linphone:listener="@{viewModel.debugModeListener}"
+                    linphone:checked="@={viewModel.debugMode}"/>
+
+                <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/advanced_settings_background_mode_title}"
+                    linphone:subtitle="@{@string/advanced_settings_background_mode_summary}"
+                    linphone:listener="@{viewModel.backgroundModeListener}"
+                    linphone:checked="@={viewModel.backgroundMode}"/>
+
+                <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/advanced_settings_auto_start_title}"
+                    linphone:subtitle="@{@string/advanced_settings_auto_start_summary}"
+                    linphone:listener="@{viewModel.autoStartListener}"
+                    linphone:checked="@={viewModel.autoStart}"/>
+
+                <include
+                    layout="@layout/settings_widget_list"
+                    linphone:title="@{@string/advanced_settings_dark_mode_title}"
+                    linphone:subtitle="@{@string/advanced_settings_dark_mode_summary}"
+                    linphone:listener="@{viewModel.darkModeListener}"
+                    linphone:selectedIndex="@{viewModel.darkModeIndex}"
+                    linphone:labels="@{viewModel.darkModeLabels}"/>
+
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/advanced_settings_device_name_title}"
+                    linphone:subtitle="@{@string/advanced_settings_device_name_summary}"
+                    linphone:listener="@{viewModel.deviceNameListener}"
+                    linphone:defaultValue="@{viewModel.deviceName}"/>
+
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/advanced_settings_remote_provisioning_url_title}"
+                    linphone:subtitle="@{@string/advanced_settings_remote_provisioning_url_summary}"
+                    linphone:listener="@{viewModel.remoteProvisioningUrlListener}"
+                    linphone:defaultValue="@{viewModel.remoteProvisioningUrl}"
+                    linphone:inputType="@{InputType.TYPE_TEXT_VARIATION_URI}"/>
+
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/advanced_settings_logs_server_url_title}"
+                    linphone:subtitle="@{@string/advanced_settings_logs_server_url_summary}"
+                    linphone:listener="@{viewModel.logsServerUrlListener}"
+                    linphone:defaultValue="@{viewModel.logsServerUrl}"
+                    linphone:inputType="@{InputType.TYPE_TEXT_VARIATION_URI}"/>
+
+                <include
+                    layout="@layout/settings_widget_basic"
+                    linphone:listener="@{viewModel.goToAndroidSettingsListener}"
+                    linphone:title="@{@string/advanced_settings_go_to_android_app_settings}" />
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </RelativeLayout>
+
+</layout>

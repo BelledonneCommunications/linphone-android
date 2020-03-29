@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.assistant.viewmodels.EmailAccountCreationViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/top_bar_fragment"
+            android:name="org.linphone.activities.assistant.fragments.TopBarFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            tools:layout="@layout/assistant_top_bar_fragment" />
+
+        <ScrollView
+            android:layout_below="@id/top_bar_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingRight="30dp"
+                android:paddingLeft="30dp"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/standard_text_font"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/assistant_create_account"
+                    android:paddingTop="10dp"
+                    android:textAllCaps="true" />
+
+                <TextView
+                    style="@style/standard_small_text_font"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_gravity="top"
+                    android:paddingTop="20dp"
+                    android:text="@string/assistant_create_account_part_email" />
+
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:columnCount="1">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="fill"
+                        android:layout_columnWeight="1"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/assistant_input_field_header_font"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/username"
+                            android:textAllCaps="true" />
+
+                        <EditText
+                            assistantUsernameValidation="@{true}"
+                            errorMessage="@={viewModel.usernameError}"
+                            android:text="@={viewModel.username}"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/resizable_text_field"
+                            android:inputType="text|textNoSuggestions"
+                            android:maxLines="1"
+                            android:hint="@string/username"
+                            android:textColor="@color/black_color" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="fill"
+                        android:layout_columnWeight="1"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/assistant_input_field_header_font"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/email"
+                            android:textAllCaps="true" />
+
+                        <EditText
+                            errorMessage="@={viewModel.emailError}"
+                            emailConfirmationValidation="@{true}"
+                            android:text="@={viewModel.email}"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/resizable_text_field"
+                            android:inputType="text|textEmailAddress"
+                            android:maxLines="1"
+                            android:hint="@string/email"
+                            android:textColor="@color/black_color" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="fill"
+                        android:layout_columnWeight="1"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/assistant_input_field_header_font"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/password"
+                            android:textAllCaps="true" />
+
+                        <EditText
+                            errorMessage="@={viewModel.passwordError}"
+                            passwordConfirmationValidation="@{passwordConfirmation}"
+                            android:text="@={viewModel.password}"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/resizable_text_field"
+                            android:inputType="textPassword"
+                            android:maxLines="1"
+                            android:hint="@string/password"
+                            android:textColor="@color/black_color" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="fill"
+                        android:layout_columnWeight="1"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/assistant_input_field_header_font"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/assistant_confirm_password"
+                            android:textAllCaps="true" />
+
+                        <EditText
+                            android:id="@+id/password_confirmation"
+                            errorMessage="@={viewModel.passwordConfirmationError}"
+                            android:text="@={viewModel.passwordConfirmation}"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/resizable_text_field"
+                            android:inputType="textPassword"
+                            android:maxLines="1"
+                            android:hint="@string/assistant_confirm_password"
+                            android:textColor="@color/black_color" />
+
+                    </LinearLayout>
+
+                </GridLayout>
+
+                <TextView
+                    android:onClick="@{() -> viewModel.create()}"
+                    android:enabled="@{viewModel.createEnabled, default=false}"
+                    android:text="@string/assistant_create_account"
+                    android:background="@drawable/assistant_button"
+                    android:textColor="@drawable/assistant_button_text_color"
+                    android:layout_gravity="center"
+                    style="@style/button_font"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:padding="10dp"/>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <include
+            layout="@layout/wait_layout"
+            bind:visibility="@{viewModel.waitForServerAnswer}"/>
+
+    </RelativeLayout>
+
+</layout>
