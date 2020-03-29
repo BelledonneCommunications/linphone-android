@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <import type="android.view.View" />
+        <import type="android.text.InputType" />
+        <variable
+            name="data"
+            type="org.linphone.activities.main.contact.viewmodels.NumberOrAddressEditorViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="@{data.toRemove ? View.GONE : View.VISIBLE, default=visible}"
+        android:paddingBottom="5dp">
+
+        <EditText
+            style="@style/contact_edit_form_font"
+            android:text="@={data.newValue}"
+            android:inputType="@{data.sipAddress ? InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS : InputType.TYPE_CLASS_PHONE}"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/resizable_text_field"
+            android:textColor="@color/black_color"
+            android:layout_toLeftOf="@id/delete"
+            android:layout_centerVertical="true"
+            android:gravity="left"
+            android:paddingRight="5dp"
+            android:hint="@{data.sipAddress ? @string/sip_address : @string/phone_number, default=@string/sip_address}"
+            android:textCursorDrawable="@null" />
+
+        <ImageView
+            android:id="@+id/delete"
+            android:onClick="@{() -> data.remove()}"
+            android:contentDescription="@string/content_description_clear_field"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/field_remove"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/field_button_background" />
+
+    </RelativeLayout>
+
+</layout>

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="historyClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="contactsClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="dialerClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="chatClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.main.viewmodels.TabsViewModel" />
+    </data>
+
+    <LinearLayout
+        android:baselineAligned="false"
+        android:id="@+id/footer"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/history"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:onClick="@{historyClickListener}"
+            android:background="@drawable/footer_button">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:padding="15dp"
+                android:contentDescription="@string/content_description_menu_history"
+                android:src="@drawable/footer_history" />
+
+            <View
+                android:id="@+id/history_select"
+                android:layout_width="5dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
+                android:background="?attr/accentColor"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/missed_calls"
+                style="@style/unread_count_font"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/unread_message_count_bg"
+                android:gravity="center"
+                android:text="@{String.valueOf(viewModel.missedCallsCount)}"
+                android:visibility="@{viewModel.missedCallsCount == 0 ? View.GONE : View.VISIBLE}" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/contacts"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:onClick="@{contactsClickListener}"
+            android:background="@drawable/footer_button">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:padding="15dp"
+                android:contentDescription="@string/content_description_menu_contacts"
+                android:src="@drawable/footer_contacts" />
+
+            <View
+                android:id="@+id/contacts_select"
+                android:layout_width="5dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
+                android:background="?attr/accentColor"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/dialer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:onClick="@{dialerClickListener}"
+            android:background="@drawable/footer_button">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:padding="15dp"
+                android:contentDescription="@string/content_description_menu_dialer"
+                android:src="@drawable/footer_dialer" />
+
+            <View
+                android:id="@+id/dialer_select"
+                android:layout_width="5dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
+                android:background="?attr/accentColor" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/chat"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:onClick="@{chatClickListener}"
+            android:background="@drawable/footer_button">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:padding="15dp"
+                android:contentDescription="@string/content_description_menu_chat"
+                android:src="@drawable/footer_chat" />
+
+            <View
+                android:id="@+id/chat_select"
+                android:layout_width="5dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
+                android:background="?attr/accentColor"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/missed_chats"
+                style="@style/unread_count_font"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/unread_message_count_bg"
+                android:gravity="center"
+                android:text="@{String.valueOf(viewModel.unreadMessagesCount)}"
+                android:visibility="@{viewModel.unreadMessagesCount == 0 ? View.GONE : View.VISIBLE}" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</layout>

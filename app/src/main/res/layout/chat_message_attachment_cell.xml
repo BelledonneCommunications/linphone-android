@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="data"
+            type="org.linphone.activities.main.chat.viewmodels.ChatMessageAttachmentViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:layout_margin="5dp"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/pendingImageForUpload"
+            android:visibility="@{data.image ? View.VISIBLE : View.GONE}"
+            android:contentDescription="@string/content_description_pending_file_transfer"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:adjustViewBounds="true"
+            app:glidePath="@{data.path}"/>
+
+        <ImageView
+            android:visibility="@{data.image ? View.VISIBLE : View.GONE}"
+            android:onClick="@{() -> data.delete()}"
+            android:contentDescription="@string/content_description_remove_pending_file_transfer"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignTop="@id/pendingImageForUpload"
+            android:layout_alignRight="@id/pendingImageForUpload"
+            android:src="@drawable/clean_field" />
+
+        <TextView
+            android:id="@+id/pendingFileForUpload"
+            android:visibility="@{data.image ? View.GONE : View.VISIBLE}"
+            android:text="@{data.fileName}"
+            android:textColor="?attr/secondaryTextColor"
+            android:textSize="21sp"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textAlignment="center" />
+
+        <ImageView
+            android:visibility="@{data.image ? View.GONE : View.VISIBLE}"
+            android:onClick="@{() -> data.delete()}"
+            android:contentDescription="@string/content_description_remove_pending_file_transfer"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignTop="@id/pendingFileForUpload"
+            android:layout_alignRight="@id/pendingFileForUpload"
+            android:src="@drawable/clean_field" />
+
+    </RelativeLayout>
+
+</layout>

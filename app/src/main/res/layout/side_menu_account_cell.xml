@@ -1,30 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="35dp"
-    android:gravity="center">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <TextView
-        android:id="@+id/account_address"
-        style="@style/assistant_input_field_header_font"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:paddingLeft="10dp" />
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="data"
+            type="org.linphone.activities.main.settings.viewmodels.AccountSettingsViewModel" />
+    </data>
 
-    <ImageView
-        android:id="@+id/account_status"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:padding="5dp"
-        android:src="@drawable/led_connected" />
-
-    <ImageView
+    <RelativeLayout
+        android:onClick="@{() -> data.accountsSettingsListener.onAccountClicked(data.identity)}"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_alignParentBottom="true"
-        android:background="?attr/dividerColor" />
+        android:layout_height="35dp"
+        android:gravity="center">
 
-</RelativeLayout>
+        <TextView
+            android:text="@{data.identity}"
+            style="@style/assistant_input_field_header_font"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp" />
+
+        <ImageView
+            android:src="@{data.iconResource}"
+            android:contentDescription="@{data.iconContentDescription}"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:padding="5dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="?attr/dividerColor" />
+
+    </RelativeLayout>
+
+</layout>
