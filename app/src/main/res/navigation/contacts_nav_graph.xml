@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/contacts_nav_graph.xml"
+    app:startDestination="@id/detailContactFragment">
+
+    <fragment
+        android:id="@+id/detailContactFragment"
+        android:name="org.linphone.activities.main.contact.fragments.DetailContactFragment"
+        tools:layout="@layout/contact_detail_fragment"
+        android:label="DetailContactFragment" >
+        <action
+            android:id="@+id/action_detailContactFragment_to_contactEditorFragment"
+            app:destination="@id/contactEditorFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/contactEditorFragment"
+        android:name="org.linphone.activities.main.contact.fragments.ContactEditorFragment"
+        tools:layout="@layout/contact_editor_fragment"
+        android:label="ContactEditorFragment" />
+    <action
+        android:id="@+id/action_global_detailContactFragment"
+        app:destination="@id/detailContactFragment"
+        app:launchSingleTop="true" />
+
+</navigation>

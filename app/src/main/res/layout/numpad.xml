@@ -1,115 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?attr/backgroundColor">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TableRow
-        android:layout_weight="1"
-        android:gravity="center">
+    <data>
+        <variable
+            name="keyListener"
+            type="org.linphone.activities.main.dialer.NumpadDigitListener" />
+    </data>
 
-        <org.linphone.dialer.views.Digit
-            android:id="@+id/Digit1"
-            style="@style/DialerDigit"
-            android:background="@drawable/numpad_one"
-            android:soundEffectsEnabled="true"
-            android:text="1" />
+    <com.google.android.flexbox.FlexboxLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="25dp"
+        android:background="?attr/backgroundColor"
+        app:flexWrap="wrap"
+        app:justifyContent="space_around"
+        app:alignItems="center"
+        app:alignContent="space_around">
 
-        <org.linphone.dialer.views.Digit
-            android:id="@+id/Digit2"
-            style="@style/DialerDigit"
-            android:background="@drawable/numpad_two"
-            android:soundEffectsEnabled="true"
-            android:text="2" />
+        <ImageView
+            style="@style/numpad_digit"
+            android:src="@drawable/numpad_one"
+            android:contentDescription="@string/content_description_numpad_1"
+            android:onClick="@{() -> keyListener.handleClick('1')}"
+            android:onLongClick="@{() -> keyListener.handleLongClick('1')}"  />
 
-        <org.linphone.dialer.views.Digit
-            android:id="@+id/Digit3"
-            style="@style/DialerDigit"
-            android:background="@drawable/numpad_three"
-            android:soundEffectsEnabled="true"
-            android:text="3" />
+        <ImageView
+            style="@style/numpad_digit"
+            android:contentDescription="@string/content_description_numpad_2"
+            android:src="@drawable/numpad_two"
+            android:onClick="@{() -> keyListener.handleClick('2')}" />
 
-    </TableRow>
+        <ImageView
+            style="@style/numpad_digit"
+            android:contentDescription="@string/content_description_numpad_3"
+            android:src="@drawable/numpad_three"
+            android:onClick="@{() -> keyListener.handleClick('3')}" />
 
-    <TableRow
-        android:layout_weight="1"
-        android:gravity="center">
+        <ImageView
+            style="@style/numpad_digit"
+            app:layout_wrapBefore="true"
+            android:src="@drawable/numpad_four"
+            android:contentDescription="@string/content_description_numpad_4"
+            android:onClick="@{() -> keyListener.handleClick('4')}" />
 
-        <org.linphone.dialer.views.Digit
-            android:id="@+id/Digit4"
-            style="@style/DialerDigit"
-            android:background="@drawable/numpad_four"
-            android:soundEffectsEnabled="true"
-            android:text="4" />
+        <ImageView
+            style="@style/numpad_digit"
+            android:src="@drawable/numpad_five"
+            android:contentDescription="@string/content_description_numpad_5"
+            android:onClick="@{() -> keyListener.handleClick('5')}" />
 
-        <org.linphone.dialer.views.Digit
-            android:id="@+id/Digit5"
-            style="@style/DialerDigit"
-            android:background="@drawable/numpad_five"
-            android:soundEffectsEnabled="true"
-            android:text="5" />
+        <ImageView
+            style="@style/numpad_digit"
+            android:src="@drawable/numpad_six"
+            android:contentDescription="@string/content_description_numpad_6"
+            android:onClick="@{() -> keyListener.handleClick('6')}" />
 
-        <org.linphone.dialer.views.Digit
-            android:id="@+id/Digit6"
-            style="@style/DialerDigit"
-            android:background="@drawable/numpad_six"
-            android:soundEffectsEnabled="true"
-            android:text="6" />
+        <ImageView
+            style="@style/numpad_digit"
+            app:layout_wrapBefore="true"
+            android:src="@drawable/numpad_seven"
+            android:contentDescription="@string/content_description_numpad_7"
+            android:onClick="@{() -> keyListener.handleClick('7')}" />
 
-    </TableRow>
+        <ImageView
+            style="@style/numpad_digit"
+            android:src="@drawable/numpad_eight"
+            android:contentDescription="@string/content_description_numpad_8"
+            android:onClick="@{() -> keyListener.handleClick('8')}" />
 
-    <TableRow
-        android:layout_weight="1"
-        android:gravity="center">
+        <ImageView
+            style="@style/numpad_digit"
+            android:src="@drawable/numpad_nine"
+            android:contentDescription="@string/content_description_numpad_9"
+            android:onClick="@{() -> keyListener.handleClick('9')}" />
 
-        <org.linphone.dialer.views.Digit
-            android:id="@+id/Digit7"
-            style="@style/DialerDigit"
-            android:background="@drawable/numpad_seven"
-            android:soundEffectsEnabled="true"
-            android:text="7" />
+        <ImageView
+            style="@style/numpad_digit"
+            app:layout_wrapBefore="true"
+            android:src="@drawable/numpad_star_digit"
+            android:contentDescription="@string/content_description_numpad_star"
+            android:onClick="@{() -> keyListener.handleClick('*')}" />
 
-        <org.linphone.dialer.views.Digit
-            android:id="@+id/Digit8"
-            style="@style/DialerDigit"
-            android:background="@drawable/numpad_eight"
-            android:soundEffectsEnabled="true"
-            android:text="8" />
+        <ImageView
+            style="@style/numpad_digit"
+            android:src="@drawable/numpad_zero"
+            android:onClick="@{() -> keyListener.handleClick('0')}"
+            android:contentDescription="@string/content_description_numpad_0"
+            android:onLongClick="@{() -> keyListener.handleLongClick('+')}"/>
 
-        <org.linphone.dialer.views.Digit
-            android:id="@+id/Digit9"
-            style="@style/DialerDigit"
-            android:background="@drawable/numpad_nine"
-            android:soundEffectsEnabled="true"
-            android:text="9" />
+        <ImageView
+            style="@style/numpad_digit"
+            android:src="@drawable/numpad_sharp"
+            android:contentDescription="@string/content_description_numpad_sharp"
+            android:onClick="@{() -> keyListener.handleClick('#')}" />
 
-    </TableRow>
+    </com.google.android.flexbox.FlexboxLayout>
 
-    <TableRow
-        android:layout_weight="1"
-        android:gravity="center">
-
-        <org.linphone.dialer.views.Digit
-            android:id="@+id/DigitStar"
-            style="@style/DialerDigit"
-            android:background="@drawable/numpad_star_digit"
-            android:soundEffectsEnabled="true"
-            android:text="*" />
-
-        <org.linphone.dialer.views.Digit
-            android:id="@+id/Digit00"
-            style="@style/DialerDigit"
-            android:background="@drawable/numpad_zero"
-            android:soundEffectsEnabled="true"
-            android:text="0+" />
-
-        <org.linphone.dialer.views.Digit
-            android:id="@+id/DigitHash"
-            style="@style/DialerDigit"
-            android:background="@drawable/numpad_sharp"
-            android:soundEffectsEnabled="true"
-            android:text="#" />
-
-    </TableRow>
-
-</TableLayout>
+</layout>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="incoming_chat_message_bubble_left_margin">0dp</dimen>
+    <dimen name="outgoing_chat_message_bubble_left_margin">45dp</dimen>
+    <dimen name="chat_message_bubble_image_height_big">200dp</dimen>
+    <dimen name="chat_message_bubble_image_height_small">100dp</dimen>
+</resources>

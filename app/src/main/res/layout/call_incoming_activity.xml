@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.call.viewmodels.IncomingCallViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/backgroundColor">
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/status_fragment"
+            android:name="org.linphone.activities.call.fragments.StatusFragment"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            tools:layout="@layout/call_status_fragment" />
+
+        <RelativeLayout
+            android:id="@+id/top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_below="@id/status_fragment"
+            android:background="?attr/lightToolbarBackgroundColor">
+
+            <TextView
+                style="@style/toolbar_title_font"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/call_incoming_title" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/contact_name"
+            android:text="@{viewModel.contact.fullName ?? viewModel.displayName}"
+            style="@style/big_contact_name_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/top_bar"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_vertical|center_horizontal"
+            android:paddingTop="5dp" />
+
+        <org.linphone.views.MarqueeTextView
+            android:id="@+id/contact_number"
+            android:text="@{viewModel.address}"
+            style="@style/sip_uri_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/contact_name"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:singleLine="true"
+            android:paddingBottom="10dp" />
+
+        <org.linphone.contact.BigContactAvatarView
+            android:id="@+id/avatar"
+            android:visibility="@{viewModel.earlyMediaVideoEnabled ? View.GONE : View.VISIBLE}"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_margin="5dp"
+            android:layout_below="@id/contact_number"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            tools:layout="@layout/contact_avatar_big"
+            app:viewModel="@{viewModel}"/>
+
+        <TextureView
+            android:visibility="@{viewModel.earlyMediaVideoEnabled ? View.VISIBLE : View.GONE}"
+            android:layout_below="@id/contact_number"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <org.linphone.activities.call.views.AnswerDeclineIncomingCallButtons
+            android:id="@+id/buttons"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            tools:layout="@layout/call_incoming_answer_decline_buttons"/>
+
+    </RelativeLayout>
+
+</layout>
