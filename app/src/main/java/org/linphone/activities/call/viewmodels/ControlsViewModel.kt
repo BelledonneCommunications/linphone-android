@@ -103,11 +103,12 @@ class ControlsViewModel : ViewModel() {
         }
 
         override fun onAudioDeviceChanged(core: Core, audioDevice: AudioDevice) {
-            updateAudioRelated()
+            updateSpeakerState()
+            updateBluetoothHeadsetState()
         }
 
         override fun onAudioDevicesListUpdated(core: Core) {
-            updateAudioRelated()
+            updateAudioRoutesState()
         }
     }
 
