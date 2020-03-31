@@ -31,7 +31,8 @@
 
         <ImageView
             android:id="@+id/settings_clear_input"
-            android:onClick="@{() -> settingsInput.setText(``)}"
+            android:onClick="@{() -> settingsInput.setText(defaultValue)}"
+            android:visibility="invisible"
             android:contentDescription="@string/content_description_clear_field"
             android:layout_width="20dp"
             android:layout_height="20dp"
@@ -57,6 +58,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/settings_input"
                 onValueChanged="@{() -> listener.onTextValueChanged(settingsInput.getText().toString())}"
+                onFocusChangeVisibilityOf="@{settingsClearInput}"
                 android:text="@{defaultValue}"
                 android:imeOptions="actionDone"
                 android:inputType="@{inputType ?? InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS}"
