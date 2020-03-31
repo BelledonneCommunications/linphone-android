@@ -154,6 +154,13 @@ fun editTextSetting(view: EditText, lambda: () -> Unit) {
     })
 }
 
+@BindingAdapter("onFocusChangeVisibilityOf")
+fun setEditTextOnFocusChangeVisibilityOf(editText: EditText, view: View) {
+    editText.setOnFocusChangeListener { _, hasFocus ->
+        view.visibility = if (hasFocus) View.VISIBLE else View.INVISIBLE
+    }
+}
+
 @BindingAdapter("selectedIndex", "settingListener")
 fun spinnerSetting(spinner: Spinner, selectedIndex: Int, listener: SettingListener) {
     spinner.setSelection(selectedIndex, true)
