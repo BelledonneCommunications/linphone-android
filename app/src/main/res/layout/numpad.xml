@@ -11,7 +11,7 @@
     <com.google.android.flexbox.FlexboxLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="25dp"
+        android:padding="10dp"
         android:background="?attr/backgroundColor"
         app:flexWrap="wrap"
         app:justifyContent="space_around"
