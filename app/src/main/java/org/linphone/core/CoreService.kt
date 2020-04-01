@@ -32,8 +32,8 @@ class CoreService : CoreService() {
         Log.i("[Service] Created")
     }
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        if (intent.extras?.get("StartForeground") == true) {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        if (intent?.extras?.get("StartForeground") == true) {
             Log.i("[Service] Starting as foreground")
             coreContext.notificationsManager.startForeground(this, true)
         }
