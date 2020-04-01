@@ -368,6 +368,22 @@ fun addEmailEditTextValidation(editText: EditText, enabled: Boolean) {
     })
 }
 
+@BindingAdapter("urlConfirmationValidation")
+fun addUrlEditTextValidation(editText: EditText, enabled: Boolean) {
+    if (!enabled) return
+    editText.addTextChangedListener(object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) { }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            if (!Patterns.WEB_URL.matcher(s).matches()) {
+                editText.error = editText.context.getString(R.string.assistant_remote_provisioning_wrong_format)
+            }
+        }
+    })
+}
+
 @BindingAdapter("passwordConfirmationValidation")
 fun addPasswordConfirmationEditTextValidation(password: EditText, passwordConfirmation: EditText) {
     password.addTextChangedListener(object : TextWatcher {

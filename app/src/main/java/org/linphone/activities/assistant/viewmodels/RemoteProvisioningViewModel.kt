@@ -19,6 +19,7 @@
  */
 package org.linphone.activities.assistant.viewmodels
 
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -30,6 +31,9 @@ import org.linphone.utils.Event
 
 class RemoteProvisioningViewModel : ViewModel() {
     val urlToFetch = MutableLiveData<String>()
+    val urlError = MutableLiveData<String>()
+
+    val fetchEnabled: MediatorLiveData<Boolean> = MediatorLiveData()
     val fetchInProgress = MutableLiveData<Boolean>()
     val fetchSuccessfulEvent = MutableLiveData<Event<Boolean>>()
 
@@ -50,6 +54,14 @@ class RemoteProvisioningViewModel : ViewModel() {
     init {
         fetchInProgress.value = false
         coreContext.core.addListener(listener)
+
+        fetchEnabled.value = false
+        fetchEnabled.addSource(urlToFetch) {
+            fetchEnabled.value = isFetchEnabled()
+        }
+        fetchEnabled.addSource(urlError) {
+            fetchEnabled.value = isFetchEnabled()
+        }
     }
 
     override fun onCleared() {
@@ -57,11 +69,16 @@ class RemoteProvisioningViewModel : ViewModel() {
         super.onCleared()
     }
 
-    fun fetchAndApply(url: String) {
+    fun fetchAndApply() {
+        val url = urlToFetch.value.orEmpty()
         coreContext.core.provisioningUri = url
         Log.w("[Remote Provisioning] Url set to [$url], restarting Core")
         fetchInProgress.value = true
         coreContext.core.stop()
         coreContext.core.start()
+    }
+
+    private fun isFetchEnabled(): Boolean {
+        return urlToFetch.value.orEmpty().isNotEmpty() && urlError.value.orEmpty().isEmpty()
     }
 }
