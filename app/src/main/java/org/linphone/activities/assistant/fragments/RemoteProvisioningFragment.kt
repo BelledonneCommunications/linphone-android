@@ -20,7 +20,6 @@
 package org.linphone.activities.assistant.fragments
 
 import android.os.Bundle
-import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -60,16 +59,6 @@ class RemoteProvisioningFragment : Fragment() {
 
         viewModel = ViewModelProvider(this).get(RemoteProvisioningViewModel::class.java)
         binding.viewModel = viewModel
-
-        binding.setApplyClickListener {
-            val url = viewModel.urlToFetch.value.orEmpty()
-            if (Patterns.WEB_URL.matcher(url).matches()) {
-                viewModel.fetchAndApply(url)
-            } else {
-                val activity = requireActivity() as AssistantActivity
-                activity.showSnackBar(R.string.assistant_remote_provisioning_wrong_format)
-            }
-        }
 
         binding.setQrCodeClickListener {
             if (findNavController().currentDestination?.id == R.id.remoteProvisioningFragment) {
