@@ -6,9 +6,6 @@
     <data>
         <import type="android.view.View"/>
         <variable
-            name="applyClickListener"
-            type="android.view.View.OnClickListener"/>
-        <variable
             name="qrCodeClickListener"
             type="android.view.View.OnClickListener"/>
         <variable
@@ -68,6 +65,8 @@
                     android:layout_height="wrap_content"/>
 
                 <EditText
+                    errorMessage="@={viewModel.urlError}"
+                    urlConfirmationValidation="@{true}"
                     android:text="@={viewModel.urlToFetch}"
                     android:background="@drawable/resizable_text_field"
                     android:textColor="@color/black_color"
@@ -78,8 +77,8 @@
                     android:maxLines="1"/>
 
                 <TextView
-                    android:onClick="@{applyClickListener}"
-                    android:enabled="@{viewModel.urlToFetch.length() > 0}"
+                    android:onClick="@{() -> viewModel.fetchAndApply()}"
+                    android:enabled="@{viewModel.fetchEnabled}"
                     android:text="@string/assistant_fetch_apply"
                     android:background="@drawable/assistant_button"
                     android:textColor="@drawable/assistant_button_text_color"
