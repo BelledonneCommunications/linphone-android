@@ -19,9 +19,7 @@
  */
 package org.linphone.activities.main.fragments
 
-import android.content.Context
 import android.os.Bundle
-import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,36 +34,13 @@ class TabsFragment : Fragment() {
     private lateinit var binding: TabsFragmentBinding
     private lateinit var viewModel: TabsViewModel
 
-    private var dialerSelected: Boolean = false
-    private var contactsSelected: Boolean = false
-    private var chatSelected: Boolean = false
-    private var historySelected: Boolean = false
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = TabsFragmentBinding.inflate(inflater, container, false)
-
-        binding.historySelect.visibility = if (historySelected) View.VISIBLE else View.GONE
-        binding.contactsSelect.visibility = if (contactsSelected) View.VISIBLE else View.GONE
-        binding.dialerSelect.visibility = if (dialerSelected) View.VISIBLE else View.GONE
-        binding.chatSelect.visibility = if (chatSelected) View.VISIBLE else View.GONE
-
         return binding.root
-    }
-
-    override fun onInflate(context: Context, attrs: AttributeSet, savedInstanceState: Bundle?) {
-        super.onInflate(context, attrs, savedInstanceState)
-
-        val attributes = context.obtainStyledAttributes(attrs, R.styleable.TabsFragment)
-        historySelected = attributes.getBoolean(R.styleable.TabsFragment_history_selected, false)
-        contactsSelected = attributes.getBoolean(R.styleable.TabsFragment_contacts_selected, false)
-        dialerSelected = attributes.getBoolean(R.styleable.TabsFragment_dialer_selected, false)
-        chatSelected = attributes.getBoolean(R.styleable.TabsFragment_chat_selected, false)
-
-        attributes.recycle()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -77,6 +52,17 @@ class TabsFragment : Fragment() {
             ViewModelProvider(this).get(TabsViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
         binding.viewModel = viewModel
+
+        viewModel.historySelected.value = false
+        viewModel.contactsSelected.value = false
+        viewModel.dialerSelected.value = false
+        viewModel.chatSelected.value = false
+        when (findNavController().currentDestination?.id) {
+            R.id.masterCallLogsFragment -> viewModel.historySelected.value = true
+            R.id.masterContactsFragment -> viewModel.contactsSelected.value = true
+            R.id.dialerFragment -> viewModel.dialerSelected.value = true
+            R.id.masterChatRoomsFragment -> viewModel.chatSelected.value = true
+        }
 
         binding.setHistoryClickListener {
             when (findNavController().currentDestination?.id) {
