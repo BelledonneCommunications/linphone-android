@@ -28,13 +28,6 @@
         <attr name="button_background_drawable" format="reference" />
     </declare-styleable>
 
-    <declare-styleable name="TabsFragment">
-        <attr name="history_selected" format="boolean"/>
-        <attr name="contacts_selected" format="boolean"/>
-        <attr name="dialer_selected" format="boolean"/>
-        <attr name="chat_selected" format="boolean"/>
-    </declare-styleable>
-
     <declare-styleable name="Settings">
         <attr name="title" format="string" />
         <attr name="subtitle" format="string" />

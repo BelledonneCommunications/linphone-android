@@ -38,7 +38,6 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_alignParentBottom="true"
-            app:dialer_selected="true"
             tools:layout="@layout/tabs_fragment" />
 
         <RelativeLayout

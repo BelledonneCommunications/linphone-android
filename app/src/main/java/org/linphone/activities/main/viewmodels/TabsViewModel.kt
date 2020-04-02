@@ -25,6 +25,11 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.*
 
 class TabsViewModel : ViewModel() {
+    val historySelected = MutableLiveData<Boolean>()
+    val contactsSelected = MutableLiveData<Boolean>()
+    val dialerSelected = MutableLiveData<Boolean>()
+    val chatSelected = MutableLiveData<Boolean>()
+
     val unreadMessagesCount = MutableLiveData<Int>()
     val missedCallsCount = MutableLiveData<Int>()
 
