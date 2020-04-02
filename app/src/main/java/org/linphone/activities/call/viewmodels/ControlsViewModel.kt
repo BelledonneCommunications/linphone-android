@@ -293,6 +293,9 @@ class ControlsViewModel : ViewModel() {
             }
         }
         audioRoutesEnabled.value = bluetoothDeviceAvailable
+        if (!bluetoothDeviceAvailable) {
+            audioRoutesVisibility.value = false
+        }
     }
 
     private fun updateBluetoothHeadsetState() {
