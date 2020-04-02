@@ -19,14 +19,19 @@
  */
 package org.linphone.activities.main
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.Gravity
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import com.google.android.material.snackbar.Snackbar
 import java.io.UnsupportedEncodingException
@@ -46,7 +51,7 @@ import org.linphone.databinding.MainActivityBinding
 import org.linphone.utils.AppUtils
 import org.linphone.utils.FileUtils
 
-class MainActivity : GenericActivity(), SnackBarActivity {
+class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestinationChangedListener {
     private lateinit var binding: MainActivityBinding
     private lateinit var sharedViewModel: SharedMainViewModel
 
@@ -112,6 +117,29 @@ class MainActivity : GenericActivity(), SnackBarActivity {
 
     override fun showSnackBar(resourceId: Int) {
         Snackbar.make(binding.coordinator, resourceId, Snackbar.LENGTH_LONG).show()
+    }
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        findNavController(R.id.nav_host_fragment).addOnDestinationChangedListener(this)
+    }
+
+    override fun onDestroy() {
+        findNavController(R.id.nav_host_fragment).removeOnDestinationChangedListener(this)
+        super.onDestroy()
+    }
+
+    override fun onDestinationChanged(
+        controller: NavController,
+        destination: NavDestination,
+        arguments: Bundle?
+    ) {
+        currentFocus?.hideKeyboard()
+    }
+
+    private fun View.hideKeyboard() {
+        val imm = context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(windowToken, 0)
     }
 
     private fun handleIntentParams(intent: Intent) {
