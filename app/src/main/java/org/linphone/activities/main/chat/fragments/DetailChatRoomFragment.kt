@@ -129,6 +129,10 @@ class DetailChatRoomFragment : MasterFragment() {
         }
         binding.chatMessagesList.addOnScrollListener(chatScrollListener)
 
+        chatSendingViewModel.textToSend.observe(viewLifecycleOwner, Observer {
+            chatSendingViewModel.onTextToSendChanged(it)
+        })
+
         listViewModel.events.observe(viewLifecycleOwner, Observer { events ->
             adapter.submitList(events)
         })

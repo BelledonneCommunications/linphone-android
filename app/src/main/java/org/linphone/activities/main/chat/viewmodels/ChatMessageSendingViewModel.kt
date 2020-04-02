@@ -47,21 +47,7 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
 
     val isReadOnly = MutableLiveData<Boolean>()
 
-    var textToSend: String = ""
-        set(value) {
-            sendMessageEnabled.value = value.isNotEmpty() || attachments.value?.isNotEmpty() ?: false
-            if (value.isNotEmpty()) {
-                if (!corePreferences.allowMultipleFilesAndTextInSameMessage) {
-                    attachFileEnabled.value = false
-                }
-                chatRoom.compose()
-            } else {
-                if (!corePreferences.allowMultipleFilesAndTextInSameMessage) {
-                    attachFileEnabled.value = attachments.value?.isEmpty() ?: true
-                }
-            }
-            field = value
-        }
+    var textToSend = MutableLiveData<String>()
 
     init {
         attachments.value = arrayListOf()
@@ -69,6 +55,20 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         attachFileEnabled.value = true
         sendMessageEnabled.value = false
         isReadOnly.value = chatRoom.hasBeenLeft()
+    }
+
+    fun onTextToSendChanged(value: String) {
+        sendMessageEnabled.value = value.isNotEmpty() || attachments.value?.isNotEmpty() ?: false
+        if (value.isNotEmpty()) {
+            if (attachFileEnabled.value == true && !corePreferences.allowMultipleFilesAndTextInSameMessage) {
+                attachFileEnabled.value = false
+            }
+            chatRoom.compose()
+        } else {
+            if (!corePreferences.allowMultipleFilesAndTextInSameMessage) {
+                attachFileEnabled.value = attachments.value?.isEmpty() ?: true
+            }
+        }
     }
 
     fun addAttachment(path: String) {
@@ -79,7 +79,7 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         })
         attachments.value = list
 
-        sendMessageEnabled.value = textToSend.isNotEmpty() || list.isNotEmpty()
+        sendMessageEnabled.value = textToSend.value.orEmpty().isNotEmpty() || list.isNotEmpty()
         if (!corePreferences.allowMultipleFilesAndTextInSameMessage) {
             attachFileEnabled.value = false
         }
@@ -91,7 +91,7 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         list.remove(attachment)
         attachments.value = list
 
-        sendMessageEnabled.value = textToSend.isNotEmpty() || list.isNotEmpty()
+        sendMessageEnabled.value = textToSend.value.orEmpty().isNotEmpty() || list.isNotEmpty()
         if (!corePreferences.allowMultipleFilesAndTextInSameMessage) {
             attachFileEnabled.value = list.isEmpty()
         }
@@ -101,8 +101,8 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         val isBasicChatRoom: Boolean = chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt())
         val message: ChatMessage = chatRoom.createEmptyMessage()
 
-        if (textToSend.isNotEmpty()) {
-            message.addTextContent(textToSend)
+        if (textToSend.value.orEmpty().isNotEmpty()) {
+            message.addTextContent(textToSend.value)
         }
 
         for (attachment in attachments.value.orEmpty()) {
