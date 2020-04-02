@@ -29,7 +29,6 @@
             android:layout_width="60dp"
             android:layout_height="match_parent"
             android:layout_alignParentBottom="true"
-            app:chat_selected="true"
             tools:layout="@layout/tabs_fragment" />
 
         <LinearLayout

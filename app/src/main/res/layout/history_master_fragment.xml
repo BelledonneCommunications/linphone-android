@@ -29,7 +29,6 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_alignParentBottom="true"
-            app:history_selected="true"
             tools:layout="@layout/tabs_fragment" />
 
         <LinearLayout
