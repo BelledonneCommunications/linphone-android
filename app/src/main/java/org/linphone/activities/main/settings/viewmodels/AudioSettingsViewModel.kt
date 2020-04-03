@@ -23,6 +23,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.MutableLiveData
 import org.linphone.R
 import org.linphone.activities.main.settings.SettingListenerStub
+import org.linphone.core.AudioDevice
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.EcCalibratorStatus
@@ -84,6 +85,18 @@ class AudioSettingsViewModel : GenericSettingsViewModel() {
     }
     val adaptiveRateControl = MutableLiveData<Boolean>()
 
+    val outputAudioDeviceListener = object : SettingListenerStub() {
+        override fun onListValueChanged(position: Int) {
+            val values = outputAudioDeviceValues.value.orEmpty()
+            if (values.size > position) {
+                core.defaultOutputAudioDevice = values[position]
+            }
+        }
+    }
+    val outputAudioDeviceIndex = MutableLiveData<Int>()
+    val outputAudioDeviceLabels = MutableLiveData<ArrayList<String>>()
+    private val outputAudioDeviceValues = MutableLiveData<ArrayList<AudioDevice>>()
+
     val codecBitrateListener = object : SettingListenerStub() {
         override fun onListValueChanged(position: Int) {
             for (payloadType in core.audioPayloadTypes) {
@@ -122,6 +135,7 @@ class AudioSettingsViewModel : GenericSettingsViewModel() {
             prefs.getString(R.string.audio_settings_echo_canceller_calibration_summary)
         }
         echoTesterStatus.value = prefs.getString(R.string.audio_settings_echo_tester_summary)
+        initOutputAudioDevicesList()
         initCodecBitrateList()
         microphoneGain.value = core.micGainDb
         playbackGain.value = core.playbackGainDb
@@ -165,6 +179,22 @@ class AudioSettingsViewModel : GenericSettingsViewModel() {
         echoTesterIsRunning = false
         echoTesterStatus.value = prefs.getString(R.string.audio_settings_echo_tester_summary_is_stopped)
         core.stopEchoTester()
+    }
+
+    private fun initOutputAudioDevicesList() {
+        val labels = arrayListOf<String>()
+        val values = arrayListOf<AudioDevice>()
+        for (audioDevice in core.audioDevices) {
+            if (audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
+                labels.add(audioDevice.id)
+                values.add(audioDevice)
+            }
+        }
+        outputAudioDeviceLabels.value = labels
+        outputAudioDeviceValues.value = values
+
+        val default = core.defaultOutputAudioDevice
+        outputAudioDeviceIndex.value = values.indexOf(default)
     }
 
     private fun initCodecBitrateList() {
