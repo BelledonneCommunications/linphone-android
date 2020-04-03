@@ -93,6 +93,14 @@
 
                 <include
                     layout="@layout/settings_widget_list"
+                    linphone:title="@{@string/audio_settings_output_device_title}"
+                    linphone:subtitle="@{@string/audio_settings_output_device_summary}"
+                    linphone:listener="@{viewModel.outputAudioDeviceListener}"
+                    linphone:selectedIndex="@{viewModel.outputAudioDeviceIndex}"
+                    linphone:labels="@{viewModel.outputAudioDeviceLabels}"/>
+
+                <include
+                    layout="@layout/settings_widget_list"
                     linphone:title="@{@string/audio_settings_codec_bitrate_title}"
                     linphone:subtitle="@{@string/audio_settings_codec_bitrate_summary}"
                     linphone:listener="@{viewModel.codecBitrateListener}"
