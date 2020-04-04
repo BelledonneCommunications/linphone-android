@@ -46,6 +46,7 @@ import org.linphone.utils.AppUtils
 import org.linphone.utils.LinphoneUtils
 
 class CoreContext(val context: Context, coreConfig: Config) {
+    var stopped = false
     val core: Core
     val handler: Handler = Handler(Looper.getMainLooper())
 
@@ -179,6 +180,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
 
     init {
         core = Factory.instance().createCoreWithConfig(coreConfig, context)
+        stopped = false
         Log.i("[Context] Ready")
     }
 
@@ -214,6 +216,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
 
         core.stop()
         core.removeListener(listener)
+        stopped = true
     }
 
     private fun configureCore() {
