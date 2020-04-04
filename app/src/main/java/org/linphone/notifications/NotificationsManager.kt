@@ -205,6 +205,7 @@ class NotificationsManager(private val context: Context) {
             notificationManager.cancel(notifiable.notificationId)
         }
 
+        stopForegroundNotification()
         coreContext.core.removeListener(listener)
     }
 
