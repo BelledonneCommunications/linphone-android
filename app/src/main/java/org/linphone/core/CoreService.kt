@@ -21,6 +21,7 @@ package org.linphone.core
 
 import android.content.Intent
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.tools.Log
 import org.linphone.core.tools.service.CoreService
 
@@ -36,6 +37,8 @@ class CoreService : CoreService() {
         if (intent?.extras?.get("StartForeground") == true) {
             Log.i("[Service] Starting as foreground")
             coreContext.notificationsManager.startForeground(this, true)
+        } else if (corePreferences.keepServiceAlive) {
+            coreContext.notificationsManager.startForeground(this, false)
         }
         return super.onStartCommand(intent, flags, startId)
     }
