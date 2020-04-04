@@ -25,7 +25,6 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.activities.main.settings.viewmodels.AccountSettingsViewModel
 import org.linphone.core.*
-import org.linphone.core.tools.Log
 
 class SideMenuViewModel : ViewModel() {
     val showAssistant: Boolean = true
@@ -60,15 +59,6 @@ class SideMenuViewModel : ViewModel() {
         }
     }
 
-    private val quitListener: CoreListenerStub = object : CoreListenerStub() {
-        override fun onGlobalStateChanged(core: Core, state: GlobalState, message: String?) {
-            if (state == GlobalState.Off) {
-                Log.w("[Side Menu] Core properly terminated, killing process")
-                android.os.Process.killProcess(android.os.Process.myPid())
-            }
-        }
-    }
-
     init {
         defaultAccountFound.value = false
         coreContext.core.addListener(listener)
@@ -78,11 +68,6 @@ class SideMenuViewModel : ViewModel() {
     override fun onCleared() {
         coreContext.core.removeListener(listener)
         super.onCleared()
-    }
-
-    fun quit() {
-        coreContext.core.addListener(quitListener)
-        coreContext.stop()
     }
 
     fun updateAccountsList() {
