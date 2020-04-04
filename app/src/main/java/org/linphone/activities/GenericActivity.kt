@@ -28,6 +28,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.LinphoneApplication.Companion.ensureCoreExists
 import org.linphone.R
 import org.linphone.core.tools.Log
 
@@ -35,6 +36,8 @@ abstract class GenericActivity : AppCompatActivity() {
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        ensureCoreExists(applicationContext)
 
         if (corePreferences.forcePortrait) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
