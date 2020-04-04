@@ -20,6 +20,7 @@
 package org.linphone
 
 import android.app.Application
+import android.content.Context
 import org.linphone.core.CoreContext
 import org.linphone.core.CorePreferences
 import org.linphone.core.Factory
@@ -30,26 +31,35 @@ class LinphoneApplication : Application() {
     companion object {
         lateinit var corePreferences: CorePreferences
         lateinit var coreContext: CoreContext
+
+        fun ensureCoreExists(context: Context) {
+            if (::coreContext.isInitialized && !coreContext.stopped) {
+                return
+            }
+
+            Factory.instance().setLogCollectionPath(context.filesDir.absolutePath)
+            Factory.instance().enableLogCollection(LogCollectionState.Enabled)
+
+            corePreferences = CorePreferences(context)
+            corePreferences.copyAssetsFromPackage()
+
+            val config = Factory.instance().createConfigWithFactory(corePreferences.configPath, corePreferences.factoryConfigPath)
+            corePreferences.config = config
+
+            val appName = context.getString(R.string.app_name)
+            Factory.instance().setDebugMode(corePreferences.debugLogs, appName)
+
+            Log.i("[Application] Core context created")
+            coreContext = CoreContext(context, config)
+            coreContext.start()
+        }
     }
 
     override fun onCreate() {
         super.onCreate()
         val appName = getString(R.string.app_name)
         android.util.Log.i("[$appName]", "Application is being created")
-
-        Factory.instance().setLogCollectionPath(applicationContext.filesDir.absolutePath)
-        Factory.instance().enableLogCollection(LogCollectionState.Enabled)
-
-        corePreferences = CorePreferences(applicationContext)
-        corePreferences.copyAssetsFromPackage()
-
-        val config = Factory.instance().createConfigWithFactory(corePreferences.configPath, corePreferences.factoryConfigPath)
-        corePreferences.config = config
-
-        Factory.instance().setDebugMode(corePreferences.debugLogs, appName)
-
-        coreContext = CoreContext(applicationContext, config)
-        coreContext.start()
+        ensureCoreExists(applicationContext)
         Log.i("[Application] Created")
     }
 }

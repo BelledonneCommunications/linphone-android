@@ -29,6 +29,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.assistant.AssistantActivity
 import org.linphone.activities.main.settings.SettingListenerStub
@@ -102,15 +103,8 @@ class SideMenuFragment : Fragment() {
         }
 
         binding.setQuitClickListener {
-            val intent = Intent()
-            intent.setAction(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            try {
-                startActivity(intent)
-            } catch (ise: IllegalStateException) {
-                Log.e("[Side Menu] Can't start home activity: ", ise)
-            }
-            viewModel.quit()
+            requireActivity().finishAndRemoveTask()
+            coreContext.stop()
         }
     }
 }

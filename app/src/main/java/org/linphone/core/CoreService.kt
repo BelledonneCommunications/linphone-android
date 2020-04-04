@@ -55,6 +55,13 @@ class CoreService : CoreService() {
         coreContext.notificationsManager.stopCallForeground()
     }
 
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        Log.i("[Service] Task removed, stopping Core")
+        coreContext.stop()
+
+        super.onTaskRemoved(rootIntent)
+    }
+
     override fun onDestroy() {
         Log.i("[Service] Stopping")
         coreContext.notificationsManager.service = null

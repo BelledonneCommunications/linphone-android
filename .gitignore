@@ -21,6 +21,7 @@ res/raw/lpconfig.xsd
 **/.vscode
 res/value-hi_IN
 linphone-sdk-android/*.aar
+app/debug
 app/release
 keystore.properties
 app/src/main/res/xml/contacts.xml
