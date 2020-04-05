@@ -78,7 +78,9 @@ class ContactEditorViewModel(val c: Contact?) : ViewModel(), ContactViewModelInt
 
     fun save(): Contact {
         var contact = c
+        var created = false
         if (contact == null) {
+            created = true
             contact = if (PermissionHelper.get().hasWriteContactsPermission()) {
                 NativeContact(AppUtils.createAndroidContact().toString())
             } else {
@@ -106,6 +108,10 @@ class ContactEditorViewModel(val c: Contact?) : ViewModel(), ContactViewModelInt
                     coreContext.core.defaultFriendList.addLocalFriend(friend)
                 }
             }
+        }
+
+        if (created) {
+            coreContext.contactsManager.addContact(contact)
         }
         return contact
     }
