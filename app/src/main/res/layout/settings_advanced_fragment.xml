@@ -74,6 +74,7 @@
 
                 <include
                     layout="@layout/settings_widget_switch"
+                    linphone:enabled="@{viewModel.backgroundModeEnabled}"
                     linphone:title="@{@string/advanced_settings_background_mode_title}"
                     linphone:subtitle="@{@string/advanced_settings_background_mode_summary}"
                     linphone:listener="@{viewModel.backgroundModeListener}"
@@ -116,6 +117,28 @@
                     linphone:listener="@{viewModel.logsServerUrlListener}"
                     linphone:defaultValue="@{viewModel.logsServerUrl}"
                     linphone:inputType="@{InputType.TYPE_TEXT_VARIATION_URI}"/>
+
+                <TextView
+                    style="@style/settings_category_font"
+                    android:id="@+id/pref_video_codecs_header"
+                    android:text="@string/android_settings_codecs_title"
+                    android:paddingTop="15dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <include
+                    layout="@layout/settings_widget_basic"
+                    android:visibility="@{viewModel.batterySettingsVisibility ? View.VISIBLE : View.GONE}"
+                    linphone:listener="@{viewModel.goToBatterySettingsListener}"
+                    linphone:title="@{@string/advanced_settings_go_to_battery_optimization_settings}" />
+
+                <include
+                    layout="@layout/settings_widget_basic"
+                    android:visibility="@{viewModel.powerManagerSettingsVisibility ? View.VISIBLE : View.GONE}"
+                    linphone:listener="@{viewModel.goToPowerManagerSettingsListener}"
+                    linphone:title="@{@string/advanced_settings_go_to_power_manager_settings}" />
 
                 <include
                     layout="@layout/settings_widget_basic"
