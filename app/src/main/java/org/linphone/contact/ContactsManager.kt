@@ -118,6 +118,11 @@ class ContactsManager(private val context: Context) {
     }
 
     @Synchronized
+    fun addContact(contact: Contact) {
+        contacts.add(contact)
+    }
+
+    @Synchronized
     fun updateContacts(all: ArrayList<Contact>, sip: ArrayList<Contact>) {
         contacts.clear()
         sipContacts.clear()
