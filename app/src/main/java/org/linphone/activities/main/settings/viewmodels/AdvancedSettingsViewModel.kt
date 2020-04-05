@@ -23,6 +23,7 @@ import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.main.settings.SettingListenerStub
+import org.linphone.mediastream.Version
 import org.linphone.utils.Event
 
 class AdvancedSettingsViewModel : GenericSettingsViewModel() {
@@ -45,6 +46,7 @@ class AdvancedSettingsViewModel : GenericSettingsViewModel() {
         }
     }
     val backgroundMode = MutableLiveData<Boolean>()
+    val backgroundModeEnabled = MutableLiveData<Boolean>()
 
     val autoStartListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
@@ -91,6 +93,22 @@ class AdvancedSettingsViewModel : GenericSettingsViewModel() {
     }
     val logsServerUrl = MutableLiveData<String>()
 
+    val goToBatterySettingsListener = object : SettingListenerStub() {
+        override fun onClicked() {
+            goToBatterySettingsEvent.value = Event(true)
+        }
+    }
+    val goToBatterySettingsEvent = MutableLiveData<Event<Boolean>>()
+    val batterySettingsVisibility = MutableLiveData<Boolean>()
+
+    val goToPowerManagerSettingsListener = object : SettingListenerStub() {
+        override fun onClicked() {
+            goToPowerManagerSettingsEvent.value = Event(true)
+        }
+    }
+    val goToPowerManagerSettingsEvent = MutableLiveData<Event<Boolean>>()
+    val powerManagerSettingsVisibility = MutableLiveData<Boolean>()
+
     val goToAndroidSettingsListener = object : SettingListenerStub() {
         override fun onClicked() {
             goToAndroidSettingsEvent.value = Event(true)
@@ -113,5 +131,7 @@ class AdvancedSettingsViewModel : GenericSettingsViewModel() {
         deviceName.value = prefs.deviceName
         remoteProvisioningUrl.value = core.provisioningUri
         logsServerUrl.value = core.logCollectionUploadServerUrl
+
+        batterySettingsVisibility.value = Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)
     }
 }
