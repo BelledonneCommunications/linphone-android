@@ -21,6 +21,7 @@ package org.linphone.activities.main.contact.fragments
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
@@ -33,6 +34,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import java.io.File
 import org.linphone.R
+import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.contact.viewmodels.*
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.contact.NativeContact
@@ -100,6 +102,28 @@ class ContactEditorFragment : Fragment() {
             list.addAll(viewModel.addresses.value.orEmpty())
             list.add(newSipUri)
             viewModel.addresses.value = list
+        }
+
+        if (!PermissionHelper.required(requireContext()).hasWriteContactsPermission()) {
+            Log.i("[Contact Editor] Asking for WRITE_CONTACTS permission")
+            requestPermissions(arrayOf(android.Manifest.permission.WRITE_CONTACTS), 0)
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == 0) {
+            val granted = grantResults[0] == PackageManager.PERMISSION_GRANTED
+            if (granted) {
+                Log.i("[Contact Editor] WRITE_CONTACTS permission granted")
+            } else {
+                Log.w("[Contact Editor] WRITE_CONTACTS permission denied")
+                (requireActivity() as MainActivity).showSnackBar(R.string.contact_editor_write_permission_denied)
+                findNavController().popBackStack()
+            }
         }
     }
 
