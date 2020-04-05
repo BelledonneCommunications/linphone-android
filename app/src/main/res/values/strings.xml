@@ -391,6 +391,9 @@
     <string name="advanced_settings_remote_provisioning_url_summary"></string>
     <string name="advanced_settings_logs_server_url_title">Logs upload server URL</string>
     <string name="advanced_settings_logs_server_url_summary">Do not edit unless you know what you are doing!</string>
+    <string name="android_settings_codecs_title">Android</string>
+    <string name="advanced_settings_go_to_battery_optimization_settings">Battery optimization settings</string>
+    <string name="advanced_settings_go_to_power_manager_settings">Power manager settings</string>
     <string name="advanced_settings_go_to_android_app_settings">Android app settings</string>
 
     <!-- Tunnel settings -->
