@@ -19,6 +19,8 @@
  */
 package org.linphone.activities.main.contact.viewmodels
 
+import android.content.ContentProviderOperation
+import android.provider.ContactsContract
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -127,6 +129,36 @@ class ContactViewModel(private val c: Contact) : ErrorReportingViewModel(), Cont
     override fun onCleared() {
         coreContext.contactsManager.removeListener(contactsUpdatedListener)
         super.onCleared()
+    }
+
+    fun deleteContact() {
+        val select = ContactsContract.Data.CONTACT_ID + " = ?"
+        val ops = java.util.ArrayList<ContentProviderOperation>()
+
+        if (c is NativeContact) {
+            val nativeContact: NativeContact = c
+            Log.i("[Contact] Setting Android contact id ${nativeContact.nativeId} to batch removal")
+            val args = arrayOf(nativeContact.nativeId)
+            ops.add(
+                ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI)
+                    .withSelection(select, args)
+                    .build()
+            )
+        }
+
+        if (c.friend != null) {
+            Log.i("[Contact] Removing friend")
+            c.friend?.remove()
+        }
+
+        if (ops.isNotEmpty()) {
+            try {
+                Log.i("[Contact] Removing ${ops.size} contacts")
+                coreContext.context.contentResolver.applyBatch(ContactsContract.AUTHORITY, ops)
+            } catch (e: Exception) {
+                Log.e("[Contact] $e")
+            }
+        }
     }
 
     private fun updateNumbersAndAddresses() {
