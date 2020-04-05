@@ -21,13 +21,13 @@ package org.linphone.activities.launcher
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.activities.GenericActivity
 import org.linphone.activities.main.MainActivity
 import org.linphone.core.tools.Log
 
-class LauncherActivity : AppCompatActivity() {
+class LauncherActivity : GenericActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
