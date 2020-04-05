@@ -19,14 +19,8 @@
  */
 package org.linphone.activities.call
 
-import android.content.Context
 import android.content.res.Configuration
-import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
-import android.hardware.SensorManager
 import android.os.Bundle
-import android.os.PowerManager
 import android.view.Gravity
 import android.view.MotionEvent
 import androidx.databinding.DataBindingUtil
@@ -34,14 +28,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
-import org.linphone.activities.GenericActivity
 import org.linphone.activities.call.viewmodels.ControlsFadingViewModel
 import org.linphone.activities.call.viewmodels.SharedCallViewModel
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallActivityBinding
 
-class CallActivity : GenericActivity() {
+class CallActivity : ProximitySensorActivity() {
     private lateinit var binding: CallActivityBinding
     private lateinit var viewModel: ControlsFadingViewModel
     private lateinit var sharedViewModel: SharedCallViewModel
@@ -50,36 +43,8 @@ class CallActivity : GenericActivity() {
     private var previewY: Float = 0f
     private lateinit var videoZoomHelper: VideoZoomHelper
 
-    private lateinit var sensorManager: SensorManager
-    private lateinit var proximitySensor: Sensor
-    private lateinit var proximityWakeLock: PowerManager.WakeLock
-    private val proximityListener: SensorEventListener = object : SensorEventListener {
-        override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) { }
-
-        override fun onSensorChanged(event: SensorEvent) {
-            if (event.timestamp == 0L) return
-            if (isProximitySensorNearby(event)) {
-                if (!proximityWakeLock.isHeld) {
-                    Log.i("[Call Activity] Acquiring proximity wake lock")
-                    proximityWakeLock.acquire()
-                }
-            } else {
-                if (proximityWakeLock.isHeld) {
-                    Log.i("[Call Activity] Releasing proximity wake lock")
-                    proximityWakeLock.release()
-                }
-            }
-        }
-    }
-    private var proximitySensorEnabled = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY)
-        proximityWakeLock = (getSystemService(Context.POWER_SERVICE) as PowerManager)
-            .newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK, "$packageName;proximity_sensor")
 
         binding = DataBindingUtil.setContentView(this, R.layout.call_activity)
         binding.lifecycleOwner = this
@@ -133,18 +98,10 @@ class CallActivity : GenericActivity() {
             finish()
         } else {
             coreContext.removeCallOverlay()
-
-            val currentCall = coreContext.core.currentCall ?: coreContext.core.calls[0]
-            if (currentCall != null) {
-                val videoEnabled = currentCall.currentParams.videoEnabled()
-                enableProximitySensor(!videoEnabled)
-            }
         }
     }
 
     override fun onPause() {
-        enableProximitySensor(false)
-
         val core = coreContext.core
         if (core.callsNb > 0) {
             coreContext.createCallOverlay()
@@ -168,38 +125,5 @@ class CallActivity : GenericActivity() {
         if (isInPictureInPictureMode) {
             viewModel.areControlsHidden.value = true
         }
-    }
-
-    private fun enableProximitySensor(enable: Boolean) {
-        if (enable) {
-            if (!proximitySensorEnabled) {
-                Log.i("[Call Activity] Enabling proximity sensor listener")
-                sensorManager.registerListener(proximityListener, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL)
-                proximitySensorEnabled = true
-            }
-        } else {
-            if (proximitySensorEnabled) {
-                Log.i("[Call Activity] Disabling proximity sensor listener")
-                sensorManager.unregisterListener(proximityListener)
-                if (proximityWakeLock.isHeld) {
-                    proximityWakeLock.release()
-                }
-                proximitySensorEnabled = false
-            }
-        }
-    }
-
-    private fun isProximitySensorNearby(event: SensorEvent): Boolean {
-        var threshold = 4.001f // <= 4 cm is near
-
-        val distanceInCm = event.values[0]
-        val maxDistance = event.sensor.maximumRange
-        Log.d("[Call Activity] Proximity sensor report [$distanceInCm] , for max range [$maxDistance]")
-
-        if (maxDistance <= threshold) {
-            // Case binary 0/1 and short sensors
-            threshold = maxDistance
-        }
-        return distanceInCm < threshold
     }
 }
