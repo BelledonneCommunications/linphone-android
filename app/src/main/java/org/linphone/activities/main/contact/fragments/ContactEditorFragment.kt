@@ -84,6 +84,7 @@ class ContactEditorFragment : Fragment() {
         binding.setSaveChangesClickListener {
             val savedContact = viewModel.save()
             if (savedContact is NativeContact) {
+                savedContact.syncValuesFromAndroidContact(requireContext())
                 val deepLink = "linphone-android://contact/view/${savedContact.nativeId}"
                 Log.i("[Contact Editor] Displaying contact, starting deep link: $deepLink")
                 findNavController().navigate(Uri.parse(deepLink))

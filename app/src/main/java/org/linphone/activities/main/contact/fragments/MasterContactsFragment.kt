@@ -169,15 +169,17 @@ class MasterContactsFragment : MasterFragment() {
             } else {
                 // When trying to display a non-native contact from history
                 val addressString = arguments?.getString("address")
-                val address = Factory.instance().createAddress(addressString)
-                if (address != null) {
-                    Log.i("[Contacts] Found friend native pointer parameter in arguments: ${address.asStringUriOnly()}")
-                    arguments?.clear()
+                if (addressString != null) {
+                    val address = Factory.instance().createAddress(addressString)
+                    if (address != null) {
+                        Log.i("[Contacts] Found friend native pointer parameter in arguments: ${address.asStringUriOnly()}")
+                        arguments?.clear()
 
-                    val contact = coreContext.contactsManager.findContactByAddress(address)
-                    if (contact != null) {
-                        Log.i("[Contacts] Found matching contact $contact")
-                        adapter.selectedContactEvent.value = Event(contact)
+                        val contact = coreContext.contactsManager.findContactByAddress(address)
+                        if (contact != null) {
+                            Log.i("[Contacts] Found matching contact $contact")
+                            adapter.selectedContactEvent.value = Event(contact)
+                        }
                     }
                 }
             }

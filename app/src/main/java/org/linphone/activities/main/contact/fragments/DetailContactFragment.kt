@@ -115,6 +115,11 @@ class DetailContactFragment : Fragment() {
             }
         }
 
+        binding.setDeleteClickListener {
+            viewModel.deleteContact()
+            findNavController().navigateUp()
+        }
+
         viewModel.onErrorEvent.observe(viewLifecycleOwner, Observer {
             it.consume { messageResourceId ->
                 (activity as MainActivity).showSnackBar(messageResourceId)
