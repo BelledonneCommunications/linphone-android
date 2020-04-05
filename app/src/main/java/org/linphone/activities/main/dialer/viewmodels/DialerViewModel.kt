@@ -36,7 +36,9 @@ class DialerViewModel : ViewModel() {
     val onKeyClick: NumpadDigitListener = object : NumpadDigitListener {
         override fun handleClick(key: Char) {
             enteredUri.value += key.toString()
-            coreContext.core.playDtmf(key, 1)
+            if (coreContext.core.callsNb == 0) {
+                coreContext.core.playDtmf(key, 1)
+            }
         }
 
         override fun handleLongClick(key: Char): Boolean {
