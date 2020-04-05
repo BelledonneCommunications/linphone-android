@@ -19,6 +19,7 @@
  */
 package org.linphone.activities.main.settings.fragments
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -34,7 +35,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
 import org.linphone.activities.main.settings.viewmodels.AdvancedSettingsViewModel
+import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsAdvancedFragmentBinding
+import org.linphone.utils.DeviceUtils
 
 class AdvancedSettingsFragment : Fragment() {
     private lateinit var binding: SettingsAdvancedFragmentBinding
@@ -71,6 +74,27 @@ class AdvancedSettingsFragment : Fragment() {
                 )
             }
         })
+
+        viewModel.goToBatterySettingsEvent.observe(viewLifecycleOwner, Observer { it.consume {
+            try {
+                val intent = Intent("android.settings.IGNORE_BATTERY_OPTIMIZATION_SETTINGS")
+                startActivity(intent)
+            } catch (anfe: ActivityNotFoundException) {
+                Log.e("[Advanced Settings] ActivityNotFound exception: ", anfe)
+            }
+        } })
+
+        viewModel.powerManagerSettingsVisibility.value = DeviceUtils.getDevicePowerManagerIntent(requireContext()) != null
+        viewModel.goToPowerManagerSettingsEvent.observe(viewLifecycleOwner, Observer { it.consume {
+            val intent = DeviceUtils.getDevicePowerManagerIntent(requireActivity())
+            if (intent != null) {
+                try {
+                    startActivity(intent)
+                } catch (se: SecurityException) {
+                    Log.e("[Advanced Settings] Security exception: ", se)
+                }
+            }
+        } })
 
         viewModel.goToAndroidSettingsEvent.observe(viewLifecycleOwner, Observer { it.consume {
             val intent = Intent()
