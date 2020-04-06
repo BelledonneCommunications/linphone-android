@@ -95,13 +95,19 @@ class Compatibility {
             }
         }
 
-        fun removeShortcutsToContacts(context: Context) {
+        fun removeShortcuts(context: Context) {
             if (Version.sdkAboveOrEqual(Version.API25_NOUGAT_71)) {
-                Api25Compatibility.removeShortcutsToContacts(context)
+                Api25Compatibility.removeShortcuts(context)
             }
         }
 
         /* Chat */
+
+        fun createShortcutsToChatRooms(context: Context) {
+            if (Version.sdkAboveOrEqual(Version.API25_NOUGAT_71)) {
+                Api25Compatibility.createShortcutsToChatRooms(context)
+            }
+        }
 
         fun addImageToMediaStore(context: Context, content: Content): Boolean {
             if (Version.sdkAboveOrEqual(Version.API29_ANDROID_10)) {

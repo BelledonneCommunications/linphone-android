@@ -27,6 +27,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.main.settings.viewmodels.ContactsSettingsViewModel
 import org.linphone.compatibility.Compatibility
@@ -61,7 +62,10 @@ class ContactsSettingsFragment : Fragment() {
                 if (newValue) {
                     Compatibility.createShortcutsToContacts(requireContext())
                 } else {
-                    Compatibility.removeShortcutsToContacts(requireContext())
+                    Compatibility.removeShortcuts(requireContext())
+                    if (corePreferences.chatRoomShortcuts) {
+                        Compatibility.createShortcutsToChatRooms(requireContext())
+                    }
                 }
             }
         })
