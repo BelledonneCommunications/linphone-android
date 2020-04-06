@@ -108,6 +108,12 @@ class CorePreferences constructor(private val context: Context) {
         get() = config.getString("app", "device_name", Compatibility.getDeviceName(context))
         set(value) = config.setString("app", "device_name", value)
 
+    var chatRoomShortcuts: Boolean
+        get() = config.getBool("app", "chat_room_shortcuts", true)
+        set(value) {
+            config.setBool("app", "chat_room_shortcuts", value)
+        }
+
     /* Contacts */
 
     // TODO: use it
@@ -124,9 +130,9 @@ class CorePreferences constructor(private val context: Context) {
         }
 
     var contactsShortcuts: Boolean
-        get() = config.getBool("app", "shortcuts", true)
+        get() = config.getBool("app", "contact_shortcuts", false)
         set(value) {
-            config.setBool("app", "shortcuts", value)
+            config.setBool("app", "contact_shortcuts", value)
         }
 
     /* Call */

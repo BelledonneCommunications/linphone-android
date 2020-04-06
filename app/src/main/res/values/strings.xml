@@ -371,8 +371,8 @@
     <string name="contacts_settings_native_presence_summary">Inserting information shortcuts from the &appName; contact into native Android contacts</string>
     <string name="contacts_settings_show_organization_title">Display contact organization</string>
     <string name="contacts_settings_show_organization_summary"></string>
-    <string name="contacts_settings_launcher_shortcuts_title">Create shortcuts in launcher</string>
-    <string name="contacts_settings_launcher_shortcuts_summary"></string>
+    <string name="contacts_settings_launcher_shortcuts_title">Create shortcuts to contacts in launcher</string>
+    <string name="contacts_settings_launcher_shortcuts_summary">Will replace chat room shortcuts if any</string>
 
     <!-- Advanced settings -->
     <string name="advanced_settings_debug_mode_title">Debug logs</string>
