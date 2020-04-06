@@ -41,6 +41,7 @@ import org.linphone.activities.call.CallActivity
 import org.linphone.activities.call.IncomingCallActivity
 import org.linphone.activities.call.OutgoingCallActivity
 import org.linphone.activities.main.MainActivity
+import org.linphone.activities.main.chat.ChatBubbleActivity
 import org.linphone.compatibility.Compatibility
 import org.linphone.contact.Contact
 import org.linphone.core.*
@@ -513,7 +514,7 @@ class NotificationsManager(private val context: Context) {
             .setArguments(args)
             .createPendingIntent()
 
-        val notification = createMessageNotification(notifiable, pendingIntent, "$localAddress#$peerAddress")
+        val notification = createMessageNotification(notifiable, pendingIntent, localAddress, peerAddress)
         if (notification != null) notify(notifiable.notificationId, notification)
     }
 
@@ -577,7 +578,8 @@ class NotificationsManager(private val context: Context) {
     private fun createMessageNotification(
         notifiable: Notifiable,
         pendingIntent: PendingIntent,
-        shortcutId: String
+        localAddress: String,
+        peerAddress: String
     ): Notification? {
         val me = Person.Builder().setName(notifiable.myself).build()
         val style = NotificationCompat.MessagingStyle(me)
@@ -604,6 +606,17 @@ class NotificationsManager(private val context: Context) {
         }
         style.isGroupConversation = notifiable.isGroup
 
+        val target = Intent(context, ChatBubbleActivity::class.java)
+        target.putExtra("LocalSipUri", localAddress)
+        target.putExtra("RemoteSipUri", peerAddress)
+        val bubbleIntent = PendingIntent.getActivity(context, 0, target, 0)
+        val bubbleIcon = if (largeIcon != null) IconCompat.createWithBitmap(largeIcon) else IconCompat.createWithResource(context, R.drawable.avatar)
+        val bubbleData = NotificationCompat.BubbleMetadata.Builder()
+            .setDesiredHeight(600)
+            .setIcon(bubbleIcon)
+            .setIntent(bubbleIntent)
+            .build()
+
         return NotificationCompat.Builder(context, context.getString(R.string.notification_channel_chat_id))
             .setSmallIcon(R.drawable.topbar_chat_notification)
             .setAutoCancel(true)
@@ -619,7 +632,8 @@ class NotificationsManager(private val context: Context) {
             .setColor(ContextCompat.getColor(context, R.color.primary_color))
             .addAction(getReplyMessageAction(notifiable))
             .addAction(getMarkMessageAsReadAction(notifiable))
-            .setShortcutId(shortcutId)
+            .setShortcutId("$localAddress#$peerAddress")
+            .setBubbleMetadata(bubbleData)
             .build()
     }
 

@@ -40,10 +40,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.io.File
-import kotlinx.android.synthetic.main.tabs_fragment.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.activities.SnackBarActivity
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.chat.ChatScrollListener
 import org.linphone.activities.main.chat.adapters.ChatMessagesListAdapter
@@ -93,6 +93,8 @@ class DetailChatRoomFragment : MasterFragment() {
             ChatRoomViewModelFactory(chatRoom)
         )[ChatRoomViewModel::class.java]
         binding.viewModel = viewModel
+        val activity = requireActivity()
+        viewModel.isInWindowedMode.value = activity as? MainActivity == null
 
         chatSendingViewModel = ViewModelProvider(
             this,
@@ -287,7 +289,9 @@ class DetailChatRoomFragment : MasterFragment() {
         super.onResume()
 
         // Prevent notifications for this chat room to be displayed
-        coreContext.notificationsManager.currentlyDisplayedChatRoomAddress = chatRoomAddress
+        if (viewModel.isInWindowedMode.value == false) {
+            coreContext.notificationsManager.currentlyDisplayedChatRoomAddress = chatRoomAddress
+        }
         scrollToBottom()
     }
 
@@ -562,7 +566,7 @@ class DetailChatRoomFragment : MasterFragment() {
             startActivity(intent)
         } catch (anfe: ActivityNotFoundException) {
             Log.e("[Chat Message] Couldn't find an activity to handle MIME type: $type")
-            val activity = requireActivity() as MainActivity
+            val activity = requireActivity() as SnackBarActivity
             activity.showSnackBar(R.string.chat_room_cant_open_file_no_app_found)
         }
     }

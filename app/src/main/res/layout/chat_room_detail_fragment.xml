@@ -43,6 +43,7 @@
 
         <LinearLayout
             android:id="@+id/top_bar"
+            android:visibility="@{viewModel.isInWindowedMode ? View.GONE : View.VISIBLE, default=visible}"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:background="?attr/lightToolbarBackgroundColor"

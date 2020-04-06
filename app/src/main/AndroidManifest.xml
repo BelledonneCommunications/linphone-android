@@ -85,6 +85,12 @@
         <activity android:name=".activities.assistant.AssistantActivity"
             android:windowSoftInputMode="adjustResize"/>
 
+        <activity android:name=".activities.main.chat.ChatBubbleActivity"
+            android:launchMode="standard"
+            android:allowEmbedded="true"
+            android:documentLaunchMode="always"
+            android:resizeableActivity="true"/>
+
         <activity android:name=".activities.call.CallActivity"
             android:launchMode="singleTop"
             android:showWhenLocked="true"

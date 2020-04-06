@@ -110,6 +110,8 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactViewModelI
     val onlyParticipantOnlyDeviceAddress: Address
         get() = chatRoom.participants.first().devices.first().address
 
+    val isInWindowedMode = MutableLiveData<Boolean>()
+
     private val contactsUpdatedListener = object : ContactsUpdatedListenerStub() {
         override fun onContactsUpdated() {
             Log.i("[Chat Room] Contacts have changed")
