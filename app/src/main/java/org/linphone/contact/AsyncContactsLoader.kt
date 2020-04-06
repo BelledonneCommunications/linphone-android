@@ -63,15 +63,15 @@ class AsyncContactsLoader(private val context: Context) :
     }
 
     override fun doInBackground(vararg args: Void): AsyncContactsData {
-        Log.i("[Contacts Loader] Background synchronization started")
-
         val data = AsyncContactsData()
-        val core: Core = coreContext.core
+        if (isCancelled) return data
 
+        Log.i("[Contacts Loader] Background synchronization started")
+        val core: Core = coreContext.core
         val androidContactsCache: HashMap<String, Contact> = HashMap()
         val nativeIds = arrayListOf<String>()
-
         val friendLists = core.friendsLists
+
         for (list in friendLists) {
             val friends = list.friends
             for (friend in friends) {
@@ -133,6 +133,7 @@ class AsyncContactsLoader(private val context: Context) :
                 while (cursor.moveToNext()) {
                     if (isCancelled) {
                         Log.w("[Contacts Loader] Task cancelled")
+                        cursor.close()
                         return data
                     }
 
@@ -218,7 +219,6 @@ class AsyncContactsLoader(private val context: Context) :
         androidContactsCache.clear()
 
         data.contacts.sort()
-        data.sipContacts.sort()
 
         Log.i("[Contacts Loader] Background synchronization finished")
         return data
@@ -232,11 +232,13 @@ class AsyncContactsLoader(private val context: Context) :
             if (contact is NativeContact) {
                 contact.createOrUpdateFriendFromNativeContact()
 
-                if (contact.friend?.presenceModel?.basicStatus == PresenceBasicStatus.Open) {
+                if (contact.friend?.presenceModel?.basicStatus == PresenceBasicStatus.Open && !data.sipContacts.contains(contact)) {
+                    Log.i("[Contacts Loader] Friend $contact has presence information, adding it to SIP list")
                     data.sipContacts.add(contact)
                 }
             }
         }
+        data.sipContacts.sort()
 
         // Now that contact fetching is asynchronous, this is required to ensure
         // presence subscription event will be sent with all friends
