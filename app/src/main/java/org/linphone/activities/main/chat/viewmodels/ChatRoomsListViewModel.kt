@@ -23,6 +23,7 @@ import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.main.viewmodels.ErrorReportingViewModel
+import org.linphone.compatibility.Compatibility
 import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.core.*
 import org.linphone.core.tools.Log
@@ -116,8 +117,11 @@ class ChatRoomsListViewModel : ErrorReportingViewModel() {
         }
 
         chatRoomsToDeleteCount = 1
-        chatRoom?.addListener(chatRoomListener)
-        chatRoom?.core?.deleteChatRoom(chatRoom)
+        if (chatRoom != null) {
+            Compatibility.removeChatRoomShortcut(chatRoom)
+            chatRoom.addListener(chatRoomListener)
+            coreContext.core.deleteChatRoom(chatRoom)
+        }
     }
 
     fun deleteChatRooms(chatRooms: ArrayList<ChatRoom>) {
@@ -127,6 +131,7 @@ class ChatRoomsListViewModel : ErrorReportingViewModel() {
                 LinphoneUtils.deleteFilesAttachedToEventLog(eventLog)
             }
 
+            Compatibility.removeChatRoomShortcut(chatRoom)
             chatRoom.addListener(chatRoomListener)
             chatRoom.core?.deleteChatRoom(chatRoom)
         }

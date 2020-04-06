@@ -25,6 +25,7 @@ import android.content.pm.PackageManager
 import android.os.Vibrator
 import android.view.WindowManager
 import androidx.core.app.NotificationManagerCompat
+import org.linphone.core.ChatRoom
 import org.linphone.core.Content
 import org.linphone.mediastream.Version
 
@@ -107,6 +108,10 @@ class Compatibility {
             if (Version.sdkAboveOrEqual(Version.API25_NOUGAT_71)) {
                 Api25Compatibility.createShortcutsToChatRooms(context)
             }
+        }
+
+        fun removeChatRoomShortcut(chatRoom: ChatRoom) {
+            // TODO Use removeLongLivedShortcuts() starting Android R (API 30)
         }
 
         fun addImageToMediaStore(context: Context, content: Content): Boolean {
