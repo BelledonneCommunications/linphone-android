@@ -24,7 +24,7 @@ import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.os.Build
 import android.provider.Settings
-import org.linphone.contact.ShortcutsHelper
+import org.linphone.utils.ShortcutsHelper
 
 @TargetApi(25)
 class Api25Compatibility {
@@ -52,7 +52,11 @@ class Api25Compatibility {
             ShortcutsHelper.createShortcutsToContacts(context)
         }
 
-        fun removeShortcutsToContacts(context: Context) {
+        fun createShortcutsToChatRooms(context: Context) {
+            ShortcutsHelper.createShortcutsToChatRooms(context)
+        }
+
+        fun removeShortcuts(context: Context) {
             ShortcutsHelper.removeShortcuts(context)
         }
     }

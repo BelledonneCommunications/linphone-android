@@ -17,18 +17,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.contact
+package org.linphone.utils
 
 import android.annotation.TargetApi
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
+import android.os.Bundle
 import androidx.collection.ArraySet
+import androidx.core.app.Person
 import androidx.core.content.pm.ShortcutInfoCompat
+import androidx.core.graphics.drawable.IconCompat
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
 import org.linphone.activities.main.MainActivity
+import org.linphone.contact.Contact
+import org.linphone.contact.NativeContact
 import org.linphone.core.Address
+import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomCapabilities
 import org.linphone.core.tools.Log
 
@@ -104,6 +111,90 @@ class ShortcutsHelper(val context: Context) {
                     .setShortLabel(contact.fullName ?: "${contact.firstName} ${contact.lastName}")
                     .setIcon(icon)
                     .setPerson(person)
+                    .setCategories(categories)
+                    .setIntent(intent)
+                    .build().toShortcutInfo()
+            } catch (e: Exception) {
+                Log.e("[Shortcuts Helper] ShortcutInfo.Builder exception: $e")
+            }
+
+            return null
+        }
+
+        fun createShortcutsToChatRooms(context: Context) {
+            val shortcuts = ArrayList<ShortcutInfo>()
+            val shortcutManager = context.getSystemService(ShortcutManager::class.java)
+            if (shortcutManager.isRateLimitingActive) {
+                Log.e("[Shortcut Helper] Rate limiting is active, aborting")
+                return
+            }
+
+            val maxShortcuts = shortcutManager.maxShortcutCountPerActivity
+            var count = 0
+            for (room in coreContext.core.chatRooms) {
+                // Android can usually only have around 4-5 shortcuts at a time
+                if (count >= maxShortcuts) {
+                    Log.w("[Shortcut Helper] Max amount of shortcuts reached ($count)")
+                    break
+                }
+
+                val shortcut: ShortcutInfo? = createChatRoomShortcut(context, room)
+                if (shortcut != null) {
+                    Log.i("[Shortcut Helper] Creating launcher shortcut for ${shortcut.shortLabel}")
+                    shortcuts.add(shortcut)
+                    count += 1
+                }
+            }
+            shortcutManager.dynamicShortcuts = shortcuts
+        }
+
+        private fun createChatRoomShortcut(context: Context, chatRoom: ChatRoom): ShortcutInfo? {
+            try {
+                val categories: ArraySet<String> = ArraySet()
+                categories.add(ShortcutInfo.SHORTCUT_CATEGORY_CONVERSATION)
+                val peerAddress = chatRoom.peerAddress.asStringUriOnly()
+                val localAddress = chatRoom.localAddress.asStringUriOnly()
+
+                val personsList = arrayListOf<Person>()
+                var subject = ""
+                var icon: IconCompat
+                if (chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt())) {
+                    val contact =
+                        coreContext.contactsManager.findContactByAddress(chatRoom.peerAddress)
+                    if (contact != null) {
+                        personsList.add(contact.getPerson())
+                    }
+                    subject = contact?.fullName ?: LinphoneUtils.getDisplayName(chatRoom.peerAddress)
+                    icon = contact?.getPerson()?.icon ?: IconCompat.createWithResource(context, R.drawable.avatar)
+                } else {
+                    for (participant in chatRoom.participants) {
+                        val contact =
+                            coreContext.contactsManager.findContactByAddress(participant.address)
+                        if (contact != null) {
+                            personsList.add(contact.getPerson())
+                        }
+                    }
+                    subject = chatRoom.subject
+                    icon = IconCompat.createWithResource(context, R.drawable.chat_group_avatar)
+                }
+
+                val persons = arrayOfNulls<Person>(personsList.size)
+                personsList.toArray(persons)
+
+                val args = Bundle()
+                args.putString("RemoteSipUri", peerAddress)
+                args.putString("LocalSipUri", localAddress)
+
+                val intent = Intent(Intent.ACTION_MAIN)
+                intent.setClass(context, MainActivity::class.java)
+                intent.putExtra("Chat", true)
+                intent.putExtra("RemoteSipUri", peerAddress)
+                intent.putExtra("LocalSipUri", localAddress)
+
+                return ShortcutInfoCompat.Builder(context, "$localAddress#$peerAddress")
+                    .setShortLabel(subject)
+                    .setIcon(icon)
+                    .setPersons(persons)
                     .setCategories(categories)
                     .setIntent(intent)
                     .build().toShortcutInfo()

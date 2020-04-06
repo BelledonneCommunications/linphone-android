@@ -82,6 +82,13 @@
 
                 <include
                     layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/chat_settings_launcher_shortcuts_title}"
+                    linphone:subtitle="@{@string/chat_settings_launcher_shortcuts_summary}"
+                    linphone:listener="@{viewModel.launcherShortcutsListener}"
+                    linphone:checked="@={viewModel.launcherShortcuts}"/>
+
+                <include
+                    layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/chat_settings_hide_empty_rooms_title}"
                     linphone:subtitle="@{@string/chat_settings_hide_empty_rooms_summary}"
                     linphone:listener="@{viewModel.hideEmptyRoomsListener}"
