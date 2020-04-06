@@ -347,6 +347,8 @@
     <string name="chat_settings_file_sharing_url_summary">Do not edit unless you know what you are doing!</string>
     <string name="chat_settings_downloaded_images_public_title">Make downloaded images visible in native gallery</string>
     <string name="chat_settings_downloaded_images_public_summary">Images in ephemeral messages won\'t be</string>
+    <string name="chat_settings_launcher_shortcuts_title">Create shortcuts to chat rooms in launcher</string>
+    <string name="chat_settings_launcher_shortcuts_summary">Will be replaced by contacts shortcuts if enabled</string>
     <string name="chat_settings_hide_empty_rooms_title">Hide empty chat rooms</string>
     <string name="chat_settings_hide_empty_rooms_summary"></string>
     <string name="chat_settings_hide_rooms_removed_proxies_title">Hide chat rooms from removed proxy configs</string>
@@ -371,8 +373,8 @@
     <string name="contacts_settings_native_presence_summary">Inserting information shortcuts from the &appName; contact into native Android contacts</string>
     <string name="contacts_settings_show_organization_title">Display contact organization</string>
     <string name="contacts_settings_show_organization_summary"></string>
-    <string name="contacts_settings_launcher_shortcuts_title">Create shortcuts in launcher</string>
-    <string name="contacts_settings_launcher_shortcuts_summary"></string>
+    <string name="contacts_settings_launcher_shortcuts_title">Create shortcuts to contacts in launcher</string>
+    <string name="contacts_settings_launcher_shortcuts_summary">Will replace chat room shortcuts if any</string>
 
     <!-- Advanced settings -->
     <string name="advanced_settings_debug_mode_title">Debug logs</string>

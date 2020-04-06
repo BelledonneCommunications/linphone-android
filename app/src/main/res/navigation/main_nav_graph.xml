@@ -44,6 +44,10 @@
             android:id="@+id/chatsDeepLink"
             app:uri="linphone-android://chat/"
             android:autoVerify="true" />
+        <deepLink
+            android:id="@+id/chatRoomDeepLink"
+            app:uri="linphone-android://chat-room/{LocalSipUri}/{RemoteSipUri}"
+            android:autoVerify="true" />
     </fragment>
     <fragment
         android:id="@+id/masterContactsFragment"

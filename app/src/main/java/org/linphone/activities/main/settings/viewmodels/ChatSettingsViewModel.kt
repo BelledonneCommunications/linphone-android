@@ -21,6 +21,7 @@ package org.linphone.activities.main.settings.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import org.linphone.activities.main.settings.SettingListenerStub
+import org.linphone.utils.Event
 
 class ChatSettingsViewModel : GenericSettingsViewModel() {
     val fileSharingUrlListener = object : SettingListenerStub() {
@@ -36,6 +37,15 @@ class ChatSettingsViewModel : GenericSettingsViewModel() {
         }
     }
     val downloadedImagesPublic = MutableLiveData<Boolean>()
+
+    val launcherShortcutsListener = object : SettingListenerStub() {
+        override fun onBoolValueChanged(newValue: Boolean) {
+            prefs.chatRoomShortcuts = newValue
+            launcherShortcutsEvent.value = Event(newValue)
+        }
+    }
+    val launcherShortcuts = MutableLiveData<Boolean>()
+    val launcherShortcutsEvent = MutableLiveData<Event<Boolean>>()
 
     val hideEmptyRoomsListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
@@ -53,6 +63,7 @@ class ChatSettingsViewModel : GenericSettingsViewModel() {
 
     init {
         downloadedImagesPublic.value = prefs.makePublicDownloadedImages
+        launcherShortcuts.value = prefs.chatRoomShortcuts
         hideEmptyRooms.value = prefs.hideEmptyRooms
         hideRoomsRemovedProxies.value = prefs.hideRoomsFromRemovedProxies
         fileSharingUrl.value = core.fileTransferServer
