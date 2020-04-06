@@ -67,7 +67,7 @@ git clone https://gitlab.linphone.org/BC/public/linphone-sdk.git --recursive
 
 2. Follow the instructions in the linphone-sdk/README file to build the SDK.
 
-3. Create or edit the gradle.properties file in $GRADLE_USER_HOME (usually ~/.gradle) file and add the absolute path to your linphone-sdk build directory, for example:
+3. Create or edit the gradle.properties file in $GRADLE_USER_HOME (usually ~/.gradle/) and add the absolute path to your linphone-sdk build directory, for example:
 ```
 LinphoneSdkBuildDir=/home/<username>/linphone-sdk/build/
 ```
@@ -109,10 +109,11 @@ If you build the app as release, the package name will be ```org.linphone```.
 
 Now that Google Cloud Messaging has been deprecated and will be completely removed on April 11th 2019, the only official way of using push notifications is through Firebase.
 
-However to make Firebase push notifications work, the project needs to have a file named app/google-services.json that contains some confidential informations, so you won't find it (it has been added to the .gitignore file).
-This means that if you compile this project, you won't have push notification feature working in the app!
+However to make Firebase push notifications work, the project needs to have a ```app/google-services.json``` file that contains the configuration.
+We have archived our own, so you can build your linphone-android application and still receive push notifications from our free SIP service (sip.linphone.org).
+If you delete it, you won't receive any push notification.
 
-To enable them, just add your own ```google-services.json``` in the app folder.
+If you have your own push server, replace this file by yours.
 
 ## Translations
 
