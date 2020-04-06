@@ -92,6 +92,7 @@ class DialerViewModel : ViewModel() {
         val addressToCall = enteredUri.value.orEmpty()
         if (addressToCall.isNotEmpty()) {
             coreContext.startCall(addressToCall)
+            eraseAll()
         } else {
             setLastOutgoingCallAddress()
         }
@@ -101,6 +102,7 @@ class DialerViewModel : ViewModel() {
         val addressToCall = enteredUri.value.orEmpty()
         if (addressToCall.isNotEmpty()) {
             coreContext.transferCallTo(addressToCall)
+            eraseAll()
         } else {
             setLastOutgoingCallAddress()
         }

@@ -440,3 +440,29 @@ fun setEditTextErrorListener(editText: EditText, attrChange: InverseBindingListe
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
     })
 }
+
+@BindingAdapter("queryValue")
+fun setSearchViewQuery(view: SearchView, query: String?) {
+    if (query != view.query) {
+        view.setQuery(query, false)
+    }
+}
+
+@InverseBindingAdapter(attribute = "queryValue")
+fun getSearchViewQuery(view: SearchView): String? {
+    return view.query?.toString()
+}
+
+@BindingAdapter("queryValueAttrChanged")
+fun setSearchViewQueryListener(view: SearchView, attrChange: InverseBindingListener) {
+    view.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        override fun onQueryTextSubmit(query: String?): Boolean {
+            return true
+        }
+
+        override fun onQueryTextChange(newText: String?): Boolean {
+            attrChange.onChange()
+            return true
+        }
+    })
+}

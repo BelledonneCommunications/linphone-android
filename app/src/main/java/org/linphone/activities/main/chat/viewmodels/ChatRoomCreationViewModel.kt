@@ -47,9 +47,10 @@ class ChatRoomCreationViewModel : ErrorReportingViewModel() {
 
     val selectedAddresses = MutableLiveData<ArrayList<Address>>()
 
-    val limeAvailable: Boolean = LinphoneUtils.isLimeAvailable()
+    val filter = MutableLiveData<String>()
+    var previousFilter = ""
 
-    private var filter: String = ""
+    val limeAvailable: Boolean = LinphoneUtils.isLimeAvailable()
 
     private val contactsUpdatedListener = object : ContactsUpdatedListenerStub() {
         override fun onContactsUpdated() {
@@ -95,18 +96,19 @@ class ChatRoomCreationViewModel : ErrorReportingViewModel() {
         isEncrypted.value = encrypted
     }
 
-    fun filter(search: String) {
-        if (filter.isNotEmpty() && filter.length > search.length) {
+    fun applyFilter() {
+        val filterValue = filter.value.orEmpty()
+        if (previousFilter.isNotEmpty() && previousFilter.length > filterValue.length) {
             coreContext.contactsManager.magicSearch.resetSearchCache()
         }
-        filter = search
+        previousFilter = filterValue
 
         updateContactsList()
     }
 
     fun updateContactsList() {
         val domain = if (sipContactsSelected.value == true) coreContext.core.defaultProxyConfig?.domain ?: "" else ""
-        val results = coreContext.contactsManager.magicSearch.getContactListFromFilter(filter, domain)
+        val results = coreContext.contactsManager.magicSearch.getContactListFromFilter(filter.value.orEmpty(), domain)
 
         val list = arrayListOf<SearchResult>()
         for (result in results) {
