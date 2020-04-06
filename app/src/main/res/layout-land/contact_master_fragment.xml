@@ -127,27 +127,19 @@
             android:layout_alignTop="@id/top_bar"
             tools:layout="@layout/list_edit_top_bar_fragment" />
 
-        <RelativeLayout
+        <SearchView
             android:id="@+id/searchBar"
+            queryValue="@={viewModel.filter}"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:focusableInTouchMode="true"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:iconifiedByDefault="false"
+            android:inputType="textPersonName"
             android:layout_below="@id/top_bar"
             android:layout_toRightOf="@id/tabs_fragment"
-            android:layout_margin="10dp">
-
-            <SearchView
-                android:id="@+id/searchView"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:gravity="center"
-                android:iconifiedByDefault="false"
-                android:inputType="textPersonName"
-                android:paddingRight="5dp"
-                android:queryBackground="@color/transparent_color"
-                android:queryHint="@string/contact_filter_hint"/>
-
-        </RelativeLayout>
+            android:layout_margin="10dp"
+            android:queryBackground="@color/transparent_color"
+            android:queryHint="@string/contact_filter_hint"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/contactsList"

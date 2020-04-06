@@ -35,7 +35,7 @@ class ContactsListViewModel : ViewModel() {
 
     val contactsList = MutableLiveData<ArrayList<Contact>>()
 
-    private var filter: String = ""
+    val filter = MutableLiveData<String>()
 
     private val contactsUpdatedListener = object : ContactsUpdatedListenerStub() {
         override fun onContactsUpdated() {
@@ -46,7 +46,6 @@ class ContactsListViewModel : ViewModel() {
 
     init {
         sipContactsSelected.value = true
-        filter = ""
 
         coreContext.contactsManager.addListener(contactsUpdatedListener)
     }
@@ -61,10 +60,10 @@ class ContactsListViewModel : ViewModel() {
         var list = arrayListOf<Contact>()
         list.addAll(if (sipContactsSelected.value == true) coreContext.contactsManager.sipContacts else coreContext.contactsManager.contacts)
 
-        if (filter.isNotEmpty()) {
-            val filter = filter.toLowerCase(Locale.getDefault())
+        val filterValue = filter.value.orEmpty().toLowerCase(Locale.getDefault())
+        if (filterValue.isNotEmpty()) {
             list = list.filter { contact ->
-                contact.fullName?.toLowerCase(Locale.getDefault())?.contains(filter) ?: false
+                contact.fullName?.toLowerCase(Locale.getDefault())?.contains(filterValue) ?: false
             } as ArrayList<Contact>
         }
 
@@ -72,11 +71,6 @@ class ContactsListViewModel : ViewModel() {
         if (list.isEmpty() || list.size != contactsList.value.orEmpty().size) {
             contactsList.value = list
         }
-    }
-
-    fun filter(search: String) {
-        filter = search
-        updateContactsList()
     }
 
     fun deleteContacts(list: ArrayList<Contact>) {
