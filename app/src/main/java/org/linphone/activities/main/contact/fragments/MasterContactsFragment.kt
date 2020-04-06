@@ -24,7 +24,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
@@ -104,6 +103,7 @@ class MasterContactsFragment : MasterFragment() {
             it.consume { contact ->
                 Log.i("[Contacts] Selected item in list changed: $contact")
                 sharedViewModel.selectedContact.value = contact
+                listViewModel.filter.value = ""
 
                 if (editOnClick) {
                     goToContactEditor()
@@ -130,22 +130,15 @@ class MasterContactsFragment : MasterFragment() {
             listViewModel.updateContactsList()
         })
 
+        listViewModel.filter.observe(viewLifecycleOwner, Observer {
+            listViewModel.updateContactsList()
+        })
+
         binding.setNewContactClickListener {
             // Remove any previously selected contact
             sharedViewModel.selectedContact.value = null
             goToContactEditor()
         }
-
-        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                listViewModel.filter(newText ?: "")
-                return true
-            }
-        })
 
         val id = arguments?.getString("id")
         if (id != null) {

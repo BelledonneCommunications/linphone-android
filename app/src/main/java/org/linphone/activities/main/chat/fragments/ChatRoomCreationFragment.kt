@@ -23,7 +23,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -122,6 +121,10 @@ class ChatRoomCreationFragment : Fragment() {
             }
         })
 
+        viewModel.filter.observe(viewLifecycleOwner, Observer {
+            viewModel.applyFilter()
+        })
+
         adapter.selectedContact.observe(viewLifecycleOwner, Observer {
             it.consume { searchResult ->
                 if (createGroup) {
@@ -144,17 +147,6 @@ class ChatRoomCreationFragment : Fragment() {
                 findNavController().navigate(R.id.action_chatRoomCreationFragment_to_groupInfoFragment, args)
             }
         }
-
-        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                viewModel.filter(newText ?: "")
-                return true
-            }
-        })
 
         viewModel.onErrorEvent.observe(viewLifecycleOwner, Observer {
             it.consume { messageResourceId ->
