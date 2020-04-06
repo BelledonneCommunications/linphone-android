@@ -57,9 +57,11 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
     private val listener = object : ContactsUpdatedListenerStub() {
         override fun onContactsUpdated() {
+            Log.i("[Main Activity] Contact(s) updated, update shortcuts")
             if (corePreferences.contactsShortcuts) {
-                Log.i("[Main Activity] Contact(s) updated, update shortcuts")
                 Compatibility.createShortcutsToContacts(this@MainActivity)
+            } else if (corePreferences.chatRoomShortcuts) {
+                Compatibility.createShortcutsToChatRooms(this@MainActivity)
             }
         }
     }
@@ -88,8 +90,6 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
             startActivity(intent)
         }
-
-        if (intent != null) handleIntentParams(intent)
 
         if (coreContext.core.proxyConfigList.isEmpty()) {
             if (corePreferences.firstStart) {
@@ -122,6 +122,8 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         findNavController(R.id.nav_host_fragment).addOnDestinationChangedListener(this)
+
+        if (intent != null) handleIntentParams(intent)
     }
 
     override fun onDestroy() {
@@ -194,8 +196,16 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                         findNavController(R.id.nav_host_fragment).navigate(Uri.parse(deepLink))
                     }
                     intent.hasExtra("Chat") -> {
-                        Log.i("[Main Activity] Found chat intent extra, go to chat rooms list")
-                        findNavController(R.id.nav_host_fragment).navigate(R.id.action_global_masterChatRoomsFragment)
+                        val deepLink = if (intent.hasExtra("RemoteSipUri") && intent.hasExtra("LocalSipUri")) {
+                            val peerAddress = intent.getStringExtra("RemoteSipUri")
+                            val localAddress = intent.getStringExtra("LocalSipUri")
+                            Log.i("[Main Activity] Found chat room intent extra: local SIP URI=[$localAddress], peer SIP URI=[$peerAddress]")
+                            "linphone-android://chat-room/$localAddress/$peerAddress"
+                        } else {
+                            Log.i("[Main Activity] Found chat intent extra, go to chat rooms list")
+                            "linphone-android://chat/"
+                        }
+                        findNavController(R.id.nav_host_fragment).navigate(Uri.parse(deepLink))
                     }
                     intent.hasExtra("Dialer") -> {
                         Log.i("[Main Activity] Found dialer intent extra, go to dialer")
