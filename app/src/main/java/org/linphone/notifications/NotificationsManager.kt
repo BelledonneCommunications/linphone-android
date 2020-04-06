@@ -500,9 +500,11 @@ class NotificationsManager(private val context: Context) {
     /* Chat related */
 
     private fun displayChatNotifiable(room: ChatRoom, notifiable: Notifiable) {
+        val localAddress = room.localAddress.asStringUriOnly()
+        val peerAddress = room.peerAddress.asStringUriOnly()
         val args = Bundle()
-        args.putString("RemoteSipUri", room.peerAddress.asStringUriOnly())
-        args.putString("LocalSipUri", room.localAddress.asStringUriOnly())
+        args.putString("RemoteSipUri", peerAddress)
+        args.putString("LocalSipUri", localAddress)
 
         val pendingIntent = NavDeepLinkBuilder(context)
             .setComponentName(MainActivity::class.java)
@@ -511,7 +513,7 @@ class NotificationsManager(private val context: Context) {
             .setArguments(args)
             .createPendingIntent()
 
-        val notification = createMessageNotification(notifiable, pendingIntent)
+        val notification = createMessageNotification(notifiable, pendingIntent, "$localAddress#$peerAddress")
         if (notification != null) notify(notifiable.notificationId, notification)
     }
 
@@ -572,7 +574,11 @@ class NotificationsManager(private val context: Context) {
 
     /* Notifications */
 
-    private fun createMessageNotification(notifiable: Notifiable, pendingIntent: PendingIntent): Notification? {
+    private fun createMessageNotification(
+        notifiable: Notifiable,
+        pendingIntent: PendingIntent,
+        shortcutId: String
+    ): Notification? {
         val me = Person.Builder().setName(notifiable.myself).build()
         val style = NotificationCompat.MessagingStyle(me)
         val largeIcon: Bitmap? = notifiable.messages.last().senderAvatar
@@ -613,6 +619,7 @@ class NotificationsManager(private val context: Context) {
             .setColor(ContextCompat.getColor(context, R.color.primary_color))
             .addAction(getReplyMessageAction(notifiable))
             .addAction(getMarkMessageAsReadAction(notifiable))
+            .setShortcutId(shortcutId)
             .build()
     }
 

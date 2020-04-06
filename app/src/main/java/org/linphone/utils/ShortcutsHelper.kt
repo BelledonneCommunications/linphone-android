@@ -38,6 +38,7 @@ import org.linphone.core.Address
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomCapabilities
 import org.linphone.core.tools.Log
+import org.linphone.mediastream.Version
 
 @TargetApi(25)
 class ShortcutsHelper(val context: Context) {
@@ -197,6 +198,7 @@ class ShortcutsHelper(val context: Context) {
                     .setPersons(persons)
                     .setCategories(categories)
                     .setIntent(intent)
+                    .setLongLived(Version.sdkAboveOrEqual(30)) // TODO Use Android R API code
                     .build().toShortcutInfo()
             } catch (e: Exception) {
                 Log.e("[Shortcuts Helper] ShortcutInfo.Builder exception: $e")
