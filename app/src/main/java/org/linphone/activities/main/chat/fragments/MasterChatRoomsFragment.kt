@@ -196,7 +196,7 @@ class MasterChatRoomsFragment : MasterFragment() {
         val localSipUri = arguments?.getString("LocalSipUri")
         val remoteSipUri = arguments?.getString("RemoteSipUri")
         if (localSipUri != null && remoteSipUri != null) {
-            Log.i("[Chat] Found local ($localSipUri) & remote addresses ($remoteSipUri) in arguments")
+            Log.i("[Chat] Found local [$localSipUri] & remote [$remoteSipUri] addresses in arguments")
             arguments?.clear()
             val localAddress = Factory.instance().createAddress(localSipUri)
             val remoteSipAddress = Factory.instance().createAddress(remoteSipUri)
