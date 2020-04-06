@@ -49,10 +49,12 @@ open class ContactsUpdatedListenerStub : ContactsUpdatedListener {
 class ContactsManager(private val context: Context) {
     private val contactsObserver: ContentObserver by lazy {
         object : ContentObserver(coreContext.handler) {
+            @Synchronized
             override fun onChange(selfChange: Boolean) {
                 onChange(selfChange, null)
             }
 
+            @Synchronized
             override fun onChange(selfChange: Boolean, uri: Uri?) {
                 Log.i("[Contacts Observer] At least one contact has changed")
                 fetchContactsAsync()
@@ -62,8 +64,12 @@ class ContactsManager(private val context: Context) {
 
     var contacts = ArrayList<Contact>()
         @Synchronized
+        get
+        @Synchronized
         private set
     var sipContacts = ArrayList<Contact>()
+        @Synchronized
+        get
         @Synchronized
         private set
 
@@ -111,8 +117,12 @@ class ContactsManager(private val context: Context) {
         Log.i("[Contacts Manager] Created")
     }
 
+    @Synchronized
     fun fetchContactsAsync() {
-        loadContactsTask?.cancel(true)
+        if (loadContactsTask != null) {
+            Log.w("[Contacts Manager] Cancelling existing async task")
+            loadContactsTask?.cancel(true)
+        }
         loadContactsTask = AsyncContactsLoader(context)
         loadContactsTask?.executeOnExecutor(THREAD_POOL_EXECUTOR)
     }
@@ -136,6 +146,7 @@ class ContactsManager(private val context: Context) {
         }
     }
 
+    @Synchronized
     fun getAndroidContactIdFromUri(uri: Uri): String? {
         val projection = arrayOf(ContactsContract.Data.CONTACT_ID)
         val cursor = context.contentResolver.query(uri, projection, null, null, null)
