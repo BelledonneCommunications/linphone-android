@@ -128,7 +128,7 @@ class ChatRoomCreationViewModel : ErrorReportingViewModel() {
         list.addAll(selectedAddresses.value.orEmpty())
 
         val found = list.find {
-            if (address != null) it.weakEqual(address) else false
+            it.weakEqual(address)
         }
 
         if (found != null) {

@@ -105,6 +105,7 @@ private class RecyclerViewSwipeUtilsCallback(
                     top + icon.intrinsicHeight
                 )
 
+                @Suppress("DEPRECATION")
                 if (configuration.leftToRightAction.iconTint != 0) icon.setColorFilter(
                     configuration.leftToRightAction.iconTint,
                     PorterDuff.Mode.SRC_IN

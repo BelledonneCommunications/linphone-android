@@ -110,43 +110,36 @@
                         android:layout_below="@id/phone_number_label"/>
 
                     <LinearLayout
-                        android:orientation="vertical"
+                        android:orientation="horizontal"
                         android:layout_marginTop="10dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/select_country">
 
-                        <LinearLayout
-                            android:orientation="horizontal"
+                        <EditText
+                            assistantPhoneNumberPrefixValidation="@{true}"
+                            android:background="@drawable/resizable_text_field"
+                            android:textColor="@color/black_color"
+                            android:inputType="phone"
+                            android:text="@={viewModel.prefix}"
+                            android:layout_marginRight="10dp"
+                            android:gravity="center"
+                            android:layout_width="65dp"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/international_prefix"
+                            android:maxLines="1"/>
+
+                        <EditText
+                            assistantPhoneNumberValidation="@{true}"
+                            errorMessage="@={viewModel.phoneNumberError}"
+                            android:text="@={viewModel.phoneNumber}"
+                            android:background="@drawable/resizable_text_field"
+                            android:textColor="@color/black_color"
+                            android:inputType="phone"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <EditText
-                                assistantPhoneNumberPrefixValidation="@{true}"
-                                android:background="@drawable/resizable_text_field"
-                                android:textColor="@color/black_color"
-                                android:inputType="phone"
-                                android:text="@={viewModel.prefix}"
-                                android:layout_marginRight="10dp"
-                                android:gravity="center"
-                                android:layout_width="65dp"
-                                android:layout_height="wrap_content"
-                                android:hint="@string/international_prefix"
-                                android:maxLines="1"/>
-
-                            <EditText
-                                assistantPhoneNumberValidation="@{true}"
-                                errorMessage="@={viewModel.phoneNumberError}"
-                                android:text="@={viewModel.phoneNumber}"
-                                android:background="@drawable/resizable_text_field"
-                                android:textColor="@color/black_color"
-                                android:inputType="phone"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:hint="@string/phone_number"
-                                android:maxLines="1"/>
-
-                        </LinearLayout>
+                            android:layout_height="wrap_content"
+                            android:hint="@string/phone_number"
+                            android:maxLines="1"/>
 
                     </LinearLayout>
 

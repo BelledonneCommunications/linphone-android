@@ -142,6 +142,7 @@
             android:layout_toRightOf="@id/tabs_fragment"
             android:padding="30dp"
             android:layout_centerHorizontal="true"
+            android:contentDescription="@null"
             android:src="@drawable/dialer_background" />
 
     </RelativeLayout>

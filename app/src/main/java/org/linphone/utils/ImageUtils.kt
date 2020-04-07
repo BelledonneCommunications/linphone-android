@@ -34,6 +34,7 @@ class ImageUtils {
             val roundBm: Bitmap?
             if (fromPictureUri != null) {
                 bm = try {
+                    @Suppress("DEPRECATION")
                     MediaStore.Images.Media.getBitmap(
                         context.contentResolver, fromPictureUri
                     )
