@@ -201,8 +201,8 @@ class FileUtils {
             return false
         }
 
-        private fun createFile(fileName: String): File {
-            var fileName = fileName
+        private fun createFile(file: String): File {
+            var fileName = file
 
             if (fileName.isEmpty()) fileName = getStartDate()
             if (!fileName.contains(".")) {

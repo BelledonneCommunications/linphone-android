@@ -25,83 +25,77 @@
             android:layout_alignParentTop="true"
             tools:layout="@layout/assistant_top_bar_fragment" />
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_below="@id/top_bar_fragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <TextView
+                style="@style/standard_text_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:paddingLeft="30dp"
-                android:paddingRight="30dp"
-                android:orientation="vertical">
+                android:text="@string/assistant_remote_provisioning_title"
+                android:paddingTop="10dp"
+                android:textAllCaps="true" />
 
-                <TextView
-                    style="@style/standard_text_font"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/assistant_remote_provisioning_title"
-                    android:paddingTop="10dp"
-                    android:textAllCaps="true" />
+            <TextView
+                style="@style/standard_small_text_font"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="top"
+                android:paddingTop="10dp"
+                android:text="@string/assistant_remote_provisioning_desc" />
 
-                <TextView
-                    style="@style/standard_small_text_font"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:layout_gravity="top"
-                    android:paddingTop="10dp"
-                    android:text="@string/assistant_remote_provisioning_desc" />
+            <TextView
+                android:text="@string/assistant_remote_provisioning_url"
+                style="@style/assistant_input_field_header_font"
+                android:textAllCaps="true"
+                android:paddingTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
-                <TextView
-                    android:text="@string/assistant_remote_provisioning_url"
-                    style="@style/assistant_input_field_header_font"
-                    android:textAllCaps="true"
-                    android:paddingTop="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+            <EditText
+                errorMessage="@={viewModel.urlError}"
+                urlConfirmationValidation="@{true}"
+                android:text="@={viewModel.urlToFetch}"
+                android:background="@drawable/resizable_text_field"
+                android:textColor="@color/black_color"
+                android:inputType="textUri"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/assistant_remote_provisioning_url"
+                android:maxLines="1"/>
 
-                <EditText
-                    errorMessage="@={viewModel.urlError}"
-                    urlConfirmationValidation="@{true}"
-                    android:text="@={viewModel.urlToFetch}"
-                    android:background="@drawable/resizable_text_field"
-                    android:textColor="@color/black_color"
-                    android:inputType="textUri"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/assistant_remote_provisioning_url"
-                    android:maxLines="1"/>
+            <TextView
+                android:onClick="@{() -> viewModel.fetchAndApply()}"
+                android:enabled="@{viewModel.fetchEnabled}"
+                android:text="@string/assistant_fetch_apply"
+                android:background="@drawable/assistant_button"
+                android:textColor="@drawable/assistant_button_text_color"
+                style="@style/button_font"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_marginTop="20dp"/>
 
-                <TextView
-                    android:onClick="@{() -> viewModel.fetchAndApply()}"
-                    android:enabled="@{viewModel.fetchEnabled}"
-                    android:text="@string/assistant_fetch_apply"
-                    android:background="@drawable/assistant_button"
-                    android:textColor="@drawable/assistant_button_text_color"
-                    style="@style/button_font"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:layout_marginTop="20dp"/>
+            <TextView
+                android:onClick="@{qrCodeClickListener}"
+                android:text="@string/assistant_launch_qrcode"
+                android:background="@drawable/assistant_button"
+                android:textColor="@drawable/assistant_button_text_color"
+                style="@style/button_font"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_marginTop="20dp"/>
 
-                <TextView
-                    android:onClick="@{qrCodeClickListener}"
-                    android:text="@string/assistant_launch_qrcode"
-                    android:background="@drawable/assistant_button"
-                    android:textColor="@drawable/assistant_button_text_color"
-                    style="@style/button_font"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:layout_marginTop="20dp"/>
-
-            </LinearLayout>
-
-        </RelativeLayout>
+        </LinearLayout>
 
         <include
             layout="@layout/wait_layout"

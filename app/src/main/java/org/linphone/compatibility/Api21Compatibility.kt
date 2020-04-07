@@ -34,6 +34,7 @@ import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.FileUtils
 
+@Suppress("DEPRECATION")
 @TargetApi(21)
 class Api21Compatibility {
     companion object {
