@@ -17,6 +17,7 @@
         <LinearLayout
             android:id="@+id/decline_button"
             android:onClick="@{() -> viewModel.decline(!viewModel.screenLocked)}"
+            android:focusable="true"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -49,14 +50,14 @@
 
                 <ImageView
                     android:src="@drawable/arrow_hangup"
-                    android:contentDescription="@string/content_description_slide_right_hangup"
+                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:alpha="0.6"/>
 
                 <ImageView
                     android:src="@drawable/arrow_hangup"
-                    android:contentDescription="@string/content_description_slide_right_hangup"
+                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:alpha="0.4"/>
@@ -68,6 +69,7 @@
         <LinearLayout
             android:id="@+id/answer_button"
             android:onClick="@{() -> viewModel.answer(!viewModel.screenLocked)}"
+            android:focusable="true"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -87,14 +89,14 @@
 
                 <ImageView
                     android:src="@drawable/arrow_accept"
-                    android:contentDescription="@string/content_description_slide_left_answer"
+                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:alpha="0.4"/>
 
                 <ImageView
                     android:src="@drawable/arrow_accept"
-                    android:contentDescription="@string/content_description_slide_left_answer"
+                    android:contentDescription="@null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:alpha="0.6"/>

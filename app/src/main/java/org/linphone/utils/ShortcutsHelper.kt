@@ -157,8 +157,8 @@ class ShortcutsHelper(val context: Context) {
                 val localAddress = chatRoom.localAddress.asStringUriOnly()
 
                 val personsList = arrayListOf<Person>()
-                var subject = ""
-                var icon: IconCompat
+                val subject: String
+                val icon: IconCompat
                 if (chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt())) {
                     val contact =
                         coreContext.contactsManager.findContactByAddress(chatRoom.peerAddress)

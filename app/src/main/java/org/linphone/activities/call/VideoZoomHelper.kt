@@ -60,7 +60,7 @@ class VideoZoomHelper(context: Context, private var videoDisplayView: View) : Ge
             }
         })
 
-        videoDisplayView.setOnTouchListener { v, event ->
+        videoDisplayView.setOnTouchListener { _, event ->
             val currentZoomFactor = zoomFactor
             scaleDetector.onTouchEvent(event)
 
