@@ -78,6 +78,7 @@ fun LinearLayout.setBackground(resource: Int) {
     this.setBackgroundResource(resource)
 }
 
+@Suppress("DEPRECATION")
 @BindingAdapter("style")
 fun TextView.setStyle(resource: Int) {
     this.setTextAppearance(context, resource)
@@ -360,7 +361,7 @@ fun addEmailEditTextValidation(editText: EditText, enabled: Boolean) {
 
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
 
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
             if (!Patterns.EMAIL_ADDRESS.matcher(s).matches()) {
                     editText.error = editText.context.getString(R.string.assistant_error_invalid_email_address)
             }
@@ -376,7 +377,7 @@ fun addUrlEditTextValidation(editText: EditText, enabled: Boolean) {
 
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
 
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
             if (!Patterns.WEB_URL.matcher(s).matches()) {
                 editText.error = editText.context.getString(R.string.assistant_remote_provisioning_wrong_format)
             }

@@ -481,13 +481,9 @@
     <string name="operation_in_progress_wait">Operation in progress, please wait</string>
 
     <!-- Content description -->
-    <string name="content_description_app_logo">&appName; logo</string>
-    <string name="content_description_ephemeral_message_logo">Ephemeral message logo</string>
-    <string name="content_description_group_chat_logo">Group conversation logo</string>
     <string name="content_description_add_sip_address_field">Add a SIP address field</string>
     <string name="content_description_add_phone_number_field">Add a phone number field</string>
     <string name="content_description_go_back">Go back</string>
-    <string name="content_description_contact_avatar">Contact avatar</string>
     <string name="content_description_phone_number_use">Show what your phone number will be used for</string>
     <string name="content_description_clear_field">Empty the text field next to it</string>
     <string name="content_description_switch_camera">Switch from front camera to back and vice versa</string>

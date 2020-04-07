@@ -41,7 +41,7 @@
                 android:src="@drawable/linphone_logo_tinted"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:contentDescription="@string/content_description_app_logo"
+                android:contentDescription="@null"
                 android:layout_centerInParent="true"/>
 
             <ProgressBar

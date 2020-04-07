@@ -32,7 +32,7 @@
 
     <ImageView
         android:id="@+id/caller_picture"
-        android:contentDescription="@string/content_description_contact_avatar"
+        android:contentDescription="@null"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:adjustViewBounds="true"

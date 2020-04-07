@@ -29,6 +29,7 @@ import org.linphone.core.ChatRoom
 import org.linphone.core.Content
 import org.linphone.mediastream.Version
 
+@Suppress("DEPRECATION")
 class Compatibility {
     companion object {
         fun hasPermission(context: Context, permission: String): Boolean {
