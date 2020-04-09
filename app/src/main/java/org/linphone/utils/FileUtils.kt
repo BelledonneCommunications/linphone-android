@@ -26,6 +26,10 @@ import android.provider.OpenableColumns
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.tools.Log
 
@@ -109,7 +113,7 @@ class FileUtils {
             }
         }
 
-        fun getFilePath(context: Context, uri: Uri): String? {
+        suspend fun getFilePath(context: Context, uri: Uri): String? {
             var result: String? = null
             val name: String = getNameFromUri(uri, context)
 
@@ -123,13 +127,16 @@ class FileUtils {
                             " to local file " +
                             localFile.absolutePath
                 )
-                if (copyToFile(remoteFile, localFile)) {
-                    Log.i("[File Utils] Copy successful")
-                    result = localFile.absolutePath
-                } else {
-                    Log.e("[File Utils] Copy failed")
+                coroutineScope {
+                    val deferred = async { copyToFile(remoteFile, localFile) }
+                    if (deferred.await()) {
+                        Log.i("[File Utils] Copy successful")
+                        result = localFile.absolutePath
+                    } else {
+                        Log.e("[File Utils] Copy failed")
+                    }
+                    remoteFile?.close()
                 }
-                remoteFile?.close()
             } catch (e: IOException) {
                 Log.e("[File Utils] getFilePath exception: ", e)
             }
@@ -158,7 +165,7 @@ class FileUtils {
             return name
         }
 
-        fun copyFileTo(filePath: String, outputStream: OutputStream?): Boolean {
+        suspend fun copyFileTo(filePath: String, outputStream: OutputStream?): Boolean {
             if (outputStream == null) {
                 Log.e("[File Utils] Can't copy file $filePath to given null output stream")
                 return false
@@ -171,11 +178,13 @@ class FileUtils {
             }
 
             try {
-                val inputStream = FileInputStream(file)
-                val buffer = ByteArray(4096)
-                var bytesRead: Int
-                while (inputStream.read(buffer).also { bytesRead = it } >= 0) {
-                    outputStream.write(buffer, 0, bytesRead)
+                withContext(Dispatchers.IO) {
+                    val inputStream = FileInputStream(file)
+                    val buffer = ByteArray(4096)
+                    var bytesRead: Int
+                    while (inputStream.read(buffer).also { bytesRead = it } >= 0) {
+                        outputStream.write(buffer, 0, bytesRead)
+                    }
                 }
                 return true
             } catch (e: IOException) {
@@ -184,14 +193,16 @@ class FileUtils {
             return false
         }
 
-        private fun copyToFile(inputStream: InputStream?, destFile: File?): Boolean {
+        private suspend fun copyToFile(inputStream: InputStream?, destFile: File?): Boolean {
             if (inputStream == null || destFile == null) return false
             try {
-                FileOutputStream(destFile).use { out ->
-                    val buffer = ByteArray(4096)
-                    var bytesRead: Int
-                    while (inputStream.read(buffer).also { bytesRead = it } >= 0) {
-                        out.write(buffer, 0, bytesRead)
+                withContext(Dispatchers.IO) {
+                    FileOutputStream(destFile).use { out ->
+                        val buffer = ByteArray(4096)
+                        var bytesRead: Int
+                        while (inputStream.read(buffer).also { bytesRead = it } >= 0) {
+                            out.write(buffer, 0, bytesRead)
+                        }
                     }
                 }
                 return true
