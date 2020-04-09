@@ -33,7 +33,7 @@ import org.linphone.utils.FileUtils
 @TargetApi(29)
 class Api29Compatibility {
     companion object {
-        fun addImageToMediaStore(context: Context, content: Content): Boolean {
+        suspend fun addImageToMediaStore(context: Context, content: Content): Boolean {
             val filePath = content.filePath
             val appName = AppUtils.getString(R.string.app_name)
             val relativePath = "${Environment.DIRECTORY_PICTURES}/$appName"
@@ -70,7 +70,7 @@ class Api29Compatibility {
             return copyOk
         }
 
-        fun addVideoToMediaStore(context: Context, content: Content): Boolean {
+        suspend fun addVideoToMediaStore(context: Context, content: Content): Boolean {
             val filePath = content.filePath
             val appName = AppUtils.getString(R.string.app_name)
             val relativePath = "${Environment.DIRECTORY_MOVIES}/$appName"
@@ -108,7 +108,7 @@ class Api29Compatibility {
             return copyOk
         }
 
-        fun addAudioToMediaStore(context: Context, content: Content): Boolean {
+        suspend fun addAudioToMediaStore(context: Context, content: Content): Boolean {
             val filePath = content.filePath
             val appName = AppUtils.getString(R.string.app_name)
             val relativePath = "${Environment.DIRECTORY_MUSIC}/$appName"
