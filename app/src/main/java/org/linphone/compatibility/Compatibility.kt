@@ -115,21 +115,21 @@ class Compatibility {
             // TODO Use removeLongLivedShortcuts() starting Android R (API 30)
         }
 
-        fun addImageToMediaStore(context: Context, content: Content): Boolean {
+        suspend fun addImageToMediaStore(context: Context, content: Content): Boolean {
             if (Version.sdkAboveOrEqual(Version.API29_ANDROID_10)) {
                 return Api29Compatibility.addImageToMediaStore(context, content)
             }
             return Api21Compatibility.addImageToMediaStore(context, content)
         }
 
-        fun addVideoToMediaStore(context: Context, content: Content): Boolean {
+        suspend fun addVideoToMediaStore(context: Context, content: Content): Boolean {
             if (Version.sdkAboveOrEqual(Version.API29_ANDROID_10)) {
                 return Api29Compatibility.addVideoToMediaStore(context, content)
             }
             return Api21Compatibility.addVideoToMediaStore(context, content)
         }
 
-        fun addAudioToMediaStore(context: Context, content: Content): Boolean {
+        suspend fun addAudioToMediaStore(context: Context, content: Content): Boolean {
             if (Version.sdkAboveOrEqual(Version.API29_ANDROID_10)) {
                 return Api29Compatibility.addAudioToMediaStore(context, content)
             }

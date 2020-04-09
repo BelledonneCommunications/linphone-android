@@ -31,8 +31,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import java.io.File
+import kotlinx.coroutines.launch
 import org.linphone.R
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.contact.viewmodels.*
@@ -130,40 +132,42 @@ class ContactEditorFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
-            var fileToUploadPath: String? = null
+            lifecycleScope.launch {
+                var fileToUploadPath: String? = null
 
-            val temporaryFileUploadPath = temporaryPicturePath
-            if (temporaryFileUploadPath != null) {
-                if (data != null) {
-                    val dataUri = data.data
-                    if (dataUri != null) {
-                        fileToUploadPath = dataUri.toString()
-                        Log.i("[Chat Room] Using data URI $fileToUploadPath")
+                val temporaryFileUploadPath = temporaryPicturePath
+                if (temporaryFileUploadPath != null) {
+                    if (data != null) {
+                        val dataUri = data.data
+                        if (dataUri != null) {
+                            fileToUploadPath = dataUri.toString()
+                            Log.i("[Chat Room] Using data URI $fileToUploadPath")
+                        } else if (temporaryFileUploadPath.exists()) {
+                            fileToUploadPath = temporaryFileUploadPath.absolutePath
+                            Log.i("[Chat Room] Data URI is null, using $fileToUploadPath")
+                        }
                     } else if (temporaryFileUploadPath.exists()) {
                         fileToUploadPath = temporaryFileUploadPath.absolutePath
-                        Log.i("[Chat Room] Data URI is null, using $fileToUploadPath")
-                    }
-                } else if (temporaryFileUploadPath.exists()) {
-                    fileToUploadPath = temporaryFileUploadPath.absolutePath
-                    Log.i("[Chat Room] Data is null, using $fileToUploadPath")
-                }
-            }
-
-            if (fileToUploadPath != null) {
-                if (fileToUploadPath.startsWith("content://") ||
-                    fileToUploadPath.startsWith("file://")
-                ) {
-                    val uriToParse = Uri.parse(fileToUploadPath)
-                    fileToUploadPath = FileUtils.getFilePath(requireContext(), uriToParse)
-                    Log.i("[Chat] Path was using a content or file scheme, real path is: $fileToUploadPath")
-                    if (fileToUploadPath == null) {
-                        Log.e("[Chat] Failed to get access to file $uriToParse")
+                        Log.i("[Chat Room] Data is null, using $fileToUploadPath")
                     }
                 }
-            }
 
-            if (fileToUploadPath != null) {
-                viewModel.setPictureFromPath(fileToUploadPath)
+                if (fileToUploadPath != null) {
+                    if (fileToUploadPath.startsWith("content://") ||
+                        fileToUploadPath.startsWith("file://")
+                    ) {
+                        val uriToParse = Uri.parse(fileToUploadPath)
+                        fileToUploadPath = FileUtils.getFilePath(requireContext(), uriToParse)
+                        Log.i("[Chat] Path was using a content or file scheme, real path is: $fileToUploadPath")
+                        if (fileToUploadPath == null) {
+                            Log.e("[Chat] Failed to get access to file $uriToParse")
+                        }
+                    }
+                }
+
+                if (fileToUploadPath != null) {
+                    viewModel.setPictureFromPath(fileToUploadPath)
+                }
             }
         }
     }
