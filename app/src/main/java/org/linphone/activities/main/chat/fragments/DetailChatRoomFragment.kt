@@ -35,12 +35,14 @@ import androidx.appcompat.view.menu.MenuPopupHelper
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.io.File
 import kotlinx.android.synthetic.main.tabs_fragment.*
+import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -299,40 +301,41 @@ class DetailChatRoomFragment : MasterFragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
-            var fileToUploadPath: String? = null
-
-            val temporaryFileUploadPath = chatSendingViewModel.temporaryFileUploadPath
-            if (temporaryFileUploadPath != null) {
-                if (data != null) {
-                    val dataUri = data.data
-                    if (dataUri != null) {
-                        fileToUploadPath = dataUri.toString()
-                        Log.i("[Chat Room] Using data URI $fileToUploadPath")
+            lifecycleScope.launch {
+                var fileToUploadPath: String? = null
+                val temporaryFileUploadPath = chatSendingViewModel.temporaryFileUploadPath
+                if (temporaryFileUploadPath != null) {
+                    if (data != null) {
+                        val dataUri = data.data
+                        if (dataUri != null) {
+                            fileToUploadPath = dataUri.toString()
+                            Log.i("[Chat Room] Using data URI $fileToUploadPath")
+                        } else if (temporaryFileUploadPath.exists()) {
+                            fileToUploadPath = temporaryFileUploadPath.absolutePath
+                            Log.i("[Chat Room] Data URI is null, using $fileToUploadPath")
+                        }
                     } else if (temporaryFileUploadPath.exists()) {
                         fileToUploadPath = temporaryFileUploadPath.absolutePath
-                        Log.i("[Chat Room] Data URI is null, using $fileToUploadPath")
-                    }
-                } else if (temporaryFileUploadPath.exists()) {
-                    fileToUploadPath = temporaryFileUploadPath.absolutePath
-                    Log.i("[Chat Room] Data is null, using $fileToUploadPath")
-                }
-            }
-
-            if (fileToUploadPath != null) {
-                if (fileToUploadPath.startsWith("content://") ||
-                    fileToUploadPath.startsWith("file://")
-                ) {
-                    val uriToParse = Uri.parse(fileToUploadPath)
-                    fileToUploadPath = FileUtils.getFilePath(requireContext(), uriToParse)
-                    Log.i("[Chat] Path was using a content or file scheme, real path is: $fileToUploadPath")
-                    if (fileToUploadPath == null) {
-                        Log.e("[Chat] Failed to get access to file $uriToParse")
+                        Log.i("[Chat Room] Data is null, using $fileToUploadPath")
                     }
                 }
-            }
 
-            if (fileToUploadPath != null) {
-                chatSendingViewModel.addAttachment(fileToUploadPath)
+                if (fileToUploadPath != null) {
+                    if (fileToUploadPath.startsWith("content://") ||
+                        fileToUploadPath.startsWith("file://")
+                    ) {
+                        val uriToParse = Uri.parse(fileToUploadPath)
+                        fileToUploadPath = FileUtils.getFilePath(requireContext(), uriToParse)
+                        Log.i("[Chat] Path was using a content or file scheme, real path is: $fileToUploadPath")
+                        if (fileToUploadPath == null) {
+                            Log.e("[Chat] Failed to get access to file $uriToParse")
+                        }
+                    }
+                }
+
+                if (fileToUploadPath != null) {
+                    chatSendingViewModel.addAttachment(fileToUploadPath)
+                }
             }
         }
     }

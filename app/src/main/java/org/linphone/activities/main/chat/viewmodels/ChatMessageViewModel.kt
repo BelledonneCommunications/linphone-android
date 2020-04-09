@@ -22,6 +22,8 @@ package org.linphone.activities.main.chat.viewmodels
 import android.os.CountDownTimer
 import android.text.Spanned
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -205,30 +207,32 @@ class ChatMessageViewModel(
     }
 
     private fun addContentToMediaStore(content: Content) {
-        when (content.type) {
-            "image" -> {
-                if (Compatibility.addImageToMediaStore(coreContext.context, content)) {
-                    Log.i("[Chat Message] Adding image ${content.name} terminated")
-                } else {
-                    Log.e("[Chat Message] Something went wrong while copying file...")
+        viewModelScope.launch {
+            when (content.type) {
+                "image" -> {
+                    if (Compatibility.addImageToMediaStore(coreContext.context, content)) {
+                        Log.i("[Chat Message] Adding image ${content.name} terminated")
+                    } else {
+                        Log.e("[Chat Message] Something went wrong while copying file...")
+                    }
                 }
-            }
-            "video" -> {
-                if (Compatibility.addVideoToMediaStore(coreContext.context, content)) {
-                    Log.i("[Chat Message] Adding video ${content.name} terminated")
-                } else {
-                    Log.e("[Chat Message] Something went wrong while copying file...")
+                "video" -> {
+                    if (Compatibility.addVideoToMediaStore(coreContext.context, content)) {
+                        Log.i("[Chat Message] Adding video ${content.name} terminated")
+                    } else {
+                        Log.e("[Chat Message] Something went wrong while copying file...")
+                    }
                 }
-            }
-            "audio" -> {
-                if (Compatibility.addAudioToMediaStore(coreContext.context, content)) {
-                    Log.i("[Chat Message] Adding audio ${content.name} terminated")
-                } else {
-                    Log.e("[Chat Message] Something went wrong while copying file...")
+                "audio" -> {
+                    if (Compatibility.addAudioToMediaStore(coreContext.context, content)) {
+                        Log.i("[Chat Message] Adding audio ${content.name} terminated")
+                    } else {
+                        Log.e("[Chat Message] Something went wrong while copying file...")
+                    }
                 }
-            }
-            else -> {
-                Log.w("[Chat Message] File ${content.name} isn't either an image, an audio file or a video, can't add it to the Media Store")
+                else -> {
+                    Log.w("[Chat Message] File ${content.name} isn't either an image, an audio file or a video, can't add it to the Media Store")
+                }
             }
         }
     }

@@ -30,12 +30,14 @@ import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import com.google.android.material.snackbar.Snackbar
 import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
+import kotlinx.coroutines.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -147,10 +149,14 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     private fun handleIntentParams(intent: Intent) {
         when (intent.action) {
             Intent.ACTION_SEND -> {
-                handleSendImage(intent)
+                lifecycleScope.launch {
+                    handleSendImage(intent)
+                }
             }
             Intent.ACTION_SEND_MULTIPLE -> {
-                handleSendMultipleImages(intent)
+                lifecycleScope.launch {
+                    handleSendMultipleImages(intent)
+                }
             }
             Intent.ACTION_VIEW -> {
                 if (intent.type == AppUtils.getString(R.string.linphone_address_mime_type)) {
@@ -218,13 +224,18 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         }
     }
 
-    private fun handleSendImage(intent: Intent) {
+    private suspend fun handleSendImage(intent: Intent) {
         (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let {
             val list = arrayListOf<String>()
-            val path = FileUtils.getFilePath(this, it)
-            if (path != null) {
-                list.add(path)
-                Log.i("[Main Activity] Found single file to share: $path")
+            coroutineScope {
+                val deferred = async {
+                    FileUtils.getFilePath(this@MainActivity, it)
+                }
+                val path = deferred.await()
+                if (path != null) {
+                    list.add(path)
+                    Log.i("[Main Activity] Found single file to share: $path")
+                }
             }
             sharedViewModel.filesToShare.value = list
 
@@ -234,14 +245,20 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         }
     }
 
-    private fun handleSendMultipleImages(intent: Intent) {
+    private suspend fun handleSendMultipleImages(intent: Intent) {
         intent.getParcelableArrayListExtra<Parcelable>(Intent.EXTRA_STREAM)?.let {
             val list = arrayListOf<String>()
-            for (parcelable in it) {
-                val uri = parcelable as Uri
-                val path = FileUtils.getFilePath(this, uri)
-                Log.i("[Main Activity] Found file to share: $path")
-                if (path != null) list.add(path)
+            coroutineScope {
+                val deferred = arrayListOf<Deferred<String?>>()
+                for (parcelable in it) {
+                    val uri = parcelable as Uri
+                    deferred.add(async { FileUtils.getFilePath(this@MainActivity, uri) })
+                }
+                val paths = deferred.awaitAll()
+                for (path in paths) {
+                    Log.i("[Main Activity] Found file to share: $path")
+                    if (path != null) list.add(path)
+                }
             }
             sharedViewModel.filesToShare.value = list
 

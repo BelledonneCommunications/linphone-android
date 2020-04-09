@@ -57,7 +57,7 @@ class Api21Compatibility {
             vibrator.vibrate(pattern, 1)
         }
 
-        fun addImageToMediaStore(context: Context, content: Content): Boolean {
+        suspend fun addImageToMediaStore(context: Context, content: Content): Boolean {
             val filePath = content.filePath
             val appName = AppUtils.getString(R.string.app_name)
             val relativePath = "${Environment.DIRECTORY_PICTURES}/$appName"
@@ -88,7 +88,7 @@ class Api21Compatibility {
             return copyOk
         }
 
-        fun addVideoToMediaStore(context: Context, content: Content): Boolean {
+        suspend fun addVideoToMediaStore(context: Context, content: Content): Boolean {
             val filePath = content.filePath
             val appName = AppUtils.getString(R.string.app_name)
             val relativePath = "${Environment.DIRECTORY_MOVIES}/$appName"
@@ -120,7 +120,7 @@ class Api21Compatibility {
             return copyOk
         }
 
-        fun addAudioToMediaStore(context: Context, content: Content): Boolean {
+        suspend fun addAudioToMediaStore(context: Context, content: Content): Boolean {
             val filePath = content.filePath
             val appName = AppUtils.getString(R.string.app_name)
             val relativePath = "${Environment.DIRECTORY_MUSIC}/$appName"
