@@ -251,7 +251,7 @@ class ControlsViewModel : ViewModel() {
 
     fun forceBluetoothAudioRoute() {
         for (audioDevice in coreContext.core.audioDevices) {
-            if (audioDevice.type == AudioDevice.Type.Bluetooth) {
+            if ((audioDevice.type == AudioDevice.Type.Bluetooth) && audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
                 Log.i("[Call] Found bluetooth audio device [${audioDevice.deviceName}], routing audio to it")
                 coreContext.core.outputAudioDevice = audioDevice
                 return
