@@ -206,8 +206,6 @@
             android:name=".assistant.RemoteConfigurationAssistantActivity"/>
         <activity
             android:name=".assistant.EchoCancellerCalibrationAssistantActivity"/>
-        <activity
-            android:name=".assistant.OpenH264DownloadAssistantActivity"/>
 
 
         <!-- Services -->
