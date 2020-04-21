@@ -59,6 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
+            android:background="?attr/backgroundColor"
             android:orientation="vertical">
 
             <RelativeLayout
@@ -75,6 +76,19 @@
                     android:text="@string/call_conference_title" />
 
                 <ImageView
+                    android:onClick="@{() -> controlsViewModel.switchCamera()}"
+                    android:visibility="@{controlsViewModel.isVideoEnabled ? View.VISIBLE : View.GONE, default=gone}"
+                    android:contentDescription="@string/content_description_switch_camera"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_toLeftOf="@id/pause_conference"
+                    android:adjustViewBounds="true"
+                    android:padding="10dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/switch_camera" />
+
+                <ImageView
+                    android:id="@+id/pause_conference"
                     android:onClick="@{() -> viewModel.pauseConference()}"
                     android:contentDescription="@string/content_description_pause_conference"
                     android:layout_width="wrap_content"
@@ -208,7 +222,7 @@
         <ImageView
             android:onClick="@{() -> controlsViewModel.switchCamera()}"
             android:enabled="@{!viewModel.callPausedByRemote}"
-            android:visibility="@{controlsViewModel.isVideoEnabled &amp;&amp; controlsViewModel.showSwitchCamera ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{controlsViewModel.isVideoEnabled &amp;&amp; controlsViewModel.showSwitchCamera &amp;&amp; (viewModel.conferenceCalls.size() == 0 || viewModel.isConferencePaused) ? View.VISIBLE : View.GONE, default=gone}"
             android:contentDescription="@string/content_description_switch_camera"
             android:layout_width="50dp"
             android:layout_height="50dp"

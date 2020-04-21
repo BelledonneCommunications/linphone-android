@@ -26,7 +26,7 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
 import android.os.PowerManager
-import org.linphone.LinphoneApplication
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.activities.GenericActivity
 import org.linphone.core.tools.Log
 
@@ -75,12 +75,9 @@ abstract class ProximitySensorActivity : GenericActivity() {
     override fun onResume() {
         super.onResume()
 
-        if (LinphoneApplication.coreContext.core.callsNb > 0) {
-            val currentCall = LinphoneApplication.coreContext.core.currentCall ?: LinphoneApplication.coreContext.core.calls[0]
-            if (currentCall != null) {
-                val videoEnabled = currentCall.currentParams.videoEnabled()
-                enableProximitySensor(!videoEnabled)
-            }
+        if (coreContext.core.callsNb > 0) {
+            val videoEnabled = coreContext.isVideoCallOrConferenceActive()
+            enableProximitySensor(!videoEnabled)
         }
     }
 

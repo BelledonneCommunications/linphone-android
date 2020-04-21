@@ -123,7 +123,7 @@ class CallActivity : ProximitySensorActivity() {
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
 
-        if (coreContext.core.currentCall?.currentParams?.videoEnabled() == true) {
+        if (coreContext.isVideoCallOrConferenceActive()) {
             Compatibility.enterPipMode(this)
         }
     }

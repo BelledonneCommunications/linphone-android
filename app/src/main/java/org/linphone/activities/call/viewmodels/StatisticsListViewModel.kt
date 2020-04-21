@@ -37,11 +37,13 @@ class StatisticsListViewModel : ViewModel() {
             message: String?
         ) {
             if (state == Call.State.End || state == Call.State.Error) {
+                val newList = arrayListOf<CallStatisticsViewModel>()
                 for (stat in callStatsList.value.orEmpty()) {
-                    if (stat.call == call) {
-                        callStatsList.value?.remove(stat)
+                    if (stat.call != call) {
+                        newList.add(stat)
                     }
                 }
+                callStatsList.value = newList
             }
         }
     }
