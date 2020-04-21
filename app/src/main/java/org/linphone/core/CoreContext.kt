@@ -355,6 +355,8 @@ class CoreContext(val context: Context, coreConfig: Config) {
             }
         }
 
+        // TODO: change camera while in video conference
+
         val call = core.currentCall
         if (call == null) {
             Log.w("[Context] Switching camera while not in call")
