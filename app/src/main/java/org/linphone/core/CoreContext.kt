@@ -353,16 +353,28 @@ class CoreContext(val context: Context, coreConfig: Config) {
             }
         }
 
-        val call = core.currentCall
-        if (call == null) {
-            Log.w("[Context] Switching camera while not in call")
-            return
+        if (core.conference != null && core.isInConference) {
+            // Nothing to do
+        } else {
+            val call = core.currentCall
+            if (call == null) {
+                Log.w("[Context] Switching camera while not in call")
+                return
+            }
+            call.update(null)
         }
-        call.update(null)
     }
 
     fun showSwitchCameraButton(): Boolean {
         return core.videoDevicesList.orEmpty().size > 2 // Count StaticImage camera
+    }
+
+    fun isVideoCallOrConferenceActive(): Boolean {
+        return if (core.conference != null && core.isInConference) {
+            core.conference.currentParams.videoEnabled()
+        } else {
+            core.currentCall?.currentParams?.videoEnabled() ?: false
+        }
     }
 
     fun createCallOverlay() {
