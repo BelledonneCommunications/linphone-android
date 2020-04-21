@@ -180,7 +180,11 @@ class ControlsViewModel : ViewModel() {
         val core = coreContext.core
         val currentCall = core.currentCall
 
-        if (currentCall != null) {
+        if (core.conference != null && core.isInConference) {
+            val params = core.conference.currentParams
+            params.enableVideo(!params.videoEnabled())
+            // TODO: update
+        } else if (currentCall != null) {
             val state = currentCall.state
             if (state == Call.State.End || state == Call.State.Released || state == Call.State.Error)
                 return
@@ -237,7 +241,19 @@ class ControlsViewModel : ViewModel() {
 
     fun startConference() {
         somethingClickedEvent.value = Event(true)
-        coreContext.core.addAllToConference()
+        
+        val core = coreContext.core
+        val currentCallVideoEnabled = core.currentCall?.currentParams?.videoEnabled() ?: false
+
+        val params = core.createConferenceParams()
+        params.enableVideo(currentCallVideoEnabled)
+        Log.i("[Call] Setting videoEnabled to [$currentCallVideoEnabled] in conference params")
+
+        val conference = core.createConferenceWithParams(params)
+        for (call in core.calls) {
+            conference.addParticipant(call)
+        }
+
         toggleOptionsMenu()
     }
 
@@ -323,12 +339,17 @@ class ControlsViewModel : ViewModel() {
     private fun updateVideoAvailable() {
         val core = coreContext.core
         isVideoAvailable.value = (core.videoCaptureEnabled() || core.videoPreviewEnabled()) &&
-                core.currentCall != null && !core.currentCall.mediaInProgress()
+                ((core.currentCall != null && !core.currentCall.mediaInProgress()) ||
+                        (core.conference != null && core.isInConference))
     }
 
     private fun updateVideoEnabled() {
         val core = coreContext.core
-        isVideoEnabled.value = core.currentCall?.currentParams?.videoEnabled()
+        if (core.conference != null && core.isInConference) {
+            isVideoEnabled.value = core.conference.currentParams.videoEnabled()
+        } else {
+            isVideoEnabled.value = core.currentCall?.currentParams?.videoEnabled()
+        }
     }
 
     private fun updateConferenceState() {
