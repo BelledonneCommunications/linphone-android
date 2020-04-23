@@ -25,6 +25,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.core.Factory
+import org.linphone.core.tools.Log
 
 class VideoSettingsViewModel : GenericSettingsViewModel() {
     val enableVideoListener = object : SettingListenerStub() {
@@ -122,11 +123,23 @@ class VideoSettingsViewModel : GenericSettingsViewModel() {
     private fun initCameraDevicesList() {
         val labels = arrayListOf<String>()
         for (camera in core.videoDevicesList) {
-            labels.add(camera)
+            if (prefs.hideStaticImageCamera && camera.startsWith("StaticImage")) {
+                Log.w("[Video Settings] Do not display StaticImage camera")
+            } else {
+                labels.add(camera)
+            }
         }
 
         cameraDeviceLabels.value = labels
-        cameraDeviceIndex.value = labels.indexOf(core.videoDevice)
+        val index = labels.indexOf(core.videoDevice)
+        if (index == -1) {
+            val firstDevice = cameraDeviceLabels.value.orEmpty().firstOrNull()
+            Log.w("[Video Settings] Device not found in labels list: ${core.videoDevice}, replace it by $firstDevice")
+            cameraDeviceIndex.value = 0
+            core.videoDevice = firstDevice
+        } else {
+            cameraDeviceIndex.value = index
+        }
     }
 
     private fun initVideoSizeList() {
