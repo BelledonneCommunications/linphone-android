@@ -84,6 +84,9 @@ class CorePreferences constructor(private val context: Context) {
         get() = config.getBool("app", "video_preview", false)
         set(value) = config.setBool("app", "video_preview", value)
 
+    val hideStaticImageCamera: Boolean
+        get() = config.getBool("app", "hide_static_image_camera", true)
+
     /* Chat */
 
     var makePublicDownloadedImages: Boolean
