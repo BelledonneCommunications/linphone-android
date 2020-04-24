@@ -41,7 +41,7 @@ class QrCodeViewModel : ViewModel() {
 
     init {
         coreContext.core.addListener(listener)
-        showSwitchCamera.value = coreContext.core.videoDevicesList.size > 1
+        showSwitchCamera.value = coreContext.showSwitchCameraButton()
     }
 
     override fun onCleared() {
