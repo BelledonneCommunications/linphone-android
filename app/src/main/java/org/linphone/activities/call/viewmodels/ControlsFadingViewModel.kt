@@ -32,6 +32,8 @@ import org.linphone.utils.Event
 class ControlsFadingViewModel : ViewModel() {
     val areControlsHidden = MutableLiveData<Boolean>()
 
+    val isVideoPreviewHidden = MutableLiveData<Boolean>()
+
     val videoEnabledEvent = MutableLiveData<Event<Boolean>>()
 
     private var timer: Timer? = null
@@ -60,6 +62,7 @@ class ControlsFadingViewModel : ViewModel() {
         coreContext.core.addListener(listener)
 
         areControlsHidden.value = false
+        isVideoPreviewHidden.value = false
 
         val currentCall = coreContext.core.currentCall
         if (currentCall != null && currentCall.currentParams.videoEnabled()) {

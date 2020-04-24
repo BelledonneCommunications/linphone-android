@@ -125,5 +125,6 @@ class CallActivity : ProximitySensorActivity() {
         if (isInPictureInPictureMode) {
             viewModel.areControlsHidden.value = true
         }
+        viewModel.isVideoPreviewHidden.value = isInPictureInPictureMode
     }
 }
