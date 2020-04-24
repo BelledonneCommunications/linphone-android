@@ -25,4 +25,6 @@ import org.linphone.utils.Event
 
 class SharedCallViewModel : ViewModel() {
     val toggleDrawerEvent = MutableLiveData<Event<Boolean>>()
+
+    val resetHiddenInterfaceTimerInVideoCallEvent = MutableLiveData<Event<Boolean>>()
 }

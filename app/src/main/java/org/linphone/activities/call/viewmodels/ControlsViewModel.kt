@@ -72,9 +72,12 @@ class ControlsViewModel : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val somethingClickedEvent = MutableLiveData<Event<Boolean>>()
+
     val onKeyClick: NumpadDigitListener = object : NumpadDigitListener {
         override fun handleClick(key: Char) {
             coreContext.core.playDtmf(key, 1)
+            somethingClickedEvent.value = Event(true)
         }
 
         override fun handleLongClick(key: Char): Boolean {
@@ -140,12 +143,14 @@ class ControlsViewModel : ViewModel() {
     }
 
     fun toggleMuteMicrophone() {
+        somethingClickedEvent.value = Event(true)
         val micEnabled = coreContext.core.micEnabled()
         coreContext.core.enableMic(!micEnabled)
         updateMuteMicState()
     }
 
     fun toggleSpeaker() {
+        somethingClickedEvent.value = Event(true)
         val audioDevice = coreContext.core.outputAudioDevice
         if (audioDevice?.type == AudioDevice.Type.Speaker) {
             forceEarpieceAudioRoute()
@@ -155,6 +160,7 @@ class ControlsViewModel : ViewModel() {
     }
 
     fun switchCamera() {
+        somethingClickedEvent.value = Event(true)
         coreContext.switchCamera()
     }
 
@@ -184,18 +190,22 @@ class ControlsViewModel : ViewModel() {
     }
 
     fun toggleOptionsMenu() {
+        somethingClickedEvent.value = Event(true)
         optionsVisibility.value = optionsVisibility.value != true
     }
 
     fun toggleNumpadVisibility() {
+        somethingClickedEvent.value = Event(true)
         numpadVisibility.value = numpadVisibility.value != true
     }
 
     fun toggleRoutesMenu() {
+        somethingClickedEvent.value = Event(true)
         audioRoutesVisibility.value = audioRoutesVisibility.value != true
     }
 
     fun toggleRecording(closeMenu: Boolean) {
+        somethingClickedEvent.value = Event(true)
         val currentCall = coreContext.core.currentCall
         if (currentCall != null) {
             if (currentCall.isRecording) {
@@ -223,11 +233,13 @@ class ControlsViewModel : ViewModel() {
     }
 
     fun startConference() {
+        somethingClickedEvent.value = Event(true)
         coreContext.core.addAllToConference()
         toggleOptionsMenu()
     }
 
     fun forceEarpieceAudioRoute() {
+        somethingClickedEvent.value = Event(true)
         for (audioDevice in coreContext.core.audioDevices) {
             if (audioDevice.type == AudioDevice.Type.Earpiece) {
                 Log.i("[Call] Found earpiece audio device [${audioDevice.deviceName}], routing audio to it")
@@ -239,6 +251,7 @@ class ControlsViewModel : ViewModel() {
     }
 
     fun forceSpeakerAudioRoute() {
+        somethingClickedEvent.value = Event(true)
         for (audioDevice in coreContext.core.audioDevices) {
             if (audioDevice.type == AudioDevice.Type.Speaker) {
                 Log.i("[Call] Found speaker audio device [${audioDevice.deviceName}], routing audio to it")
@@ -250,6 +263,7 @@ class ControlsViewModel : ViewModel() {
     }
 
     fun forceBluetoothAudioRoute() {
+        somethingClickedEvent.value = Event(true)
         for (audioDevice in coreContext.core.audioDevices) {
             if ((audioDevice.type == AudioDevice.Type.Bluetooth) && audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
                 Log.i("[Call] Found bluetooth audio device [${audioDevice.deviceName}], routing audio to it")

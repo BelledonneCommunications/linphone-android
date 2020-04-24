@@ -30,13 +30,16 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.activities.call.viewmodels.CallsViewModel
 import org.linphone.activities.call.viewmodels.ControlsViewModel
+import org.linphone.activities.call.viewmodels.SharedCallViewModel
 import org.linphone.activities.main.MainActivity
 import org.linphone.databinding.CallControlsFragmentBinding
+import org.linphone.utils.Event
 
 class ControlsFragment : Fragment() {
     private lateinit var binding: CallControlsFragmentBinding
     private lateinit var callsViewModel: CallsViewModel
     private lateinit var controlsViewModel: ControlsViewModel
+    private lateinit var sharedViewModel: SharedCallViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,6 +54,10 @@ class ControlsFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         binding.lifecycleOwner = this
+
+        sharedViewModel = activity?.run {
+            ViewModelProvider(this).get(SharedCallViewModel::class.java)
+        } ?: throw Exception("Invalid Activity")
 
         callsViewModel = ViewModelProvider(this).get(CallsViewModel::class.java)
         binding.viewModel = callsViewModel
@@ -101,6 +108,12 @@ class ControlsFragment : Fragment() {
                 intent.putExtra("Dialer", true)
                 intent.putExtra("Transfer", true)
                 startActivity(intent)
+            }
+        })
+
+        controlsViewModel.somethingClickedEvent.observe(viewLifecycleOwner, Observer {
+            it.consume {
+                sharedViewModel.resetHiddenInterfaceTimerInVideoCallEvent.value = Event(true)
             }
         })
     }
