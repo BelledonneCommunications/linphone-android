@@ -59,6 +59,10 @@ class AccountLoginFragment : AbstractPhoneFragment() {
         viewModel = ViewModelProvider(this, AccountLoginViewModelFactory(sharedViewModel.getAccountCreator())).get(AccountLoginViewModel::class.java)
         binding.viewModel = viewModel
 
+        if (resources.getBoolean(R.bool.isTablet)) {
+            viewModel.loginWithUsernamePassword.value = true
+        }
+
         binding.setInfoClickListener {
             showPhoneNumberInfoDialog()
         }
