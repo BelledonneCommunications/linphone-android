@@ -78,6 +78,7 @@ class VideoSettingsFragment : Fragment() {
         val granted = grantResults[0] == PackageManager.PERMISSION_GRANTED
         if (granted) {
             Log.i("[Video Settings] CAMERA permission granted")
+            coreContext.core.reloadVideoDevices()
         } else {
             Log.w("[Video Settings] CAMERA permission denied")
         }
