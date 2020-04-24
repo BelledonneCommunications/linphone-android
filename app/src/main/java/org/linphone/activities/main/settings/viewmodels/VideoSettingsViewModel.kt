@@ -120,7 +120,7 @@ class VideoSettingsViewModel : GenericSettingsViewModel() {
         bandwidthLimit.value = core.downloadBandwidth
     }
 
-    private fun initCameraDevicesList() {
+    fun initCameraDevicesList() {
         val labels = arrayListOf<String>()
         for (camera in core.videoDevicesList) {
             if (prefs.hideStaticImageCamera && camera.startsWith("StaticImage")) {
