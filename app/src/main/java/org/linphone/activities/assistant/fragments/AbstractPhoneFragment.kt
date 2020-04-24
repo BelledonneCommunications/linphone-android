@@ -49,11 +49,13 @@ abstract class AbstractPhoneFragment : Fragment() {
     }
 
     protected fun checkPermission() {
-        if (!PermissionHelper.get().hasReadPhoneState()) {
-            Log.i("[Assistant] Asking for READ_PHONE_STATE permission")
-            requestPermissions(arrayOf(Manifest.permission.READ_PHONE_STATE), 0)
-        } else {
-            updateFromDeviceInfo()
+        if (!resources.getBoolean(R.bool.isTablet)) {
+            if (!PermissionHelper.get().hasReadPhoneState()) {
+                Log.i("[Assistant] Asking for READ_PHONE_STATE permission")
+                requestPermissions(arrayOf(Manifest.permission.READ_PHONE_STATE), 0)
+            } else {
+                updateFromDeviceInfo()
+            }
         }
     }
 

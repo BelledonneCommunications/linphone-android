@@ -79,7 +79,6 @@ class CorePreferences constructor(private val context: Context) {
 
     /* Video */
 
-    // TODO: use it to show video preview on dialer for tablets
     var videoPreview: Boolean
         get() = config.getBool("app", "video_preview", false)
         set(value) = config.setBool("app", "video_preview", value)
