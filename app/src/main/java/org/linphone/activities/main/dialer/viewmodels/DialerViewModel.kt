@@ -33,6 +33,8 @@ class DialerViewModel : ViewModel() {
 
     val transferVisibility = MutableLiveData<Boolean>()
 
+    val showPreview = MutableLiveData<Boolean>()
+
     val onKeyClick: NumpadDigitListener = object : NumpadDigitListener {
         override fun handleClick(key: Char) {
             enteredUri.value += key.toString()
@@ -79,6 +81,12 @@ class DialerViewModel : ViewModel() {
         super.onCleared()
     }
 
+    fun updateShowVideoPreview() {
+        val videoPreview = corePreferences.videoPreview
+        showPreview.value = videoPreview
+        coreContext.core.enableVideoPreview(videoPreview)
+    }
+
     fun eraseLastChar() {
         enteredUri.value = enteredUri.value?.dropLast(1)
     }
@@ -106,6 +114,10 @@ class DialerViewModel : ViewModel() {
         } else {
             setLastOutgoingCallAddress()
         }
+    }
+
+    fun switchCamera() {
+        coreContext.switchCamera()
     }
 
     private fun setLastOutgoingCallAddress() {

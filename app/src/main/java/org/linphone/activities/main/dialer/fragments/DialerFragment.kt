@@ -27,6 +27,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
 import org.linphone.activities.main.dialer.viewmodels.DialerViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.tools.Log
@@ -93,5 +95,14 @@ class DialerFragment : Fragment() {
 
         Log.i("[Dialer] Pending call transfer mode = ${sharedViewModel.pendingCallTransfer}")
         viewModel.transferVisibility.value = sharedViewModel.pendingCallTransfer
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        if (resources.getBoolean(R.bool.isTablet)) {
+            coreContext.core.nativePreviewWindowId = binding.videoPreviewWindow
+        }
+        viewModel.updateShowVideoPreview()
     }
 }
