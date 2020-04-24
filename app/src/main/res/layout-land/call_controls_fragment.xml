@@ -116,7 +116,7 @@
         <ImageView
             android:onClick="@{() -> controlsViewModel.switchCamera()}"
             android:enabled="@{!viewModel.callPausedByRemote}"
-            android:visibility="@{controlsViewModel.isVideoEnabled ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{controlsViewModel.isVideoEnabled &amp;&amp; controlsViewModel.showSwitchCamera ? View.VISIBLE : View.GONE, default=gone}"
             android:contentDescription="@string/content_description_switch_camera"
             android:layout_width="50dp"
             android:layout_height="50dp"
