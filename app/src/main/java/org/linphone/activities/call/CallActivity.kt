@@ -64,6 +64,12 @@ class CallActivity : ProximitySensorActivity() {
             }
         })
 
+        sharedViewModel.resetHiddenInterfaceTimerInVideoCallEvent.observe(this, Observer {
+            it.consume {
+                viewModel.showMomentarily()
+            }
+        })
+
         coreContext.core.nativeVideoWindowId = binding.remoteVideoSurface
         coreContext.core.nativePreviewWindowId = binding.localPreviewVideoSurface
 
