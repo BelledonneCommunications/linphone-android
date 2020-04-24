@@ -34,6 +34,7 @@ abstract class ProximitySensorActivity : GenericActivity() {
     private lateinit var sensorManager: SensorManager
     private lateinit var proximitySensor: Sensor
     private lateinit var proximityWakeLock: PowerManager.WakeLock
+    private var proximitySensorFound = false
     private val proximityListener: SensorEventListener = object : SensorEventListener {
         override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) { }
 
@@ -57,13 +58,18 @@ abstract class ProximitySensorActivity : GenericActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY)
-        proximityWakeLock = (getSystemService(Context.POWER_SERVICE) as PowerManager)
-            .newWakeLock(
-                PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK,
-                "$packageName;proximity_sensor"
-            )
+        try {
+            sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+            proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY)
+            proximityWakeLock = (getSystemService(Context.POWER_SERVICE) as PowerManager)
+                .newWakeLock(
+                    PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK,
+                    "$packageName;proximity_sensor"
+                )
+            proximitySensorFound = true
+        } catch (ise: IllegalStateException) {
+            Log.e("[Call Activity] Failed to get proximity sensor: $ise")
+        }
     }
 
     override fun onResume() {
@@ -85,6 +91,11 @@ abstract class ProximitySensorActivity : GenericActivity() {
     }
 
     protected fun enableProximitySensor(enable: Boolean) {
+        if (!proximitySensorFound) {
+            Log.w("[Call Activity] Couldn't find proximity sensor in this device, skipping")
+            return
+        }
+
         if (enable) {
             if (!proximitySensorEnabled) {
                 Log.i("[Call Activity] Enabling proximity sensor listener")
