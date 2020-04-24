@@ -35,6 +35,8 @@ class DialerViewModel : ViewModel() {
 
     val showPreview = MutableLiveData<Boolean>()
 
+    val showSwitchCamera = MutableLiveData<Boolean>()
+
     val onKeyClick: NumpadDigitListener = object : NumpadDigitListener {
         override fun handleClick(key: Char) {
             enteredUri.value += key.toString()
@@ -73,6 +75,8 @@ class DialerViewModel : ViewModel() {
         enteredUri.value = ""
         atLeastOneCall.value = coreContext.core.callsNb > 0
         transferVisibility.value = false
+
+        showSwitchCamera.value = coreContext.showSwitchCameraButton()
     }
 
     override fun onCleared() {

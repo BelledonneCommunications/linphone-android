@@ -44,6 +44,8 @@ class ControlsViewModel : ViewModel() {
 
     val isVideoUpdateInProgress = MutableLiveData<Boolean>()
 
+    val showSwitchCamera = MutableLiveData<Boolean>()
+
     val isPauseEnabled = MutableLiveData<Boolean>()
 
     val isRecording = MutableLiveData<Boolean>()
@@ -129,6 +131,7 @@ class ControlsViewModel : ViewModel() {
 
         isRecording.value = currentCall?.isRecording
         isVideoUpdateInProgress.value = false
+        showSwitchCamera.value = coreContext.showSwitchCameraButton()
 
         updateUI()
     }

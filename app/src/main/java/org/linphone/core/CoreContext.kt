@@ -363,6 +363,10 @@ class CoreContext(val context: Context, coreConfig: Config) {
         call.update(null)
     }
 
+    fun showSwitchCameraButton(): Boolean {
+        return core.videoDevicesList.orEmpty().size > 2 // Count StaticImage camera
+    }
+
     fun createCallOverlay() {
         if (!corePreferences.showCallOverlay || callOverlay != null) {
             return
