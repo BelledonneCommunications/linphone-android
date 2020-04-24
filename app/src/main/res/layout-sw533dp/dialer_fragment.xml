@@ -60,7 +60,7 @@
 
         <ImageView
             android:onClick="@{() -> viewModel.switchCamera()}"
-            android:visibility="@{viewModel.showPreview ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{viewModel.showPreview &amp;&amp; viewModel.showSwitchCamera ? View.VISIBLE : View.GONE, default=gone}"
             android:contentDescription="@string/content_description_switch_camera"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
