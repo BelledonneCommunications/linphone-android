@@ -241,7 +241,7 @@ class ControlsViewModel : ViewModel() {
 
     fun startConference() {
         somethingClickedEvent.value = Event(true)
-        
+
         val core = coreContext.core
         val currentCallVideoEnabled = core.currentCall?.currentParams?.videoEnabled() ?: false
 
@@ -344,12 +344,7 @@ class ControlsViewModel : ViewModel() {
     }
 
     private fun updateVideoEnabled() {
-        val core = coreContext.core
-        if (core.conference != null && core.isInConference) {
-            isVideoEnabled.value = core.conference.currentParams.videoEnabled()
-        } else {
-            isVideoEnabled.value = core.currentCall?.currentParams?.videoEnabled()
-        }
+        isVideoEnabled.value = coreContext.isVideoCallOrConferenceActive()
     }
 
     private fun updateConferenceState() {

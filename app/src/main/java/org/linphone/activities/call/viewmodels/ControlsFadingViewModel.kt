@@ -46,11 +46,9 @@ class ControlsFadingViewModel : ViewModel() {
             message: String?
         ) {
             if (state == Call.State.StreamsRunning || state == Call.State.Updating || state == Call.State.UpdatedByRemote) {
-                Log.i("[Controls Fading] Call is in state $state, video is enabled? ${call.currentParams.videoEnabled()}")
-                if (core.conference != null && core.isInConference && core.conference.currentParams.videoEnabled()) {
-                    videoEnabledEvent.value = Event(true)
-                    startTimer()
-                } else if (call.currentParams.videoEnabled()) {
+                val videoEnabled = coreContext.isVideoCallOrConferenceActive()
+                Log.i("[Controls Fading] Call is in state $state, video is enabled? $videoEnabled")
+                if (videoEnabled) {
                     videoEnabledEvent.value = Event(true)
                     startTimer()
                 } else {
@@ -67,16 +65,10 @@ class ControlsFadingViewModel : ViewModel() {
         areControlsHidden.value = false
         isVideoPreviewHidden.value = false
 
-        val core = coreContext.core
-        if (core.conference != null && core.isInConference && core.conference.currentParams.videoEnabled()) {
+        val videoEnabled = coreContext.isVideoCallOrConferenceActive()
+        if (videoEnabled) {
             videoEnabledEvent.value = Event(true)
             startTimer()
-        } else {
-            val currentCall = coreContext.core.currentCall
-            if (currentCall != null && currentCall.currentParams.videoEnabled()) {
-                videoEnabledEvent.value = Event(true)
-                startTimer()
-            }
         }
     }
 
@@ -104,12 +96,8 @@ class ControlsFadingViewModel : ViewModel() {
         timer = Timer("Hide UI controls scheduler")
         timer?.schedule(object : TimerTask() {
             override fun run() {
-                val core = coreContext.core
-                if (core.conference != null && core.isInConference) {
-                    areControlsHidden.postValue(core.conference.currentParams.videoEnabled())
-                } else {
-                    areControlsHidden.postValue(coreContext.core.currentCall?.currentParams?.videoEnabled() ?: false)
-                }
+                val videoEnabled = coreContext.isVideoCallOrConferenceActive()
+                areControlsHidden.postValue(videoEnabled)
             }
         }, 3000)
     }
