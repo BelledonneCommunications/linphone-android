@@ -39,11 +39,7 @@ import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import java.io.File;
-import java.sql.Timestamp;
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
+
 import org.linphone.assistant.PhoneAccountLinkingAssistantActivity;
 import org.linphone.call.AndroidAudioManager;
 import org.linphone.call.CallManager;
@@ -65,12 +61,17 @@ import org.linphone.core.Reason;
 import org.linphone.core.Tunnel;
 import org.linphone.core.TunnelConfig;
 import org.linphone.core.VersionUpdateCheckResult;
-import org.linphone.core.tools.H264Helper;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.utils.MediaScanner;
 import org.linphone.utils.PushNotificationUtils;
+
+import java.io.File;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /** Handles Linphone's Core lifecycle */
 public class LinphoneManager implements SensorEventListener {
@@ -443,9 +444,6 @@ public class LinphoneManager implements SensorEventListener {
         } catch (Exception e) {
             Log.e(e, "[Manager] Cannot start linphone");
         }
-
-        // H264 codec Management - set to auto mode -> MediaCodec >= android 5.0 >= OpenH264
-        H264Helper.setH264Mode(H264Helper.MODE_AUTO, mCore);
     }
 
     private synchronized void configureCore() {

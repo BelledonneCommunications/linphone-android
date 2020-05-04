@@ -35,8 +35,6 @@ import org.linphone.compatibility.Compatibility;
 import org.linphone.core.Core;
 import org.linphone.core.Friend;
 import org.linphone.core.FriendList;
-import org.linphone.core.PresenceBasicStatus;
-import org.linphone.core.PresenceModel;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.LinphoneUtils;
@@ -226,7 +224,7 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
                 }
             }
 
-            if (contact.getFriend() != null) {
+            /*if (contact.getFriend() != null) {
                 for (LinphoneNumberOrAddress noa : contact.getNumbersOrAddresses()) {
                     PresenceModel pm =
                             contact.getFriend().getPresenceModelForUriOrTel(noa.getValue());
@@ -235,7 +233,7 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
                         break;
                     }
                 }
-            }
+            }*/
 
             if (!mContext.getResources().getBoolean(R.bool.hide_sip_contacts_without_presence)) {
                 if (contact.hasAddress() && !data.sipContacts.contains(contact)) {

@@ -67,11 +67,9 @@ git clone https://gitlab.linphone.org/BC/public/linphone-sdk.git --recursive
 
 2. Follow the instructions in the linphone-sdk/README file to build the SDK.
 
-3. Edit in the linphone-sdk-android folder of this project the symbolic link (debug and/or release) to the generated AAR.
-We recommend to at least create the link for the release AAR that can be used for debug APK flavor because it is smaller and will reduce the time required to install the APK.
+3. Create or edit the gradle.properties file in $GRADLE_USER_HOME (usually ~/.gradle) file and add the absolute path to your linphone-sdk build directory, for example:
 ```
-ln -s <path to linphone-sdk>/linphone-sdk/build/linphone-sdk/bin/outputs/aar/linphone-sdk-android-release.aar linphone-sdk-android/linphone-sdk-android-release.aar
-ln -s <path to linphone-sdk>/linphone-sdk/build/linphone-sdk/bin/outputs/aar/linphone-sdk-android-debug.aar linphone-sdk-android/linphone-sdk-android-debug.aar
+LinphoneSdkBuildDir=/home/<username>/linphone-sdk/build/
 ```
 
 4. Rebuild the app in Android Studio.
@@ -89,6 +87,14 @@ ln -s <path to linphone-sdk>/linphone-sdk/build/linphone-sdk/bin/outputs/aar/lin
 5. Make sure you are using the debug AAR in the app/build.gradle script and not the release one (to have faster builds by default the release AAR is used even for debug APK flavor).
 
 6. Debug app.
+
+## Troubleshouting
+
+If you encounter the `couldn't find "libc++_shared.so"` crash when the app starts, simply clean the project in Android Studio (under Build menu) and build again.
+
+When submitting an issue, please attach the matching library logs. To enable them, go to Settings -> Advanced and toggle "Debug Mode".
+
+Then restart the app, reproduce the issue and upload the logs using the "Upload logs" button on the About page.
 
 ## Create an APK with a different package name
 

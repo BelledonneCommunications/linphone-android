@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.util.Log;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.assistant.MenuAssistantActivity;
@@ -57,9 +58,14 @@ public class LinphoneLauncherActivity extends Activity implements ServiceWaitThr
         if (LinphoneService.isReady()) {
             onServiceReady();
         } else {
-            startService(
-                    new Intent().setClass(LinphoneLauncherActivity.this, LinphoneService.class));
-            new ServiceWaitThread(this).start();
+            try {
+                startService(
+                        new Intent()
+                                .setClass(LinphoneLauncherActivity.this, LinphoneService.class));
+                new ServiceWaitThread(this).start();
+            } catch (IllegalStateException ise) {
+                Log.e("Linphone", "Exception raised while starting service: " + ise);
+            }
         }
     }
 

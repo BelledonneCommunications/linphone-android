@@ -36,6 +36,7 @@ import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.EcCalibratorStatus;
 import org.linphone.core.PayloadType;
+import org.linphone.core.tools.Log;
 import org.linphone.settings.widget.BasicSetting;
 import org.linphone.settings.widget.ListSetting;
 import org.linphone.settings.widget.SettingListenerBase;
@@ -113,7 +114,11 @@ public class AudioSettingsFragment extends SettingsFragment {
                 new SettingListenerBase() {
                     @Override
                     public void onTextValueChanged(String newValue) {
-                        mPrefs.setMicGainDb(Float.valueOf(newValue));
+                        try {
+                            mPrefs.setMicGainDb(Float.valueOf(newValue));
+                        } catch (NumberFormatException nfe) {
+                            Log.e("Can't set mic gain, number format exception: " + nfe);
+                        }
                     }
                 });
 
@@ -121,7 +126,11 @@ public class AudioSettingsFragment extends SettingsFragment {
                 new SettingListenerBase() {
                     @Override
                     public void onTextValueChanged(String newValue) {
-                        mPrefs.setPlaybackGainDb(Float.valueOf(newValue));
+                        try {
+                            mPrefs.setPlaybackGainDb(Float.valueOf(newValue));
+                        } catch (NumberFormatException nfe) {
+                            Log.e("Can't set speaker gain, number format exception: " + nfe);
+                        }
                     }
                 });
 
@@ -129,14 +138,18 @@ public class AudioSettingsFragment extends SettingsFragment {
                 new SettingListenerBase() {
                     @Override
                     public void onListValueChanged(int position, String newLabel, String newValue) {
-                        int bitrate = Integer.valueOf(newValue);
-                        mPrefs.setCodecBitrateLimit(bitrate);
+                        try {
+                            int bitrate = Integer.valueOf(newValue);
+                            mPrefs.setCodecBitrateLimit(bitrate);
 
-                        Core core = LinphoneManager.getCore();
-                        for (final PayloadType pt : core.getAudioPayloadTypes()) {
-                            if (pt.isVbr()) {
-                                pt.setNormalBitrate(bitrate);
+                            Core core = LinphoneManager.getCore();
+                            for (final PayloadType pt : core.getAudioPayloadTypes()) {
+                                if (pt.isVbr()) {
+                                    pt.setNormalBitrate(bitrate);
+                                }
                             }
+                        } catch (NumberFormatException nfe) {
+                            Log.e("Can't set codec bitrate limit, number format exception: " + nfe);
                         }
                     }
                 });
