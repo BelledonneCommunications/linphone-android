@@ -399,6 +399,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
                 }
                 MotionEvent.ACTION_UP -> {
                     if (abs(overlayX - params.x) < 5 && abs(overlayY - params.y) < 5) {
+                        Log.i("[Core Context] Overlay clicked, go back to call view")
                         onCallStarted()
                     }
                     overlayX = params.x.toFloat()
