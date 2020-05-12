@@ -86,7 +86,7 @@
             android:windowSoftInputMode="adjustResize"/>
 
         <activity android:name=".activities.call.CallActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleInstance"
             android:showWhenLocked="true"
             android:supportsPictureInPicture="true" />
 
