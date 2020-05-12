@@ -163,6 +163,12 @@ class CorePreferences constructor(private val context: Context) {
             config.setBool("app", "call_overlay", value)
         }
 
+    var callRightAway: Boolean
+        get() = config.getBool("app", "call_right_away", false)
+        set(value) {
+            config.setBool("app", "call_right_away", value)
+        }
+
     /* Assistant */
 
     var firstStart: Boolean

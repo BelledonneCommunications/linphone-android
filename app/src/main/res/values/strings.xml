@@ -333,6 +333,8 @@
     <string name="call_settings_sipinfo_dtmf_summary"></string>
     <string name="call_settings_rfc2833_dtmf_title">Send in-band DTMFs (RFC 2833)</string>
     <string name="call_settings_rfc2833_dtmf_summary"></string>
+    <string name="call_settings_auto_start_title">Start call immediately</string>
+    <string name="call_settings_auto_start_summary">The call will start automatically if started from another application</string>
     <string name="call_settings_auto_answer_title">Auto answer incoming calls</string>
     <string name="call_settings_auto_answer_summary"></string>
     <string name="call_settings_auto_answer_delay_title">Auto answer time</string>
