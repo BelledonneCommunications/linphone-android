@@ -119,6 +119,13 @@
 
                 <include
                     layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/call_settings_auto_start_title}"
+                    linphone:subtitle="@{@string/call_settings_auto_start_summary}"
+                    linphone:listener="@{viewModel.autoStartListener}"
+                    linphone:checked="@={viewModel.autoStart}"/>
+
+                <include
+                    layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/call_settings_auto_answer_title}"
                     linphone:subtitle="@{@string/call_settings_auto_answer_summary}"
                     linphone:listener="@{viewModel.autoAnswerListener}"

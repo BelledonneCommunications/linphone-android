@@ -28,6 +28,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.main.dialer.viewmodels.DialerViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
@@ -90,7 +91,14 @@ class DialerFragment : Fragment() {
             sharedViewModel.pendingCallTransfer = arguments?.getBoolean("Transfer") ?: false
         }
         if (arguments?.containsKey("URI") == true) {
-            viewModel.enteredUri.value = arguments?.getString("URI")
+            val address = arguments?.getString("URI") ?: ""
+
+            if (corePreferences.callRightAway) {
+                Log.i("[Dialer] Call right away setting is enabled, start the call to $address")
+                viewModel.directCall(address)
+            } else {
+                viewModel.enteredUri.value = address
+            }
         }
 
         Log.i("[Dialer] Pending call transfer mode = ${sharedViewModel.pendingCallTransfer}")
