@@ -25,6 +25,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.activities.main.dialer.NumpadDigitListener
 import org.linphone.core.*
+import org.linphone.core.tools.Log
 
 class DialerViewModel : ViewModel() {
     val enteredUri = MutableLiveData<String>()
@@ -36,6 +37,9 @@ class DialerViewModel : ViewModel() {
     val showPreview = MutableLiveData<Boolean>()
 
     val showSwitchCamera = MutableLiveData<Boolean>()
+
+    private var addressWaitingNetworkToBeCalled: String? = null
+    private var timeAtWitchWeTriedToCall: Long = 0
 
     val onKeyClick: NumpadDigitListener = object : NumpadDigitListener {
         override fun handleClick(key: Char) {
@@ -66,6 +70,22 @@ class DialerViewModel : ViewModel() {
             message: String?
         ) {
             atLeastOneCall.value = core.callsNb > 0
+        }
+
+        override fun onNetworkReachable(core: Core, reachable: Boolean) {
+            if (reachable && addressWaitingNetworkToBeCalled.orEmpty().isNotEmpty()) {
+                val now = System.currentTimeMillis()
+                if (now - timeAtWitchWeTriedToCall > 1000) {
+                    Log.e("[Dialer] More than 1 second has passed waiting for network, abort auto call to $addressWaitingNetworkToBeCalled")
+                    enteredUri.value = addressWaitingNetworkToBeCalled
+                } else {
+                    Log.i("[Dialer] Network is available, continue auto call to $addressWaitingNetworkToBeCalled")
+                    coreContext.startCall(addressWaitingNetworkToBeCalled.orEmpty())
+                }
+
+                addressWaitingNetworkToBeCalled = null
+                timeAtWitchWeTriedToCall = 0
+            }
         }
     }
 
@@ -98,6 +118,16 @@ class DialerViewModel : ViewModel() {
     fun eraseAll(): Boolean {
         enteredUri.value = ""
         return true
+    }
+
+    fun directCall(to: String) {
+        if (coreContext.core.isNetworkReachable) {
+            coreContext.startCall(to)
+        } else {
+            Log.w("[Dialer] Network isnt't reachable at the time, wait for network to start call (happens mainly when app is cold started)")
+            timeAtWitchWeTriedToCall = System.currentTimeMillis()
+            addressWaitingNetworkToBeCalled = to
+        }
     }
 
     fun startCall() {
