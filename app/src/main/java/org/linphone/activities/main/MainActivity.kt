@@ -148,7 +148,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
     private fun handleIntentParams(intent: Intent) {
         when (intent.action) {
-            Intent.ACTION_SEND -> {
+            Intent.ACTION_SEND, Intent.ACTION_SENDTO -> {
                 lifecycleScope.launch {
                     handleSendImage(intent)
                 }
@@ -238,11 +238,9 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                 }
             }
             sharedViewModel.filesToShare.value = list
-
-            val deepLink = "linphone-android://chat/"
-            Log.i("[Main Activity] Starting deep link: $deepLink")
-            findNavController(R.id.nav_host_fragment).navigate(Uri.parse(deepLink))
         }
+
+        handleSendChatRoom(intent)
     }
 
     private suspend fun handleSendMultipleImages(intent: Intent) {
@@ -261,7 +259,40 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                 }
             }
             sharedViewModel.filesToShare.value = list
+        }
 
+        handleSendChatRoom(intent)
+    }
+
+    private suspend fun handleSendChatRoom(intent: Intent) {
+        val uri = intent.data
+        if (uri != null) {
+            Log.i("[Main Activity] Found uri: $uri to send a message to")
+            val stringUri = uri.toString()
+            var addressToIM: String = stringUri
+            try {
+                addressToIM = URLDecoder.decode(stringUri, "UTF-8")
+            } catch (e: UnsupportedEncodingException) {
+            }
+
+            when {
+                addressToIM.startsWith("sms:") ->
+                    addressToIM = addressToIM.substring("sms:".length)
+                addressToIM.startsWith("smsto:") ->
+                    addressToIM = addressToIM.substring("smsto:".length)
+                addressToIM.startsWith("mms:") ->
+                    addressToIM = addressToIM.substring("mms:".length)
+                addressToIM.startsWith("mmsto:") ->
+                    addressToIM = addressToIM.substring("mmsto:".length)
+            }
+
+            val peerAddress = coreContext.core.interpretUrl(addressToIM)?.asStringUriOnly()
+            val localAddress =
+                coreContext.core.defaultProxyConfig?.identityAddress?.asStringUriOnly()
+            val deepLink = "linphone-android://chat-room/$localAddress/$peerAddress"
+            Log.i("[Main Activity] Starting deep link: $deepLink")
+            findNavController(R.id.nav_host_fragment).navigate(Uri.parse(deepLink))
+        } else {
             val deepLink = "linphone-android://chat/"
             Log.i("[Main Activity] Starting deep link: $deepLink")
             findNavController(R.id.nav_host_fragment).navigate(Uri.parse(deepLink))
