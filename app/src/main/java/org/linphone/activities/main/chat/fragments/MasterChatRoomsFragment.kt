@@ -207,6 +207,13 @@ class MasterChatRoomsFragment : MasterFragment() {
                 adapter.selectedChatRoomEvent.value = Event(chatRoom)
             }
         } else {
+            sharedViewModel.textToShare.observe(viewLifecycleOwner, Observer {
+                if (it.isNotEmpty()) {
+                    Log.i("[Chat] Found text to share")
+                    val activity = requireActivity() as MainActivity
+                    activity.showSnackBar(R.string.chat_room_toast_choose_for_sharing)
+                }
+            })
             sharedViewModel.filesToShare.observe(viewLifecycleOwner, Observer {
                 if (it.isNotEmpty()) {
                     Log.i("[Chat] Found ${it.size} files to share")
