@@ -119,6 +119,11 @@ class NativeContact(val nativeId: String, private val lookupKey: String? = null)
                 }
 
                 Log.d("[Native Contact] Found SIP address $data1")
+                if (phoneNumbers.contains(data1)) {
+                    Log.d("[Native Contact] SIP address value already exists in phone numbers list, skipping")
+                    return
+                }
+
                 val address: Address? = coreContext.core.interpretUrl(data1)
                 if (address == null) {
                     Log.e("[Native Contact] Couldn't parse address $data1 !")
