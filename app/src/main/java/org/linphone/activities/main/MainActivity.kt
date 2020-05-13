@@ -149,13 +149,17 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     private fun handleIntentParams(intent: Intent) {
         when (intent.action) {
             Intent.ACTION_SEND, Intent.ACTION_SENDTO -> {
-                lifecycleScope.launch {
-                    handleSendImage(intent)
+                if (intent.type?.startsWith("text/") == true) {
+                    handleSendText(intent)
+                } else {
+                    lifecycleScope.launch {
+                        handleSendFile(intent)
+                    }
                 }
             }
             Intent.ACTION_SEND_MULTIPLE -> {
                 lifecycleScope.launch {
-                    handleSendMultipleImages(intent)
+                    handleSendMultipleFiles(intent)
                 }
             }
             Intent.ACTION_VIEW -> {
@@ -224,7 +228,15 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         }
     }
 
-    private suspend fun handleSendImage(intent: Intent) {
+    private fun handleSendText(intent: Intent) {
+        intent.getStringExtra(Intent.EXTRA_TEXT)?.let {
+            sharedViewModel.textToShare.value = it
+        }
+
+        handleSendChatRoom(intent)
+    }
+
+    private suspend fun handleSendFile(intent: Intent) {
         (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let {
             val list = arrayListOf<String>()
             coroutineScope {
@@ -243,7 +255,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         handleSendChatRoom(intent)
     }
 
-    private suspend fun handleSendMultipleImages(intent: Intent) {
+    private suspend fun handleSendMultipleFiles(intent: Intent) {
         intent.getParcelableArrayListExtra<Parcelable>(Intent.EXTRA_STREAM)?.let {
             val list = arrayListOf<String>()
             coroutineScope {
@@ -264,7 +276,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         handleSendChatRoom(intent)
     }
 
-    private suspend fun handleSendChatRoom(intent: Intent) {
+    private fun handleSendChatRoom(intent: Intent) {
         val uri = intent.data
         if (uri != null) {
             Log.i("[Main Activity] Found uri: $uri to send a message to")

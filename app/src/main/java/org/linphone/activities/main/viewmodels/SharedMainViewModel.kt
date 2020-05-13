@@ -40,6 +40,8 @@ class SharedMainViewModel : ViewModel() {
 
     val filesToShare = MutableLiveData<ArrayList<String>>()
 
+    val textToShare = MutableLiveData<String>()
+
     val messageToForwardEvent: MutableLiveData<Event<ChatMessage>> by lazy {
         MutableLiveData<Event<ChatMessage>>()
     }

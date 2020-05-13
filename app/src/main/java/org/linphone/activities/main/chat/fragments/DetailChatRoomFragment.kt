@@ -238,6 +238,14 @@ class DetailChatRoomFragment : MasterFragment() {
             coreContext.startCall(viewModel.addressToCall)
         }
 
+        sharedViewModel.textToShare.observe(viewLifecycleOwner, Observer {
+            if (it.isNotEmpty()) {
+                Log.i("[Chat Room] Found text to share")
+                chatSendingViewModel.textToSend.value = it
+                sharedViewModel.textToShare.value = ""
+            }
+        })
+
         sharedViewModel.filesToShare.observe(viewLifecycleOwner, Observer {
             if (it.isNotEmpty()) {
                 for (path in it) {
