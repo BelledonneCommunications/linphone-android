@@ -261,11 +261,23 @@ class ContactsManager(private val context: Context) {
         if (friend.userData == null) return false
 
         val contact: Contact = friend.userData as Contact
+        Log.i("[Contacts Manager] Received presence information for contact $contact")
         for (listener in contactsUpdatedListeners) {
             listener.onContactUpdated(contact)
         }
 
-        Log.i("[Contacts Manager] Received presence information for contact $contact")
+        if (corePreferences.storePresenceInNativeContact) {
+            if (contact is NativeContact) {
+                for (phoneNumber in contact.phoneNumbers) {
+                    val sipAddress = contact.getContactForPhoneNumberOrAddress(phoneNumber)
+                    if (sipAddress != null) {
+                        Log.i("[Contacts Manager] Found presence information to store in native contact $contact")
+                        NativeContactEditor(contact).setPresenceInformation(phoneNumber, sipAddress).commit()
+                    }
+                }
+            }
+        }
+
         if (!sipContacts.contains(contact)) {
             sipContacts.add(contact)
             return true

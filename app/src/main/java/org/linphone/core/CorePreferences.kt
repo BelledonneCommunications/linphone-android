@@ -118,7 +118,6 @@ class CorePreferences constructor(private val context: Context) {
 
     /* Contacts */
 
-    // TODO: use it
     var storePresenceInNativeContact: Boolean
         get() = config.getBool("app", "store_presence_in_native_contact", false)
         set(value) {
@@ -199,7 +198,7 @@ class CorePreferences constructor(private val context: Context) {
             config.setString("app", "voice_mail", value)
         }
 
-    /* App settings previously in non_localizable_custom */
+    /* Read only application settings previously in non_localizable_custom */
 
     val defaultDomain: String
         get() = config.getString("app", "default_domain", "sip.linphone.org")
