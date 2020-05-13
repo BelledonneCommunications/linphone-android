@@ -47,6 +47,7 @@
         </activity>
 
         <activity android:name=".activities.main.MainActivity"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize">
             <nav-graph android:value="@navigation/main_nav_graph" />
 
@@ -86,7 +87,7 @@
             android:windowSoftInputMode="adjustResize"/>
 
         <activity android:name=".activities.call.CallActivity"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTop"
             android:showWhenLocked="true"
             android:supportsPictureInPicture="true" />
 

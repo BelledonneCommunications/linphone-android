@@ -180,17 +180,17 @@ class NativeContactEditor(val contact: NativeContact) {
                 phoneNumber.currentValue.isEmpty() -> {
                     // New phone number to add
                     addCount++
-                    addNumber(phoneNumber)
+                    addNumber(phoneNumber.newValue.value.orEmpty())
                 }
                 phoneNumber.toRemove.value == true -> {
                     // Existing number to remove
                     removeCount++
-                    removeNumber(phoneNumber)
+                    removeNumber(phoneNumber.currentValue)
                 }
                 phoneNumber.currentValue != phoneNumber.newValue.value -> {
                     // Existing number to update
                     editCount++
-                    updateNumber(phoneNumber)
+                    updateNumber(phoneNumber.currentValue, phoneNumber.newValue.value.orEmpty())
                 }
             }
         }
@@ -210,20 +210,20 @@ class NativeContactEditor(val contact: NativeContact) {
                     // New address to add
                     addCount++
                     if (useLinphoneSyncAccount) {
-                        addAddress(sipAddress)
+                        addAddress(sipAddress.newValue.value.orEmpty())
                     } else {
-                        addSipAddress(sipAddress)
+                        addSipAddress(sipAddress.newValue.value.orEmpty())
                     }
                 }
                 sipAddress.toRemove.value == true -> {
                     // Existing address to remove
                     removeCount++
-                    removeAddress(sipAddress)
+                    removeAddress(sipAddress.currentValue)
                 }
                 sipAddress.currentValue != sipAddress.newValue.value -> {
                     // Existing address to update
                     editCount++
-                    updateAddress(sipAddress)
+                    updateAddress(sipAddress.currentValue, sipAddress.newValue.value.orEmpty())
                 }
             }
         }
@@ -235,6 +235,18 @@ class NativeContactEditor(val contact: NativeContact) {
     fun setPicture(value: ByteArray?): NativeContactEditor {
         pictureByteArray = value
         if (value != null) Log.i("[Native Contact Editor] Adding operation: picture set/update")
+        return this
+    }
+
+    fun setPresenceInformation(phoneNumber: String, sipAddress: String): NativeContactEditor {
+        Log.i("[Native Contact Editor] Trying to add presence information to contact as ${if (useLinphoneSyncAccount) "phone number" else "SIP address"}")
+
+        if (useLinphoneSyncAccount) {
+            setPresencePhoneNumber(phoneNumber)
+        } else {
+            setPresenceSipAddress(sipAddress)
+        }
+
         return this
     }
 
@@ -269,14 +281,14 @@ class NativeContactEditor(val contact: NativeContact) {
         changes.add(operation)
     }
 
-    private fun addNumber(number: NumberOrAddressEditorViewModel) {
+    private fun addNumber(number: String) {
         val insert = ContentProviderOperation.newInsert(contactUri)
             .withValue(ContactsContract.Data.RAW_CONTACT_ID, rawId)
             .withValue(
                 ContactsContract.Data.MIMETYPE,
                 CommonDataKinds.Phone.CONTENT_ITEM_TYPE
             )
-            .withValue(CommonDataKinds.Phone.NUMBER, number.newValue.value)
+            .withValue(CommonDataKinds.Phone.NUMBER, number)
             .withValue(
                 CommonDataKinds.Phone.TYPE,
                 CommonDataKinds.Phone.TYPE_MOBILE
@@ -285,19 +297,19 @@ class NativeContactEditor(val contact: NativeContact) {
         addChanges(insert)
     }
 
-    private fun updateNumber(number: NumberOrAddressEditorViewModel) {
+    private fun updateNumber(currentValue: String, newValue: String) {
         val update = ContentProviderOperation.newUpdate(contactUri)
             .withSelection(
                 phoneNumberSelection,
                 arrayOf(
                     contact.nativeId,
                     CommonDataKinds.Phone.CONTENT_ITEM_TYPE,
-                    number.currentValue,
-                    number.currentValue
+                    currentValue,
+                    currentValue
                 )
             )
             .withValue(ContactsContract.Data.MIMETYPE, CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
-            .withValue(CommonDataKinds.Phone.NUMBER, number.newValue.value)
+            .withValue(CommonDataKinds.Phone.NUMBER, newValue)
             .withValue(
                 CommonDataKinds.Phone.TYPE,
                 CommonDataKinds.Phone.TYPE_MOBILE
@@ -306,48 +318,48 @@ class NativeContactEditor(val contact: NativeContact) {
         addChanges(update)
     }
 
-    private fun removeNumber(number: NumberOrAddressEditorViewModel) {
+    private fun removeNumber(number: String) {
         val delete = ContentProviderOperation.newDelete(contactUri)
             .withSelection(
                 phoneNumberSelection,
                 arrayOf(
                     contact.nativeId,
                     CommonDataKinds.Phone.CONTENT_ITEM_TYPE,
-                    number.currentValue,
-                    number.currentValue
+                    number,
+                    number
                 )
             )
             .build()
         addChanges(delete)
     }
 
-    private fun addAddress(address: NumberOrAddressEditorViewModel) {
+    private fun addAddress(address: String) {
         val insert = ContentProviderOperation.newInsert(contactUri)
             .withValue(ContactsContract.Data.RAW_CONTACT_ID, linphoneRawId)
             .withValue(
                 ContactsContract.Data.MIMETYPE,
                 AppUtils.getString(R.string.linphone_address_mime_type)
             )
-            .withValue("data1", address.newValue.value) // value
+            .withValue("data1", address) // value
             .withValue("data2", AppUtils.getString(R.string.app_name)) // summary
-            .withValue("data3", address.newValue.value) // detail
+            .withValue("data3", address) // detail
             .build()
         addChanges(insert)
     }
 
-    private fun addSipAddress(address: NumberOrAddressEditorViewModel) {
+    private fun addSipAddress(address: String) {
         val insert = ContentProviderOperation.newInsert(contactUri)
             .withValue(ContactsContract.Data.RAW_CONTACT_ID, rawId)
             .withValue(
                 ContactsContract.Data.MIMETYPE,
                 CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE
             )
-            .withValue("data1", address.newValue.value) // value
+            .withValue("data1", address) // value
             .build()
         addChanges(insert)
     }
 
-    private fun updateAddress(address: NumberOrAddressEditorViewModel) {
+    private fun updateAddress(currentValue: String, newValue: String) {
         val update = ContentProviderOperation.newUpdate(contactUri)
             .withSelection(
                 sipAddressSelection,
@@ -355,21 +367,21 @@ class NativeContactEditor(val contact: NativeContact) {
                     contact.nativeId,
                     CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE,
                     AppUtils.getString(R.string.linphone_address_mime_type),
-                    address.currentValue
+                    currentValue
                 )
             )
             .withValue(
                 ContactsContract.Data.MIMETYPE,
                 AppUtils.getString(R.string.linphone_address_mime_type)
             )
-            .withValue("data1", address.newValue.value) // value
+            .withValue("data1", newValue) // value
             .withValue("data2", AppUtils.getString(R.string.app_name)) // summary
-            .withValue("data3", address.newValue.value) // detail
+            .withValue("data3", newValue) // detail
             .build()
         addChanges(update)
     }
 
-    private fun removeAddress(address: NumberOrAddressEditorViewModel) {
+    private fun removeAddress(address: String) {
         val delete = ContentProviderOperation.newDelete(contactUri)
             .withSelection(
                 sipAddressSelection,
@@ -377,11 +389,51 @@ class NativeContactEditor(val contact: NativeContact) {
                     contact.nativeId,
                     CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE,
                     AppUtils.getString(R.string.linphone_address_mime_type),
-                    address.currentValue
+                    address
                 )
             )
             .build()
         addChanges(delete)
+    }
+
+    private fun setPresencePhoneNumber(phoneNumber: String) {
+        val contentResolver = coreContext.context.contentResolver
+        val cursor = contentResolver.query(
+            ContactsContract.Data.CONTENT_URI,
+            arrayOf("data1"),
+            "${ContactsContract.Data.RAW_CONTACT_ID} = ? AND ${ContactsContract.Data.MIMETYPE} = ? AND data1 = ?",
+            arrayOf(linphoneRawId, AppUtils.getString(R.string.linphone_address_mime_type), phoneNumber),
+            null
+        )
+        val count = cursor?.count ?: 0
+        cursor?.close()
+
+        if (count == 0) {
+            Log.i("[Native Contact Editor] No existing presence information found for this phone number, let's add it")
+            addAddress(phoneNumber)
+        } else {
+            Log.i("[Native Contact Editor] There is already an entry for this, skipping")
+        }
+    }
+
+    private fun setPresenceSipAddress(sipAddress: String) {
+        val contentResolver = coreContext.context.contentResolver
+        val cursor = contentResolver.query(
+            ContactsContract.Data.CONTENT_URI,
+            arrayOf("data1"),
+            "${ContactsContract.Data.RAW_CONTACT_ID} = ? AND ${ContactsContract.Data.MIMETYPE} = ? AND data1 = ?",
+            arrayOf(rawId, CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE, sipAddress),
+            null
+        )
+        val count = cursor?.count ?: 0
+        cursor?.close()
+
+        if (count == 0) {
+            Log.i("[Native Contact Editor] No existing presence information found for this phone number, let's add it")
+            addSipAddress(sipAddress)
+        } else {
+            Log.i("[Native Contact Editor] There is already an entry for this, skipping")
+        }
     }
 
     private fun updatePicture() {
