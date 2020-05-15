@@ -16,6 +16,7 @@ job-android:
     - echo keyPassword=$ANDROID_KEYSTORE_KEY_PASSWORD >> keystore.properties
     - echo keyAlias=$ANDROID_KEYSTORE_KEY_ALIAS >> keystore.properties
     - echo storeFile=$ANDROID_KEYSTORE_FILE >> keystore.properties
+    - ./gradlew app:dependencies | grep org.linphone
     - ./gradlew assembleDebug
     - ./gradlew assembleRelease
 
