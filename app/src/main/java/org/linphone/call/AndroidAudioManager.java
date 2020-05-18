@@ -355,8 +355,7 @@ public class AndroidAudioManager {
                             || mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL)
                     && mVibrator != null
                     && LinphonePreferences.instance().isIncomingCallVibrationEnabled()) {
-                long[] patern = {0, 1000, 1000};
-                mVibrator.vibrate(patern, 1);
+                Compatibility.vibrate(mVibrator);
             }
             if (mRingerPlayer == null) {
                 requestAudioFocus(STREAM_RING);
