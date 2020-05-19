@@ -24,9 +24,11 @@ import android.os.AsyncTask;
 public class AsyncContactPresence extends AsyncTask<Void, AndroidContact, Void> {
 
     private LinphoneContact mLinphoneContact;
+    private String mAlias;
 
-    public AsyncContactPresence(LinphoneContact linphoneContact) {
+    public AsyncContactPresence(LinphoneContact linphoneContact, String alias) {
         mLinphoneContact = linphoneContact;
+        mAlias = alias;
     }
 
     @Override
@@ -36,7 +38,7 @@ public class AsyncContactPresence extends AsyncTask<Void, AndroidContact, Void> 
 
     @Override
     protected Void doInBackground(Void... voids) {
-        mLinphoneContact.updateNativeContactWithPresenceInfo();
+        mLinphoneContact.addPresenceInfoToNativeContact(mAlias);
         return null;
     }
 }
