@@ -618,34 +618,17 @@ public class LinphoneContact extends AndroidContact
         }
     }
 
-    public synchronized void updateNativeContactWithPresenceInfo() {
-        Log.d("[Contact] Trying to update native contact with presence information");
+    public synchronized void addPresenceInfoToNativeContact(String value) {
+        Log.d(
+                "[Contact] Trying to update native contact with presence information for phone number ",
+                value);
 
         // Creation of the raw contact with the presence information (tablet)
         createRawLinphoneContactFromExistingAndroidContactIfNeeded();
 
-        for (LinphoneNumberOrAddress noa : getNumbersOrAddresses()) {
-            if (noa.isSIPAddress()) {
-                // We are only interested in SIP addresses
-                continue;
-            }
-            String value = noa.getValue();
-            if (value == null || value.isEmpty()) {
-                return;
-            }
-
-            // Test presence of the value
-            PresenceModel pm = getFriend().getPresenceModelForUriOrTel(value);
-            // If presence is not null
-            if (pm != null
-                    && pm.getBasicStatus() != null
-                    && pm.getBasicStatus().equals(PresenceBasicStatus.Open)) {
-                Log.d("[Contact] Found presence information for phone number " + value);
-                if (!isLinphoneAddressMimeEntryAlreadyExisting(value)) {
-                    // Do the action on the contact only once if it has not been done yet
-                    updateNativeContactWithPresenceInfo(value);
-                }
-            }
+        if (!isLinphoneAddressMimeEntryAlreadyExisting(value)) {
+            // Do the action on the contact only once if it has not been done yet
+            updateNativeContactWithPresenceInfo(value);
         }
         saveChangesCommited();
     }
