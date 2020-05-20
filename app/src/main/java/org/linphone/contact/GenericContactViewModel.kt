@@ -24,7 +24,6 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.activities.main.viewmodels.ErrorReportingViewModel
 import org.linphone.core.Address
 import org.linphone.core.ChatRoomSecurityLevel
-import org.linphone.core.tools.Log
 import org.linphone.utils.LinphoneUtils
 
 interface ContactViewModelInterface {
@@ -46,7 +45,6 @@ abstract class GenericContactViewModel(private val sipAddress: Address) : ErrorR
 
     private val contactsUpdatedListener = object : ContactsUpdatedListenerStub() {
         override fun onContactUpdated(contact: Contact) {
-            Log.i("[Generic Contact VM] Contacts have changed")
             contactLookup()
         }
     }

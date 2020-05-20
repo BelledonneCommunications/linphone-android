@@ -80,6 +80,7 @@ class ControlsViewModel : ViewModel() {
         override fun handleClick(key: Char) {
             coreContext.core.playDtmf(key, 1)
             somethingClickedEvent.value = Event(true)
+            coreContext.core.currentCall?.sendDtmf(key)
         }
 
         override fun handleLongClick(key: Char): Boolean {
