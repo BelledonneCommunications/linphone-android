@@ -142,13 +142,11 @@ class CoreContext(val context: Context, coreConfig: Config) {
                         Log.w("[Context] Auto answering call immediately")
                         answerCall(call)
                     } else {
-                        val timer = Timer("Auto answer scheduler")
                         Log.i("[Context] Scheduling auto answering in $autoAnswerDelay milliseconds")
-                        timer.schedule(object : TimerTask() {
-                            override fun run() {
-                                Log.w("[Context] Auto answering call")
-                                answerCall(call)
-                            }
+                        val mainThreadHandler = Handler(Looper.getMainLooper())
+                        mainThreadHandler.postDelayed({
+                            Log.w("[Context] Auto answering call")
+                            answerCall(call)
                         }, autoAnswerDelay.toLong())
                     }
                 }
