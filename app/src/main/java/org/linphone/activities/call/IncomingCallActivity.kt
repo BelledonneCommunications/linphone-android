@@ -23,6 +23,7 @@ import android.annotation.TargetApi
 import android.app.KeyguardManager
 import android.content.Context
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -31,6 +32,7 @@ import org.linphone.R
 import org.linphone.activities.GenericActivity
 import org.linphone.activities.call.viewmodels.IncomingCallViewModel
 import org.linphone.activities.call.viewmodels.IncomingCallViewModelFactory
+import org.linphone.compatibility.Compatibility
 import org.linphone.core.Call
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallIncomingActivityBinding
@@ -43,6 +45,10 @@ class IncomingCallActivity : GenericActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        Compatibility.setShowWhenLocked(this, true)
+        Compatibility.setTurnScreenOn(this, true)
 
         binding = DataBindingUtil.setContentView(this, R.layout.call_incoming_activity)
         binding.lifecycleOwner = this

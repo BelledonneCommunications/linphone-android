@@ -46,6 +46,24 @@ class Compatibility {
             }
         }
 
+        /* UI */
+
+        fun setShowWhenLocked(activity: Activity, enable: Boolean) {
+            if (Version.sdkStrictlyBelow(Version.API27_OREO_81)) {
+                Api21Compatibility.setShowWhenLocked(activity, enable)
+            } else {
+                Api27Compatibility.setShowWhenLocked(activity, enable)
+            }
+        }
+
+        fun setTurnScreenOn(activity: Activity, enable: Boolean) {
+            if (Version.sdkStrictlyBelow(Version.API27_OREO_81)) {
+                Api21Compatibility.setTurnScreenOn(activity, enable)
+            } else {
+                Api27Compatibility.setTurnScreenOn(activity, enable)
+            }
+        }
+
         /* Notifications */
 
         fun createNotificationChannels(
