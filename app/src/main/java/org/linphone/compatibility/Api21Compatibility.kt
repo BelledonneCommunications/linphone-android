@@ -20,6 +20,7 @@
 package org.linphone.compatibility
 
 import android.annotation.TargetApi
+import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.content.ContentValues
 import android.content.Context
@@ -28,6 +29,7 @@ import android.os.Environment
 import android.os.Vibrator
 import android.provider.MediaStore
 import android.provider.Settings
+import android.view.WindowManager
 import org.linphone.R
 import org.linphone.core.Content
 import org.linphone.core.tools.Log
@@ -150,6 +152,22 @@ class Api21Compatibility {
                 content.userData = fileUri.toString()
             }
             return copyOk
+        }
+
+        fun setShowWhenLocked(activity: Activity, enable: Boolean) {
+            if (enable) {
+                activity.window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
+            } else {
+                activity.window.clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
+            }
+        }
+
+        fun setTurnScreenOn(activity: Activity, enable: Boolean) {
+            if (enable) {
+                activity.window.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
+            } else {
+                activity.window.clearFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
+            }
         }
     }
 }
