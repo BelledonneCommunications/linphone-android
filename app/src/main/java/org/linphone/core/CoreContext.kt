@@ -354,7 +354,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
         }
 
         if (core.conference != null && core.isInConference) {
-            // TODO: change camera while in video conference
+            // Nothing to do
         } else {
             val call = core.currentCall
             if (call == null) {

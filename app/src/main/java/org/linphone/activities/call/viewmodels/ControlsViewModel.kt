@@ -183,8 +183,10 @@ class ControlsViewModel : ViewModel() {
 
         if (core.conference != null && core.isInConference) {
             val params = core.conference.currentParams
-            params.enableVideo(!params.videoEnabled())
-            // TODO: update
+            val videoEnabled = params.videoEnabled()
+            params.enableVideo(!videoEnabled)
+            Log.i("[Controls VM] Conference current param for video is $videoEnabled")
+            core.conference.updateParams(params)
         } else if (currentCall != null) {
             val state = currentCall.state
             if (state == Call.State.End || state == Call.State.Released || state == Call.State.Error)
