@@ -169,5 +169,9 @@ class Api21Compatibility {
                 activity.window.clearFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
             }
         }
+
+        fun requestDismissKeyguard(activity: Activity) {
+            activity.window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD)
+        }
     }
 }

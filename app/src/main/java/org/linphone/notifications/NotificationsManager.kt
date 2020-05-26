@@ -343,6 +343,11 @@ class NotificationsManager(private val context: Context) {
         val address = call.remoteAddress.asStringUriOnly()
         val notifiable = getNotifiableForCall(call)
 
+        if (notifiable.notificationId == currentForegroundServiceNotificationId) {
+            Log.w("[Notifications Manager] Incoming call notification already displayed by foreground service, skipping")
+            return
+        }
+
         val contact: Contact? = coreContext.contactsManager.findContactByAddress(call.remoteAddress)
         val pictureUri = contact?.getContactThumbnailPictureUri()
         val roundPicture = ImageUtils.getRoundBitmapFromUri(context, pictureUri)
@@ -380,10 +385,13 @@ class NotificationsManager(private val context: Context) {
             .addAction(getCallAnswerAction(notifiable.notificationId))
             .setCustomHeadsUpContentView(notificationLayoutHeadsUp)
             .build()
-        notify(notifiable.notificationId, notification)
 
         if (useAsForeground) {
+            Log.i("[Notifications Manager] Notifying incoming call notification for foreground service")
             startForeground(notifiable.notificationId, notification)
+        } else {
+            Log.i("[Notifications Manager] Notifying incoming call notification")
+            notify(notifiable.notificationId, notification)
         }
     }
 
