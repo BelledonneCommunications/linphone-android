@@ -89,11 +89,13 @@ class DialerFragment : Fragment() {
 
         if (arguments?.containsKey("Transfer") == true) {
             sharedViewModel.pendingCallTransfer = arguments?.getBoolean("Transfer") ?: false
+            Log.i("[Dialer] Is pending call transfer: ${sharedViewModel.pendingCallTransfer}")
         }
         if (arguments?.containsKey("URI") == true) {
             val address = arguments?.getString("URI") ?: ""
+            val skipAutoCall = arguments?.getBoolean("SkipAutoCallStart") ?: false
 
-            if (corePreferences.callRightAway) {
+            if (corePreferences.callRightAway && !skipAutoCall) {
                 Log.i("[Dialer] Call right away setting is enabled, start the call to $address")
                 viewModel.directCall(address)
             } else {
