@@ -79,10 +79,11 @@ class DetailContactFragment : Fragment() {
         viewModel.startCallToEvent.observe(viewLifecycleOwner, Observer {
             it.consume { address ->
                 if (coreContext.core.callsNb > 0) {
-                    Log.i("[Contact] Starting dialer with pre-filled URI ${address.asStringUriOnly()}")
+                    Log.i("[Contact] Starting dialer with pre-filled URI ${address.asStringUriOnly()}, is transfer? ${sharedViewModel.pendingCallTransfer}")
                     val args = Bundle()
                     args.putString("URI", address.asStringUriOnly())
                     args.putBoolean("Transfer", sharedViewModel.pendingCallTransfer)
+                    args.putBoolean("SkipAutoCallStart", true) // If auto start call setting is enabled, ignore it
                     findNavController().navigate(
                         R.id.action_global_dialerFragment,
                         args
