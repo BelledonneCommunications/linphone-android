@@ -145,6 +145,12 @@ class DetailChatRoomFragment : MasterFragment() {
             }
         })
 
+        listViewModel.scrollToBottomOnMessageReceivedEvent.observe(viewLifecycleOwner, Observer {
+            it.consume {
+                scrollToBottom()
+            }
+        })
+
         listViewModel.requestWriteExternalStoragePermissionEvent.observe(viewLifecycleOwner, Observer {
             it.consume {
                 requestPermissions(arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
