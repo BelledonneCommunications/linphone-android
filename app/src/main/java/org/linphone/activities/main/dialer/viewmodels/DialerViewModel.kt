@@ -19,6 +19,7 @@
  */
 package org.linphone.activities.main.dialer.viewmodels
 
+import android.provider.Settings
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -45,7 +46,11 @@ class DialerViewModel : ViewModel() {
         override fun handleClick(key: Char) {
             enteredUri.value += key.toString()
             if (coreContext.core.callsNb == 0) {
-                coreContext.core.playDtmf(key, 1)
+                val contentResolver = coreContext.context.contentResolver
+                val dtmfSetting = Settings.System.getInt(contentResolver, Settings.System.DTMF_TONE_WHEN_DIALING)
+                if (dtmfSetting == 1) {
+                    coreContext.core.playDtmf(key, 1)
+                }
             }
         }
 
