@@ -49,17 +49,9 @@ class OutgoingCallActivity : ProximitySensorActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.call_outgoing_activity)
         binding.lifecycleOwner = this
 
-        var outgoingCall: Call? = null
-        for (call in coreContext.core.calls) {
-            if (call.state == Call.State.OutgoingInit ||
-                call.state == Call.State.OutgoingProgress ||
-                call.state == Call.State.OutgoingRinging) {
-                outgoingCall = call
-            }
-        }
-
+        var outgoingCall: Call? = findOutgoingCall()
         if (outgoingCall == null) {
-            Log.e("[Outgoing Call] Couldn't find call in state Outgoing")
+            Log.e("[Outgoing Call Activity] Couldn't find call in state Outgoing")
             finish()
             return
         }
@@ -91,6 +83,14 @@ class OutgoingCallActivity : ProximitySensorActivity() {
 
         viewModel.callEndedEvent.observe(this, Observer {
             it.consume {
+                Log.i("[Outgoing Call Activity] Call ended, finish activity")
+                finish()
+            }
+        })
+
+        viewModel.callConnectedEvent.observe(this, Observer {
+            it.consume {
+                Log.i("[Outgoing Call Activity] Call connected, finish activity")
                 finish()
             }
         })
@@ -100,15 +100,25 @@ class OutgoingCallActivity : ProximitySensorActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        var outgoingCall: Call? = findOutgoingCall()
+        if (outgoingCall == null) {
+            Log.e("[Outgoing Call Activity] Couldn't find call in state Outgoing")
+            finish()
+        }
+    }
+
     @TargetApi(Version.API23_MARSHMALLOW_60)
     private fun checkPermissions() {
         val permissionsRequiredList = arrayListOf<String>()
         if (!PermissionHelper.get().hasRecordAudioPermission()) {
-            Log.i("[Outgoing Call] Asking for RECORD_AUDIO permission")
+            Log.i("[Outgoing Call Activity] Asking for RECORD_AUDIO permission")
             permissionsRequiredList.add(android.Manifest.permission.RECORD_AUDIO)
         }
         if (viewModel.call.currentParams.videoEnabled() && !PermissionHelper.get().hasCameraPermission()) {
-            Log.i("[Outgoing Call] Asking for CAMERA permission")
+            Log.i("[Outgoing Call Activity] Asking for CAMERA permission")
             permissionsRequiredList.add(android.Manifest.permission.CAMERA)
         }
         if (permissionsRequiredList.isNotEmpty()) {
@@ -116,5 +126,16 @@ class OutgoingCallActivity : ProximitySensorActivity() {
             permissionsRequiredList.toArray(permissionsRequired)
             requestPermissions(permissionsRequired, 0)
         }
+    }
+
+    private fun findOutgoingCall(): Call? {
+        for (call in coreContext.core.calls) {
+            if (call.state == Call.State.OutgoingInit ||
+                call.state == Call.State.OutgoingProgress ||
+                call.state == Call.State.OutgoingRinging) {
+                return call
+            }
+        }
+        return null
     }
 }
