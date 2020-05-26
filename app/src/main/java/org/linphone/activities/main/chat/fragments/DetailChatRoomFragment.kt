@@ -114,8 +114,8 @@ class DetailChatRoomFragment : MasterFragment() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                 if (positionStart == adapter.itemCount - 1) {
                     adapter.notifyItemChanged(positionStart - 1) // For grouping purposes
-                    scrollToBottom()
                 }
+                scrollToBottom()
             }
         })
         binding.chatMessagesList.adapter = adapter
