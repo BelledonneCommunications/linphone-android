@@ -85,6 +85,9 @@ class DialerFragment : Fragment() {
 
         binding.setTransferCallClickListener {
             viewModel.transferCall()
+            // Transfer has been consumed
+            sharedViewModel.pendingCallTransfer = false
+            viewModel.transferVisibility.value = false
         }
 
         if (arguments?.containsKey("Transfer") == true) {
