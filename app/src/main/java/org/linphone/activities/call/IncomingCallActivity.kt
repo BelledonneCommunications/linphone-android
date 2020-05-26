@@ -22,6 +22,7 @@ package org.linphone.activities.call
 import android.annotation.TargetApi
 import android.app.KeyguardManager
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.databinding.DataBindingUtil
@@ -47,22 +48,16 @@ class IncomingCallActivity : GenericActivity() {
         super.onCreate(savedInstanceState)
 
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        Compatibility.setShowWhenLocked(this, true)
         Compatibility.setTurnScreenOn(this, true)
+        Compatibility.setShowWhenLocked(this, true)
+        Compatibility.requestDismissKeyguard(this)
 
         binding = DataBindingUtil.setContentView(this, R.layout.call_incoming_activity)
         binding.lifecycleOwner = this
 
-        var incomingCall: Call? = null
-        for (call in coreContext.core.calls) {
-            if (call.state == Call.State.IncomingReceived ||
-                call.state == Call.State.IncomingEarlyMedia) {
-                incomingCall = call
-            }
-        }
-
+        var incomingCall: Call? = findIncomingCall()
         if (incomingCall == null) {
-            Log.e("[Incoming Call] Couldn't find call in state Incoming")
+            Log.e("[Incoming Call Activity] Couldn't find call in state Incoming")
             finish()
             return
         }
@@ -75,6 +70,14 @@ class IncomingCallActivity : GenericActivity() {
 
         viewModel.callEndedEvent.observe(this, Observer {
             it.consume {
+                Log.i("[Incoming Call Activity] Call ended, finish activity")
+                finish()
+            }
+        })
+
+        viewModel.callConnectedEvent.observe(this, Observer {
+            it.consume {
+                Log.i("[Incoming Call Activity] Call connected, finish activity")
                 finish()
             }
         })
@@ -89,15 +92,25 @@ class IncomingCallActivity : GenericActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        var incomingCall: Call? = findIncomingCall()
+        if (incomingCall == null) {
+            Log.e("[Incoming Call Activity] Couldn't find call in state Incoming")
+            finish()
+        }
+    }
+
     @TargetApi(Version.API23_MARSHMALLOW_60)
     private fun checkPermissions() {
         val permissionsRequiredList = arrayListOf<String>()
         if (!PermissionHelper.get().hasRecordAudioPermission()) {
-            Log.i("[Incoming Call] Asking for RECORD_AUDIO permission")
+            Log.i("[Incoming Call Activity] Asking for RECORD_AUDIO permission")
             permissionsRequiredList.add(android.Manifest.permission.RECORD_AUDIO)
         }
         if (viewModel.call.currentParams.videoEnabled() && !PermissionHelper.get().hasCameraPermission()) {
-            Log.i("[Incoming Call] Asking for CAMERA permission")
+            Log.i("[Incoming Call Activity] Asking for CAMERA permission")
             permissionsRequiredList.add(android.Manifest.permission.CAMERA)
         }
         if (permissionsRequiredList.isNotEmpty()) {
@@ -105,5 +118,15 @@ class IncomingCallActivity : GenericActivity() {
             permissionsRequiredList.toArray(permissionsRequired)
             requestPermissions(permissionsRequired, 0)
         }
+    }
+
+    private fun findIncomingCall(): Call? {
+        for (call in coreContext.core.calls) {
+            if (call.state == Call.State.IncomingReceived ||
+                call.state == Call.State.IncomingEarlyMedia) {
+                return call
+            }
+        }
+        return null
     }
 }

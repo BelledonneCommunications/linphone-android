@@ -101,14 +101,11 @@
 
         <activity android:name=".activities.call.CallActivity"
             android:launchMode="singleTop"
-            android:showWhenLocked="true"
             android:supportsPictureInPicture="true" />
 
         <activity android:name=".activities.call.IncomingCallActivity"
             android:launchMode="singleTop"
-            android:noHistory="true"
-            android:showWhenLocked="true"
-            android:turnScreenOn="true" />
+            android:noHistory="true" />
 
         <activity android:name=".activities.call.OutgoingCallActivity"
             android:launchMode="singleTop"

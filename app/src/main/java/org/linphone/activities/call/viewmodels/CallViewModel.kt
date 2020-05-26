@@ -50,6 +50,10 @@ open class CallViewModel(val call: Call) : GenericContactViewModel(call.remoteAd
         MutableLiveData<Event<Boolean>>()
     }
 
+    val callConnectedEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     private val listener = object : CallListenerStub() {
         override fun onStateChanged(call: Call, state: Call.State, message: String) {
             if (call != this@CallViewModel.call) return
@@ -62,6 +66,8 @@ open class CallViewModel(val call: Call) : GenericContactViewModel(call.remoteAd
                 if (state == Call.State.Error) {
                     Log.e("[Call View Model] Error state reason is ${call.reason}")
                 }
+            } else if (call.state == Call.State.Connected) {
+                callConnectedEvent.value = Event(true)
             }
         }
     }
