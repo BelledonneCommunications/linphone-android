@@ -20,6 +20,7 @@
 package org.linphone.activities.main.settings.viewmodels
 
 import androidx.lifecycle.MutableLiveData
+import org.linphone.R
 import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.utils.Event
 
@@ -30,6 +31,32 @@ class ChatSettingsViewModel : GenericSettingsViewModel() {
         }
     }
     val fileSharingUrl = MutableLiveData<String>()
+
+    val autoDownloadListener = object : SettingListenerStub() {
+        override fun onListValueChanged(position: Int) {
+            val maxSize = when (position) {
+                0 -> -1
+                1 -> 0
+                else -> 10000000
+            }
+            core.maxSizeForAutoDownloadIncomingFiles = maxSize
+            autoDownloadMaxSize.value = maxSize
+            updateAutoDownloadIndexFromMaxSize(maxSize)
+        }
+    }
+    val autoDownloadIndex = MutableLiveData<Int>()
+    val autoDownloadLabels = MutableLiveData<ArrayList<String>>()
+
+    val autoDownloadMaxSizeListener = object : SettingListenerStub() {
+        override fun onTextValueChanged(newValue: String) {
+            if (newValue.isNotEmpty()) {
+                val maxSize = newValue.toInt()
+                core.maxSizeForAutoDownloadIncomingFiles = maxSize
+                updateAutoDownloadIndexFromMaxSize(maxSize)
+            }
+        }
+    }
+    val autoDownloadMaxSize = MutableLiveData<Int>()
 
     val downloadedImagesPublicListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
@@ -63,9 +90,30 @@ class ChatSettingsViewModel : GenericSettingsViewModel() {
 
     init {
         downloadedImagesPublic.value = prefs.makePublicDownloadedImages
+        initAutoDownloadList()
         launcherShortcuts.value = prefs.chatRoomShortcuts
         hideEmptyRooms.value = prefs.hideEmptyRooms
         hideRoomsRemovedProxies.value = prefs.hideRoomsFromRemovedProxies
         fileSharingUrl.value = core.fileTransferServer
+    }
+
+    private fun initAutoDownloadList() {
+        val labels = arrayListOf<String>()
+        labels.add(prefs.getString(R.string.chat_settings_auto_download_never))
+        labels.add(prefs.getString(R.string.chat_settings_auto_download_always))
+        labels.add(prefs.getString(R.string.chat_settings_auto_download_under_size))
+        autoDownloadLabels.value = labels
+
+        val currentValue = core.maxSizeForAutoDownloadIncomingFiles
+        autoDownloadMaxSize.value = currentValue
+        updateAutoDownloadIndexFromMaxSize(currentValue)
+    }
+
+    private fun updateAutoDownloadIndexFromMaxSize(maxSize: Int) {
+        autoDownloadIndex.value = when (maxSize) {
+            -1 -> 0
+            0 -> 1
+            else -> 2
+        }
     }
 }

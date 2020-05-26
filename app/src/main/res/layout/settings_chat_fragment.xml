@@ -74,6 +74,23 @@
                     linphone:inputType="@{InputType.TYPE_TEXT_VARIATION_URI}"/>
 
                 <include
+                    layout="@layout/settings_widget_list"
+                    linphone:title="@{@string/chat_settings_auto_download_title}"
+                    linphone:subtitle="@{@string/chat_settings_auto_download_summary}"
+                    linphone:listener="@{viewModel.autoDownloadListener}"
+                    linphone:selectedIndex="@{viewModel.autoDownloadIndex}"
+                    linphone:labels="@{viewModel.autoDownloadLabels}"/>
+
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/chat_settings_auto_download_max_size_title}"
+                    linphone:subtitle="@{@string/chat_settings_auto_download_max_size_summary}"
+                    linphone:listener="@{viewModel.autoDownloadMaxSizeListener}"
+                    linphone:defaultValue="@{viewModel.autoDownloadMaxSize.toString()}"
+                    linphone:inputType="@{InputType.TYPE_CLASS_NUMBER}"
+                    linphone:enabled="@{viewModel.autoDownloadIndex == 2}"/>
+
+                <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/chat_settings_downloaded_images_public_title}"
                     linphone:subtitle="@{@string/chat_settings_downloaded_images_public_summary}"
