@@ -64,6 +64,14 @@ class Compatibility {
             }
         }
 
+        fun requestDismissKeyguard(activity: Activity) {
+            if (Version.sdkStrictlyBelow(Version.API27_OREO_81)) {
+                Api21Compatibility.requestDismissKeyguard(activity)
+            } else {
+                Api27Compatibility.requestDismissKeyguard(activity)
+            }
+        }
+
         /* Notifications */
 
         fun createNotificationChannels(

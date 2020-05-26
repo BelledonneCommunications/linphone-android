@@ -49,6 +49,7 @@ class CallActivity : ProximitySensorActivity() {
 
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         Compatibility.setShowWhenLocked(this, true)
+        Compatibility.setTurnScreenOn(this, true)
 
         binding = DataBindingUtil.setContentView(this, R.layout.call_activity)
         binding.lifecycleOwner = this

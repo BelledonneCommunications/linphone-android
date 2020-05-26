@@ -30,7 +30,6 @@ import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
 import android.view.*
 import java.io.File
-import java.util.*
 import kotlin.math.abs
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.activities.call.CallActivity
@@ -435,6 +434,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
     /* Start call related activities */
 
     private fun onIncomingReceived() {
+        Log.i("[Context] Starting IncomingCallActivity")
         val intent = Intent(context, IncomingCallActivity::class.java)
         // This flag is required to start an Activity from a Service context
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -442,6 +442,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
     }
 
     private fun onOutgoingStarted() {
+        Log.i("[Context] Starting OutgoingCallActivity")
         val intent = Intent(context, OutgoingCallActivity::class.java)
         // This flag is required to start an Activity from a Service context
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -449,6 +450,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
     }
 
     private fun onCallStarted() {
+        Log.i("[Context] Starting CallActivity")
         val intent = Intent(context, CallActivity::class.java)
         // This flag is required to start an Activity from a Service context
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
