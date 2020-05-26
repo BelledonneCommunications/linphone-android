@@ -369,6 +369,7 @@ class NotificationsManager(private val context: Context) {
             .setContentIntent(pendingIntent)
             .setCategory(NotificationCompat.CATEGORY_CALL)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setWhen(System.currentTimeMillis())
             .setAutoCancel(false)
             .setShowWhen(true)
