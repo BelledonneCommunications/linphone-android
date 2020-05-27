@@ -32,7 +32,6 @@ import android.view.*
 import android.webkit.MimeTypeMap
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.view.menu.MenuPopupHelper
-import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -40,7 +39,6 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import java.io.File
 import kotlinx.android.synthetic.main.tabs_fragment.*
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -520,39 +518,8 @@ class DetailChatRoomFragment : MasterFragment() {
 
     private fun openFile(contentFilePath: String) {
         val intent = Intent(Intent.ACTION_VIEW)
-        val contentUri: Uri
         var path = contentFilePath
-
-        when {
-            path.startsWith("file://") -> {
-                path = path.substring("file://".length)
-                val file = File(path)
-                contentUri = FileProvider.getUriForFile(
-                    requireContext(),
-                    getString(R.string.file_provider),
-                    file
-                )
-            }
-            path.startsWith("content://") -> {
-                contentUri = Uri.parse(path)
-            }
-            else -> {
-                val file = File(path)
-                contentUri = try {
-                    FileProvider.getUriForFile(
-                        requireContext(),
-                        getString(R.string.file_provider),
-                        file
-                    )
-                } catch (e: Exception) {
-                    Log.e(
-                        "[Chat Message] Couldn't get URI for file $file using file provider ${getString(R.string.file_provider)}"
-                    )
-                    Uri.parse(path)
-                }
-            }
-        }
-
+        val contentUri: Uri = FileUtils.getPublicFilePath(requireContext(), path)
         val filePath: String = contentUri.toString()
         Log.i("[Chat Message] Trying to open file: $filePath")
         var type: String? = null
