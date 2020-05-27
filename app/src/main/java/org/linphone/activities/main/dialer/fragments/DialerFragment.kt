@@ -19,12 +19,14 @@
  */
 package org.linphone.activities.main.dialer.fragments
 
+import android.app.AlertDialog
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -106,6 +108,13 @@ class DialerFragment : Fragment() {
             }
         }
 
+        viewModel.enteredUri.observe(viewLifecycleOwner, Observer {
+            if (it == corePreferences.debugPopupCode) {
+                displayDebugPopup()
+                viewModel.enteredUri.value = ""
+            }
+        })
+
         Log.i("[Dialer] Pending call transfer mode = ${sharedViewModel.pendingCallTransfer}")
         viewModel.transferVisibility.value = sharedViewModel.pendingCallTransfer
     }
@@ -117,5 +126,27 @@ class DialerFragment : Fragment() {
             coreContext.core.nativePreviewWindowId = binding.videoPreviewWindow
         }
         viewModel.updateShowVideoPreview()
+    }
+
+    private fun displayDebugPopup() {
+        val alertDialog = AlertDialog.Builder(context)
+        alertDialog.setTitle(getString(R.string.debug_popup_title))
+        if (corePreferences.debugLogs) {
+            alertDialog.setItems(resources.getStringArray(R.array.popup_send_log)) { _, which ->
+                if (which == 0) {
+                    corePreferences.debugLogs = false
+                }
+                if (which == 1) {
+                    // TODO: upload logs
+                }
+            }
+        } else {
+            alertDialog.setItems(resources.getStringArray(R.array.popup_enable_log)) { _, which ->
+                if (which == 0) {
+                    corePreferences.debugLogs = true
+                }
+            }
+        }
+        alertDialog.show()
     }
 }

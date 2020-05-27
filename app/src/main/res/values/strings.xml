@@ -19,8 +19,8 @@
     <string name="about_liblinphone_sdk_version">&appName; SDK %s</string>
     <string name="about_privacy_policy">Visit our privacy policy</string>
     <string name="about_text" translatable="false">GNU General Public License V3\n © 2010–2020 Belledonne Communications</string>
-    <string name="about_send_log">Send log</string>
-    <string name="about_reset_log">Reset log</string>
+    <string name="about_send_log">Send logs</string>
+    <string name="about_reset_log">Reset logs</string>
     <string name="logs_url_copied_to_clipboard">Logs url copied into clipboard</string>
     <string name="about_bugreport_email" translatable="false">linphone-android@belledonne-communications.com</string>
 
@@ -37,6 +37,7 @@
     <string name="domain">Domain</string>
     <string name="sip_address">SIP address</string>
     <string name="sip_addresses">SIP addresses</string>
+    <string name="cancel">Cancel</string>
     <plurals name="days">
         <item quantity="one">%d day</item>
         <item quantity="other">%d days</item>
@@ -94,6 +95,19 @@
 
     <!-- Dialer -->
     <string name="dialer_address_bar_hint">Enter a number or an address</string>
+    <string name="debug_popup_title">Debug</string>
+    <string name="debug_popup_enable_logs">Enable logs</string>
+    <string name="debug_popup_disable_logs">Disable logs</string>
+    <string name="debug_popup_send_logs">Send logs</string>
+    <string-array name="popup_send_log">
+        <item>@string/debug_popup_disable_logs</item>
+        <item>@string/debug_popup_send_logs</item>
+        <item>@string/cancel</item>
+    </string-array>
+    <string-array name="popup_enable_log">
+        <item>@string/debug_popup_enable_logs</item>
+        <item>@string/cancel</item>
+    </string-array>
 
     <!-- Chat -->
     <string name="no_chat_history">No conversations</string>

@@ -203,6 +203,9 @@ class CorePreferences constructor(private val context: Context) {
     val defaultDomain: String
         get() = config.getString("app", "default_domain", "sip.linphone.org")
 
+    val debugPopupCode: String
+        get() = config.getString("app", "debug_popup_magic", "#1234#")
+
     val fetchContactsFromDefaultDirectory: Boolean
         get() = config.getBool("app", "fetch_contacts_from_default_directory", true)
 
