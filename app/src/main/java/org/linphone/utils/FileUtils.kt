@@ -23,6 +23,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Environment
 import android.provider.OpenableColumns
+import androidx.core.content.FileProvider
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -31,6 +32,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
 import org.linphone.core.tools.Log
 
 class FileUtils {
@@ -229,6 +231,40 @@ class FileUtils {
             } catch (e: RuntimeException) {
                 SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
             }
+        }
+
+        fun getPublicFilePath(context: Context, path: String): Uri {
+            var contentUri: Uri
+            when {
+                path.startsWith("file://") -> {
+                    val file = File(path.substring("file://".length))
+                    contentUri = FileProvider.getUriForFile(
+                        context,
+                        context.getString(R.string.file_provider),
+                        file
+                    )
+                }
+                path.startsWith("content://") -> {
+                    contentUri = Uri.parse(path)
+                }
+                else -> {
+                    val file = File(path)
+                    contentUri = try {
+                        FileProvider.getUriForFile(
+                            context,
+                            context.getString(R.string.file_provider),
+                            file
+                        )
+                    } catch (e: Exception) {
+                        Log.e(
+                            "[Chat Message] Couldn't get URI for file $file using file provider ${context.getString(
+                                R.string.file_provider)}"
+                        )
+                        Uri.parse(path)
+                    }
+                }
+            }
+            return contentUri
         }
     }
 }

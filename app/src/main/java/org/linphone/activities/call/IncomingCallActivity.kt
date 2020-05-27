@@ -22,7 +22,6 @@ package org.linphone.activities.call
 import android.annotation.TargetApi
 import android.app.KeyguardManager
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.databinding.DataBindingUtil

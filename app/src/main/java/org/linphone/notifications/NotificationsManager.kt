@@ -26,6 +26,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.webkit.MimeTypeMap
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -45,6 +46,7 @@ import org.linphone.compatibility.Compatibility
 import org.linphone.contact.Contact
 import org.linphone.core.*
 import org.linphone.core.tools.Log
+import org.linphone.utils.FileUtils
 import org.linphone.utils.ImageUtils
 import org.linphone.utils.LinphoneUtils
 
@@ -128,8 +130,8 @@ class NotificationsManager(private val context: Context) {
             }
         }
 
-        override fun onMessageReceived(core: Core?, room: ChatRoom?, message: ChatMessage?) {
-            if (message == null || room == null || message.isOutgoing) return
+        override fun onMessageReceived(core: Core, room: ChatRoom, message: ChatMessage) {
+            if (message.isOutgoing) return
 
             if (currentlyDisplayedChatRoomAddress == room.peerAddress?.asStringUriOnly()) {
                 Log.i("[Notifications Manager] Chat room is currently displayed, do not notify received message")
@@ -151,8 +153,8 @@ class NotificationsManager(private val context: Context) {
     }
 
     val chatListener: ChatMessageListener = object : ChatMessageListenerStub() {
-        override fun onMsgStateChanged(message: ChatMessage?, state: ChatMessage.State?) {
-            if (message == null || message.userData == null) return
+        override fun onMsgStateChanged(message: ChatMessage, state: ChatMessage.State) {
+            message.userData ?: return
             val id = message.userData as Int
             Log.i("[Notifications Manager] Reply message state changed [$state] for id $id")
 
@@ -542,6 +544,25 @@ class NotificationsManager(private val context: Context) {
         }
         val notifiableMessage = NotifiableMessage(text, contact, displayName, message.time, senderAvatar = roundPicture)
         notifiable.messages.add(notifiableMessage)
+
+        for (content in message.contents) {
+            if (content.isFile) {
+                val path = content.filePath
+                if (path != null) {
+                    val contentUri: Uri = FileUtils.getPublicFilePath(context, path)
+                    val filePath: String = contentUri.toString()
+                    val extension = FileUtils.getExtensionFromFileName(filePath)
+                    if (extension.isNotEmpty()) {
+                        val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+                        notifiableMessage.filePath = contentUri
+                        notifiableMessage.fileMime = mime
+                        Log.i("[Notifications Manager] Added file $contentUri with MIME $mime to notification")
+                    } else {
+                        Log.e("[Notifications Manager] Couldn't find extension for incoming message with file $path")
+                    }
+                }
+            }
+        }
 
         if (room.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
             notifiable.isGroup = false
