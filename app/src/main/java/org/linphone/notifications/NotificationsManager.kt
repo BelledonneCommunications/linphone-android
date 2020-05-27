@@ -388,12 +388,12 @@ class NotificationsManager(private val context: Context) {
             .setCustomHeadsUpContentView(notificationLayoutHeadsUp)
             .build()
 
+        Log.i("[Notifications Manager] Notifying incoming call notification")
+        notify(notifiable.notificationId, notification)
+
         if (useAsForeground) {
             Log.i("[Notifications Manager] Notifying incoming call notification for foreground service")
             startForeground(notifiable.notificationId, notification)
-        } else {
-            Log.i("[Notifications Manager] Notifying incoming call notification")
-            notify(notifiable.notificationId, notification)
         }
     }
 
