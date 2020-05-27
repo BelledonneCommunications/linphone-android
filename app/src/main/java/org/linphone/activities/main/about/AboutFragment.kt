@@ -98,7 +98,7 @@ class AboutFragment : Fragment() {
         )
         intent.putExtra(Intent.EXTRA_SUBJECT, "$appName Logs")
         intent.putExtra(Intent.EXTRA_TEXT, info)
-        intent.type = "application/zip"
+        intent.type = "text/plain"
 
         try {
             startActivity(Intent.createChooser(intent, "Send mail..."))
