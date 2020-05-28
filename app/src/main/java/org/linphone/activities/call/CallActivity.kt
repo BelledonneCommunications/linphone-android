@@ -23,7 +23,6 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.Gravity
 import android.view.MotionEvent
-import android.view.WindowManager
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -47,7 +46,6 @@ class CallActivity : ProximitySensorActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         Compatibility.setShowWhenLocked(this, true)
         Compatibility.setTurnScreenOn(this, true)
 

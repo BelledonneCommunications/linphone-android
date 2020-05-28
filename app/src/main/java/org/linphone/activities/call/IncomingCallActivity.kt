@@ -23,7 +23,6 @@ import android.annotation.TargetApi
 import android.app.KeyguardManager
 import android.content.Context
 import android.os.Bundle
-import android.view.WindowManager
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -46,9 +45,8 @@ class IncomingCallActivity : GenericActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        Compatibility.setTurnScreenOn(this, true)
         Compatibility.setShowWhenLocked(this, true)
+        Compatibility.setTurnScreenOn(this, true)
         Compatibility.requestDismissKeyguard(this)
 
         binding = DataBindingUtil.setContentView(this, R.layout.call_incoming_activity)
