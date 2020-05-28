@@ -48,7 +48,7 @@ class ChatRoomCreationViewModel : ErrorReportingViewModel() {
     val selectedAddresses = MutableLiveData<ArrayList<Address>>()
 
     val filter = MutableLiveData<String>()
-    var previousFilter = ""
+    private var previousFilter = ""
 
     val limeAvailable: Boolean = LinphoneUtils.isLimeAvailable()
 
@@ -80,8 +80,6 @@ class ChatRoomCreationViewModel : ErrorReportingViewModel() {
 
         selectedAddresses.value = arrayListOf()
 
-        updateContactsList()
-
         coreContext.contactsManager.addListener(contactsUpdatedListener)
         waitForChatRoomCreation.value = false
     }
@@ -98,6 +96,8 @@ class ChatRoomCreationViewModel : ErrorReportingViewModel() {
 
     fun applyFilter() {
         val filterValue = filter.value.orEmpty()
+        if (previousFilter == filterValue) return
+
         if (previousFilter.isNotEmpty() && previousFilter.length > filterValue.length) {
             coreContext.contactsManager.magicSearch.resetSearchCache()
         }
