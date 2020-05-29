@@ -297,6 +297,8 @@
     <string name="audio_settings_echo_tester_summary_is_running">Echo tester is running</string>
     <string name="audio_settings_adaptive_rate_control_title">Adaptive rate control</string>
     <string name="audio_settings_adaptive_rate_control_summary"></string>
+    <string name="audio_settings_input_device_title">Default input audio device</string>
+    <string name="audio_settings_input_device_summary">Changes will take effect starting next call</string>
     <string name="audio_settings_output_device_title">Default output audio device</string>
     <string name="audio_settings_output_device_summary">Changes will take effect starting next call</string>
     <string name="audio_settings_codec_bitrate_title">Codec bitrate limit</string>
