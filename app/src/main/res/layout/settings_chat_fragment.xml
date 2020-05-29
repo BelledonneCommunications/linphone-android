@@ -118,6 +118,11 @@
                     linphone:listener="@{viewModel.hideRoomsRemovedProxiesListener}"
                     linphone:checked="@={viewModel.hideRoomsRemovedProxies}"/>
 
+                <include
+                    layout="@layout/settings_widget_basic"
+                    linphone:listener="@{viewModel.goToAndroidNotificationSettingsListener}"
+                    linphone:title="@{@string/chat_settings_go_to_android_notification_settings}" />
+
             </LinearLayout>
 
         </ScrollView>

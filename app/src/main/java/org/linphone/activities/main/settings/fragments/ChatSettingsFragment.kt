@@ -19,7 +19,10 @@
  */
 package org.linphone.activities.main.settings.fragments
 
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,6 +34,7 @@ import org.linphone.R
 import org.linphone.activities.main.settings.viewmodels.ChatSettingsViewModel
 import org.linphone.compatibility.Compatibility
 import org.linphone.databinding.SettingsChatFragmentBinding
+import org.linphone.mediastream.Version
 
 class ChatSettingsFragment : Fragment() {
     private lateinit var binding: SettingsChatFragmentBinding
@@ -65,5 +69,22 @@ class ChatSettingsFragment : Fragment() {
                 }
             }
         })
+
+        viewModel.goToAndroidNotificationSettingsEvent.observe(viewLifecycleOwner, Observer { it.consume {
+            if (Build.VERSION.SDK_INT >= Version.API26_O_80) {
+                val i = Intent()
+                i.action = Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS
+                i.putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().packageName)
+                i.putExtra(
+                    Settings.EXTRA_CHANNEL_ID,
+                    getString(R.string.notification_channel_chat_id)
+                )
+                i.addCategory(Intent.CATEGORY_DEFAULT)
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+                i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
+                startActivity(i)
+            }
+        } })
     }
 }

@@ -359,6 +359,7 @@
     <string name="call_settings_incoming_timeout_summary">in seconds</string>
     <string name="call_settings_voice_mail_uri_title">Voice mail URI</string>
     <string name="call_settings_voice_mail_uri_summary"></string>
+    <string name="call_settings_go_to_android_notification_settings">Android notification settings</string>
 
     <!-- Chat settings -->
     <string name="chat_settings_file_sharing_url_title">Sharing server URL</string>
@@ -378,6 +379,7 @@
     <string name="chat_settings_hide_empty_rooms_summary"></string>
     <string name="chat_settings_hide_rooms_removed_proxies_title">Hide chat rooms from removed proxy configs</string>
     <string name="chat_settings_hide_rooms_removed_proxies_summary">If you are missing chat rooms, try to uncheck this setting</string>
+    <string name="chat_settings_go_to_android_notification_settings">Android notification settings</string>
 
     <!-- Network settings -->
     <string name="network_settings_wifi_only_title">Use WiFi only</string>
