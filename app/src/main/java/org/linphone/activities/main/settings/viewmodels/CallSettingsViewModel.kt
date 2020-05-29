@@ -118,6 +118,13 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
     }
     val voiceMailUri = MutableLiveData<String>()
 
+    val goToAndroidNotificationSettingsListener = object : SettingListenerStub() {
+        override fun onClicked() {
+            goToAndroidNotificationSettingsEvent.value = Event(true)
+        }
+    }
+    val goToAndroidNotificationSettingsEvent = MutableLiveData<Event<Boolean>>()
+
     init {
         deviceRingtone.value = core.ring == null
         vibrateOnIncomingCall.value = prefs.vibrateWhileIncomingCall

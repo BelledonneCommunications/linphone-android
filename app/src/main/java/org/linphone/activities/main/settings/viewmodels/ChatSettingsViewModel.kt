@@ -88,6 +88,13 @@ class ChatSettingsViewModel : GenericSettingsViewModel() {
     }
     val hideRoomsRemovedProxies = MutableLiveData<Boolean>()
 
+    val goToAndroidNotificationSettingsListener = object : SettingListenerStub() {
+        override fun onClicked() {
+            goToAndroidNotificationSettingsEvent.value = Event(true)
+        }
+    }
+    val goToAndroidNotificationSettingsEvent = MutableLiveData<Event<Boolean>>()
+
     init {
         downloadedImagesPublic.value = prefs.makePublicDownloadedImages
         initAutoDownloadList()
