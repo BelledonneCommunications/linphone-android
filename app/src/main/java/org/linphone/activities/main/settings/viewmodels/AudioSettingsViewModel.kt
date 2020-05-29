@@ -85,6 +85,18 @@ class AudioSettingsViewModel : GenericSettingsViewModel() {
     }
     val adaptiveRateControl = MutableLiveData<Boolean>()
 
+    val inputAudioDeviceListener = object : SettingListenerStub() {
+        override fun onListValueChanged(position: Int) {
+            val values = inputAudioDeviceValues.value.orEmpty()
+            if (values.size > position) {
+                core.defaultInputAudioDevice = values[position]
+            }
+        }
+    }
+    val inputAudioDeviceIndex = MutableLiveData<Int>()
+    val inputAudioDeviceLabels = MutableLiveData<ArrayList<String>>()
+    private val inputAudioDeviceValues = MutableLiveData<ArrayList<AudioDevice>>()
+
     val outputAudioDeviceListener = object : SettingListenerStub() {
         override fun onListValueChanged(position: Int) {
             val values = outputAudioDeviceValues.value.orEmpty()
@@ -135,6 +147,7 @@ class AudioSettingsViewModel : GenericSettingsViewModel() {
             prefs.getString(R.string.audio_settings_echo_canceller_calibration_summary)
         }
         echoTesterStatus.value = prefs.getString(R.string.audio_settings_echo_tester_summary)
+        initInputAudioDevicesList()
         initOutputAudioDevicesList()
         initCodecBitrateList()
         microphoneGain.value = core.micGainDb
@@ -181,10 +194,26 @@ class AudioSettingsViewModel : GenericSettingsViewModel() {
         core.stopEchoTester()
     }
 
+    private fun initInputAudioDevicesList() {
+        val labels = arrayListOf<String>()
+        val values = arrayListOf<AudioDevice>()
+        for (audioDevice in core.extendedAudioDevices) {
+            if (audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityRecord)) {
+                labels.add(audioDevice.id)
+                values.add(audioDevice)
+            }
+        }
+        inputAudioDeviceLabels.value = labels
+        inputAudioDeviceValues.value = values
+
+        val default = core.defaultInputAudioDevice
+        inputAudioDeviceIndex.value = values.indexOf(default)
+    }
+
     private fun initOutputAudioDevicesList() {
         val labels = arrayListOf<String>()
         val values = arrayListOf<AudioDevice>()
-        for (audioDevice in core.audioDevices) {
+        for (audioDevice in core.extendedAudioDevices) {
             if (audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
                 labels.add(audioDevice.id)
                 values.add(audioDevice)
