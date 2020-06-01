@@ -21,6 +21,7 @@ package org.linphone.contact
 
 import android.accounts.Account
 import android.accounts.AccountManager
+import android.content.ContentResolver
 import android.content.Context
 import android.database.ContentObserver
 import android.net.Uri
@@ -256,6 +257,26 @@ class ContactsManager(private val context: Context) {
         }
     }
 
+    fun getAvailableSyncAccounts(): List<Pair<String, String>> {
+        val accountManager = context.getSystemService(Context.ACCOUNT_SERVICE) as AccountManager
+        val syncAdapters = ContentResolver.getSyncAdapterTypes()
+        val available = arrayListOf<Pair<String, String>>()
+
+        for (syncAdapter in syncAdapters) {
+            if (syncAdapter.authority == "com.android.contacts" && syncAdapter.isUserVisible) {
+                Log.i("[Contacts Manager] Found sync adapter for com.android.contacts authority: ${syncAdapter.accountType}")
+                val accounts = accountManager.getAccountsByType(syncAdapter.accountType)
+                for (account in accounts) {
+                    Log.i("[Contacts Manager] Found account for account type ${syncAdapter.accountType}: ${account.name}")
+                    val pair = Pair(account.name, account.type)
+                    available.add(pair)
+                }
+            }
+        }
+
+        return available
+    }
+
     @Synchronized
     private fun refreshContactOnPresenceReceived(friend: Friend): Boolean {
         if (friend.userData == null) return false
@@ -272,7 +293,7 @@ class ContactsManager(private val context: Context) {
                     val sipAddress = contact.getContactForPhoneNumberOrAddress(phoneNumber)
                     if (sipAddress != null) {
                         Log.i("[Contacts Manager] Found presence information to store in native contact $contact")
-                        NativeContactEditor(contact).setPresenceInformation(phoneNumber, sipAddress).commit()
+                        NativeContactEditor(contact, null, null).setPresenceInformation(phoneNumber, sipAddress).commit()
                     }
                 }
             }

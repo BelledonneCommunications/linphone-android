@@ -21,14 +21,12 @@ package org.linphone.utils
 
 import android.app.Activity
 import android.content.*
-import android.provider.ContactsContract
 import android.text.Spanned
 import android.util.TypedValue
 import androidx.core.text.HtmlCompat
 import java.util.*
 import java.util.regex.Pattern
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.tools.Log
 
@@ -100,24 +98,6 @@ class AppUtils {
                 1 -> split[0][0].toString()
                 else -> split[0][0].toString() + split[1][0].toString()
             }
-        }
-
-        fun createAndroidContact(): Long {
-            var accountType: String? = null
-            var accountName: String? = null
-
-            if (corePreferences.useLinphoneSyncAccount) {
-                accountType = getString(org.linphone.R.string.sync_account_type)
-                accountName = getString(org.linphone.R.string.sync_account_name)
-            }
-
-            val values = ContentValues()
-            values.put(ContactsContract.RawContacts.ACCOUNT_TYPE, accountType)
-            values.put(ContactsContract.RawContacts.ACCOUNT_NAME, accountName)
-
-            val rawContactUri = coreContext.context.contentResolver
-                .insert(ContactsContract.RawContacts.CONTENT_URI, values)
-            return ContentUris.parseId(rawContactUri)
         }
 
         fun pixelsToDp(pixels: Float): Float {
