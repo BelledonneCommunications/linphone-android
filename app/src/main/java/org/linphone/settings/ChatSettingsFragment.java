@@ -29,9 +29,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.Nullable;
-import org.linphone.LinphoneManager;
 import org.linphone.R;
-import org.linphone.core.ChatRoom;
 import org.linphone.core.tools.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.settings.widget.BasicSetting;
@@ -47,7 +45,6 @@ public class ChatSettingsFragment extends SettingsFragment {
     private BasicSetting mAndroidNotificationSettings;
     private ListSetting mAutoDownloadIncomingFilesPolicy;
     private SwitchSetting mHideEmptyRooms, mHideRemovedProxiesRooms, mMakeDownloadedImagesPublic;
-    private SwitchSetting mEnableEphemeralBeta;
 
     @Nullable
     @Override
@@ -88,9 +85,6 @@ public class ChatSettingsFragment extends SettingsFragment {
 
         mHideRemovedProxiesRooms =
                 mRootView.findViewById(R.id.pref_android_app_hide_chat_rooms_from_removed_proxies);
-
-        mEnableEphemeralBeta =
-                mRootView.findViewById(R.id.pref_android_app_enable_ephemeral_messages_beta);
     }
 
     private void setListeners() {
@@ -172,19 +166,6 @@ public class ChatSettingsFragment extends SettingsFragment {
                         LinphonePreferences.instance().setHideRemovedProxiesChatRooms(newValue);
                     }
                 });
-
-        mEnableEphemeralBeta.setListener(
-                new SettingListenerBase() {
-                    @Override
-                    public void onBoolValueChanged(boolean newValue) {
-                        LinphonePreferences.instance().enableEphemeralMessages(newValue);
-                        if (!newValue) {
-                            for (ChatRoom room : LinphoneManager.getCore().getChatRooms()) {
-                                room.enableEphemeral(false);
-                            }
-                        }
-                    }
-                });
     }
 
     private void updateValues() {
@@ -202,9 +183,6 @@ public class ChatSettingsFragment extends SettingsFragment {
 
         mHideRemovedProxiesRooms.setChecked(
                 LinphonePreferences.instance().hideRemovedProxiesChatRooms());
-
-        mEnableEphemeralBeta.setChecked(
-                LinphonePreferences.instance().isEphemeralMessagesEnabled());
 
         setListeners();
     }
