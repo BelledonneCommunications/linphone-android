@@ -19,22 +19,25 @@
  */
 package org.linphone.activities.call.viewmodels
 
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.util.*
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.core.AudioDevice
 import org.linphone.core.Call
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
-import org.linphone.utils.Event
 
 class ControlsFadingViewModel : ViewModel() {
     val areControlsHidden = MutableLiveData<Boolean>()
 
     val isVideoPreviewHidden = MutableLiveData<Boolean>()
 
-    val videoEnabledEvent = MutableLiveData<Event<Boolean>>()
+    private val videoEnabled = MutableLiveData<Boolean>()
+    private val nonEarpieceOutputAudioDevice = MutableLiveData<Boolean>()
+    val proximitySensorEnabled: MediatorLiveData<Boolean> = MediatorLiveData()
 
     private var timer: Timer? = null
 
@@ -46,15 +49,22 @@ class ControlsFadingViewModel : ViewModel() {
             message: String?
         ) {
             if (state == Call.State.StreamsRunning || state == Call.State.Updating || state == Call.State.UpdatedByRemote) {
-                val videoEnabled = coreContext.isVideoCallOrConferenceActive()
+                val isVideoCall = coreContext.isVideoCallOrConferenceActive()
                 Log.i("[Controls Fading] Call is in state $state, video is enabled? $videoEnabled")
-                if (videoEnabled) {
-                    videoEnabledEvent.value = Event(true)
+                if (isVideoCall) {
+                    videoEnabled.value = true
                     startTimer()
                 } else {
-                    videoEnabledEvent.value = Event(false)
+                    videoEnabled.value = false
                     stopTimer()
                 }
+            }
+        }
+
+        override fun onAudioDeviceChanged(core: Core, audioDevice: AudioDevice) {
+            if (audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
+                Log.i("[Controls Fading] Output audio device changed to: ${audioDevice.id}")
+                nonEarpieceOutputAudioDevice.value = audioDevice.type != AudioDevice.Type.Earpiece
             }
         }
     }
@@ -64,11 +74,20 @@ class ControlsFadingViewModel : ViewModel() {
 
         areControlsHidden.value = false
         isVideoPreviewHidden.value = false
+        nonEarpieceOutputAudioDevice.value = coreContext.core.outputAudioDevice?.type != AudioDevice.Type.Earpiece
 
-        val videoEnabled = coreContext.isVideoCallOrConferenceActive()
-        if (videoEnabled) {
-            videoEnabledEvent.value = Event(true)
+        val isVideoCall = coreContext.isVideoCallOrConferenceActive()
+        videoEnabled.value = isVideoCall
+        if (isVideoCall) {
             startTimer()
+        }
+
+        proximitySensorEnabled.value = shouldEnableProximitySensor()
+        proximitySensorEnabled.addSource(videoEnabled) {
+            proximitySensorEnabled.value = shouldEnableProximitySensor()
+        }
+        proximitySensorEnabled.addSource(nonEarpieceOutputAudioDevice) {
+            proximitySensorEnabled.value = shouldEnableProximitySensor()
         }
     }
 
@@ -82,6 +101,10 @@ class ControlsFadingViewModel : ViewModel() {
     fun showMomentarily() {
         stopTimer()
         startTimer()
+    }
+
+    private fun shouldEnableProximitySensor(): Boolean {
+        return !(videoEnabled.value ?: false) && !(nonEarpieceOutputAudioDevice.value ?: false)
     }
 
     private fun stopTimer() {
