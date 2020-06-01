@@ -43,7 +43,7 @@ task getGitVersion() {
             gitVersion = gitVersionStream.toString().trim() + "." + gitCommitsCount.toString().trim() + "+" + gitCommitHash.toString().trim()
         }
         println("Git version: " + gitVersion)
-    } catch (Exception e) {
+    } catch (ignored) {
         println("Git not found")
     }
     project.version = gitVersion
@@ -52,7 +52,7 @@ project.tasks['preBuild'].dependsOn 'getGitVersion'
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    buildToolsVersion "29.0.3"
     defaultConfig {
         minSdkVersion 23
         targetSdkVersion 29

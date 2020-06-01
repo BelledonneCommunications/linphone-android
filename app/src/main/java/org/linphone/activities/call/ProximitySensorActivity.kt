@@ -42,12 +42,12 @@ abstract class ProximitySensorActivity : GenericActivity() {
             if (event.timestamp == 0L) return
             if (isProximitySensorNearby(event)) {
                 if (!proximityWakeLock.isHeld) {
-                    Log.i("[Call Activity] Acquiring proximity wake lock")
+                    Log.i("[Proximity Sensor Activity] Acquiring proximity wake lock")
                     proximityWakeLock.acquire()
                 }
             } else {
                 if (proximityWakeLock.isHeld) {
-                    Log.i("[Call Activity] Releasing proximity wake lock")
+                    Log.i("[Proximity Sensor Activity] Releasing proximity wake lock")
                     proximityWakeLock.release()
                 }
             }
@@ -68,7 +68,7 @@ abstract class ProximitySensorActivity : GenericActivity() {
                 )
             proximitySensorFound = true
         } catch (ise: IllegalStateException) {
-            Log.e("[Call Activity] Failed to get proximity sensor: $ise")
+            Log.e("[Proximity Sensor Activity] Failed to get proximity sensor: $ise")
         }
     }
 
@@ -89,19 +89,19 @@ abstract class ProximitySensorActivity : GenericActivity() {
 
     protected fun enableProximitySensor(enable: Boolean) {
         if (!proximitySensorFound) {
-            Log.w("[Call Activity] Couldn't find proximity sensor in this device, skipping")
+            Log.w("[Proximity Sensor Activity] Couldn't find proximity sensor in this device, skipping")
             return
         }
 
         if (enable) {
             if (!proximitySensorEnabled) {
-                Log.i("[Call Activity] Enabling proximity sensor listener")
+                Log.i("[Proximity Sensor Activity] Enabling proximity sensor listener")
                 sensorManager.registerListener(proximityListener, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL)
                 proximitySensorEnabled = true
             }
         } else {
             if (proximitySensorEnabled) {
-                Log.i("[Call Activity] Disabling proximity sensor listener")
+                Log.i("[Proximity Sensor Activity] Disabling proximity sensor listener")
                 sensorManager.unregisterListener(proximityListener)
                 if (proximityWakeLock.isHeld) {
                     proximityWakeLock.release()
@@ -116,7 +116,7 @@ abstract class ProximitySensorActivity : GenericActivity() {
 
         val distanceInCm = event.values[0]
         val maxDistance = event.sensor.maximumRange
-        Log.d("[Call Activity] Proximity sensor report [$distanceInCm] , for max range [$maxDistance]")
+        Log.d("[Proximity Sensor Activity] Proximity sensor report [$distanceInCm] , for max range [$maxDistance]")
 
         if (maxDistance <= threshold) {
             // Case binary 0/1 and short sensors

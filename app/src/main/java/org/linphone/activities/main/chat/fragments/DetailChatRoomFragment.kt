@@ -518,7 +518,7 @@ class DetailChatRoomFragment : MasterFragment() {
 
     private fun openFile(contentFilePath: String) {
         val intent = Intent(Intent.ACTION_VIEW)
-        var path = contentFilePath
+        val path = contentFilePath
         val contentUri: Uri = FileUtils.getPublicFilePath(requireContext(), path)
         val filePath: String = contentUri.toString()
         Log.i("[Chat Message] Trying to open file: $filePath")
