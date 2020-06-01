@@ -21,6 +21,7 @@ package org.linphone.contact
 
 import android.content.ContentProviderOperation
 import android.content.ContentUris
+import android.content.ContentValues
 import android.net.Uri
 import android.provider.ContactsContract
 import android.provider.ContactsContract.CommonDataKinds
@@ -33,7 +34,29 @@ import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.PermissionHelper
 
-class NativeContactEditor(val contact: NativeContact) {
+class NativeContactEditor(
+    val contact: NativeContact,
+    private var syncAccountName: String?,
+    private var syncAccountType: String?
+) {
+    companion object {
+        fun createAndroidContact(accountName: String?, accountType: String?): Long {
+            val values = ContentValues()
+
+            if (accountName == null && accountType == null && corePreferences.useLinphoneSyncAccount) {
+                values.put(RawContacts.ACCOUNT_NAME, AppUtils.getString(R.string.sync_account_name))
+                values.put(RawContacts.ACCOUNT_TYPE, AppUtils.getString(R.string.sync_account_type))
+            } else {
+                values.put(RawContacts.ACCOUNT_NAME, accountName)
+                values.put(RawContacts.ACCOUNT_TYPE, accountType)
+            }
+
+            val rawContactUri = coreContext.context.contentResolver
+                .insert(RawContacts.CONTENT_URI, values)
+            return ContentUris.parseId(rawContactUri)
+        }
+    }
+
     private val changes = arrayListOf<ContentProviderOperation>()
     private val selection =
         "${ContactsContract.Data.CONTACT_ID} =? AND ${ContactsContract.Data.MIMETYPE} =?"
@@ -49,10 +72,13 @@ class NativeContactEditor(val contact: NativeContact) {
     private var pictureByteArray: ByteArray? = null
 
     init {
-        val contentResolver = coreContext.context.contentResolver
-        val syncAccountType = AppUtils.getString(R.string.sync_account_type)
-        val syncAccountName = AppUtils.getString(R.string.sync_account_name)
+        if (syncAccountName == null && syncAccountType == null && useLinphoneSyncAccount) {
+            syncAccountName = AppUtils.getString(R.string.sync_account_name)
+            syncAccountType = AppUtils.getString(R.string.sync_account_type)
+        }
 
+        Log.i("[Native Contact Editor] Using sync account $syncAccountName with type $syncAccountType")
+        val contentResolver = coreContext.context.contentResolver
         val cursor = contentResolver.query(
             RawContacts.CONTENT_URI,
             arrayOf(RawContacts._ID, RawContacts.ACCOUNT_TYPE),
@@ -76,7 +102,7 @@ class NativeContactEditor(val contact: NativeContact) {
         }
         cursor?.close()
 
-        // When contact has been created with AppUtils.createAndroidContact this is required
+        // When contact has been created with NativeContactEditor.createAndroidContact this is required
         if (rawId == null) rawId = contact.nativeId
 
         if (linphoneRawId == null && useLinphoneSyncAccount) {

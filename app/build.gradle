@@ -178,3 +178,6 @@ ktlint {
 }
 
 project.tasks['preBuild'].dependsOn 'ktlintFormat'
+
+// Always clean on pre-build, prevents build issues caused by data binding
+project.tasks['preBuild'].dependsOn 'clean'

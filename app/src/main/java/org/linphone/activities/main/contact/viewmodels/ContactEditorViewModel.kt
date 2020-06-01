@@ -31,7 +31,6 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.contact.*
 import org.linphone.core.tools.Log
-import org.linphone.utils.AppUtils
 import org.linphone.utils.ImageUtils
 import org.linphone.utils.PermissionHelper
 
@@ -82,14 +81,14 @@ class ContactEditorViewModel(val c: Contact?) : ViewModel(), ContactViewModelInt
         if (contact == null) {
             created = true
             contact = if (PermissionHelper.get().hasWriteContactsPermission()) {
-                NativeContact(AppUtils.createAndroidContact().toString())
+                NativeContact(NativeContactEditor.createAndroidContact(null, null).toString())
             } else {
                 Contact()
             }
         }
 
         if (contact is NativeContact) {
-            NativeContactEditor(contact)
+            NativeContactEditor(contact, null, null)
                 .setFirstAndLastNames(firstName.value.orEmpty(), lastName.value.orEmpty())
                 .setOrganization(organization.value.orEmpty())
                 .setPhoneNumbers(numbers.value.orEmpty())
