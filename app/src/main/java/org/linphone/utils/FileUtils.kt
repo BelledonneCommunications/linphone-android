@@ -234,7 +234,7 @@ class FileUtils {
         }
 
         fun getPublicFilePath(context: Context, path: String): Uri {
-            var contentUri: Uri
+            val contentUri: Uri
             when {
                 path.startsWith("file://") -> {
                     val file = File(path.substring("file://".length))

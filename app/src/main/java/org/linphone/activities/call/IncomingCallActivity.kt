@@ -52,7 +52,7 @@ class IncomingCallActivity : GenericActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.call_incoming_activity)
         binding.lifecycleOwner = this
 
-        var incomingCall: Call? = findIncomingCall()
+        val incomingCall: Call? = findIncomingCall()
         if (incomingCall == null) {
             Log.e("[Incoming Call Activity] Couldn't find call in state Incoming")
             finish()
@@ -92,7 +92,7 @@ class IncomingCallActivity : GenericActivity() {
     override fun onResume() {
         super.onResume()
 
-        var incomingCall: Call? = findIncomingCall()
+        val incomingCall: Call? = findIncomingCall()
         if (incomingCall == null) {
             Log.e("[Incoming Call Activity] Couldn't find call in state Incoming")
             finish()

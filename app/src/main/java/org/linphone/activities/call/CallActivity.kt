@@ -85,17 +85,18 @@ class CallActivity : ProximitySensorActivity() {
                 MotionEvent.ACTION_MOVE -> {
                     v.animate().x(event.rawX + previewX).y(event.rawY + previewY).setDuration(0).start()
                 }
-                else -> false
+                else -> {
+                    v.performClick()
+                    false
+                }
             }
             true
         }
 
         videoZoomHelper = VideoZoomHelper(this, binding.remoteVideoSurface)
 
-        viewModel.videoEnabledEvent.observe(this, Observer {
-            it.consume { videoEnabled ->
-                enableProximitySensor(!videoEnabled)
-            }
+        viewModel.proximitySensorEnabled.observe(this, Observer {
+            enableProximitySensor(it)
         })
     }
 
