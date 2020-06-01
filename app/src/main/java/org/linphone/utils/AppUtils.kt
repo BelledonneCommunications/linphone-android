@@ -19,8 +19,8 @@
  */
 package org.linphone.utils
 
-import android.content.ContentUris
-import android.content.ContentValues
+import android.app.Activity
+import android.content.*
 import android.provider.ContactsContract
 import android.text.Spanned
 import android.util.TypedValue
@@ -29,6 +29,8 @@ import java.util.*
 import java.util.regex.Pattern
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.R
+import org.linphone.core.tools.Log
 
 /**
  * Various utility methods for application
@@ -124,6 +126,24 @@ class AppUtils {
                 pixels,
                 coreContext.context.resources.displayMetrics
             )
+        }
+
+        fun shareUploadedLogsUrl(activity: Activity, info: String) {
+            val appName = activity.getString(R.string.app_name)
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.putExtra(
+                Intent.EXTRA_EMAIL,
+                arrayOf(activity.getString(R.string.about_bugreport_email))
+            )
+            intent.putExtra(Intent.EXTRA_SUBJECT, "$appName Logs")
+            intent.putExtra(Intent.EXTRA_TEXT, info)
+            intent.type = "text/plain"
+
+            try {
+                activity.startActivity(Intent.createChooser(intent, activity.getString(R.string.share_uploaded_logs_link)))
+            } catch (ex: ActivityNotFoundException) {
+                Log.e(ex)
+            }
         }
     }
 }

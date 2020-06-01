@@ -20,6 +20,9 @@
 package org.linphone.activities.main.dialer.fragments
 
 import android.app.AlertDialog
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -32,15 +35,19 @@ import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.dialer.viewmodels.DialerViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.tools.Log
 import org.linphone.databinding.DialerFragmentBinding
+import org.linphone.utils.AppUtils
 
 class DialerFragment : Fragment() {
     private lateinit var binding: DialerFragmentBinding
     private lateinit var viewModel: DialerViewModel
     private lateinit var sharedViewModel: SharedMainViewModel
+
+    private var uploadLogsInitiatedByUs = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -115,6 +122,23 @@ class DialerFragment : Fragment() {
             }
         })
 
+        viewModel.uploadFinishedEvent.observe(viewLifecycleOwner, Observer {
+            it.consume { url ->
+                // To prevent being trigger when using the Send Logs button in About page
+                if (uploadLogsInitiatedByUs) {
+                    val clipboard =
+                        requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                    val clip = ClipData.newPlainText("Logs url", url)
+                    clipboard.setPrimaryClip(clip)
+
+                    val activity = requireActivity() as MainActivity
+                    activity.showSnackBar(R.string.logs_url_copied_to_clipboard)
+
+                    AppUtils.shareUploadedLogsUrl(activity, url)
+                }
+            }
+        })
+
         Log.i("[Dialer] Pending call transfer mode = ${sharedViewModel.pendingCallTransfer}")
         viewModel.transferVisibility.value = sharedViewModel.pendingCallTransfer
     }
@@ -126,6 +150,7 @@ class DialerFragment : Fragment() {
             coreContext.core.nativePreviewWindowId = binding.videoPreviewWindow
         }
         viewModel.updateShowVideoPreview()
+        uploadLogsInitiatedByUs = false
     }
 
     private fun displayDebugPopup() {
@@ -137,7 +162,8 @@ class DialerFragment : Fragment() {
                     corePreferences.debugLogs = false
                 }
                 if (which == 1) {
-                    // TODO: upload logs
+                    uploadLogsInitiatedByUs = true
+                    viewModel.uploadLogs()
                 }
             }
         } else {
