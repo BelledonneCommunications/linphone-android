@@ -19,59 +19,14 @@
  */
 package org.linphone.activities.main.about
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
-import org.linphone.core.Core
-import org.linphone.core.CoreListenerStub
-import org.linphone.utils.Event
+import org.linphone.utils.LogsUploadViewModel
 
-class AboutViewModel : ViewModel() {
+class AboutViewModel : LogsUploadViewModel() {
     val appVersion: String = coreContext.appVersion
 
     val sdkVersion: String = coreContext.sdkVersion
 
     val showLogsButtons: Boolean = corePreferences.debugLogs
-
-    val uploadInProgress = MutableLiveData<Boolean>()
-
-    val uploadFinishedEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
-    }
-
-    private val listener = object : CoreListenerStub() {
-        override fun onLogCollectionUploadStateChanged(
-            core: Core,
-            state: Core.LogCollectionUploadState,
-            info: String
-        ) {
-            if (state == Core.LogCollectionUploadState.Delivered) {
-                uploadInProgress.value = false
-                uploadFinishedEvent.value = Event(info)
-            } else if (state == Core.LogCollectionUploadState.NotDelivered) {
-                uploadInProgress.value = false
-            }
-        }
-    }
-
-    init {
-        coreContext.core.addListener(listener)
-        uploadInProgress.value = false
-    }
-
-    override fun onCleared() {
-        coreContext.core.removeListener(listener)
-
-        super.onCleared()
-    }
-
-    fun uploadLogs() {
-        uploadInProgress.value = true
-        coreContext.core.uploadLogCollection()
-    }
-
-    fun resetLogs() {
-        coreContext.core.resetLogCollection()
-    }
 }

@@ -31,8 +31,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
 import org.linphone.activities.main.MainActivity
-import org.linphone.core.tools.Log
 import org.linphone.databinding.AboutFragmentBinding
+import org.linphone.utils.AppUtils
 
 class AboutFragment : Fragment() {
     private lateinit var binding: AboutFragmentBinding
@@ -83,27 +83,8 @@ class AboutFragment : Fragment() {
                 val activity = requireActivity() as MainActivity
                 activity.showSnackBar(R.string.logs_url_copied_to_clipboard)
 
-                shareUploadedLogsUrl(url)
+                AppUtils.shareUploadedLogsUrl(activity, url)
             }
         })
-    }
-
-    // Logs
-    private fun shareUploadedLogsUrl(info: String) {
-        val appName = getString(R.string.app_name)
-        val intent = Intent(Intent.ACTION_SEND)
-        intent.putExtra(
-            Intent.EXTRA_EMAIL,
-            arrayOf(getString(R.string.about_bugreport_email))
-        )
-        intent.putExtra(Intent.EXTRA_SUBJECT, "$appName Logs")
-        intent.putExtra(Intent.EXTRA_TEXT, info)
-        intent.type = "text/plain"
-
-        try {
-            startActivity(Intent.createChooser(intent, "Send mail..."))
-        } catch (ex: ActivityNotFoundException) {
-            Log.e(ex)
-        }
     }
 }
