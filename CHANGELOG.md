@@ -18,6 +18,9 @@ Group changes to describe their impact on the project, as follows:
 
 ### Changed
 - Files from chat messages are now stored in a private space and will be deleted when the message or room will be deleted
+- SDK updated to 4.4 version
+- Fixed ANRs
+- Fixed various issues
 
 ## [4.2.3] - 2020-03-03
 
