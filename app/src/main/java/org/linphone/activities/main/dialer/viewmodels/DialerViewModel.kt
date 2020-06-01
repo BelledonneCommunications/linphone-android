@@ -21,14 +21,14 @@ package org.linphone.activities.main.dialer.viewmodels
 
 import android.provider.Settings
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.activities.main.dialer.NumpadDigitListener
 import org.linphone.core.*
 import org.linphone.core.tools.Log
+import org.linphone.utils.LogsUploadViewModel
 
-class DialerViewModel : ViewModel() {
+class DialerViewModel : LogsUploadViewModel() {
     val enteredUri = MutableLiveData<String>()
 
     val atLeastOneCall = MutableLiveData<Boolean>()
