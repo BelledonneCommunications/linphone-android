@@ -6,6 +6,7 @@
 
 <resources>
     <string name="app_name">&appName;</string>
+    <string name="app_name_debug">&appName; (debug)</string>
     <string name="service_name">&appName; Service</string>
     <string name="service_auto_start_description">&appName; as been started automatically</string>
     <string name="service_description">This is required to receive calls while in background</string>

@@ -67,11 +67,13 @@ android {
         }
 
         if (variant.buildType.name == "release") {
-        variant.getMergedFlavor().manifestPlaceholders = [linphone_address_mime_type: "vnd.android.cursor.item/vnd." + getPackageName() + ".provider.sip_address",
-                                                          linphone_file_provider: getPackageName() + ".fileprovider"]
+            variant.getMergedFlavor().manifestPlaceholders = [linphone_address_mime_type: "vnd.android.cursor.item/vnd." + getPackageName() + ".provider.sip_address",
+                                                            linphone_file_provider: getPackageName() + ".fileprovider",
+                                                            appLabel: "@string/app_name"]
         } else {
             variant.getMergedFlavor().manifestPlaceholders = [linphone_address_mime_type: "vnd.android.cursor.item/vnd." + getPackageName() + ".provider.sip_address",
-                                                              linphone_file_provider: getPackageName() + ".debug.fileprovider"]
+                                                            linphone_file_provider: getPackageName() + ".debug.fileprovider",
+                                                            appLabel: "@string/app_name_debug"]
         }
     }
 
