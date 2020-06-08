@@ -429,6 +429,21 @@
     <string name="advanced_settings_go_to_android_app_settings">Android app settings</string>
 
     <!-- Tunnel settings -->
+    <string name="tunnel_settings_hostname_url_title">Hostname</string>
+    <string name="tunnel_settings_hostname_url_summary"></string>
+    <string name="tunnel_settings_port_title">Port</string>
+    <string name="tunnel_settings_port_summary"></string>
+    <string name="tunnel_settings_dual_mode_title">Dual mode enabled</string>
+    <string name="tunnel_settings_dual_mode_summary">Will use one server for upload and another one for download</string>
+    <string name="tunnel_settings_dual_hostname_url_title">Second server hostname</string>
+    <string name="tunnel_settings_dual_hostname_url_summary">Required in dual mode</string>
+    <string name="tunnel_settings_dual_port_title">Second server port</string>
+    <string name="tunnel_settings_dual_port_summary">Required in dual mode</string>
+    <string name="tunnel_settings_mode_title">Mode</string>
+    <string name="tunnel_settings_mode_summary"></string>
+    <string name="tunnel_settings_disabled_mode">Disabled</string>
+    <string name="tunnel_settings_always_mode">Always</string>
+    <string name="tunnel_settings_auto_mode">Auto</string>
 
     <!-- Account settings -->
     <string name="account_settings_user_name_title">Username</string>
