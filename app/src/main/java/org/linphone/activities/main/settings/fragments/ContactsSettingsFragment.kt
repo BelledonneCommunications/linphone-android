@@ -19,6 +19,7 @@
  */
 package org.linphone.activities.main.settings.fragments
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,11 +28,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.main.settings.viewmodels.ContactsSettingsViewModel
 import org.linphone.compatibility.Compatibility
+import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsContactsFragmentBinding
+import org.linphone.utils.PermissionHelper
 
 class ContactsSettingsFragment : Fragment() {
     private lateinit var binding: SettingsContactsFragmentBinding
@@ -69,5 +73,52 @@ class ContactsSettingsFragment : Fragment() {
                 }
             }
         })
+
+        viewModel.askWriteContactsPermissionForPresenceStorageEvent.observe(viewLifecycleOwner, Observer {
+            it.consume {
+                Log.i("[Contacts Settings] Asking for WRITE_CONTACTS permission to be able to store presence")
+                requestPermissions(arrayOf(android.Manifest.permission.WRITE_CONTACTS), 1)
+            }
+        })
+
+        if (!PermissionHelper.required(requireContext()).hasReadContactsPermission()) {
+            Log.i("[Contacts Settings] Asking for READ_CONTACTS permission")
+            requestPermissions(arrayOf(android.Manifest.permission.READ_CONTACTS), 0)
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
+            0 -> {
+                val granted = grantResults[0] == PackageManager.PERMISSION_GRANTED
+                if (granted) {
+                    Log.i("[Contacts Settings] READ_CONTACTS permission granted")
+                    viewModel.readContactsPermissionGranted.value = true
+                    coreContext.contactsManager.fetchContactsAsync()
+                } else {
+                    Log.w("[Contacts Settings] READ_CONTACTS permission denied")
+                }
+            }
+            1 -> {
+                val granted = grantResults[0] == PackageManager.PERMISSION_GRANTED
+                if (granted) {
+                    Log.i("[Contacts Settings] WRITE_CONTACTS permission granted")
+                    corePreferences.storePresenceInNativeContact = true
+
+                    if (coreContext.core.isFriendListSubscriptionEnabled) {
+                        Log.i("[Contacts Settings] Updating subscription")
+                        for (list in coreContext.core.friendsLists) {
+                            list.updateSubscriptions()
+                        }
+                    }
+                } else {
+                    Log.w("[Contacts Settings] WRITE_CONTACTS permission denied")
+                }
+            }
+        }
     }
 }
