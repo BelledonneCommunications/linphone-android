@@ -287,7 +287,7 @@ class ContactsManager(private val context: Context) {
             listener.onContactUpdated(contact)
         }
 
-        if (corePreferences.storePresenceInNativeContact) {
+        if (corePreferences.storePresenceInNativeContact && PermissionHelper.get().hasWriteContactsPermission()) {
             if (contact is NativeContact) {
                 for (phoneNumber in contact.phoneNumbers) {
                     val sipAddress = contact.getContactForPhoneNumberOrAddress(phoneNumber)
