@@ -206,6 +206,7 @@ class MasterContactsFragment : MasterFragment() {
             val granted = grantResults[0] == PackageManager.PERMISSION_GRANTED
             if (granted) {
                 Log.i("[Contacts] READ_CONTACTS permission granted")
+                coreContext.contactsManager.onReadContactsPermissionGranted()
                 coreContext.contactsManager.fetchContactsAsync()
             } else {
                 Log.w("[Contacts] READ_CONTACTS permission denied")
