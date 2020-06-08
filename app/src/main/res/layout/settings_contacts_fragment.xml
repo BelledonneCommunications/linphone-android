@@ -69,28 +69,32 @@
                     linphone:title="@{@string/contacts_settings_friendlist_subscribe_title}"
                     linphone:subtitle="@{@string/contacts_settings_friendlist_subscribe_summary}"
                     linphone:listener="@{viewModel.friendListSubscribeListener}"
-                    linphone:checked="@={viewModel.friendListSubscribe}"/>
+                    linphone:checked="@={viewModel.friendListSubscribe}"
+                    linphone:enabled="@{viewModel.readContactsPermissionGranted}"/>
 
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/contacts_settings_native_presence_title}"
                     linphone:subtitle="@{@string/contacts_settings_native_presence_summary}"
                     linphone:listener="@{viewModel.nativePresenceListener}"
-                    linphone:checked="@={viewModel.nativePresence}"/>
+                    linphone:checked="@={viewModel.nativePresence}"
+                    linphone:enabled="@{viewModel.readContactsPermissionGranted &amp;&amp; viewModel.friendListSubscribe}"/>
 
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/contacts_settings_show_organization_title}"
                     linphone:subtitle="@{@string/contacts_settings_show_organization_summary}"
                     linphone:listener="@{viewModel.showOrganizationListener}"
-                    linphone:checked="@={viewModel.showOrganization}"/>
+                    linphone:checked="@={viewModel.showOrganization}"
+                    linphone:enabled="@{viewModel.readContactsPermissionGranted}"/>
 
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/contacts_settings_launcher_shortcuts_title}"
                     linphone:subtitle="@{@string/contacts_settings_launcher_shortcuts_summary}"
                     linphone:listener="@{viewModel.launcherShortcutsListener}"
-                    linphone:checked="@={viewModel.launcherShortcuts}"/>
+                    linphone:checked="@={viewModel.launcherShortcuts}"
+                    linphone:enabled="@{viewModel.readContactsPermissionGranted}"/>
 
             </LinearLayout>
 

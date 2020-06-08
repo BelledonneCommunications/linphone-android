@@ -235,10 +235,11 @@ class NativeContactEditor(
                 sipAddress.currentValue.isEmpty() -> {
                     // New address to add
                     addCount++
+                    val address = sipAddress.newValue.value.orEmpty()
                     if (useLinphoneSyncAccount) {
-                        addAddress(sipAddress.newValue.value.orEmpty())
+                        addAddress(address, address)
                     } else {
-                        addSipAddress(sipAddress.newValue.value.orEmpty())
+                        addSipAddress(address)
                     }
                 }
                 sipAddress.toRemove.value == true -> {
@@ -268,7 +269,7 @@ class NativeContactEditor(
         Log.i("[Native Contact Editor] Trying to add presence information to contact as ${if (useLinphoneSyncAccount) "phone number" else "SIP address"}")
 
         if (useLinphoneSyncAccount) {
-            setPresencePhoneNumber(phoneNumber)
+            setPresence(sipAddress, phoneNumber)
         } else {
             setPresenceSipAddress(sipAddress)
         }
@@ -359,7 +360,7 @@ class NativeContactEditor(
         addChanges(delete)
     }
 
-    private fun addAddress(address: String) {
+    private fun addAddress(address: String, detail: String) {
         val insert = ContentProviderOperation.newInsert(contactUri)
             .withValue(ContactsContract.Data.RAW_CONTACT_ID, linphoneRawId)
             .withValue(
@@ -368,7 +369,7 @@ class NativeContactEditor(
             )
             .withValue("data1", address) // value
             .withValue("data2", AppUtils.getString(R.string.app_name)) // summary
-            .withValue("data3", address) // detail
+            .withValue("data3", detail) // detail
             .build()
         addChanges(insert)
     }
@@ -422,13 +423,13 @@ class NativeContactEditor(
         addChanges(delete)
     }
 
-    private fun setPresencePhoneNumber(phoneNumber: String) {
+    private fun setPresence(sipAddress: String, phoneNumber: String) {
         val contentResolver = coreContext.context.contentResolver
         val cursor = contentResolver.query(
             ContactsContract.Data.CONTENT_URI,
             arrayOf("data1"),
-            "${ContactsContract.Data.RAW_CONTACT_ID} = ? AND ${ContactsContract.Data.MIMETYPE} = ? AND data1 = ?",
-            arrayOf(linphoneRawId, AppUtils.getString(R.string.linphone_address_mime_type), phoneNumber),
+            "${ContactsContract.Data.RAW_CONTACT_ID} = ? AND ${ContactsContract.Data.MIMETYPE} = ? AND data1 = ? AND data3 = ?",
+            arrayOf(linphoneRawId, AppUtils.getString(R.string.linphone_address_mime_type), sipAddress, phoneNumber),
             null
         )
         val count = cursor?.count ?: 0
@@ -436,7 +437,7 @@ class NativeContactEditor(
 
         if (count == 0) {
             Log.i("[Native Contact Editor] No existing presence information found for this phone number, let's add it")
-            addAddress(phoneNumber)
+            addAddress(sipAddress, phoneNumber)
         } else {
             Log.i("[Native Contact Editor] There is already an entry for this, skipping")
         }
