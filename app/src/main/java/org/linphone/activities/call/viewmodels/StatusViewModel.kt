@@ -49,7 +49,7 @@ class StatusViewModel : StatusViewModel() {
             on: Boolean,
             authenticationToken: String
         ) {
-            if (call.params.mediaEncryption == MediaEncryption.ZRTP && !call.authenticationTokenVerified) {
+            if (call.currentParams.mediaEncryption == MediaEncryption.ZRTP && !call.authenticationTokenVerified) {
                 showZrtpDialogEvent.value = Event(call)
             } else {
                 updateEncryptionInfo(call)
@@ -77,7 +77,7 @@ class StatusViewModel : StatusViewModel() {
         if (currentCall != null) {
             updateEncryptionInfo(currentCall)
 
-            if (currentCall.params.mediaEncryption == MediaEncryption.ZRTP && !currentCall.authenticationTokenVerified) {
+            if (currentCall.currentParams.mediaEncryption == MediaEncryption.ZRTP && !currentCall.authenticationTokenVerified) {
                 showZrtpDialogEvent.value = Event(currentCall)
             }
         }
@@ -91,7 +91,7 @@ class StatusViewModel : StatusViewModel() {
 
     fun showZrtpDialog() {
         val currentCall = coreContext.core.currentCall
-        if (currentCall?.params?.mediaEncryption == MediaEncryption.ZRTP) {
+        if (currentCall?.currentParams?.mediaEncryption == MediaEncryption.ZRTP) {
             showZrtpDialogEvent.value = Event(currentCall)
         }
     }
@@ -106,7 +106,7 @@ class StatusViewModel : StatusViewModel() {
             return
         }
 
-        when (call.params.mediaEncryption ?: MediaEncryption.None) {
+        when (call.currentParams.mediaEncryption ?: MediaEncryption.None) {
             MediaEncryption.SRTP, MediaEncryption.DTLS -> {
                 encryptionIcon.value = R.drawable.security_ok
                 encryptionIconVisible.value = true
