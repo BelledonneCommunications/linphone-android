@@ -106,8 +106,9 @@ class ContactsManager(private val context: Context) {
     }
 
     init {
-        if (PermissionHelper.required(context).hasReadContactsPermission())
-            context.contentResolver.registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, contactsObserver)
+        if (PermissionHelper.required(context).hasReadContactsPermission()) {
+            onReadContactsPermissionGranted()
+        }
 
         initSyncAccount()
 
@@ -116,6 +117,15 @@ class ContactsManager(private val context: Context) {
             list.addListener(friendListListener)
         }
         Log.i("[Contacts Manager] Created")
+    }
+
+    fun onReadContactsPermissionGranted() {
+        Log.i("[Contacts Manager] Register contacts observer")
+        context.contentResolver.registerContentObserver(
+            ContactsContract.Contacts.CONTENT_URI,
+            true,
+            contactsObserver
+        )
     }
 
     @Synchronized
@@ -282,20 +292,14 @@ class ContactsManager(private val context: Context) {
         if (friend.userData == null) return false
 
         val contact: Contact = friend.userData as Contact
-        Log.i("[Contacts Manager] Received presence information for contact $contact")
+        Log.d("[Contacts Manager] Received presence information for contact $contact")
         for (listener in contactsUpdatedListeners) {
             listener.onContactUpdated(contact)
         }
 
         if (corePreferences.storePresenceInNativeContact && PermissionHelper.get().hasWriteContactsPermission()) {
             if (contact is NativeContact) {
-                for (phoneNumber in contact.phoneNumbers) {
-                    val sipAddress = contact.getContactForPhoneNumberOrAddress(phoneNumber)
-                    if (sipAddress != null) {
-                        Log.i("[Contacts Manager] Found presence information to store in native contact $contact")
-                        NativeContactEditor(contact, null, null).setPresenceInformation(phoneNumber, sipAddress).commit()
-                    }
-                }
+                storePresenceInNativeContact(contact)
             }
         }
 
@@ -305,5 +309,39 @@ class ContactsManager(private val context: Context) {
         }
 
         return false
+    }
+
+    @Synchronized
+    fun storePresenceInformationForAllContacts() {
+        if (corePreferences.storePresenceInNativeContact && PermissionHelper.get().hasWriteContactsPermission()) {
+            for (list in coreContext.core.friendsLists) {
+                for (friend in list.friends) {
+                    if (friend.userData == null) continue
+                    val contact: Contact = friend.userData as Contact
+                    if (contact is NativeContact) {
+                        storePresenceInNativeContact(contact)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun storePresenceInNativeContact(contact: NativeContact) {
+        for (phoneNumber in contact.phoneNumbers) {
+            val sipAddress = contact.getContactForPhoneNumberOrAddress(phoneNumber)
+            if (sipAddress != null) {
+                Log.d("[Contacts Manager] Found presence information to store in native contact $contact")
+                val contactEditor = NativeContactEditor(contact, null, null)
+                // TODO: could be great to do in a coroutine
+                // launch {
+                    // withContext(Dispatchers.IO) {
+                        contactEditor.setPresenceInformation(phoneNumber, sipAddress).commit()
+                    // }
+                // }
+                for (listener in contactsUpdatedListeners) {
+                    listener.onContactUpdated(contact)
+                }
+            }
+        }
     }
 }

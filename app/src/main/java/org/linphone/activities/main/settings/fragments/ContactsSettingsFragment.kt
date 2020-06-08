@@ -98,6 +98,7 @@ class ContactsSettingsFragment : Fragment() {
                 if (granted) {
                     Log.i("[Contacts Settings] READ_CONTACTS permission granted")
                     viewModel.readContactsPermissionGranted.value = true
+                    coreContext.contactsManager.onReadContactsPermissionGranted()
                     coreContext.contactsManager.fetchContactsAsync()
                 } else {
                     Log.w("[Contacts Settings] READ_CONTACTS permission denied")
@@ -108,13 +109,7 @@ class ContactsSettingsFragment : Fragment() {
                 if (granted) {
                     Log.i("[Contacts Settings] WRITE_CONTACTS permission granted")
                     corePreferences.storePresenceInNativeContact = true
-
-                    if (coreContext.core.isFriendListSubscriptionEnabled) {
-                        Log.i("[Contacts Settings] Updating subscription")
-                        for (list in coreContext.core.friendsLists) {
-                            list.updateSubscriptions()
-                        }
-                    }
+                    coreContext.contactsManager.storePresenceInformationForAllContacts()
                 } else {
                     Log.w("[Contacts Settings] WRITE_CONTACTS permission denied")
                 }

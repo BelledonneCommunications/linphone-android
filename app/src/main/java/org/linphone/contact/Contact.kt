@@ -88,12 +88,14 @@ open class Contact : Comparable<Contact> {
         for (number in friend.phoneNumbers) {
             if (!phoneNumbers.contains(number)) phoneNumbers.add(number)
         }
+
         sipAddresses.clear()
         rawSipAddresses.clear()
         for (address in friend.addresses) {
-            if (!sipAddresses.contains(address)) {
+            val stringAddress = address.asStringUriOnly()
+            if (!rawSipAddresses.contains(stringAddress)) {
                 sipAddresses.add(address)
-                rawSipAddresses.add(address.asStringUriOnly())
+                rawSipAddresses.add(stringAddress)
             }
         }
 

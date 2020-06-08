@@ -130,9 +130,10 @@ class NativeContact(val nativeId: String, private val lookupKey: String? = null)
                     return
                 }
 
-                if (!sipAddresses.contains(address)) {
+                val stringAddress = address.asStringUriOnly()
+                if (!rawSipAddresses.contains(stringAddress)) {
                     sipAddresses.add(address)
-                    rawSipAddresses.add(data1)
+                    rawSipAddresses.add(stringAddress)
                 }
             }
             ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE -> {
