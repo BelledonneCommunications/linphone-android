@@ -27,10 +27,11 @@ import org.linphone.activities.main.settings.viewmodels.AccountSettingsViewModel
 import org.linphone.core.*
 
 class SideMenuViewModel : ViewModel() {
-    val showAssistant: Boolean = true
-    val showSettings: Boolean = true
-    val showRecordings: Boolean = true
-    val showAbout: Boolean = true
+    val showAssistant = MutableLiveData<Boolean>()
+    val showSettings = MutableLiveData<Boolean>()
+    val showRecordings = MutableLiveData<Boolean>()
+    val showAbout = MutableLiveData<Boolean>()
+    val showLogcat = MutableLiveData<Boolean>()
 
     val defaultAccount = MutableLiveData<AccountSettingsViewModel>()
     val defaultAccountFound = MutableLiveData<Boolean>()
@@ -60,6 +61,12 @@ class SideMenuViewModel : ViewModel() {
     }
 
     init {
+        showAssistant.value = true
+        showSettings.value = true
+        showRecordings.value = true
+        showAbout.value = true
+        showLogcat.value = true
+
         defaultAccountFound.value = false
         coreContext.core.addListener(listener)
         updateAccountsList()

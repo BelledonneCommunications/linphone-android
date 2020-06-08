@@ -75,6 +75,7 @@
     <string name="assistant">Assistant</string>
     <string name="recordings">Recordings</string>
     <string name="settings">Settings</string>
+    <string name="logcat">Logcat</string>
     <string name="quit">Quit</string>
 
     <!-- History -->

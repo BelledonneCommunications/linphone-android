@@ -17,6 +17,9 @@
             name="aboutClickListener"
             type="android.view.View.OnClickListener"/>
         <variable
+            name="logcatClickListener"
+            type="android.view.View.OnClickListener" />
+        <variable
             name="quitClickListener"
             type="android.view.View.OnClickListener"/>
         <variable
@@ -207,6 +210,35 @@
 
                 <TextView
                     android:text="@string/about"
+                    style="@style/standard_text_font"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="16dp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?dividerColor" />
+
+            <LinearLayout
+                android:onClick="@{logcatClickListener}"
+                android:visibility="@{viewModel.showLogcat ? View.VISIBLE : View.GONE}"
+                android:layout_width="match_parent"
+                android:layout_height="45dp">
+
+                <ImageView
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:padding="10dp"
+                    android:contentDescription="@string/logcat"
+                    android:src="@drawable/menu_about" />
+
+                <TextView
+                    android:text="@string/logcat"
                     style="@style/standard_text_font"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"

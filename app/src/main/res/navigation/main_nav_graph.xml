@@ -393,5 +393,11 @@
             android:name="IsLinking"
             app:argType="boolean" />
     </fragment>
+    <fragment
+        android:id="@+id/logcatFragment"
+        android:name="org.linphone.activities.main.logcat.fragments.LogcatFragment"
+        tools:layout="@layout/logcat_fragment"
+        android:label="LogcatFragment" />
+    <action android:id="@+id/action_global_logcatFragment" app:destination="@id/logcatFragment"/>
 
 </navigation>

@@ -83,28 +83,37 @@ class SideMenuFragment : Fragment() {
         }
 
         binding.setAssistantClickListener {
-            sharedViewModel.toggleDrawerEvent.value = Event(true)
+            closeSideMenu()
             startActivity(Intent(context, AssistantActivity::class.java))
         }
 
         binding.setSettingsClickListener {
-            sharedViewModel.toggleDrawerEvent.value = Event(true)
+            closeSideMenu()
             findNavController().navigate(R.id.action_global_settingsFragment)
         }
 
         binding.setRecordingsClickListener {
-            sharedViewModel.toggleDrawerEvent.value = Event(true)
+            closeSideMenu()
             findNavController().navigate(R.id.action_global_recordingsFragment)
         }
 
         binding.setAboutClickListener {
-            sharedViewModel.toggleDrawerEvent.value = Event(true)
+            closeSideMenu()
             findNavController().navigate(R.id.action_global_aboutFragment)
+        }
+
+        binding.setLogcatClickListener {
+            closeSideMenu()
+            findNavController().navigate(R.id.action_global_logcatFragment)
         }
 
         binding.setQuitClickListener {
             requireActivity().finishAndRemoveTask()
             coreContext.stop()
         }
+    }
+
+    private fun closeSideMenu() {
+        sharedViewModel.toggleDrawerEvent.value = Event(true)
     }
 }
