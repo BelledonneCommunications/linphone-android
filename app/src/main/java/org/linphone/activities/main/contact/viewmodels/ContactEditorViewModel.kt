@@ -99,7 +99,31 @@ class ContactEditorViewModel(val c: Contact?) : ViewModel(), ContactViewModelInt
             val friend = contact.friend ?: coreContext.core.createFriend()
             if (friend != null) {
                 friend.edit()
-                // TODO edit friend
+                friend.name = "${firstName.value.orEmpty()} ${lastName.value.orEmpty()}"
+
+                for (address in friend.addresses) {
+                    friend.removeAddress(address)
+                }
+                for (address in addresses.value.orEmpty()) {
+                    val parsed = coreContext.core.interpretUrl(address.newValue.value.orEmpty())
+                    if (parsed != null) friend.addAddress(parsed)
+                }
+
+                for (phone in friend.phoneNumbers) {
+                    friend.removePhoneNumber(phone)
+                }
+                for (phone in numbers.value.orEmpty()) {
+                    if (phone.newValue.value?.isNotEmpty() == true) {
+                        friend.addPhoneNumber(phone.newValue.value)
+                    }
+                }
+
+                val vCard = friend.vcard
+                if (vCard != null) {
+                    vCard.organization = organization.value.orEmpty()
+                    vCard.familyName = lastName.value.orEmpty()
+                    vCard.givenName = firstName.value.orEmpty()
+                }
                 friend.done()
 
                 if (contact.friend == null) {
