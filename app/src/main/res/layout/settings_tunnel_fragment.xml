@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:linphone="http://schemas.android.com/apk/res-auto">
 
     <data>
         <import type="android.view.View"/>
+        <import type="android.text.InputType"/>
         <variable
             name="backClickListener"
             type="android.view.View.OnClickListener"/>
@@ -62,6 +64,57 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/tunnel_settings_hostname_url_title}"
+                    linphone:subtitle="@{@string/tunnel_settings_hostname_url_summary}"
+                    linphone:listener="@{viewModel.hostnameUrlListener}"
+                    linphone:defaultValue="@{viewModel.hostnameUrl}"
+                    linphone:inputType="@{InputType.TYPE_TEXT_VARIATION_URI}"/>
+
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/tunnel_settings_port_title}"
+                    linphone:subtitle="@{@string/tunnel_settings_port_summary}"
+                    linphone:listener="@{viewModel.portListener}"
+                    linphone:defaultValue="@{viewModel.port.toString()}"
+                    linphone:inputType="@{InputType.TYPE_CLASS_NUMBER}"/>
+
+                <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/tunnel_settings_dual_mode_title}"
+                    linphone:subtitle="@{@string/tunnel_settings_dual_mode_summary}"
+                    linphone:listener="@{viewModel.useDualModeListener}"
+                    linphone:checked="@={viewModel.useDualMode}"/>
+
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/tunnel_settings_dual_hostname_url_title}"
+                    linphone:subtitle="@{@string/tunnel_settings_dual_hostname_url_summary}"
+                    linphone:listener="@{viewModel.hostnameUrl2Listener}"
+                    linphone:defaultValue="@{viewModel.hostnameUrl2}"
+                    linphone:inputType="@{InputType.TYPE_TEXT_VARIATION_URI}"
+                    linphone:enabled="@{viewModel.useDualMode}"
+                    android:visibility="@{viewModel.useDualMode ? View.VISIBLE : View.GONE}"/>
+
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/tunnel_settings_dual_port_title}"
+                    linphone:subtitle="@{@string/tunnel_settings_dual_port_summary}"
+                    linphone:listener="@{viewModel.port2Listener}"
+                    linphone:defaultValue="@{viewModel.port2.toString()}"
+                    linphone:inputType="@{InputType.TYPE_CLASS_NUMBER}"
+                    linphone:enabled="@{viewModel.useDualMode}"
+                    android:visibility="@{viewModel.useDualMode ? View.VISIBLE : View.GONE}"/>
+
+                <include
+                    layout="@layout/settings_widget_list"
+                    linphone:title="@{@string/tunnel_settings_mode_title}"
+                    linphone:subtitle="@{@string/tunnel_settings_mode_summary}"
+                    linphone:listener="@{viewModel.modeListener}"
+                    linphone:selectedIndex="@{viewModel.modeIndex}"
+                    linphone:labels="@{viewModel.modeLabels}"/>
 
             </LinearLayout>
 
