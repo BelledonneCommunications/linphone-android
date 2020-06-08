@@ -266,7 +266,7 @@ class NativeContactEditor(
     }
 
     fun setPresenceInformation(phoneNumber: String, sipAddress: String): NativeContactEditor {
-        Log.i("[Native Contact Editor] Trying to add presence information to contact as ${if (useLinphoneSyncAccount) "phone number" else "SIP address"}")
+        Log.d("[Native Contact Editor] Trying to add presence information to contact as ${if (useLinphoneSyncAccount) "phone number" else "SIP address"}")
 
         if (useLinphoneSyncAccount) {
             setPresence(sipAddress, phoneNumber)
