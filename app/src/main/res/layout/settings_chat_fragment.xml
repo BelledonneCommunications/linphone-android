@@ -88,7 +88,8 @@
                     linphone:listener="@{viewModel.autoDownloadMaxSizeListener}"
                     linphone:defaultValue="@{viewModel.autoDownloadMaxSize.toString()}"
                     linphone:inputType="@{InputType.TYPE_CLASS_NUMBER}"
-                    linphone:enabled="@{viewModel.autoDownloadIndex == 2}"/>
+                    linphone:enabled="@{viewModel.autoDownloadIndex == 2}"
+                    android:visibility="@{viewModel.autoDownloadIndex == 2 ? View.VISIBLE : View.GONE}"/>
 
                 <include
                     layout="@layout/settings_widget_switch"
