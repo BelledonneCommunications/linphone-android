@@ -21,6 +21,7 @@ package org.linphone.activities.main.recordings.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
@@ -49,7 +50,7 @@ class RecordingViewModel(val path: String) : ViewModel(), Comparable<RecordingVi
         get() = SimpleDateFormat("mm:ss", Locale.getDefault()).format(duration) // is already in milliseconds
 
     val formattedDate: String
-        get() = SimpleDateFormat("HH:mm", Locale.getDefault()).format(date)
+        get() = DateFormat.getTimeInstance(DateFormat.SHORT).format(date)
 
     val playStartedEvent = MutableLiveData<Event<Boolean>>()
 
