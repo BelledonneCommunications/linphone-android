@@ -64,6 +64,8 @@ class NativeContactEditor(
         "$selection AND (${CommonDataKinds.Phone.NUMBER}=? OR ${CommonDataKinds.Phone.NORMALIZED_NUMBER}=?)"
     private val sipAddressSelection =
         "${ContactsContract.Data.CONTACT_ID} =? AND (${ContactsContract.Data.MIMETYPE} =? OR ${ContactsContract.Data.MIMETYPE} =?) AND data1=?"
+    private val presenceUpdateSelection =
+        "${ContactsContract.Data.CONTACT_ID} =? AND ${ContactsContract.Data.MIMETYPE} =? AND data3=?"
     private val useLinphoneSyncAccount = corePreferences.useLinphoneSyncAccount
     private val contactUri = ContactsContract.Data.CONTENT_URI
 
@@ -206,17 +208,17 @@ class NativeContactEditor(
                 phoneNumber.currentValue.isEmpty() -> {
                     // New phone number to add
                     addCount++
-                    addNumber(phoneNumber.newValue.value.orEmpty())
+                    addPhoneNumber(phoneNumber.newValue.value.orEmpty())
                 }
                 phoneNumber.toRemove.value == true -> {
                     // Existing number to remove
                     removeCount++
-                    removeNumber(phoneNumber.currentValue)
+                    removePhoneNumber(phoneNumber.currentValue)
                 }
                 phoneNumber.currentValue != phoneNumber.newValue.value -> {
                     // Existing number to update
                     editCount++
-                    updateNumber(phoneNumber.currentValue, phoneNumber.newValue.value.orEmpty())
+                    updatePhoneNumber(phoneNumber.currentValue, phoneNumber.newValue.value.orEmpty())
                 }
             }
         }
@@ -237,7 +239,7 @@ class NativeContactEditor(
                     addCount++
                     val address = sipAddress.newValue.value.orEmpty()
                     if (useLinphoneSyncAccount) {
-                        addAddress(address, address)
+                        addLinphoneAddress(address, address)
                     } else {
                         addSipAddress(address)
                     }
@@ -245,12 +247,12 @@ class NativeContactEditor(
                 sipAddress.toRemove.value == true -> {
                     // Existing address to remove
                     removeCount++
-                    removeAddress(sipAddress.currentValue)
+                    removeLinphoneOrSipAddress(sipAddress.currentValue)
                 }
                 sipAddress.currentValue != sipAddress.newValue.value -> {
                     // Existing address to update
                     editCount++
-                    updateAddress(sipAddress.currentValue, sipAddress.newValue.value.orEmpty())
+                    updateLinphoneOrSipAddress(sipAddress.currentValue, sipAddress.newValue.value.orEmpty())
                 }
             }
         }
@@ -269,7 +271,7 @@ class NativeContactEditor(
         Log.d("[Native Contact Editor] Trying to add presence information to contact as ${if (useLinphoneSyncAccount) "phone number" else "SIP address"}")
 
         if (useLinphoneSyncAccount) {
-            setPresence(sipAddress, phoneNumber)
+            setPresenceLinphoneSipAddressForPhoneNumber(sipAddress, phoneNumber)
         } else {
             setPresenceSipAddress(sipAddress)
         }
@@ -308,14 +310,14 @@ class NativeContactEditor(
         changes.add(operation)
     }
 
-    private fun addNumber(number: String) {
+    private fun addPhoneNumber(phoneNumber: String) {
         val insert = ContentProviderOperation.newInsert(contactUri)
             .withValue(ContactsContract.Data.RAW_CONTACT_ID, rawId)
             .withValue(
                 ContactsContract.Data.MIMETYPE,
                 CommonDataKinds.Phone.CONTENT_ITEM_TYPE
             )
-            .withValue(CommonDataKinds.Phone.NUMBER, number)
+            .withValue(CommonDataKinds.Phone.NUMBER, phoneNumber)
             .withValue(
                 CommonDataKinds.Phone.TYPE,
                 CommonDataKinds.Phone.TYPE_MOBILE
@@ -324,7 +326,7 @@ class NativeContactEditor(
         addChanges(insert)
     }
 
-    private fun updateNumber(currentValue: String, newValue: String) {
+    private fun updatePhoneNumber(currentValue: String, phoneNumber: String) {
         val update = ContentProviderOperation.newUpdate(contactUri)
             .withSelection(
                 phoneNumberSelection,
@@ -336,7 +338,7 @@ class NativeContactEditor(
                 )
             )
             .withValue(ContactsContract.Data.MIMETYPE, CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
-            .withValue(CommonDataKinds.Phone.NUMBER, newValue)
+            .withValue(CommonDataKinds.Phone.NUMBER, phoneNumber)
             .withValue(
                 CommonDataKinds.Phone.TYPE,
                 CommonDataKinds.Phone.TYPE_MOBILE
@@ -345,22 +347,22 @@ class NativeContactEditor(
         addChanges(update)
     }
 
-    private fun removeNumber(number: String) {
+    private fun removePhoneNumber(phoneNumber: String) {
         val delete = ContentProviderOperation.newDelete(contactUri)
             .withSelection(
                 phoneNumberSelection,
                 arrayOf(
                     contact.nativeId,
                     CommonDataKinds.Phone.CONTENT_ITEM_TYPE,
-                    number,
-                    number
+                    phoneNumber,
+                    phoneNumber
                 )
             )
             .build()
         addChanges(delete)
     }
 
-    private fun addAddress(address: String, detail: String) {
+    private fun addLinphoneAddress(address: String, detail: String) {
         val insert = ContentProviderOperation.newInsert(contactUri)
             .withValue(ContactsContract.Data.RAW_CONTACT_ID, linphoneRawId)
             .withValue(
@@ -386,7 +388,7 @@ class NativeContactEditor(
         addChanges(insert)
     }
 
-    private fun updateAddress(currentValue: String, newValue: String) {
+    private fun updateLinphoneOrSipAddress(currentValue: String, sipAddress: String) {
         val update = ContentProviderOperation.newUpdate(contactUri)
             .withSelection(
                 sipAddressSelection,
@@ -401,14 +403,14 @@ class NativeContactEditor(
                 ContactsContract.Data.MIMETYPE,
                 AppUtils.getString(R.string.linphone_address_mime_type)
             )
-            .withValue("data1", newValue) // value
+            .withValue("data1", sipAddress) // value
             .withValue("data2", AppUtils.getString(R.string.app_name)) // summary
-            .withValue("data3", newValue) // detail
+            .withValue("data3", sipAddress) // detail
             .build()
         addChanges(update)
     }
 
-    private fun removeAddress(address: String) {
+    private fun removeLinphoneOrSipAddress(sipAddress: String) {
         val delete = ContentProviderOperation.newDelete(contactUri)
             .withSelection(
                 sipAddressSelection,
@@ -416,31 +418,65 @@ class NativeContactEditor(
                     contact.nativeId,
                     CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE,
                     AppUtils.getString(R.string.linphone_address_mime_type),
-                    address
+                    sipAddress
                 )
             )
             .build()
         addChanges(delete)
     }
 
-    private fun setPresence(sipAddress: String, phoneNumber: String) {
+    private fun setPresenceLinphoneSipAddressForPhoneNumber(sipAddress: String, phoneNumber: String) {
         val contentResolver = coreContext.context.contentResolver
         val cursor = contentResolver.query(
             ContactsContract.Data.CONTENT_URI,
             arrayOf("data1"),
-            "${ContactsContract.Data.RAW_CONTACT_ID} = ? AND ${ContactsContract.Data.MIMETYPE} = ? AND data1 = ? AND data3 = ?",
-            arrayOf(linphoneRawId, AppUtils.getString(R.string.linphone_address_mime_type), sipAddress, phoneNumber),
+            "${ContactsContract.Data.RAW_CONTACT_ID} = ? AND ${ContactsContract.Data.MIMETYPE} = ? AND data3 = ?",
+            arrayOf(linphoneRawId, AppUtils.getString(R.string.linphone_address_mime_type), phoneNumber),
             null
         )
         val count = cursor?.count ?: 0
+        val data1 = if (count > 0) {
+            if (cursor?.moveToFirst() == true) {
+                cursor.getString(cursor.getColumnIndex("data1"))
+            } else null
+        } else null
         cursor?.close()
 
         if (count == 0) {
-            Log.i("[Native Contact Editor] No existing presence information found for this phone number, let's add it")
-            addAddress(sipAddress, phoneNumber)
+            Log.i("[Native Contact Editor] No existing presence information found for this phone number & SIP address, let's add it")
+            addLinphoneAddress(sipAddress, phoneNumber)
         } else {
-            Log.i("[Native Contact Editor] There is already an entry for this, skipping")
+            if (data1 != null && data1 == sipAddress) {
+                Log.i("[Native Contact Editor] There is already an entry for this phone number and SIP address, skipping")
+            } else {
+                Log.w("[Native Contact Editor] There is already an entry for this phone number but not for the same SIP address")
+                updatePresenceLinphoneSipAddressForPhoneNumber(sipAddress, phoneNumber)
+            }
         }
+    }
+
+    private fun updatePresenceLinphoneSipAddressForPhoneNumber(
+        sipAddress: String,
+        phoneNumber: String
+    ) {
+        val update = ContentProviderOperation.newUpdate(contactUri)
+            .withSelection(
+                presenceUpdateSelection,
+                arrayOf(
+                    contact.nativeId,
+                    AppUtils.getString(R.string.linphone_address_mime_type),
+                    phoneNumber
+                )
+            )
+            .withValue(
+                ContactsContract.Data.MIMETYPE,
+                AppUtils.getString(R.string.linphone_address_mime_type)
+            )
+            .withValue("data1", sipAddress) // value
+            .withValue("data2", AppUtils.getString(R.string.app_name)) // summary
+            .withValue("data3", phoneNumber) // detail
+            .build()
+        addChanges(update)
     }
 
     private fun setPresenceSipAddress(sipAddress: String) {
@@ -456,10 +492,10 @@ class NativeContactEditor(
         cursor?.close()
 
         if (count == 0) {
-            Log.i("[Native Contact Editor] No existing presence information found for this phone number, let's add it")
+            Log.i("[Native Contact Editor] SIP address not found, let's add it")
             addSipAddress(sipAddress)
         } else {
-            Log.i("[Native Contact Editor] There is already an entry for this, skipping")
+            Log.i("[Native Contact Editor] There is already an entry for this SIP address, skipping")
         }
     }
 
