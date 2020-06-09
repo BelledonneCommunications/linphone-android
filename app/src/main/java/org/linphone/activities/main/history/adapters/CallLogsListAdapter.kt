@@ -27,8 +27,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DiffUtil
-import java.text.SimpleDateFormat
-import java.util.*
 import org.linphone.R
 import org.linphone.activities.main.history.viewmodels.CallLogViewModel
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
@@ -122,7 +120,7 @@ class CallLogsListAdapter(val selectionViewModel: ListTopBarViewModel) : Lifecyc
         } else if (TimestampUtils.isYesterday(date)) {
             return context.getString(R.string.yesterday)
         }
-        return SimpleDateFormat("EEE d MMM", Locale.getDefault()).format(Date(date * 1000))
+        return TimestampUtils.toString(date, onlyDate = true, shortDate = false)
     }
 }
 
