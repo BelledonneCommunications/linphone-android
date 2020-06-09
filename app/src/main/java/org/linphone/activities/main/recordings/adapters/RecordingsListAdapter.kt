@@ -27,8 +27,6 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DiffUtil
-import java.text.SimpleDateFormat
-import java.util.*
 import org.linphone.R
 import org.linphone.activities.main.recordings.viewmodels.RecordingViewModel
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
@@ -131,7 +129,7 @@ class RecordingsListAdapter(val selectionViewModel: ListTopBarViewModel) : Lifec
         } else if (TimestampUtils.isYesterday(date, false)) {
             return context.getString(R.string.yesterday)
         }
-        return SimpleDateFormat("EEE d MMM", Locale.getDefault()).format(Date(date))
+        return TimestampUtils.toString(date, onlyDate = true, timestampInSecs = false, shortDate = false)
     }
 }
 
