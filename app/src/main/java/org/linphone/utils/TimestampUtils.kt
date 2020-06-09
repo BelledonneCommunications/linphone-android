@@ -19,8 +19,10 @@
  */
 package org.linphone.utils
 
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import org.linphone.core.tools.Log
 
 class TimestampUtils {
     companion object {
@@ -53,14 +55,37 @@ class TimestampUtils {
             return isSameDay(cal1.time, cal2.time)
         }
 
-        fun toString(timestamp: Long, onlyDate: Boolean = false, timestampInSecs: Boolean = true): String {
-            val format = if (isToday(timestamp)) {
-                "HH:mm"
+        private fun isSameYear(timestamp: Long, timestampInSecs: Boolean = true): Boolean {
+            val cal = Calendar.getInstance()
+            cal.timeInMillis = if (timestampInSecs) timestamp * 1000 else timestamp
+            return isSameYear(cal, Calendar.getInstance())
+        }
+
+        fun toString(
+            timestamp: Long,
+            onlyDate: Boolean = false,
+            timestampInSecs: Boolean = true,
+            shortDate: Boolean = true
+        ): String {
+            val dateFormat = if (isToday(timestamp, timestampInSecs)) {
+                DateFormat.getTimeInstance(DateFormat.SHORT)
             } else {
-                if (onlyDate) "dd/MM" else "dd/MM HH:mm"
+                if (onlyDate) {
+                    DateFormat.getDateInstance(if (shortDate) DateFormat.SHORT else DateFormat.FULL)
+                } else {
+                    DateFormat.getDateTimeInstance(if (shortDate) DateFormat.SHORT else DateFormat.MEDIUM, DateFormat.SHORT)
+                }
+            } as SimpleDateFormat
+
+            if (isSameYear(timestamp, timestampInSecs)) {
+                // Remove the year part of the format
+                dateFormat.applyPattern(
+                    dateFormat.toPattern().replace("/?y+/?|\\s?y+\\s?".toRegex(),"")
+                )
             }
+
             val millis = if (timestampInSecs) timestamp * 1000 else timestamp
-            return SimpleDateFormat(format, Locale.getDefault()).format(Date(millis))
+            return dateFormat.format(Date(millis))
         }
 
         private fun isSameDay(
@@ -70,6 +95,14 @@ class TimestampUtils {
             return cal1[Calendar.ERA] == cal2[Calendar.ERA] &&
                     cal1[Calendar.YEAR] == cal2[Calendar.YEAR] &&
                     cal1[Calendar.DAY_OF_YEAR] == cal2[Calendar.DAY_OF_YEAR]
+        }
+
+        private fun isSameYear(
+            cal1: Calendar,
+            cal2: Calendar
+        ): Boolean {
+            return cal1[Calendar.ERA] == cal2[Calendar.ERA] &&
+                    cal1[Calendar.YEAR] == cal2[Calendar.YEAR]
         }
     }
 }

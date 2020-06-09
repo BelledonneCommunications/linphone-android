@@ -93,8 +93,7 @@ class CallLogViewModel(val callLog: CallLog) : GenericContactViewModel(callLog.r
     }
 
     val date: String by lazy {
-        val pattern = if (TimestampUtils.isToday(callLog.startDate)) "HH:mm" else "yyyy/MM/dd - HH:mm"
-        SimpleDateFormat(pattern, Locale.getDefault()).format(Date(callLog.startDate * 1000))
+        TimestampUtils.toString(callLog.startDate)
     }
 
     val startCallEvent: MutableLiveData<Event<Address>> by lazy {
