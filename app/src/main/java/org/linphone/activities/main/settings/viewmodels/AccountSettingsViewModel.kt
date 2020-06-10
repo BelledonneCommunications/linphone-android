@@ -168,6 +168,7 @@ class AccountSettingsViewModel(val proxyConfig: ProxyConfig) : GenericSettingsVi
         }
     }
     val pushNotification = MutableLiveData<Boolean>()
+    val pushNotificationsAvailable = MutableLiveData<Boolean>()
 
     val transportListener = object : SettingListenerStub() {
         override fun onListValueChanged(position: Int) {
@@ -286,6 +287,7 @@ class AccountSettingsViewModel(val proxyConfig: ProxyConfig) : GenericSettingsVi
         domain.value = proxyConfig.identityAddress.domain
         disable.value = !proxyConfig.registerEnabled()
         pushNotification.value = proxyConfig.isPushNotificationAllowed
+        pushNotificationsAvailable.value = core.isPushNotificationAvailable
         proxy.value = proxyConfig.serverAddr
         outboundProxy.value = proxyConfig.serverAddr == proxyConfig.route
         stunServer.value = proxyConfig.natPolicy?.stunServer
