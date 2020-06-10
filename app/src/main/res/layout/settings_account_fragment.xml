@@ -156,7 +156,8 @@
                     linphone:title="@{@string/account_settings_push_notification_title}"
                     linphone:subtitle="@{@string/account_settings_push_notification_summary}"
                     linphone:listener="@{viewModel.pushNotificationListener}"
-                    linphone:checked="@={viewModel.pushNotification}"/>
+                    linphone:checked="@={viewModel.pushNotification}"
+                    android:visibility="@{viewModel.pushNotificationsAvailable ? View.VISIBLE : View.GONE}"/>
 
                 <include
                     layout="@layout/settings_widget_list"
