@@ -84,7 +84,8 @@
                     linphone:title="@{@string/network_settings_push_notifications_title}"
                     linphone:subtitle="@{@string/advanced_settings_push_notifications_summary}"
                     linphone:listener="@{viewModel.pushNotificationsListener}"
-                    linphone:checked="@={viewModel.pushNotifications}"/>
+                    linphone:checked="@={viewModel.pushNotifications}"
+                    linphone:enabled="@{viewModel.pushNotificationsAvailable}"/>
 
                 <include
                     layout="@layout/settings_widget_switch"
