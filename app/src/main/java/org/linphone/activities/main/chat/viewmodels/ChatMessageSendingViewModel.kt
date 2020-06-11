@@ -74,7 +74,7 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
     fun addAttachment(path: String) {
         val list = arrayListOf<ChatMessageAttachmentViewModel>()
         list.addAll(attachments.value.orEmpty())
-        list.add(ChatMessageAttachmentViewModel(path, FileUtils.isExtensionImage(path)) {
+        list.add(ChatMessageAttachmentViewModel(path) {
             removeAttachment(it)
         })
         attachments.value = list

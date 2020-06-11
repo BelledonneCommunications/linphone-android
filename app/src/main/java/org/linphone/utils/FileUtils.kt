@@ -23,6 +23,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Environment
 import android.provider.OpenableColumns
+import android.webkit.MimeTypeMap
 import androidx.core.content.FileProvider
 import java.io.*
 import java.text.SimpleDateFormat
@@ -37,13 +38,6 @@ import org.linphone.core.tools.Log
 
 class FileUtils {
     companion object {
-        fun getMimeFromFile(path: String?): String? {
-            val filePath = path ?: ""
-            return if (isExtensionImage(filePath)) {
-                "image/" + getExtensionFromFileName(filePath)
-            } else "file/" + getExtensionFromFileName(filePath)
-        }
-
         fun getNameFromFilePath(filePath: String): String {
             var name = filePath
             val i = filePath.lastIndexOf('/')
@@ -54,17 +48,19 @@ class FileUtils {
         }
 
         fun getExtensionFromFileName(fileName: String): String {
-            var extension = ""
-            val i = fileName.lastIndexOf('.')
-            if (i > 0) {
-                extension = fileName.substring(i + 1)
-            }
-            return extension
+            return MimeTypeMap.getFileExtensionFromUrl(fileName)
         }
 
         fun isExtensionImage(path: String): Boolean {
             val extension = getExtensionFromFileName(path).toLowerCase(Locale.getDefault())
-            return extension.matches(Regex("(png|jpg|jpeg|bmp|gif)"))
+            val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+            return type?.startsWith("image/") ?: false
+        }
+
+        fun isExtensionVideo(path: String): Boolean {
+            val extension = getExtensionFromFileName(path).toLowerCase(Locale.getDefault())
+            val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+            return type?.startsWith("video/") ?: false
         }
 
         fun getFileStorageDir(isPicture: Boolean = false): File {
