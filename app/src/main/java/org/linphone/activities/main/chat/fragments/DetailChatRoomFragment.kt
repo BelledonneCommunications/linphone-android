@@ -39,7 +39,6 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.tabs_fragment.*
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -518,8 +517,7 @@ class DetailChatRoomFragment : MasterFragment() {
 
     private fun openFile(contentFilePath: String) {
         val intent = Intent(Intent.ACTION_VIEW)
-        val path = contentFilePath
-        val contentUri: Uri = FileUtils.getPublicFilePath(requireContext(), path)
+        val contentUri: Uri = FileUtils.getPublicFilePath(requireContext(), contentFilePath)
         val filePath: String = contentUri.toString()
         Log.i("[Chat Message] Trying to open file: $filePath")
         var type: String? = null
@@ -535,7 +533,7 @@ class DetailChatRoomFragment : MasterFragment() {
         if (type != null) {
             Log.i("[Chat Message] Found matching MIME type $type")
         } else {
-            type = FileUtils.getMimeFromFile(filePath)
+            type = "file/$extension"
             Log.e("[Chat Message] Can't get MIME type from extension: $extension, will use $type")
         }
 

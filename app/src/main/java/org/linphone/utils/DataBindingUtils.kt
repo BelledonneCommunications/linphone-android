@@ -20,6 +20,7 @@
 package org.linphone.utils
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.text.Editable
@@ -52,6 +53,11 @@ import org.linphone.core.tools.Log
 @BindingAdapter("android:src")
 fun ImageView.setSourceImageResource(resource: Int) {
     this.setImageResource(resource)
+}
+
+@BindingAdapter("android:src")
+fun ImageView.setSourceImageBitmap(bitmap: Bitmap?) {
+    if (bitmap != null) this.setImageBitmap(bitmap)
 }
 
 @BindingAdapter("android:contentDescription")

@@ -24,8 +24,26 @@
             android:layout_height="@{data.alone ? @dimen/chat_message_bubble_image_height_big : @dimen/chat_message_bubble_image_height_small, default=wrap_content}"
             android:layout_margin="5dp"
             app:glidePath="@{data.content.filePath}"
-            android:visibility="@{data.isImage() ? View.VISIBLE : View.GONE}"
+            android:visibility="@{data.image ? View.VISIBLE : View.GONE}"
             android:adjustViewBounds="true" />
+
+        <ImageView
+            android:onClick="@{() -> data.openFile()}"
+            android:onLongClick="@{longClickListener}"
+            android:contentDescription="@string/content_description_downloaded_file_transfer"
+            android:layout_width="wrap_content"
+            android:layout_height="@{data.alone ? @dimen/chat_message_bubble_image_height_big : @dimen/chat_message_bubble_image_height_small, default=wrap_content}"
+            android:layout_margin="5dp"
+            android:src="@{data.videoPreview}"
+            android:visibility="@{data.video ? View.VISIBLE : View.GONE, default=gone}"
+            android:adjustViewBounds="true" />
+
+        <ImageView
+            android:visibility="@{data.video ? View.VISIBLE : View.GONE, default=gone}"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/recording_play_pause"
+            android:layout_centerInParent="true"/>
 
         <TextView
             android:onClick="@{() -> data.openFile()}"
@@ -35,7 +53,7 @@
             android:fontFamily="sans-serif"
             android:textStyle="normal"
             android:text="@{data.content.name}"
-            android:visibility="@{data.downloadable || data.isImage() ? View.GONE : View.VISIBLE}"
+            android:visibility="@{data.downloadable || data.image || data.video ? View.GONE : View.VISIBLE, default=gone}"
             android:layout_width="150dp"
             android:layout_height="100dp"
             android:layout_margin="5dp"

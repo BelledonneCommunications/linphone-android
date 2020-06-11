@@ -34,9 +34,35 @@
             android:layout_alignRight="@id/pendingImageForUpload"
             android:src="@drawable/clean_field" />
 
+        <ImageView
+            android:id="@+id/pendingVideoForUpload"
+            android:visibility="@{data.video ? View.VISIBLE : View.GONE, default=gone}"
+            android:contentDescription="@string/content_description_pending_file_transfer"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:adjustViewBounds="true"
+            android:src="@{data.videoPreview}"/>
+
+        <ImageView
+            android:visibility="@{data.video ? View.VISIBLE : View.GONE, default=gone}"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/recording_play_pause"
+            android:layout_centerInParent="true"/>
+
+        <ImageView
+            android:visibility="@{data.video ? View.VISIBLE : View.GONE, default=gone}"
+            android:onClick="@{() -> data.delete()}"
+            android:contentDescription="@string/content_description_remove_pending_file_transfer"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignTop="@id/pendingVideoForUpload"
+            android:layout_alignRight="@id/pendingVideoForUpload"
+            android:src="@drawable/clean_field" />
+
         <TextView
             android:id="@+id/pendingFileForUpload"
-            android:visibility="@{data.image ? View.GONE : View.VISIBLE}"
+            android:visibility="@{data.image || data.video ? View.GONE : View.VISIBLE, default=gone}"
             android:text="@{data.fileName}"
             android:textColor="?attr/secondaryTextColor"
             android:textSize="21sp"
@@ -47,7 +73,7 @@
             android:textAlignment="center" />
 
         <ImageView
-            android:visibility="@{data.image ? View.GONE : View.VISIBLE}"
+            android:visibility="@{data.image || data.video ? View.GONE : View.VISIBLE, default=gone}"
             android:onClick="@{() -> data.delete()}"
             android:contentDescription="@string/content_description_remove_pending_file_transfer"
             android:layout_width="20dp"

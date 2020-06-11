@@ -19,15 +19,34 @@
  */
 package org.linphone.activities.main.chat.viewmodels
 
+import android.graphics.Bitmap
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.linphone.utils.FileUtils
+import org.linphone.utils.ImageUtils
 
 class ChatMessageAttachmentViewModel(
     val path: String,
-    val isImage: Boolean,
     private val deleteCallback: (attachment: ChatMessageAttachmentViewModel) -> Unit
 ) : ViewModel() {
     val fileName: String = FileUtils.getNameFromFilePath(path)
+    val isImage: Boolean = FileUtils.isExtensionImage(path)
+    val isVideo: Boolean = FileUtils.isExtensionVideo(path)
+    val videoPreview = MutableLiveData<Bitmap>()
+
+    init {
+        if (isVideo) {
+            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    videoPreview.postValue(ImageUtils.getVideoPreview(path))
+                }
+            }
+        }
+    }
 
     fun delete() {
         deleteCallback(this)

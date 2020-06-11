@@ -19,12 +19,18 @@
  */
 package org.linphone.activities.main.chat.viewmodels
 
+import android.graphics.Bitmap
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.linphone.core.ChatMessage
 import org.linphone.core.Content
 import org.linphone.core.tools.Log
 import org.linphone.utils.FileUtils
+import org.linphone.utils.ImageUtils
 
 class ChatMessageContentViewModel(
     val content: Content,
@@ -32,6 +38,8 @@ class ChatMessageContentViewModel(
     private val listener: OnContentClickedListener?
 ) : ViewModel() {
     val isImage = MutableLiveData<Boolean>()
+    val isVideo = MutableLiveData<Boolean>()
+    val videoPreview = MutableLiveData<Bitmap>()
 
     val downloadable = MutableLiveData<Boolean>()
 
@@ -55,14 +63,25 @@ class ChatMessageContentViewModel(
             if (content.filePath.isNotEmpty()) {
                 Log.i("[Content] Found displayable content: ${content.filePath}")
                 isImage.value = FileUtils.isExtensionImage(content.filePath)
+                isVideo.value = FileUtils.isExtensionVideo(content.filePath)
+
+                if (isVideo.value == true) {
+                    viewModelScope.launch {
+                        withContext(Dispatchers.IO) {
+                            videoPreview.postValue(ImageUtils.getVideoPreview(content.filePath))
+                        }
+                    }
+                }
             } else {
                 Log.w("[Content] Found content with empty path...")
                 isImage.value = false
+                isVideo.value = false
             }
         } else {
             Log.i("[Content] Found downloadable content: ${content.name}")
             downloadable.value = true
             isImage.value = false
+            isVideo.value = false
         }
 
         downloadEnabled.value = downloadable.value
