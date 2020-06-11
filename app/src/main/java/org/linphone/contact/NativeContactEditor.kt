@@ -92,13 +92,13 @@ class NativeContactEditor(
             do {
                 if (rawId == null) {
                     rawId = cursor.getString(cursor.getColumnIndex(RawContacts._ID))
-                    Log.i("[Native Contact Editor] Found raw id $rawId for native contact with id ${contact.nativeId}")
+                    Log.d("[Native Contact Editor] Found raw id $rawId for native contact with id ${contact.nativeId}")
                 }
 
                 val accountType = cursor.getString(cursor.getColumnIndex(RawContacts.ACCOUNT_TYPE))
                 if (accountType == syncAccountType && linphoneRawId == null) {
                     linphoneRawId = cursor.getString(cursor.getColumnIndex(RawContacts._ID))
-                    Log.i("[Native Contact Editor] Found linphone raw id $linphoneRawId for native contact with id ${contact.nativeId}")
+                    Log.d("[Native Contact Editor] Found linphone raw id $linphoneRawId for native contact with id ${contact.nativeId}")
                 }
             } while (cursor.moveToNext() && linphoneRawId == null)
         }
@@ -447,7 +447,7 @@ class NativeContactEditor(
             addLinphoneAddress(sipAddress, phoneNumber)
         } else {
             if (data1 != null && data1 == sipAddress) {
-                Log.i("[Native Contact Editor] There is already an entry for this phone number and SIP address, skipping")
+                Log.d("[Native Contact Editor] There is already an entry for this phone number and SIP address, skipping")
             } else {
                 Log.w("[Native Contact Editor] There is already an entry for this phone number but not for the same SIP address")
                 updatePresenceLinphoneSipAddressForPhoneNumber(sipAddress, phoneNumber)
@@ -495,7 +495,7 @@ class NativeContactEditor(
             Log.i("[Native Contact Editor] SIP address not found, let's add it")
             addSipAddress(sipAddress)
         } else {
-            Log.i("[Native Contact Editor] There is already an entry for this SIP address, skipping")
+            Log.d("[Native Contact Editor] There is already an entry for this SIP address, skipping")
         }
     }
 
