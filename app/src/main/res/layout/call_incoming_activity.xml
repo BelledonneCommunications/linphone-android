@@ -69,14 +69,17 @@
             android:layout_height="200dp"
             android:layout_margin="5dp"
             android:layout_below="@id/contact_number"
+            android:layout_above="@id/buttons"
             android:layout_centerHorizontal="true"
             android:gravity="center"
             tools:layout="@layout/contact_avatar_big"
             app:viewModel="@{viewModel}"/>
 
         <TextureView
+            android:id="@+id/remote_video_surface"
             android:visibility="@{viewModel.earlyMediaVideoEnabled ? View.VISIBLE : View.GONE}"
             android:layout_below="@id/contact_number"
+            android:layout_above="@id/buttons"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

@@ -79,6 +79,13 @@ class IncomingCallActivity : GenericActivity() {
             }
         })
 
+        viewModel.earlyMediaVideoEnabled.observe(this, Observer {
+            if (it) {
+                Log.i("[Incoming Call Activity] Early media video being received, set native window id")
+                coreContext.core.nativeVideoWindowId = binding.remoteVideoSurface
+            }
+        })
+
         val keyguardManager = getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
         viewModel.screenLocked.value = keyguardManager.isKeyguardLocked
 
