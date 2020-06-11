@@ -48,7 +48,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactViewModelI
     override val displayName: String by lazy {
         when {
             chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt()) -> LinphoneUtils.getDisplayName(chatRoom.peerAddress)
-            chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) -> LinphoneUtils.getDisplayName(chatRoom.participants.first()?.address ?: chatRoom.peerAddress)
+            chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) -> LinphoneUtils.getDisplayName(chatRoom.participants.firstOrNull()?.address ?: chatRoom.peerAddress)
             chatRoom.hasCapability(ChatRoomCapabilities.Conference.toInt()) -> chatRoom.subject
             else -> chatRoom.peerAddress.asStringUriOnly()
         }
