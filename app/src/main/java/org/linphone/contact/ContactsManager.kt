@@ -28,6 +28,8 @@ import android.net.Uri
 import android.os.AsyncTask.THREAD_POOL_EXECUTOR
 import android.provider.ContactsContract
 import android.util.Patterns
+import com.google.android.gms.tasks.Tasks.await
+import kotlinx.coroutines.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -332,14 +334,17 @@ class ContactsManager(private val context: Context) {
             if (sipAddress != null) {
                 Log.d("[Contacts Manager] Found presence information to store in native contact $contact")
                 val contactEditor = NativeContactEditor(contact, null, null)
-                // TODO: could be great to do in a coroutine
-                // launch {
-                    // withContext(Dispatchers.IO) {
-                        contactEditor.setPresenceInformation(phoneNumber, sipAddress).commit()
-                    // }
-                // }
-                for (listener in contactsUpdatedListeners) {
-                    listener.onContactUpdated(contact)
+                val coroutineScope = CoroutineScope(Dispatchers.Main)
+                coroutineScope.launch {
+                    val deferred = async {
+                        withContext(Dispatchers.IO) {
+                            contactEditor.setPresenceInformation(phoneNumber, sipAddress).commit()
+                        }
+                    }
+                    deferred.await()
+                    for (listener in contactsUpdatedListeners) {
+                        listener.onContactUpdated(contact)
+                    }
                 }
             }
         }
