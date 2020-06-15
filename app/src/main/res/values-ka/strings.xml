@@ -196,6 +196,7 @@
   <string name="separator">: </string>
   <string name="imdn_info">მიწოდების სტატუსი</string>
   <string name="add_to_contacts">კონტაქტებში დამატება</string>
+  <string name="chat_room_ephemeral_message_disabled">გათიშულია</string>
   <!--Status Bar-->
   <string name="voicemail_unread">წაუკითხავი შეტყობინება</string>
   <!--Side Menu-->

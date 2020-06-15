@@ -129,6 +129,7 @@
   <string name="phone_number_link_info_content">\nDina vänner hittar dig lättare om du kopplar ditt konto till ditt telefonnummer\n\nDu ser i din adressbok vilka som använder Linphone och dina vänner vet att de når dig på Linphone också.\n</string>
   <string name="phone_number_link_info_content_already_account">Du kan bara använda ditt telefonnummer med ett Linphone-konto.\n\nOm du redan har länkat ditt nummer till ett annat konto, men du föredrar att använda det här, kopplar du bara det nu och ditt nummer flyttas automatiskt till det här kontot.</string>
   <string name="phone_number_overuse">För många SMS har skickats till detta nummer på kort tid, försök igen om 24 timmar.</string>
+  <string name="account_doesnt_exist">Konto finns inte</string>
   <!--Status-->
   <string name="invalid_email">Ogiltig e-post</string>
   <string name="account_already_exist">Konto finns redan</string>
@@ -244,6 +245,28 @@
   <string name="toast_choose_chat_room_for_sharing">Välj en konversation eller skapa en ny</string>
   <string name="trust_denied">Förtroende har nekats. Ring ett samtal för att starta autentiseringsprocessen igen.</string>
   <string name="cant_open_file_no_app_found">Kan inte öppna filen, inget program tillgängligt för detta format.</string>
+  <string name="chat_message_forwarded">Vidarebefordrat</string>
+  <string name="chat_room_context_menu_group_info">Gruppinformation</string>
+  <string name="chat_room_context_menu_participants_devices">Konversationsenheter</string>
+  <string name="chat_message_context_menu_ephemeral_messages">Kortlivade meddelanden</string>
+  <string name="chat_message_context_menu_delete_messages">Ta bort meddelanden</string>
+  <string name="chat_message_context_menu_forward">Vidarebefordra</string>
+  <string name="chat_room_ephemeral_fragment_title">Kortlivade meddelanden</string>
+  <string name="chat_room_ephemeral_messages_desc">Detta meddelande kommer att tas bort i båda ändar när det har lästs och efter den valda tidsgränsen.</string>
+  <string name="chat_room_ephemeral_message_disabled">Inaktiverad</string>
+  <string name="chat_room_ephemeral_message_one_minute">1 minut</string>
+  <string name="chat_room_ephemeral_message_one_hour">1 timme</string>
+  <string name="chat_room_ephemeral_message_one_day">1 dag</string>
+  <string name="chat_room_ephemeral_message_three_days">3 dagar</string>
+  <string name="chat_room_ephemeral_message_one_week">1 vecka</string>
+  <plurals name="days">
+    <item quantity="one">%d dag</item>
+    <item quantity="other">%d dagar</item>
+  </plurals>
+  <string name="chat_event_ephemeral_disabled">Du har inaktiverat kortlivade meddelanden</string>
+  <string name="chat_event_ephemeral_enabled">Du har arktiverat kortlivade meddelanden: %s</string>
+  <string name="chat_event_ephemeral_lifetime_changed">Utgångsdatum för kortlivade meddelanden: %s</string>
+  <string name="chat_message_forward_confirmation_dialog">Vill du vidarebefordra meddelandet i detta rum?</string>
   <!--Status Bar-->
   <string name="status_connected">Ansluten</string>
   <string name="status_not_connected">Inte ansluten</string>
@@ -289,6 +312,7 @@
   <string name="call_stats_decoder_name">Avkodare:</string>
   <string name="call_stats_player_filter">Spelarfilter:</string>
   <string name="call_stats_display_filter">Visningsfilter:</string>
+  <string name="call_stats_capture_filter">Infångstfilter:</string>
   <string name="call">Ring</string>
   <string name="call_log_delete_dialog">Vill du ta bort de valda samtalsloggarna?</string>
   <!--Recordings-->
@@ -368,6 +392,9 @@
   <string name="pref_tunnel_title">Tunnel</string>
   <string name="pref_tunnel_host">Värdnamn</string>
   <string name="pref_tunnel_port">Port</string>
+  <string name="pref_tunnel_dual_mode">Aktivera samtidigt läge</string>
+  <string name="pref_tunnel_host_2">Värdnamn (andra server för samtidigt läge)</string>
+  <string name="pref_tunnel_port_2">Port (andra server för samtidigt läge)</string>
   <string name="pref_tunnel_mode">Läge</string>
   <!--do not change order without changing corresponding entry_values in non_localizable_strings.xml-->
   <string-array name="tunnel_mode_entries">
@@ -407,6 +434,7 @@
   <string name="pref_video_preset">Förinställd video</string>
   <string name="pref_preferred_video_size">Föredragen videostorlek</string>
   <string name="pref_preferred_fps">Föredragen FPS</string>
+  <string name="pref_preview_video">Visa förhandsgransknings av kamera i uppringare</string>
   <string name="pref_bandwidth_limit">Bandbreddsgräns i kbit/s</string>
   <string name="pref_video_codecs_title">Kodek</string>
   <!--Contact settings-->
@@ -414,6 +442,7 @@
   <string name="pref_contact_sync_subtitle">Infogar informationsgenvägar från Linphone-kontakten i lokala Android-kontakter</string>
   <string name="pref_contact_title">Kontakt</string>
   <string name="pref_contact_display_contact_organization_title">Visa kontaktorganisation</string>
+  <string name="pref_create_contact_shortcuts">Skapa genvägar i startmenyn</string>
   <!--Call settings-->
   <string name="pref_call_title">Ring</string>
   <string name="pref_device_ringtone">Använd enhetens ringsignal</string>
@@ -427,6 +456,7 @@
   <string name="pref_dialer_call">Använd Linphone som standard telefonapp</string>
   <string name="pref_accept_early_media">Acceptera tidig-media</string>
   <string name="pref_grant_read_dnd_settings_permission_title">Inställningar för Stör ej</string>
+  <string name="pref_grant_read_dnd_settings_permission_desc">Du måste ge rättighet till Stör-ej-inställningen för att det ska ringa eller inte beroende på aktuell inställning</string>
   <string name="pref_media_encryption_mandatory_title">Mediekryptering obligatorisk</string>
   <!--Chat settings-->
   <string name="pref_chat_title">Chatt</string>
@@ -445,6 +475,9 @@
   <string name="pref_android_app_hide_empty_chat_rooms_title">Dölj tomma chattrum</string>
   <string name="pref_android_app_hide_chat_rooms_from_removed_proxies_title">Dölj chattrum från borttagna proxykonfigurationer</string>
   <string name="pref_android_app_hide_chat_rooms_from_removed_proxies_desc">Om du har saknade chattrum, prova att avmarkera den här inställningen</string>
+  <string name="pref_android_app_make_downloaded_images_visible_in_native_gallery_title">Gör hämtade bilder synliga i inbyggt galleri</string>
+  <string name="pref_android_app_make_downloaded_images_visible_in_native_gallery_desc">Bilder i kortlivade meddelanden kommer inte att</string>
+  <string name="pref_android_app_enable_ephemeral_messages_beta">Aktivera efemära meddelanden (beta)</string>
   <!--Network settings-->
   <string name="pref_network_title">Nätverk</string>
   <string name="pref_wifi_only">Använd endast Wi-Fi</string>

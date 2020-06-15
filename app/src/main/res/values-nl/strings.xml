@@ -23,6 +23,8 @@
   <!--Common-->
   <string name="username">Gebruikersnaam</string>
   <string name="phone_number">Telefoonnummer</string>
+  <string name="confirmation_code">Bevestigingscode</string>
+  <string name="international_prefix">Voorvoegsel voor internationale oproepen</string>
   <string name="display_name">Weergavenaam</string>
   <string name="password">Wachtwoord</string>
   <string name="confirm_password">Bevestig wachtwoord</string>
@@ -47,11 +49,13 @@
   <string name="connect">Connectie</string>
   <string name="decline">Weigeren</string>
   <string name="conference">Conference</string>
+  <string name="link_account_popup">Wil je de account %s verbinden met je telefoonnummer?</string>
   <string name="maybe_later">later misscxhien</string>
   <string name="later">later</string>
   <string name="no">Nee</string>
   <string name="ok">prima</string>
   <string name="yes">Ja</string>
+  <string name="update_available">Een update is beschikbaar</string>
   <string name="do_not_ask_again">Niet opnieuw tonen</string>
   <!--Launch screen-->
   <string name="app_description">omschrijving</string>
@@ -66,6 +70,17 @@
   <string name="assistant_linphone_login_desc">linphoen</string>
   <string name="transport">Transport</string>
   <string name="assistant_create_account_phone_number_address">Uw SIP adres is</string>
+  <string name="assistant_login_linphone">Gebruik Linphone account</string>
+  <string name="assistant_login_generic">Gebruik SIP account</string>
+  <string name="assistant_create_account_part_2">We stuurden u een SMS met een validatiecode naar je telefoonnummer:</string>
+  <string name="assistant_generic_account">Gebruik SIP account</string>
+  <string name="assistant_launch_qrcode">QR code</string>
+  <string name="assistant_login">Inloggen</string>
+  <string name="assistant_account_validated">Je account werd gevalideerd.</string>
+  <string name="wizard_failed">Er gebeurde een fout, probeer het later opnieuw.</string>
+  <string name="wizard_server_unavailable">De server is onbereikbaar, controleer je netwerkverbinding.</string>
+  <string name="wizard_username_unavailable">Die gebruikersnaam is al in gebruik.</string>
+  <string name="wizard_username_incorrect">Je gebruikersnaam is ongeldig.</string>
   <!--Status-->
   <string name="password_too_short">Wachtwoord is te kort</string>
   <string name="password_too_long">Wachtwoiord is te lang</string>

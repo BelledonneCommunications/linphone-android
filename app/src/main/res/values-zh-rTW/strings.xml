@@ -227,6 +227,8 @@
   <string name="group_chat_room_devices">對話的裝置</string>
   <string name="add_to_contacts">加入到連絡人</string>
   <string name="download_file">下載</string>
+  <string name="chat_room_context_menu_participants_devices">對話的裝置</string>
+  <string name="chat_room_ephemeral_message_disabled">停用</string>
   <!--Status Bar-->
   <string name="status_connected">已連線</string>
   <string name="status_not_connected">未連線</string>

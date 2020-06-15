@@ -170,6 +170,7 @@
   <string name="resend">أعد اﻹرسال</string>
   <string name="add_to_contacts">إضافة إلى جهات الاتصال</string>
   <string name="download_file">تنزيل</string>
+  <string name="chat_room_ephemeral_message_disabled">غير مفعلة</string>
   <!--Status Bar-->
   <string name="voicemail_unread">الرسائل غير المقروءة</string>
   <!--Side Menu-->

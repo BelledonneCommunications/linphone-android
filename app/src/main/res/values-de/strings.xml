@@ -7,12 +7,16 @@
   <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">Startvorgang</string>
   <string name="notification_registered">%s verbunden</string>
+  <string name="notification_register_failure">1%s Verbindungsaufbau gescheitert</string>
   <string name="tunnel_host"></string>
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone-Kern %s</string>
   <string name="about_liblinphone_sdk_version">Linphone SDK %s</string>
+  <string name="about_privacy_policy">Unsere Datenschutzerklärung</string>
   <string name="sync_account_name">Linphone-Kontakte</string>
   <!--Notifications-->
+  <string name="notification_reply_label">antworten</string>
+  <string name="notification_replied_label">Antworten senden: 1%s</string>
   <string name="notification_call_hangup_label">Auflegen</string>
   <string name="notification_mark_as_read_label">Als gelesen markieren</string>
   <!--Common-->
@@ -20,6 +24,7 @@
   <string name="userid">Benutzerkennung (optional)</string>
   <string name="phone_number">Telefonnummer</string>
   <string name="confirmation_code">Bestätigungscode</string>
+  <string name="international_prefix">Vorwahl für internationale Telefonnummern</string>
   <string name="display_name">Anzeigename</string>
   <string name="password">Passwort</string>
   <string name="confirm_password">Passwortbestätigung</string>
@@ -117,6 +122,7 @@
   <string name="phone_number_info_content">\nDank Ihrer Telefonnummer können Ihre Freunde Sie leichter finden.\n\nSie werden in Ihrem Adressbuch sehen, wer Linphone verwendet, und Ihre Freunde werden ebenfalls wissen, dass sie Sie mit Linphone erreichen können.\n</string>
   <string name="phone_number_link_info_content">\nIhre Freunde werden Sie einfacher finden, wenn Sie Ihr Benutzerkonto mit Ihrer Telefonnummer verknüpfen.\n\nSie werden in Ihrem Adressbuch sehen, wer Linphone verwendet, und Ihre Freunde werden ebenfalls wissen, dass sie Sie mit Linphone erreichen können.\n</string>
   <string name="phone_number_link_info_content_already_account">Sie können Ihre Telefonnummer mit nur einem Linphone-Benutzerkonto verwenden.\n\nWenn Sie Ihre Nummer bereits mit einem anderen Konto verknüpft haben, aber Sie lieber dieses hier verwenden möchten, verknüpfen Sie es einfach jetzt, und Ihre Nummer wird automatisch zu diesem Konto verschoben.</string>
+  <string name="account_doesnt_exist">Konto ist nicht vorhanden</string>
   <!--Status-->
   <string name="invalid_email">Ungültige E-Mail-Adresse</string>
   <string name="account_already_exist">Konto bereits vorhanden</string>
@@ -218,9 +224,27 @@
   <string name="add_to_contacts">Zu Kontakten hinzufügen</string>
   <string name="unexpected_event">Unerwartetes Ereignis %i für %s</string>
   <string name="download_file">Herunterladen</string>
+  <string name="chat_message_forwarded">Weitergeleitet</string>
+  <string name="chat_room_context_menu_group_info">Gruppeninfo</string>
+  <string name="chat_room_context_menu_participants_devices">Geräte des Gesprächs</string>
+  <string name="chat_message_context_menu_ephemeral_messages">Kurzlebige Nachrichten</string>
+  <string name="chat_message_context_menu_delete_messages">Nachrichten löschen</string>
+  <string name="chat_message_context_menu_forward">Weiterleiten</string>
+  <string name="chat_room_ephemeral_fragment_title">Kurzlebige Nachrichten</string>
+  <string name="chat_room_ephemeral_message_disabled">Deaktiviert</string>
+  <string name="chat_room_ephemeral_message_one_minute">1 Minute</string>
+  <string name="chat_room_ephemeral_message_one_hour">1 Stunde</string>
+  <string name="chat_room_ephemeral_message_one_day">1 Tag</string>
+  <string name="chat_room_ephemeral_message_three_days">3 Tage</string>
+  <string name="chat_room_ephemeral_message_one_week">1 Woche</string>
+  <plurals name="days">
+    <item quantity="one">%d Tag</item>
+    <item quantity="other">%d Tage</item>
+  </plurals>
   <!--Status Bar-->
   <string name="status_connected">Verbunden</string>
   <string name="status_not_connected">Nicht verbunden</string>
+  <string name="status_in_progress">Verbindung wird aufgebaut</string>
   <string name="status_error">Verbindung fehlgeschlagen</string>
   <string name="voicemail_unread">ungelesene Nachrichten</string>
   <!--Side Menu-->
@@ -259,6 +283,7 @@
   <string name="call_stats_encoder_name">Kodierer:</string>
   <string name="call_stats_decoder_name">Dekodierer:</string>
   <string name="call_stats_display_filter">Filter anzeigen:</string>
+  <string name="call_stats_capture_filter">Aufnahmefilter</string>
   <string name="call">Anruf</string>
   <!--Recordings-->
   <string name="no_recordings">Keine Aufnahmen</string>
@@ -360,6 +385,7 @@
   <string name="pref_codecs">Codecs</string>
   <!--Video settings-->
   <string name="pref_video_title">Video</string>
+  <string name="pref_video_camera_device">Kamera</string>
   <string name="pref_overlay">Videoeinblendung</string>
   <string name="pref_overlay_summary">Anrufvideo in Einblendung anzeigen, wenn Sie außerhalb der Anwendung sind</string>
   <string name="pref_video_use_front_camera_title">Frontkamera benutzen</string>

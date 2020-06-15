@@ -156,6 +156,7 @@
   <string name="image_not_saved">Błąd, obraz nie został zapisany</string>
   <string name="processing_image">Przetwarzanie obrazu, może potrwać nawet do kilku sekund w zależności od rozmiaru pliku</string>
   <string name="add_to_contacts">Dodaj do kontaktów</string>
+  <string name="chat_room_ephemeral_message_disabled">Nieaktywny</string>
   <!--Status Bar-->
   <string name="voicemail_unread">Nieprzeczytane wiadomości</string>
   <!--Side Menu-->

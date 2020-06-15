@@ -129,6 +129,7 @@
   <string name="phone_number_link_info_content">\nI tuoi amici ti troveranno più facilmente se colleghi il tuo account al tuo numero di telefono\n\nSi vedrai nella tua rubrica che sta usando Linphone e i tuoi amici sapranno che possono contattarti anche su Linphone.\n</string>
   <string name="phone_number_link_info_content_already_account">Puoi utilizzare il tuo numero di telefono solo con un account Linphone.\n\nSe avevi già collegato il tuo numero a un altro account ma preferisci utilizzare questo, collegalo semplicemente ora e il tuo numero verrà automaticamente spostato su questo account.</string>
   <string name="phone_number_overuse">Troppi SMS sono stati inviati a questo numero in un breve periodo di tempo, riprova tra 24 ore.</string>
+  <string name="account_doesnt_exist">L\'account non esiste</string>
   <!--Status-->
   <string name="invalid_email">E-mail non valida</string>
   <string name="account_already_exist">Account già esistente</string>
@@ -244,6 +245,28 @@
   <string name="toast_choose_chat_room_for_sharing">Scegli una conversazione o creane una nuova</string>
   <string name="trust_denied">Il trust è stato negato. Effettua una chiamata per avviare nuovamente la procedura di autenticazione.</string>
   <string name="cant_open_file_no_app_found">Impossibile aprire il file, nessuna applicazione disponibile per questo formato.</string>
+  <string name="chat_message_forwarded">Inoltrato</string>
+  <string name="chat_room_context_menu_group_info">Informazioni sul gruppo</string>
+  <string name="chat_room_context_menu_participants_devices">Dispositivi di conversazione</string>
+  <string name="chat_message_context_menu_ephemeral_messages">Messaggi effimeri</string>
+  <string name="chat_message_context_menu_delete_messages">Elimina i messaggi</string>
+  <string name="chat_message_context_menu_forward">Inoltra</string>
+  <string name="chat_room_ephemeral_fragment_title">Messaggi effimeri</string>
+  <string name="chat_room_ephemeral_messages_desc">Questo messaggio verrà eliminato per entrambe le parti una volta che è stato letto e dopo la scadenza selezionata.</string>
+  <string name="chat_room_ephemeral_message_disabled">Disabilitato</string>
+  <string name="chat_room_ephemeral_message_one_minute">1 minuto</string>
+  <string name="chat_room_ephemeral_message_one_hour">1 ora</string>
+  <string name="chat_room_ephemeral_message_one_day">1 giorno</string>
+  <string name="chat_room_ephemeral_message_three_days">3 giorni</string>
+  <string name="chat_room_ephemeral_message_one_week">1 settimana</string>
+  <plurals name="days">
+    <item quantity="one">%d giorno</item>
+    <item quantity="other">%d giorni</item>
+  </plurals>
+  <string name="chat_event_ephemeral_disabled">Hai disabilitato i messaggi effimeri</string>
+  <string name="chat_event_ephemeral_enabled">Hai abilitato i messaggi effimeri: %s</string>
+  <string name="chat_event_ephemeral_lifetime_changed">Data di scadenza dei messaggi effimeri: %s</string>
+  <string name="chat_message_forward_confirmation_dialog">Vuoi inoltrare il messaggio in questa stanza?</string>
   <!--Status Bar-->
   <string name="status_connected">Connesso</string>
   <string name="status_not_connected">Non connesso</string>
@@ -450,7 +473,11 @@
   <string name="pref_auto_download_always">Sempre</string>
   <string name="pref_auto_download_under_size">Se minore della grandezza massima</string>
   <string name="pref_android_app_hide_empty_chat_rooms_title">Nascondi chat room vuote</string>
+  <string name="pref_android_app_hide_chat_rooms_from_removed_proxies_title">Nascondi le chat rooms dalla configurazione proxy rimossa</string>
   <string name="pref_android_app_hide_chat_rooms_from_removed_proxies_desc">Se mancano le chat room, prova a deselezionare questa impostazione</string>
+  <string name="pref_android_app_make_downloaded_images_visible_in_native_gallery_title">Rendi visibili le immagini scaricate nella galleria nativa</string>
+  <string name="pref_android_app_make_downloaded_images_visible_in_native_gallery_desc">Le immagini nei messaggi effimeri non lo saranno</string>
+  <string name="pref_android_app_enable_ephemeral_messages_beta">Abilita messaggi effimeri (beta)</string>
   <!--Network settings-->
   <string name="pref_network_title">Rete</string>
   <string name="pref_wifi_only">Usa solo Wi-Fi</string>
