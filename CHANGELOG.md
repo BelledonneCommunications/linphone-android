@@ -10,7 +10,7 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
-## [4.3.0] - Unreleased
+## [4.3.0] - 2020-06-23
 
 ### Added
 - Forward message between chat rooms

@@ -247,6 +247,28 @@ Disponible gratuitement ici : %s</string>
   <string name="toast_choose_chat_room_for_sharing">Sélectionnez une conversation ou créez-en une nouvelle</string>
   <string name="trust_denied">La confiance a été retirée. Faites un appel pour relancer la procédure d’authentification.</string>
   <string name="cant_open_file_no_app_found">Impossible d\'ouvrir le fichier, aucune application disponible pour ce format.</string>
+  <string name="chat_message_forwarded">Transféré</string>
+  <string name="chat_room_context_menu_group_info">Infos du groupe</string>
+  <string name="chat_room_context_menu_participants_devices">Terminaux de la conversation</string>
+  <string name="chat_message_context_menu_ephemeral_messages">Messages éphémères</string>
+  <string name="chat_message_context_menu_delete_messages">Supprimer les messages</string>
+  <string name="chat_message_context_menu_forward">Transférer</string>
+  <string name="chat_room_ephemeral_fragment_title">Messages éphémères</string>
+  <string name="chat_room_ephemeral_messages_desc">Ce message disparaîtra de votre discussion et de celle des destinataires une fois lu et après la durée sélectionnée.</string>
+  <string name="chat_room_ephemeral_message_disabled">Désactivé</string>
+  <string name="chat_room_ephemeral_message_one_minute">1 minute</string>
+  <string name="chat_room_ephemeral_message_one_hour">1 heure</string>
+  <string name="chat_room_ephemeral_message_one_day">1 jour</string>
+  <string name="chat_room_ephemeral_message_three_days">3 jours</string>
+  <string name="chat_room_ephemeral_message_one_week">1 semaine</string>
+  <plurals name="days">
+    <item quantity="one">%d jour</item>
+    <item quantity="other">%d jours</item>
+  </plurals>
+  <string name="chat_event_ephemeral_disabled">Vous avez désactivé les messages éphémères</string>
+  <string name="chat_event_ephemeral_enabled">Vous avez activé les messages éphémères : %s</string>
+  <string name="chat_event_ephemeral_lifetime_changed">Délai d’expiration des messages : %s</string>
+  <string name="chat_message_forward_confirmation_dialog">Voulez-vous transférer le message dans cette conversation ?</string>
   <!--Status Bar-->
   <string name="status_connected">Connecté</string>
   <string name="status_not_connected">Déconnecté</string>
@@ -455,6 +477,9 @@ Disponible gratuitement ici : %s</string>
   <string name="pref_android_app_hide_empty_chat_rooms_title">Cacher les conversations vides</string>
   <string name="pref_android_app_hide_chat_rooms_from_removed_proxies_title">Cacher les conversations liées aux comptes supprimés</string>
   <string name="pref_android_app_hide_chat_rooms_from_removed_proxies_desc">S\'il vous manque des conversations, essayez de décocher ce paramètre</string>
+  <string name="pref_android_app_make_downloaded_images_visible_in_native_gallery_title">Rendre visible dans la galerie les images téléchargées</string>
+  <string name="pref_android_app_make_downloaded_images_visible_in_native_gallery_desc">Les images dans les messages éphémères ne seront jamais publiques</string>
+  <string name="pref_android_app_enable_ephemeral_messages_beta">Messages éphémères (bêta)</string>
   <!--Network settings-->
   <string name="pref_network_title">Réseau</string>
   <string name="pref_wifi_only">Utiliser WiFi uniquement</string>
