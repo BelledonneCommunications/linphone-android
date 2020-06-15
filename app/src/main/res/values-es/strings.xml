@@ -79,6 +79,7 @@
   <string name="imdn_info">Estado de entrega</string>
   <string name="add_to_contacts">Añadir a contactos</string>
   <string name="download_file">Descargar</string>
+  <string name="chat_room_ephemeral_message_disabled">Discapacitado</string>
   <!--Status Bar-->
   <string name="voicemail_unread">mensajes sin leer</string>
   <!--Side Menu-->
@@ -198,7 +199,7 @@
   <string name="pref_chat_title">Chat</string>
   <string name="pref_image_sharing_server_desc">¡No editar excepto si sabe lo que está haciendo!</string>
   <string name="pref_use_lime_encryption">Usar cifrado LIME</string>
-  <string name="lime_encryption_entry_disabled">Activado</string>
+  <string name="lime_encryption_entry_disabled">Discapacitado</string>
   <string name="lime_encryption_entry_mandatory">Obligatorio</string>
   <string name="lime_encryption_entry_preferred">Preferido</string>
   <string name="lime_encryption_enable_zrtp">LIME requiere cifrado ZRTP.\nAl activar LIME se activa también el cifrado ZRTP para la multimedia.</string>

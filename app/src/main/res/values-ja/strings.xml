@@ -163,6 +163,7 @@
   <string name="resend">再送信</string>
   <string name="add_to_contacts">連絡先に追加</string>
   <string name="download_file">ダウンロード</string>
+  <string name="chat_room_ephemeral_message_disabled">無効にする</string>
   <!--Status Bar-->
   <string name="voicemail_unread">未読メッセージ</string>
   <!--Side Menu-->

@@ -202,6 +202,7 @@
   <string name="imdn_info">Status da entrega</string>
   <string name="add_to_contacts">Adicionar aos Contatos</string>
   <string name="download_file">Download</string>
+  <string name="chat_room_ephemeral_message_disabled">Desativado</string>
   <!--Status Bar-->
   <string name="voicemail_unread"> mensagens não lidas</string>
   <!--Side Menu-->

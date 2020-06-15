@@ -245,6 +245,30 @@
   <string name="toast_choose_chat_room_for_sharing">Оберіть бесіду або створіть нову</string>
   <string name="trust_denied">У довірі було відмовлено. Зробіть виклик, аби почати процес автентифікації знову.</string>
   <string name="cant_open_file_no_app_found">Не вдається відкрити файл, немає додатків для цього формату.</string>
+  <string name="chat_message_forwarded">Переслано</string>
+  <string name="chat_room_context_menu_group_info">Відомості про групу</string>
+  <string name="chat_room_context_menu_participants_devices">Пристрої розмови</string>
+  <string name="chat_message_context_menu_ephemeral_messages">Недовготривалі повідомлення</string>
+  <string name="chat_message_context_menu_delete_messages">Вилучити повідомлення</string>
+  <string name="chat_message_context_menu_forward">Переслати</string>
+  <string name="chat_room_ephemeral_fragment_title">Недовготривалі повідомлення</string>
+  <string name="chat_room_ephemeral_messages_desc">Це повідомлення буде вилучене на обох кінцях після прочитання й коли мине обраний час очікування.</string>
+  <string name="chat_room_ephemeral_message_disabled">Відімкнено</string>
+  <string name="chat_room_ephemeral_message_one_minute">1 хвилина</string>
+  <string name="chat_room_ephemeral_message_one_hour">1 година</string>
+  <string name="chat_room_ephemeral_message_one_day">1 день</string>
+  <string name="chat_room_ephemeral_message_three_days">3 дні</string>
+  <string name="chat_room_ephemeral_message_one_week">1 тиждень</string>
+  <plurals name="days">
+    <item quantity="one">%d день</item>
+    <item quantity="few">%d дні</item>
+    <item quantity="many">%d днів</item>
+    <item quantity="other">%d днів</item>
+  </plurals>
+  <string name="chat_event_ephemeral_disabled">Ви відімкнули недовготривалі повідомлення</string>
+  <string name="chat_event_ephemeral_enabled">Ви увімкнули недовготривалі повідомлення: %s</string>
+  <string name="chat_event_ephemeral_lifetime_changed">Термін дії недовготривалих повідомлень: %s</string>
+  <string name="chat_message_forward_confirmation_dialog">Ви бажаєте переслати повідомлення у цій кімнаті?</string>
   <!--Status Bar-->
   <string name="status_connected">З\'єднано</string>
   <string name="status_not_connected">Не з\'єднано</string>
@@ -453,6 +477,9 @@
   <string name="pref_android_app_hide_empty_chat_rooms_title">Приховати порожні чати</string>
   <string name="pref_android_app_hide_chat_rooms_from_removed_proxies_title">Приховати чати з вилучених налаштувань проксі</string>
   <string name="pref_android_app_hide_chat_rooms_from_removed_proxies_desc">Якщо у вас є відсутні чати, то спробуйте зняти цей прапорець</string>
+  <string name="pref_android_app_make_downloaded_images_visible_in_native_gallery_title">Зробити завантажені зображення видимими у рідній галереї</string>
+  <string name="pref_android_app_make_downloaded_images_visible_in_native_gallery_desc">Зображень у недовготривалих повідомленнях не буде</string>
+  <string name="pref_android_app_enable_ephemeral_messages_beta">Увімкнути недовготривалі повідомлення (бета)</string>
   <!--Network settings-->
   <string name="pref_network_title">Мережа</string>
   <string name="pref_wifi_only">Використовувати лише WiFi</string>
