@@ -247,11 +247,6 @@ class ContactsManager(private val context: Context) {
     }
 
     private fun initSyncAccount() {
-        if (!corePreferences.useLinphoneSyncAccount) {
-            Log.w("[Contacts Manager] Linphone sync account disabled, skipping initialization")
-            return
-        }
-
         val accountManager = context.getSystemService(Context.ACCOUNT_SERVICE) as AccountManager
         val accounts = accountManager.getAccountsByType(context.getString(R.string.sync_account_type))
         if (accounts.isEmpty()) {
@@ -332,13 +327,13 @@ class ContactsManager(private val context: Context) {
         for (phoneNumber in contact.phoneNumbers) {
             val sipAddress = contact.getContactForPhoneNumberOrAddress(phoneNumber)
             if (sipAddress != null) {
-                Log.d("[Contacts Manager] Found presence information to store in native contact $contact")
-                val contactEditor = NativeContactEditor(contact, null, null)
+                Log.d("[Contacts Manager] Found presence information to store in native contact $contact under Linphone sync account")
+                val contactEditor = NativeContactEditor(contact, context.getString(R.string.sync_account_name), context.getString(R.string.sync_account_type))
                 val coroutineScope = CoroutineScope(Dispatchers.Main)
                 coroutineScope.launch {
                     val deferred = async {
                         withContext(Dispatchers.IO) {
-                            contactEditor.setPresenceInformation(phoneNumber, sipAddress).commit()
+                            contactEditor.ensureSyncAccountRawIdExists().setPresenceInformation(phoneNumber, sipAddress).commit()
                         }
                     }
                     deferred.await()
