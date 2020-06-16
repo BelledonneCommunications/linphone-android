@@ -81,14 +81,15 @@ class ContactEditorViewModel(val c: Contact?) : ViewModel(), ContactViewModelInt
         if (contact == null) {
             created = true
             contact = if (PermissionHelper.get().hasWriteContactsPermission()) {
-                NativeContact(NativeContactEditor.createAndroidContact(null, null).toString())
+                // Store native contact in default sync account
+                NativeContact(NativeContactEditor.createAndroidContact().toString())
             } else {
                 Contact()
             }
         }
 
         if (contact is NativeContact) {
-            NativeContactEditor(contact, null, null)
+            NativeContactEditor(contact)
                 .setFirstAndLastNames(firstName.value.orEmpty(), lastName.value.orEmpty())
                 .setOrganization(organization.value.orEmpty())
                 .setPhoneNumbers(numbers.value.orEmpty())
