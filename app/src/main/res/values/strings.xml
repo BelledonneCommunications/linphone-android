@@ -140,6 +140,8 @@
     <string name="chat_room_group_info_leave">Leave the group</string>
     <string name="chat_room_group_info_leave_dialog_button">Leave</string>
     <string name="chat_room_group_info_leave_dialog_message">Do you want to leave this conversation?</string>
+    <string name="chat_room_group_info_you_are_now_admin">You are now admin</string>
+    <string name="chat_room_group_info_you_are_no_longer_admin">You are no longer admin</string>
     <string name="chat_message_imdn_info">Delivery status</string>
     <string name="chat_message_imdn_displayed">Read</string>
     <string name="chat_message_imdn_delivered">Delivered</string>
