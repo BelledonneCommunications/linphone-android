@@ -39,6 +39,8 @@ class DialerViewModel : LogsUploadViewModel() {
 
     val showSwitchCamera = MutableLiveData<Boolean>()
 
+    val autoInitiateVideoCalls = MutableLiveData<Boolean>()
+
     private var addressWaitingNetworkToBeCalled: String? = null
     private var timeAtWitchWeTriedToCall: Long = 0
 
