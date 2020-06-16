@@ -234,6 +234,7 @@
     <string name="assistant_error_invalid_email_address">Email address isn\t valid</string>
     <string name="assistant_error_username_too_long">Username has too many characters</string>
     <string name="assistant_error_account_not_activated">Your account has not been validated yet</string>
+    <string name="assistant_error_invalid_credentials">Account does not exist or password does not match</string>
 
     <!-- Assistant login -->
     <string name="assistant_linphone_account">Use your &appName; account</string>
