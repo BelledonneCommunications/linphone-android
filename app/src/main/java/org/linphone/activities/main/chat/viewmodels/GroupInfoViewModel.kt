@@ -54,6 +54,10 @@ class GroupInfoViewModel(val chatRoom: ChatRoom?) : ErrorReportingViewModel() {
 
     val waitForChatRoomCreation = MutableLiveData<Boolean>()
 
+    val meAdminChangedEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     private val listener = object : ChatRoomListenerStub() {
         override fun onStateChanged(chatRoom: ChatRoom, state: ChatRoom.State) {
             if (state == ChatRoom.State.Created) {
@@ -79,7 +83,9 @@ class GroupInfoViewModel(val chatRoom: ChatRoom?) : ErrorReportingViewModel() {
         }
 
         override fun onParticipantAdminStatusChanged(chatRoom: ChatRoom?, eventLog: EventLog?) {
-            isMeAdmin.value = chatRoom?.me?.isAdmin
+            val admin = chatRoom?.me?.isAdmin ?: false
+            isMeAdmin.value = admin
+            meAdminChangedEvent.value = Event(admin)
             updateParticipants()
         }
     }
