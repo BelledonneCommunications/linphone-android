@@ -73,7 +73,7 @@ class DialogViewModel(val message: String, val title: String = "") : ViewModel()
     var okLabel: String = "OK"
     private var onOk: (Boolean) -> Unit = {}
 
-    fun showOkButton(ok: (Boolean) -> Unit, label: String) {
+    fun showOkButton(ok: (Boolean) -> Unit, label: String = okLabel) {
         showOk = true
         onOk = ok
         okLabel = label

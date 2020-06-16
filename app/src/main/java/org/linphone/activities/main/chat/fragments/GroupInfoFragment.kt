@@ -49,6 +49,7 @@ class GroupInfoFragment : Fragment() {
     private lateinit var viewModel: GroupInfoViewModel
     private lateinit var sharedViewModel: SharedMainViewModel
     private lateinit var adapter: GroupInfoParticipantsAdapter
+    private var meAdminStatusChangedDialog: Dialog? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -93,8 +94,14 @@ class GroupInfoFragment : Fragment() {
             adapter.submitList(it)
         })
 
-        viewModel.isMeAdmin.observe(viewLifecycleOwner, Observer {
-            adapter.showAdminControls(it && chatRoom != null)
+        viewModel.isMeAdmin.observe(viewLifecycleOwner, Observer { isMeAdmin ->
+            adapter.showAdminControls(isMeAdmin && chatRoom != null)
+        })
+
+        viewModel.meAdminChangedEvent.observe(viewLifecycleOwner, Observer {
+            it.consume { isMeAdmin ->
+                showMeAdminStateChanged(isMeAdmin)
+            }
         })
 
         adapter.participantRemovedEvent.observe(viewLifecycleOwner, Observer {
@@ -190,5 +197,24 @@ class GroupInfoFragment : Fragment() {
         if (findNavController().currentDestination?.id == R.id.groupInfoFragment) {
             findNavController().navigate(R.id.action_groupInfoFragment_to_detailChatRoomFragment)
         }
+    }
+
+    private fun showMeAdminStateChanged(isMeAdmin: Boolean) {
+        meAdminStatusChangedDialog?.dismiss()
+
+        val message = if (isMeAdmin) {
+            getString(R.string.chat_room_group_info_you_are_now_admin)
+        } else {
+            getString(R.string.chat_room_group_info_you_are_no_longer_admin)
+        }
+        val dialogViewModel = DialogViewModel(message)
+        val dialog = DialogUtils.getDialog(requireContext(), dialogViewModel)
+
+        dialogViewModel.showOkButton({
+            dialog.dismiss()
+        })
+
+        dialog.show()
+        meAdminStatusChangedDialog = dialog
     }
 }
