@@ -23,9 +23,8 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import org.linphone.core.AccountCreator
-import org.linphone.core.ProxyConfig
-import org.linphone.core.TransportType
+import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
 
@@ -51,7 +50,40 @@ class GenericLoginViewModel(private val accountCreator: AccountCreator) : ViewMo
 
     val loginEnabled: MediatorLiveData<Boolean> = MediatorLiveData()
 
+    val waitForServerAnswer = MutableLiveData<Boolean>()
+
     val leaveAssistantEvent = MutableLiveData<Event<Boolean>>()
+
+    val invalidCredentialsEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
+    private var proxyConfigToCheck: ProxyConfig? = null
+
+    private val coreListener = object : CoreListenerStub() {
+        override fun onRegistrationStateChanged(
+            core: Core,
+            cfg: ProxyConfig,
+            state: RegistrationState,
+            message: String?
+        ) {
+            if (cfg == proxyConfigToCheck) {
+                Log.i("[Assistant] [Generic Login] Registration state is $state: $message")
+                waitForServerAnswer.value = false
+                if (state == RegistrationState.Ok) {
+                    leaveAssistantEvent.value = Event(true)
+                    core.removeListener(this)
+                } else if (state == RegistrationState.Failed) {
+                    invalidCredentialsEvent.value = Event(true)
+                    val authInfo = cfg.findAuthInfo()
+                    if (authInfo != null) core.removeAuthInfo(authInfo)
+                    core.removeProxyConfig(cfg)
+                    proxyConfigToCheck = null
+                    core.removeListener(this)
+                }
+            }
+        }
+    }
 
     init {
         transport.value = TransportType.Tls
@@ -73,6 +105,9 @@ class GenericLoginViewModel(private val accountCreator: AccountCreator) : ViewMo
     }
 
     fun createProxyConfig() {
+        waitForServerAnswer.value = true
+        coreContext.core.addListener(coreListener)
+
         accountCreator.username = username.value
         accountCreator.password = password.value
         accountCreator.domain = domain.value
@@ -80,15 +115,16 @@ class GenericLoginViewModel(private val accountCreator: AccountCreator) : ViewMo
         accountCreator.transport = transport.value
 
         val proxyConfig: ProxyConfig? = accountCreator.createProxyConfig()
+        proxyConfigToCheck = proxyConfig
 
         if (proxyConfig == null) {
             Log.e("[Assistant] [Generic Login] Account creator couldn't create proxy config")
+            coreContext.core.removeListener(coreListener)
             // TODO: show error
             return
         }
 
         Log.i("[Assistant] [Generic Login] Proxy config created")
-        leaveAssistantEvent.value = Event(true)
     }
 
     private fun isLoginButtonEnabled(): Boolean {

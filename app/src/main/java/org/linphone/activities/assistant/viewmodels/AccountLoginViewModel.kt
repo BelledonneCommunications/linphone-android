@@ -20,9 +20,8 @@
 package org.linphone.activities.assistant.viewmodels
 
 import androidx.lifecycle.*
-import org.linphone.core.AccountCreator
-import org.linphone.core.AccountCreatorListenerStub
-import org.linphone.core.ProxyConfig
+import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
 
@@ -50,6 +49,10 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
         MutableLiveData<Event<Boolean>>()
     }
 
+    val invalidCredentialsEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     val goToSmsValidationEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -67,6 +70,33 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
                 goToSmsValidationEvent.value = Event(true)
             } else {
                 // TODO: show error
+            }
+        }
+    }
+
+    private var proxyConfigToCheck: ProxyConfig? = null
+
+    private val coreListener = object : CoreListenerStub() {
+        override fun onRegistrationStateChanged(
+            core: Core,
+            cfg: ProxyConfig,
+            state: RegistrationState,
+            message: String?
+        ) {
+            if (cfg == proxyConfigToCheck) {
+                Log.i("[Assistant] [Account Login] Registration state is $state: $message")
+                waitForServerAnswer.value = false
+                if (state == RegistrationState.Ok) {
+                    leaveAssistantEvent.value = Event(true)
+                    core.removeListener(this)
+                } else if (state == RegistrationState.Failed) {
+                    invalidCredentialsEvent.value = Event(true)
+                    val authInfo = cfg.findAuthInfo()
+                    if (authInfo != null) core.removeAuthInfo(authInfo)
+                    core.removeProxyConfig(cfg)
+                    proxyConfigToCheck = null
+                    core.removeListener(this)
+                }
             }
         }
     }
@@ -109,10 +139,10 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
             Log.i("[Assistant] [Account Login] Username is ${accountCreator.username}")
 
             waitForServerAnswer.value = true
-            if (createProxyConfig()) {
-                leaveAssistantEvent.value = Event(true)
-            } else {
+            coreContext.core.addListener(coreListener)
+            if (!createProxyConfig()) {
                 waitForServerAnswer.value = false
+                coreContext.core.removeListener(coreListener)
                 // TODO: show error
             }
         } else {
@@ -140,6 +170,7 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
 
     private fun createProxyConfig(): Boolean {
         val proxyConfig: ProxyConfig? = accountCreator.createProxyConfig()
+        proxyConfigToCheck = proxyConfig
 
         if (proxyConfig == null) {
             Log.e("[Assistant] [Account Login] Account creator couldn't create proxy config")
