@@ -227,11 +227,6 @@ class CorePreferences constructor(private val context: Context) {
     val contactOrganizationVisible: Boolean
         get() = config.getBool("app", "display_contact_organization", true)
 
-    // If enabled, SIP addresses will be stored in a different raw id than the contact and with a custom MIME type
-    // If disabled, contacts will be created in default account & addresses will be stored in native SIP field
-    val useLinphoneSyncAccount: Boolean
-        get() = config.getBool("app", "use_linphone_tag", true)
-
     private val darkModeAllowed: Boolean
         get() = config.getBool("app", "dark_mode_allowed", true)
 

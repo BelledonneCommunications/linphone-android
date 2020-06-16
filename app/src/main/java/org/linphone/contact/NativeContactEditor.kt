@@ -27,7 +27,6 @@ import android.provider.ContactsContract
 import android.provider.ContactsContract.CommonDataKinds
 import android.provider.ContactsContract.RawContacts
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.main.contact.viewmodels.NumberOrAddressEditorViewModel
 import org.linphone.core.tools.Log
@@ -36,20 +35,14 @@ import org.linphone.utils.PermissionHelper
 
 class NativeContactEditor(
     val contact: NativeContact,
-    private var syncAccountName: String?,
-    private var syncAccountType: String?
+    private var syncAccountName: String? = null,
+    private var syncAccountType: String? = null
 ) {
     companion object {
-        fun createAndroidContact(accountName: String?, accountType: String?): Long {
+        fun createAndroidContact(accountName: String? = null, accountType: String? = null): Long {
             val values = ContentValues()
-
-            if (accountName == null && accountType == null && corePreferences.useLinphoneSyncAccount) {
-                values.put(RawContacts.ACCOUNT_NAME, AppUtils.getString(R.string.sync_account_name))
-                values.put(RawContacts.ACCOUNT_TYPE, AppUtils.getString(R.string.sync_account_type))
-            } else {
-                values.put(RawContacts.ACCOUNT_NAME, accountName)
-                values.put(RawContacts.ACCOUNT_TYPE, accountType)
-            }
+            values.put(RawContacts.ACCOUNT_NAME, accountName)
+            values.put(RawContacts.ACCOUNT_TYPE, accountType)
 
             val rawContactUri = coreContext.context.contentResolver
                 .insert(RawContacts.CONTENT_URI, values)
@@ -66,19 +59,13 @@ class NativeContactEditor(
         "${ContactsContract.Data.CONTACT_ID} =? AND (${ContactsContract.Data.MIMETYPE} =? OR ${ContactsContract.Data.MIMETYPE} =?) AND data1=?"
     private val presenceUpdateSelection =
         "${ContactsContract.Data.CONTACT_ID} =? AND ${ContactsContract.Data.MIMETYPE} =? AND data3=?"
-    private val useLinphoneSyncAccount = corePreferences.useLinphoneSyncAccount
     private val contactUri = ContactsContract.Data.CONTENT_URI
 
     private var rawId: String? = null
-    private var linphoneRawId: String? = null
+    private var syncAccountRawId: String? = null
     private var pictureByteArray: ByteArray? = null
 
     init {
-        if (syncAccountName == null && syncAccountType == null && useLinphoneSyncAccount) {
-            syncAccountName = AppUtils.getString(R.string.sync_account_name)
-            syncAccountType = AppUtils.getString(R.string.sync_account_type)
-        }
-
         Log.i("[Native Contact Editor] Using sync account $syncAccountName with type $syncAccountType")
         val contentResolver = coreContext.context.contentResolver
         val cursor = contentResolver.query(
@@ -96,40 +83,16 @@ class NativeContactEditor(
                 }
 
                 val accountType = cursor.getString(cursor.getColumnIndex(RawContacts.ACCOUNT_TYPE))
-                if (accountType == syncAccountType && linphoneRawId == null) {
-                    linphoneRawId = cursor.getString(cursor.getColumnIndex(RawContacts._ID))
-                    Log.d("[Native Contact Editor] Found linphone raw id $linphoneRawId for native contact with id ${contact.nativeId}")
+                if (accountType == syncAccountType && syncAccountRawId == null) {
+                    syncAccountRawId = cursor.getString(cursor.getColumnIndex(RawContacts._ID))
+                    Log.d("[Native Contact Editor] Found sync account raw id $syncAccountRawId for native contact with id ${contact.nativeId}")
                 }
-            } while (cursor.moveToNext() && linphoneRawId == null)
+            } while (cursor.moveToNext() && syncAccountRawId == null)
         }
         cursor?.close()
 
         // When contact has been created with NativeContactEditor.createAndroidContact this is required
         if (rawId == null) rawId = contact.nativeId
-
-        if (linphoneRawId == null && useLinphoneSyncAccount) {
-            Log.w("[Native Contact Editor] Linphone raw id not found")
-            val insert = ContentProviderOperation.newInsert(RawContacts.CONTENT_URI)
-                .withValue(RawContacts.ACCOUNT_TYPE, syncAccountType)
-                .withValue(RawContacts.ACCOUNT_NAME, syncAccountName)
-                .withValue(RawContacts.AGGREGATION_MODE, RawContacts.AGGREGATION_MODE_DEFAULT)
-                .build()
-            addChanges(insert)
-            val update =
-                ContentProviderOperation.newUpdate(ContactsContract.AggregationExceptions.CONTENT_URI)
-                    .withValue(
-                        ContactsContract.AggregationExceptions.TYPE,
-                        ContactsContract.AggregationExceptions.TYPE_KEEP_TOGETHER
-                    )
-                    .withValue(ContactsContract.AggregationExceptions.RAW_CONTACT_ID1, rawId)
-                    .withValueBackReference(
-                        ContactsContract.AggregationExceptions.RAW_CONTACT_ID2,
-                        0
-                    )
-                    .build()
-            addChanges(update)
-            commit()
-        }
     }
 
     fun setFirstAndLastNames(firstName: String, lastName: String): NativeContactEditor {
@@ -238,11 +201,7 @@ class NativeContactEditor(
                     // New address to add
                     addCount++
                     val address = sipAddress.newValue.value.orEmpty()
-                    if (useLinphoneSyncAccount) {
-                        addLinphoneAddress(address, address)
-                    } else {
-                        addSipAddress(address)
-                    }
+                    addSipAddress(address)
                 }
                 sipAddress.toRemove.value == true -> {
                     // Existing address to remove
@@ -267,15 +226,41 @@ class NativeContactEditor(
         return this
     }
 
-    fun setPresenceInformation(phoneNumber: String, sipAddress: String): NativeContactEditor {
-        Log.d("[Native Contact Editor] Trying to add presence information to contact as ${if (useLinphoneSyncAccount) "phone number" else "SIP address"}")
+    fun ensureSyncAccountRawIdExists(): NativeContactEditor {
+        if (syncAccountRawId == null) {
+            Log.w("[Native Contact Editor] Sync account raw id not found")
+            val insert = ContentProviderOperation.newInsert(RawContacts.CONTENT_URI)
+                .withValue(RawContacts.ACCOUNT_TYPE, syncAccountType)
+                .withValue(RawContacts.ACCOUNT_NAME, syncAccountName)
+                .withValue(RawContacts.AGGREGATION_MODE, RawContacts.AGGREGATION_MODE_DEFAULT)
+                .build()
+            addChanges(insert)
+            val update =
+                ContentProviderOperation.newUpdate(ContactsContract.AggregationExceptions.CONTENT_URI)
+                    .withValue(
+                        ContactsContract.AggregationExceptions.TYPE,
+                        ContactsContract.AggregationExceptions.TYPE_KEEP_TOGETHER
+                    )
+                    .withValue(ContactsContract.AggregationExceptions.RAW_CONTACT_ID1, rawId)
+                    .withValueBackReference(
+                        ContactsContract.AggregationExceptions.RAW_CONTACT_ID2,
+                        0
+                    )
+                    .build()
+            addChanges(update)
+            commit()
+        }
+        return this
+    }
 
-        if (useLinphoneSyncAccount) {
-            setPresenceLinphoneSipAddressForPhoneNumber(sipAddress, phoneNumber)
-        } else {
-            setPresenceSipAddress(sipAddress)
+    fun setPresenceInformation(phoneNumber: String, sipAddress: String): NativeContactEditor {
+        if (syncAccountRawId == null) {
+            Log.e("[Native Contact Editor] Can't add presence to contact in Linphone sync account, no raw id")
+            return this
         }
 
+        Log.d("[Native Contact Editor] Trying to add presence information to contact")
+        setPresenceLinphoneSipAddressForPhoneNumber(sipAddress, phoneNumber)
         return this
     }
 
@@ -287,9 +272,9 @@ class NativeContactEditor(
                     val results = contentResolver.applyBatch(ContactsContract.AUTHORITY, changes)
                     for (result in results) {
                         Log.i("[Native Contact Editor] Result is $result")
-                        if (linphoneRawId == null && useLinphoneSyncAccount && result?.uri != null) {
-                            linphoneRawId = ContentUris.parseId(result.uri).toString()
-                            Log.i("[Native Contact Editor] Linphone raw id is $linphoneRawId")
+                        if (syncAccountRawId == null && result?.uri != null) {
+                            syncAccountRawId = ContentUris.parseId(result.uri).toString()
+                            Log.i("[Native Contact Editor] Sync account raw id is $syncAccountRawId")
                         }
                     }
                 }
@@ -362,20 +347,6 @@ class NativeContactEditor(
         addChanges(delete)
     }
 
-    private fun addLinphoneAddress(address: String, detail: String) {
-        val insert = ContentProviderOperation.newInsert(contactUri)
-            .withValue(ContactsContract.Data.RAW_CONTACT_ID, linphoneRawId)
-            .withValue(
-                ContactsContract.Data.MIMETYPE,
-                AppUtils.getString(R.string.linphone_address_mime_type)
-            )
-            .withValue("data1", address) // value
-            .withValue("data2", AppUtils.getString(R.string.app_name)) // summary
-            .withValue("data3", detail) // detail
-            .build()
-        addChanges(insert)
-    }
-
     private fun addSipAddress(address: String) {
         val insert = ContentProviderOperation.newInsert(contactUri)
             .withValue(ContactsContract.Data.RAW_CONTACT_ID, rawId)
@@ -431,7 +402,7 @@ class NativeContactEditor(
             ContactsContract.Data.CONTENT_URI,
             arrayOf("data1"),
             "${ContactsContract.Data.RAW_CONTACT_ID} = ? AND ${ContactsContract.Data.MIMETYPE} = ? AND data3 = ?",
-            arrayOf(linphoneRawId, AppUtils.getString(R.string.linphone_address_mime_type), phoneNumber),
+            arrayOf(syncAccountRawId, AppUtils.getString(R.string.linphone_address_mime_type), phoneNumber),
             null
         )
         val count = cursor?.count ?: 0
@@ -444,7 +415,7 @@ class NativeContactEditor(
 
         if (count == 0) {
             Log.i("[Native Contact Editor] No existing presence information found for this phone number & SIP address, let's add it")
-            addLinphoneAddress(sipAddress, phoneNumber)
+            addPresenceLinphoneSipAddressForPhoneNumber(sipAddress, phoneNumber)
         } else {
             if (data1 != null && data1 == sipAddress) {
                 Log.d("[Native Contact Editor] There is already an entry for this phone number and SIP address, skipping")
@@ -453,6 +424,20 @@ class NativeContactEditor(
                 updatePresenceLinphoneSipAddressForPhoneNumber(sipAddress, phoneNumber)
             }
         }
+    }
+
+    private fun addPresenceLinphoneSipAddressForPhoneNumber(address: String, detail: String) {
+        val insert = ContentProviderOperation.newInsert(contactUri)
+            .withValue(ContactsContract.Data.RAW_CONTACT_ID, syncAccountRawId)
+            .withValue(
+                ContactsContract.Data.MIMETYPE,
+                AppUtils.getString(R.string.linphone_address_mime_type)
+            )
+            .withValue("data1", address) // value
+            .withValue("data2", AppUtils.getString(R.string.app_name)) // summary
+            .withValue("data3", detail) // detail
+            .build()
+        addChanges(insert)
     }
 
     private fun updatePresenceLinphoneSipAddressForPhoneNumber(
@@ -477,26 +462,6 @@ class NativeContactEditor(
             .withValue("data3", phoneNumber) // detail
             .build()
         addChanges(update)
-    }
-
-    private fun setPresenceSipAddress(sipAddress: String) {
-        val contentResolver = coreContext.context.contentResolver
-        val cursor = contentResolver.query(
-            ContactsContract.Data.CONTENT_URI,
-            arrayOf("data1"),
-            "${ContactsContract.Data.RAW_CONTACT_ID} = ? AND ${ContactsContract.Data.MIMETYPE} = ? AND data1 = ?",
-            arrayOf(rawId, CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE, sipAddress),
-            null
-        )
-        val count = cursor?.count ?: 0
-        cursor?.close()
-
-        if (count == 0) {
-            Log.i("[Native Contact Editor] SIP address not found, let's add it")
-            addSipAddress(sipAddress)
-        } else {
-            Log.d("[Native Contact Editor] There is already an entry for this SIP address, skipping")
-        }
     }
 
     private fun updatePicture() {
