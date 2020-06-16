@@ -150,6 +150,7 @@ class DialerFragment : Fragment() {
             coreContext.core.nativePreviewWindowId = binding.videoPreviewWindow
         }
         viewModel.updateShowVideoPreview()
+        viewModel.autoInitiateVideoCalls.value = coreContext.core.videoActivationPolicy.automaticallyInitiate
         uploadLogsInitiatedByUs = false
     }
 
