@@ -19,6 +19,7 @@
  */
 package org.linphone.activities.assistant.fragments
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -31,7 +32,9 @@ import org.linphone.R
 import org.linphone.activities.assistant.viewmodels.AccountLoginViewModel
 import org.linphone.activities.assistant.viewmodels.AccountLoginViewModelFactory
 import org.linphone.activities.assistant.viewmodels.SharedAssistantViewModel
+import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.databinding.AssistantAccountLoginFragmentBinding
+import org.linphone.utils.DialogUtils
 
 class AccountLoginFragment : AbstractPhoneFragment() {
     private lateinit var binding: AssistantAccountLoginFragmentBinding
@@ -91,6 +94,19 @@ class AccountLoginFragment : AbstractPhoneFragment() {
                 } else {
                     requireActivity().finish()
                 }
+            }
+        })
+
+        viewModel.invalidCredentialsEvent.observe(viewLifecycleOwner, Observer {
+            it.consume {
+                val dialogViewModel = DialogViewModel(getString(R.string.assistant_error_invalid_credentials))
+                val dialog: Dialog = DialogUtils.getDialog(requireContext(), dialogViewModel)
+
+                dialogViewModel.showDeleteButton({
+                    dialog.dismiss()
+                }, getString(R.string.dialog_ok))
+
+                dialog.show()
             }
         })
 

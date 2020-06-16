@@ -75,12 +75,8 @@ class AccountSettingsViewModel(val proxyConfig: ProxyConfig) : GenericSettingsVi
         ) {
             if (state == RegistrationState.Cleared && cfg == proxyConfigToDelete) {
                 Log.i("[Account Settings] Proxy config to remove registration is now cleared")
-                val authInfo = cfg.findAuthInfo()
-                core.removeProxyConfig(cfg)
-                core.removeAuthInfo(authInfo)
-
                 waitForUnregister.value = false
-                proxyConfigRemovedEvent.value = Event(true)
+                deleteProxyConfig(cfg)
             } else {
                 update()
             }
@@ -140,10 +136,19 @@ class AccountSettingsViewModel(val proxyConfig: ProxyConfig) : GenericSettingsVi
     }
     // isDefault mutable is above
 
+    private fun deleteProxyConfig(cfg: ProxyConfig) {
+        val authInfo = cfg.findAuthInfo()
+        core.removeProxyConfig(cfg)
+        core.removeAuthInfo(authInfo)
+        proxyConfigRemovedEvent.value = Event(true)
+    }
+
     val deleteListener = object : SettingListenerStub() {
         override fun onClicked() {
             proxyConfigToDelete = proxyConfig
-            waitForUnregister.value = true
+
+            val registered = proxyConfig.state == RegistrationState.Ok
+            waitForUnregister.value = registered
 
             if (core.defaultProxyConfig == proxyConfig) {
                 Log.i("[Account Settings] Proxy config  was default, let's look for a replacement")
@@ -159,6 +164,11 @@ class AccountSettingsViewModel(val proxyConfig: ProxyConfig) : GenericSettingsVi
             proxyConfig.edit()
             proxyConfig.enableRegister(false)
             proxyConfig.done()
+
+            if (!registered) {
+                Log.w("[Account Settings] Proxy config isn't registered, don't unregister before removing it")
+                deleteProxyConfig(proxyConfig)
+            }
         }
     }
 
