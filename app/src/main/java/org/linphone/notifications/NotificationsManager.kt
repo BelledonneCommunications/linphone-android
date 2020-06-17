@@ -42,6 +42,7 @@ import org.linphone.activities.call.CallActivity
 import org.linphone.activities.call.IncomingCallActivity
 import org.linphone.activities.call.OutgoingCallActivity
 import org.linphone.activities.main.MainActivity
+import org.linphone.activities.main.chat.bubble.ChatBubbleActivity
 import org.linphone.compatibility.Compatibility
 import org.linphone.contact.Contact
 import org.linphone.core.*
@@ -66,7 +67,8 @@ private class NotifiableMessage(
     val time: Long,
     val senderAvatar: Bitmap? = null,
     var filePath: Uri? = null,
-    var fileMime: String? = null
+    var fileMime: String? = null,
+    val isOutgoing: Boolean = false
 )
 
 class NotificationsManager(private val context: Context) {
@@ -542,7 +544,7 @@ class NotificationsManager(private val context: Context) {
                 text = content.name
             }
         }
-        val notifiableMessage = NotifiableMessage(text, contact, displayName, message.time, senderAvatar = roundPicture)
+        val notifiableMessage = NotifiableMessage(text, contact, displayName, message.time, senderAvatar = roundPicture, isOutgoing = message.isOutgoing)
         notifiable.messages.add(notifiableMessage)
 
         for (content in message.contents) {
@@ -595,7 +597,8 @@ class NotificationsManager(private val context: Context) {
             message.textContent,
             null,
             notifiable.myself ?: LinphoneUtils.getDisplayName(message.fromAddress),
-            System.currentTimeMillis()
+            System.currentTimeMillis(),
+            isOutgoing = true
         )
         notifiable.messages.add(reply)
 
@@ -613,15 +616,21 @@ class NotificationsManager(private val context: Context) {
         val style = NotificationCompat.MessagingStyle(me)
         val largeIcon: Bitmap? = notifiable.messages.last().senderAvatar
 
+        var lastPerson: Person? = null
         for (message in notifiable.messages) {
             val contact = message.contact
             val person = if (contact != null) {
                 contact.getPerson()
             } else {
                 val builder = Person.Builder().setName(message.sender)
-                val userIcon = if (message.senderAvatar != null) IconCompat.createWithBitmap(message.senderAvatar) else IconCompat.createWithResource(context, R.drawable.avatar)
+                val userIcon = if (message.senderAvatar != null) IconCompat.createWithAdaptiveBitmap(message.senderAvatar) else IconCompat.createWithResource(context, R.drawable.avatar)
                 if (userIcon != null) builder.setIcon(userIcon)
                 builder.build()
+            }
+
+            // We don't want to see our own avatar
+            if (!message.isOutgoing) {
+                lastPerson = person
             }
 
             val msg = NotificationCompat.MessagingStyle.Message(message.message, message.time, person)
@@ -633,6 +642,13 @@ class NotificationsManager(private val context: Context) {
             style.conversationTitle = notifiable.groupTitle
         }
         style.isGroupConversation = notifiable.isGroup
+
+        val target = Intent(context, ChatBubbleActivity::class.java)
+        val bubbleIntent = PendingIntent.getActivity(context, 0, target, 0 /* flags */)
+        val bubble = NotificationCompat.BubbleMetadata.Builder()
+            .setIntent(bubbleIntent)
+            .setIcon(lastPerson?.icon ?: IconCompat.createWithResource(context, R.drawable.avatar))
+            .build()
 
         return NotificationCompat.Builder(context, context.getString(R.string.notification_channel_chat_id))
             .setSmallIcon(R.drawable.topbar_chat_notification)
@@ -650,6 +666,7 @@ class NotificationsManager(private val context: Context) {
             .addAction(getReplyMessageAction(notifiable))
             .addAction(getMarkMessageAsReadAction(notifiable))
             .setShortcutId(shortcutId)
+            .setBubbleMetadata(bubble)
             .build()
     }
 

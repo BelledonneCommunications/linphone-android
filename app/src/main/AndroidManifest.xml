@@ -111,6 +111,12 @@
             android:launchMode="singleTop"
             android:noHistory="true" />
 
+        <activity
+            android:name=".activities.main.chat.bubble.ChatBubbleActivity"
+            android:allowEmbedded="true"
+            android:documentLaunchMode="always"
+            android:resizeableActivity="true" />
+
         <!-- Services -->
 
         <service

@@ -46,6 +46,8 @@ class ShortcutsHelper(val context: Context) {
         fun createShortcutsToContacts(context: Context) {
             val shortcuts = ArrayList<ShortcutInfo>()
             val shortcutManager = context.getSystemService(ShortcutManager::class.java)
+            shortcutManager ?: return
+
             if (shortcutManager.isRateLimitingActive) {
                 Log.e("[Shortcut Helper] Rate limiting is active, aborting")
                 return
@@ -125,6 +127,8 @@ class ShortcutsHelper(val context: Context) {
         fun createShortcutsToChatRooms(context: Context) {
             val shortcuts = ArrayList<ShortcutInfo>()
             val shortcutManager = context.getSystemService(ShortcutManager::class.java)
+            shortcutManager ?: return
+
             if (shortcutManager.isRateLimitingActive) {
                 Log.e("[Shortcut Helper] Rate limiting is active, aborting")
                 return
