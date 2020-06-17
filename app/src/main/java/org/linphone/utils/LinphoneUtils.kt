@@ -32,6 +32,8 @@ import org.linphone.core.tools.Log
  */
 class LinphoneUtils {
     companion object {
+        private const val RECORDING_DATE_PATTERN = "dd-MM-yyyy-HH-mm-ss"
+
         fun getDisplayName(address: Address): String {
             return address.displayName ?: address.username
         }
@@ -99,9 +101,13 @@ class LinphoneUtils {
 
         fun getRecordingFilePathForAddress(address: Address): String {
             val displayName = getDisplayName(address)
-            val dateFormat: DateFormat = SimpleDateFormat("dd-MM-yyyy-HH-mm-ss", Locale.getDefault())
+            val dateFormat: DateFormat = SimpleDateFormat(RECORDING_DATE_PATTERN, Locale.getDefault())
             val fileName = "${displayName}_${dateFormat.format(Date())}.mkv"
             return FileUtils.getFileStoragePath(fileName).absolutePath
+        }
+
+        fun getRecordingDateFromFileName(name: String): Date {
+            return SimpleDateFormat(RECORDING_DATE_PATTERN, Locale.getDefault()).parse(name)
         }
     }
 }
