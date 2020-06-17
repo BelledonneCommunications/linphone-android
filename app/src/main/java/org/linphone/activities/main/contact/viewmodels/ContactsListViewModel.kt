@@ -73,6 +73,38 @@ class ContactsListViewModel : ViewModel() {
         }
     }
 
+    fun deleteContact(contact: Contact?) {
+        contact ?: return
+
+        val select = ContactsContract.Data.CONTACT_ID + " = ?"
+        val ops = ArrayList<ContentProviderOperation>()
+
+        if (contact is NativeContact) {
+            val nativeContact: NativeContact = contact
+            Log.i("[Contacts] Adding Android contact id ${nativeContact.nativeId} to batch removal")
+            val args = arrayOf(nativeContact.nativeId)
+            ops.add(
+                ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI)
+                    .withSelection(select, args)
+                    .build()
+            )
+        }
+
+        if (contact.friend != null) {
+            Log.i("[Contacts] Removing friend")
+            contact.friend?.remove()
+        }
+
+        if (ops.isNotEmpty()) {
+            try {
+                Log.i("[Contacts] Removing ${ops.size} contacts")
+                coreContext.context.contentResolver.applyBatch(ContactsContract.AUTHORITY, ops)
+            } catch (e: Exception) {
+                Log.e("[Contacts] $e")
+            }
+        }
+    }
+
     fun deleteContacts(list: ArrayList<Contact>) {
         val select = ContactsContract.Data.CONTACT_ID + " = ?"
         val ops = ArrayList<ContentProviderOperation>()

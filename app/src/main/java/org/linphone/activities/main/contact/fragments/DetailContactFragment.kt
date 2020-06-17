@@ -131,7 +131,7 @@ class DetailContactFragment : Fragment() {
     }
 
     private fun confirmContactRemoval() {
-        val dialogViewModel = DialogViewModel(getString(R.string.contact_confirm_removal_dialog))
+        val dialogViewModel = DialogViewModel(getString(R.string.contact_delete_one_dialog))
         val dialog: Dialog = DialogUtils.getDialog(requireContext(), dialogViewModel)
 
         dialogViewModel.showCancelButton {

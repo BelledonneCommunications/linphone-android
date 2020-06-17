@@ -49,6 +49,7 @@ import org.linphone.databinding.ChatRoomMasterFragmentBinding
 import org.linphone.utils.*
 
 class MasterChatRoomsFragment : MasterFragment() {
+    override val dialogConfirmationMessageBeforeRemoval = R.plurals.chat_room_delete_dialog
     private lateinit var binding: ChatRoomMasterFragmentBinding
     private lateinit var listViewModel: ChatRoomsListViewModel
     private lateinit var adapter: ChatRoomsListAdapter
@@ -94,6 +95,7 @@ class MasterChatRoomsFragment : MasterFragment() {
         val layoutManager = LinearLayoutManager(activity)
         binding.chatList.layoutManager = layoutManager
 
+        // Swipe action
         val swipeConfiguration = RecyclerViewSwipeConfiguration()
         val white = ContextCompat.getColor(requireContext(), R.color.white_color)
 
@@ -102,7 +104,7 @@ class MasterChatRoomsFragment : MasterFragment() {
             override fun onLeftToRightSwipe(viewHolder: RecyclerView.ViewHolder) {}
 
             override fun onRightToLeftSwipe(viewHolder: RecyclerView.ViewHolder) {
-                val viewModel = DialogViewModel(getString(R.string.dialog_default_delete_message))
+                val viewModel = DialogViewModel(getString(R.string.chat_room_delete_one_dialog))
                 val dialog: Dialog = DialogUtils.getDialog(requireContext(), viewModel)
 
                 viewModel.showCancelButton {
