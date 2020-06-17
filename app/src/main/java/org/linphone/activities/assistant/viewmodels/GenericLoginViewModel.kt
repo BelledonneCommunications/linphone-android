@@ -75,10 +75,6 @@ class GenericLoginViewModel(private val accountCreator: AccountCreator) : ViewMo
                     core.removeListener(this)
                 } else if (state == RegistrationState.Failed) {
                     invalidCredentialsEvent.value = Event(true)
-                    val authInfo = cfg.findAuthInfo()
-                    if (authInfo != null) core.removeAuthInfo(authInfo)
-                    core.removeProxyConfig(cfg)
-                    proxyConfigToCheck = null
                     core.removeListener(this)
                 }
             }
@@ -102,6 +98,19 @@ class GenericLoginViewModel(private val accountCreator: AccountCreator) : ViewMo
 
     fun setTransport(transportType: TransportType) {
         transport.value = transportType
+    }
+
+    fun removeInvalidProxyConfig() {
+        val cfg = proxyConfigToCheck
+        cfg ?: return
+        val authInfo = cfg.findAuthInfo()
+        if (authInfo != null) coreContext.core.removeAuthInfo(authInfo)
+        coreContext.core.removeProxyConfig(cfg)
+        proxyConfigToCheck = null
+    }
+
+    fun continueEvenIfInvalidCredentials() {
+        leaveAssistantEvent.value = Event(true)
     }
 
     fun createProxyConfig() {
