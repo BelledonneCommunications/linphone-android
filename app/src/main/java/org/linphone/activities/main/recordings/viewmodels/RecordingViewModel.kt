@@ -26,10 +26,12 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.core.AudioDevice
 import org.linphone.core.Player
 import org.linphone.core.PlayerListener
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
+import org.linphone.utils.LinphoneUtils
 
 class RecordingViewModel(val path: String) : ViewModel(), Comparable<RecordingViewModel> {
     companion object {
@@ -64,13 +66,26 @@ class RecordingViewModel(val path: String) : ViewModel(), Comparable<RecordingVi
 
     init {
         val m = RECORD_PATTERN.matcher(path)
-        if (m.matches()) {
+        if (m.matches() && m.groupCount() >= 2) {
             name = m.group(1)
-            date = SimpleDateFormat("dd-MM-yyyy-HH-mm-ss", Locale.getDefault()).parse(m.group(2))
+            date = LinphoneUtils.getRecordingDateFromFileName(m.group(2))
         }
         isPlaying.value = false
 
-        player = coreContext.core.createLocalPlayer(null, null, null)
+        // Use speaker sound card to play recordings, otherwise use earpiece
+        // If none are available, default one will be used
+        var speakerCard: String? = null
+        var earpieceCard: String? = null
+        for (device in coreContext.core.audioDevices) {
+            if (device.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
+                if (device.type == AudioDevice.Type.Speaker) {
+                    speakerCard = device.id
+                } else if (device.type == AudioDevice.Type.Earpiece) {
+                    earpieceCard = device.id
+                }
+            }
+        }
+        player = coreContext.core.createLocalPlayer(speakerCard ?: earpieceCard, null, null)
         player.addListener(listener)
     }
 
