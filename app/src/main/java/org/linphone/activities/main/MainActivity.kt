@@ -87,6 +87,12 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             }
         })
 
+        coreContext.callErrorMessageResourceId.observe(this, Observer {
+            it.consume { messageResourceId ->
+                showSnackBar(messageResourceId)
+            }
+        })
+
         binding.setGoBackToCallClickListener {
             val intent = Intent(this, CallActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
