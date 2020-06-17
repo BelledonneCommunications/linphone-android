@@ -20,6 +20,8 @@
 package org.linphone.activities.assistant.fragments
 
 import android.app.Dialog
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -74,6 +76,13 @@ class AccountLoginFragment : AbstractPhoneFragment() {
             CountryPickerFragment(viewModel).show(childFragmentManager, "CountryPicker")
         }
 
+        binding.setForgotPasswordClickListener {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            intent.data = Uri.parse(getString(R.string.assistant_forgotten_password_link))
+            startActivity(intent)
+        }
+
         viewModel.goToSmsValidationEvent.observe(viewLifecycleOwner, Observer {
             it.consume {
                 if (findNavController().currentDestination?.id == R.id.accountLoginFragment) {
@@ -102,9 +111,15 @@ class AccountLoginFragment : AbstractPhoneFragment() {
                 val dialogViewModel = DialogViewModel(getString(R.string.assistant_error_invalid_credentials))
                 val dialog: Dialog = DialogUtils.getDialog(requireContext(), dialogViewModel)
 
-                dialogViewModel.showDeleteButton({
+                dialogViewModel.showCancelButton {
+                    viewModel.removeInvalidProxyConfig()
                     dialog.dismiss()
-                }, getString(R.string.dialog_ok))
+                }
+
+                dialogViewModel.showDeleteButton({
+                    viewModel.continueEvenIfInvalidCredentials()
+                    dialog.dismiss()
+                }, getString(R.string.assistant_continue_even_if_credentials_invalid))
 
                 dialog.show()
             }

@@ -12,6 +12,9 @@
             name="infoClickListener"
             type="android.view.View.OnClickListener"/>
         <variable
+            name="forgotPasswordClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
             name="viewModel"
             type="org.linphone.activities.assistant.viewmodels.AccountLoginViewModel" />
     </data>
@@ -218,6 +221,17 @@
                             android:maxLines="1"
                             android:hint="@string/password"
                             android:textColor="@color/black_color" />
+
+                        <TextView
+                            android:onClick="@{forgotPasswordClickListener}"
+                            android:textColor="?attr/accentColor"
+                            android:textSize="8sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:gravity="center"
+                            android:paddingTop="5dp"
+                            android:text="@string/assistant_login_forgotten_password" />
 
                     </LinearLayout>
 
