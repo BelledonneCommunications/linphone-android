@@ -19,6 +19,7 @@
  */
 package org.linphone.activities.main.contact.fragments
 
+import android.app.Dialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -34,9 +35,11 @@ import org.linphone.R
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.contact.viewmodels.ContactViewModel
 import org.linphone.activities.main.contact.viewmodels.ContactViewModelFactory
+import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactDetailFragmentBinding
+import org.linphone.utils.DialogUtils
 
 class DetailContactFragment : Fragment() {
     private lateinit var binding: ContactDetailFragmentBinding
@@ -117,8 +120,7 @@ class DetailContactFragment : Fragment() {
         }
 
         binding.setDeleteClickListener {
-            viewModel.deleteContact()
-            findNavController().navigateUp()
+            confirmContactRemoval()
         }
 
         viewModel.onErrorEvent.observe(viewLifecycleOwner, Observer {
@@ -126,6 +128,23 @@ class DetailContactFragment : Fragment() {
                 (activity as MainActivity).showSnackBar(messageResourceId)
             }
         })
+    }
+
+    private fun confirmContactRemoval() {
+        val dialogViewModel = DialogViewModel(getString(R.string.contact_confirm_removal_dialog))
+        val dialog: Dialog = DialogUtils.getDialog(requireContext(), dialogViewModel)
+
+        dialogViewModel.showCancelButton {
+            dialog.dismiss()
+        }
+
+        dialogViewModel.showDeleteButton({
+            viewModel.deleteContact()
+            dialog.dismiss()
+            findNavController().navigateUp()
+        }, getString(R.string.dialog_delete))
+
+        dialog.show()
     }
 
     private fun sendSms(number: String) {

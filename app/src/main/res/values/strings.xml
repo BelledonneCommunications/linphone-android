@@ -94,6 +94,7 @@
     <string name="contact_organization">Organization</string>
     <string name="contact_choose_existing_or_new_to_add_number">Select a contact or create a new one</string>
     <string name="contact_editor_write_permission_denied">Write Contacts permission denied, can\'t edit contact</string>
+    <string name="contact_confirm_removal_dialog">Do you want to delete this contact?\nIt will also be removed from your device addressbook</string>
 
     <!-- Dialer -->
     <string name="dialer_address_bar_hint">Enter a number or an address</string>
