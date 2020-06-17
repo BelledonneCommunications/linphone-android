@@ -80,9 +80,15 @@ class GenericAccountLoginFragment : Fragment() {
                 val dialogViewModel = DialogViewModel(getString(R.string.assistant_error_invalid_credentials))
                 val dialog: Dialog = DialogUtils.getDialog(requireContext(), dialogViewModel)
 
-                dialogViewModel.showDeleteButton({
+                dialogViewModel.showCancelButton {
+                    viewModel.removeInvalidProxyConfig()
                     dialog.dismiss()
-                }, getString(R.string.dialog_ok))
+                }
+
+                dialogViewModel.showDeleteButton({
+                    viewModel.continueEvenIfInvalidCredentials()
+                    dialog.dismiss()
+                }, getString(R.string.assistant_continue_even_if_credentials_invalid))
 
                 dialog.show()
             }
