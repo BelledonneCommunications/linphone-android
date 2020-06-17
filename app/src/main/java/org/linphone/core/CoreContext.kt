@@ -29,9 +29,11 @@ import android.os.Vibrator
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
 import android.view.*
+import androidx.lifecycle.MutableLiveData
 import java.io.File
 import kotlin.math.abs
 import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.R
 import org.linphone.activities.call.CallActivity
 import org.linphone.activities.call.IncomingCallActivity
 import org.linphone.activities.call.OutgoingCallActivity
@@ -42,6 +44,7 @@ import org.linphone.core.tools.Log
 import org.linphone.mediastream.Version
 import org.linphone.notifications.NotificationsManager
 import org.linphone.utils.AppUtils
+import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
 class CoreContext(val context: Context, coreConfig: Config) {
@@ -64,6 +67,10 @@ class CoreContext(val context: Context, coreConfig: Config) {
     }
     val notificationsManager: NotificationsManager by lazy {
         NotificationsManager(context)
+    }
+
+    val callErrorMessageResourceId: MutableLiveData<Event<Int>> by lazy {
+        MutableLiveData<Event<Int>>()
     }
 
     private var gsmCallActive = false
@@ -170,6 +177,22 @@ class CoreContext(val context: Context, coreConfig: Config) {
                     }
 
                     removeCallOverlay()
+                }
+
+                if (state == Call.State.Error) {
+                    Log.w("[Context] Call error reason is ${call.errorInfo.reason}")
+                    val id = when (call.errorInfo.reason) {
+                        Reason.Busy -> R.string.call_error_user_busy
+                        Reason.IOError -> R.string.call_error_io_error
+                        Reason.NotAcceptable -> R.string.call_error_incompatible_media_params
+                        Reason.NotFound -> R.string.call_error_user_not_found
+                        else -> R.string.call_error_unknown
+                    }
+                    callErrorMessageResourceId.value = Event(id)
+                } else if (state == Call.State.End && call.errorInfo.reason == Reason.Declined) {
+                    Log.i("[Context] Call has been declined")
+                    val id = R.string.call_error_declined
+                    callErrorMessageResourceId.value = Event(id)
                 }
             }
         }
@@ -317,6 +340,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
         val address: Address? = core.interpretUrl(stringAddress)
         if (address == null) {
             Log.e("[Context] Failed to parse $stringAddress, abort outgoing call")
+            callErrorMessageResourceId.value = Event(R.string.call_error_network_unreachable)
             return
         }
 
@@ -326,6 +350,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
     fun startCall(address: Address, forceZRTP: Boolean = false) {
         if (!core.isNetworkReachable) {
             Log.e("[Context] Network unreachable, abort outgoing call")
+            callErrorMessageResourceId.value = Event(R.string.call_error_network_unreachable)
             return
         }
 
@@ -388,11 +413,11 @@ class CoreContext(val context: Context, coreConfig: Config) {
         params.x = overlayX.toInt()
         params.y = overlayY.toInt()
         params.gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
-        val overlay = LayoutInflater.from(context).inflate(org.linphone.R.layout.call_overlay, null)
+        val overlay = LayoutInflater.from(context).inflate(R.layout.call_overlay, null)
 
         var initX = overlayX
         var initY = overlayY
-        overlay.setOnTouchListener { _, event ->
+        overlay.setOnTouchListener { view, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     initX = params.x - event.rawX
@@ -408,8 +433,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
                 }
                 MotionEvent.ACTION_UP -> {
                     if (abs(overlayX - params.x) < 5 && abs(overlayY - params.y) < 5) {
-                        Log.i("[Core Context] Overlay clicked, go back to call view")
-                        onCallStarted()
+                        view.performClick()
                     }
                     overlayX = params.x.toFloat()
                     overlayY = params.y.toFloat()
@@ -417,6 +441,10 @@ class CoreContext(val context: Context, coreConfig: Config) {
                 else -> false
             }
             true
+        }
+        overlay.setOnClickListener {
+            Log.i("[Context] Overlay clicked, go back to call view")
+            onCallStarted()
         }
 
         callOverlay = overlay

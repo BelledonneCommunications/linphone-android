@@ -52,11 +52,11 @@ class SharedMainViewModel : ViewModel() {
 
     val selectedContact = MutableLiveData<Contact>()
 
-    /* Call */
-
-    var pendingCallTransfer: Boolean = false
-
     /* Accounts */
 
     val proxyConfigRemoved = MutableLiveData<Boolean>()
+
+    /* Call */
+
+    var pendingCallTransfer: Boolean = false
 }
