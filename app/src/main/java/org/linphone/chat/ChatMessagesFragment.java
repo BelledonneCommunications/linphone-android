@@ -1124,6 +1124,10 @@ public class ChatMessagesFragment extends Fragment
         if (!mChatRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt())) {
             builder.removeItem(R.id.chat_room_participants_devices);
             builder.removeItem(R.id.chat_room_ephemeral_messages);
+        } else {
+            if (!LinphonePreferences.instance().isEphemeralMessagesEnabled()) {
+                builder.removeItem(R.id.chat_room_ephemeral_messages);
+            }
         }
 
         builder.setCallback(
