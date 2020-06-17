@@ -70,6 +70,23 @@ class CallLogsListViewModel : ViewModel() {
         super.onCleared()
     }
 
+    fun deleteCallLog(callLog: CallLog?) {
+        val list = arrayListOf<CallLog>()
+        list.addAll(callLogs.value.orEmpty())
+
+        val missedList = arrayListOf<CallLog>()
+        missedList.addAll(missedCallLogs.value.orEmpty())
+
+        if (callLog != null) {
+            coreContext.core.removeCallLog(callLog)
+            list.remove(callLog)
+            missedList.remove(callLog)
+        }
+
+        callLogs.value = list
+        missedCallLogs.value = missedList
+    }
+
     fun deleteCallLogs(listToDelete: ArrayList<CallLog>) {
         val list = arrayListOf<CallLog>()
         list.addAll(callLogs.value.orEmpty())
