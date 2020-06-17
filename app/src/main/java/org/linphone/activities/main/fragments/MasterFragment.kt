@@ -27,6 +27,7 @@ import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
+import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
 
 /**
@@ -35,6 +36,7 @@ import org.linphone.utils.DialogUtils
  */
 abstract class MasterFragment : Fragment() {
     protected lateinit var listSelectionViewModel: ListTopBarViewModel
+    protected open val dialogConfirmationMessageBeforeRemoval: Int = R.plurals.dialog_default_delete
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -60,7 +62,8 @@ abstract class MasterFragment : Fragment() {
 
         listSelectionViewModel.deleteSelectionEvent.observe(viewLifecycleOwner, Observer {
             it.consume {
-                val viewModel = DialogViewModel(getString(R.string.dialog_default_delete_message))
+                val confirmationDialog = AppUtils.getStringWithPlural(dialogConfirmationMessageBeforeRemoval, listSelectionViewModel.selectedItems.value.orEmpty().size)
+                val viewModel = DialogViewModel(confirmationDialog)
                 val dialog: Dialog = DialogUtils.getDialog(requireContext(), viewModel)
 
                 viewModel.showCancelButton {
