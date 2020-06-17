@@ -139,9 +139,9 @@ repositories {
         url file(LinphoneSdkBuildDir + '/maven_repository/')
     }
 
-    /*maven {
+    maven {
         url "https://linphone.org/maven_repository"
-    }*/
+    }
 }
 
 dependencies {

@@ -189,6 +189,13 @@
     <string name="call_notification_outgoing">Outgoing call</string>
     <string name="call_notification_active">Call running</string>
     <string name="call_conference_title">Conference</string>
+    <string name="call_error_declined">Call has been declined</string>
+    <string name="call_error_user_busy">User is busy</string>
+    <string name="call_error_user_not_found">User hasn\'t been found</string>
+    <string name="call_error_incompatible_media_params">Incompatible media parameters</string>
+    <string name="call_error_network_unreachable">Network is unreachable</string>
+    <string name="call_error_io_error">Network error</string>
+    <string name="call_error_unknown">Unknown error</string>
 
     <!-- Call stats -->
     <string name="call_stats_audio">Audio</string>
