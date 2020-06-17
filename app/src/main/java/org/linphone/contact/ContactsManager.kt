@@ -25,6 +25,7 @@ import android.content.ContentResolver
 import android.content.Context
 import android.database.ContentObserver
 import android.net.Uri
+import android.os.AsyncTask
 import android.os.AsyncTask.THREAD_POOL_EXECUTOR
 import android.provider.ContactsContract
 import android.util.Patterns
@@ -290,13 +291,16 @@ class ContactsManager(private val context: Context) {
 
         val contact: Contact = friend.userData as Contact
         Log.d("[Contacts Manager] Received presence information for contact $contact")
-        for (listener in contactsUpdatedListeners) {
-            listener.onContactUpdated(contact)
-        }
-
         if (corePreferences.storePresenceInNativeContact && PermissionHelper.get().hasWriteContactsPermission()) {
             if (contact is NativeContact) {
                 storePresenceInNativeContact(contact)
+            }
+        }
+        if (loadContactsTask?.status == AsyncTask.Status.RUNNING) {
+            Log.w("[Contacts Manager] Async contacts loader running, skip onContactUpdated listener notify")
+        } else {
+            for (listener in contactsUpdatedListeners) {
+                listener.onContactUpdated(contact)
             }
         }
 
@@ -317,6 +321,13 @@ class ContactsManager(private val context: Context) {
                     val contact: Contact = friend.userData as Contact
                     if (contact is NativeContact) {
                         storePresenceInNativeContact(contact)
+                        if (loadContactsTask?.status == AsyncTask.Status.RUNNING) {
+                            Log.w("[Contacts Manager] Async contacts loader running, skip onContactUpdated listener notify")
+                        } else {
+                            for (listener in contactsUpdatedListeners) {
+                                listener.onContactUpdated(contact)
+                            }
+                        }
                     }
                 }
             }
@@ -337,9 +348,6 @@ class ContactsManager(private val context: Context) {
                         }
                     }
                     deferred.await()
-                    for (listener in contactsUpdatedListeners) {
-                        listener.onContactUpdated(contact)
-                    }
                 }
             }
         }
