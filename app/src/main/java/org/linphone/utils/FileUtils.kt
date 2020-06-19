@@ -48,7 +48,14 @@ class FileUtils {
         }
 
         fun getExtensionFromFileName(fileName: String): String {
-            return MimeTypeMap.getFileExtensionFromUrl(fileName)
+            var extension = MimeTypeMap.getFileExtensionFromUrl(fileName)
+            if (extension == null || extension.isEmpty()) {
+                val i = fileName.lastIndexOf('.')
+                if (i > 0) {
+                    extension = fileName.substring(i + 1)
+                }
+            }
+            return extension
         }
 
         fun isExtensionImage(path: String): Boolean {
