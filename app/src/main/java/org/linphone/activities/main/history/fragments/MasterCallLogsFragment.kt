@@ -38,10 +38,10 @@ import org.linphone.R
 import org.linphone.activities.main.fragments.MasterFragment
 import org.linphone.activities.main.history.adapters.CallLogsListAdapter
 import org.linphone.activities.main.history.viewmodels.CallLogsListViewModel
+import org.linphone.activities.main.history.viewmodels.GroupedCallLogViewModel
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.main.viewmodels.TabsViewModel
-import org.linphone.core.CallLog
 import org.linphone.core.tools.Log
 import org.linphone.databinding.HistoryMasterFragmentBinding
 import org.linphone.utils.*
@@ -109,7 +109,7 @@ class MasterCallLogsFragment : MasterFragment() {
                 }
 
                 viewModel.showDeleteButton({
-                    listViewModel.deleteCallLog(listViewModel.callLogs.value?.get(viewHolder.adapterPosition))
+                    listViewModel.deleteCallLogGroup(adapter.getItemAt(viewHolder.adapterPosition))
                     dialog.dismiss()
                 }, getString(R.string.dialog_delete))
 
@@ -156,7 +156,7 @@ class MasterCallLogsFragment : MasterFragment() {
 
         adapter.selectedCallLogEvent.observe(viewLifecycleOwner, Observer {
             it.consume { callLog ->
-                sharedViewModel.selectedCallLog.value = callLog
+                sharedViewModel.selectedCallLog.value = callLog.lastCallLog
                 if (!resources.getBoolean(R.bool.isTablet)) {
                     if (findNavController().currentDestination?.id == R.id.masterCallLogsFragment) {
                         findNavController().navigate(R.id.action_masterCallLogsFragment_to_detailCallLogFragment)
@@ -212,12 +212,12 @@ class MasterCallLogsFragment : MasterFragment() {
     }
 
     override fun deleteItems(indexesOfItemToDelete: ArrayList<Int>) {
-        val list = ArrayList<CallLog>()
+        val list = ArrayList<GroupedCallLogViewModel>()
         for (index in indexesOfItemToDelete) {
-            val callLog = adapter.getItemAt(index)
-            list.add(callLog)
+            val callLogGroup = adapter.getItemAt(index)
+            list.add(callLogGroup)
         }
-        listViewModel.deleteCallLogs(list)
+        listViewModel.deleteCallLogGroups(list)
     }
 
     private fun scrollToTop() {

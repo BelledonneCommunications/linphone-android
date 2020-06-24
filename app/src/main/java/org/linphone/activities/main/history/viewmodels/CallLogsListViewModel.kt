@@ -26,10 +26,11 @@ import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
+import org.linphone.utils.TimestampUtils
 
 class CallLogsListViewModel : ViewModel() {
-    val callLogs = MutableLiveData<ArrayList<CallLog>>()
-    val missedCallLogs = MutableLiveData<ArrayList<CallLog>>()
+    val callLogs = MutableLiveData<ArrayList<GroupedCallLogViewModel>>()
+    val missedCallLogs = MutableLiveData<ArrayList<GroupedCallLogViewModel>>()
 
     val missedCallLogsSelected = MutableLiveData<Boolean>()
 
@@ -70,47 +71,71 @@ class CallLogsListViewModel : ViewModel() {
         super.onCleared()
     }
 
-    fun deleteCallLog(callLog: CallLog?) {
-        val list = arrayListOf<CallLog>()
-        list.addAll(callLogs.value.orEmpty())
-
-        val missedList = arrayListOf<CallLog>()
-        missedList.addAll(missedCallLogs.value.orEmpty())
-
+    fun deleteCallLogGroup(callLog: GroupedCallLogViewModel?) {
         if (callLog != null) {
-            coreContext.core.removeCallLog(callLog)
-            list.remove(callLog)
-            missedList.remove(callLog)
+            for (log in callLog.callLogs) {
+                coreContext.core.removeCallLog(log)
+            }
         }
 
-        callLogs.value = list
-        missedCallLogs.value = missedList
+        updateCallLogs()
     }
 
-    fun deleteCallLogs(listToDelete: ArrayList<CallLog>) {
-        val list = arrayListOf<CallLog>()
-        list.addAll(callLogs.value.orEmpty())
-
-        val missedList = arrayListOf<CallLog>()
-        missedList.addAll(missedCallLogs.value.orEmpty())
-
+    fun deleteCallLogGroups(listToDelete: ArrayList<GroupedCallLogViewModel>) {
         for (callLog in listToDelete) {
-            coreContext.core.removeCallLog(callLog)
-            list.remove(callLog)
-            missedList.remove(callLog)
+            for (log in callLog.callLogs) {
+                coreContext.core.removeCallLog(log)
+            }
         }
 
-        callLogs.value = list
-        missedCallLogs.value = missedList
+        updateCallLogs()
     }
 
     private fun updateCallLogs() {
-        val list = arrayListOf<CallLog>()
-        val missedList = arrayListOf<CallLog>()
+        val list = arrayListOf<GroupedCallLogViewModel>()
+        val missedList = arrayListOf<GroupedCallLogViewModel>()
 
+        var previousCallLogGroup: GroupedCallLogViewModel? = null
+        var previousMissedCallLogGroup: GroupedCallLogViewModel? = null
         for (callLog in coreContext.core.callLogs) {
-            list.add(callLog)
-            if (callLog.status == Call.Status.Missed) missedList.add(callLog)
+            if (previousCallLogGroup == null) {
+                previousCallLogGroup = GroupedCallLogViewModel(callLog)
+            } else if (previousCallLogGroup.lastCallLog.localAddress.weakEqual(callLog.localAddress) && previousCallLogGroup.lastCallLog.remoteAddress.weakEqual(callLog.remoteAddress)) {
+                if (TimestampUtils.isSameDay(previousCallLogGroup.lastCallLog.startDate, callLog.startDate)) {
+                    previousCallLogGroup.callLogs.add(callLog)
+                    previousCallLogGroup.lastCallLog = callLog
+                } else {
+                    list.add(previousCallLogGroup)
+                    previousCallLogGroup = GroupedCallLogViewModel(callLog)
+                }
+            } else {
+                list.add(previousCallLogGroup)
+                previousCallLogGroup = GroupedCallLogViewModel(callLog)
+            }
+
+            if (callLog.status == Call.Status.Missed) {
+                if (previousMissedCallLogGroup == null) {
+                    previousMissedCallLogGroup = GroupedCallLogViewModel(callLog)
+                } else if (previousMissedCallLogGroup.lastCallLog.localAddress.weakEqual(callLog.localAddress) && previousMissedCallLogGroup.lastCallLog.remoteAddress.weakEqual(callLog.remoteAddress)) {
+                    if (TimestampUtils.isSameDay(previousMissedCallLogGroup.lastCallLog.startDate, callLog.startDate)) {
+                        previousMissedCallLogGroup.callLogs.add(callLog)
+                        previousMissedCallLogGroup.lastCallLog = callLog
+                    } else {
+                        missedList.add(previousMissedCallLogGroup)
+                        previousMissedCallLogGroup = GroupedCallLogViewModel(callLog)
+                    }
+                } else {
+                    missedList.add(previousMissedCallLogGroup)
+                    previousMissedCallLogGroup = GroupedCallLogViewModel(callLog)
+                }
+            }
+        }
+
+        if (previousCallLogGroup != null && !list.contains(previousCallLogGroup)) {
+            list.add(previousCallLogGroup)
+        }
+        if (previousMissedCallLogGroup != null && !missedList.contains(previousMissedCallLogGroup)) {
+            missedList.add(previousMissedCallLogGroup)
         }
 
         callLogs.value = list
