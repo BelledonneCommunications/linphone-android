@@ -10,7 +10,7 @@ static def firebaseEnabled() {
 }
 
 task getGitVersion() {
-    def gitVersion = "4.3.0"
+    def gitVersion = "4.4.0"
     def gitVersionStream = new ByteArrayOutputStream()
     def gitCommitsCount = new ByteArrayOutputStream()
     def gitCommitHash = new ByteArrayOutputStream()
@@ -169,7 +169,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.google.android:flexbox:1.1.0'
     implementation 'com.github.bumptech.glide:glide:4.9.0'
-    implementation "org.linphone:linphone-sdk-android:4.4+"
+    implementation "org.linphone:linphone-sdk-android:4.5+"
 }
 if (firebaseEnabled()) {
     apply plugin: 'com.google.gms.google-services'
