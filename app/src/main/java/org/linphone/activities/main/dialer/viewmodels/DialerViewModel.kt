@@ -26,6 +26,7 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.activities.main.dialer.NumpadDigitListener
 import org.linphone.core.*
 import org.linphone.core.tools.Log
+import org.linphone.utils.Event
 import org.linphone.utils.LogsUploadViewModel
 
 class DialerViewModel : LogsUploadViewModel() {
@@ -40,6 +41,10 @@ class DialerViewModel : LogsUploadViewModel() {
     val showSwitchCamera = MutableLiveData<Boolean>()
 
     val autoInitiateVideoCalls = MutableLiveData<Boolean>()
+
+    val updateAvailableEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
 
     private var addressWaitingNetworkToBeCalled: String? = null
     private var timeAtWitchWeTriedToCall: Long = 0
@@ -92,6 +97,20 @@ class DialerViewModel : LogsUploadViewModel() {
 
                 addressWaitingNetworkToBeCalled = null
                 timeAtWitchWeTriedToCall = 0
+            }
+        }
+
+        override fun onVersionUpdateCheckResultReceived(
+            core: Core,
+            result: VersionUpdateCheckResult,
+            version: String?,
+            url: String?
+        ) {
+            if (result == VersionUpdateCheckResult.NewVersionAvailable) {
+                Log.i("[Dialer] Update available, version [$version], url [$url]")
+                if (url != null && url.isNotEmpty()) {
+                    updateAvailableEvent.value = Event(url)
+                }
             }
         }
     }

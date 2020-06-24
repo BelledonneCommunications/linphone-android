@@ -20,9 +20,11 @@
 package org.linphone.activities.main.dialer.fragments
 
 import android.app.AlertDialog
+import android.app.Dialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -32,15 +34,18 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import org.linphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.dialer.viewmodels.DialerViewModel
+import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.tools.Log
 import org.linphone.databinding.DialerFragmentBinding
 import org.linphone.utils.AppUtils
+import org.linphone.utils.DialogUtils
 
 class DialerFragment : Fragment() {
     private lateinit var binding: DialerFragmentBinding
@@ -139,8 +144,16 @@ class DialerFragment : Fragment() {
             }
         })
 
+        viewModel.updateAvailableEvent.observe(viewLifecycleOwner, Observer {
+            it.consume { url ->
+                displayNewVersionAvailableDialog(url)
+            }
+        })
+
         Log.i("[Dialer] Pending call transfer mode = ${sharedViewModel.pendingCallTransfer}")
         viewModel.transferVisibility.value = sharedViewModel.pendingCallTransfer
+
+        checkForUpdate()
     }
 
     override fun onResume() {
@@ -175,5 +188,37 @@ class DialerFragment : Fragment() {
             }
         }
         alertDialog.show()
+    }
+
+    private fun checkForUpdate() {
+        val url: String? = corePreferences.checkIfUpdateAvailableUrl
+        if (url != null && url.isNotEmpty()) {
+            val lastTimestamp: Int = corePreferences.lastUpdateAvailableCheckTimestamp
+            val currentTimeStamp = System.currentTimeMillis().toInt()
+            val interval: Int = corePreferences.checkUpdateAvailableInterval
+            if (lastTimestamp == 0 || currentTimeStamp - lastTimestamp >= interval) {
+                val currentVersion = BuildConfig.VERSION_NAME
+                Log.i("[Dialer] Checking for update using url [$url] and current version [$currentVersion]")
+                coreContext.core.checkForUpdate(currentVersion)
+                corePreferences.lastUpdateAvailableCheckTimestamp = currentTimeStamp
+            }
+        }
+    }
+
+    private fun displayNewVersionAvailableDialog(url: String) {
+        val viewModel = DialogViewModel(getString(R.string.dialog_update_available))
+        val dialog: Dialog = DialogUtils.getDialog(requireContext(), viewModel)
+
+        viewModel.showCancelButton {
+            dialog.dismiss()
+        }
+
+        viewModel.showOkButton({
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            startActivity(browserIntent)
+            dialog.dismiss()
+        }, getString(R.string.dialog_ok))
+
+        dialog.show()
     }
 }
