@@ -113,7 +113,7 @@ class MasterChatRoomsFragment : MasterFragment() {
                 }
 
                 viewModel.showDeleteButton({
-                    listViewModel.deleteChatRoom(listViewModel.chatRooms.value?.get(viewHolder.adapterPosition))
+                    listViewModel.deleteChatRoom(adapter.getItemAt(viewHolder.adapterPosition))
                     dialog.dismiss()
                 }, getString(R.string.dialog_delete))
 
