@@ -29,16 +29,16 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DiffUtil
 import org.linphone.R
 import org.linphone.activities.main.history.viewmodels.CallLogViewModel
+import org.linphone.activities.main.history.viewmodels.GroupedCallLogViewModel
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
 import org.linphone.core.Address
-import org.linphone.core.CallLog
 import org.linphone.databinding.GenericListHeaderBinding
 import org.linphone.databinding.HistoryListCellBinding
 import org.linphone.utils.*
 
-class CallLogsListAdapter(val selectionViewModel: ListTopBarViewModel) : LifecycleListAdapter<CallLog, CallLogsListAdapter.ViewHolder>(CallLogDiffCallback()), HeaderAdapter {
-    val selectedCallLogEvent: MutableLiveData<Event<CallLog>> by lazy {
-        MutableLiveData<Event<CallLog>>()
+class CallLogsListAdapter(val selectionViewModel: ListTopBarViewModel) : LifecycleListAdapter<GroupedCallLogViewModel, CallLogsListAdapter.ViewHolder>(CallLogDiffCallback()), HeaderAdapter {
+    val selectedCallLogEvent: MutableLiveData<Event<GroupedCallLogViewModel>> by lazy {
+        MutableLiveData<Event<GroupedCallLogViewModel>>()
     }
 
     val startCallToEvent: MutableLiveData<Event<Address>> by lazy {
@@ -62,9 +62,9 @@ class CallLogsListAdapter(val selectionViewModel: ListTopBarViewModel) : Lifecyc
     inner class ViewHolder(
         private val binding: HistoryListCellBinding
     ) : LifecycleViewHolder(binding) {
-        fun bind(callLog: CallLog) {
+        fun bind(callLogGroup: GroupedCallLogViewModel) {
             with(binding) {
-                val callLogViewModel = CallLogViewModel(callLog)
+                val callLogViewModel = CallLogViewModel(callLogGroup.lastCallLog)
                 viewModel = callLogViewModel
 
                 // This is for item selection through ListTopBarFragment
@@ -77,14 +77,16 @@ class CallLogsListAdapter(val selectionViewModel: ListTopBarViewModel) : Lifecyc
                     if (selectionViewModel.isEditionEnabled.value == true) {
                         selectionViewModel.onToggleSelect(adapterPosition)
                     } else {
-                        startCallToEvent.value = Event(callLog.remoteAddress)
+                        startCallToEvent.value = Event(callLogGroup.lastCallLog.remoteAddress)
                     }
                 }
 
                 // This listener is disabled when in edition mode
                 setDetailsClickListener {
-                    selectedCallLogEvent.value = Event(callLog)
+                    selectedCallLogEvent.value = Event(callLogGroup)
                 }
+
+                groupCount = callLogGroup.callLogs.size
 
                 executePendingBindings()
             }
@@ -93,18 +95,18 @@ class CallLogsListAdapter(val selectionViewModel: ListTopBarViewModel) : Lifecyc
 
     override fun displayHeaderForPosition(position: Int): Boolean {
         if (position >= itemCount) return false
-        val callLog = getItem(position)
-        val date = callLog.startDate
+        val callLogGroup = getItem(position)
+        val date = callLogGroup.lastCallLog.startDate
         val previousPosition = position - 1
         return if (previousPosition >= 0) {
-            val previousItemDate = getItem(previousPosition).startDate
+            val previousItemDate = getItem(previousPosition).lastCallLog.startDate
             !TimestampUtils.isSameDay(date, previousItemDate)
         } else true
     }
 
     override fun getHeaderViewForPosition(context: Context, position: Int): View {
         val callLog = getItem(position)
-        val date = formatDate(context, callLog.startDate)
+        val date = formatDate(context, callLog.lastCallLog.startDate)
         val binding: GenericListHeaderBinding = DataBindingUtil.inflate(
             LayoutInflater.from(context),
             R.layout.generic_list_header, null, false
@@ -124,17 +126,17 @@ class CallLogsListAdapter(val selectionViewModel: ListTopBarViewModel) : Lifecyc
     }
 }
 
-private class CallLogDiffCallback : DiffUtil.ItemCallback<CallLog>() {
+private class CallLogDiffCallback : DiffUtil.ItemCallback<GroupedCallLogViewModel>() {
     override fun areItemsTheSame(
-        oldItem: CallLog,
-        newItem: CallLog
+        oldItem: GroupedCallLogViewModel,
+        newItem: GroupedCallLogViewModel
     ): Boolean {
-        return oldItem.callId == newItem.callId
+        return oldItem.lastCallLog.callId == newItem.lastCallLog.callId
     }
 
     override fun areContentsTheSame(
-        oldItem: CallLog,
-        newItem: CallLog
+        oldItem: GroupedCallLogViewModel,
+        newItem: GroupedCallLogViewModel
     ): Boolean {
         return false // For headers
     }

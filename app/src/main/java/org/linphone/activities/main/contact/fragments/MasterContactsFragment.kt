@@ -112,7 +112,7 @@ class MasterContactsFragment : MasterFragment() {
                 }
 
                 viewModel.showDeleteButton({
-                    listViewModel.deleteContact(listViewModel.contactsList.value?.get(viewHolder.adapterPosition))
+                    listViewModel.deleteContact(adapter.getItemAt(viewHolder.adapterPosition))
                     dialog.dismiss()
                 }, getString(R.string.dialog_delete))
 
