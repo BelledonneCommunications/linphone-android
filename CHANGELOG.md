@@ -10,6 +10,11 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+### [4.4.0] - Unreleased
+
+### Changed
+- Min Android version updated from 21 to 23 (Android 6) due to SDK audio routes feature
+
 ## [4.3.0] - 2020-06-23
 
 ### Added
