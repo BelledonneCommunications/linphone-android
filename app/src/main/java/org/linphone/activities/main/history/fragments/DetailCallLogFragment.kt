@@ -61,14 +61,16 @@ class DetailCallLogFragment : Fragment() {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
 
-        val callLog = sharedViewModel.selectedCallLog.value
-        callLog ?: return
+        val callLogGroup = sharedViewModel.selectedCallLogGroup.value
+        callLogGroup ?: return
 
         viewModel = ViewModelProvider(
             this,
-            CallLogViewModelFactory(callLog)
+            CallLogViewModelFactory(callLogGroup.lastCallLog)
         )[CallLogViewModel::class.java]
         binding.viewModel = viewModel
+
+        viewModel.relatedCallLogs.value = callLogGroup.callLogs
 
         binding.setBackClickListener {
             findNavController().popBackStack()

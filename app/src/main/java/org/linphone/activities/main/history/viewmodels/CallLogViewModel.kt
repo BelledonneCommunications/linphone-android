@@ -25,7 +25,6 @@ import androidx.lifecycle.ViewModelProvider
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
-import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.contact.GenericContactViewModel
 import org.linphone.core.*
@@ -86,14 +85,14 @@ class CallLogViewModel(val callLog: CallLog) : GenericContactViewModel(callLog.r
     }
 
     val duration: String by lazy {
-        val dateFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+        val dateFormat = SimpleDateFormat(if (callLog.duration >= 3600) "HH:mm:ss" else "mm:ss", Locale.getDefault())
         val cal = Calendar.getInstance()
         cal[0, 0, 0, 0, 0] = callLog.duration
         dateFormat.format(cal.time)
     }
 
     val date: String by lazy {
-        TimestampUtils.toString(callLog.startDate)
+        TimestampUtils.toString(callLog.startDate, shortDate = false)
     }
 
     val startCallEvent: MutableLiveData<Event<Address>> by lazy {
@@ -107,6 +106,8 @@ class CallLogViewModel(val callLog: CallLog) : GenericContactViewModel(callLog.r
     val waitForChatRoomCreation = MutableLiveData<Boolean>()
 
     val secureChatAllowed = contact.value?.friend?.getPresenceModelForUriOrTel(peerSipUri)?.hasCapability(FriendCapability.LimeX3Dh) ?: false
+
+    val relatedCallLogs = MutableLiveData<ArrayList<CallLog>>()
 
     private val chatRoomListener = object : ChatRoomListenerStub() {
         override fun onStateChanged(chatRoom: ChatRoom, state: ChatRoom.State) {
@@ -146,9 +147,8 @@ class CallLogViewModel(val callLog: CallLog) : GenericContactViewModel(callLog.r
 
     fun getCallsHistory(): ArrayList<CallLogViewModel> {
         val callsHistory = ArrayList<CallLogViewModel>()
-        val logs = coreContext.core.getCallHistory(callLog.remoteAddress, coreContext.core.defaultProxyConfig?.identityAddress)
-        for (log in logs) {
-            callsHistory.add(CallLogViewModel(log))
+        for (callLog in relatedCallLogs.value.orEmpty()) {
+            callsHistory.add(CallLogViewModel(callLog))
         }
         return callsHistory
     }

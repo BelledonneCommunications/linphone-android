@@ -31,7 +31,7 @@
         <CheckBox
             android:id="@+id/select"
             android:onClick="@{() -> selectionListViewModel.onToggleSelect(position)}"
-            android:visibility="@{selectionListViewModel.isEditionEnabled ? View.VISIBLE : View.GONE}"
+            android:visibility="@{selectionListViewModel.isEditionEnabled ? View.VISIBLE : View.GONE, default=gone}"
             android:checked="@{selectionListViewModel.selectedItems.contains(position)}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -86,7 +86,7 @@
             android:paddingBottom="5dp">
 
             <LinearLayout
-                android:visibility="@{viewModel.chatMessage.forward ? View.VISIBLE : View.GONE}"
+                android:visibility="@{viewModel.chatMessage.forward ? View.VISIBLE : View.GONE, default=gone}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -110,7 +110,8 @@
                     android:fontFamily="sans-serif"
                     android:textStyle="normal"
                     android:lineSpacingExtra="3.3sp"
-                    android:text="@string/chat_message_forwarded" />
+                    android:text="@string/chat_message_forwarded"
+                    tools:ignore="SmallSp" />
 
             </LinearLayout>
 
@@ -145,7 +146,7 @@
                 android:lineSpacingExtra="-1.7sp"/>
 
             <LinearLayout
-                android:visibility="@{viewModel.chatMessage.ephemeral ? View.VISIBLE : View.GONE}"
+                android:visibility="@{viewModel.chatMessage.ephemeral ? View.VISIBLE : View.GONE, default=gone}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -178,7 +179,7 @@
 
         <TextView
             android:id="@+id/time"
-            android:text="@{viewModel.chatMessage.outgoing ? viewModel.time : viewModel.time + ` - ` + (viewModel.contact.fullName ?? viewModel.displayName), default=Wednesday}"
+            android:text="@{viewModel.chatMessage.outgoing ? viewModel.time : viewModel.time + ` - ` + (viewModel.contact.fullName ?? viewModel.displayName)}"
             android:visibility="@{viewModel.hideTime ? View.GONE : View.VISIBLE}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

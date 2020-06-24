@@ -21,6 +21,7 @@ package org.linphone.activities.main.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.linphone.activities.main.history.viewmodels.GroupedCallLogViewModel
 import org.linphone.contact.Contact
 import org.linphone.core.*
 import org.linphone.utils.Event
@@ -30,7 +31,7 @@ class SharedMainViewModel : ViewModel() {
 
     /* Call history */
 
-    val selectedCallLog = MutableLiveData<CallLog>()
+    val selectedCallLogGroup = MutableLiveData<GroupedCallLogViewModel>()
 
     /* Chat */
 
