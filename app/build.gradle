@@ -18,7 +18,7 @@ static def firebaseEnabled() {
 }
 
 task getGitVersion() {
-    def gitVersion = "5.0"
+    def gitVersion = "5.0.0"
     def gitVersionStream = new ByteArrayOutputStream()
     def gitCommitsCount = new ByteArrayOutputStream()
     def gitCommitHash = new ByteArrayOutputStream()
@@ -56,7 +56,7 @@ android {
     defaultConfig {
         minSdkVersion 23
         targetSdkVersion 29
-        versionCode 4300
+        versionCode 4999
         versionName "${project.version}"
         applicationId getPackageName()
     }
@@ -164,7 +164,7 @@ dependencies {
         implementation 'com.google.firebase:firebase-messaging:19.0.1'
     }
 
-    implementation 'org.linphone:linphone-sdk-android:4.4.0-alpha+'
+    implementation 'org.linphone:linphone-sdk-android:4.5+'
 }
 
 if (firebaseEnabled()) {
