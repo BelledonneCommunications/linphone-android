@@ -156,7 +156,7 @@ class MasterCallLogsFragment : MasterFragment() {
 
         adapter.selectedCallLogEvent.observe(viewLifecycleOwner, Observer {
             it.consume { callLog ->
-                sharedViewModel.selectedCallLog.value = callLog.lastCallLog
+                sharedViewModel.selectedCallLogGroup.value = callLog
                 if (!resources.getBoolean(R.bool.isTablet)) {
                     if (findNavController().currentDestination?.id == R.id.masterCallLogsFragment) {
                         findNavController().navigate(R.id.action_masterCallLogsFragment_to_detailCallLogFragment)
