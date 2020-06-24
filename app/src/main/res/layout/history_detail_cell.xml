@@ -9,11 +9,9 @@
             type="org.linphone.activities.main.history.viewmodels.CallLogViewModel" />
     </data>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
         android:padding="10dp">
 
         <ImageView
@@ -21,32 +19,18 @@
             android:contentDescription="@{data.iconContentDescription}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
             android:paddingLeft="10dp"
             android:paddingRight="10dp" />
 
-        <com.google.android.flexbox.FlexboxLayout
+        <org.linphone.views.MarqueeTextView
+            android:text="@{data.date + ` - ` + data.duration}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:flexWrap="wrap"
-            app:justifyContent="center">
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true" />
 
-            <TextView
-                android:text="@{data.duration}"
-                android:textColor="?attr/primarySubtextDarkColor"
-                android:textSize="18sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingRight="10dp" />
-
-            <TextView
-                android:text="@{data.date}"
-                android:textColor="?attr/primarySubtextDarkColor"
-                android:textSize="18sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-        </com.google.android.flexbox.FlexboxLayout>
-
-    </LinearLayout>
+    </RelativeLayout>
 
 </layout>
