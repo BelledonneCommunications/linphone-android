@@ -77,10 +77,12 @@
                 android:contentDescription="@{viewModel.iconContentDescription}"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
                 android:layout_alignParentLeft="true"
                 android:adjustViewBounds="true"
-                android:padding="7dp"/>
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:paddingTop="7dp"
+                android:paddingBottom="7dp"/>
 
             <org.linphone.contact.ContactAvatarView
                 android:id="@+id/avatar"
@@ -97,7 +99,6 @@
                 style="@style/contact_name_list_cell_font"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@id/avatar"
                 android:gravity="center_vertical"
                 android:singleLine="true" />
