@@ -39,6 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:layout="@layout/contact_avatar"
+                android:layout_centerHorizontal="true"
                 app:showSecurityLevel="@{viewModel.encryptedChatRoom}"
                 app:viewModel="@{viewModel}"/>
 
@@ -50,7 +51,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/avatar"
+                android:paddingRight="10dp"
                 android:layout_marginTop="5dp"
+                android:layout_centerHorizontal="true"
                 android:singleLine="true" />
 
         </RelativeLayout>
@@ -88,11 +91,11 @@
                     android:singleLine="true"
                     android:ellipsize="end"
                     android:text="@{String.valueOf(viewModel.unreadMessagesCount)}"
-                    android:visibility="@{viewModel.unreadMessagesCount == 0 ? View.GONE : View.VISIBLE}"/>
+                    android:visibility="@{viewModel.unreadMessagesCount == 0 ? View.GONE : View.VISIBLE, default=gone}"/>
 
                 <CheckBox
                     android:onClick="@{() -> selectionListViewModel.onToggleSelect(position)}"
-                    android:visibility="@{selectionListViewModel.isEditionEnabled ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{selectionListViewModel.isEditionEnabled ? View.VISIBLE : View.GONE, default=gone}"
                     android:checked="@{selectionListViewModel.selectedItems.contains(position)}"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent" />
@@ -111,7 +114,7 @@
                 android:maxLines="2" />
 
             <ImageView
-                android:visibility="@{viewModel.chatRoom.ephemeralEnabled() ? View.VISIBLE : View.GONE}"
+                android:visibility="@{viewModel.chatRoom.ephemeralEnabled() ? View.VISIBLE : View.GONE, default=gone}"
                 android:id="@+id/ephemeral"
                 android:contentDescription="@string/content_description_ephemeral_chat_room"
                 android:layout_width="20dp"

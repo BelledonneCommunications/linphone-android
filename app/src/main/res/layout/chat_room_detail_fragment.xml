@@ -210,7 +210,7 @@
                         android:src="@drawable/chat_send_message" />
 
                     <ImageView
-                        android:visibility="@{viewModel.chatRoom.ephemeralEnabled() ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{viewModel.chatRoom.ephemeralEnabled() ? View.VISIBLE : View.GONE, default=gone}"
                         android:enabled="@{chatSendingViewModel.sendMessageEnabled &amp;&amp; !chatSendingViewModel.isReadOnly}"
                         android:contentDescription="@string/content_description_ephemeral_message"
                         android:clickable="false"

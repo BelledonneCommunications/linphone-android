@@ -141,9 +141,16 @@
             android:queryBackground="@color/transparent_color"
             android:queryHint="@string/contact_filter_hint"/>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/searchBar"
+            android:background="?attr/dividerColor" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/contactsList"
             android:layout_toRightOf="@id/tabs_fragment"
+            android:layout_marginTop="5dp"
             android:layout_below="@id/searchBar"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
