@@ -104,7 +104,7 @@
 
                     <ImageView
                         android:onClick="@{editClickListener}"
-                        android:enabled="@{!viewModel.callLogs.empty}"
+                        android:enabled="@{viewModel.missedCallLogsSelected ? !viewModel.missedCallLogs.empty : !viewModel.callLogs.empty}"
                         android:contentDescription="@string/content_description_enter_edition_mode"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
