@@ -87,9 +87,7 @@ class RecordingsListAdapter(val selectionViewModel: ListTopBarViewModel) : Lifec
         return if (previousPosition >= 0) {
             val previousItemDate = getItem(previousPosition).date
             !TimestampUtils.isSameDay(date, previousItemDate)
-        } else {
-            true
-        }
+        } else true
     }
 
     override fun getHeaderViewForPosition(context: Context, position: Int): View {
