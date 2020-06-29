@@ -20,6 +20,8 @@
 package org.linphone.dialer;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -35,6 +37,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
+import org.linphone.BuildConfig;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.activities.MainActivity;
@@ -44,11 +47,13 @@ import org.linphone.contacts.ContactsManager;
 import org.linphone.core.Call;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
+import org.linphone.core.VersionUpdateCheckResult;
 import org.linphone.core.tools.Log;
 import org.linphone.dialer.views.AddressText;
 import org.linphone.dialer.views.Digit;
 import org.linphone.dialer.views.EraseButton;
 import org.linphone.settings.LinphonePreferences;
+import org.linphone.utils.LinphoneUtils;
 
 public class DialerActivity extends MainActivity implements AddressText.AddressChangedListener {
     private static final String ACTION_CALL_LINPHONE = "org.linphone.intent.action.CallLaunched";
@@ -102,6 +107,50 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
                     public void onCallStateChanged(
                             Core core, Call call, Call.State state, String message) {
                         updateLayout();
+                    }
+
+                    @Override
+                    public void onVersionUpdateCheckResultReceived(
+                            Core core,
+                            VersionUpdateCheckResult result,
+                            String version,
+                            String url) {
+                        if (result == VersionUpdateCheckResult.NewVersionAvailable) {
+                            final String urlToUse = url;
+                            final String versionAv = version;
+                            LinphoneUtils.dispatchOnUIThreadAfter(
+                                    new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            AlertDialog.Builder builder =
+                                                    new AlertDialog.Builder(DialerActivity.this);
+                                            builder.setMessage(
+                                                    getString(R.string.update_available)
+                                                            + ": "
+                                                            + versionAv);
+                                            builder.setCancelable(false);
+                                            builder.setNeutralButton(
+                                                    getString(R.string.ok),
+                                                    new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(
+                                                                DialogInterface dialogInterface,
+                                                                int i) {
+                                                            if (urlToUse != null) {
+                                                                Intent urlIntent =
+                                                                        new Intent(
+                                                                                Intent.ACTION_VIEW);
+                                                                urlIntent.setData(
+                                                                        Uri.parse(urlToUse));
+                                                                startActivity(urlIntent);
+                                                            }
+                                                        }
+                                                    });
+                                            builder.show();
+                                        }
+                                    },
+                                    1000);
+                        }
                     }
                 };
 
@@ -179,6 +228,28 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
         if (mListener != null) mListener = null;
 
         super.onDestroy();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (getResources().getBoolean(R.bool.check_for_update_when_app_starts)) {
+            checkForUpdate();
+        }
+    }
+
+    private void checkForUpdate() {
+        String url = LinphonePreferences.instance().getCheckReleaseUrl();
+        if (url != null && !url.isEmpty()) {
+            int lastTimestamp = LinphonePreferences.instance().getLastCheckReleaseTimestamp();
+            int currentTimeStamp = (int) System.currentTimeMillis();
+            int interval = getResources().getInteger(R.integer.time_between_update_check); // 24h
+            if (lastTimestamp == 0 || currentTimeStamp - lastTimestamp >= interval) {
+                LinphoneManager.getCore().checkForUpdate(BuildConfig.VERSION_NAME);
+                LinphonePreferences.instance().setLastCheckReleaseTimestamp(currentTimeStamp);
+            }
+        }
     }
 
     private void initUI(View view) {
