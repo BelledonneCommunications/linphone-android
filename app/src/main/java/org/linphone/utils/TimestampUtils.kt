@@ -51,7 +51,7 @@ class TimestampUtils {
             cal1: Date,
             cal2: Date
         ): Boolean {
-            return isSameDay(cal1.time, cal2.time)
+            return isSameDay(cal1.time, cal2.time, false)
         }
 
         private fun isSameYear(timestamp: Long, timestampInSecs: Boolean = true): Boolean {
