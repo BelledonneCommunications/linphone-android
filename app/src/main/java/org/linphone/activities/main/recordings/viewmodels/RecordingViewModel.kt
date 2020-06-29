@@ -21,16 +21,20 @@ package org.linphone.activities.main.recordings.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.ticker
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.AudioDevice
 import org.linphone.core.Player
 import org.linphone.core.PlayerListener
 import org.linphone.core.tools.Log
-import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
 class RecordingViewModel(val path: String) : ViewModel(), Comparable<RecordingViewModel> {
@@ -54,14 +58,17 @@ class RecordingViewModel(val path: String) : ViewModel(), Comparable<RecordingVi
     val formattedDate: String
         get() = DateFormat.getTimeInstance(DateFormat.SHORT).format(date)
 
-    val playStartedEvent = MutableLiveData<Event<Boolean>>()
+    val position = MutableLiveData<Int>()
+    val formattedPosition = MutableLiveData<String>()
 
     val isPlaying = MutableLiveData<Boolean>()
+
+    private val tickerChannel = ticker(1000, 1000)
 
     private var player: Player
     private val listener = PlayerListener {
         Log.i("[Recording] End of file reached")
-        pause()
+        stop()
     }
 
     init {
@@ -71,6 +78,9 @@ class RecordingViewModel(val path: String) : ViewModel(), Comparable<RecordingVi
             date = LinphoneUtils.getRecordingDateFromFileName(m.group(2))
         }
         isPlaying.value = false
+
+        position.value = 0
+        formattedPosition.value = SimpleDateFormat("mm:ss", Locale.getDefault()).format(0)
 
         // Use speaker sound card to play recordings, otherwise use earpiece
         // If none are available, default one will be used
@@ -90,6 +100,7 @@ class RecordingViewModel(val path: String) : ViewModel(), Comparable<RecordingVi
     }
 
     override fun onCleared() {
+        tickerChannel.cancel()
         if (!isClosed()) player.close()
         player.removeListener(listener)
 
@@ -101,21 +112,49 @@ class RecordingViewModel(val path: String) : ViewModel(), Comparable<RecordingVi
     }
 
     fun play() {
-        if (isClosed()) player.open(path)
-        seek(0)
+        if (isClosed()) {
+            player.open(path)
+            player.seek(0)
+        }
         player.start()
-        playStartedEvent.value = Event(true)
         isPlaying.value = true
+
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                for (tick in tickerChannel) {
+                    if (player.state == Player.State.Playing) {
+                        updatePosition()
+                    }
+                }
+            }
+        }
     }
 
     fun pause() {
         player.pause()
         isPlaying.value = false
-        playStartedEvent.value = Event(false)
     }
 
-    private fun seek(position: Int) {
-        if (!isClosed()) player.seek(position)
+    fun onProgressChanged(progress: Any) {
+        if (progress is Int) {
+            if (player.state == Player.State.Playing) {
+                pause()
+            }
+            player.seek(progress)
+            updatePosition()
+        }
+    }
+
+    private fun updatePosition() {
+        val progress = if (isClosed()) 0 else player.currentPosition
+        position.postValue(progress)
+        formattedPosition.postValue(SimpleDateFormat("mm:ss", Locale.getDefault()).format(progress)) // is already in milliseconds
+    }
+
+    private fun stop() {
+        pause()
+        player.seek(0)
+        updatePosition()
     }
 
     private fun isClosed(): Boolean {
