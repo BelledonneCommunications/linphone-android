@@ -31,6 +31,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.*
+import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.databinding.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -179,6 +180,19 @@ fun spinnerSetting(spinner: Spinner, selectedIndex: Int, listener: SettingListen
             listener.onListValueChanged(position)
         }
     }
+}
+
+@BindingAdapter("onProgressChanged")
+fun setListener(view: SeekBar, lambda: (Any) -> Unit) {
+    view.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+        override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+            if (fromUser) lambda(progress)
+        }
+
+        override fun onStartTrackingTouch(seekBar: SeekBar?) { }
+
+        override fun onStopTrackingTouch(seekBar: SeekBar?) { }
+    })
 }
 
 @BindingAdapter("entries")
