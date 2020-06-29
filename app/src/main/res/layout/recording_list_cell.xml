@@ -88,8 +88,8 @@
                 android:layout_alignParentRight="true"
                 android:orientation="horizontal">
 
-                <Chronometer
-                    android:id="@+id/record_current_time"
+                <TextView
+                    android:text="@{viewModel.formattedPosition}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center" />
@@ -108,8 +108,9 @@
 
             <SeekBar
                 android:id="@+id/record_progression_bar"
-                android:enabled="false"
+                onProgressChanged="@{(progress) -> viewModel.onProgressChanged(progress)}"
                 android:max="@{viewModel.duration}"
+                android:progress="@{viewModel.position}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
