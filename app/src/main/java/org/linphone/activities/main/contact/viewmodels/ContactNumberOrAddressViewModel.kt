@@ -23,7 +23,7 @@ import androidx.lifecycle.ViewModel
 import org.linphone.core.Address
 
 class ContactNumberOrAddressViewModel(
-    val address: Address,
+    val address: Address?,
     val hasPresence: Boolean,
     val displayedValue: String,
     val isSip: Boolean = true,
@@ -33,10 +33,12 @@ class ContactNumberOrAddressViewModel(
     val showInvite = !hasPresence && !isSip
 
     fun startCall() {
+        address ?: return
         listener.onCall(address)
     }
 
     fun startChat(secured: Boolean) {
+        address ?: return
         listener.onChat(address, secured)
     }
 
