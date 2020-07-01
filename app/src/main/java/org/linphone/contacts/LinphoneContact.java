@@ -24,6 +24,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import java.io.Serializable;
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.List;
 import org.linphone.LinphoneContext;
@@ -114,7 +115,10 @@ public class LinphoneContact extends AndroidContact
             }
             return id.compareTo(contactId);
         }
-        return fullName.compareTo(contactFullName);
+
+        Collator collator = Collator.getInstance();
+        collator.setStrength(Collator.NO_DECOMPOSITION);
+        return collator.compare(fullName, contactFullName);
     }
 
     @Override
