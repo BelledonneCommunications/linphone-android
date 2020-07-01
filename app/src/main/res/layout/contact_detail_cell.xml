@@ -80,6 +80,7 @@
 
             <ImageView
                 android:onClick="@{() -> data.startCall()}"
+                android:enabled="@{data.address != null}"
                 android:contentDescription="@string/content_description_start_call"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
@@ -89,6 +90,7 @@
 
             <ImageView
                 android:onClick="@{() -> data.startChat(false)}"
+                android:enabled="@{data.address != null}"
                 android:contentDescription="@string/content_description_start_chat"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
@@ -98,6 +100,7 @@
 
             <RelativeLayout
                 android:visibility="@{data.showSecureChat ? View.VISIBLE : View.GONE}"
+                android:enabled="@{data.address != null}"
                 android:onClick="@{() -> data.startChat(true)}"
                 android:layout_width="65dp"
                 android:layout_height="60dp"

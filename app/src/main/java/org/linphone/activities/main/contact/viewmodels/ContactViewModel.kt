@@ -176,7 +176,7 @@ class ContactViewModel(private val c: Contact) : ErrorReportingViewModel(), Cont
             val presenceModel = c.friend?.getPresenceModelForUriOrTel(number)
             val hasPresence = presenceModel != null && presenceModel.basicStatus == PresenceBasicStatus.Open
             val contactAddress = presenceModel?.contact ?: number
-            val address = coreContext.core.interpretUrl(contactAddress) ?: continue
+            val address = coreContext.core.interpretUrl(contactAddress)
             val isMe = coreContext.core.defaultProxyConfig?.identityAddress?.weakEqual(address) ?: false
             val secureChatAllowed = !isMe && c.friend?.getPresenceModelForUriOrTel(number)?.hasCapability(FriendCapability.LimeX3Dh) ?: false
             val noa = ContactNumberOrAddressViewModel(address, hasPresence, number, isSip = false, showSecureChat = secureChatAllowed, listener = listener)
