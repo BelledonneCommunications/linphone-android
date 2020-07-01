@@ -130,7 +130,7 @@ class NativeContactEditor(
     fun setOrganization(value: String): NativeContactEditor {
         val previousValue = contact.organization
         if (value == previousValue) {
-            Log.w("[Native Contact Editor] Organization hasn't changed")
+            Log.d("[Native Contact Editor] Organization hasn't changed")
             return this
         }
 
@@ -170,8 +170,11 @@ class NativeContactEditor(
             when {
                 phoneNumber.currentValue.isEmpty() -> {
                     // New phone number to add
-                    addCount++
-                    addPhoneNumber(phoneNumber.newValue.value.orEmpty())
+                    val number = phoneNumber.newValue.value.orEmpty()
+                    if (number.isNotEmpty()) {
+                        addCount++
+                        addPhoneNumber(number)
+                    }
                 }
                 phoneNumber.toRemove.value == true -> {
                     // Existing number to remove
@@ -180,8 +183,11 @@ class NativeContactEditor(
                 }
                 phoneNumber.currentValue != phoneNumber.newValue.value -> {
                     // Existing number to update
-                    editCount++
-                    updatePhoneNumber(phoneNumber.currentValue, phoneNumber.newValue.value.orEmpty())
+                    val number = phoneNumber.newValue.value.orEmpty()
+                    if (number.isNotEmpty()) {
+                        editCount++
+                        updatePhoneNumber(phoneNumber.currentValue, number)
+                    }
                 }
             }
         }
@@ -199,9 +205,11 @@ class NativeContactEditor(
             when {
                 sipAddress.currentValue.isEmpty() -> {
                     // New address to add
-                    addCount++
                     val address = sipAddress.newValue.value.orEmpty()
-                    addSipAddress(address)
+                    if (address.isNotEmpty()) {
+                        addCount++
+                        addSipAddress(address)
+                    }
                 }
                 sipAddress.toRemove.value == true -> {
                     // Existing address to remove
@@ -210,8 +218,11 @@ class NativeContactEditor(
                 }
                 sipAddress.currentValue != sipAddress.newValue.value -> {
                     // Existing address to update
-                    editCount++
-                    updateLinphoneOrSipAddress(sipAddress.currentValue, sipAddress.newValue.value.orEmpty())
+                    val address = sipAddress.newValue.value.orEmpty()
+                    if (address.isNotEmpty()) {
+                        editCount++
+                        updateLinphoneOrSipAddress(sipAddress.currentValue, address)
+                    }
                 }
             }
         }

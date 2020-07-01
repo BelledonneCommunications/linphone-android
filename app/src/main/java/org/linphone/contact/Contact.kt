@@ -24,6 +24,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import androidx.core.app.Person
 import androidx.core.graphics.drawable.IconCompat
+import java.text.Collator
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Address
@@ -76,7 +77,9 @@ open class Contact : Comparable<Contact> {
             val otherOrg = other.organization ?: ""
             return org.compareTo(otherOrg)
         }
-        return fn.compareTo(otherFn)
+        val collator = Collator.getInstance()
+        collator.strength = Collator.NO_DECOMPOSITION
+        return collator.compare(fn, otherFn)
     }
 
     @Synchronized
