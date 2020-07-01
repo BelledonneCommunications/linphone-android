@@ -110,7 +110,7 @@ class NativeContact(val nativeId: String, private val lookupKey: String? = null)
 
                 Log.d("[Native Contact] Found phone number $data1 ($data4)")
                 val number = data4 ?: data1
-                if (number != null && !phoneNumbers.contains(number)) phoneNumbers.add(number)
+                if (number != null && number.isNotEmpty() && !phoneNumbers.contains(number)) phoneNumbers.add(number)
             }
             linphoneMime, ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE -> {
                 if (data1 == null) {
