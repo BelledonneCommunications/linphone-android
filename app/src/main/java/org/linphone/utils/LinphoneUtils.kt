@@ -55,15 +55,18 @@ class LinphoneUtils {
             val defaultProxyConfig = core.defaultProxyConfig
 
             val params = core.createDefaultChatRoomParams()
-            params.enableEncryption(isSecured)
             params.enableGroup(false)
-            params.backend = if (isSecured) ChatRoomBackend.FlexisipChat else ChatRoomBackend.Basic
-            params.subject = AppUtils.getString(R.string.chat_room_dummy_subject)
+            params.backend = ChatRoomBackend.Basic
+            if (isSecured) {
+                params.subject = AppUtils.getString(R.string.chat_room_dummy_subject)
+                params.enableEncryption(true)
+                params.backend = ChatRoomBackend.FlexisipChat
+            }
 
             val participants = arrayOf(participant)
 
-            return core.searchChatRoom(params, defaultProxyConfig?.identityAddress, participants)
-                ?: core.createChatRoom(params, defaultProxyConfig?.identityAddress, participants)
+            return core.searchChatRoom(params, defaultProxyConfig?.contact, null, participants)
+                ?: core.createChatRoom(params, defaultProxyConfig?.contact, participants)
         }
 
         fun deleteFilesAttachedToEventLog(eventLog: EventLog) {
