@@ -306,7 +306,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
             val peerAddress = coreContext.core.interpretUrl(addressToIM)?.asStringUriOnly()
             val localAddress =
-                coreContext.core.defaultProxyConfig?.identityAddress?.asStringUriOnly()
+                coreContext.core.defaultProxyConfig?.contact?.asStringUriOnly()
             val deepLink = "linphone-android://chat-room/$localAddress/$peerAddress"
             Log.i("[Main Activity] Starting deep link: $deepLink")
             findNavController(R.id.nav_host_fragment).navigate(Uri.parse(deepLink))

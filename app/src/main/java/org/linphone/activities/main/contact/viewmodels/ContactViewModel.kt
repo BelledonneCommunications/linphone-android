@@ -111,6 +111,7 @@ class ContactViewModel(private val c: Contact) : ErrorReportingViewModel(), Cont
             } else {
                 waitForChatRoomCreation.value = false
                 Log.e("[Contact Detail] Couldn't create chat room with address $address")
+                onErrorEvent.value = Event(R.string.chat_room_creation_failed_snack)
             }
         }
 

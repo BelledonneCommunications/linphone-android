@@ -142,6 +142,7 @@ class CallLogViewModel(val callLog: CallLog) : GenericContactViewModel(callLog.r
         } else {
             waitForChatRoomCreation.value = false
             Log.e("[History Detail] Couldn't create chat room with address ${callLog.remoteAddress}")
+            onErrorEvent.value = Event(R.string.chat_room_creation_failed_snack)
         }
     }
 
