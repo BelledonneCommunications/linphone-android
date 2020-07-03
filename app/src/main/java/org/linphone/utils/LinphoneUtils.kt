@@ -40,14 +40,14 @@ class LinphoneUtils {
 
         fun isLimeAvailable(): Boolean {
             val core = coreContext.core
-            val defaultProxy = core.defaultProxyConfig
-            return core.limeX3DhAvailable() && core.limeX3DhEnabled() && core.limeX3DhServerUrl != null && defaultProxy != null
+            return core.limeX3DhAvailable() && core.limeX3DhEnabled() &&
+                    core.limeX3DhServerUrl != null &&
+                    core.defaultProxyConfig?.conferenceFactoryUri != null
         }
 
         fun isGroupChatAvailable(): Boolean {
             val core = coreContext.core
-            val defaultProxy = core.defaultProxyConfig
-            return defaultProxy != null && defaultProxy.conferenceFactoryUri != null
+            return core.defaultProxyConfig?.conferenceFactoryUri != null
         }
 
         fun createOneToOneChatRoom(participant: Address, isSecured: Boolean = false): ChatRoom? {
