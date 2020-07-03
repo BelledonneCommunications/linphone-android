@@ -49,7 +49,7 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
                 return
             }
 
-            val room = core.getChatRoom(remoteAddress, localAddress)
+            val room = core.searchChatRoom(null, localAddress, arrayOf(remoteAddress))
             if (room == null) {
                 Log.e("[Notification Broadcast Receiver] Couldn't find chat room for remote address $remoteSipAddress and local address $localIdentity")
                 return

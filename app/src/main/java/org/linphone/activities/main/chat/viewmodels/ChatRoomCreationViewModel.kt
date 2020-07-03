@@ -147,56 +147,44 @@ class ChatRoomCreationViewModel : ErrorReportingViewModel() {
         val defaultProxyConfig = coreContext.core.defaultProxyConfig
         var room: ChatRoom?
 
-        if (defaultProxyConfig == null) {
-            val address = searchResult.address ?: coreContext.core.interpretUrl(searchResult.phoneNumber)
-            if (address == null) {
-                Log.e("[Chat Room Creation] Can't get a valid address from search result $searchResult")
-                onErrorEvent.value = Event(R.string.chat_room_creation_failed_snack)
-                waitForChatRoomCreation.value = false
-                return
-            }
-
-            Log.w("[Chat Room Creation] No default proxy config found, creating basic chat room without local identity with ${address.asStringUriOnly()}")
-            room = coreContext.core.getChatRoom(address)
-            if (room != null) {
-                chatRoomCreatedEvent.value = Event(room)
-            } else {
-                Log.e("[Chat Room Creation] Couldn't create chat room with remote ${address.asStringUriOnly()}")
-            }
+        val address = searchResult.address ?: coreContext.core.interpretUrl(searchResult.phoneNumber)
+        if (address == null) {
+            Log.e("[Chat Room Creation] Can't get a valid address from search result $searchResult")
+            onErrorEvent.value = Event(R.string.chat_room_creation_failed_snack)
             waitForChatRoomCreation.value = false
             return
         }
 
         val encrypted = isEncrypted.value == true
-        room = coreContext.core.findOneToOneChatRoom(defaultProxyConfig.identityAddress, searchResult.address, encrypted)
+        val params: ChatRoomParams = coreContext.core.createDefaultChatRoomParams()
+        params.backend = ChatRoomBackend.Basic
+        params.enableGroup(false)
+        if (encrypted) {
+            params.enableEncryption(true)
+            params.backend = ChatRoomBackend.FlexisipChat
+            params.subject = AppUtils.getString(R.string.chat_room_dummy_subject)
+        }
+
+        val participants = arrayOf(searchResult.address)
+
+        // Use proxy config contact instead of identity because we need GRUU if FlexisipChat backend
+        room = coreContext.core.searchChatRoom(params, defaultProxyConfig.contact, participants)
         if (room == null) {
-            Log.w("[Chat Room Creation] Couldn't find existing 1-1 chat room with remote ${searchResult.address.asStringUriOnly()}, encryption=$encrypted and local identity ${defaultProxyConfig.identityAddress.asStringUriOnly()}")
+            Log.w("[Chat Room Creation] Couldn't find existing 1-1 chat room with remote ${searchResult.address.asStringUriOnly()}, encryption=$encrypted and local identity ${defaultProxyConfig.contact.asStringUriOnly()}")
+            // Use proxy config contact instead of identity because we need GRUU if FlexisipChat backend
+            room = coreContext.core.createChatRoom(params, defaultProxyConfig.contact, participants)
             if (encrypted) {
-                val params: ChatRoomParams = coreContext.core.createDefaultChatRoomParams()
-                // This will set the backend to FlexisipChat automatically
-                params.enableEncryption(true)
-                params.enableGroup(false)
-
-                val participants = arrayOfNulls<Address>(1)
-                participants[0] = searchResult.address
-
-                room = coreContext.core.createChatRoom(
-                    params,
-                    AppUtils.getString(R.string.chat_room_dummy_subject),
-                    participants
-                )
                 room?.addListener(listener)
             } else {
-                room = coreContext.core.getChatRoom(searchResult.address, defaultProxyConfig.identityAddress)
                 if (room != null) {
                     chatRoomCreatedEvent.value = Event(room)
                 } else {
-                    Log.e("[Chat Room Creation] Couldn't create chat room with remote ${searchResult.address.asStringUriOnly()} and local identity ${defaultProxyConfig.identityAddress.asStringUriOnly()}")
+                    Log.e("[Chat Room Creation] Couldn't create chat room with remote ${searchResult.address.asStringUriOnly()} and local identity ${defaultProxyConfig.contact.asStringUriOnly()}")
                 }
                 waitForChatRoomCreation.value = false
             }
         } else {
-            Log.i("[Chat Room Creation] Found existing 1-1 chat room with remote ${searchResult.address.asStringUriOnly()}, encryption=$encrypted and local identity ${defaultProxyConfig.identityAddress.asStringUriOnly()}")
+            Log.i("[Chat Room Creation] Found existing 1-1 chat room with remote ${searchResult.address.asStringUriOnly()}, encryption=$encrypted and local identity ${defaultProxyConfig.contact.asStringUriOnly()}")
             chatRoomCreatedEvent.value = Event(room)
             waitForChatRoomCreation.value = false
         }
