@@ -168,7 +168,7 @@ class ChatRoomCreationViewModel : ErrorReportingViewModel() {
         val participants = arrayOf(searchResult.address)
 
         // Use proxy config contact instead of identity because we need GRUU if FlexisipChat backend
-        room = coreContext.core.searchChatRoom(params, defaultProxyConfig.contact, participants)
+        room = coreContext.core.searchChatRoom(params, defaultProxyConfig.contact, null, participants)
         if (room == null) {
             Log.w("[Chat Room Creation] Couldn't find existing 1-1 chat room with remote ${searchResult.address.asStringUriOnly()}, encryption=$encrypted and local identity ${defaultProxyConfig.contact.asStringUriOnly()}")
             // Use proxy config contact instead of identity because we need GRUU if FlexisipChat backend
