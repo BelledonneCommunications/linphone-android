@@ -202,7 +202,7 @@ class MasterChatRoomsFragment : MasterFragment() {
             arguments?.clear()
             val localAddress = Factory.instance().createAddress(localSipUri)
             val remoteSipAddress = Factory.instance().createAddress(remoteSipUri)
-            val chatRoom = coreContext.core.getChatRoom(remoteSipAddress, localAddress)
+            val chatRoom = coreContext.core.searchChatRoom(null, localAddress, arrayOf(remoteSipAddress))
             if (chatRoom != null) {
                 Log.i("[Chat] Found matching chat room $chatRoom")
                 chatRoom.markAsRead()

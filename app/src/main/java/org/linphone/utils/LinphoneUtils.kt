@@ -54,32 +54,16 @@ class LinphoneUtils {
             val core: Core = coreContext.core
             val defaultProxyConfig = core.defaultProxyConfig
 
-            if (defaultProxyConfig != null) {
-                val room = core.findOneToOneChatRoom(defaultProxyConfig.identityAddress, participant, isSecured)
-                if (room != null) {
-                    return room
-                } else {
-                    return if (defaultProxyConfig.conferenceFactoryUri != null && isSecured /*|| !LinphonePreferences.instance().useBasicChatRoomFor1To1()*/) {
-                        val params = core.createDefaultChatRoomParams()
-                        params.enableEncryption(isSecured)
-                        params.enableGroup(false)
-                        // We don't want a basic chat room, so if isSecured is false we have to set this manually
-                        params.backend = ChatRoomBackend.FlexisipChat
+            val params = core.createDefaultChatRoomParams()
+            params.enableEncryption(isSecured)
+            params.enableGroup(false)
+            params.backend = if (isSecured) ChatRoomBackend.FlexisipChat else ChatRoomBackend.Basic
+            params.subject = AppUtils.getString(R.string.chat_room_dummy_subject)
 
-                        val participants = arrayOfNulls<Address>(1)
-                        participants[0] = participant
-                        core.createChatRoom(params, AppUtils.getString(R.string.chat_room_dummy_subject), participants)
-                    } else {
-                        core.getChatRoom(participant)
-                    }
-                }
-            } else {
-                if (isSecured) {
-                    Log.e("[Linphone Utils] Can't create a secured chat room without proxy config")
-                    return null
-                }
-                return core.getChatRoom(participant)
-            }
+            val participants = arrayOf(participant)
+
+            return core.searchChatRoom(params, defaultProxyConfig?.identityAddress, participants)
+                ?: core.createChatRoom(params, defaultProxyConfig?.identityAddress, participants)
         }
 
         fun deleteFilesAttachedToEventLog(eventLog: EventLog) {

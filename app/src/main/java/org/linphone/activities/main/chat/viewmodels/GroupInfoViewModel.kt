@@ -113,6 +113,7 @@ class GroupInfoViewModel(val chatRoom: ChatRoom?) : ErrorReportingViewModel() {
         val params: ChatRoomParams = coreContext.core.createDefaultChatRoomParams()
         params.enableEncryption(isEncrypted.value == true)
         params.enableGroup(true)
+        params.subject = subject.value
 
         val addresses = arrayOfNulls<Address>(participants.value.orEmpty().size)
         var index = 0
@@ -122,8 +123,14 @@ class GroupInfoViewModel(val chatRoom: ChatRoom?) : ErrorReportingViewModel() {
             index += 1
         }
 
-        val chatRoom: ChatRoom? = coreContext.core.createChatRoom(params, subject.value, addresses)
+        // Use proxy config contact instead of identity because we need GRUU
+        val chatRoom: ChatRoom? = coreContext.core.createChatRoom(params, coreContext.core.defaultProxyConfig?.contact, addresses)
         chatRoom?.addListener(listener)
+        if (chatRoom == null) {
+            Log.e("[Chat Room Group Info] Couldn't create chat room!")
+            waitForChatRoomCreation.value = false
+            onErrorEvent.value = Event(R.string.chat_room_creation_failed_snack)
+        }
     }
 
     fun updateRoom() {
