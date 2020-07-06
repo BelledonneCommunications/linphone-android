@@ -200,9 +200,8 @@ class ContactsManager(private val context: Context) {
 
     @Synchronized
     fun findContactByPhoneNumber(number: String): Contact? {
-        return contacts.find { contact ->
-            contact.phoneNumbers.contains(number)
-        }
+        val friend: Friend? = coreContext.core.findFriendByPhoneNumber(number)
+        return friend?.userData as? Contact
     }
 
     @Synchronized
