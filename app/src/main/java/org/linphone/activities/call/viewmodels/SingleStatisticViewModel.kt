@@ -53,6 +53,7 @@ class StatItemViewModel(val type: StatType) : ViewModel() {
 
     fun update(call: Call, stats: CallStats) {
         val payloadType = if (stats.type == StreamType.Audio) call.currentParams.usedAudioPayloadType else call.currentParams.usedVideoPayloadType
+        payloadType ?: return
         value.value = when (type) {
             StatType.CAPTURE -> if (stats.type == StreamType.Audio) call.core.captureDevice else call.core.videoDevice
             StatType.PLAYBACK -> if (stats.type == StreamType.Audio) call.core.playbackDevice else call.core.videoDisplayFilter

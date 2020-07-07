@@ -61,6 +61,11 @@ class Api21Compatibility {
 
         suspend fun addImageToMediaStore(context: Context, content: Content): Boolean {
             val filePath = content.filePath
+            if (filePath == null) {
+                Log.e("[Chat Message] Content doesn't have a file path!")
+                return false
+            }
+
             val appName = AppUtils.getString(R.string.app_name)
             val relativePath = "${Environment.DIRECTORY_PICTURES}/$appName"
             val fileName = content.name
@@ -92,6 +97,11 @@ class Api21Compatibility {
 
         suspend fun addVideoToMediaStore(context: Context, content: Content): Boolean {
             val filePath = content.filePath
+            if (filePath == null) {
+                Log.e("[Chat Message] Content doesn't have a file path!")
+                return false
+            }
+
             val appName = AppUtils.getString(R.string.app_name)
             val relativePath = "${Environment.DIRECTORY_MOVIES}/$appName"
             val fileName = content.name
@@ -124,6 +134,11 @@ class Api21Compatibility {
 
         suspend fun addAudioToMediaStore(context: Context, content: Content): Boolean {
             val filePath = content.filePath
+            if (filePath == null) {
+                Log.e("[Chat Message] Content doesn't have a file path!")
+                return false
+            }
+
             val appName = AppUtils.getString(R.string.app_name)
             val relativePath = "${Environment.DIRECTORY_MUSIC}/$appName"
             val fileName = content.name

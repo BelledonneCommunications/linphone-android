@@ -175,7 +175,7 @@ class ShortcutsHelper(val context: Context) {
                             personsList.add(contact.getPerson())
                         }
                     }
-                    subject = chatRoom.subject
+                    subject = chatRoom.subject.orEmpty()
                     icon = IconCompat.createWithResource(context, R.drawable.chat_group_avatar)
                 }
 

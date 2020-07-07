@@ -35,6 +35,10 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
 
         if (intent.action == NotificationsManager.INTENT_REPLY_NOTIF_ACTION || intent.action == NotificationsManager.INTENT_MARK_AS_READ_ACTION) {
             val remoteSipAddress: String? = coreContext.notificationsManager.getSipUriForChatNotificationId(notificationId)
+            if (remoteSipAddress == null) {
+                Log.e("[Notification Broadcast Receiver] Couldn't find remote address $remoteSipAddress for notification id $notificationId")
+                return
+            }
             val core: Core = coreContext.core
 
             val remoteAddress = core.interpretUrl(remoteSipAddress)
@@ -75,7 +79,7 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
             val remoteAddress: String? = coreContext.notificationsManager.getSipUriForCallNotificationId(notificationId)
             val core: Core = coreContext.core
 
-            val call = core.findCallFromUri(remoteAddress)
+            val call = if (remoteAddress != null) core.findCallFromUri(remoteAddress) else null
             if (call == null) {
                 Log.e("[Notification Broadcast Receiver] Couldn't find call from remote address $remoteAddress")
                 return

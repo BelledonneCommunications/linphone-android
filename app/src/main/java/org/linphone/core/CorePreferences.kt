@@ -107,7 +107,7 @@ class CorePreferences constructor(private val context: Context) {
         }
 
     var deviceName: String
-        get() = config.getString("app", "device_name", Compatibility.getDeviceName(context))
+        get() = config.getString("app", "device_name", Compatibility.getDeviceName(context))!!
         set(value) = config.setString("app", "device_name", value)
 
     var chatRoomShortcuts: Boolean
@@ -207,10 +207,10 @@ class CorePreferences constructor(private val context: Context) {
     /* Read only application settings previously in non_localizable_custom */
 
     val defaultDomain: String
-        get() = config.getString("app", "default_domain", "sip.linphone.org")
+        get() = config.getString("app", "default_domain", "sip.linphone.org")!!
 
     val debugPopupCode: String
-        get() = config.getString("app", "debug_popup_magic", "#1234#")
+        get() = config.getString("app", "debug_popup_magic", "#1234#")!!
 
     val fetchContactsFromDefaultDirectory: Boolean
         get() = config.getBool("app", "fetch_contacts_from_default_directory", true)
@@ -219,13 +219,13 @@ class CorePreferences constructor(private val context: Context) {
         get() = config.getBool("app", "hide_contacts_without_presence", false)
 
     val rlsUri: String
-        get() = config.getString("app", "rls_uri", "sip:rls@sip.linphone.org")
+        get() = config.getString("app", "rls_uri", "sip:rls@sip.linphone.org")!!
 
     val conferenceServerUri: String
-        get() = config.getString("app", "default_conference_factory_uri", "sip:conference-factory@sip.linphone.org")
+        get() = config.getString("app", "default_conference_factory_uri", "sip:conference-factory@sip.linphone.org")!!
 
     val limeX3dhServerUrl: String
-        get() = config.getString("app", "default_lime_x3dh_server_url", "https://lime.linphone.org/lime-server/lime-server.php")
+        get() = config.getString("app", "default_lime_x3dh_server_url", "https://lime.linphone.org/lime-server/lime-server.php")!!
 
     val allowMultipleFilesAndTextInSameMessage: Boolean
         get() = config.getBool("app", "allow_multiple_files_and_text_in_same_message", true)

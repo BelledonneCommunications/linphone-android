@@ -54,7 +54,8 @@ class AsyncContactsLoader(private val context: Context) :
         if (core.isFriendListSubscriptionEnabled) {
             val rls: String = corePreferences.rlsUri
             for (list in core.friendsLists) {
-                if (list.rlsAddress == null || list.rlsAddress.asStringUriOnly() != rls) {
+                val rlsAddress = list.rlsAddress
+                if (rlsAddress == null || rlsAddress.asStringUriOnly() != rls) {
                     Log.i("[Contacts Loader] Friend list RLS URI updated to: $rls")
                     list.rlsUri = rls
                 }

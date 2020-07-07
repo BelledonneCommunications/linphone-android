@@ -31,11 +31,8 @@ class ChatRoomCreationContactViewModel(private val searchResult: SearchResult) :
     override val contact = MutableLiveData<Contact>()
 
     override val displayName: String by lazy {
-        when {
-            searchResult.friend != null -> searchResult.friend.name
-            searchResult.address != null -> LinphoneUtils.getDisplayName(searchResult.address)
-            else -> searchResult.phoneNumber
-        }
+        val address = searchResult.address
+        searchResult.friend?.name ?: if (address != null) LinphoneUtils.getDisplayName(address) else searchResult.phoneNumber.orEmpty()
     }
 
     val isDisabled: MutableLiveData<Boolean> by lazy {
@@ -47,14 +44,14 @@ class ChatRoomCreationContactViewModel(private val searchResult: SearchResult) :
     }
 
     val isLinphoneUser: Boolean by lazy {
-        searchResult.friend?.getPresenceModelForUriOrTel(searchResult.phoneNumber ?: searchResult.address.asStringUriOnly())?.basicStatus == PresenceBasicStatus.Open
+        searchResult.friend?.getPresenceModelForUriOrTel(searchResult.phoneNumber ?: searchResult.address?.asStringUriOnly() ?: "")?.basicStatus == PresenceBasicStatus.Open
     }
 
     val sipUri: String by lazy {
-        searchResult.phoneNumber ?: searchResult.address.asStringUriOnly()
+        searchResult.phoneNumber ?: searchResult.address?.asStringUriOnly() ?: ""
     }
 
-    val address: Address by lazy {
+    val address: Address? by lazy {
         searchResult.address
     }
 
@@ -70,11 +67,11 @@ class ChatRoomCreationContactViewModel(private val searchResult: SearchResult) :
     }
 
     private fun searchMatchingContact() {
-        if (searchResult.address != null) {
-            contact.value =
-                coreContext.contactsManager.findContactByAddress(searchResult.address)
+        val address = searchResult.address
+        if (address != null) {
+            contact.value = coreContext.contactsManager.findContactByAddress(address)
         } else if (searchResult.phoneNumber != null) {
-            contact.value = coreContext.contactsManager.findContactByPhoneNumber(searchResult.phoneNumber)
+            contact.value = coreContext.contactsManager.findContactByPhoneNumber(searchResult.phoneNumber.orEmpty())
         }
     }
 }

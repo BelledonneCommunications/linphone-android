@@ -38,11 +38,11 @@ class AccountSettingsViewModelFactory(private val identity: String) :
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         for (proxy in coreContext.core.proxyConfigList) {
-            if (proxy.identityAddress.asStringUriOnly() == identity) {
+            if (proxy.identityAddress?.asStringUriOnly() == identity) {
                 return AccountSettingsViewModel(proxy) as T
             }
         }
-        return AccountSettingsViewModel(coreContext.core.defaultProxyConfig) as T
+        return AccountSettingsViewModel(coreContext.core.defaultProxyConfig!!) as T
     }
 }
 
@@ -115,7 +115,7 @@ class AccountSettingsViewModel(val proxyConfig: ProxyConfig) : GenericSettingsVi
 
     val displayNameListener = object : SettingListenerStub() {
         override fun onTextValueChanged(newValue: String) {
-            proxyConfig.identityAddress.displayName = newValue
+            proxyConfig.identityAddress?.displayName = newValue
         }
     }
     // displayName mutable is above
@@ -138,9 +138,11 @@ class AccountSettingsViewModel(val proxyConfig: ProxyConfig) : GenericSettingsVi
 
     private fun deleteProxyConfig(cfg: ProxyConfig) {
         val authInfo = cfg.findAuthInfo()
-        core.removeProxyConfig(cfg)
-        core.removeAuthInfo(authInfo)
-        proxyConfigRemovedEvent.value = Event(true)
+        if (authInfo != null) {
+            core.removeProxyConfig(cfg)
+            core.removeAuthInfo(authInfo)
+            proxyConfigRemovedEvent.value = Event(true)
+        }
     }
 
     val deleteListener = object : SettingListenerStub() {
@@ -207,7 +209,7 @@ class AccountSettingsViewModel(val proxyConfig: ProxyConfig) : GenericSettingsVi
 
     val stunServerListener = object : SettingListenerStub() {
         override fun onTextValueChanged(newValue: String) {
-            proxyConfig.natPolicy.stunServer = newValue
+            proxyConfig.natPolicy?.stunServer = newValue
             if (newValue.isEmpty()) ice.value = false
             stunServer.value = newValue
         }
@@ -216,7 +218,7 @@ class AccountSettingsViewModel(val proxyConfig: ProxyConfig) : GenericSettingsVi
 
     val iceListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
-            proxyConfig.natPolicy.enableIce(newValue)
+            proxyConfig.natPolicy?.enableIce(newValue)
         }
     }
     val ice = MutableLiveData<Boolean>()
@@ -276,8 +278,11 @@ class AccountSettingsViewModel(val proxyConfig: ProxyConfig) : GenericSettingsVi
 
     private fun update() {
         isDefault.value = core.defaultProxyConfig == proxyConfig
-        displayName.value = LinphoneUtils.getDisplayName(proxyConfig.identityAddress)
-        identity.value = proxyConfig.identityAddress.asStringUriOnly()
+        val identityAddress = proxyConfig.identityAddress
+        if (identityAddress != null) {
+            displayName.value = LinphoneUtils.getDisplayName(identityAddress)
+            identity.value = identityAddress.asStringUriOnly()
+        }
 
         iconResource.value = when (proxyConfig.state) {
             RegistrationState.Ok -> R.drawable.led_connected
@@ -292,14 +297,14 @@ class AccountSettingsViewModel(val proxyConfig: ProxyConfig) : GenericSettingsVi
             else -> R.string.status_not_connected
         }
 
-        userName.value = proxyConfig.identityAddress.username
+        userName.value = proxyConfig.identityAddress?.username
         userId.value = proxyConfig.findAuthInfo()?.userid
-        domain.value = proxyConfig.identityAddress.domain
+        domain.value = proxyConfig.identityAddress?.domain
         disable.value = !proxyConfig.registerEnabled()
         pushNotification.value = proxyConfig.isPushNotificationAllowed
         pushNotificationsAvailable.value = core.isPushNotificationAvailable
         proxy.value = proxyConfig.serverAddr
-        outboundProxy.value = proxyConfig.serverAddr == proxyConfig.route
+        outboundProxy.value = proxyConfig.serverAddr == proxyConfig.routes.firstOrNull()
         stunServer.value = proxyConfig.natPolicy?.stunServer
         ice.value = proxyConfig.natPolicy?.iceEnabled()
         avpf.value = proxyConfig.avpfEnabled()

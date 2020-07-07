@@ -118,8 +118,9 @@ class ChatRoomCreationViewModel : ErrorReportingViewModel() {
     }
 
     fun toggleSelectionForSearchResult(searchResult: SearchResult) {
-        if (searchResult.address != null) {
-            toggleSelectionForAddress(searchResult.address)
+        val address = searchResult.address
+        if (address != null) {
+            toggleSelectionForAddress(address)
         }
     }
 
@@ -147,7 +148,7 @@ class ChatRoomCreationViewModel : ErrorReportingViewModel() {
         val defaultProxyConfig = coreContext.core.defaultProxyConfig
         var room: ChatRoom?
 
-        val address = searchResult.address ?: coreContext.core.interpretUrl(searchResult.phoneNumber)
+        val address = searchResult.address ?: coreContext.core.interpretUrl(searchResult.phoneNumber ?: "")
         if (address == null) {
             Log.e("[Chat Room Creation] Can't get a valid address from search result $searchResult")
             onErrorEvent.value = Event(R.string.chat_room_creation_failed_snack)
@@ -168,23 +169,23 @@ class ChatRoomCreationViewModel : ErrorReportingViewModel() {
         val participants = arrayOf(searchResult.address)
 
         // Use proxy config contact instead of identity because we need GRUU if FlexisipChat backend
-        room = coreContext.core.searchChatRoom(params, defaultProxyConfig.contact, null, participants)
+        room = coreContext.core.searchChatRoom(params, defaultProxyConfig?.contact, null, participants)
         if (room == null) {
-            Log.w("[Chat Room Creation] Couldn't find existing 1-1 chat room with remote ${searchResult.address.asStringUriOnly()}, encryption=$encrypted and local identity ${defaultProxyConfig.contact.asStringUriOnly()}")
+            Log.w("[Chat Room Creation] Couldn't find existing 1-1 chat room with remote ${searchResult.address?.asStringUriOnly()}, encryption=$encrypted and local identity ${defaultProxyConfig?.contact?.asStringUriOnly()}")
             // Use proxy config contact instead of identity because we need GRUU if FlexisipChat backend
-            room = coreContext.core.createChatRoom(params, defaultProxyConfig.contact, participants)
+            room = coreContext.core.createChatRoom(params, defaultProxyConfig?.contact, participants)
             if (encrypted) {
                 room?.addListener(listener)
             } else {
                 if (room != null) {
                     chatRoomCreatedEvent.value = Event(room)
                 } else {
-                    Log.e("[Chat Room Creation] Couldn't create chat room with remote ${searchResult.address.asStringUriOnly()} and local identity ${defaultProxyConfig.contact.asStringUriOnly()}")
+                    Log.e("[Chat Room Creation] Couldn't create chat room with remote ${searchResult.address?.asStringUriOnly()} and local identity ${defaultProxyConfig?.contact?.asStringUriOnly()}")
                 }
                 waitForChatRoomCreation.value = false
             }
         } else {
-            Log.i("[Chat Room Creation] Found existing 1-1 chat room with remote ${searchResult.address.asStringUriOnly()}, encryption=$encrypted and local identity ${defaultProxyConfig.contact.asStringUriOnly()}")
+            Log.i("[Chat Room Creation] Found existing 1-1 chat room with remote ${searchResult.address?.asStringUriOnly()}, encryption=$encrypted and local identity ${defaultProxyConfig?.contact?.asStringUriOnly()}")
             chatRoomCreatedEvent.value = Event(room)
             waitForChatRoomCreation.value = false
         }
