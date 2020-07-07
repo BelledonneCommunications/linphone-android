@@ -72,7 +72,7 @@ class VideoSettingsViewModel : GenericSettingsViewModel() {
 
     val videoSizeListener = object : SettingListenerStub() {
         override fun onListValueChanged(position: Int) {
-            core.preferredVideoDefinition = Factory.instance().createVideoDefinitionFromName(videoSizeLabels.value.orEmpty()[position])
+            core.setPreferredVideoDefinition(Factory.instance().createVideoDefinitionFromName(videoSizeLabels.value.orEmpty()[position]))
         }
     }
     val videoSizeIndex = MutableLiveData<Int>()
@@ -135,8 +135,10 @@ class VideoSettingsViewModel : GenericSettingsViewModel() {
         if (index == -1) {
             val firstDevice = cameraDeviceLabels.value.orEmpty().firstOrNull()
             Log.w("[Video Settings] Device not found in labels list: ${core.videoDevice}, replace it by $firstDevice")
-            cameraDeviceIndex.value = 0
-            core.videoDevice = firstDevice
+            if (firstDevice != null) {
+                cameraDeviceIndex.value = 0
+                core.videoDevice = firstDevice
+            }
         } else {
             cameraDeviceIndex.value = index
         }
@@ -146,11 +148,11 @@ class VideoSettingsViewModel : GenericSettingsViewModel() {
         val labels = arrayListOf<String>()
 
         for (size in Factory.instance().supportedVideoDefinitions) {
-            labels.add(size.name)
+            labels.add(size.name.orEmpty())
         }
 
         videoSizeLabels.value = labels
-        videoSizeIndex.value = labels.indexOf(core.preferredVideoDefinition.name)
+        videoSizeIndex.value = labels.indexOf(core.preferredVideoDefinition?.name)
     }
 
     private fun initVideoPresetList() {

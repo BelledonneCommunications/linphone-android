@@ -97,8 +97,9 @@ open class CallViewModel(val call: Call) : GenericContactViewModel(call.remoteAd
     }
 
     fun removeFromConference() {
-        if (call.conference != null) {
-            call.conference.removeParticipant(call.remoteAddress)
+        val conference = call.conference
+        if (conference != null) {
+            conference.removeParticipant(call.remoteAddress)
             if (call.core.conferenceSize <= 1) call.core.leaveConference()
         }
     }

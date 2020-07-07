@@ -49,7 +49,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactViewModelI
         when {
             chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt()) -> LinphoneUtils.getDisplayName(chatRoom.peerAddress)
             chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) -> LinphoneUtils.getDisplayName(chatRoom.participants.firstOrNull()?.address ?: chatRoom.peerAddress)
-            chatRoom.hasCapability(ChatRoomCapabilities.Conference.toInt()) -> chatRoom.subject
+            chatRoom.hasCapability(ChatRoomCapabilities.Conference.toInt()) -> chatRoom.subject.orEmpty()
             else -> chatRoom.peerAddress.asStringUriOnly()
         }
     }

@@ -73,7 +73,8 @@ class ChatRoomCreationContactsAdapter : LifecycleListAdapter<SearchResult, ChatR
 
                 selectedAddresses.observe(this@ViewHolder, Observer {
                     val selected = it.find { address ->
-                        if (searchResult.address != null) address.weakEqual(searchResult.address) else false
+                        val searchAddress = searchResult.address
+                        if (searchAddress != null) address.weakEqual(searchAddress) else false
                     }
                     searchResultViewModel.isSelected.value = selected != null
                 })
@@ -91,7 +92,8 @@ class ChatRoomCreationContactsAdapter : LifecycleListAdapter<SearchResult, ChatR
             viewModel: ChatRoomCreationContactViewModel,
             securityEnabled: Boolean
         ) {
-            val isMyself = securityEnabled && searchResult.address != null && coreContext.core.defaultProxyConfig?.identityAddress?.weakEqual(searchResult.address) ?: false
+            val searchAddress = searchResult.address
+            val isMyself = securityEnabled && searchAddress != null && coreContext.core.defaultProxyConfig?.identityAddress?.weakEqual(searchAddress) ?: false
             val limeCheck = !securityEnabled || (securityEnabled && searchResult.hasCapability(FriendCapability.LimeX3Dh))
             val groupCheck = !groupChatEnabled || (groupChatEnabled && searchResult.hasCapability(FriendCapability.GroupChat))
             val disabled = if (searchResult.friend != null) !limeCheck || !groupCheck || isMyself else false // Generated entry from search filter
@@ -111,7 +113,9 @@ private class SearchResultDiffCallback : DiffUtil.ItemCallback<SearchResult>() {
         oldItem: SearchResult,
         newItem: SearchResult
     ): Boolean {
-        return if (oldItem.address != null && newItem.address != null) oldItem.address.weakEqual(newItem.address) else false
+        val oldAddress = oldItem.address
+        val newAddress = newItem.address
+        return if (oldAddress != null && newAddress != null) oldAddress.weakEqual(newAddress) else false
     }
 
     override fun areContentsTheSame(

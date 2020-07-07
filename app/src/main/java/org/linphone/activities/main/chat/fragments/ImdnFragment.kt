@@ -67,7 +67,7 @@ class ImdnFragment : Fragment() {
 
         if (arguments != null) {
             val messageId = arguments?.getString("MessageId")
-            val message = chatRoom.findMessage(messageId)
+            val message = if (messageId != null) chatRoom.findMessage(messageId) else null
             if (message != null) {
                 Log.i("[IMDN] Found message $message with id $messageId")
                 viewModel = ViewModelProvider(
