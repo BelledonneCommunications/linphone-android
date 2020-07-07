@@ -58,9 +58,11 @@ class QrCodeViewModel : ViewModel() {
             }
         }
 
-        val first = coreContext.core.videoDevicesList[0]
-        Log.i("[QR Code] Using first camera found: $first")
-        coreContext.core.videoDevice = first
+        val first = coreContext.core.videoDevicesList.firstOrNull()
+        if (first != null) {
+            Log.i("[QR Code] Using first camera found: $first")
+            coreContext.core.videoDevice = first
+        }
     }
 
     fun switchCamera() {

@@ -127,6 +127,7 @@ class ChatMessagesListAdapter(val selectionViewModel: ListTopBarViewModel) : Lif
             with(binding) {
                 if (eventLog.type == EventLog.Type.ConferenceChatMessage) {
                     val chatMessage = eventLog.chatMessage
+                    chatMessage ?: return
                     val chatMessageViewModel = ChatMessageViewModel(chatMessage, contentClickedListener)
                     viewModel = chatMessageViewModel
 
@@ -150,7 +151,7 @@ class ChatMessagesListAdapter(val selectionViewModel: ListTopBarViewModel) : Lif
                         val previousItem = getItem(adapterPosition - 1)
                         if (previousItem.type == EventLog.Type.ConferenceChatMessage) {
                             val previousMessage = previousItem.chatMessage
-                            if (previousMessage.fromAddress.weakEqual(chatMessage.fromAddress)) {
+                            if (previousMessage != null && previousMessage.fromAddress.weakEqual(chatMessage.fromAddress)) {
                                 if (chatMessage.time - previousMessage.time < MAX_TIME_TO_GROUP_MESSAGES) {
                                     hasPrevious = true
                                 }
@@ -162,7 +163,7 @@ class ChatMessagesListAdapter(val selectionViewModel: ListTopBarViewModel) : Lif
                         val nextItem = getItem(adapterPosition + 1)
                         if (nextItem.type == EventLog.Type.ConferenceChatMessage) {
                             val nextMessage = nextItem.chatMessage
-                            if (nextMessage.fromAddress.weakEqual(chatMessage.fromAddress)) {
+                            if (nextMessage != null && nextMessage.fromAddress.weakEqual(chatMessage.fromAddress)) {
                                 if (nextMessage.time - chatMessage.time < MAX_TIME_TO_GROUP_MESSAGES) {
                                     hasNext = true
                                 }
@@ -314,8 +315,8 @@ private class ChatMessageDiffCallback : DiffUtil.ItemCallback<EventLog>() {
     ): Boolean {
         return if (oldItem.type == EventLog.Type.ConferenceChatMessage &&
             newItem.type == EventLog.Type.ConferenceChatMessage) {
-            oldItem.chatMessage.time == newItem.chatMessage.time &&
-                    oldItem.chatMessage.isOutgoing == newItem.chatMessage.isOutgoing
+            oldItem.chatMessage?.time == newItem.chatMessage?.time &&
+                    oldItem.chatMessage?.isOutgoing == newItem.chatMessage?.isOutgoing
         } else oldItem.notifyId == newItem.notifyId
     }
 
@@ -324,7 +325,7 @@ private class ChatMessageDiffCallback : DiffUtil.ItemCallback<EventLog>() {
         newItem: EventLog
     ): Boolean {
         return if (newItem.type == EventLog.Type.ConferenceChatMessage) {
-            newItem.chatMessage.state == ChatMessage.State.Displayed
+            newItem.chatMessage?.state == ChatMessage.State.Displayed
         } else false
     }
 }

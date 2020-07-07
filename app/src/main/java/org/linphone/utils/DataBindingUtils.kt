@@ -354,7 +354,7 @@ fun addPrefixEditTextValidation(editText: EditText, enabled: Boolean) {
 @BindingAdapter("assistantUsernameValidation")
 fun addUsernameEditTextValidation(editText: EditText, enabled: Boolean) {
     if (!enabled) return
-    val usernameRegexp = corePreferences.config.getString("assistant", "username_regex", "^[a-z0-9+_.\\-]*\$")
+    val usernameRegexp = corePreferences.config.getString("assistant", "username_regex", "^[a-z0-9+_.\\-]*\$")!!
     val usernameMaxLength = corePreferences.config.getInt("assistant", "username_max_length", 64)
     editText.addTextChangedListener(object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {

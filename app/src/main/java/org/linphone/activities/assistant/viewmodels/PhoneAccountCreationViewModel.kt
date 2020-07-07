@@ -155,7 +155,7 @@ class PhoneAccountCreationViewModel(accountCreator: AccountCreator) : AbstractPh
 
     private fun isCreateButtonEnabled(): Boolean {
         val usernameRegexp = corePreferences.config.getString("assistant", "username_regex", "^[a-z0-9+_.\\-]*\$")
-        return isPhoneNumberOk() &&
+        return isPhoneNumberOk() && usernameRegexp != null &&
                 (useUsername.value == false ||
                     username.value.orEmpty().matches(Regex(usernameRegexp)) &&
                     username.value.orEmpty().isNotEmpty() &&

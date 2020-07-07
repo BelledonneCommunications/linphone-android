@@ -50,7 +50,7 @@ class TunnelSettingsViewModel : GenericSettingsViewModel() {
     val useDualModeListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
             val tunnel = core.tunnel
-            tunnel.enableDualMode(newValue)
+            tunnel?.enableDualMode(newValue)
         }
     }
     val useDualMode = MutableLiveData<Boolean>()
@@ -77,7 +77,7 @@ class TunnelSettingsViewModel : GenericSettingsViewModel() {
 
     val modeListener = object : SettingListenerStub() {
         override fun onListValueChanged(position: Int) {
-            core.tunnel.mode = when (position) {
+            core.tunnel?.mode = when (position) {
                 0 -> Tunnel.Mode.Disable
                 1 -> Tunnel.Mode.Enable
                 else -> Tunnel.Mode.Auto
@@ -93,7 +93,7 @@ class TunnelSettingsViewModel : GenericSettingsViewModel() {
 
         hostnameUrl.value = config.host
         port.value = config.port
-        useDualMode.value = tunnel.dualModeEnabled()
+        useDualMode.value = tunnel?.dualModeEnabled()
         hostnameUrl2.value = config.host2
         port2.value = config.port2
 
@@ -102,9 +102,9 @@ class TunnelSettingsViewModel : GenericSettingsViewModel() {
 
     private fun getTunnelConfig(): TunnelConfig {
         val tunnel = core.tunnel
-        val configs = tunnel.servers
+        val configs = tunnel?.servers.orEmpty()
         return if (configs.isNotEmpty()) {
-            configs[0]
+            configs.first()
         } else {
             Factory.instance().createTunnelConfig()
         }
@@ -112,9 +112,9 @@ class TunnelSettingsViewModel : GenericSettingsViewModel() {
 
     private fun updateTunnelConfig(config: TunnelConfig) {
         val tunnel = core.tunnel
-        tunnel.cleanServers()
+        tunnel?.cleanServers()
         if (config.host?.isNotEmpty() == true) {
-            tunnel.addServer(config)
+            tunnel?.addServer(config)
         }
     }
 
@@ -125,7 +125,7 @@ class TunnelSettingsViewModel : GenericSettingsViewModel() {
         labels.add(prefs.getString(R.string.tunnel_settings_auto_mode))
         modeLabels.value = labels
 
-        modeIndex.value = when (core.tunnel.mode) {
+        modeIndex.value = when (core.tunnel?.mode) {
             Tunnel.Mode.Disable -> 0
             Tunnel.Mode.Enable -> 1
             else -> 2

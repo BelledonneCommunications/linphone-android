@@ -175,7 +175,8 @@ class NativeContact(val nativeId: String, private val lookupKey: String? = null)
         val friend = this.friend
         if (friend != null) {
             friend.edit()
-            friend.name = fullName
+            val fn = fullName
+            if (fn != null) friend.setName(fn)
 
             val vCard = friend.vcard
             if (vCard != null) {

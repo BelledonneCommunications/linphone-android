@@ -23,7 +23,7 @@ import org.linphone.contact.GenericContactViewModel
 import org.linphone.core.ParticipantImdnState
 import org.linphone.utils.TimestampUtils
 
-class ImdnParticipantViewModel(private val imdnState: ParticipantImdnState) : GenericContactViewModel(imdnState.participant.address) {
+class ImdnParticipantViewModel(imdnState: ParticipantImdnState) : GenericContactViewModel(imdnState.participant.address) {
     val sipUri: String = imdnState.participant.address.asStringUriOnly()
 
     val time: String = TimestampUtils.toString(imdnState.stateChangeTime)

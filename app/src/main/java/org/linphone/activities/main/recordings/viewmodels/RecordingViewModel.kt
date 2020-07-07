@@ -65,7 +65,7 @@ class RecordingViewModel(val path: String) : ViewModel(), Comparable<RecordingVi
 
     private val tickerChannel = ticker(1000, 1000)
 
-    private var player: Player
+    private lateinit var player: Player
     private val listener = PlayerListener {
         Log.i("[Recording] End of file reached")
         stop()
@@ -95,7 +95,9 @@ class RecordingViewModel(val path: String) : ViewModel(), Comparable<RecordingVi
                 }
             }
         }
-        player = coreContext.core.createLocalPlayer(speakerCard ?: earpieceCard, null, null)
+        val localPlayer = coreContext.core.createLocalPlayer(speakerCard ?: earpieceCard, null, null)
+        if (localPlayer != null) player = localPlayer
+        else Log.e("[Recording VM] Couldn't create local player!")
         player.addListener(listener)
     }
 

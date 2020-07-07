@@ -139,7 +139,7 @@ class GroupInfoViewModel(val chatRoom: ChatRoom?) : ErrorReportingViewModel() {
             val newSubject = subject.value.orEmpty()
             if (newSubject.isNotEmpty() && newSubject != chatRoom.subject) {
                 Log.i("[Chat Room Group Info] Subject changed to $newSubject")
-                chatRoom.subject = newSubject
+                chatRoom.setSubject(newSubject)
             }
 
             // Removed participants

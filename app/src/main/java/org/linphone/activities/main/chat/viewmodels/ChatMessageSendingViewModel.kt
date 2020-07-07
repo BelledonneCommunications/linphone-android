@@ -101,8 +101,9 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         val isBasicChatRoom: Boolean = chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt())
         val message: ChatMessage = chatRoom.createEmptyMessage()
 
-        if (textToSend.value.orEmpty().isNotEmpty()) {
-            message.addTextContent(textToSend.value)
+        val toSend = textToSend.value
+        if (toSend != null && toSend.isNotEmpty()) {
+            message.addTextContent(toSend)
         }
 
         for (attachment in attachments.value.orEmpty()) {
@@ -134,6 +135,6 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
 
     fun transferMessage(chatMessage: ChatMessage) {
         val message = chatRoom.createForwardMessage(chatMessage)
-        message?.send()
+        message.send()
     }
 }

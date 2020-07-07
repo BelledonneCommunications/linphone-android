@@ -71,8 +71,9 @@ open class StatusViewModel : ViewModel() {
         core.addListener(listener)
 
         var state: RegistrationState = RegistrationState.None
-        if (core.defaultProxyConfig != null) {
-            state = core.defaultProxyConfig.state
+        val defaultProxyConfig = core.defaultProxyConfig
+        if (defaultProxyConfig != null) {
+            state = defaultProxyConfig.state
         }
         updateDefaultProxyConfigRegistrationStatus(state)
     }

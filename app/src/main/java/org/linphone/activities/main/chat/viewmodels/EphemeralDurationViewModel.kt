@@ -23,7 +23,7 @@ import androidx.lifecycle.ViewModel
 
 class EphemeralDurationViewModel(
     val textResource: Int,
-    private val selectedDuration: Long,
+    selectedDuration: Long,
     private val duration: Long,
     private val listener: DurationItemClicked
 ) : ViewModel() {

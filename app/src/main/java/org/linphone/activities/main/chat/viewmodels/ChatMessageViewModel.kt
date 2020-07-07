@@ -63,7 +63,8 @@ class ChatMessageViewModel(
     val ephemeralLifetime = MutableLiveData<String>()
 
     val text: Spanned? by lazy {
-        if (chatMessage.textContent != null) AppUtils.getTextWithHttpLinks(chatMessage.textContent) else null
+        val textContent = chatMessage.textContent
+        if (textContent != null) AppUtils.getTextWithHttpLinks(textContent) else null
     }
 
     private var countDownTimer: CountDownTimer? = null
