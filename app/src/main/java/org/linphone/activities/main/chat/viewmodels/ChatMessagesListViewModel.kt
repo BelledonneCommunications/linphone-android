@@ -79,6 +79,7 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
 
             if (eventLog.type == EventLog.Type.ConferenceChatMessage) {
                 val chatMessage = eventLog.chatMessage
+                chatMessage ?: return
                 chatMessage.userData = position
                 chatMessage.addListener(chatMessageListener)
 
@@ -101,6 +102,7 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
 
             if (eventLog.type == EventLog.Type.ConferenceChatMessage) {
                 val chatMessage = eventLog.chatMessage
+                chatMessage ?: return
                 chatMessage.userData = position
                 chatMessage.addListener(chatMessageListener)
             }
@@ -138,7 +140,9 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
 
         override fun onEphemeralMessageDeleted(chatRoom: ChatRoom, eventLog: EventLog) {
             Log.i("[Chat Messages] An ephemeral chat message has expired, removing it from event list")
-            deleteMessage(eventLog.chatMessage)
+            val chatMessage = eventLog.chatMessage
+            chatMessage ?: return
+            deleteMessage(chatMessage)
         }
 
         override fun onEphemeralEvent(chatRoom: ChatRoom, eventLog: EventLog) {

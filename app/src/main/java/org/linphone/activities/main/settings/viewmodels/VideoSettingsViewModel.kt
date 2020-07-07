@@ -122,7 +122,7 @@ class VideoSettingsViewModel : GenericSettingsViewModel() {
 
     fun initCameraDevicesList() {
         val labels = arrayListOf<String>()
-        for (camera in core.videoDevicesList) {
+        for (camera in core.videoDevicesList.orEmpty()) {
             if (prefs.hideStaticImageCamera && camera.startsWith("StaticImage")) {
                 Log.w("[Video Settings] Do not display StaticImage camera")
             } else {
@@ -145,8 +145,8 @@ class VideoSettingsViewModel : GenericSettingsViewModel() {
     private fun initVideoSizeList() {
         val labels = arrayListOf<String>()
 
-        for (size in Factory.instance().supportedVideoDefinitions) {
-            labels.add(size.name)
+        for (size in Factory.instance().supportedVideoDefinitions.orEmpty()) {
+            labels.add(size.name.orEmpty())
         }
 
         videoSizeLabels.value = labels

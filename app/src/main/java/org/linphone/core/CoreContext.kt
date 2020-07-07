@@ -214,7 +214,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
             Log.i("[Context] Push received, assume in background")
             core.enterBackground()
         }
-        core.config.setBool("net", "use_legacy_push_notification_params", true)
+        core.config?.setBool("net", "use_legacy_push_notification_params", true)
         core.start()
 
         configureCore()
@@ -250,12 +250,12 @@ class CoreContext(val context: Context, coreConfig: Config) {
         computeUserAgent()
 
         for (lpc in core.proxyConfigList) {
-            if (lpc.identityAddress.domain == corePreferences.defaultDomain) {
+            if (lpc.identityAddress?.domain == corePreferences.defaultDomain) {
                 // Ensure conference URI is set on sip.linphone.org proxy configs
                 if (lpc.conferenceFactoryUri == null) {
                     lpc.edit()
                     val uri = corePreferences.conferenceServerUri
-                    Log.i("[Context] Setting conference factory on proxy config ${lpc.identityAddress.asString()} to default value: $uri")
+                    Log.i("[Context] Setting conference factory on proxy config ${lpc.identityAddress?.asString()} to default value: $uri")
                     lpc.conferenceFactoryUri = uri
                     lpc.done()
                 }
@@ -302,7 +302,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
     fun answerCall(call: Call) {
         Log.i("[Context] Answering call $call")
         val params = core.createCallParams(call)
-        params.recordFile = LinphoneUtils.getRecordingFilePathForAddress(call.remoteAddress)
+        params?.recordFile = LinphoneUtils.getRecordingFilePathForAddress(call.remoteAddress)
         call.acceptWithParams(params)
     }
 
@@ -356,9 +356,9 @@ class CoreContext(val context: Context, coreConfig: Config) {
 
         val params = core.createCallParams(null)
         if (forceZRTP) {
-            params.mediaEncryption = MediaEncryption.ZRTP
+            params?.mediaEncryption = MediaEncryption.ZRTP
         }
-        params.recordFile = LinphoneUtils.getRecordingFilePathForAddress(address)
+        params?.recordFile = LinphoneUtils.getRecordingFilePathForAddress(address)
 
         val call = core.inviteAddressWithParams(address, params)
         Log.i("[Context] Starting call $call")
@@ -368,8 +368,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
         val currentDevice = core.videoDevice
         Log.i("[Context] Current camera device is $currentDevice")
 
-        val devices = core.videoDevicesList
-        for (camera in devices) {
+        for (camera in core.videoDevicesList.orEmpty()) {
             if (camera != currentDevice && camera != "StaticImage: Static picture") {
                 Log.i("[Context] New camera device will be $camera")
                 core.videoDevice = camera
@@ -394,8 +393,9 @@ class CoreContext(val context: Context, coreConfig: Config) {
     }
 
     fun isVideoCallOrConferenceActive(): Boolean {
-        return if (core.conference != null && core.isInConference) {
-            core.conference.currentParams.videoEnabled()
+        val conference = core.conference
+        return if (conference != null && core.isInConference) {
+            conference.currentParams.videoEnabled()
         } else {
             core.currentCall?.currentParams?.videoEnabled() ?: false
         }

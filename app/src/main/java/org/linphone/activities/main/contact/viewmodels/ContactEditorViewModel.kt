@@ -129,7 +129,7 @@ class ContactEditorViewModel(val c: Contact?) : ViewModel(), ContactViewModelInt
 
                 if (contact.friend == null) {
                     contact.friend = friend
-                    coreContext.core.defaultFriendList.addLocalFriend(friend)
+                    coreContext.core.defaultFriendList?.addLocalFriend(friend)
                 }
             }
         }

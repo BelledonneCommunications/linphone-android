@@ -53,8 +53,9 @@ class AsyncContactsLoader(private val context: Context) :
         val core = coreContext.core
         if (core.isFriendListSubscriptionEnabled) {
             val rls: String = corePreferences.rlsUri
-            for (list in core.friendsLists) {
-                if (list.rlsAddress == null || list.rlsAddress.asStringUriOnly() != rls) {
+            for (list in core.friendsLists.orEmpty()) {
+                val rlsAddress = list.rlsAddress
+                if (rlsAddress == null || rlsAddress.asStringUriOnly() != rls) {
                     Log.i("[Contacts Loader] Friend list RLS URI updated to: $rls")
                     list.rlsUri = rls
                 }
@@ -72,7 +73,7 @@ class AsyncContactsLoader(private val context: Context) :
         val nativeIds = arrayListOf<String>()
         val friendLists = core.friendsLists
 
-        for (list in friendLists) {
+        for (list in friendLists.orEmpty()) {
             val friends = list.friends
             for (friend in friends) {
                 if (isCancelled) {
@@ -165,7 +166,7 @@ class AsyncContactsLoader(private val context: Context) :
                 Log.w("[Contacts Loader] Read contacts permission denied, can't fetch native contacts")
             }
 
-            for (list in core.friendsLists) {
+            for (list in core.friendsLists.orEmpty()) {
                 val friends = list.friends
                 for (friend in friends) {
                     if (isCancelled) {
@@ -245,7 +246,7 @@ class AsyncContactsLoader(private val context: Context) :
         val core = coreContext.core
         if (core.isFriendListSubscriptionEnabled) {
             Log.i("[Contacts Loader] Matching friends created, updating subscription")
-            for (list in core.friendsLists) {
+            for (list in core.friendsLists.orEmpty()) {
                 list.updateSubscriptions()
             }
         }

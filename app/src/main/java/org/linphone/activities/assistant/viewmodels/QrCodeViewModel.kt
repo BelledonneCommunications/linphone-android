@@ -50,7 +50,7 @@ class QrCodeViewModel : ViewModel() {
     }
 
     fun setBackCamera() {
-        for (camera in coreContext.core.videoDevicesList) {
+        for (camera in coreContext.core.videoDevicesList.orEmpty()) {
             if (camera.contains("Back")) {
                 Log.i("[QR Code] Found back facing camera: $camera")
                 coreContext.core.videoDevice = camera
@@ -58,7 +58,7 @@ class QrCodeViewModel : ViewModel() {
             }
         }
 
-        val first = coreContext.core.videoDevicesList[0]
+        val first = coreContext.core.videoDevicesList.orEmpty().firstOrNull()
         Log.i("[QR Code] Using first camera found: $first")
         coreContext.core.videoDevice = first
     }

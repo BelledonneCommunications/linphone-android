@@ -116,7 +116,7 @@ class ContactsManager(private val context: Context) {
         initSyncAccount()
 
         val core = coreContext.core
-        for (list in core.friendsLists) {
+        for (list in core.friendsLists.orEmpty()) {
             list.addListener(friendListListener)
         }
         Log.i("[Contacts Manager] Created")
@@ -243,7 +243,7 @@ class ContactsManager(private val context: Context) {
         sipContacts.clear()
 
         val core = coreContext.core
-        for (list in core.friendsLists) list.removeListener(friendListListener)
+        for (list in core.friendsLists.orEmpty()) list.removeListener(friendListListener)
     }
 
     private fun initSyncAccount() {
@@ -314,7 +314,7 @@ class ContactsManager(private val context: Context) {
     @Synchronized
     fun storePresenceInformationForAllContacts() {
         if (corePreferences.storePresenceInNativeContact && PermissionHelper.get().hasWriteContactsPermission()) {
-            for (list in coreContext.core.friendsLists) {
+            for (list in coreContext.core.friendsLists.orEmpty()) {
                 for (friend in list.friends) {
                     if (friend.userData == null) continue
                     val contact: Contact = friend.userData as Contact

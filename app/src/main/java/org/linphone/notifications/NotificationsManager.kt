@@ -536,7 +536,7 @@ class NotificationsManager(private val context: Context) {
 
         val notifiable = getNotifiableForRoom(room)
         var text = ""
-        if (message.hasTextContent()) text = message.textContent
+        if (message.hasTextContent()) text = message.textContent.orEmpty()
         else {
             for (content in message.contents) {
                 text = content.name
@@ -592,7 +592,7 @@ class NotificationsManager(private val context: Context) {
         Log.i("[Notifications Manager] Updating message notification with reply for notification ${notifiable.notificationId}")
 
         val reply = NotifiableMessage(
-            message.textContent,
+            message.textContent.orEmpty(),
             null,
             notifiable.myself ?: LinphoneUtils.getDisplayName(message.fromAddress),
             System.currentTimeMillis()

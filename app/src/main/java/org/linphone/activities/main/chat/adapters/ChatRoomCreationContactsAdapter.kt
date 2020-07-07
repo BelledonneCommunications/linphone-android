@@ -111,7 +111,9 @@ private class SearchResultDiffCallback : DiffUtil.ItemCallback<SearchResult>() {
         oldItem: SearchResult,
         newItem: SearchResult
     ): Boolean {
-        return if (oldItem.address != null && newItem.address != null) oldItem.address.weakEqual(newItem.address) else false
+        val oldAddress = oldItem.address
+        val newAddress = newItem.address
+        return if (oldAddress != null && newAddress != null) oldAddress.weakEqual(newAddress) else false
     }
 
     override fun areContentsTheSame(
