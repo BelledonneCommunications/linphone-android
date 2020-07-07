@@ -171,7 +171,7 @@ class ControlsViewModel : ViewModel() {
     fun terminateCall() {
         val core = coreContext.core
         when {
-            core.currentCall != null -> core.currentCall.terminate()
+            core.currentCall != null -> core.currentCall?.terminate()
             core.isInConference -> core.terminateConference()
             else -> core.terminateAllCalls()
         }
@@ -180,13 +180,14 @@ class ControlsViewModel : ViewModel() {
     fun toggleVideo() {
         val core = coreContext.core
         val currentCall = core.currentCall
+        val conference = core.conference
 
-        if (core.conference != null && core.isInConference) {
+        if (conference != null && core.isInConference) {
             val params = core.createConferenceParams()
-            val videoEnabled = core.conference.currentParams.videoEnabled()
+            val videoEnabled = conference.currentParams.videoEnabled()
             params.enableVideo(!videoEnabled)
             Log.i("[Controls VM] Conference current param for video is $videoEnabled")
-            core.conference.updateParams(params)
+            conference.updateParams(params)
         } else if (currentCall != null) {
             val state = currentCall.state
             if (state == Call.State.End || state == Call.State.Released || state == Call.State.Error)
@@ -194,7 +195,7 @@ class ControlsViewModel : ViewModel() {
 
             isVideoUpdateInProgress.value = true
             val params = core.createCallParams(currentCall)
-            params.enableVideo(!currentCall.currentParams.videoEnabled())
+            params?.enableVideo(!currentCall.currentParams.videoEnabled())
             currentCall.update(params)
         }
     }
@@ -254,7 +255,7 @@ class ControlsViewModel : ViewModel() {
 
         val conference = core.createConferenceWithParams(params)
         for (call in core.calls) {
-            conference.addParticipant(call)
+            conference?.addParticipant(call)
         }
 
         toggleOptionsMenu()
@@ -341,8 +342,9 @@ class ControlsViewModel : ViewModel() {
 
     private fun updateVideoAvailable() {
         val core = coreContext.core
+        val currentCall = core.currentCall
         isVideoAvailable.value = (core.videoCaptureEnabled() || core.videoPreviewEnabled()) &&
-                ((core.currentCall != null && !core.currentCall.mediaInProgress()) ||
+                ((currentCall != null && !currentCall.mediaInProgress()) ||
                         (core.conference != null && core.isInConference))
     }
 

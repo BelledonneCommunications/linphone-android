@@ -127,13 +127,13 @@ class ChatRoomsListViewModel : ErrorReportingViewModel() {
     fun deleteChatRooms(chatRooms: ArrayList<ChatRoom>) {
         chatRoomsToDeleteCount = chatRooms.size
         for (chatRoom in chatRooms) {
-            for (eventLog in chatRoom.getHistoryMessageEvents(0).orEmpty()) {
+            for (eventLog in chatRoom.getHistoryMessageEvents(0)) {
                 LinphoneUtils.deleteFilesAttachedToEventLog(eventLog)
             }
 
             Compatibility.removeChatRoomShortcut(chatRoom)
             chatRoom.addListener(chatRoomListener)
-            chatRoom.core?.deleteChatRoom(chatRoom)
+            chatRoom.core.deleteChatRoom(chatRoom)
         }
     }
 

@@ -35,7 +35,7 @@ class LinphoneUtils {
         private const val RECORDING_DATE_PATTERN = "dd-MM-yyyy-HH-mm-ss"
 
         fun getDisplayName(address: Address): String {
-            return address.displayName ?: address.username
+            return address.displayName ?: address.username ?: ""
         }
 
         fun isLimeAvailable(): Boolean {

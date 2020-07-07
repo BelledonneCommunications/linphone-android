@@ -168,6 +168,9 @@ class AudioSettingsViewModel : GenericSettingsViewModel() {
         core.removeListener(listener)
 
         when (status) {
+            EcCalibratorStatus.InProgress -> {
+                echoCalibration.value = prefs.getString(R.string.audio_settings_echo_cancellation_calibration_started)
+            }
             EcCalibratorStatus.DoneNoEcho -> {
                 echoCalibration.value = prefs.getString(R.string.audio_settings_echo_cancellation_calibration_no_echo)
             }

@@ -58,17 +58,18 @@ class ChatMessageContentViewModel(
 
     init {
         if (content.isFile || (content.isFileTransfer && chatMessage.isOutgoing)) {
-            downloadable.value = content.filePath.isEmpty()
+            val filePath = content.filePath ?: ""
+            downloadable.value = filePath.isEmpty()
 
-            if (content.filePath.isNotEmpty()) {
-                Log.i("[Content] Found displayable content: ${content.filePath}")
-                isImage.value = FileUtils.isExtensionImage(content.filePath)
-                isVideo.value = FileUtils.isExtensionVideo(content.filePath)
+            if (filePath.isNotEmpty()) {
+                Log.i("[Content] Found displayable content: $filePath")
+                isImage.value = FileUtils.isExtensionImage(filePath)
+                isVideo.value = FileUtils.isExtensionVideo(filePath)
 
                 if (isVideo.value == true) {
                     viewModelScope.launch {
                         withContext(Dispatchers.IO) {
-                            videoPreview.postValue(ImageUtils.getVideoPreview(content.filePath))
+                            videoPreview.postValue(ImageUtils.getVideoPreview(filePath))
                         }
                     }
                 }
@@ -88,18 +89,22 @@ class ChatMessageContentViewModel(
     }
 
     fun download() {
-        if (content.isFileTransfer && (content.filePath == null || content.filePath.isEmpty())) {
-            val file = FileUtils.getFileStoragePath(content.name)
-            content.filePath = file.path
-            downloadEnabled.value = false
+        val filePath = content.filePath
+        if (content.isFileTransfer && (filePath == null || filePath.isEmpty())) {
+            val contentName = content.name
+            if (contentName != null) {
+                val file = FileUtils.getFileStoragePath(contentName)
+                content.filePath = file.path
+                downloadEnabled.value = false
 
-            Log.i("[Content] Started downloading ${content.name} into ${content.filePath}")
-            chatMessage.downloadContent(content)
+                Log.i("[Content] Started downloading $contentName into ${content.filePath}")
+                chatMessage.downloadContent(content)
+            }
         }
     }
 
     fun openFile() {
-        listener?.onContentClicked(content.filePath)
+        listener?.onContentClicked(content.filePath.orEmpty())
     }
 }
 

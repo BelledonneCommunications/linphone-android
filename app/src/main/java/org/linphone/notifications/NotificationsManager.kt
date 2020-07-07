@@ -122,7 +122,7 @@ class NotificationsManager(private val context: Context) {
                 Call.State.IncomingEarlyMedia, Call.State.IncomingReceived -> displayIncomingCallNotification(call)
                 Call.State.End, Call.State.Error -> dismissCallNotification(call)
                 Call.State.Released -> {
-                    if (call.callLog?.status == Call.Status.Missed) {
+                    if (call.callLog.status == Call.Status.Missed) {
                         displayMissedCallNotification(call)
                     }
                 }
@@ -133,12 +133,12 @@ class NotificationsManager(private val context: Context) {
         override fun onMessageReceived(core: Core, room: ChatRoom, message: ChatMessage) {
             if (message.isOutgoing) return
 
-            if (currentlyDisplayedChatRoomAddress == room.peerAddress?.asStringUriOnly()) {
+            if (currentlyDisplayedChatRoomAddress == room.peerAddress.asStringUriOnly()) {
                 Log.i("[Notifications Manager] Chat room is currently displayed, do not notify received message")
                 return
             }
 
-            if (message.errorInfo?.reason == Reason.UnsupportedContent) {
+            if (message.errorInfo.reason == Reason.UnsupportedContent) {
                 Log.w("[Notifications Manager] Received message with unsupported content, do not notify")
                 return
             }
@@ -500,7 +500,7 @@ class NotificationsManager(private val context: Context) {
     }
 
     private fun dismissCallNotification(call: Call) {
-        val address = call.remoteAddress?.asStringUriOnly()
+        val address = call.remoteAddress.asStringUriOnly()
         val notifiable: Notifiable? = callNotificationsMap[address]
         if (notifiable != null) {
             cancel(notifiable.notificationId)
@@ -536,10 +536,10 @@ class NotificationsManager(private val context: Context) {
 
         val notifiable = getNotifiableForRoom(room)
         var text = ""
-        if (message.hasTextContent()) text = message.textContent
+        if (message.hasTextContent()) text = message.textContent.orEmpty()
         else {
             for (content in message.contents) {
-                text = content.name
+                text += content.name
             }
         }
         val notifiableMessage = NotifiableMessage(text, contact, displayName, message.time, senderAvatar = roundPicture)
@@ -592,7 +592,7 @@ class NotificationsManager(private val context: Context) {
         Log.i("[Notifications Manager] Updating message notification with reply for notification ${notifiable.notificationId}")
 
         val reply = NotifiableMessage(
-            message.textContent,
+            message.textContent.orEmpty(),
             null,
             notifiable.myself ?: LinphoneUtils.getDisplayName(message.fromAddress),
             System.currentTimeMillis()

@@ -52,10 +52,11 @@ class CallsViewModel : ViewModel() {
             callPausedByRemote.value = state == Call.State.PausedByRemote
             isConferencePaused.value = !coreContext.core.isInConference
 
-            if (core.currentCall == null) {
+            val currentCall = core.currentCall
+            if (currentCall == null) {
                 currentCallViewModel.value = null
             } else if (currentCallViewModel.value == null) {
-                currentCallViewModel.value = CallViewModel(core.currentCall)
+                currentCallViewModel.value = CallViewModel(currentCall)
             }
 
             if (state == Call.State.End || state == Call.State.Released || state == Call.State.Error) {

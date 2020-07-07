@@ -26,7 +26,7 @@ import org.linphone.core.ChatRoomSecurityLevel
 import org.linphone.core.ParticipantDevice
 
 class DevicesListChildViewModel(private val device: ParticipantDevice) : ViewModel() {
-    val deviceName: String = device.name
+    val deviceName: String = device.name.orEmpty()
 
     val securityLevelIcon: Int by lazy {
         when (device.securityLevel) {

@@ -57,8 +57,8 @@ class CoreContext(val context: Context, coreConfig: Config) {
     }
 
     val sdkVersion: String by lazy {
-        val sdkVersion = context.getString(org.linphone.R.string.linphone_sdk_version)
-        val sdkBranch = context.getString(org.linphone.R.string.linphone_sdk_branch)
+        val sdkVersion = context.getString(R.string.linphone_sdk_version)
+        val sdkBranch = context.getString(R.string.linphone_sdk_branch)
         "$sdkVersion ($sdkBranch)"
     }
 
@@ -250,12 +250,12 @@ class CoreContext(val context: Context, coreConfig: Config) {
         computeUserAgent()
 
         for (lpc in core.proxyConfigList) {
-            if (lpc.identityAddress.domain == corePreferences.defaultDomain) {
+            if (lpc.identityAddress?.domain == corePreferences.defaultDomain) {
                 // Ensure conference URI is set on sip.linphone.org proxy configs
                 if (lpc.conferenceFactoryUri == null) {
                     lpc.edit()
                     val uri = corePreferences.conferenceServerUri
-                    Log.i("[Context] Setting conference factory on proxy config ${lpc.identityAddress.asString()} to default value: $uri")
+                    Log.i("[Context] Setting conference factory on proxy config ${lpc.identityAddress?.asString()} to default value: $uri")
                     lpc.conferenceFactoryUri = uri
                     lpc.done()
                 }
@@ -277,11 +277,11 @@ class CoreContext(val context: Context, coreConfig: Config) {
 
     private fun computeUserAgent() {
         val deviceName: String = corePreferences.deviceName
-        val appName: String = context.resources.getString(org.linphone.R.string.app_name)
+        val appName: String = context.resources.getString(R.string.app_name)
         val androidVersion = org.linphone.BuildConfig.VERSION_NAME
         val userAgent = "$appName/$androidVersion ($deviceName) LinphoneSDK"
-        val sdkVersion = context.getString(org.linphone.R.string.linphone_sdk_version)
-        val sdkBranch = context.getString(org.linphone.R.string.linphone_sdk_branch)
+        val sdkVersion = context.getString(R.string.linphone_sdk_version)
+        val sdkBranch = context.getString(R.string.linphone_sdk_branch)
         val sdkUserAgent = "$sdkVersion ($sdkBranch)"
         core.setUserAgent(userAgent, sdkUserAgent)
     }
@@ -302,7 +302,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
     fun answerCall(call: Call) {
         Log.i("[Context] Answering call $call")
         val params = core.createCallParams(call)
-        params.recordFile = LinphoneUtils.getRecordingFilePathForAddress(call.remoteAddress)
+        params?.recordFile = LinphoneUtils.getRecordingFilePathForAddress(call.remoteAddress)
         call.acceptWithParams(params)
     }
 
@@ -356,11 +356,15 @@ class CoreContext(val context: Context, coreConfig: Config) {
 
         val params = core.createCallParams(null)
         if (forceZRTP) {
-            params.mediaEncryption = MediaEncryption.ZRTP
+            params?.mediaEncryption = MediaEncryption.ZRTP
         }
-        params.recordFile = LinphoneUtils.getRecordingFilePathForAddress(address)
+        params?.recordFile = LinphoneUtils.getRecordingFilePathForAddress(address)
 
-        val call = core.inviteAddressWithParams(address, params)
+        val call = if (params != null) {
+            core.inviteAddressWithParams(address, params)
+        } else {
+            core.inviteAddress(address)
+        }
         Log.i("[Context] Starting call $call")
     }
 
@@ -368,8 +372,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
         val currentDevice = core.videoDevice
         Log.i("[Context] Current camera device is $currentDevice")
 
-        val devices = core.videoDevicesList
-        for (camera in devices) {
+        for (camera in core.videoDevicesList) {
             if (camera != currentDevice && camera != "StaticImage: Static picture") {
                 Log.i("[Context] New camera device will be $camera")
                 core.videoDevice = camera
@@ -390,12 +393,13 @@ class CoreContext(val context: Context, coreConfig: Config) {
     }
 
     fun showSwitchCameraButton(): Boolean {
-        return core.videoDevicesList.orEmpty().size > 2 // Count StaticImage camera
+        return core.videoDevicesList.size > 2 // Count StaticImage camera
     }
 
     fun isVideoCallOrConferenceActive(): Boolean {
-        return if (core.conference != null && core.isInConference) {
-            core.conference.currentParams.videoEnabled()
+        val conference = core.conference
+        return if (conference != null && core.isInConference) {
+            conference.currentParams.videoEnabled()
         } else {
             core.currentCall?.currentParams?.videoEnabled() ?: false
         }

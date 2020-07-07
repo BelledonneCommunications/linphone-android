@@ -44,7 +44,7 @@ class IncomingCallViewModel(call: Call) : CallViewModel(call) {
     init {
         screenLocked.value = false
         inviteWithVideo.value = call.currentParams.videoEnabled()
-        earlyMediaVideoEnabled.value = call.state == Call.State.IncomingEarlyMedia && call.currentParams?.videoEnabled() ?: false
+        earlyMediaVideoEnabled.value = call.state == Call.State.IncomingEarlyMedia && call.currentParams.videoEnabled()
     }
 
     fun answer(doAction: Boolean) {
