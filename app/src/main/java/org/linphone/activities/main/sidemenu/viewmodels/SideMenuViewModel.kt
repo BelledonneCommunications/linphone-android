@@ -22,15 +22,18 @@ package org.linphone.activities.main.sidemenu.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.activities.main.settings.viewmodels.AccountSettingsViewModel
 import org.linphone.core.*
 
 class SideMenuViewModel : ViewModel() {
-    val showAssistant: Boolean = true
-    val showSettings: Boolean = true
-    val showRecordings: Boolean = true
-    val showAbout: Boolean = true
+    val showAccounts: Boolean = corePreferences.showAccountsInSideMenu
+    val showAssistant: Boolean = corePreferences.showAssistantInSideMenu
+    val showSettings: Boolean = corePreferences.showSettingsInSideMenu
+    val showRecordings: Boolean = corePreferences.showRecordingsInSideMenu
+    val showAbout: Boolean = corePreferences.showAboutInSideMenu
+    val showQuit: Boolean = corePreferences.showQuitInSideMenu
 
     val defaultAccount = MutableLiveData<AccountSettingsViewModel>()
     val defaultAccountFound = MutableLiveData<Boolean>()
