@@ -22,10 +22,21 @@ package org.linphone.activities.main.settings.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.activities.main.settings.SettingListenerStub
 
 class SettingsViewModel : ViewModel() {
     val tunnelAvailable: Boolean = coreContext.core.tunnelAvailable()
+
+    val showAccountSettings: Boolean = corePreferences.showAccountSettings
+    val showTunnelSettings: Boolean = tunnelAvailable && corePreferences.showTunnelSettings
+    val showAudioSettings: Boolean = corePreferences.showAudioSettings
+    val showVideoSettings: Boolean = corePreferences.showVideoSettings
+    val showCallSettings: Boolean = corePreferences.showCallSettings
+    val showChatSettings: Boolean = corePreferences.showChatSettings
+    val showNetworkSettings: Boolean = corePreferences.showNetworkSettings
+    val showContactsSettings: Boolean = corePreferences.showContactsSettings
+    val showAdvancedSettings: Boolean = corePreferences.showAdvancedSettings
 
     val accounts = MutableLiveData<ArrayList<AccountSettingsViewModel>>()
 

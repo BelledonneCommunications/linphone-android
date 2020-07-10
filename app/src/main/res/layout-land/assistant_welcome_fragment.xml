@@ -16,6 +16,9 @@
         <variable
             name="remoteProvisioningClickListener"
             type="android.view.View.OnClickListener"/>
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.assistant.viewmodels.WelcomeViewModel" />
     </data>
 
     <RelativeLayout
@@ -65,6 +68,7 @@
 
                     <TextView
                         android:id="@+id/account_creation"
+                        android:visibility="@{viewModel.showCreateAccount ? View.VISIBLE : View.GONE}"
                         android:onClick="@{createAccountClickListener}"
                         style="@style/button_font"
                         android:gravity="center"
@@ -80,6 +84,7 @@
 
                     <TextView
                         android:id="@+id/account_connection"
+                        android:visibility="@{viewModel.showLinphoneLogin ? View.VISIBLE : View.GONE}"
                         android:onClick="@{accountLoginClickListener}"
                         style="@style/button_font"
                         android:gravity="center"
@@ -95,6 +100,7 @@
 
                     <TextView
                         android:id="@+id/generic_connection"
+                        android:visibility="@{viewModel.showGenericLogin ? View.VISIBLE : View.GONE}"
                         android:onClick="@{genericAccountLoginClickListener}"
                         style="@style/button_font"
                         android:gravity="center"
@@ -110,6 +116,7 @@
 
                     <TextView
                         android:id="@+id/remote_configuration"
+                        android:visibility="@{viewModel.showRemoteProvisioning ? View.VISIBLE : View.GONE}"
                         android:onClick="@{remoteProvisioningClickListener}"
                         style="@style/button_font"
                         android:gravity="center"

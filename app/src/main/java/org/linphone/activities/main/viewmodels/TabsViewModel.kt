@@ -22,9 +22,15 @@ package org.linphone.activities.main.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.*
 
 class TabsViewModel : ViewModel() {
+    val showHistory: Boolean = corePreferences.showHistory
+    val showContacts: Boolean = corePreferences.showContacts
+    val showDialer: Boolean = corePreferences.showDialer
+    val showChat: Boolean = corePreferences.showChat
+
     val historySelected = MutableLiveData<Boolean>()
     val contactsSelected = MutableLiveData<Boolean>()
     val dialerSelected = MutableLiveData<Boolean>()
