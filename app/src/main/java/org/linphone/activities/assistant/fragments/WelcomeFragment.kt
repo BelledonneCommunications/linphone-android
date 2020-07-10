@@ -24,12 +24,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
+import org.linphone.activities.assistant.viewmodels.WelcomeViewModel
 import org.linphone.databinding.AssistantWelcomeFragmentBinding
 
 class WelcomeFragment : Fragment() {
     private lateinit var binding: AssistantWelcomeFragmentBinding
+    private lateinit var viewModel: WelcomeViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,6 +47,9 @@ class WelcomeFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         binding.lifecycleOwner = this
+
+        viewModel = ViewModelProvider(this).get(WelcomeViewModel::class.java)
+        binding.viewModel = viewModel
 
         binding.setCreateAccountClickListener {
             if (findNavController().currentDestination?.id == R.id.welcomeFragment) {
