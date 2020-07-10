@@ -69,6 +69,7 @@
                 <TextView
                     style="@style/settings_category_font"
                     android:text="@string/settings_accounts_title"
+                    android:visibility="@{viewModel.showAccountSettings ? View.VISIBLE : View.GONE}"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:layout_width="wrap_content"
@@ -78,6 +79,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:visibility="@{viewModel.showAccountSettings ? View.VISIBLE : View.GONE}"
                     linphone:entries="@{viewModel.accounts}"
                     linphone:layout="@{@layout/settings_account_cell}"/>
 
@@ -93,41 +95,48 @@
                 <include
                     layout="@layout/settings_widget_basic"
                     linphone:listener="@{viewModel.tunnelSettingsListener}"
-                    android:visibility="@{viewModel.tunnelAvailable ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.showTunnelSettings ? View.VISIBLE : View.GONE}"
                     linphone:title="@{@string/settings_tunnel_title}" />
 
                 <include
                     layout="@layout/settings_widget_basic"
+                    android:visibility="@{viewModel.showAudioSettings ? View.VISIBLE : View.GONE}"
                     linphone:listener="@{viewModel.audioSettingsListener}"
                     linphone:title="@{@string/settings_audio_title}" />
 
                 <include
                     layout="@layout/settings_widget_basic"
+                    android:visibility="@{viewModel.showVideoSettings ? View.VISIBLE : View.GONE}"
                     linphone:listener="@{viewModel.videoSettingsListener}"
                     linphone:title="@{@string/settings_video_title}" />
 
                 <include
                     layout="@layout/settings_widget_basic"
+                    android:visibility="@{viewModel.showCallSettings ? View.VISIBLE : View.GONE}"
                     linphone:listener="@{viewModel.callSettingsListener}"
                     linphone:title="@{@string/settings_call_title}" />
 
                 <include
                     layout="@layout/settings_widget_basic"
+                    android:visibility="@{viewModel.showChatSettings ? View.VISIBLE : View.GONE}"
                     linphone:listener="@{viewModel.chatSettingsListener}"
                     linphone:title="@{@string/settings_chat_title}" />
 
                 <include
                     layout="@layout/settings_widget_basic"
+                    android:visibility="@{viewModel.showNetworkSettings ? View.VISIBLE : View.GONE}"
                     linphone:listener="@{viewModel.networkSettingsListener}"
                     linphone:title="@{@string/settings_network_title}" />
 
                 <include
                     layout="@layout/settings_widget_basic"
+                    android:visibility="@{viewModel.showContactsSettings ? View.VISIBLE : View.GONE}"
                     linphone:listener="@{viewModel.contactsSettingsListener}"
                     linphone:title="@{@string/settings_contacts_title}" />
 
                 <include
                     layout="@layout/settings_widget_basic"
+                    android:visibility="@{viewModel.showAdvancedSettings ? View.VISIBLE : View.GONE}"
                     linphone:listener="@{viewModel.advancedSettingsListener}"
                     linphone:title="@{@string/settings_advanced_title}" />
 

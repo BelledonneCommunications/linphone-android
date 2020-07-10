@@ -34,6 +34,7 @@
             android:id="@+id/main_account"
             android:onClick="@{() -> viewModel.defaultAccount.accountsSettingsListener.onAccountClicked(viewModel.defaultAccount.identity)}"
             android:enabled="@{viewModel.defaultAccountFound}"
+            android:visibility="@{viewModel.showAccounts ? View.VISIBLE : View.GONE}"
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:background="?attr/lightToolbarBackgroundColor">
@@ -91,6 +92,7 @@
         </RelativeLayout>
 
         <LinearLayout
+            android:visibility="@{viewModel.showAccounts ? View.VISIBLE : View.GONE}"
             android:id="@+id/additional_accounts"
             android:layout_below="@id/main_account"
             android:layout_width="match_parent"
@@ -226,6 +228,7 @@
         <LinearLayout
             android:id="@+id/side_menu_quit"
             android:onClick="@{quitClickListener}"
+            android:visibility="@{viewModel.showQuit ? View.VISIBLE : View.GONE}"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_alignParentBottom="true"

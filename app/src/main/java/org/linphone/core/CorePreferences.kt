@@ -239,6 +239,85 @@ class CorePreferences constructor(private val context: Context) {
     val checkUpdateAvailableInterval: Int
         get() = config.getInt("app", "version_check_interval", 86400000)
 
+    /* Tabs */
+
+    val showHistory: Boolean
+        get() = config.getBool("app", "tabs_history", true)
+
+    val showContacts: Boolean
+        get() = config.getBool("app", "tabs_contacts", true)
+
+    val showDialer: Boolean
+        get() = config.getBool("app", "tabs_dialer", true)
+
+    val showChat: Boolean
+        get() = config.getBool("app", "tabs_chat", true)
+
+    /* Assistant */
+
+    val showCreateAccount: Boolean
+        get() = config.getBool("app", "assistant_create_account", true)
+
+    val showLinphoneLogin: Boolean
+        get() = config.getBool("app", "assistant_linphone_login", true)
+
+    val showGenericLogin: Boolean
+        get() = config.getBool("app", "assistant_generic_login", true)
+
+    val showRemoteProvisioning: Boolean
+        get() = config.getBool("app", "assistant_remote_provisioning", true)
+
+    /* Side Menu */
+
+    val showAccountsInSideMenu: Boolean
+        get() = config.getBool("app", "side_menu_accounts", true)
+
+    val showAssistantInSideMenu: Boolean
+        get() = config.getBool("app", "side_menu_assistant", true)
+
+    val showSettingsInSideMenu: Boolean
+        get() = config.getBool("app", "side_menu_settings", true)
+
+    val showRecordingsInSideMenu: Boolean
+        get() = config.getBool("app", "side_menu_recordings", true)
+
+    val showAboutInSideMenu: Boolean
+        get() = config.getBool("app", "side_menu_about", true)
+
+    val showQuitInSideMenu: Boolean
+        get() = config.getBool("app", "side_menu_quit", true)
+
+    /* Settings */
+
+    val showAccountSettings: Boolean
+        get() = config.getBool("app", "settings_accounts", true)
+
+    val showTunnelSettings: Boolean
+        get() = config.getBool("app", "settings_tunnel", true)
+
+    val showAudioSettings: Boolean
+        get() = config.getBool("app", "settings_audio", true)
+
+    val showVideoSettings: Boolean
+        get() = config.getBool("app", "settings_video", true)
+
+    val showCallSettings: Boolean
+        get() = config.getBool("app", "settings_call", true)
+
+    val showChatSettings: Boolean
+        get() = config.getBool("app", "settings_chat", true)
+
+    val showNetworkSettings: Boolean
+        get() = config.getBool("app", "settings_network", true)
+
+    val showContactsSettings: Boolean
+        get() = config.getBool("app", "settings_contacts", true)
+
+    val showAdvancedSettings: Boolean
+        get() = config.getBool("app", "settings_advanced", true)
+
+    /* Other stuff */
+
     private val darkModeAllowed: Boolean
         get() = config.getBool("app", "dark_mode_allowed", true)
 

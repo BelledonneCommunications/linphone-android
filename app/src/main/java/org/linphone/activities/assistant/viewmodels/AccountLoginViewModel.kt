@@ -21,6 +21,7 @@ package org.linphone.activities.assistant.viewmodels
 
 import androidx.lifecycle.*
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
@@ -100,7 +101,7 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
     init {
         accountCreator.addListener(listener)
 
-        loginWithUsernamePassword.value = false
+        loginWithUsernamePassword.value = coreContext.context.resources.getBoolean(R.bool.isTablet)
 
         loginEnabled.value = false
         loginEnabled.addSource(prefix) {
