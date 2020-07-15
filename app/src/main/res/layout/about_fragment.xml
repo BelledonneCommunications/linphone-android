@@ -183,7 +183,7 @@
                         android:paddingTop="20dp"
                         android:orientation="horizontal">
 
-                        <Button
+                        <TextView
                             android:onClick="@{() -> viewModel.uploadLogs()}"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -194,7 +194,7 @@
                             android:padding="10dp"
                             android:text="@string/about_send_log" />
 
-                        <Button
+                        <TextView
                             android:onClick="@{() -> viewModel.resetLogs()}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
