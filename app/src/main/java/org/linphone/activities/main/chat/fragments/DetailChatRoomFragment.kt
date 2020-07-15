@@ -542,8 +542,27 @@ class DetailChatRoomFragment : MasterFragment() {
             startActivity(intent)
         } catch (anfe: ActivityNotFoundException) {
             Log.e("[Chat Message] Couldn't find an activity to handle MIME type: $type")
-            val activity = requireActivity() as MainActivity
-            activity.showSnackBar(R.string.chat_room_cant_open_file_no_app_found)
+
+            val dialogViewModel = DialogViewModel(getString(R.string.dialog_try_open_file_as_text_body), getString(R.string.dialog_try_open_file_as_text_title))
+            val dialog = DialogUtils.getDialog(requireContext(), dialogViewModel)
+
+            dialogViewModel.showCancelButton {
+                dialog.dismiss()
+            }
+
+            dialogViewModel.showOkButton({
+                dialog.dismiss()
+                intent.setDataAndType(contentUri, "text/plain")
+                try {
+                    startActivity(intent)
+                } catch (anfe: ActivityNotFoundException) {
+                    Log.e("[Chat Message] Couldn't find an activity to handle text/plain MIME type")
+                    val activity = requireActivity() as MainActivity
+                    activity.showSnackBar(R.string.chat_room_cant_open_file_no_app_found)
+                }
+            })
+
+            dialog.show()
         }
     }
 }

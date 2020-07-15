@@ -560,6 +560,8 @@
         <item quantity="other">@string/dialog_default_delete_many</item>
     </plurals>
     <string name="dialog_update_available">An update is available</string>
+    <string name="dialog_try_open_file_as_text_title">No app found for this kind of file</string>
+    <string name="dialog_try_open_file_as_text_body">Would you like to try opening it as a plain text file?</string>
 
     <!-- Content description -->
     <string name="content_description_add_sip_address_field">Add a SIP address field</string>
