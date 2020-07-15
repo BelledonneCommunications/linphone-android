@@ -26,6 +26,7 @@ import android.util.SparseArray
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import org.linphone.R
 
 class RecyclerViewHeaderDecoration(private val adapter: HeaderAdapter) : RecyclerView.ItemDecoration() {
     private val headers: SparseArray<View> = SparseArray()
@@ -54,7 +55,8 @@ class RecyclerViewHeaderDecoration(private val adapter: HeaderAdapter) : Recycle
         }
 
         val displayMetrics = parent.context.resources.displayMetrics
-        val widthSpec = View.MeasureSpec.makeMeasureSpec(displayMetrics.widthPixels, View.MeasureSpec.EXACTLY)
+        val width = if (view.resources.getBoolean(R.bool.isTablet)) displayMetrics.widthPixels / 2 else displayMetrics.widthPixels
+        val widthSpec = View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY)
         val heightSpec = View.MeasureSpec.makeMeasureSpec(displayMetrics.heightPixels, View.MeasureSpec.EXACTLY)
         val childWidth = ViewGroup.getChildMeasureSpec(widthSpec, parent.paddingLeft + parent.paddingRight, view.layoutParams.width)
         val childHeight = ViewGroup.getChildMeasureSpec(heightSpec, parent.paddingTop + parent.paddingBottom, view.layoutParams.height)
