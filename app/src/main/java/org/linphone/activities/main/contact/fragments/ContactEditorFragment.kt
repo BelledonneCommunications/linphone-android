@@ -38,6 +38,7 @@ import kotlinx.coroutines.launch
 import org.linphone.R
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.contact.viewmodels.*
+import org.linphone.activities.main.navigateToContact
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.contact.NativeContact
 import org.linphone.core.tools.Log
@@ -87,9 +88,8 @@ class ContactEditorFragment : Fragment() {
             val savedContact = viewModel.save()
             if (savedContact is NativeContact) {
                 savedContact.syncValuesFromAndroidContact(requireContext())
-                val deepLink = "linphone-android://contact/view/${savedContact.nativeId}"
-                Log.i("[Contact Editor] Displaying contact, starting deep link: $deepLink")
-                findNavController().navigate(Uri.parse(deepLink))
+                Log.i("[Contact Editor] Displaying contact $savedContact")
+                navigateToContact(savedContact)
             } else {
                 findNavController().popBackStack()
             }

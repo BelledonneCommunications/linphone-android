@@ -25,11 +25,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -40,6 +37,8 @@ import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.chat.adapters.ChatRoomsListAdapter
 import org.linphone.activities.main.chat.viewmodels.ChatRoomsListViewModel
 import org.linphone.activities.main.fragments.MasterFragment
+import org.linphone.activities.main.navigateToChatRoom
+import org.linphone.activities.main.navigateToChatRoomCreation
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.ChatRoom
@@ -145,15 +144,7 @@ class MasterChatRoomsFragment : MasterFragment() {
         adapter.selectedChatRoomEvent.observe(viewLifecycleOwner, Observer {
             it.consume { chatRoom ->
                 sharedViewModel.selectedChatRoom.value = chatRoom
-                if (!resources.getBoolean(R.bool.isTablet)) {
-                    if (findNavController().currentDestination?.id == R.id.masterChatRoomsFragment) {
-                        findNavController().navigate(R.id.action_masterChatRoomsFragment_to_detailChatRoomFragment)
-                    }
-                } else {
-                    val navHostFragment =
-                        childFragmentManager.findFragmentById(R.id.chat_nav_container) as NavHostFragment
-                    navHostFragment.navController.navigate(R.id.action_global_detailChatRoomFragment)
-                }
+                navigateToChatRoom()
             }
         })
 
@@ -162,37 +153,12 @@ class MasterChatRoomsFragment : MasterFragment() {
         }
 
         binding.setNewOneToOneChatRoomClickListener {
-            val bundle = bundleOf("createGroup" to false)
-            if (!resources.getBoolean(R.bool.isTablet)) {
-                if (findNavController().currentDestination?.id == R.id.masterChatRoomsFragment) {
-                    findNavController().navigate(
-                        R.id.action_masterChatRoomsFragment_to_chatRoomCreationFragment,
-                        bundle
-                    )
-                }
-            } else {
-                val navHostFragment =
-                    childFragmentManager.findFragmentById(R.id.chat_nav_container) as NavHostFragment
-                navHostFragment.navController.navigate(R.id.action_global_chatRoomCreationFragment, bundle)
-            }
+            navigateToChatRoomCreation(false)
         }
 
         binding.setNewGroupChatRoomClickListener {
             sharedViewModel.selectedGroupChatRoom.value = null
-
-            val bundle = bundleOf("createGroup" to true)
-            if (!resources.getBoolean(R.bool.isTablet)) {
-                if (findNavController().currentDestination?.id == R.id.masterChatRoomsFragment) {
-                    findNavController().navigate(
-                        R.id.action_masterChatRoomsFragment_to_chatRoomCreationFragment,
-                        bundle
-                    )
-                }
-            } else {
-                val navHostFragment =
-                    childFragmentManager.findFragmentById(R.id.chat_nav_container) as NavHostFragment
-                navHostFragment.navController.navigate(R.id.action_global_chatRoomCreationFragment, bundle)
-            }
+            navigateToChatRoomCreation(true)
         }
 
         val localSipUri = arguments?.getString("LocalSipUri")

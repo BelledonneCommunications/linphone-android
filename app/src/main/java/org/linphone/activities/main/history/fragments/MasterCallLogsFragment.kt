@@ -27,7 +27,6 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -39,6 +38,7 @@ import org.linphone.activities.main.fragments.MasterFragment
 import org.linphone.activities.main.history.adapters.CallLogsListAdapter
 import org.linphone.activities.main.history.viewmodels.CallLogsListViewModel
 import org.linphone.activities.main.history.viewmodels.GroupedCallLogViewModel
+import org.linphone.activities.main.navigateToCallHistory
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.main.viewmodels.TabsViewModel
@@ -157,15 +157,7 @@ class MasterCallLogsFragment : MasterFragment() {
         adapter.selectedCallLogEvent.observe(viewLifecycleOwner, Observer {
             it.consume { callLog ->
                 sharedViewModel.selectedCallLogGroup.value = callLog
-                if (!resources.getBoolean(R.bool.isTablet)) {
-                    if (findNavController().currentDestination?.id == R.id.masterCallLogsFragment) {
-                        findNavController().navigate(R.id.action_masterCallLogsFragment_to_detailCallLogFragment)
-                    }
-                } else {
-                    val navHostFragment =
-                        childFragmentManager.findFragmentById(R.id.history_nav_container) as NavHostFragment
-                    navHostFragment.navController.navigate(R.id.action_global_detailCallLogFragment)
-                }
+                navigateToCallHistory()
             }
         })
 
