@@ -28,8 +28,6 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -40,6 +38,8 @@ import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.contact.adapters.ContactsListAdapter
 import org.linphone.activities.main.contact.viewmodels.ContactsListViewModel
 import org.linphone.activities.main.fragments.MasterFragment
+import org.linphone.activities.main.navigateToContact
+import org.linphone.activities.main.navigateToContactEditor
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.contact.Contact
@@ -138,11 +138,11 @@ class MasterContactsFragment : MasterFragment() {
                 listViewModel.filter.value = ""
 
                 if (editOnClick) {
-                    goToContactEditor()
+                    navigateToContactEditor(sipUriToAdd)
                     editOnClick = false
                     sipUriToAdd = null
                 } else {
-                    goToContactDetails()
+                    navigateToContact()
                 }
             }
         })
@@ -169,7 +169,7 @@ class MasterContactsFragment : MasterFragment() {
         binding.setNewContactClickListener {
             // Remove any previously selected contact
             sharedViewModel.selectedContact.value = null
-            goToContactEditor()
+            navigateToContactEditor(sipUriToAdd)
         }
 
         val id = arguments?.getString("id")
@@ -251,33 +251,6 @@ class MasterContactsFragment : MasterFragment() {
             } else {
                 Log.w("[Contacts] WRITE_CONTACTS permission denied")
             }
-        }
-    }
-
-    private fun goToContactDetails() {
-        if (!resources.getBoolean(R.bool.isTablet)) {
-            if (findNavController().currentDestination?.id == R.id.masterContactsFragment) {
-                findNavController().navigate(R.id.action_masterContactsFragment_to_detailContactFragment)
-            }
-        } else {
-            val navHostFragment =
-                childFragmentManager.findFragmentById(R.id.contacts_nav_container) as NavHostFragment
-            navHostFragment.navController.navigate(R.id.action_global_detailContactFragment)
-        }
-    }
-
-    private fun goToContactEditor() {
-        val args = Bundle()
-        if (sipUriToAdd != null) args.putString("SipUri", sipUriToAdd)
-
-        if (!resources.getBoolean(R.bool.isTablet)) {
-            if (findNavController().currentDestination?.id == R.id.masterContactsFragment) {
-                findNavController().navigate(R.id.action_masterContactsFragment_to_contactEditorFragment, args)
-            }
-        } else {
-            val navHostFragment =
-                childFragmentManager.findFragmentById(R.id.contacts_nav_container) as NavHostFragment
-            navHostFragment.navController.navigate(R.id.action_global_contactEditorFragment, args)
         }
     }
 }

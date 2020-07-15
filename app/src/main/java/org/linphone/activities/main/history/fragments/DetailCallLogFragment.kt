@@ -19,7 +19,6 @@
  */
 package org.linphone.activities.main.history.fragments
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -33,6 +32,9 @@ import org.linphone.R
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.history.viewmodels.CallLogViewModel
 import org.linphone.activities.main.history.viewmodels.CallLogViewModelFactory
+import org.linphone.activities.main.navigateToContact
+import org.linphone.activities.main.navigateToContacts
+import org.linphone.activities.main.navigateToFriend
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.contact.NativeContact
 import org.linphone.core.tools.Log
@@ -79,23 +81,20 @@ class DetailCallLogFragment : Fragment() {
 
         binding.setNewContactClickListener {
             viewModel.callLog.remoteAddress.clean()
-            val deepLink = "linphone-android://contact/new/${viewModel.callLog.remoteAddress.asStringUriOnly()}"
-            Log.i("[History] Creating contact, starting deep link: $deepLink")
-            findNavController().navigate(Uri.parse(deepLink))
+            Log.i("[History] Creating contact with SIP URI: ${viewModel.callLog.remoteAddress.asStringUriOnly()}")
+            navigateToContacts(viewModel.callLog.remoteAddress.asStringUriOnly())
         }
 
         binding.setContactClickListener {
             val contact = viewModel.contact.value as? NativeContact
             if (contact != null) {
-                val deepLink = "linphone-android://contact/view/${contact.nativeId}"
-                Log.i("[History] Displaying contact, starting deep link: $deepLink")
-                findNavController().navigate(Uri.parse(deepLink))
+                Log.i("[History] Displaying contact $contact")
+                navigateToContact(contact)
             } else {
                 val address = viewModel.callLog.remoteAddress
                 address.clean()
-                val deepLink = "linphone-android://contact/view-friend/${address.asStringUriOnly()}"
-                Log.i("[History] Displaying friend, starting deep link: $deepLink")
-                findNavController().navigate(Uri.parse(deepLink))
+                Log.i("[History] Displaying friend with address ${address.asStringUriOnly()}")
+                navigateToFriend(address)
             }
         }
 

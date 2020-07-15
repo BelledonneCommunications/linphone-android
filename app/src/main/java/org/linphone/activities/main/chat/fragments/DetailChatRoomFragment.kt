@@ -35,7 +35,6 @@ import androidx.appcompat.view.menu.MenuPopupHelper
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -48,6 +47,8 @@ import org.linphone.activities.main.chat.ChatScrollListener
 import org.linphone.activities.main.chat.adapters.ChatMessagesListAdapter
 import org.linphone.activities.main.chat.viewmodels.*
 import org.linphone.activities.main.fragments.MasterFragment
+import org.linphone.activities.main.navigateToChatRooms
+import org.linphone.activities.main.navigateToContacts
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.*
@@ -172,10 +173,8 @@ class DetailChatRoomFragment : MasterFragment() {
                 // as we don't want to forward it in this chat room
                 sharedViewModel.messageToForwardEvent.removeObservers(viewLifecycleOwner)
                 sharedViewModel.messageToForwardEvent.value = Event(chatMessage)
-
-                val deepLink = "linphone-android://chat/"
-                Log.i("[Chat Room] Forwarding message, starting deep link: $deepLink")
-                findNavController().navigate(Uri.parse(deepLink))
+                Log.i("[Chat Room] Forwarding message, going to chat rooms list")
+                navigateToChatRooms()
             }
         })
 
@@ -183,15 +182,14 @@ class DetailChatRoomFragment : MasterFragment() {
             it.consume { chatMessage ->
                 val args = Bundle()
                 args.putString("MessageId", chatMessage.messageId)
-                Navigation.findNavController(binding.root).navigate(R.id.action_detailChatRoomFragment_to_imdnFragment, args)
+                findNavController().navigate(R.id.action_detailChatRoomFragment_to_imdnFragment, args)
             }
         })
 
         adapter.addSipUriToContactEvent.observe(viewLifecycleOwner, Observer {
             it.consume { sipUri ->
-                val deepLink = "linphone-android://contact/new/$sipUri"
-                Log.i("[Chat Room] Creating contact, starting deep link: $deepLink")
-                findNavController().navigate(Uri.parse(deepLink))
+                Log.i("[Chat Room] Going to contacts list with SIP URI to add: $sipUri")
+                navigateToContacts(sipUri)
             }
         })
 
