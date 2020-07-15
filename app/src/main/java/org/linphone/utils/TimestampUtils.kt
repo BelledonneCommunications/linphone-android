@@ -79,7 +79,7 @@ class TimestampUtils {
             if (isSameYear(timestamp, timestampInSecs)) {
                 // Remove the year part of the format
                 dateFormat.applyPattern(
-                    dateFormat.toPattern().replace("/?y+/?|\\s?y+\\s?".toRegex(), if (shortDate) "" else " ")
+                    dateFormat.toPattern().replace("/?y+/?|,?\\s?y+\\s?".toRegex(), if (shortDate) "" else " ")
                 )
             }
 
