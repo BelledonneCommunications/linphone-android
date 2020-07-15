@@ -26,9 +26,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
-import org.linphone.R
+import org.linphone.activities.main.*
+import org.linphone.activities.main.navigateToAccountSettings
+import org.linphone.activities.main.navigateToAudioSettings
+import org.linphone.activities.main.navigateToTunnelSettings
 import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.activities.main.settings.viewmodels.SettingsViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
@@ -70,155 +72,62 @@ class SettingsFragment : Fragment() {
 
         val identity = arguments?.getString("identity")
         if (identity != null) {
-            val args = Bundle()
-            args.putString("Identity", identity)
             Log.i("[Settings] Found identity parameter in arguments: $identity")
-            arguments?.clear()
-
-            if (!resources.getBoolean(R.bool.isTablet)) {
-                if (findNavController().currentDestination?.id == R.id.settingsFragment) {
-                    findNavController().navigate(
-                        R.id.action_settingsFragment_to_accountSettingsFragment,
-                        args
-                    )
-                }
-            } else {
-                val navHostFragment =
-                    childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
-                navHostFragment.navController.navigate(R.id.action_global_accountSettingsFragment, args)
-            }
+            navigateToAccountSettings(identity)
         }
 
         viewModel.accountsSettingsListener = object : SettingListenerStub() {
             override fun onAccountClicked(identity: String) {
-                val args = Bundle()
-                args.putString("Identity", identity)
                 Log.i("[Settings] Navigation to settings for proxy with identity: $identity")
-
-                if (!resources.getBoolean(R.bool.isTablet)) {
-                    if (findNavController().currentDestination?.id == R.id.settingsFragment) {
-                        findNavController().navigate(
-                            R.id.action_settingsFragment_to_accountSettingsFragment,
-                            args
-                        )
-                    }
-                } else {
-                    val navHostFragment =
-                        childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
-                    navHostFragment.navController.navigate(R.id.action_global_accountSettingsFragment, args)
-                }
+                navigateToAccountSettings(identity)
             }
         }
 
         viewModel.tunnelSettingsListener = object : SettingListenerStub() {
             override fun onClicked() {
-                if (!resources.getBoolean(R.bool.isTablet)) {
-                    if (findNavController().currentDestination?.id == R.id.settingsFragment) {
-                        findNavController().navigate(R.id.action_settingsFragment_to_tunnelSettingsFragment)
-                    }
-                } else {
-                    val navHostFragment =
-                        childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
-                    navHostFragment.navController.navigate(R.id.action_global_tunnelSettingsFragment)
-                }
+                navigateToTunnelSettings()
             }
         }
 
         viewModel.audioSettingsListener = object : SettingListenerStub() {
             override fun onClicked() {
-                if (!resources.getBoolean(R.bool.isTablet)) {
-                    if (findNavController().currentDestination?.id == R.id.settingsFragment) {
-                        findNavController().navigate(R.id.action_settingsFragment_to_audioSettingsFragment)
-                    }
-                } else {
-                    val navHostFragment =
-                        childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
-                    navHostFragment.navController.navigate(R.id.action_global_audioSettingsFragment)
-                }
+                navigateToAudioSettings()
             }
         }
 
         viewModel.videoSettingsListener = object : SettingListenerStub() {
             override fun onClicked() {
-                if (!resources.getBoolean(R.bool.isTablet)) {
-                    if (findNavController().currentDestination?.id == R.id.settingsFragment) {
-                        findNavController().navigate(R.id.action_settingsFragment_to_videoSettingsFragment)
-                    }
-                } else {
-                    val navHostFragment =
-                        childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
-                    navHostFragment.navController.navigate(R.id.action_global_videoSettingsFragment)
-                }
+                navigateToVideoSettings()
             }
         }
 
         viewModel.callSettingsListener = object : SettingListenerStub() {
             override fun onClicked() {
-                if (!resources.getBoolean(R.bool.isTablet)) {
-                    if (findNavController().currentDestination?.id == R.id.settingsFragment) {
-                        findNavController().navigate(R.id.action_settingsFragment_to_callSettingsFragment)
-                    }
-                } else {
-                    val navHostFragment =
-                        childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
-                    navHostFragment.navController.navigate(R.id.action_global_callSettingsFragment)
-                }
+                navigateToCallSettings()
             }
         }
 
         viewModel.chatSettingsListener = object : SettingListenerStub() {
             override fun onClicked() {
-                if (!resources.getBoolean(R.bool.isTablet)) {
-                    if (findNavController().currentDestination?.id == R.id.settingsFragment) {
-                        findNavController().navigate(R.id.action_settingsFragment_to_chatSettingsFragment)
-                    }
-                } else {
-                    val navHostFragment =
-                        childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
-                    navHostFragment.navController.navigate(R.id.action_global_chatSettingsFragment)
-                }
+                navigateToChatSettings()
             }
         }
 
         viewModel.networkSettingsListener = object : SettingListenerStub() {
             override fun onClicked() {
-                if (!resources.getBoolean(R.bool.isTablet)) {
-                    if (findNavController().currentDestination?.id == R.id.settingsFragment) {
-                        findNavController().navigate(R.id.action_settingsFragment_to_networkSettingsFragment)
-                    }
-                } else {
-                    val navHostFragment =
-                        childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
-                    navHostFragment.navController.navigate(R.id.action_global_networkSettingsFragment)
-                }
+                navigateToNetworkSettings()
             }
         }
 
         viewModel.contactsSettingsListener = object : SettingListenerStub() {
             override fun onClicked() {
-                if (!resources.getBoolean(R.bool.isTablet)) {
-                    if (findNavController().currentDestination?.id == R.id.settingsFragment) {
-                        findNavController().navigate(R.id.action_settingsFragment_to_contactsSettingsFragment)
-                    }
-                } else {
-                    val navHostFragment =
-                        childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
-                    navHostFragment.navController.navigate(R.id.action_global_contactsSettingsFragment)
-                }
+                navigateToContactsSettings()
             }
         }
 
         viewModel.advancedSettingsListener = object : SettingListenerStub() {
             override fun onClicked() {
-                if (!resources.getBoolean(R.bool.isTablet)) {
-                    if (findNavController().currentDestination?.id == R.id.settingsFragment) {
-                        findNavController().navigate(R.id.action_settingsFragment_to_advancedSettingsFragment)
-                    }
-                } else {
-                    val navHostFragment =
-                        childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
-                    navHostFragment.navController.navigate(R.id.action_global_advancedSettingsFragment)
-                }
+                navigateToAdvancedSettings()
             }
         }
     }
