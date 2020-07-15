@@ -41,6 +41,7 @@ class DialogViewModel(val message: String, val title: String = "") : ViewModel()
 
     init {
         doNotAskAgain.value = false
+        showTitle = title.isNotEmpty()
     }
 
     var showCancel: Boolean = false

@@ -79,7 +79,7 @@ class LinphoneUtils {
         fun deleteFilesAttachedToChatMessage(chatMessage: ChatMessage) {
             for (content in chatMessage.contents) {
                 val filePath = content.filePath
-                if (filePath != null) {
+                if (filePath != null && filePath.isNotEmpty()) {
                     Log.i("[Linphone Utils] Deleting file $filePath")
                     FileUtils.deleteFile(filePath)
                 }
