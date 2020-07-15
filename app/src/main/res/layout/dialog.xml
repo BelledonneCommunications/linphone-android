@@ -131,24 +131,26 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <Button
+            <TextView
                 android:onClick="@{() -> viewModel.onCancelClicked()}"
                 style="@style/dialog_cancel_button_font"
                 android:layout_width="137dp"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_margin="10dp"
+                android:gravity="center"
                 android:background="@drawable/resizable_assistant_button"
                 android:ellipsize="end"
                 android:padding="10dp"
                 android:text="@string/dialog_cancel"
                 android:visibility="@{viewModel.showCancel ? View.VISIBLE : View.GONE}" />
 
-            <Button
+            <TextView
                 android:onClick="@{() -> viewModel.onDeleteClicked()}"
                 style="@style/dialog_action_button_font"
                 android:layout_width="137dp"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_margin="10dp"
+                android:gravity="center"
                 android:background="@drawable/resizable_assistant_button"
                 android:backgroundTint="@color/red_color"
                 android:ellipsize="end"
@@ -156,12 +158,13 @@
                 android:text="@{viewModel.deleteLabel ?? @string/dialog_delete, default=@string/dialog_delete}"
                 android:visibility="@{viewModel.showDelete ? View.VISIBLE : View.GONE}" />
 
-            <Button
+            <TextView
                 android:onClick="@{() -> viewModel.onOkClicked()}"
                 style="@style/dialog_action_button_font"
                 android:layout_width="137dp"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_margin="10dp"
+                android:gravity="center"
                 android:background="@drawable/resizable_assistant_button"
                 android:backgroundTint="@color/green_color"
                 android:ellipsize="end"

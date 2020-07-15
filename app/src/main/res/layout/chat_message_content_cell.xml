@@ -62,15 +62,15 @@
             android:gravity="center"
             android:textAlignment="center" />
 
-        <Button
+        <TextView
             style="@style/button_font"
             android:onClick="@{() -> data.download()}"
             android:onLongClick="@{longClickListener}"
             android:enabled="@{data.downloadEnabled}"
             android:text="@string/chat_message_download_file"
             android:visibility="@{data.downloadable ? View.VISIBLE : View.GONE}"
-            android:layout_width="137dp"
-            android:layout_height="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:textColor="@drawable/assistant_button_text_color"
             android:background="@drawable/resizable_assistant_button"
