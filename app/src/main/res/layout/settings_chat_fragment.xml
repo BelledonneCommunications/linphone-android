@@ -93,10 +93,11 @@
 
                 <include
                     layout="@layout/settings_widget_switch"
-                    linphone:title="@{@string/chat_settings_downloaded_images_public_title}"
-                    linphone:subtitle="@{@string/chat_settings_downloaded_images_public_summary}"
-                    linphone:listener="@{viewModel.downloadedImagesPublicListener}"
-                    linphone:checked="@={viewModel.downloadedImagesPublic}"/>
+                    linphone:title="@{@string/chat_settings_downloaded_media_public_title}"
+                    linphone:enabled="@{viewModel.autoDownloadIndex == 0}"
+                    linphone:subtitle="@{@string/chat_settings_downloaded_media_public_summary}"
+                    linphone:listener="@{viewModel.downloadedMediaPublicListener}"
+                    linphone:checked="@={viewModel.downloadedMediaPublic}"/>
 
                 <include
                     layout="@layout/settings_widget_switch"
