@@ -42,6 +42,11 @@ class ChatSettingsViewModel : GenericSettingsViewModel() {
             core.maxSizeForAutoDownloadIncomingFiles = maxSize
             autoDownloadMaxSize.value = maxSize
             updateAutoDownloadIndexFromMaxSize(maxSize)
+
+            // Auto download isn't compatible with making downloaded images public
+            if (position > 0 && downloadedMediaPublic.value == true) {
+                downloadedMediaPublic.value = false
+            }
         }
     }
     val autoDownloadIndex = MutableLiveData<Int>()
@@ -58,12 +63,12 @@ class ChatSettingsViewModel : GenericSettingsViewModel() {
     }
     val autoDownloadMaxSize = MutableLiveData<Int>()
 
-    val downloadedImagesPublicListener = object : SettingListenerStub() {
+    val downloadedMediaPublicListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
-            prefs.makePublicDownloadedImages = newValue
+            downloadedMediaPublic.value = newValue
         }
     }
-    val downloadedImagesPublic = MutableLiveData<Boolean>()
+    val downloadedMediaPublic = MutableLiveData<Boolean>()
 
     val launcherShortcutsListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
@@ -96,7 +101,7 @@ class ChatSettingsViewModel : GenericSettingsViewModel() {
     val goToAndroidNotificationSettingsEvent = MutableLiveData<Event<Boolean>>()
 
     init {
-        downloadedImagesPublic.value = prefs.makePublicDownloadedImages
+        downloadedMediaPublic.value = prefs.makePublicMediaFilesDownloaded
         initAutoDownloadList()
         launcherShortcuts.value = prefs.chatRoomShortcuts
         hideEmptyRooms.value = prefs.hideEmptyRooms
