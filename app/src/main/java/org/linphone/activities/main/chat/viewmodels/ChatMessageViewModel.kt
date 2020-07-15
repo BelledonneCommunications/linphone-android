@@ -81,7 +81,7 @@ class ChatMessageViewModel(
                 // It will even cause the app to crash if updateContentsList is not call right after
                 updateContentsList()
 
-                if (!message.isEphemeral && corePreferences.makePublicDownloadedImages) {
+                if (!message.isEphemeral && corePreferences.makePublicMediaFilesDownloaded) {
                     if (Version.sdkAboveOrEqual(Version.API29_ANDROID_10) || PermissionHelper.get().hasWriteExternalStorage()) {
                         for (content in message.contents) {
                             if (content.isFile && content.filePath != null && content.userData == null) {

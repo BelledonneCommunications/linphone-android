@@ -404,8 +404,8 @@
     <string name="chat_settings_auto_download_under_size">If lighter than given maximum size</string>
     <string name="chat_settings_auto_download_max_size_title">Max size</string>
     <string name="chat_settings_auto_download_max_size_summary">in bytes</string>
-    <string name="chat_settings_downloaded_images_public_title">Make downloaded images visible in native gallery</string>
-    <string name="chat_settings_downloaded_images_public_summary">Images in ephemeral messages won\'t be</string>
+    <string name="chat_settings_downloaded_media_public_title">Make downloaded media public</string>
+    <string name="chat_settings_downloaded_media_public_summary">Files in ephemeral messages won\'t be, doesn\'t work with auto download feature</string>
     <string name="chat_settings_launcher_shortcuts_title">Create shortcuts to chat rooms in launcher</string>
     <string name="chat_settings_launcher_shortcuts_summary">Will be replaced by contacts shortcuts if enabled</string>
     <string name="chat_settings_hide_empty_rooms_title">Hide empty chat rooms</string>

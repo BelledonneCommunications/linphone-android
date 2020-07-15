@@ -88,7 +88,8 @@ class CorePreferences constructor(private val context: Context) {
 
     /* Chat */
 
-    var makePublicDownloadedImages: Boolean
+    var makePublicMediaFilesDownloaded: Boolean
+        // Keep old name for backward compatibility
         get() = config.getBool("app", "make_downloaded_images_public_in_gallery", true)
         set(value) {
             config.setBool("app", "make_downloaded_images_public_in_gallery", value)
