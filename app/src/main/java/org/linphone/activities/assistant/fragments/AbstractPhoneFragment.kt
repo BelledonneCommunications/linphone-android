@@ -21,9 +21,9 @@
 package org.linphone.activities.assistant.fragments
 
 import android.Manifest
-import android.app.AlertDialog
 import android.content.pm.PackageManager
 import androidx.fragment.app.Fragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.linphone.R
 import org.linphone.activities.assistant.viewmodels.AbstractPhoneViewModel
 import org.linphone.core.tools.Log
@@ -66,7 +66,7 @@ abstract class AbstractPhoneFragment : Fragment() {
     }
 
     protected fun showPhoneNumberInfoDialog() {
-        AlertDialog.Builder(context)
+        MaterialAlertDialogBuilder(context)
             .setTitle(getString(R.string.assistant_phone_number_info_title))
             .setMessage(
                 getString(R.string.assistant_phone_number_link_info_content) + "\n" +
@@ -74,6 +74,7 @@ abstract class AbstractPhoneFragment : Fragment() {
                             R.string.assistant_phone_number_link_info_content_already_account
                         )
             )
+            .setNegativeButton(getString(R.string.dialog_ok), null)
             .show()
     }
 }
