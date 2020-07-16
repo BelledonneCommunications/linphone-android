@@ -3,6 +3,9 @@
 
     <data>
         <import type="android.view.View"/>
+        <variable
+            name="cancelClickListener"
+            type="android.view.View.OnClickListener"/>
     </data>
 
     <LinearLayout
@@ -35,7 +38,7 @@
                 android:layout_toLeftOf="@id/clear_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/assistant_choose_country">
+                android:hint="@string/assistant_choose_country_title">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/search_country"
@@ -65,10 +68,20 @@
         <ListView
             android:id="@+id/countryList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:cacheColorHint="@color/transparent_color"
             android:divider="@color/light_grey_color"
             android:dividerHeight="1dp" />
+
+        <TextView
+            android:onClick="@{cancelClickListener}"
+            style="@style/button_font"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_cancel"
+            android:gravity="right" />
 
     </LinearLayout>
 
