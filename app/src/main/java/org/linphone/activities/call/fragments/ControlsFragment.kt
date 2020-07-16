@@ -29,6 +29,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.activities.call.viewmodels.CallsViewModel
+import org.linphone.activities.call.viewmodels.ConferenceViewModel
 import org.linphone.activities.call.viewmodels.ControlsViewModel
 import org.linphone.activities.call.viewmodels.SharedCallViewModel
 import org.linphone.activities.main.MainActivity
@@ -39,6 +40,7 @@ class ControlsFragment : Fragment() {
     private lateinit var binding: CallControlsFragmentBinding
     private lateinit var callsViewModel: CallsViewModel
     private lateinit var controlsViewModel: ControlsViewModel
+    private lateinit var conferenceViewModel: ConferenceViewModel
     private lateinit var sharedViewModel: SharedCallViewModel
 
     override fun onCreateView(
@@ -64,6 +66,9 @@ class ControlsFragment : Fragment() {
 
         controlsViewModel = ViewModelProvider(this).get(ControlsViewModel::class.java)
         binding.controlsViewModel = controlsViewModel
+
+        conferenceViewModel = ViewModelProvider(this).get(ConferenceViewModel::class.java)
+        binding.conferenceViewModel = conferenceViewModel
 
         callsViewModel.currentCallViewModel.observe(viewLifecycleOwner, Observer {
             if (it != null) {
