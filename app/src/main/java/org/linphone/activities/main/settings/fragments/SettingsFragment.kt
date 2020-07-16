@@ -70,9 +70,10 @@ class SettingsFragment : Fragment() {
             viewModel.updateAccountsList()
         })
 
-        val identity = arguments?.getString("identity")
+        val identity = arguments?.getString("Identity")
         if (identity != null) {
             Log.i("[Settings] Found identity parameter in arguments: $identity")
+            arguments?.clear()
             navigateToAccountSettings(identity)
         }
 

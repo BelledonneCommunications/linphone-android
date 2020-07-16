@@ -34,6 +34,7 @@ import org.linphone.activities.main.contact.fragments.MasterContactsFragment
 import org.linphone.activities.main.history.fragments.DetailCallLogFragment
 import org.linphone.activities.main.history.fragments.MasterCallLogsFragment
 import org.linphone.activities.main.settings.fragments.SettingsFragment
+import org.linphone.activities.main.sidemenu.fragments.SideMenuFragment
 import org.linphone.contact.NativeContact
 import org.linphone.core.Address
 
@@ -149,6 +150,18 @@ internal fun DetailCallLogFragment.navigateToFriend(friendAddress: Address) {
 }
 
 /* Settings  related */
+
+internal fun SideMenuFragment.navigateToAccountSettings(identity: String) {
+    if (!resources.getBoolean(R.bool.isTablet)) {
+        // If not a tablet, navigate directly to account settings fragment
+        val deepLink = "linphone-android://account-settings/$identity"
+        findNavController().navigate(Uri.parse(deepLink))
+    } else {
+        // On tablet, to keep the categories list on left side, navigate to settings fragment first
+        val deepLink = "linphone-android://settings/$identity"
+        findNavController().navigate(Uri.parse(deepLink))
+    }
+}
 
 internal fun SettingsFragment.navigateToAccountSettings(identity: String) {
     val bundle = bundleOf("Identity" to identity)

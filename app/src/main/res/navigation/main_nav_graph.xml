@@ -275,7 +275,7 @@
             app:popUpToInclusive="false" />
         <deepLink
             android:id="@+id/settingsDeepLink"
-            app:uri="linphone-android://account-settings/{identity}"
+            app:uri="linphone-android://settings/{Identity}"
             android:autoVerify="true" />
     </fragment>
     <action
@@ -296,6 +296,10 @@
         <action
             android:id="@+id/action_accountSettingsFragment_to_phoneAccountLinkingFragment"
             app:destination="@id/phoneAccountLinkingFragment" />
+        <deepLink
+            android:id="@+id/accountSettingsDeepLink"
+            app:uri="linphone-android://account-settings/{Identity}"
+            android:autoVerify="true" />
     </fragment>
     <fragment
         android:id="@+id/advancedSettingsFragment"

@@ -20,7 +20,6 @@
 package org.linphone.activities.main.sidemenu.fragments
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -32,6 +31,7 @@ import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.assistant.AssistantActivity
+import org.linphone.activities.main.navigateToAccountSettings
 import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.activities.main.sidemenu.viewmodels.SideMenuViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
@@ -77,8 +77,7 @@ class SideMenuFragment : Fragment() {
                 Log.i("[Side Menu] Navigation to settings for proxy with identity: $identity")
 
                 sharedViewModel.toggleDrawerEvent.value = Event(true)
-                val deepLink = "linphone-android://account-settings/$identity"
-                findNavController().navigate(Uri.parse(deepLink))
+                navigateToAccountSettings(identity)
             }
         }
 
