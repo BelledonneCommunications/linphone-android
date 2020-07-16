@@ -32,6 +32,7 @@
     <string name="select_your_country">Select your country</string>
     <string name="international_prefix">Prefix</string>
     <string name="assistant_choose_country">Choose a country</string>
+    <string name="assistant_choose_country_title">Country name or prefix</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="email">Email</string>

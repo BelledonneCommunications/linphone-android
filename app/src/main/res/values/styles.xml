@@ -66,6 +66,13 @@
         <item name="android:textSize">13sp</item>
     </style>
 
+    <style name="assistant_country_dialog_style" parent="Base.Theme.AppCompat.Dialog">
+        <item name="colorPrimary">@color/primary_color</item>
+        <item name="android:textColorPrimary">@color/light_primary_text_color</item>
+        <item name="android:windowMinWidthMajor">97%</item>
+        <item name="android:windowMinWidthMinor">97%</item>
+    </style>
+
     <!-- About related -->
 
     <style name="about_license_font" parent="@android:style/TextAppearance.Medium">
