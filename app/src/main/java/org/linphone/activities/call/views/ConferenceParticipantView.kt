@@ -26,11 +26,11 @@ import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.databinding.DataBindingUtil
 import org.linphone.R
-import org.linphone.activities.call.viewmodels.CallViewModel
-import org.linphone.databinding.CallConferenceBinding
+import org.linphone.activities.call.viewmodels.ConferenceParticipantViewModel
+import org.linphone.databinding.CallConferenceParticipantBinding
 
-class ConferenceCallView : LinearLayout {
-    private lateinit var binding: CallConferenceBinding
+class ConferenceParticipantView : LinearLayout {
+    private lateinit var binding: CallConferenceParticipantBinding
 
     constructor(context: Context) : super(context) {
         init(context)
@@ -53,15 +53,16 @@ class ConferenceCallView : LinearLayout {
 
     fun init(context: Context) {
         binding = DataBindingUtil.inflate(
-            LayoutInflater.from(context), R.layout.call_conference, this, true
+            LayoutInflater.from(context), R.layout.call_conference_participant, this, true
         )
     }
 
-    fun setViewModel(viewModel: CallViewModel) {
+    fun setViewModel(viewModel: ConferenceParticipantViewModel) {
         binding.viewModel = viewModel
 
+        // TODO get timestamp at which participant joined the conference
         binding.callTimer.base =
-            SystemClock.elapsedRealtime() - (1000 * viewModel.call.duration) // Linphone timestamps are in seconds
+            SystemClock.elapsedRealtime() - (1000 * viewModel.participant.creationTime) // Linphone timestamps are in seconds
         binding.callTimer.start()
     }
 }
