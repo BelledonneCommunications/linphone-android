@@ -5,10 +5,10 @@
     <data>
         <variable
             name="data"
-            type="org.linphone.activities.call.viewmodels.CallViewModel" />
+            type="org.linphone.activities.call.viewmodels.ConferenceParticipantViewModel" />
     </data>
 
-    <org.linphone.activities.call.views.ConferenceCallView
+    <org.linphone.activities.call.views.ConferenceParticipantView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         bind:viewModel="@{data}"/>
