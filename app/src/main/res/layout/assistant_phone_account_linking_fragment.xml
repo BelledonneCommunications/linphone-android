@@ -116,30 +116,41 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/select_country">
 
-                        <EditText
-                            assistantPhoneNumberPrefixValidation="@{true}"
-                            android:background="@drawable/resizable_text_field"
-                            android:textColor="@color/black_color"
-                            android:inputType="phone"
-                            android:text="@={viewModel.prefix}"
-                            android:layout_marginRight="10dp"
-                            android:gravity="center"
-                            android:layout_width="65dp"
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="100dp"
                             android:layout_height="wrap_content"
-                            android:hint="@string/international_prefix"
-                            android:maxLines="1"/>
+                            android:layout_marginRight="10dp"
+                            android:hint="@string/international_prefix">
 
-                        <EditText
-                            assistantPhoneNumberValidation="@{true}"
-                            errorMessage="@={viewModel.phoneNumberError}"
-                            android:text="@={viewModel.phoneNumber}"
-                            android:background="@drawable/resizable_text_field"
-                            android:textColor="@color/black_color"
-                            android:inputType="phone"
+                            <com.google.android.material.textfield.TextInputEditText
+                                assistantPhoneNumberPrefixValidation="@{true}"
+                                android:text="@={viewModel.prefix}"
+                                android:imeOptions="actionDone"
+                                android:singleLine="true"
+                                android:inputType="phone"
+                                android:background="@color/transparent_color"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"/>
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="@string/phone_number"
-                            android:maxLines="1"/>
+                            android:hint="@string/phone_number">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                assistantPhoneNumberValidation="@{true}"
+                                errorMessage="@={viewModel.phoneNumberError}"
+                                android:text="@={viewModel.phoneNumber}"
+                                android:imeOptions="actionDone"
+                                android:singleLine="true"
+                                android:inputType="phone"
+                                android:background="@color/transparent_color"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"/>
+
+                        </com.google.android.material.textfield.TextInputLayout>
 
                     </LinearLayout>
 

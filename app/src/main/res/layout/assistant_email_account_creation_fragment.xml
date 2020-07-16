@@ -52,128 +52,77 @@
                     android:paddingTop="20dp"
                     android:text="@string/assistant_create_account_part_email" />
 
-                <GridLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:columnCount="1">
+                    android:layout_height="wrap_content"
+                    android:hint="@string/username">
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_gravity="fill"
-                        android:layout_columnWeight="1"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:orientation="vertical">
+                    <com.google.android.material.textfield.TextInputEditText
+                        assistantUsernameValidation="@{true}"
+                        errorMessage="@={viewModel.usernameError}"
+                        android:text="@={viewModel.username}"
+                        android:imeOptions="actionDone"
+                        android:singleLine="true"
+                        android:inputType="text|textNoSuggestions"
+                        android:background="@color/transparent_color"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
 
-                        <TextView
-                            style="@style/assistant_input_field_header_font"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/username"
-                            android:textAllCaps="true" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                        <EditText
-                            assistantUsernameValidation="@{true}"
-                            errorMessage="@={viewModel.usernameError}"
-                            android:text="@={viewModel.username}"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/resizable_text_field"
-                            android:inputType="text|textNoSuggestions"
-                            android:maxLines="1"
-                            android:hint="@string/username"
-                            android:textColor="@color/black_color" />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/email">
 
-                    </LinearLayout>
+                    <com.google.android.material.textfield.TextInputEditText
+                        errorMessage="@={viewModel.emailError}"
+                        emailConfirmationValidation="@{true}"
+                        android:text="@={viewModel.email}"
+                        android:imeOptions="actionDone"
+                        android:singleLine="true"
+                        android:inputType="text|textEmailAddress"
+                        android:background="@color/transparent_color"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_gravity="fill"
-                        android:layout_columnWeight="1"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:orientation="vertical">
+                </com.google.android.material.textfield.TextInputLayout>
 
-                        <TextView
-                            style="@style/assistant_input_field_header_font"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/email"
-                            android:textAllCaps="true" />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/password">
 
-                        <EditText
-                            errorMessage="@={viewModel.emailError}"
-                            emailConfirmationValidation="@{true}"
-                            android:text="@={viewModel.email}"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/resizable_text_field"
-                            android:inputType="text|textEmailAddress"
-                            android:maxLines="1"
-                            android:hint="@string/email"
-                            android:textColor="@color/black_color" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        errorMessage="@={viewModel.passwordError}"
+                        passwordConfirmationValidation="@{passwordConfirmation}"
+                        android:text="@={viewModel.password}"
+                        android:imeOptions="actionDone"
+                        android:singleLine="true"
+                        android:inputType="textPassword"
+                        android:background="@color/transparent_color"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
 
-                    </LinearLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_gravity="fill"
-                        android:layout_columnWeight="1"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:orientation="vertical">
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/assistant_confirm_password">
 
-                        <TextView
-                            style="@style/assistant_input_field_header_font"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/password"
-                            android:textAllCaps="true" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/password_confirmation"
+                        errorMessage="@={viewModel.passwordConfirmationError}"
+                        android:text="@={viewModel.passwordConfirmation}"
+                        android:imeOptions="actionDone"
+                        android:singleLine="true"
+                        android:inputType="textPassword"
+                        android:background="@color/transparent_color"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
 
-                        <EditText
-                            errorMessage="@={viewModel.passwordError}"
-                            passwordConfirmationValidation="@{passwordConfirmation}"
-                            android:text="@={viewModel.password}"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/resizable_text_field"
-                            android:inputType="textPassword"
-                            android:maxLines="1"
-                            android:hint="@string/password"
-                            android:textColor="@color/black_color" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_gravity="fill"
-                        android:layout_columnWeight="1"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:orientation="vertical">
-
-                        <TextView
-                            style="@style/assistant_input_field_header_font"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/assistant_confirm_password"
-                            android:textAllCaps="true" />
-
-                        <EditText
-                            android:id="@+id/password_confirmation"
-                            errorMessage="@={viewModel.passwordConfirmationError}"
-                            android:text="@={viewModel.passwordConfirmation}"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/resizable_text_field"
-                            android:inputType="textPassword"
-                            android:maxLines="1"
-                            android:hint="@string/assistant_confirm_password"
-                            android:textColor="@color/black_color" />
-
-                    </LinearLayout>
-
-                </GridLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
                     android:onClick="@{() -> viewModel.create()}"
