@@ -95,70 +95,54 @@
 
                 </FrameLayout>
 
-                <TextView
-                    style="@style/contact_edit_form_label_font"
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
-                    android:text="@string/contact_last_name"
-                    android:textAllCaps="true" />
+                    android:hint="@string/contact_last_name">
 
-                <EditText
-                    style="@style/contact_edit_form_font"
-                    android:text="@={viewModel.lastName}"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@drawable/resizable_text_field"
-                    android:textColor="@color/black_color"
-                    android:gravity="left"
-                    android:inputType="textPersonName|textCapWords"
-                    android:paddingRight="5dp"
-                    android:hint="@string/contact_last_name"
-                    android:textCursorDrawable="@null" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:text="@={viewModel.lastName}"
+                        android:imeOptions="actionDone"
+                        android:singleLine="true"
+                        android:inputType="textPersonName|textCapWords"
+                        android:background="@color/transparent_color"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
 
-                <TextView
-                    style="@style/contact_edit_form_label_font"
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
-                    android:text="@string/contact_first_name"
-                    android:textAllCaps="true" />
+                    android:hint="@string/contact_first_name">
 
-                <EditText
-                    style="@style/contact_edit_form_font"
-                    android:text="@={viewModel.firstName}"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@drawable/resizable_text_field"
-                    android:textColor="@color/black_color"
-                    android:gravity="left"
-                    android:inputType="textPersonName|textCapWords"
-                    android:paddingRight="5dp"
-                    android:hint="@string/contact_first_name"
-                    android:textCursorDrawable="@null" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:text="@={viewModel.firstName}"
+                        android:imeOptions="actionDone"
+                        android:singleLine="true"
+                        android:inputType="textPersonName|textCapWords"
+                        android:background="@color/transparent_color"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
 
-                <TextView
-                    style="@style/contact_edit_form_label_font"
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
                     android:visibility="@{viewModel.displayOrganization ? View.VISIBLE : View.GONE}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
-                    android:text="@string/contact_organization"
-                    android:textAllCaps="true" />
+                    android:hint="@string/contact_organization">
 
-                <EditText
-                    style="@style/contact_edit_form_font"
-                    android:visibility="@{viewModel.displayOrganization ? View.VISIBLE : View.GONE}"
-                    android:text="@={viewModel.organization}"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@drawable/resizable_text_field"
-                    android:textColor="@color/black_color"
-                    android:gravity="left"
-                    android:inputType="textPersonName|textCapWords"
-                    android:paddingRight="5dp"
-                    android:hint="@string/contact_organization"
-                    android:textCursorDrawable="@null" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:text="@={viewModel.organization}"
+                        android:imeOptions="actionDone"
+                        android:singleLine="true"
+                        android:inputType="textPersonName|textCapWords"
+                        android:background="@color/transparent_color"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"

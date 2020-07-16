@@ -162,13 +162,18 @@
             android:queryBackground="@color/transparent_color"
             android:queryHint="@string/contact_filter_hint"/>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/searchBar"
+            android:background="?attr/dividerColor" />
+
         <HorizontalScrollView
             android:visibility="@{viewModel.createGroupChat ? View.VISIBLE : View.GONE}"
             android:id="@+id/layoutContactsSelected"
             android:layout_below="@id/searchBar"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="5dp"
             android:background="?attr/lightToolbarBackgroundColor"
             android:fadeScrollbars="false"
             android:lines="1">
