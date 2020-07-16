@@ -70,12 +70,6 @@ class SettingsFragment : Fragment() {
             viewModel.updateAccountsList()
         })
 
-        val identity = arguments?.getString("identity")
-        if (identity != null) {
-            Log.i("[Settings] Found identity parameter in arguments: $identity")
-            navigateToAccountSettings(identity)
-        }
-
         viewModel.accountsSettingsListener = object : SettingListenerStub() {
             override fun onAccountClicked(identity: String) {
                 Log.i("[Settings] Navigation to settings for proxy with identity: $identity")

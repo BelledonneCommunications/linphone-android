@@ -273,10 +273,6 @@
             app:destination="@id/tunnelSettingsFragment"
             app:popUpTo="@+id/settingsFragment"
             app:popUpToInclusive="false" />
-        <deepLink
-            android:id="@+id/settingsDeepLink"
-            app:uri="linphone-android://account-settings/{identity}"
-            android:autoVerify="true" />
     </fragment>
     <action
         android:id="@+id/action_global_settingsFragment"
@@ -296,6 +292,10 @@
         <action
             android:id="@+id/action_accountSettingsFragment_to_phoneAccountLinkingFragment"
             app:destination="@id/phoneAccountLinkingFragment" />
+        <deepLink
+            android:id="@+id/accountSettingsDeepLink"
+            app:uri="linphone-android://account-settings/{Identity}"
+            android:autoVerify="true" />
     </fragment>
     <fragment
         android:id="@+id/advancedSettingsFragment"
