@@ -37,16 +37,8 @@ class StatisticsListViewModel : ViewModel() {
             state: Call.State,
             message: String
         ) {
-            if (state == Call.State.End || state == Call.State.Error) {
-                val newList = arrayListOf<CallStatisticsData>()
-                for (stat in callStatsList.value.orEmpty()) {
-                    if (stat.call != call) {
-                        newList.add(stat)
-                    } else {
-                        stat.destroy()
-                    }
-                }
-                callStatsList.value = newList
+            if (state == Call.State.End || state == Call.State.Error || state == Call.State.Connected) {
+                computeCallsList()
             }
         }
     }
@@ -54,13 +46,7 @@ class StatisticsListViewModel : ViewModel() {
     init {
         coreContext.core.addListener(listener)
 
-        val list = arrayListOf<CallStatisticsData>()
-        for (call in coreContext.core.calls) {
-            if (call.state != Call.State.End && call.state != Call.State.Released && call.state != Call.State.Error) {
-                list.add(CallStatisticsData(call))
-            }
-        }
-        callStatsList.value = list
+        computeCallsList()
     }
 
     override fun onCleared() {
@@ -68,5 +54,15 @@ class StatisticsListViewModel : ViewModel() {
         coreContext.core.removeListener(listener)
 
         super.onCleared()
+    }
+
+    private fun computeCallsList() {
+        val list = arrayListOf<CallStatisticsData>()
+        for (call in coreContext.core.calls) {
+            if (call.state != Call.State.End && call.state != Call.State.Released && call.state != Call.State.Error) {
+                list.add(CallStatisticsData(call))
+            }
+        }
+        callStatsList.value = list
     }
 }
