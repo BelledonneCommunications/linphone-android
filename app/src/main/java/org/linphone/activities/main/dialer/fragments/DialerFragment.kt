@@ -19,7 +19,6 @@
  */
 package org.linphone.activities.main.dialer.fragments
 
-import android.app.AlertDialog
 import android.app.Dialog
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -34,6 +33,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.linphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -168,7 +168,7 @@ class DialerFragment : Fragment() {
     }
 
     private fun displayDebugPopup() {
-        val alertDialog = AlertDialog.Builder(context)
+        val alertDialog = MaterialAlertDialogBuilder(context)
         alertDialog.setTitle(getString(R.string.debug_popup_title))
         if (corePreferences.debugLogs) {
             alertDialog.setItems(resources.getStringArray(R.array.popup_send_log)) { _, which ->
