@@ -110,43 +110,46 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/select_country">
 
-                        <TextView
-                            android:text="@string/phone_number"
-                            style="@style/assistant_input_field_header_font"
-                            android:textAllCaps="true"
-                            android:layout_marginTop="10dp"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
-
                         <LinearLayout
                             android:orientation="horizontal"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
-                            <EditText
-                                assistantPhoneNumberPrefixValidation="@{true}"
-                                android:text="@={viewModel.prefix}"
-                                android:background="@drawable/resizable_text_field"
-                                android:textColor="@color/black_color"
-                                android:inputType="phone"
-                                android:layout_marginRight="10dp"
-                                android:gravity="center"
-                                android:layout_width="65dp"
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="100dp"
                                 android:layout_height="wrap_content"
-                                android:hint="@string/international_prefix"
-                                android:maxLines="1"/>
+                                android:layout_marginRight="10dp"
+                                android:hint="@string/international_prefix">
 
-                            <EditText
-                                assistantPhoneNumberValidation="@{true}"
-                                errorMessage="@={viewModel.phoneNumberError}"
-                                android:text="@={viewModel.phoneNumber}"
-                                android:background="@drawable/resizable_text_field"
-                                android:textColor="@color/black_color"
-                                android:inputType="phone"
+                                <com.google.android.material.textfield.TextInputEditText
+                                    assistantPhoneNumberPrefixValidation="@{true}"
+                                    android:text="@={viewModel.prefix}"
+                                    android:imeOptions="actionDone"
+                                    android:singleLine="true"
+                                    android:inputType="phone"
+                                    android:background="@color/transparent_color"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"/>
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="@string/phone_number"
-                                android:maxLines="1"/>
+                                android:hint="@string/phone_number">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    assistantPhoneNumberValidation="@{true}"
+                                    errorMessage="@={viewModel.phoneNumberError}"
+                                    android:text="@={viewModel.phoneNumber}"
+                                    android:imeOptions="actionDone"
+                                    android:singleLine="true"
+                                    android:inputType="phone"
+                                    android:background="@color/transparent_color"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"/>
+
+                            </com.google.android.material.textfield.TextInputLayout>
 
                         </LinearLayout>
 
@@ -154,88 +157,68 @@
 
                 </RelativeLayout>
 
-                <RelativeLayout
+                <LinearLayout
                     android:visibility="@{viewModel.loginWithUsernamePassword ? View.VISIBLE: View.GONE}"
                     android:layout_marginBottom="5dp"
                     android:paddingTop="10dp"
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/username_desc"
                         style="@style/standard_small_text_font"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:layout_alignParentTop="true"
                         android:paddingTop="10dp"
                         android:text="@string/assistant_linphone_login_desc" />
 
-                    <LinearLayout
+                    <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/username_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:layout_below="@id/username_desc"
-                        android:orientation="vertical">
+                        android:layout_marginTop="16dp"
+                        android:hint="@string/username">
 
-                        <TextView
-                            style="@style/assistant_input_field_header_font"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/username"
-                            android:textAllCaps="true" />
-
-                        <EditText
+                        <com.google.android.material.textfield.TextInputEditText
                             android:text="@={viewModel.username}"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/resizable_text_field"
+                            android:imeOptions="actionDone"
+                            android:singleLine="true"
                             android:inputType="text|textNoSuggestions"
-                            android:maxLines="1"
-                            android:hint="@string/username"
-                            android:textColor="@color/black_color" />
+                            android:background="@color/transparent_color"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
 
-                    </LinearLayout>
+                    </com.google.android.material.textfield.TextInputLayout>
 
-                    <LinearLayout
+                    <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:layout_below="@id/username_layout"
-                        android:orientation="vertical">
+                        android:hint="@string/password">
 
-                        <TextView
-                            style="@style/assistant_input_field_header_font"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/password"
-                            android:textAllCaps="true" />
-
-                        <EditText
+                        <com.google.android.material.textfield.TextInputEditText
                             android:text="@={viewModel.password}"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/resizable_text_field"
+                            android:imeOptions="actionDone"
+                            android:singleLine="true"
                             android:inputType="textPassword"
-                            android:maxLines="1"
-                            android:hint="@string/password"
-                            android:textColor="@color/black_color" />
+                            android:background="@color/transparent_color"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
 
-                        <TextView
-                            android:onClick="@{forgotPasswordClickListener}"
-                            android:textColor="?attr/accentColor"
-                            android:textSize="8sp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="right"
-                            android:gravity="center"
-                            android:paddingTop="5dp"
-                            android:text="@string/assistant_login_forgotten_password" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
-                    </LinearLayout>
+                    <TextView
+                        android:onClick="@{forgotPasswordClickListener}"
+                        android:textColor="?attr/accentColor"
+                        android:textSize="8sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:gravity="right"
+                        android:paddingTop="6dp"
+                        android:text="@string/assistant_login_forgotten_password" />
 
-                </RelativeLayout>
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
