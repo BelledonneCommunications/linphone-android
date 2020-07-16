@@ -31,6 +31,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.call.viewmodels.CallsViewModel
+import org.linphone.activities.call.viewmodels.ConferenceViewModel
 import org.linphone.activities.call.viewmodels.ControlsViewModel
 import org.linphone.activities.call.viewmodels.SharedCallViewModel
 import org.linphone.activities.main.MainActivity
@@ -47,6 +48,7 @@ import org.linphone.utils.PermissionHelper
 class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
     private lateinit var callsViewModel: CallsViewModel
     private lateinit var controlsViewModel: ControlsViewModel
+    private lateinit var conferenceViewModel: ConferenceViewModel
     private lateinit var sharedViewModel: SharedCallViewModel
 
     private var dialog: Dialog? = null
@@ -67,6 +69,9 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
 
         controlsViewModel = ViewModelProvider(this).get(ControlsViewModel::class.java)
         binding.controlsViewModel = controlsViewModel
+
+        conferenceViewModel = ViewModelProvider(this).get(ConferenceViewModel::class.java)
+        binding.conferenceViewModel = conferenceViewModel
 
         callsViewModel.currentCallViewModel.observe(viewLifecycleOwner, {
             if (it != null) {

@@ -112,14 +112,6 @@ open class CallViewModel(val call: Call) : GenericContactViewModel(call.remoteAd
         call.resume()
     }
 
-    fun removeFromConference() {
-        val conference = call.conference
-        if (conference != null) {
-            conference.removeParticipant(call.remoteAddress)
-            if (call.core.conferenceSize <= 1) call.core.leaveConference()
-        }
-    }
-
     private fun startTimer(call: Call) {
         timer?.cancel()
 
