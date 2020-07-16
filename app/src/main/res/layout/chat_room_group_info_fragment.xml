@@ -79,15 +79,23 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp">
 
-                <EditText
-                    android:text="@={viewModel.subject}"
-                    android:enabled="@{viewModel.meAdmin}"
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:gravity="center"
-                    android:hint="@string/chat_room_group_info_subject_hint"
-                    android:inputType="textEmailSubject"
-                    android:paddingRight="5dp" />
+                    android:layout_height="wrap_content"
+                    android:paddingRight="5dp"
+                    android:hint="@string/chat_room_group_info_subject_hint">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:text="@={viewModel.subject}"
+                        android:enabled="@{viewModel.meAdmin}"
+                        android:imeOptions="actionDone"
+                        android:singleLine="true"
+                        android:inputType="textEmailSubject"
+                        android:background="@color/transparent_color"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
 
             </RelativeLayout>
 

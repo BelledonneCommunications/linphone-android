@@ -52,25 +52,23 @@
                 android:paddingTop="10dp"
                 android:text="@string/assistant_remote_provisioning_desc" />
 
-            <TextView
-                android:text="@string/assistant_remote_provisioning_url"
-                style="@style/assistant_input_field_header_font"
-                android:textAllCaps="true"
-                android:paddingTop="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <EditText
-                errorMessage="@={viewModel.urlError}"
-                urlConfirmationValidation="@{true}"
-                android:text="@={viewModel.urlToFetch}"
-                android:background="@drawable/resizable_text_field"
-                android:textColor="@color/black_color"
-                android:inputType="textUri"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/assistant_remote_provisioning_url"
-                android:maxLines="1"/>
+                android:hint="@string/assistant_remote_provisioning_url">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    errorMessage="@={viewModel.urlError}"
+                    urlConfirmationValidation="@{true}"
+                    android:text="@={viewModel.urlToFetch}"
+                    android:imeOptions="actionDone"
+                    android:singleLine="true"
+                    android:inputType="textUri"
+                    android:background="@color/transparent_color"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:onClick="@{() -> viewModel.fetchAndApply()}"
