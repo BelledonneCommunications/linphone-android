@@ -133,7 +133,7 @@ class StatusViewModel : StatusViewModel() {
     }
 
     private fun updateCallQualityIcon() {
-        val call = coreContext.core.currentCall
+        val call = coreContext.core.currentCall ?: coreContext.core.calls.firstOrNull()
         val quality = call?.currentQuality ?: 0f
         callQualityIcon.value = when {
             quality >= 4 -> R.drawable.call_quality_indicator_4

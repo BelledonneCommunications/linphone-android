@@ -506,7 +506,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
     fun isVideoCallOrConferenceActive(): Boolean {
         val conference = core.conference
         return if (conference != null && core.isInConference) {
-            conference.currentParams.videoEnabled()
+            conference.currentParams.isVideoEnabled()
         } else {
             core.currentCall?.currentParams?.videoEnabled() ?: false
         }
