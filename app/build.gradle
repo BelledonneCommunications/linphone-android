@@ -165,7 +165,7 @@ dependencies {
         implementation 'com.google.firebase:firebase-messaging:19.0.1'
     }
 
-    implementation 'org.linphone:linphone-sdk-android:4.5+'
+    implementation 'org.linphone:linphone-sdk-android-debug:4.5+'
 }
 
 if (firebaseEnabled()) {

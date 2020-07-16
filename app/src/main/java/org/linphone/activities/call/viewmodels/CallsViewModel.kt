@@ -22,9 +22,8 @@ package org.linphone.activities.call.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.core.Call
-import org.linphone.core.Core
-import org.linphone.core.CoreListenerStub
+import org.linphone.core.*
+import org.linphone.core.tools.Log
 import org.linphone.utils.Event
 
 class CallsViewModel : ViewModel() {
@@ -34,23 +33,14 @@ class CallsViewModel : ViewModel() {
 
     val pausedCalls = MutableLiveData<ArrayList<CallViewModel>>()
 
-    val conferenceCalls = MutableLiveData<ArrayList<CallViewModel>>()
-
-    val isConferencePaused = MutableLiveData<Boolean>()
-
     val noMoreCallEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
 
     private val listener = object : CoreListenerStub() {
-        override fun onCallStateChanged(
-            core: Core,
-            call: Call,
-            state: Call.State,
-            message: String
-        ) {
+        override fun onCallStateChanged(core: Core, call: Call, state: Call.State, message: String) {
+            Log.i("[Calls VM] Call state changed: $state")
             callPausedByRemote.value = state == Call.State.PausedByRemote
-            isConferencePaused.value = !coreContext.core.isInConference
 
             val currentCall = core.currentCall
             if (currentCall == null) {
@@ -62,22 +52,14 @@ class CallsViewModel : ViewModel() {
             if (state == Call.State.End || state == Call.State.Released || state == Call.State.Error) {
                 if (core.callsNb == 0) {
                     noMoreCallEvent.value = Event(true)
-                    conferenceCalls.value = arrayListOf()
                 } else {
                     removeCallFromPausedListIfPresent(call)
-                    removeCallFromConferenceIfPresent(call)
                 }
             } else {
                 if (state == Call.State.Pausing) {
                     addCallToPausedList(call)
                 } else if (state == Call.State.Resuming) {
                     removeCallFromPausedListIfPresent(call)
-                } else {
-                    if (call.conference != null) {
-                        addCallToConferenceListIfNotAlreadyInIt(call)
-                    } else {
-                        removeCallFromConferenceIfPresent(call)
-                    }
                 }
             }
         }
@@ -90,40 +72,20 @@ class CallsViewModel : ViewModel() {
         if (currentCall != null) {
             currentCallViewModel.value = CallViewModel(currentCall)
         }
-        callPausedByRemote.value = currentCall?.state == Call.State.PausedByRemote
-        isConferencePaused.value = !coreContext.core.isInConference
 
-        val conferenceList = arrayListOf<CallViewModel>()
+        callPausedByRemote.value = currentCall?.state == Call.State.PausedByRemote
+
         for (call in coreContext.core.calls) {
             if (call.state == Call.State.Paused || call.state == Call.State.Pausing) {
                 addCallToPausedList(call)
-            } else {
-                if (call.conference != null && call.core.isInConference) {
-                    conferenceList.add(CallViewModel(call))
-                }
             }
         }
-        conferenceCalls.value = conferenceList
     }
 
     override fun onCleared() {
         coreContext.core.removeListener(listener)
 
         super.onCleared()
-    }
-
-    fun pauseConference() {
-        if (coreContext.core.isInConference) {
-            coreContext.core.leaveConference()
-            isConferencePaused.value = true
-        }
-    }
-
-    fun resumeConference() {
-        if (!coreContext.core.isInConference) {
-            coreContext.core.enterConference()
-            isConferencePaused.value = false
-        }
     }
 
     private fun addCallToPausedList(call: Call) {
@@ -147,32 +109,5 @@ class CallsViewModel : ViewModel() {
         }
 
         pausedCalls.value = list
-    }
-
-    private fun addCallToConferenceListIfNotAlreadyInIt(call: Call) {
-        val list = arrayListOf<CallViewModel>()
-        list.addAll(conferenceCalls.value.orEmpty())
-
-        for (viewModel in list) {
-            if (viewModel.call == call) return
-        }
-
-        val viewModel = CallViewModel(call)
-        list.add(viewModel)
-        conferenceCalls.value = list
-    }
-
-    private fun removeCallFromConferenceIfPresent(call: Call) {
-        val list = arrayListOf<CallViewModel>()
-        list.addAll(conferenceCalls.value.orEmpty())
-
-        for (viewModel in list) {
-            if (viewModel.call == call) {
-                list.remove(viewModel)
-                break
-            }
-        }
-
-        conferenceCalls.value = list
     }
 }
