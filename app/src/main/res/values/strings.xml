@@ -30,7 +30,7 @@
     <string name="phone_number">Phone number</string>
     <string name="phone_numbers">Phone numbers</string>
     <string name="select_your_country">Select your country</string>
-    <string name="international_prefix">International phone number prefix</string>
+    <string name="international_prefix">Prefix</string>
     <string name="assistant_choose_country">Choose a country</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
