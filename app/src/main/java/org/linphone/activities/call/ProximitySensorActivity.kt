@@ -39,7 +39,7 @@ abstract class ProximitySensorActivity : GenericActivity() {
         override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) { }
 
         override fun onSensorChanged(event: SensorEvent) {
-            if (event.timestamp == 0L) return
+            if (event.timestamp == 0L || !proximitySensorEnabled) return
             if (isProximitySensorNearby(event)) {
                 if (!proximityWakeLock.isHeld) {
                     Log.i("[Proximity Sensor Activity] Acquiring proximity wake lock")
@@ -85,6 +85,12 @@ abstract class ProximitySensorActivity : GenericActivity() {
         enableProximitySensor(false)
 
         super.onPause()
+    }
+
+    override fun onDestroy() {
+        enableProximitySensor(false)
+
+        super.onDestroy()
     }
 
     protected fun enableProximitySensor(enable: Boolean) {
