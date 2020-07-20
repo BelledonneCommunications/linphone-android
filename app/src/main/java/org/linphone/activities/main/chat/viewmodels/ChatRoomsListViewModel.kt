@@ -118,6 +118,7 @@ class ChatRoomsListViewModel : ErrorReportingViewModel() {
 
         chatRoomsToDeleteCount = 1
         if (chatRoom != null) {
+            coreContext.notificationsManager.dismissChatNotification(chatRoom)
             Compatibility.removeChatRoomShortcut(chatRoom)
             chatRoom.addListener(chatRoomListener)
             coreContext.core.deleteChatRoom(chatRoom)
@@ -131,6 +132,7 @@ class ChatRoomsListViewModel : ErrorReportingViewModel() {
                 LinphoneUtils.deleteFilesAttachedToEventLog(eventLog)
             }
 
+            coreContext.notificationsManager.dismissChatNotification(chatRoom)
             Compatibility.removeChatRoomShortcut(chatRoom)
             chatRoom.addListener(chatRoomListener)
             chatRoom.core.deleteChatRoom(chatRoom)
