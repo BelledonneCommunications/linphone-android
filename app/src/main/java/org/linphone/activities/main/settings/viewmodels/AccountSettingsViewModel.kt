@@ -139,10 +139,14 @@ class AccountSettingsViewModel(val proxyConfig: ProxyConfig) : GenericSettingsVi
     private fun deleteProxyConfig(cfg: ProxyConfig) {
         val authInfo = cfg.findAuthInfo()
         if (authInfo != null) {
-            core.removeProxyConfig(cfg)
+            Log.i("[Account Settings] Found auth info $authInfo, removing it.")
             core.removeAuthInfo(authInfo)
-            proxyConfigRemovedEvent.value = Event(true)
+        } else {
+            Log.w("[Account Settings] Couldn't find matching auth info...")
         }
+
+        core.removeProxyConfig(cfg)
+        proxyConfigRemovedEvent.value = Event(true)
     }
 
     val deleteListener = object : SettingListenerStub() {
