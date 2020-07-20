@@ -199,6 +199,12 @@ class CorePreferences constructor(private val context: Context) {
             config.setString("app", "voice_mail", value)
         }
 
+    var redirectDeclinedCallToVoiceMail: Boolean
+        get() = config.getBool("app", "redirect_declined_call_to_voice_mail", true)
+        set(value) {
+            config.setBool("app", "redirect_declined_call_to_voice_mail", value)
+        }
+
     var lastUpdateAvailableCheckTimestamp: Int
         get() = config.getInt("app", "version_check_url_last_timestamp", 0)
         set(value) {

@@ -307,8 +307,14 @@ class CoreContext(val context: Context, coreConfig: Config) {
     }
 
     fun declineCall(call: Call) {
-        Log.i("[Context] Declining call $call")
-        call.decline(Reason.Declined)
+        val voiceMailUri = corePreferences.voiceMailUri
+        if (voiceMailUri != null && corePreferences.redirectDeclinedCallToVoiceMail) {
+            Log.i("[Context] Redirecting call $call to voice mail")
+            call.redirect(voiceMailUri)
+        } else {
+            Log.i("[Context] Declining call $call")
+            call.decline(Reason.Declined)
+        }
     }
 
     fun terminateCall(call: Call) {
