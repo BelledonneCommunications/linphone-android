@@ -602,6 +602,15 @@ class NotificationsManager(private val context: Context) {
         displayChatNotifiable(message.chatRoom, notifiable)
     }
 
+    fun dismissChatNotification(room: ChatRoom) {
+        val address = room.peerAddress.asStringUriOnly()
+        val notifiable: Notifiable? = chatNotificationsMap[address]
+        if (notifiable != null) {
+            Log.i("[Notifications Manager] Dismissing notification for chat room $room with id ${notifiable.notificationId}")
+            cancel(notifiable.notificationId)
+        }
+    }
+
     /* Notifications */
 
     private fun createMessageNotification(
