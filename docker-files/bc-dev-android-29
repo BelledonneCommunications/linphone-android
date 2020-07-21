@@ -21,7 +21,6 @@ ENV ANDROID_HOME /opt/android-sdk-linux
 RUN apt-get update && \
     apt-get install -y curl nano sudo unzip vim wget openjdk-8-jdk-headless rsync ssh git && \
     apt-get clean
-RUN chmod ugo+rwx /opt/android-sdk-linux
 
 # Get the Android tools
 RUN wget https://dl.google.com/android/repository/tools_r$ANDROID_SDK-linux.zip && \
