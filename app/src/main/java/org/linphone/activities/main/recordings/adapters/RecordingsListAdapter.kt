@@ -21,9 +21,11 @@ package org.linphone.activities.main.recordings.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DiffUtil
 import org.linphone.R
@@ -31,14 +33,22 @@ import org.linphone.activities.main.recordings.viewmodels.RecordingViewModel
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
 import org.linphone.databinding.GenericListHeaderBinding
 import org.linphone.databinding.RecordingListCellBinding
-import org.linphone.utils.HeaderAdapter
-import org.linphone.utils.LifecycleListAdapter
-import org.linphone.utils.LifecycleViewHolder
-import org.linphone.utils.TimestampUtils
+import org.linphone.utils.*
 
 class RecordingsListAdapter(val selectionViewModel: ListTopBarViewModel) : LifecycleListAdapter<RecordingViewModel, RecordingsListAdapter.ViewHolder>(
     RecordingDiffCallback()
 ), HeaderAdapter {
+
+    val isVideoRecordingPlayingEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
+    private lateinit var videoSurface: TextureView
+
+    fun setVideoTextureView(textureView: TextureView) {
+        videoSurface = textureView
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding: RecordingListCellBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
@@ -71,6 +81,15 @@ class RecordingsListAdapter(val selectionViewModel: ListTopBarViewModel) : Lifec
                         selectionViewModel.onToggleSelect(adapterPosition)
                     }
                 }
+
+                recording.isVideoRecordingPlayingEvent.observe(this@ViewHolder, Observer {
+                    it.consume { value ->
+                        if (value) {
+                            recording.setTextureView(videoSurface)
+                        }
+                        isVideoRecordingPlayingEvent.value = Event(value)
+                    }
+                })
 
                 executePendingBindings()
             }
