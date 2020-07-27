@@ -19,6 +19,7 @@
  */
 package org.linphone.activities.main.recordings.viewmodels
 
+import android.view.TextureView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -46,21 +47,11 @@ class RecordingViewModel(val path: String) : ViewModel(), Comparable<RecordingVi
     lateinit var name: String
     lateinit var date: Date
 
-    val duration: Int
-        get() {
-            if (isClosed()) player.open(path)
-            return player.duration
-        }
-
-    val formattedDuration: String
-        get() = SimpleDateFormat("mm:ss", Locale.getDefault()).format(duration) // is already in milliseconds
-
-    val formattedDate: String
-        get() = DateFormat.getTimeInstance(DateFormat.SHORT).format(date)
-
+    val duration = MutableLiveData<Int>()
+    val formattedDuration = MutableLiveData<String>()
+    val formattedDate = MutableLiveData<String>()
     val position = MutableLiveData<Int>()
     val formattedPosition = MutableLiveData<String>()
-
     val isPlaying = MutableLiveData<Boolean>()
 
     private val tickerChannel = ticker(1000, 1000)
@@ -82,23 +73,7 @@ class RecordingViewModel(val path: String) : ViewModel(), Comparable<RecordingVi
         position.value = 0
         formattedPosition.value = SimpleDateFormat("mm:ss", Locale.getDefault()).format(0)
 
-        // Use speaker sound card to play recordings, otherwise use earpiece
-        // If none are available, default one will be used
-        var speakerCard: String? = null
-        var earpieceCard: String? = null
-        for (device in coreContext.core.audioDevices) {
-            if (device.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
-                if (device.type == AudioDevice.Type.Speaker) {
-                    speakerCard = device.id
-                } else if (device.type == AudioDevice.Type.Earpiece) {
-                    earpieceCard = device.id
-                }
-            }
-        }
-        val localPlayer = coreContext.core.createLocalPlayer(speakerCard ?: earpieceCard, null, null)
-        if (localPlayer != null) player = localPlayer
-        else Log.e("[Recording VM] Couldn't create local player!")
-        player.addListener(listener)
+        initPlayer()
     }
 
     override fun onCleared() {
@@ -145,6 +120,36 @@ class RecordingViewModel(val path: String) : ViewModel(), Comparable<RecordingVi
             player.seek(progress)
             updatePosition()
         }
+    }
+
+    fun setTextureView(textureView: TextureView) {
+        player.setWindowId(textureView.surfaceTexture)
+    }
+
+    private fun initPlayer() {
+        // Use speaker sound card to play recordings, otherwise use earpiece
+        // If none are available, default one will be used
+        var speakerCard: String? = null
+        var earpieceCard: String? = null
+        for (device in coreContext.core.audioDevices) {
+            if (device.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
+                if (device.type == AudioDevice.Type.Speaker) {
+                    speakerCard = device.id
+                } else if (device.type == AudioDevice.Type.Earpiece) {
+                    earpieceCard = device.id
+                }
+            }
+        }
+
+        val localPlayer = coreContext.core.createLocalPlayer(speakerCard ?: earpieceCard, null, null)
+        if (localPlayer != null) player = localPlayer
+        else Log.e("[Recording VM] Couldn't create local player!")
+        player.addListener(listener)
+
+        player.open(path)
+        duration.value = player.duration
+        formattedDuration.value = SimpleDateFormat("mm:ss", Locale.getDefault()).format(player.duration) // is already in milliseconds
+        formattedDate.value = DateFormat.getTimeInstance(DateFormat.SHORT).format(date)
     }
 
     private fun updatePosition() {

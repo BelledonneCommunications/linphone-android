@@ -20,7 +20,9 @@
 package org.linphone.activities.main.recordings.adapters
 
 import android.content.Context
+import android.graphics.SurfaceTexture
 import android.view.LayoutInflater
+import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -69,6 +71,31 @@ class RecordingsListAdapter(val selectionViewModel: ListTopBarViewModel) : Lifec
                 setClickListener {
                     if (selectionViewModel.isEditionEnabled.value == true) {
                         selectionViewModel.onToggleSelect(adapterPosition)
+                    }
+                }
+
+                if (videoWindow.isAvailable) recording.setTextureView(videoWindow)
+                else videoWindow.surfaceTextureListener = object : TextureView.SurfaceTextureListener {
+                    override fun onSurfaceTextureSizeChanged(
+                        surface: SurfaceTexture?,
+                        width: Int,
+                        height: Int
+                    ) {
+                    }
+
+                    override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) {
+                    }
+
+                    override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean {
+                        return true
+                    }
+
+                    override fun onSurfaceTextureAvailable(
+                        surface: SurfaceTexture?,
+                        width: Int,
+                        height: Int
+                    ) {
+                        recording.setTextureView(videoWindow)
                     }
                 }
 
