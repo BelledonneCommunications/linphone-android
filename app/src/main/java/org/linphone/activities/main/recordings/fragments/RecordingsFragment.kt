@@ -21,6 +21,7 @@ package org.linphone.activities.main.recordings.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
@@ -40,6 +41,9 @@ class RecordingsFragment : MasterFragment() {
     private lateinit var binding: RecordingsFragmentBinding
     private lateinit var viewModel: RecordingsViewModel
     private lateinit var adapter: RecordingsListAdapter
+
+    private var videoX: Float = 0f
+    private var videoY: Float = 0f
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -83,6 +87,31 @@ class RecordingsFragment : MasterFragment() {
         binding.setBackClickListener { findNavController().popBackStack() }
 
         binding.setEditClickListener { listSelectionViewModel.isEditionEnabled.value = true }
+
+        binding.setVideoTouchListener { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    videoX = v.x - event.rawX
+                    videoY = v.y - event.rawY
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    v.animate().x(event.rawX + videoX).y(event.rawY + videoY).setDuration(0).start()
+                }
+                else -> {
+                    v.performClick()
+                    false
+                }
+            }
+            true
+        }
+
+        adapter.isVideoRecordingPlayingEvent.observe(viewLifecycleOwner, Observer {
+            it.consume { value ->
+                viewModel.isVideoVisible.value = value
+            }
+        })
+
+        adapter.setVideoTextureView(binding.recordingVideoSurface)
     }
 
     override fun getItemCount(): Int {
