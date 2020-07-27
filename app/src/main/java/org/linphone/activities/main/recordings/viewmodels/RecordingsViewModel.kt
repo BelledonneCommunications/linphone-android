@@ -28,8 +28,11 @@ import org.linphone.utils.FileUtils
 class RecordingsViewModel : ViewModel() {
     val recordingsList = MutableLiveData<ArrayList<RecordingViewModel>>()
 
+    val isVideoVisible = MutableLiveData<Boolean>()
+
     init {
         getRecordings()
+        isVideoVisible.value = false
     }
 
     fun deleteRecordings(list: ArrayList<RecordingViewModel>) {

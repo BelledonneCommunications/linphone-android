@@ -11,6 +11,9 @@
             name="editClickListener"
             type="android.view.View.OnClickListener"/>
         <variable
+            name="videoTouchListener"
+            type="android.view.View.OnTouchListener" />
+        <variable
             name="viewModel"
             type="org.linphone.activities.main.recordings.viewmodels.RecordingsViewModel" />
     </data>
@@ -84,6 +87,15 @@
             android:layout_centerVertical="true"
             android:gravity="center"
             android:text="@string/recordings_empty_list" />
+
+        <TextureView
+            android:id="@+id/recording_video_surface"
+            android:onTouch="@{videoTouchListener}"
+            android:visibility="@{viewModel.isVideoVisible ? View.VISIBLE : View.GONE, default=gone}"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true" />
 
     </RelativeLayout>
 
