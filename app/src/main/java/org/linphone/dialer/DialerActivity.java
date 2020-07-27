@@ -192,7 +192,6 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
         super.onResume();
 
         mDialerSelected.setVisibility(View.VISIBLE);
-        mAddress.setText("");
 
         Core core = LinphoneManager.getCore();
         if (core != null) {
@@ -208,6 +207,7 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
     @Override
     protected void onPause() {
         enableVideoPreviewIfTablet(false);
+        if (mAddress != null) mAddress.setText("");
         Core core = LinphoneManager.getCore();
         if (core != null) {
             core.removeListener(mListener);
