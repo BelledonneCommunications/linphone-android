@@ -32,8 +32,9 @@ class LinphoneApplication : Application() {
         lateinit var corePreferences: CorePreferences
         lateinit var coreContext: CoreContext
 
-        fun ensureCoreExists(context: Context) {
+        fun ensureCoreExists(context: Context, pushReceived: Boolean = false) {
             if (::coreContext.isInitialized && !coreContext.stopped) {
+                Log.d("[Application] Skipping Core creation (push received? $pushReceived)")
                 return
             }
 
@@ -49,7 +50,7 @@ class LinphoneApplication : Application() {
             val appName = context.getString(R.string.app_name)
             Factory.instance().setDebugMode(corePreferences.debugLogs, appName)
 
-            Log.i("[Application] Core context created")
+            Log.i("[Application] Core context created ${if (pushReceived) "from push" else ""}")
             coreContext = CoreContext(context, config)
             coreContext.start()
         }

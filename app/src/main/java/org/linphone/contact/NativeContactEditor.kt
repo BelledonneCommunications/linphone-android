@@ -66,7 +66,7 @@ class NativeContactEditor(
     private var pictureByteArray: ByteArray? = null
 
     init {
-        Log.i("[Native Contact Editor] Using sync account $syncAccountName with type $syncAccountType")
+        Log.d("[Native Contact Editor] Using sync account $syncAccountName with type $syncAccountType")
         val contentResolver = coreContext.context.contentResolver
         val cursor = contentResolver.query(
             RawContacts.CONTENT_URI,
