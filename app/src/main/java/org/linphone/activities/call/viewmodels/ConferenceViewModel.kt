@@ -68,6 +68,7 @@ class ConferenceViewModel : ViewModel() {
                 isMeConferenceFocus.value = conference.me.isFocus
             } else if (state == Conference.State.Terminated || state == Conference.State.TerminationFailed) {
                 conference.removeListener(conferenceListener)
+                conferenceParticipants.value = arrayListOf<ConferenceParticipantViewModel>()
             }
         }
     }
