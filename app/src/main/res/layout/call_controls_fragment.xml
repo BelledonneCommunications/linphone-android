@@ -111,18 +111,24 @@
                 android:layout_height="1dp"
                 android:background="?attr/dividerColor" />
 
-            <LinearLayout
+            <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:orientation="vertical"
-                app:entries="@{conferenceViewModel.conferenceParticipants}"
-                app:layout="@{@layout/call_conference_cell}"/>
+                android:layout_gravity="top">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:entries="@{conferenceViewModel.conferenceParticipants}"
+                    app:layout="@{@layout/call_conference_cell}"/>
+
+            </ScrollView>
 
         </LinearLayout>
 
         <org.linphone.contact.BigContactAvatarView
-            android:visibility="@{controlsViewModel.isVideoEnabled ? View.GONE : View.VISIBLE, default=gone}"
+            android:visibility="@{controlsViewModel.isVideoEnabled || conferenceViewModel.conferenceParticipants.size() > 0 ? View.GONE : View.VISIBLE, default=gone}"
             android:id="@+id/avatar"
             android:layout_width="200dp"
             android:layout_height="200dp"

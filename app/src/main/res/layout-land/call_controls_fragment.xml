@@ -56,8 +56,79 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:visibility="@{conferenceViewModel.conferenceParticipants.size() == 0 || conferenceViewModel.isConferencePaused ? View.GONE : View.VISIBLE, default=gone}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:background="?attr/backgroundColor"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingLeft="10dp"
+                    android:textColor="?attr/primaryTextColor"
+                    android:textSize="30sp"
+                    android:text="@string/call_conference_title" />
+
+                <ImageView
+                    android:onClick="@{() -> controlsViewModel.switchCamera()}"
+                    android:visibility="@{controlsViewModel.isVideoEnabled ? View.VISIBLE : View.GONE, default=gone}"
+                    android:contentDescription="@string/content_description_switch_camera"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_toLeftOf="@id/pause_conference"
+                    android:adjustViewBounds="true"
+                    android:padding="10dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/switch_camera" />
+
+                <ImageView
+                    android:id="@+id/pause_conference"
+                    android:visibility="@{conferenceViewModel.isMeConferenceFocus ? View.VISIBLE : View.GONE, default=gone}"
+                    android:onClick="@{() -> conferenceViewModel.pauseConference()}"
+                    android:contentDescription="@string/content_description_pause_conference"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:adjustViewBounds="true"
+                    android:padding="10dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/pause" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/dividerColor" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:entries="@{conferenceViewModel.conferenceParticipants}"
+                    app:layout="@{@layout/call_conference_cell}"/>
+
+            </ScrollView>
+
+        </LinearLayout>
+
         <org.linphone.contact.BigContactAvatarView
-            android:visibility="@{controlsViewModel.isVideoEnabled ? View.GONE : View.VISIBLE, default=gone}"
+            android:visibility="@{controlsViewModel.isVideoEnabled || conferenceViewModel.conferenceParticipants.size() > 0 ? View.GONE : View.VISIBLE, default=gone}"
             android:id="@+id/avatar"
             android:layout_width="200dp"
             android:layout_height="200dp"
