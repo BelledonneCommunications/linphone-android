@@ -53,6 +53,14 @@
                 android:src="@drawable/avatar"
                 glideAvatarFallback="@{viewModel.defaultAccountAvatar}" />
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:padding="10dp"
+                android:contentDescription="@null"
+                android:src="@drawable/avatar_border" />
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
