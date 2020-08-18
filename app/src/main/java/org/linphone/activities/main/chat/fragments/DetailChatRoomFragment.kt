@@ -311,37 +311,7 @@ class DetailChatRoomFragment : MasterFragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             lifecycleScope.launch {
-                var fileToUploadPath: String? = null
-                val temporaryFileUploadPath = chatSendingViewModel.temporaryFileUploadPath
-                if (temporaryFileUploadPath != null) {
-                    if (data != null) {
-                        val dataUri = data.data
-                        if (dataUri != null) {
-                            fileToUploadPath = dataUri.toString()
-                            Log.i("[Chat Room] Using data URI $fileToUploadPath")
-                        } else if (temporaryFileUploadPath.exists()) {
-                            fileToUploadPath = temporaryFileUploadPath.absolutePath
-                            Log.i("[Chat Room] Data URI is null, using $fileToUploadPath")
-                        }
-                    } else if (temporaryFileUploadPath.exists()) {
-                        fileToUploadPath = temporaryFileUploadPath.absolutePath
-                        Log.i("[Chat Room] Data is null, using $fileToUploadPath")
-                    }
-                }
-
-                if (fileToUploadPath != null) {
-                    if (fileToUploadPath.startsWith("content://") ||
-                        fileToUploadPath.startsWith("file://")
-                    ) {
-                        val uriToParse = Uri.parse(fileToUploadPath)
-                        fileToUploadPath = FileUtils.getFilePath(requireContext(), uriToParse)
-                        Log.i("[Chat] Path was using a content or file scheme, real path is: $fileToUploadPath")
-                        if (fileToUploadPath == null) {
-                            Log.e("[Chat] Failed to get access to file $uriToParse")
-                        }
-                    }
-                }
-
+                val fileToUploadPath = ImageUtils.getImageFilePathFromPickerIntent(data, chatSendingViewModel.temporaryFileUploadPath)
                 if (fileToUploadPath != null) {
                     chatSendingViewModel.addAttachment(fileToUploadPath)
                 }

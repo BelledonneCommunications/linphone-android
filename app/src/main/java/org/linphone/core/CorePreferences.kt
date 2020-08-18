@@ -276,6 +276,12 @@ class CorePreferences constructor(private val context: Context) {
 
     /* Side Menu */
 
+    var defaultAccountAvatarPath: String?
+        get() = config.getString("app", "default_avatar_path", null)
+        set(value) {
+            config.setString("app", "default_avatar_path", value)
+        }
+
     val showAccountsInSideMenu: Boolean
         get() = config.getBool("app", "side_menu_accounts", true)
 

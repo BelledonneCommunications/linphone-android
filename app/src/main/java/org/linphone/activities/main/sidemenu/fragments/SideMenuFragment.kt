@@ -19,15 +19,22 @@
  */
 package org.linphone.activities.main.sidemenu.fragments
 
+import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.os.Parcelable
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import java.io.File
+import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.assistant.AssistantActivity
@@ -38,11 +45,15 @@ import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.tools.Log
 import org.linphone.databinding.SideMenuFragmentBinding
 import org.linphone.utils.Event
+import org.linphone.utils.FileUtils
+import org.linphone.utils.ImageUtils
+import org.linphone.utils.PermissionHelper
 
 class SideMenuFragment : Fragment() {
     private lateinit var binding: SideMenuFragmentBinding
     private lateinit var viewModel: SideMenuViewModel
     private lateinit var sharedViewModel: SharedMainViewModel
+    private var temporaryPicturePath: File? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -81,6 +92,10 @@ class SideMenuFragment : Fragment() {
             }
         }
 
+        binding.setSelfPictureClickListener {
+            pickFile()
+        }
+
         binding.setAssistantClickListener {
             sharedViewModel.toggleDrawerEvent.value = Event(true)
             startActivity(Intent(context, AssistantActivity::class.java))
@@ -105,5 +120,40 @@ class SideMenuFragment : Fragment() {
             requireActivity().finishAndRemoveTask()
             coreContext.stop()
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK) {
+            lifecycleScope.launch {
+                val contactImageFilePath = ImageUtils.getImageFilePathFromPickerIntent(data, temporaryPicturePath)
+                if (contactImageFilePath != null) {
+                    viewModel.setPictureFromPath(contactImageFilePath)
+                }
+            }
+        }
+    }
+
+    private fun pickFile() {
+        val cameraIntents = ArrayList<Intent>()
+
+        // Handles image picking
+        val galleryIntent = Intent(Intent.ACTION_PICK)
+        galleryIntent.type = "image/*"
+
+        if (PermissionHelper.get().hasCameraPermission()) {
+            // Allows to capture directly from the camera
+            val captureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            val tempFileName = System.currentTimeMillis().toString() + ".jpeg"
+            temporaryPicturePath = FileUtils.getFileStoragePath(tempFileName)
+            val uri = Uri.fromFile(temporaryPicturePath)
+            captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
+            cameraIntents.add(captureIntent)
+        }
+
+        val chooserIntent =
+            Intent.createChooser(galleryIntent, getString(R.string.chat_message_pick_file_dialog))
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(arrayOf<Parcelable>()))
+
+        startActivityForResult(chooserIntent, 0)
     }
 }
