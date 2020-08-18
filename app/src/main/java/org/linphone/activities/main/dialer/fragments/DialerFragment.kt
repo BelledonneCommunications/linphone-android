@@ -168,7 +168,7 @@ class DialerFragment : Fragment() {
     }
 
     private fun displayDebugPopup() {
-        val alertDialog = MaterialAlertDialogBuilder(context)
+        val alertDialog = MaterialAlertDialogBuilder(requireContext())
         alertDialog.setTitle(getString(R.string.debug_popup_title))
         if (corePreferences.debugLogs) {
             alertDialog.setItems(resources.getStringArray(R.array.popup_send_log)) { _, which ->

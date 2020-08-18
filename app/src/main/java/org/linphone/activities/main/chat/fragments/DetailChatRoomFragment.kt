@@ -446,7 +446,7 @@ class DetailChatRoomFragment : MasterFragment() {
         // TODO: hide ephemeral menu if not all participants support the feature
 
         builder.setCallback(object : MenuBuilder.Callback {
-            override fun onMenuModeChange(menu: MenuBuilder?) {}
+            override fun onMenuModeChange(menu: MenuBuilder) {}
 
             override fun onMenuItemSelected(menu: MenuBuilder, item: MenuItem): Boolean {
                 return when (item.itemId) {
