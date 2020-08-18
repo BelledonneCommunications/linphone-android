@@ -133,7 +133,7 @@ class NativeContact(val nativeId: String, private val lookupKey: String? = null)
                 val stringAddress = address.asStringUriOnly()
                 if (!rawSipAddresses.contains(stringAddress)) {
                     sipAddresses.add(address)
-                    rawSipAddresses.add(stringAddress)
+                    rawSipAddresses.add(data1)
                 }
             }
             ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE -> {
