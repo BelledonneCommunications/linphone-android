@@ -74,7 +74,7 @@ class ContactViewModel(private val c: Contact) : ErrorReportingViewModel(), Cont
     private val contactsUpdatedListener = object : ContactsUpdatedListenerStub() {
         override fun onContactUpdated(contact: Contact) {
             if (c is NativeContact && contact is NativeContact && c.nativeId == contact.nativeId) {
-                Log.i("[Contact] $contact has changed")
+                Log.d("[Contact] $contact has changed")
                 updateNumbersAndAddresses()
             }
         }

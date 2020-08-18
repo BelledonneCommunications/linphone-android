@@ -38,6 +38,13 @@ class ContactsSettingsViewModel : GenericSettingsViewModel() {
     }
     val friendListSubscribe = MutableLiveData<Boolean>()
 
+    val contactStorageAppSyncAccountListener = object : SettingListenerStub() {
+        override fun onBoolValueChanged(newValue: Boolean) {
+            prefs.storeCreatedContactsInAppSyncAccount = newValue
+        }
+    }
+    val contactStorageAppSyncAccount = MutableLiveData<Boolean>()
+
     val nativePresenceListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
             if (newValue) {
@@ -73,6 +80,7 @@ class ContactsSettingsViewModel : GenericSettingsViewModel() {
         readContactsPermissionGranted.value = PermissionHelper.get().hasReadContactsPermission()
 
         friendListSubscribe.value = core.isFriendListSubscriptionEnabled
+        contactStorageAppSyncAccount.value = prefs.storeCreatedContactsInAppSyncAccount
         nativePresence.value = prefs.storePresenceInNativeContact
         showOrganization.value = prefs.displayOrganization
         launcherShortcuts.value = prefs.contactsShortcuts
