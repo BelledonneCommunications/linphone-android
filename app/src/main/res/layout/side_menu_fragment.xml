@@ -5,6 +5,9 @@
     <data>
         <import type="android.view.View"/>
         <variable
+            name="selfPictureClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
             name="assistantClickListener"
             type="android.view.View.OnClickListener"/>
         <variable
@@ -39,10 +42,21 @@
             android:layout_height="70dp"
             android:background="?attr/lightToolbarBackgroundColor">
 
+            <ImageView
+                android:visibility="@{viewModel.defaultAccountFound ? View.VISIBLE : View.GONE}"
+                android:onClick="@{selfPictureClickListener}"
+                android:id="@+id/avatar"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:padding="10dp"
+                android:src="@drawable/avatar"
+                glideAvatarFallback="@{viewModel.defaultAccountAvatar}" />
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/avatar"
                 android:gravity="center_vertical"
                 android:orientation="vertical">
 

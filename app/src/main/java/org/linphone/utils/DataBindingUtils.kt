@@ -263,6 +263,16 @@ fun <T> setEntries(
     setEntries(viewGroup, entries, layoutId, null, parent)
 }
 
+@BindingAdapter("glideAvatarFallback")
+fun loadAvatarWithGlideFallback(imageView: ImageView, path: String?) {
+    if (path != null && path.isNotEmpty() && FileUtils.isExtensionImage(path)) {
+        Glide.with(imageView).load(path).apply(RequestOptions.circleCropTransform()).into(imageView)
+    } else {
+        Log.w("[Data Binding] [Glide] Can't load $path")
+        imageView.setImageResource(R.drawable.avatar)
+    }
+}
+
 @BindingAdapter("glidePath")
 fun loadImageWithGlide(imageView: ImageView, path: String) {
     if (path.isNotEmpty() && FileUtils.isExtensionImage(path)) {
