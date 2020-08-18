@@ -86,7 +86,7 @@ class NativeContact(val nativeId: String, private val lookupKey: String? = null)
 
     @Synchronized
     override fun syncValuesFromAndroidCursor(cursor: Cursor) {
-        val displayName: String =
+        val displayName: String? =
             cursor.getString(cursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME_PRIMARY))
 
         val mime: String? = cursor.getString(cursor.getColumnIndex(ContactsContract.Data.MIMETYPE))
