@@ -28,7 +28,7 @@
         android:orientation="vertical"
         android:gravity="center_vertical|left">
 
-        <Switch
+        <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/setting_switch"
             android:enabled="@{enabled ?? true}"
             android:checked="@={checked}"

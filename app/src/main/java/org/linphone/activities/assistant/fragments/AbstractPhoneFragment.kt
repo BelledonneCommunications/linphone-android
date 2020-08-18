@@ -66,7 +66,7 @@ abstract class AbstractPhoneFragment : Fragment() {
     }
 
     protected fun showPhoneNumberInfoDialog() {
-        MaterialAlertDialogBuilder(context)
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle(getString(R.string.assistant_phone_number_info_title))
             .setMessage(
                 getString(R.string.assistant_phone_number_link_info_content) + "\n" +

@@ -125,7 +125,7 @@
                             <com.google.android.material.textfield.TextInputEditText
                                 assistantPhoneNumberPrefixValidation="@{true}"
                                 android:text="@={viewModel.prefix}"
-                                android:imeOptions="actionDone"
+                                android:imeOptions="actionNext"
                                 android:singleLine="true"
                                 android:inputType="phone"
                                 android:background="@color/transparent_color"

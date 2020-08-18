@@ -61,7 +61,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:text="@={viewModel.username}"
-                        android:imeOptions="actionDone"
+                        android:imeOptions="actionNext"
                         android:singleLine="true"
                         android:inputType="text|textNoSuggestions"
                         android:background="@color/transparent_color"
@@ -78,7 +78,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:text="@={viewModel.password}"
-                        android:imeOptions="actionDone"
+                        android:imeOptions="actionNext"
                         android:singleLine="true"
                         android:inputType="textPassword"
                         android:background="@color/transparent_color"
@@ -94,7 +94,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:text="@={viewModel.domain}"
-                        android:imeOptions="actionDone"
+                        android:imeOptions="actionNext"
                         android:singleLine="true"
                         android:inputType="textUri"
                         android:background="@color/transparent_color"
