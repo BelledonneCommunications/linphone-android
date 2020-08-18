@@ -24,6 +24,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.databinding.DataBindingUtil
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.ChatRoomSecurityLevel
 import org.linphone.databinding.ContactAvatarBinding
@@ -63,6 +64,7 @@ class ContactAvatarView : LinearLayout {
         binding.groupChatAvatarVisibility = viewModel.showGroupChatAvatar
 
         binding.imagePath = contact?.getContactThumbnailPictureUri()
+        binding.borderVisibility = corePreferences.showBorderOnContactAvatar
 
         binding.securityIcon = when (viewModel.securityLevel) {
             ChatRoomSecurityLevel.Safe -> R.drawable.security_2_indicator

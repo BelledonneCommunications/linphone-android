@@ -13,6 +13,9 @@
         <variable
             name="imagePath"
             type="android.net.Uri" />
+        <variable
+            name="borderVisibility"
+            type="Boolean" />
     </data>
 
     <RelativeLayout
@@ -58,6 +61,7 @@
             app:glideAvatar="@{imagePath}" />
 
         <ImageView
+            android:visibility="@{borderVisibility ? View.VISIBLE : View.GONE}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
