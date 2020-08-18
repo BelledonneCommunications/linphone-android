@@ -119,6 +119,12 @@ class CorePreferences constructor(private val context: Context) {
 
     /* Contacts */
 
+    var storeCreatedContactsInAppSyncAccount: Boolean
+        get() = config.getBool("app", "store_contacts_in_app_sync_account", false)
+        set(value) {
+            config.setBool("app", "store_contacts_in_app_sync_account", value)
+        }
+
     var storePresenceInNativeContact: Boolean
         get() = config.getBool("app", "store_presence_in_native_contact", false)
         set(value) {

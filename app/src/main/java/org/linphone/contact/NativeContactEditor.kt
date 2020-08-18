@@ -39,7 +39,7 @@ class NativeContactEditor(
     private var syncAccountType: String? = null
 ) {
     companion object {
-        fun createAndroidContact(accountName: String? = null, accountType: String? = null): Long {
+        fun createAndroidContact(accountName: String?, accountType: String?): Long {
             val values = ContentValues()
             values.put(RawContacts.ACCOUNT_NAME, accountName)
             values.put(RawContacts.ACCOUNT_TYPE, accountType)
@@ -371,31 +371,40 @@ class NativeContactEditor(
     }
 
     private fun updateLinphoneOrSipAddress(currentValue: String, sipAddress: String) {
-        val update = ContentProviderOperation.newUpdate(contactUri)
+        val updateLegacy = ContentProviderOperation.newUpdate(contactUri)
             .withSelection(
-                sipAddressSelection,
+                "${ContactsContract.Data.CONTACT_ID} =? AND ${ContactsContract.Data.MIMETYPE} =? AND data1=?",
                 arrayOf(
                     contact.nativeId,
-                    CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE,
                     AppUtils.getString(R.string.linphone_address_mime_type),
                     currentValue
                 )
-            )
-            .withValue(
-                ContactsContract.Data.MIMETYPE,
-                AppUtils.getString(R.string.linphone_address_mime_type)
             )
             .withValue("data1", sipAddress) // value
             .withValue("data2", AppUtils.getString(R.string.app_name)) // summary
             .withValue("data3", sipAddress) // detail
             .build()
+
+        val update = ContentProviderOperation.newUpdate(contactUri)
+            .withSelection(
+                "${ContactsContract.Data.CONTACT_ID} =? AND ${ContactsContract.Data.MIMETYPE} =? AND data1=?",
+                arrayOf(
+                    contact.nativeId,
+                    CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE,
+                    currentValue
+                )
+            )
+            .withValue("data1", sipAddress) // value
+            .build()
+
+        addChanges(updateLegacy)
         addChanges(update)
     }
 
     private fun removeLinphoneOrSipAddress(sipAddress: String) {
         val delete = ContentProviderOperation.newDelete(contactUri)
             .withSelection(
-                sipAddressSelection,
+                "${ContactsContract.Data.CONTACT_ID} =? AND (${ContactsContract.Data.MIMETYPE} =? OR ${ContactsContract.Data.MIMETYPE} =?) AND data1=?",
                 arrayOf(
                     contact.nativeId,
                     CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE,
