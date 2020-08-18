@@ -240,6 +240,12 @@ class CorePreferences constructor(private val context: Context) {
     val contactOrganizationVisible: Boolean
         get() = config.getBool("app", "display_contact_organization", true)
 
+    val showBorderOnContactAvatar: Boolean
+        get() = config.getBool("app", "show_border_on_contact_avatar", false)
+
+    val showBorderOnBigContactAvatar: Boolean
+        get() = config.getBool("app", "show_border_on_big_contact_avatar", true)
+
     val checkIfUpdateAvailableUrl: String?
         get() = config.getString("misc", "version_check_url_root", null)
 
