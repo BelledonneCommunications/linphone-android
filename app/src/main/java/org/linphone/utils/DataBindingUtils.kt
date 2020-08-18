@@ -39,6 +39,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
+import com.google.android.material.switchmaterial.SwitchMaterial
 import org.linphone.BR
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -131,7 +132,7 @@ fun setLayoutToLeftOf(view: View, oldTargetId: Int, newTargetId: Int) {
 
 @BindingAdapter("onClickToggleSwitch")
 fun switchSetting(view: View, switchId: Int) {
-    val switch: Switch = view.findViewById(switchId)
+    val switch: SwitchMaterial = view.findViewById(switchId)
     view.setOnClickListener { switch.isChecked = !switch.isChecked }
 }
 
