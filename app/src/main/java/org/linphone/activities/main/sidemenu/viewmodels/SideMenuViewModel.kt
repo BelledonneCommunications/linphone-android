@@ -37,6 +37,7 @@ class SideMenuViewModel : ViewModel() {
 
     val defaultAccount = MutableLiveData<AccountSettingsViewModel>()
     val defaultAccountFound = MutableLiveData<Boolean>()
+    val defaultAccountAvatar = MutableLiveData<String>()
 
     val accounts = MutableLiveData<ArrayList<AccountSettingsViewModel>>()
 
@@ -64,6 +65,7 @@ class SideMenuViewModel : ViewModel() {
 
     init {
         defaultAccountFound.value = false
+        defaultAccountAvatar.value = corePreferences.defaultAccountAvatarPath
         coreContext.core.addListener(listener)
         updateAccountsList()
     }
@@ -93,5 +95,10 @@ class SideMenuViewModel : ViewModel() {
             }
         }
         accounts.value = list
+    }
+
+    fun setPictureFromPath(picturePath: String) {
+        corePreferences.defaultAccountAvatarPath = picturePath
+        defaultAccountAvatar.value = corePreferences.defaultAccountAvatarPath
     }
 }
