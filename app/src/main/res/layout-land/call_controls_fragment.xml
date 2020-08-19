@@ -176,7 +176,7 @@
 
         <ImageView
             android:onClick="@{() -> viewModel.currentCallViewModel.pause()}"
-            android:visibility="@{viewModel.currentCallViewModel == null ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.currentCallViewModel == null || (conferenceViewModel.conferenceParticipants.size() != 0 &amp;&amp; !conferenceViewModel.isConferencePaused) ? View.GONE : View.VISIBLE}"
             android:selected="@{viewModel.currentCallViewModel.isPaused ?? false}"
             android:enabled="@{!viewModel.callPausedByRemote &amp;&amp; controlsViewModel.isPauseEnabled}"
             android:contentDescription="@string/content_description_pause_call"

@@ -68,7 +68,7 @@ class ConferenceViewModel : ViewModel() {
                 isMeConferenceFocus.value = conference.me.isFocus
             } else if (state == Conference.State.Terminated || state == Conference.State.TerminationFailed) {
                 conference.removeListener(conferenceListener)
-                conferenceParticipants.value = arrayListOf<ConferenceParticipantViewModel>()
+                conferenceParticipants.value = arrayListOf()
             }
         }
     }
@@ -79,6 +79,13 @@ class ConferenceViewModel : ViewModel() {
         isConferencePaused.value = false; // !coreContext.core.isInConference
         isMeConferenceFocus.value = false
         conferenceParticipants.value = arrayListOf()
+
+        val conference = coreContext.core.conference
+        if (conference != null) {
+            conference.addListener(conferenceListener)
+            isMeConferenceFocus.value = conference.me.isFocus
+            updateParticipantsList(conference)
+        }
     }
 
     override fun onCleared() {
