@@ -107,6 +107,8 @@
         <item quantity="one">@string/contact_delete_one_dialog</item>
         <item quantity="other">@string/contact_delete_many_dialog</item>
     </plurals>
+    <string name="contact_new_choose_sync_account">Choose where to save the contact</string>
+    <string name="contact_local_sync_account">Store locally</string>
 
     <!-- Dialer -->
     <string name="dialer_address_bar_hint">Enter a number or an address</string>
@@ -430,8 +432,6 @@
     <!-- Contacts settings -->
     <string name="contacts_settings_friendlist_subscribe_title">Friendlist subscribe</string>
     <string name="contacts_settings_friendlist_subscribe_summary"></string>
-    <string name="contacts_settings_contact_storage_title">Store new contacts in the app sync account</string>
-    <string name="contacts_settings_contact_storage_summary">If enabled, contacts created via the app will be removed when the app will be uninstalled.</string>
     <string name="contacts_settings_native_presence_title">Presence information in native contact</string>
     <string name="contacts_settings_native_presence_summary">Inserting information shortcuts from the &appName; contact into native Android contacts</string>
     <string name="contacts_settings_show_organization_title">Display contact organization</string>

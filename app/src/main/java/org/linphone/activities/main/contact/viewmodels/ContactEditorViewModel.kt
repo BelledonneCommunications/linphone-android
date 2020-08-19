@@ -29,10 +29,8 @@ import java.io.ByteArrayOutputStream
 import java.io.IOException
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
-import org.linphone.R
 import org.linphone.contact.*
 import org.linphone.core.tools.Log
-import org.linphone.utils.AppUtils
 import org.linphone.utils.ImageUtils
 import org.linphone.utils.PermissionHelper
 
@@ -66,6 +64,9 @@ class ContactEditorViewModel(val c: Contact?) : ViewModel(), ContactViewModelInt
 
     val addresses = MutableLiveData<ArrayList<NumberOrAddressEditorViewModel>>()
 
+    var syncAccountName: String? = null
+    var syncAccountType: String? = null
+
     init {
         if (c != null) {
             contact.value = c
@@ -83,12 +84,7 @@ class ContactEditorViewModel(val c: Contact?) : ViewModel(), ContactViewModelInt
         if (contact == null) {
             created = true
             contact = if (PermissionHelper.get().hasWriteContactsPermission()) {
-                // Store native contact in default sync account
-                if (corePreferences.storeCreatedContactsInAppSyncAccount) {
-                    NativeContact(NativeContactEditor.createAndroidContact(AppUtils.getString(R.string.sync_account_name), AppUtils.getString(R.string.sync_account_type)).toString())
-                } else {
-                    NativeContact(NativeContactEditor.createAndroidContact(null, null).toString())
-                }
+                NativeContact(NativeContactEditor.createAndroidContact(syncAccountName, syncAccountType).toString())
             } else {
                 Contact()
             }
