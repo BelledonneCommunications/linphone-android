@@ -141,7 +141,7 @@
                 android:background="@drawable/resizable_assistant_button"
                 android:ellipsize="end"
                 android:padding="10dp"
-                android:text="@string/dialog_cancel"
+                android:text="@{viewModel.cancelLabel ?? @string/dialog_cancel, default=@string/dialog_cancel}"
                 android:visibility="@{viewModel.showCancel ? View.VISIBLE : View.GONE}" />
 
             <TextView

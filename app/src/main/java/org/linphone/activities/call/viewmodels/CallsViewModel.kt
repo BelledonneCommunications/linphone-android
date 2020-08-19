@@ -42,6 +42,10 @@ class CallsViewModel : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val callUpdateEvent: MutableLiveData<Event<Call>> by lazy {
+        MutableLiveData<Event<Call>>()
+    }
+
     private val listener = object : CoreListenerStub() {
         override fun onCallStateChanged(
             core: Core,
@@ -67,17 +71,26 @@ class CallsViewModel : ViewModel() {
                     removeCallFromPausedListIfPresent(call)
                     removeCallFromConferenceIfPresent(call)
                 }
+            } else if (state == Call.State.Pausing) {
+                addCallToPausedList(call)
+            } else if (state == Call.State.Resuming) {
+                removeCallFromPausedListIfPresent(call)
+            } else if (call.state == Call.State.UpdatedByRemote) {
+                // If the correspondent proposes video while audio call,
+                // defer update until user has chosen whether to accept it or not
+                val remoteVideo = call.remoteParams?.videoEnabled() ?: false
+                val localVideo = call.currentParams.videoEnabled()
+                val autoAccept = call.core.videoActivationPolicy.automaticallyAccept
+                if (remoteVideo && !localVideo && !autoAccept) {
+                    call.deferUpdate()
+                    // TODO: start 30 secs timer and decline update if no answer when it triggers
+                    callUpdateEvent.value = Event(call)
+                }
             } else {
-                if (state == Call.State.Pausing) {
-                    addCallToPausedList(call)
-                } else if (state == Call.State.Resuming) {
-                    removeCallFromPausedListIfPresent(call)
+                if (call.conference != null) {
+                    addCallToConferenceListIfNotAlreadyInIt(call)
                 } else {
-                    if (call.conference != null) {
-                        addCallToConferenceListIfNotAlreadyInIt(call)
-                    } else {
-                        removeCallFromConferenceIfPresent(call)
-                    }
+                    removeCallFromConferenceIfPresent(call)
                 }
             }
         }
@@ -110,6 +123,19 @@ class CallsViewModel : ViewModel() {
         coreContext.core.removeListener(listener)
 
         super.onCleared()
+    }
+
+    fun answerCallUpdateRequest(call: Call, accept: Boolean) {
+        val core = call.core
+        val params = core.createCallParams(call)
+
+        if (accept) {
+            params?.enableVideo(true)
+            core.enableVideoCapture(true)
+            core.enableVideoDisplay(true)
+        }
+
+        call.acceptUpdate(params)
     }
 
     fun pauseConference() {
