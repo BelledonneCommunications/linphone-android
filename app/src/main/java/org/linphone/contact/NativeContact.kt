@@ -227,4 +227,8 @@ class NativeContact(val nativeId: String, private val lookupKey: String? = null)
             cursor.close()
         }
     }
+
+    override fun toString(): String {
+        return "${super.toString()}: id [$nativeId], name [$fullName]"
+    }
 }

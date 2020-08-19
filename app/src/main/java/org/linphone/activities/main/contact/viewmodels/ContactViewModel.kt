@@ -75,7 +75,7 @@ class ContactViewModel(private val c: Contact) : ErrorReportingViewModel(), Cont
         override fun onContactUpdated(contact: Contact) {
             if (c is NativeContact && contact is NativeContact && c.nativeId == contact.nativeId) {
                 Log.d("[Contact] $contact has changed")
-                updateNumbersAndAddresses()
+                updateNumbersAndAddresses(contact)
             }
         }
     }
@@ -122,7 +122,7 @@ class ContactViewModel(private val c: Contact) : ErrorReportingViewModel(), Cont
 
     init {
         contact.value = c
-        updateNumbersAndAddresses()
+        updateNumbersAndAddresses(c)
         coreContext.contactsManager.addListener(contactsUpdatedListener)
         waitForChatRoomCreation.value = false
     }
@@ -162,24 +162,24 @@ class ContactViewModel(private val c: Contact) : ErrorReportingViewModel(), Cont
         }
     }
 
-    private fun updateNumbersAndAddresses() {
+    private fun updateNumbersAndAddresses(contact: Contact) {
         val list = arrayListOf<ContactNumberOrAddressViewModel>()
-        for (address in c.sipAddresses) {
+        for (address in contact.sipAddresses) {
             val value = address.asStringUriOnly()
-            val presenceModel = c.friend?.getPresenceModelForUriOrTel(value)
+            val presenceModel = contact.friend?.getPresenceModelForUriOrTel(value)
             val hasPresence = presenceModel?.basicStatus == PresenceBasicStatus.Open
             val isMe = coreContext.core.defaultProxyConfig?.identityAddress?.weakEqual(address) ?: false
-            val secureChatAllowed = !isMe && c.friend?.getPresenceModelForUriOrTel(value)?.hasCapability(FriendCapability.LimeX3Dh) ?: false
+            val secureChatAllowed = !isMe && contact.friend?.getPresenceModelForUriOrTel(value)?.hasCapability(FriendCapability.LimeX3Dh) ?: false
             val noa = ContactNumberOrAddressViewModel(address, hasPresence, LinphoneUtils.getDisplayName(address), showSecureChat = secureChatAllowed, listener = listener)
             list.add(noa)
         }
-        for (number in c.phoneNumbers) {
-            val presenceModel = c.friend?.getPresenceModelForUriOrTel(number)
+        for (number in contact.phoneNumbers) {
+            val presenceModel = contact.friend?.getPresenceModelForUriOrTel(number)
             val hasPresence = presenceModel != null && presenceModel.basicStatus == PresenceBasicStatus.Open
             val contactAddress = presenceModel?.contact ?: number
             val address = coreContext.core.interpretUrl(contactAddress)
             val isMe = if (address != null) coreContext.core.defaultProxyConfig?.identityAddress?.weakEqual(address) ?: false else false
-            val secureChatAllowed = !isMe && c.friend?.getPresenceModelForUriOrTel(number)?.hasCapability(FriendCapability.LimeX3Dh) ?: false
+            val secureChatAllowed = !isMe && contact.friend?.getPresenceModelForUriOrTel(number)?.hasCapability(FriendCapability.LimeX3Dh) ?: false
             val noa = ContactNumberOrAddressViewModel(address, hasPresence, number, isSip = false, showSecureChat = secureChatAllowed, listener = listener)
             list.add(noa)
         }

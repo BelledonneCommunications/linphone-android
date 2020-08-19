@@ -47,7 +47,7 @@ import org.linphone.utils.FileUtils
 import org.linphone.utils.ImageUtils
 import org.linphone.utils.PermissionHelper
 
-class ContactEditorFragment : Fragment() {
+class ContactEditorFragment : Fragment(), SyncAccountPickerFragment.SyncAccountPickedListener {
     private lateinit var binding: ContactEditorFragmentBinding
     private lateinit var viewModel: ContactEditorViewModel
     private lateinit var sharedViewModel: SharedMainViewModel
@@ -86,13 +86,11 @@ class ContactEditorFragment : Fragment() {
         }
 
         binding.setSaveChangesClickListener {
-            val savedContact = viewModel.save()
-            if (savedContact is NativeContact) {
-                savedContact.syncValuesFromAndroidContact(requireContext())
-                Log.i("[Contact Editor] Displaying contact $savedContact")
-                navigateToContact(savedContact)
+            if (viewModel.c == null) {
+                Log.i("[Contact Editor] New contact, ask user where to store it")
+                SyncAccountPickerFragment(this).show(childFragmentManager, "SyncAccountPicker")
             } else {
-                findNavController().popBackStack()
+                saveContact()
             }
         }
 
@@ -112,6 +110,13 @@ class ContactEditorFragment : Fragment() {
             Log.i("[Contact Editor] Asking for WRITE_CONTACTS permission")
             requestPermissions(arrayOf(android.Manifest.permission.WRITE_CONTACTS), 0)
         }
+    }
+
+    override fun onSyncAccountClicked(name: String?, type: String?) {
+        Log.i("[Contact Editor] Using account $name / $type")
+        viewModel.syncAccountName = name
+        viewModel.syncAccountType = type
+        saveContact()
     }
 
     override fun onRequestPermissionsResult(
@@ -139,6 +144,17 @@ class ContactEditorFragment : Fragment() {
                     viewModel.setPictureFromPath(contactImageFilePath)
                 }
             }
+        }
+    }
+
+    private fun saveContact() {
+        val savedContact = viewModel.save()
+        if (savedContact is NativeContact) {
+            savedContact.syncValuesFromAndroidContact(requireContext())
+            Log.i("[Contact Editor] Displaying contact $savedContact")
+            navigateToContact(savedContact)
+        } else {
+            findNavController().popBackStack()
         }
     }
 
