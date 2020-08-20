@@ -22,6 +22,11 @@ package org.linphone.activities.call.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import java.util.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.contact.GenericContactViewModel
 import org.linphone.core.Call
@@ -54,6 +59,8 @@ open class CallViewModel(val call: Call) : GenericContactViewModel(call.remoteAd
         MutableLiveData<Event<Boolean>>()
     }
 
+    private var timer: Timer? = null
+
     private val listener = object : CallListenerStub() {
         override fun onStateChanged(call: Call, state: Call.State, message: String) {
             if (call != this@CallViewModel.call) return
@@ -61,6 +68,7 @@ open class CallViewModel(val call: Call) : GenericContactViewModel(call.remoteAd
             isPaused.value = state == Call.State.Paused
 
             if (state == Call.State.End || state == Call.State.Released || state == Call.State.Error) {
+                timer?.cancel()
                 callEndedEvent.value = Event(true)
 
                 if (state == Call.State.Error) {
@@ -68,6 +76,13 @@ open class CallViewModel(val call: Call) : GenericContactViewModel(call.remoteAd
                 }
             } else if (call.state == Call.State.Connected) {
                 callConnectedEvent.value = Event(true)
+            } else if (call.state == Call.State.StreamsRunning) {
+                // Stop call update timer once user has accepted or declined call update
+                timer?.cancel()
+            } else if (call.state == Call.State.UpdatedByRemote) {
+                // User has 30 secs to accept or decline call update
+                // Dialog to accept or decline is handled by CallsViewModel & ControlsFragment
+                startTimer(call)
             }
         }
     }
@@ -102,5 +117,21 @@ open class CallViewModel(val call: Call) : GenericContactViewModel(call.remoteAd
             conference.removeParticipant(call.remoteAddress)
             if (call.core.conferenceSize <= 1) call.core.leaveConference()
         }
+    }
+
+    private fun startTimer(call: Call) {
+        timer?.cancel()
+
+        timer = Timer("Call update timeout")
+        timer?.schedule(object : TimerTask() {
+            override fun run() {
+                // Decline call update
+                viewModelScope.launch {
+                    withContext(Dispatchers.Main) {
+                        coreContext.answerCallUpdateRequest(call, false)
+                    }
+                }
+            }
+        }, 30000)
     }
 }

@@ -29,6 +29,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import java.util.*
 import org.linphone.R
 import org.linphone.activities.call.viewmodels.CallsViewModel
 import org.linphone.activities.call.viewmodels.ControlsViewModel
@@ -46,6 +47,8 @@ class ControlsFragment : Fragment() {
     private lateinit var callsViewModel: CallsViewModel
     private lateinit var controlsViewModel: ControlsViewModel
     private lateinit var sharedViewModel: SharedCallViewModel
+
+    private var dialog: Dialog? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -87,7 +90,11 @@ class ControlsFragment : Fragment() {
 
         callsViewModel.callUpdateEvent.observe(viewLifecycleOwner, Observer {
             it.consume { call ->
-                showCallUpdateDialog(call)
+                if (call.state == Call.State.StreamsRunning) {
+                    dialog?.dismiss()
+                } else if (call.state == Call.State.UpdatedByRemote) {
+                    showCallUpdateDialog(call)
+                }
             }
         })
 
@@ -132,18 +139,18 @@ class ControlsFragment : Fragment() {
 
     private fun showCallUpdateDialog(call: Call) {
         val viewModel = DialogViewModel(AppUtils.getString(R.string.call_video_update_requested_dialog))
-        val dialog: Dialog = DialogUtils.getDialog(requireContext(), viewModel)
+        dialog = DialogUtils.getDialog(requireContext(), viewModel)
 
         viewModel.showCancelButton({
             callsViewModel.answerCallUpdateRequest(call, false)
-            dialog.dismiss()
+            dialog?.dismiss()
         }, getString(R.string.dialog_decline))
 
         viewModel.showOkButton({
             callsViewModel.answerCallUpdateRequest(call, true)
-            dialog.dismiss()
+            dialog?.dismiss()
         }, getString(R.string.dialog_accept))
 
-        dialog.show()
+        dialog?.show()
     }
 }
