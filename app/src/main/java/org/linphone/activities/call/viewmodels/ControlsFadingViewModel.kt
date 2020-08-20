@@ -22,6 +22,10 @@ package org.linphone.activities.call.viewmodels
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.AudioDevice
@@ -119,8 +123,12 @@ class ControlsFadingViewModel : ViewModel() {
         timer = Timer("Hide UI controls scheduler")
         timer?.schedule(object : TimerTask() {
             override fun run() {
-                val videoEnabled = coreContext.isVideoCallOrConferenceActive()
-                areControlsHidden.postValue(videoEnabled)
+                viewModelScope.launch {
+                    withContext(Dispatchers.Main) {
+                        val videoEnabled = coreContext.isVideoCallOrConferenceActive()
+                        areControlsHidden.postValue(videoEnabled)
+                    }
+                }
             }
         }, 3000)
     }
