@@ -132,6 +132,10 @@ class ContactsManager(private val context: Context) {
         )
     }
 
+    fun shouldDisplaySipContactsList(): Boolean {
+        return coreContext.core.defaultProxyConfig?.identityAddress?.domain == corePreferences.defaultDomain
+    }
+
     @Synchronized
     fun fetchContactsAsync() {
         if (loadContactsTask != null) {
