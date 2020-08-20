@@ -75,7 +75,7 @@ class ChatRoomCreationViewModel : ErrorReportingViewModel() {
 
     init {
         createGroupChat.value = false
-        sipContactsSelected.value = true
+        sipContactsSelected.value = coreContext.contactsManager.shouldDisplaySipContactsList()
         isEncrypted.value = false
 
         selectedAddresses.value = arrayListOf()
