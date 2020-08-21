@@ -22,6 +22,7 @@ package org.linphone.activities.main.settings.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import java.lang.NumberFormatException
 import java.util.*
 import kotlin.collections.ArrayList
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -236,14 +237,20 @@ class AccountSettingsViewModel(val proxyConfig: ProxyConfig) : GenericSettingsVi
 
     val avpfRrIntervalListener = object : SettingListenerStub() {
         override fun onTextValueChanged(newValue: String) {
-            proxyConfig.avpfRrInterval = newValue.toInt()
+            try {
+                proxyConfig.avpfRrInterval = newValue.toInt()
+            } catch (nfe: NumberFormatException) {
+            }
         }
     }
     val avpfRrInterval = MutableLiveData<Int>()
 
     val expiresListener = object : SettingListenerStub() {
         override fun onTextValueChanged(newValue: String) {
-            proxyConfig.expires = newValue.toInt()
+            try {
+                proxyConfig.expires = newValue.toInt()
+            } catch (nfe: NumberFormatException) {
+            }
         }
     }
     val expires = MutableLiveData<Int>()

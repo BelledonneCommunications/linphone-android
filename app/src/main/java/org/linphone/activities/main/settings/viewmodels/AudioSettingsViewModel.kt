@@ -21,6 +21,7 @@ package org.linphone.activities.main.settings.viewmodels
 
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.MutableLiveData
+import java.lang.NumberFormatException
 import org.linphone.R
 import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.core.AudioDevice
@@ -124,14 +125,20 @@ class AudioSettingsViewModel : GenericSettingsViewModel() {
 
     val microphoneGainListener = object : SettingListenerStub() {
         override fun onTextValueChanged(newValue: String) {
-            core.micGainDb = newValue.toFloat()
+            try {
+                core.micGainDb = newValue.toFloat()
+            } catch (nfe: NumberFormatException) {
+            }
         }
     }
     val microphoneGain = MutableLiveData<Float>()
 
     val playbackGainListener = object : SettingListenerStub() {
         override fun onTextValueChanged(newValue: String) {
-            core.playbackGainDb = newValue.toFloat()
+            try {
+                core.playbackGainDb = newValue.toFloat()
+            } catch (nfe: NumberFormatException) {
+            }
         }
     }
     val playbackGain = MutableLiveData<Float>()
