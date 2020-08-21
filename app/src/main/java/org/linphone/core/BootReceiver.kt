@@ -24,22 +24,15 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.content.ContextCompat
 import org.linphone.LinphoneApplication.Companion.corePreferences
-import org.linphone.R
 import org.linphone.core.tools.Log
 
 class BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        val serviceIntent = Intent(Intent.ACTION_MAIN).setClass(context, CoreService::class.java)
-        if (intent.action.equals(Intent.ACTION_SHUTDOWN, ignoreCase = true)) {
-            android.util.Log.d(
-                context.getString(R.string.app_name),
-                "[Boot Receiver] Device is shutting down, destroying Core to unregister"
-            )
-            context.stopService(serviceIntent)
-        } else if (intent.action.equals(Intent.ACTION_BOOT_COMPLETED, ignoreCase = true)) {
+        if (intent.action.equals(Intent.ACTION_BOOT_COMPLETED, ignoreCase = true)) {
             val autoStart = corePreferences.autoStart
             Log.i("[Boot Receiver] Device is starting, autoStart is $autoStart")
             if (autoStart) {
+                val serviceIntent = Intent(Intent.ACTION_MAIN).setClass(context, CoreService::class.java)
                 serviceIntent.putExtra("StartForeground", true)
                 ContextCompat.startForegroundService(context, serviceIntent)
             }
