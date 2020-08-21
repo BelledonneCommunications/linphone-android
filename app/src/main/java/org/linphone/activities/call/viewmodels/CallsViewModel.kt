@@ -37,6 +37,10 @@ class CallsViewModel : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val callUpdateEvent: MutableLiveData<Event<Call>> by lazy {
+        MutableLiveData<Event<Call>>()
+    }
+
     private val listener = object : CoreListenerStub() {
         override fun onCallStateChanged(core: Core, call: Call, state: Call.State, message: String) {
             Log.i("[Calls VM] Call state changed: $state")
@@ -55,7 +59,25 @@ class CallsViewModel : ViewModel() {
                 } else {
                     removeCallFromPausedListIfPresent(call)
                 }
+            } else if (state == Call.State.Pausing) {
+                addCallToPausedList(call)
+            } else if (state == Call.State.Resuming) {
+                removeCallFromPausedListIfPresent(call)
+            } else if (call.state == Call.State.UpdatedByRemote) {
+                // If the correspondent asks to turn on video while audio call,
+                // defer update until user has chosen whether to accept it or not
+                val remoteVideo = call.remoteParams?.videoEnabled() ?: false
+                val localVideo = call.currentParams.videoEnabled()
+                val autoAccept = call.core.videoActivationPolicy.automaticallyAccept
+                if (remoteVideo && !localVideo && !autoAccept) {
+                    call.deferUpdate()
+                    callUpdateEvent.value = Event(call)
+                }
             } else {
+                if (state == Call.State.StreamsRunning) {
+                    callUpdateEvent.value = Event(call)
+                }
+
                 if (state == Call.State.Pausing) {
                     addCallToPausedList(call)
                 } else if (state == Call.State.Resuming) {

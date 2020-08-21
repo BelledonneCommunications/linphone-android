@@ -44,9 +44,10 @@ import org.linphone.contact.NativeContact
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactEditorFragmentBinding
 import org.linphone.utils.FileUtils
+import org.linphone.utils.ImageUtils
 import org.linphone.utils.PermissionHelper
 
-class ContactEditorFragment : Fragment() {
+class ContactEditorFragment : Fragment(), SyncAccountPickerFragment.SyncAccountPickedListener {
     private lateinit var binding: ContactEditorFragmentBinding
     private lateinit var viewModel: ContactEditorViewModel
     private lateinit var sharedViewModel: SharedMainViewModel
@@ -85,13 +86,11 @@ class ContactEditorFragment : Fragment() {
         }
 
         binding.setSaveChangesClickListener {
-            val savedContact = viewModel.save()
-            if (savedContact is NativeContact) {
-                savedContact.syncValuesFromAndroidContact(requireContext())
-                Log.i("[Contact Editor] Displaying contact $savedContact")
-                navigateToContact(savedContact)
+            if (viewModel.c == null) {
+                Log.i("[Contact Editor] New contact, ask user where to store it")
+                SyncAccountPickerFragment(this).show(childFragmentManager, "SyncAccountPicker")
             } else {
-                findNavController().popBackStack()
+                saveContact()
             }
         }
 
@@ -111,6 +110,13 @@ class ContactEditorFragment : Fragment() {
             Log.i("[Contact Editor] Asking for WRITE_CONTACTS permission")
             requestPermissions(arrayOf(android.Manifest.permission.WRITE_CONTACTS), 0)
         }
+    }
+
+    override fun onSyncAccountClicked(name: String?, type: String?) {
+        Log.i("[Contact Editor] Using account $name / $type")
+        viewModel.syncAccountName = name
+        viewModel.syncAccountType = type
+        saveContact()
     }
 
     override fun onRequestPermissionsResult(
@@ -133,49 +139,29 @@ class ContactEditorFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             lifecycleScope.launch {
-                var fileToUploadPath: String? = null
-
-                val temporaryFileUploadPath = temporaryPicturePath
-                if (temporaryFileUploadPath != null) {
-                    if (data != null) {
-                        val dataUri = data.data
-                        if (dataUri != null) {
-                            fileToUploadPath = dataUri.toString()
-                            Log.i("[Chat Room] Using data URI $fileToUploadPath")
-                        } else if (temporaryFileUploadPath.exists()) {
-                            fileToUploadPath = temporaryFileUploadPath.absolutePath
-                            Log.i("[Chat Room] Data URI is null, using $fileToUploadPath")
-                        }
-                    } else if (temporaryFileUploadPath.exists()) {
-                        fileToUploadPath = temporaryFileUploadPath.absolutePath
-                        Log.i("[Chat Room] Data is null, using $fileToUploadPath")
-                    }
-                }
-
-                if (fileToUploadPath != null) {
-                    if (fileToUploadPath.startsWith("content://") ||
-                        fileToUploadPath.startsWith("file://")
-                    ) {
-                        val uriToParse = Uri.parse(fileToUploadPath)
-                        fileToUploadPath = FileUtils.getFilePath(requireContext(), uriToParse)
-                        Log.i("[Chat] Path was using a content or file scheme, real path is: $fileToUploadPath")
-                        if (fileToUploadPath == null) {
-                            Log.e("[Chat] Failed to get access to file $uriToParse")
-                        }
-                    }
-                }
-
-                if (fileToUploadPath != null) {
-                    viewModel.setPictureFromPath(fileToUploadPath)
+                val contactImageFilePath = ImageUtils.getImageFilePathFromPickerIntent(data, temporaryPicturePath)
+                if (contactImageFilePath != null) {
+                    viewModel.setPictureFromPath(contactImageFilePath)
                 }
             }
+        }
+    }
+
+    private fun saveContact() {
+        val savedContact = viewModel.save()
+        if (savedContact is NativeContact) {
+            savedContact.syncValuesFromAndroidContact(requireContext())
+            Log.i("[Contact Editor] Displaying contact $savedContact")
+            navigateToContact(savedContact)
+        } else {
+            findNavController().popBackStack()
         }
     }
 
     private fun pickFile() {
         val cameraIntents = ArrayList<Intent>()
 
-        // Handles image & video picking
+        // Handles image picking
         val galleryIntent = Intent(Intent.ACTION_PICK)
         galleryIntent.type = "image/*"
 

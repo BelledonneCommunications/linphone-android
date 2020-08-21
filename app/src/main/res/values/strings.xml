@@ -107,6 +107,8 @@
         <item quantity="one">@string/contact_delete_one_dialog</item>
         <item quantity="other">@string/contact_delete_many_dialog</item>
     </plurals>
+    <string name="contact_new_choose_sync_account">Choose where to save the contact</string>
+    <string name="contact_local_sync_account">Store locally</string>
 
     <!-- Dialer -->
     <string name="dialer_address_bar_hint">Enter a number or an address</string>
@@ -215,6 +217,7 @@
     <string name="call_error_network_unreachable">Network is unreachable</string>
     <string name="call_error_io_error">Network error</string>
     <string name="call_error_unknown">Unknown error</string>
+    <string name="call_video_update_requested_dialog">Correspondent would like to turn the video on</string>
 
     <!-- Call stats -->
     <string name="call_stats_audio">Audio</string>
@@ -551,6 +554,8 @@
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_delete">Delete</string>
     <string name="dialog_ok">OK</string>
+    <string name="dialog_accept">Accept</string>
+    <string name="dialog_decline">Decline</string>
     <string name="dialog_call">Call</string>
     <string name="dialog_lime_security_message">Instant messages are end-to-end encrypted in secured conversations. It is possible to upgrade the security level of a conversation by authenticating participants. To do so, call the contact and follow the authentication process.</string>
     <string name="operation_in_progress_wait">Operation in progress, please wait</string>

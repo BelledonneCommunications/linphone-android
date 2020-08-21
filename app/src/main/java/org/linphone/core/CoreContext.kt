@@ -299,6 +299,18 @@ class CoreContext(val context: Context, coreConfig: Config) {
 
     /* Call related functions */
 
+    fun answerCallUpdateRequest(call: Call, accept: Boolean) {
+        val params = core.createCallParams(call)
+
+        if (accept) {
+            params?.enableVideo(true)
+            core.enableVideoCapture(true)
+            core.enableVideoDisplay(true)
+        }
+
+        call.acceptUpdate(params)
+    }
+
     fun answerCall(call: Call) {
         Log.i("[Context] Answering call $call")
         val params = core.createCallParams(call)

@@ -19,6 +19,7 @@
  */
 package org.linphone.activities.call.fragments
 
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.SystemClock
@@ -28,12 +29,18 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import java.util.*
+import org.linphone.R
 import org.linphone.activities.call.viewmodels.CallsViewModel
 import org.linphone.activities.call.viewmodels.ConferenceViewModel
 import org.linphone.activities.call.viewmodels.ControlsViewModel
 import org.linphone.activities.call.viewmodels.SharedCallViewModel
 import org.linphone.activities.main.MainActivity
+import org.linphone.activities.main.viewmodels.DialogViewModel
+import org.linphone.core.Call
 import org.linphone.databinding.CallControlsFragmentBinding
+import org.linphone.utils.AppUtils
+import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 
 class ControlsFragment : Fragment() {
@@ -42,6 +49,8 @@ class ControlsFragment : Fragment() {
     private lateinit var controlsViewModel: ControlsViewModel
     private lateinit var conferenceViewModel: ConferenceViewModel
     private lateinit var sharedViewModel: SharedCallViewModel
+
+    private var dialog: Dialog? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -84,6 +93,16 @@ class ControlsFragment : Fragment() {
             }
         })
 
+        callsViewModel.callUpdateEvent.observe(viewLifecycleOwner, Observer {
+            it.consume { call ->
+                if (call.state == Call.State.StreamsRunning) {
+                    dialog?.dismiss()
+                } else if (call.state == Call.State.UpdatedByRemote) {
+                    showCallUpdateDialog(call)
+                }
+            }
+        })
+
         controlsViewModel.chatClickedEvent.observe(viewLifecycleOwner, Observer {
             it.consume {
                 val intent = Intent()
@@ -121,5 +140,22 @@ class ControlsFragment : Fragment() {
                 sharedViewModel.resetHiddenInterfaceTimerInVideoCallEvent.value = Event(true)
             }
         })
+    }
+
+    private fun showCallUpdateDialog(call: Call) {
+        val viewModel = DialogViewModel(AppUtils.getString(R.string.call_video_update_requested_dialog))
+        dialog = DialogUtils.getDialog(requireContext(), viewModel)
+
+        viewModel.showCancelButton({
+            callsViewModel.answerCallUpdateRequest(call, false)
+            dialog?.dismiss()
+        }, getString(R.string.dialog_decline))
+
+        viewModel.showOkButton({
+            callsViewModel.answerCallUpdateRequest(call, true)
+            dialog?.dismiss()
+        }, getString(R.string.dialog_accept))
+
+        dialog?.show()
     }
 }

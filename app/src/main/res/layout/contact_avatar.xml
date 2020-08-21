@@ -28,6 +28,9 @@
         <variable
             name="imagePath"
             type="android.net.Uri" />
+        <variable
+            name="borderVisibility"
+            type="Boolean" />
     </data>
 
     <RelativeLayout
@@ -71,6 +74,15 @@
             android:adjustViewBounds="true"
             android:contentDescription="@null"
             app:glideAvatar="@{imagePath}" />
+
+        <ImageView
+            android:visibility="@{borderVisibility ? View.VISIBLE : View.GONE, default=gone}"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentLeft="true"
+            android:adjustViewBounds="true"
+            android:contentDescription="@null"
+            android:src="@drawable/avatar_border" />
 
         <ImageView
             android:visibility="@{securityBadgeVisibility ? View.VISIBLE : View.GONE, default=gone}"

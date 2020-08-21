@@ -54,9 +54,10 @@
             android:contentDescription="@null"
             android:src="@drawable/dialer_background" />
 
-        <TextureView
+        <org.linphone.mediastream.video.capture.CaptureTextureView
             android:id="@+id/video_preview_window"
             android:visibility="@{viewModel.showPreview ? View.VISIBLE : View.GONE, default=gone}"
+            android:layout_toRightOf="@id/tabs_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"/>

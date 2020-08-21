@@ -86,7 +86,7 @@ class NativeContact(val nativeId: String, private val lookupKey: String? = null)
 
     @Synchronized
     override fun syncValuesFromAndroidCursor(cursor: Cursor) {
-        val displayName: String =
+        val displayName: String? =
             cursor.getString(cursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME_PRIMARY))
 
         val mime: String? = cursor.getString(cursor.getColumnIndex(ContactsContract.Data.MIMETYPE))
@@ -133,7 +133,7 @@ class NativeContact(val nativeId: String, private val lookupKey: String? = null)
                 val stringAddress = address.asStringUriOnly()
                 if (!rawSipAddresses.contains(stringAddress)) {
                     sipAddresses.add(address)
-                    rawSipAddresses.add(stringAddress)
+                    rawSipAddresses.add(data1)
                 }
             }
             ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE -> {
@@ -226,5 +226,9 @@ class NativeContact(val nativeId: String, private val lookupKey: String? = null)
             }
             cursor.close()
         }
+    }
+
+    override fun toString(): String {
+        return "${super.toString()}: id [$nativeId], name [$fullName]"
     }
 }
