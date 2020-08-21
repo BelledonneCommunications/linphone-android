@@ -430,8 +430,13 @@ class CoreContext(val context: Context, coreConfig: Config) {
 
         if (overlayY == 0f) overlayY = AppUtils.pixelsToDp(40f)
         val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val params: WindowManager.LayoutParams = WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT,
-            Compatibility.getOverlayType(), WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.TRANSLUCENT)
+        val params: WindowManager.LayoutParams = WindowManager.LayoutParams(
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            Compatibility.getOverlayType(),
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+            PixelFormat.TRANSLUCENT
+        )
         params.x = overlayX.toInt()
         params.y = overlayY.toInt()
         params.gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
