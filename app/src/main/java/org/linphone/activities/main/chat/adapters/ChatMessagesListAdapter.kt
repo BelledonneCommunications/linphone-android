@@ -46,7 +46,7 @@ import org.linphone.utils.LifecycleViewHolder
 
 class ChatMessagesListAdapter(val selectionViewModel: ListTopBarViewModel) : LifecycleListAdapter<EventLog, LifecycleViewHolder>(ChatMessageDiffCallback()) {
     companion object {
-        const val MAX_TIME_TO_GROUP_MESSAGES = 300 // 5 minutes
+        const val MAX_TIME_TO_GROUP_MESSAGES = 60 // 1 minute
     }
 
     val resendMessageEvent: MutableLiveData<Event<ChatMessage>> by lazy {
