@@ -47,6 +47,10 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
                 return
             }
 
+            if (localIdentity == null) {
+                Log.e("[Notification Broadcast Receiver] Local identity is null for notification id $notificationId")
+                return
+            }
             val localAddress = core.interpretUrl(localIdentity)
             if (localAddress == null) {
                 Log.e("[Notification Broadcast Receiver] Couldn't interpret local address $localIdentity")

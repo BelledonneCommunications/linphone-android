@@ -54,6 +54,7 @@
                 glideAvatarFallback="@{viewModel.defaultAccountAvatar}" />
 
             <ImageView
+                android:visibility="@{viewModel.defaultAccountFound ? View.VISIBLE : View.GONE}"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
@@ -74,6 +75,7 @@
                     android:textColor="?attr/lightToolbarTextColor"
                     android:textStyle="bold"
                     android:textSize="18sp"
+                    android:padding="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 

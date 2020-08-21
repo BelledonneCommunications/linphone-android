@@ -137,8 +137,10 @@ class Compatibility {
             }
         }
 
-        fun removeChatRoomShortcut(chatRoom: ChatRoom) {
-            // TODO Use removeLongLivedShortcuts() starting Android R (API 30)
+        fun removeChatRoomShortcut(context: Context, chatRoom: ChatRoom) {
+            if (Version.sdkAboveOrEqual(Version.API30_ANDROID_11)) {
+                // TODO Use removeLongLivedShortcuts()
+            }
         }
 
         suspend fun addImageToMediaStore(context: Context, content: Content): Boolean {
