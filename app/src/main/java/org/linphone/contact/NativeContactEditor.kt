@@ -47,14 +47,23 @@ class NativeContactEditor(val contact: NativeContact) {
             val contentResolver = coreContext.context.contentResolver
             val results = contentResolver.applyBatch(ContactsContract.AUTHORITY, changes)
             for (result in results) {
-                Log.i("[Native Contact Editor] Contact creation result is ${result.uri}")
-                val cursor = contentResolver.query(result.uri, arrayOf(RawContacts.CONTACT_ID), null, null, null)
-                if (cursor != null) {
-                    cursor.moveToNext()
-                    val contactId: Long = cursor.getLong(0)
-                    Log.i("[Native Contact Editor] New contact id is $contactId")
-                    cursor.close()
-                    return contactId
+                val uri = result.uri
+                Log.i("[Native Contact Editor] Contact creation result is $uri")
+                if (uri != null) {
+                    val cursor = contentResolver.query(
+                        uri,
+                        arrayOf(RawContacts.CONTACT_ID),
+                        null,
+                        null,
+                        null
+                    )
+                    if (cursor != null) {
+                        cursor.moveToNext()
+                        val contactId: Long = cursor.getLong(0)
+                        Log.i("[Native Contact Editor] New contact id is $contactId")
+                        cursor.close()
+                        return contactId
+                    }
                 }
             }
 
@@ -301,9 +310,10 @@ class NativeContactEditor(val contact: NativeContact) {
                     val contentResolver = coreContext.context.contentResolver
                     val results = contentResolver.applyBatch(ContactsContract.AUTHORITY, changes)
                     for (result in results) {
-                        Log.i("[Native Contact Editor] Result is ${result.uri}")
-                        if (updateSyncAccountRawId && syncAccountRawId == null && result?.uri != null) {
-                            syncAccountRawId = ContentUris.parseId(result.uri).toString()
+                        val uri = result.uri
+                        Log.i("[Native Contact Editor] Result is $uri")
+                        if (uri != null && updateSyncAccountRawId && syncAccountRawId == null) {
+                            syncAccountRawId = ContentUris.parseId(uri).toString()
                             Log.i("[Native Contact Editor] Sync account raw id is $syncAccountRawId")
                         }
                     }
