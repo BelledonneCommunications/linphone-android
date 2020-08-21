@@ -12,7 +12,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 
 class SyncAccountAdapter : BaseAdapter() {
-    private var accounts: ArrayList<Triple<String, String, Drawable>> = arrayListOf()
+    private var accounts: ArrayList<Triple<String, String, Drawable?>> = arrayListOf()
 
     init {
         accounts.addAll(coreContext.contactsManager.getAvailableSyncAccounts())
@@ -30,7 +30,7 @@ class SyncAccountAdapter : BaseAdapter() {
         return view
     }
 
-    override fun getItem(position: Int): Triple<String, String, Drawable> {
+    override fun getItem(position: Int): Triple<String, String, Drawable?> {
         return accounts[position]
     }
 
