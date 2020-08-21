@@ -276,12 +276,12 @@ class ContactsManager(private val context: Context) {
         }
     }
 
-    fun getAvailableSyncAccounts(): List<Triple<String, String, Drawable>> {
+    fun getAvailableSyncAccounts(): List<Triple<String, String, Drawable?>> {
         val accountManager = context.getSystemService(Context.ACCOUNT_SERVICE) as AccountManager
         val packageManager = context.packageManager
         val syncAdapters = ContentResolver.getSyncAdapterTypes()
         val authenticators: Array<AuthenticatorDescription> = accountManager.authenticatorTypes
-        val available = arrayListOf<Triple<String, String, Drawable>>()
+        val available = arrayListOf<Triple<String, String, Drawable?>>()
 
         for (syncAdapter in syncAdapters) {
             if (syncAdapter.authority == "com.android.contacts" && syncAdapter.isUserVisible) {

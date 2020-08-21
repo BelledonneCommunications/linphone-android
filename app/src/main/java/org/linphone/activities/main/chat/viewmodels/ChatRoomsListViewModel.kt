@@ -119,7 +119,7 @@ class ChatRoomsListViewModel : ErrorReportingViewModel() {
         chatRoomsToDeleteCount = 1
         if (chatRoom != null) {
             coreContext.notificationsManager.dismissChatNotification(chatRoom)
-            Compatibility.removeChatRoomShortcut(chatRoom)
+            Compatibility.removeChatRoomShortcut(coreContext.context, chatRoom)
             chatRoom.addListener(chatRoomListener)
             coreContext.core.deleteChatRoom(chatRoom)
         }
@@ -133,7 +133,7 @@ class ChatRoomsListViewModel : ErrorReportingViewModel() {
             }
 
             coreContext.notificationsManager.dismissChatNotification(chatRoom)
-            Compatibility.removeChatRoomShortcut(chatRoom)
+            Compatibility.removeChatRoomShortcut(coreContext.context, chatRoom)
             chatRoom.addListener(chatRoomListener)
             chatRoom.core.deleteChatRoom(chatRoom)
         }

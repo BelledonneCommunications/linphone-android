@@ -137,19 +137,19 @@ class RecordingViewModel(val path: String) : ViewModel(), Comparable<RecordingVi
         } else {
             textureView.surfaceTextureListener = object : TextureView.SurfaceTextureListener {
                 override fun onSurfaceTextureSizeChanged(
-                    surface: SurfaceTexture?,
+                    surface: SurfaceTexture,
                     width: Int,
                     height: Int
                 ) { }
 
-                override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) { }
+                override fun onSurfaceTextureUpdated(surface: SurfaceTexture) { }
 
-                override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean {
+                override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
                     return true
                 }
 
                 override fun onSurfaceTextureAvailable(
-                    surface: SurfaceTexture?,
+                    surface: SurfaceTexture,
                     width: Int,
                     height: Int
                 ) {

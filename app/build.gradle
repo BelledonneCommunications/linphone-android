@@ -51,8 +51,8 @@ task getGitVersion() {
 project.tasks['preBuild'].dependsOn 'getGitVersion'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdkVersion 30
+    buildToolsVersion '30.0.2'
     defaultConfig {
         minSdkVersion 23
         targetSdkVersion 29
