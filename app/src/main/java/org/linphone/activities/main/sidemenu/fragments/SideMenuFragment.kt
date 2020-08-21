@@ -29,7 +29,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -76,7 +75,7 @@ class SideMenuFragment : Fragment() {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
 
-        sharedViewModel.proxyConfigRemoved.observe(viewLifecycleOwner, Observer {
+        sharedViewModel.proxyConfigRemoved.observe(viewLifecycleOwner, {
             Log.i("[Side Menu] Proxy config removed, update accounts list")
             viewModel.updateAccountsList()
         })

@@ -51,6 +51,7 @@
                 android:adjustViewBounds="true"
                 android:padding="10dp"
                 android:src="@drawable/avatar"
+                android:contentDescription="@string/content_description_change_own_picture"
                 glideAvatarFallback="@{viewModel.defaultAccountAvatar}" />
 
             <ImageView

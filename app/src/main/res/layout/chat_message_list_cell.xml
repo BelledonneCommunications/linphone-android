@@ -161,7 +161,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dp"
                     android:textColor="@color/primary_color"
-                    android:textSize="10sp"
+                    android:textSize="12sp"
                     android:fontFamily="sans-serif"
                     android:textStyle="normal"
                     android:lineSpacingExtra="3.3sp" />

@@ -26,7 +26,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
@@ -73,7 +72,7 @@ class AboutFragment : Fragment() {
             startActivity(browserIntent)
         }
 
-        viewModel.uploadFinishedEvent.observe(viewLifecycleOwner, Observer {
+        viewModel.uploadFinishedEvent.observe(viewLifecycleOwner, {
             it.consume { url ->
                 val clipboard =
                     requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager

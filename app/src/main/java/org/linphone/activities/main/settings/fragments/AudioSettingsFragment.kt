@@ -27,7 +27,6 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.BR
@@ -63,14 +62,14 @@ class AudioSettingsFragment : Fragment() {
         binding.setBackClickListener { findNavController().popBackStack() }
         binding.back.visibility = if (resources.getBoolean(R.bool.isTablet)) View.INVISIBLE else View.VISIBLE
 
-        viewModel.askAudioRecordPermissionForEchoCancellerCalibrationEvent.observe(viewLifecycleOwner, Observer {
+        viewModel.askAudioRecordPermissionForEchoCancellerCalibrationEvent.observe(viewLifecycleOwner, {
             it.consume {
                 Log.i("[Audio Settings] Asking for RECORD_AUDIO permission for echo canceller calibration")
                 requestPermissions(arrayOf(android.Manifest.permission.RECORD_AUDIO), 1)
             }
         })
 
-        viewModel.askAudioRecordPermissionForEchoTesterEvent.observe(viewLifecycleOwner, Observer {
+        viewModel.askAudioRecordPermissionForEchoTesterEvent.observe(viewLifecycleOwner, {
             it.consume {
                 Log.i("[Audio Settings] Asking for RECORD_AUDIO permission for echo tester")
                 requestPermissions(arrayOf(android.Manifest.permission.RECORD_AUDIO), 2)

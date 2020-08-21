@@ -28,7 +28,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
@@ -61,7 +60,7 @@ class CallSettingsFragment : Fragment() {
         binding.setBackClickListener { findNavController().popBackStack() }
         binding.back.visibility = if (resources.getBoolean(R.bool.isTablet)) View.INVISIBLE else View.VISIBLE
 
-        viewModel.overlayEnabledEvent.observe(viewLifecycleOwner, Observer {
+        viewModel.overlayEnabledEvent.observe(viewLifecycleOwner, {
             it.consume {
                 if (!Compatibility.canDrawOverlay(requireContext())) {
                     val intent = Intent("android.settings.action.MANAGE_OVERLAY_PERMISSION", Uri.parse("package:${requireContext().packageName}"))
@@ -70,7 +69,7 @@ class CallSettingsFragment : Fragment() {
             }
         })
 
-        viewModel.goToAndroidNotificationSettingsEvent.observe(viewLifecycleOwner, Observer { it.consume {
+        viewModel.goToAndroidNotificationSettingsEvent.observe(viewLifecycleOwner, { it.consume {
             if (Build.VERSION.SDK_INT >= Version.API26_O_80) {
                 val i = Intent()
                 i.action = Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS

@@ -51,7 +51,7 @@ class ImdnAdapter : ListAdapter<ParticipantImdnState,
         holder.bind(getItem(position))
     }
 
-    inner class ViewHolder(
+    class ViewHolder(
         private val binding: ChatRoomImdnParticipantCellBinding
     ) : LifecycleViewHolder(binding) {
         fun bind(participantImdnState: ParticipantImdnState) {

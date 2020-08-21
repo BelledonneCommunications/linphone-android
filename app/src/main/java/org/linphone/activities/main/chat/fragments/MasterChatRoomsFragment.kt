@@ -25,7 +25,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -127,21 +126,21 @@ class MasterChatRoomsFragment : MasterFragment() {
         dividerItemDecoration.setDrawable(resources.getDrawable(R.drawable.divider, null))
         binding.chatList.addItemDecoration(dividerItemDecoration)
 
-        listViewModel.chatRooms.observe(viewLifecycleOwner, Observer { chatRooms ->
+        listViewModel.chatRooms.observe(viewLifecycleOwner, { chatRooms ->
             adapter.submitList(chatRooms)
         })
 
-        listViewModel.latestUpdatedChatRoomId.observe(viewLifecycleOwner, Observer { position ->
+        listViewModel.latestUpdatedChatRoomId.observe(viewLifecycleOwner, { position ->
             adapter.notifyItemChanged(position)
         })
 
-        listViewModel.contactsUpdatedEvent.observe(viewLifecycleOwner, Observer {
+        listViewModel.contactsUpdatedEvent.observe(viewLifecycleOwner, {
             it.consume {
                 adapter.notifyDataSetChanged()
             }
         })
 
-        adapter.selectedChatRoomEvent.observe(viewLifecycleOwner, Observer {
+        adapter.selectedChatRoomEvent.observe(viewLifecycleOwner, {
             it.consume { chatRoom ->
                 sharedViewModel.selectedChatRoom.value = chatRoom
                 navigateToChatRoom()
@@ -175,21 +174,21 @@ class MasterChatRoomsFragment : MasterFragment() {
                 adapter.selectedChatRoomEvent.value = Event(chatRoom)
             }
         } else {
-            sharedViewModel.textToShare.observe(viewLifecycleOwner, Observer {
+            sharedViewModel.textToShare.observe(viewLifecycleOwner, {
                 if (it.isNotEmpty()) {
                     Log.i("[Chat] Found text to share")
                     val activity = requireActivity() as MainActivity
                     activity.showSnackBar(R.string.chat_room_toast_choose_for_sharing)
                 }
             })
-            sharedViewModel.filesToShare.observe(viewLifecycleOwner, Observer {
+            sharedViewModel.filesToShare.observe(viewLifecycleOwner, {
                 if (it.isNotEmpty()) {
                     Log.i("[Chat] Found ${it.size} files to share")
                     val activity = requireActivity() as MainActivity
                     activity.showSnackBar(R.string.chat_room_toast_choose_for_sharing)
                 }
             })
-            sharedViewModel.messageToForwardEvent.observe(viewLifecycleOwner, Observer {
+            sharedViewModel.messageToForwardEvent.observe(viewLifecycleOwner, {
                 if (!it.consumed()) {
                     Log.i("[Chat] Found chat message to transfer")
 
@@ -198,7 +197,7 @@ class MasterChatRoomsFragment : MasterFragment() {
                 }
             })
 
-            listViewModel.onErrorEvent.observe(viewLifecycleOwner, Observer {
+            listViewModel.onErrorEvent.observe(viewLifecycleOwner, {
                 it.consume { messageResourceId ->
                     (activity as MainActivity).showSnackBar(messageResourceId)
                 }

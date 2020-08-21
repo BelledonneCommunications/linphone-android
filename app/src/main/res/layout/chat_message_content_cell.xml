@@ -43,13 +43,14 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/recording_play_pause"
+            android:contentDescription="@string/content_description_chat_message_video_attachment"
             android:layout_centerInParent="true"/>
 
         <TextView
             android:onClick="@{() -> data.openFile()}"
             android:onLongClick="@{longClickListener}"
             android:textColor="?attr/secondaryTextColor"
-            android:textSize="11.7sp"
+            android:textSize="12sp"
             android:fontFamily="sans-serif"
             android:textStyle="normal"
             android:text="@{data.content.name}"

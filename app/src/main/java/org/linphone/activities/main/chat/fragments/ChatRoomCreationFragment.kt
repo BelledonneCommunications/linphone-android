@@ -24,7 +24,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -96,23 +95,23 @@ class ChatRoomCreationFragment : Fragment() {
             viewModel.sipContactsSelected.value = true
         }
 
-        viewModel.contactsList.observe(viewLifecycleOwner, Observer {
+        viewModel.contactsList.observe(viewLifecycleOwner, {
             adapter.submitList(it)
         })
 
-        viewModel.isEncrypted.observe(viewLifecycleOwner, Observer {
+        viewModel.isEncrypted.observe(viewLifecycleOwner, {
             adapter.securityEnabled.value = it
         })
 
-        viewModel.sipContactsSelected.observe(viewLifecycleOwner, Observer {
+        viewModel.sipContactsSelected.observe(viewLifecycleOwner, {
             viewModel.updateContactsList()
         })
 
-        viewModel.selectedAddresses.observe(viewLifecycleOwner, Observer {
+        viewModel.selectedAddresses.observe(viewLifecycleOwner, {
             adapter.selectedAddresses.value = it
         })
 
-        viewModel.chatRoomCreatedEvent.observe(viewLifecycleOwner, Observer {
+        viewModel.chatRoomCreatedEvent.observe(viewLifecycleOwner, {
             it.consume { chatRoom ->
                 sharedViewModel.selectedChatRoom.value = chatRoom
                 if (findNavController().currentDestination?.id == R.id.chatRoomCreationFragment) {
@@ -121,11 +120,11 @@ class ChatRoomCreationFragment : Fragment() {
             }
         })
 
-        viewModel.filter.observe(viewLifecycleOwner, Observer {
+        viewModel.filter.observe(viewLifecycleOwner, {
             viewModel.applyFilter()
         })
 
-        adapter.selectedContact.observe(viewLifecycleOwner, Observer {
+        adapter.selectedContact.observe(viewLifecycleOwner, {
             it.consume { searchResult ->
                 if (createGroup) {
                     viewModel.toggleSelectionForSearchResult(searchResult)
@@ -148,7 +147,7 @@ class ChatRoomCreationFragment : Fragment() {
             }
         }
 
-        viewModel.onErrorEvent.observe(viewLifecycleOwner, Observer {
+        viewModel.onErrorEvent.observe(viewLifecycleOwner, {
             it.consume { messageResourceId ->
                 (activity as MainActivity).showSnackBar(messageResourceId)
             }

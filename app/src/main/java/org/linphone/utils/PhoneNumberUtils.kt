@@ -39,7 +39,7 @@ class PhoneNumberUtils {
             return null
         }
 
-        @SuppressLint("MissingPermission")
+        @SuppressLint("MissingPermission", "HardwareIds")
         fun getDevicePhoneNumber(context: Context): String? {
             if (PermissionHelper.get().hasReadPhoneState()) {
                 try {

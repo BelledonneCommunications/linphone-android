@@ -27,9 +27,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import java.util.*
 import org.linphone.R
 import org.linphone.activities.call.viewmodels.CallsViewModel
 import org.linphone.activities.call.viewmodels.ControlsViewModel
@@ -74,7 +72,7 @@ class ControlsFragment : Fragment() {
         controlsViewModel = ViewModelProvider(this).get(ControlsViewModel::class.java)
         binding.controlsViewModel = controlsViewModel
 
-        callsViewModel.currentCallViewModel.observe(viewLifecycleOwner, Observer {
+        callsViewModel.currentCallViewModel.observe(viewLifecycleOwner, {
             if (it != null) {
                 binding.activeCallTimer.base =
                     SystemClock.elapsedRealtime() - (1000 * it.call.duration) // Linphone timestamps are in seconds
@@ -82,13 +80,13 @@ class ControlsFragment : Fragment() {
             }
         })
 
-        callsViewModel.noMoreCallEvent.observe(viewLifecycleOwner, Observer {
+        callsViewModel.noMoreCallEvent.observe(viewLifecycleOwner, {
             it.consume {
                 activity?.finish()
             }
         })
 
-        callsViewModel.callUpdateEvent.observe(viewLifecycleOwner, Observer {
+        callsViewModel.callUpdateEvent.observe(viewLifecycleOwner, {
             it.consume { call ->
                 if (call.state == Call.State.StreamsRunning) {
                     dialog?.dismiss()
@@ -98,7 +96,7 @@ class ControlsFragment : Fragment() {
             }
         })
 
-        controlsViewModel.chatClickedEvent.observe(viewLifecycleOwner, Observer {
+        controlsViewModel.chatClickedEvent.observe(viewLifecycleOwner, {
             it.consume {
                 val intent = Intent()
                 intent.setClass(requireContext(), MainActivity::class.java)
@@ -108,7 +106,7 @@ class ControlsFragment : Fragment() {
             }
         })
 
-        controlsViewModel.addCallClickedEvent.observe(viewLifecycleOwner, Observer {
+        controlsViewModel.addCallClickedEvent.observe(viewLifecycleOwner, {
             it.consume {
                 val intent = Intent()
                 intent.setClass(requireContext(), MainActivity::class.java)
@@ -119,7 +117,7 @@ class ControlsFragment : Fragment() {
             }
         })
 
-        controlsViewModel.transferCallClickedEvent.observe(viewLifecycleOwner, Observer {
+        controlsViewModel.transferCallClickedEvent.observe(viewLifecycleOwner, {
             it.consume {
                 val intent = Intent()
                 intent.setClass(requireContext(), MainActivity::class.java)
@@ -130,7 +128,7 @@ class ControlsFragment : Fragment() {
             }
         })
 
-        controlsViewModel.somethingClickedEvent.observe(viewLifecycleOwner, Observer {
+        controlsViewModel.somethingClickedEvent.observe(viewLifecycleOwner, {
             it.consume {
                 sharedViewModel.resetHiddenInterfaceTimerInVideoCallEvent.value = Event(true)
             }

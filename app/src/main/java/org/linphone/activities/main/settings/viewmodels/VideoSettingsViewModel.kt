@@ -152,7 +152,7 @@ class VideoSettingsViewModel : GenericSettingsViewModel() {
         }
 
         videoSizeLabels.value = labels
-        videoSizeIndex.value = labels.indexOf(core.preferredVideoDefinition?.name)
+        videoSizeIndex.value = labels.indexOf(core.preferredVideoDefinition.name)
     }
 
     private fun initVideoPresetList() {

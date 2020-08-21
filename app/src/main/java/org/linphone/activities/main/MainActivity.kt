@@ -28,7 +28,6 @@ import android.view.Gravity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -77,7 +76,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         sharedViewModel = ViewModelProvider(this).get(SharedMainViewModel::class.java)
         binding.viewModel = sharedViewModel
 
-        sharedViewModel.toggleDrawerEvent.observe(this, Observer {
+        sharedViewModel.toggleDrawerEvent.observe(this, {
             it.consume {
                 if (binding.sideMenu.isDrawerOpen(Gravity.LEFT)) {
                     binding.sideMenu.closeDrawer(binding.sideMenuContent, true)
@@ -87,7 +86,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             }
         })
 
-        coreContext.callErrorMessageResourceId.observe(this, Observer {
+        coreContext.callErrorMessageResourceId.observe(this, {
             it.consume { messageResourceId ->
                 showSnackBar(messageResourceId)
             }

@@ -22,7 +22,6 @@ package org.linphone.activities.main.fragments
 import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
 import org.linphone.activities.main.viewmodels.DialogViewModel
@@ -44,23 +43,23 @@ abstract class MasterFragment : Fragment() {
         // List selection
         listSelectionViewModel = ViewModelProvider(this).get(ListTopBarViewModel::class.java)
 
-        listSelectionViewModel.isEditionEnabled.observe(viewLifecycleOwner, Observer {
+        listSelectionViewModel.isEditionEnabled.observe(viewLifecycleOwner, {
             if (!it) listSelectionViewModel.onUnSelectAll()
         })
 
-        listSelectionViewModel.selectAllEvent.observe(viewLifecycleOwner, Observer {
+        listSelectionViewModel.selectAllEvent.observe(viewLifecycleOwner, {
             it.consume {
                 listSelectionViewModel.onSelectAll(getItemCount() - 1)
             }
         })
 
-        listSelectionViewModel.unSelectAllEvent.observe(viewLifecycleOwner, Observer {
+        listSelectionViewModel.unSelectAllEvent.observe(viewLifecycleOwner, {
             it.consume {
                 listSelectionViewModel.onUnSelectAll()
             }
         })
 
-        listSelectionViewModel.deleteSelectionEvent.observe(viewLifecycleOwner, Observer {
+        listSelectionViewModel.deleteSelectionEvent.observe(viewLifecycleOwner, {
             it.consume {
                 val confirmationDialog = AppUtils.getStringWithPlural(dialogConfirmationMessageBeforeRemoval, listSelectionViewModel.selectedItems.value.orEmpty().size)
                 val viewModel = DialogViewModel(confirmationDialog)
