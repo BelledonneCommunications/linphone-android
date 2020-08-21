@@ -62,7 +62,7 @@
                     android:contentDescription="@string/content_description_e2e_encryption_disabled"
                     android:src="@drawable/security_toogle_icon_grey"/>
 
-                <Switch
+                <com.google.android.material.switchmaterial.SwitchMaterial
                     android:checked="@={viewModel.isEncrypted}"
                     android:layout_width="50dp"
                     android:layout_height="match_parent"

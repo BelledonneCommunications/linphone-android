@@ -119,56 +119,49 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <LinearLayout
+                <RadioGroup
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:padding="10dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
-                    <RadioGroup
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
+                    <TextView
+                        style="@style/assistant_input_field_header_font"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
                         android:gravity="center"
-                        android:orientation="horizontal">
+                        android:text="@string/transport"
+                        android:textAllCaps="true" />
 
-                        <TextView
-                            style="@style/assistant_input_field_header_font"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:text="@string/transport"
-                            android:textAllCaps="true" />
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:checked="@{viewModel.transport == TransportType.Udp}"
+                        android:onClick="@{() -> viewModel.setTransport(TransportType.Udp)}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:textColor="?attr/primaryTextColor"
+                        android:text="@string/transport_udp" />
 
-                        <com.google.android.material.radiobutton.MaterialRadioButton
-                            android:checked="@{viewModel.transport == TransportType.Udp}"
-                            android:onClick="@{() -> viewModel.setTransport(TransportType.Udp)}"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:textColor="?attr/primaryTextColor"
-                            android:text="@string/transport_udp" />
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:checked="@{viewModel.transport == TransportType.Tcp}"
+                        android:onClick="@{() -> viewModel.setTransport(TransportType.Tcp)}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:textColor="?attr/primaryTextColor"
+                        android:text="@string/transport_tcp" />
 
-                        <com.google.android.material.radiobutton.MaterialRadioButton
-                            android:checked="@{viewModel.transport == TransportType.Tcp}"
-                            android:onClick="@{() -> viewModel.setTransport(TransportType.Tcp)}"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:textColor="?attr/primaryTextColor"
-                            android:text="@string/transport_tcp" />
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:checked="@{viewModel.transport == TransportType.Tls}"
+                        android:onClick="@{() -> viewModel.setTransport(TransportType.Tls)}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:textColor="?attr/primaryTextColor"
+                        android:text="@string/transport_tls" />
 
-                        <com.google.android.material.radiobutton.MaterialRadioButton
-                            android:checked="@{viewModel.transport == TransportType.Tls}"
-                            android:onClick="@{() -> viewModel.setTransport(TransportType.Tls)}"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:textColor="?attr/primaryTextColor"
-                            android:text="@string/transport_tls" />
-
-                    </RadioGroup>
-
-                </LinearLayout>
+                </RadioGroup>
 
                 <TextView
                     android:onClick="@{() -> viewModel.createProxyConfig()}"

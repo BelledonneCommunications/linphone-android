@@ -20,23 +20,20 @@
 package org.linphone.compatibility
 
 import android.annotation.TargetApi
-import android.app.*
-import android.app.usage.UsageStatsManager
 import android.content.Context
+import android.content.pm.ShortcutManager
+import org.linphone.core.ChatRoom
 
-@TargetApi(28)
-class Api28Compatibility {
+@TargetApi(30)
+class Api30Compatibility {
     companion object {
-        fun isAppUserRestricted(context: Context): Boolean {
-            val activityManager =
-                context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-            return activityManager.isBackgroundRestricted
-        }
+        fun removeChatRoomShortcut(context: Context, chatRoom: ChatRoom) {
+            val peerAddress = chatRoom.peerAddress.asStringUriOnly()
+            val localAddress = chatRoom.localAddress.asStringUriOnly()
 
-        fun getAppStandbyBucket(context: Context): Int {
-            val usageStatsManager =
-                context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
-            return usageStatsManager.appStandbyBucket
+            val shortcutManager = context.getSystemService(ShortcutManager::class.java)
+            val shortcutsToRemoveList = arrayListOf("$localAddress#$peerAddress")
+            shortcutManager.removeLongLivedShortcuts(shortcutsToRemoveList)
         }
     }
 }

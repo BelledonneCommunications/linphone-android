@@ -23,7 +23,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication
@@ -80,7 +79,7 @@ class PhoneAccountLinkingFragment : AbstractPhoneFragment() {
             CountryPickerFragment(viewModel).show(childFragmentManager, "CountryPicker")
         }
 
-        viewModel.goToSmsValidationEvent.observe(viewLifecycleOwner, Observer {
+        viewModel.goToSmsValidationEvent.observe(viewLifecycleOwner, {
             it.consume {
                 if (findNavController().currentDestination?.id == R.id.phoneAccountLinkingFragment) {
                     val args = Bundle()
@@ -91,7 +90,7 @@ class PhoneAccountLinkingFragment : AbstractPhoneFragment() {
             }
         })
 
-        viewModel.leaveAssistantEvent.observe(viewLifecycleOwner, Observer {
+        viewModel.leaveAssistantEvent.observe(viewLifecycleOwner, {
             it.consume {
                 if (findNavController().currentDestination?.id == R.id.phoneAccountLinkingFragment) {
                     if (LinphoneApplication.coreContext.core.isEchoCancellerCalibrationRequired) {

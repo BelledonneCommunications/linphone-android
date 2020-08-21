@@ -25,7 +25,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -128,19 +127,19 @@ class MasterCallLogsFragment : MasterFragment() {
         val headerItemDecoration = RecyclerViewHeaderDecoration(adapter)
         binding.callLogsList.addItemDecoration(headerItemDecoration)
 
-        listViewModel.callLogs.observe(viewLifecycleOwner, Observer { callLogs ->
+        listViewModel.callLogs.observe(viewLifecycleOwner, { callLogs ->
             if (listViewModel.missedCallLogsSelected.value == false) {
                 adapter.submitList(callLogs)
             }
         })
 
-        listViewModel.missedCallLogs.observe(viewLifecycleOwner, Observer { callLogs ->
+        listViewModel.missedCallLogs.observe(viewLifecycleOwner, { callLogs ->
             if (listViewModel.missedCallLogsSelected.value == true) {
                 adapter.submitList(callLogs)
             }
         })
 
-        listViewModel.missedCallLogsSelected.observe(viewLifecycleOwner, Observer {
+        listViewModel.missedCallLogsSelected.observe(viewLifecycleOwner, {
             if (it) {
                 adapter.submitList(listViewModel.missedCallLogs.value)
             } else {
@@ -148,20 +147,20 @@ class MasterCallLogsFragment : MasterFragment() {
             }
         })
 
-        listViewModel.contactsUpdatedEvent.observe(viewLifecycleOwner, Observer {
+        listViewModel.contactsUpdatedEvent.observe(viewLifecycleOwner, {
             it.consume {
                 adapter.notifyDataSetChanged()
             }
         })
 
-        adapter.selectedCallLogEvent.observe(viewLifecycleOwner, Observer {
+        adapter.selectedCallLogEvent.observe(viewLifecycleOwner, {
             it.consume { callLog ->
                 sharedViewModel.selectedCallLogGroup.value = callLog
                 navigateToCallHistory()
             }
         })
 
-        adapter.startCallToEvent.observe(viewLifecycleOwner, Observer {
+        adapter.startCallToEvent.observe(viewLifecycleOwner, {
             it.consume { address ->
                 if (coreContext.core.callsNb > 0) {
                     Log.i("[History] Starting dialer with pre-filled URI ${address.asStringUriOnly()}, is transfer? ${sharedViewModel.pendingCallTransfer}")

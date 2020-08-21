@@ -44,7 +44,7 @@
         <item quantity="one">%d day</item>
         <item quantity="other">%d days</item>
     </plurals>
-    <string name="share_uploaded_logs_link">Share logs link using...</string>
+    <string name="share_uploaded_logs_link">Share logs link using…</string>
 
     <!-- Errors -->
     <string name="invalid_email">Invalid email</string>
@@ -736,6 +736,7 @@
     <string name="content_description_cancel_contact_edit">Discard changes</string>
     <string name="content_description_confirm_contact_edit">Save changes</string>
     <string name="content_description_change_contact_picture">Change contact picture</string>
+    <string name="content_description_change_own_picture">Change own picture</string>
     <string name="content_description_call_direction">Call direction</string>
     <string name="content_description_all_calls">All calls</string>
     <string name="content_description_missed_calls">Missed calls</string>

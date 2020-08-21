@@ -24,7 +24,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -101,7 +100,7 @@ class ImdnFragment : Fragment() {
         val headerItemDecoration = RecyclerViewHeaderDecoration(adapter)
         binding.participantsList.addItemDecoration(headerItemDecoration)
 
-        viewModel.participants.observe(viewLifecycleOwner, Observer {
+        viewModel.participants.observe(viewLifecycleOwner, {
             adapter.submitList(it)
         })
 

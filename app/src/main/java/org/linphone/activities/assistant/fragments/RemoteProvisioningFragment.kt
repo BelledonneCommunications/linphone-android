@@ -24,7 +24,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -66,7 +65,7 @@ class RemoteProvisioningFragment : Fragment() {
             }
         }
 
-        viewModel.fetchSuccessfulEvent.observe(viewLifecycleOwner, Observer {
+        viewModel.fetchSuccessfulEvent.observe(viewLifecycleOwner, {
             it.consume { success ->
                 if (success) {
                     if (coreContext.core.isEchoCancellerCalibrationRequired) {

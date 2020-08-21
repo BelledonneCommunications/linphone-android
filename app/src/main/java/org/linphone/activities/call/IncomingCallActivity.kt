@@ -24,7 +24,6 @@ import android.app.KeyguardManager
 import android.content.Context
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
@@ -65,21 +64,21 @@ class IncomingCallActivity : GenericActivity() {
         )[IncomingCallViewModel::class.java]
         binding.viewModel = viewModel
 
-        viewModel.callEndedEvent.observe(this, Observer {
+        viewModel.callEndedEvent.observe(this, {
             it.consume {
                 Log.i("[Incoming Call Activity] Call ended, finish activity")
                 finish()
             }
         })
 
-        viewModel.callConnectedEvent.observe(this, Observer {
+        viewModel.callConnectedEvent.observe(this, {
             it.consume {
                 Log.i("[Incoming Call Activity] Call connected, finish activity")
                 finish()
             }
         })
 
-        viewModel.earlyMediaVideoEnabled.observe(this, Observer {
+        viewModel.earlyMediaVideoEnabled.observe(this, {
             if (it) {
                 Log.i("[Incoming Call Activity] Early media video being received, set native window id")
                 coreContext.core.nativeVideoWindowId = binding.remoteVideoSurface

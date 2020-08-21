@@ -25,7 +25,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -63,7 +62,7 @@ class GenericAccountLoginFragment : Fragment() {
         viewModel = ViewModelProvider(this, GenericLoginViewModelFactory(sharedViewModel.getAccountCreator(true))).get(GenericLoginViewModel::class.java)
         binding.viewModel = viewModel
 
-        viewModel.leaveAssistantEvent.observe(viewLifecycleOwner, Observer {
+        viewModel.leaveAssistantEvent.observe(viewLifecycleOwner, {
             it.consume {
                 if (coreContext.core.isEchoCancellerCalibrationRequired) {
                     if (findNavController().currentDestination?.id == R.id.genericAccountLoginFragment) {
@@ -75,7 +74,7 @@ class GenericAccountLoginFragment : Fragment() {
             }
         })
 
-        viewModel.invalidCredentialsEvent.observe(viewLifecycleOwner, Observer {
+        viewModel.invalidCredentialsEvent.observe(viewLifecycleOwner, {
             it.consume {
                 val dialogViewModel = DialogViewModel(getString(R.string.assistant_error_invalid_credentials))
                 val dialog: Dialog = DialogUtils.getDialog(requireContext(), dialogViewModel)
