@@ -25,7 +25,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.activities.assistant.viewmodels.EchoCancellerCalibrationViewModel
 import org.linphone.core.tools.Log
@@ -53,7 +52,7 @@ class EchoCancellerCalibrationFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(EchoCancellerCalibrationViewModel::class.java)
         binding.viewModel = viewModel
 
-        viewModel.echoCalibrationTerminated.observe(viewLifecycleOwner, Observer {
+        viewModel.echoCalibrationTerminated.observe(viewLifecycleOwner, {
             it.consume {
                 requireActivity().finish()
             }

@@ -25,7 +25,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -61,7 +60,7 @@ class ContactsSettingsFragment : Fragment() {
         binding.setBackClickListener { findNavController().popBackStack() }
         binding.back.visibility = if (resources.getBoolean(R.bool.isTablet)) View.INVISIBLE else View.VISIBLE
 
-        viewModel.launcherShortcutsEvent.observe(viewLifecycleOwner, Observer {
+        viewModel.launcherShortcutsEvent.observe(viewLifecycleOwner, {
             it.consume { newValue ->
                 if (newValue) {
                     Compatibility.createShortcutsToContacts(requireContext())
@@ -74,7 +73,7 @@ class ContactsSettingsFragment : Fragment() {
             }
         })
 
-        viewModel.askWriteContactsPermissionForPresenceStorageEvent.observe(viewLifecycleOwner, Observer {
+        viewModel.askWriteContactsPermissionForPresenceStorageEvent.observe(viewLifecycleOwner, {
             it.consume {
                 Log.i("[Contacts Settings] Asking for WRITE_CONTACTS permission to be able to store presence")
                 requestPermissions(arrayOf(android.Manifest.permission.WRITE_CONTACTS), 1)

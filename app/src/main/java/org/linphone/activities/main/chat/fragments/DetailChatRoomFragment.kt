@@ -32,7 +32,6 @@ import android.view.*
 import android.webkit.MimeTypeMap
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.view.menu.MenuPopupHelper
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -129,45 +128,45 @@ class DetailChatRoomFragment : MasterFragment() {
         }
         binding.chatMessagesList.addOnScrollListener(chatScrollListener)
 
-        chatSendingViewModel.textToSend.observe(viewLifecycleOwner, Observer {
+        chatSendingViewModel.textToSend.observe(viewLifecycleOwner, {
             chatSendingViewModel.onTextToSendChanged(it)
         })
 
-        listViewModel.events.observe(viewLifecycleOwner, Observer { events ->
+        listViewModel.events.observe(viewLifecycleOwner, { events ->
             adapter.submitList(events)
         })
 
-        listViewModel.messageUpdatedEvent.observe(viewLifecycleOwner, Observer {
+        listViewModel.messageUpdatedEvent.observe(viewLifecycleOwner, {
             it.consume { position ->
                 adapter.notifyItemChanged(position)
             }
         })
 
-        listViewModel.scrollToBottomOnMessageReceivedEvent.observe(viewLifecycleOwner, Observer {
+        listViewModel.scrollToBottomOnMessageReceivedEvent.observe(viewLifecycleOwner, {
             it.consume {
                 scrollToBottom()
             }
         })
 
-        listViewModel.requestWriteExternalStoragePermissionEvent.observe(viewLifecycleOwner, Observer {
+        listViewModel.requestWriteExternalStoragePermissionEvent.observe(viewLifecycleOwner, {
             it.consume {
                 requestPermissions(arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
             }
         })
 
-        adapter.deleteMessageEvent.observe(viewLifecycleOwner, Observer {
+        adapter.deleteMessageEvent.observe(viewLifecycleOwner, {
             it.consume { chatMessage ->
                 listViewModel.deleteMessage(chatMessage)
             }
         })
 
-        adapter.resendMessageEvent.observe(viewLifecycleOwner, Observer {
+        adapter.resendMessageEvent.observe(viewLifecycleOwner, {
             it.consume { chatMessage ->
                 listViewModel.resendMessage(chatMessage)
             }
         })
 
-        adapter.forwardMessageEvent.observe(viewLifecycleOwner, Observer {
+        adapter.forwardMessageEvent.observe(viewLifecycleOwner, {
             it.consume { chatMessage ->
                 // Remove observer before setting the message to forward
                 // as we don't want to forward it in this chat room
@@ -178,7 +177,7 @@ class DetailChatRoomFragment : MasterFragment() {
             }
         })
 
-        adapter.showImdnForMessageEvent.observe(viewLifecycleOwner, Observer {
+        adapter.showImdnForMessageEvent.observe(viewLifecycleOwner, {
             it.consume { chatMessage ->
                 val args = Bundle()
                 args.putString("MessageId", chatMessage.messageId)
@@ -186,14 +185,14 @@ class DetailChatRoomFragment : MasterFragment() {
             }
         })
 
-        adapter.addSipUriToContactEvent.observe(viewLifecycleOwner, Observer {
+        adapter.addSipUriToContactEvent.observe(viewLifecycleOwner, {
             it.consume { sipUri ->
                 Log.i("[Chat Room] Going to contacts list with SIP URI to add: $sipUri")
                 navigateToContacts(sipUri)
             }
         })
 
-        adapter.openContentEvent.observe(viewLifecycleOwner, Observer {
+        adapter.openContentEvent.observe(viewLifecycleOwner, {
             it.consume { path ->
                 openFile(path)
             }
@@ -239,7 +238,7 @@ class DetailChatRoomFragment : MasterFragment() {
             coreContext.startCall(viewModel.addressToCall)
         }
 
-        sharedViewModel.textToShare.observe(viewLifecycleOwner, Observer {
+        sharedViewModel.textToShare.observe(viewLifecycleOwner, {
             if (it.isNotEmpty()) {
                 Log.i("[Chat Room] Found text to share")
                 chatSendingViewModel.textToSend.value = it
@@ -247,7 +246,7 @@ class DetailChatRoomFragment : MasterFragment() {
             }
         })
 
-        sharedViewModel.filesToShare.observe(viewLifecycleOwner, Observer {
+        sharedViewModel.filesToShare.observe(viewLifecycleOwner, {
             if (it.isNotEmpty()) {
                 for (path in it) {
                     Log.i("[Chat Room] Found $path file to share")
@@ -257,7 +256,7 @@ class DetailChatRoomFragment : MasterFragment() {
             }
         })
 
-        sharedViewModel.messageToForwardEvent.observe(viewLifecycleOwner, Observer {
+        sharedViewModel.messageToForwardEvent.observe(viewLifecycleOwner, {
             it.consume { chatMessage ->
                 Log.i("[Chat Room] Found message to transfer")
                 showForwardConfirmationDialog(chatMessage)

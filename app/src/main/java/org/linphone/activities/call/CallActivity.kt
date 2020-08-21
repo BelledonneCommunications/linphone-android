@@ -24,7 +24,6 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.MotionEvent
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
@@ -57,7 +56,7 @@ class CallActivity : ProximitySensorActivity() {
 
         sharedViewModel = ViewModelProvider(this).get(SharedCallViewModel::class.java)
 
-        sharedViewModel.toggleDrawerEvent.observe(this, Observer {
+        sharedViewModel.toggleDrawerEvent.observe(this, {
             it.consume {
                 if (binding.statsMenu.isDrawerOpen(Gravity.LEFT)) {
                     binding.statsMenu.closeDrawer(binding.sideMenuContent, true)
@@ -67,7 +66,7 @@ class CallActivity : ProximitySensorActivity() {
             }
         })
 
-        sharedViewModel.resetHiddenInterfaceTimerInVideoCallEvent.observe(this, Observer {
+        sharedViewModel.resetHiddenInterfaceTimerInVideoCallEvent.observe(this, {
             it.consume {
                 viewModel.showMomentarily()
             }
@@ -95,7 +94,7 @@ class CallActivity : ProximitySensorActivity() {
 
         videoZoomHelper = VideoZoomHelper(this, binding.remoteVideoSurface)
 
-        viewModel.proximitySensorEnabled.observe(this, Observer {
+        viewModel.proximitySensorEnabled.observe(this, {
             enableProximitySensor(it)
         })
     }

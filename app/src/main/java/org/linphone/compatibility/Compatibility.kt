@@ -139,7 +139,7 @@ class Compatibility {
 
         fun removeChatRoomShortcut(context: Context, chatRoom: ChatRoom) {
             if (Version.sdkAboveOrEqual(Version.API30_ANDROID_11)) {
-                // TODO Use removeLongLivedShortcuts()
+                Api30Compatibility.removeChatRoomShortcut(context, chatRoom)
             }
         }
 

@@ -26,7 +26,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DiffUtil
 import org.linphone.R
 import org.linphone.activities.main.recordings.viewmodels.RecordingViewModel
@@ -72,7 +71,7 @@ class RecordingsListAdapter(val selectionViewModel: ListTopBarViewModel) : Lifec
 
                 // This is for item selection through ListTopBarFragment
                 selectionListViewModel = selectionViewModel
-                selectionViewModel.isEditionEnabled.observe(this@ViewHolder, Observer {
+                selectionViewModel.isEditionEnabled.observe(this@ViewHolder, {
                     position = adapterPosition
                 })
 
@@ -82,7 +81,7 @@ class RecordingsListAdapter(val selectionViewModel: ListTopBarViewModel) : Lifec
                     }
                 }
 
-                recording.isVideoRecordingPlayingEvent.observe(this@ViewHolder, Observer {
+                recording.isVideoRecordingPlayingEvent.observe(this@ViewHolder, {
                     it.consume { value ->
                         if (value) {
                             recording.setTextureView(videoSurface)

@@ -24,6 +24,7 @@ class SyncAccountAdapter : BaseAdapter() {
 
         val icon = view.findViewById<ImageView>(R.id.account_icon)
         icon.setImageDrawable(account.third)
+        icon.contentDescription = account.second
         val name = view.findViewById<TextView>(R.id.account_name)
         name.text = account.first
 

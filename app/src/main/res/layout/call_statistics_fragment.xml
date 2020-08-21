@@ -9,26 +9,20 @@
             type="org.linphone.activities.call.viewmodels.StatisticsListViewModel" />
     </data>
 
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?attr/backgroundColor"
         android:clickable="true">
 
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:background="?attr/backgroundColor"
+            android:orientation="vertical"
+            app:entries="@{viewModel.callStatsList}"
+            app:layout="@{@layout/call_statistics_cell}" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/backgroundColor"
-                android:orientation="vertical"
-                app:entries="@{viewModel.callStatsList}"
-                app:layout="@{@layout/call_statistics_cell}" />
-
-        </ScrollView>
-
-    </RelativeLayout>
+    </ScrollView>
 
 </layout>

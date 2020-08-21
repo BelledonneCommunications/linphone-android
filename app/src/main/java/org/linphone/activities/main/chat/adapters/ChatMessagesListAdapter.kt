@@ -28,7 +28,6 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DiffUtil
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
@@ -133,7 +132,7 @@ class ChatMessagesListAdapter(val selectionViewModel: ListTopBarViewModel) : Lif
 
                     // This is for item selection through ListTopBarFragment
                     selectionListViewModel = selectionViewModel
-                    selectionViewModel.isEditionEnabled.observe(this@ChatMessageViewHolder, Observer {
+                    selectionViewModel.isEditionEnabled.observe(this@ChatMessageViewHolder, {
                         position = adapterPosition
                     })
 
@@ -292,7 +291,7 @@ class ChatMessagesListAdapter(val selectionViewModel: ListTopBarViewModel) : Lif
 
                 // This is for item selection through ListTopBarFragment
                 selectionListViewModel = selectionViewModel
-                selectionViewModel.isEditionEnabled.observe(this@EventViewHolder, Observer {
+                selectionViewModel.isEditionEnabled.observe(this@EventViewHolder, {
                     position = adapterPosition
                 })
 

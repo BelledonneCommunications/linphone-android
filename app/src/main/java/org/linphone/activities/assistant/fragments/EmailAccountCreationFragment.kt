@@ -24,7 +24,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
@@ -59,7 +58,7 @@ class EmailAccountCreationFragment : Fragment() {
         viewModel = ViewModelProvider(this, EmailAccountCreationViewModelFactory(sharedViewModel.getAccountCreator())).get(EmailAccountCreationViewModel::class.java)
         binding.viewModel = viewModel
 
-        viewModel.goToEmailValidationEvent.observe(viewLifecycleOwner, Observer {
+        viewModel.goToEmailValidationEvent.observe(viewLifecycleOwner, {
             it.consume {
                 if (findNavController().currentDestination?.id == R.id.emailAccountCreationFragment) {
                     findNavController().navigate(R.id.action_emailAccountCreationFragment_to_emailAccountValidationFragment)

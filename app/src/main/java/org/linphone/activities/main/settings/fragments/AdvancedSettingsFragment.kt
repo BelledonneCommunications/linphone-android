@@ -30,7 +30,6 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
@@ -64,7 +63,7 @@ class AdvancedSettingsFragment : Fragment() {
         binding.setBackClickListener { findNavController().popBackStack() }
         binding.back.visibility = if (resources.getBoolean(R.bool.isTablet)) View.INVISIBLE else View.VISIBLE
 
-        viewModel.setNightModeEvent.observe(viewLifecycleOwner, Observer {
+        viewModel.setNightModeEvent.observe(viewLifecycleOwner, {
             it.consume { value ->
                 AppCompatDelegate.setDefaultNightMode(
                     when (value) {
@@ -78,7 +77,7 @@ class AdvancedSettingsFragment : Fragment() {
 
         viewModel.backgroundModeEnabled.value = !DeviceUtils.isAppUserRestricted(requireContext())
 
-        viewModel.goToBatterySettingsEvent.observe(viewLifecycleOwner, Observer { it.consume {
+        viewModel.goToBatterySettingsEvent.observe(viewLifecycleOwner, { it.consume {
             try {
                 val intent = Intent("android.settings.IGNORE_BATTERY_OPTIMIZATION_SETTINGS")
                 startActivity(intent)
@@ -88,7 +87,7 @@ class AdvancedSettingsFragment : Fragment() {
         } })
 
         viewModel.powerManagerSettingsVisibility.value = PowerManagerUtils.getDevicePowerManagerIntent(requireContext()) != null
-        viewModel.goToPowerManagerSettingsEvent.observe(viewLifecycleOwner, Observer { it.consume {
+        viewModel.goToPowerManagerSettingsEvent.observe(viewLifecycleOwner, { it.consume {
             val intent = PowerManagerUtils.getDevicePowerManagerIntent(requireActivity())
             if (intent != null) {
                 try {
@@ -99,7 +98,7 @@ class AdvancedSettingsFragment : Fragment() {
             }
         } })
 
-        viewModel.goToAndroidSettingsEvent.observe(viewLifecycleOwner, Observer { it.consume {
+        viewModel.goToAndroidSettingsEvent.observe(viewLifecycleOwner, { it.consume {
             val intent = Intent()
             intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
             intent.addCategory(Intent.CATEGORY_DEFAULT)

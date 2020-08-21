@@ -25,7 +25,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DiffUtil
 import org.linphone.R
 import org.linphone.activities.main.history.viewmodels.CallLogViewModel
@@ -69,7 +68,7 @@ class CallLogsListAdapter(val selectionViewModel: ListTopBarViewModel) : Lifecyc
 
                 // This is for item selection through ListTopBarFragment
                 selectionListViewModel = selectionViewModel
-                selectionViewModel.isEditionEnabled.observe(this@ViewHolder, Observer {
+                selectionViewModel.isEditionEnabled.observe(this@ViewHolder, {
                     position = adapterPosition
                 })
 

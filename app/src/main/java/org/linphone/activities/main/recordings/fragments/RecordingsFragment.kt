@@ -24,7 +24,6 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -80,7 +79,7 @@ class RecordingsFragment : MasterFragment() {
         val headerItemDecoration = RecyclerViewHeaderDecoration(adapter)
         binding.recordingsList.addItemDecoration(headerItemDecoration)
 
-        viewModel.recordingsList.observe(viewLifecycleOwner, Observer { recordings ->
+        viewModel.recordingsList.observe(viewLifecycleOwner, { recordings ->
             adapter.submitList(recordings)
         })
 
@@ -105,7 +104,7 @@ class RecordingsFragment : MasterFragment() {
             true
         }
 
-        adapter.isVideoRecordingPlayingEvent.observe(viewLifecycleOwner, Observer {
+        adapter.isVideoRecordingPlayingEvent.observe(viewLifecycleOwner, {
             it.consume { value ->
                 viewModel.isVideoVisible.value = value
             }

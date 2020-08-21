@@ -23,7 +23,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DiffUtil
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
@@ -67,11 +66,11 @@ class ChatRoomCreationContactsAdapter : LifecycleListAdapter<SearchResult, ChatR
                 val searchResultViewModel = ChatRoomCreationContactViewModel(searchResult)
                 viewModel = searchResultViewModel
 
-                securityEnabled.observe(this@ViewHolder, Observer {
+                securityEnabled.observe(this@ViewHolder, {
                     updateSecurity(searchResult, searchResultViewModel, it)
                 })
 
-                selectedAddresses.observe(this@ViewHolder, Observer {
+                selectedAddresses.observe(this@ViewHolder, {
                     val selected = it.find { address ->
                         val searchAddress = searchResult.address
                         if (searchAddress != null) address.weakEqual(searchAddress) else false

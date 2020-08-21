@@ -26,7 +26,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -131,7 +130,7 @@ class MasterContactsFragment : MasterFragment() {
         val headerItemDecoration = RecyclerViewHeaderDecoration(adapter)
         binding.contactsList.addItemDecoration(headerItemDecoration)
 
-        adapter.selectedContactEvent.observe(viewLifecycleOwner, Observer {
+        adapter.selectedContactEvent.observe(viewLifecycleOwner, {
             it.consume { contact ->
                 Log.i("[Contacts] Selected item in list changed: $contact")
                 sharedViewModel.selectedContact.value = contact
@@ -147,7 +146,7 @@ class MasterContactsFragment : MasterFragment() {
             }
         })
 
-        listViewModel.contactsList.observe(viewLifecycleOwner, Observer {
+        listViewModel.contactsList.observe(viewLifecycleOwner, {
             adapter.submitList(it)
         })
 
@@ -158,11 +157,11 @@ class MasterContactsFragment : MasterFragment() {
             listViewModel.sipContactsSelected.value = true
         }
 
-        listViewModel.sipContactsSelected.observe(viewLifecycleOwner, Observer {
+        listViewModel.sipContactsSelected.observe(viewLifecycleOwner, {
             listViewModel.updateContactsList()
         })
 
-        listViewModel.filter.observe(viewLifecycleOwner, Observer {
+        listViewModel.filter.observe(viewLifecycleOwner, {
             listViewModel.updateContactsList()
         })
 

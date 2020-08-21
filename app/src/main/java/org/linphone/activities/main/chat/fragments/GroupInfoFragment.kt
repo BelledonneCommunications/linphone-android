@@ -25,7 +25,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -90,21 +89,21 @@ class GroupInfoFragment : Fragment() {
         dividerItemDecoration.setDrawable(resources.getDrawable(R.drawable.divider, null))
         binding.participants.addItemDecoration(dividerItemDecoration)
 
-        viewModel.participants.observe(viewLifecycleOwner, Observer {
+        viewModel.participants.observe(viewLifecycleOwner, {
             adapter.submitList(it)
         })
 
-        viewModel.isMeAdmin.observe(viewLifecycleOwner, Observer { isMeAdmin ->
+        viewModel.isMeAdmin.observe(viewLifecycleOwner, { isMeAdmin ->
             adapter.showAdminControls(isMeAdmin && chatRoom != null)
         })
 
-        viewModel.meAdminChangedEvent.observe(viewLifecycleOwner, Observer {
+        viewModel.meAdminChangedEvent.observe(viewLifecycleOwner, {
             it.consume { isMeAdmin ->
                 showMeAdminStateChanged(isMeAdmin)
             }
         })
 
-        adapter.participantRemovedEvent.observe(viewLifecycleOwner, Observer {
+        adapter.participantRemovedEvent.observe(viewLifecycleOwner, {
             it.consume { participant ->
                 viewModel.removeParticipant(participant)
             }
@@ -116,7 +115,7 @@ class GroupInfoFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-        viewModel.createdChatRoomEvent.observe(viewLifecycleOwner, Observer {
+        viewModel.createdChatRoomEvent.observe(viewLifecycleOwner, {
             it.consume { chatRoom ->
                 sharedViewModel.selectedChatRoom.value = chatRoom
                 goToChatRoom()
@@ -164,7 +163,7 @@ class GroupInfoFragment : Fragment() {
             dialog.show()
         }
 
-        viewModel.onErrorEvent.observe(viewLifecycleOwner, Observer {
+        viewModel.onErrorEvent.observe(viewLifecycleOwner, {
             it.consume { messageResourceId ->
                 (activity as MainActivity).showSnackBar(messageResourceId)
             }
