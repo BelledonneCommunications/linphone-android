@@ -125,7 +125,7 @@
                                 <com.google.android.material.textfield.TextInputEditText
                                     assistantPhoneNumberPrefixValidation="@{true}"
                                     android:text="@={viewModel.prefix}"
-                                    android:imeOptions="actionDone"
+                                    android:imeOptions="actionNext"
                                     android:singleLine="true"
                                     android:inputType="phone"
                                     android:background="@color/transparent_color"
@@ -183,7 +183,7 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:text="@={viewModel.username}"
-                            android:imeOptions="actionDone"
+                            android:imeOptions="actionNext"
                             android:singleLine="true"
                             android:inputType="text|textNoSuggestions"
                             android:background="@color/transparent_color"
@@ -229,7 +229,7 @@
                     android:gravity="center"
                     android:paddingTop="10dp">
 
-                    <Switch
+                    <com.google.android.material.switchmaterial.SwitchMaterial
                         android:checked="@={viewModel.loginWithUsernamePassword}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>

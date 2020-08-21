@@ -64,6 +64,9 @@ class ContactEditorViewModel(val c: Contact?) : ViewModel(), ContactViewModelInt
 
     val addresses = MutableLiveData<ArrayList<NumberOrAddressEditorViewModel>>()
 
+    var syncAccountName: String? = null
+    var syncAccountType: String? = null
+
     init {
         if (c != null) {
             contact.value = c
@@ -81,8 +84,7 @@ class ContactEditorViewModel(val c: Contact?) : ViewModel(), ContactViewModelInt
         if (contact == null) {
             created = true
             contact = if (PermissionHelper.get().hasWriteContactsPermission()) {
-                // Store native contact in default sync account
-                NativeContact(NativeContactEditor.createAndroidContact().toString())
+                NativeContact(NativeContactEditor.createAndroidContact(syncAccountName, syncAccountType).toString())
             } else {
                 Contact()
             }

@@ -240,6 +240,12 @@ class CorePreferences constructor(private val context: Context) {
     val contactOrganizationVisible: Boolean
         get() = config.getBool("app", "display_contact_organization", true)
 
+    val showBorderOnContactAvatar: Boolean
+        get() = config.getBool("app", "show_border_on_contact_avatar", false)
+
+    val showBorderOnBigContactAvatar: Boolean
+        get() = config.getBool("app", "show_border_on_big_contact_avatar", true)
+
     val checkIfUpdateAvailableUrl: String?
         get() = config.getString("misc", "version_check_url_root", null)
 
@@ -275,6 +281,12 @@ class CorePreferences constructor(private val context: Context) {
         get() = config.getBool("app", "assistant_remote_provisioning", true)
 
     /* Side Menu */
+
+    var defaultAccountAvatarPath: String?
+        get() = config.getString("app", "default_avatar_path", null)
+        set(value) {
+            config.setString("app", "default_avatar_path", value)
+        }
 
     val showAccountsInSideMenu: Boolean
         get() = config.getBool("app", "side_menu_accounts", true)

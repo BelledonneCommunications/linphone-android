@@ -21,9 +21,11 @@ package org.linphone.contact
 
 import android.accounts.Account
 import android.accounts.AccountManager
+import android.accounts.AuthenticatorDescription
 import android.content.ContentResolver
 import android.content.Context
 import android.database.ContentObserver
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.AsyncTask.THREAD_POOL_EXECUTOR
@@ -130,6 +132,10 @@ class ContactsManager(private val context: Context) {
         )
     }
 
+    fun shouldDisplaySipContactsList(): Boolean {
+        return coreContext.core.defaultProxyConfig?.identityAddress?.domain == corePreferences.defaultDomain
+    }
+
     @Synchronized
     fun fetchContactsAsync() {
         if (loadContactsTask != null) {
@@ -193,7 +199,10 @@ class ContactsManager(private val context: Context) {
 
             // Restart contacts async fetching
             fetchContactsAsync()
+        } else {
+            Log.d("[Contacts Manager] Found contact with id [$id]: ${found?.fullName}")
         }
+
         return found
     }
 
@@ -249,7 +258,11 @@ class ContactsManager(private val context: Context) {
         val accountManager = context.getSystemService(Context.ACCOUNT_SERVICE) as AccountManager
         val accounts = accountManager.getAccountsByType(context.getString(R.string.sync_account_type))
         if (accounts.isEmpty()) {
-            val newAccount = Account(context.getString(R.string.sync_account_name), context.getString(R.string.sync_account_type))
+            val newAccount = Account(
+                context.getString(R.string.sync_account_name), context.getString(
+                    R.string.sync_account_type
+                )
+            )
             try {
                 accountManager.addAccountExplicitly(newAccount, null, null)
                 Log.i("[Contacts Manager] Contact account added")
@@ -263,19 +276,28 @@ class ContactsManager(private val context: Context) {
         }
     }
 
-    fun getAvailableSyncAccounts(): List<Pair<String, String>> {
+    fun getAvailableSyncAccounts(): List<Triple<String, String, Drawable>> {
         val accountManager = context.getSystemService(Context.ACCOUNT_SERVICE) as AccountManager
+        val packageManager = context.packageManager
         val syncAdapters = ContentResolver.getSyncAdapterTypes()
-        val available = arrayListOf<Pair<String, String>>()
+        val authenticators: Array<AuthenticatorDescription> = accountManager.authenticatorTypes
+        val available = arrayListOf<Triple<String, String, Drawable>>()
 
         for (syncAdapter in syncAdapters) {
             if (syncAdapter.authority == "com.android.contacts" && syncAdapter.isUserVisible) {
-                Log.i("[Contacts Manager] Found sync adapter for com.android.contacts authority: ${syncAdapter.accountType}")
-                val accounts = accountManager.getAccountsByType(syncAdapter.accountType)
-                for (account in accounts) {
-                    Log.i("[Contacts Manager] Found account for account type ${syncAdapter.accountType}: ${account.name}")
-                    val pair = Pair(account.name, account.type)
-                    available.add(pair)
+                if (syncAdapter.supportsUploading() || syncAdapter.accountType == context.getString(R.string.sync_account_type)) {
+                    Log.i("[Contacts Manager] Found sync adapter for com.android.contacts authority: ${syncAdapter.accountType}")
+                    val accounts = accountManager.getAccountsByType(syncAdapter.accountType)
+                    for (account in accounts) {
+                        Log.i("[Contacts Manager] Found account for account type ${syncAdapter.accountType}: ${account.name}")
+                        for (authenticator in authenticators) {
+                            if (authenticator.type == account.type) {
+                                val drawable = packageManager.getDrawable(authenticator.packageName, authenticator.smallIconId, null)
+                                val triple = Triple(account.name, account.type, drawable)
+                                available.add(triple)
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -337,12 +359,15 @@ class ContactsManager(private val context: Context) {
             val sipAddress = contact.getContactForPhoneNumberOrAddress(phoneNumber)
             if (sipAddress != null) {
                 Log.d("[Contacts Manager] Found presence information to store in native contact $contact under Linphone sync account")
-                val contactEditor = NativeContactEditor(contact, context.getString(R.string.sync_account_name), context.getString(R.string.sync_account_type))
+                val contactEditor = NativeContactEditor(contact)
                 val coroutineScope = CoroutineScope(Dispatchers.Main)
                 coroutineScope.launch {
                     val deferred = async {
                         withContext(Dispatchers.IO) {
-                            contactEditor.ensureSyncAccountRawIdExists().setPresenceInformation(phoneNumber, sipAddress).commit()
+                            contactEditor.setPresenceInformation(
+                                phoneNumber,
+                                sipAddress
+                            ).commit()
                         }
                     }
                     deferred.await()

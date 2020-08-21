@@ -45,7 +45,7 @@ class ContactsListViewModel : ViewModel() {
     }
 
     init {
-        sipContactsSelected.value = true
+        sipContactsSelected.value = coreContext.contactsManager.shouldDisplaySipContactsList()
 
         coreContext.contactsManager.addListener(contactsUpdatedListener)
     }

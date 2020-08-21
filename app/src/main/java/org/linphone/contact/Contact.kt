@@ -163,4 +163,8 @@ open class Contact : Comparable<Contact> {
         if (presenceModel != null && presenceModel.basicStatus == PresenceBasicStatus.Open) return presenceModel.contact
         return null
     }
+
+    override fun toString(): String {
+        return "${super.toString()}: name [$fullName]"
+    }
 }
