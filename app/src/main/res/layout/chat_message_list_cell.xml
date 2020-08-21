@@ -70,6 +70,7 @@
 
         <LinearLayout
             android:id="@+id/background"
+            android:onClick="@{clickListener}"
             android:onLongClick="@{contextMenuClickListener}"
             android:background="@{viewModel.backgroundRes, default=@drawable/chat_bubble_outgoing_full}"
             android:descendantFocusability="blocksDescendants"
@@ -81,7 +82,7 @@
             android:layout_below="@id/time"
             android:layout_marginBottom="1dp"
             android:layout_marginRight="3dp"
-            android:layout_marginLeft="@{!viewModel.chatMessage.outgoing || selectionListViewModel.isEditionEnabled ? @dimen/incoming_chat_message_bubble_left_margin : @dimen/outgoing_chat_message_bubble_left_margin}"
+            android:layout_marginLeft="@{selectionListViewModel.isEditionEnabled ? @dimen/edit_chat_message_bubble_left_margin : !viewModel.chatMessage.outgoing ? @dimen/incoming_chat_message_bubble_left_margin : @dimen/outgoing_chat_message_bubble_left_margin}"
             android:paddingTop="5dp"
             android:paddingBottom="5dp">
 
@@ -128,6 +129,7 @@
                 app:justifyContent="center"/>
 
             <org.linphone.activities.main.chat.views.MultiLineWrapContentWidthTextView
+                android:onClick="@{clickListener}"
                 android:onLongClick="@{contextMenuClickListener}"
                 android:text="@{viewModel.text}"
                 android:visibility="@{viewModel.text.length > 0 ? View.VISIBLE : View.GONE}"
