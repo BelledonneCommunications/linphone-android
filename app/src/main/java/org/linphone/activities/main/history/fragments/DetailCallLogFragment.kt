@@ -24,7 +24,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -98,7 +97,7 @@ class DetailCallLogFragment : Fragment() {
             }
         }
 
-        viewModel.startCallEvent.observe(viewLifecycleOwner, Observer {
+        viewModel.startCallEvent.observe(viewLifecycleOwner, {
             it.consume { address ->
                 if (coreContext.core.callsNb > 0) {
                     Log.i("[History] Starting dialer with pre-filled URI ${address.asStringUriOnly()}, is transfer? ${sharedViewModel.pendingCallTransfer}")
@@ -116,7 +115,7 @@ class DetailCallLogFragment : Fragment() {
             }
         })
 
-        viewModel.chatRoomCreatedEvent.observe(viewLifecycleOwner, Observer {
+        viewModel.chatRoomCreatedEvent.observe(viewLifecycleOwner, {
             it.consume { chatRoom ->
                 if (findNavController().currentDestination?.id == R.id.detailCallLogFragment) {
                     val args = Bundle()
@@ -127,7 +126,7 @@ class DetailCallLogFragment : Fragment() {
             }
         })
 
-        viewModel.onErrorEvent.observe(viewLifecycleOwner, Observer {
+        viewModel.onErrorEvent.observe(viewLifecycleOwner, {
             it.consume { messageResourceId ->
                 (activity as MainActivity).showSnackBar(messageResourceId)
             }

@@ -26,7 +26,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -83,7 +82,7 @@ class AccountLoginFragment : AbstractPhoneFragment() {
             startActivity(intent)
         }
 
-        viewModel.goToSmsValidationEvent.observe(viewLifecycleOwner, Observer {
+        viewModel.goToSmsValidationEvent.observe(viewLifecycleOwner, {
             it.consume {
                 if (findNavController().currentDestination?.id == R.id.accountLoginFragment) {
                     val args = Bundle()
@@ -94,7 +93,7 @@ class AccountLoginFragment : AbstractPhoneFragment() {
             }
         })
 
-        viewModel.leaveAssistantEvent.observe(viewLifecycleOwner, Observer {
+        viewModel.leaveAssistantEvent.observe(viewLifecycleOwner, {
             it.consume {
                 if (coreContext.core.isEchoCancellerCalibrationRequired) {
                     if (findNavController().currentDestination?.id == R.id.accountLoginFragment) {
@@ -106,7 +105,7 @@ class AccountLoginFragment : AbstractPhoneFragment() {
             }
         })
 
-        viewModel.invalidCredentialsEvent.observe(viewLifecycleOwner, Observer {
+        viewModel.invalidCredentialsEvent.observe(viewLifecycleOwner, {
             it.consume {
                 val dialogViewModel = DialogViewModel(getString(R.string.assistant_error_invalid_credentials))
                 val dialog: Dialog = DialogUtils.getDialog(requireContext(), dialogViewModel)

@@ -30,7 +30,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -120,14 +119,14 @@ class DialerFragment : Fragment() {
             }
         }
 
-        viewModel.enteredUri.observe(viewLifecycleOwner, Observer {
+        viewModel.enteredUri.observe(viewLifecycleOwner, {
             if (it == corePreferences.debugPopupCode) {
                 displayDebugPopup()
                 viewModel.enteredUri.value = ""
             }
         })
 
-        viewModel.uploadFinishedEvent.observe(viewLifecycleOwner, Observer {
+        viewModel.uploadFinishedEvent.observe(viewLifecycleOwner, {
             it.consume { url ->
                 // To prevent being trigger when using the Send Logs button in About page
                 if (uploadLogsInitiatedByUs) {
@@ -144,7 +143,7 @@ class DialerFragment : Fragment() {
             }
         })
 
-        viewModel.updateAvailableEvent.observe(viewLifecycleOwner, Observer {
+        viewModel.updateAvailableEvent.observe(viewLifecycleOwner, {
             it.consume { url ->
                 displayNewVersionAvailableDialog(url)
             }

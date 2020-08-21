@@ -23,7 +23,6 @@ import android.annotation.TargetApi
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
@@ -82,14 +81,14 @@ class OutgoingCallActivity : GenericActivity() {
             controlsViewModel.toggleSpeaker()
         }
 
-        viewModel.callEndedEvent.observe(this, Observer {
+        viewModel.callEndedEvent.observe(this, {
             it.consume {
                 Log.i("[Outgoing Call Activity] Call ended, finish activity")
                 finish()
             }
         })
 
-        viewModel.callConnectedEvent.observe(this, Observer {
+        viewModel.callConnectedEvent.observe(this, {
             it.consume {
                 Log.i("[Outgoing Call Activity] Call connected, finish activity")
                 finish()

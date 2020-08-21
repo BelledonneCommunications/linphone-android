@@ -26,7 +26,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -67,7 +66,7 @@ class PhoneAccountValidationFragment : Fragment() {
         viewModel.isCreation.value = arguments?.getBoolean("IsCreation", false)
         viewModel.isLinking.value = arguments?.getBoolean("IsLinking", false)
 
-        viewModel.leaveAssistantEvent.observe(viewLifecycleOwner, Observer {
+        viewModel.leaveAssistantEvent.observe(viewLifecycleOwner, {
             it.consume {
                 when {
                     viewModel.isLogin.value == true || viewModel.isCreation.value == true -> {
