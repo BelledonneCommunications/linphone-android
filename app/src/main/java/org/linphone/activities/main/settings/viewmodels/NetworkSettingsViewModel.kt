@@ -20,6 +20,7 @@
 package org.linphone.activities.main.settings.viewmodels
 
 import androidx.lifecycle.MutableLiveData
+import java.lang.NumberFormatException
 import org.linphone.activities.main.settings.SettingListenerStub
 
 class NetworkSettingsViewModel : GenericSettingsViewModel() {
@@ -56,8 +57,11 @@ class NetworkSettingsViewModel : GenericSettingsViewModel() {
 
     val sipPortListener = object : SettingListenerStub() {
         override fun onTextValueChanged(newValue: String) {
-            val port = newValue.toInt()
-            setSipPort(port)
+            try {
+                val port = newValue.toInt()
+                setSipPort(port)
+            } catch (nfe: NumberFormatException) {
+            }
         }
     }
     val sipPort = MutableLiveData<Int>()

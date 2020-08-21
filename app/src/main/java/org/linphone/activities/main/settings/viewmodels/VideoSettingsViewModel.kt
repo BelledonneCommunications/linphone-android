@@ -21,6 +21,7 @@ package org.linphone.activities.main.settings.viewmodels
 
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.MutableLiveData
+import java.lang.NumberFormatException
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.main.settings.SettingListenerStub
@@ -97,8 +98,11 @@ class VideoSettingsViewModel : GenericSettingsViewModel() {
 
     val bandwidthLimitListener = object : SettingListenerStub() {
         override fun onTextValueChanged(newValue: String) {
-            core.downloadBandwidth = newValue.toInt()
-            core.uploadBandwidth = newValue.toInt()
+            try {
+                core.downloadBandwidth = newValue.toInt()
+                core.uploadBandwidth = newValue.toInt()
+            } catch (nfe: NumberFormatException) {
+            }
         }
     }
     val bandwidthLimit = MutableLiveData<Int>()

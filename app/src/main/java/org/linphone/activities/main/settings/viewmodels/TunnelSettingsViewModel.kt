@@ -20,6 +20,7 @@
 package org.linphone.activities.main.settings.viewmodels
 
 import androidx.lifecycle.MutableLiveData
+import java.lang.NumberFormatException
 import org.linphone.R
 import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.core.Factory
@@ -38,10 +39,11 @@ class TunnelSettingsViewModel : GenericSettingsViewModel() {
 
     val portListener = object : SettingListenerStub() {
         override fun onTextValueChanged(newValue: String) {
-            if (newValue.isNotEmpty()) {
+            try {
                 val config = getTunnelConfig()
                 config.port = newValue.toInt()
                 updateTunnelConfig(config)
+            } catch (nfe: NumberFormatException) {
             }
         }
     }
@@ -66,10 +68,11 @@ class TunnelSettingsViewModel : GenericSettingsViewModel() {
 
     val port2Listener = object : SettingListenerStub() {
         override fun onTextValueChanged(newValue: String) {
-            if (newValue.isNotEmpty()) {
+            try {
                 val config = getTunnelConfig()
                 config.port2 = newValue.toInt()
                 updateTunnelConfig(config)
+            } catch (nfe: NumberFormatException) {
             }
         }
     }

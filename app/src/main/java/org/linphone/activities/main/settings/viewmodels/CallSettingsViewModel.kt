@@ -20,6 +20,7 @@
 package org.linphone.activities.main.settings.viewmodels
 
 import androidx.lifecycle.MutableLiveData
+import java.lang.NumberFormatException
 import org.linphone.R
 import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.core.MediaEncryption
@@ -99,14 +100,20 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
 
     val autoAnswerDelayListener = object : SettingListenerStub() {
         override fun onTextValueChanged(newValue: String) {
-            prefs.autoAnswerDelay = newValue.toInt()
+            try {
+                prefs.autoAnswerDelay = newValue.toInt()
+            } catch (nfe: NumberFormatException) {
+            }
         }
     }
     val autoAnswerDelay = MutableLiveData<Int>()
 
     val incomingTimeoutListener = object : SettingListenerStub() {
         override fun onTextValueChanged(newValue: String) {
-            core.incTimeout = newValue.toInt()
+            try {
+                core.incTimeout = newValue.toInt()
+            } catch (nfe: NumberFormatException) {
+            }
         }
     }
     val incomingTimeout = MutableLiveData<Int>()
