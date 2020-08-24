@@ -439,6 +439,8 @@
     <string name="contacts_settings_show_organization_summary"></string>
     <string name="contacts_settings_launcher_shortcuts_title">Create shortcuts to contacts in launcher</string>
     <string name="contacts_settings_launcher_shortcuts_summary">Will replace chat room shortcuts if any</string>
+    <string name="contacts_settings_show_new_contact_account_dialog_title">Always ask in which account save newly created contact</string>
+    <string name="contacts_settings_show_new_contact_account_dialog_summary">If disabled contact will be stored locally</string>
 
     <!-- Advanced settings -->
     <string name="advanced_settings_debug_mode_title">Debug logs</string>
