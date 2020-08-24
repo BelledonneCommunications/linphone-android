@@ -96,6 +96,13 @@
                     linphone:labels="@{viewModel.darkModeLabels}"/>
 
                 <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/advanced_settings_full_screen_title}"
+                    linphone:subtitle="@{@string/advanced_settings_full_screen_summary}"
+                    linphone:listener="@{viewModel.fullScreenListener}"
+                    linphone:checked="@={viewModel.fullScreen}"/>
+
+                <include
                     layout="@layout/settings_widget_text"
                     linphone:title="@{@string/advanced_settings_device_name_title}"
                     linphone:subtitle="@{@string/advanced_settings_device_name_summary}"
