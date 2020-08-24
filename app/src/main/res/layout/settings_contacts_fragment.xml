@@ -74,6 +74,14 @@
 
                 <include
                     layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/contacts_settings_show_new_contact_account_dialog_title}"
+                    linphone:subtitle="@{@string/contacts_settings_show_new_contact_account_dialog_summary}"
+                    linphone:listener="@{viewModel.showNewContactAccountDialogListener}"
+                    linphone:checked="@={viewModel.showNewContactAccountDialog}"
+                    linphone:enabled="@{viewModel.readContactsPermissionGranted}"/>
+
+                <include
+                    layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/contacts_settings_native_presence_title}"
                     linphone:subtitle="@{@string/contacts_settings_native_presence_summary}"
                     linphone:listener="@{viewModel.nativePresenceListener}"

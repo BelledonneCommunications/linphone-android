@@ -48,6 +48,7 @@
 
             <ImageView
                 android:id="@+id/ok"
+                android:enabled="@{!viewModel.firstName.empty || !viewModel.lastName.empty}"
                 android:contentDescription="@string/content_description_confirm_contact_edit"
                 android:onClick="@{saveChangesClickListener}"
                 android:layout_width="0dp"
