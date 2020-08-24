@@ -62,6 +62,12 @@ class CorePreferences constructor(private val context: Context) {
             config.setBool("app", "force_portrait_orientation", value)
         }
 
+    var fullScreen: Boolean
+        get() = config.getBool("app", "full_screen_activities", false)
+        set(value) {
+            config.setBool("app", "full_screen_activities", value)
+        }
+
     /** -1 means auto, 0 no, 1 yes */
     var darkMode: Int
         get() {
