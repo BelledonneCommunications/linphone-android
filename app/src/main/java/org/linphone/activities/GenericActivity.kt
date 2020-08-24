@@ -24,8 +24,14 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.Surface
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.lifecycleScope
+import java.util.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.LinphoneApplication.Companion.ensureCoreExists
@@ -33,11 +39,14 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 
 abstract class GenericActivity : AppCompatActivity() {
+    private var timer: Timer? = null
+
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         ensureCoreExists(applicationContext)
+        hideSystemUI()
 
         if (corePreferences.forcePortrait) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -59,6 +68,28 @@ abstract class GenericActivity : AppCompatActivity() {
                 }
             }
         }
+
+        window.decorView.setOnSystemUiVisibilityChangeListener { visibility ->
+            if (visibility and View.SYSTEM_UI_FLAG_FULLSCREEN == 0) {
+                timer?.cancel()
+
+                timer = Timer("Hide Android top & bottom bars")
+                timer?.schedule(object : TimerTask() {
+                    override fun run() {
+                        lifecycleScope.launch {
+                            withContext(Dispatchers.Main) {
+                                hideSystemUI()
+                            }
+                        }
+                    }
+                }, 2000)
+            }
+        }
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) hideSystemUI()
     }
 
     override fun onResume() {
@@ -82,5 +113,19 @@ abstract class GenericActivity : AppCompatActivity() {
 
     fun isTablet(): Boolean {
         return resources.getBoolean(R.bool.isTablet)
+    }
+
+    fun hideSystemUI() {
+        if (corePreferences.fullScreen) {
+            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE
+                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_FULLSCREEN
+                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
+        }
+    }
+
+    fun showSystemUI() {
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
     }
 }
