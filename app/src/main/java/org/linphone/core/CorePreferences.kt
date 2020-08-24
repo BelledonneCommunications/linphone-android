@@ -125,6 +125,12 @@ class CorePreferences constructor(private val context: Context) {
             config.setBool("app", "store_presence_in_native_contact", value)
         }
 
+    var showNewContactAccountDialog: Boolean
+        get() = config.getBool("app", "show_new_contact_account_dialog", true)
+        set(value) {
+            config.setBool("app", "show_new_contact_account_dialog", value)
+        }
+
     var displayOrganization: Boolean
         get() = config.getBool("app", "display_contact_organization", contactOrganizationVisible)
         set(value) {

@@ -68,12 +68,10 @@ class ContactEditorViewModel(val c: Contact?) : ViewModel(), ContactViewModelInt
     var syncAccountType: String? = null
 
     init {
-        if (c != null) {
-            contact.value = c
-            firstName.value = c.firstName
-            lastName.value = c.lastName
-            organization.value = c.organization
-        }
+        contact.value = c
+        firstName.value = c?.firstName ?: ""
+        lastName.value = c?.lastName ?: ""
+        organization.value = c?.organization ?: ""
 
         updateNumbersAndAddresses()
     }

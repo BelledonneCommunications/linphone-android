@@ -35,6 +35,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import java.io.File
 import kotlinx.coroutines.launch
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.contact.viewmodels.*
@@ -86,7 +87,10 @@ class ContactEditorFragment : Fragment(), SyncAccountPickerFragment.SyncAccountP
         }
 
         binding.setSaveChangesClickListener {
-            if (viewModel.c == null) {
+            viewModel.syncAccountName = null
+            viewModel.syncAccountType = null
+
+            if (viewModel.c == null && corePreferences.showNewContactAccountDialog) {
                 Log.i("[Contact Editor] New contact, ask user where to store it")
                 SyncAccountPickerFragment(this).show(childFragmentManager, "SyncAccountPicker")
             } else {
