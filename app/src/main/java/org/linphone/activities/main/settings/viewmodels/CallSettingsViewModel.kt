@@ -125,6 +125,13 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
     }
     val voiceMailUri = MutableLiveData<String>()
 
+    val acceptEarlyMediaListener = object : SettingListenerStub() {
+        override fun onBoolValueChanged(newValue: Boolean) {
+            prefs.acceptEarlyMedia = newValue
+        }
+    }
+    val acceptEarlyMedia = MutableLiveData<Boolean>()
+
     val goToAndroidNotificationSettingsListener = object : SettingListenerStub() {
         override fun onClicked() {
             goToAndroidNotificationSettingsEvent.value = Event(true)
@@ -147,6 +154,7 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
         autoAnswerDelay.value = prefs.autoAnswerDelay
         incomingTimeout.value = core.incTimeout
         voiceMailUri.value = prefs.voiceMailUri
+        acceptEarlyMedia.value = prefs.acceptEarlyMedia
     }
 
     private fun initEncryptionList() {
