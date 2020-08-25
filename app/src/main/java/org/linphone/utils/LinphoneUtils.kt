@@ -19,6 +19,11 @@
  */
 package org.linphone.utils
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
+import android.telephony.TelephonyManager.*
+import androidx.core.content.ContextCompat.getSystemService
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -88,13 +93,31 @@ class LinphoneUtils {
 
         fun getRecordingFilePathForAddress(address: Address): String {
             val displayName = getDisplayName(address)
-            val dateFormat: DateFormat = SimpleDateFormat(RECORDING_DATE_PATTERN, Locale.getDefault())
+            val dateFormat: DateFormat = SimpleDateFormat(
+                RECORDING_DATE_PATTERN,
+                Locale.getDefault()
+            )
             val fileName = "${displayName}_${dateFormat.format(Date())}.mkv"
             return FileUtils.getFileStoragePath(fileName).absolutePath
         }
 
         fun getRecordingDateFromFileName(name: String): Date {
             return SimpleDateFormat(RECORDING_DATE_PATTERN, Locale.getDefault()).parse(name)
+        }
+
+        fun checkIfNetworkHasLowBandwidth(context: Context): Boolean {
+            val connMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val networkInfo: NetworkInfo? = connMgr.activeNetworkInfo
+            if (networkInfo != null && networkInfo.isConnected) {
+                if (networkInfo.type == ConnectivityManager.TYPE_MOBILE) {
+                    return when (networkInfo.subtype) {
+                        NETWORK_TYPE_EDGE, NETWORK_TYPE_GPRS, NETWORK_TYPE_IDEN -> true
+                        else -> false
+                    }
+                }
+            }
+            // In doubt return false
+            return false
         }
     }
 }

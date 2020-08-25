@@ -315,6 +315,10 @@ class CoreContext(val context: Context, coreConfig: Config) {
         Log.i("[Context] Answering call $call")
         val params = core.createCallParams(call)
         params?.recordFile = LinphoneUtils.getRecordingFilePathForAddress(call.remoteAddress)
+        if (LinphoneUtils.checkIfNetworkHasLowBandwidth(context)) {
+            Log.w("[Context] Enabling low bandwidth mode!")
+            params?.enableLowBandwidth(true)
+        }
         call.acceptWithParams(params)
     }
 
@@ -375,6 +379,10 @@ class CoreContext(val context: Context, coreConfig: Config) {
         val params = core.createCallParams(null)
         if (forceZRTP) {
             params?.mediaEncryption = MediaEncryption.ZRTP
+        }
+        if (LinphoneUtils.checkIfNetworkHasLowBandwidth(context)) {
+            Log.w("[Context] Enabling low bandwidth mode!")
+            params?.enableLowBandwidth(true)
         }
         params?.recordFile = LinphoneUtils.getRecordingFilePathForAddress(address)
 
