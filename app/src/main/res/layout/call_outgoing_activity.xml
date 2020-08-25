@@ -51,39 +51,45 @@
 
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/contact_name"
-            android:text="@{viewModel.contact.fullName ?? viewModel.displayName}"
-            style="@style/big_contact_name_font"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/top_bar"
-            android:layout_centerHorizontal="true"
-            android:gravity="center_vertical|center_horizontal"
-            android:paddingTop="5dp" />
+            android:layout_centerInParent="true">
 
-        <org.linphone.views.MarqueeTextView
-            android:id="@+id/contact_number"
-            android:text="@{viewModel.address}"
-            style="@style/sip_uri_font"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/contact_name"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:singleLine="true"
-            android:paddingBottom="10dp" />
+            <TextView
+                android:id="@+id/contact_name"
+                android:text="@{viewModel.contact.fullName ?? viewModel.displayName}"
+                style="@style/big_contact_name_font"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_vertical|center_horizontal"
+                android:paddingTop="10dp" />
 
-        <org.linphone.contact.BigContactAvatarView
-            android:id="@+id/avatar"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_margin="5dp"
-            android:layout_below="@id/contact_number"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            tools:layout="@layout/contact_avatar_big"
-            app:viewModel="@{viewModel}"/>
+            <org.linphone.views.MarqueeTextView
+                android:id="@+id/contact_number"
+                android:text="@{viewModel.address}"
+                style="@style/sip_uri_font"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/contact_name"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:singleLine="true"
+                android:paddingBottom="10dp" />
+
+            <org.linphone.contact.BigContactAvatarView
+                android:id="@+id/avatar"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_margin="5dp"
+                android:layout_below="@id/contact_number"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                tools:layout="@layout/contact_avatar_big"
+                app:viewModel="@{viewModel}"/>
+
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -23,6 +23,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.*
 
 class IncomingCallViewModelFactory(private val call: Call) :
@@ -43,8 +44,10 @@ class IncomingCallViewModel(call: Call) : CallViewModel(call) {
 
     init {
         screenLocked.value = false
-        inviteWithVideo.value = call.currentParams.videoEnabled()
-        earlyMediaVideoEnabled.value = call.state == Call.State.IncomingEarlyMedia && call.currentParams.videoEnabled()
+        inviteWithVideo.value = call.remoteParams?.videoEnabled()
+        earlyMediaVideoEnabled.value = corePreferences.acceptEarlyMedia &&
+                call.state == Call.State.IncomingEarlyMedia &&
+                call.currentParams.videoEnabled()
     }
 
     fun answer(doAction: Boolean) {

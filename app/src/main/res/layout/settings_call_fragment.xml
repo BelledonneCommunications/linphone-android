@@ -158,6 +158,13 @@
                     linphone:inputType="@{InputType.TYPE_TEXT_VARIATION_URI}"/>
 
                 <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/call_settings_accept_early_media_title}"
+                    linphone:subtitle="@{@string/call_settings_accept_early_media_summary}"
+                    linphone:listener="@{viewModel.acceptEarlyMediaListener}"
+                    linphone:checked="@={viewModel.acceptEarlyMedia}"/>
+
+                <include
                     layout="@layout/settings_widget_basic"
                     linphone:listener="@{viewModel.goToAndroidNotificationSettingsListener}"
                     linphone:title="@{@string/call_settings_go_to_android_notification_settings}" />

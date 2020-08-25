@@ -395,6 +395,8 @@
     <string name="call_settings_incoming_timeout_title">Incoming call timeout</string>
     <string name="call_settings_incoming_timeout_summary">in seconds</string>
     <string name="call_settings_voice_mail_uri_title">Voice mail URI</string>
+    <string name="call_settings_accept_early_media_title">Accept early media</string>
+    <string name="call_settings_accept_early_media_summary"></string>
     <string name="call_settings_voice_mail_uri_summary"></string>
     <string name="call_settings_go_to_android_notification_settings">Android notification settings</string>
 
