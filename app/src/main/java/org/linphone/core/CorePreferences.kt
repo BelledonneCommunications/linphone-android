@@ -270,6 +270,9 @@ class CorePreferences constructor(private val context: Context) {
     val checkUpdateAvailableInterval: Int
         get() = config.getInt("app", "version_check_interval", 86400000)
 
+    val showIncomingChatMessagesDeliveryStatus: Boolean
+        get() = config.getBool("app", "show_incoming_messages_delivery_status", false)
+
     /* Tabs */
 
     val showHistory: Boolean
