@@ -166,6 +166,9 @@ dependencies {
     }
 
     implementation 'org.linphone:linphone-sdk-android:4.5+'
+
+    // Memory leak detection.
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
 }
 
 if (firebaseEnabled()) {
