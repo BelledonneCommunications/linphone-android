@@ -97,6 +97,7 @@
 
                 <include
                     layout="@layout/settings_widget_switch"
+                    android:visibility="@{View.GONE}"
                     linphone:title="@{@string/advanced_settings_full_screen_title}"
                     linphone:subtitle="@{@string/advanced_settings_full_screen_summary}"
                     linphone:listener="@{viewModel.fullScreenListener}"
