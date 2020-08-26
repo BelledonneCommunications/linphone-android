@@ -421,7 +421,7 @@ class NotificationsManager(private val context: Context) {
             context, context.getString(R.string.notification_channel_incoming_call_id))
             .setContentTitle(context.getString(R.string.missed_call_notification_title))
             .setContentText(body)
-            .setSmallIcon(R.drawable.call_status_missed)
+            .setSmallIcon(R.drawable.topbar_missed_call_notification)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
             .setCategory(Notification.CATEGORY_EVENT)
@@ -453,12 +453,16 @@ class NotificationsManager(private val context: Context) {
             Call.State.Paused, Call.State.Pausing, Call.State.PausedByRemote -> {
                 callActivity = CallActivity::class.java
                 stringResourceId = R.string.call_notification_paused
-                iconResourceId = R.drawable.topbar_call_notification
+                iconResourceId = R.drawable.topbar_call_paused_notification
             }
             Call.State.OutgoingRinging, Call.State.OutgoingProgress, Call.State.OutgoingInit, Call.State.OutgoingEarlyMedia -> {
                 callActivity = OutgoingCallActivity::class.java
                 stringResourceId = R.string.call_notification_outgoing
-                iconResourceId = R.drawable.topbar_call_notification
+                iconResourceId = if (call.params.videoEnabled()) {
+                    R.drawable.topbar_videocall_notification
+                } else {
+                    R.drawable.topbar_call_notification
+                }
             }
             else -> {
                 callActivity = CallActivity::class.java
