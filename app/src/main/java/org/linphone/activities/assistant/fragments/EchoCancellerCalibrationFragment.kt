@@ -21,28 +21,18 @@ package org.linphone.activities.assistant.fragments
 
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import org.linphone.R
+import org.linphone.activities.GenericFragment
 import org.linphone.activities.assistant.viewmodels.EchoCancellerCalibrationViewModel
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantEchoCancellerCalibrationFragmentBinding
 import org.linphone.utils.PermissionHelper
 
-class EchoCancellerCalibrationFragment : Fragment() {
-    private lateinit var binding: AssistantEchoCancellerCalibrationFragmentBinding
+class EchoCancellerCalibrationFragment : GenericFragment<AssistantEchoCancellerCalibrationFragmentBinding>() {
     private lateinit var viewModel: EchoCancellerCalibrationViewModel
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = AssistantEchoCancellerCalibrationFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun getLayoutId(): Int = R.layout.assistant_echo_canceller_calibration_fragment
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

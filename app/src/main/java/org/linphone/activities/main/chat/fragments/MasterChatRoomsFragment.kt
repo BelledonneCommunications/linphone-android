@@ -21,9 +21,6 @@ package org.linphone.activities.main.chat.fragments
 
 import android.app.Dialog
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -46,21 +43,13 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatRoomMasterFragmentBinding
 import org.linphone.utils.*
 
-class MasterChatRoomsFragment : MasterFragment() {
+class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding>() {
     override val dialogConfirmationMessageBeforeRemoval = R.plurals.chat_room_delete_dialog
-    private lateinit var binding: ChatRoomMasterFragmentBinding
     private lateinit var listViewModel: ChatRoomsListViewModel
     private lateinit var adapter: ChatRoomsListAdapter
     private lateinit var sharedViewModel: SharedMainViewModel
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = ChatRoomMasterFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun getLayoutId(): Int = R.layout.chat_room_master_fragment
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

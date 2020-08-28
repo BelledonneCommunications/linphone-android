@@ -22,9 +22,6 @@ package org.linphone.activities.main.contact.fragments
 import android.app.Dialog
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -47,9 +44,8 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactMasterFragmentBinding
 import org.linphone.utils.*
 
-class MasterContactsFragment : MasterFragment() {
+class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding>() {
     override val dialogConfirmationMessageBeforeRemoval = R.plurals.contact_delete_dialog
-    private lateinit var binding: ContactMasterFragmentBinding
     private lateinit var listViewModel: ContactsListViewModel
     private lateinit var adapter: ContactsListAdapter
     private lateinit var sharedViewModel: SharedMainViewModel
@@ -57,14 +53,7 @@ class MasterContactsFragment : MasterFragment() {
     private var sipUriToAdd: String? = null
     private var editOnClick: Boolean = false
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = ContactMasterFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun getLayoutId(): Int = R.layout.contact_master_fragment
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

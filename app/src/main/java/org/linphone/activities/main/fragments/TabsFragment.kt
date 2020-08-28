@@ -20,28 +20,17 @@
 package org.linphone.activities.main.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
+import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.viewmodels.TabsViewModel
 import org.linphone.databinding.TabsFragmentBinding
 
-class TabsFragment : Fragment() {
-    private lateinit var binding: TabsFragmentBinding
+class TabsFragment : GenericFragment<TabsFragmentBinding>() {
     private lateinit var viewModel: TabsViewModel
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = TabsFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun getLayoutId(): Int = R.layout.tabs_fragment
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

@@ -20,29 +20,21 @@
 package org.linphone.activities.main.chat.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import org.linphone.R
+import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.chat.viewmodels.EphemeralViewModel
 import org.linphone.activities.main.chat.viewmodels.EphemeralViewModelFactory
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.databinding.ChatRoomEphemeralFragmentBinding
 
-class EphemeralFragment : Fragment() {
-    private lateinit var binding: ChatRoomEphemeralFragmentBinding
+class EphemeralFragment : GenericFragment<ChatRoomEphemeralFragmentBinding>() {
     private lateinit var viewModel: EphemeralViewModel
     private lateinit var sharedViewModel: SharedMainViewModel
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = ChatRoomEphemeralFragmentBinding.inflate(inflater, container, false)
-        return binding.root
+    override fun getLayoutId(): Int {
+        return R.layout.chat_room_ephemeral_fragment
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
