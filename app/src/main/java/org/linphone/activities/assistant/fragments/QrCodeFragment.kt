@@ -21,32 +21,22 @@ package org.linphone.activities.assistant.fragments
 
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
+import org.linphone.activities.GenericFragment
 import org.linphone.activities.assistant.viewmodels.QrCodeViewModel
 import org.linphone.activities.assistant.viewmodels.SharedAssistantViewModel
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantQrCodeFragmentBinding
 import org.linphone.utils.PermissionHelper
 
-class QrCodeFragment : Fragment() {
-    private lateinit var binding: AssistantQrCodeFragmentBinding
+class QrCodeFragment : GenericFragment<AssistantQrCodeFragmentBinding>() {
     private lateinit var sharedViewModel: SharedAssistantViewModel
     private lateinit var viewModel: QrCodeViewModel
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = AssistantQrCodeFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun getLayoutId(): Int = R.layout.assistant_qr_code_fragment
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

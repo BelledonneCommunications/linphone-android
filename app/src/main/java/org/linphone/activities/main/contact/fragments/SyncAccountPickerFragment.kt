@@ -28,7 +28,8 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactSyncAccountPickerFragmentBinding
 
 class SyncAccountPickerFragment(private val listener: SyncAccountPickedListener) : DialogFragment() {
-    private lateinit var binding: ContactSyncAccountPickerFragmentBinding
+    private var _binding: ContactSyncAccountPickerFragmentBinding? = null
+    private val binding get() = _binding!!
     private lateinit var adapter: SyncAccountAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,12 +37,17 @@ class SyncAccountPickerFragment(private val listener: SyncAccountPickedListener)
         setStyle(STYLE_NO_TITLE, R.style.assistant_country_dialog_style)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = ContactSyncAccountPickerFragmentBinding.inflate(inflater, container, false)
+        _binding = ContactSyncAccountPickerFragmentBinding.inflate(inflater, container, false)
 
         adapter = SyncAccountAdapter()
         binding.accountsList.adapter = adapter

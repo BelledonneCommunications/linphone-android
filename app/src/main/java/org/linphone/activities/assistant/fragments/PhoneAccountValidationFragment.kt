@@ -22,32 +22,21 @@ package org.linphone.activities.assistant.fragments
 import android.content.ClipboardManager
 import android.content.Context.CLIPBOARD_SERVICE
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.activities.GenericFragment
 import org.linphone.activities.assistant.viewmodels.PhoneAccountValidationViewModel
 import org.linphone.activities.assistant.viewmodels.PhoneAccountValidationViewModelFactory
 import org.linphone.activities.assistant.viewmodels.SharedAssistantViewModel
 import org.linphone.databinding.AssistantPhoneAccountValidationFragmentBinding
 
-class PhoneAccountValidationFragment : Fragment() {
-    private lateinit var binding: AssistantPhoneAccountValidationFragmentBinding
+class PhoneAccountValidationFragment : GenericFragment<AssistantPhoneAccountValidationFragmentBinding>() {
     private lateinit var sharedViewModel: SharedAssistantViewModel
     private lateinit var viewModel: PhoneAccountValidationViewModel
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = AssistantPhoneAccountValidationFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun getLayoutId(): Int = R.layout.assistant_phone_account_validation_fragment
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

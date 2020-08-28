@@ -20,10 +20,7 @@
 package org.linphone.activities.main.recordings.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -36,22 +33,14 @@ import org.linphone.activities.main.recordings.viewmodels.RecordingsViewModel
 import org.linphone.databinding.RecordingsFragmentBinding
 import org.linphone.utils.RecyclerViewHeaderDecoration
 
-class RecordingsFragment : MasterFragment() {
-    private lateinit var binding: RecordingsFragmentBinding
+class RecordingsFragment : MasterFragment<RecordingsFragmentBinding>() {
     private lateinit var viewModel: RecordingsViewModel
     private lateinit var adapter: RecordingsListAdapter
 
     private var videoX: Float = 0f
     private var videoY: Float = 0f
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = RecordingsFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun getLayoutId(): Int = R.layout.recordings_fragment
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
