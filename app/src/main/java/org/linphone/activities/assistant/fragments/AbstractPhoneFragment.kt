@@ -22,15 +22,16 @@ package org.linphone.activities.assistant.fragments
 
 import android.Manifest
 import android.content.pm.PackageManager
-import androidx.fragment.app.Fragment
+import androidx.databinding.ViewDataBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.linphone.R
+import org.linphone.activities.GenericFragment
 import org.linphone.activities.assistant.viewmodels.AbstractPhoneViewModel
 import org.linphone.core.tools.Log
 import org.linphone.utils.PermissionHelper
 import org.linphone.utils.PhoneNumberUtils
 
-abstract class AbstractPhoneFragment : Fragment() {
+abstract class AbstractPhoneFragment<T : ViewDataBinding> : GenericFragment<T>() {
     abstract val viewModel: AbstractPhoneViewModel
 
     override fun onRequestPermissionsResult(

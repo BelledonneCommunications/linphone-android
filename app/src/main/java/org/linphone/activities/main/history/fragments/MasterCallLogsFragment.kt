@@ -21,9 +21,6 @@ package org.linphone.activities.main.history.fragments
 
 import android.app.Dialog
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -45,21 +42,13 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.HistoryMasterFragmentBinding
 import org.linphone.utils.*
 
-class MasterCallLogsFragment : MasterFragment() {
+class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding>() {
     override val dialogConfirmationMessageBeforeRemoval = R.plurals.history_delete_dialog
-    private lateinit var binding: HistoryMasterFragmentBinding
     private lateinit var listViewModel: CallLogsListViewModel
     private lateinit var adapter: CallLogsListAdapter
     private lateinit var sharedViewModel: SharedMainViewModel
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = HistoryMasterFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun getLayoutId(): Int = R.layout.history_master_fragment
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

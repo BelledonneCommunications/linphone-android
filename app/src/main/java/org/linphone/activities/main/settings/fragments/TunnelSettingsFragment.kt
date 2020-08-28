@@ -20,28 +20,18 @@
 package org.linphone.activities.main.settings.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
+import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.settings.viewmodels.TunnelSettingsViewModel
 import org.linphone.databinding.SettingsTunnelFragmentBinding
 
-class TunnelSettingsFragment : Fragment() {
-    private lateinit var binding: SettingsTunnelFragmentBinding
+class TunnelSettingsFragment : GenericFragment<SettingsTunnelFragmentBinding>() {
     private lateinit var viewModel: TunnelSettingsViewModel
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = SettingsTunnelFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun getLayoutId(): Int = R.layout.settings_tunnel_fragment
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
