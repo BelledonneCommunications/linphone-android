@@ -158,12 +158,20 @@ class CoreContext(val context: Context, coreConfig: Config) {
                 }
             } else if (state == Call.State.OutgoingInit) {
                 onOutgoingStarted()
+            } else if (state == Call.State.OutgoingRinging) {
+                if (core.callsNb == 1) {
+                    routeAudioToBluetoothIfAvailable(call)
+                }
             } else if (state == Call.State.Connected) {
                 if (isVibrating) {
                     Log.i("[Context] Stopping vibration")
                     val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
                     vibrator.cancel()
                     isVibrating = false
+                }
+
+                if (call.dir == Call.Dir.Incoming && core.callsNb == 1) {
+                    routeAudioToBluetoothIfAvailable(call)
                 }
 
                 onCallStarted()
@@ -518,5 +526,17 @@ class CoreContext(val context: Context, coreConfig: Config) {
         // This flag is required to start an Activity from a Service context
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
         context.startActivity(intent)
+    }
+
+    private fun routeAudioToBluetoothIfAvailable(call: Call) {
+        for (audioDevice in core.audioDevices) {
+            if (audioDevice.type == AudioDevice.Type.Bluetooth &&
+                    audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
+                Log.i("[Context] Found bluetooth audio device [${audioDevice.deviceName}], routing audio to it")
+                call.outputAudioDevice = audioDevice
+                return
+            }
+        }
+        Log.w("[Context] Didn't find any bluetooth audio device, keeping default audio route")
     }
 }
