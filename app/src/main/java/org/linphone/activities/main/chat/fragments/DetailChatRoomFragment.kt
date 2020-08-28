@@ -56,8 +56,7 @@ import org.linphone.databinding.ChatRoomDetailFragmentBinding
 import org.linphone.utils.*
 import org.linphone.utils.Event
 
-class DetailChatRoomFragment : MasterFragment() {
-    private lateinit var binding: ChatRoomDetailFragmentBinding
+class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding>() {
     private lateinit var viewModel: ChatRoomViewModel
     private lateinit var chatSendingViewModel: ChatMessageSendingViewModel
     private lateinit var listViewModel: ChatMessagesListViewModel
@@ -65,13 +64,8 @@ class DetailChatRoomFragment : MasterFragment() {
     private lateinit var sharedViewModel: SharedMainViewModel
     private var chatRoomAddress: String? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = ChatRoomDetailFragmentBinding.inflate(inflater, container, false)
-        return binding.root
+    override fun getLayoutId(): Int {
+        return R.layout.chat_room_detail_fragment
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

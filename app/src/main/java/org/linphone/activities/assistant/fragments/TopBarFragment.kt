@@ -20,24 +20,13 @@
 package org.linphone.activities.assistant.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import org.linphone.R
+import org.linphone.activities.GenericFragment
 import org.linphone.databinding.AssistantTopBarFragmentBinding
 
-class TopBarFragment : Fragment() {
-    private lateinit var binding: AssistantTopBarFragmentBinding
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = AssistantTopBarFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+class TopBarFragment : GenericFragment<AssistantTopBarFragmentBinding>() {
+    override fun getLayoutId(): Int = R.layout.assistant_top_bar_fragment
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

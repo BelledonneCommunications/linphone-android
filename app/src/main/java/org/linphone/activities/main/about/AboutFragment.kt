@@ -22,29 +22,18 @@ package org.linphone.activities.main.about
 import android.content.*
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
+import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.MainActivity
 import org.linphone.databinding.AboutFragmentBinding
 import org.linphone.utils.AppUtils
 
-class AboutFragment : Fragment() {
-    private lateinit var binding: AboutFragmentBinding
+class AboutFragment : GenericFragment<AboutFragmentBinding>() {
     private lateinit var viewModel: AboutViewModel
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = AboutFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun getLayoutId(): Int = R.layout.about_fragment
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

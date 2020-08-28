@@ -17,26 +17,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.activities.call.fragments
+package org.linphone.activities
 
 import android.os.Bundle
-import androidx.lifecycle.ViewModelProvider
-import org.linphone.R
-import org.linphone.activities.GenericFragment
-import org.linphone.activities.call.viewmodels.StatisticsListViewModel
-import org.linphone.databinding.CallStatisticsFragmentBinding
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
+import androidx.fragment.app.Fragment
 
-class StatisticsFragment : GenericFragment<CallStatisticsFragmentBinding>() {
-    private lateinit var viewModel: StatisticsListViewModel
+abstract class GenericFragment<T : ViewDataBinding> : Fragment() {
+    private var _binding: T? = null
+    protected val binding get() = _binding!!
 
-    override fun getLayoutId(): Int = R.layout.call_statistics_fragment
+    abstract fun getLayoutId(): Int
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = DataBindingUtil.inflate<T>(inflater, getLayoutId(), container, false)
+        return _binding!!.root
+    }
 
-        binding.lifecycleOwner = this
-
-        viewModel = ViewModelProvider(this).get(StatisticsListViewModel::class.java)
-        binding.viewModel = viewModel
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

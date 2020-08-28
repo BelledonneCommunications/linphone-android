@@ -26,10 +26,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -37,6 +33,7 @@ import org.linphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.dialer.viewmodels.DialerViewModel
 import org.linphone.activities.main.viewmodels.DialogViewModel
@@ -46,21 +43,13 @@ import org.linphone.databinding.DialerFragmentBinding
 import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
 
-class DialerFragment : Fragment() {
-    private lateinit var binding: DialerFragmentBinding
+class DialerFragment : GenericFragment<DialerFragmentBinding>() {
     private lateinit var viewModel: DialerViewModel
     private lateinit var sharedViewModel: SharedMainViewModel
 
     private var uploadLogsInitiatedByUs = false
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = DialerFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun getLayoutId(): Int = R.layout.dialer_fragment
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

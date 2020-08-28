@@ -20,15 +20,13 @@
 package org.linphone.activities.main.chat.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.R
+import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.chat.adapters.ChatRoomCreationContactsAdapter
 import org.linphone.activities.main.chat.viewmodels.ChatRoomCreationViewModel
@@ -36,20 +34,12 @@ import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.Address
 import org.linphone.databinding.ChatRoomCreationFragmentBinding
 
-class ChatRoomCreationFragment : Fragment() {
-    private lateinit var binding: ChatRoomCreationFragmentBinding
+class ChatRoomCreationFragment : GenericFragment<ChatRoomCreationFragmentBinding>() {
     private lateinit var viewModel: ChatRoomCreationViewModel
     private lateinit var sharedViewModel: SharedMainViewModel
     private lateinit var adapter: ChatRoomCreationContactsAdapter
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = ChatRoomCreationFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun getLayoutId(): Int = R.layout.chat_room_creation_fragment
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

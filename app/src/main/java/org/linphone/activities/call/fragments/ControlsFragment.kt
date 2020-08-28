@@ -23,12 +23,9 @@ import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.SystemClock
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
+import org.linphone.activities.GenericFragment
 import org.linphone.activities.call.viewmodels.CallsViewModel
 import org.linphone.activities.call.viewmodels.ControlsViewModel
 import org.linphone.activities.call.viewmodels.SharedCallViewModel
@@ -40,22 +37,14 @@ import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 
-class ControlsFragment : Fragment() {
-    private lateinit var binding: CallControlsFragmentBinding
+class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
     private lateinit var callsViewModel: CallsViewModel
     private lateinit var controlsViewModel: ControlsViewModel
     private lateinit var sharedViewModel: SharedCallViewModel
 
     private var dialog: Dialog? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = CallControlsFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun getLayoutId(): Int = R.layout.call_controls_fragment
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

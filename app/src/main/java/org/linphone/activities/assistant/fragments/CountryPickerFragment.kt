@@ -30,7 +30,8 @@ import org.linphone.core.DialPlan
 import org.linphone.databinding.AssistantCountryPickerFragmentBinding
 
 class CountryPickerFragment(private val listener: CountryPickedListener) : DialogFragment() {
-    private lateinit var binding: AssistantCountryPickerFragmentBinding
+    private var _binding: AssistantCountryPickerFragmentBinding? = null
+    private val binding get() = _binding!!
     private lateinit var adapter: CountryPickerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,12 +39,17 @@ class CountryPickerFragment(private val listener: CountryPickedListener) : Dialo
         setStyle(STYLE_NO_TITLE, R.style.assistant_country_dialog_style)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = AssistantCountryPickerFragmentBinding.inflate(inflater, container, false)
+        _binding = AssistantCountryPickerFragmentBinding.inflate(inflater, container, false)
 
         adapter = CountryPickerAdapter()
         binding.countryList.adapter = adapter

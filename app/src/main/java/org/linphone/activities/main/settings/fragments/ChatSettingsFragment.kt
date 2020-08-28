@@ -23,30 +23,20 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
+import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.settings.viewmodels.ChatSettingsViewModel
 import org.linphone.compatibility.Compatibility
 import org.linphone.databinding.SettingsChatFragmentBinding
 import org.linphone.mediastream.Version
 
-class ChatSettingsFragment : Fragment() {
-    private lateinit var binding: SettingsChatFragmentBinding
+class ChatSettingsFragment : GenericFragment<SettingsChatFragmentBinding>() {
     private lateinit var viewModel: ChatSettingsViewModel
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = SettingsChatFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun getLayoutId(): Int = R.layout.settings_chat_fragment
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

@@ -21,15 +21,12 @@ package org.linphone.activities.main.chat.fragments
 
 import android.app.Dialog
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.R
+import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.chat.GroupChatRoomMember
 import org.linphone.activities.main.chat.adapters.GroupInfoParticipantsAdapter
@@ -43,21 +40,13 @@ import org.linphone.core.ChatRoomCapabilities
 import org.linphone.databinding.ChatRoomGroupInfoFragmentBinding
 import org.linphone.utils.DialogUtils
 
-class GroupInfoFragment : Fragment() {
-    private lateinit var binding: ChatRoomGroupInfoFragmentBinding
+class GroupInfoFragment : GenericFragment<ChatRoomGroupInfoFragmentBinding>() {
     private lateinit var viewModel: GroupInfoViewModel
     private lateinit var sharedViewModel: SharedMainViewModel
     private lateinit var adapter: GroupInfoParticipantsAdapter
     private var meAdminStatusChangedDialog: Dialog? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = ChatRoomGroupInfoFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun getLayoutId(): Int = R.layout.chat_room_group_info_fragment
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

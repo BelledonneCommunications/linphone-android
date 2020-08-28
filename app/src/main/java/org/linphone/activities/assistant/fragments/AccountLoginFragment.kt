@@ -23,9 +23,6 @@ import android.app.Dialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -37,19 +34,11 @@ import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.databinding.AssistantAccountLoginFragmentBinding
 import org.linphone.utils.DialogUtils
 
-class AccountLoginFragment : AbstractPhoneFragment() {
-    private lateinit var binding: AssistantAccountLoginFragmentBinding
+class AccountLoginFragment : AbstractPhoneFragment<AssistantAccountLoginFragmentBinding>() {
     override lateinit var viewModel: AccountLoginViewModel
     private lateinit var sharedViewModel: SharedAssistantViewModel
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = AssistantAccountLoginFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun getLayoutId(): Int = R.layout.assistant_account_login_fragment
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

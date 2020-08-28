@@ -26,10 +26,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.provider.MediaStore
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -37,6 +33,7 @@ import java.io.File
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.contact.viewmodels.*
 import org.linphone.activities.main.navigateToContact
@@ -48,20 +45,12 @@ import org.linphone.utils.FileUtils
 import org.linphone.utils.ImageUtils
 import org.linphone.utils.PermissionHelper
 
-class ContactEditorFragment : Fragment(), SyncAccountPickerFragment.SyncAccountPickedListener {
-    private lateinit var binding: ContactEditorFragmentBinding
+class ContactEditorFragment : GenericFragment<ContactEditorFragmentBinding>(), SyncAccountPickerFragment.SyncAccountPickedListener {
     private lateinit var viewModel: ContactEditorViewModel
     private lateinit var sharedViewModel: SharedMainViewModel
     private var temporaryPicturePath: File? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = ContactEditorFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun getLayoutId(): Int = R.layout.contact_editor_fragment
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

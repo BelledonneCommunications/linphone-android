@@ -21,13 +21,10 @@ package org.linphone.activities.call.fragments
 
 import android.app.Dialog
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import java.util.*
 import org.linphone.R
+import org.linphone.activities.GenericFragment
 import org.linphone.activities.call.viewmodels.SharedCallViewModel
 import org.linphone.activities.call.viewmodels.StatusViewModel
 import org.linphone.activities.main.viewmodels.DialogViewModel
@@ -37,20 +34,12 @@ import org.linphone.databinding.CallStatusFragmentBinding
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 
-class StatusFragment : Fragment() {
-    private lateinit var binding: CallStatusFragmentBinding
+class StatusFragment : GenericFragment<CallStatusFragmentBinding>() {
     private lateinit var viewModel: StatusViewModel
     private lateinit var sharedViewModel: SharedCallViewModel
     private var zrtpDialog: Dialog? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = CallStatusFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun getLayoutId(): Int = R.layout.call_status_fragment
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

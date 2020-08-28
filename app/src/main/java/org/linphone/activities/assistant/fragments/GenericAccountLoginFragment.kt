@@ -21,14 +21,11 @@ package org.linphone.activities.assistant.fragments
 
 import android.app.Dialog
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.activities.GenericFragment
 import org.linphone.activities.assistant.viewmodels.GenericLoginViewModel
 import org.linphone.activities.assistant.viewmodels.GenericLoginViewModelFactory
 import org.linphone.activities.assistant.viewmodels.SharedAssistantViewModel
@@ -36,19 +33,11 @@ import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.databinding.AssistantGenericAccountLoginFragmentBinding
 import org.linphone.utils.DialogUtils
 
-class GenericAccountLoginFragment : Fragment() {
-    private lateinit var binding: AssistantGenericAccountLoginFragmentBinding
+class GenericAccountLoginFragment : GenericFragment<AssistantGenericAccountLoginFragmentBinding>() {
     private lateinit var sharedViewModel: SharedAssistantViewModel
     private lateinit var viewModel: GenericLoginViewModel
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = AssistantGenericAccountLoginFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun getLayoutId(): Int = R.layout.assistant_generic_account_login_fragment
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

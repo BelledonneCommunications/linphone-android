@@ -20,9 +20,6 @@
 package org.linphone.activities.assistant.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
@@ -31,19 +28,11 @@ import org.linphone.activities.assistant.viewmodels.PhoneAccountCreationViewMode
 import org.linphone.activities.assistant.viewmodels.SharedAssistantViewModel
 import org.linphone.databinding.AssistantPhoneAccountCreationFragmentBinding
 
-class PhoneAccountCreationFragment : AbstractPhoneFragment() {
-    private lateinit var binding: AssistantPhoneAccountCreationFragmentBinding
+class PhoneAccountCreationFragment : AbstractPhoneFragment<AssistantPhoneAccountCreationFragmentBinding>() {
     private lateinit var sharedViewModel: SharedAssistantViewModel
     override lateinit var viewModel: PhoneAccountCreationViewModel
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = AssistantPhoneAccountCreationFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun getLayoutId(): Int = R.layout.assistant_phone_account_creation_fragment
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
