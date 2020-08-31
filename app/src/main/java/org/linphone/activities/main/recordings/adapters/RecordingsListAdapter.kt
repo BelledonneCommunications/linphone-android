@@ -25,8 +25,10 @@ import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.activities.main.recordings.viewmodels.RecordingViewModel
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
@@ -34,10 +36,10 @@ import org.linphone.databinding.GenericListHeaderBinding
 import org.linphone.databinding.RecordingListCellBinding
 import org.linphone.utils.*
 
-class RecordingsListAdapter(val selectionViewModel: ListTopBarViewModel) : LifecycleListAdapter<RecordingViewModel, RecordingsListAdapter.ViewHolder>(
-    RecordingDiffCallback()
-), HeaderAdapter {
-
+class RecordingsListAdapter(
+    selectionVM: ListTopBarViewModel,
+    private val viewLifecycleOwner: LifecycleOwner
+) : SelectionListAdapter<RecordingViewModel, RecyclerView.ViewHolder>(selectionVM, RecordingDiffCallback()), HeaderAdapter {
     val isVideoRecordingPlayingEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -48,32 +50,30 @@ class RecordingsListAdapter(val selectionViewModel: ListTopBarViewModel) : Lifec
         videoSurface = textureView
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val binding: RecordingListCellBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
             R.layout.recording_list_cell, parent, false
         )
-        val viewHolder = ViewHolder(binding)
-        binding.lifecycleOwner = viewHolder
-        return viewHolder
+        return ViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position))
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        (holder as ViewHolder).bind(getItem(position))
     }
 
     inner class ViewHolder(
         private val binding: RecordingListCellBinding
-    ) : LifecycleViewHolder(binding) {
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(recording: RecordingViewModel) {
             with(binding) {
                 viewModel = recording
 
+                binding.lifecycleOwner = viewLifecycleOwner
+
                 // This is for item selection through ListTopBarFragment
+                position = adapterPosition
                 selectionListViewModel = selectionViewModel
-                selectionViewModel.isEditionEnabled.observe(this@ViewHolder, {
-                    position = adapterPosition
-                })
 
                 setClickListener {
                     if (selectionViewModel.isEditionEnabled.value == true) {
@@ -81,14 +81,18 @@ class RecordingsListAdapter(val selectionViewModel: ListTopBarViewModel) : Lifec
                     }
                 }
 
-                recording.isVideoRecordingPlayingEvent.observe(this@ViewHolder, {
-                    it.consume { value ->
-                        if (value) {
+                setPlayListener {
+                    if (recording.isPlaying.value == true) {
+                        recording.pause()
+                        isVideoRecordingPlayingEvent.value = Event(false)
+                    } else {
+                        recording.play()
+                        if (recording.isVideoAvailable()) {
                             recording.setTextureView(videoSurface)
+                            isVideoRecordingPlayingEvent.value = Event(true)
                         }
-                        isVideoRecordingPlayingEvent.value = Event(value)
                     }
-                })
+                }
 
                 executePendingBindings()
             }

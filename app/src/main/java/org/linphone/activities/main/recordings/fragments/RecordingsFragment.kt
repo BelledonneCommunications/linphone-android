@@ -33,14 +33,18 @@ import org.linphone.activities.main.recordings.viewmodels.RecordingsViewModel
 import org.linphone.databinding.RecordingsFragmentBinding
 import org.linphone.utils.RecyclerViewHeaderDecoration
 
-class RecordingsFragment : MasterFragment<RecordingsFragmentBinding>() {
+class RecordingsFragment : MasterFragment<RecordingsFragmentBinding, RecordingsListAdapter>() {
     private lateinit var viewModel: RecordingsViewModel
-    private lateinit var adapter: RecordingsListAdapter
 
     private var videoX: Float = 0f
     private var videoY: Float = 0f
 
     override fun getLayoutId(): Int = R.layout.recordings_fragment
+
+    override fun onDestroyView() {
+        binding.recordingsList.adapter = null
+        super.onDestroyView()
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -50,10 +54,7 @@ class RecordingsFragment : MasterFragment<RecordingsFragmentBinding>() {
         viewModel = ViewModelProvider(this).get(RecordingsViewModel::class.java)
         binding.viewModel = viewModel
 
-        adapter =
-            RecordingsListAdapter(
-                listSelectionViewModel
-            )
+        _adapter = RecordingsListAdapter(listSelectionViewModel, viewLifecycleOwner)
         binding.recordingsList.adapter = adapter
 
         val layoutManager = LinearLayoutManager(activity)
@@ -109,7 +110,7 @@ class RecordingsFragment : MasterFragment<RecordingsFragmentBinding>() {
     override fun deleteItems(indexesOfItemToDelete: ArrayList<Int>) {
         val list = ArrayList<RecordingViewModel>()
         for (index in indexesOfItemToDelete) {
-            val recording = adapter.getItemAt(index)
+            val recording = adapter.currentList[index]
             list.add(recording)
         }
         viewModel.deleteRecordings(list)

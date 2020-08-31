@@ -24,8 +24,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.activities.main.chat.viewmodels.ImdnParticipantViewModel
 import org.linphone.core.ChatMessage
@@ -33,31 +35,30 @@ import org.linphone.core.ParticipantImdnState
 import org.linphone.databinding.ChatRoomImdnParticipantCellBinding
 import org.linphone.databinding.ImdnListHeaderBinding
 import org.linphone.utils.HeaderAdapter
-import org.linphone.utils.LifecycleViewHolder
 
-class ImdnAdapter : ListAdapter<ParticipantImdnState,
-        ImdnAdapter.ViewHolder>(ParticipantImdnStateDiffCallback()), HeaderAdapter {
+class ImdnAdapter(
+    private val viewLifecycleOwner: LifecycleOwner
+) : ListAdapter<ParticipantImdnState, RecyclerView.ViewHolder>(ParticipantImdnStateDiffCallback()), HeaderAdapter {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding: ChatRoomImdnParticipantCellBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
             R.layout.chat_room_imdn_participant_cell, parent, false
         )
-        val viewHolder = ViewHolder(binding)
-        binding.lifecycleOwner = viewHolder
-        return viewHolder
+        return ViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position))
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        (holder as ViewHolder).bind(getItem(position))
     }
 
-    class ViewHolder(
+    inner class ViewHolder(
         private val binding: ChatRoomImdnParticipantCellBinding
-    ) : LifecycleViewHolder(binding) {
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(participantImdnState: ParticipantImdnState) {
             with(binding) {
-                val imdnViewModel = ImdnParticipantViewModel(participantImdnState)
-                viewModel = imdnViewModel
+                viewModel = ImdnParticipantViewModel(participantImdnState)
+
+                binding.lifecycleOwner = viewLifecycleOwner
 
                 executePendingBindings()
             }

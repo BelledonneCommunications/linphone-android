@@ -43,13 +43,30 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatRoomMasterFragmentBinding
 import org.linphone.utils.*
 
-class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding>() {
+class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, ChatRoomsListAdapter>() {
     override val dialogConfirmationMessageBeforeRemoval = R.plurals.chat_room_delete_dialog
     private lateinit var listViewModel: ChatRoomsListViewModel
-    private lateinit var adapter: ChatRoomsListAdapter
     private lateinit var sharedViewModel: SharedMainViewModel
 
+    private val observer = object : RecyclerView.AdapterDataObserver() {
+        override fun onChanged() {
+            scrollToTop()
+        }
+        override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+            scrollToTop()
+        }
+        override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
+            scrollToTop()
+        }
+    }
+
     override fun getLayoutId(): Int = R.layout.chat_room_master_fragment
+
+    override fun onDestroyView() {
+        binding.chatList.adapter = null
+        adapter.unregisterAdapterDataObserver(observer)
+        super.onDestroyView()
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -63,20 +80,10 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding>() 
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
 
-        adapter = ChatRoomsListAdapter(listSelectionViewModel)
+        _adapter = ChatRoomsListAdapter(listSelectionViewModel, viewLifecycleOwner)
         // SubmitList is done on a background thread
         // We need this adapter data observer to know when to scroll
-        adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-            override fun onChanged() {
-                scrollToTop()
-            }
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                scrollToTop()
-            }
-            override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
-                scrollToTop()
-            }
-        })
+        adapter.registerAdapterDataObserver(observer)
         binding.chatList.adapter = adapter
 
         val layoutManager = LinearLayoutManager(activity)
@@ -100,7 +107,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding>() 
                 }
 
                 viewModel.showDeleteButton({
-                    listViewModel.deleteChatRoom(adapter.getItemAt(viewHolder.adapterPosition))
+                    listViewModel.deleteChatRoom(adapter.currentList[viewHolder.adapterPosition])
                     dialog.dismiss()
                 }, getString(R.string.dialog_delete))
 
@@ -133,6 +140,12 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding>() 
             it.consume { chatRoom ->
                 sharedViewModel.selectedChatRoom.value = chatRoom
                 navigateToChatRoom()
+            }
+        })
+
+        adapter.toggledPositionForSelectionEvent.observe(viewLifecycleOwner, {
+            it.consume { position ->
+                listSelectionViewModel.onToggleSelect(position)
             }
         })
 
@@ -201,7 +214,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding>() 
     override fun deleteItems(indexesOfItemToDelete: ArrayList<Int>) {
         val list = ArrayList<ChatRoom>()
         for (index in indexesOfItemToDelete) {
-            val chatRoom = adapter.getItemAt(index)
+            val chatRoom = adapter.currentList[index]
             list.add(chatRoom)
         }
         listViewModel.deleteChatRooms(list)

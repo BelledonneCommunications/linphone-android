@@ -76,7 +76,7 @@ class ImdnFragment : GenericFragment<ChatRoomImdnFragmentBinding>() {
             return
         }
 
-        adapter = ImdnAdapter()
+        adapter = ImdnAdapter(viewLifecycleOwner)
         binding.participantsList.adapter = adapter
 
         val layoutManager = LinearLayoutManager(activity)

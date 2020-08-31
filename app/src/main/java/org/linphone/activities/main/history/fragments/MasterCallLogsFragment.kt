@@ -42,13 +42,24 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.HistoryMasterFragmentBinding
 import org.linphone.utils.*
 
-class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding>() {
+class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, CallLogsListAdapter>() {
     override val dialogConfirmationMessageBeforeRemoval = R.plurals.history_delete_dialog
     private lateinit var listViewModel: CallLogsListViewModel
-    private lateinit var adapter: CallLogsListAdapter
     private lateinit var sharedViewModel: SharedMainViewModel
 
+    private val observer = object : RecyclerView.AdapterDataObserver() {
+        override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+            scrollToTop()
+        }
+    }
+
     override fun getLayoutId(): Int = R.layout.history_master_fragment
+
+    override fun onDestroyView() {
+        binding.callLogsList.adapter = null
+        adapter.unregisterAdapterDataObserver(observer)
+        super.onDestroyView()
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -62,14 +73,10 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding>() {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
 
-        adapter = CallLogsListAdapter(listSelectionViewModel)
+        _adapter = CallLogsListAdapter(listSelectionViewModel, viewLifecycleOwner)
         // SubmitList is done on a background thread
         // We need this adapter data observer to know when to scroll
-        adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                scrollToTop()
-            }
-        })
+        adapter.registerAdapterDataObserver(observer)
         binding.callLogsList.adapter = adapter
 
         binding.setEditClickListener {
@@ -97,7 +104,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding>() {
                 }
 
                 viewModel.showDeleteButton({
-                    listViewModel.deleteCallLogGroup(adapter.getItemAt(viewHolder.adapterPosition))
+                    listViewModel.deleteCallLogGroup(adapter.currentList[viewHolder.adapterPosition])
                     dialog.dismiss()
                 }, getString(R.string.dialog_delete))
 
@@ -194,7 +201,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding>() {
     override fun deleteItems(indexesOfItemToDelete: ArrayList<Int>) {
         val list = ArrayList<GroupedCallLogViewModel>()
         for (index in indexesOfItemToDelete) {
-            val callLogGroup = adapter.getItemAt(index)
+            val callLogGroup = adapter.currentList[index]
             list.add(callLogGroup)
         }
         listViewModel.deleteCallLogGroups(list)

@@ -44,16 +44,20 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactMasterFragmentBinding
 import org.linphone.utils.*
 
-class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding>() {
+class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, ContactsListAdapter>() {
     override val dialogConfirmationMessageBeforeRemoval = R.plurals.contact_delete_dialog
     private lateinit var listViewModel: ContactsListViewModel
-    private lateinit var adapter: ContactsListAdapter
     private lateinit var sharedViewModel: SharedMainViewModel
 
     private var sipUriToAdd: String? = null
     private var editOnClick: Boolean = false
 
     override fun getLayoutId(): Int = R.layout.contact_master_fragment
+
+    override fun onDestroyView() {
+        binding.contactsList.adapter = null
+        super.onDestroyView()
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -67,7 +71,7 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding>() {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
 
-        adapter = ContactsListAdapter(listSelectionViewModel)
+        _adapter = ContactsListAdapter(listSelectionViewModel, viewLifecycleOwner)
         binding.contactsList.adapter = adapter
 
         binding.setEditClickListener {
@@ -100,7 +104,7 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding>() {
                 }
 
                 viewModel.showDeleteButton({
-                    listViewModel.deleteContact(adapter.getItemAt(viewHolder.adapterPosition))
+                    listViewModel.deleteContact(adapter.currentList[viewHolder.adapterPosition])
                     dialog.dismiss()
                 }, getString(R.string.dialog_delete))
 
@@ -211,7 +215,7 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding>() {
     override fun deleteItems(indexesOfItemToDelete: ArrayList<Int>) {
         val list = ArrayList<Contact>()
         for (index in indexesOfItemToDelete) {
-            val contact = adapter.getItemAt(index)
+            val contact = adapter.currentList[index]
             list.add(contact)
         }
         listViewModel.deleteContacts(list)
