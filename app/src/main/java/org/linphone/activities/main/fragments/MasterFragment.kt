@@ -29,12 +29,16 @@ import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
+import org.linphone.utils.SelectionListAdapter
 
 /**
  * This fragment can be inherited by all fragments that will display a list
  * where items can be selected for removal through the ListTopBarFragment
  */
-abstract class MasterFragment<T : ViewDataBinding> : GenericFragment<T>() {
+abstract class MasterFragment<T : ViewDataBinding, U : SelectionListAdapter<*, *>> : GenericFragment<T>() {
+    protected var _adapter: U? = null
+    protected val adapter get() = _adapter!!
+
     protected lateinit var listSelectionViewModel: ListTopBarViewModel
     protected open val dialogConfirmationMessageBeforeRemoval: Int = R.plurals.dialog_default_delete
 

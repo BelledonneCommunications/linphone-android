@@ -37,7 +37,6 @@ import org.linphone.core.AudioDevice
 import org.linphone.core.Player
 import org.linphone.core.PlayerListener
 import org.linphone.core.tools.Log
-import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
 class RecordingViewModel(val path: String) : ViewModel(), Comparable<RecordingViewModel> {
@@ -56,16 +55,36 @@ class RecordingViewModel(val path: String) : ViewModel(), Comparable<RecordingVi
     val formattedPosition = MutableLiveData<String>()
     val isPlaying = MutableLiveData<Boolean>()
 
-    val isVideoRecordingPlayingEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
-    }
-
     private val tickerChannel = ticker(1000, 1000)
 
     private lateinit var player: Player
     private val listener = PlayerListener {
         Log.i("[Recording] End of file reached")
         stop()
+    }
+
+    private val textureViewListener = object : TextureView.SurfaceTextureListener {
+        override fun onSurfaceTextureSizeChanged(
+            surface: SurfaceTexture,
+            width: Int,
+            height: Int
+        ) { }
+
+        override fun onSurfaceTextureUpdated(surface: SurfaceTexture) { }
+
+        override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
+            player.setWindowId(null)
+            return true
+        }
+
+        override fun onSurfaceTextureAvailable(
+            surface: SurfaceTexture,
+            width: Int,
+            height: Int
+        ) {
+            Log.i("[Recording VM] Surface texture should be available now")
+            player.setWindowId(surface)
+        }
     }
 
     init {
@@ -84,6 +103,7 @@ class RecordingViewModel(val path: String) : ViewModel(), Comparable<RecordingVi
 
     override fun onCleared() {
         tickerChannel.cancel()
+        player.setWindowId(null)
         if (!isClosed()) player.close()
         player.removeListener(listener)
 
@@ -111,8 +131,10 @@ class RecordingViewModel(val path: String) : ViewModel(), Comparable<RecordingVi
                 }
             }
         }
+    }
 
-        isVideoRecordingPlayingEvent.value = Event(player.isVideoAvailable)
+    fun isVideoAvailable(): Boolean {
+        return player.isVideoAvailable
     }
 
     fun pause() {
@@ -135,28 +157,7 @@ class RecordingViewModel(val path: String) : ViewModel(), Comparable<RecordingVi
         if (textureView.isAvailable) {
             player.setWindowId(textureView.surfaceTexture)
         } else {
-            textureView.surfaceTextureListener = object : TextureView.SurfaceTextureListener {
-                override fun onSurfaceTextureSizeChanged(
-                    surface: SurfaceTexture,
-                    width: Int,
-                    height: Int
-                ) { }
-
-                override fun onSurfaceTextureUpdated(surface: SurfaceTexture) { }
-
-                override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
-                    return true
-                }
-
-                override fun onSurfaceTextureAvailable(
-                    surface: SurfaceTexture,
-                    width: Int,
-                    height: Int
-                ) {
-                    Log.i("[Recording VM] Surface texture should be available now")
-                    player.setWindowId(textureView.surfaceTexture)
-                }
-            }
+            textureView.surfaceTextureListener = textureViewListener
         }
     }
 
@@ -197,7 +198,6 @@ class RecordingViewModel(val path: String) : ViewModel(), Comparable<RecordingVi
         player.seek(0)
         updatePosition()
         player.close()
-        isVideoRecordingPlayingEvent.value = Event(false)
     }
 
     private fun isClosed(): Boolean {

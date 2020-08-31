@@ -67,7 +67,10 @@ class GroupInfoFragment : GenericFragment<ChatRoomGroupInfoFragmentBinding>() {
 
         viewModel.isEncrypted.value = sharedViewModel.createEncryptedChatRoom
 
-        adapter = GroupInfoParticipantsAdapter(chatRoom?.hasCapability(ChatRoomCapabilities.Encrypted.toInt()) ?: viewModel.isEncrypted.value == true)
+        adapter = GroupInfoParticipantsAdapter(
+            viewLifecycleOwner,
+            chatRoom?.hasCapability(ChatRoomCapabilities.Encrypted.toInt()) ?: viewModel.isEncrypted.value == true
+            )
         binding.participants.adapter = adapter
 
         val layoutManager = LinearLayoutManager(activity)

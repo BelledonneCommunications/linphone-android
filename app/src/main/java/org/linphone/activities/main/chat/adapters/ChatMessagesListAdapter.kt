@@ -27,8 +27,10 @@ import android.view.MenuItem
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -42,10 +44,12 @@ import org.linphone.core.EventLog
 import org.linphone.databinding.ChatEventListCellBinding
 import org.linphone.databinding.ChatMessageListCellBinding
 import org.linphone.utils.Event
-import org.linphone.utils.LifecycleListAdapter
-import org.linphone.utils.LifecycleViewHolder
+import org.linphone.utils.SelectionListAdapter
 
-class ChatMessagesListAdapter(val selectionViewModel: ListTopBarViewModel) : LifecycleListAdapter<EventLog, LifecycleViewHolder>(ChatMessageDiffCallback()) {
+class ChatMessagesListAdapter(
+    selectionVM: ListTopBarViewModel,
+    private val viewLifecycleOwner: LifecycleOwner
+) : SelectionListAdapter<EventLog, RecyclerView.ViewHolder>(selectionVM, ChatMessageDiffCallback()) {
     companion object {
         const val MAX_TIME_TO_GROUP_MESSAGES = 60 // 1 minute
     }
@@ -80,7 +84,7 @@ class ChatMessagesListAdapter(val selectionViewModel: ListTopBarViewModel) : Lif
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LifecycleViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             EventLog.Type.ConferenceChatMessage.toInt() -> createChatMessageViewHolder(parent)
             else -> createEventViewHolder(parent)
@@ -92,9 +96,7 @@ class ChatMessagesListAdapter(val selectionViewModel: ListTopBarViewModel) : Lif
             LayoutInflater.from(parent.context),
             R.layout.chat_message_list_cell, parent, false
         )
-        val viewHolder = ChatMessageViewHolder(binding)
-        binding.lifecycleOwner = viewHolder
-        return viewHolder
+        return ChatMessageViewHolder(binding)
     }
 
     private fun createEventViewHolder(parent: ViewGroup): EventViewHolder {
@@ -102,12 +104,10 @@ class ChatMessagesListAdapter(val selectionViewModel: ListTopBarViewModel) : Lif
             LayoutInflater.from(parent.context),
             R.layout.chat_event_list_cell, parent, false
         )
-        val viewHolder = EventViewHolder(binding)
-        binding.lifecycleOwner = viewHolder
-        return viewHolder
+        return EventViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: LifecycleViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val eventLog = getItem(position)
         when (holder) {
             is ChatMessageViewHolder -> holder.bind(eventLog)
@@ -122,7 +122,7 @@ class ChatMessagesListAdapter(val selectionViewModel: ListTopBarViewModel) : Lif
 
     inner class ChatMessageViewHolder(
         private val binding: ChatMessageListCellBinding
-    ) : LifecycleViewHolder(binding), PopupMenu.OnMenuItemClickListener {
+    ) : RecyclerView.ViewHolder(binding.root), PopupMenu.OnMenuItemClickListener {
         fun bind(eventLog: EventLog) {
             with(binding) {
                 if (eventLog.type == EventLog.Type.ConferenceChatMessage) {
@@ -131,9 +131,11 @@ class ChatMessagesListAdapter(val selectionViewModel: ListTopBarViewModel) : Lif
                     val chatMessageViewModel = ChatMessageViewModel(chatMessage, contentClickedListener)
                     viewModel = chatMessageViewModel
 
+                    binding.lifecycleOwner = viewLifecycleOwner
+
                     // This is for item selection through ListTopBarFragment
                     selectionListViewModel = selectionViewModel
-                    selectionViewModel.isEditionEnabled.observe(this@ChatMessageViewHolder, {
+                    selectionViewModel.isEditionEnabled.observe(viewLifecycleOwner, {
                         position = adapterPosition
                     })
 
@@ -284,15 +286,17 @@ class ChatMessagesListAdapter(val selectionViewModel: ListTopBarViewModel) : Lif
 
     inner class EventViewHolder(
         private val binding: ChatEventListCellBinding
-    ) : LifecycleViewHolder(binding) {
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(eventLog: EventLog) {
             with(binding) {
                 val eventViewModel = EventViewModel(eventLog)
                 viewModel = eventViewModel
 
+                binding.lifecycleOwner = viewLifecycleOwner
+
                 // This is for item selection through ListTopBarFragment
                 selectionListViewModel = selectionViewModel
-                selectionViewModel.isEditionEnabled.observe(this@EventViewHolder, {
+                selectionViewModel.isEditionEnabled.observe(viewLifecycleOwner, {
                     position = adapterPosition
                 })
 
