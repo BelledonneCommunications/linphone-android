@@ -40,7 +40,7 @@ import org.linphone.utils.TimestampUtils
 
 class ChatMessageViewModel(
     val chatMessage: ChatMessage,
-    private val contentListener: OnContentClickedListener? = null
+    private var contentListener: OnContentClickedListener? = null
 ) : GenericContactViewModel(chatMessage.fromAddress) {
     val sendInProgress = MutableLiveData<Boolean>()
 
@@ -114,6 +114,7 @@ class ChatMessageViewModel(
 
     override fun onCleared() {
         chatMessage.removeListener(listener)
+        contentListener = null
 
         super.onCleared()
     }

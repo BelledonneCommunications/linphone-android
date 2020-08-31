@@ -24,8 +24,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.activities.main.history.viewmodels.CallLogViewModel
 import org.linphone.activities.main.history.viewmodels.GroupedCallLogViewModel
@@ -35,7 +37,10 @@ import org.linphone.databinding.GenericListHeaderBinding
 import org.linphone.databinding.HistoryListCellBinding
 import org.linphone.utils.*
 
-class CallLogsListAdapter(val selectionViewModel: ListTopBarViewModel) : LifecycleListAdapter<GroupedCallLogViewModel, CallLogsListAdapter.ViewHolder>(CallLogDiffCallback()), HeaderAdapter {
+class CallLogsListAdapter(
+    selectionVM: ListTopBarViewModel,
+    private val viewLifecycleOwner: LifecycleOwner
+) : SelectionListAdapter<GroupedCallLogViewModel, RecyclerView.ViewHolder>(selectionVM, CallLogDiffCallback()), HeaderAdapter {
     val selectedCallLogEvent: MutableLiveData<Event<GroupedCallLogViewModel>> by lazy {
         MutableLiveData<Event<GroupedCallLogViewModel>>()
     }
@@ -44,31 +49,31 @@ class CallLogsListAdapter(val selectionViewModel: ListTopBarViewModel) : Lifecyc
         MutableLiveData<Event<Address>>()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val binding: HistoryListCellBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
             R.layout.history_list_cell, parent, false
         )
-        val viewHolder = ViewHolder(binding)
-        binding.lifecycleOwner = viewHolder
-        return viewHolder
+        return ViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position))
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        (holder as ViewHolder).bind(getItem(position))
     }
 
     inner class ViewHolder(
         private val binding: HistoryListCellBinding
-    ) : LifecycleViewHolder(binding) {
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(callLogGroup: GroupedCallLogViewModel) {
             with(binding) {
                 val callLogViewModel = CallLogViewModel(callLogGroup.lastCallLog)
                 viewModel = callLogViewModel
 
+                binding.lifecycleOwner = viewLifecycleOwner
+
                 // This is for item selection through ListTopBarFragment
                 selectionListViewModel = selectionViewModel
-                selectionViewModel.isEditionEnabled.observe(this@ViewHolder, {
+                selectionViewModel.isEditionEnabled.observe(viewLifecycleOwner, {
                     position = adapterPosition
                 })
 

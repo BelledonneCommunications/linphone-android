@@ -59,9 +59,9 @@ class ChatRoomCreationFragment : GenericFragment<ChatRoomCreationFragmentBinding
 
         binding.viewModel = viewModel
 
-        adapter = ChatRoomCreationContactsAdapter()
+        adapter = ChatRoomCreationContactsAdapter(viewLifecycleOwner)
         adapter.groupChatEnabled = viewModel.createGroupChat.value == true
-        adapter.securityEnabled.value = viewModel.isEncrypted.value == true
+        adapter.updateSecurity(viewModel.isEncrypted.value == true)
         binding.contactsList.adapter = adapter
 
         val layoutManager = LinearLayoutManager(activity)
@@ -90,7 +90,7 @@ class ChatRoomCreationFragment : GenericFragment<ChatRoomCreationFragmentBinding
         })
 
         viewModel.isEncrypted.observe(viewLifecycleOwner, {
-            adapter.securityEnabled.value = it
+            adapter.updateSecurity(it)
         })
 
         viewModel.sipContactsSelected.observe(viewLifecycleOwner, {
@@ -98,7 +98,7 @@ class ChatRoomCreationFragment : GenericFragment<ChatRoomCreationFragmentBinding
         })
 
         viewModel.selectedAddresses.observe(viewLifecycleOwner, {
-            adapter.selectedAddresses.value = it
+            adapter.updateSelectedAddresses(it)
         })
 
         viewModel.chatRoomCreatedEvent.observe(viewLifecycleOwner, {
