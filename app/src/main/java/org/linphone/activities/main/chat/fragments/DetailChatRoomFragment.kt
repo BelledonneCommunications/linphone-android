@@ -56,16 +56,31 @@ import org.linphone.databinding.ChatRoomDetailFragmentBinding
 import org.linphone.utils.*
 import org.linphone.utils.Event
 
-class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding>() {
+class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, ChatMessagesListAdapter>() {
     private lateinit var viewModel: ChatRoomViewModel
     private lateinit var chatSendingViewModel: ChatMessageSendingViewModel
     private lateinit var listViewModel: ChatMessagesListViewModel
-    private lateinit var adapter: ChatMessagesListAdapter
     private lateinit var sharedViewModel: SharedMainViewModel
+
+    private val observer = object : RecyclerView.AdapterDataObserver() {
+        override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+            if (positionStart == adapter.itemCount - 1) {
+                adapter.notifyItemChanged(positionStart - 1) // For grouping purposes
+                scrollToBottom()
+            }
+        }
+    }
+
     private var chatRoomAddress: String? = null
 
     override fun getLayoutId(): Int {
         return R.layout.chat_room_detail_fragment
+    }
+
+    override fun onDestroyView() {
+        binding.chatMessagesList.adapter = null
+        adapter.unregisterAdapterDataObserver(observer)
+        super.onDestroyView()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -98,18 +113,11 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding>() {
             ChatMessagesListViewModelFactory(chatRoom)
         )[ChatMessagesListViewModel::class.java]
 
-        adapter = ChatMessagesListAdapter(listSelectionViewModel)
+        _adapter = ChatMessagesListAdapter(listSelectionViewModel, viewLifecycleOwner)
         // SubmitList is done on a background thread
         // We need this adapter data observer to know when to scroll
-        adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                if (positionStart == adapter.itemCount - 1) {
-                    adapter.notifyItemChanged(positionStart - 1) // For grouping purposes
-                    scrollToBottom()
-                }
-            }
-        })
         binding.chatMessagesList.adapter = adapter
+        adapter.registerAdapterDataObserver(observer)
 
         val layoutManager = LinearLayoutManager(activity)
         layoutManager.stackFromEnd = true
@@ -265,7 +273,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding>() {
     override fun deleteItems(indexesOfItemToDelete: ArrayList<Int>) {
         val list = ArrayList<EventLog>()
         for (index in indexesOfItemToDelete) {
-            val eventLog = adapter.getItemAt(index)
+            val eventLog = adapter.currentList[index]
             list.add(eventLog)
         }
         listViewModel.deleteEventLogs(list)

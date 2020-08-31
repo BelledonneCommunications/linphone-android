@@ -22,18 +22,21 @@ package org.linphone.activities.main.chat.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.activities.main.chat.GroupChatRoomMember
 import org.linphone.activities.main.chat.viewmodels.GroupInfoParticipantViewModel
 import org.linphone.databinding.ChatRoomGroupInfoParticipantCellBinding
 import org.linphone.utils.Event
-import org.linphone.utils.LifecycleListAdapter
-import org.linphone.utils.LifecycleViewHolder
 
-class GroupInfoParticipantsAdapter(private val isEncryptionEnabled: Boolean) : LifecycleListAdapter<GroupChatRoomMember,
-        GroupInfoParticipantsAdapter.ViewHolder>(ParticipantDiffCallback()) {
+class GroupInfoParticipantsAdapter(
+    private val viewLifecycleOwner: LifecycleOwner,
+    private val isEncryptionEnabled: Boolean
+) : ListAdapter<GroupChatRoomMember, RecyclerView.ViewHolder>(ParticipantDiffCallback()) {
     private var showAdmin: Boolean = false
 
     val participantRemovedEvent: MutableLiveData<Event<GroupChatRoomMember>> by lazy {
@@ -45,13 +48,11 @@ class GroupInfoParticipantsAdapter(private val isEncryptionEnabled: Boolean) : L
             LayoutInflater.from(parent.context),
             R.layout.chat_room_group_info_participant_cell, parent, false
         )
-        val viewHolder = ViewHolder(binding)
-        binding.lifecycleOwner = viewHolder
-        return viewHolder
+        return ViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position))
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        (holder as ViewHolder).bind(getItem(position))
     }
 
     fun showAdminControls(show: Boolean) {
@@ -61,12 +62,14 @@ class GroupInfoParticipantsAdapter(private val isEncryptionEnabled: Boolean) : L
 
     inner class ViewHolder(
         private val binding: ChatRoomGroupInfoParticipantCellBinding
-    ) : LifecycleViewHolder(binding) {
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(participant: GroupChatRoomMember) {
             with(binding) {
                 val participantViewModel = GroupInfoParticipantViewModel(participant)
                 participantViewModel.showAdminControls.value = showAdmin
                 viewModel = participantViewModel
+
+                binding.lifecycleOwner = viewLifecycleOwner
 
                 setRemoveClickListener {
                     participantRemovedEvent.value = Event(participant)

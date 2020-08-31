@@ -21,23 +21,20 @@ package org.linphone.utils
 
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import org.linphone.activities.main.viewmodels.ListTopBarViewModel
 
-/**
- * This class prevents having to do in each adapter the viewHolder.attach/detach calls
- * to create lifecycle events that are required for the data binding to work correctly
- */
-abstract class LifecycleListAdapter<T, VH : LifecycleViewHolder>(diff: DiffUtil.ItemCallback<T>) : ListAdapter<T, VH>(diff) {
-    override fun onViewAttachedToWindow(holder: VH) {
-        super.onViewAttachedToWindow(holder)
-        holder.attach()
-    }
+abstract class SelectionListAdapter<T, VH : RecyclerView.ViewHolder>(
+    selectionVM: ListTopBarViewModel,
+    diff: DiffUtil.ItemCallback<T>
+) :
+    ListAdapter<T, VH>(diff) {
 
-    override fun onViewDetachedFromWindow(holder: VH) {
-        super.onViewDetachedFromWindow(holder)
-        holder.detach()
-    }
+    private var _selectionViewModel: ListTopBarViewModel? = selectionVM
+    protected val selectionViewModel get() = _selectionViewModel!!
 
-    fun getItemAt(position: Int): T {
-        return getItem(position)
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        _selectionViewModel = null
     }
 }

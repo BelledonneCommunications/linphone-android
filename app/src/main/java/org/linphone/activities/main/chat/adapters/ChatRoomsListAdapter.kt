@@ -22,20 +22,28 @@ package org.linphone.activities.main.chat.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.activities.main.chat.viewmodels.ChatRoomViewModel
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
 import org.linphone.core.ChatRoom
 import org.linphone.databinding.ChatRoomListCellBinding
 import org.linphone.utils.Event
-import org.linphone.utils.LifecycleListAdapter
-import org.linphone.utils.LifecycleViewHolder
+import org.linphone.utils.SelectionListAdapter
 
-class ChatRoomsListAdapter(val selectionViewModel: ListTopBarViewModel) : LifecycleListAdapter<ChatRoom, ChatRoomsListAdapter.ViewHolder>(ChatRoomDiffCallback()) {
+class ChatRoomsListAdapter(
+    selectionVM: ListTopBarViewModel,
+    private val viewLifecycleOwner: LifecycleOwner
+) : SelectionListAdapter<ChatRoom, RecyclerView.ViewHolder>(selectionVM, ChatRoomDiffCallback()) {
     val selectedChatRoomEvent: MutableLiveData<Event<ChatRoom>> by lazy {
         MutableLiveData<Event<ChatRoom>>()
+    }
+
+    val toggledPositionForSelectionEvent: MutableLiveData<Event<Int>> by lazy {
+        MutableLiveData<Event<Int>>()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -43,26 +51,26 @@ class ChatRoomsListAdapter(val selectionViewModel: ListTopBarViewModel) : Lifecy
             LayoutInflater.from(parent.context),
             R.layout.chat_room_list_cell, parent, false
         )
-        val viewHolder = ViewHolder(binding)
-        binding.lifecycleOwner = viewHolder
-        return viewHolder
+        return ViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position))
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        (holder as ViewHolder).bind(getItem(position))
     }
 
     inner class ViewHolder(
         private val binding: ChatRoomListCellBinding
-    ) : LifecycleViewHolder(binding) {
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(chatRoom: ChatRoom) {
             with(binding) {
                 val chatRoomViewModel = ChatRoomViewModel(chatRoom)
                 viewModel = chatRoomViewModel
 
+                binding.lifecycleOwner = viewLifecycleOwner
+
                 // This is for item selection through ListTopBarFragment
                 selectionListViewModel = selectionViewModel
-                selectionViewModel.isEditionEnabled.observe(this@ViewHolder, {
+                selectionViewModel.isEditionEnabled.observe(viewLifecycleOwner, {
                     position = adapterPosition
                 })
 

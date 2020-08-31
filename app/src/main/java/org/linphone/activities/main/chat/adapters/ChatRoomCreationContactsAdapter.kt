@@ -22,8 +22,11 @@ package org.linphone.activities.main.chat.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.main.chat.viewmodels.ChatRoomCreationContactViewModel
@@ -32,51 +35,57 @@ import org.linphone.core.FriendCapability
 import org.linphone.core.SearchResult
 import org.linphone.databinding.ChatRoomCreationContactCellBinding
 import org.linphone.utils.Event
-import org.linphone.utils.LifecycleListAdapter
-import org.linphone.utils.LifecycleViewHolder
 
-class ChatRoomCreationContactsAdapter : LifecycleListAdapter<SearchResult, ChatRoomCreationContactsAdapter.ViewHolder>(SearchResultDiffCallback()) {
+class ChatRoomCreationContactsAdapter(
+    private val viewLifecycleOwner: LifecycleOwner
+) : ListAdapter<SearchResult, RecyclerView.ViewHolder>(SearchResultDiffCallback()) {
     val selectedContact = MutableLiveData<Event<SearchResult>>()
-
-    val selectedAddresses = MutableLiveData<ArrayList<Address>>()
 
     var groupChatEnabled: Boolean = false
 
-    val securityEnabled = MutableLiveData<Boolean>()
+    private var selectedAddresses = ArrayList<Address>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    private var securityEnabled: Boolean = false
+
+    fun updateSelectedAddresses(selection: ArrayList<Address>) {
+        selectedAddresses = selection
+        notifyDataSetChanged()
+    }
+
+    fun updateSecurity(enabled: Boolean) {
+        securityEnabled = enabled
+        notifyDataSetChanged()
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val binding: ChatRoomCreationContactCellBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
             R.layout.chat_room_creation_contact_cell, parent, false
         )
-        val viewHolder = ViewHolder(binding)
-        binding.lifecycleOwner = viewHolder
-        return viewHolder
+        return ViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position))
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        (holder as ViewHolder).bind(getItem(position))
     }
 
     inner class ViewHolder(
         private val binding: ChatRoomCreationContactCellBinding
-    ) : LifecycleViewHolder(binding) {
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(searchResult: SearchResult) {
             with(binding) {
                 val searchResultViewModel = ChatRoomCreationContactViewModel(searchResult)
                 viewModel = searchResultViewModel
 
-                securityEnabled.observe(this@ViewHolder, {
-                    updateSecurity(searchResult, searchResultViewModel, it)
-                })
+                binding.lifecycleOwner = viewLifecycleOwner
 
-                selectedAddresses.observe(this@ViewHolder, {
-                    val selected = it.find { address ->
-                        val searchAddress = searchResult.address
-                        if (searchAddress != null) address.weakEqual(searchAddress) else false
-                    }
-                    searchResultViewModel.isSelected.value = selected != null
-                })
+                updateSecurity(searchResult, searchResultViewModel, securityEnabled)
+
+                val selected = selectedAddresses.find { address ->
+                    val searchAddress = searchResult.address
+                    if (searchAddress != null) address.weakEqual(searchAddress) else false
+                }
+                searchResultViewModel.isSelected.value = selected != null
 
                 setClickListener {
                     selectedContact.value = Event(searchResult)
