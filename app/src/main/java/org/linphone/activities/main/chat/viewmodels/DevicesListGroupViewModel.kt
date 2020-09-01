@@ -25,6 +25,7 @@ import org.linphone.R
 import org.linphone.contact.GenericContactViewModel
 import org.linphone.core.ChatRoomSecurityLevel
 import org.linphone.core.Participant
+import org.linphone.utils.LinphoneUtils
 
 class DevicesListGroupViewModel(private val participant: Participant) : GenericContactViewModel(participant.address) {
     override val securityLevel: ChatRoomSecurityLevel
@@ -48,7 +49,7 @@ class DevicesListGroupViewModel(private val participant: Participant) : GenericC
         }
     }
 
-    val sipUri: String = participant.address.asStringUriOnly()
+    val sipUri: String get() = LinphoneUtils.getDisplayableAddress(participant.address)
 
     val isExpanded = MutableLiveData<Boolean>()
 

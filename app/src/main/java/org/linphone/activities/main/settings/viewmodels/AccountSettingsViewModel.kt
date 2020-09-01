@@ -26,6 +26,7 @@ import java.lang.NumberFormatException
 import java.util.*
 import kotlin.collections.ArrayList
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.core.*
@@ -64,6 +65,8 @@ class AccountSettingsViewModel(val proxyConfig: ProxyConfig) : GenericSettingsVi
     val proxyConfigRemovedEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
+
+    val displayUsernameInsteadOfIdentity = corePreferences.replaceSipUriByUsername
 
     private var proxyConfigToDelete: ProxyConfig? = null
 

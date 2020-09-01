@@ -68,6 +68,12 @@ class CorePreferences constructor(private val context: Context) {
             config.setBool("app", "full_screen_activities", value)
         }
 
+    var replaceSipUriByUsername: Boolean
+        get() = config.getBool("app", "replace_sip_uri_by_username", false)
+        set(value) {
+            config.setBool("app", "replace_sip_uri_by_username", value)
+        }
+
     /** -1 means auto, 0 no, 1 yes */
     var darkMode: Int
         get() {

@@ -45,7 +45,7 @@ class CallLogViewModelFactory(private val callLog: CallLog) :
 class CallLogViewModel(val callLog: CallLog) : GenericContactViewModel(callLog.remoteAddress) {
     val peerSipUri: String by lazy {
         callLog.remoteAddress.clean() // To remove gruu if any
-        callLog.remoteAddress.asStringUriOnly()
+        LinphoneUtils.getDisplayableAddress(callLog.remoteAddress)
     }
 
     val statusIconResource: Int by lazy {
