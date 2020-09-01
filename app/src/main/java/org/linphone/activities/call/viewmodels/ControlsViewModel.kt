@@ -312,7 +312,7 @@ class ControlsViewModel : ViewModel() {
         updateConferenceState()
     }
 
-    private fun updateMuteMicState() {
+    fun updateMuteMicState() {
         isMicrophoneMuted.value = !PermissionHelper.get().hasRecordAudioPermission() || !coreContext.core.micEnabled()
     }
 
