@@ -342,7 +342,7 @@ class NotificationsManager(private val context: Context) {
     }
 
     private fun displayIncomingCallNotification(call: Call, useAsForeground: Boolean = false) {
-        val address = call.remoteAddress.asStringUriOnly()
+        val address = LinphoneUtils.getDisplayableAddress(call.remoteAddress)
         val notifiable = getNotifiableForCall(call)
 
         if (notifiable.notificationId == currentForegroundServiceNotificationId) {

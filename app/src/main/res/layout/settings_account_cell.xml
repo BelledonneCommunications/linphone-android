@@ -27,7 +27,7 @@
 
         <org.linphone.views.MarqueeTextView
             android:id="@+id/settings_title"
-            android:text="@{data.identity}"
+            android:text="@{data.displayUsernameInsteadOfIdentity ? data.userName : data.identity}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:singleLine="true"

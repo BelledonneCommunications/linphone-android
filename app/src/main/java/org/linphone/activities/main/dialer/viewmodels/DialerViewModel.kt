@@ -27,6 +27,7 @@ import org.linphone.activities.main.dialer.NumpadDigitListener
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
+import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.LogsUploadViewModel
 
 class DialerViewModel : LogsUploadViewModel() {
@@ -183,7 +184,7 @@ class DialerViewModel : LogsUploadViewModel() {
     private fun setLastOutgoingCallAddress() {
         val callLog = coreContext.core.lastOutgoingCallLog
         if (callLog != null) {
-            enteredUri.value = callLog.remoteAddress.asStringUriOnly()
+            enteredUri.value = LinphoneUtils.getDisplayableAddress(callLog.remoteAddress)
         }
     }
 }

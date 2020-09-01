@@ -33,6 +33,7 @@ import org.linphone.core.Call
 import org.linphone.core.CallListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
+import org.linphone.utils.LinphoneUtils
 
 class CallViewModelFactory(private val call: Call) :
     ViewModelProvider.NewInstanceFactory() {
@@ -46,7 +47,7 @@ class CallViewModelFactory(private val call: Call) :
 open class CallViewModel(val call: Call) : GenericContactViewModel(call.remoteAddress) {
     val address: String by lazy {
         call.remoteAddress.clean() // To remove gruu if any
-        call.remoteAddress.asStringUriOnly()
+        LinphoneUtils.getDisplayableAddress(call.remoteAddress)
     }
 
     val isPaused = MutableLiveData<Boolean>()

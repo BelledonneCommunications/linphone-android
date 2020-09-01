@@ -28,6 +28,7 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.*
 import org.linphone.core.tools.Log
@@ -41,6 +42,15 @@ class LinphoneUtils {
 
         fun getDisplayName(address: Address): String {
             return address.displayName ?: address.username ?: ""
+        }
+
+        fun getDisplayableAddress(address: Address?): String {
+            if (address == null) return "[null]"
+            return if (corePreferences.replaceSipUriByUsername) {
+                address.username ?: address.asStringUriOnly()
+            } else {
+                address.asStringUriOnly()
+            }
         }
 
         fun isLimeAvailable(): Boolean {

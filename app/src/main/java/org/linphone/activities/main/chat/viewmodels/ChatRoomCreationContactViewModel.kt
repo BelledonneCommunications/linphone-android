@@ -48,7 +48,7 @@ class ChatRoomCreationContactViewModel(private val searchResult: SearchResult) :
     }
 
     val sipUri: String by lazy {
-        searchResult.phoneNumber ?: searchResult.address?.asStringUriOnly() ?: ""
+        searchResult.phoneNumber ?: LinphoneUtils.getDisplayableAddress(searchResult.address)
     }
 
     val address: Address? by lazy {
