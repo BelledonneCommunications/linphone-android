@@ -91,7 +91,7 @@
 
                 <TextView
                     android:visibility="@{viewModel.defaultAccountFound ? View.VISIBLE : View.GONE}"
-                    android:text="@{viewModel.defaultAccount.identity}"
+                    android:text="@{viewModel.defaultAccount.displayUsernameInsteadOfIdentity ? viewModel.defaultAccount.userName : viewModel.defaultAccount.identity}"
                     style="@style/sip_uri_small_font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />

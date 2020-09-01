@@ -15,7 +15,7 @@
         android:gravity="center">
 
         <TextView
-            android:text="@{data.identity}"
+            android:text="@{data.displayUsernameInsteadOfIdentity ? data.userName : data.identity}"
             style="@style/assistant_input_field_header_font"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
