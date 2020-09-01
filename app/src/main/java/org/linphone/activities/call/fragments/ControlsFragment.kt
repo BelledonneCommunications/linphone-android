@@ -19,8 +19,10 @@
  */
 package org.linphone.activities.call.fragments
 
+import android.annotation.TargetApi
 import android.app.Dialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.SystemClock
 import androidx.lifecycle.ViewModelProvider
@@ -32,10 +34,13 @@ import org.linphone.activities.call.viewmodels.SharedCallViewModel
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.core.Call
+import org.linphone.core.tools.Log
 import org.linphone.databinding.CallControlsFragmentBinding
+import org.linphone.mediastream.Version
 import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
+import org.linphone.utils.PermissionHelper
 
 class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
     private lateinit var callsViewModel: CallsViewModel
@@ -122,6 +127,36 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
                 sharedViewModel.resetHiddenInterfaceTimerInVideoCallEvent.value = Event(true)
             }
         })
+
+        if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
+            checkPermissions()
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Log.i("[Controls Fragment] RECORD_AUDIO permission has been granted")
+            controlsViewModel.updateMuteMicState()
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    @TargetApi(Version.API23_MARSHMALLOW_60)
+    private fun checkPermissions() {
+        val permissionsRequiredList = arrayListOf<String>()
+        if (!PermissionHelper.get().hasRecordAudioPermission()) {
+            Log.i("[Controls Fragment] Asking for RECORD_AUDIO permission")
+            permissionsRequiredList.add(android.Manifest.permission.RECORD_AUDIO)
+        }
+        if (permissionsRequiredList.isNotEmpty()) {
+            val permissionsRequired = arrayOfNulls<String>(permissionsRequiredList.size)
+            permissionsRequiredList.toArray(permissionsRequired)
+            requestPermissions(permissionsRequired, 0)
+        }
     }
 
     private fun showCallUpdateDialog(call: Call) {
