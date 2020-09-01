@@ -23,13 +23,17 @@ import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.main.settings.SettingListenerStub
+import org.linphone.core.Factory
 import org.linphone.mediastream.Version
+import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
 class AdvancedSettingsViewModel : GenericSettingsViewModel() {
     val debugModeListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
             prefs.debugLogs = newValue
+            val appName = AppUtils.getString(R.string.app_name)
+            Factory.instance().setDebugMode(prefs.debugLogs, appName)
         }
     }
     val debugMode = MutableLiveData<Boolean>()
