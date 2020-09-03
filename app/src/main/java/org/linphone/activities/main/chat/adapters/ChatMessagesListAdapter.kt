@@ -237,8 +237,7 @@ class ChatMessagesListAdapter(
         private fun resendMessage() {
             val chatMessage = binding.viewModel?.chatMessage
             if (chatMessage != null) {
-                val viewHolder = binding.lifecycleOwner as ChatMessageViewHolder
-                chatMessage.userData = viewHolder.adapterPosition
+                chatMessage.userData = adapterPosition
                 resendMessageEvent.value = Event(chatMessage)
             }
         }
@@ -269,8 +268,7 @@ class ChatMessagesListAdapter(
         private fun deleteMessage() {
             val chatMessage = binding.viewModel?.chatMessage
             if (chatMessage != null) {
-                val viewHolder = binding.lifecycleOwner as ChatMessageViewHolder
-                chatMessage.userData = viewHolder.adapterPosition
+                chatMessage.userData = adapterPosition
                 deleteMessageEvent.value = Event(chatMessage)
             }
         }

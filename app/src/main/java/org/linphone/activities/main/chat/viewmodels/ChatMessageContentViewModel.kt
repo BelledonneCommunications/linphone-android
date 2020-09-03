@@ -79,13 +79,17 @@ class ChatMessageContentViewModel(
                 isVideo.value = false
             }
         } else {
-            Log.i("[Content] Found downloadable content: ${content.name}")
+            if (chatMessage.isFileTransferInProgress) {
+                Log.i("[Content] Found content currently being downloaded: ${content.name}")
+                downloadEnabled.value = false
+            } else {
+                Log.i("[Content] Found downloadable content: ${content.name}")
+                downloadEnabled.value = true
+            }
             downloadable.value = true
             isImage.value = false
             isVideo.value = false
         }
-
-        downloadEnabled.value = downloadable.value
     }
 
     fun download() {
