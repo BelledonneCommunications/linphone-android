@@ -122,7 +122,9 @@ class NotificationsManager(private val context: Context) {
                 Call.State.IncomingEarlyMedia, Call.State.IncomingReceived -> displayIncomingCallNotification(call)
                 Call.State.End, Call.State.Error -> dismissCallNotification(call)
                 Call.State.Released -> {
-                    if (call.callLog.status == Call.Status.Missed) {
+                    if (call.callLog.status == Call.Status.Missed ||
+                        call.callLog.status == Call.Status.Aborted ||
+                            call.callLog.status == Call.Status.EarlyAborted) {
                         displayMissedCallNotification(call)
                     }
                 }
