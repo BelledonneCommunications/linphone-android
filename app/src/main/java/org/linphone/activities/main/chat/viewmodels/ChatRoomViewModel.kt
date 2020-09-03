@@ -131,6 +131,11 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactViewModelI
     private val chatRoomListener: ChatRoomListenerStub = object : ChatRoomListenerStub() {
         override fun onStateChanged(chatRoom: ChatRoom, state: ChatRoom.State) {
             Log.i("[Chat Room] $chatRoom state changed: $state")
+            if (state == ChatRoom.State.Created) {
+                contactLookup()
+                updateSecurityIcon()
+                subject.value = chatRoom.subject
+            }
         }
 
         override fun onSubjectChanged(chatRoom: ChatRoom, eventLog: EventLog) {
