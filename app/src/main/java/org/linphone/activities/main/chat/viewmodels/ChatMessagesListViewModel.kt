@@ -58,30 +58,20 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
-    private val chatMessageListener: ChatMessageListenerStub = object : ChatMessageListenerStub() {
-        override fun onMsgStateChanged(message: ChatMessage, state: ChatMessage.State) {
-            if (state == ChatMessage.State.Displayed) {
-                message.removeListener(this)
-            }
-
-            val position: Int? = message.userData as? Int?
-            if (position != null) {
-                messageUpdatedEvent.value = Event(position)
-            }
-        }
-    }
-
     private val chatRoomListener: ChatRoomListenerStub = object : ChatRoomListenerStub() {
         override fun onChatMessageReceived(chatRoom: ChatRoom, eventLog: EventLog) {
             chatRoom.markAsRead()
 
-            val position = events.value?.size ?: 0
-
             if (eventLog.type == EventLog.Type.ConferenceChatMessage) {
                 val chatMessage = eventLog.chatMessage
                 chatMessage ?: return
-                chatMessage.userData = position
-                chatMessage.addListener(chatMessageListener)
+                chatMessage.userData = events.value.orEmpty().size
+
+                val lastEventLog = events.value.orEmpty().last()
+                if (lastEventLog.type == EventLog.Type.ConferenceChatMessage && lastEventLog.chatMessage == chatMessage) {
+                    Log.w("[Chat Messages] Found already present chat message, don't add it it's probably the result of an auto download")
+                    return
+                }
 
                 if (Version.sdkStrictlyBelow(Version.API29_ANDROID_10) && !PermissionHelper.get().hasWriteExternalStorage()) {
                     for (content in chatMessage.contents) {
@@ -98,13 +88,12 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
         }
 
         override fun onChatMessageSent(chatRoom: ChatRoom, eventLog: EventLog) {
-            val position = events.value?.size ?: 0
+            val position = events.value.orEmpty().size
 
             if (eventLog.type == EventLog.Type.ConferenceChatMessage) {
                 val chatMessage = eventLog.chatMessage
                 chatMessage ?: return
                 chatMessage.userData = position
-                chatMessage.addListener(chatMessageListener)
             }
 
             addEvent(eventLog)
