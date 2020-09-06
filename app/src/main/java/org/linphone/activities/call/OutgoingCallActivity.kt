@@ -26,7 +26,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
-import org.linphone.activities.GenericActivity
 import org.linphone.activities.call.viewmodels.CallViewModel
 import org.linphone.activities.call.viewmodels.CallViewModelFactory
 import org.linphone.activities.call.viewmodels.ControlsViewModel
@@ -36,7 +35,7 @@ import org.linphone.databinding.CallOutgoingActivityBinding
 import org.linphone.mediastream.Version
 import org.linphone.utils.PermissionHelper
 
-class OutgoingCallActivity : GenericActivity() {
+class OutgoingCallActivity : ProximitySensorActivity() {
     private lateinit var binding: CallOutgoingActivityBinding
     private lateinit var viewModel: CallViewModel
     private lateinit var controlsViewModel: ControlsViewModel
@@ -93,6 +92,10 @@ class OutgoingCallActivity : GenericActivity() {
                 Log.i("[Outgoing Call Activity] Call connected, finish activity")
                 finish()
             }
+        })
+
+        controlsViewModel.isSpeakerSelected.observe(this, {
+            enableProximitySensor(!it)
         })
 
         if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
