@@ -25,6 +25,7 @@ import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.*
+import org.linphone.utils.Event
 
 class IncomingCallViewModelFactory(private val call: Call) :
     ViewModelProvider.NewInstanceFactory() {
@@ -42,12 +43,32 @@ class IncomingCallViewModel(call: Call) : CallViewModel(call) {
 
     val inviteWithVideo = MutableLiveData<Boolean>()
 
+    private val listener = object : CoreListenerStub() {
+        override fun onCallStateChanged(
+            core: Core,
+            call: Call,
+            state: Call.State,
+            message: String
+        ) {
+            if (core.callsNb == 0) {
+                callEndedEvent.value = Event(true)
+            }
+        }
+    }
+
     init {
+        coreContext.core.addListener(listener)
+
         screenLocked.value = false
         inviteWithVideo.value = call.remoteParams?.videoEnabled()
         earlyMediaVideoEnabled.value = corePreferences.acceptEarlyMedia &&
                 call.state == Call.State.IncomingEarlyMedia &&
                 call.currentParams.videoEnabled()
+    }
+
+    override fun onCleared() {
+        coreContext.core.removeListener(listener)
+        super.onCleared()
     }
 
     fun answer(doAction: Boolean) {
