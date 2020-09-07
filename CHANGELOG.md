@@ -10,6 +10,16 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [4.3.1] - 2020-09-25
+
+### Fixed
+- Added phoneCall foregroundServiceType for Android Q and newer
+- Contact sorting when first character has an accent
+
+### Changed
+- SDK updated to 4.4.2
+- Updated translations
+
 ## [4.3.0] - 2020-06-23
 
 ### Added
