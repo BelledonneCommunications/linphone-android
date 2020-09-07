@@ -212,6 +212,7 @@
 
         <service
             android:name=".service.LinphoneService"
+            android:foregroundServiceType="phoneCall"
             android:label="@string/service_name" />
 
         <service

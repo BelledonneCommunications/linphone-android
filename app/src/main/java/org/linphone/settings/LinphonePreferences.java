@@ -394,14 +394,18 @@ public class LinphonePreferences {
 
     public String getPreferredVideoSize() {
         // Core can only return video size (width and height), not the name
-        return getConfig().getString("video", "size", "qvga");
+        return getConfig().getString("video", "size", "vga");
     }
 
     public void setPreferredVideoSize(String preferredVideoSize) {
         if (getLc() == null) return;
         VideoDefinition preferredVideoDefinition =
                 Factory.instance().createVideoDefinitionFromName(preferredVideoSize);
-        getLc().setPreferredVideoDefinition(preferredVideoDefinition);
+        if (preferredVideoDefinition != null) {
+            getLc().setPreferredVideoDefinition(preferredVideoDefinition);
+        } else {
+            Log.e("[Video Settings] Failed to get video definition matching ", preferredVideoSize);
+        }
     }
 
     public int getPreferredVideoFps() {
