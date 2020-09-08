@@ -89,7 +89,7 @@ class QrCodeFragment : GenericFragment<AssistantQrCodeFragmentBinding>() {
         if (granted) {
             Log.i("[QR Code] CAMERA permission granted")
             coreContext.core.reloadVideoDevices()
-            coreContext.switchCamera()
+            viewModel.setBackCamera()
         } else {
             Log.w("[QR Code] CAMERA permission denied")
             findNavController().navigateUp()

@@ -50,6 +50,8 @@ class QrCodeViewModel : ViewModel() {
     }
 
     fun setBackCamera() {
+        showSwitchCamera.value = coreContext.showSwitchCameraButton()
+
         for (camera in coreContext.core.videoDevicesList) {
             if (camera.contains("Back")) {
                 Log.i("[QR Code] Found back facing camera: $camera")
