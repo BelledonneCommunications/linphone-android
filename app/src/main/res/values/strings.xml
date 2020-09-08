@@ -8,7 +8,7 @@
     <string name="app_name">&appName;</string>
     <string name="app_name_debug">&appName; (debug)</string>
     <string name="service_name">&appName; Service</string>
-    <string name="service_auto_start_description">&appName; as been started automatically</string>
+    <string name="service_auto_start_description">&appName; has been started automatically</string>
     <string name="service_description">This is required to receive calls while in background</string>
     <string name="sync_account_name">&appName; contacts</string>
 
@@ -299,7 +299,7 @@
 
     <!-- Assistant remote provisioning -->
     <string name="assistant_remote_provisioning_title">Fetch remote configuration</string>
-    <string name="assistant_remote_provisioning_desc">Please provide your provisioning URL</string>
+    <string name="assistant_remote_provisioning_desc">Please provide your configuration URL</string>
     <string name="assistant_remote_provisioning_url">URL</string>
     <string name="assistant_remote_provisioning_wrong_format">Unknown URL format, can\'t download provisioning…</string>
     <string name="assistant_remote_provisioning_failure">Failed to download or apply remote provisioning profile…</string>
