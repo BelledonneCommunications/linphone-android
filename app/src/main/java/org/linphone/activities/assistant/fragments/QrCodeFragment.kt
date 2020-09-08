@@ -58,7 +58,7 @@ class QrCodeFragment : GenericFragment<AssistantQrCodeFragmentBinding>() {
         })
         viewModel.setBackCamera()
 
-        if (!PermissionHelper.required(requireContext()).hasRecordAudioPermission()) {
+        if (!PermissionHelper.required(requireContext()).hasCameraPermission()) {
             Log.i("[QR Code] Asking for CAMERA permission")
             requestPermissions(arrayOf(android.Manifest.permission.CAMERA), 0)
         }
@@ -88,6 +88,8 @@ class QrCodeFragment : GenericFragment<AssistantQrCodeFragmentBinding>() {
         val granted = grantResults[0] == PackageManager.PERMISSION_GRANTED
         if (granted) {
             Log.i("[QR Code] CAMERA permission granted")
+            coreContext.core.reloadVideoDevices()
+            coreContext.switchCamera()
         } else {
             Log.w("[QR Code] CAMERA permission denied")
             findNavController().navigateUp()
