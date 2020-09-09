@@ -34,6 +34,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="${appLabel}"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:extractNativeLibs="${extractNativeLibs}"
         android:theme="@style/AppTheme">
 
         <activity
