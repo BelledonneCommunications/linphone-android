@@ -65,6 +65,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:resizeableActivity="true"
         android:theme="@style/LinphoneStyle"
+        android:extractNativeLibs="${extractNativeLibs}"
         android:requestLegacyExternalStorage="true">
 
         <!-- Starting activities -->
