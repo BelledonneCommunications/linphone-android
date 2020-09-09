@@ -92,12 +92,15 @@ android {
             outputFileName = "linphone-android-${variant.buildType.name}-${project.version}.apk"
         }
 
+        // https://developer.android.com/studio/releases/gradle-plugin#3-6-0-behavior for extractNativeLibs
         if (variant.buildType.name == "release") {
             variant.getMergedFlavor().manifestPlaceholders = [linphone_address_mime_type: "vnd.android.cursor.item/vnd." + getPackageName() + ".provider.sip_address",
-                                    linphone_file_provider: getPackageName() + ".provider"]
+                                    linphone_file_provider: getPackageName() + ".provider",
+                                    extractNativeLibs: "false"]
         } else {
             variant.getMergedFlavor().manifestPlaceholders = [linphone_address_mime_type: "vnd.android.cursor.item/vnd." + getPackageName() + ".provider.sip_address",
-                                    linphone_file_provider: getPackageName() + ".debug.provider"]
+                                    linphone_file_provider: getPackageName() + ".debug.provider",
+                                    extractNativeLibs: "true"]
         }
     }
 
