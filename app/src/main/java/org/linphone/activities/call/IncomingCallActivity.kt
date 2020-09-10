@@ -19,9 +19,11 @@
  */
 package org.linphone.activities.call
 
+import android.Manifest
 import android.annotation.TargetApi
 import android.app.KeyguardManager
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -113,14 +115,36 @@ class IncomingCallActivity : GenericActivity() {
             Log.i("[Incoming Call Activity] Asking for RECORD_AUDIO permission")
             permissionsRequiredList.add(android.Manifest.permission.RECORD_AUDIO)
         }
+
         if (viewModel.call.currentParams.videoEnabled() && !PermissionHelper.get().hasCameraPermission()) {
             Log.i("[Incoming Call Activity] Asking for CAMERA permission")
             permissionsRequiredList.add(android.Manifest.permission.CAMERA)
         }
+
         if (permissionsRequiredList.isNotEmpty()) {
             val permissionsRequired = arrayOfNulls<String>(permissionsRequiredList.size)
             permissionsRequiredList.toArray(permissionsRequired)
             requestPermissions(permissionsRequired, 0)
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == 0) {
+            for (i in permissions.indices) {
+                when (permissions[i]) {
+                    Manifest.permission.RECORD_AUDIO -> if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                        Log.i("[Incoming Call Activity] RECORD_AUDIO permission has been granted")
+                    }
+                    Manifest.permission.CAMERA -> if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                        Log.i("[Incoming Call Activity] CAMERA permission has been granted")
+                        coreContext.core.reloadVideoDevices()
+                    }
+                }
+            }
         }
     }
 
