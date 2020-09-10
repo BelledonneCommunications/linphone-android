@@ -19,6 +19,7 @@
  */
 package org.linphone.activities.call.viewmodels
 
+import android.Manifest
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlin.math.max
@@ -74,6 +75,10 @@ class ControlsViewModel : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val askPermissionEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
     val somethingClickedEvent = MutableLiveData<Event<Boolean>>()
 
     val onKeyClick: NumpadDigitListener = object : NumpadDigitListener {
@@ -104,6 +109,10 @@ class ControlsViewModel : ViewModel() {
             message: String?
         ) {
             if (state == Call.State.StreamsRunning) isVideoUpdateInProgress.value = false
+
+            if (coreContext.isVideoCallOrConferenceActive() && !PermissionHelper.get().hasCameraPermission()) {
+                askPermissionEvent.value = Event(Manifest.permission.CAMERA)
+            }
 
             updateUI()
         }
@@ -147,6 +156,11 @@ class ControlsViewModel : ViewModel() {
     }
 
     fun toggleMuteMicrophone() {
+        if (!PermissionHelper.get().hasRecordAudioPermission()) {
+            askPermissionEvent.value = Event(Manifest.permission.RECORD_AUDIO)
+            return
+        }
+
         somethingClickedEvent.value = Event(true)
         val micEnabled = coreContext.core.micEnabled()
         coreContext.core.enableMic(!micEnabled)
@@ -178,6 +192,11 @@ class ControlsViewModel : ViewModel() {
     }
 
     fun toggleVideo() {
+        if (!PermissionHelper.get().hasCameraPermission()) {
+            askPermissionEvent.value = Event(Manifest.permission.CAMERA)
+            return
+        }
+
         val core = coreContext.core
         val currentCall = core.currentCall
         val conference = core.conference
@@ -314,6 +333,7 @@ class ControlsViewModel : ViewModel() {
 
     fun updateMuteMicState() {
         isMicrophoneMuted.value = !PermissionHelper.get().hasRecordAudioPermission() || !coreContext.core.micEnabled()
+        isMuteMicrophoneEnabled.value = coreContext.core.currentCall != null || coreContext.core.isInConference
     }
 
     private fun updateSpeakerState() {
@@ -349,7 +369,8 @@ class ControlsViewModel : ViewModel() {
     }
 
     private fun updateVideoEnabled() {
-        isVideoEnabled.value = coreContext.isVideoCallOrConferenceActive()
+        val enabled = coreContext.isVideoCallOrConferenceActive()
+        isVideoEnabled.value = enabled
     }
 
     private fun updateConferenceState() {
