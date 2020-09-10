@@ -19,7 +19,9 @@
  */
 package org.linphone.activities.call
 
+import android.Manifest
 import android.annotation.TargetApi
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.databinding.DataBindingUtil
@@ -64,22 +66,6 @@ class OutgoingCallActivity : ProximitySensorActivity() {
         controlsViewModel = ViewModelProvider(this).get(ControlsViewModel::class.java)
         binding.controlsViewModel = controlsViewModel
 
-        binding.setTerminateCallClickListener {
-            viewModel.terminateCall()
-        }
-
-        binding.setToggleMicrophoneClickListener {
-            if (PermissionHelper.get().hasRecordAudioPermission()) {
-                controlsViewModel.toggleMuteMicrophone()
-            } else {
-                checkPermissions()
-            }
-        }
-
-        binding.setToggleSpeakerClickListener {
-            controlsViewModel.toggleSpeaker()
-        }
-
         viewModel.callEndedEvent.observe(this, {
             it.consume {
                 Log.i("[Outgoing Call Activity] Call ended, finish activity")
@@ -96,6 +82,12 @@ class OutgoingCallActivity : ProximitySensorActivity() {
 
         controlsViewModel.isSpeakerSelected.observe(this, {
             enableProximitySensor(!it)
+        })
+
+        controlsViewModel.askPermissionEvent.observe(this, {
+            it.consume { permission ->
+                requestPermissions(arrayOf(permission), 0)
+            }
         })
 
         if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
@@ -128,6 +120,25 @@ class OutgoingCallActivity : ProximitySensorActivity() {
             val permissionsRequired = arrayOfNulls<String>(permissionsRequiredList.size)
             permissionsRequiredList.toArray(permissionsRequired)
             requestPermissions(permissionsRequired, 0)
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == 0) {
+            for (i in permissions.indices) {
+                when (permissions[i]) {
+                    Manifest.permission.RECORD_AUDIO -> if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                        controlsViewModel.updateMuteMicState()
+                    }
+                    Manifest.permission.CAMERA -> if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                        coreContext.core.reloadVideoDevices()
+                    }
+                }
+            }
         }
     }
 

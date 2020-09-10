@@ -6,15 +6,6 @@
     <data>
         <import type="android.view.View" />
         <variable
-            name="toggleMicrophoneClickListener"
-            type="android.view.View.OnClickListener" />
-        <variable
-            name="toggleSpeakerClickListener"
-            type="android.view.View.OnClickListener" />
-        <variable
-            name="terminateCallClickListener"
-            type="android.view.View.OnClickListener" />
-        <variable
             name="viewModel"
             type="org.linphone.activities.call.viewmodels.CallViewModel" />
         <variable
@@ -99,7 +90,7 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:onClick="@{toggleMicrophoneClickListener}"
+                android:onClick="@{() -> controlsViewModel.toggleMuteMicrophone()}"
                 android:selected="@{controlsViewModel.isMicrophoneMuted}"
                 android:contentDescription="@{controlsViewModel.isMicrophoneMuted ? @string/content_description_disable_mic_mute : @string/content_description_enable_mic_mute}"
                 android:layout_width="match_parent"
@@ -110,7 +101,7 @@
                 android:src="@drawable/micro" />
 
             <ImageView
-                android:onClick="@{toggleSpeakerClickListener}"
+                android:onClick="@{() -> controlsViewModel.toggleSpeaker()}"
                 android:selected="@{controlsViewModel.isSpeakerSelected}"
                 android:contentDescription="@{controlsViewModel.isSpeakerSelected ? @string/content_description_disable_speaker : @string/content_description_enable_speaker}"
                 android:layout_width="match_parent"
@@ -121,7 +112,7 @@
                 android:src="@drawable/speaker" />
 
             <ImageView
-                android:onClick="@{terminateCallClickListener}"
+                android:onClick="@{() -> viewModel.terminateCall()}"
                 android:contentDescription="@string/content_description_terminate_call"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

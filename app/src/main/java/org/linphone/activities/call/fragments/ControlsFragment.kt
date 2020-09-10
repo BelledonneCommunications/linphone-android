@@ -19,13 +19,15 @@
  */
 package org.linphone.activities.call.fragments
 
+import android.Manifest
 import android.annotation.TargetApi
 import android.app.Dialog
 import android.content.Intent
-import android.content.pm.PackageManager
+import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
 import android.os.SystemClock
 import androidx.lifecycle.ViewModelProvider
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.call.viewmodels.CallsViewModel
@@ -122,6 +124,13 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
             }
         })
 
+        controlsViewModel.askPermissionEvent.observe(viewLifecycleOwner, {
+            it.consume { permission ->
+                Log.i("[Controls Fragment] Asking for $permission permission")
+                requestPermissions(arrayOf(permission), 0)
+            }
+        })
+
         controlsViewModel.somethingClickedEvent.observe(viewLifecycleOwner, {
             it.consume {
                 sharedViewModel.resetHiddenInterfaceTimerInVideoCallEvent.value = Event(true)
@@ -138,9 +147,17 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        if (requestCode == 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.i("[Controls Fragment] RECORD_AUDIO permission has been granted")
-            controlsViewModel.updateMuteMicState()
+        if (requestCode == 0) {
+            for (i in permissions.indices) {
+                when (permissions[i]) {
+                    Manifest.permission.RECORD_AUDIO -> if (grantResults[i] == PERMISSION_GRANTED) {
+                        controlsViewModel.updateMuteMicState()
+                    }
+                    Manifest.permission.CAMERA -> if (grantResults[i] == PERMISSION_GRANTED) {
+                        coreContext.core.reloadVideoDevices()
+                    }
+                }
+            }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
@@ -148,10 +165,17 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
     @TargetApi(Version.API23_MARSHMALLOW_60)
     private fun checkPermissions() {
         val permissionsRequiredList = arrayListOf<String>()
+
         if (!PermissionHelper.get().hasRecordAudioPermission()) {
             Log.i("[Controls Fragment] Asking for RECORD_AUDIO permission")
             permissionsRequiredList.add(android.Manifest.permission.RECORD_AUDIO)
         }
+
+        if (coreContext.isVideoCallOrConferenceActive() && !PermissionHelper.get().hasCameraPermission()) {
+            Log.i("[Controls Fragment] Asking for CAMERA permission")
+            permissionsRequiredList.add(android.Manifest.permission.CAMERA)
+        }
+
         if (permissionsRequiredList.isNotEmpty()) {
             val permissionsRequired = arrayOfNulls<String>(permissionsRequiredList.size)
             permissionsRequiredList.toArray(permissionsRequired)
