@@ -126,7 +126,9 @@ class AccountSettingsViewModel(val proxyConfig: ProxyConfig) : GenericSettingsVi
 
     val disableListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
+            proxyConfig.edit()
             proxyConfig.enableRegister(!newValue)
+            proxyConfig.done()
         }
     }
     val disable = MutableLiveData<Boolean>()
