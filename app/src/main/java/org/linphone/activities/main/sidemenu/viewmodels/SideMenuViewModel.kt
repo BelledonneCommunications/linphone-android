@@ -54,7 +54,7 @@ class SideMenuViewModel : ViewModel() {
             core: Core,
             cfg: ProxyConfig,
             state: RegistrationState,
-            message: String?
+            message: String
         ) {
             if (coreContext.core.proxyConfigList.size != accounts.value?.size) {
                 // Only refresh the list if a proxy has been added or removed
