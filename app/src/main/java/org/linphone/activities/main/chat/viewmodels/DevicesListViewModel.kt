@@ -39,19 +39,19 @@ class DevicesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
     val participants = MutableLiveData<ArrayList<DevicesListGroupViewModel>>()
 
     private val listener = object : ChatRoomListenerStub() {
-        override fun onParticipantDeviceAdded(chatRoom: ChatRoom?, eventLog: EventLog?) {
+        override fun onParticipantDeviceAdded(chatRoom: ChatRoom, eventLog: EventLog) {
             updateParticipants()
         }
 
-        override fun onParticipantDeviceRemoved(chatRoom: ChatRoom?, eventLog: EventLog?) {
+        override fun onParticipantDeviceRemoved(chatRoom: ChatRoom, eventLog: EventLog) {
             updateParticipants()
         }
 
-        override fun onParticipantAdded(chatRoom: ChatRoom?, eventLog: EventLog?) {
+        override fun onParticipantAdded(chatRoom: ChatRoom, eventLog: EventLog) {
             updateParticipants()
         }
 
-        override fun onParticipantRemoved(chatRoom: ChatRoom?, eventLog: EventLog?) {
+        override fun onParticipantRemoved(chatRoom: ChatRoom, eventLog: EventLog) {
             updateParticipants()
         }
     }
