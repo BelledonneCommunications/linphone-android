@@ -110,10 +110,10 @@ class NotificationsManager(private val context: Context) {
 
     private val listener: CoreListenerStub = object : CoreListenerStub() {
         override fun onCallStateChanged(
-            core: Core?,
-            call: Call?,
-            state: Call.State?,
-            message: String?
+            core: Core,
+            call: Call,
+            state: Call.State,
+            message: String
         ) {
             if (call == null) return
             Log.i("[Notifications Manager] Call state changed [$state]")

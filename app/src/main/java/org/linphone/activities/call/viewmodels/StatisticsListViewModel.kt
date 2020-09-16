@@ -34,7 +34,7 @@ class StatisticsListViewModel : ViewModel() {
             core: Core,
             call: Call,
             state: Call.State,
-            message: String?
+            message: String
         ) {
             if (state == Call.State.End || state == Call.State.Error) {
                 val newList = arrayListOf<CallStatisticsViewModel>()

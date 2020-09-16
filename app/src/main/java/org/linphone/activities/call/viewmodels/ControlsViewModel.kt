@@ -106,7 +106,7 @@ class ControlsViewModel : ViewModel() {
             core: Core,
             call: Call,
             state: Call.State,
-            message: String?
+            message: String
         ) {
             if (state == Call.State.StreamsRunning) isVideoUpdateInProgress.value = false
 

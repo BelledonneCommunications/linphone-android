@@ -70,19 +70,19 @@ class GroupInfoViewModel(val chatRoom: ChatRoom?) : ErrorReportingViewModel() {
             }
         }
 
-        override fun onSubjectChanged(chatRoom: ChatRoom?, eventLog: EventLog?) {
+        override fun onSubjectChanged(chatRoom: ChatRoom, eventLog: EventLog) {
             subject.value = chatRoom?.subject
         }
 
-        override fun onParticipantAdded(chatRoom: ChatRoom?, eventLog: EventLog?) {
+        override fun onParticipantAdded(chatRoom: ChatRoom, eventLog: EventLog) {
             updateParticipants()
         }
 
-        override fun onParticipantRemoved(chatRoom: ChatRoom?, eventLog: EventLog?) {
+        override fun onParticipantRemoved(chatRoom: ChatRoom, eventLog: EventLog) {
             updateParticipants()
         }
 
-        override fun onParticipantAdminStatusChanged(chatRoom: ChatRoom?, eventLog: EventLog?) {
+        override fun onParticipantAdminStatusChanged(chatRoom: ChatRoom, eventLog: EventLog) {
             val admin = chatRoom?.me?.isAdmin ?: false
             isMeAdmin.value = admin
             meAdminChangedEvent.value = Event(admin)

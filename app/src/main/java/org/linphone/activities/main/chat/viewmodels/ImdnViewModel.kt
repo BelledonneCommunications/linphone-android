@@ -42,8 +42,8 @@ class ImdnViewModel(private val chatMessage: ChatMessage) : ViewModel() {
 
     private val listener = object : ChatMessageListenerStub() {
         override fun onParticipantImdnStateChanged(
-            message: ChatMessage?,
-            state: ParticipantImdnState?
+            message: ChatMessage,
+            state: ParticipantImdnState
         ) {
             updateParticipantsLists()
         }

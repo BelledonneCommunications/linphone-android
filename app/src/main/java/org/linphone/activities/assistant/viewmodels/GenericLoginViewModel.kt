@@ -65,7 +65,7 @@ class GenericLoginViewModel(private val accountCreator: AccountCreator) : ViewMo
             core: Core,
             cfg: ProxyConfig,
             state: RegistrationState,
-            message: String?
+            message: String
         ) {
             if (cfg == proxyConfigToCheck) {
                 Log.i("[Assistant] [Generic Login] Registration state is $state: $message")

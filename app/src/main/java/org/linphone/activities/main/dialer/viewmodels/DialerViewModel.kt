@@ -80,7 +80,7 @@ class DialerViewModel : LogsUploadViewModel() {
             core: Core,
             call: Call,
             state: Call.State,
-            message: String?
+            message: String
         ) {
             atLeastOneCall.value = core.callsNb > 0
         }
