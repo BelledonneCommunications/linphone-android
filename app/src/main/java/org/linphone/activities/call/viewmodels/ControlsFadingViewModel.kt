@@ -50,7 +50,7 @@ class ControlsFadingViewModel : ViewModel() {
             core: Core,
             call: Call,
             state: Call.State,
-            message: String?
+            message: String
         ) {
             if (state == Call.State.StreamsRunning || state == Call.State.Updating || state == Call.State.UpdatedByRemote) {
                 val isVideoCall = coreContext.isVideoCallOrConferenceActive()

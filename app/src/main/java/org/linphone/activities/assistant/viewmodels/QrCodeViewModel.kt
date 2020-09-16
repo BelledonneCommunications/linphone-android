@@ -33,9 +33,9 @@ class QrCodeViewModel : ViewModel() {
     val showSwitchCamera = MutableLiveData<Boolean>()
 
     private val listener = object : CoreListenerStub() {
-        override fun onQrcodeFound(core: Core, result: String) {
+        override fun onQrcodeFound(core: Core, result: String?) {
             Log.i("[QR Code] Found [$result]")
-            qrCodeFoundEvent.postValue(Event(result))
+            if (result != null) qrCodeFoundEvent.postValue(Event(result))
         }
     }
 

@@ -47,7 +47,7 @@ class StatusViewModel : StatusViewModel() {
             core: Core,
             call: Call,
             on: Boolean,
-            authenticationToken: String
+            authenticationToken: String?
         ) {
             if (call.currentParams.mediaEncryption == MediaEncryption.ZRTP && !call.authenticationTokenVerified) {
                 showZrtpDialogEvent.value = Event(call)
@@ -60,7 +60,7 @@ class StatusViewModel : StatusViewModel() {
             core: Core,
             call: Call,
             state: Call.State,
-            message: String?
+            message: String
         ) {
             if (call == core.currentCall) {
                 updateEncryptionInfo(call)
