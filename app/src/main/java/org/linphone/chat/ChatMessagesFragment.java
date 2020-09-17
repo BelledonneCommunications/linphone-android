@@ -83,6 +83,7 @@ import org.linphone.core.EventLog;
 import org.linphone.core.Factory;
 import org.linphone.core.Participant;
 import org.linphone.core.ParticipantDevice;
+import org.linphone.core.ParticipantImdnState;
 import org.linphone.core.Reason;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
@@ -1446,6 +1447,10 @@ public class ChatMessagesFragment extends Fragment
         ((ChatMessagesGenericAdapter) mChatEventsList.getAdapter()).addToHistory(event);
         scrollToBottom();
     }
+
+    @Override
+    public void onChatMessageParticipantImdnStateChanged(
+            ChatRoom cr, ChatMessage msg, ParticipantImdnState state) {}
 
     @Override
     public void onSubjectChanged(ChatRoom cr, EventLog event) {
