@@ -73,7 +73,7 @@ class VideoSettingsViewModel : GenericSettingsViewModel() {
 
     val videoSizeListener = object : SettingListenerStub() {
         override fun onListValueChanged(position: Int) {
-            core.setPreferredVideoDefinition(Factory.instance().createVideoDefinitionFromName(videoSizeLabels.value.orEmpty()[position]))
+            core.setPreferredVideoDefinitionByName(videoSizeLabels.value.orEmpty()[position])
         }
     }
     val videoSizeIndex = MutableLiveData<Int>()
