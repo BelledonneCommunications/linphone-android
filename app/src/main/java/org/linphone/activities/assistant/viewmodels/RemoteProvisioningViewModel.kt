@@ -38,7 +38,7 @@ class RemoteProvisioningViewModel : ViewModel() {
     val fetchSuccessfulEvent = MutableLiveData<Event<Boolean>>()
 
     private val listener = object : CoreListenerStub() {
-        override fun onConfiguringStatus(core: Core, status: ConfiguringState, message: String) {
+        override fun onConfiguringStatus(core: Core, status: ConfiguringState, message: String?) {
             fetchInProgress.value = false
             when (status) {
                 ConfiguringState.Successful -> {
