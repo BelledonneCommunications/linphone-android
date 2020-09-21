@@ -23,6 +23,7 @@ import android.Manifest
 import android.annotation.TargetApi
 import android.app.KeyguardManager
 import android.content.Context
+import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
@@ -84,6 +85,10 @@ class IncomingCallActivity : GenericActivity() {
         val keyguardManager = getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
         val keyguardLocked = keyguardManager.isKeyguardLocked
         viewModel.screenLocked.value = keyguardLocked
+        if (keyguardLocked) {
+            // Forbid screen rotation to prevent keyguard to show up above incoming call view
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
+        }
 
         binding.buttons.setViewModel(viewModel)
 
