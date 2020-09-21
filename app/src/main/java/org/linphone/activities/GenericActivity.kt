@@ -48,8 +48,10 @@ abstract class GenericActivity : AppCompatActivity() {
         ensureCoreExists(applicationContext)
         hideSystemUI()
 
-        if (corePreferences.forcePortrait) {
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        requestedOrientation = if (corePreferences.forcePortrait) {
+            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        } else {
+            ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         }
 
         val nightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
