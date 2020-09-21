@@ -74,13 +74,6 @@ class IncomingCallActivity : GenericActivity() {
             }
         })
 
-        viewModel.callConnectedEvent.observe(this, {
-            it.consume {
-                Log.i("[Incoming Call Activity] Call connected, finish activity")
-                finish()
-            }
-        })
-
         viewModel.earlyMediaVideoEnabled.observe(this, {
             if (it) {
                 Log.i("[Incoming Call Activity] Early media video being received, set native window id")
@@ -89,7 +82,8 @@ class IncomingCallActivity : GenericActivity() {
         })
 
         val keyguardManager = getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
-        viewModel.screenLocked.value = keyguardManager.isKeyguardLocked
+        val keyguardLocked = keyguardManager.isKeyguardLocked
+        viewModel.screenLocked.value = keyguardLocked
 
         binding.buttons.setViewModel(viewModel)
 
