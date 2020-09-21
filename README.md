@@ -92,6 +92,8 @@ LinphoneSdkBuildDir=/home/<username>/linphone-sdk/build/
 
 If you encounter the `couldn't find "libc++_shared.so"` crash when the app starts, simply clean the project in Android Studio (under Build menu) and build again.
 
+If during the build you have `DataBinderMapperImpl.java error: cannot find symbol`, try building again.
+
 When submitting an issue, please attach the matching library logs. To enable them, go to Settings -> Advanced and toggle "Debug Mode".
 
 Then restart the app, reproduce the issue and upload the logs using the "Upload logs" button on the About page.
