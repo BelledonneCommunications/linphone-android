@@ -14,15 +14,9 @@ Copyright © Belledonne Communications
 
 Linphone is dual licensed, and is available either :
 
- - under a [GNU/GPLv3 license](https://www.gnu.org/licenses/gpl-3.0.en.html), for free (open source). Please make sure that you
+ - under a [GNU/GPLv3 license](https://www.gnu.org/licenses/gpl-3.0.en.html), for free (open source). Please make sure that you understand and agree with the terms  of this license before using it (see LICENSE file for details).
 
-understand and agree with the terms of this license before using it (see LICENSE file for
-
-details).
-
- - under a proprietary license, for a fee, to be used in closed source applications. Contact
-
-[Belledonne Communications](https://www.linphone.org/contact) for any question about costs and services.
+ - under a proprietary license, for a fee, to be used in closed source applications. Contact [Belledonne Communications](https://www.linphone.org/contact) for any question about costs and services.
 
 ### Documentation
 
@@ -88,15 +82,24 @@ LinphoneSdkBuildDir=/home/<username>/linphone-sdk/build/
 
 6. Debug app.
 
+## Known issues
+
+- If you encounter the `couldn't find "libc++_shared.so"` crash when the app starts, simply clean the project in Android Studio (under Build menu) and build again.
+Also check you have built the SDK for the right CPU architecture using the `-DLINPHONESDK_ANDROID_ARCHS=armv7,arm64,x86,x86_64` cmake parameter.
+
+- If during the build you have `DataBinderMapperImpl.java error: cannot find symbol`, try building again.
+
+- Push notification might not work when app has been started by Android Studio consecutively to an install. Remove the app from the recent activity view and start it again using the launcher icon to resolve this.
+
 ## Troubleshouting
 
-If you encounter the `couldn't find "libc++_shared.so"` crash when the app starts, simply clean the project in Android Studio (under Build menu) and build again.
+When submitting an issue on our [Github repository](https://github.com/BelledonneCommunications/linphone-android), please attach the matching library logs:
 
-If during the build you have `DataBinderMapperImpl.java error: cannot find symbol`, try building again.
+1. To enable them, go to Settings -> Advanced and toggle `Debug Mode`. If they are already enabled, clear them first using the `Reset logs` button on the About page.
 
-When submitting an issue, please attach the matching library logs. To enable them, go to Settings -> Advanced and toggle "Debug Mode".
+2. Then restart the app, reproduce the issue and upload the logs using the `Send logs` button on the About page.
 
-Then restart the app, reproduce the issue and upload the logs using the "Upload logs" button on the About page.
+3. Finally paste the link to the uploaded logs (link is already in the clipboard after a sucessful upload).
 
 ## Create an APK with a different package name
 
