@@ -5,8 +5,8 @@
 ]>
 
 <resources>
-    <string name="app_name">&appName;</string>
-    <string name="app_name_debug">&appName; (debug)</string>
+    <string name="app_name" translatable="false">&appName;</string>
+    <string name="app_name_debug" translatable="false">&appName; (debug)</string>
     <string name="service_name">&appName; Service</string>
     <string name="service_auto_start_description">&appName; has been started automatically</string>
     <string name="service_description">This is required to receive calls while in background</string>
@@ -16,8 +16,8 @@
     <string name="about_link" translatable="false">https://linphone.org</string>
     <string name="about_privacy_policy_link" translatable="false">https://www.linphone.org/terms-and-privacy</string>
     <string name="about_license_link" translatable="false">https://www.gnu.org/licenses/gpl-3.0.html</string>
-    <string name="about_version">&appName; Android %s</string>
-    <string name="about_liblinphone_sdk_version">&appName; SDK %s</string>
+    <string name="about_version" translatable="false">&appName; Android %s</string>
+    <string name="about_liblinphone_sdk_version" translatable="false">&appName; SDK %s</string>
     <string name="about_privacy_policy">Visit our privacy policy</string>
     <string name="about_text" translatable="false">GNU General Public License V3\n © 2010–2020 Belledonne Communications</string>
     <string name="about_send_log">Send logs</string>
