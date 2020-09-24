@@ -1,2 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<!DOCTYPE resources [
+<!ENTITY appName "Linphone">
+]>
+<resources>
+    <string name="service_name">&amp;appName; Service&appName; Service</string>
+</resources>
