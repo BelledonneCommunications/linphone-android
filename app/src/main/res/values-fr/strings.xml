@@ -3,6 +3,6 @@
 <!ENTITY appName "Linphone">
 ]>
 <resources>
-    <string name="service_name">&amp;appName; Service&appName; Service</string>
+    <string name="service_name">&appName; Service2</string>
     <string name="service_auto_start_description">&appName; a été démarré automatiquement</string>
 </resources>
