@@ -1,2 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<!DOCTYPE resources [
+<!ENTITY appName "Linphone">
+]>
+<resources>
+    <string name="service_name">&amp;appName; Service&appName; Service</string>
+    <string name="service_auto_start_description">&amp;appName; a été démarré automatiquement&appName; has been started automatically</string>
+</resources>
