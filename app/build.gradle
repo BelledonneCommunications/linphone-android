@@ -59,6 +59,9 @@ android {
         versionCode 4999
         versionName "${project.version}"
         applicationId getPackageName()
+        ndk {
+            debugSymbolLevel 'SYMBOL_TABLE'
+        }
     }
 
     applicationVariants.all { variant ->
