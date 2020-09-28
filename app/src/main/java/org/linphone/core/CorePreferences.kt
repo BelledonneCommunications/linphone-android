@@ -235,7 +235,7 @@ class CorePreferences constructor(private val context: Context) {
             config.setInt("app", "version_check_url_last_timestamp", value)
         }
 
-    /* Read only application settings previously in non_localizable_custom */
+    /* Read only application settings, some were previously in non_localizable_custom */
 
     val defaultDomain: String
         get() = config.getString("app", "default_domain", "sip.linphone.org")!!
@@ -278,6 +278,11 @@ class CorePreferences constructor(private val context: Context) {
 
     val showIncomingChatMessagesDeliveryStatus: Boolean
         get() = config.getBool("app", "show_incoming_messages_delivery_status", false)
+
+    // If enabled, this will cause the video to "freeze" on your correspondent screen
+    // as you won't send video packets anymore
+    val hideCameraPreviewInPipMode: Boolean
+        get() = config.getBool("app", "hide_camera_preview_in_pip_mode", false)
 
     /* Tabs */
 
