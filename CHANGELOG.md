@@ -10,14 +10,48 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
-## [4.3.0] - Unreleased
+## [5.0.0] - Unreleased
+
+This version is a full rewrite of the app in kotlin, using modern Android components like navigation, viewmodel, databinding, coroutines, etc...
+
+### Added
+
+- Using linphone SDK 5.0 API to better handle audio route (see linphone-sdk changelog)
+- More settings are available
+- Display video in recordings if available
+- "Swipe left to delete" action available on calls history, contacts & chat rooms list
+- Improved preview when sharing video files through the chat
+- Android 11 people & conversation compliant
+
+### Changed
+
+- Dropped Android 5 compatibility, Android 6 or higher (API 23) is now required to install the app
+- Call history view groups call from the same SIP URI (like linphone-iphone)
+- Improved how Android native contacts are used
+- Removed "back-to-call" button from dialer & chat views, use notification or overlay (see call settings)
+- Switched to material design for text input fields & switches
+- Launcher shortcuts can be to either contacts or chat rooms
+
+## [4.3.1] - 2020-09-25
+
+### Fixed
+- Added phoneCall foregroundServiceType for Android Q and newer
+- Contact sorting when first character has an accent
+
+### Changed
+- SDK updated to 4.4.2
+- Updated translations
+
+## [4.3.0] - 2020-06-23
 
 ### Added
 - Forward message between chat rooms
-- Ephemeral messages (auto destroy after a given timeout once read) for encrypted chat rooms
 
 ### Changed
 - Files from chat messages are now stored in a private space and will be deleted when the message or room will be deleted
+- SDK updated to 4.4 version
+- Fixed ANRs
+- Fixed various issues
 
 ## [4.2.3] - 2020-03-03
 
