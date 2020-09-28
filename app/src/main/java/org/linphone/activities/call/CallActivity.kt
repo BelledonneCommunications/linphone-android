@@ -26,6 +26,7 @@ import android.view.MotionEvent
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.call.viewmodels.ControlsFadingViewModel
 import org.linphone.activities.call.viewmodels.SharedCallViewModel
@@ -134,6 +135,11 @@ class CallActivity : ProximitySensorActivity() {
         if (isInPictureInPictureMode) {
             viewModel.areControlsHidden.value = true
         }
-        viewModel.isVideoPreviewHidden.value = isInPictureInPictureMode
+
+        if (corePreferences.hideCameraPreviewInPipMode) {
+            viewModel.isVideoPreviewHidden.value = isInPictureInPictureMode
+        } else {
+            viewModel.isVideoPreviewResizedForPip.value = isInPictureInPictureMode
+        }
     }
 }

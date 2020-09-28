@@ -30,8 +30,9 @@
 
             <org.linphone.mediastream.video.capture.CaptureTextureView
                 android:onTouch="@{previewTouchListener}"
-                android:visibility="@{viewModel.isVideoPreviewHidden ? View.INVISIBLE : View.VISIBLE}"
+                android:visibility="@{viewModel.isVideoPreviewHidden ? View.INVISIBLE : View.VISIBLE, default=visible}"
                 android:id="@+id/local_preview_video_surface"
+                android:layout_size="@{viewModel.isVideoPreviewResizedForPip ? @dimen/video_preview_pip_max_size : @dimen/video_preview_max_size}"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
                 android:layout_alignParentRight="true"
