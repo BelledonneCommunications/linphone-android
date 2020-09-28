@@ -102,6 +102,7 @@
 
         <activity android:name=".activities.call.CallActivity"
             android:launchMode="singleTop"
+            android:resizeableActivity="true"
             android:supportsPictureInPicture="true" />
 
         <activity android:name=".activities.call.IncomingCallActivity"

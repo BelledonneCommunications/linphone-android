@@ -38,6 +38,7 @@ class ControlsFadingViewModel : ViewModel() {
     val areControlsHidden = MutableLiveData<Boolean>()
 
     val isVideoPreviewHidden = MutableLiveData<Boolean>()
+    val isVideoPreviewResizedForPip = MutableLiveData<Boolean>()
 
     private val videoEnabled = MutableLiveData<Boolean>()
     private val nonEarpieceOutputAudioDevice = MutableLiveData<Boolean>()
@@ -78,6 +79,7 @@ class ControlsFadingViewModel : ViewModel() {
 
         areControlsHidden.value = false
         isVideoPreviewHidden.value = false
+        isVideoPreviewResizedForPip.value = false
         nonEarpieceOutputAudioDevice.value = coreContext.core.outputAudioDevice?.type != AudioDevice.Type.Earpiece
 
         val isVideoCall = coreContext.isVideoCallOrConferenceActive()
