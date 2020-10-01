@@ -614,6 +614,7 @@ class NotificationsManager(private val context: Context) {
         val notifiable: Notifiable? = chatNotificationsMap[address]
         if (notifiable != null) {
             Log.i("[Notifications Manager] Dismissing notification for chat room $room with id ${notifiable.notificationId}")
+            notifiable.messages.clear()
             cancel(notifiable.notificationId)
         }
     }
