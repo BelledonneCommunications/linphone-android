@@ -107,6 +107,12 @@ class CorePreferences constructor(private val context: Context) {
             config.setBool("app", "make_downloaded_images_public_in_gallery", value)
         }
 
+    var hideChatMessageContentInNotification: Boolean
+        get() = config.getBool("app", "hide_chat_message_content_in_notification", false)
+        set(value) {
+            config.setBool("app", "hide_chat_message_content_in_notification", value)
+        }
+
     var hideEmptyRooms: Boolean
         get() = config.getBool("app", "hide_empty_chat_rooms", true)
         set(value) {

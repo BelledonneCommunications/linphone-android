@@ -46,6 +46,7 @@ import org.linphone.compatibility.Compatibility
 import org.linphone.contact.Contact
 import org.linphone.core.*
 import org.linphone.core.tools.Log
+import org.linphone.utils.AppUtils
 import org.linphone.utils.FileUtils
 import org.linphone.utils.ImageUtils
 import org.linphone.utils.LinphoneUtils
@@ -636,13 +637,26 @@ class NotificationsManager(private val context: Context) {
                 contact.getPerson()
             } else {
                 val builder = Person.Builder().setName(message.sender)
-                val userIcon = if (message.senderAvatar != null) IconCompat.createWithBitmap(message.senderAvatar) else IconCompat.createWithResource(context, R.drawable.avatar)
+                val userIcon =
+                    if (message.senderAvatar != null) {
+                        IconCompat.createWithBitmap(message.senderAvatar)
+                    } else {
+                        IconCompat.createWithResource(context, R.drawable.avatar)
+                    }
                 if (userIcon != null) builder.setIcon(userIcon)
                 builder.build()
             }
 
-            val msg = NotificationCompat.MessagingStyle.Message(message.message, message.time, person)
-            if (message.filePath != null) msg.setData(message.fileMime, message.filePath)
+            val msg = if (!corePreferences.hideChatMessageContentInNotification) {
+                NotificationCompat.MessagingStyle.Message(message.message, message.time, person)
+            } else {
+                NotificationCompat.MessagingStyle.Message(AppUtils.getString(R.string.chat_message_notification_hidden_content), message.time, person)
+            }
+
+            if (message.filePath != null && !corePreferences.hideChatMessageContentInNotification) {
+                msg.setData(message.fileMime, message.filePath)
+            }
+
             style.addMessage(msg)
         }
 
