@@ -33,9 +33,9 @@ import org.linphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
-import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.dialer.viewmodels.DialerViewModel
+import org.linphone.activities.main.fragments.SecureFragment
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.tools.Log
@@ -43,7 +43,7 @@ import org.linphone.databinding.DialerFragmentBinding
 import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
 
-class DialerFragment : GenericFragment<DialerFragmentBinding>() {
+class DialerFragment : SecureFragment<DialerFragmentBinding>() {
     private lateinit var viewModel: DialerViewModel
     private lateinit var sharedViewModel: SharedMainViewModel
 
