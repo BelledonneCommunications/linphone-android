@@ -41,6 +41,7 @@ import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.activities.GenericActivity
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.chat.ChatScrollListener
 import org.linphone.activities.main.chat.adapters.ChatMessagesListAdapter
@@ -95,6 +96,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         val chatRoom = sharedViewModel.selectedChatRoom.value
         chatRoom ?: return
         chatRoomAddress = chatRoom.peerAddress.asStringUriOnly()
+        isSecure = chatRoom.currentParams.encryptionEnabled()
 
         viewModel = ViewModelProvider(
             this,

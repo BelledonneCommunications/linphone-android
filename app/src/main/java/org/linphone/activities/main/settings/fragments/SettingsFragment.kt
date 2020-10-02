@@ -23,8 +23,8 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
-import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.*
+import org.linphone.activities.main.fragments.SecureFragment
 import org.linphone.activities.main.navigateToAccountSettings
 import org.linphone.activities.main.navigateToAudioSettings
 import org.linphone.activities.main.navigateToTunnelSettings
@@ -34,7 +34,7 @@ import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsFragmentBinding
 
-class SettingsFragment : GenericFragment<SettingsFragmentBinding>() {
+class SettingsFragment : SecureFragment<SettingsFragmentBinding>() {
     private lateinit var sharedViewModel: SharedMainViewModel
     private lateinit var viewModel: SettingsViewModel
 

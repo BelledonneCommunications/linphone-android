@@ -23,13 +23,13 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
-import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.chat.viewmodels.DevicesListViewModel
 import org.linphone.activities.main.chat.viewmodels.DevicesListViewModelFactory
+import org.linphone.activities.main.fragments.SecureFragment
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.databinding.ChatRoomDevicesFragmentBinding
 
-class DevicesFragment : GenericFragment<ChatRoomDevicesFragmentBinding>() {
+class DevicesFragment : SecureFragment<ChatRoomDevicesFragmentBinding>() {
     private lateinit var listViewModel: DevicesListViewModel
     private lateinit var sharedViewModel: SharedMainViewModel
 
@@ -46,6 +46,8 @@ class DevicesFragment : GenericFragment<ChatRoomDevicesFragmentBinding>() {
 
         val chatRoom = sharedViewModel.selectedChatRoom.value
         chatRoom ?: return
+
+        isSecure = chatRoom.currentParams.encryptionEnabled()
 
         listViewModel = ViewModelProvider(
             this,
