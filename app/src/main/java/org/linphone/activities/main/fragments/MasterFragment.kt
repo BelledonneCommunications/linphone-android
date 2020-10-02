@@ -24,7 +24,6 @@ import android.os.Bundle
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
-import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
 import org.linphone.utils.AppUtils
@@ -35,7 +34,7 @@ import org.linphone.utils.SelectionListAdapter
  * This fragment can be inherited by all fragments that will display a list
  * where items can be selected for removal through the ListTopBarFragment
  */
-abstract class MasterFragment<T : ViewDataBinding, U : SelectionListAdapter<*, *>> : GenericFragment<T>() {
+abstract class MasterFragment<T : ViewDataBinding, U : SelectionListAdapter<*, *>> : SecureFragment<T>() {
     protected var _adapter: U? = null
     protected val adapter get() = _adapter!!
 

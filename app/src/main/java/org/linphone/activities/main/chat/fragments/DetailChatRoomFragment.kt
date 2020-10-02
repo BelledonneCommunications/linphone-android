@@ -95,6 +95,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         val chatRoom = sharedViewModel.selectedChatRoom.value
         chatRoom ?: return
         chatRoomAddress = chatRoom.peerAddress.asStringUriOnly()
+        isSecure = chatRoom.currentParams.encryptionEnabled()
 
         viewModel = ViewModelProvider(
             this,
