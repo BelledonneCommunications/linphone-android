@@ -198,6 +198,7 @@
         <item quantity="one">@string/chat_room_delete_one_dialog</item>
         <item quantity="other">@string/chat_room_delete_many_dialog</item>
     </plurals>
+    <string name="chat_message_notification_hidden_content">&lt;Redacted&gt;</string>
 
     <!-- Recordings -->
     <string name="recordings_empty_list">No recordings</string>
@@ -412,6 +413,8 @@
     <string name="chat_settings_auto_download_max_size_summary">in bytes</string>
     <string name="chat_settings_downloaded_media_public_title">Make downloaded media public</string>
     <string name="chat_settings_downloaded_media_public_summary">Files in ephemeral messages won\'t be, doesn\'t work with auto download feature</string>
+    <string name="chat_settings_hide_notification_content_title">Hide message content in notifications</string>
+    <string name="chat_settings_hide_notification_content_summary">Only sender name will be displayed</string>
     <string name="chat_settings_launcher_shortcuts_title">Create shortcuts to chat rooms in launcher</string>
     <string name="chat_settings_launcher_shortcuts_summary">Will be replaced by contacts shortcuts if enabled</string>
     <string name="chat_settings_hide_empty_rooms_title">Hide empty chat rooms</string>
