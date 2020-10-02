@@ -25,16 +25,16 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.R
-import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.chat.adapters.ImdnAdapter
 import org.linphone.activities.main.chat.viewmodels.ImdnViewModel
 import org.linphone.activities.main.chat.viewmodels.ImdnViewModelFactory
+import org.linphone.activities.main.fragments.SecureFragment
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatRoomImdnFragmentBinding
 import org.linphone.utils.RecyclerViewHeaderDecoration
 
-class ImdnFragment : GenericFragment<ChatRoomImdnFragmentBinding>() {
+class ImdnFragment : SecureFragment<ChatRoomImdnFragmentBinding>() {
     private lateinit var viewModel: ImdnViewModel
     private lateinit var adapter: ImdnAdapter
     private lateinit var sharedViewModel: SharedMainViewModel
@@ -54,6 +54,8 @@ class ImdnFragment : GenericFragment<ChatRoomImdnFragmentBinding>() {
 
         val chatRoom = sharedViewModel.selectedChatRoom.value
         chatRoom ?: return
+
+        isSecure = chatRoom.currentParams.encryptionEnabled()
 
         if (arguments != null) {
             val messageId = arguments?.getString("MessageId")
