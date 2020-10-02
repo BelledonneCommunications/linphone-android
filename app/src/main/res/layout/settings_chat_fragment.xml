@@ -101,6 +101,13 @@
 
                 <include
                     layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/chat_settings_hide_notification_content_title}"
+                    linphone:subtitle="@{@string/chat_settings_hide_notification_content_summary}"
+                    linphone:listener="@{viewModel.hideNotificationContentListener}"
+                    linphone:checked="@={viewModel.hideNotificationContent}"/>
+
+                <include
+                    layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/chat_settings_launcher_shortcuts_title}"
                     linphone:subtitle="@{@string/chat_settings_launcher_shortcuts_summary}"
                     linphone:listener="@{viewModel.launcherShortcutsListener}"

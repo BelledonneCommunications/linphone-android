@@ -67,10 +67,19 @@ class ChatSettingsViewModel : GenericSettingsViewModel() {
 
     val downloadedMediaPublicListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
+            prefs.makePublicMediaFilesDownloaded = newValue
             downloadedMediaPublic.value = newValue
         }
     }
     val downloadedMediaPublic = MutableLiveData<Boolean>()
+
+    val hideNotificationContentListener = object : SettingListenerStub() {
+        override fun onBoolValueChanged(newValue: Boolean) {
+            prefs.hideChatMessageContentInNotification = newValue
+            hideNotificationContent.value = newValue
+        }
+    }
+    val hideNotificationContent = MutableLiveData<Boolean>()
 
     val launcherShortcutsListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
@@ -104,6 +113,7 @@ class ChatSettingsViewModel : GenericSettingsViewModel() {
 
     init {
         downloadedMediaPublic.value = prefs.makePublicMediaFilesDownloaded
+        hideNotificationContent.value = prefs.hideChatMessageContentInNotification
         initAutoDownloadList()
         launcherShortcuts.value = prefs.chatRoomShortcuts
         hideEmptyRooms.value = prefs.hideEmptyRooms
