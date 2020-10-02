@@ -23,13 +23,13 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
-import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.chat.viewmodels.EphemeralViewModel
 import org.linphone.activities.main.chat.viewmodels.EphemeralViewModelFactory
+import org.linphone.activities.main.fragments.SecureFragment
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.databinding.ChatRoomEphemeralFragmentBinding
 
-class EphemeralFragment : GenericFragment<ChatRoomEphemeralFragmentBinding>() {
+class EphemeralFragment : SecureFragment<ChatRoomEphemeralFragmentBinding>() {
     private lateinit var viewModel: EphemeralViewModel
     private lateinit var sharedViewModel: SharedMainViewModel
 
@@ -40,6 +40,7 @@ class EphemeralFragment : GenericFragment<ChatRoomEphemeralFragmentBinding>() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        isSecure = true
         binding.lifecycleOwner = this
 
         sharedViewModel = activity?.run {

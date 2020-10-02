@@ -71,6 +71,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        isSecure = true
         binding.lifecycleOwner = this
 
         listViewModel = ViewModelProvider(this).get(ChatRoomsListViewModel::class.java)

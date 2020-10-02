@@ -25,12 +25,12 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
-import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.MainActivity
+import org.linphone.activities.main.fragments.SecureFragment
 import org.linphone.databinding.AboutFragmentBinding
 import org.linphone.utils.AppUtils
 
-class AboutFragment : GenericFragment<AboutFragmentBinding>() {
+class AboutFragment : SecureFragment<AboutFragmentBinding>() {
     private lateinit var viewModel: AboutViewModel
 
     override fun getLayoutId(): Int = R.layout.about_fragment

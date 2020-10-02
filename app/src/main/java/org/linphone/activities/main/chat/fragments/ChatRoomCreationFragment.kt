@@ -26,15 +26,15 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.R
-import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.chat.adapters.ChatRoomCreationContactsAdapter
 import org.linphone.activities.main.chat.viewmodels.ChatRoomCreationViewModel
+import org.linphone.activities.main.fragments.SecureFragment
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.Address
 import org.linphone.databinding.ChatRoomCreationFragmentBinding
 
-class ChatRoomCreationFragment : GenericFragment<ChatRoomCreationFragmentBinding>() {
+class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>() {
     private lateinit var viewModel: ChatRoomCreationViewModel
     private lateinit var sharedViewModel: SharedMainViewModel
     private lateinit var adapter: ChatRoomCreationContactsAdapter
