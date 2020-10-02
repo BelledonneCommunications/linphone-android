@@ -26,12 +26,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.R
-import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.chat.GroupChatRoomMember
 import org.linphone.activities.main.chat.adapters.GroupInfoParticipantsAdapter
 import org.linphone.activities.main.chat.viewmodels.GroupInfoViewModel
 import org.linphone.activities.main.chat.viewmodels.GroupInfoViewModelFactory
+import org.linphone.activities.main.fragments.SecureFragment
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.Address
@@ -40,7 +40,7 @@ import org.linphone.core.ChatRoomCapabilities
 import org.linphone.databinding.ChatRoomGroupInfoFragmentBinding
 import org.linphone.utils.DialogUtils
 
-class GroupInfoFragment : GenericFragment<ChatRoomGroupInfoFragmentBinding>() {
+class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
     private lateinit var viewModel: GroupInfoViewModel
     private lateinit var sharedViewModel: SharedMainViewModel
     private lateinit var adapter: GroupInfoParticipantsAdapter
@@ -58,6 +58,7 @@ class GroupInfoFragment : GenericFragment<ChatRoomGroupInfoFragmentBinding>() {
         } ?: throw Exception("Invalid Activity")
 
         val chatRoom: ChatRoom? = sharedViewModel.selectedGroupChatRoom.value
+        isSecure = chatRoom?.currentParams?.encryptionEnabled() ?: false
 
         viewModel = ViewModelProvider(
             this,

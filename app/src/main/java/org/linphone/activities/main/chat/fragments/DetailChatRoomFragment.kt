@@ -102,6 +102,8 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         )[ChatRoomViewModel::class.java]
         binding.viewModel = viewModel
 
+        isSecure = viewModel.encryptedChatRoom
+
         chatSendingViewModel = ViewModelProvider(
             this,
             ChatMessageSendingViewModelFactory(chatRoom)
