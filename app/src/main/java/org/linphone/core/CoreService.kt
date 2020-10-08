@@ -38,6 +38,7 @@ class CoreService : CoreService() {
             Log.i("[Service] Starting as foreground")
             coreContext.notificationsManager.startForeground(this, true)
         } else if (corePreferences.keepServiceAlive) {
+            Log.i("[Service] Starting as foreground to keep app alive in background")
             coreContext.notificationsManager.startForeground(this, false)
         }
         return super.onStartCommand(intent, flags, startId)
@@ -48,10 +49,12 @@ class CoreService : CoreService() {
     }
 
     override fun showForegroundServiceNotification() {
+        Log.i("[Service] Starting service as foreground")
         coreContext.notificationsManager.startCallForeground(this)
     }
 
     override fun hideForegroundServiceNotification() {
+        Log.i("[Service] Stopping service as foreground")
         coreContext.notificationsManager.stopCallForeground()
     }
 
