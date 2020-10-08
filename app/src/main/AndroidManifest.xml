@@ -117,7 +117,7 @@
 
         <service
             android:name=".core.CoreService"
-            android:foregroundServiceType="phoneCall"
+            android:foregroundServiceType="phoneCall|camera|microphone"
             android:stopWithTask="false"
             android:label="@string/app_name" />
 
