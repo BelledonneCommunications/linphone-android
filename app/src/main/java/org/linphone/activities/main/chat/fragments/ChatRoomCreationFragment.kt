@@ -19,12 +19,14 @@
  */
 package org.linphone.activities.main.chat.fragments
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import org.linphone.LinphoneApplication
 import org.linphone.R
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.chat.adapters.ChatRoomCreationContactsAdapter
@@ -32,7 +34,9 @@ import org.linphone.activities.main.chat.viewmodels.ChatRoomCreationViewModel
 import org.linphone.activities.main.fragments.SecureFragment
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.Address
+import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatRoomCreationFragmentBinding
+import org.linphone.utils.PermissionHelper
 
 class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>() {
     private lateinit var viewModel: ChatRoomCreationViewModel
@@ -142,6 +146,11 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
                 (activity as MainActivity).showSnackBar(messageResourceId)
             }
         })
+
+        if (!PermissionHelper.get().hasReadContactsPermission()) {
+            Log.i("[Chat Room Creation] Asking for READ_CONTACTS permission")
+            requestPermissions(arrayOf(android.Manifest.permission.READ_CONTACTS), 0)
+        }
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -149,6 +158,23 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
         val participants = arguments?.getSerializable("participants") as? ArrayList<Address>
         if (participants != null && participants.size > 0) {
             viewModel.selectedAddresses.value = participants
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == 0) {
+            val granted = grantResults[0] == PackageManager.PERMISSION_GRANTED
+            if (granted) {
+                Log.i("[Chat Room Creation] READ_CONTACTS permission granted")
+                LinphoneApplication.coreContext.contactsManager.onReadContactsPermissionGranted()
+                LinphoneApplication.coreContext.contactsManager.fetchContactsAsync()
+            } else {
+                Log.w("[Chat Room Creation] READ_CONTACTS permission denied")
+            }
         }
     }
 }
