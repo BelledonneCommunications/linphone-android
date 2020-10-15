@@ -241,6 +241,12 @@ class CorePreferences constructor(private val context: Context) {
             config.setInt("app", "version_check_url_last_timestamp", value)
         }
 
+    var useLegacyPushNotificationFormat: Boolean
+        get() = config.getBool("net", "use_legacy_push_notification_params", false)
+        set(value) {
+            config.setBool("net", "use_legacy_push_notification_params", value)
+        }
+
     /* Read only application settings, some were previously in non_localizable_custom */
 
     val defaultDomain: String
@@ -397,6 +403,15 @@ class CorePreferences constructor(private val context: Context) {
 
     val ringtonePath: String
         get() = context.filesDir.absolutePath + "/share/sounds/linphone/rings/notes_of_the_optimistic.mkv"
+
+    val userCertificatesPath: String
+        get() = context.filesDir.absolutePath + "/user-certs"
+
+    val zrtpSecretsPath: String
+        get() = context.filesDir.absolutePath + "/zrtp_secrets"
+
+    val callHistoryDatabasePath: String
+        get() = context.filesDir.absolutePath + "/linphone-log-history.db"
 
     fun copyAssetsFromPackage() {
         copy("linphonerc_default", configPath)
