@@ -21,3 +21,5 @@
 #-renamesourcefileattribute SourceFile
 
 -keep public class * extends androidx.fragment.app.Fragment { *; }
+-keep public class * extends com.bumptech.glide.module.AppGlideModule
+-keep class com.bumptech.glide.GeneratedAppGlideModuleImpl
