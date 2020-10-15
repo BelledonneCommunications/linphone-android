@@ -35,7 +35,7 @@
 
         <RelativeLayout
             android:id="@+id/main_account"
-            android:onClick="@{() -> viewModel.defaultAccount.accountsSettingsListener.onAccountClicked(viewModel.defaultAccount.identity)}"
+            android:onClick="@{() -> viewModel.defaultAccountViewModel.accountsSettingsListener.onAccountClicked(viewModel.defaultAccountViewModel.identity)}"
             android:enabled="@{viewModel.defaultAccountFound}"
             android:visibility="@{viewModel.showAccounts ? View.VISIBLE : View.GONE}"
             android:layout_width="match_parent"
@@ -82,7 +82,7 @@
 
                 <TextView
                     android:visibility="@{viewModel.defaultAccountFound ? View.VISIBLE : View.GONE}"
-                    android:text="@{viewModel.defaultAccount.displayName}"
+                    android:text="@{viewModel.defaultAccountViewModel.displayName}"
                     android:textColor="?attr/lightToolbarTextColor"
                     android:textStyle="bold"
                     android:textSize="18sp"
@@ -91,7 +91,7 @@
 
                 <TextView
                     android:visibility="@{viewModel.defaultAccountFound ? View.VISIBLE : View.GONE}"
-                    android:text="@{viewModel.defaultAccount.displayUsernameInsteadOfIdentity ? viewModel.defaultAccount.userName : viewModel.defaultAccount.identity}"
+                    android:text="@{viewModel.defaultAccountViewModel.displayUsernameInsteadOfIdentity ? viewModel.defaultAccountViewModel.userName : viewModel.defaultAccountViewModel.identity}"
                     style="@style/sip_uri_small_font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
@@ -99,8 +99,8 @@
             </LinearLayout>
 
             <ImageView
-                android:src="@{viewModel.defaultAccount.iconResource}"
-                android:contentDescription="@{viewModel.defaultAccount.iconContentDescription}"
+                android:src="@{viewModel.defaultAccountViewModel.iconResource}"
+                android:contentDescription="@{viewModel.defaultAccountViewModel.iconContentDescription}"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_alignParentTop="true"

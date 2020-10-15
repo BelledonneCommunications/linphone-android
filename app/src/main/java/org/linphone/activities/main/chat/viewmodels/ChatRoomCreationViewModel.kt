@@ -107,7 +107,7 @@ class ChatRoomCreationViewModel : ErrorReportingViewModel() {
     }
 
     fun updateContactsList() {
-        val domain = if (sipContactsSelected.value == true) coreContext.core.defaultProxyConfig?.domain ?: "" else ""
+        val domain = if (sipContactsSelected.value == true) coreContext.core.defaultAccount?.params?.domain ?: "" else ""
         val results = coreContext.contactsManager.magicSearch.getContactListFromFilter(filter.value.orEmpty(), domain)
 
         val list = arrayListOf<SearchResult>()
@@ -145,7 +145,7 @@ class ChatRoomCreationViewModel : ErrorReportingViewModel() {
 
     fun createOneToOneChat(searchResult: SearchResult) {
         waitForChatRoomCreation.value = true
-        val defaultProxyConfig = coreContext.core.defaultProxyConfig
+        val defaultAccount = coreContext.core.defaultAccount
         var room: ChatRoom?
 
         val address = searchResult.address ?: coreContext.core.interpretUrl(searchResult.phoneNumber ?: "")
@@ -168,24 +168,24 @@ class ChatRoomCreationViewModel : ErrorReportingViewModel() {
 
         val participants = arrayOf(searchResult.address)
 
-        // Use proxy config contact instead of identity because we need GRUU if FlexisipChat backend
-        room = coreContext.core.searchChatRoom(params, defaultProxyConfig?.contact, null, participants)
+        // TODO //FIXME Use account contact instead of identity because we need GRUU if FlexisipChat backend
+        room = coreContext.core.searchChatRoom(params, defaultAccount?.contactAddress, null, participants)
         if (room == null) {
-            Log.w("[Chat Room Creation] Couldn't find existing 1-1 chat room with remote ${searchResult.address?.asStringUriOnly()}, encryption=$encrypted and local identity ${defaultProxyConfig?.contact?.asStringUriOnly()}")
-            // Use proxy config contact instead of identity because we need GRUU if FlexisipChat backend
-            room = coreContext.core.createChatRoom(params, defaultProxyConfig?.contact, participants)
+            Log.w("[Chat Room Creation] Couldn't find existing 1-1 chat room with remote ${searchResult.address?.asStringUriOnly()}, encryption=$encrypted and local identity ${defaultAccount?.contactAddress?.asStringUriOnly()}")
+            // TODO //FIXME Use account contact instead of identity because we need GRUU if FlexisipChat backend
+            room = coreContext.core.createChatRoom(params, defaultAccount?.contactAddress, participants)
             if (encrypted) {
                 room?.addListener(listener)
             } else {
                 if (room != null) {
                     chatRoomCreatedEvent.value = Event(room)
                 } else {
-                    Log.e("[Chat Room Creation] Couldn't create chat room with remote ${searchResult.address?.asStringUriOnly()} and local identity ${defaultProxyConfig?.contact?.asStringUriOnly()}")
+                    Log.e("[Chat Room Creation] Couldn't create chat room with remote ${searchResult.address?.asStringUriOnly()} and local identity ${defaultAccount?.contactAddress?.asStringUriOnly()}")
                 }
                 waitForChatRoomCreation.value = false
             }
         } else {
-            Log.i("[Chat Room Creation] Found existing 1-1 chat room with remote ${searchResult.address?.asStringUriOnly()}, encryption=$encrypted and local identity ${defaultProxyConfig?.contact?.asStringUriOnly()}")
+            Log.i("[Chat Room Creation] Found existing 1-1 chat room with remote ${searchResult.address?.asStringUriOnly()}, encryption=$encrypted and local identity ${defaultAccount?.contactAddress?.asStringUriOnly()}")
             chatRoomCreatedEvent.value = Event(room)
             waitForChatRoomCreation.value = false
         }
