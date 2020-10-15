@@ -123,7 +123,7 @@ class GroupInfoViewModel(val chatRoom: ChatRoom?) : ErrorReportingViewModel() {
             index += 1
         }
 
-        val chatRoom: ChatRoom? = coreContext.core.createChatRoom(params, coreContext.core.defaultProxyConfig?.identityAddress, addresses)
+        val chatRoom: ChatRoom? = coreContext.core.createChatRoom(params, coreContext.core.defaultAccount?.params?.identityAddress, addresses)
         chatRoom?.addListener(listener)
         if (chatRoom == null) {
             Log.e("[Chat Room Group Info] Couldn't create chat room!")

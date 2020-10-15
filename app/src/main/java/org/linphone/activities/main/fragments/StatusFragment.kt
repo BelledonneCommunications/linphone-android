@@ -48,11 +48,11 @@ class StatusFragment : GenericFragment<StatusFragmentBinding>() {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
 
-        sharedViewModel.proxyConfigRemoved.observe(viewLifecycleOwner, {
-            Log.i("[Status Fragment] A proxy config was removed, update default proxy state")
-            val defaultProxy = coreContext.core.defaultProxyConfig
-            if (defaultProxy != null) {
-                viewModel.updateDefaultProxyConfigRegistrationStatus(defaultProxy.state)
+        sharedViewModel.accountRemoved.observe(viewLifecycleOwner, {
+            Log.i("[Status Fragment] An account was removed, update default proxy state")
+            val defaultAccount = coreContext.core.defaultAccount
+            if (defaultAccount != null) {
+                viewModel.updateDefaultAccountRegistrationStatus(defaultAccount.state)
             }
         })
 

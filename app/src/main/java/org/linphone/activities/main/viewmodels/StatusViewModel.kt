@@ -41,7 +41,7 @@ open class StatusViewModel : ViewModel() {
             state: RegistrationState,
             message: String
         ) {
-            updateDefaultProxyConfigRegistrationStatus(state)
+            updateDefaultAccountRegistrationStatus(state)
         }
 
         override fun onNotifyReceived(
@@ -71,11 +71,11 @@ open class StatusViewModel : ViewModel() {
         core.addListener(listener)
 
         var state: RegistrationState = RegistrationState.None
-        val defaultProxyConfig = core.defaultProxyConfig
-        if (defaultProxyConfig != null) {
-            state = defaultProxyConfig.state
+        val defaultAccount = core.defaultAccount
+        if (defaultAccount != null) {
+            state = defaultAccount.state
         }
-        updateDefaultProxyConfigRegistrationStatus(state)
+        updateDefaultAccountRegistrationStatus(state)
     }
 
     override fun onCleared() {
@@ -87,7 +87,7 @@ open class StatusViewModel : ViewModel() {
         coreContext.core.refreshRegisters()
     }
 
-    fun updateDefaultProxyConfigRegistrationStatus(state: RegistrationState) {
+    fun updateDefaultAccountRegistrationStatus(state: RegistrationState) {
         registrationStatusText.value = getStatusIconText(state)
         registrationStatusDrawable.value = getStatusIconResource(state)
     }

@@ -35,7 +35,7 @@ class SideMenuViewModel : ViewModel() {
     val showAbout: Boolean = corePreferences.showAboutInSideMenu
     val showQuit: Boolean = corePreferences.showQuitInSideMenu
 
-    val defaultAccount = MutableLiveData<AccountSettingsViewModel>()
+    val defaultAccountViewModel = MutableLiveData<AccountSettingsViewModel>()
     val defaultAccountFound = MutableLiveData<Boolean>()
     val defaultAccountAvatar = MutableLiveData<String>()
 
@@ -56,7 +56,7 @@ class SideMenuViewModel : ViewModel() {
             state: RegistrationState,
             message: String
         ) {
-            if (coreContext.core.proxyConfigList.size != accounts.value?.size) {
+            if (coreContext.core.accountList.size != accounts.value?.size) {
                 // Only refresh the list if a proxy has been added or removed
                 updateAccountsList()
             }
@@ -77,18 +77,18 @@ class SideMenuViewModel : ViewModel() {
 
     fun updateAccountsList() {
         val list = arrayListOf<AccountSettingsViewModel>()
-        if (coreContext.core.proxyConfigList.isNotEmpty()) {
-            val defaultProxyConfig = coreContext.core.defaultProxyConfig
-            if (defaultProxyConfig != null) {
-                val defaultViewModel = AccountSettingsViewModel(defaultProxyConfig)
+        if (coreContext.core.accountList.isNotEmpty()) {
+            val defaultAccount = coreContext.core.defaultAccount
+            if (defaultAccount != null) {
+                val defaultViewModel = AccountSettingsViewModel(defaultAccount)
                 defaultViewModel.accountsSettingsListener = accountClickListener
-                defaultAccount.value = defaultViewModel
+                defaultAccountViewModel.value = defaultViewModel
                 defaultAccountFound.value = true
             }
 
-            for (proxy in coreContext.core.proxyConfigList) {
-                if (proxy != coreContext.core.defaultProxyConfig) {
-                    val viewModel = AccountSettingsViewModel(proxy)
+            for (account in coreContext.core.accountList) {
+                if (account != coreContext.core.defaultAccount) {
+                    val viewModel = AccountSettingsViewModel(account)
                     viewModel.accountsSettingsListener = accountClickListener
                     list.add(viewModel)
                 }

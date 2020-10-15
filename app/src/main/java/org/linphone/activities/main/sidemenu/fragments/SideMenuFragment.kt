@@ -64,8 +64,8 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
 
-        sharedViewModel.proxyConfigRemoved.observe(viewLifecycleOwner, {
-            Log.i("[Side Menu] Proxy config removed, update accounts list")
+        sharedViewModel.accountRemoved.observe(viewLifecycleOwner, {
+            Log.i("[Side Menu] Account removed, update accounts list")
             viewModel.updateAccountsList()
         })
 
