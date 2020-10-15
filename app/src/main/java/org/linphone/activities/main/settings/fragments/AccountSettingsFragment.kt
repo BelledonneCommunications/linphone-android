@@ -56,9 +56,9 @@ class AccountSettingsFragment : GenericFragment<SettingsAccountFragmentBinding>(
         viewModel.linkPhoneNumberEvent.observe(viewLifecycleOwner, {
             it.consume {
                 if (findNavController().currentDestination?.id == R.id.accountSettingsFragment) {
-                    val authInfo = viewModel.proxyConfig.findAuthInfo()
+                    val authInfo = viewModel.account.findAuthInfo()
                     if (authInfo == null) {
-                        Log.e("[Account Settings] Failed to find auth info for proxy config ${viewModel.proxyConfig}")
+                        Log.e("[Account Settings] Failed to find auth info for account ${viewModel.account}")
                     } else {
                         val args = Bundle()
                         args.putString("Username", authInfo.username)
@@ -73,9 +73,9 @@ class AccountSettingsFragment : GenericFragment<SettingsAccountFragmentBinding>(
             }
         })
 
-        viewModel.proxyConfigRemovedEvent.observe(viewLifecycleOwner, {
+        viewModel.accountRemovedEvent.observe(viewLifecycleOwner, {
             it.consume {
-                sharedViewModel.proxyConfigRemoved.value = true
+                sharedViewModel.accountRemoved.value = true
                 findNavController().navigateUp()
             }
         })

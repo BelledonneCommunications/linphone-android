@@ -39,16 +39,16 @@ class AccountSettingsViewModelFactory(private val identity: String) :
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        for (proxy in coreContext.core.proxyConfigList) {
-            if (proxy.identityAddress?.asStringUriOnly() == identity) {
-                return AccountSettingsViewModel(proxy) as T
+        for (account in coreContext.core.accountList) {
+            if (account.params.identityAddress?.asStringUriOnly() == identity) {
+                return AccountSettingsViewModel(account) as T
             }
         }
-        return AccountSettingsViewModel(coreContext.core.defaultProxyConfig!!) as T
+        return AccountSettingsViewModel(coreContext.core.defaultAccount!!) as T
     }
 }
 
-class AccountSettingsViewModel(val proxyConfig: ProxyConfig) : GenericSettingsViewModel() {
+class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel() {
     val isDefault = MutableLiveData<Boolean>()
 
     val displayName = MutableLiveData<String>()
@@ -62,25 +62,24 @@ class AccountSettingsViewModel(val proxyConfig: ProxyConfig) : GenericSettingsVi
 
     val waitForUnregister = MutableLiveData<Boolean>()
 
-    val proxyConfigRemovedEvent: MutableLiveData<Event<Boolean>> by lazy {
+    val accountRemovedEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
 
     val displayUsernameInsteadOfIdentity = corePreferences.replaceSipUriByUsername
 
-    private var proxyConfigToDelete: ProxyConfig? = null
+    private var accountToDelete: Account? = null
 
-    val listener: CoreListenerStub = object : CoreListenerStub() {
+    val listener: AccountListenerStub = object : AccountListenerStub() {
         override fun onRegistrationStateChanged(
-            core: Core,
-            cfg: ProxyConfig,
+            account: Account,
             state: RegistrationState,
             message: String
         ) {
-            if (state == RegistrationState.Cleared && cfg == proxyConfigToDelete) {
-                Log.i("[Account Settings] Proxy config to remove registration is now cleared")
+            if (state == RegistrationState.Cleared && account == accountToDelete) {
+                Log.i("[Account Settings] Account to remove registration is now cleared")
                 waitForUnregister.value = false
-                deleteProxyConfig(cfg)
+                deleteAccount(account)
             } else {
                 update()
             }
@@ -119,16 +118,14 @@ class AccountSettingsViewModel(val proxyConfig: ProxyConfig) : GenericSettingsVi
 
     val displayNameListener = object : SettingListenerStub() {
         override fun onTextValueChanged(newValue: String) {
-            proxyConfig.identityAddress?.displayName = newValue
+            account.params.identityAddress?.displayName = newValue
         }
     }
     // displayName mutable is above
 
     val disableListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
-            proxyConfig.edit()
-            proxyConfig.enableRegister(!newValue)
-            proxyConfig.done()
+            account.params.registerEnabled = !newValue
         }
     }
     val disable = MutableLiveData<Boolean>()
@@ -136,14 +133,14 @@ class AccountSettingsViewModel(val proxyConfig: ProxyConfig) : GenericSettingsVi
     val isDefaultListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
             if (newValue) {
-                core.defaultProxyConfig = proxyConfig
+                core.defaultAccount = account
             }
         }
     }
     // isDefault mutable is above
 
-    private fun deleteProxyConfig(cfg: ProxyConfig) {
-        val authInfo = cfg.findAuthInfo()
+    private fun deleteAccount(account: Account) {
+        val authInfo = account.findAuthInfo()
         if (authInfo != null) {
             Log.i("[Account Settings] Found auth info $authInfo, removing it.")
             core.removeAuthInfo(authInfo)
@@ -151,42 +148,40 @@ class AccountSettingsViewModel(val proxyConfig: ProxyConfig) : GenericSettingsVi
             Log.w("[Account Settings] Couldn't find matching auth info...")
         }
 
-        core.removeProxyConfig(cfg)
-        proxyConfigRemovedEvent.value = Event(true)
+        core.removeAccount(account)
+        accountRemovedEvent.value = Event(true)
     }
 
     val deleteListener = object : SettingListenerStub() {
         override fun onClicked() {
-            proxyConfigToDelete = proxyConfig
+            accountToDelete = account
 
-            val registered = proxyConfig.state == RegistrationState.Ok
+            val registered = account.state == RegistrationState.Ok
             waitForUnregister.value = registered
 
-            if (core.defaultProxyConfig == proxyConfig) {
-                Log.i("[Account Settings] Proxy config  was default, let's look for a replacement")
-                for (proxyConfigIterator in core.proxyConfigList) {
-                    if (proxyConfig != proxyConfigIterator) {
-                        core.defaultProxyConfig = proxyConfigIterator
-                        Log.i("[Account Settings] New default proxy config is $proxyConfigIterator")
+            if (core.defaultAccount == account) {
+                Log.i("[Account Settings] Account was default, let's look for a replacement")
+                for (accountIterator in core.accountList) {
+                    if (account != accountIterator) {
+                        core.defaultAccount = accountIterator
+                        Log.i("[Account Settings] New default account is $accountIterator")
                         break
                     }
                 }
             }
 
-            proxyConfig.edit()
-            proxyConfig.enableRegister(false)
-            proxyConfig.done()
+            account.params.registerEnabled = false
 
             if (!registered) {
-                Log.w("[Account Settings] Proxy config isn't registered, don't unregister before removing it")
-                deleteProxyConfig(proxyConfig)
+                Log.w("[Account Settings] Account isn't registered, don't unregister before removing it")
+                deleteAccount(account)
             }
         }
     }
 
     val pushNotificationListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
-            proxyConfig.isPushNotificationAllowed = newValue
+            account.params.pushNotificationAllowed = newValue
         }
     }
     val pushNotification = MutableLiveData<Boolean>()
@@ -202,24 +197,21 @@ class AccountSettingsViewModel(val proxyConfig: ProxyConfig) : GenericSettingsVi
 
     val proxyListener = object : SettingListenerStub() {
         override fun onTextValueChanged(newValue: String) {
-            proxyConfig.serverAddr = newValue
-            if (outboundProxy.value == true) {
-                // TODO
-            }
+            account.params.serverAddr = newValue
         }
     }
     val proxy = MutableLiveData<String>()
 
     val outboundProxyListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
-            // TODO
+            account.params.outboundProxyEnabled = newValue
         }
     }
     val outboundProxy = MutableLiveData<Boolean>()
 
     val stunServerListener = object : SettingListenerStub() {
         override fun onTextValueChanged(newValue: String) {
-            proxyConfig.natPolicy?.stunServer = newValue
+            account.params.natPolicy?.stunServer = newValue
             if (newValue.isEmpty()) ice.value = false
             stunServer.value = newValue
         }
@@ -228,14 +220,14 @@ class AccountSettingsViewModel(val proxyConfig: ProxyConfig) : GenericSettingsVi
 
     val iceListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
-            proxyConfig.natPolicy?.enableIce(newValue)
+            account.params.natPolicy?.enableIce(newValue)
         }
     }
     val ice = MutableLiveData<Boolean>()
 
     val avpfListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
-            proxyConfig.avpfMode = if (newValue) AVPFMode.Enabled else AVPFMode.Disabled
+            account.params.avpfMode = if (newValue) AVPFMode.Enabled else AVPFMode.Disabled
         }
     }
     val avpf = MutableLiveData<Boolean>()
@@ -243,7 +235,7 @@ class AccountSettingsViewModel(val proxyConfig: ProxyConfig) : GenericSettingsVi
     val avpfRrIntervalListener = object : SettingListenerStub() {
         override fun onTextValueChanged(newValue: String) {
             try {
-                proxyConfig.avpfRrInterval = newValue.toInt()
+                account.params.avpfRrInterval = newValue.toInt()
             } catch (nfe: NumberFormatException) {
             }
         }
@@ -253,7 +245,7 @@ class AccountSettingsViewModel(val proxyConfig: ProxyConfig) : GenericSettingsVi
     val expiresListener = object : SettingListenerStub() {
         override fun onTextValueChanged(newValue: String) {
             try {
-                proxyConfig.expires = newValue.toInt()
+                account.params.expires = newValue.toInt()
             } catch (nfe: NumberFormatException) {
             }
         }
@@ -262,14 +254,14 @@ class AccountSettingsViewModel(val proxyConfig: ProxyConfig) : GenericSettingsVi
 
     val dialPrefixListener = object : SettingListenerStub() {
         override fun onTextValueChanged(newValue: String) {
-            proxyConfig.dialPrefix = newValue
+            account.params.dialPrefix = newValue
         }
     }
     val dialPrefix = MutableLiveData<String>()
 
     val escapePlusListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
-            proxyConfig.dialEscapePlus = newValue
+            account.params.dialEscapePlusEnabled = newValue
         }
     }
     val escapePlus = MutableLiveData<Boolean>()
@@ -283,51 +275,51 @@ class AccountSettingsViewModel(val proxyConfig: ProxyConfig) : GenericSettingsVi
 
     init {
         update()
-        core.addListener(listener)
+        account.addListener(listener)
         initTransportList()
     }
 
     override fun onCleared() {
-        core.removeListener(listener)
+        account.removeListener(listener)
         super.onCleared()
     }
 
     private fun update() {
-        isDefault.value = core.defaultProxyConfig == proxyConfig
-        val identityAddress = proxyConfig.identityAddress
+        isDefault.value = core.defaultAccount == account
+        val identityAddress = account.params.identityAddress
         if (identityAddress != null) {
             displayName.value = LinphoneUtils.getDisplayName(identityAddress)
             identity.value = identityAddress.asStringUriOnly()
         }
 
-        iconResource.value = when (proxyConfig.state) {
+        iconResource.value = when (account.state) {
             RegistrationState.Ok -> R.drawable.led_connected
             RegistrationState.Failed -> R.drawable.led_error
             RegistrationState.Progress -> R.drawable.led_inprogress
             else -> R.drawable.led_disconnected
         }
-        iconContentDescription.value = when (proxyConfig.state) {
+        iconContentDescription.value = when (account.state) {
             RegistrationState.Ok -> R.string.status_connected
             RegistrationState.Progress -> R.string.status_in_progress
             RegistrationState.Failed -> R.string.status_error
             else -> R.string.status_not_connected
         }
 
-        userName.value = proxyConfig.identityAddress?.username
-        userId.value = proxyConfig.findAuthInfo()?.userid
-        domain.value = proxyConfig.identityAddress?.domain
-        disable.value = !proxyConfig.registerEnabled()
-        pushNotification.value = proxyConfig.isPushNotificationAllowed
+        userName.value = account.params.identityAddress?.username
+        userId.value = account.findAuthInfo()?.userid
+        domain.value = account.params.identityAddress?.domain
+        disable.value = !account.params.registerEnabled
+        pushNotification.value = account.params.pushNotificationAllowed
         pushNotificationsAvailable.value = core.isPushNotificationAvailable
-        proxy.value = proxyConfig.serverAddr
-        outboundProxy.value = proxyConfig.serverAddr == proxyConfig.routes.firstOrNull()
-        stunServer.value = proxyConfig.natPolicy?.stunServer
-        ice.value = proxyConfig.natPolicy?.iceEnabled()
-        avpf.value = proxyConfig.avpfEnabled()
-        avpfRrInterval.value = proxyConfig.avpfRrInterval
-        expires.value = proxyConfig.expires
-        dialPrefix.value = proxyConfig.dialPrefix
-        escapePlus.value = proxyConfig.dialEscapePlus
+        proxy.value = account.params.serverAddr
+        outboundProxy.value = account.params.outboundProxyEnabled
+        stunServer.value = account.params.natPolicy?.stunServer
+        ice.value = account.params.natPolicy?.iceEnabled()
+        avpf.value = account.params.avpfMode == AVPFMode.Enabled
+        avpfRrInterval.value = account.params.avpfRrInterval
+        expires.value = account.params.expires
+        dialPrefix.value = account.params.dialPrefix
+        escapePlus.value = account.params.dialEscapePlusEnabled
     }
 
     private fun initTransportList() {
@@ -338,6 +330,12 @@ class AccountSettingsViewModel(val proxyConfig: ProxyConfig) : GenericSettingsVi
         labels.add(prefs.getString(R.string.account_settings_transport_tls))
 
         transportLabels.value = labels
-        transportIndex.value = labels.indexOf(proxyConfig.transport.toUpperCase(Locale.getDefault()))
+        val transport = when (account.transport) {
+            TransportType.Udp -> "UDP"
+            TransportType.Tcp -> "TCP"
+            TransportType.Tls -> "TLS"
+            TransportType.Dtls -> "DTLS"
+        }
+        transportIndex.value = labels.indexOf(transport)
     }
 }
