@@ -73,6 +73,15 @@
                     linphone:checked="@={viewModel.debugMode}"/>
 
                 <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/advanced_settings_logs_server_url_title}"
+                    linphone:subtitle="@{@string/advanced_settings_logs_server_url_summary}"
+                    linphone:listener="@{viewModel.logsServerUrlListener}"
+                    linphone:defaultValue="@{viewModel.logsServerUrl}"
+                    linphone:inputType="@{InputType.TYPE_TEXT_VARIATION_URI}"
+                    linphone:enabled="@{viewModel.debugMode}"/>
+
+                <include
                     layout="@layout/settings_widget_switch"
                     linphone:enabled="@{viewModel.backgroundModeEnabled}"
                     linphone:title="@{@string/advanced_settings_background_mode_title}"
@@ -116,14 +125,6 @@
                     linphone:subtitle="@{@string/advanced_settings_remote_provisioning_url_summary}"
                     linphone:listener="@{viewModel.remoteProvisioningUrlListener}"
                     linphone:defaultValue="@{viewModel.remoteProvisioningUrl}"
-                    linphone:inputType="@{InputType.TYPE_TEXT_VARIATION_URI}"/>
-
-                <include
-                    layout="@layout/settings_widget_text"
-                    linphone:title="@{@string/advanced_settings_logs_server_url_title}"
-                    linphone:subtitle="@{@string/advanced_settings_logs_server_url_summary}"
-                    linphone:listener="@{viewModel.logsServerUrlListener}"
-                    linphone:defaultValue="@{viewModel.logsServerUrl}"
                     linphone:inputType="@{InputType.TYPE_TEXT_VARIATION_URI}"/>
 
                 <TextView
