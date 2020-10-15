@@ -19,11 +19,14 @@
  */
 package org.linphone.activities.main.dialer.viewmodels
 
+import android.content.Context
+import android.os.Vibrator
 import android.provider.Settings
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.activities.main.dialer.NumpadDigitListener
+import org.linphone.compatibility.Compatibility
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
@@ -47,6 +50,8 @@ class DialerViewModel : LogsUploadViewModel() {
         MutableLiveData<Event<String>>()
     }
 
+    private val vibrator = coreContext.context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+
     private var addressWaitingNetworkToBeCalled: String? = null
     private var timeAtWitchWeTriedToCall: Long = 0
 
@@ -55,9 +60,12 @@ class DialerViewModel : LogsUploadViewModel() {
             enteredUri.value += key.toString()
             if (coreContext.core.callsNb == 0) {
                 val contentResolver = coreContext.context.contentResolver
-                val dtmfSetting = Settings.System.getInt(contentResolver, Settings.System.DTMF_TONE_WHEN_DIALING)
-                if (dtmfSetting == 1) {
+                if (Settings.System.getInt(contentResolver, Settings.System.DTMF_TONE_WHEN_DIALING) == 1) {
                     coreContext.core.playDtmf(key, 1)
+
+                    if (vibrator.hasVibrator() && corePreferences.dtmfKeypadVibration) {
+                        Compatibility.eventVibration(vibrator)
+                    }
                 }
             }
         }

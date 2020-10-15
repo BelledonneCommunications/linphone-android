@@ -20,11 +20,15 @@
 package org.linphone.activities.call.viewmodels
 
 import android.Manifest
+import android.content.Context
+import android.os.Vibrator
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlin.math.max
+import org.linphone.LinphoneApplication
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.activities.main.dialer.NumpadDigitListener
+import org.linphone.compatibility.Compatibility
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
@@ -81,11 +85,17 @@ class ControlsViewModel : ViewModel() {
 
     val somethingClickedEvent = MutableLiveData<Event<Boolean>>()
 
+    private val vibrator = coreContext.context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+
     val onKeyClick: NumpadDigitListener = object : NumpadDigitListener {
         override fun handleClick(key: Char) {
             coreContext.core.playDtmf(key, 1)
             somethingClickedEvent.value = Event(true)
             coreContext.core.currentCall?.sendDtmf(key)
+
+            if (vibrator.hasVibrator() && LinphoneApplication.corePreferences.dtmfKeypadVibration) {
+                Compatibility.eventVibration(vibrator)
+            }
         }
 
         override fun handleLongClick(key: Char): Boolean {

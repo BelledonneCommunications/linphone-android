@@ -115,6 +115,14 @@ class Compatibility {
             }
         }
 
+        fun eventVibration(vibrator: Vibrator) {
+            if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
+                Api26Compatibility.eventVibration(vibrator)
+            } else {
+                Api21Compatibility.eventVibration(vibrator)
+            }
+        }
+
         /* Contacts */
 
         fun createShortcutsToContacts(context: Context) {
