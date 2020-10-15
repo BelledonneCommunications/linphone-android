@@ -68,29 +68,37 @@
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/network_settings_wifi_only_title}"
-                    linphone:subtitle="@{@string/advanced_settings_wifi_only_summary}"
+                    linphone:subtitle="@{@string/network_settings_wifi_only_summary}"
                     linphone:listener="@{viewModel.wifiOnlyListener}"
                     linphone:checked="@={viewModel.wifiOnly}"/>
 
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/network_settings_allow_ipv6_title}"
-                    linphone:subtitle="@{@string/advanced_settings_allow_ipv6_summary}"
+                    linphone:subtitle="@{@string/network_settings_allow_ipv6_summary}"
                     linphone:listener="@{viewModel.allowIpv6Listener}"
                     linphone:checked="@={viewModel.allowIpv6}"/>
 
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/network_settings_push_notifications_title}"
-                    linphone:subtitle="@{@string/advanced_settings_push_notifications_summary}"
+                    linphone:subtitle="@{@string/network_settings_push_notifications_summary}"
                     linphone:listener="@{viewModel.pushNotificationsListener}"
                     linphone:checked="@={viewModel.pushNotifications}"
                     linphone:enabled="@{viewModel.pushNotificationsAvailable}"/>
 
                 <include
                     layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/network_settings_legacy_push_notification_format_title}"
+                    linphone:subtitle="@{@string/network_settings_legacy_push_notification_format_summary}"
+                    linphone:listener="@{viewModel.legacyPushNotificationFormatListener}"
+                    linphone:checked="@={viewModel.legacyPushNotificationFormat}"
+                    linphone:enabled="@{viewModel.pushNotificationsAvailable}"/>
+
+                <include
+                    layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/network_settings_random_ports_title}"
-                    linphone:subtitle="@{@string/advanced_settings_random_ports_summary}"
+                    linphone:subtitle="@{@string/network_settings_random_ports_summary}"
                     linphone:listener="@{viewModel.randomPortsListener}"
                     linphone:checked="@={viewModel.randomPorts}"/>
 

@@ -220,11 +220,12 @@ class CoreContext(val context: Context, coreConfig: Config) {
         notificationsManager.onCoreReady()
 
         core.addListener(listener)
+
         if (isPush) {
             Log.i("[Context] Push received, assume in background")
             core.enterBackground()
         }
-        core.config.setBool("net", "use_legacy_push_notification_params", true)
+
         core.start()
 
         configureCore()
@@ -252,8 +253,8 @@ class CoreContext(val context: Context, coreConfig: Config) {
     private fun configureCore() {
         Log.i("[Context] Configuring Core")
 
-        core.zrtpSecretsFile = context.filesDir.absolutePath + "/zrtp_secrets"
-        core.callLogsDatabasePath = context.filesDir.absolutePath + "/linphone-log-history.db"
+        core.zrtpSecretsFile = corePreferences.zrtpSecretsPath
+        core.callLogsDatabasePath = corePreferences.callHistoryDatabasePath
 
         initUserCertificates()
 
@@ -297,7 +298,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
     }
 
     private fun initUserCertificates() {
-        val userCertsPath = context.filesDir.absolutePath + "/user-certs"
+        val userCertsPath = corePreferences.userCertificatesPath
         val f = File(userCertsPath)
         if (!f.exists()) {
             if (!f.mkdir()) {
