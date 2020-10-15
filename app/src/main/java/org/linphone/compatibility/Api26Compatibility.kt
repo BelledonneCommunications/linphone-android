@@ -111,5 +111,13 @@ class Api26Compatibility {
                 .build()
             vibrator.vibrate(effect, audioAttrs)
         }
+
+        fun eventVibration(vibrator: Vibrator) {
+            val effect = VibrationEffect.createWaveform(longArrayOf(0L, 100L, 100L), intArrayOf(0, VibrationEffect.DEFAULT_AMPLITUDE, 0), -1)
+            val audioAttrs = AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_NOTIFICATION_EVENT)
+                .build()
+            vibrator.vibrate(effect, audioAttrs)
+        }
     }
 }

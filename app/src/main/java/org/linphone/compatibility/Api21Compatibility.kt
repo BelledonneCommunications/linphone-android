@@ -59,6 +59,11 @@ class Api21Compatibility {
             vibrator.vibrate(pattern, 1)
         }
 
+        fun eventVibration(vibrator: Vibrator) {
+            val pattern = longArrayOf(0, 100, 100)
+            vibrator.vibrate(pattern, -1)
+        }
+
         suspend fun addImageToMediaStore(context: Context, content: Content): Boolean {
             val filePath = content.filePath
             if (filePath == null) {
