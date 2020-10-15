@@ -1,8 +1,8 @@
 
 ## Start of factory rc
 
-#This file shall not contain path referencing package name, in order to be portable when app is renamed.
-#Paths to resources must be set from LinphoneManager, after creating LinphoneCore.
+# This file shall not contain path referencing package name, in order to be portable when app is renamed.
+# Paths to resources must be set from LinphoneManager, after creating LinphoneCore.
 
 [net]
 mtu=1300
