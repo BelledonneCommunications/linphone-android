@@ -16,6 +16,7 @@ ENV SHELL=/bin/bash
 # Define environment
 ENV ANDROID_SDK 25.2.5
 ENV ANDROID_HOME /opt/android-sdk-linux
+ENV ANDROID_NDK_HOME /opt/android-sdk-linux/ndk
 
 # Install common general tools
 RUN apt-get update && \
@@ -26,10 +27,10 @@ RUN apt-get update && \
 RUN wget https://dl.google.com/android/repository/tools_r$ANDROID_SDK-linux.zip && \
     unzip tools_r$ANDROID_SDK-linux.zip -d $ANDROID_HOME && \
     rm -f tools_r$ANDROID_SDK-linux.zip
-ENV PATH $ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$PATH
+ENV PATH $ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:ANDROID_NDK_HOME:$PATH
 
 # Get the Android SDK
-RUN echo "y" | sdkmanager "platforms;android-30" "build-tools;30.0.2" "extras;android;m2repository" "extras;google;m2repository" "platform-tools" "tools"
+RUN echo "y" | sdkmanager "platforms;android-30" "build-tools;30.0.2" "extras;android;m2repository" "extras;google;m2repository" "platform-tools" "tools" "ndk;21.3.6528147"
 
 # Accept Android SDK licenses
 RUN yes | sdkmanager --licenses
