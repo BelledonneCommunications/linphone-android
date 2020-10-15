@@ -33,7 +33,6 @@ import android.view.inputmethod.EditorInfo
 import android.widget.*
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.databinding.*
-import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
@@ -272,7 +271,7 @@ fun <T> setEntries(
 @BindingAdapter("glideAvatarFallback")
 fun loadAvatarWithGlideFallback(imageView: ImageView, path: String?) {
     if (path != null && path.isNotEmpty() && FileUtils.isExtensionImage(path)) {
-        Glide.with(imageView).load(path).apply(RequestOptions.circleCropTransform()).into(imageView)
+        GlideApp.with(imageView).load(path).apply(RequestOptions.circleCropTransform()).into(imageView)
     } else {
         Log.w("[Data Binding] [Glide] Can't load $path")
         imageView.setImageResource(R.drawable.avatar)
@@ -282,7 +281,7 @@ fun loadAvatarWithGlideFallback(imageView: ImageView, path: String?) {
 @BindingAdapter("glidePath")
 fun loadImageWithGlide(imageView: ImageView, path: String) {
     if (path.isNotEmpty() && FileUtils.isExtensionImage(path)) {
-        Glide.with(imageView).load(path).into(imageView)
+        GlideApp.with(imageView).load(path).into(imageView)
     } else {
         Log.w("[Data Binding] [Glide] Can't load $path")
     }
@@ -296,7 +295,7 @@ fun loadAvatarWithGlide(imageView: ImageView, path: Uri?) {
 @BindingAdapter("glideAvatar")
 fun loadAvatarWithGlide(imageView: ImageView, path: String?) {
     if (path != null) {
-        Glide.with(imageView).load(path).apply(RequestOptions.circleCropTransform()).listener(object :
+        GlideApp.with(imageView).load(path).apply(RequestOptions.circleCropTransform()).listener(object :
             RequestListener<Drawable?> {
             override fun onLoadFailed(
                 e: GlideException?,
