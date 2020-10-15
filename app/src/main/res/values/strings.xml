@@ -425,13 +425,15 @@
 
     <!-- Network settings -->
     <string name="network_settings_wifi_only_title">Use WiFi only</string>
-    <string name="advanced_settings_wifi_only_summary"></string>
+    <string name="network_settings_wifi_only_summary"></string>
     <string name="network_settings_allow_ipv6_title">Allow IPv6</string>
-    <string name="advanced_settings_allow_ipv6_summary"></string>
+    <string name="network_settings_allow_ipv6_summary"></string>
     <string name="network_settings_push_notifications_title">Enable push notifications</string>
-    <string name="advanced_settings_push_notifications_summary"></string>
+    <string name="network_settings_push_notifications_summary"></string>
+    <string name="network_settings_legacy_push_notification_format_title">Use legacy push notification params</string>
+    <string name="network_settings_legacy_push_notification_format_summary">Required when using Flexisip &lt; 2.0</string>
     <string name="network_settings_random_ports_title">Use random ports</string>
-    <string name="advanced_settings_random_ports_summary"></string>
+    <string name="network_settings_random_ports_summary"></string>
     <string name="network_settings_sip_port_title">SIP port to use</string>
     <string name="network_settings_sip_port_summary"></string>
 
