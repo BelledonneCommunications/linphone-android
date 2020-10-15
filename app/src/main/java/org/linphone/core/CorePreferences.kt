@@ -290,6 +290,9 @@ class CorePreferences constructor(private val context: Context) {
     val hideCameraPreviewInPipMode: Boolean
         get() = config.getBool("app", "hide_camera_preview_in_pip_mode", false)
 
+    val dtmfKeypadVibration: Boolean
+        get() = config.getBool("app", "dtmf_keypad_vibraton", false)
+
     /* Tabs */
 
     val showHistory: Boolean
