@@ -170,7 +170,8 @@ class ContactViewModel(private val c: Contact) : ErrorReportingViewModel(), Cont
             val hasPresence = presenceModel?.basicStatus == PresenceBasicStatus.Open
             val isMe = coreContext.core.defaultProxyConfig?.identityAddress?.weakEqual(address) ?: false
             val secureChatAllowed = !isMe && contact.friend?.getPresenceModelForUriOrTel(value)?.hasCapability(FriendCapability.LimeX3Dh) ?: false
-            val noa = ContactNumberOrAddressViewModel(address, hasPresence, LinphoneUtils.getDisplayName(address), showSecureChat = secureChatAllowed, listener = listener)
+            val displayValue = if (coreContext.core.defaultProxyConfig?.domain == address.domain) (address.username ?: value) else value
+            val noa = ContactNumberOrAddressViewModel(address, hasPresence, displayValue, showSecureChat = secureChatAllowed, listener = listener)
             list.add(noa)
         }
         for (number in contact.phoneNumbers) {
