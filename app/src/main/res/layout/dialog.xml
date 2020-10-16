@@ -108,11 +108,10 @@
             android:orientation="horizontal"
             android:visibility="@{viewModel.showDoNotAskAgain ? View.VISIBLE : View.GONE}">
 
-            <CheckBox
+            <com.google.android.material.switchmaterial.SwitchMaterial
                 android:checked="@={viewModel.doNotAskAgain}"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@drawable/checkbox" />
+                android:layout_height="wrap_content" />
 
             <TextView
                 style="@style/dialog_message_font"
