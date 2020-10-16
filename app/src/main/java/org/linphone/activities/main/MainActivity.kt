@@ -28,7 +28,6 @@ import android.view.Gravity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -125,9 +124,8 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
     override fun showSnackBar(resourceId: Int) {
         val snackBar = Snackbar.make(binding.coordinator, resourceId, Snackbar.LENGTH_LONG)
-        val anchorView = binding.navHostFragment.findViewById<FragmentContainerView>(R.id.tabs_fragment)
-        if (anchorView != null) {
-            snackBar.anchorView = anchorView
+        if (binding.tabsFragment.visibility == View.VISIBLE) {
+            snackBar.anchorView = binding.tabsFragment
         }
         snackBar.show()
     }
@@ -150,6 +148,11 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         arguments: Bundle?
     ) {
         currentFocus?.hideKeyboard()
+
+        binding.tabsFragment.visibility = when (destination.id) {
+            R.id.masterCallLogsFragment, R.id.masterContactsFragment, R.id.dialerFragment, R.id.masterChatRoomsFragment -> View.VISIBLE
+            else -> View.GONE
+        }
     }
 
     private fun View.hideKeyboard() {

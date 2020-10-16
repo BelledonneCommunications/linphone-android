@@ -26,14 +26,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/tabs_fragment"
-            android:name="org.linphone.activities.main.fragments.TabsFragment"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_alignParentBottom="true"
-            tools:layout="@layout/tabs_fragment" />
-
         <LinearLayout
             android:id="@+id/top_bar"
             android:layout_width="match_parent"
@@ -147,7 +139,6 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/contactsList"
-            android:layout_above="@id/tabs_fragment"
             android:layout_below="@id/searchBar"
             android:layout_marginTop="5dp"
             android:layout_width="match_parent"
