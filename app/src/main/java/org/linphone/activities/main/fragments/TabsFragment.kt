@@ -21,13 +21,16 @@ package org.linphone.activities.main.fragments
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.viewmodels.TabsViewModel
 import org.linphone.databinding.TabsFragmentBinding
 
-class TabsFragment : GenericFragment<TabsFragmentBinding>() {
+class TabsFragment : GenericFragment<TabsFragmentBinding>(), NavController.OnDestinationChangedListener {
     private lateinit var viewModel: TabsViewModel
 
     override fun getLayoutId(): Int = R.layout.tabs_fragment
@@ -41,17 +44,6 @@ class TabsFragment : GenericFragment<TabsFragmentBinding>() {
             ViewModelProvider(this).get(TabsViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
         binding.viewModel = viewModel
-
-        viewModel.historySelected.value = false
-        viewModel.contactsSelected.value = false
-        viewModel.dialerSelected.value = false
-        viewModel.chatSelected.value = false
-        when (findNavController().currentDestination?.id) {
-            R.id.masterCallLogsFragment -> viewModel.historySelected.value = true
-            R.id.masterContactsFragment -> viewModel.contactsSelected.value = true
-            R.id.dialerFragment -> viewModel.dialerSelected.value = true
-            R.id.masterChatRoomsFragment -> viewModel.chatSelected.value = true
-        }
 
         binding.setHistoryClickListener {
             when (findNavController().currentDestination?.id) {
@@ -83,6 +75,34 @@ class TabsFragment : GenericFragment<TabsFragmentBinding>() {
                 R.id.masterContactsFragment -> findNavController().navigate(R.id.action_masterContactsFragment_to_masterChatRoomsFragment)
                 R.id.dialerFragment -> findNavController().navigate(R.id.action_dialerFragment_to_masterChatRoomsFragment)
             }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        findNavController().addOnDestinationChangedListener(this)
+    }
+
+    override fun onStop() {
+        findNavController().removeOnDestinationChangedListener(this)
+        super.onStop()
+    }
+
+    override fun onDestinationChanged(
+        controller: NavController,
+        destination: NavDestination,
+        arguments: Bundle?
+    ) {
+        viewModel.historySelected.value = false
+        viewModel.contactsSelected.value = false
+        viewModel.dialerSelected.value = false
+        viewModel.chatSelected.value = false
+
+        when (destination.id) {
+            R.id.masterCallLogsFragment -> viewModel.historySelected.value = true
+            R.id.masterContactsFragment -> viewModel.contactsSelected.value = true
+            R.id.dialerFragment -> viewModel.dialerSelected.value = true
+            R.id.masterChatRoomsFragment -> viewModel.chatSelected.value = true
         }
     }
 }
