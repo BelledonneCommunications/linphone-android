@@ -60,7 +60,14 @@ android {
         versionName "${project.version}"
         applicationId getPackageName()
     }
-    ndkVersion "21.3.6528147"
+
+    // Required to be able to generate app bundle with native libraries symbols, see releaseAppBundle below
+    def ndkHome = System.getenv('ANDROID_NDK_HOME')
+    if (ndkHome == null || !new File(ndkHome + "/source.properties").exists()) {
+        ndkVersion "21.3.6528147"
+    } else {
+        ndkPath ndkHome
+    }
 
     applicationVariants.all { variant ->
         variant.outputs.all {
@@ -96,7 +103,6 @@ android {
 
     buildTypes {
         release {
-            ndk.debugSymbolLevel = 'SYMBOL_TABLE'
             minifyEnabled true
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -108,6 +114,11 @@ android {
             if (!firebaseEnabled()) {
                 resValue "string", "gcm_defaultSenderId", "none"
             }
+        }
+
+        releaseAppBundle {
+            initWith release
+            ndk.debugSymbolLevel = 'FULL'
         }
 
         debug {
