@@ -60,7 +60,14 @@ android {
         versionName "${project.version}"
         applicationId getPackageName()
     }
-    ndkVersion "21.3.6528147"
+
+    // Required to be able to generate app bundle with native libraries symbols, see releaseAppBundle below
+    def ndkHome = System.getenv('ANDROID_NDK_HOME')
+    if (ndkHome == null || !new File(ndkHome + "/source.properties").exists()) {
+        ndkVersion "21.3.6528147"
+    } else {
+        ndkPath ndkHome
+    }
 
     applicationVariants.all { variant ->
         variant.outputs.all {
@@ -68,7 +75,7 @@ android {
         }
 
         // See https://developer.android.com/studio/releases/gradle-plugin#3-6-0-behavior for why extractNativeLibs is set to true in debug flavor
-        if (variant.buildType.name == "release") {
+        if (variant.buildType.name == "release" || variant.buildType.name == "releaseAppBundle") {
             variant.getMergedFlavor().manifestPlaceholders = [linphone_address_mime_type: "vnd.android.cursor.item/vnd." + getPackageName() + ".provider.sip_address",
                                                             linphone_file_provider: getPackageName() + ".fileprovider",
                                                             appLabel: "@string/app_name",
@@ -96,7 +103,6 @@ android {
 
     buildTypes {
         release {
-            ndk.debugSymbolLevel = 'SYMBOL_TABLE'
             minifyEnabled true
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -108,6 +114,11 @@ android {
             if (!firebaseEnabled()) {
                 resValue "string", "gcm_defaultSenderId", "none"
             }
+        }
+
+        releaseAppBundle {
+            initWith release
+            ndk.debugSymbolLevel = 'FULL'
         }
 
         debug {
