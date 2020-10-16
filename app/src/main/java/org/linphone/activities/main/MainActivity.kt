@@ -28,6 +28,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -123,7 +124,12 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     }
 
     override fun showSnackBar(resourceId: Int) {
-        Snackbar.make(binding.coordinator, resourceId, Snackbar.LENGTH_LONG).show()
+        val snackBar = Snackbar.make(binding.coordinator, resourceId, Snackbar.LENGTH_LONG)
+        val anchorView = binding.navHostFragment.findViewById<FragmentContainerView>(R.id.tabs_fragment)
+        if (anchorView != null) {
+            snackBar.anchorView = anchorView
+        }
+        snackBar.show()
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
