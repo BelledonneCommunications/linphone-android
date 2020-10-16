@@ -23,6 +23,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.R
 import org.linphone.core.*
 
 class TabsViewModel : ViewModel() {
@@ -84,5 +85,19 @@ class TabsViewModel : ViewModel() {
 
     fun updateUnreadChatCount() {
         unreadMessagesCount.value = coreContext.core.unreadChatMessageCountFromActiveLocals
+    }
+
+    fun updateTabSelection(destinationId: Int) {
+        historySelected.value = false
+        contactsSelected.value = false
+        dialerSelected.value = false
+        chatSelected.value = false
+
+        when (destinationId) {
+            R.id.masterCallLogsFragment -> historySelected.value = true
+            R.id.masterContactsFragment -> contactsSelected.value = true
+            R.id.dialerFragment -> dialerSelected.value = true
+            R.id.masterChatRoomsFragment -> chatSelected.value = true
+        }
     }
 }
