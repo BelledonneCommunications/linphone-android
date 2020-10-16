@@ -93,16 +93,6 @@ class TabsFragment : GenericFragment<TabsFragmentBinding>(), NavController.OnDes
         destination: NavDestination,
         arguments: Bundle?
     ) {
-        viewModel.historySelected.value = false
-        viewModel.contactsSelected.value = false
-        viewModel.dialerSelected.value = false
-        viewModel.chatSelected.value = false
-
-        when (destination.id) {
-            R.id.masterCallLogsFragment -> viewModel.historySelected.value = true
-            R.id.masterContactsFragment -> viewModel.contactsSelected.value = true
-            R.id.dialerFragment -> viewModel.dialerSelected.value = true
-            R.id.masterChatRoomsFragment -> viewModel.chatSelected.value = true
-        }
+        viewModel.updateTabSelection(destination.id)
     }
 }
