@@ -91,7 +91,7 @@ LinphoneSdkBuildDir=/home/<username>/linphone-sdk/build/
 - If you encounter the `couldn't find "libc++_shared.so"` crash when the app starts, simply clean the project in Android Studio (under Build menu) and build again.
 Also check you have built the SDK for the right CPU architecture using the `-DLINPHONESDK_ANDROID_ARCHS=armv7,arm64,x86,x86_64` cmake parameter.
 
-- If during the build you have `DataBinderMapperImpl.java error: cannot find symbol`, try building again.
+- If during the build you have `DataBinderMapperImpl.java error: cannot find symbol` or `Could not find accessor org.linphone.activities.main.chat.viewmodels.ChatRoomsListViewModel.chatRooms` with `Could not find accessor org.linphone.activities.main.settings.viewmodels.NetworkSettingsViewModel.sipPort`, try building again. It is merely a build failure from Android Studio that happens sometimes.
 
 - Push notification might not work when app has been started by Android Studio consecutively to an install. Remove the app from the recent activity view and start it again using the launcher icon to resolve this.
 
