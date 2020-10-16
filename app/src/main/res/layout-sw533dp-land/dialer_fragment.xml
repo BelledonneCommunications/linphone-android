@@ -35,20 +35,11 @@
         android:layout_height="match_parent"
         android:background="@color/grey_color">
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/tabs_fragment"
-            android:name="org.linphone.activities.main.fragments.TabsFragment"
-            android:layout_width="60dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            tools:layout="@layout/tabs_fragment" />
-
         <ImageView
             android:visibility="@{viewModel.showPreview ? View.GONE : View.VISIBLE}"
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/tabs_fragment"
             android:layout_toLeftOf="@id/ui_layout"
             android:padding="30dp"
             android:contentDescription="@null"
@@ -57,7 +48,6 @@
         <org.linphone.mediastream.video.capture.CaptureTextureView
             android:id="@+id/video_preview_window"
             android:visibility="@{viewModel.showPreview ? View.VISIBLE : View.GONE, default=gone}"
-            android:layout_toRightOf="@id/tabs_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"/>
