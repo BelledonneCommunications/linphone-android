@@ -32,14 +32,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/tabs_fragment"
-            android:name="org.linphone.activities.main.fragments.TabsFragment"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_alignParentBottom="true"
-            tools:layout="@layout/tabs_fragment" />
-
         <RelativeLayout
             android:id="@+id/address_bar"
             android:layout_width="match_parent"
@@ -82,7 +74,7 @@
             android:id="@+id/controls"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_above="@id/tabs_fragment">
+            android:layout_alignParentBottom="true">
 
             <ImageView
                 android:onClick="@{newContactClickListener}"

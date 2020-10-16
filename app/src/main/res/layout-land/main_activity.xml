@@ -37,28 +37,28 @@
                 android:layout_height="match_parent"
                 android:layout_below="@id/status_fragment">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <androidx.fragment.app.FragmentContainerView
+                        android:id="@+id/tabs_fragment"
+                        android:name="org.linphone.activities.main.fragments.TabsFragment"
+                        android:layout_width="60dp"
+                        android:layout_height="match_parent"
+                        tools:layout="@layout/tabs_fragment" />
 
                     <androidx.fragment.app.FragmentContainerView
                         android:id="@+id/nav_host_fragment"
                         android:name="androidx.navigation.fragment.NavHostFragment"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_above="@id/tabs_fragment"
+                        android:layout_below="@id/status_fragment"
                         app:defaultNavHost="true"
                         app:navGraph="@navigation/main_nav_graph" />
 
-                    <androidx.fragment.app.FragmentContainerView
-                        android:id="@+id/tabs_fragment"
-                        android:name="org.linphone.activities.main.fragments.TabsFragment"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:layout_alignParentBottom="true"
-                        tools:layout="@layout/tabs_fragment" />
-
-                </RelativeLayout>
+                </LinearLayout>
 
                 <!-- Side Menu -->
                 <RelativeLayout
