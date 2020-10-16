@@ -52,6 +52,10 @@ to install the generated APK in the previous step (use installRelease instead if
 
 APK files are stored within ```./app/build/outputs/apk/debug/``` and ```./app/build/outputs/apk/release/``` directories.
 
+When building a release AppBundle, use releaseAppBundle target instead of release. 
+Also make sure you have a NDK installed and that you have an environment variable named ```ANDROID_NDK_HOME``` that contains the path to the NDK.
+This is to be able to include native libraries symbols into app bundle for the Play Store.
+
 ## Building a local SDK
 
 1. Clone the linphone-sdk repository from out gitlab:
