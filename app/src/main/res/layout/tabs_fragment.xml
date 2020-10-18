@@ -20,19 +20,40 @@
             type="org.linphone.activities.main.viewmodels.TabsViewModel" />
     </data>
 
-    <LinearLayout
-        android:baselineAligned="false"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/footer"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:orientation="horizontal">
+        android:layout_height="60dp">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.25" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineMiddle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.75" />
 
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:onClick="@{historyClickListener}"
             android:visibility="@{viewModel.showHistory ? View.VISIBLE : View.GONE}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/guidelineLeft"
             android:background="@drawable/footer_button">
 
             <ImageView
@@ -65,9 +86,10 @@
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:onClick="@{contactsClickListener}"
             android:visibility="@{viewModel.showContacts ? View.VISIBLE : View.GONE}"
+            app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+            app:layout_constraintEnd_toEndOf="@id/guidelineMiddle"
             android:background="@drawable/footer_button">
 
             <ImageView
@@ -90,9 +112,10 @@
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:onClick="@{dialerClickListener}"
             android:visibility="@{viewModel.showDialer ? View.VISIBLE : View.GONE}"
+            app:layout_constraintStart_toStartOf="@id/guidelineMiddle"
+            app:layout_constraintEnd_toEndOf="@id/guidelineRight"
             android:background="@drawable/footer_button">
 
             <ImageView
@@ -115,9 +138,10 @@
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:onClick="@{chatClickListener}"
             android:visibility="@{viewModel.showChat ? View.VISIBLE : View.GONE}"
+            app:layout_constraintStart_toStartOf="@id/guidelineRight"
+            app:layout_constraintEnd_toEndOf="parent"
             android:background="@drawable/footer_button">
 
             <ImageView
@@ -147,6 +171,6 @@
 
         </RelativeLayout>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
