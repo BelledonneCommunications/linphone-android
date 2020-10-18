@@ -299,20 +299,6 @@ class CorePreferences constructor(private val context: Context) {
     val dtmfKeypadVibration: Boolean
         get() = config.getBool("app", "dtmf_keypad_vibraton", false)
 
-    /* Tabs */
-
-    val showHistory: Boolean
-        get() = config.getBool("app", "tabs_history", true)
-
-    val showContacts: Boolean
-        get() = config.getBool("app", "tabs_contacts", true)
-
-    val showDialer: Boolean
-        get() = config.getBool("app", "tabs_dialer", true)
-
-    val showChat: Boolean
-        get() = config.getBool("app", "tabs_chat", true)
-
     /* Assistant */
 
     val showCreateAccount: Boolean

@@ -48,6 +48,7 @@
                         android:layout_height="match_parent"
                         android:layout_above="@id/tabs_fragment"
                         app:defaultNavHost="true"
+                        tools:layout="@layout/dialer_fragment"
                         app:navGraph="@navigation/main_nav_graph" />
 
                     <androidx.fragment.app.FragmentContainerView
