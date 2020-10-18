@@ -23,7 +23,6 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
 import org.linphone.activities.GenericFragment
@@ -93,6 +92,11 @@ class TabsFragment : GenericFragment<TabsFragmentBinding>(), NavController.OnDes
         destination: NavDestination,
         arguments: Bundle?
     ) {
-        viewModel.updateTabSelection(destination.id)
+        when (destination.id) {
+            R.id.masterCallLogsFragment -> binding.selectorMotion.transitionToState(R.id.call_history)
+            R.id.masterContactsFragment -> binding.selectorMotion.transitionToState(R.id.contacts)
+            R.id.dialerFragment -> binding.selectorMotion.transitionToState(R.id.dialer)
+            R.id.masterChatRoomsFragment -> binding.selectorMotion.transitionToState(R.id.chat_rooms)
+        }
     }
 }

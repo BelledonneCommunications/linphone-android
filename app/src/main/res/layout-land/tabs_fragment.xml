@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
         <import type="android.view.View"/>
@@ -20,35 +21,50 @@
             type="org.linphone.activities.main.viewmodels.TabsViewModel" />
     </data>
 
-    <LinearLayout
-        android:baselineAligned="false"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/footer"
         android:layout_width="60dp"
         android:layout_height="match_parent"
+        android:baselineAligned="false"
         android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineTop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.25" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineMiddle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineBottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.75" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:onClick="@{historyClickListener}"
-            android:visibility="@{viewModel.showHistory ? View.VISIBLE : View.GONE}"
-            android:background="@drawable/footer_button">
+            android:background="@drawable/footer_button"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/guidelineTop"
+            android:onClick="@{historyClickListener}">
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:padding="15dp"
                 android:contentDescription="@string/content_description_menu_history"
+                android:padding="15dp"
                 android:src="@drawable/footer_history" />
-
-            <View
-                android:layout_width="5dp"
-                android:layout_height="match_parent"
-                android:layout_alignParentBottom="true"
-                android:background="?attr/accentColor"
-                android:visibility="@{viewModel.historySelected ? View.VISIBLE : View.GONE, default=gone}" />
 
             <TextView
                 style="@style/unread_count_font"
@@ -67,75 +83,54 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:onClick="@{contactsClickListener}"
-            android:visibility="@{viewModel.showContacts ? View.VISIBLE : View.GONE}"
-            android:background="@drawable/footer_button">
+            android:background="@drawable/footer_button"
+            app:layout_constraintTop_toTopOf="@id/guidelineTop"
+            app:layout_constraintBottom_toTopOf="@id/guidelineMiddle"
+            android:onClick="@{contactsClickListener}">
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:padding="15dp"
                 android:contentDescription="@string/content_description_menu_contacts"
+                android:padding="15dp"
                 android:src="@drawable/footer_contacts" />
 
-            <View
-                android:layout_width="5dp"
-                android:layout_height="match_parent"
-                android:layout_alignParentBottom="true"
-                android:background="?attr/accentColor"
-                android:visibility="@{viewModel.contactsSelected ? View.VISIBLE : View.GONE, default=gone}" />
-
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:onClick="@{dialerClickListener}"
-            android:visibility="@{viewModel.showDialer ? View.VISIBLE : View.GONE}"
-            android:background="@drawable/footer_button">
+            android:background="@drawable/footer_button"
+            app:layout_constraintTop_toTopOf="@id/guidelineMiddle"
+            app:layout_constraintBottom_toTopOf="@id/guidelineBottom"
+            android:onClick="@{dialerClickListener}">
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:padding="15dp"
                 android:contentDescription="@string/content_description_menu_dialer"
+                android:padding="15dp"
                 android:src="@drawable/footer_dialer" />
 
-            <View
-                android:layout_width="5dp"
-                android:layout_height="match_parent"
-                android:layout_alignParentBottom="true"
-                android:background="?attr/accentColor"
-                android:visibility="@{viewModel.dialerSelected ? View.VISIBLE : View.GONE, default=visible}" />
-
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:onClick="@{chatClickListener}"
-            android:visibility="@{viewModel.showChat ? View.VISIBLE : View.GONE}"
-            android:background="@drawable/footer_button">
+            android:background="@drawable/footer_button"
+            app:layout_constraintTop_toTopOf="@id/guidelineBottom"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:onClick="@{chatClickListener}">
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:padding="15dp"
                 android:contentDescription="@string/content_description_menu_chat"
+                android:padding="15dp"
                 android:src="@drawable/footer_chat" />
-
-            <View
-                android:layout_width="5dp"
-                android:layout_height="match_parent"
-                android:layout_alignParentBottom="true"
-                android:background="?attr/accentColor"
-                android:visibility="@{viewModel.chatSelected ? View.VISIBLE : View.GONE, default=gone}" />
 
             <TextView
                 style="@style/unread_count_font"
@@ -151,6 +146,35 @@
 
         </RelativeLayout>
 
-    </LinearLayout>
+        <androidx.constraintlayout.motion.widget.MotionLayout
+            android:id="@+id/selectorMotion"
+            android:layout_width="5dp"
+            android:layout_height="match_parent"
+            app:layoutDescription="@xml/tabs_land"
+            app:layout_constraintRight_toRightOf="parent">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/gTop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.25" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/gMiddle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.5" />
+
+            <View
+                android:id="@+id/selector"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?attr/accentColor" />
+
+        </androidx.constraintlayout.motion.widget.MotionLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
