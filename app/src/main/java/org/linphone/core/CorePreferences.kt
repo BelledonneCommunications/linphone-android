@@ -370,6 +370,9 @@ class CorePreferences constructor(private val context: Context) {
 
     /* Other stuff */
 
+    val masterDetailsAnimation: Boolean
+        get() = config.getBool("app", "master_details_animation", false)
+
     private val darkModeAllowed: Boolean
         get() = config.getBool("app", "dark_mode_allowed", true)
 

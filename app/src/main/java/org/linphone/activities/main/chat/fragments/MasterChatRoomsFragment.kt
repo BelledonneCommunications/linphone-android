@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.chat.adapters.ChatRoomsListAdapter
@@ -87,6 +88,17 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
         adapter.registerAdapterDataObserver(observer)
         binding.chatList.adapter = adapter
 
+        // For transition animation
+        if (isRestoredFromBackStack && corePreferences.masterDetailsAnimation) {
+            binding.chatList.apply {
+                postponeEnterTransition()
+                viewTreeObserver.addOnPreDrawListener {
+                    startPostponedEnterTransition()
+                    true
+                }
+            }
+        }
+
         val layoutManager = LinearLayoutManager(activity)
         binding.chatList.layoutManager = layoutManager
 
@@ -140,7 +152,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
         adapter.selectedChatRoomEvent.observe(viewLifecycleOwner, {
             it.consume { chatRoom ->
                 sharedViewModel.selectedChatRoom.value = chatRoom
-                navigateToChatRoom()
+                navigateToChatRoom(adapter.selectionFragmentNavigationExtras)
             }
         })
 

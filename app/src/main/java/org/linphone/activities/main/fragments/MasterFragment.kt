@@ -41,6 +41,19 @@ abstract class MasterFragment<T : ViewDataBinding, U : SelectionListAdapter<*, *
     protected lateinit var listSelectionViewModel: ListTopBarViewModel
     protected open val dialogConfirmationMessageBeforeRemoval: Int = R.plurals.dialog_default_delete
 
+    // Without this we would have glitches when popUpToInclusive navigation & postponeEnterTransition
+    protected var isRestoredFromBackStack = false
+
+    override fun onDestroyView() {
+        isRestoredFromBackStack = true
+        super.onDestroyView()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        isRestoredFromBackStack = false
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 

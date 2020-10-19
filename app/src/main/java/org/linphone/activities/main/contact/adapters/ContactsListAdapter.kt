@@ -23,9 +23,11 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
@@ -62,6 +64,11 @@ class ContactsListAdapter(
         private val binding: ContactListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(contact: Contact) {
+            // For transition animation
+            ViewCompat.setTransitionName(binding.avatar, "avatar_${contact.fullName}")
+            ViewCompat.setTransitionName(binding.name, "display_name_${contact.fullName}")
+            ViewCompat.setTransitionName(binding.contactOrganization, "organization_${contact.fullName}")
+
             with(binding) {
                 val contactViewModel = ContactViewModel(contact)
                 viewModel = contactViewModel
@@ -78,6 +85,11 @@ class ContactsListAdapter(
                     if (selectionViewModel.isEditionEnabled.value == true) {
                         selectionViewModel.onToggleSelect(adapterPosition)
                     } else {
+                        // For transition animation
+                        selectionFragmentNavigationExtras = FragmentNavigatorExtras(
+                            binding.avatar to "avatar_${contact.fullName}",
+                            binding.name to "display_name_${contact.fullName}",
+                            binding.contactOrganization to "organization_${contact.fullName}")
                         selectedContactEvent.value = Event(contact)
                     }
                 }

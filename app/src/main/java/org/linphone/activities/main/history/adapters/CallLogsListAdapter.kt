@@ -23,9 +23,11 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
@@ -65,6 +67,10 @@ class CallLogsListAdapter(
         private val binding: HistoryListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(callLogGroup: GroupedCallLogViewModel) {
+            // For transition animation
+            ViewCompat.setTransitionName(binding.avatar, "avatar_${callLogGroup.lastCallLog.callId}")
+            ViewCompat.setTransitionName(binding.sipUri, "display_name_${callLogGroup.lastCallLog.callId}")
+
             with(binding) {
                 val callLogViewModel = CallLogViewModel(callLogGroup.lastCallLog)
                 viewModel = callLogViewModel
@@ -87,6 +93,10 @@ class CallLogsListAdapter(
 
                 // This listener is disabled when in edition mode
                 setDetailsClickListener {
+                    // For transition animation
+                    selectionFragmentNavigationExtras = FragmentNavigatorExtras(
+                        binding.avatar to "avatar_${callLogGroup.lastCallLog.callId}",
+                        binding.sipUri to "display_name_${callLogGroup.lastCallLog.callId}")
                     selectedCallLogEvent.value = Event(callLogGroup)
                 }
 

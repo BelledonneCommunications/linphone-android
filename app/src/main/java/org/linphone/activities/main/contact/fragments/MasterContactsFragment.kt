@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.contact.adapters.ContactsListAdapter
@@ -73,6 +74,17 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
 
         _adapter = ContactsListAdapter(listSelectionViewModel, viewLifecycleOwner)
         binding.contactsList.adapter = adapter
+
+        // For transition animation
+        if (isRestoredFromBackStack && corePreferences.masterDetailsAnimation) {
+            binding.contactsList.apply {
+                postponeEnterTransition()
+                viewTreeObserver.addOnPreDrawListener {
+                    startPostponedEnterTransition()
+                    true
+                }
+            }
+        }
 
         binding.setEditClickListener {
             if (PermissionHelper.get().hasWriteContactsPermission()) {
@@ -134,7 +146,7 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
                     editOnClick = false
                     sipUriToAdd = null
                 } else {
-                    navigateToContact()
+                    navigateToContact(adapter.selectionFragmentNavigationExtras)
                 }
             }
         })

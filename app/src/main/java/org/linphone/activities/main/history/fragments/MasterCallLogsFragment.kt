@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.main.fragments.MasterFragment
 import org.linphone.activities.main.history.adapters.CallLogsListAdapter
@@ -79,6 +80,17 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
         adapter.registerAdapterDataObserver(observer)
         binding.callLogsList.adapter = adapter
 
+        // For transition animation
+        if (isRestoredFromBackStack && corePreferences.masterDetailsAnimation) {
+            binding.callLogsList.apply {
+                postponeEnterTransition()
+                viewTreeObserver.addOnPreDrawListener {
+                    startPostponedEnterTransition()
+                    true
+                }
+            }
+        }
+
         binding.setEditClickListener {
             listSelectionViewModel.isEditionEnabled.value = true
         }
@@ -90,7 +102,12 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
         val swipeConfiguration = RecyclerViewSwipeConfiguration()
         val white = ContextCompat.getColor(requireContext(), R.color.white_color)
 
-        swipeConfiguration.rightToLeftAction = RecyclerViewSwipeConfiguration.Action("Delete", white, ContextCompat.getColor(requireContext(), R.color.red_color))
+        swipeConfiguration.rightToLeftAction = RecyclerViewSwipeConfiguration.Action(
+            "Delete", white, ContextCompat.getColor(
+                requireContext(),
+                R.color.red_color
+            )
+        )
         val swipeListener = object : RecyclerViewSwipeListener {
             override fun onLeftToRightSwipe(viewHolder: RecyclerView.ViewHolder) {}
 
@@ -152,7 +169,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
         adapter.selectedCallLogEvent.observe(viewLifecycleOwner, {
             it.consume { callLog ->
                 sharedViewModel.selectedCallLogGroup.value = callLog
-                navigateToCallHistory()
+                navigateToCallHistory(adapter.selectionFragmentNavigationExtras)
             }
         })
 
@@ -163,7 +180,10 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
                     val args = Bundle()
                     args.putString("URI", address.asStringUriOnly())
                     args.putBoolean("Transfer", sharedViewModel.pendingCallTransfer)
-                    args.putBoolean("SkipAutoCallStart", true) // If auto start call setting is enabled, ignore it
+                    args.putBoolean(
+                        "SkipAutoCallStart",
+                        true
+                    ) // If auto start call setting is enabled, ignore it
                     findNavController().navigate(
                         R.id.action_global_dialerFragment,
                         args

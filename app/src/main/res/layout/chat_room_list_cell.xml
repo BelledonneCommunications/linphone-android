@@ -73,7 +73,6 @@
                 android:singleLine="true"
                 android:scrollHorizontally="true" />
 
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

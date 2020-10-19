@@ -21,9 +21,11 @@ package org.linphone.activities.main.chat.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
@@ -62,6 +64,9 @@ class ChatRoomsListAdapter(
         private val binding: ChatRoomListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(chatRoom: ChatRoom) {
+            // For transition animation
+            ViewCompat.setTransitionName(binding.title, "title_${chatRoom.localAddress.asString()}_${chatRoom.peerAddress.asString()}")
+
             with(binding) {
                 val chatRoomViewModel = ChatRoomViewModel(chatRoom)
                 viewModel = chatRoomViewModel
@@ -78,6 +83,9 @@ class ChatRoomsListAdapter(
                     if (selectionViewModel.isEditionEnabled.value == true) {
                         selectionViewModel.onToggleSelect(adapterPosition)
                     } else {
+                        // For transition animation
+                        selectionFragmentNavigationExtras = FragmentNavigatorExtras(
+                            binding.title to "title_${chatRoom.localAddress.asString()}_${chatRoom.peerAddress.asString()}")
                         selectedChatRoomEvent.value = Event(chatRoom)
                         chatRoom.markAsRead()
                     }

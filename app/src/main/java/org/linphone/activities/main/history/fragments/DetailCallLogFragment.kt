@@ -21,8 +21,11 @@ package org.linphone.activities.main.history.fragments
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.ViewCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.transition.TransitionInflater
+import org.linphone.LinphoneApplication
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.GenericFragment
@@ -43,6 +46,15 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
 
     override fun getLayoutId(): Int = R.layout.history_detail_fragment
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // For transition animation
+        if (LinphoneApplication.corePreferences.masterDetailsAnimation) {
+            sharedElementEnterTransition =
+                TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+        }
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -60,6 +72,10 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
             CallLogViewModelFactory(callLogGroup.lastCallLog)
         )[CallLogViewModel::class.java]
         binding.viewModel = viewModel
+
+        // For transition animation
+        ViewCompat.setTransitionName(binding.avatar, "avatar_${viewModel.callLog.callId}")
+        ViewCompat.setTransitionName(binding.displayName, "display_name_${viewModel.callLog.callId}")
 
         viewModel.relatedCallLogs.value = callLogGroup.callLogs
 

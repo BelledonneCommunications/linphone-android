@@ -69,6 +69,7 @@
                 android:paddingLeft="5dp">
 
                 <org.linphone.views.MarqueeTextView
+                    android:id="@+id/title"
                     android:onClick="@{titleClickListener}"
                     android:text="@{viewModel.oneToOneChatRoom ? (viewModel.contact.fullName ?? viewModel.displayName) : viewModel.subject}"
                     style="@style/toolbar_small_title_font"
