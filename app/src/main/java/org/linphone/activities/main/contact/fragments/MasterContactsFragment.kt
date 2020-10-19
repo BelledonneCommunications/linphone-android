@@ -74,6 +74,17 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
         _adapter = ContactsListAdapter(listSelectionViewModel, viewLifecycleOwner)
         binding.contactsList.adapter = adapter
 
+        // For transition animation
+        if (isRestoredFromBackStack) {
+            binding.contactsList.apply {
+                postponeEnterTransition()
+                viewTreeObserver.addOnPreDrawListener {
+                    startPostponedEnterTransition()
+                    true
+                }
+            }
+        }
+
         binding.setEditClickListener {
             if (PermissionHelper.get().hasWriteContactsPermission()) {
                 listSelectionViewModel.isEditionEnabled.value = true
@@ -134,7 +145,7 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
                     editOnClick = false
                     sipUriToAdd = null
                 } else {
-                    navigateToContact()
+                    navigateToContact(adapter.selectionFragmentNavigationExtras)
                 }
             }
         })

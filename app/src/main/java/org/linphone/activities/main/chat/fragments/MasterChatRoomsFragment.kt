@@ -87,6 +87,17 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
         adapter.registerAdapterDataObserver(observer)
         binding.chatList.adapter = adapter
 
+        // For transition animation
+        if (isRestoredFromBackStack) {
+            binding.chatList.apply {
+                postponeEnterTransition()
+                viewTreeObserver.addOnPreDrawListener {
+                    startPostponedEnterTransition()
+                    true
+                }
+            }
+        }
+
         val layoutManager = LinearLayoutManager(activity)
         binding.chatList.layoutManager = layoutManager
 
@@ -140,7 +151,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
         adapter.selectedChatRoomEvent.observe(viewLifecycleOwner, {
             it.consume { chatRoom ->
                 sharedViewModel.selectedChatRoom.value = chatRoom
-                navigateToChatRoom()
+                navigateToChatRoom(adapter.selectionFragmentNavigationExtras)
             }
         })
 

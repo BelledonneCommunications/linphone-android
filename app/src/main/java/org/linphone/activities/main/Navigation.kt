@@ -24,6 +24,7 @@ import android.os.Bundle
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
+import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
@@ -48,10 +49,10 @@ internal fun Fragment.findMasterNavController(): NavController {
 
 /* Chat  related */
 
-internal fun MasterChatRoomsFragment.navigateToChatRoom() {
+internal fun MasterChatRoomsFragment.navigateToChatRoom(extras: FragmentNavigator.Extras? = null) {
     if (!resources.getBoolean(R.bool.isTablet)) {
         if (findNavController().currentDestination?.id == R.id.masterChatRoomsFragment) {
-            findNavController().navigate(R.id.action_masterChatRoomsFragment_to_detailChatRoomFragment)
+            findNavController().navigate(R.id.action_masterChatRoomsFragment_to_detailChatRoomFragment, null, null, extras)
         }
     } else {
         val navHostFragment =
@@ -90,10 +91,10 @@ internal fun DetailChatRoomFragment.navigateToChatRooms() {
 
 /* Contacts  related */
 
-internal fun MasterContactsFragment.navigateToContact() {
+internal fun MasterContactsFragment.navigateToContact(extras: FragmentNavigator.Extras? = null) {
     if (!resources.getBoolean(R.bool.isTablet)) {
         if (findNavController().currentDestination?.id == R.id.masterContactsFragment) {
-            findNavController().navigate(R.id.action_masterContactsFragment_to_detailContactFragment)
+            findNavController().navigate(R.id.action_masterContactsFragment_to_detailContactFragment, null, null, extras)
         }
     } else {
         val navHostFragment =
@@ -122,10 +123,10 @@ internal fun ContactEditorFragment.navigateToContact(contact: NativeContact) {
 
 /* History  related */
 
-internal fun MasterCallLogsFragment.navigateToCallHistory() {
+internal fun MasterCallLogsFragment.navigateToCallHistory(extras: FragmentNavigator.Extras? = null) {
     if (!resources.getBoolean(R.bool.isTablet)) {
         if (findNavController().currentDestination?.id == R.id.masterCallLogsFragment) {
-            findNavController().navigate(R.id.action_masterCallLogsFragment_to_detailCallLogFragment)
+            findNavController().navigate(R.id.action_masterCallLogsFragment_to_detailCallLogFragment, null, null, extras)
         }
     } else {
         val navHostFragment =
