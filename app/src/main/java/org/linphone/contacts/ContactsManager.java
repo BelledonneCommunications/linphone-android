@@ -51,6 +51,8 @@ import org.linphone.core.Friend;
 import org.linphone.core.FriendList;
 import org.linphone.core.FriendListListener;
 import org.linphone.core.MagicSearch;
+import org.linphone.core.PresenceBasicStatus;
+import org.linphone.core.PresenceModel;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
@@ -485,12 +487,31 @@ public class ContactsManager extends ContentObserver
                     .getApplicationContext()
                     .getResources()
                     .getBoolean(R.bool.use_linphone_tag)) {
-                // Inserting Linphone information in Android contact if the parameter is enabled
                 if (LinphonePreferences.instance()
                         .isPresenceStorageInNativeAndroidContactEnabled()) {
-                    // add presence to native contact
-                    AsyncContactPresence asyncContactPresence = new AsyncContactPresence(contact);
-                    asyncContactPresence.execute();
+                    // Inserting information in Android contact if the parameter is enabled
+                    for (LinphoneNumberOrAddress noa : contact.getNumbersOrAddresses()) {
+                        if (noa.isSIPAddress()) {
+                            // We are only interested in phone numbers
+                            continue;
+                        }
+                        String value = noa.getValue();
+                        if (value == null || value.isEmpty()) {
+                            continue;
+                        }
+
+                        // Test presence of the value
+                        PresenceModel pm = contact.getFriend().getPresenceModelForUriOrTel(value);
+                        // If presence is not null
+                        if (pm != null
+                                && pm.getBasicStatus() != null
+                                && pm.getBasicStatus().equals(PresenceBasicStatus.Open)) {
+                            // Add presence to native contact
+                            AsyncContactPresence asyncContactPresence =
+                                    new AsyncContactPresence(contact, value);
+                            asyncContactPresence.execute();
+                        }
+                    }
                 }
             }
 

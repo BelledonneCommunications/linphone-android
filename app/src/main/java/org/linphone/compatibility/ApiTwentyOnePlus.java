@@ -26,6 +26,7 @@ import android.app.PendingIntent;
 import android.content.ContentProviderClient;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Vibrator;
 import android.view.WindowManager;
 import androidx.core.content.ContextCompat;
 import org.linphone.R;
@@ -241,5 +242,10 @@ class ApiTwentyOnePlus {
         if (enable) {
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         }
+    }
+
+    public static void vibrate(Vibrator vibrator) {
+        long[] pattern = {0, 1000, 1000};
+        vibrator.vibrate(pattern, 1);
     }
 }

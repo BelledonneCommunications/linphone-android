@@ -107,6 +107,7 @@ public class AccountConnectionAssistantActivity extends AssistantActivity {
                 mUsernameConnection.setVisibility(View.GONE);
             }
         } else {
+            mUsernameConnectionSwitch.setChecked(true);
             mPhoneNumberConnection.setVisibility(View.GONE);
             findViewById(R.id.username_switch_layout).setVisibility(View.GONE);
         }

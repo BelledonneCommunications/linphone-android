@@ -10,14 +10,21 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
-## [4.3.0] - Unreleased
+### [4.4.0] - Unreleased
+
+### Changed
+- Min Android version updated from 21 to 23 (Android 6) due to SDK audio routes feature
+
+## [4.3.0] - 2020-06-23
 
 ### Added
 - Forward message between chat rooms
-- Ephemeral messages (auto destroy after a given timeout once read) for encrypted chat rooms
 
 ### Changed
 - Files from chat messages are now stored in a private space and will be deleted when the message or room will be deleted
+- SDK updated to 4.4 version
+- Fixed ANRs
+- Fixed various issues
 
 ## [4.2.3] - 2020-03-03
 

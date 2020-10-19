@@ -328,6 +328,7 @@ public class CallActivity extends LinphoneGenericActivity
                 });
 
         ImageView chat = findViewById(R.id.chat);
+        chat.setEnabled(!getResources().getBoolean(R.bool.disable_chat));
         chat.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
