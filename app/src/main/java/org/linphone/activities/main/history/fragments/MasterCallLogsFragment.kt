@@ -79,6 +79,15 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
         adapter.registerAdapterDataObserver(observer)
         binding.callLogsList.adapter = adapter
 
+        // For transition animation
+        binding.callLogsList.apply {
+            postponeEnterTransition()
+            viewTreeObserver.addOnPreDrawListener {
+                startPostponedEnterTransition()
+                true
+            }
+        }
+
         binding.setEditClickListener {
             listSelectionViewModel.isEditionEnabled.value = true
         }
@@ -152,7 +161,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
         adapter.selectedCallLogEvent.observe(viewLifecycleOwner, {
             it.consume { callLog ->
                 sharedViewModel.selectedCallLogGroup.value = callLog
-                navigateToCallHistory()
+                navigateToCallHistory(adapter.selectionFragmentNavigationExtras)
             }
         })
 

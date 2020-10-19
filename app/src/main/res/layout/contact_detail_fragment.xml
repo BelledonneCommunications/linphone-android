@@ -89,6 +89,7 @@
                     app:viewModel="@{viewModel}"/>
 
                 <TextView
+                    android:id="@+id/name"
                     android:text="@{viewModel.contact.fullName}"
                     style="@style/big_contact_name_font"
                     android:layout_width="wrap_content"
@@ -97,6 +98,7 @@
                     android:layout_gravity="center" />
 
                 <org.linphone.views.MarqueeTextView
+                    android:id="@+id/organization"
                     android:visibility="@{viewModel.displayOrganization ? View.VISIBLE : View.GONE}"
                     android:text="@{viewModel.contact.organization}"
                     style="@style/contact_organization_font"

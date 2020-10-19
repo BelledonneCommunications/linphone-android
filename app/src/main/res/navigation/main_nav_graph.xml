@@ -28,6 +28,8 @@
         <action
             android:id="@+id/action_masterChatRoomsFragment_to_detailChatRoomFragment"
             app:destination="@id/chat_nav_graph.xml"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
             app:launchSingleTop="true" />
         <action
             android:id="@+id/action_masterChatRoomsFragment_to_chatRoomCreationFragment"
@@ -72,6 +74,8 @@
         <action
             android:id="@+id/action_masterContactsFragment_to_detailContactFragment"
             app:destination="@id/contacts_nav_graph.xml"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
             app:launchSingleTop="true" />
         <action
             android:id="@+id/action_masterContactsFragment_to_contactEditorFragment"
@@ -117,6 +121,8 @@
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_masterCallLogsFragment_to_detailCallLogFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
             app:destination="@id/history_nav_graph.xml" />
     </fragment>
     <fragment

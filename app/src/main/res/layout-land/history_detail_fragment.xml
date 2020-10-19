@@ -94,6 +94,7 @@
                     app:viewModel="@{viewModel}"/>
 
                 <TextView
+                    android:id="@+id/display_name"
                     android:text="@{viewModel.contact.fullName ?? viewModel.displayName}"
                     style="@style/big_contact_name_font"
                     android:layout_width="wrap_content"

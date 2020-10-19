@@ -24,8 +24,10 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.ViewCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.transition.TransitionInflater
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.GenericFragment
@@ -44,6 +46,12 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
 
     override fun getLayoutId(): Int = R.layout.contact_detail_fragment
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // For transition animation
+        sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -61,6 +69,11 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
             ContactViewModelFactory(contact)
         )[ContactViewModel::class.java]
         binding.viewModel = viewModel
+
+        // For transition animation
+        ViewCompat.setTransitionName(binding.avatar, "avatar_${viewModel.displayName}")
+        ViewCompat.setTransitionName(binding.name, "display_name_${viewModel.displayName}")
+        ViewCompat.setTransitionName(binding.organization, "organization_${viewModel.displayName}")
 
         viewModel.sendSmsToEvent.observe(viewLifecycleOwner, {
             it.consume { number ->

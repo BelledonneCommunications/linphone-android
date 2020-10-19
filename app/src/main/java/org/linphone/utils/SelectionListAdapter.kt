@@ -19,6 +19,7 @@
  */
 package org.linphone.utils
 
+import androidx.navigation.fragment.FragmentNavigator
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -32,6 +33,9 @@ abstract class SelectionListAdapter<T, VH : RecyclerView.ViewHolder>(
 
     private var _selectionViewModel: ListTopBarViewModel? = selectionVM
     protected val selectionViewModel get() = _selectionViewModel!!
+
+    // For transition animation
+    lateinit var selectionFragmentNavigationExtras: FragmentNavigator.Extras
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
         super.onDetachedFromRecyclerView(recyclerView)
