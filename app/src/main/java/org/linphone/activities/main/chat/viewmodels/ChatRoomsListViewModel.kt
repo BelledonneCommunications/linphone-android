@@ -99,7 +99,7 @@ class ChatRoomsListViewModel : ErrorReportingViewModel() {
     private var chatRoomsToDeleteCount = 0
 
     init {
-        chatRooms.value = getChatRooms()
+        updateChatRooms()
         coreContext.core.addListener(listener)
         coreContext.contactsManager.addListener(contactsUpdatedListener)
     }
@@ -144,16 +144,10 @@ class ChatRoomsListViewModel : ErrorReportingViewModel() {
     }
 
     private fun updateChatRooms() {
-        chatRooms.value = getChatRooms()
-    }
+        var list = arrayListOf<ChatRoom>()
 
-    private fun getChatRooms(): ArrayList<ChatRoom> {
-        val list = arrayListOf<ChatRoom>()
+        list.addAll(coreContext.core.chatRooms)
 
-        for (room in coreContext.core.chatRooms) {
-            list.add(room)
-        }
-
-        return list
+        chatRooms.value = list
     }
 }

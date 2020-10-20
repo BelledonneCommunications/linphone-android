@@ -42,10 +42,6 @@ class ChatRoomsListAdapter(
         MutableLiveData<Event<ChatRoom>>()
     }
 
-    val toggledPositionForSelectionEvent: MutableLiveData<Event<Int>> by lazy {
-        MutableLiveData<Event<Int>>()
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding: ChatRoomListCellBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
