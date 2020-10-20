@@ -131,7 +131,7 @@ class ChatMessagesListAdapter(
                     val chatMessageViewModel = ChatMessageViewModel(chatMessage, contentClickedListener)
                     viewModel = chatMessageViewModel
 
-                    binding.lifecycleOwner = viewLifecycleOwner
+                    lifecycleOwner = viewLifecycleOwner
 
                     // This is for item selection through ListTopBarFragment
                     selectionListViewModel = selectionViewModel
@@ -139,7 +139,7 @@ class ChatMessagesListAdapter(
                         position = adapterPosition
                     })
 
-                    binding.setClickListener {
+                    setClickListener {
                         if (selectionViewModel.isEditionEnabled.value == true) {
                             selectionViewModel.onToggleSelect(adapterPosition)
                         }
