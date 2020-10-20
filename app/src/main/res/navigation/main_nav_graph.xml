@@ -12,16 +12,22 @@
         tools:layout="@layout/chat_room_master_fragment" >
         <action
             android:id="@+id/action_masterChatRoomsFragment_to_dialerFragment"
+            app:enterAnim="@anim/enter_left"
+            app:exitAnim="@anim/exit_right"
             app:destination="@id/dialerFragment"
             app:popUpTo="@+id/dialerFragment"
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_masterChatRoomsFragment_to_masterCallLogsFragment"
+            app:enterAnim="@anim/enter_left"
+            app:exitAnim="@anim/exit_right"
             app:destination="@id/masterCallLogsFragment"
             app:popUpTo="@+id/masterCallLogsFragment"
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_masterChatRoomsFragment_to_masterContactsFragment"
+            app:enterAnim="@anim/enter_left"
+            app:exitAnim="@anim/exit_right"
             app:destination="@id/masterContactsFragment"
             app:popUpTo="@+id/masterContactsFragment"
             app:popUpToInclusive="true" />
@@ -56,16 +62,22 @@
         tools:layout="@layout/contact_master_fragment" >
         <action
             android:id="@+id/action_masterContactsFragment_to_masterCallLogsFragment"
+            app:enterAnim="@anim/enter_left"
+            app:exitAnim="@anim/exit_right"
             app:destination="@id/masterCallLogsFragment"
             app:popUpTo="@+id/masterCallLogsFragment"
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_masterContactsFragment_to_dialerFragment"
+            app:enterAnim="@anim/enter_right"
+            app:exitAnim="@anim/exit_left"
             app:destination="@id/dialerFragment"
             app:popUpTo="@+id/dialerFragment"
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_masterContactsFragment_to_masterChatRoomsFragment"
+            app:enterAnim="@anim/enter_right"
+            app:exitAnim="@anim/exit_left"
             app:destination="@id/masterChatRoomsFragment"
             app:popUpTo="@+id/masterChatRoomsFragment"
             app:popUpToInclusive="true" />
@@ -102,16 +114,22 @@
         tools:layout="@layout/history_master_fragment" >
         <action
             android:id="@+id/action_masterCallLogsFragment_to_dialerFragment"
+            app:enterAnim="@anim/enter_right"
+            app:exitAnim="@anim/exit_left"
             app:destination="@id/dialerFragment"
             app:popUpTo="@+id/dialerFragment"
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_masterCallLogsFragment_to_masterContactsFragment"
+            app:enterAnim="@anim/enter_right"
+            app:exitAnim="@anim/exit_left"
             app:destination="@id/masterContactsFragment"
             app:popUpTo="@+id/masterContactsFragment"
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_masterCallLogsFragment_to_masterChatRoomsFragment"
+            app:enterAnim="@anim/enter_right"
+            app:exitAnim="@anim/exit_left"
             app:destination="@id/masterChatRoomsFragment"
             app:popUpTo="@+id/masterChatRoomsFragment"
             app:popUpToInclusive="true" />
@@ -126,16 +144,22 @@
         tools:layout="@layout/dialer_fragment" >
         <action
             android:id="@+id/action_dialerFragment_to_masterCallLogsFragment"
+            app:enterAnim="@anim/enter_left"
+            app:exitAnim="@anim/exit_right"
             app:destination="@id/masterCallLogsFragment"
             app:popUpTo="@id/masterCallLogsFragment"
             app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_dialerFragment_to_masterContactsFragment"
+            app:enterAnim="@anim/enter_left"
+            app:exitAnim="@anim/exit_right"
             app:destination="@id/masterContactsFragment"
             app:popUpTo="@+id/masterContactsFragment"
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_dialerFragment_to_masterChatRoomsFragment"
+            app:enterAnim="@anim/enter_right"
+            app:exitAnim="@anim/exit_left"
             app:destination="@id/masterChatRoomsFragment"
             app:popUpTo="@+id/masterChatRoomsFragment"
             app:popUpToInclusive="true" />
