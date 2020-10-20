@@ -60,4 +60,8 @@ class SharedMainViewModel : ViewModel() {
     /* Call */
 
     var pendingCallTransfer: Boolean = false
+
+    /* Dialer */
+
+    var dialerUri: String = ""
 }
