@@ -9,6 +9,9 @@
             name="clickListener"
             type="android.view.View.OnClickListener"/>
         <variable
+            name="longClickListener"
+            type="android.view.View.OnLongClickListener"/>
+        <variable
             name="position"
             type="Integer"/>
         <variable
@@ -20,10 +23,11 @@
     </data>
 
     <LinearLayout
+        android:onClick="@{clickListener}"
+        android:onLongClick="@{longClickListener}"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:gravity="center_vertical"
-        android:onClick="@{clickListener}"
         android:paddingLeft="10dp"
         android:paddingTop="5dp"
         android:paddingRight="10dp"

@@ -69,7 +69,7 @@ class RecordingsListAdapter(
             with(binding) {
                 viewModel = recording
 
-                binding.lifecycleOwner = viewLifecycleOwner
+                lifecycleOwner = viewLifecycleOwner
 
                 // This is for item selection through ListTopBarFragment
                 position = adapterPosition

@@ -69,7 +69,7 @@ class GroupInfoParticipantsAdapter(
                 participantViewModel.showAdminControls.value = showAdmin
                 viewModel = participantViewModel
 
-                binding.lifecycleOwner = viewLifecycleOwner
+                lifecycleOwner = viewLifecycleOwner
 
                 setRemoveClickListener {
                     participantRemovedEvent.value = Event(participant)

@@ -69,7 +69,7 @@ class CallLogsListAdapter(
                 val callLogViewModel = CallLogViewModel(callLogGroup.lastCallLog)
                 viewModel = callLogViewModel
 
-                binding.lifecycleOwner = viewLifecycleOwner
+                lifecycleOwner = viewLifecycleOwner
 
                 // This is for item selection through ListTopBarFragment
                 selectionListViewModel = selectionViewModel
@@ -83,6 +83,15 @@ class CallLogsListAdapter(
                     } else {
                         startCallToEvent.value = Event(callLogGroup.lastCallLog.remoteAddress)
                     }
+                }
+
+                setLongClickListener {
+                    if (selectionViewModel.isEditionEnabled.value == false) {
+                        selectionViewModel.isEditionEnabled.value = true
+                        // Selection will be handled by click listener
+                        true
+                    }
+                    false
                 }
 
                 // This listener is disabled when in edition mode

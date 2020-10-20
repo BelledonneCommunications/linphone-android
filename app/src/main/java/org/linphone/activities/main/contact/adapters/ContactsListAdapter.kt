@@ -66,7 +66,7 @@ class ContactsListAdapter(
                 val contactViewModel = ContactViewModel(contact)
                 viewModel = contactViewModel
 
-                binding.lifecycleOwner = viewLifecycleOwner
+                lifecycleOwner = viewLifecycleOwner
 
                 // This is for item selection through ListTopBarFragment
                 selectionListViewModel = selectionViewModel
@@ -74,12 +74,21 @@ class ContactsListAdapter(
                     position = adapterPosition
                 })
 
-                binding.setClickListener {
+                setClickListener {
                     if (selectionViewModel.isEditionEnabled.value == true) {
                         selectionViewModel.onToggleSelect(adapterPosition)
                     } else {
                         selectedContactEvent.value = Event(contact)
                     }
+                }
+
+                setLongClickListener {
+                    if (selectionViewModel.isEditionEnabled.value == false) {
+                        selectionViewModel.isEditionEnabled.value = true
+                        // Selection will be handled by click listener
+                        true
+                    }
+                    false
                 }
 
                 executePendingBindings()
