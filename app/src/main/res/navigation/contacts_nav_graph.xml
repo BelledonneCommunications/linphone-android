@@ -12,6 +12,10 @@
         android:label="DetailContactFragment" >
         <action
             android:id="@+id/action_detailContactFragment_to_contactEditorFragment"
+            app:enterAnim="@anim/enter_right"
+            app:exitAnim="@anim/exit_left"
+            app:popEnterAnim="@anim/enter_left"
+            app:popExitAnim="@anim/exit_right"
             app:destination="@id/contactEditorFragment" />
     </fragment>
     <fragment
@@ -21,6 +25,10 @@
         android:label="ContactEditorFragment" />
     <action
         android:id="@+id/action_global_detailContactFragment"
+        app:enterAnim="@anim/enter_right"
+        app:exitAnim="@anim/exit_left"
+        app:popEnterAnim="@anim/enter_left"
+        app:popExitAnim="@anim/exit_right"
         app:destination="@id/detailContactFragment"
         app:launchSingleTop="true" />
 

@@ -33,10 +33,18 @@
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_masterChatRoomsFragment_to_detailChatRoomFragment"
+            app:enterAnim="@anim/enter_right"
+            app:exitAnim="@anim/exit_left"
+            app:popEnterAnim="@anim/enter_left"
+            app:popExitAnim="@anim/exit_right"
             app:destination="@id/chat_nav_graph.xml"
             app:launchSingleTop="true" />
         <action
             android:id="@+id/action_masterChatRoomsFragment_to_chatRoomCreationFragment"
+            app:enterAnim="@anim/enter_right"
+            app:exitAnim="@anim/exit_left"
+            app:popEnterAnim="@anim/enter_left"
+            app:popExitAnim="@anim/exit_right"
             app:destination="@id/chatRoomCreationFragment" />
         <argument
             android:name="LocalSipUri"
@@ -83,10 +91,18 @@
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_masterContactsFragment_to_detailContactFragment"
+            app:enterAnim="@anim/enter_right"
+            app:exitAnim="@anim/exit_left"
+            app:popEnterAnim="@anim/enter_left"
+            app:popExitAnim="@anim/exit_right"
             app:destination="@id/contacts_nav_graph.xml"
             app:launchSingleTop="true" />
         <action
             android:id="@+id/action_masterContactsFragment_to_contactEditorFragment"
+            app:enterAnim="@anim/enter_right"
+            app:exitAnim="@anim/exit_left"
+            app:popEnterAnim="@anim/enter_left"
+            app:popExitAnim="@anim/exit_right"
             app:destination="@id/contactEditorFragment"
             app:launchSingleTop="false" />
         <argument
@@ -135,6 +151,10 @@
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_masterCallLogsFragment_to_detailCallLogFragment"
+            app:enterAnim="@anim/enter_right"
+            app:exitAnim="@anim/exit_left"
+            app:popEnterAnim="@anim/enter_left"
+            app:popExitAnim="@anim/exit_right"
             app:destination="@id/history_nav_graph.xml" />
     </fragment>
     <fragment
@@ -191,12 +211,20 @@
             android:defaultValue="false" />
         <action
             android:id="@+id/action_chatRoomCreationFragment_to_groupInfoFragment"
+            app:enterAnim="@anim/enter_right"
+            app:exitAnim="@anim/exit_left"
+            app:popEnterAnim="@anim/enter_left"
+            app:popExitAnim="@anim/exit_right"
             app:destination="@id/groupInfoFragment"
             app:launchSingleTop="true"
             app:popUpTo="@+id/groupInfoFragment"
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_chatRoomCreationFragment_to_detailChatRoomFragment"
+            app:enterAnim="@anim/enter_right"
+            app:exitAnim="@anim/exit_left"
+            app:popEnterAnim="@anim/enter_left"
+            app:popExitAnim="@anim/exit_right"
             app:destination="@id/chat_nav_graph.xml"
             app:launchSingleTop="true"
             app:popUpTo="@+id/masterChatRoomsFragment"
@@ -209,12 +237,20 @@
         android:label="GroupInfoFragment" >
         <action
             android:id="@+id/action_groupInfoFragment_to_detailChatRoomFragment"
+            app:enterAnim="@anim/enter_right"
+            app:exitAnim="@anim/exit_left"
+            app:popEnterAnim="@anim/enter_left"
+            app:popExitAnim="@anim/exit_right"
             app:destination="@id/chat_nav_graph.xml"
             app:launchSingleTop="true"
             app:popUpTo="@+id/masterChatRoomsFragment"
             app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_groupInfoFragment_to_chatRoomCreationFragment"
+            app:enterAnim="@anim/enter_left"
+            app:exitAnim="@anim/exit_right"
+            app:popEnterAnim="@anim/enter_right"
+            app:popExitAnim="@anim/exit_left"
             app:destination="@id/chatRoomCreationFragment"
             app:launchSingleTop="true"
             app:popUpTo="@+id/chatRoomCreationFragment"
@@ -248,52 +284,84 @@
         tools:layout="@layout/settings_fragment"
         android:label="SettingsFragment" >
         <action
-            android:id="@+id/action_SettingsFragment_to_"
-            app:destination="@id/settings_nav_graph.xml"
-            app:launchSingleTop="true" />
-        <action
             android:id="@+id/action_settingsFragment_to_chatSettingsFragment"
+            app:enterAnim="@anim/enter_right"
+            app:exitAnim="@anim/exit_left"
+            app:popEnterAnim="@anim/enter_left"
+            app:popExitAnim="@anim/exit_right"
             app:destination="@id/chatSettingsFragment"
             app:popUpTo="@+id/settingsFragment"
             app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_settingsFragment_to_callSettingsFragment"
+            app:enterAnim="@anim/enter_right"
+            app:exitAnim="@anim/exit_left"
+            app:popEnterAnim="@anim/enter_left"
+            app:popExitAnim="@anim/exit_right"
             app:destination="@id/callSettingsFragment"
             app:popUpTo="@+id/settingsFragment"
             app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_settingsFragment_to_advancedSettingsFragment"
+            app:enterAnim="@anim/enter_right"
+            app:exitAnim="@anim/exit_left"
+            app:popEnterAnim="@anim/enter_left"
+            app:popExitAnim="@anim/exit_right"
             app:destination="@id/advancedSettingsFragment"
             app:popUpTo="@+id/settingsFragment"
             app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_settingsFragment_to_accountSettingsFragment"
+            app:enterAnim="@anim/enter_right"
+            app:exitAnim="@anim/exit_left"
+            app:popEnterAnim="@anim/enter_left"
+            app:popExitAnim="@anim/exit_right"
             app:destination="@id/accountSettingsFragment"
             app:launchSingleTop="true"
             app:popUpTo="@+id/accountSettingsFragment"
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_settingsFragment_to_audioSettingsFragment"
+            app:enterAnim="@anim/enter_right"
+            app:exitAnim="@anim/exit_left"
+            app:popEnterAnim="@anim/enter_left"
+            app:popExitAnim="@anim/exit_right"
             app:destination="@id/audioSettingsFragment"
             app:popUpTo="@+id/settingsFragment"
             app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_settingsFragment_to_contactsSettingsFragment"
+            app:enterAnim="@anim/enter_right"
+            app:exitAnim="@anim/exit_left"
+            app:popEnterAnim="@anim/enter_left"
+            app:popExitAnim="@anim/exit_right"
             app:destination="@id/contactsSettingsFragment"
             app:popUpTo="@+id/settingsFragment"
             app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_settingsFragment_to_videoSettingsFragment"
+            app:enterAnim="@anim/enter_right"
+            app:exitAnim="@anim/exit_left"
+            app:popEnterAnim="@anim/enter_left"
+            app:popExitAnim="@anim/exit_right"
             app:destination="@id/videoSettingsFragment"
             app:popUpTo="@+id/settingsFragment"
             app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_settingsFragment_to_networkSettingsFragment"
+            app:enterAnim="@anim/enter_right"
+            app:exitAnim="@anim/exit_left"
+            app:popEnterAnim="@anim/enter_left"
+            app:popExitAnim="@anim/exit_right"
             app:destination="@id/networkSettingsFragment"
             app:popUpTo="@+id/settingsFragment"
             app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_settingsFragment_to_tunnelSettingsFragment"
+            app:enterAnim="@anim/enter_right"
+            app:exitAnim="@anim/exit_left"
+            app:popEnterAnim="@anim/enter_left"
+            app:popExitAnim="@anim/exit_right"
             app:destination="@id/tunnelSettingsFragment"
             app:popUpTo="@+id/settingsFragment"
             app:popUpToInclusive="false" />
@@ -384,6 +452,10 @@
         android:label="PhoneAccountLinkingFragment" >
         <action
             android:id="@+id/action_phoneAccountLinkingFragment_to_phoneAccountValidationFragment"
+            app:enterAnim="@anim/enter_right"
+            app:exitAnim="@anim/exit_left"
+            app:popEnterAnim="@anim/enter_left"
+            app:popExitAnim="@anim/exit_right"
             app:destination="@id/phoneAccountValidationFragment" />
         <argument
             android:name="Username"
