@@ -136,7 +136,11 @@ internal fun MasterContactsFragment.navigateToContactEditor(sipUriToAdd: String?
 
 internal fun ContactEditorFragment.navigateToContact(contact: NativeContact) {
     val deepLink = "linphone-android://contact/view/${contact.nativeId}"
-    findMasterNavController().navigate(Uri.parse(deepLink), getRightToLeftAnimationNavOptions())
+    if (!resources.getBoolean(R.bool.isTablet)) {
+        findMasterNavController().navigate(Uri.parse(deepLink), getRightToLeftAnimationNavOptions())
+    } else {
+        findMasterNavController().navigate(Uri.parse(deepLink))
+    }
 }
 
 /* History  related */
