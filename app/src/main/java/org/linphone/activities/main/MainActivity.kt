@@ -21,6 +21,7 @@ package org.linphone.activities.main
 
 import android.app.Activity
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
@@ -124,7 +125,8 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
     override fun showSnackBar(resourceId: Int) {
         val snackBar = Snackbar.make(binding.coordinator, resourceId, Snackbar.LENGTH_LONG)
-        if (binding.tabsFragment.visibility == View.VISIBLE) {
+        if (binding.tabsFragment.visibility == View.VISIBLE &&
+                resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             snackBar.anchorView = binding.tabsFragment
         }
         snackBar.show()
