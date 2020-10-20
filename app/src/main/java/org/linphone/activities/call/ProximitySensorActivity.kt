@@ -60,7 +60,9 @@ abstract class ProximitySensorActivity : GenericActivity() {
 
         try {
             sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-            proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY)
+            val sensor: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY)
+            sensor ?: return
+            proximitySensor = sensor
             proximityWakeLock = (getSystemService(Context.POWER_SERVICE) as PowerManager)
                 .newWakeLock(
                     PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK,
