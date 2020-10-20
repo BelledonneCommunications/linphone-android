@@ -10,4 +10,5 @@
         android:name="org.linphone.activities.main.history.fragments.DetailCallLogFragment"
         tools:layout="@layout/history_detail_fragment"
         android:label="DetailCallLogFragment" />
+
 </navigation>

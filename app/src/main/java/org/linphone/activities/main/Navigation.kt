@@ -24,6 +24,7 @@ import android.os.Bundle
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
@@ -44,6 +45,24 @@ internal fun Fragment.findMasterNavController(): NavController {
     } else {
         parentFragment?.parentFragment?.findNavController() ?: findNavController()
     }
+}
+
+fun getRightToLeftAnimationNavOptions(): NavOptions {
+    return NavOptions.Builder()
+        .setEnterAnim(R.anim.enter_right)
+        .setExitAnim(R.anim.exit_left)
+        .setPopEnterAnim(R.anim.enter_left)
+        .setPopExitAnim(R.anim.exit_right)
+        .build()
+}
+
+fun getLeftToRightAnimationNavOptions(): NavOptions {
+    return NavOptions.Builder()
+        .setEnterAnim(R.anim.enter_left)
+        .setExitAnim(R.anim.exit_right)
+        .setPopEnterAnim(R.anim.enter_right)
+        .setPopExitAnim(R.anim.exit_left)
+        .build()
 }
 
 /* Chat  related */
@@ -80,12 +99,12 @@ internal fun MasterChatRoomsFragment.navigateToChatRoomCreation(
 
 internal fun DetailChatRoomFragment.navigateToContacts(sipUriToAdd: String) {
     val deepLink = "linphone-android://contact/new/$sipUriToAdd"
-    findMasterNavController().navigate(Uri.parse(deepLink))
+    findMasterNavController().navigate(Uri.parse(deepLink), getLeftToRightAnimationNavOptions())
 }
 
 internal fun DetailChatRoomFragment.navigateToChatRooms() {
     val deepLink = "linphone-android://chat/"
-    findMasterNavController().navigate(Uri.parse(deepLink))
+    findMasterNavController().navigate(Uri.parse(deepLink), getLeftToRightAnimationNavOptions())
 }
 
 /* Contacts  related */
@@ -117,7 +136,7 @@ internal fun MasterContactsFragment.navigateToContactEditor(sipUriToAdd: String?
 
 internal fun ContactEditorFragment.navigateToContact(contact: NativeContact) {
     val deepLink = "linphone-android://contact/view/${contact.nativeId}"
-    findMasterNavController().navigate(Uri.parse(deepLink))
+    findMasterNavController().navigate(Uri.parse(deepLink), getRightToLeftAnimationNavOptions())
 }
 
 /* History  related */
@@ -136,17 +155,17 @@ internal fun MasterCallLogsFragment.navigateToCallHistory() {
 
 internal fun DetailCallLogFragment.navigateToContacts(sipUriToAdd: String) {
     val deepLink = "linphone-android://contact/new/$sipUriToAdd"
-    findMasterNavController().navigate(Uri.parse(deepLink))
+    findMasterNavController().navigate(Uri.parse(deepLink), getRightToLeftAnimationNavOptions())
 }
 
 internal fun DetailCallLogFragment.navigateToContact(contact: NativeContact) {
     val deepLink = "linphone-android://contact/view/${contact.nativeId}"
-    findMasterNavController().navigate(Uri.parse(deepLink))
+    findMasterNavController().navigate(Uri.parse(deepLink), getRightToLeftAnimationNavOptions())
 }
 
 internal fun DetailCallLogFragment.navigateToFriend(friendAddress: Address) {
     val deepLink = "linphone-android://contact/new/${friendAddress.asStringUriOnly()}"
-    findMasterNavController().navigate(Uri.parse(deepLink))
+    findMasterNavController().navigate(Uri.parse(deepLink), getRightToLeftAnimationNavOptions())
 }
 
 /* Settings  related */
