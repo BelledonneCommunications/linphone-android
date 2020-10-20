@@ -77,7 +77,7 @@ class ChatRoomCreationContactsAdapter(
                 val searchResultViewModel = ChatRoomCreationContactViewModel(searchResult)
                 viewModel = searchResultViewModel
 
-                binding.lifecycleOwner = viewLifecycleOwner
+                lifecycleOwner = viewLifecycleOwner
 
                 updateSecurity(searchResult, searchResultViewModel, securityEnabled)
 

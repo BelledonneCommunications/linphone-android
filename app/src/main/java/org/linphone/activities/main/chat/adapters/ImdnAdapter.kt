@@ -58,7 +58,7 @@ class ImdnAdapter(
             with(binding) {
                 viewModel = ImdnParticipantViewModel(participantImdnState)
 
-                binding.lifecycleOwner = viewLifecycleOwner
+                lifecycleOwner = viewLifecycleOwner
 
                 executePendingBindings()
             }
