@@ -484,7 +484,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
                     overlayX = params.x.toFloat()
                     overlayY = params.y.toFloat()
                 }
-                else -> false
+                else -> return@setOnTouchListener false
             }
             true
         }
