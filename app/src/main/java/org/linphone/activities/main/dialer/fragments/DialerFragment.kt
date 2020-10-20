@@ -144,15 +144,23 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
         checkForUpdate()
     }
 
+    override fun onPause() {
+        sharedViewModel.dialerUri = viewModel.enteredUri.value ?: ""
+        super.onPause()
+    }
+
     override fun onResume() {
         super.onResume()
 
         if (resources.getBoolean(R.bool.isTablet)) {
             coreContext.core.nativePreviewWindowId = binding.videoPreviewWindow
         }
+
         viewModel.updateShowVideoPreview()
         viewModel.autoInitiateVideoCalls.value = coreContext.core.videoActivationPolicy.automaticallyInitiate
         uploadLogsInitiatedByUs = false
+
+        viewModel.enteredUri.value = sharedViewModel.dialerUri
     }
 
     private fun displayDebugPopup() {
