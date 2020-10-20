@@ -49,7 +49,9 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
 
     private val observer = object : RecyclerView.AdapterDataObserver() {
         override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-            scrollToTop()
+            if (positionStart == 0 && itemCount == 1) {
+                scrollToTop()
+            }
         }
     }
 
