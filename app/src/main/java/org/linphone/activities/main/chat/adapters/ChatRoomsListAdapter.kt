@@ -66,7 +66,7 @@ class ChatRoomsListAdapter(
                 val chatRoomViewModel = ChatRoomViewModel(chatRoom)
                 viewModel = chatRoomViewModel
 
-                binding.lifecycleOwner = viewLifecycleOwner
+                lifecycleOwner = viewLifecycleOwner
 
                 // This is for item selection through ListTopBarFragment
                 selectionListViewModel = selectionViewModel
@@ -74,13 +74,22 @@ class ChatRoomsListAdapter(
                     position = adapterPosition
                 })
 
-                binding.setClickListener {
+                setClickListener {
                     if (selectionViewModel.isEditionEnabled.value == true) {
                         selectionViewModel.onToggleSelect(adapterPosition)
                     } else {
                         selectedChatRoomEvent.value = Event(chatRoom)
                         chatRoom.markAsRead()
                     }
+                }
+
+                setLongClickListener {
+                    if (selectionViewModel.isEditionEnabled.value == false) {
+                        selectionViewModel.isEditionEnabled.value = true
+                        // Selection will be handled by click listener
+                        true
+                    }
+                    false
                 }
 
                 executePendingBindings()
