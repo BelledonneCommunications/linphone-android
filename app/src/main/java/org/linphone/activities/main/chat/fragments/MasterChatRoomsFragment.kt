@@ -53,7 +53,9 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
             scrollToTop()
         }
         override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-            scrollToTop()
+            if (positionStart == 0 && itemCount == 1) {
+                scrollToTop()
+            }
         }
         override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
             scrollToTop()
@@ -141,12 +143,6 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
             it.consume { chatRoom ->
                 sharedViewModel.selectedChatRoom.value = chatRoom
                 navigateToChatRoom()
-            }
-        })
-
-        adapter.toggledPositionForSelectionEvent.observe(viewLifecycleOwner, {
-            it.consume { position ->
-                listSelectionViewModel.onToggleSelect(position)
             }
         })
 
