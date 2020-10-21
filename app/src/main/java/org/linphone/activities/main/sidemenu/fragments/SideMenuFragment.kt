@@ -67,8 +67,8 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         }
 
-        sharedViewModel.proxyConfigRemoved.observe(viewLifecycleOwner, {
-            Log.i("[Side Menu] Proxy config removed, update accounts list")
+        sharedViewModel.accountRemoved.observe(viewLifecycleOwner, {
+            Log.i("[Side Menu] Account removed, update accounts list")
             viewModel.updateAccountsList()
         })
 
@@ -76,7 +76,7 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
             override fun onAccountClicked(identity: String) {
                 val args = Bundle()
                 args.putString("Identity", identity)
-                Log.i("[Side Menu] Navigation to settings for proxy with identity: $identity")
+                Log.i("[Side Menu] Navigation to settings for account with identity: $identity")
 
                 sharedViewModel.toggleDrawerEvent.value = Event(true)
                 navigateToAccountSettings(identity)
