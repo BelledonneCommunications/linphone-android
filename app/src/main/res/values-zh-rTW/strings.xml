@@ -421,8 +421,8 @@
     <string name="account_settings_avpf_rr_interval_summary">以秒為單位（1到5之間）</string>
     <string name="account_settings_expires_title">到期</string>
     <string name="account_settings_expires_summary">以秒為單位</string>
-    <string name="account_settings_dial_prefix_title">您所在國家的前綴</string>
-    <string name="account_settings_dial_prefix_summary">不包含+</string>
+    <string name="account_settings_prefix_title">您所在國家的前綴</string>
+    <string name="account_settings_prefix_summary">不包含+</string>
     <string name="account_settings_escape_plus_title">用00代替+</string>
     <string name="notification_channel_incoming_call_name">&appName;來電通知</string>
     <string name="notification_channel_chat_name">&appName;即時通訊通知</string>

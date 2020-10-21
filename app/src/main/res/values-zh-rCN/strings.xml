@@ -160,8 +160,8 @@
     <string name="account_settings_avpf_rr_interval_summary">以秒为单位（1到5之间）</string>
     <string name="account_settings_expires_title">到期</string>
     <string name="account_settings_expires_summary">以秒为单位</string>
-    <string name="account_settings_dial_prefix_title">您所在国家的前缀</string>
-    <string name="account_settings_dial_prefix_summary">不包含 +</string>
+    <string name="account_settings_prefix_title">您所在国家的前缀</string>
+    <string name="account_settings_prefix_summary">不包含 +</string>
     <string name="account_settings_escape_plus_title">用00代替+</string>
     <string name="notification_channel_service_name">&appName; 服务通知</string>
     <string name="notification_channel_chat_name">&appName; 即时通讯通知</string>

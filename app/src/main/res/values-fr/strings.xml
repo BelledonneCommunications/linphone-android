@@ -389,6 +389,7 @@
     <string name="account_settings_transport_udp">UDP</string>
     <string name="account_settings_transport_tcp">TCP</string>
     <string name="account_settings_transport_tls">TLS</string>
+    <string name="account_settings_transport_dtls">DTLS</string>
     <string name="account_settings_proxy_title">Proxy SIP</string>
     <string name="account_settings_outbound_proxy_title">Outbound proxy</string>
     <string name="account_settings_stun_server_title">Serveur TURN / STUN</string>
@@ -397,8 +398,8 @@
     <string name="account_settings_avpf_rr_interval_summary">en secondes (entre 1 et 5)</string>
     <string name="account_settings_expires_title">Expiration</string>
     <string name="account_settings_expires_summary">en secondes</string>
-    <string name="account_settings_dial_prefix_summary">(sans le +)</string>
-    <string name="account_settings_dial_prefix_title">Préfixe de votre pays</string>
+    <string name="account_settings_prefix_summary">(sans le +)</string>
+    <string name="account_settings_prefix_title">Préfixe de votre pays</string>
     <string name="account_settings_escape_plus_title">Remplacer + par 00</string>
     <string name="notification_channel_incoming_call_name">Notifications d\'appels entrants &appName;</string>
     <string name="incoming_call_notification_title">Appel entrant</string>

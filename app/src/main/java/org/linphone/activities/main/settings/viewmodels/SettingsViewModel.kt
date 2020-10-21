@@ -70,9 +70,9 @@ class SettingsViewModel : ViewModel() {
 
     fun updateAccountsList() {
         val list = arrayListOf<AccountSettingsViewModel>()
-        if (coreContext.core.proxyConfigList.isNotEmpty()) {
-            for (proxy in coreContext.core.proxyConfigList) {
-                val viewModel = AccountSettingsViewModel(proxy)
+        if (coreContext.core.accountList.isNotEmpty()) {
+            for (account in coreContext.core.accountList) {
+                val viewModel = AccountSettingsViewModel(account)
                 viewModel.accountsSettingsListener = accountClickListener
                 list.add(viewModel)
             }
