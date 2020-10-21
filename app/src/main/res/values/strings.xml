@@ -542,8 +542,10 @@
     <string name="account_settings_avpf_rr_interval_summary">in seconds (between 1 and 5)</string>
     <string name="account_settings_expires_title">Expire</string>
     <string name="account_settings_expires_summary">in seconds</string>
-    <string name="account_settings_dial_prefix_title">Prefix for your country</string>
-    <string name="account_settings_dial_prefix_summary">without the +</string>
+    <string name="account_settings_prefix_title">Prefix for your country</string>
+    <string name="account_settings_prefix_summary">without the +</string>
+    <string name="account_settings_apply_prefix_for_calls_title">Apply prefix for outgoing calls and chat</string>
+    <string name="account_settings_apply_prefix_for_calls_summary">If a number is entered, apply prefix to number</string>
     <string name="account_settings_escape_plus_title">Replace + by 00</string>
     <string name="account_settings_escape_plus_summary"></string>
 
