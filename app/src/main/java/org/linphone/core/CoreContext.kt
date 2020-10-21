@@ -312,15 +312,15 @@ class CoreContext(val context: Context, coreConfig: Config) {
 
         computeUserAgent()
 
-        for (lpc in core.proxyConfigList) {
-            if (lpc.identityAddress?.domain == corePreferences.defaultDomain) {
+        for (account in core.accountList) {
+            if (account.params.identityAddress?.domain == corePreferences.defaultDomain) {
                 // Ensure conference URI is set on sip.linphone.org proxy configs
-                if (lpc.conferenceFactoryUri == null) {
-                    lpc.edit()
+                if (account.params.conferenceFactoryUri == null) {
+                    val params = account.params.clone()
                     val uri = corePreferences.conferenceServerUri
-                    Log.i("[Context] Setting conference factory on proxy config ${lpc.identityAddress?.asString()} to default value: $uri")
-                    lpc.conferenceFactoryUri = uri
-                    lpc.done()
+                    Log.i("[Context] Setting conference factory on proxy config ${params.identityAddress?.asString()} to default value: $uri")
+                    params.conferenceFactoryUri = uri
+                    account.params = params
                 }
 
                 // Ensure LIME server URL is set if at least one sip.linphone.org proxy
