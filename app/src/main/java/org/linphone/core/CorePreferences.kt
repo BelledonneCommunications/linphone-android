@@ -391,6 +391,9 @@ class CorePreferences constructor(private val context: Context) {
 
     /* Settings */
 
+    val allowDtlsTransport: Boolean
+        get() = config.getBool("app", "allow_dtls_transport", false)
+
     val showAccountSettings: Boolean
         get() = config.getBool("app", "settings_accounts", true)
 
