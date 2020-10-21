@@ -23,7 +23,7 @@
             android:layout_alignParentTop="true"
             tools:layout="@layout/assistant_top_bar_fragment" />
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_below="@id/top_bar_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -142,7 +142,7 @@
 
             </LinearLayout>
 
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
 
         <include
             layout="@layout/wait_layout"
