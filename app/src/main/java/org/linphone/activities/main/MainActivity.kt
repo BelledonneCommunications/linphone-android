@@ -21,13 +21,13 @@ package org.linphone.activities.main
 
 import android.app.Activity
 import android.content.Intent
-import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.Gravity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -124,12 +124,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     }
 
     override fun showSnackBar(resourceId: Int) {
-        val snackBar = Snackbar.make(binding.coordinator, resourceId, Snackbar.LENGTH_LONG)
-        if (binding.tabsFragment.visibility == View.VISIBLE &&
-                resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            snackBar.anchorView = binding.tabsFragment
-        }
-        snackBar.show()
+        Snackbar.make(findViewById(R.id.coordinator), resourceId, Snackbar.LENGTH_LONG).show()
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -151,9 +146,11 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     ) {
         currentFocus?.hideKeyboard()
 
-        binding.tabsFragment.visibility = when (destination.id) {
-            R.id.masterCallLogsFragment, R.id.masterContactsFragment, R.id.dialerFragment, R.id.masterChatRoomsFragment -> View.VISIBLE
-            else -> View.GONE
+        val motionLayout: MotionLayout = binding.content as MotionLayout
+        when (destination.id) {
+            R.id.masterCallLogsFragment, R.id.masterContactsFragment, R.id.dialerFragment, R.id.masterChatRoomsFragment ->
+                motionLayout.transitionToState(R.id.visible)
+            else -> motionLayout.transitionToState(R.id.gone)
         }
     }
 
@@ -199,7 +196,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                     var addressToCall: String = stringUri
                     try {
                         addressToCall = URLDecoder.decode(stringUri, "UTF-8")
-                    } catch (e: UnsupportedEncodingException) {}
+                    } catch (e: UnsupportedEncodingException) { }
 
                     if (addressToCall.startsWith("sip:")) {
                         addressToCall = addressToCall.substring("sip:".length)
@@ -210,7 +207,10 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                     Log.i("[Main Activity] Starting dialer with pre-filled URI $addressToCall")
                     val args = Bundle()
                     args.putString("URI", addressToCall)
-                    findNavController(R.id.nav_host_fragment).navigate(R.id.action_global_dialerFragment, args)
+                    findNavController(R.id.nav_host_fragment).navigate(
+                        R.id.action_global_dialerFragment,
+                        args
+                    )
                 }
             }
             else -> {
@@ -237,7 +237,10 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                         Log.i("[Main Activity] Found dialer intent extra, go to dialer")
                         val args = Bundle()
                         args.putBoolean("Transfer", intent.getBooleanExtra("Transfer", false))
-                        findNavController(R.id.nav_host_fragment).navigate(R.id.action_global_dialerFragment, args)
+                        findNavController(R.id.nav_host_fragment).navigate(
+                            R.id.action_global_dialerFragment,
+                            args
+                        )
                     }
                 }
             }

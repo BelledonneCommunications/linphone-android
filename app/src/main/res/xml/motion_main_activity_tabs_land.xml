@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        motion:duration="100"
+        motion:constraintSetStart="@+id/visible"
+        motion:constraintSetEnd="@+id/gone" />
+
+    <ConstraintSet android:id="@+id/visible">
+
+        <Constraint
+            android:id="@id/tabs_fragment"
+            android:layout_width="@dimen/main_activity_tabs_fragment_size"
+            android:layout_height="match_parent"
+            motion:layout_constraintLeft_toLeftOf="parent"
+            motion:layout_constraintRight_creator="0"/>
+
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/gone">
+
+        <Constraint
+            android:id="@id/tabs_fragment"
+            android:layout_width="@dimen/main_activity_tabs_fragment_size"
+            android:layout_height="match_parent"
+            motion:layout_constraintRight_toLeftOf="parent"/>
+
+    </ConstraintSet>
+
+</MotionScene>
