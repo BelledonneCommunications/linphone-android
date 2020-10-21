@@ -19,6 +19,10 @@
             app:argType="string" />
         <action
             android:id="@+id/action_accountSettingsFragment_to_phoneAccountLinkingFragment"
+            app:enterAnim="@anim/enter_right"
+            app:exitAnim="@anim/exit_left"
+            app:popEnterAnim="@anim/enter_left"
+            app:popExitAnim="@anim/exit_right"
             app:destination="@id/phoneAccountLinkingFragment" />
     </fragment>
     <fragment
@@ -104,6 +108,10 @@
         android:label="PhoneAccountLinkingFragment" >
         <action
             android:id="@+id/action_phoneAccountLinkingFragment_to_phoneAccountValidationFragment"
+            app:enterAnim="@anim/enter_right"
+            app:exitAnim="@anim/exit_left"
+            app:popEnterAnim="@anim/enter_left"
+            app:popExitAnim="@anim/exit_right"
             app:destination="@id/phoneAccountValidationFragment" />
         <argument
             android:name="Username"
@@ -124,6 +132,10 @@
         android:label="PhoneAccountValidationFragment" >
         <action
             android:id="@+id/action_phoneAccountValidationFragment_to_accountSettingsFragment"
+            app:enterAnim="@anim/enter_left"
+            app:exitAnim="@anim/exit_right"
+            app:popEnterAnim="@anim/enter_right"
+            app:popExitAnim="@anim/exit_left"
             app:destination="@id/accountSettingsFragment"
             app:launchSingleTop="true"
             app:popUpTo="@id/accountSettingsFragment"

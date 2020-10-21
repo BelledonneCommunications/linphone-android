@@ -178,7 +178,7 @@ internal fun SideMenuFragment.navigateToAccountSettings(identity: String) {
     if (!resources.getBoolean(R.bool.isTablet)) {
         // If not a tablet, navigate directly to account settings fragment
         val deepLink = "linphone-android://account-settings/$identity"
-        findNavController().navigate(Uri.parse(deepLink))
+        findNavController().navigate(Uri.parse(deepLink), getRightToLeftAnimationNavOptions())
     } else {
         // On tablet, to keep the categories list on left side, navigate to settings fragment first
         val deepLink = "linphone-android://settings/$identity"
