@@ -61,7 +61,7 @@
 
         </LinearLayout>
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_below="@id/top_bar"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -211,7 +211,7 @@
 
             </LinearLayout>
 
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
 
         <include
             layout="@layout/wait_layout"
