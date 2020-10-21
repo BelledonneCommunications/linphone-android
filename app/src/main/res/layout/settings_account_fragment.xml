@@ -224,11 +224,18 @@
 
                 <include
                     layout="@layout/settings_widget_text"
-                    linphone:title="@{@string/account_settings_dial_prefix_title}"
-                    linphone:subtitle="@{@string/account_settings_dial_prefix_summary}"
-                    linphone:listener="@{viewModel.dialPrefixListener}"
-                    linphone:defaultValue="@{viewModel.dialPrefix.toString()}"
+                    linphone:title="@{@string/account_settings_prefix_title}"
+                    linphone:subtitle="@{@string/account_settings_prefix_summary}"
+                    linphone:listener="@{viewModel.prefixListener}"
+                    linphone:defaultValue="@{viewModel.prefix}"
                     linphone:inputType="@{InputType.TYPE_CLASS_NUMBER}"/>
+
+                <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/account_settings_apply_prefix_for_calls_title}"
+                    linphone:subtitle="@{@string/account_settings_apply_prefix_for_calls_summary}"
+                    linphone:listener="@{viewModel.dialPrefixListener}"
+                    linphone:checked="@={viewModel.dialPrefix}"/>
 
                 <include
                     layout="@layout/settings_widget_switch"
