@@ -150,7 +150,7 @@
             android:id="@+id/selectorMotion"
             android:layout_width="5dp"
             android:layout_height="match_parent"
-            app:layoutDescription="@xml/tabs_land"
+            app:layoutDescription="@xml/motion_main_activity_tabs_selector_land"
             app:layout_constraintRight_toRightOf="parent">
 
             <androidx.constraintlayout.widget.Guideline

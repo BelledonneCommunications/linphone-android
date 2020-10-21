@@ -22,7 +22,7 @@
             android:id="@+id/status_fragment"
             android:name="org.linphone.activities.call.fragments.StatusFragment"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="@dimen/status_fragment_size"
             android:layout_alignParentTop="true"
             tools:layout="@layout/call_status_fragment" />
 
@@ -45,6 +45,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/top_bar"
+            android:layout_above="@id/buttons"
             android:layout_centerInParent="true">
 
             <TextView
@@ -83,6 +85,7 @@
         </RelativeLayout>
 
         <LinearLayout
+            android:id="@+id/buttons"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_alignParentLeft="true"
