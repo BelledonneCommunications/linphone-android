@@ -183,7 +183,7 @@
                     android:text="@string/history_calls_list"
                     android:textAllCaps="true" />
 
-                <ScrollView
+                <androidx.core.widget.NestedScrollView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
@@ -194,7 +194,7 @@
                         app:entries="@{viewModel.callsHistory}"
                         app:layout="@{@layout/history_detail_cell}"/>
 
-                </ScrollView>
+                </androidx.core.widget.NestedScrollView>
 
             </LinearLayout>
 
