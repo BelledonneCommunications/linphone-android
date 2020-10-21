@@ -541,6 +541,7 @@
     <string name="account_settings_transport_title">Transporte</string>
     <string name="account_settings_transport_tcp">TCP</string>
     <string name="account_settings_transport_tls">TLS</string>
+    <string name="account_settings_transport_dtls">DTLS</string>
     <string name="account_settings_proxy_title">Proxy SIP</string>
     <string name="account_settings_outbound_proxy_summary">Enruta todas las llamadas a través del proxy SIP de arriba</string>
     <string name="account_settings_stun_server_title">Servidor STUN / TURN</string>
@@ -549,8 +550,8 @@
     <string name="account_settings_avpf_rr_interval_title">AVPF de intervalo regular de RTCP</string>
     <string name="account_settings_expires_title">Caduce</string>
     <string name="account_settings_expires_summary">en segundos</string>
-    <string name="account_settings_dial_prefix_title">Prefijo de tu país</string>
-    <string name="account_settings_dial_prefix_summary">sin el +</string>
+    <string name="account_settings_prefix_title">Prefijo de tu país</string>
+    <string name="account_settings_prefix_summary">sin el +</string>
     <string name="account_settings_escape_plus_title">Reemplazar + por 00</string>
     <string name="notification_channel_incoming_call_name">&appName; notificaciones de llamadas entrantes</string>
     <string name="notification_channel_chat_name">&appName; notificaciones de mensajes</string>
