@@ -22,15 +22,19 @@ This version is a full rewrite of the app in kotlin, using modern Android compon
 - "Swipe left to delete" action available on calls history, contacts & chat rooms list
 - Improved preview when sharing video files through the chat
 - Android 11 people & conversation compliant
+- Animations
 
 ### Changed
 
+- Replaced ProxyConfig objects by new Account API
 - Dropped Android 5 compatibility, Android 6 or higher (API 23) is now required to install the app
 - Call history view groups call from the same SIP URI (like linphone-iphone)
 - Improved how Android native contacts are used
 - Removed "back-to-call" button from dialer & chat views, use notification or overlay (see call settings)
 - Switched to material design for text input fields & switches
 - Launcher shortcuts can be to either contacts or chat rooms
+- Use material design when possible
+- Replaced toasts by snack bars
 
 ## [4.3.1] - 2020-09-25
 

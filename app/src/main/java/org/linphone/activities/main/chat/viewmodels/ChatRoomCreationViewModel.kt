@@ -107,7 +107,7 @@ class ChatRoomCreationViewModel : ErrorReportingViewModel() {
     }
 
     fun updateContactsList() {
-        val domain = if (sipContactsSelected.value == true) coreContext.core.defaultProxyConfig?.domain ?: "" else ""
+        val domain = if (sipContactsSelected.value == true) coreContext.core.defaultAccount?.params?.domain ?: "" else ""
         val results = coreContext.contactsManager.magicSearch.getContactListFromFilter(filter.value.orEmpty(), domain)
 
         val list = arrayListOf<SearchResult>()
@@ -145,7 +145,7 @@ class ChatRoomCreationViewModel : ErrorReportingViewModel() {
 
     fun createOneToOneChat(searchResult: SearchResult) {
         waitForChatRoomCreation.value = true
-        val defaultProxyConfig = coreContext.core.defaultProxyConfig
+        val defaultAccount = coreContext.core.defaultAccount
         var room: ChatRoom?
 
         val address = searchResult.address ?: coreContext.core.interpretUrl(searchResult.phoneNumber ?: "")
@@ -167,12 +167,13 @@ class ChatRoomCreationViewModel : ErrorReportingViewModel() {
         }
 
         val participants = arrayOf(address)
-        val localAddress = defaultProxyConfig?.identityAddress
+        val localAddress = defaultAccount?.identityAddress
 
         room = coreContext.core.searchChatRoom(params, localAddress, null, participants)
         if (room == null) {
             Log.w("[Chat Room Creation] Couldn't find existing 1-1 chat room with remote ${address.asStringUriOnly()}, encryption=$encrypted and local identity ${localAddress?.asStringUriOnly()}")
             room = coreContext.core.createChatRoom(params, localAddress, participants)
+
             if (encrypted) {
                 room?.addListener(listener)
             } else {

@@ -99,7 +99,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             startActivity(intent)
         }
 
-        if (coreContext.core.proxyConfigList.isEmpty()) {
+        if (coreContext.core.accountList.isEmpty()) {
             if (corePreferences.firstStart) {
                 corePreferences.firstStart = false
                 startActivity(Intent(this, AssistantActivity::class.java))
@@ -316,7 +316,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
             val peerAddress = coreContext.core.interpretUrl(addressToIM)?.asStringUriOnly()
             val localAddress =
-                coreContext.core.defaultProxyConfig?.contact?.asStringUriOnly()
+                coreContext.core.defaultAccount?.identityAddress?.asStringUriOnly()
             val deepLink = "linphone-android://chat-room/$localAddress/$peerAddress"
             Log.i("[Main Activity] Starting deep link: $deepLink")
             findNavController(R.id.nav_host_fragment).navigate(Uri.parse(deepLink))

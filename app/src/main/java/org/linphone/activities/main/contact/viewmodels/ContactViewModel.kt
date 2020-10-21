@@ -168,9 +168,9 @@ class ContactViewModel(private val c: Contact) : ErrorReportingViewModel(), Cont
             val value = address.asStringUriOnly()
             val presenceModel = contact.friend?.getPresenceModelForUriOrTel(value)
             val hasPresence = presenceModel?.basicStatus == PresenceBasicStatus.Open
-            val isMe = coreContext.core.defaultProxyConfig?.identityAddress?.weakEqual(address) ?: false
+            val isMe = coreContext.core.defaultAccount?.params?.identityAddress?.weakEqual(address) ?: false
             val secureChatAllowed = !isMe && contact.friend?.getPresenceModelForUriOrTel(value)?.hasCapability(FriendCapability.LimeX3Dh) ?: false
-            val displayValue = if (coreContext.core.defaultProxyConfig?.domain == address.domain) (address.username ?: value) else value
+            val displayValue = if (coreContext.core.defaultAccount?.params?.domain == address.domain) (address.username ?: value) else value
             val noa = ContactNumberOrAddressViewModel(address, hasPresence, displayValue, showSecureChat = secureChatAllowed, listener = listener)
             list.add(noa)
         }
@@ -179,7 +179,7 @@ class ContactViewModel(private val c: Contact) : ErrorReportingViewModel(), Cont
             val hasPresence = presenceModel != null && presenceModel.basicStatus == PresenceBasicStatus.Open
             val contactAddress = presenceModel?.contact ?: number
             val address = coreContext.core.interpretUrl(contactAddress)
-            val isMe = if (address != null) coreContext.core.defaultProxyConfig?.identityAddress?.weakEqual(address) ?: false else false
+            val isMe = if (address != null) coreContext.core.defaultAccount?.params?.identityAddress?.weakEqual(address) ?: false else false
             val secureChatAllowed = !isMe && contact.friend?.getPresenceModelForUriOrTel(number)?.hasCapability(FriendCapability.LimeX3Dh) ?: false
             val noa = ContactNumberOrAddressViewModel(address, hasPresence, number, isSip = false, showSecureChat = secureChatAllowed, listener = listener)
             list.add(noa)
