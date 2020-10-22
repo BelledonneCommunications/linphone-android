@@ -54,10 +54,10 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@drawable/footer_button"
+            android:onClick="@{historyClickListener}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/guidelineTop"
-            app:layoutDescription="@xml/motion_main_activity_tabs_history_unread_count_land"
-            android:onClick="@{historyClickListener}">
+            app:layoutDescription="@xml/motion_main_activity_tabs_history_unread_count_land">
 
             <ImageView
                 android:id="@+id/history"
@@ -84,9 +84,9 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@drawable/footer_button"
+            android:onClick="@{contactsClickListener}"
             app:layout_constraintTop_toTopOf="@id/guidelineTop"
-            app:layout_constraintBottom_toTopOf="@id/guidelineMiddle"
-            android:onClick="@{contactsClickListener}">
+            app:layout_constraintBottom_toTopOf="@id/guidelineMiddle">
 
             <ImageView
                 android:layout_width="match_parent"
@@ -102,9 +102,9 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@drawable/footer_button"
+            android:onClick="@{dialerClickListener}"
             app:layout_constraintTop_toTopOf="@id/guidelineMiddle"
-            app:layout_constraintBottom_toTopOf="@id/guidelineBottom"
-            android:onClick="@{dialerClickListener}">
+            app:layout_constraintBottom_toTopOf="@id/guidelineBottom">
 
             <ImageView
                 android:layout_width="match_parent"
@@ -120,10 +120,10 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@drawable/footer_button"
+            android:onClick="@{chatClickListener}"
             app:layout_constraintTop_toTopOf="@id/guidelineBottom"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layoutDescription="@xml/motion_main_activity_tabs_chat_unread_count_land"
-            android:onClick="@{chatClickListener}">
+            app:layoutDescription="@xml/motion_main_activity_tabs_chat_unread_count_land">
 
             <ImageView
                 android:id="@+id/chat"

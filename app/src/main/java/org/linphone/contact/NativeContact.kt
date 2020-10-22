@@ -176,13 +176,13 @@ class NativeContact(val nativeId: String, private val lookupKey: String? = null)
         if (friend != null) {
             friend.edit()
             val fn = fullName
-            if (fn != null) friend.setName(fn)
+            if (fn != null) friend.name = fn
 
             val vCard = friend.vcard
             if (vCard != null) {
                 vCard.familyName = lastName
                 vCard.givenName = firstName
-                if (organization != null) vCard.organization = organization
+                vCard.organization = organization
             }
 
             if (!created) {

@@ -51,11 +51,11 @@
         <androidx.constraintlayout.motion.widget.MotionLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:background="@drawable/footer_button"
             android:onClick="@{historyClickListener}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="@id/guidelineLeft"
-            app:layoutDescription="@xml/motion_main_activity_tabs_history_unread_count"
-            android:background="@drawable/footer_button">
+            app:layoutDescription="@xml/motion_main_activity_tabs_history_unread_count">
 
             <ImageView
                 android:id="@+id/history"
@@ -82,10 +82,10 @@
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:background="@drawable/footer_button"
             android:onClick="@{contactsClickListener}"
             app:layout_constraintStart_toStartOf="@id/guidelineLeft"
-            app:layout_constraintEnd_toEndOf="@id/guidelineMiddle"
-            android:background="@drawable/footer_button">
+            app:layout_constraintEnd_toEndOf="@id/guidelineMiddle">
 
             <ImageView
                 android:layout_width="match_parent"
@@ -100,10 +100,10 @@
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:background="@drawable/footer_button"
             android:onClick="@{dialerClickListener}"
             app:layout_constraintStart_toStartOf="@id/guidelineMiddle"
-            app:layout_constraintEnd_toEndOf="@id/guidelineRight"
-            android:background="@drawable/footer_button">
+            app:layout_constraintEnd_toEndOf="@id/guidelineRight">
 
             <ImageView
                 android:layout_width="match_parent"
