@@ -113,6 +113,7 @@
                         android:gravity="center"
                         android:paddingTop="20dp"
                         android:textColorLink="?attr/secondaryTextColor"
+                        android:textIsSelectable="true"
                         android:text="@{String.format(@string/about_version, viewModel.appVersion)}" />
 
                     <TextView
@@ -122,6 +123,7 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:textColorLink="?attr/secondaryTextColor"
+                        android:textIsSelectable="true"
                         android:text="@{String.format(@string/about_liblinphone_sdk_version, viewModel.sdkVersion)}" />
 
                 </LinearLayout>
