@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        motion:duration="250"
+        motion:autoTransition="animateToEnd"
+        motion:constraintSetStart="@+id/bottom"
+        motion:constraintSetEnd="@+id/top" />
+
+    <Transition
+        motion:duration="250"
+        motion:autoTransition="animateToEnd"
+        motion:constraintSetStart="@+id/top"
+        motion:constraintSetEnd="@+id/bottom" />
+
+    <ConstraintSet android:id="@+id/bottom">
+
+        <Constraint
+            android:id="@id/chat_unread_count"
+            android:layout_marginRight="5dp"
+            motion:layout_constraintRight_toRightOf="parent"
+            motion:layout_constraintTop_toTopOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <CustomAttribute
+                motion:attributeName="translationY"
+                motion:customDimension="0dp"/>
+
+            <PropertySet
+                motion:visibilityMode="ignore" />
+
+        </Constraint>
+
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/top">
+
+        <Constraint
+            android:id="@id/chat_unread_count"
+            android:layout_marginRight="5dp"
+            motion:layout_constraintRight_toRightOf="parent"
+            motion:layout_constraintTop_toTopOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <CustomAttribute
+                motion:attributeName="translationY"
+                motion:customDimension="5dp"/>
+
+            <PropertySet
+                motion:visibilityMode="ignore" />
+
+        </Constraint>
+
+    </ConstraintSet>
+
+</MotionScene>
