@@ -6,19 +6,7 @@
     <data>
         <import type="android.view.View"/>
         <variable
-            name="eraseClickListener"
-            type="android.view.View.OnClickListener"/>
-        <variable
-            name="eraseLongClickListener"
-            type="android.view.View.OnLongClickListener"/>
-        <variable
             name="newContactClickListener"
-            type="android.view.View.OnClickListener"/>
-        <variable
-            name="startCallClickListener"
-            type="android.view.View.OnClickListener"/>
-        <variable
-            name="addCallClickListener"
             type="android.view.View.OnClickListener"/>
         <variable
             name="transferCallClickListener"
@@ -41,8 +29,8 @@
 
             <ImageView
                 android:id="@+id/erase"
-                android:onClick="@{eraseClickListener}"
-                android:onLongClick="@{eraseLongClickListener}"
+                android:onClick="@{() -> viewModel.eraseLastChar()}"
+                android:onLongClick="@{() -> viewModel.eraseAll()}"
                 android:contentDescription="@string/content_description_dialer_erase"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -88,7 +76,7 @@
                 android:src="@drawable/contact_add" />
 
             <ImageView
-                android:onClick="@{startCallClickListener}"
+                android:onClick="@{() -> viewModel.startCall()}"
                 android:visibility="@{viewModel.atLeastOneCall ? View.GONE : View.VISIBLE}"
                 android:contentDescription="@string/content_description_start_call"
                 android:layout_width="match_parent"
@@ -99,7 +87,7 @@
                 android:src="@{viewModel.autoInitiateVideoCalls ? @drawable/call_video_start : @drawable/call_audio_start, default=@drawable/call_audio_start}" />
 
             <ImageView
-                android:onClick="@{addCallClickListener}"
+                android:onClick="@{() -> viewModel.startCall()}"
                 android:visibility="@{viewModel.atLeastOneCall &amp;&amp; !viewModel.transferVisibility ? View.VISIBLE : View.GONE, default=gone}"
                 android:contentDescription="@string/content_description_add_call"
                 android:layout_width="match_parent"
