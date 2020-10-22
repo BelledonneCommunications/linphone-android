@@ -99,7 +99,7 @@ class ContactEditorViewModel(val c: Contact?) : ViewModel(), ContactViewModelInt
         } else {
             val friend = contact.friend ?: coreContext.core.createFriend()
             friend.edit()
-            friend.setName("${firstName.value.orEmpty()} ${lastName.value.orEmpty()}")
+            friend.name = "${firstName.value.orEmpty()} ${lastName.value.orEmpty()}"
 
             for (address in friend.addresses) {
                 friend.removeAddress(address)
@@ -121,9 +121,9 @@ class ContactEditorViewModel(val c: Contact?) : ViewModel(), ContactViewModelInt
 
             val vCard = friend.vcard
             if (vCard != null) {
-                vCard.organization = organization.value.orEmpty()
-                vCard.familyName = lastName.value.orEmpty()
-                vCard.givenName = firstName.value.orEmpty()
+                vCard.organization = organization.value
+                vCard.familyName = lastName.value
+                vCard.givenName = firstName.value
             }
             friend.done()
 
