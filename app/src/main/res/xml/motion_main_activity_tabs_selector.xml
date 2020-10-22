@@ -31,7 +31,6 @@
             android:id="@id/selector"
             android:layout_height="wrap_content"
             motion:layout_constraintWidth_percent=".25"
-            motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintLeft_toLeftOf="parent" />
 
     </ConstraintSet>
@@ -42,7 +41,6 @@
             android:id="@id/selector"
             android:layout_height="wrap_content"
             motion:layout_constraintWidth_percent=".25"
-            motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintLeft_toLeftOf="@id/gLeft" />
 
     </ConstraintSet>
@@ -53,7 +51,6 @@
             android:id="@id/selector"
             android:layout_height="wrap_content"
             motion:layout_constraintWidth_percent=".25"
-            motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintLeft_toLeftOf="@id/gMiddle" />
 
     </ConstraintSet>
@@ -64,7 +61,6 @@
             android:id="@id/selector"
             android:layout_height="wrap_content"
             motion:layout_constraintWidth_percent=".25"
-            motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintRight_toRightOf="parent" />
 
     </ConstraintSet>
