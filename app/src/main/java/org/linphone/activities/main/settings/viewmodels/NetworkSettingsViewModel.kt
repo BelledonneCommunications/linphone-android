@@ -56,7 +56,7 @@ class NetworkSettingsViewModel : GenericSettingsViewModel() {
     val randomPortsListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
             val port = if (newValue) -1 else 5060
-            setSipPort(port)
+            setTransportPort(port)
             sipPort.value = port
         }
     }
@@ -66,7 +66,7 @@ class NetworkSettingsViewModel : GenericSettingsViewModel() {
         override fun onTextValueChanged(newValue: String) {
             try {
                 val port = newValue.toInt()
-                setSipPort(port)
+                setTransportPort(port)
             } catch (nfe: NumberFormatException) {
             }
         }
@@ -79,11 +79,11 @@ class NetworkSettingsViewModel : GenericSettingsViewModel() {
         pushNotifications.value = core.isPushNotificationEnabled
         pushNotificationsAvailable.value = core.isPushNotificationAvailable
         legacyPushNotificationFormat.value = prefs.useLegacyPushNotificationFormat
-        randomPorts.value = getSipPort() == -1
-        sipPort.value = getSipPort()
+        randomPorts.value = getTransportPort() == -1
+        sipPort.value = getTransportPort()
     }
 
-    private fun setSipPort(port: Int) {
+    private fun setTransportPort(port: Int) {
         val transports = core.transports
         transports.udpPort = port
         transports.tcpPort = port
@@ -91,7 +91,7 @@ class NetworkSettingsViewModel : GenericSettingsViewModel() {
         core.transports = transports
     }
 
-    private fun getSipPort(): Int {
+    private fun getTransportPort(): Int {
         val transports = core.transports
         if (transports.udpPort > 0) return transports.udpPort
         return transports.tcpPort
