@@ -63,26 +63,10 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
 
-        binding.setEraseClickListener {
-            viewModel.eraseLastChar()
-        }
-
-        binding.setEraseLongClickListener {
-            viewModel.eraseAll()
-        }
-
         binding.setNewContactClickListener {
             val deepLink = "linphone-android://contact/new/${viewModel.enteredUri.value}"
             Log.i("[Dialer] Creating contact, starting deep link: $deepLink")
             findNavController().navigate(Uri.parse(deepLink))
-        }
-
-        binding.setStartCallClickListener {
-            viewModel.startCall()
-        }
-
-        binding.setAddCallClickListener {
-            viewModel.startCall()
         }
 
         binding.setTransferCallClickListener {
