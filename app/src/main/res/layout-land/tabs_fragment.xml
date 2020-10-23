@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
+<layout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
@@ -21,13 +22,11 @@
             type="org.linphone.activities.main.viewmodels.TabsViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/footer"
-        android:layout_width="60dp"
+    <androidx.constraintlayout.motion.widget.MotionLayout
+        android:id="@+id/motion_layout"
+        android:layout_width="@dimen/main_activity_tabs_fragment_size"
         android:layout_height="match_parent"
-        android:baselineAligned="false"
-        android:orientation="vertical">
+        app:layoutDescription="@xml/motion_main_activity_tabs_land">
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guidelineTop"
@@ -50,37 +49,35 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.75" />
 
-        <androidx.constraintlayout.motion.widget.MotionLayout
+        <ImageView
+            android:id="@+id/history"
+            android:onClick="@{historyClickListener}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/content_description_menu_history"
+            android:padding="15dp"
             android:background="@drawable/footer_button"
-            android:onClick="@{historyClickListener}"
+            android:src="@drawable/footer_history"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/guidelineTop"
-            app:layoutDescription="@xml/motion_main_activity_tabs_history_unread_count_land">
+            app:layout_constraintBottom_toTopOf="@id/guidelineTop" />
 
-            <ImageView
-                android:id="@+id/history"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:contentDescription="@string/content_description_menu_history"
-                android:padding="15dp"
-                android:src="@drawable/footer_history" />
-
-            <TextView
-                android:id="@+id/history_unread_count"
-                style="@style/unread_count_font"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/unread_message_count_bg"
-                android:gravity="center"
-                android:text="@{String.valueOf(viewModel.missedCallsCount)}"
-                android:visibility="@{viewModel.missedCallsCount == 0 ? View.GONE : View.VISIBLE}" />
-
-        </androidx.constraintlayout.motion.widget.MotionLayout>
+        <TextView
+            android:id="@+id/history_unread_count"
+            style="@style/unread_count_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/unread_message_count_bg"
+            android:gravity="center"
+            android:text="@{String.valueOf(viewModel.missedCallsCount)}"
+            android:visibility="@{viewModel.missedCallsCount == 0 ? View.GONE : View.VISIBLE}"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <RelativeLayout
+            android:id="@+id/contacts"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@drawable/footer_button"
@@ -99,6 +96,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/dialer"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@drawable/footer_button"
@@ -116,65 +114,42 @@
 
         </RelativeLayout>
 
-        <androidx.constraintlayout.motion.widget.MotionLayout
+        <ImageView
+            android:id="@+id/chat"
+            android:onClick="@{chatClickListener}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/content_description_menu_chat"
+            android:padding="15dp"
+            android:src="@drawable/footer_chat"
             android:background="@drawable/footer_button"
-            android:onClick="@{chatClickListener}"
             app:layout_constraintTop_toTopOf="@id/guidelineBottom"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layoutDescription="@xml/motion_main_activity_tabs_chat_unread_count_land">
+            app:layout_constraintBottom_toBottomOf="parent" />
 
-            <ImageView
-                android:id="@+id/chat"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:contentDescription="@string/content_description_menu_chat"
-                android:padding="15dp"
-                android:src="@drawable/footer_chat" />
+        <TextView
+            android:id="@+id/chat_unread_count"
+            style="@style/unread_count_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/unread_message_count_bg"
+            android:gravity="center"
+            android:text="@{String.valueOf(viewModel.unreadMessagesCount)}"
+            android:visibility="@{viewModel.unreadMessagesCount == 0 ? View.GONE : View.VISIBLE}"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/guidelineBottom" />
 
-            <TextView
-                android:id="@+id/chat_unread_count"
-                style="@style/unread_count_font"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/unread_message_count_bg"
-                android:gravity="center"
-                android:text="@{String.valueOf(viewModel.unreadMessagesCount)}"
-                android:visibility="@{viewModel.unreadMessagesCount == 0 ? View.GONE : View.VISIBLE}" />
+        <View
+            android:id="@+id/selector"
+            android:layout_width="@dimen/tabs_fragment_selector_size"
+            android:layout_height="0dp"
+            android:background="?attr/accentColor"
+            app:layout_constraintHeight_percent=".25"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/guidelineBottom" />
 
-        </androidx.constraintlayout.motion.widget.MotionLayout>
-
-        <androidx.constraintlayout.motion.widget.MotionLayout
-            android:id="@+id/selectorMotion"
-            android:layout_width="5dp"
-            android:layout_height="match_parent"
-            app:layoutDescription="@xml/motion_main_activity_tabs_selector_land"
-            app:layout_constraintLeft_toLeftOf="parent">
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/gTop"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.25" />
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/gMiddle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.5" />
-
-            <View
-                android:id="@+id/selector"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="?attr/accentColor" />
-
-        </androidx.constraintlayout.motion.widget.MotionLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.motion.widget.MotionLayout>
 
 </layout>
