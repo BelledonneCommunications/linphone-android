@@ -19,7 +19,9 @@
  */
 package org.linphone.activities.main.fragments
 
+import android.animation.ValueAnimator
 import android.os.Bundle
+import android.view.animation.LinearInterpolator
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
@@ -33,6 +35,10 @@ class TabsFragment : GenericFragment<TabsFragmentBinding>(), NavController.OnDes
     private lateinit var viewModel: TabsViewModel
 
     override fun getLayoutId(): Int = R.layout.tabs_fragment
+
+    private val bounceAnimator: ValueAnimator by lazy {
+        ValueAnimator.ofFloat(resources.getDimension(R.dimen.tabs_fragment_unread_count_bounce_offset), 0f)
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -75,14 +81,26 @@ class TabsFragment : GenericFragment<TabsFragmentBinding>(), NavController.OnDes
                 R.id.dialerFragment -> findNavController().navigate(R.id.action_dialerFragment_to_masterChatRoomsFragment)
             }
         }
+
+        bounceAnimator.addUpdateListener {
+            val value = it.animatedValue as Float
+            binding.historyUnreadCount.translationY = -value
+            binding.chatUnreadCount.translationY = -value
+        }
+        bounceAnimator.interpolator = LinearInterpolator()
+        bounceAnimator.duration = 250
+        bounceAnimator.repeatMode = ValueAnimator.REVERSE
+        bounceAnimator.repeatCount = ValueAnimator.INFINITE
     }
 
     override fun onStart() {
         super.onStart()
+        bounceAnimator.start()
         findNavController().addOnDestinationChangedListener(this)
     }
 
     override fun onStop() {
+        bounceAnimator.pause()
         findNavController().removeOnDestinationChangedListener(this)
         super.onStop()
     }
@@ -93,10 +111,10 @@ class TabsFragment : GenericFragment<TabsFragmentBinding>(), NavController.OnDes
         arguments: Bundle?
     ) {
         when (destination.id) {
-            R.id.masterCallLogsFragment -> binding.selectorMotion.transitionToState(R.id.call_history)
-            R.id.masterContactsFragment -> binding.selectorMotion.transitionToState(R.id.contacts)
-            R.id.dialerFragment -> binding.selectorMotion.transitionToState(R.id.dialer)
-            R.id.masterChatRoomsFragment -> binding.selectorMotion.transitionToState(R.id.chat_rooms)
+            R.id.masterCallLogsFragment -> binding.motionLayout.transitionToState(R.id.call_history)
+            R.id.masterContactsFragment -> binding.motionLayout.transitionToState(R.id.contacts)
+            R.id.dialerFragment -> binding.motionLayout.transitionToState(R.id.dialer)
+            R.id.masterChatRoomsFragment -> binding.motionLayout.transitionToState(R.id.chat_rooms)
         }
     }
 }

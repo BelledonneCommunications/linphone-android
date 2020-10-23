@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
+<layout
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -22,10 +22,11 @@
             type="org.linphone.activities.main.viewmodels.TabsViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/footer"
+    <androidx.constraintlayout.motion.widget.MotionLayout
+        android:id="@+id/motion_layout"
         android:layout_width="match_parent"
-        android:layout_height="60dp">
+        android:layout_height="@dimen/main_activity_tabs_fragment_size"
+        app:layoutDescription="@xml/motion_main_activity_tabs">
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guidelineLeft"
@@ -48,38 +49,35 @@
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.75" />
 
-        <androidx.constraintlayout.motion.widget.MotionLayout
+        <ImageView
+            android:id="@+id/history"
+            android:onClick="@{historyClickListener}"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:padding="15dp"
+            android:contentDescription="@string/content_description_menu_history"
+            android:src="@drawable/footer_history"
             android:background="@drawable/footer_button"
-            android:onClick="@{historyClickListener}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/guidelineLeft"
-            app:layoutDescription="@xml/motion_main_activity_tabs_history_unread_count">
+            app:layout_constraintEnd_toEndOf="@id/guidelineLeft" />
 
-            <ImageView
-                android:id="@+id/history"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:padding="15dp"
-                android:contentDescription="@string/content_description_menu_history"
-                android:src="@drawable/footer_history" />
-
-            <TextView
-                android:id="@+id/history_unread_count"
-                style="@style/unread_count_font"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/unread_message_count_bg"
-                android:gravity="center"
-                android:text="@{String.valueOf(viewModel.missedCallsCount)}"
-                android:visibility="@{viewModel.missedCallsCount == 0 ? View.GONE : View.VISIBLE}" />
-
-        </androidx.constraintlayout.motion.widget.MotionLayout>
+        <TextView
+            android:id="@+id/history_unread_count"
+            style="@style/unread_count_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/unread_message_count_bg"
+            android:gravity="center"
+            android:text="@{String.valueOf(viewModel.missedCallsCount)}"
+            android:visibility="@{viewModel.missedCallsCount == 0 ? View.GONE : View.VISIBLE}"
+            app:layout_constraintRight_toLeftOf="@id/guidelineLeft"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <RelativeLayout
+            android:id="@+id/contacts"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:background="@drawable/footer_button"
@@ -98,6 +96,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/dialer"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:background="@drawable/footer_button"
@@ -115,66 +114,42 @@
 
         </RelativeLayout>
 
-        <androidx.constraintlayout.motion.widget.MotionLayout
+        <ImageView
+            android:id="@+id/chat"
+            android:onClick="@{chatClickListener}"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/content_description_menu_chat"
+            android:padding="15dp"
+            android:src="@drawable/footer_chat"
             android:background="@drawable/footer_button"
-            android:onClick="@{chatClickListener}"
-            app:layoutDescription="@xml/motion_main_activity_tabs_chat_unread_count"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/guidelineRight">
+            app:layout_constraintStart_toStartOf="@id/guidelineRight" />
 
-            <ImageView
-                android:id="@+id/chat"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:contentDescription="@string/content_description_menu_chat"
-                android:padding="15dp"
-                android:src="@drawable/footer_chat" />
+        <TextView
+            android:id="@+id/chat_unread_count"
+            style="@style/unread_count_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/unread_message_count_bg"
+            android:gravity="center"
+            android:text="@{String.valueOf(viewModel.unreadMessagesCount)}"
+            android:visibility="@{viewModel.unreadMessagesCount == 0 ? View.GONE : View.VISIBLE}"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-            <TextView
-                android:id="@+id/chat_unread_count"
-                style="@style/unread_count_font"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/unread_message_count_bg"
-                android:gravity="center"
-                android:text="@{String.valueOf(viewModel.unreadMessagesCount)}"
-                android:visibility="@{viewModel.unreadMessagesCount == 0 ? View.GONE : View.VISIBLE}" />
+        <View
+            android:id="@+id/selector"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/tabs_fragment_selector_size"
+            android:background="?attr/accentColor"
+            app:layout_constraintWidth_percent=".25"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/guidelineMiddle" />
 
-        </androidx.constraintlayout.motion.widget.MotionLayout>
-
-        <androidx.constraintlayout.motion.widget.MotionLayout
-            android:id="@+id/selectorMotion"
-            android:layout_width="match_parent"
-            android:layout_height="5dp"
-            app:layoutDescription="@xml/motion_main_activity_tabs_selector"
-            app:layout_constraintBottom_toBottomOf="parent">
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/gLeft"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.25" />
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/gMiddle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.5" />
-
-            <View
-                android:id="@+id/selector"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="?attr/accentColor" />
-
-        </androidx.constraintlayout.motion.widget.MotionLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.motion.widget.MotionLayout>
 
 </layout>

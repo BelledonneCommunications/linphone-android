@@ -9,4 +9,6 @@
     <dimen name="video_preview_pip_max_size">50dp</dimen>
     <dimen name="main_activity_tabs_fragment_size">60dp</dimen>
     <dimen name="status_fragment_size">40dp</dimen>
+    <dimen name="tabs_fragment_selector_size">5dp</dimen>
+    <dimen name="tabs_fragment_unread_count_bounce_offset">5dp</dimen>
 </resources>
