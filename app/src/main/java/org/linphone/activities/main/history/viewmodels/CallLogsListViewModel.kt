@@ -26,6 +26,7 @@ import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
+import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.TimestampUtils
 
 class CallLogsListViewModel : ViewModel() {
@@ -113,7 +114,7 @@ class CallLogsListViewModel : ViewModel() {
                 previousCallLogGroup = GroupedCallLogViewModel(callLog)
             }
 
-            if (callLog.status == Call.Status.Missed) {
+            if (LinphoneUtils.isCallLogMissed(callLog)) {
                 if (previousMissedCallLogGroup == null) {
                     previousMissedCallLogGroup = GroupedCallLogViewModel(callLog)
                 } else if (previousMissedCallLogGroup.lastCallLog.localAddress.weakEqual(callLog.localAddress) && previousMissedCallLogGroup.lastCallLog.remoteAddress.weakEqual(callLog.remoteAddress)) {

@@ -129,5 +129,12 @@ class LinphoneUtils {
             // In doubt return false
             return false
         }
+
+        fun isCallLogMissed(callLog: CallLog): Boolean{
+            return (callLog.dir == Call.Dir.Incoming &&
+                (callLog.status == Call.Status.Missed ||
+                callLog.status == Call.Status.Aborted ||
+                callLog.status == Call.Status.EarlyAborted))
+        }
     }
 }
