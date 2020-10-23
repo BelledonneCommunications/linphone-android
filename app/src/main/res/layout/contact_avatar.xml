@@ -73,6 +73,7 @@
             android:layout_alignParentLeft="true"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
+            android:background="?attr/backgroundColor"
             app:glideAvatar="@{imagePath}" />
 
         <ImageView
