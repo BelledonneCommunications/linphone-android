@@ -31,7 +31,19 @@
         motion:constraintSetStart="@+id/contacts"
         motion:constraintSetEnd="@+id/chat_rooms"/>
 
-    <ConstraintSet android:id="@+id/visible">
+    <ConstraintSet android:id="@+id/parent">
+
+        <Constraint android:id="@id/history_unread_count">
+            <PropertySet motion:visibilityMode="ignore" motion:applyMotionScene="false" />
+        </Constraint>
+
+        <Constraint android:id="@id/chat_unread_count">
+            <PropertySet motion:visibilityMode="ignore" motion:applyMotionScene="false" />
+        </Constraint>
+
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/visible" motion:deriveConstraintsFrom="@id/parent">
 
         <Constraint
             android:id="@id/tabs_fragment"
@@ -40,19 +52,9 @@
             motion:layout_constraintLeft_toLeftOf="parent"
             motion:layout_constraintRight_creator="0"/>
 
-        <Constraint
-            android:id="@id/history_unread_count">
-            <PropertySet motion:visibilityMode="ignore" />
-        </Constraint>
-
-        <Constraint
-            android:id="@id/chat_unread_count">
-            <PropertySet motion:visibilityMode="ignore" />
-        </Constraint>
-
     </ConstraintSet>
 
-    <ConstraintSet android:id="@+id/gone">
+    <ConstraintSet android:id="@+id/gone" motion:deriveConstraintsFrom="@id/parent">
 
         <Constraint
             android:id="@id/tabs_fragment"
@@ -62,7 +64,7 @@
 
     </ConstraintSet>
 
-    <ConstraintSet android:id="@+id/call_history">
+    <ConstraintSet android:id="@+id/call_history" motion:deriveConstraintsFrom="@id/parent">
 
         <Constraint
             android:id="@id/selector"
@@ -71,19 +73,9 @@
             motion:layout_constraintLeft_toLeftOf="parent"
             motion:layout_constraintTop_toTopOf="parent" />
 
-        <Constraint
-            android:id="@id/history_unread_count">
-            <PropertySet motion:visibilityMode="ignore" />
-        </Constraint>
-
-        <Constraint
-            android:id="@id/chat_unread_count">
-            <PropertySet motion:visibilityMode="ignore" />
-        </Constraint>
-
     </ConstraintSet>
 
-    <ConstraintSet android:id="@+id/contacts">
+    <ConstraintSet android:id="@+id/contacts" motion:deriveConstraintsFrom="@id/parent">
 
         <Constraint
             android:id="@id/selector"
@@ -92,19 +84,9 @@
             motion:layout_constraintLeft_toLeftOf="parent"
             motion:layout_constraintTop_toTopOf="@id/guidelineTop" />
 
-        <Constraint
-            android:id="@id/history_unread_count">
-            <PropertySet motion:visibilityMode="ignore" />
-        </Constraint>
-
-        <Constraint
-            android:id="@id/chat_unread_count">
-            <PropertySet motion:visibilityMode="ignore" />
-        </Constraint>
-
     </ConstraintSet>
 
-    <ConstraintSet android:id="@+id/dialer">
+    <ConstraintSet android:id="@+id/dialer" motion:deriveConstraintsFrom="@id/parent">
 
         <Constraint
             android:id="@id/selector"
@@ -113,19 +95,9 @@
             motion:layout_constraintLeft_toLeftOf="parent"
             motion:layout_constraintTop_toTopOf="@id/guidelineMiddle" />
 
-        <Constraint
-            android:id="@id/history_unread_count">
-            <PropertySet motion:visibilityMode="ignore" />
-        </Constraint>
-
-        <Constraint
-            android:id="@id/chat_unread_count">
-            <PropertySet motion:visibilityMode="ignore" />
-        </Constraint>
-
     </ConstraintSet>
 
-    <ConstraintSet android:id="@+id/chat_rooms">
+    <ConstraintSet android:id="@+id/chat_rooms" motion:deriveConstraintsFrom="@id/parent">
 
         <Constraint
             android:id="@id/selector"
@@ -133,16 +105,6 @@
             motion:layout_constraintHeight_percent=".25"
             motion:layout_constraintLeft_toLeftOf="parent"
             motion:layout_constraintBottom_toBottomOf="parent" />
-
-        <Constraint
-            android:id="@id/history_unread_count">
-            <PropertySet motion:visibilityMode="ignore" />
-        </Constraint>
-
-        <Constraint
-            android:id="@id/chat_unread_count">
-            <PropertySet motion:visibilityMode="ignore" />
-        </Constraint>
 
     </ConstraintSet>
 

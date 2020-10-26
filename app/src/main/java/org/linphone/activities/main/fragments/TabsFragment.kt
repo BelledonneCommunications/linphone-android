@@ -26,6 +26,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.findNavController
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.navigateToCallHistory
@@ -83,13 +84,19 @@ class TabsFragment : GenericFragment<TabsFragmentBinding>(), NavController.OnDes
 
     override fun onStart() {
         super.onStart()
-        bounceAnimator.start()
+
+        if (corePreferences.enableAnimations) {
+            bounceAnimator.start()
+        }
         findNavController().addOnDestinationChangedListener(this)
     }
 
     override fun onStop() {
-        bounceAnimator.pause()
+        if (corePreferences.enableAnimations) {
+            bounceAnimator.pause()
+        }
         findNavController().removeOnDestinationChangedListener(this)
+
         super.onStop()
     }
 
@@ -98,11 +105,20 @@ class TabsFragment : GenericFragment<TabsFragmentBinding>(), NavController.OnDes
         destination: NavDestination,
         arguments: Bundle?
     ) {
-        when (destination.id) {
-            R.id.masterCallLogsFragment -> binding.motionLayout.transitionToState(R.id.call_history)
-            R.id.masterContactsFragment -> binding.motionLayout.transitionToState(R.id.contacts)
-            R.id.dialerFragment -> binding.motionLayout.transitionToState(R.id.dialer)
-            R.id.masterChatRoomsFragment -> binding.motionLayout.transitionToState(R.id.chat_rooms)
+        if (corePreferences.enableAnimations) {
+            when (destination.id) {
+                R.id.masterCallLogsFragment -> binding.motionLayout.transitionToState(R.id.call_history)
+                R.id.masterContactsFragment -> binding.motionLayout.transitionToState(R.id.contacts)
+                R.id.dialerFragment -> binding.motionLayout.transitionToState(R.id.dialer)
+                R.id.masterChatRoomsFragment -> binding.motionLayout.transitionToState(R.id.chat_rooms)
+            }
+        } else {
+            when (destination.id) {
+                R.id.masterCallLogsFragment -> binding.motionLayout.setTransition(R.id.call_history, R.id.call_history)
+                R.id.masterContactsFragment -> binding.motionLayout.setTransition(R.id.contacts, R.id.contacts)
+                R.id.dialerFragment -> binding.motionLayout.setTransition(R.id.dialer, R.id.dialer)
+                R.id.masterChatRoomsFragment -> binding.motionLayout.setTransition(R.id.chat_rooms, R.id.chat_rooms)
+            }
         }
     }
 }

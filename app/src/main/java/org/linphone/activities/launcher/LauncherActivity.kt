@@ -22,6 +22,7 @@ package org.linphone.activities.launcher
 import android.content.Intent
 import android.os.Bundle
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.GenericActivity
 import org.linphone.activities.main.MainActivity
@@ -55,6 +56,8 @@ class LauncherActivity : GenericActivity() {
         intent.data = getIntent().data
 
         startActivity(intent)
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+        if (corePreferences.enableAnimations) {
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+        }
     }
 }
