@@ -49,7 +49,7 @@ class AccountLoginFragment : AbstractPhoneFragment<AssistantAccountLoginFragment
         sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedAssistantViewModel::class.java)
         }
-        
+
         viewModel = ViewModelProvider(this, AccountLoginViewModelFactory(sharedViewModel.getAccountCreator())).get(AccountLoginViewModel::class.java)
         binding.viewModel = viewModel
 

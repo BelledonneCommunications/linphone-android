@@ -62,16 +62,16 @@ class CorePreferences constructor(private val context: Context) {
             config.setBool("app", "force_portrait_orientation", value)
         }
 
-    var fullScreen: Boolean
-        get() = config.getBool("app", "full_screen_activities", false)
-        set(value) {
-            config.setBool("app", "full_screen_activities", value)
-        }
-
     var replaceSipUriByUsername: Boolean
         get() = config.getBool("app", "replace_sip_uri_by_username", false)
         set(value) {
             config.setBool("app", "replace_sip_uri_by_username", value)
+        }
+
+    var enableAnimations: Boolean
+        get() = config.getBool("app", "enable_animations", false)
+        set(value) {
+            config.setBool("app", "enable_animations", value)
         }
 
     /** -1 means auto, 0 no, 1 yes */

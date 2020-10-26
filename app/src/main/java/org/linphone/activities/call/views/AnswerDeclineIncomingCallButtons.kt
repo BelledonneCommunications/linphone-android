@@ -30,6 +30,7 @@ import android.view.View.OnTouchListener
 import android.view.animation.LinearInterpolator
 import android.widget.LinearLayout
 import androidx.databinding.DataBindingUtil
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.call.viewmodels.IncomingCallViewModel
 import org.linphone.core.tools.Log
@@ -137,6 +138,8 @@ class AnswerDeclineIncomingCallButtons : LinearLayout {
     }
 
     private fun configureAnimation() {
+        if (!corePreferences.enableAnimations) return
+
         val accept1 = ObjectAnimator.ofFloat(binding.arrowAccept1, "alpha", 1f, 0.6f, 0.4f, 1f).apply {
             repeatCount = ObjectAnimator.INFINITE
             repeatMode = ObjectAnimator.RESTART
