@@ -30,7 +30,6 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
-import org.linphone.activities.GenericActivity
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.settings.viewmodels.AdvancedSettingsViewModel
 import org.linphone.core.tools.Log
@@ -63,16 +62,6 @@ class AdvancedSettingsFragment : GenericFragment<SettingsAdvancedFragmentBinding
                         else -> AppCompatDelegate.MODE_NIGHT_UNSPECIFIED
                     }
                 )
-            }
-        })
-
-        viewModel.fullScreenChangedEvent.observe(viewLifecycleOwner, {
-            it.consume { hideUI ->
-                if (hideUI) {
-                    (activity as GenericActivity).hideSystemUI()
-                } else {
-                    (activity as GenericActivity).showSystemUI()
-                }
             }
         })
 

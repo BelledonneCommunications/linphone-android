@@ -28,6 +28,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.assistant.fragments.*
 import org.linphone.activities.main.chat.fragments.ChatRoomCreationFragment
@@ -55,6 +56,7 @@ internal fun Fragment.findMasterNavController(): NavController {
 }
 
 fun getRightToLeftAnimationNavOptions(): NavOptions {
+    if (!corePreferences.enableAnimations) return NavOptions.Builder().build()
     return NavOptions.Builder()
         .setEnterAnim(R.anim.enter_right)
         .setExitAnim(R.anim.exit_left)
@@ -64,6 +66,7 @@ fun getRightToLeftAnimationNavOptions(): NavOptions {
 }
 
 fun getLeftToRightAnimationNavOptions(): NavOptions {
+    if (!corePreferences.enableAnimations) return NavOptions.Builder().build()
     return NavOptions.Builder()
         .setEnterAnim(R.anim.enter_left)
         .setExitAnim(R.anim.exit_right)
@@ -73,6 +76,7 @@ fun getLeftToRightAnimationNavOptions(): NavOptions {
 }
 
 fun getRightToLeftNoPopAnimationNavOptions(): NavOptions {
+    if (!corePreferences.enableAnimations) return NavOptions.Builder().build()
     return NavOptions.Builder()
         .setEnterAnim(R.anim.enter_right)
         .setExitAnim(R.anim.exit_left)
@@ -80,6 +84,7 @@ fun getRightToLeftNoPopAnimationNavOptions(): NavOptions {
 }
 
 fun getLeftToRightNoPopAnimationNavOptions(): NavOptions {
+    if (!corePreferences.enableAnimations) return NavOptions.Builder().build()
     return NavOptions.Builder()
         .setEnterAnim(R.anim.enter_left)
         .setExitAnim(R.anim.exit_right)

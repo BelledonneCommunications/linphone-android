@@ -29,6 +29,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -68,6 +69,8 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         }
     }
 
+    private lateinit var tabsFragment: FragmentContainerView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -105,6 +108,8 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                 startActivity(Intent(this, AssistantActivity::class.java))
             }
         }
+
+        tabsFragment = findViewById(R.id.tabs_fragment)
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -147,10 +152,18 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         currentFocus?.hideKeyboard()
 
         val motionLayout: MotionLayout = binding.content as MotionLayout
-        when (destination.id) {
-            R.id.masterCallLogsFragment, R.id.masterContactsFragment, R.id.dialerFragment, R.id.masterChatRoomsFragment ->
-                motionLayout.transitionToState(R.id.visible)
-            else -> motionLayout.transitionToState(R.id.gone)
+        if (corePreferences.enableAnimations) {
+            when (destination.id) {
+                R.id.masterCallLogsFragment, R.id.masterContactsFragment, R.id.dialerFragment, R.id.masterChatRoomsFragment ->
+                    motionLayout.transitionToState(R.id.visible)
+                else -> motionLayout.transitionToState(R.id.gone)
+            }
+        } else {
+            when (destination.id) {
+                R.id.masterCallLogsFragment, R.id.masterContactsFragment, R.id.dialerFragment, R.id.masterChatRoomsFragment ->
+                    motionLayout.setTransition(R.id.visible, R.id.visible)
+                else -> motionLayout.setTransition(R.id.gone, R.id.gone)
+            }
         }
     }
 
