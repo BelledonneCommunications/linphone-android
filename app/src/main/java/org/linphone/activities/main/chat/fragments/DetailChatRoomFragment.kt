@@ -353,9 +353,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 if (viewModel.oneParticipantOneDevice) {
                     coreContext.startCall(viewModel.onlyParticipantOnlyDeviceAddress, true)
                 } else {
-                    if (findNavController().currentDestination?.id == R.id.detailChatRoomFragment) {
-                        navigateToDevices()
-                    }
+                    navigateToDevices()
                 }
 
                 dialog.dismiss()
@@ -366,24 +364,18 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             if (viewModel.oneParticipantOneDevice) {
                 coreContext.startCall(viewModel.onlyParticipantOnlyDeviceAddress, true)
             } else {
-                if (findNavController().currentDestination?.id == R.id.detailChatRoomFragment) {
-                    navigateToDevices()
-                }
+                navigateToDevices()
             }
         }
     }
 
     private fun showGroupInfo(chatRoom: ChatRoom) {
         sharedViewModel.selectedGroupChatRoom.value = chatRoom
-        if (findNavController().currentDestination?.id == R.id.detailChatRoomFragment) {
-            navigateToGroupInfo()
-        }
+        navigateToGroupInfo()
     }
 
     private fun showEphemeralMessages() {
-        if (findNavController().currentDestination?.id == R.id.detailChatRoomFragment) {
-            navigateToEphemeralInfo()
-        }
+        navigateToEphemeralInfo()
     }
 
     private fun showForwardConfirmationDialog(chatMessage: ChatMessage) {
