@@ -30,6 +30,8 @@ import org.linphone.activities.GenericFragment
 import org.linphone.activities.assistant.viewmodels.PhoneAccountValidationViewModel
 import org.linphone.activities.assistant.viewmodels.PhoneAccountValidationViewModelFactory
 import org.linphone.activities.assistant.viewmodels.SharedAssistantViewModel
+import org.linphone.activities.main.navigateToAccountSettings
+import org.linphone.activities.main.navigateToEchoCancellerCalibration
 import org.linphone.databinding.AssistantPhoneAccountValidationFragmentBinding
 
 class PhoneAccountValidationFragment : GenericFragment<AssistantPhoneAccountValidationFragmentBinding>() {
@@ -61,7 +63,7 @@ class PhoneAccountValidationFragment : GenericFragment<AssistantPhoneAccountVali
                     viewModel.isLogin.value == true || viewModel.isCreation.value == true -> {
                         if (coreContext.core.isEchoCancellerCalibrationRequired) {
                             if (findNavController().currentDestination?.id == R.id.phoneAccountValidationFragment) {
-                                findNavController().navigate(R.id.action_phoneAccountValidationFragment_to_echoCancellerCalibrationFragment)
+                                navigateToEchoCancellerCalibration()
                             }
                         } else {
                             requireActivity().finish()
@@ -71,7 +73,7 @@ class PhoneAccountValidationFragment : GenericFragment<AssistantPhoneAccountVali
                         if (findNavController().currentDestination?.id == R.id.phoneAccountValidationFragment) {
                             val args = Bundle()
                             args.putString("Identity", "sip:${viewModel.accountCreator.username}@${viewModel.accountCreator.domain}")
-                            findNavController().navigate(R.id.action_phoneAccountValidationFragment_to_accountSettingsFragment, args)
+                            navigateToAccountSettings(args)
                         }
                     }
                 }

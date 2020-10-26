@@ -27,14 +27,16 @@ import android.os.Parcelable
 import android.provider.MediaStore
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import java.io.File
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.assistant.AssistantActivity
+import org.linphone.activities.main.navigateToAbout
 import org.linphone.activities.main.navigateToAccountSettings
+import org.linphone.activities.main.navigateToRecordings
+import org.linphone.activities.main.navigateToSettings
 import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.activities.main.sidemenu.viewmodels.SideMenuViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
@@ -91,17 +93,17 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
 
         binding.setSettingsClickListener {
             sharedViewModel.toggleDrawerEvent.value = Event(true)
-            findNavController().navigate(R.id.action_global_settingsFragment)
+            navigateToSettings()
         }
 
         binding.setRecordingsClickListener {
             sharedViewModel.toggleDrawerEvent.value = Event(true)
-            findNavController().navigate(R.id.action_global_recordingsFragment)
+            navigateToRecordings()
         }
 
         binding.setAboutClickListener {
             sharedViewModel.toggleDrawerEvent.value = Event(true)
-            findNavController().navigate(R.id.action_global_aboutFragment)
+            navigateToAbout()
         }
 
         binding.setQuitClickListener {

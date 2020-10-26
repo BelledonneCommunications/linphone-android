@@ -32,6 +32,8 @@ import org.linphone.activities.main.chat.adapters.GroupInfoParticipantsAdapter
 import org.linphone.activities.main.chat.viewmodels.GroupInfoViewModel
 import org.linphone.activities.main.chat.viewmodels.GroupInfoViewModelFactory
 import org.linphone.activities.main.fragments.SecureFragment
+import org.linphone.activities.main.navigateToChatRoom
+import org.linphone.activities.main.navigateToChatRoomCreation
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.Address
@@ -111,7 +113,7 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
         viewModel.createdChatRoomEvent.observe(viewLifecycleOwner, {
             it.consume { chatRoom ->
                 sharedViewModel.selectedChatRoom.value = chatRoom
-                goToChatRoom()
+                navigateToChatRoom()
             }
         })
 
@@ -126,18 +128,14 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
         binding.setParticipantsClickListener {
             sharedViewModel.createEncryptedChatRoom = viewModel.isEncrypted.value == true
 
-            if (findNavController().currentDestination?.id == R.id.groupInfoFragment) {
-                val args = Bundle()
-                args.putBoolean("createGroup", true)
-
-                val list = arrayListOf<Address>()
-                for (participant in viewModel.participants.value.orEmpty()) {
-                    list.add(participant.address)
-                }
-                args.putSerializable("participants", list)
-
-                findNavController().navigate(R.id.action_groupInfoFragment_to_chatRoomCreationFragment, args)
+            val args = Bundle()
+            args.putBoolean("createGroup", true)
+            val list = arrayListOf<Address>()
+            for (participant in viewModel.participants.value.orEmpty()) {
+                list.add(participant.address)
             }
+            args.putSerializable("participants", list)
+            navigateToChatRoomCreation(args)
         }
 
         binding.setLeaveClickListener {
@@ -182,12 +180,6 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
             }
 
             viewModel.participants.value = list
-        }
-    }
-
-    private fun goToChatRoom() {
-        if (findNavController().currentDestination?.id == R.id.groupInfoFragment) {
-            findNavController().navigate(R.id.action_groupInfoFragment_to_detailChatRoomFragment)
         }
     }
 

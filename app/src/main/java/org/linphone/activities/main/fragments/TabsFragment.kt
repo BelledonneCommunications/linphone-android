@@ -28,6 +28,10 @@ import androidx.navigation.NavDestination
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
 import org.linphone.activities.GenericFragment
+import org.linphone.activities.main.navigateToCallHistory
+import org.linphone.activities.main.navigateToChatRooms
+import org.linphone.activities.main.navigateToContacts
+import org.linphone.activities.main.navigateToDialer
 import org.linphone.activities.main.viewmodels.TabsViewModel
 import org.linphone.databinding.TabsFragmentBinding
 
@@ -51,35 +55,19 @@ class TabsFragment : GenericFragment<TabsFragmentBinding>(), NavController.OnDes
         binding.viewModel = viewModel
 
         binding.setHistoryClickListener {
-            when (findNavController().currentDestination?.id) {
-                R.id.masterContactsFragment -> findNavController().navigate(R.id.action_masterContactsFragment_to_masterCallLogsFragment)
-                R.id.dialerFragment -> findNavController().navigate(R.id.action_dialerFragment_to_masterCallLogsFragment)
-                R.id.masterChatRoomsFragment -> findNavController().navigate(R.id.action_masterChatRoomsFragment_to_masterCallLogsFragment)
-            }
+            navigateToCallHistory()
         }
 
         binding.setContactsClickListener {
-            when (findNavController().currentDestination?.id) {
-                R.id.masterCallLogsFragment -> findNavController().navigate(R.id.action_masterCallLogsFragment_to_masterContactsFragment)
-                R.id.dialerFragment -> findNavController().navigate(R.id.action_dialerFragment_to_masterContactsFragment)
-                R.id.masterChatRoomsFragment -> findNavController().navigate(R.id.action_masterChatRoomsFragment_to_masterContactsFragment)
-            }
+            navigateToContacts()
         }
 
         binding.setDialerClickListener {
-            when (findNavController().currentDestination?.id) {
-                R.id.masterCallLogsFragment -> findNavController().navigate(R.id.action_masterCallLogsFragment_to_dialerFragment)
-                R.id.masterContactsFragment -> findNavController().navigate(R.id.action_masterContactsFragment_to_dialerFragment)
-                R.id.masterChatRoomsFragment -> findNavController().navigate(R.id.action_masterChatRoomsFragment_to_dialerFragment)
-            }
+            navigateToDialer()
         }
 
         binding.setChatClickListener {
-            when (findNavController().currentDestination?.id) {
-                R.id.masterCallLogsFragment -> findNavController().navigate(R.id.action_masterCallLogsFragment_to_masterChatRoomsFragment)
-                R.id.masterContactsFragment -> findNavController().navigate(R.id.action_masterContactsFragment_to_masterChatRoomsFragment)
-                R.id.dialerFragment -> findNavController().navigate(R.id.action_dialerFragment_to_masterChatRoomsFragment)
-            }
+            navigateToChatRooms()
         }
 
         bounceAnimator.addUpdateListener {

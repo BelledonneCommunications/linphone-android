@@ -12,38 +12,18 @@
         android:label="WelcomeFragment" >
         <action
             android:id="@+id/action_welcomeFragment_to_accountLoginFragment"
-            app:enterAnim="@anim/enter_right"
-            app:exitAnim="@anim/exit_left"
-            app:popEnterAnim="@anim/enter_left"
-            app:popExitAnim="@anim/exit_right"
             app:destination="@id/accountLoginFragment" />
         <action
             android:id="@+id/action_welcomeFragment_to_emailAccountCreationFragment"
-            app:enterAnim="@anim/enter_right"
-            app:exitAnim="@anim/exit_left"
-            app:popEnterAnim="@anim/enter_left"
-            app:popExitAnim="@anim/exit_right"
             app:destination="@id/emailAccountCreationFragment" />
         <action
             android:id="@+id/action_welcomeFragment_to_phoneAccountCreationFragment"
-            app:enterAnim="@anim/enter_right"
-            app:exitAnim="@anim/exit_left"
-            app:popEnterAnim="@anim/enter_left"
-            app:popExitAnim="@anim/exit_right"
             app:destination="@id/phoneAccountCreationFragment" />
         <action
             android:id="@+id/action_welcomeFragment_to_genericAccountLoginFragment"
-            app:enterAnim="@anim/enter_right"
-            app:exitAnim="@anim/exit_left"
-            app:popEnterAnim="@anim/enter_left"
-            app:popExitAnim="@anim/exit_right"
             app:destination="@id/genericAccountLoginFragment" />
         <action
             android:id="@+id/action_welcomeFragment_to_remoteProvisioningFragment"
-            app:enterAnim="@anim/enter_right"
-            app:exitAnim="@anim/exit_left"
-            app:popEnterAnim="@anim/enter_left"
-            app:popExitAnim="@anim/exit_right"
             app:destination="@id/remoteProvisioningFragment" />
     </fragment>
     <fragment
@@ -53,17 +33,9 @@
         android:label="AccountLoginFragment" >
         <action
             android:id="@+id/action_accountLoginFragment_to_echoCancellerCalibrationFragment"
-            app:enterAnim="@anim/enter_right"
-            app:exitAnim="@anim/exit_left"
-            app:popEnterAnim="@anim/enter_left"
-            app:popExitAnim="@anim/exit_right"
             app:destination="@id/echoCancellerCalibrationFragment" />
         <action
             android:id="@+id/action_accountLoginFragment_to_phoneAccountValidationFragment"
-            app:enterAnim="@anim/enter_right"
-            app:exitAnim="@anim/exit_left"
-            app:popEnterAnim="@anim/enter_left"
-            app:popExitAnim="@anim/exit_right"
             app:destination="@id/phoneAccountValidationFragment" />
     </fragment>
     <fragment
@@ -73,10 +45,6 @@
         android:label="GenericAccountLoginFragment" >
         <action
             android:id="@+id/action_genericAccountLoginFragment_to_echoCancellerCalibrationFragment"
-            app:enterAnim="@anim/enter_right"
-            app:exitAnim="@anim/exit_left"
-            app:popEnterAnim="@anim/enter_left"
-            app:popExitAnim="@anim/exit_right"
             app:destination="@id/echoCancellerCalibrationFragment" />
     </fragment>
     <fragment
@@ -86,17 +54,9 @@
         android:label="RemoteProvisioningFragment" >
         <action
             android:id="@+id/action_remoteProvisioningFragment_to_qrCodeFragment"
-            app:enterAnim="@anim/enter_right"
-            app:exitAnim="@anim/exit_left"
-            app:popEnterAnim="@anim/enter_left"
-            app:popExitAnim="@anim/exit_right"
             app:destination="@id/qrCodeFragment" />
         <action
             android:id="@+id/action_remoteProvisioningFragment_to_echoCancellerCalibrationFragment"
-            app:enterAnim="@anim/enter_right"
-            app:exitAnim="@anim/exit_left"
-            app:popEnterAnim="@anim/enter_left"
-            app:popExitAnim="@anim/exit_right"
             app:destination="@id/echoCancellerCalibrationFragment" />
     </fragment>
     <fragment
@@ -106,10 +66,6 @@
         android:label="EmailAccountCreationFragment" >
         <action
             android:id="@+id/action_emailAccountCreationFragment_to_emailAccountValidationFragment"
-            app:enterAnim="@anim/enter_right"
-            app:exitAnim="@anim/exit_left"
-            app:popEnterAnim="@anim/enter_left"
-            app:popExitAnim="@anim/exit_right"
             app:destination="@id/emailAccountValidationFragment" />
     </fragment>
     <fragment
@@ -119,10 +75,6 @@
         android:label="EmailAccountValidationFragment" >
         <action
             android:id="@+id/action_emailAccountValidationFragment_to_phoneAccountLinkingFragment"
-            app:enterAnim="@anim/enter_right"
-            app:exitAnim="@anim/exit_left"
-            app:popEnterAnim="@anim/enter_left"
-            app:popExitAnim="@anim/exit_right"
             app:destination="@id/phoneAccountLinkingFragment" />
     </fragment>
     <fragment
@@ -132,10 +84,6 @@
         android:label="PhoneAccountCreationFragment" >
         <action
             android:id="@+id/action_phoneAccountCreationFragment_to_phoneAccountValidationFragment"
-            app:enterAnim="@anim/enter_right"
-            app:exitAnim="@anim/exit_left"
-            app:popEnterAnim="@anim/enter_left"
-            app:popExitAnim="@anim/exit_right"
             app:destination="@id/phoneAccountValidationFragment" />
     </fragment>
     <fragment
@@ -145,10 +93,6 @@
         android:label="PhoneAccountValidationFragment" >
         <action
             android:id="@+id/action_phoneAccountValidationFragment_to_echoCancellerCalibrationFragment"
-            app:enterAnim="@anim/enter_right"
-            app:exitAnim="@anim/exit_left"
-            app:popEnterAnim="@anim/enter_left"
-            app:popExitAnim="@anim/exit_right"
             app:destination="@id/echoCancellerCalibrationFragment" />
         <argument
             android:name="PhoneNumber"
@@ -191,10 +135,6 @@
             app:nullable="true" />
         <action
             android:id="@+id/action_phoneAccountLinkingFragment_to_phoneAccountValidationFragment"
-            app:enterAnim="@anim/enter_right"
-            app:exitAnim="@anim/exit_left"
-            app:popEnterAnim="@anim/enter_left"
-            app:popExitAnim="@anim/exit_right"
             app:destination="@id/phoneAccountValidationFragment" >
             <argument
                 android:name="IsCreation"
@@ -212,10 +152,6 @@
             android:defaultValue="false" />
         <action
             android:id="@+id/action_phoneAccountLinkingFragment_to_echoCancellerCalibrationFragment"
-            app:enterAnim="@anim/enter_right"
-            app:exitAnim="@anim/exit_left"
-            app:popEnterAnim="@anim/enter_left"
-            app:popExitAnim="@anim/exit_right"
             app:destination="@id/echoCancellerCalibrationFragment" />
     </fragment>
 </navigation>

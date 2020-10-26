@@ -23,7 +23,6 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,6 +34,7 @@ import org.linphone.activities.main.history.adapters.CallLogsListAdapter
 import org.linphone.activities.main.history.viewmodels.CallLogsListViewModel
 import org.linphone.activities.main.history.viewmodels.GroupedCallLogViewModel
 import org.linphone.activities.main.navigateToCallHistory
+import org.linphone.activities.main.navigateToDialer
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.main.viewmodels.TabsViewModel
@@ -166,10 +166,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
                     args.putString("URI", address.asStringUriOnly())
                     args.putBoolean("Transfer", sharedViewModel.pendingCallTransfer)
                     args.putBoolean("SkipAutoCallStart", true) // If auto start call setting is enabled, ignore it
-                    findNavController().navigate(
-                        R.id.action_global_dialerFragment,
-                        args
-                    )
+                    navigateToDialer(args)
                 } else {
                     coreContext.startCall(address)
                 }
