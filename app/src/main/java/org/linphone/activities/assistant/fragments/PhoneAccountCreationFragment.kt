@@ -21,7 +21,6 @@ package org.linphone.activities.assistant.fragments
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import org.linphone.R
 import org.linphone.activities.assistant.viewmodels.PhoneAccountCreationViewModel
 import org.linphone.activities.assistant.viewmodels.PhoneAccountCreationViewModelFactory
@@ -57,12 +56,10 @@ class PhoneAccountCreationFragment : AbstractPhoneFragment<AssistantPhoneAccount
 
         viewModel.goToSmsValidationEvent.observe(viewLifecycleOwner, {
             it.consume {
-                if (findNavController().currentDestination?.id == R.id.phoneAccountCreationFragment) {
-                    val args = Bundle()
-                    args.putBoolean("IsCreation", true)
-                    args.putString("PhoneNumber", viewModel.accountCreator.phoneNumber)
-                    navigateToPhoneAccountValidation(args)
-                }
+                val args = Bundle()
+                args.putBoolean("IsCreation", true)
+                args.putString("PhoneNumber", viewModel.accountCreator.phoneNumber)
+                navigateToPhoneAccountValidation(args)
             }
         })
 

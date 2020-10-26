@@ -88,12 +88,10 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
 
         viewModel.chatRoomCreatedEvent.observe(viewLifecycleOwner, {
             it.consume { chatRoom ->
-                if (findNavController().currentDestination?.id == R.id.detailContactFragment) {
-                    val args = Bundle()
-                    args.putString("LocalSipUri", chatRoom.localAddress.asStringUriOnly())
-                    args.putString("RemoteSipUri", chatRoom.peerAddress.asStringUriOnly())
-                    navigateToChatRooms(args)
-                }
+                val args = Bundle()
+                args.putString("LocalSipUri", chatRoom.localAddress.asStringUriOnly())
+                args.putString("RemoteSipUri", chatRoom.peerAddress.asStringUriOnly())
+                navigateToChatRooms(args)
             }
         })
 
@@ -103,9 +101,7 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
         binding.back.visibility = if (resources.getBoolean(R.bool.isTablet)) View.INVISIBLE else View.VISIBLE
 
         binding.setEditClickListener {
-            if (findNavController().currentDestination?.id == R.id.detailContactFragment) {
-                navigateToContactEditor()
-            }
+            navigateToContactEditor()
         }
 
         binding.setDeleteClickListener {

@@ -104,12 +104,10 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
 
         viewModel.chatRoomCreatedEvent.observe(viewLifecycleOwner, {
             it.consume { chatRoom ->
-                if (findNavController().currentDestination?.id == R.id.detailCallLogFragment) {
-                    val args = Bundle()
-                    args.putString("LocalSipUri", chatRoom.localAddress.asStringUriOnly())
-                    args.putString("RemoteSipUri", chatRoom.peerAddress.asStringUriOnly())
-                    navigateToChatRooms(args)
-                }
+                val args = Bundle()
+                args.putString("LocalSipUri", chatRoom.localAddress.asStringUriOnly())
+                args.putString("RemoteSipUri", chatRoom.peerAddress.asStringUriOnly())
+                navigateToChatRooms(args)
             }
         })
 

@@ -21,7 +21,6 @@ package org.linphone.activities.assistant.fragments
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.assistant.viewmodels.EmailAccountCreationViewModel
@@ -50,9 +49,7 @@ class EmailAccountCreationFragment : GenericFragment<AssistantEmailAccountCreati
 
         viewModel.goToEmailValidationEvent.observe(viewLifecycleOwner, {
             it.consume {
-                if (findNavController().currentDestination?.id == R.id.emailAccountCreationFragment) {
-                    navigateToEmailAccountValidation()
-                }
+                navigateToEmailAccountValidation()
             }
         })
     }

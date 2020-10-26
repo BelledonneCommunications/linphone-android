@@ -21,7 +21,6 @@ package org.linphone.activities.assistant.fragments
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.assistant.viewmodels.*
@@ -48,13 +47,11 @@ class EmailAccountValidationFragment : GenericFragment<AssistantEmailAccountVali
 
         viewModel.leaveAssistantEvent.observe(viewLifecycleOwner, {
             it.consume {
-                if (findNavController().currentDestination?.id == R.id.emailAccountValidationFragment) {
-                    val args = Bundle()
-                    args.putBoolean("AllowSkip", true)
-                    args.putString("Username", viewModel.accountCreator.username)
-                    args.putString("Password", viewModel.accountCreator.password)
-                    navigateToAccountLinking(args)
-                }
+                val args = Bundle()
+                args.putBoolean("AllowSkip", true)
+                args.putString("Username", viewModel.accountCreator.username)
+                args.putString("Password", viewModel.accountCreator.password)
+                navigateToAccountLinking(args)
             }
         })
     }
