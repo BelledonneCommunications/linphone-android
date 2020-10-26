@@ -74,6 +74,15 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
         _adapter = ContactsListAdapter(listSelectionViewModel, viewLifecycleOwner)
         binding.contactsList.adapter = adapter
 
+        // To ensure animation will be smooth
+        binding.contactsList.apply {
+            postponeEnterTransition()
+            viewTreeObserver.addOnPreDrawListener {
+                startPostponedEnterTransition()
+                true
+            }
+        }
+
         binding.setEditClickListener {
             if (PermissionHelper.get().hasWriteContactsPermission()) {
                 listSelectionViewModel.isEditionEnabled.value = true
