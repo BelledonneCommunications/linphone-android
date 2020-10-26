@@ -52,9 +52,9 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
 
         binding.lifecycleOwner = this
 
-        sharedViewModel = activity?.run {
+        sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
-        } ?: throw Exception("Invalid Activity")
+        }
 
         val contact = sharedViewModel.selectedContact.value
         contact ?: return

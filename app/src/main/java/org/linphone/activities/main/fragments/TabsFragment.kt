@@ -49,9 +49,9 @@ class TabsFragment : GenericFragment<TabsFragmentBinding>(), NavController.OnDes
 
         binding.lifecycleOwner = this
 
-        viewModel = activity?.run {
+        viewModel = requireActivity().run {
             ViewModelProvider(this).get(TabsViewModel::class.java)
-        } ?: throw Exception("Invalid Activity")
+        }
         binding.viewModel = viewModel
 
         binding.setHistoryClickListener {

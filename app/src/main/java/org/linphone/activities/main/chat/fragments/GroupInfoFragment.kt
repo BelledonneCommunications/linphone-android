@@ -55,9 +55,9 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
 
         binding.lifecycleOwner = this
 
-        sharedViewModel = activity?.run {
+        sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
-        } ?: throw Exception("Invalid Activity")
+        }
 
         val chatRoom: ChatRoom? = sharedViewModel.selectedGroupChatRoom.value
         isSecure = chatRoom?.currentParams?.encryptionEnabled() ?: false
