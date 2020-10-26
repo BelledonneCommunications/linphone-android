@@ -70,6 +70,15 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
         adapter.updateSecurity(viewModel.isEncrypted.value == true)
         binding.contactsList.adapter = adapter
 
+        // To ensure animation will be smooth
+        binding.contactsList.apply {
+            postponeEnterTransition()
+            viewTreeObserver.addOnPreDrawListener {
+                startPostponedEnterTransition()
+                true
+            }
+        }
+
         val layoutManager = LinearLayoutManager(activity)
         binding.contactsList.layoutManager = layoutManager
 

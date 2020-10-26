@@ -81,6 +81,15 @@ class ImdnFragment : SecureFragment<ChatRoomImdnFragmentBinding>() {
         adapter = ImdnAdapter(viewLifecycleOwner)
         binding.participantsList.adapter = adapter
 
+        // To ensure animation will be smooth
+        binding.participantsList.apply {
+            postponeEnterTransition()
+            viewTreeObserver.addOnPreDrawListener {
+                startPostponedEnterTransition()
+                true
+            }
+        }
+
         val layoutManager = LinearLayoutManager(activity)
         binding.participantsList.layoutManager = layoutManager
 

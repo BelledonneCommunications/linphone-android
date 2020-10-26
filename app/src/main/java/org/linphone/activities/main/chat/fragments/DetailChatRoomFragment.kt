@@ -121,6 +121,15 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         binding.chatMessagesList.adapter = adapter
         adapter.registerAdapterDataObserver(observer)
 
+        // To ensure animation will be smooth
+        binding.chatMessagesList.apply {
+            postponeEnterTransition()
+            viewTreeObserver.addOnPreDrawListener {
+                startPostponedEnterTransition()
+                true
+            }
+        }
+
         val layoutManager = LinearLayoutManager(activity)
         layoutManager.stackFromEnd = true
         binding.chatMessagesList.layoutManager = layoutManager
