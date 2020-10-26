@@ -20,12 +20,16 @@
 package org.linphone.activities.call.fragments
 
 import android.Manifest
+import android.animation.ValueAnimator
 import android.annotation.TargetApi
 import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
 import android.os.SystemClock
+import android.view.View
+import android.view.animation.LinearInterpolator
+import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
@@ -52,6 +56,10 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
     private var dialog: Dialog? = null
 
     override fun getLayoutId(): Int = R.layout.call_controls_fragment
+
+    private val bounceAnimator: ValueAnimator by lazy {
+        ValueAnimator.ofFloat(resources.getDimension(R.dimen.tabs_fragment_unread_count_bounce_offset), 0f)
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -140,6 +148,29 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
         if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
             checkPermissions()
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        bounceAnimator.addUpdateListener {
+            val value = it.animatedValue as Float
+            view.findViewById<TextView>(R.id.chat_unread_count).translationY = -value
+        }
+        bounceAnimator.interpolator = LinearInterpolator()
+        bounceAnimator.duration = 250
+        bounceAnimator.repeatMode = ValueAnimator.REVERSE
+        bounceAnimator.repeatCount = ValueAnimator.INFINITE
+    }
+
+    override fun onStart() {
+        super.onStart()
+        bounceAnimator.start()
+    }
+
+    override fun onStop() {
+        bounceAnimator.pause()
+        super.onStop()
     }
 
     override fun onRequestPermissionsResult(
