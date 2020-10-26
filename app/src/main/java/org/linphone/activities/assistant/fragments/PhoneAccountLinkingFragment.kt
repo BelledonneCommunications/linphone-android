@@ -21,7 +21,6 @@ package org.linphone.activities.assistant.fragments
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication
 import org.linphone.R
 import org.linphone.activities.assistant.viewmodels.*
@@ -72,25 +71,19 @@ class PhoneAccountLinkingFragment : AbstractPhoneFragment<AssistantPhoneAccountL
 
         viewModel.goToSmsValidationEvent.observe(viewLifecycleOwner, {
             it.consume {
-                if (findNavController().currentDestination?.id == R.id.phoneAccountLinkingFragment) {
-                    val args = Bundle()
-                    args.putBoolean("IsLinking", true)
-                    args.putString("PhoneNumber", viewModel.accountCreator.phoneNumber)
-                    navigateToPhoneAccountValidation(args)
-                }
+                val args = Bundle()
+                args.putBoolean("IsLinking", true)
+                args.putString("PhoneNumber", viewModel.accountCreator.phoneNumber)
+                navigateToPhoneAccountValidation(args)
             }
         })
 
         viewModel.leaveAssistantEvent.observe(viewLifecycleOwner, {
             it.consume {
-                if (findNavController().currentDestination?.id == R.id.phoneAccountLinkingFragment) {
-                    if (LinphoneApplication.coreContext.core.isEchoCancellerCalibrationRequired) {
-                        if (findNavController().currentDestination?.id == R.id.phoneAccountValidationFragment) {
-                            navigateToEchoCancellerCalibration()
-                        }
-                    } else {
-                        requireActivity().finish()
-                    }
+                if (LinphoneApplication.coreContext.core.isEchoCancellerCalibrationRequired) {
+                    navigateToEchoCancellerCalibration()
+                } else {
+                    requireActivity().finish()
                 }
             }
         })

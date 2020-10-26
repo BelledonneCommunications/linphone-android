@@ -21,7 +21,6 @@ package org.linphone.activities.assistant.fragments
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.GenericFragment
@@ -51,18 +50,14 @@ class RemoteProvisioningFragment : GenericFragment<AssistantRemoteProvisioningFr
         binding.viewModel = viewModel
 
         binding.setQrCodeClickListener {
-            if (findNavController().currentDestination?.id == R.id.remoteProvisioningFragment) {
-                navigateToQrCode()
-            }
+            navigateToQrCode()
         }
 
         viewModel.fetchSuccessfulEvent.observe(viewLifecycleOwner, {
             it.consume { success ->
                 if (success) {
                     if (coreContext.core.isEchoCancellerCalibrationRequired) {
-                        if (findNavController().currentDestination?.id == R.id.remoteProvisioningFragment) {
-                            navigateToEchoCancellerCalibration()
-                        }
+                        navigateToEchoCancellerCalibration()
                     } else {
                         requireActivity().finish()
                     }
