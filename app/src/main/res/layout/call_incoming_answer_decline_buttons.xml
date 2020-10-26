@@ -42,25 +42,25 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/arrow_hangup"
+                    android:id="@+id/arrow_hangup_1"
                     android:contentDescription="@string/content_description_slide_right_hangup"
                     android:src="@drawable/arrow_hangup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
                 <ImageView
+                    android:id="@+id/arrow_hangup_2"
                     android:src="@drawable/arrow_hangup"
                     android:contentDescription="@null"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:alpha="0.6"/>
+                    android:layout_height="wrap_content"/>
 
                 <ImageView
+                    android:id="@+id/arrow_hangup_3"
                     android:src="@drawable/arrow_hangup"
                     android:contentDescription="@null"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:alpha="0.4"/>
+                    android:layout_height="wrap_content"/>
 
             </LinearLayout>
 
@@ -88,20 +88,21 @@
                 android:orientation="horizontal">
 
                 <ImageView
+                    android:id="@+id/arrow_accept_3"
                     android:src="@drawable/arrow_accept"
                     android:contentDescription="@null"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:alpha="0.4"/>
+                    android:layout_height="wrap_content"/>
 
                 <ImageView
+                    android:id="@+id/arrow_accept_2"
                     android:src="@drawable/arrow_accept"
                     android:contentDescription="@null"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:alpha="0.6"/>
+                    android:layout_height="wrap_content"/>
 
                 <ImageView
+                    android:id="@+id/arrow_accept_1"
                     android:src="@drawable/arrow_accept"
                     android:contentDescription="@string/content_description_slide_left_answer"
                     android:layout_width="wrap_content"
