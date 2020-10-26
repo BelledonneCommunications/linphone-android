@@ -21,7 +21,6 @@ package org.linphone.activities.assistant.fragments
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.assistant.viewmodels.WelcomeViewModel
@@ -46,31 +45,23 @@ class WelcomeFragment : GenericFragment<AssistantWelcomeFragmentBinding>() {
         binding.viewModel = viewModel
 
         binding.setCreateAccountClickListener {
-            if (findNavController().currentDestination?.id == R.id.welcomeFragment) {
-                if (resources.getBoolean(R.bool.isTablet)) {
-                    navigateToEmailAccountCreation()
-                } else {
-                    navigateToPhoneAccountCreation()
-                }
+            if (resources.getBoolean(R.bool.isTablet)) {
+                navigateToEmailAccountCreation()
+            } else {
+                navigateToPhoneAccountCreation()
             }
         }
 
         binding.setAccountLoginClickListener {
-            if (findNavController().currentDestination?.id == R.id.welcomeFragment) {
-                navigateToAccountLogin()
-            }
+            navigateToAccountLogin()
         }
 
         binding.setGenericAccountLoginClickListener {
-            if (findNavController().currentDestination?.id == R.id.welcomeFragment) {
-                navigateToGenericLogin()
-            }
+            navigateToGenericLogin()
         }
 
         binding.setRemoteProvisioningClickListener {
-            if (findNavController().currentDestination?.id == R.id.welcomeFragment) {
-                navigateToRemoteProvisioning()
-            }
+            navigateToRemoteProvisioning()
         }
     }
 }

@@ -24,7 +24,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.assistant.viewmodels.AccountLoginViewModel
@@ -75,21 +74,17 @@ class AccountLoginFragment : AbstractPhoneFragment<AssistantAccountLoginFragment
 
         viewModel.goToSmsValidationEvent.observe(viewLifecycleOwner, {
             it.consume {
-                if (findNavController().currentDestination?.id == R.id.accountLoginFragment) {
-                    val args = Bundle()
-                    args.putBoolean("IsLogin", true)
-                    args.putString("PhoneNumber", viewModel.accountCreator.phoneNumber)
-                    navigateToPhoneAccountValidation(args)
-                }
+                val args = Bundle()
+                args.putBoolean("IsLogin", true)
+                args.putString("PhoneNumber", viewModel.accountCreator.phoneNumber)
+                navigateToPhoneAccountValidation(args)
             }
         })
 
         viewModel.leaveAssistantEvent.observe(viewLifecycleOwner, {
             it.consume {
                 if (coreContext.core.isEchoCancellerCalibrationRequired) {
-                    if (findNavController().currentDestination?.id == R.id.accountLoginFragment) {
-                        navigateToEchoCancellerCalibration()
-                    }
+                    navigateToEchoCancellerCalibration()
                 } else {
                     requireActivity().finish()
                 }

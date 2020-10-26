@@ -56,17 +56,15 @@ class AccountSettingsFragment : GenericFragment<SettingsAccountFragmentBinding>(
 
         viewModel.linkPhoneNumberEvent.observe(viewLifecycleOwner, {
             it.consume {
-                if (findNavController().currentDestination?.id == R.id.accountSettingsFragment) {
-                    val authInfo = viewModel.proxyConfig.findAuthInfo()
-                    if (authInfo == null) {
-                        Log.e("[Account Settings] Failed to find auth info for proxy config ${viewModel.proxyConfig}")
-                    } else {
-                        val args = Bundle()
-                        args.putString("Username", authInfo.username)
-                        args.putString("Password", authInfo.password)
-                        args.putString("HA1", authInfo.ha1)
-                        navigateToPhoneLinking(args)
-                    }
+                val authInfo = viewModel.proxyConfig.findAuthInfo()
+                if (authInfo == null) {
+                    Log.e("[Account Settings] Failed to find auth info for proxy config ${viewModel.proxyConfig}")
+                } else {
+                    val args = Bundle()
+                    args.putString("Username", authInfo.username)
+                    args.putString("Password", authInfo.password)
+                    args.putString("HA1", authInfo.ha1)
+                    navigateToPhoneLinking(args)
                 }
             }
         })

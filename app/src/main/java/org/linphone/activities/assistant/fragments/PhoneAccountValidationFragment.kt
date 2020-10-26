@@ -23,7 +23,6 @@ import android.content.ClipboardManager
 import android.content.Context.CLIPBOARD_SERVICE
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.GenericFragment
@@ -62,19 +61,15 @@ class PhoneAccountValidationFragment : GenericFragment<AssistantPhoneAccountVali
                 when {
                     viewModel.isLogin.value == true || viewModel.isCreation.value == true -> {
                         if (coreContext.core.isEchoCancellerCalibrationRequired) {
-                            if (findNavController().currentDestination?.id == R.id.phoneAccountValidationFragment) {
-                                navigateToEchoCancellerCalibration()
-                            }
+                            navigateToEchoCancellerCalibration()
                         } else {
                             requireActivity().finish()
                         }
                     }
                     viewModel.isLinking.value == true -> {
-                        if (findNavController().currentDestination?.id == R.id.phoneAccountValidationFragment) {
-                            val args = Bundle()
-                            args.putString("Identity", "sip:${viewModel.accountCreator.username}@${viewModel.accountCreator.domain}")
-                            navigateToAccountSettings(args)
-                        }
+                       val args = Bundle()
+                        args.putString("Identity", "sip:${viewModel.accountCreator.username}@${viewModel.accountCreator.domain}")
+                        navigateToAccountSettings(args)
                     }
                 }
             }

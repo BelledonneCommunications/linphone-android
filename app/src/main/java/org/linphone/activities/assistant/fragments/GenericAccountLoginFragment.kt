@@ -22,7 +22,6 @@ package org.linphone.activities.assistant.fragments
 import android.app.Dialog
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.GenericFragment
@@ -55,9 +54,7 @@ class GenericAccountLoginFragment : GenericFragment<AssistantGenericAccountLogin
         viewModel.leaveAssistantEvent.observe(viewLifecycleOwner, {
             it.consume {
                 if (coreContext.core.isEchoCancellerCalibrationRequired) {
-                    if (findNavController().currentDestination?.id == R.id.genericAccountLoginFragment) {
-                        navigateToEchoCancellerCalibration()
-                    }
+                    navigateToEchoCancellerCalibration()
                 } else {
                     requireActivity().finish()
                 }
