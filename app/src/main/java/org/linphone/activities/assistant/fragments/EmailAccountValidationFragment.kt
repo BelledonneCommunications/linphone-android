@@ -25,6 +25,7 @@ import androidx.navigation.fragment.findNavController
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.assistant.viewmodels.*
+import org.linphone.activities.main.navigateToAccountLinking
 import org.linphone.databinding.AssistantEmailAccountValidationFragmentBinding
 
 class EmailAccountValidationFragment : GenericFragment<AssistantEmailAccountValidationFragmentBinding>() {
@@ -52,7 +53,7 @@ class EmailAccountValidationFragment : GenericFragment<AssistantEmailAccountVali
                     args.putBoolean("AllowSkip", true)
                     args.putString("Username", viewModel.accountCreator.username)
                     args.putString("Password", viewModel.accountCreator.password)
-                    findNavController().navigate(R.id.action_emailAccountValidationFragment_to_phoneAccountLinkingFragment, args)
+                    navigateToAccountLinking(args)
                 }
             }
         })

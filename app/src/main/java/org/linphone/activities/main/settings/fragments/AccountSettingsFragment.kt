@@ -25,6 +25,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
 import org.linphone.activities.GenericFragment
+import org.linphone.activities.main.navigateToPhoneLinking
 import org.linphone.activities.main.settings.viewmodels.AccountSettingsViewModel
 import org.linphone.activities.main.settings.viewmodels.AccountSettingsViewModelFactory
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
@@ -64,10 +65,7 @@ class AccountSettingsFragment : GenericFragment<SettingsAccountFragmentBinding>(
                         args.putString("Username", authInfo.username)
                         args.putString("Password", authInfo.password)
                         args.putString("HA1", authInfo.ha1)
-                        findNavController().navigate(
-                            R.id.action_accountSettingsFragment_to_phoneAccountLinkingFragment,
-                            args
-                        )
+                        navigateToPhoneLinking(args)
                     }
                 }
             }

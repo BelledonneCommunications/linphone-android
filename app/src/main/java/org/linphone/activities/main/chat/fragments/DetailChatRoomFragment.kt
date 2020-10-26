@@ -41,13 +41,14 @@ import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
-import org.linphone.activities.main.MainActivity
+import org.linphone.activities.main.*
 import org.linphone.activities.main.chat.ChatScrollListener
 import org.linphone.activities.main.chat.adapters.ChatMessagesListAdapter
 import org.linphone.activities.main.chat.viewmodels.*
 import org.linphone.activities.main.fragments.MasterFragment
 import org.linphone.activities.main.navigateToChatRooms
 import org.linphone.activities.main.navigateToContacts
+import org.linphone.activities.main.navigateToImdn
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.*
@@ -184,7 +185,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             it.consume { chatMessage ->
                 val args = Bundle()
                 args.putString("MessageId", chatMessage.messageId)
-                findNavController().navigate(R.id.action_detailChatRoomFragment_to_imdnFragment, args)
+                navigateToImdn(args)
             }
         })
 
@@ -344,7 +345,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                     coreContext.startCall(viewModel.onlyParticipantOnlyDeviceAddress, true)
                 } else {
                     if (findNavController().currentDestination?.id == R.id.detailChatRoomFragment) {
-                        findNavController().navigate(R.id.action_detailChatRoomFragment_to_devicesFragment)
+                        navigateToDevices()
                     }
                 }
 
@@ -357,7 +358,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 coreContext.startCall(viewModel.onlyParticipantOnlyDeviceAddress, true)
             } else {
                 if (findNavController().currentDestination?.id == R.id.detailChatRoomFragment) {
-                    findNavController().navigate(R.id.action_detailChatRoomFragment_to_devicesFragment)
+                    navigateToDevices()
                 }
             }
         }
@@ -366,13 +367,13 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
     private fun showGroupInfo(chatRoom: ChatRoom) {
         sharedViewModel.selectedGroupChatRoom.value = chatRoom
         if (findNavController().currentDestination?.id == R.id.detailChatRoomFragment) {
-            findNavController().navigate(R.id.action_detailChatRoomFragment_to_groupInfoFragment)
+            navigateToGroupInfo()
         }
     }
 
     private fun showEphemeralMessages() {
         if (findNavController().currentDestination?.id == R.id.detailChatRoomFragment) {
-            findNavController().navigate(R.id.action_detailChatRoomFragment_to_ephemeralFragment)
+            navigateToEphemeralInfo()
         }
     }
 

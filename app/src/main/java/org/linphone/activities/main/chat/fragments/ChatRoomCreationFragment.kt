@@ -32,6 +32,8 @@ import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.chat.adapters.ChatRoomCreationContactsAdapter
 import org.linphone.activities.main.chat.viewmodels.ChatRoomCreationViewModel
 import org.linphone.activities.main.fragments.SecureFragment
+import org.linphone.activities.main.navigateToChatRoom
+import org.linphone.activities.main.navigateToGroupInfo
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.Address
 import org.linphone.core.tools.Log
@@ -108,9 +110,7 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
         viewModel.chatRoomCreatedEvent.observe(viewLifecycleOwner, {
             it.consume { chatRoom ->
                 sharedViewModel.selectedChatRoom.value = chatRoom
-                if (findNavController().currentDestination?.id == R.id.chatRoomCreationFragment) {
-                    findNavController().navigate(R.id.action_chatRoomCreationFragment_to_detailChatRoomFragment)
-                }
+                navigateToChatRoom()
             }
         })
 
@@ -133,12 +133,9 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
         // Next button is only used to go to group chat info fragment
         binding.setNextClickListener {
             sharedViewModel.createEncryptedChatRoom = viewModel.isEncrypted.value == true
-
-            if (findNavController().currentDestination?.id == R.id.chatRoomCreationFragment) {
-                val args = Bundle()
-                args.putSerializable("participants", viewModel.selectedAddresses.value)
-                findNavController().navigate(R.id.action_chatRoomCreationFragment_to_groupInfoFragment, args)
-            }
+            val args = Bundle()
+            args.putSerializable("participants", viewModel.selectedAddresses.value)
+            navigateToGroupInfo(args)
         }
 
         viewModel.onErrorEvent.observe(viewLifecycleOwner, {

@@ -25,6 +25,8 @@ import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication
 import org.linphone.R
 import org.linphone.activities.assistant.viewmodels.*
+import org.linphone.activities.main.navigateToEchoCancellerCalibration
+import org.linphone.activities.main.navigateToPhoneAccountValidation
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantPhoneAccountLinkingFragmentBinding
 
@@ -74,7 +76,7 @@ class PhoneAccountLinkingFragment : AbstractPhoneFragment<AssistantPhoneAccountL
                     val args = Bundle()
                     args.putBoolean("IsLinking", true)
                     args.putString("PhoneNumber", viewModel.accountCreator.phoneNumber)
-                    findNavController().navigate(R.id.action_phoneAccountLinkingFragment_to_phoneAccountValidationFragment, args)
+                    navigateToPhoneAccountValidation(args)
                 }
             }
         })
@@ -84,7 +86,7 @@ class PhoneAccountLinkingFragment : AbstractPhoneFragment<AssistantPhoneAccountL
                 if (findNavController().currentDestination?.id == R.id.phoneAccountLinkingFragment) {
                     if (LinphoneApplication.coreContext.core.isEchoCancellerCalibrationRequired) {
                         if (findNavController().currentDestination?.id == R.id.phoneAccountValidationFragment) {
-                            findNavController().navigate(R.id.action_phoneAccountLinkingFragment_to_echoCancellerCalibrationFragment)
+                            navigateToEchoCancellerCalibration()
                         }
                     } else {
                         requireActivity().finish()
