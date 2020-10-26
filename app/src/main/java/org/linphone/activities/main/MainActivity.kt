@@ -207,10 +207,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                     Log.i("[Main Activity] Starting dialer with pre-filled URI $addressToCall")
                     val args = Bundle()
                     args.putString("URI", addressToCall)
-                    findNavController(R.id.nav_host_fragment).navigate(
-                        R.id.action_global_dialerFragment,
-                        args
-                    )
+                    navigateToDialer(args)
                 }
             }
             else -> {
@@ -237,10 +234,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                         Log.i("[Main Activity] Found dialer intent extra, go to dialer")
                         val args = Bundle()
                         args.putBoolean("Transfer", intent.getBooleanExtra("Transfer", false))
-                        findNavController(R.id.nav_host_fragment).navigate(
-                            R.id.action_global_dialerFragment,
-                            args
-                        )
+                        navigateToDialer(args)
                     }
                 }
             }

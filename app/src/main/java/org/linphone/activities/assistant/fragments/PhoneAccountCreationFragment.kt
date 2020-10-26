@@ -26,6 +26,7 @@ import org.linphone.R
 import org.linphone.activities.assistant.viewmodels.PhoneAccountCreationViewModel
 import org.linphone.activities.assistant.viewmodels.PhoneAccountCreationViewModelFactory
 import org.linphone.activities.assistant.viewmodels.SharedAssistantViewModel
+import org.linphone.activities.main.navigateToPhoneAccountValidation
 import org.linphone.databinding.AssistantPhoneAccountCreationFragmentBinding
 
 class PhoneAccountCreationFragment : AbstractPhoneFragment<AssistantPhoneAccountCreationFragmentBinding>() {
@@ -60,7 +61,7 @@ class PhoneAccountCreationFragment : AbstractPhoneFragment<AssistantPhoneAccount
                     val args = Bundle()
                     args.putBoolean("IsCreation", true)
                     args.putString("PhoneNumber", viewModel.accountCreator.phoneNumber)
-                    findNavController().navigate(R.id.action_phoneAccountCreationFragment_to_phoneAccountValidationFragment, args)
+                    navigateToPhoneAccountValidation(args)
                 }
             }
         })

@@ -30,6 +30,8 @@ import org.linphone.R
 import org.linphone.activities.assistant.viewmodels.AccountLoginViewModel
 import org.linphone.activities.assistant.viewmodels.AccountLoginViewModelFactory
 import org.linphone.activities.assistant.viewmodels.SharedAssistantViewModel
+import org.linphone.activities.main.navigateToEchoCancellerCalibration
+import org.linphone.activities.main.navigateToPhoneAccountValidation
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.databinding.AssistantAccountLoginFragmentBinding
 import org.linphone.utils.DialogUtils
@@ -77,7 +79,7 @@ class AccountLoginFragment : AbstractPhoneFragment<AssistantAccountLoginFragment
                     val args = Bundle()
                     args.putBoolean("IsLogin", true)
                     args.putString("PhoneNumber", viewModel.accountCreator.phoneNumber)
-                    findNavController().navigate(R.id.action_accountLoginFragment_to_phoneAccountValidationFragment, args)
+                    navigateToPhoneAccountValidation(args)
                 }
             }
         })
@@ -86,7 +88,7 @@ class AccountLoginFragment : AbstractPhoneFragment<AssistantAccountLoginFragment
             it.consume {
                 if (coreContext.core.isEchoCancellerCalibrationRequired) {
                     if (findNavController().currentDestination?.id == R.id.accountLoginFragment) {
-                        findNavController().navigate(R.id.action_accountLoginFragment_to_echoCancellerCalibrationFragment)
+                        navigateToEchoCancellerCalibration()
                     }
                 } else {
                     requireActivity().finish()

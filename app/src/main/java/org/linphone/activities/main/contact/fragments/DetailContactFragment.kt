@@ -32,6 +32,9 @@ import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.contact.viewmodels.ContactViewModel
 import org.linphone.activities.main.contact.viewmodels.ContactViewModelFactory
+import org.linphone.activities.main.navigateToChatRooms
+import org.linphone.activities.main.navigateToContactEditor
+import org.linphone.activities.main.navigateToDialer
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.tools.Log
@@ -76,10 +79,7 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
                     args.putString("URI", address.asStringUriOnly())
                     args.putBoolean("Transfer", sharedViewModel.pendingCallTransfer)
                     args.putBoolean("SkipAutoCallStart", true) // If auto start call setting is enabled, ignore it
-                    findNavController().navigate(
-                        R.id.action_global_dialerFragment,
-                        args
-                    )
+                    navigateToDialer(args)
                 } else {
                     coreContext.startCall(address)
                 }
@@ -92,7 +92,7 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
                     val args = Bundle()
                     args.putString("LocalSipUri", chatRoom.localAddress.asStringUriOnly())
                     args.putString("RemoteSipUri", chatRoom.peerAddress.asStringUriOnly())
-                    findNavController().navigate(R.id.action_global_masterChatRoomsFragment, args)
+                    navigateToChatRooms(args)
                 }
             }
         })
@@ -104,7 +104,7 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
 
         binding.setEditClickListener {
             if (findNavController().currentDestination?.id == R.id.detailContactFragment) {
-                findNavController().navigate(R.id.action_detailContactFragment_to_contactEditorFragment)
+                navigateToContactEditor()
             }
         }
 

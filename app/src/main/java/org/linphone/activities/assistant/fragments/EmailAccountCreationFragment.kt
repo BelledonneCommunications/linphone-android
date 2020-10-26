@@ -27,6 +27,7 @@ import org.linphone.activities.GenericFragment
 import org.linphone.activities.assistant.viewmodels.EmailAccountCreationViewModel
 import org.linphone.activities.assistant.viewmodels.EmailAccountCreationViewModelFactory
 import org.linphone.activities.assistant.viewmodels.SharedAssistantViewModel
+import org.linphone.activities.main.navigateToEmailAccountValidation
 import org.linphone.databinding.AssistantEmailAccountCreationFragmentBinding
 
 class EmailAccountCreationFragment : GenericFragment<AssistantEmailAccountCreationFragmentBinding>() {
@@ -50,7 +51,7 @@ class EmailAccountCreationFragment : GenericFragment<AssistantEmailAccountCreati
         viewModel.goToEmailValidationEvent.observe(viewLifecycleOwner, {
             it.consume {
                 if (findNavController().currentDestination?.id == R.id.emailAccountCreationFragment) {
-                    findNavController().navigate(R.id.action_emailAccountCreationFragment_to_emailAccountValidationFragment)
+                    navigateToEmailAccountValidation()
                 }
             }
         })
