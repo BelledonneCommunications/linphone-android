@@ -26,7 +26,7 @@ import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.GenericFragment
-import org.linphone.activities.main.MainActivity
+import org.linphone.activities.main.*
 import org.linphone.activities.main.history.viewmodels.CallLogViewModel
 import org.linphone.activities.main.history.viewmodels.CallLogViewModelFactory
 import org.linphone.activities.main.navigateToContact
@@ -95,10 +95,7 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
                     args.putString("URI", address.asStringUriOnly())
                     args.putBoolean("Transfer", sharedViewModel.pendingCallTransfer)
                     args.putBoolean("SkipAutoCallStart", true) // If auto start call setting is enabled, ignore it
-                    findNavController().navigate(
-                        R.id.action_global_dialerFragment,
-                        args
-                    )
+                    navigateToDialer(args)
                 } else {
                     coreContext.startCall(address)
                 }
@@ -111,7 +108,7 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
                     val args = Bundle()
                     args.putString("LocalSipUri", chatRoom.localAddress.asStringUriOnly())
                     args.putString("RemoteSipUri", chatRoom.peerAddress.asStringUriOnly())
-                    findNavController().navigate(R.id.action_global_masterChatRoomsFragment, args)
+                    navigateToChatRooms(args)
                 }
             }
         })

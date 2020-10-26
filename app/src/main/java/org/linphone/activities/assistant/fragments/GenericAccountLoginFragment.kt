@@ -29,6 +29,7 @@ import org.linphone.activities.GenericFragment
 import org.linphone.activities.assistant.viewmodels.GenericLoginViewModel
 import org.linphone.activities.assistant.viewmodels.GenericLoginViewModelFactory
 import org.linphone.activities.assistant.viewmodels.SharedAssistantViewModel
+import org.linphone.activities.main.navigateToEchoCancellerCalibration
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.databinding.AssistantGenericAccountLoginFragmentBinding
 import org.linphone.utils.DialogUtils
@@ -55,7 +56,7 @@ class GenericAccountLoginFragment : GenericFragment<AssistantGenericAccountLogin
             it.consume {
                 if (coreContext.core.isEchoCancellerCalibrationRequired) {
                     if (findNavController().currentDestination?.id == R.id.genericAccountLoginFragment) {
-                        findNavController().navigate(R.id.action_genericAccountLoginFragment_to_echoCancellerCalibrationFragment)
+                        navigateToEchoCancellerCalibration()
                     }
                 } else {
                     requireActivity().finish()

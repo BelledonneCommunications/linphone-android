@@ -12,31 +12,15 @@
         android:label="DetailChatRoomFragment" >
         <action
             android:id="@+id/action_detailChatRoomFragment_to_imdnFragment"
-            app:enterAnim="@anim/enter_right"
-            app:exitAnim="@anim/exit_left"
-            app:popEnterAnim="@anim/enter_left"
-            app:popExitAnim="@anim/exit_right"
             app:destination="@id/imdnFragment" />
         <action
             android:id="@+id/action_detailChatRoomFragment_to_devicesFragment"
-            app:enterAnim="@anim/enter_right"
-            app:exitAnim="@anim/exit_left"
-            app:popEnterAnim="@anim/enter_left"
-            app:popExitAnim="@anim/exit_right"
             app:destination="@id/devicesFragment" />
         <action
             android:id="@+id/action_detailChatRoomFragment_to_groupInfoFragment"
-            app:enterAnim="@anim/enter_right"
-            app:exitAnim="@anim/exit_left"
-            app:popEnterAnim="@anim/enter_left"
-            app:popExitAnim="@anim/exit_right"
             app:destination="@id/groupInfoFragment" />
         <action
             android:id="@+id/action_detailChatRoomFragment_to_ephemeralFragment"
-            app:enterAnim="@anim/enter_right"
-            app:exitAnim="@anim/exit_left"
-            app:popEnterAnim="@anim/enter_left"
-            app:popExitAnim="@anim/exit_right"
             app:destination="@id/ephemeralFragment"
             app:launchSingleTop="true"
             app:popUpTo="@+id/ephemeralFragment"
@@ -54,17 +38,9 @@
             android:defaultValue="false" />
         <action
             android:id="@+id/action_chatRoomCreationFragment_to_groupInfoFragment"
-            app:enterAnim="@anim/enter_right"
-            app:exitAnim="@anim/exit_left"
-            app:popEnterAnim="@anim/enter_left"
-            app:popExitAnim="@anim/exit_right"
             app:destination="@id/groupInfoFragment" />
         <action
             android:id="@+id/action_chatRoomCreationFragment_to_detailChatRoomFragment"
-            app:enterAnim="@anim/enter_right"
-            app:exitAnim="@anim/exit_left"
-            app:popEnterAnim="@anim/enter_left"
-            app:popExitAnim="@anim/exit_right"
             app:destination="@id/detailChatRoomFragment"
             app:launchSingleTop="true"
             app:popUpTo="@+id/masterChatRoomsFragment"
@@ -82,20 +58,12 @@
         android:label="GroupInfoFragment" >
         <action
             android:id="@+id/action_groupInfoFragment_to_chatRoomCreationFragment"
-            app:enterAnim="@anim/enter_left"
-            app:exitAnim="@anim/exit_right"
-            app:popEnterAnim="@anim/enter_right"
-            app:popExitAnim="@anim/exit_left"
             app:destination="@id/chatRoomCreationFragment"
             app:launchSingleTop="true"
             app:popUpTo="@+id/chatRoomCreationFragment"
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_groupInfoFragment_to_detailChatRoomFragment"
-            app:enterAnim="@anim/enter_right"
-            app:exitAnim="@anim/exit_left"
-            app:popEnterAnim="@anim/enter_left"
-            app:popExitAnim="@anim/exit_right"
             app:destination="@id/detailChatRoomFragment"
             app:launchSingleTop="true"
             app:popUpTo="@+id/masterChatRoomsFragment"

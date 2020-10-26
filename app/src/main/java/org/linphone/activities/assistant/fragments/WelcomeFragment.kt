@@ -25,6 +25,11 @@ import androidx.navigation.fragment.findNavController
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.assistant.viewmodels.WelcomeViewModel
+import org.linphone.activities.main.*
+import org.linphone.activities.main.navigateToAccountLogin
+import org.linphone.activities.main.navigateToEmailAccountCreation
+import org.linphone.activities.main.navigateToGenericLogin
+import org.linphone.activities.main.navigateToRemoteProvisioning
 import org.linphone.databinding.AssistantWelcomeFragmentBinding
 
 class WelcomeFragment : GenericFragment<AssistantWelcomeFragmentBinding>() {
@@ -43,28 +48,28 @@ class WelcomeFragment : GenericFragment<AssistantWelcomeFragmentBinding>() {
         binding.setCreateAccountClickListener {
             if (findNavController().currentDestination?.id == R.id.welcomeFragment) {
                 if (resources.getBoolean(R.bool.isTablet)) {
-                    findNavController().navigate(R.id.action_welcomeFragment_to_emailAccountCreationFragment)
+                    navigateToEmailAccountCreation()
                 } else {
-                    findNavController().navigate(R.id.action_welcomeFragment_to_phoneAccountCreationFragment)
+                    navigateToPhoneAccountCreation()
                 }
             }
         }
 
         binding.setAccountLoginClickListener {
             if (findNavController().currentDestination?.id == R.id.welcomeFragment) {
-                findNavController().navigate(R.id.action_welcomeFragment_to_accountLoginFragment)
+                navigateToAccountLogin()
             }
         }
 
         binding.setGenericAccountLoginClickListener {
             if (findNavController().currentDestination?.id == R.id.welcomeFragment) {
-                findNavController().navigate(R.id.action_welcomeFragment_to_genericAccountLoginFragment)
+                navigateToGenericLogin()
             }
         }
 
         binding.setRemoteProvisioningClickListener {
             if (findNavController().currentDestination?.id == R.id.welcomeFragment) {
-                findNavController().navigate(R.id.action_welcomeFragment_to_remoteProvisioningFragment)
+                navigateToRemoteProvisioning()
             }
         }
     }

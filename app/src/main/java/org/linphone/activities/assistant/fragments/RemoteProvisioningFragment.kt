@@ -28,6 +28,8 @@ import org.linphone.activities.GenericFragment
 import org.linphone.activities.assistant.AssistantActivity
 import org.linphone.activities.assistant.viewmodels.RemoteProvisioningViewModel
 import org.linphone.activities.assistant.viewmodels.SharedAssistantViewModel
+import org.linphone.activities.main.navigateToEchoCancellerCalibration
+import org.linphone.activities.main.navigateToQrCode
 import org.linphone.databinding.AssistantRemoteProvisioningFragmentBinding
 
 class RemoteProvisioningFragment : GenericFragment<AssistantRemoteProvisioningFragmentBinding>() {
@@ -50,7 +52,7 @@ class RemoteProvisioningFragment : GenericFragment<AssistantRemoteProvisioningFr
 
         binding.setQrCodeClickListener {
             if (findNavController().currentDestination?.id == R.id.remoteProvisioningFragment) {
-                findNavController().navigate(R.id.action_remoteProvisioningFragment_to_qrCodeFragment)
+                navigateToQrCode()
             }
         }
 
@@ -59,7 +61,7 @@ class RemoteProvisioningFragment : GenericFragment<AssistantRemoteProvisioningFr
                 if (success) {
                     if (coreContext.core.isEchoCancellerCalibrationRequired) {
                         if (findNavController().currentDestination?.id == R.id.remoteProvisioningFragment) {
-                            findNavController().navigate(R.id.action_remoteProvisioningFragment_to_echoCancellerCalibrationFragment)
+                            navigateToEchoCancellerCalibration()
                         }
                     } else {
                         requireActivity().finish()
