@@ -49,9 +49,9 @@ class StatusFragment : GenericFragment<CallStatusFragmentBinding>() {
         viewModel = ViewModelProvider(this).get(StatusViewModel::class.java)
         binding.viewModel = viewModel
 
-        sharedViewModel = activity?.run {
+        sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedCallViewModel::class.java)
-        } ?: throw Exception("Invalid Activity")
+        }
 
         binding.setStatsClickListener {
             sharedViewModel.toggleDrawerEvent.value = Event(true)

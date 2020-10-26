@@ -39,9 +39,9 @@ class PhoneAccountCreationFragment : AbstractPhoneFragment<AssistantPhoneAccount
 
         binding.lifecycleOwner = this
 
-        sharedViewModel = activity?.run {
+        sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedAssistantViewModel::class.java)
-        } ?: throw Exception("Invalid Activity")
+        }
 
         viewModel = ViewModelProvider(this, PhoneAccountCreationViewModelFactory(sharedViewModel.getAccountCreator())).get(PhoneAccountCreationViewModel::class.java)
         binding.viewModel = viewModel

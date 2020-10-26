@@ -59,9 +59,9 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
         viewModel = ViewModelProvider(this).get(DialerViewModel::class.java)
         binding.viewModel = viewModel
 
-        sharedViewModel = activity?.run {
+        sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
-        } ?: throw Exception("Invalid Activity")
+        }
 
         binding.setNewContactClickListener {
             val deepLink = "linphone-android://contact/new/${viewModel.enteredUri.value}"

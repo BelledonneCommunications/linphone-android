@@ -48,9 +48,9 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
 
         binding.lifecycleOwner = this
 
-        sharedViewModel = activity?.run {
+        sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
-        } ?: throw Exception("Invalid Activity")
+        }
 
         val callLogGroup = sharedViewModel.selectedCallLogGroup.value
         callLogGroup ?: return

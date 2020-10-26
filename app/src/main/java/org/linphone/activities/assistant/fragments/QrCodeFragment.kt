@@ -43,9 +43,9 @@ class QrCodeFragment : GenericFragment<AssistantQrCodeFragmentBinding>() {
 
         binding.lifecycleOwner = this
 
-        sharedViewModel = activity?.run {
+        sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedAssistantViewModel::class.java)
-        } ?: throw Exception("Invalid Activity")
+        }
 
         viewModel = ViewModelProvider(this).get(QrCodeViewModel::class.java)
         binding.viewModel = viewModel

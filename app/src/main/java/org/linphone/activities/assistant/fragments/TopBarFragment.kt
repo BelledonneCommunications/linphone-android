@@ -35,7 +35,8 @@ class TopBarFragment : GenericFragment<AssistantTopBarFragmentBinding>() {
 
         binding.setBackClickListener {
             if (!findNavController().popBackStack()) {
-                activity?.finish()
+                requireActivity().finish()
+                requireActivity().overridePendingTransition(R.anim.enter_left, R.anim.exit_right)
             }
         }
     }
