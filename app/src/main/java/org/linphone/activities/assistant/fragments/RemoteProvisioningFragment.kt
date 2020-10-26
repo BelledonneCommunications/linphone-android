@@ -42,9 +42,9 @@ class RemoteProvisioningFragment : GenericFragment<AssistantRemoteProvisioningFr
 
         binding.lifecycleOwner = this
 
-        sharedViewModel = activity?.run {
+        sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedAssistantViewModel::class.java)
-        } ?: throw Exception("Invalid Activity")
+        }
 
         viewModel = ViewModelProvider(this).get(RemoteProvisioningViewModel::class.java)
         binding.viewModel = viewModel
