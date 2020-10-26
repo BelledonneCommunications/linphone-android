@@ -19,12 +19,15 @@
  */
 package org.linphone.activities.call.views
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
+import android.view.animation.LinearInterpolator
 import android.widget.LinearLayout
 import androidx.databinding.DataBindingUtil
 import org.linphone.R
@@ -121,6 +124,7 @@ class AnswerDeclineIncomingCallButtons : LinearLayout {
         )
 
         updateSlideMode()
+        configureAnimation()
     }
 
     private fun updateSlideMode() {
@@ -129,6 +133,45 @@ class AnswerDeclineIncomingCallButtons : LinearLayout {
         if (slideMode) {
             binding.answerButton.setOnTouchListener(mAnswerTouchListener)
             binding.declineButton.setOnTouchListener(mDeclineTouchListener)
+        }
+    }
+
+    private fun configureAnimation() {
+        val accept1 = ObjectAnimator.ofFloat(binding.arrowAccept1, "alpha", 1f, 0.6f, 0.4f, 1f).apply {
+            repeatCount = ObjectAnimator.INFINITE
+            repeatMode = ObjectAnimator.RESTART
+        }
+
+        val accept2 = ObjectAnimator.ofFloat(binding.arrowAccept2, "alpha", 0.6f, 1f, 0.4f, 0.6f).apply {
+            repeatCount = ObjectAnimator.INFINITE
+            repeatMode = ObjectAnimator.RESTART
+        }
+
+        val accept3 = ObjectAnimator.ofFloat(binding.arrowAccept3, "alpha", 0.4f, 0.6f, 1f, 0.4f).apply {
+            repeatCount = ObjectAnimator.INFINITE
+            repeatMode = ObjectAnimator.RESTART
+        }
+
+        val hangup1 = ObjectAnimator.ofFloat(binding.arrowHangup1, "alpha", 1f, 0.6f, 0.4f, 1f).apply {
+            repeatCount = ObjectAnimator.INFINITE
+            repeatMode = ObjectAnimator.RESTART
+        }
+
+        val hangup2 = ObjectAnimator.ofFloat(binding.arrowHangup2, "alpha", 0.6f, 1f, 0.4f, 0.6f).apply {
+            repeatCount = ObjectAnimator.INFINITE
+            repeatMode = ObjectAnimator.RESTART
+        }
+
+        val hangup3 = ObjectAnimator.ofFloat(binding.arrowHangup3, "alpha", 0.4f, 0.6f, 1f, 0.4f).apply {
+            repeatCount = ObjectAnimator.INFINITE
+            repeatMode = ObjectAnimator.RESTART
+        }
+
+        AnimatorSet().apply {
+            duration = 2000
+            interpolator = LinearInterpolator()
+            playTogether(accept1, accept2, accept3, hangup1, hangup2, hangup3)
+            start()
         }
     }
 }
