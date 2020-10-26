@@ -71,9 +71,9 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
         listViewModel = ViewModelProvider(this).get(CallLogsListViewModel::class.java)
         binding.viewModel = listViewModel
 
-        sharedViewModel = activity?.run {
+        sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
-        } ?: throw Exception("Invalid Activity")
+        }
 
         _adapter = CallLogsListAdapter(listSelectionViewModel, viewLifecycleOwner)
         // SubmitList is done on a background thread
@@ -196,10 +196,10 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
         coreContext.core.resetMissedCallsCount()
         coreContext.notificationsManager.dismissMissedCallNotification()
 
-        val tabsViewModel = activity?.run {
+        val tabsViewModel = requireActivity().run {
             ViewModelProvider(this).get(TabsViewModel::class.java)
         }
-        tabsViewModel?.updateMissedCallCount()
+        tabsViewModel.updateMissedCallCount()
     }
 
     override fun getItemCount(): Int {

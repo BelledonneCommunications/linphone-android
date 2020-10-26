@@ -43,9 +43,9 @@ class AccountSettingsFragment : GenericFragment<SettingsAccountFragmentBinding>(
 
         binding.lifecycleOwner = this
 
-        sharedViewModel = activity?.run {
+        sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
-        } ?: throw Exception("Invalid Activity")
+        }
 
         val identity = arguments?.getString("Identity") ?: ""
         viewModel = ViewModelProvider(this, AccountSettingsViewModelFactory(identity)).get(AccountSettingsViewModel::class.java)

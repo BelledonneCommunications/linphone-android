@@ -44,9 +44,9 @@ class StatusFragment : GenericFragment<StatusFragmentBinding>() {
         viewModel = ViewModelProvider(this).get(StatusViewModel::class.java)
         binding.viewModel = viewModel
 
-        sharedViewModel = activity?.run {
+        sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
-        } ?: throw Exception("Invalid Activity")
+        }
 
         sharedViewModel.proxyConfigRemoved.observe(viewLifecycleOwner, {
             Log.i("[Status Fragment] A proxy config was removed, update default proxy state")

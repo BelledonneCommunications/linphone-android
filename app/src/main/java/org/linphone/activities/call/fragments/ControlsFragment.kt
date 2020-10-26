@@ -66,9 +66,9 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
 
         binding.lifecycleOwner = this
 
-        sharedViewModel = activity?.run {
+        sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedCallViewModel::class.java)
-        } ?: throw Exception("Invalid Activity")
+        }
 
         callsViewModel = ViewModelProvider(this).get(CallsViewModel::class.java)
         binding.viewModel = callsViewModel
@@ -86,7 +86,7 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
 
         callsViewModel.noMoreCallEvent.observe(viewLifecycleOwner, {
             it.consume {
-                activity?.finish()
+                requireActivity().finish()
             }
         })
 

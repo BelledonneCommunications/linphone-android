@@ -62,9 +62,9 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
         viewModel = ViewModelProvider(this).get(SideMenuViewModel::class.java)
         binding.viewModel = viewModel
 
-        sharedViewModel = activity?.run {
+        sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
-        } ?: throw Exception("Invalid Activity")
+        }
 
         sharedViewModel.proxyConfigRemoved.observe(viewLifecycleOwner, {
             Log.i("[Side Menu] Proxy config removed, update accounts list")
@@ -89,6 +89,7 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
         binding.setAssistantClickListener {
             sharedViewModel.toggleDrawerEvent.value = Event(true)
             startActivity(Intent(context, AssistantActivity::class.java))
+            requireActivity().overridePendingTransition(R.anim.enter_right, R.anim.exit_left)
         }
 
         binding.setSettingsClickListener {

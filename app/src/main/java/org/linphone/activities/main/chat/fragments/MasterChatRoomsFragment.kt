@@ -79,9 +79,9 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
         listViewModel = ViewModelProvider(this).get(ChatRoomsListViewModel::class.java)
         binding.viewModel = listViewModel
 
-        sharedViewModel = activity?.run {
+        sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
-        } ?: throw Exception("Invalid Activity")
+        }
 
         _adapter = ChatRoomsListAdapter(listSelectionViewModel, viewLifecycleOwner)
         // SubmitList is done on a background thread

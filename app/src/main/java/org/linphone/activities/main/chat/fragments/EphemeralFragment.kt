@@ -43,9 +43,9 @@ class EphemeralFragment : SecureFragment<ChatRoomEphemeralFragmentBinding>() {
         isSecure = true
         binding.lifecycleOwner = this
 
-        sharedViewModel = activity?.run {
+        sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
-        } ?: throw Exception("Invalid Activity")
+        }
 
         val chatRoom = sharedViewModel.selectedChatRoom.value
         chatRoom ?: return

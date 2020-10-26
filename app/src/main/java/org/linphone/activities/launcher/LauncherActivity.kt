@@ -55,5 +55,6 @@ class LauncherActivity : GenericActivity() {
         intent.data = getIntent().data
 
         startActivity(intent)
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
     }
 }
