@@ -81,6 +81,15 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
         adapter.registerAdapterDataObserver(observer)
         binding.callLogsList.adapter = adapter
 
+        // To ensure animation will be smooth
+        binding.callLogsList.apply {
+            postponeEnterTransition()
+            viewTreeObserver.addOnPreDrawListener {
+                startPostponedEnterTransition()
+                true
+            }
+        }
+
         binding.setEditClickListener {
             listSelectionViewModel.isEditionEnabled.value = true
         }

@@ -76,6 +76,15 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
             )
         binding.participants.adapter = adapter
 
+        // To ensure animation will be smooth
+        binding.participants.apply {
+            postponeEnterTransition()
+            viewTreeObserver.addOnPreDrawListener {
+                startPostponedEnterTransition()
+                true
+            }
+        }
+
         val layoutManager = LinearLayoutManager(activity)
         binding.participants.layoutManager = layoutManager
 
