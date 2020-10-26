@@ -32,6 +32,7 @@ import android.view.animation.LinearInterpolator
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.call.viewmodels.CallsViewModel
@@ -165,11 +166,16 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
 
     override fun onStart() {
         super.onStart()
-        bounceAnimator.start()
+
+        if (corePreferences.enableAnimations) {
+            bounceAnimator.start()
+        }
     }
 
     override fun onStop() {
-        bounceAnimator.pause()
+        if (corePreferences.enableAnimations) {
+            bounceAnimator.pause()
+        }
         super.onStop()
     }
 

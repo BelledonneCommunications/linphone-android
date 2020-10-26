@@ -461,8 +461,8 @@
     <string name="advanced_settings_dark_mode_label_auto">Auto</string>
     <string name="advanced_settings_dark_mode_label_no">No</string>
     <string name="advanced_settings_dark_mode_label_yes">Yes</string>
-    <string name="advanced_settings_full_screen_title">Full screen</string>
-    <string name="advanced_settings_full_screen_summary"></string>
+    <string name="advanced_settings_animations_title">Animations</string>
+    <string name="advanced_settings_animations_summary"></string>
     <string name="advanced_settings_device_name_title">Device name</string>
     <string name="advanced_settings_device_name_summary">Changes will be applied at next start up</string>
     <string name="advanced_settings_remote_provisioning_url_title">Remote provisioning URL</string>

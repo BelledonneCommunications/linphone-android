@@ -30,6 +30,7 @@ import androidx.lifecycle.lifecycleScope
 import java.io.File
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.assistant.AssistantActivity
@@ -89,7 +90,10 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
         binding.setAssistantClickListener {
             sharedViewModel.toggleDrawerEvent.value = Event(true)
             startActivity(Intent(context, AssistantActivity::class.java))
-            requireActivity().overridePendingTransition(R.anim.enter_right, R.anim.exit_left)
+
+            if (corePreferences.enableAnimations) {
+                requireActivity().overridePendingTransition(R.anim.enter_right, R.anim.exit_left)
+            }
         }
 
         binding.setSettingsClickListener {

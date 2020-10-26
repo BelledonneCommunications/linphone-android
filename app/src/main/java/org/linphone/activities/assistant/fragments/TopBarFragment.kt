@@ -21,6 +21,7 @@ package org.linphone.activities.assistant.fragments
 
 import android.os.Bundle
 import androidx.navigation.fragment.findNavController
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.databinding.AssistantTopBarFragmentBinding
@@ -36,7 +37,12 @@ class TopBarFragment : GenericFragment<AssistantTopBarFragmentBinding>() {
         binding.setBackClickListener {
             if (!findNavController().popBackStack()) {
                 requireActivity().finish()
-                requireActivity().overridePendingTransition(R.anim.enter_left, R.anim.exit_right)
+                if (corePreferences.enableAnimations) {
+                    requireActivity().overridePendingTransition(
+                        R.anim.enter_left,
+                        R.anim.exit_right
+                    )
+                }
             }
         }
     }

@@ -53,14 +53,16 @@
                     android:src="@drawable/arrow_hangup"
                     android:contentDescription="@null"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:alpha="0.6"/>
 
                 <ImageView
                     android:id="@+id/arrow_hangup_3"
                     android:src="@drawable/arrow_hangup"
                     android:contentDescription="@null"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:alpha="0.4"/>
 
             </LinearLayout>
 
@@ -92,14 +94,16 @@
                     android:src="@drawable/arrow_accept"
                     android:contentDescription="@null"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:alpha="0.4"/>
 
                 <ImageView
                     android:id="@+id/arrow_accept_2"
                     android:src="@drawable/arrow_accept"
                     android:contentDescription="@null"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:alpha="0.6"/>
 
                 <ImageView
                     android:id="@+id/arrow_accept_1"

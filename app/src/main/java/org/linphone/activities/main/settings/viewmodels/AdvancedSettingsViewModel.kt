@@ -72,14 +72,12 @@ class AdvancedSettingsViewModel : GenericSettingsViewModel() {
     private val darkModeValues = arrayListOf(-1, 0, 1)
     val setNightModeEvent = MutableLiveData<Event<Int>>()
 
-    val fullScreenListener = object : SettingListenerStub() {
+    val animationsListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
-            prefs.fullScreen = newValue
-            fullScreenChangedEvent.value = Event(newValue)
+            prefs.enableAnimations = newValue
         }
     }
-    val fullScreen = MutableLiveData<Boolean>()
-    val fullScreenChangedEvent = MutableLiveData<Event<Boolean>>()
+    val animations = MutableLiveData<Boolean>()
 
     val deviceNameListener = object : SettingListenerStub() {
         override fun onTextValueChanged(newValue: String) {
@@ -141,7 +139,7 @@ class AdvancedSettingsViewModel : GenericSettingsViewModel() {
         darkModeLabels.value = labels
         darkModeIndex.value = darkModeValues.indexOf(prefs.darkMode)
 
-        fullScreen.value = prefs.fullScreen
+        animations.value = prefs.enableAnimations
         deviceName.value = prefs.deviceName
         remoteProvisioningUrl.value = core.provisioningUri
         logsServerUrl.value = core.logCollectionUploadServerUrl
