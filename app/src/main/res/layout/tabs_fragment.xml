@@ -26,7 +26,7 @@
         android:id="@+id/motion_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/main_activity_tabs_fragment_size"
-        app:layoutDescription="@xml/motion_main_activity_tabs">
+        app:layoutDescription="@xml/motion_main_activity_tabs_selector">
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guidelineLeft"
@@ -69,10 +69,9 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="25dp"
             android:layout_marginTop="5dp"
-            android:background="@drawable/unread_message_count_bg"
             android:gravity="center"
-            android:text="@{String.valueOf(viewModel.missedCallsCount)}"
-            android:visibility="@{viewModel.missedCallsCount == 0 ? View.GONE : View.VISIBLE}"
+            android:background="@{viewModel.missedCallsCount == 0 ? @drawable/hidden_unread_message_count_bg : @drawable/unread_message_count_bg}"
+            android:text="@{viewModel.missedCallsCount == 0 ? `` : String.valueOf(viewModel.missedCallsCount)}"
             app:layout_constraintRight_toLeftOf="@id/guidelineLeft"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -134,10 +133,9 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="25dp"
             android:layout_marginTop="5dp"
-            android:background="@drawable/unread_message_count_bg"
             android:gravity="center"
-            android:text="@{String.valueOf(viewModel.unreadMessagesCount)}"
-            android:visibility="@{viewModel.unreadMessagesCount == 0 ? View.GONE : View.VISIBLE}"
+            android:background="@{viewModel.unreadMessagesCount == 0 ? @drawable/hidden_unread_message_count_bg : @drawable/unread_message_count_bg}"
+            android:text="@{viewModel.unreadMessagesCount == 0 ? `` : String.valueOf(viewModel.unreadMessagesCount)}"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
