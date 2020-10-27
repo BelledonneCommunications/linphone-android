@@ -217,10 +217,6 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
         }
     }
 
-    override fun getItemCount(): Int {
-        return adapter.itemCount
-    }
-
     override fun deleteItems(indexesOfItemToDelete: ArrayList<Int>) {
         val list = ArrayList<Contact>()
         for (index in indexesOfItemToDelete) {

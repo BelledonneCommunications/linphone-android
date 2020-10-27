@@ -112,10 +112,6 @@ class RecordingsFragment : MasterFragment<RecordingsFragmentBinding, RecordingsL
         adapter.setVideoTextureView(binding.recordingVideoSurface)
     }
 
-    override fun getItemCount(): Int {
-        return adapter.itemCount
-    }
-
     override fun deleteItems(indexesOfItemToDelete: ArrayList<Int>) {
         val list = ArrayList<RecordingViewModel>()
         for (index in indexesOfItemToDelete) {

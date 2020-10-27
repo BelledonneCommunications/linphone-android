@@ -213,10 +213,6 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
         }
     }
 
-    override fun getItemCount(): Int {
-        return adapter.itemCount
-    }
-
     override fun deleteItems(indexesOfItemToDelete: ArrayList<Int>) {
         val list = ArrayList<ChatRoom>()
         for (index in indexesOfItemToDelete) {

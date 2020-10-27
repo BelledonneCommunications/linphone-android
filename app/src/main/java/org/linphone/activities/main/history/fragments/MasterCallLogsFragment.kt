@@ -202,10 +202,6 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
         tabsViewModel.updateMissedCallCount()
     }
 
-    override fun getItemCount(): Int {
-        return adapter.itemCount
-    }
-
     override fun deleteItems(indexesOfItemToDelete: ArrayList<Int>) {
         val list = ArrayList<GroupedCallLogViewModel>()
         for (index in indexesOfItemToDelete) {
