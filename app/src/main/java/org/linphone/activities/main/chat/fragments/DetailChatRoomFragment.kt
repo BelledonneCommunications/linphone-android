@@ -277,10 +277,6 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         })
     }
 
-    override fun getItemCount(): Int {
-        return adapter.itemCount
-    }
-
     override fun deleteItems(indexesOfItemToDelete: ArrayList<Int>) {
         val list = ArrayList<EventLog>()
         for (index in indexesOfItemToDelete) {

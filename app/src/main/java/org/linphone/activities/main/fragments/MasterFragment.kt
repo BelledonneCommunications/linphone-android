@@ -90,7 +90,9 @@ abstract class MasterFragment<T : ViewDataBinding, U : SelectionListAdapter<*, *
         deleteItems(list)
     }
 
-    abstract fun getItemCount(): Int
+    private fun getItemCount(): Int {
+        return adapter.itemCount
+    }
 
     abstract fun deleteItems(indexesOfItemToDelete: ArrayList<Int>)
 }
