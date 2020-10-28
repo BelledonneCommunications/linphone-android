@@ -399,6 +399,9 @@ class CorePreferences constructor(private val context: Context) {
     val callHistoryDatabasePath: String
         get() = context.filesDir.absolutePath + "/linphone-log-history.db"
 
+    val staticPicture: String
+        get() = context.filesDir.absolutePath + "/share/images/nowebcamcif.jpg"
+
     fun copyAssetsFromPackage() {
         copy("linphonerc_default", configPath)
         copy("linphonerc_factory", factoryConfigPath, true)
