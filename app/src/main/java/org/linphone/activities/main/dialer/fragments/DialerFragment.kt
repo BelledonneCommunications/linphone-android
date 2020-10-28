@@ -78,15 +78,17 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
             sharedViewModel.pendingCallTransfer = arguments?.getBoolean("Transfer") ?: false
             Log.i("[Dialer] Is pending call transfer: ${sharedViewModel.pendingCallTransfer}")
         }
+
         if (arguments?.containsKey("URI") == true) {
             val address = arguments?.getString("URI") ?: ""
+            Log.i("[Dialer] Found URI to call: $address")
             val skipAutoCall = arguments?.getBoolean("SkipAutoCallStart") ?: false
 
             if (corePreferences.callRightAway && !skipAutoCall) {
                 Log.i("[Dialer] Call right away setting is enabled, start the call to $address")
                 viewModel.directCall(address)
             } else {
-                viewModel.enteredUri.value = address
+                sharedViewModel.dialerUri = address
             }
         }
 
