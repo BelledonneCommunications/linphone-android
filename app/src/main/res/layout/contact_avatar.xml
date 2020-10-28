@@ -31,15 +31,18 @@
         <variable
             name="borderVisibility"
             type="Boolean" />
+        <variable
+            name="backgroundColor"
+            type="Integer" />
     </data>
 
     <RelativeLayout
         android:layout_width="45dp"
-        android:layout_height="35dp">
+        android:layout_height="@dimen/contact_avatar_size">
 
         <ImageView
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="@dimen/contact_avatar_size"
+            android:layout_height="@dimen/contact_avatar_size"
             android:layout_alignParentLeft="true"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
@@ -47,8 +50,8 @@
 
         <ImageView
             android:visibility="@{generatedAvatarVisibility &amp;&amp; !groupChatAvatarVisibility ? View.VISIBLE : View.GONE}"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="@dimen/contact_avatar_size"
+            android:layout_height="@dimen/contact_avatar_size"
             android:layout_alignParentLeft="true"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
@@ -60,26 +63,26 @@
             android:textColor="?attr/secondaryTextColor"
             android:textSize="21sp"
             android:textStyle="bold"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="@dimen/contact_avatar_size"
+            android:layout_height="@dimen/contact_avatar_size"
             android:layout_alignParentLeft="true"
             android:gravity="center"
             android:singleLine="true"
             android:ellipsize="none" />
 
         <ImageView
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="@dimen/contact_avatar_size"
+            android:layout_height="@dimen/contact_avatar_size"
             android:layout_alignParentLeft="true"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
-            android:background="?attr/backgroundColor"
+            android:background="@drawable/contact_avatar_bg"
             app:glideAvatar="@{imagePath}" />
 
         <ImageView
             android:visibility="@{borderVisibility ? View.VISIBLE : View.GONE, default=gone}"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="@dimen/contact_avatar_size"
+            android:layout_height="@dimen/contact_avatar_size"
             android:layout_alignParentLeft="true"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
