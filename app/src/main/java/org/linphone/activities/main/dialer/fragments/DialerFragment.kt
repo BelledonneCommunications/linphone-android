@@ -27,7 +27,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.linphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -36,6 +35,7 @@ import org.linphone.R
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.dialer.viewmodels.DialerViewModel
 import org.linphone.activities.main.fragments.SecureFragment
+import org.linphone.activities.main.navigateToContacts
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.tools.Log
@@ -64,9 +64,7 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
         }
 
         binding.setNewContactClickListener {
-            val deepLink = "linphone-android://contact/new/${viewModel.enteredUri.value}"
-            Log.i("[Dialer] Creating contact, starting deep link: $deepLink")
-            findNavController().navigate(Uri.parse(deepLink))
+            navigateToContacts(viewModel.enteredUri.value)
         }
 
         binding.setTransferCallClickListener {

@@ -38,6 +38,7 @@ import org.linphone.activities.main.chat.fragments.MasterChatRoomsFragment
 import org.linphone.activities.main.contact.fragments.ContactEditorFragment
 import org.linphone.activities.main.contact.fragments.DetailContactFragment
 import org.linphone.activities.main.contact.fragments.MasterContactsFragment
+import org.linphone.activities.main.dialer.fragments.DialerFragment
 import org.linphone.activities.main.fragments.TabsFragment
 import org.linphone.activities.main.history.fragments.DetailCallLogFragment
 import org.linphone.activities.main.history.fragments.MasterCallLogsFragment
@@ -78,16 +79,16 @@ fun getLeftToRightAnimationNavOptions(): NavOptions {
 fun getRightToLeftNoPopAnimationNavOptions(): NavOptions {
     if (!corePreferences.enableAnimations) return NavOptions.Builder().build()
     return NavOptions.Builder()
-        .setEnterAnim(R.anim.enter_right)
-        .setExitAnim(R.anim.exit_left)
+        .setEnterAnim(R.anim.enter_right_or_bottom)
+        .setExitAnim(R.anim.exit_left_or_top)
         .build()
 }
 
 fun getLeftToRightNoPopAnimationNavOptions(): NavOptions {
     if (!corePreferences.enableAnimations) return NavOptions.Builder().build()
     return NavOptions.Builder()
-        .setEnterAnim(R.anim.enter_left)
-        .setExitAnim(R.anim.exit_right)
+        .setEnterAnim(R.anim.enter_left_or_top)
+        .setExitAnim(R.anim.exit_right_or_bottom)
         .build()
 }
 
@@ -183,6 +184,13 @@ internal fun TabsFragment.navigateToChatRooms() {
     }
 }
 
+/* Dialer related */
+
+internal fun DialerFragment.navigateToContacts(uriToAdd: String?) {
+    val deepLink = "linphone-android://contact/new/$uriToAdd"
+    findNavController().navigate(Uri.parse(deepLink), getLeftToRightNoPopAnimationNavOptions())
+}
+
 /* Chat related */
 
 internal fun MasterChatRoomsFragment.navigateToChatRoom() {
@@ -197,7 +205,11 @@ internal fun MasterChatRoomsFragment.navigateToChatRoom() {
     } else {
         val navHostFragment =
             childFragmentManager.findFragmentById(R.id.chat_nav_container) as NavHostFragment
-        navHostFragment.navController.navigate(R.id.action_global_detailChatRoomFragment)
+        navHostFragment.navController.navigate(
+            R.id.action_global_detailChatRoomFragment,
+            null,
+            getRightToLeftAnimationNavOptions()
+        )
     }
 }
 
@@ -216,7 +228,11 @@ internal fun MasterChatRoomsFragment.navigateToChatRoomCreation(
     } else {
         val navHostFragment =
             childFragmentManager.findFragmentById(R.id.chat_nav_container) as NavHostFragment
-        navHostFragment.navController.navigate(R.id.action_global_chatRoomCreationFragment, bundle)
+        navHostFragment.navController.navigate(
+            R.id.action_global_chatRoomCreationFragment,
+            bundle,
+            getRightToLeftAnimationNavOptions()
+        )
     }
 }
 
@@ -341,21 +357,21 @@ internal fun MasterContactsFragment.navigateToContactEditor(sipUriToAdd: String?
     } else {
         val navHostFragment =
             childFragmentManager.findFragmentById(R.id.contacts_nav_container) as NavHostFragment
-        navHostFragment.navController.navigate(R.id.action_global_contactEditorFragment, bundle)
+        navHostFragment.navController.navigate(
+            R.id.action_global_contactEditorFragment,
+            bundle,
+            getRightToLeftAnimationNavOptions()
+        )
     }
 }
 
 internal fun ContactEditorFragment.navigateToContact(contact: NativeContact) {
     val deepLink = "linphone-android://contact/view/${contact.nativeId}"
-    if (!resources.getBoolean(R.bool.isTablet)) {
-        findMasterNavController().navigate(Uri.parse(deepLink), getRightToLeftAnimationNavOptions())
-    } else {
-        findMasterNavController().navigate(Uri.parse(deepLink))
-    }
+    findMasterNavController().navigate(Uri.parse(deepLink), getRightToLeftAnimationNavOptions())
 }
 
 internal fun DetailContactFragment.navigateToChatRooms(args: Bundle?) {
-    findNavController().navigate(
+    findMasterNavController().navigate(
         R.id.action_global_masterChatRoomsFragment,
         args,
         getRightToLeftAnimationNavOptions()
@@ -363,7 +379,7 @@ internal fun DetailContactFragment.navigateToChatRooms(args: Bundle?) {
 }
 
 internal fun DetailContactFragment.navigateToDialer(args: Bundle?) {
-    findNavController().navigate(
+    findMasterNavController().navigate(
         R.id.action_global_dialerFragment,
         args,
         getRightToLeftAnimationNavOptions()
@@ -385,14 +401,20 @@ internal fun DetailContactFragment.navigateToContactEditor() {
 internal fun MasterCallLogsFragment.navigateToCallHistory() {
     if (!resources.getBoolean(R.bool.isTablet)) {
         if (findNavController().currentDestination?.id == R.id.masterCallLogsFragment) {
-            findNavController().navigate(R.id.action_masterCallLogsFragment_to_detailCallLogFragment,
-            null,
-            getRightToLeftAnimationNavOptions())
+            findNavController().navigate(
+                R.id.action_masterCallLogsFragment_to_detailCallLogFragment,
+                null,
+                getRightToLeftAnimationNavOptions()
+            )
         }
     } else {
         val navHostFragment =
             childFragmentManager.findFragmentById(R.id.history_nav_container) as NavHostFragment
-        navHostFragment.navController.navigate(R.id.action_global_detailCallLogFragment)
+        navHostFragment.navController.navigate(
+            R.id.action_global_detailCallLogFragment,
+            null,
+            getRightToLeftAnimationNavOptions()
+        )
     }
 }
 
@@ -420,7 +442,7 @@ internal fun DetailCallLogFragment.navigateToFriend(friendAddress: Address) {
 }
 
 internal fun DetailCallLogFragment.navigateToChatRooms(args: Bundle?) {
-    findNavController().navigate(
+    findMasterNavController().navigate(
         R.id.action_global_masterChatRoomsFragment,
         args,
         getRightToLeftAnimationNavOptions()
@@ -428,7 +450,7 @@ internal fun DetailCallLogFragment.navigateToChatRooms(args: Bundle?) {
 }
 
 internal fun DetailCallLogFragment.navigateToDialer(args: Bundle?) {
-    findNavController().navigate(
+    findMasterNavController().navigate(
         R.id.action_global_dialerFragment,
         args,
         getRightToLeftAnimationNavOptions()
@@ -450,7 +472,11 @@ internal fun SettingsFragment.navigateToAccountSettings(identity: String) {
     } else {
         val navHostFragment =
             childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
-        navHostFragment.navController.navigate(R.id.action_global_accountSettingsFragment, bundle)
+        navHostFragment.navController.navigate(
+            R.id.action_global_accountSettingsFragment,
+            bundle,
+            getRightToLeftAnimationNavOptions()
+        )
     }
 }
 
@@ -466,7 +492,11 @@ internal fun SettingsFragment.navigateToTunnelSettings() {
     } else {
         val navHostFragment =
             childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
-        navHostFragment.navController.navigate(R.id.action_global_tunnelSettingsFragment)
+        navHostFragment.navController.navigate(
+            R.id.action_global_tunnelSettingsFragment,
+            null,
+            getRightToLeftAnimationNavOptions()
+        )
     }
 }
 
@@ -482,7 +512,11 @@ internal fun SettingsFragment.navigateToAudioSettings() {
     } else {
         val navHostFragment =
             childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
-        navHostFragment.navController.navigate(R.id.action_global_audioSettingsFragment)
+        navHostFragment.navController.navigate(
+            R.id.action_global_audioSettingsFragment,
+            null,
+            getRightToLeftAnimationNavOptions()
+        )
     }
 }
 
@@ -498,7 +532,11 @@ internal fun SettingsFragment.navigateToVideoSettings() {
     } else {
         val navHostFragment =
             childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
-        navHostFragment.navController.navigate(R.id.action_global_videoSettingsFragment)
+        navHostFragment.navController.navigate(
+            R.id.action_global_videoSettingsFragment,
+            null,
+            getRightToLeftAnimationNavOptions()
+        )
     }
 }
 
@@ -514,7 +552,11 @@ internal fun SettingsFragment.navigateToCallSettings() {
     } else {
         val navHostFragment =
             childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
-        navHostFragment.navController.navigate(R.id.action_global_callSettingsFragment)
+        navHostFragment.navController.navigate(
+            R.id.action_global_callSettingsFragment,
+            null,
+            getRightToLeftAnimationNavOptions()
+        )
     }
 }
 
@@ -530,7 +572,11 @@ internal fun SettingsFragment.navigateToChatSettings() {
     } else {
         val navHostFragment =
             childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
-        navHostFragment.navController.navigate(R.id.action_global_chatSettingsFragment)
+        navHostFragment.navController.navigate(
+            R.id.action_global_chatSettingsFragment,
+            null,
+            getRightToLeftAnimationNavOptions()
+            )
     }
 }
 
@@ -546,7 +592,11 @@ internal fun SettingsFragment.navigateToNetworkSettings() {
     } else {
         val navHostFragment =
             childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
-        navHostFragment.navController.navigate(R.id.action_global_networkSettingsFragment)
+        navHostFragment.navController.navigate(
+            R.id.action_global_networkSettingsFragment,
+            null,
+            getRightToLeftAnimationNavOptions()
+        )
     }
 }
 
@@ -562,7 +612,11 @@ internal fun SettingsFragment.navigateToContactsSettings() {
     } else {
         val navHostFragment =
             childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
-        navHostFragment.navController.navigate(R.id.action_global_contactsSettingsFragment)
+        navHostFragment.navController.navigate(
+            R.id.action_global_contactsSettingsFragment,
+            null,
+            getRightToLeftAnimationNavOptions()
+        )
     }
 }
 
@@ -578,7 +632,11 @@ internal fun SettingsFragment.navigateToAdvancedSettings() {
     } else {
         val navHostFragment =
             childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
-        navHostFragment.navController.navigate(R.id.action_global_advancedSettingsFragment)
+        navHostFragment.navController.navigate(
+            R.id.action_global_advancedSettingsFragment,
+            null,
+            getRightToLeftAnimationNavOptions()
+        )
     }
 }
 
@@ -605,15 +663,14 @@ internal fun PhoneAccountLinkingFragment.navigateToPhoneAccountValidation(args: 
 /* Side menu related */
 
 internal fun SideMenuFragment.navigateToAccountSettings(identity: String) {
-    if (!resources.getBoolean(R.bool.isTablet)) {
+    val deepLink = if (!resources.getBoolean(R.bool.isTablet)) {
         // If not a tablet, navigate directly to account settings fragment
-        val deepLink = "linphone-android://account-settings/$identity"
-        findNavController().navigate(Uri.parse(deepLink), getRightToLeftAnimationNavOptions())
+        "linphone-android://account-settings/$identity"
     } else {
         // On tablet, to keep the categories list on left side, navigate to settings fragment first
-        val deepLink = "linphone-android://settings/$identity"
-        findNavController().navigate(Uri.parse(deepLink))
+        "linphone-android://settings/$identity"
     }
+    findNavController().navigate(Uri.parse(deepLink), getRightToLeftAnimationNavOptions())
 }
 
 internal fun SideMenuFragment.navigateToSettings() {
