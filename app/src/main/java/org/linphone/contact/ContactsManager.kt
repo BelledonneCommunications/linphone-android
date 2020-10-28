@@ -187,20 +187,10 @@ class ContactsManager(private val context: Context) {
             }
         }
 
-        if (found == null && PermissionHelper.required(context).hasReadContactsPermission()) {
-            // First of all abort background contacts fetching
-            loadContactsTask?.cancel(true)
-
-            Log.i("[Contacts Manager] Creating native contact with id $id and fetch information from Android database directly")
-            found = NativeContact(id)
-            found.syncValuesFromAndroidContact(context)
-            // Create a LinphoneFriend to be able to receive presence information
-            found.createOrUpdateFriendFromNativeContact()
-
-            // Restart contacts async fetching
-            fetchContactsAsync()
+        if (found == null) {
+            Log.i("[Contacts Manager] Contact with id $id not found yet")
         } else {
-            Log.d("[Contacts Manager] Found contact with id [$id]: ${found?.fullName}")
+            Log.d("[Contacts Manager] Found contact with id [$id]: ${found.fullName}")
         }
 
         return found

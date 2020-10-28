@@ -51,6 +51,7 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
 
     private var sipUriToAdd: String? = null
     private var editOnClick: Boolean = false
+    private var contactIdToDisplay: String? = null
 
     override fun getLayoutId(): Int = R.layout.contact_master_fragment
 
@@ -149,6 +150,15 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
         })
 
         listViewModel.contactsList.observe(viewLifecycleOwner, {
+            val id = contactIdToDisplay
+            if (id != null) {
+                val contact = coreContext.contactsManager.findContactById(id)
+                if (contact != null) {
+                    contactIdToDisplay = null
+                    Log.i("[Contacts] Found matching contact $contact after callback")
+                    adapter.selectedContactEvent.value = Event(contact)
+                }
+            }
             adapter.submitList(it)
         })
 
@@ -181,6 +191,9 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
             if (contact != null) {
                 Log.i("[Contacts] Found matching contact $contact")
                 adapter.selectedContactEvent.value = Event(contact)
+            } else {
+                Log.w("[Contacts] Matching contact not found yet, waiting for contacts updated callback")
+                contactIdToDisplay = id
             }
         } else {
             val sipUri = arguments?.getString("sipUri")
