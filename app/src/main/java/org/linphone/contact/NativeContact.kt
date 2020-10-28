@@ -104,7 +104,7 @@ class NativeContact(val nativeId: String, private val lookupKey: String? = null)
         when (mime) {
             ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE -> {
                 if (data1 == null && data4 == null) {
-                    Log.e("[Native Contact] Phone number data is empty")
+                    Log.d("[Native Contact] Phone number data is empty")
                     return
                 }
 
@@ -114,7 +114,7 @@ class NativeContact(val nativeId: String, private val lookupKey: String? = null)
             }
             linphoneMime, ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE -> {
                 if (data1 == null) {
-                    Log.e("[Native Contact] SIP address is null !")
+                    Log.d("[Native Contact] SIP address is null")
                     return
                 }
 
@@ -133,12 +133,12 @@ class NativeContact(val nativeId: String, private val lookupKey: String? = null)
                 val stringAddress = address.asStringUriOnly()
                 if (!rawSipAddresses.contains(stringAddress)) {
                     sipAddresses.add(address)
-                    rawSipAddresses.add(data1)
+                    rawSipAddresses.add(stringAddress)
                 }
             }
             ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE -> {
                 if (data1 == null) {
-                    Log.e("[Native Contact] Organization is null !")
+                    Log.d("[Native Contact] Organization is null")
                     return
                 }
 
@@ -147,7 +147,7 @@ class NativeContact(val nativeId: String, private val lookupKey: String? = null)
             }
             ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE -> {
                 if (data2 == null && data3 == null) {
-                    Log.e("[Native Contact] First name and last name are both null !")
+                    Log.d("[Native Contact] First name and last name are both null")
                     return
                 }
 
