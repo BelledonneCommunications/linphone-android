@@ -11,4 +11,5 @@
     <dimen name="status_fragment_size">40dp</dimen>
     <dimen name="tabs_fragment_selector_size">5dp</dimen>
     <dimen name="tabs_fragment_unread_count_bounce_offset">5dp</dimen>
+    <dimen name="contact_avatar_size">35dp</dimen>
 </resources>
