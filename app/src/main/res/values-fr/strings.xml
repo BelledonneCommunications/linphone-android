@@ -5,4 +5,10 @@
 <resources>
     <string name="service_name">&appName; Service</string>
     <string name="service_auto_start_description">&appName; a été démarré automatiquement</string>
+    <string name="sync_account_name">Contacts &appName;</string>
+    <string name="about_privacy_policy">Notre politique de vie privée</string>
+    <string name="about_send_log">Envoyer les traces</string>
+    <string name="about_reset_log">Nettoyer les traces</string>
+    <string name="service_description">Nécessaire pour recevoir les appels pendant que l\'application est au second plan</string>
+    <string name="logs_url_copied_to_clipboard">URL des traces copiée dans le presse-papier</string>
 </resources>
