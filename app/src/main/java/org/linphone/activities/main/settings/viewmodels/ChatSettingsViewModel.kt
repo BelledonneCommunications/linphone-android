@@ -26,6 +26,13 @@ import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.utils.Event
 
 class ChatSettingsViewModel : GenericSettingsViewModel() {
+    val markAsReadNotifDismissalListener = object : SettingListenerStub() {
+        override fun onBoolValueChanged(newValue: Boolean) {
+            prefs.markAsReadUponChatMessageNotificationDismissal = newValue
+        }
+    }
+    val markAsReadNotifDismissal = MutableLiveData<Boolean>()
+
     val fileSharingUrlListener = object : SettingListenerStub() {
         override fun onTextValueChanged(newValue: String) {
             core.logCollectionUploadServerUrl = newValue
@@ -112,6 +119,7 @@ class ChatSettingsViewModel : GenericSettingsViewModel() {
     val goToAndroidNotificationSettingsEvent = MutableLiveData<Event<Boolean>>()
 
     init {
+        markAsReadNotifDismissal.value = prefs.markAsReadUponChatMessageNotificationDismissal
         downloadedMediaPublic.value = prefs.makePublicMediaFilesDownloaded
         hideNotificationContent.value = prefs.hideChatMessageContentInNotification
         initAutoDownloadList()

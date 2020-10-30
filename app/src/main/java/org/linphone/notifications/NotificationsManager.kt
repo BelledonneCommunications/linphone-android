@@ -662,7 +662,7 @@ class NotificationsManager(private val context: Context) {
         }
         style.isGroupConversation = notifiable.isGroup
 
-        return NotificationCompat.Builder(context, context.getString(R.string.notification_channel_chat_id))
+        val notificationBuilder = NotificationCompat.Builder(context, context.getString(R.string.notification_channel_chat_id))
             .setSmallIcon(R.drawable.topbar_chat_notification)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
@@ -678,7 +678,12 @@ class NotificationsManager(private val context: Context) {
             .addAction(getReplyMessageAction(notifiable))
             .addAction(getMarkMessageAsReadAction(notifiable))
             .setShortcutId(shortcutId)
-            .build()
+        if (corePreferences.markAsReadUponChatMessageNotificationDismissal) {
+            Log.i("[Notifications Manager] Chat room will be marked as read when notification will be dismissed")
+            notificationBuilder
+                .setDeleteIntent(getMarkMessageAsReadPendingIntent(notifiable))
+        }
+        return notificationBuilder.build()
     }
 
     /* Notifications actions */
@@ -743,18 +748,22 @@ class NotificationsManager(private val context: Context) {
             .build()
     }
 
-    private fun getMarkMessageAsReadAction(notifiable: Notifiable): NotificationCompat.Action {
+    private fun getMarkMessageAsReadPendingIntent(notifiable: Notifiable): PendingIntent {
         val markAsReadIntent = Intent(context, NotificationBroadcastReceiver::class.java)
         markAsReadIntent.action = INTENT_MARK_AS_READ_ACTION
         markAsReadIntent.putExtra(INTENT_NOTIF_ID, notifiable.notificationId)
         markAsReadIntent.putExtra(INTENT_LOCAL_IDENTITY, notifiable.localIdentity)
 
-        val markAsReadPendingIntent = PendingIntent.getBroadcast(
+        return PendingIntent.getBroadcast(
             context,
             notifiable.notificationId,
             markAsReadIntent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )
+    }
+
+    private fun getMarkMessageAsReadAction(notifiable: Notifiable): NotificationCompat.Action {
+        val markAsReadPendingIntent = getMarkMessageAsReadPendingIntent(notifiable)
         return NotificationCompat.Action.Builder(
             R.drawable.chat_send_over,
             context.getString(R.string.received_chat_notification_mark_as_read_label),

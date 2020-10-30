@@ -402,6 +402,8 @@
     <string name="call_settings_go_to_android_notification_settings">Android notification settings</string>
 
     <!-- Chat settings -->
+    <string name="chat_settings_mark_as_read_notif_dismissal_title">Mark as read upon notification dismissal</string>
+    <string name="chat_settings_mark_as_read_notif_dismissal_summary"></string>
     <string name="chat_settings_file_sharing_url_title">Sharing server URL</string>
     <string name="chat_settings_file_sharing_url_summary">Do not edit unless you know what you are doing!</string>
     <string name="chat_settings_auto_download_title">Auto download incoming files policy</string>

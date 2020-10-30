@@ -17,20 +17,25 @@ This version is a full rewrite of the app in kotlin, using modern Android compon
 ### Added
 
 - Using linphone SDK 5.0 API to better handle audio route (see linphone-sdk changelog)
-- More settings are available
 - Display video in recordings if available
 - "Swipe left to delete" action available on calls history, contacts & chat rooms list
 - Improved preview when sharing video files through the chat
 - Android 11 people & conversation compliant
+- New animations between fragments and for unread chat messages / missed calls counters (can be disabled)
+- Option to mark messages as read when dismissing the notification
+- More settings are available
 
 ### Changed
 
 - Dropped Android 5 compatibility, Android 6 or higher (API 23) is now required to install the app
 - Call history view groups call from the same SIP URI (like linphone-iphone)
 - Improved how Android native contacts are used
-- Removed "back-to-call" button from dialer & chat views, use notification or overlay (see call settings)
 - Switched to material design for text input fields & switches
 - Launcher shortcuts can be to either contacts or chat rooms
+
+### Removed
+
+- Removed "back-to-call" button from dialer & chat views, use notification or overlay (see call settings)
 
 ## [4.3.1] - 2020-09-25
 
