@@ -100,6 +100,12 @@ class CorePreferences constructor(private val context: Context) {
 
     /* Chat */
 
+    var markAsReadUponChatMessageNotificationDismissal: Boolean
+        get() = config.getBool("app", "mark_as_read_notif_dismissal", false)
+        set(value) {
+            config.setBool("app", "mark_as_read_notif_dismissal", value)
+        }
+
     var makePublicMediaFilesDownloaded: Boolean
         // Keep old name for backward compatibility
         get() = config.getBool("app", "make_downloaded_images_public_in_gallery", true)
