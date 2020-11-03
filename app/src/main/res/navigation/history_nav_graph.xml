@@ -9,6 +9,18 @@
         android:id="@+id/detailCallLogFragment"
         android:name="org.linphone.activities.main.history.fragments.DetailCallLogFragment"
         tools:layout="@layout/history_detail_fragment"
-        android:label="DetailCallLogFragment" />
+        android:label="DetailCallLogFragment">
+
+        <action
+            android:id="@+id/action_detailCallLogFragment_to_detailContactFragment"
+            app:destination="@id/contacts_nav_graph.xml"
+            app:launchSingleTop="true" />
+
+        <action
+            android:id="@+id/action_detailCallLogFragment_to_detailChatRoomFragment"
+            app:destination="@id/chat_nav_graph.xml"
+            app:launchSingleTop="true" />
+
+    </fragment>
 
 </navigation>
