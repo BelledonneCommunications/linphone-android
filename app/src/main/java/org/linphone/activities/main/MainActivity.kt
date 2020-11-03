@@ -189,38 +189,26 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                 }
             }
             Intent.ACTION_VIEW -> {
+                val uri = intent.data
                 if (intent.type == AppUtils.getString(R.string.linphone_address_mime_type)) {
-                    val contactUri = intent.data
-                    if (contactUri != null) {
-                        val contactId = coreContext.contactsManager.getAndroidContactIdFromUri(contactUri)
+                    if (uri != null) {
+                        val contactId = coreContext.contactsManager.getAndroidContactIdFromUri(uri)
                         if (contactId != null) {
                             val deepLink = "linphone-android://contact/view/$contactId"
-                            Log.i("[Main Activity] Found contact URI parameter in intent: $contactUri, starting deep link: $deepLink")
+                            Log.i("[Main Activity] Found contact URI parameter in intent: $uri, starting deep link: $deepLink")
                             findNavController(R.id.nav_host_fragment).navigate(Uri.parse(deepLink))
                         }
+                    }
+                } else {
+                    if (uri != null) {
+                        handleTelOrSipUri(uri)
                     }
                 }
             }
             Intent.ACTION_DIAL, Intent.ACTION_CALL -> {
                 val uri = intent.data
                 if (uri != null) {
-                    Log.i("[Main Activity] Found uri: $uri to call")
-                    val stringUri = uri.toString()
-                    var addressToCall: String = stringUri
-                    try {
-                        addressToCall = URLDecoder.decode(stringUri, "UTF-8")
-                    } catch (e: UnsupportedEncodingException) { }
-
-                    if (addressToCall.startsWith("sip:")) {
-                        addressToCall = addressToCall.substring("sip:".length)
-                    } else if (addressToCall.startsWith("tel:")) {
-                        addressToCall = addressToCall.substring("tel:".length)
-                    }
-
-                    Log.i("[Main Activity] Starting dialer with pre-filled URI $addressToCall")
-                    val args = Bundle()
-                    args.putString("URI", addressToCall)
-                    navigateToDialer(args)
+                    handleTelOrSipUri(uri)
                 }
             }
             else -> {
@@ -252,6 +240,25 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                 }
             }
         }
+    }
+
+    private fun handleTelOrSipUri(uri: Uri) {
+        Log.i("[Main Activity] Found uri: $uri to call")
+        val stringUri = uri.toString()
+        var addressToCall: String = stringUri
+        try {
+            addressToCall = URLDecoder.decode(stringUri, "UTF-8")
+        } catch (e: UnsupportedEncodingException) { }
+
+        if (addressToCall.startsWith("tel:")) {
+            Log.i("[Main Activity] Removing tel: prefix")
+            addressToCall = addressToCall.substring("tel:".length)
+        }
+
+        Log.i("[Main Activity] Starting dialer with pre-filled URI $addressToCall")
+        val args = Bundle()
+        args.putString("URI", addressToCall)
+        navigateToDialer(args)
     }
 
     private fun handleSendText(intent: Intent) {

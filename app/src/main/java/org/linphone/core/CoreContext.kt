@@ -255,7 +255,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
 
         core.zrtpSecretsFile = corePreferences.zrtpSecretsPath
         core.callLogsDatabasePath = corePreferences.callHistoryDatabasePath
-        core.staticPicture = corePreferences.staticPicture
+        core.staticPicture = corePreferences.staticPicturePath
 
         initUserCertificates()
 
