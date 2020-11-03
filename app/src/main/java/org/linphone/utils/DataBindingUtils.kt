@@ -32,6 +32,8 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.*
 import android.widget.SeekBar.OnSeekBarChangeListener
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.Guideline
 import androidx.databinding.*
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -135,6 +137,13 @@ fun setLayoutToLeftOf(view: View, oldTargetId: Int, newTargetId: Int) {
     view.layoutParams = layoutParams
 }
 
+@BindingAdapter("layout_constraintGuide_percent")
+fun setLayoutConstraintGuidePercent(guideline: Guideline, percent: Float) {
+    val params = guideline.layoutParams as ConstraintLayout.LayoutParams
+    params.guidePercent = percent
+    guideline.layoutParams = params
+}
+
 @BindingAdapter("onClickToggleSwitch")
 fun switchSetting(view: View, switchId: Int) {
     val switch: SwitchMaterial = view.findViewById(switchId)
@@ -162,9 +171,9 @@ fun editTextSetting(view: EditText, lambda: () -> Unit) {
             }
         }
 
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     })
 }
 
@@ -195,9 +204,9 @@ fun setListener(view: SeekBar, lambda: (Any) -> Unit) {
             if (fromUser) lambda(progress)
         }
 
-        override fun onStartTrackingTouch(seekBar: SeekBar?) { }
+        override fun onStartTrackingTouch(seekBar: SeekBar?) {}
 
-        override fun onStopTrackingTouch(seekBar: SeekBar?) { }
+        override fun onStopTrackingTouch(seekBar: SeekBar?) {}
     })
 }
 
@@ -226,7 +235,12 @@ private fun <T> setEntries(
         val inflater = viewGroup.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         for (i in entries.indices) {
             val entry = entries[i]
-            val binding = DataBindingUtil.inflate<ViewDataBinding>(inflater, layoutId, viewGroup, false)
+            val binding = DataBindingUtil.inflate<ViewDataBinding>(
+                inflater,
+                layoutId,
+                viewGroup,
+                false
+            )
             binding.setVariable(BR.data, entry)
             binding.setVariable(BR.longClickListener, onLongClick)
             binding.setVariable(BR.parent, parent)
@@ -271,7 +285,9 @@ fun <T> setEntries(
 @BindingAdapter("glideAvatarFallback")
 fun loadAvatarWithGlideFallback(imageView: ImageView, path: String?) {
     if (path != null && path.isNotEmpty() && FileUtils.isExtensionImage(path)) {
-        GlideApp.with(imageView).load(path).apply(RequestOptions.circleCropTransform()).into(imageView)
+        GlideApp.with(imageView).load(path).apply(RequestOptions.circleCropTransform()).into(
+            imageView
+        )
     } else {
         Log.w("[Data Binding] [Glide] Can't load $path")
         imageView.setImageResource(R.drawable.avatar)
@@ -295,30 +311,31 @@ fun loadAvatarWithGlide(imageView: ImageView, path: Uri?) {
 @BindingAdapter("glideAvatar")
 fun loadAvatarWithGlide(imageView: ImageView, path: String?) {
     if (path != null) {
-        GlideApp.with(imageView).load(path).apply(RequestOptions.circleCropTransform()).listener(object :
-            RequestListener<Drawable?> {
-            override fun onLoadFailed(
-                e: GlideException?,
-                model: Any?,
-                target: Target<Drawable?>?,
-                isFirstResource: Boolean
-            ): Boolean {
-                Log.w("[Data Binding] [Glide] Can't load $path")
-                imageView.visibility = View.GONE
-                return false
-            }
+        GlideApp.with(imageView).load(path).apply(RequestOptions.circleCropTransform()).listener(
+            object :
+                RequestListener<Drawable?> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable?>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    Log.w("[Data Binding] [Glide] Can't load $path")
+                    imageView.visibility = View.GONE
+                    return false
+                }
 
-            override fun onResourceReady(
-                resource: Drawable?,
-                model: Any?,
-                target: Target<Drawable?>?,
-                dataSource: DataSource?,
-                isFirstResource: Boolean
-            ): Boolean {
-                imageView.visibility = View.VISIBLE
-                return false
-            }
-        }).into(imageView)
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable?>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    imageView.visibility = View.VISIBLE
+                    return false
+                }
+            }).into(imageView)
     } else {
         imageView.visibility = View.GONE
     }
@@ -341,13 +358,14 @@ fun addPhoneNumberEditTextValidation(editText: EditText, enabled: Boolean) {
         override fun afterTextChanged(s: Editable?) {
             when {
                 s?.matches(Regex("\\d+")) == false ->
-                    editText.error = editText.context.getString(R.string.assistant_error_phone_number_invalid_characters)
+                    editText.error =
+                        editText.context.getString(R.string.assistant_error_phone_number_invalid_characters)
             }
         }
 
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     })
 }
 
@@ -355,9 +373,9 @@ fun addPhoneNumberEditTextValidation(editText: EditText, enabled: Boolean) {
 fun addPrefixEditTextValidation(editText: EditText, enabled: Boolean) {
     if (!enabled) return
     editText.addTextChangedListener(object : TextWatcher {
-        override fun afterTextChanged(s: Editable?) { }
+        override fun afterTextChanged(s: Editable?) {}
 
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             if (s == null || s.isEmpty() || !s.startsWith("+")) {
@@ -370,22 +388,28 @@ fun addPrefixEditTextValidation(editText: EditText, enabled: Boolean) {
 @BindingAdapter("assistantUsernameValidation")
 fun addUsernameEditTextValidation(editText: EditText, enabled: Boolean) {
     if (!enabled) return
-    val usernameRegexp = corePreferences.config.getString("assistant", "username_regex", "^[a-z0-9+_.\\-]*\$")!!
+    val usernameRegexp = corePreferences.config.getString(
+        "assistant",
+        "username_regex",
+        "^[a-z0-9+_.\\-]*\$"
+    )!!
     val usernameMaxLength = corePreferences.config.getInt("assistant", "username_max_length", 64)
     editText.addTextChangedListener(object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
             when {
                 s?.matches(Regex(usernameRegexp)) == false ->
-                    editText.error = editText.context.getString(R.string.assistant_error_username_invalid_characters)
+                    editText.error =
+                        editText.context.getString(R.string.assistant_error_username_invalid_characters)
                 s?.length ?: 0 > usernameMaxLength -> {
-                    editText.error = editText.context.getString(R.string.assistant_error_username_too_long)
+                    editText.error =
+                        editText.context.getString(R.string.assistant_error_username_too_long)
                 }
             }
         }
 
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     })
 }
 
@@ -393,13 +417,14 @@ fun addUsernameEditTextValidation(editText: EditText, enabled: Boolean) {
 fun addEmailEditTextValidation(editText: EditText, enabled: Boolean) {
     if (!enabled) return
     editText.addTextChangedListener(object : TextWatcher {
-        override fun afterTextChanged(s: Editable?) { }
+        override fun afterTextChanged(s: Editable?) {}
 
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
             if (!Patterns.EMAIL_ADDRESS.matcher(s).matches()) {
-                    editText.error = editText.context.getString(R.string.assistant_error_invalid_email_address)
+                editText.error =
+                    editText.context.getString(R.string.assistant_error_invalid_email_address)
             }
         }
     })
@@ -409,13 +434,14 @@ fun addEmailEditTextValidation(editText: EditText, enabled: Boolean) {
 fun addUrlEditTextValidation(editText: EditText, enabled: Boolean) {
     if (!enabled) return
     editText.addTextChangedListener(object : TextWatcher {
-        override fun afterTextChanged(s: Editable?) { }
+        override fun afterTextChanged(s: Editable?) {}
 
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
             if (!Patterns.WEB_URL.matcher(s).matches()) {
-                editText.error = editText.context.getString(R.string.assistant_remote_provisioning_wrong_format)
+                editText.error =
+                    editText.context.getString(R.string.assistant_remote_provisioning_wrong_format)
             }
         }
     })
@@ -426,11 +452,12 @@ fun addPasswordConfirmationEditTextValidation(password: EditText, passwordConfir
     password.addTextChangedListener(object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {}
 
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             if (passwordConfirmation.text == null || s == null || passwordConfirmation.text.toString() != s.toString()) {
-                passwordConfirmation.error = passwordConfirmation.context.getString(R.string.assistant_error_passwords_dont_match)
+                passwordConfirmation.error =
+                    passwordConfirmation.context.getString(R.string.assistant_error_passwords_dont_match)
             } else {
                 passwordConfirmation.error = null // To clear other edit text field error
             }
@@ -440,11 +467,12 @@ fun addPasswordConfirmationEditTextValidation(password: EditText, passwordConfir
     passwordConfirmation.addTextChangedListener(object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {}
 
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             if (password.text == null || s == null || password.text.toString() != s.toString()) {
-                passwordConfirmation.error = passwordConfirmation.context.getString(R.string.assistant_error_passwords_dont_match)
+                passwordConfirmation.error =
+                    passwordConfirmation.context.getString(R.string.assistant_error_passwords_dont_match)
             }
         }
     })
@@ -474,7 +502,7 @@ fun setEditTextErrorListener(editText: EditText, attrChange: InverseBindingListe
             attrChange.onChange()
         }
 
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     })
 }
 

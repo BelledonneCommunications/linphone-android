@@ -33,21 +33,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.25" />
+            layout_constraintGuide_percent="@{viewModel.leftAnchor, default=0.25}" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guidelineMiddle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.5" />
+            layout_constraintGuide_percent="@{viewModel.middleAnchor, default=0.5}" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guidelineBottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.75" />
+            layout_constraintGuide_percent="@{viewModel.rightAnchor, default=0.75}" />
 
         <ImageView
             android:id="@+id/history"
@@ -143,10 +143,7 @@
             android:id="@+id/selector"
             android:layout_width="@dimen/tabs_fragment_selector_size"
             android:layout_height="0dp"
-            android:background="?attr/accentColor"
-            app:layout_constraintHeight_percent=".25"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/guidelineBottom" />
+            android:background="?attr/accentColor" />
 
     </androidx.constraintlayout.motion.widget.MotionLayout>
 
