@@ -253,6 +253,12 @@ class CorePreferences constructor(private val context: Context) {
             config.setBool("net", "use_legacy_push_notification_params", value)
         }
 
+    var defaultAccountAvatarPath: String?
+        get() = config.getString("app", "default_avatar_path", null)
+        set(value) {
+            config.setString("app", "default_avatar_path", value)
+        }
+
     /* Read only application settings, some were previously in non_localizable_custom */
 
     val defaultDomain: String
@@ -289,7 +295,7 @@ class CorePreferences constructor(private val context: Context) {
         get() = config.getBool("app", "show_border_on_big_contact_avatar", true)
 
     val checkIfUpdateAvailableUrl: String?
-        get() = config.getString("misc", "version_check_url_root", null)
+        get() = config.getString("misc", "version_check_url_root", "https://linphone.org/releases/android/RELEASE")
 
     val checkUpdateAvailableInterval: Int
         get() = config.getInt("app", "version_check_interval", 86400000)
@@ -320,12 +326,6 @@ class CorePreferences constructor(private val context: Context) {
         get() = config.getBool("app", "assistant_remote_provisioning", true)
 
     /* Side Menu */
-
-    var defaultAccountAvatarPath: String?
-        get() = config.getString("app", "default_avatar_path", null)
-        set(value) {
-            config.setString("app", "default_avatar_path", value)
-        }
 
     val showAccountsInSideMenu: Boolean
         get() = config.getBool("app", "side_menu_accounts", true)
@@ -374,11 +374,6 @@ class CorePreferences constructor(private val context: Context) {
     val showAdvancedSettings: Boolean
         get() = config.getBool("app", "settings_advanced", true)
 
-    /* Other stuff */
-
-    private val darkModeAllowed: Boolean
-        get() = config.getBool("app", "dark_mode_allowed", true)
-
     /* Assets stuff */
 
     val configPath: String
@@ -405,8 +400,13 @@ class CorePreferences constructor(private val context: Context) {
     val callHistoryDatabasePath: String
         get() = context.filesDir.absolutePath + "/linphone-log-history.db"
 
-    val staticPicture: String
+    val staticPicturePath: String
         get() = context.filesDir.absolutePath + "/share/images/nowebcamcif.jpg"
+
+    /* Other stuff */
+
+    private val darkModeAllowed: Boolean
+        get() = config.getBool("app", "dark_mode_allowed", true)
 
     fun copyAssetsFromPackage() {
         copy("linphonerc_default", configPath)
