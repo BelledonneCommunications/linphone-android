@@ -118,6 +118,7 @@
 
                 <ImageView
                     android:onClick="@{() -> viewModel.startChat(false)}"
+                    android:visibility="@{viewModel.chatAllowed ? View.VISIBLE : View.GONE}"
                     android:contentDescription="@string/content_description_start_chat"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
@@ -127,7 +128,7 @@
 
                 <RelativeLayout
                     android:onClick="@{() -> viewModel.startChat(true)}"
-                    android:visibility="@{viewModel.secureChatAllowed ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.chatAllowed &amp;&amp; viewModel.secureChatAllowed ? View.VISIBLE : View.GONE}"
                     android:layout_width="65dp"
                     android:layout_height="60dp"
                     android:layout_margin="10dp">

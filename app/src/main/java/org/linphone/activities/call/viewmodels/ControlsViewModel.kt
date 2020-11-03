@@ -85,6 +85,8 @@ class ControlsViewModel : ViewModel() {
 
     val somethingClickedEvent = MutableLiveData<Event<Boolean>>()
 
+    val chatAllowed = !LinphoneApplication.corePreferences.disableChat
+
     private val vibrator = coreContext.context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
 
     val onKeyClick: NumpadDigitListener = object : NumpadDigitListener {

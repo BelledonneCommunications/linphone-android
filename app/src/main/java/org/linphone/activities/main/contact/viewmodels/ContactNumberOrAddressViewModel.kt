@@ -20,6 +20,7 @@
 package org.linphone.activities.main.contact.viewmodels
 
 import androidx.lifecycle.ViewModel
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.Address
 
 class ContactNumberOrAddressViewModel(
@@ -31,6 +32,8 @@ class ContactNumberOrAddressViewModel(
     private val listener: ContactNumberOrAddressClickListener
 ) : ViewModel() {
     val showInvite = !hasPresence && !isSip
+
+    val chatAllowed = !corePreferences.disableChat
 
     fun startCall() {
         address ?: return

@@ -22,11 +22,16 @@ package org.linphone.activities.main.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.*
 
 class TabsViewModel : ViewModel() {
     val unreadMessagesCount = MutableLiveData<Int>()
     val missedCallsCount = MutableLiveData<Int>()
+
+    val leftAnchor = MutableLiveData<Float>()
+    val middleAnchor = MutableLiveData<Float>()
+    val rightAnchor = MutableLiveData<Float>()
 
     private val listener: CoreListenerStub = object : CoreListenerStub() {
         override fun onCallStateChanged(
@@ -58,6 +63,16 @@ class TabsViewModel : ViewModel() {
     init {
         coreContext.core.addListener(listener)
 
+        if (corePreferences.disableChat) {
+            leftAnchor.value = 1 / 3F
+            middleAnchor.value = 2 / 3F
+            rightAnchor.value = 1F
+        } else {
+            leftAnchor.value = 0.25F
+            middleAnchor.value = 0.5F
+            rightAnchor.value = 0.75F
+        }
+
         updateUnreadChatCount()
         updateMissedCallCount()
     }
@@ -72,6 +87,6 @@ class TabsViewModel : ViewModel() {
     }
 
     fun updateUnreadChatCount() {
-        unreadMessagesCount.value = coreContext.core.unreadChatMessageCountFromActiveLocals
+        unreadMessagesCount.value = if (corePreferences.disableChat) 0 else coreContext.core.unreadChatMessageCountFromActiveLocals
     }
 }

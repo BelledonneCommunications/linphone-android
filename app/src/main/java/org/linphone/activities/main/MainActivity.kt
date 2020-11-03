@@ -220,6 +220,8 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                         findNavController(R.id.nav_host_fragment).navigate(Uri.parse(deepLink))
                     }
                     intent.hasExtra("Chat") -> {
+                        if (corePreferences.disableChat) return
+
                         val deepLink = if (intent.hasExtra("RemoteSipUri") && intent.hasExtra("LocalSipUri")) {
                             val peerAddress = intent.getStringExtra("RemoteSipUri")
                             val localAddress = intent.getStringExtra("LocalSipUri")
@@ -262,6 +264,8 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     }
 
     private fun handleSendText(intent: Intent) {
+        if (corePreferences.disableChat) return
+
         intent.getStringExtra(Intent.EXTRA_TEXT)?.let {
             sharedViewModel.textToShare.value = it
         }
@@ -270,6 +274,8 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     }
 
     private suspend fun handleSendFile(intent: Intent) {
+        if (corePreferences.disableChat) return
+
         (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let {
             val list = arrayListOf<String>()
             coroutineScope {
@@ -289,6 +295,8 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     }
 
     private suspend fun handleSendMultipleFiles(intent: Intent) {
+        if (corePreferences.disableChat) return
+
         intent.getParcelableArrayListExtra<Parcelable>(Intent.EXTRA_STREAM)?.let {
             val list = arrayListOf<String>()
             coroutineScope {
@@ -310,6 +318,8 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     }
 
     private fun handleSendChatRoom(intent: Intent) {
+        if (corePreferences.disableChat) return
+
         val uri = intent.data
         if (uri != null) {
             Log.i("[Main Activity] Found uri: $uri to send a message to")
