@@ -14,6 +14,7 @@
             android:id="@+id/action_detailContactFragment_to_contactEditorFragment"
             app:destination="@id/contactEditorFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/contactEditorFragment"
         android:name="org.linphone.activities.main.contact.fragments.ContactEditorFragment"
@@ -24,24 +25,21 @@
             app:argType="string"
             app:nullable="true" />
     </fragment>
+
     <fragment
         android:id="@+id/emptyContactFragment"
         android:name="org.linphone.activities.main.fragments.EmptyFragment"
         tools:layout="@layout/empty_fragment"
         android:label="EmptyFragment" >
-        <action
-            android:id="@+id/action_emptyContactFragment_to_detailContactFragment"
-            app:destination="@id/detailContactFragment"
-            app:launchSingleTop="true"
-            app:popUpTo="@+id/emptyContactFragment"
-            app:popUpToInclusive="true" />
     </fragment>
+
     <action
         android:id="@+id/action_global_detailContactFragment"
         app:destination="@id/detailContactFragment"
         app:launchSingleTop="true"
         app:popUpTo="@+id/emptyContactFragment"
         app:popUpToInclusive="true" />
+
     <action
         android:id="@+id/action_global_contactEditorFragment"
         app:destination="@id/contactEditorFragment"

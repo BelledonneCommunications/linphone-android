@@ -29,10 +29,9 @@ import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.GenericFragment
-import org.linphone.activities.main.MainActivity
+import org.linphone.activities.main.*
 import org.linphone.activities.main.contact.viewmodels.ContactViewModel
 import org.linphone.activities.main.contact.viewmodels.ContactViewModelFactory
-import org.linphone.activities.main.navigateToChatRooms
 import org.linphone.activities.main.navigateToContactEditor
 import org.linphone.activities.main.navigateToDialer
 import org.linphone.activities.main.viewmodels.DialogViewModel
@@ -54,6 +53,13 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
 
         sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
+        }
+
+        val id = arguments?.getString("id")
+        arguments?.clear()
+        if (id != null) {
+            Log.i("[Contact] Found contact id parameter in arguments: $id")
+            sharedViewModel.selectedContact.value = coreContext.contactsManager.findContactById(id)
         }
 
         val contact = sharedViewModel.selectedContact.value
@@ -91,7 +97,7 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
                 val args = Bundle()
                 args.putString("LocalSipUri", chatRoom.localAddress.asStringUriOnly())
                 args.putString("RemoteSipUri", chatRoom.peerAddress.asStringUriOnly())
-                navigateToChatRooms(args)
+                navigateToChatRoom(args)
             }
         })
 

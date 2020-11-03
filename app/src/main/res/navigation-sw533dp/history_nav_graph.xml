@@ -9,23 +9,19 @@
         android:id="@+id/emptyFragment"
         android:name="org.linphone.activities.main.fragments.EmptyFragment"
         tools:layout="@layout/empty_fragment"
-        android:label="EmptyFragment" >
-        <action
-            android:id="@+id/action_emptyFragment_to_detailCallLogFragment"
-            app:destination="@id/detailCallLogFragment"
-            app:launchSingleTop="true"
-            app:popUpTo="@+id/emptyFragment"
-            app:popUpToInclusive="true" />
-    </fragment>
+        android:label="EmptyFragment"/>
+
     <fragment
         android:id="@+id/detailCallLogFragment"
         android:name="org.linphone.activities.main.history.fragments.DetailCallLogFragment"
         tools:layout="@layout/history_detail_fragment"
         android:label="DetailCallLogFragment" />
+
     <action
         android:id="@+id/action_global_detailCallLogFragment"
         app:destination="@id/detailCallLogFragment"
         app:launchSingleTop="true"
         app:popUpTo="@+id/emptyFragment"
         app:popUpToInclusive="true" />
+
 </navigation>
