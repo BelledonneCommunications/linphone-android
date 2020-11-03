@@ -100,7 +100,11 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
         val swipeConfiguration = RecyclerViewSwipeConfiguration()
         val white = ContextCompat.getColor(requireContext(), R.color.white_color)
 
-        swipeConfiguration.rightToLeftAction = RecyclerViewSwipeConfiguration.Action("Delete", white, ContextCompat.getColor(requireContext(), R.color.red_color))
+        swipeConfiguration.rightToLeftAction = RecyclerViewSwipeConfiguration.Action(
+            "Delete",
+            white,
+            ContextCompat.getColor(requireContext(), R.color.red_color)
+        )
         val swipeListener = object : RecyclerViewSwipeListener {
             override fun onLeftToRightSwipe(viewHolder: RecyclerView.ViewHolder) {}
 
@@ -184,9 +188,12 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
         }
 
         val id = arguments?.getString("id")
+        val sipUri = arguments?.getString("sipUri")
+        val addressString = arguments?.getString("address")
+        arguments?.clear()
+
         if (id != null) {
             Log.i("[Contacts] Found contact id parameter in arguments: $id")
-            arguments?.clear()
             val contact = coreContext.contactsManager.findContactById(id)
             if (contact != null) {
                 Log.i("[Contacts] Found matching contact $contact")
@@ -195,31 +202,20 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
                 Log.w("[Contacts] Matching contact not found yet, waiting for contacts updated callback")
                 contactIdToDisplay = id
             }
-        } else {
-            val sipUri = arguments?.getString("sipUri")
-            if (sipUri != null) {
-                Log.i("[Contacts] Found sipUri parameter in arguments: $sipUri")
-                sipUriToAdd = sipUri
-                arguments?.clear()
-
-                val activity = requireActivity() as MainActivity
-                activity.showSnackBar(R.string.contact_choose_existing_or_new_to_add_number)
-                editOnClick = true
-            } else {
-                // When trying to display a non-native contact from history
-                val addressString = arguments?.getString("address")
-                if (addressString != null) {
-                    val address = Factory.instance().createAddress(addressString)
-                    if (address != null) {
-                        Log.i("[Contacts] Found friend native pointer parameter in arguments: ${address.asStringUriOnly()}")
-                        arguments?.clear()
-
-                        val contact = coreContext.contactsManager.findContactByAddress(address)
-                        if (contact != null) {
-                            Log.i("[Contacts] Found matching contact $contact")
-                            adapter.selectedContactEvent.value = Event(contact)
-                        }
-                    }
+        } else if (sipUri != null) {
+            Log.i("[Contacts] Found sipUri parameter in arguments: $sipUri")
+            sipUriToAdd = sipUri
+            val activity = requireActivity() as MainActivity
+            activity.showSnackBar(R.string.contact_choose_existing_or_new_to_add_number)
+            editOnClick = true
+        } else if (addressString != null) {
+            val address = Factory.instance().createAddress(addressString)
+            if (address != null) {
+                Log.i("[Contacts] Found friend native pointer parameter in arguments: ${address.asStringUriOnly()}")
+                val contact = coreContext.contactsManager.findContactByAddress(address)
+                if (contact != null) {
+                    Log.i("[Contacts] Found matching contact $contact")
+                    adapter.selectedContactEvent.value = Event(contact)
                 }
             }
         }
