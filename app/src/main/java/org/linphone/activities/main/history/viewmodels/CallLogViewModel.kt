@@ -25,6 +25,7 @@ import androidx.lifecycle.ViewModelProvider
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.contact.GenericContactViewModel
 import org.linphone.core.*
@@ -104,6 +105,8 @@ class CallLogViewModel(val callLog: CallLog) : GenericContactViewModel(callLog.r
     }
 
     val waitForChatRoomCreation = MutableLiveData<Boolean>()
+
+    val chatAllowed = !corePreferences.disableChat
 
     val secureChatAllowed = contact.value?.friend?.getPresenceModelForUriOrTel(peerSipUri)?.hasCapability(FriendCapability.LimeX3Dh) ?: false
 

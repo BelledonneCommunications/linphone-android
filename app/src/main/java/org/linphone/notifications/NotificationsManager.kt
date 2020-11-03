@@ -132,7 +132,7 @@ class NotificationsManager(private val context: Context) {
         }
 
         override fun onMessageReceived(core: Core, room: ChatRoom, message: ChatMessage) {
-            if (message.isOutgoing) return
+            if (message.isOutgoing || corePreferences.disableChat) return
 
             if (currentlyDisplayedChatRoomAddress == room.peerAddress.asStringUriOnly()) {
                 Log.i("[Notifications Manager] Chat room is currently displayed, do not notify received message")

@@ -31,9 +31,9 @@
         <Constraint
             android:id="@id/selector"
             android:layout_height="@dimen/tabs_fragment_selector_size"
-            motion:layout_constraintWidth_percent=".25"
             motion:layout_constraintBottom_toBottomOf="parent"
-            motion:layout_constraintLeft_toLeftOf="parent" />
+            motion:layout_constraintLeft_toLeftOf="parent"
+            motion:layout_constraintRight_toLeftOf="@id/guidelineLeft" />
 
     </ConstraintSet>
 
@@ -42,9 +42,9 @@
         <Constraint
             android:id="@id/selector"
             android:layout_height="@dimen/tabs_fragment_selector_size"
-            motion:layout_constraintWidth_percent=".25"
             motion:layout_constraintBottom_toBottomOf="parent"
-            motion:layout_constraintLeft_toLeftOf="@id/guidelineLeft" />
+            motion:layout_constraintLeft_toLeftOf="@id/guidelineLeft"
+            motion:layout_constraintRight_toLeftOf="@id/guidelineMiddle" />
 
     </ConstraintSet>
 
@@ -53,9 +53,9 @@
         <Constraint
             android:id="@id/selector"
             android:layout_height="@dimen/tabs_fragment_selector_size"
-            motion:layout_constraintWidth_percent=".25"
             motion:layout_constraintBottom_toBottomOf="parent"
-            motion:layout_constraintLeft_toLeftOf="@id/guidelineMiddle" />
+            motion:layout_constraintLeft_toLeftOf="@id/guidelineMiddle"
+            motion:layout_constraintRight_toLeftOf="@id/guidelineRight" />
 
     </ConstraintSet>
 
@@ -64,8 +64,8 @@
         <Constraint
             android:id="@id/selector"
             android:layout_height="@dimen/tabs_fragment_selector_size"
-            motion:layout_constraintWidth_percent=".25"
             motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintLeft_toLeftOf="@id/guidelineRight"
             motion:layout_constraintRight_toRightOf="parent" />
 
     </ConstraintSet>

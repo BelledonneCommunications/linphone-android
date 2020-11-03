@@ -311,6 +311,10 @@ class CorePreferences constructor(private val context: Context) {
     val dtmfKeypadVibration: Boolean
         get() = config.getBool("app", "dtmf_keypad_vibraton", false)
 
+    // Will disable chat feature completely
+    val disableChat: Boolean
+        get() = config.getBool("app", "disable_chat_feature", false)
+
     /* Assistant */
 
     val showCreateAccount: Boolean
