@@ -370,12 +370,20 @@ internal fun ContactEditorFragment.navigateToContact(contact: NativeContact) {
     findMasterNavController().navigate(Uri.parse(deepLink), getRightToLeftAnimationNavOptions())
 }
 
-internal fun DetailContactFragment.navigateToChatRooms(args: Bundle?) {
-    findMasterNavController().navigate(
-        R.id.action_global_masterChatRoomsFragment,
-        args,
-        getRightToLeftAnimationNavOptions()
-    )
+internal fun DetailContactFragment.navigateToChatRoom(args: Bundle?) {
+    if (!resources.getBoolean(R.bool.isTablet)) {
+        findNavController().navigate(
+            R.id.action_detailContactFragment_to_detailChatRoomFragment,
+            args,
+            getRightToLeftAnimationNavOptions()
+        )
+    } else {
+        findMasterNavController().navigate(
+            R.id.action_global_masterChatRoomsFragment,
+            args,
+            getRightToLeftAnimationNavOptions()
+        )
+    }
 }
 
 internal fun DetailContactFragment.navigateToDialer(args: Bundle?) {
@@ -432,8 +440,18 @@ internal fun DetailCallLogFragment.navigateToContacts(sipUriToAdd: String) {
 }
 
 internal fun DetailCallLogFragment.navigateToContact(contact: NativeContact) {
-    val deepLink = "linphone-android://contact/view/${contact.nativeId}"
-    findMasterNavController().navigate(Uri.parse(deepLink), getRightToLeftAnimationNavOptions())
+    if (!resources.getBoolean(R.bool.isTablet)) {
+        val args = Bundle()
+        args.putString("id", contact.nativeId)
+        findMasterNavController().navigate(
+            R.id.action_detailCallLogFragment_to_detailContactFragment,
+            args,
+            getRightToLeftAnimationNavOptions()
+        )
+    } else {
+        val deepLink = "linphone-android://contact/view/${contact.nativeId}"
+        findMasterNavController().navigate(Uri.parse(deepLink), getRightToLeftAnimationNavOptions())
+    }
 }
 
 internal fun DetailCallLogFragment.navigateToFriend(friendAddress: Address) {
@@ -441,12 +459,20 @@ internal fun DetailCallLogFragment.navigateToFriend(friendAddress: Address) {
     findMasterNavController().navigate(Uri.parse(deepLink), getRightToLeftAnimationNavOptions())
 }
 
-internal fun DetailCallLogFragment.navigateToChatRooms(args: Bundle?) {
-    findMasterNavController().navigate(
-        R.id.action_global_masterChatRoomsFragment,
-        args,
-        getRightToLeftAnimationNavOptions()
-    )
+internal fun DetailCallLogFragment.navigateToChatRoom(args: Bundle?) {
+    if (!resources.getBoolean(R.bool.isTablet)) {
+        findNavController().navigate(
+            R.id.action_detailCallLogFragment_to_detailChatRoomFragment,
+            args,
+            getRightToLeftAnimationNavOptions()
+        )
+    } else {
+        findMasterNavController().navigate(
+            R.id.action_global_masterChatRoomsFragment,
+            args,
+            getRightToLeftAnimationNavOptions()
+        )
+    }
 }
 
 internal fun DetailCallLogFragment.navigateToDialer(args: Bundle?) {

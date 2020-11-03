@@ -138,6 +138,7 @@ class CallLogViewModel(val callLog: CallLog) : GenericContactViewModel(callLog.r
         val chatRoom = LinphoneUtils.createOneToOneChatRoom(callLog.remoteAddress, isSecured)
         if (chatRoom != null) {
             if (chatRoom.state == ChatRoom.State.Created) {
+                waitForChatRoomCreation.value = false
                 chatRoomCreatedEvent.value = Event(chatRoom)
             } else {
                 chatRoom.addListener(chatRoomListener)

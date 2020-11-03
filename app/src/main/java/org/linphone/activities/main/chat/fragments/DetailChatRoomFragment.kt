@@ -93,6 +93,17 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         }
 
+        val localSipUri = arguments?.getString("LocalSipUri")
+        val remoteSipUri = arguments?.getString("RemoteSipUri")
+        arguments?.clear()
+        if (localSipUri != null && remoteSipUri != null) {
+            Log.i("[Chat Room] Found local [$localSipUri] & remote [$remoteSipUri] addresses in arguments")
+            arguments?.clear()
+            val localAddress = Factory.instance().createAddress(localSipUri)
+            val remoteSipAddress = Factory.instance().createAddress(remoteSipUri)
+            sharedViewModel.selectedChatRoom.value = coreContext.core.searchChatRoom(null, localAddress, remoteSipAddress, arrayOfNulls(0))
+        }
+
         val chatRoom = sharedViewModel.selectedChatRoom.value
         chatRoom ?: return
         chatRoomAddress = chatRoom.peerAddress.asStringUriOnly()

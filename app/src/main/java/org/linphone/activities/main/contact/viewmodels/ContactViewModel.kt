@@ -104,6 +104,7 @@ class ContactViewModel(private val c: Contact) : ErrorReportingViewModel(), Cont
 
             if (chatRoom != null) {
                 if (chatRoom.state == ChatRoom.State.Created) {
+                    waitForChatRoomCreation.value = false
                     chatRoomCreatedEvent.value = Event(chatRoom)
                 } else {
                     chatRoom.addListener(chatRoomListener)
