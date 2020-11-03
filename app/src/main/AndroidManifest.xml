@@ -79,11 +79,14 @@
             </intent-filter>
 
             <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.DIAL" />
                 <action android:name="android.intent.action.CALL" />
                 <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="tel" />
                 <data android:scheme="sip" />
+                <data android:scheme="sips" />
             </intent-filter>
 
             <intent-filter>
