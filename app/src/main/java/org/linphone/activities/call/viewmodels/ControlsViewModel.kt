@@ -83,6 +83,10 @@ class ControlsViewModel : ViewModel() {
         MutableLiveData<Event<String>>()
     }
 
+    val toggleOptionsMenuEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     val somethingClickedEvent = MutableLiveData<Event<Boolean>>()
 
     val chatAllowed = !LinphoneApplication.corePreferences.disableChat
@@ -234,6 +238,7 @@ class ControlsViewModel : ViewModel() {
     fun toggleOptionsMenu() {
         somethingClickedEvent.value = Event(true)
         optionsVisibility.value = optionsVisibility.value != true
+        toggleOptionsMenuEvent.value = Event(optionsVisibility.value ?: true)
     }
 
     fun toggleNumpadVisibility() {
