@@ -160,7 +160,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@id/primary_buttons_row"
-            android:layout_marginBottom="60dp"
+            android:layout_marginBottom="@dimen/call_button_size"
             android:layout_gravity="bottom"
             android:background="?attr/backgroundColor"
             android:orientation="vertical"
@@ -251,7 +251,7 @@
             layout="@layout/call_primary_buttons"
             bind:viewModel="@{controlsViewModel}"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"/>
 
         <include
@@ -261,7 +261,7 @@
             android:layout_above="@id/primary_buttons_row"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="60dp"
+            android:layout_marginBottom="@dimen/call_button_size"
             android:layout_centerInParent="true" />
 
         <include
