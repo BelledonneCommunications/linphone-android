@@ -27,8 +27,8 @@ import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
 import android.os.SystemClock
-import android.view.View
 import android.view.animation.LinearInterpolator
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -59,7 +59,26 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
     override fun getLayoutId(): Int = R.layout.call_controls_fragment
 
     private val bounceAnimator: ValueAnimator by lazy {
-        ValueAnimator.ofFloat(resources.getDimension(R.dimen.tabs_fragment_unread_count_bounce_offset), 0f)
+        ValueAnimator.ofFloat(resources.getDimension(R.dimen.tabs_fragment_unread_count_bounce_offset), 0f).apply {
+            addUpdateListener {
+                val value = it.animatedValue as Float
+                view?.findViewById<TextView>(R.id.chat_unread_count)?.translationY = -value
+            }
+            interpolator = LinearInterpolator()
+            duration = 250
+            repeatMode = ValueAnimator.REVERSE
+            repeatCount = ValueAnimator.INFINITE
+        }
+    }
+
+    private val optionsMenuAnimator: ValueAnimator by lazy {
+        ValueAnimator.ofFloat(resources.getDimension(R.dimen.call_options_menu_translate_y), 0f).apply {
+            addUpdateListener {
+                val value = it.animatedValue as Float
+                view?.findViewById<LinearLayout>(R.id.options_menu)?.translationY = value
+            }
+            duration = if (corePreferences.enableAnimations) 500 else 0
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -140,6 +159,16 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
             }
         })
 
+        controlsViewModel.toggleOptionsMenuEvent.observe(viewLifecycleOwner, {
+            it.consume { open ->
+                if (open) {
+                    optionsMenuAnimator.start()
+                } else {
+                    optionsMenuAnimator.reverse()
+                }
+            }
+        })
+
         controlsViewModel.somethingClickedEvent.observe(viewLifecycleOwner, {
             it.consume {
                 sharedViewModel.resetHiddenInterfaceTimerInVideoCallEvent.value = Event(true)
@@ -149,19 +178,6 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
         if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
             checkPermissions()
         }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        bounceAnimator.addUpdateListener {
-            val value = it.animatedValue as Float
-            view.findViewById<TextView>(R.id.chat_unread_count).translationY = -value
-        }
-        bounceAnimator.interpolator = LinearInterpolator()
-        bounceAnimator.duration = 250
-        bounceAnimator.repeatMode = ValueAnimator.REVERSE
-        bounceAnimator.repeatCount = ValueAnimator.INFINITE
     }
 
     override fun onStart() {

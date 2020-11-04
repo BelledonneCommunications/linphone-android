@@ -42,7 +42,17 @@ class TabsFragment : GenericFragment<TabsFragmentBinding>(), NavController.OnDes
     override fun getLayoutId(): Int = R.layout.tabs_fragment
 
     private val bounceAnimator: ValueAnimator by lazy {
-        ValueAnimator.ofFloat(resources.getDimension(R.dimen.tabs_fragment_unread_count_bounce_offset), 0f)
+        ValueAnimator.ofFloat(resources.getDimension(R.dimen.tabs_fragment_unread_count_bounce_offset), 0f).apply {
+            addUpdateListener {
+                val value = it.animatedValue as Float
+                binding.historyUnreadCount.translationY = -value
+                binding.chatUnreadCount.translationY = -value
+            }
+            interpolator = LinearInterpolator()
+            duration = 250
+            repeatMode = ValueAnimator.REVERSE
+            repeatCount = ValueAnimator.INFINITE
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -70,16 +80,6 @@ class TabsFragment : GenericFragment<TabsFragmentBinding>(), NavController.OnDes
         binding.setChatClickListener {
             navigateToChatRooms()
         }
-
-        bounceAnimator.addUpdateListener {
-            val value = it.animatedValue as Float
-            binding.historyUnreadCount.translationY = -value
-            binding.chatUnreadCount.translationY = -value
-        }
-        bounceAnimator.interpolator = LinearInterpolator()
-        bounceAnimator.duration = 250
-        bounceAnimator.repeatMode = ValueAnimator.REVERSE
-        bounceAnimator.repeatCount = ValueAnimator.INFINITE
     }
 
     override fun onStart() {
