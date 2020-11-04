@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <import type="android.view.View" />
@@ -31,7 +32,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="@dimen/call_button_size"
                 android:layout_alignParentBottom="true"
                 android:layout_toLeftOf="@id/left_vertical_divider_2">
 
@@ -62,7 +63,7 @@
                 android:enabled="@{viewModel.isMuteMicrophoneEnabled}"
                 android:contentDescription="@{viewModel.isMicrophoneMuted ? @string/content_description_disable_mic_mute : @string/content_description_enable_mic_mute}"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="@dimen/call_button_size"
                 android:layout_toRightOf="@id/left_vertical_divider_2"
                 android:layout_alignParentBottom="true"
                 android:background="?attr/button_background_drawable"
@@ -93,7 +94,7 @@
                     android:visibility="@{viewModel.audioRoutesEnabled ? View.GONE : View.VISIBLE}"
                     android:contentDescription="@{viewModel.isSpeakerSelected ? @string/content_description_disable_speaker : @string/content_description_enable_speaker}"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="@dimen/call_button_size"
                     android:layout_alignParentBottom="true"
                     android:background="?attr/button_background_drawable"
                     android:padding="15dp"
@@ -106,7 +107,7 @@
                     android:contentDescription="@string/content_description_toggle_audio_menu"
                     android:id="@+id/audio_route"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="@dimen/call_button_size"
                     android:layout_alignParentBottom="true"
                     android:background="?attr/button_background_drawable"
                     android:padding="15dp"
@@ -119,7 +120,7 @@
                     android:contentDescription="@string/content_description_use_bluetooth_headset"
                     android:id="@+id/route_bluetooth"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="@dimen/call_button_size"
                     android:layout_above="@id/audio_route"
                     android:background="?attr/button_background_drawable"
                     android:padding="15dp"
@@ -132,7 +133,7 @@
                     android:contentDescription="@string/content_description_use_earpiece"
                     android:id="@+id/route_earpiece"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="@dimen/call_button_size"
                     android:layout_above="@id/route_bluetooth"
                     android:background="?attr/button_background_drawable"
                     android:padding="15dp"
@@ -144,7 +145,7 @@
                     android:onClick="@{() -> viewModel.forceSpeakerAudioRoute()}"
                     android:contentDescription="@string/content_description_use_speaker"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="@dimen/call_button_size"
                     android:layout_above="@id/route_earpiece"
                     android:background="?attr/button_background_drawable"
                     android:padding="15dp"
@@ -154,8 +155,56 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/right_vertical_divider_2">
+
+                <LinearLayout
+                    android:id="@+id/options_menu"
+                    android:translationY="@dimen/call_options_menu_translate_y"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@id/options"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:onClick="@{() -> viewModel.startConference()}"
+                        android:enabled="@{viewModel.isConferencingAvailable}"
+                        android:contentDescription="@string/content_description_start_conference"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/call_button_size"
+                        android:background="?attr/button_background_drawable"
+                        android:padding="15dp"
+                        android:src="@drawable/options_start_conference" />
+
+                    <ImageView
+                        android:onClick="@{() -> viewModel.onTransferCallClicked()}"
+                        android:contentDescription="@string/content_description_transfer_call"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/call_button_size"
+                        android:background="?attr/button_background_drawable"
+                        android:padding="15dp"
+                        android:src="@drawable/options_transfer_call" />
+
+                    <ImageView
+                        android:onClick="@{() -> viewModel.onAddCallClicked()}"
+                        android:contentDescription="@string/content_description_add_call"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/call_button_size"
+                        android:background="?attr/button_background_drawable"
+                        android:padding="15dp"
+                        android:src="@drawable/options_add_call" />
+
+                    <ImageView
+                        android:onClick="@{() -> viewModel.toggleRecording(true)}"
+                        android:selected="@{viewModel.isRecording}"
+                        android:contentDescription="@string/content_description_toggle_recording"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/call_button_size"
+                        android:background="?attr/button_background_drawable"
+                        android:padding="15dp"
+                        android:src="@drawable/options_rec" />
+
+                </LinearLayout>
 
                 <ImageView
                     android:id="@+id/options"
@@ -163,60 +212,11 @@
                     android:selected="@{viewModel.optionsVisibility}"
                     android:contentDescription="@string/content_description_toggle_call_menu"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="@dimen/call_button_size"
                     android:layout_alignParentBottom="true"
                     android:background="?attr/button_background_drawable"
                     android:padding="15dp"
                     android:src="@drawable/options" />
-
-                <ImageView
-                    android:id="@+id/record_call"
-                    android:onClick="@{() -> viewModel.toggleRecording(true)}"
-                    android:selected="@{viewModel.isRecording}"
-                    android:visibility="@{viewModel.optionsVisibility ? View.VISIBLE : View.GONE, default=gone}"
-                    android:contentDescription="@string/content_description_toggle_recording"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:layout_above="@id/options"
-                    android:background="?attr/button_background_drawable"
-                    android:padding="15dp"
-                    android:src="@drawable/options_rec" />
-
-                <ImageView
-                    android:id="@+id/add_call"
-                    android:onClick="@{() -> viewModel.onAddCallClicked()}"
-                    android:visibility="@{viewModel.optionsVisibility ? View.VISIBLE : View.GONE, default=gone}"
-                    android:contentDescription="@string/content_description_add_call"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:layout_above="@id/record_call"
-                    android:background="?attr/button_background_drawable"
-                    android:padding="15dp"
-                    android:src="@drawable/options_add_call" />
-
-                <ImageView
-                    android:id="@+id/transfer"
-                    android:onClick="@{() -> viewModel.onTransferCallClicked()}"
-                    android:visibility="@{viewModel.optionsVisibility ? View.VISIBLE : View.GONE, default=gone}"
-                    android:contentDescription="@string/content_description_transfer_call"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:layout_above="@id/add_call"
-                    android:background="?attr/button_background_drawable"
-                    android:padding="15dp"
-                    android:src="@drawable/options_transfer_call" />
-
-                <ImageView
-                    android:onClick="@{() -> viewModel.startConference()}"
-                    android:enabled="@{viewModel.isConferencingAvailable}"
-                    android:visibility="@{viewModel.optionsVisibility ? View.VISIBLE : View.GONE, default=gone}"
-                    android:contentDescription="@string/content_description_start_conference"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:layout_above="@id/transfer"
-                    android:background="?attr/button_background_drawable"
-                    android:padding="15dp"
-                    android:src="@drawable/options_start_conference" />
 
             </RelativeLayout>
 
