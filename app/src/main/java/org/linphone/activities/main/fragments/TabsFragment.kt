@@ -19,9 +19,7 @@
  */
 package org.linphone.activities.main.fragments
 
-import android.animation.ValueAnimator
 import android.os.Bundle
-import android.view.animation.LinearInterpolator
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
@@ -40,20 +38,6 @@ class TabsFragment : GenericFragment<TabsFragmentBinding>(), NavController.OnDes
     private lateinit var viewModel: TabsViewModel
 
     override fun getLayoutId(): Int = R.layout.tabs_fragment
-
-    private val bounceAnimator: ValueAnimator by lazy {
-        ValueAnimator.ofFloat(resources.getDimension(R.dimen.tabs_fragment_unread_count_bounce_offset), 0f).apply {
-            addUpdateListener {
-                val value = it.animatedValue as Float
-                binding.historyUnreadCount.translationY = -value
-                binding.chatUnreadCount.translationY = -value
-            }
-            interpolator = LinearInterpolator()
-            duration = 250
-            repeatMode = ValueAnimator.REVERSE
-            repeatCount = ValueAnimator.INFINITE
-        }
-    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -84,19 +68,11 @@ class TabsFragment : GenericFragment<TabsFragmentBinding>(), NavController.OnDes
 
     override fun onStart() {
         super.onStart()
-
-        if (corePreferences.enableAnimations) {
-            bounceAnimator.start()
-        }
         findNavController().addOnDestinationChangedListener(this)
     }
 
     override fun onStop() {
-        if (corePreferences.enableAnimations) {
-            bounceAnimator.pause()
-        }
         findNavController().removeOnDestinationChangedListener(this)
-
         super.onStop()
     }
 

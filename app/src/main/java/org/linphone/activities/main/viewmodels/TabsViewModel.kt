@@ -19,11 +19,15 @@
  */
 package org.linphone.activities.main.viewmodels
 
+import android.animation.ValueAnimator
+import android.view.animation.LinearInterpolator
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.R
 import org.linphone.core.*
+import org.linphone.utils.AppUtils
 
 class TabsViewModel : ViewModel() {
     val unreadMessagesCount = MutableLiveData<Int>()
@@ -32,6 +36,23 @@ class TabsViewModel : ViewModel() {
     val leftAnchor = MutableLiveData<Float>()
     val middleAnchor = MutableLiveData<Float>()
     val rightAnchor = MutableLiveData<Float>()
+
+    val historyMissedCountTranslateY = MutableLiveData<Float>()
+    val chatUnreadCountTranslateY = MutableLiveData<Float>()
+
+    private val bounceAnimator: ValueAnimator by lazy {
+        ValueAnimator.ofFloat(AppUtils.getDimension(R.dimen.tabs_fragment_unread_count_bounce_offset), 0f).apply {
+            addUpdateListener {
+                val value = it.animatedValue as Float
+                historyMissedCountTranslateY.value = -value
+                chatUnreadCountTranslateY.value = -value
+            }
+            interpolator = LinearInterpolator()
+            duration = 250
+            repeatMode = ValueAnimator.REVERSE
+            repeatCount = ValueAnimator.INFINITE
+        }
+    }
 
     private val listener: CoreListenerStub = object : CoreListenerStub() {
         override fun onCallStateChanged(
@@ -75,6 +96,8 @@ class TabsViewModel : ViewModel() {
 
         updateUnreadChatCount()
         updateMissedCallCount()
+
+        if (corePreferences.enableAnimations) bounceAnimator.start()
     }
 
     override fun onCleared() {
