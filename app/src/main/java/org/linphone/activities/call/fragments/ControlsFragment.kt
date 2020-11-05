@@ -20,19 +20,14 @@
 package org.linphone.activities.call.fragments
 
 import android.Manifest
-import android.animation.ValueAnimator
 import android.annotation.TargetApi
 import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
 import android.os.SystemClock
-import android.view.animation.LinearInterpolator
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.call.viewmodels.CallsViewModel
@@ -57,39 +52,6 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
     private var dialog: Dialog? = null
 
     override fun getLayoutId(): Int = R.layout.call_controls_fragment
-
-    private val bounceAnimator: ValueAnimator by lazy {
-        ValueAnimator.ofFloat(resources.getDimension(R.dimen.tabs_fragment_unread_count_bounce_offset), 0f).apply {
-            addUpdateListener {
-                val value = it.animatedValue as Float
-                view?.findViewById<TextView>(R.id.chat_unread_count)?.translationY = -value
-            }
-            interpolator = LinearInterpolator()
-            duration = 250
-            repeatMode = ValueAnimator.REVERSE
-            repeatCount = ValueAnimator.INFINITE
-        }
-    }
-
-    private val optionsMenuAnimator: ValueAnimator by lazy {
-        ValueAnimator.ofFloat(resources.getDimension(R.dimen.call_options_menu_translate_y), 0f).apply {
-            addUpdateListener {
-                val value = it.animatedValue as Float
-                view?.findViewById<LinearLayout>(R.id.options_menu)?.translationY = value
-            }
-            duration = if (corePreferences.enableAnimations) 500 else 0
-        }
-    }
-
-    private val audioRoutesMenuAnimator: ValueAnimator by lazy {
-        ValueAnimator.ofFloat(resources.getDimension(R.dimen.call_audio_routes_menu_translate_y), 0f).apply {
-            addUpdateListener {
-                val value = it.animatedValue as Float
-                view?.findViewById<LinearLayout>(R.id.audio_routes_menu)?.translationY = value
-            }
-            duration = if (corePreferences.enableAnimations) 500 else 0
-        }
-    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -169,26 +131,6 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
             }
         })
 
-        controlsViewModel.toggleOptionsMenuEvent.observe(viewLifecycleOwner, {
-            it.consume { open ->
-                if (open) {
-                    optionsMenuAnimator.start()
-                } else {
-                    optionsMenuAnimator.reverse()
-                }
-            }
-        })
-
-        controlsViewModel.toggleAudioRoutesMenuEvent.observe(viewLifecycleOwner, {
-            it.consume { open ->
-                if (open) {
-                    audioRoutesMenuAnimator.start()
-                } else {
-                    audioRoutesMenuAnimator.reverse()
-                }
-            }
-        })
-
         controlsViewModel.somethingClickedEvent.observe(viewLifecycleOwner, {
             it.consume {
                 sharedViewModel.resetHiddenInterfaceTimerInVideoCallEvent.value = Event(true)
@@ -198,21 +140,6 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
         if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
             checkPermissions()
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-        if (corePreferences.enableAnimations) {
-            bounceAnimator.start()
-        }
-    }
-
-    override fun onStop() {
-        if (corePreferences.enableAnimations) {
-            bounceAnimator.pause()
-        }
-        super.onStop()
     }
 
     override fun onRequestPermissionsResult(
