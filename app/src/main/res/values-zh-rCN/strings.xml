@@ -369,7 +369,7 @@
     <string name="no_contact">无联系人。</string>
     <string name="no_sip_contact">无SIP联系人。</string>
     <string name="contact_filter_hint">搜索联系人</string>
-    <string name="contact_send_sms_invite_text">您好，和我一起加入 &appName;通讯APP吧！您可以免费下载</string>
+    <string name="contact_send_sms_invite_text">您好，和我一起加入 &appName;通讯APP吧！您可以免费在%s下载</string>
     <string name="contact_last_name">姓式</string>
     <string name="contact_first_name">名字</string>
     <string name="contact_organization">机构</string>
@@ -398,12 +398,12 @@
     <string name="chat_event_subject_changed">新主题： %s</string>
     <string name="chat_event_admin_set">%s 是管理者</string>
     <string name="chat_event_admin_unset">%s 不再是管理者</string>
-    <string name="chat_security_event_lime_identity_key_changed">%s 的LIME身份密钥已更改</string>
+    <string name="chat_security_event_lime_identity_key_changed">%s 的加密身份密钥已更改</string>
     <string name="chat_security_event_security_level_downgraded">%s 造成安全级别下降</string>
     <string name="chat_security_event_participant_max_count_exceeded">参加人数上限超过 %s 人</string>
-    <string name="chat_event_ephemeral_disabled">您禁用了短暂信息</string>
-    <string name="chat_event_ephemeral_enabled">您启用了短暂消息：%s</string>
-    <string name="chat_event_ephemeral_lifetime_changed">短暂信息到期日：%s</string>
+    <string name="chat_event_ephemeral_disabled">您禁用了「阅后即焚」信息</string>
+    <string name="chat_event_ephemeral_enabled">您启用了「阅后即焚」信息：%s</string>
+    <string name="chat_event_ephemeral_lifetime_changed">「阅后即焚」到期日：%s</string>
     <string name="chat_message_download_file">下载</string>
     <string name="chat_message_pick_file_dialog">选择源</string>
     <string name="chat_room_devices_fragment_title">对话设备</string>
