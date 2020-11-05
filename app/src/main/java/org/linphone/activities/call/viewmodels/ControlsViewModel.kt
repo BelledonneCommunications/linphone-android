@@ -87,6 +87,10 @@ class ControlsViewModel : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val toggleAudioRoutesMenuEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     val somethingClickedEvent = MutableLiveData<Event<Boolean>>()
 
     val chatAllowed = !LinphoneApplication.corePreferences.disableChat
@@ -249,6 +253,7 @@ class ControlsViewModel : ViewModel() {
     fun toggleRoutesMenu() {
         somethingClickedEvent.value = Event(true)
         audioRoutesVisibility.value = audioRoutesVisibility.value != true
+        toggleAudioRoutesMenuEvent.value = Event(audioRoutesVisibility.value ?: true)
     }
 
     fun toggleRecording(closeMenu: Boolean) {
