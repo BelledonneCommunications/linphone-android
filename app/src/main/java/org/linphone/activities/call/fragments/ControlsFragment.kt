@@ -81,6 +81,16 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
         }
     }
 
+    private val audioRoutesMenuAnimator: ValueAnimator by lazy {
+        ValueAnimator.ofFloat(resources.getDimension(R.dimen.call_audio_routes_menu_translate_y), 0f).apply {
+            addUpdateListener {
+                val value = it.animatedValue as Float
+                view?.findViewById<LinearLayout>(R.id.audio_routes_menu)?.translationY = value
+            }
+            duration = if (corePreferences.enableAnimations) 500 else 0
+        }
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -165,6 +175,16 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
                     optionsMenuAnimator.start()
                 } else {
                     optionsMenuAnimator.reverse()
+                }
+            }
+        })
+
+        controlsViewModel.toggleAudioRoutesMenuEvent.observe(viewLifecycleOwner, {
+            it.consume { open ->
+                if (open) {
+                    audioRoutesMenuAnimator.start()
+                } else {
+                    audioRoutesMenuAnimator.reverse()
                 }
             }
         })

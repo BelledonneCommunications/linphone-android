@@ -14,4 +14,5 @@
     <dimen name="contact_avatar_size">35dp</dimen>
     <dimen name="call_button_size">60dp</dimen>
     <dimen name="call_options_menu_translate_y">300dp</dimen>
+    <dimen name="call_audio_routes_menu_translate_y">240dp</dimen>
 </resources>
