@@ -20,17 +20,22 @@
 package org.linphone.activities.call.viewmodels
 
 import android.Manifest
+import android.animation.ValueAnimator
 import android.content.Context
 import android.os.Vibrator
+import android.view.animation.LinearInterpolator
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlin.math.max
 import org.linphone.LinphoneApplication
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.R
 import org.linphone.activities.main.dialer.NumpadDigitListener
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.*
 import org.linphone.core.tools.Log
+import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.PermissionHelper
 
@@ -83,19 +88,50 @@ class ControlsViewModel : ViewModel() {
         MutableLiveData<Event<String>>()
     }
 
-    val toggleOptionsMenuEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
-    }
-
-    val toggleAudioRoutesMenuEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
-    }
-
     val somethingClickedEvent = MutableLiveData<Event<Boolean>>()
 
     val chatAllowed = !LinphoneApplication.corePreferences.disableChat
 
     private val vibrator = coreContext.context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+
+    val chatUnreadCountTranslateY = MutableLiveData<Float>()
+
+    val optionsMenuTranslateY = MutableLiveData<Float>()
+
+    val audioRoutesMenuTranslateY = MutableLiveData<Float>()
+
+    private val bounceAnimator: ValueAnimator by lazy {
+        ValueAnimator.ofFloat(AppUtils.getDimension(R.dimen.tabs_fragment_unread_count_bounce_offset), 0f).apply {
+            addUpdateListener {
+                val value = it.animatedValue as Float
+                chatUnreadCountTranslateY.value = -value
+            }
+            interpolator = LinearInterpolator()
+            duration = 250
+            repeatMode = ValueAnimator.REVERSE
+            repeatCount = ValueAnimator.INFINITE
+        }
+    }
+
+    private val optionsMenuAnimator: ValueAnimator by lazy {
+        ValueAnimator.ofFloat(AppUtils.getDimension(R.dimen.call_options_menu_translate_y), 0f).apply {
+            addUpdateListener {
+                val value = it.animatedValue as Float
+                optionsMenuTranslateY.value = value
+            }
+            duration = if (corePreferences.enableAnimations) 500 else 0
+        }
+    }
+
+    private val audioRoutesMenuAnimator: ValueAnimator by lazy {
+        ValueAnimator.ofFloat(AppUtils.getDimension(R.dimen.call_audio_routes_menu_translate_y), 0f).apply {
+            addUpdateListener {
+                val value = it.animatedValue as Float
+                audioRoutesMenuTranslateY.value = value
+            }
+            duration = if (corePreferences.enableAnimations) 500 else 0
+        }
+    }
 
     val onKeyClick: NumpadDigitListener = object : NumpadDigitListener {
         override fun handleClick(key: Char) {
@@ -163,7 +199,12 @@ class ControlsViewModel : ViewModel() {
         isVideoUpdateInProgress.value = false
         showSwitchCamera.value = coreContext.showSwitchCameraButton()
 
+        chatUnreadCountTranslateY.value = 0f
+        optionsMenuTranslateY.value = AppUtils.getDimension(R.dimen.call_options_menu_translate_y)
+        audioRoutesMenuTranslateY.value = AppUtils.getDimension(R.dimen.call_audio_routes_menu_translate_y)
+
         updateUI()
+        if (corePreferences.enableAnimations) bounceAnimator.start()
     }
 
     override fun onCleared() {
@@ -242,7 +283,11 @@ class ControlsViewModel : ViewModel() {
     fun toggleOptionsMenu() {
         somethingClickedEvent.value = Event(true)
         optionsVisibility.value = optionsVisibility.value != true
-        toggleOptionsMenuEvent.value = Event(optionsVisibility.value ?: true)
+        if (optionsVisibility.value == true) {
+            optionsMenuAnimator.start()
+        } else {
+            optionsMenuAnimator.reverse()
+        }
     }
 
     fun toggleNumpadVisibility() {
@@ -253,7 +298,11 @@ class ControlsViewModel : ViewModel() {
     fun toggleRoutesMenu() {
         somethingClickedEvent.value = Event(true)
         audioRoutesVisibility.value = audioRoutesVisibility.value != true
-        toggleAudioRoutesMenuEvent.value = Event(audioRoutesVisibility.value ?: true)
+        if (audioRoutesVisibility.value == true) {
+            audioRoutesMenuAnimator.start()
+        } else {
+            audioRoutesMenuAnimator.reverse()
+        }
     }
 
     fun toggleRecording(closeMenu: Boolean) {

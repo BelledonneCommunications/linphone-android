@@ -52,7 +52,7 @@
                 android:src="@drawable/footer_chat" />
 
             <TextView
-                android:id="@+id/chat_unread_count"
+                android:translationY="@{viewModel.chatUnreadCountTranslateY}"
                 android:text="@{String.valueOf(viewModel.unreadMessagesCount)}"
                 android:visibility="@{viewModel.unreadMessagesCount == 0 ? View.GONE : View.VISIBLE}"
                 style="@style/unread_count_font"

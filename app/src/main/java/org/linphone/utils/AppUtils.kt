@@ -47,6 +47,10 @@ class AppUtils {
             return coreContext.context.resources.getQuantityString(id, count, value)
         }
 
+        fun getDimension(id: Int): Float {
+            return coreContext.context.resources.getDimension(id)
+        }
+
         fun getTextWithHttpLinks(input: String): Spanned {
             var text = input
             if (text.contains("<")) {

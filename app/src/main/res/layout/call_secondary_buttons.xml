@@ -102,7 +102,7 @@
 
                 <LinearLayout
                     android:id="@+id/audio_routes_menu"
-                    android:translationY="@dimen/call_audio_routes_menu_translate_y"
+                    android:translationY="@{viewModel.audioRoutesMenuTranslateY, default=@dimen/call_audio_routes_menu_translate_y}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_above="@id/audio_routes"
@@ -162,7 +162,7 @@
 
                 <LinearLayout
                     android:id="@+id/options_menu"
-                    android:translationY="@dimen/call_options_menu_translate_y"
+                    android:translationY="@{viewModel.optionsMenuTranslateY, default=@dimen/call_options_menu_translate_y}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_above="@id/options"
