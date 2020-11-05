@@ -100,56 +100,58 @@
                     android:padding="15dp"
                     android:src="@drawable/speaker" />
 
+                <LinearLayout
+                    android:id="@+id/audio_routes_menu"
+                    android:translationY="@dimen/call_audio_routes_menu_translate_y"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@id/audio_routes"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:selected="@{viewModel.isBluetoothHeadsetSelected}"
+                        android:onClick="@{() -> viewModel.forceBluetoothAudioRoute()}"
+                        android:contentDescription="@string/content_description_use_bluetooth_headset"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/call_button_size"
+                        android:background="?attr/button_background_drawable"
+                        android:padding="15dp"
+                        android:src="@drawable/route_bluetooth" />
+
+                    <ImageView
+                        android:selected="@{!viewModel.isSpeakerSelected &amp;&amp; !viewModel.isBluetoothHeadsetSelected}"
+                        android:onClick="@{() -> viewModel.forceEarpieceAudioRoute()}"
+                        android:contentDescription="@string/content_description_use_earpiece"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/call_button_size"
+                        android:background="?attr/button_background_drawable"
+                        android:padding="15dp"
+                        android:src="@drawable/route_earpiece" />
+
+                    <ImageView
+                        android:selected="@{viewModel.isSpeakerSelected}"
+                        android:onClick="@{() -> viewModel.forceSpeakerAudioRoute()}"
+                        android:contentDescription="@string/content_description_use_speaker"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/call_button_size"
+                        android:background="?attr/button_background_drawable"
+                        android:padding="15dp"
+                        android:src="@drawable/route_speaker" />
+
+                </LinearLayout>
+
                 <ImageView
+                    android:id="@+id/audio_routes"
                     android:onClick="@{() -> viewModel.toggleRoutesMenu()}"
-                    android:visibility="@{viewModel.audioRoutesEnabled ? View.VISIBLE : View.GONE, default=gone}"
+                    android:visibility="@{viewModel.audioRoutesEnabled ? View.VISIBLE : View.INVISIBLE, default=invisible}"
                     android:selected="@{viewModel.audioRoutesVisibility}"
                     android:contentDescription="@string/content_description_toggle_audio_menu"
-                    android:id="@+id/audio_route"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/call_button_size"
                     android:layout_alignParentBottom="true"
                     android:background="?attr/button_background_drawable"
                     android:padding="15dp"
                     android:src="@drawable/routes" />
-
-                <ImageView
-                    android:visibility="@{viewModel.audioRoutesVisibility ? View.VISIBLE : View.GONE, default=gone}"
-                    android:selected="@{viewModel.isBluetoothHeadsetSelected}"
-                    android:onClick="@{() -> viewModel.forceBluetoothAudioRoute()}"
-                    android:contentDescription="@string/content_description_use_bluetooth_headset"
-                    android:id="@+id/route_bluetooth"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/call_button_size"
-                    android:layout_above="@id/audio_route"
-                    android:background="?attr/button_background_drawable"
-                    android:padding="15dp"
-                    android:src="@drawable/route_bluetooth" />
-
-                <ImageView
-                    android:visibility="@{viewModel.audioRoutesVisibility ? View.VISIBLE : View.GONE, default=gone}"
-                    android:selected="@{!viewModel.isSpeakerSelected &amp;&amp; !viewModel.isBluetoothHeadsetSelected}"
-                    android:onClick="@{() -> viewModel.forceEarpieceAudioRoute()}"
-                    android:contentDescription="@string/content_description_use_earpiece"
-                    android:id="@+id/route_earpiece"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/call_button_size"
-                    android:layout_above="@id/route_bluetooth"
-                    android:background="?attr/button_background_drawable"
-                    android:padding="15dp"
-                    android:src="@drawable/route_earpiece" />
-
-                <ImageView
-                    android:visibility="@{viewModel.audioRoutesVisibility ? View.VISIBLE : View.GONE, default=gone}"
-                    android:selected="@{viewModel.isSpeakerSelected}"
-                    android:onClick="@{() -> viewModel.forceSpeakerAudioRoute()}"
-                    android:contentDescription="@string/content_description_use_speaker"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/call_button_size"
-                    android:layout_above="@id/route_earpiece"
-                    android:background="?attr/button_background_drawable"
-                    android:padding="15dp"
-                    android:src="@drawable/route_speaker" />
 
             </RelativeLayout>
 
