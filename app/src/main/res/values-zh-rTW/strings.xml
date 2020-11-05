@@ -1,2 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<!DOCTYPE resources [
+<!ENTITY appName "Linphone">
+]>
+<resources>
+    <string name="service_name">&appName;服務</string>
+    <string name="service_description">若要在後台可接聽電話，這是必選項</string>
+    <string name="sync_account_name">&appName;聯絡人</string>
+    <string name="about_privacy_policy">訪問我們的隱私政策</string>
+    <string name="about_send_log">發送日誌</string>
+    <string name="about_reset_log">重啓日誌</string>
+    <string name="logs_url_copied_to_clipboard">日誌網址複製到剪貼板</string>
+    <string name="error">錯誤</string>
+    <string name="phone_number">電話號碼</string>
+    <string name="phone_numbers">電話號碼</string>
+    <string name="international_prefix">前綴</string>
+    <string name="assistant_choose_country">選擇一個國家</string>
+    <string name="assistant_choose_country_title">國家名稱或前綴</string>
+    <string name="username">用戶名</string>
+    <string name="password">密碼</string>
+    <string name="email">電郵</string>
+    <string name="domain">域名</string>
+    <string name="sip_address">SIP地址</string>
+    <string name="sip_addresses">SIP地址</string>
+    <string name="cancel">取消</string>
+    <plurals name="days">
+        <item quantity="other">%d 天</item>
+    </plurals>
+    <string name="invalid_email">郵箱無效</string>
+    <string name="today">今日</string>
+    <string name="yesterday">昨日</string>
+    <string name="transport">傳輸</string>
+    <string name="transport_udp">UDP用戶數據報協議</string>
+    <string name="transport_tcp">TCP傳輸控制協議</string>
+    <string name="transport_tls">TLS安全傳輸層協議</string>
+    <string name="hash_algorithm_md5">MD5 哈希散列算法</string>
+    <string name="hash_algorithm_sha256">SHA-256加密算法</string>
+    <string name="status_connected">已連接</string>
+    <string name="status_not_connected">未連接</string>
+    <string name="status_in_progress">正在進行連接</string>
+    <string name="status_error">連接失敗</string>
+    <string name="no_account_configured">沒有配置的帳戶</string>
+    <string name="about">關於</string>
+    <string name="assistant">助手</string>
+    <string name="recordings">錄音</string>
+    <string name="settings">設置</string>
+    <string name="quit">退出</string>
+    <string name="history_calls_list">通話</string>
+    <string name="no_missed_call_history">通話紀錄中沒有未接來電</string>
+    <string name="history_delete_many_dialog">您要刪除這些紀錄嗎？</string>
+    <string name="contact_invite_friend">邀請</string>
+    <string name="no_contact">您的通訊錄中沒有聯絡人。</string>
+    <string name="contact_filter_hint">搜索聯絡人</string>
+    <string name="contact_send_sms_invite_text">您好，和我一起加入&appName;吧！您可以在%s免費下載</string>
+    <string name="contact_last_name">姓式</string>
+    <string name="contact_first_name">名字</string>
+    <string name="contact_organization">機構</string>
+    <string name="contact_editor_write_permission_denied">寫入聯絡人權限被拒，無法編輯聯絡人</string>
+    <string name="contact_delete_one_dialog">您要刪除這個聯絡人嗎？
+\n它也將會從您的設備通訊錄中刪除</string>
+    <string name="contact_new_choose_sync_account">選擇保存聯絡人的位置</string>
+    <string name="contact_local_sync_account">本地存儲</string>
+    <string name="dialer_address_bar_hint">輸入電話號碼或地址</string>
+    <string name="debug_popup_title">調試</string>
+    <string name="debug_popup_enable_logs">啟用日誌</string>
+    <string name="debug_popup_disable_logs">禁用日誌</string>
+    <string name="debug_popup_send_logs">發送日誌</string>
+    <string name="no_chat_history">無對話</string>
+    <string name="chat_remote_is_composing">遠程正在寫入…</string>
+    <string name="chat_event_conference_created">您已加入群組</string>
+    <string name="chat_event_conference_destroyed">您已離開群組</string>
+    <string name="chat_event_participant_added">%s 已加入</string>
+    <string name="chat_event_participant_removed">%s 已離開</string>
+    <string name="chat_event_device_added">%s 的新設備</string>
+    <string name="chat_event_device_removed">%s 的設備已刪除</string>
+    <string name="chat_event_subject_changed">新主題%s</string>
+    <string name="chat_event_admin_set">%s 是管理者</string>
+    <string name="chat_event_admin_unset">%s 已不再是管理者</string>
+    <string name="chat_security_event_lime_identity_key_changed">%s 的加密身份密鑰已更改</string>
+    <string name="chat_security_event_security_level_downgraded">%s造成安全級別下降</string>
+    <string name="chat_security_event_participant_max_count_exceeded">參加人數上限超過%s人</string>
+    <string name="chat_event_ephemeral_disabled">您禁用了「閱後即焚」訊息</string>
+    <string name="chat_event_ephemeral_enabled">您開啟了「閱後即焚」訊息</string>
+    <string name="chat_event_ephemeral_lifetime_changed">「閱後即焚」訊息到期日：%s</string>
+    <string name="chat_message_download_file">下載</string>
+    <string name="chat_message_pick_file_dialog">選擇源</string>
+    <string name="chat_room_devices_fragment_title">對話設備</string>
+    <string name="service_auto_start_description">&appName;已自動啟動</string>
+    <string name="select_your_country">選擇您的國家</string>
+    <string name="share_uploaded_logs_link">共享日誌鏈接使用…</string>
+    <string name="app_description"><i>自由</i>的SIP客戶端</string>
+    <string name="history_delete_one_dialog">您要刪除這項紀錄嗎？</string>
+    <string name="no_call_history">通話紀錄中沒有通話</string>
+    <string name="no_sip_contact">通訊錄中沒有SIP聯絡人。</string>
+    <string name="contact_choose_existing_or_new_to_add_number">選擇聯絡人或建立新的聯絡人</string>
+    <string name="contact_delete_many_dialog">您要刪除這些聯絡人嗎？
+\n它們也將會從您的設備通訊錄中刪除</string>
+    <string name="chat_security_event_man_in_the_middle_detected">檢測到中間人攻擊</string>
+</resources>
