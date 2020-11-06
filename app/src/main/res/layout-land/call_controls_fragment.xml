@@ -141,7 +141,6 @@
 
         <include
             layout="@layout/numpad"
-            android:visibility="@{controlsViewModel.numpadVisibility ? View.VISIBLE : View.GONE, default=gone}"
             bind:keyListener="@{controlsViewModel.onKeyClick}"
             android:layout_above="@id/primary_buttons_row"
             android:layout_width="match_parent"
