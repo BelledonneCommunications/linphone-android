@@ -97,11 +97,14 @@ class AppUtils {
             if (displayName.isEmpty()) return ""
 
             val split = displayName.toUpperCase(Locale.getDefault()).split(" ")
-            return when (split.size) {
-                0 -> ""
-                1 -> split[0][0].toString()
-                else -> split[0][0].toString() + split[1][0].toString()
+            var initials = ""
+            for (i in split.indices) {
+                if (split[i].isNotEmpty()) {
+                    initials += split[i][0]
+                    if (initials.length >= 2) break
+                }
             }
+            return initials
         }
 
         fun pixelsToDp(pixels: Float): Float {
