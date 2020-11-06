@@ -100,6 +100,10 @@ class ControlsViewModel : ViewModel() {
 
     val audioRoutesMenuTranslateY = MutableLiveData<Float>()
 
+    val toggleNumpadEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     private val bounceAnimator: ValueAnimator by lazy {
         ValueAnimator.ofFloat(AppUtils.getDimension(R.dimen.tabs_fragment_unread_count_bounce_offset), 0f).apply {
             addUpdateListener {
@@ -293,6 +297,7 @@ class ControlsViewModel : ViewModel() {
     fun toggleNumpadVisibility() {
         somethingClickedEvent.value = Event(true)
         numpadVisibility.value = numpadVisibility.value != true
+        toggleNumpadEvent.value = Event(numpadVisibility.value ?: true)
     }
 
     fun toggleRoutesMenu() {
