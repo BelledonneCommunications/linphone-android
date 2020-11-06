@@ -22,6 +22,7 @@ package org.linphone.activities.main.dialer.viewmodels
 import android.content.Context
 import android.os.Vibrator
 import android.provider.Settings
+import android.widget.EditText
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -138,6 +139,11 @@ class DialerViewModel : LogsUploadViewModel() {
         coreContext.core.removeListener(listener)
 
         super.onCleared()
+    }
+
+    // This is to workaround the cursor being set to the start when pressing a digit
+    fun onUriChanged(input: EditText) {
+        input.setSelection(input.text.length)
     }
 
     fun updateShowVideoPreview() {

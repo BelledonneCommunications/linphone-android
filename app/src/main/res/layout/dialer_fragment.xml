@@ -42,7 +42,9 @@
                 android:src="@drawable/backspace" />
 
             <EditText
+                android:id="@+id/sip_uri_input"
                 android:text="@={viewModel.enteredUri}"
+                android:onTextChanged="@{(text, start, before, count) -> viewModel.onUriChanged(sipUriInput)}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
