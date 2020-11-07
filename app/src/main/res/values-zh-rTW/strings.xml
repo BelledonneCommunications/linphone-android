@@ -96,4 +96,143 @@
     <string name="contact_delete_many_dialog">您要刪除這些聯絡人嗎？
 \n它們也將會從您的設備通訊錄中刪除</string>
     <string name="chat_security_event_man_in_the_middle_detected">檢測到中間人攻擊</string>
+    <string name="chat_room_ephemeral_messages_desc">該信息已閱讀後，兩端的信息將在選定的超時時間被刪除。</string>
+    <string name="call_error_declined">通話被拒</string>
+    <string name="call_video_update_requested_dialog">對方要求啟用視訊</string>
+    <string name="call_stats_receiver_loss_rate">接收方丟失率：</string>
+    <string name="chat_room_group_info_title">信息</string>
+    <string name="chat_room_group_info_participants">參與者</string>
+    <string name="chat_room_group_info_subject_hint">為群組命名</string>
+    <string name="chat_room_group_info_leave">離開群組</string>
+    <string name="chat_room_group_info_leave_dialog_button">離開</string>
+    <string name="chat_room_group_info_you_are_now_admin">您現在是管理者</string>
+    <string name="chat_room_group_info_you_are_no_longer_admin">您已不再是管理者</string>
+    <string name="chat_message_imdn_info">發送狀態</string>
+    <string name="chat_message_imdn_displayed">已讀</string>
+    <string name="chat_message_imdn_sent">已發送</string>
+    <string name="chat_message_imdn_delivered">已送達</string>
+    <string name="chat_message_imdn_undelivered">未送達</string>
+    <string name="chat_message_forwarded">已转发</string>
+    <string name="chat_message_context_menu_resend">重發</string>
+    <string name="chat_message_context_menu_copy_text">複製文本</string>
+    <string name="chat_message_context_menu_forward">轉發</string>
+    <string name="chat_message_context_menu_imdn_info">發送狀態</string>
+    <string name="chat_message_context_menu_delete">刪除</string>
+    <string name="chat_message_context_menu_add_to_contacts">加入通訊錄</string>
+    <string name="chat_room_toast_choose_for_sharing">選擇一個對話或創建一個新的對話</string>
+    <string name="chat_room_cant_open_file_no_app_found">無法打開文件，沒有適用於此格式的應用程序。</string>
+    <string name="chat_room_creation_failed">聊天室創建失敗</string>
+    <string name="chat_room_context_menu_group_info">群組信息</string>
+    <string name="chat_room_context_menu_participants_devices">對話中的設備</string>
+    <string name="chat_message_context_menu_ephemeral_messages">「閱後即焚」信息</string>
+    <string name="chat_message_context_menu_delete_messages">刪除訊息</string>
+    <string name="chat_room_ephemeral_fragment_title">「閱後即焚」信息</string>
+    <string name="chat_room_ephemeral_message_disabled">已禁用</string>
+    <string name="chat_room_ephemeral_message_one_minute">1分鐘</string>
+    <string name="chat_room_ephemeral_message_one_hour">1小時</string>
+    <string name="chat_room_ephemeral_message_one_day">1天</string>
+    <string name="chat_room_ephemeral_message_three_days">3天</string>
+    <string name="chat_room_ephemeral_message_one_week">1週</string>
+    <plurals name="chat_room_remote_composing">
+        <item quantity="other">%s 正在寫…</item>
+    </plurals>
+    <string name="chat_room_creation_failed_snack">聊天室創建失敗</string>
+    <string name="chat_room_removal_failed_snack">聊天室刪除失敗</string>
+    <string name="chat_room_delete_one_dialog">您確定要刪除此對話嗎？</string>
+    <string name="chat_room_delete_many_dialog">您確定要刪除這些對話嗎？</string>
+    <string name="chat_message_notification_hidden_content">&lt;已編輯&gt;</string>
+    <string name="recordings_empty_list">無錄音</string>
+    <string name="call_incoming_title">來電</string>
+    <string name="call_outgoing_title">去電</string>
+    <string name="call_paused_by_remote">通話已被對方暫停</string>
+    <string name="call_notification_paused">暫停通話</string>
+    <string name="call_notification_outgoing">去電</string>
+    <string name="call_notification_active">通話中</string>
+    <string name="call_conference_title">會議</string>
+    <string name="call_error_user_busy">用戶忙線中</string>
+    <string name="call_error_user_not_found">找不到用戶</string>
+    <string name="call_error_incompatible_media_params">不兼容的媒體參數</string>
+    <string name="call_error_network_unreachable">無法連接網路</string>
+    <string name="call_error_io_error">網路錯誤</string>
+    <string name="call_error_unknown">未知錯誤</string>
+    <string name="call_stats_audio">音頻</string>
+    <string name="call_stats_video">視頻</string>
+    <string name="call_stats_codec">編解碼器：</string>
+    <string name="call_stats_ip">IP協議族：</string>
+    <string name="call_stats_upload">上傳帶寬：</string>
+    <string name="call_stats_download">下載帶寬：</string>
+    <string name="call_stats_estimated_download">預估下載帶寬：</string>
+    <string name="call_stats_ice">ICE互動式連接建立：</string>
+    <string name="call_stats_video_resolution_sent">發送視頻分辨率：</string>
+    <string name="call_stats_video_resolution_received">接收視頻分辨率：</string>
+    <string name="call_stats_video_fps_sent">發送視頻fps：</string>
+    <string name="call_stats_video_fps_received">接收視頻fps：</string>
+    <string name="call_stats_sender_loss_rate">發送方丟失率：</string>
+    <string name="call_stats_jitter_buffer">抖動緩衝：</string>
+    <string name="call_stats_encoder_name">編碼器：</string>
+    <string name="call_stats_decoder_name">解碼器：</string>
+    <string name="call_stats_player_filter">播放過濾器：</string>
+    <string name="call_stats_display_filter">顯示過濾器：</string>
+    <string name="call_stats_capture_filter">捕捉過濾器：</string>
+    <string name="assistant_welcome_title">歡迎</string>
+    <string name="assistant_create_account">創建帳戶</string>
+    <string name="assistant_login_linphone">使用&appName;帳戶</string>
+    <string name="assistant_login_generic">使用SIP帳戶</string>
+    <string name="assistant_remote_provisioning">獲取遠程配置</string>
+    <string name="assistant_ec_calibration">正在進行回音消除校正</string>
+    <string name="assistant_phone_number_info_title">我的電話號碼將用於？</string>
+    <string name="assistant_phone_number_link_info_content">"
+\n如果將您的帳戶鏈接您的電話號碼，您的朋友們可以更容易的找到你。
+\n
+\n您在通訊錄裡可以查看誰在使用＆appName ;，他們也同樣可以通過＆appName;聯繫您。
+\n"</string>
+    <string name="assistant_error_phone_number_invalid_characters">只能輸入數字</string>
+    <string name="assistant_error_username_already_exists">用戶名已被使用</string>
+    <string name="assistant_error_phone_number_already_exists">已有帳戶鏈接這個號碼</string>
+    <string name="assistant_error_username_invalid_characters">找到無效字符</string>
+    <string name="assistant_error_passwords_dont_match">密碼錯誤</string>
+    <string name="assistant_error_invalid_email_address">電郵地址無效</string>
+    <string name="assistant_error_username_too_long">用戶名過長</string>
+    <string name="assistant_linphone_account">使用您的&appName;帳戶</string>
+    <string name="assistant_create_account_part_1">請確認您的國家碼再輸入電話號碼</string>
+    <string name="assistant_linphone_login_desc">請輸入您&appName;帳戶的用戶名和密碼</string>
+    <string name="assistant_login_with_username">用您的用戶名和密碼來代替電話號碼</string>
+    <string name="assistant_login_forgotten_password">忘記密碼？</string>
+    <string name="assistant_login">登入</string>
+    <string name="assistant_finish">完成配置</string>
+    <string name="assistant_confirmation_code">確認碼</string>
+    <string name="assistant_generic_account">使用SIP帳戶</string>
+    <string name="assistant_login_desc">請輸入您的用戶名、密碼和SIP域名</string>
+    <string name="assistant_display_name_optional">顯示名字（可選）</string>
+    <string name="assistant_password_hash_algorithm">哈希算法</string>
+    <string name="assistant_confirm_password">確認密碼</string>
+    <string name="assistant_validate_account_1">您的帳戶已經創建。請檢查郵件以驗證您的帳戶：</string>
+    <string name="assistant_validate_account_2">一旦完成，請返回並點擊此處。</string>
+    <string name="assistant_use_username_instead_or_phone_number">使用一個用戶名（可選）</string>
+    <string name="assistant_create_account_part_3">請輸入4位數字碼以完成驗證：
+\n</string>
+    <string name="assistant_link_phone_number">您將用您的電話號碼關聯以下用戶名：</string>
+    <string name="assistant_link_phone_number_skip">跳過</string>
+    <string name="assistant_link_account">鏈接帳戶</string>
+    <string name="assistant_remote_provisioning_title">獲取遠程配置</string>
+    <string name="assistant_remote_provisioning_desc">請提供您的配置網址</string>
+    <string name="assistant_remote_provisioning_url">網址</string>
+    <string name="assistant_remote_provisioning_wrong_format">不明的URL網址格式，無法下載配置資源…</string>
+    <string name="assistant_welcome_desc">助手將會幫助您配置和使用您的SIP帳戶。</string>
+    <string name="assistant_phone_number_info_content">
+\n益於您的電話號碼，您的朋友們將更容易找到您。
+\n
+\n您在通訊錄裡可以查看誰在使用&appName;，他們也同樣可以通過&appName;聯繫您。
+\n</string>
+    <string name="assistant_phone_number_link_info_content_already_account">您的電話號碼只能鏈接一個＆appName;賬戶。
+\n
+\n如果您已經把您的號碼鏈接了其他帳戶，但是您更想使用這個。只需鏈接您現在的賬戶，你的號碼就會自動轉移到這個賬戶。</string>
+    <string name="assistant_error_account_not_activated">您的帳戶尚未經驗證</string>
+    <string name="assistant_error_invalid_credentials">帳戶不存在或密碼不匹配</string>
+    <string name="assistant_continue_even_if_credentials_invalid">繼續</string>
+    <string name="assistant_create_account_part_email">請為您的&appName;帳戶輸入用戶名和密碼</string>
+    <string name="assistant_create_account_part_2">我們已發送驗證碼短信致您的手機：</string>
+    <string name="chat_room_group_info_admin">管理者</string>
+    <string name="chat_room_group_info_leave_dialog_message">您要離開這個對話嗎？</string>
+    <string name="chat_message_forward_confirmation_dialog">是否要在此聊天室轉發信息？</string>
 </resources>
