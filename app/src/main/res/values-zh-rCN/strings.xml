@@ -416,8 +416,8 @@
     <string name="chat_room_group_info_you_are_now_admin">您现在是管理者</string>
     <string name="chat_room_group_info_you_are_no_longer_admin">您已不再是管理者</string>
     <string name="chat_message_imdn_displayed">已读</string>
-    <string name="chat_message_imdn_delivered">已发送</string>
-    <string name="chat_message_imdn_undelivered">未交付</string>
+    <string name="chat_message_imdn_delivered">已送达</string>
+    <string name="chat_message_imdn_undelivered">未送达</string>
     <string name="chat_message_imdn_sent">已发送</string>
     <string name="chat_message_context_menu_resend">重发</string>
     <string name="chat_message_context_menu_copy_text">复制文本</string>
@@ -429,10 +429,10 @@
     <string name="chat_room_cant_open_file_no_app_found">无法打开文件，没有适用于此格式的应用程序。</string>
     <string name="chat_room_creation_failed">聊天室创建失败</string>
     <string name="chat_room_context_menu_group_info">组信息</string>
-    <string name="chat_room_context_menu_participants_devices">对话设备</string>
-    <string name="chat_message_context_menu_ephemeral_messages">短暂信息</string>
+    <string name="chat_room_context_menu_participants_devices">对话中的设备</string>
+    <string name="chat_message_context_menu_ephemeral_messages">「阅后即焚」信息</string>
     <string name="chat_message_context_menu_delete_messages">删除信息</string>
-    <string name="chat_room_ephemeral_messages_desc">读取此消息后和选定的超时后，将在两端删除。</string>
+    <string name="chat_room_ephemeral_messages_desc">该信息已阅读后，区别的信息将在扩展的超时时间被删除。</string>
     <string name="chat_room_ephemeral_message_disabled">已禁用</string>
     <string name="chat_room_ephemeral_message_one_minute">1分钟</string>
     <string name="chat_room_ephemeral_message_one_hour">1小时</string>
@@ -482,7 +482,7 @@
 \n
 \n如果您已经把您的号码关联了其他账户，但是您更想使用这个。只需关联您现在的账户，你的号码就会自动转移到这个账户。</string>
     <string name="assistant_error_phone_number_invalid_characters">只能输入数字</string>
-    <string name="assistant_error_username_already_exists">账户已存在</string>
+    <string name="assistant_error_username_already_exists">用户名已被使用</string>
     <string name="assistant_error_phone_number_already_exists">已有账户关联这个电话号码</string>
     <string name="assistant_error_username_invalid_characters">找到无效字符</string>
     <string name="assistant_error_passwords_dont_match">密码错误</string>
@@ -506,8 +506,8 @@
     <string name="assistant_confirm_password">密码确认</string>
     <string name="call_stats_receiver_loss_rate">接收方丢失率:</string>
     <string name="call_stats_encoder_name">编码器：</string>
-    <string name="call_stats_player_filter">播放器过滤器：</string>
-    <string name="call_stats_capture_filter">捕获过滤器：</string>
+    <string name="call_stats_player_filter">播放过滤器：</string>
+    <string name="call_stats_capture_filter">捕捉过滤器：</string>
     <string name="assistant_welcome_desc">助手将会帮助您配置和使用您的SIP帐户。</string>
     <string name="assistant_login_linphone">使用&appName;账户</string>
     <string name="assistant_login_generic">使用SIP 账户</string>
@@ -515,8 +515,8 @@
     <string name="assistant_phone_number_info_title">我的电话号码将用于？</string>
     <string name="assistant_validate_account_2">一旦完成，请返回并点击此处。</string>
     <string name="assistant_use_username_instead_or_phone_number">使用一个用户名(可选)</string>
-    <string name="assistant_create_account_part_2">我们已向您的手机发送了短信激活码：</string>
-    <string name="assistant_create_account_part_3">请输入4位数字码来完成验证：
+    <string name="assistant_create_account_part_2">我们已向您的手机发送了验证码短信：</string>
+    <string name="assistant_create_account_part_3">请输入4位数字码以完成验证：
 \n</string>
     <string name="assistant_link_phone_number">您将用您的电话号码关联以下用户名：</string>
     <string name="assistant_link_phone_number_skip">跳过</string>
@@ -549,7 +549,7 @@
     <string name="call_video_update_requested_dialog">对方要求启用视讯</string>
     <string name="call_stats_display_filter">显示筛选器：</string>
     <string name="assistant_phone_number_info_content">
-\n得益于您的电话号码，您的朋友们可以更容易的找到你。
+\n益于您的电话号码，您的朋友们可以更容易的找到您。
 \n
 \n您在通讯录里可以查看谁在使用&appName;，他们也同样可以通过&appName;联系您。
 \n</string>
@@ -559,7 +559,7 @@
 \n您在通讯录里可以查看谁在使用&appName;，他们也同样可以通过&appName;联系您。
 \n</string>
     <string name="assistant_login_desc">请输入您的用户名与密码和您的SIP域名</string>
-    <string name="assistant_validate_account_1">您的帐户已经创建。请检查邮件来激活您的帐户：</string>
+    <string name="assistant_validate_account_1">您的帐户已经创建。请检查邮件以驗證您的帐户：</string>
     <string name="call_stats_video_resolution_received">接收视频分辨率：</string>
     <plurals name="contact_delete_dialog">
         <item quantity="other">\@string/contact_delete_one_dialog</item>
