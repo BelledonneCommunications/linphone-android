@@ -216,7 +216,7 @@
     <string name="assistant_link_account">鏈接帳戶</string>
     <string name="assistant_remote_provisioning_title">獲取遠程配置</string>
     <string name="assistant_remote_provisioning_desc">請提供您的配置網址</string>
-    <string name="assistant_remote_provisioning_url">網址</string>
+    <string name="assistant_remote_provisioning_url">URL網址</string>
     <string name="assistant_remote_provisioning_wrong_format">不明的URL網址格式，無法下載配置資源…</string>
     <string name="assistant_welcome_desc">助手將會幫助您配置和使用您的SIP帳戶。</string>
     <string name="assistant_phone_number_info_content">
@@ -235,4 +235,18 @@
     <string name="chat_room_group_info_admin">管理者</string>
     <string name="chat_room_group_info_leave_dialog_message">您要離開這個對話嗎？</string>
     <string name="chat_message_forward_confirmation_dialog">是否要在此聊天室轉發信息？</string>
+    <string name="assistant_remote_provisioning_failure">無法下載或應用遠程配置文件…</string>
+    <string name="assistant_fetch_apply">獲取與應用</string>
+    <string name="assistant_launch_qrcode">二維碼</string>
+    <string name="settings_accounts_title">SIP帳戶</string>
+    <string name="settings_default_account_subtitle">默認帳戶</string>
+    <string name="settings_list_title">設定偏好</string>
+    <string name="settings_tunnel_title">隧道協議</string>
+    <string name="settings_audio_title">音頻</string>
+    <string name="settings_video_title">視頻</string>
+    <string name="settings_call_title">通話</string>
+    <string name="settings_chat_title">聊天</string>
+    <string name="settings_network_title">網路</string>
+    <string name="settings_contacts_title">聯絡人</string>
+    <string name="settings_advanced_title">高級設置</string>
 </resources>
