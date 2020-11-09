@@ -76,6 +76,26 @@ fun getLeftToRightAnimationNavOptions(): NavOptions {
         .build()
 }
 
+fun getRightBottomToLeftTopAnimationNavOptions(): NavOptions {
+    if (!corePreferences.enableAnimations) return NavOptions.Builder().build()
+    return NavOptions.Builder()
+        .setEnterAnim(R.anim.enter_right_or_bottom)
+        .setExitAnim(R.anim.exit_left_or_top)
+        .setPopEnterAnim(R.anim.enter_left_or_top)
+        .setPopExitAnim(R.anim.exit_right_or_bottom)
+        .build()
+}
+
+fun getLeftTopToRightBottomAnimationNavOptions(): NavOptions {
+    if (!corePreferences.enableAnimations) return NavOptions.Builder().build()
+    return NavOptions.Builder()
+        .setEnterAnim(R.anim.enter_left_or_top)
+        .setExitAnim(R.anim.exit_right_or_bottom)
+        .setPopEnterAnim(R.anim.enter_right_or_bottom)
+        .setPopExitAnim(R.anim.exit_left_or_top)
+        .build()
+}
+
 fun getRightToLeftNoPopAnimationNavOptions(): NavOptions {
     if (!corePreferences.enableAnimations) return NavOptions.Builder().build()
     return NavOptions.Builder()
@@ -375,13 +395,13 @@ internal fun DetailContactFragment.navigateToChatRoom(args: Bundle?) {
         findNavController().navigate(
             R.id.action_detailContactFragment_to_detailChatRoomFragment,
             args,
-            getRightToLeftAnimationNavOptions()
+            getRightBottomToLeftTopAnimationNavOptions()
         )
     } else {
         findMasterNavController().navigate(
             R.id.action_global_masterChatRoomsFragment,
             args,
-            getRightToLeftAnimationNavOptions()
+            getRightBottomToLeftTopAnimationNavOptions()
         )
     }
 }
@@ -464,13 +484,13 @@ internal fun DetailCallLogFragment.navigateToChatRoom(args: Bundle?) {
         findNavController().navigate(
             R.id.action_detailCallLogFragment_to_detailChatRoomFragment,
             args,
-            getRightToLeftAnimationNavOptions()
+            getRightBottomToLeftTopAnimationNavOptions()
         )
     } else {
         findMasterNavController().navigate(
             R.id.action_global_masterChatRoomsFragment,
             args,
-            getRightToLeftAnimationNavOptions()
+            getRightBottomToLeftTopAnimationNavOptions()
         )
     }
 }
