@@ -21,6 +21,7 @@ package org.linphone.core
 
 import android.content.Context
 import java.io.File
+import java.io.FileInputStream
 import java.io.FileOutputStream
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.compatibility.Compatibility
@@ -277,10 +278,18 @@ class CorePreferences constructor(private val context: Context) {
         get() = config.getString("app", "rls_uri", "sip:rls@sip.linphone.org")!!
 
     val conferenceServerUri: String
-        get() = config.getString("app", "default_conference_factory_uri", "sip:conference-factory@sip.linphone.org")!!
+        get() = config.getString(
+            "app",
+            "default_conference_factory_uri",
+            "sip:conference-factory@sip.linphone.org"
+        )!!
 
     val limeX3dhServerUrl: String
-        get() = config.getString("app", "default_lime_x3dh_server_url", "https://lime.linphone.org/lime-server/lime-server.php")!!
+        get() = config.getString(
+            "app",
+            "default_lime_x3dh_server_url",
+            "https://lime.linphone.org/lime-server/lime-server.php"
+        )!!
 
     val allowMultipleFilesAndTextInSameMessage: Boolean
         get() = config.getBool("app", "allow_multiple_files_and_text_in_same_message", true)
@@ -295,7 +304,11 @@ class CorePreferences constructor(private val context: Context) {
         get() = config.getBool("app", "show_border_on_big_contact_avatar", true)
 
     val checkIfUpdateAvailableUrl: String?
-        get() = config.getString("misc", "version_check_url_root", "https://linphone.org/releases/android/RELEASE")
+        get() = config.getString(
+            "misc",
+            "version_check_url_root",
+            "https://linphone.org/releases/android/RELEASE"
+        )
 
     val checkUpdateAvailableInterval: Int
         get() = config.getInt("app", "version_check_interval", 86400000)
@@ -398,12 +411,6 @@ class CorePreferences constructor(private val context: Context) {
     val userCertificatesPath: String
         get() = context.filesDir.absolutePath + "/user-certs"
 
-    val zrtpSecretsPath: String
-        get() = context.filesDir.absolutePath + "/zrtp_secrets"
-
-    val callHistoryDatabasePath: String
-        get() = context.filesDir.absolutePath + "/linphone-log-history.db"
-
     val staticPicturePath: String
         get() = context.filesDir.absolutePath + "/share/images/nowebcamcif.jpg"
 
@@ -417,6 +424,9 @@ class CorePreferences constructor(private val context: Context) {
         copy("linphonerc_factory", factoryConfigPath, true)
         copy("assistant_linphone_default_values", linphoneDefaultValuesPath, true)
         copy("assistant_default_values", defaultValuesPath, true)
+
+        move(context.filesDir.absolutePath + "/linphone-log-history.db", context.filesDir.absolutePath + "/call-history.db")
+        move(context.filesDir.absolutePath + "/zrtp_secrets", context.filesDir.absolutePath + "/zrtp-secrets.db")
     }
 
     fun getString(resource: Int): String {
@@ -427,11 +437,11 @@ class CorePreferences constructor(private val context: Context) {
         val outFile = File(to)
         if (outFile.exists()) {
             if (!overrideIfExists) {
-                Log.i("[Preferences] File $to already exists")
+                android.util.Log.i(context.getString(org.linphone.R.string.app_name), "[Preferences] File $to already exists")
                 return
             }
         }
-        Log.i("[Preferences] Overriding $to by $from asset")
+        android.util.Log.i(context.getString(org.linphone.R.string.app_name), "[Preferences] Overriding $to by $from asset")
 
         val outStream = FileOutputStream(outFile)
         val inFile = context.assets.open(from)
@@ -446,5 +456,33 @@ class CorePreferences constructor(private val context: Context) {
         inFile.close()
         outStream.flush()
         outStream.close()
+    }
+
+    private fun move(from: String, to: String, overrideIfExists: Boolean = false) {
+        val inFile = File(from)
+        val outFile = File(to)
+        if (inFile.exists()) {
+            if (outFile.exists() && !overrideIfExists) {
+                android.util.Log.w(context.getString(org.linphone.R.string.app_name), "[Preferences] Can't move [$from] to [$to], destination file already exists")
+            } else {
+                val inStream = FileInputStream(inFile)
+                val outStream = FileOutputStream(outFile)
+
+                val buffer = ByteArray(1024)
+                var read: Int
+                while (inStream.read(buffer).also { read = it } != -1) {
+                    outStream.write(buffer, 0, read)
+                }
+
+                inStream.close()
+                outStream.flush()
+                outStream.close()
+
+                inFile.delete()
+                android.util.Log.i(context.getString(org.linphone.R.string.app_name), "[Preferences] Successfully moved [$from] to [$to]")
+            }
+        } else {
+            android.util.Log.w(context.getString(org.linphone.R.string.app_name), "[Preferences] Can't move [$from] to [$to], source file doesn't exists")
+        }
     }
 }
