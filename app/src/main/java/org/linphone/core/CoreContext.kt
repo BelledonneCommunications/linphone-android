@@ -253,8 +253,6 @@ class CoreContext(val context: Context, coreConfig: Config) {
     private fun configureCore() {
         Log.i("[Context] Configuring Core")
 
-        core.zrtpSecretsFile = corePreferences.zrtpSecretsPath
-        core.callLogsDatabasePath = corePreferences.callHistoryDatabasePath
         core.staticPicture = corePreferences.staticPicturePath
 
         initUserCertificates()
