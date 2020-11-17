@@ -1,2 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<!DOCTYPE resources [
+<!ENTITY appName "Linphone">
+]>
+<resources>
+    <string name="service_name">&amp;appNombre; Servicio</string>
+    <string name="service_auto_start_description">&amp;appNombre; se ha iniciado automáticamente</string>
+    <string name="logs_url_copied_to_clipboard">Registra la URL copiada en el portapapeles</string>
+    <string name="service_description">Esto es necesario para recibir llamadas en segundo plano</string>
+    <string name="sync_account_name">&appName; contactos</string>
+    <string name="about_privacy_policy">Visite nuestra política de privacidad</string>
+    <string name="about_send_log">Enviar registros</string>
+    <string name="about_reset_log">Restablecer registros</string>
+    <string name="error">Error</string>
+    <string name="phone_number">Número de teléfono</string>
+    <string name="phone_numbers">Números de teléfonos</string>
+    <string name="select_your_country">Selecciona tu país</string>
+    <string name="international_prefix">Prefijo</string>
+    <string name="assistant_choose_country">Selecciona un país</string>
+    <string name="assistant_choose_country_title">Nombre del país o prefijo</string>
+</resources>
