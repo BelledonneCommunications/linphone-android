@@ -64,4 +64,31 @@
     <string name="contact_first_name">Nombre</string>
     <string name="contact_organization">Organización</string>
     <string name="contact_choose_existing_or_new_to_add_number">Selecciona un contacto o crea uno nuevo</string>
+    <string name="contact_editor_write_permission_denied">Permiso de escritura de contactos denegado, no se puede editar el contacto</string>
+    <string name="contact_delete_one_dialog">Quieres eliminar este contacto\?
+\nTambién se eliminará de la libreta de direcciones de su dispositivo.</string>
+    <string name="contact_delete_many_dialog">Estás seguro de que deseas eliminar estos contactos\?
+\nTambién se eliminarán de la libreta de direcciones de su dispositivo</string>
+    <string name="contact_new_choose_sync_account">Elige dónde guardar tu contacto</string>
+    <string name="contact_local_sync_account">Almacenar localmente</string>
+    <string name="dialer_address_bar_hint">Ingrese un número o una dirección</string>
+    <string name="debug_popup_title">Depurar</string>
+    <string name="debug_popup_enable_logs">Habilitar registros</string>
+    <string name="debug_popup_disable_logs">Deshabilitar registros</string>
+    <string name="debug_popup_send_logs">Enviar registros</string>
+    <string name="no_chat_history">No conversaciones</string>
+    <string name="chat_remote_is_composing">Remoto está escribiendo…</string>
+    <string name="chat_event_conference_created">Te has unido al grupo</string>
+    <string name="chat_event_conference_destroyed">Te has salido del grupo</string>
+    <string name="chat_event_participant_added">%s se ha unido</string>
+    <string name="chat_event_participant_removed">%s se ha ido</string>
+    <string name="chat_event_device_added">nuevo dispositivo para %s</string>
+    <string name="chat_event_device_removed">dispositivo para %s eliminado</string>
+    <string name="chat_event_subject_changed">Nuevo asunto: %s</string>
+    <string name="chat_event_admin_set">%s es administrador</string>
+    <string name="chat_event_admin_unset">%s ha dejado de ser administrador</string>
+    <string name="chat_security_event_lime_identity_key_changed">La clave de identidad LIME cambió para %s</string>
+    <string name="chat_security_event_man_in_the_middle_detected">Ataque man-in-the-middle detectado para %s</string>
+    <string name="chat_security_event_security_level_downgraded">El nivel de seguridad disminuyó debido a %s</string>
+    <string name="chat_security_event_participant_max_count_exceeded">Recuento máximo de participantes superado en %s</string>
 </resources>
