@@ -548,4 +548,14 @@
     <string name="assistant_validate_account_2">Pour valider votre compte, veuillez suivre les instructions reçues par email et cliquer sur le bouton.</string>
     <string name="assistant_create_account_part_3">Pour valider votre numéro veuillez enter le code à 4 chiffres ci-dessous :
 \n</string>
+    <string name="content_description_disable_speaker">Envoyer le son vers les écouteurs</string>
+    <string name="content_description_toggle_audio_menu">Afficher ou masquer le menu de sélection du périphérique audio</string>
+    <string name="chat_message_notification_hidden_content">&lt;Censuré&gt;</string>
+    <string name="content_description_enable_speaker">Envoyer le son vers le haut-parleur</string>
+    <string name="call_settings_overlay_title">Superposition des notifications push sur l\'écran</string>
+    <string name="call_settings_overlay_summary">L\'autorisation d\'afficher les notifications push en superposition est requise</string>
+    <string name="chat_settings_mark_as_read_notif_dismissal_title">Marquer comme lu lorsque la notification est supprimée</string>
+    <string name="chat_settings_launcher_shortcuts_summary">Si les deux options de raccourci sont activées, les raccourcis conversations sont remplacées par les raccourcis contacts.</string>
+    <string name="account_settings_transport_title">Transport</string>
+    <string name="content_description_clear_field">Vider le champ texte à côté</string>
 </resources>
