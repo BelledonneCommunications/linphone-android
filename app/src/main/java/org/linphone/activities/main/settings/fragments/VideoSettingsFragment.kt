@@ -79,13 +79,20 @@ class VideoSettingsFragment : GenericFragment<SettingsVideoFragmentBinding>() {
     private fun initVideoCodecsList() {
         val list = arrayListOf<ViewDataBinding>()
         for (payload in coreContext.core.videoPayloadTypes) {
-            val binding = DataBindingUtil.inflate<ViewDataBinding>(LayoutInflater.from(requireContext()), R.layout.settings_widget_switch, null, false)
-            binding.setVariable(BR.title, payload.mimeType)
-            binding.setVariable(BR.subtitle, "")
+            val binding = DataBindingUtil.inflate<ViewDataBinding>(LayoutInflater.from(requireContext()), R.layout.settings_widget_switch_and_text, null, false)
+            binding.setVariable(BR.switch_title, payload.mimeType)
+            binding.setVariable(BR.switch_subtitle, "")
+            binding.setVariable(BR.text_title, "recv-fmtp")
+            binding.setVariable(BR.text_subtitle, "")
+            binding.setVariable(BR.defaultValue, payload.recvFmtp)
             binding.setVariable(BR.checked, payload.enabled())
             binding.setVariable(BR.listener, object : SettingListenerStub() {
                 override fun onBoolValueChanged(newValue: Boolean) {
                     payload.enable(newValue)
+                }
+
+                override fun onTextValueChanged(newValue: String) {
+                    payload.recvFmtp = newValue
                 }
             })
             binding.lifecycleOwner = this
