@@ -248,13 +248,15 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         Log.i("[Main Activity] Found uri: $uri to call")
         val stringUri = uri.toString()
         var addressToCall: String = stringUri
-        try {
-            addressToCall = URLDecoder.decode(stringUri, "UTF-8")
-        } catch (e: UnsupportedEncodingException) { }
 
         if (addressToCall.startsWith("tel:")) {
             Log.i("[Main Activity] Removing tel: prefix")
             addressToCall = addressToCall.substring("tel:".length)
+        }
+
+        val address = coreContext.core.interpretUrl(addressToCall)
+        if (address != null) {
+            addressToCall = address.asStringUriOnly()
         }
 
         Log.i("[Main Activity] Starting dialer with pre-filled URI $addressToCall")
