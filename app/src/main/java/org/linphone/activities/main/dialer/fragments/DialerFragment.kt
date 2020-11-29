@@ -91,6 +91,7 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
                 sharedViewModel.dialerUri = address
             }
         }
+        arguments?.clear()
 
         viewModel.enteredUri.observe(viewLifecycleOwner, {
             if (it == corePreferences.debugPopupCode) {
