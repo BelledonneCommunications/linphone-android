@@ -34,6 +34,7 @@ import org.linphone.activities.main.viewmodels.ListTopBarViewModel
 import org.linphone.contact.Contact
 import org.linphone.databinding.ContactListCellBinding
 import org.linphone.databinding.GenericListHeaderBinding
+import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.HeaderAdapter
 import org.linphone.utils.SelectionListAdapter
@@ -109,7 +110,7 @@ class ContactsListAdapter(
 
     override fun getHeaderViewForPosition(context: Context, position: Int): View {
         val contact = getItem(position)
-        val firstLetter = contact.fullName?.first().toString()
+        val firstLetter = AppUtils.getInitials(contact.fullName ?: "", 1)
         val binding: GenericListHeaderBinding = DataBindingUtil.inflate(
             LayoutInflater.from(context),
             R.layout.generic_list_header, null, false

@@ -29,6 +29,8 @@ import android.os.Vibrator
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
 import android.view.*
+import androidx.emoji.bundled.BundledEmojiCompatConfig
+import androidx.emoji.text.EmojiCompat
 import androidx.lifecycle.MutableLiveData
 import java.io.File
 import kotlin.math.abs
@@ -233,6 +235,8 @@ class CoreContext(val context: Context, coreConfig: Config) {
         val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         Log.i("[Context] Registering phone state listener")
         telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE)
+
+        EmojiCompat.init(BundledEmojiCompatConfig(context))
     }
 
     fun stop() {

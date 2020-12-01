@@ -24,6 +24,7 @@ import android.content.*
 import android.text.Spanned
 import android.util.TypedValue
 import androidx.core.text.HtmlCompat
+import androidx.emoji.text.EmojiCompat
 import java.util.*
 import java.util.regex.Pattern
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -93,15 +94,23 @@ class AppUtils {
             return HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_LEGACY)
         }
 
-        fun getInitials(displayName: String): String {
+        fun getInitials(displayName: String, limit: Int = 2): String {
             if (displayName.isEmpty()) return ""
 
+            val emoji = EmojiCompat.get()
             val split = displayName.toUpperCase(Locale.getDefault()).split(" ")
             var initials = ""
+            var characters = 0
+
             for (i in split.indices) {
                 if (split[i].isNotEmpty()) {
-                    initials += split[i][0]
-                    if (initials.length >= 2) break
+                    if (emoji.hasEmojiGlyph(split[i])) {
+                        initials += emoji.process(split[i])
+                    } else {
+                        initials += split[i][0]
+                    }
+                    characters += 1
+                    if (characters >= limit) break
                 }
             }
             return initials
