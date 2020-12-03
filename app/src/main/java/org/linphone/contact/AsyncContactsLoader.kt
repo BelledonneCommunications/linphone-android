@@ -49,18 +49,6 @@ class AsyncContactsLoader(private val context: Context) :
     override fun onPreExecute() {
         if (isCancelled) return
         Log.i("[Contacts Loader] Synchronization started")
-
-        val core = coreContext.core
-        if (core.isFriendListSubscriptionEnabled) {
-            val rls: String = corePreferences.rlsUri
-            for (list in core.friendsLists) {
-                val rlsAddress = list.rlsAddress
-                if (rlsAddress == null || rlsAddress.asStringUriOnly() != rls) {
-                    Log.i("[Contacts Loader] Friend list RLS URI updated to: $rls")
-                    list.rlsUri = rls
-                }
-            }
-        }
     }
 
     override fun doInBackground(vararg args: Void): AsyncContactsData {
