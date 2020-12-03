@@ -274,9 +274,6 @@ class CorePreferences constructor(private val context: Context) {
     val hideContactsWithoutPresence: Boolean
         get() = config.getBool("app", "hide_contacts_without_presence", false)
 
-    val rlsUri: String
-        get() = config.getString("app", "rls_uri", "sip:rls@sip.linphone.org")!!
-
     val conferenceServerUri: String
         get() = config.getString(
             "app",
