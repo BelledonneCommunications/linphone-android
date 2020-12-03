@@ -32,7 +32,6 @@ import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
-import org.linphone.utils.LinphoneUtils
 
 class AccountSettingsViewModelFactory(private val identity: String) :
     ViewModelProvider.NewInstanceFactory() {
@@ -296,7 +295,7 @@ class AccountSettingsViewModel(val proxyConfig: ProxyConfig) : GenericSettingsVi
         isDefault.value = core.defaultProxyConfig == proxyConfig
         val identityAddress = proxyConfig.identityAddress
         if (identityAddress != null) {
-            displayName.value = LinphoneUtils.getDisplayName(identityAddress)
+            displayName.value = identityAddress.displayName ?: ""
             identity.value = identityAddress.asStringUriOnly()
         }
 
