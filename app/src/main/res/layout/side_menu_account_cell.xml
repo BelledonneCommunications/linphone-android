@@ -15,8 +15,11 @@
         android:gravity="center">
 
         <TextView
-            android:text="@{data.displayUsernameInsteadOfIdentity ? data.userName : data.identity}"
-            style="@style/assistant_input_field_header_font"
+            android:text="@{data.displayName + ` ` + (data.displayUsernameInsteadOfIdentity ? data.userName : data.identity)}"
+            android:textColor="?attr/primaryTextColor"
+            android:textSize="13sp"
+            android:singleLine="true"
+            android:ellipsize="end"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical"

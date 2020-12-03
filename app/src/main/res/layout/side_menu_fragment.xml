@@ -82,7 +82,7 @@
 
                 <TextView
                     android:visibility="@{viewModel.defaultAccountFound ? View.VISIBLE : View.GONE}"
-                    android:text="@{viewModel.defaultAccount.displayName}"
+                    android:text="@{viewModel.defaultAccount.displayName.isEmpty() ? viewModel.defaultAccount.userName : viewModel.defaultAccount.displayName}"
                     android:textColor="?attr/lightToolbarTextColor"
                     android:textStyle="bold"
                     android:textSize="18sp"
