@@ -31,7 +31,7 @@
                 android:layout_centerInParent="true"
                 android:layout_marginTop="10dp"
                 android:textAllCaps="true"
-                android:textColor="?attr/primarySubtextLightColor" />
+                android:textColor="?attr/primarySubtextDarkColor" />
 
             <ImageView
                 android:visibility="@{data.hasPresence ? View.VISIBLE : View.GONE}"
