@@ -91,6 +91,7 @@
                 <data android:scheme="tel" />
                 <data android:scheme="sip" />
                 <data android:scheme="sips" />
+                <data android:scheme="linphone" />
             </intent-filter>
 
             <intent-filter>
