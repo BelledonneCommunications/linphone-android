@@ -252,6 +252,9 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         if (addressToCall.startsWith("tel:")) {
             Log.i("[Main Activity] Removing tel: prefix")
             addressToCall = addressToCall.substring("tel:".length)
+        } else if (addressToCall.startsWith("linphone:")) {
+            Log.i("[Main Activity] Removing linphone: prefix")
+            addressToCall = addressToCall.substring("linphone:".length)
         }
 
         val address = coreContext.core.interpretUrl(addressToCall)
