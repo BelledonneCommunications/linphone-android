@@ -80,6 +80,7 @@ class Compatibility {
         ) {
             if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
                 Api26Compatibility.createServiceChannel(context, notificationManager)
+                Api26Compatibility.createMissedCallChannel(context, notificationManager)
                 Api26Compatibility.createIncomingCallChannel(context, notificationManager)
                 Api26Compatibility.createMessageChannel(context, notificationManager)
             }
