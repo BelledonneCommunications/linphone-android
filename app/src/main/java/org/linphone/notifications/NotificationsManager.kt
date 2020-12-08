@@ -320,7 +320,7 @@ class NotificationsManager(private val context: Context) {
             .setContentText(if (useAutoStartDescription) context.getString(R.string.service_auto_start_description) else context.getString(R.string.service_description))
             .setSmallIcon(R.drawable.topbar_service_notification)
             .setContentIntent(pendingIntent)
-            .setCategory(Notification.CATEGORY_SERVICE)
+            .setCategory(NotificationCompat.CATEGORY_SERVICE)
             .setVisibility(NotificationCompat.VISIBILITY_SECRET)
             .setWhen(System.currentTimeMillis())
             .setShowWhen(true)
@@ -419,13 +419,13 @@ class NotificationsManager(private val context: Context) {
             .createPendingIntent()
 
         val notification = NotificationCompat.Builder(
-            context, context.getString(R.string.notification_channel_incoming_call_id))
+            context, context.getString(R.string.notification_channel_missed_call_id))
             .setContentTitle(context.getString(R.string.missed_call_notification_title))
             .setContentText(body)
             .setSmallIcon(R.drawable.topbar_missed_call_notification)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
-            .setCategory(Notification.CATEGORY_EVENT)
+            // .setCategory(NotificationCompat.CATEGORY_EVENT) No one really matches "missed call"
             .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
             .setWhen(System.currentTimeMillis())
             .setShowWhen(true)
@@ -488,7 +488,7 @@ class NotificationsManager(private val context: Context) {
             .setLargeIcon(roundPicture)
             .setAutoCancel(false)
             .setContentIntent(pendingIntent)
-            .setCategory(Notification.CATEGORY_CALL)
+            .setCategory(NotificationCompat.CATEGORY_CALL)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setWhen(System.currentTimeMillis())

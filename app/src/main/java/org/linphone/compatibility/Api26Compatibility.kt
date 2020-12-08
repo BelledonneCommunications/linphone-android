@@ -52,16 +52,29 @@ class Api26Compatibility {
         fun createServiceChannel(context: Context, notificationManager: NotificationManagerCompat) {
             // Create service notification channel
             val id = context.getString(R.string.notification_channel_service_id)
-            val name: CharSequence =
-                context.getString(R.string.notification_channel_service_name)
-            val description =
-                context.getString(R.string.notification_channel_service_name)
-            val channel =
-                NotificationChannel(id, name, NotificationManager.IMPORTANCE_LOW)
+            val name = context.getString(R.string.notification_channel_service_name)
+            val description = context.getString(R.string.notification_channel_service_name)
+            val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_LOW)
             channel.description = description
             channel.enableVibration(false)
             channel.enableLights(false)
             channel.setShowBadge(false)
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        fun createMissedCallChannel(
+            context: Context,
+            notificationManager: NotificationManagerCompat
+        ) {
+            val id = context.getString(R.string.notification_channel_missed_call_id)
+            val name = context.getString(R.string.notification_channel_missed_call_name)
+            val description = context.getString(R.string.notification_channel_missed_call_name)
+            val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_LOW)
+            channel.description = description
+            channel.lightColor = context.getColor(R.color.notification_led_color)
+            channel.enableVibration(true)
+            channel.enableLights(true)
+            channel.setShowBadge(true)
             notificationManager.createNotificationChannel(channel)
         }
 
@@ -71,12 +84,9 @@ class Api26Compatibility {
         ) {
             // Create incoming calls notification channel
             val id = context.getString(R.string.notification_channel_incoming_call_id)
-            val name: CharSequence =
-                context.getString(R.string.notification_channel_incoming_call_name)
-            val description =
-                context.getString(R.string.notification_channel_incoming_call_name)
-            val channel =
-                NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH)
+            val name = context.getString(R.string.notification_channel_incoming_call_name)
+            val description = context.getString(R.string.notification_channel_incoming_call_name)
+            val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH)
             channel.description = description
             channel.lightColor = context.getColor(R.color.notification_led_color)
             channel.enableVibration(true)
@@ -85,13 +95,15 @@ class Api26Compatibility {
             notificationManager.createNotificationChannel(channel)
         }
 
-        fun createMessageChannel(context: Context, notificationManager: NotificationManagerCompat) {
+        fun createMessageChannel(
+            context: Context,
+            notificationManager: NotificationManagerCompat
+        ) {
             // Create messages notification channel
             val id = context.getString(R.string.notification_channel_chat_id)
             val name = context.getString(R.string.notification_channel_chat_name)
             val description = context.getString(R.string.notification_channel_chat_name)
-            val channel =
-                NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH)
+            val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH)
             channel.description = description
             channel.lightColor = context.getColor(R.color.notification_led_color)
             channel.enableLights(true)
