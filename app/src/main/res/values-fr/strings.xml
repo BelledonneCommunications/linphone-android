@@ -68,7 +68,7 @@
     <string name="transport_tls">TLS</string>
     <string name="hash_algorithm_md5">MD5</string>
     <string name="hash_algorithm_sha256">SHA-256</string>
-    <string name="app_description">Le client SIP open source</string>
+    <string name="app_description">Le client SIP <i>open source</i></string>
     <string name="status_connected">Connecté</string>
     <string name="status_not_connected">Non connecté</string>
     <string name="status_in_progress">Connexion en cours</string>
@@ -208,7 +208,7 @@
     <string name="assistant_remote_provisioning_title">Télécharger la configuration distante</string>
     <string name="assistant_remote_provisioning_desc">Veuillez saisir l\'URL de configuration</string>
     <string name="assistant_remote_provisioning_url">URL</string>
-    <string name="assistant_remote_provisioning_wrong_format">Format d\'URL inconnu. Le fichier de configuration n\'a pas pu être téléchargé.</string>
+    <string name="assistant_remote_provisioning_wrong_format">Format d\'URL inconnu, le fichier de configuration n\'a pas pu être téléchargé…</string>
     <string name="assistant_fetch_apply">Télécharger et appliquer</string>
     <string name="assistant_launch_qrcode">Qr Code</string>
     <string name="settings_accounts_title">Comptes SIP</string>
@@ -276,8 +276,8 @@
     <string name="account_settings_user_name_summary">Exemple : john, si votre compte est john@sip.example.org</string>
     <string name="account_settings_password_summary">Vous devrez re-saisir votre mot de passe si vous changez votre nom d\'utilisateur ou le domaine</string>
     <string name="network_settings_legacy_push_notification_format_title">Utiliser les anciens paramètres de notifications push</string>
-    <string name="notification_channel_service_name">Notification du service &appName;</string>
-    <string name="notification_channel_chat_name">Notification de message entrant &appName;</string>
+    <string name="notification_channel_service_name">Notification de service &appName;</string>
+    <string name="notification_channel_chat_name">Notifications de messages entrants &appName;</string>
     <string name="account_settings_outbound_proxy_summary">Faire passer tous les appels via le serveur mandataire SIP</string>
     <string name="account_settings_avpf_rr_interval_title">Intervalle AVPF RTCP régulier</string>
     <string name="dialog_do_not_ask_again">Ne plus afficher</string>
@@ -400,14 +400,14 @@
     <string name="account_settings_dial_prefix_summary">(sans le +)</string>
     <string name="account_settings_dial_prefix_title">Préfixe de votre pays</string>
     <string name="account_settings_escape_plus_title">Remplacer + par 00</string>
-    <string name="notification_channel_incoming_call_name">Notification d\'appel entrant &appName;</string>
+    <string name="notification_channel_incoming_call_name">Notifications d\'appels entrants &appName;</string>
     <string name="incoming_call_notification_title">Appel entrant</string>
     <string name="incoming_call_notification_hangup_action_label">Raccrocher</string>
     <string name="incoming_call_notification_answer_action_label">Répondre</string>
     <string name="received_chat_notification_reply_label">Répondre</string>
     <string name="received_chat_notification_mark_as_read_label">Marquer comme lu</string>
     <string name="missed_call_notification_body">Appel manqué de %s</string>
-    <string name="missed_calls_notification_body">Appels manqués de %s</string>
+    <string name="missed_calls_notification_body">%d appels manqués</string>
     <string name="missed_call_notification_title">Appel manqué</string>
     <string name="zrtp_dialog_title">Sécurité des communications</string>
     <string name="zrtp_dialog_message">Confirmez avec votre interlocuteur le code SAS suivant</string>
@@ -430,7 +430,7 @@
     <string name="content_description_add_sip_address_field">Ajouter un champ SIP adresse</string>
     <string name="content_description_add_phone_number_field">Ajouter un champ numéro de téléphone</string>
     <string name="content_description_go_back">Revenir en arrière</string>
-    <string name="content_description_phone_number_use">A quoi mon numéro de téléphone va-t-il servir \?</string>
+    <string name="content_description_phone_number_use">Affiche à quoi le numéro de téléphone va-t-il servir</string>
     <string name="content_description_switch_camera">Intervertir la source de capture de la vidéo</string>
     <string name="content_description_pause_conference">Mettre la conférence en pause</string>
     <string name="content_description_start_conference">Fusionner les appels dans une conférence</string>
@@ -491,7 +491,7 @@
     <string name="content_description_call_quality_2">La qualité d\'appel est moyenne</string>
     <string name="content_description_call_quality_1">La qualité d\'appel est mauvaise</string>
     <string name="content_description_call_quality_4">La qualité d\'appel est très bonne</string>
-    <string name="share_uploaded_logs_link">Partager le fichier de traces</string>
+    <string name="share_uploaded_logs_link">Partager le fichier de traces avec…</string>
     <string name="content_description_call_not_secured">L\'appel n\'est pas chiffré</string>
     <string name="history_delete_one_dialog">Voulez-vous supprimer cet enregistrement \?</string>
     <string name="content_description_call_security_pending">Le chiffrement est en cours</string>
@@ -499,7 +499,7 @@
     <string name="content_description_chat_message_video_attachment">Vidéo en pièce jointe</string>
     <string name="no_account_configured">Aucun compte configuré</string>
     <string name="contact_send_sms_invite_text">Bonjour ! Rejoins-moi sur &appName;! Disponible gratuitement ici : %s</string>
-    <string name="assistant_validate_account_1">Votre compte a été créé. Nous avons envoyé un email de confirmation à l\'adresse : %@. Vérifiez vos emails pour valider votre compte. Lorsque cela est fait, cliquez sur le bouton pour continuer.</string>
+    <string name="assistant_validate_account_1">Votre compte a été créé. Nous vous avons envoyé un email de confirmation à l\'adresse :</string>
     <plurals name="chat_room_remote_composing">
         <item quantity="one">%s écrit…</item>
         <item quantity="other">%s écrivent…</item>
@@ -507,7 +507,7 @@
     <string name="chat_event_participant_added">%s a rejoint le groupe</string>
     <string name="contact_choose_existing_or_new_to_add_number">Sélectionnez un contact ou créez-en un</string>
     <string name="service_name">Service &appName;</string>
-    <string name="service_description">Les push notifications sont nécessaires pour recevoir les appels lorsque l\'app est en arrière-plan.</string>
+    <string name="service_description">Nécessaire pour recevoir les appels lorsque l\'app est en arrière-plan</string>
     <string name="select_your_country">Choisissez votre pays</string>
     <string name="sip_addresses">Adresses SIP</string>
     <plurals name="days">
@@ -543,7 +543,7 @@
 \nVous verrez dans votre carnet d\'adresses les contacts qui utilisent &appName; et vos amis sauront qu\'ils peuvent vous contacter.
 \n</string>
     <string name="assistant_error_invalid_credentials">Le compte n\'existe pas ou les mots de passe ne correspondent pas</string>
-    <string name="assistant_linphone_login_desc">Veuillez saisir votre nom d\'utilisateur et votre mot de passe de votre compte &appName;</string>
+    <string name="assistant_linphone_login_desc">Veuillez saisir le nom d\'utilisateur et mot de passe de votre compte &appName;</string>
     <string name="assistant_display_name_optional">Nom d\'affichage (optionnel)</string>
     <string name="assistant_validate_account_2">Pour valider votre compte, veuillez suivre les instructions reçues par email et cliquer sur le bouton.</string>
     <string name="assistant_create_account_part_3">Pour valider votre numéro veuillez enter le code à 4 chiffres ci-dessous :
@@ -555,7 +555,8 @@
     <string name="call_settings_overlay_title">Superposition des notifications push sur l\'écran</string>
     <string name="call_settings_overlay_summary">L\'autorisation d\'afficher les notifications push en superposition est requise</string>
     <string name="chat_settings_mark_as_read_notif_dismissal_title">Marquer comme lu lorsque la notification est supprimée</string>
-    <string name="chat_settings_launcher_shortcuts_summary">Si les deux options de raccourci sont activées, les raccourcis conversations sont remplacées par les raccourcis contacts.</string>
+    <string name="chat_settings_launcher_shortcuts_summary">Seront remplacés par les raccourcis de contacts si activés</string>
     <string name="account_settings_transport_title">Transport</string>
     <string name="content_description_clear_field">Vider le champ texte à côté</string>
+    <string name="notification_channel_missed_call_name">Notifications d\'appels manqués &appName;</string>
 </resources>
