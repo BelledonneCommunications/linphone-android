@@ -92,7 +92,7 @@ class GroupInfoViewModel(val chatRoom: ChatRoom?) : ErrorReportingViewModel() {
 
     init {
         subject.value = chatRoom?.subject
-        isMeAdmin.value = chatRoom == null || (chatRoom.me.isAdmin && !chatRoom.hasBeenLeft())
+        isMeAdmin.value = chatRoom == null || (chatRoom.me?.isAdmin == true && !chatRoom.hasBeenLeft())
         canLeaveGroup.value = chatRoom != null && !chatRoom.hasBeenLeft()
         isEncrypted.value = chatRoom?.hasCapability(ChatRoomCapabilities.Encrypted.toInt())
 
@@ -165,7 +165,7 @@ class GroupInfoViewModel(val chatRoom: ChatRoom?) : ErrorReportingViewModel() {
                 if (participant != null) {
                     // Participant found, check if admin status needs to be updated
                     if (member.isAdmin != participant.isAdmin) {
-                        if (chatRoom.me.isAdmin) {
+                        if (chatRoom.me?.isAdmin == true) {
                             Log.i("[Chat Room Group Info] Participant ${member.address.asStringUriOnly()} will be admin? ${member.isAdmin}")
                             chatRoom.setParticipantAdminStatus(participant, member.isAdmin)
                         }

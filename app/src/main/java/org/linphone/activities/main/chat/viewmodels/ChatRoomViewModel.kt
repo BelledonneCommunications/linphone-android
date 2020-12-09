@@ -95,7 +95,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactViewModelI
     val oneParticipantOneDevice: Boolean
         get() {
             return chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) &&
-                chatRoom.me.devices.size == 1 &&
+                chatRoom.me?.devices?.size == 1 &&
                 chatRoom.participants.first().devices.size == 1
         }
 
