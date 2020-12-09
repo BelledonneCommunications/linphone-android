@@ -102,8 +102,8 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
             it.consume {
                 val intent = Intent()
                 intent.setClass(requireContext(), MainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
                 intent.putExtra("Chat", true)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             }
         })
@@ -112,9 +112,9 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
             it.consume {
                 val intent = Intent()
                 intent.setClass(requireContext(), MainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
                 intent.putExtra("Dialer", true)
                 intent.putExtra("Transfer", false)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             }
         })
@@ -123,9 +123,9 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
             it.consume {
                 val intent = Intent()
                 intent.setClass(requireContext(), MainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
                 intent.putExtra("Dialer", true)
                 intent.putExtra("Transfer", true)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             }
         })
