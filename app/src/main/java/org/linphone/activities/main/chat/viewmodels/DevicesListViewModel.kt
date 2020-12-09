@@ -68,7 +68,8 @@ class DevicesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
 
     private fun updateParticipants() {
         val list = arrayListOf<DevicesListGroupViewModel>()
-        list.add(DevicesListGroupViewModel(chatRoom.me))
+        val me = chatRoom.me
+        if (me != null) list.add(DevicesListGroupViewModel(me))
         for (participant in chatRoom.participants) {
             list.add(DevicesListGroupViewModel(participant))
         }
