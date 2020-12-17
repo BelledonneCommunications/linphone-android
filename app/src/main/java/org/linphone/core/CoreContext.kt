@@ -160,7 +160,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
                 }
             } else if (state == Call.State.OutgoingInit) {
                 onOutgoingStarted()
-            } else if (state == Call.State.OutgoingRinging) {
+            } else if (state == Call.State.OutgoingProgress) {
                 if (core.callsNb == 1) {
                     routeAudioToBluetoothIfAvailable(call)
                 }
