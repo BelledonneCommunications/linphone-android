@@ -90,7 +90,7 @@ class ControlsViewModel : ViewModel() {
 
     val somethingClickedEvent = MutableLiveData<Event<Boolean>>()
 
-    val chatAllowed = !LinphoneApplication.corePreferences.disableChat
+    val chatAllowed = !corePreferences.disableChat
 
     private val vibrator = coreContext.context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
 
@@ -178,12 +178,15 @@ class ControlsViewModel : ViewModel() {
         }
 
         override fun onAudioDeviceChanged(core: Core, audioDevice: AudioDevice) {
+            Log.i("[Call] Audio device changed: ${audioDevice.deviceName}")
             updateSpeakerState()
             updateBluetoothHeadsetState()
         }
 
         override fun onAudioDevicesListUpdated(core: Core) {
+            if (core.callsNb == 0) return
             updateAudioRoutesState()
+            routeAudioToBluetoothIfAvailable(core.currentCall ?: core.calls[0])
         }
     }
 
@@ -434,6 +437,18 @@ class ControlsViewModel : ViewModel() {
     private fun updateBluetoothHeadsetState() {
         val audioDevice = coreContext.core.outputAudioDevice
         isBluetoothHeadsetSelected.value = audioDevice?.type == AudioDevice.Type.Bluetooth
+    }
+
+    private fun routeAudioToBluetoothIfAvailable(call: Call) {
+        for (audioDevice in coreContext.core.audioDevices) {
+            if (audioDevice.type == AudioDevice.Type.Bluetooth &&
+                audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
+                Log.i("[Call] Found bluetooth audio device [${audioDevice.deviceName}], routing audio to it")
+                call.outputAudioDevice = audioDevice
+                return
+            }
+        }
+        Log.w("[Call] Didn't find any bluetooth audio device, keeping current audio route")
     }
 
     private fun updateVideoAvailable() {
