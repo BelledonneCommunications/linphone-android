@@ -23,7 +23,6 @@ import android.Manifest
 import android.annotation.TargetApi
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.WindowManager
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -44,8 +43,6 @@ class OutgoingCallActivity : ProximitySensorActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         binding = DataBindingUtil.setContentView(this, R.layout.call_outgoing_activity)
         binding.lifecycleOwner = this
