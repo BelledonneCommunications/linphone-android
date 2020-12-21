@@ -313,13 +313,15 @@ class CoreContext(val context: Context, coreConfig: Config) {
 
     /* Call related functions */
 
-    fun answerCallUpdateRequest(call: Call, accept: Boolean) {
+    fun answerCallVideoUpdateRequest(call: Call, accept: Boolean) {
         val params = core.createCallParams(call)
 
         if (accept) {
             params?.enableVideo(true)
             core.enableVideoCapture(true)
             core.enableVideoDisplay(true)
+        } else {
+            params?.enableVideo(false)
         }
 
         call.acceptUpdate(params)
