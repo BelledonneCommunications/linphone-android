@@ -93,7 +93,9 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
                 if (call.state == Call.State.StreamsRunning) {
                     dialog?.dismiss()
                 } else if (call.state == Call.State.UpdatedByRemote) {
-                    showCallUpdateDialog(call)
+                    if (call.currentParams.videoEnabled() != call.remoteParams?.videoEnabled()) {
+                        showCallVideoUpdateDialog(call)
+                    }
                 }
             }
         })
@@ -219,17 +221,17 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
         }
     }
 
-    private fun showCallUpdateDialog(call: Call) {
+    private fun showCallVideoUpdateDialog(call: Call) {
         val viewModel = DialogViewModel(AppUtils.getString(R.string.call_video_update_requested_dialog))
         dialog = DialogUtils.getDialog(requireContext(), viewModel)
 
         viewModel.showCancelButton({
-            callsViewModel.answerCallUpdateRequest(call, false)
+            callsViewModel.answerCallVideoUpdateRequest(call, false)
             dialog?.dismiss()
         }, getString(R.string.dialog_decline))
 
         viewModel.showOkButton({
-            callsViewModel.answerCallUpdateRequest(call, true)
+            callsViewModel.answerCallVideoUpdateRequest(call, true)
             dialog?.dismiss()
         }, getString(R.string.dialog_accept))
 
