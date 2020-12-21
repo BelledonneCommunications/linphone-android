@@ -128,8 +128,8 @@ class CallsViewModel : ViewModel() {
         super.onCleared()
     }
 
-    fun answerCallUpdateRequest(call: Call, accept: Boolean) {
-        coreContext.answerCallUpdateRequest(call, accept)
+    fun answerCallVideoUpdateRequest(call: Call, accept: Boolean) {
+        coreContext.answerCallVideoUpdateRequest(call, accept)
     }
 
     fun pauseConference() {

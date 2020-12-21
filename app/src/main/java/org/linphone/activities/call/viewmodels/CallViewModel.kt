@@ -129,7 +129,7 @@ open class CallViewModel(val call: Call) : GenericContactViewModel(call.remoteAd
                 // Decline call update
                 viewModelScope.launch {
                     withContext(Dispatchers.Main) {
-                        coreContext.answerCallUpdateRequest(call, false)
+                        coreContext.answerCallVideoUpdateRequest(call, false)
                     }
                 }
             }
