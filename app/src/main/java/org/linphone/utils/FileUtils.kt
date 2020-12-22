@@ -20,6 +20,7 @@
 package org.linphone.utils
 
 import android.content.Context
+import android.database.CursorIndexOutOfBoundsException
 import android.net.Uri
 import android.os.Environment
 import android.provider.OpenableColumns
@@ -158,9 +159,13 @@ class FileUtils {
                     returnCursor.moveToFirst()
                     val nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
                     if (nameIndex != -1) {
-                        name = returnCursor.getString(nameIndex)
+                        try {
+                            name = returnCursor.getString(nameIndex)
+                        } catch (e: CursorIndexOutOfBoundsException) {
+                            Log.e("[File Utils] Failed to get the display name for URI $uri, exception is $e")
+                        }
                     } else {
-                        Log.e("[File Utils] Couldn't get DISPLAY_NAME column index for URI $uri")
+                        Log.e("[File Utils] Couldn't get DISPLAY_NAME column index for URI: $uri")
                     }
                     returnCursor.close()
                 }
