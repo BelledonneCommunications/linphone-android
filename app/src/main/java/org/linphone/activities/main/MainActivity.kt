@@ -175,7 +175,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     private fun handleIntentParams(intent: Intent) {
         when (intent.action) {
             Intent.ACTION_SEND, Intent.ACTION_SENDTO -> {
-                if (intent.type?.startsWith("text/") == true) {
+                if (intent.type == "text/plain") {
                     handleSendText(intent)
                 } else {
                     lifecycleScope.launch {
@@ -280,6 +280,8 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
     private suspend fun handleSendFile(intent: Intent) {
         if (corePreferences.disableChat) return
+
+        Log.i("[Main Activity] Found single file to share with type ${intent.type}")
 
         (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let {
             val list = arrayListOf<String>()
