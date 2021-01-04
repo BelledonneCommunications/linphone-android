@@ -64,7 +64,8 @@ class TimestampUtils {
             timestamp: Long,
             onlyDate: Boolean = false,
             timestampInSecs: Boolean = true,
-            shortDate: Boolean = true
+            shortDate: Boolean = true,
+            hideYear: Boolean = true
         ): String {
             val dateFormat = if (isToday(timestamp, timestampInSecs)) {
                 DateFormat.getTimeInstance(DateFormat.SHORT)
@@ -76,7 +77,7 @@ class TimestampUtils {
                 }
             } as SimpleDateFormat
 
-            if (isSameYear(timestamp, timestampInSecs)) {
+            if (hideYear || isSameYear(timestamp, timestampInSecs)) {
                 // Remove the year part of the format
                 dateFormat.applyPattern(
                     dateFormat.toPattern().replace("/?y+/?|,?\\s?y+\\s?".toRegex(), if (shortDate) "" else " ")
