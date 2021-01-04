@@ -131,7 +131,7 @@ class RecordingsListAdapter(
         } else if (TimestampUtils.isYesterday(date, false)) {
             return context.getString(R.string.yesterday)
         }
-        return TimestampUtils.toString(date, onlyDate = true, timestampInSecs = false, shortDate = false)
+        return TimestampUtils.toString(date, onlyDate = true, timestampInSecs = false, shortDate = false, hideYear = false)
     }
 }
 
