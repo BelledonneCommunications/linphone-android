@@ -135,7 +135,7 @@ class CallLogsListAdapter(
         } else if (TimestampUtils.isYesterday(date)) {
             return context.getString(R.string.yesterday)
         }
-        return TimestampUtils.toString(date, onlyDate = true, shortDate = false)
+        return TimestampUtils.toString(date, onlyDate = true, shortDate = false, hideYear = false)
     }
 }
 
