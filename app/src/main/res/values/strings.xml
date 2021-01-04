@@ -644,6 +644,7 @@
     <string name="content_description_exit_conference">Exit conference</string>
     <string name="content_title_notification_service">Linphone service notification</string>
     <string name="content_title_notification">Linphone instant messages notifications</string>
+    <string name="content_title_notification_missed_call">Linphone missed calls notifications</string>
     <string name="content_description_conversation_subject">Group chat room subject</string>
     <string name="content_description_conversation_infos">Group chat room info</string>
     <string name="content_description_record_call">Record call</string>

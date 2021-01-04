@@ -22,6 +22,7 @@
     <string name="about_bugreport_email" translatable="false">linphone-android@belledonne-communications.com</string>
     <string name="notification_service_channel_id" translatable="false">linphone_notification_service_id</string>
     <string name="notification_channel_id" translatable="false">linphone_notification_id</string>
+    <string name="notification_missed_call_channel_id" translatable="false">linphone_notification_missed_call_id</string>
 
     <!-- Push notification settings -->
     <bool name="enable_push_id">true</bool>

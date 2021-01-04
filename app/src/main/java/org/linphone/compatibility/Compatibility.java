@@ -71,6 +71,7 @@ public class Compatibility {
         if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
             ApiTwentySixPlus.createServiceChannel(context);
             ApiTwentySixPlus.createMessageChannel(context);
+            ApiTwentySixPlus.createMissedCallChannel(context);
         }
     }
 
