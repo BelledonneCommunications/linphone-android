@@ -93,7 +93,7 @@ class CallLogViewModel(val callLog: CallLog) : GenericContactViewModel(callLog.r
     }
 
     val date: String by lazy {
-        TimestampUtils.toString(callLog.startDate, shortDate = false)
+        TimestampUtils.toString(callLog.startDate, shortDate = false, hideYear = false)
     }
 
     val startCallEvent: MutableLiveData<Event<Address>> by lazy {
