@@ -144,6 +144,8 @@ public class CallManager {
             params.enableVideo(true);
             core.enableVideoCapture(true);
             core.enableVideoDisplay(true);
+        } else {
+            params.enableVideo(false);
         }
 
         call.acceptUpdate(params);
