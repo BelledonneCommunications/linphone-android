@@ -70,7 +70,7 @@
   <string name="assistant_create_account">Fiók létrehozása</string>
   <string name="assistant_link_account">Fiók összekapcsolása</string>
   <string name="assistant_continue">Folytatás</string>
-  <string name="assistant_activate">A fiók aktiválása</string>
+  <string name="assistant_activate">A fiók indítása</string>
   <string name="assistant_finish">A konfiguráció befejezése</string>
   <string name="assistant_validate_account_1">A felhasználói fiókja elkészült. Kérjük, ellenőrizze e-mailjét, hogy érvényesítse a fiókját:</string>
   <string name="assistant_validate_account_2">Ha ez megtörtént, térjen vissza ide és kattintson a gombra.</string>
@@ -125,7 +125,7 @@
   <string name="use_email_for_validation">Használjon e-mail címet a fiók érvényesítéséhez</string>
   <string name="login_with_username">A telefonszám helyett használja a felhasználónevét és jelszavát</string>
   <string name="phone_number_info_title">Mire fogják használni a telefonszámomat?</string>
-  <string name="phone_number_info_content">\nTelefonszámának köszönhetően barátai könnyebben megtalálják Önt.\n\n A címjegyzékben látni fogja, hogy ki használja a Linphone-t és a barátai tudni fogják, hogy Linphone-on is elérhetik Önt.\n</string>
+  <string name="phone_number_info_content">\nTelefonszámának köszönhetően barátai könnyebben megtalálják Önt.\n\nA címjegyzékben látni fogja, hogy ki használja a Linphone-t és a barátai tudni fogják, hogy Linphone-on is elérhetik Önt.\n</string>
   <string name="phone_number_link_info_content">\nBarátai könnyebben megtalálják Önt, ha összekapcsolja fiókját a telefonszámával\n\nA címjegyzékben látni fogja, hogy ki használja a Linphone-t, és a barátaid tudni fogják, hogy Linphone-on is elérhetik Önt.\n</string>
   <string name="phone_number_link_info_content_already_account">A telefonszámát csak egy Linphone-fiókkal használhatja.\n\nHa már összekapcsolta telefonszámát egy másik fiókkal, de inkább ezt használja, egyszerűen kapcsolja össze, és a telefonszám önműködően átkerül ebbe a fiókba.</string>
   <string name="phone_number_overuse">Túl sok SMS-t küldtek erre a számra rövid idő alatt. Kérjük, várjon 24 órát, mielőtt újra megpróbálja.</string>
@@ -144,7 +144,7 @@
   <string name="phone_number_too_long">Túl hosszú a telefonszám</string>
   <string name="phone_number_too_short">Túl rövid a telefonszám</string>
   <string name="phone_number_invalid">Érvénytelen telefonszám</string>
-  <string name="activation_code_invalid">Érvénytelen aktiválási kód</string>
+  <string name="activation_code_invalid">Érvénytelen indítási kód</string>
   <string name="password_too_short">Jelszó túl rövid</string>
   <string name="password_too_long">Jelszó túl hosszú</string>
   <string name="request_failed">Nem sikerült lekérdezni a kiszolgálót. Kérjük, próbálja újra később.</string>
@@ -284,7 +284,7 @@
   <string name="incoming_call">Bejövő hívás</string>
   <string name="outgoing_call">Kimenő hívás</string>
   <string name="add_video_dialog">A hívó be szeretné kapcsolni a videót</string>
-  <string name="no_current_call">Nincs aktív hívás</string>
+  <string name="no_current_call">Nincs jelenlegi hívás</string>
   <string name="call_paused_by_remote">Távoli felhasználó várakoztatja a hívását.</string>
   <string name="couldnt_accept_call">Hiba történt a hívás elfogadása közben</string>
   <string name="zrtp_local_sas">Mond:</string>
@@ -466,7 +466,7 @@
   <string name="lime_encryption_entry_disabled">Tiltva</string>
   <string name="lime_encryption_entry_mandatory">Kötelező</string>
   <string name="lime_encryption_entry_preferred">Elsődleges</string>
-  <string name="lime_encryption_enable_zrtp"> LIME ZRTP titkosítást igényel. \ LIME aktiválásával automatikusan aktiválja a ZRTP adathordozó titkosítást.</string>
+  <string name="lime_encryption_enable_zrtp">LIME ZRTP titkosítást igényel.\nLIME indításával önműködően indítja a ZRTP adathordozó titkosítást.</string>
   <string name="pref_auto_download_policy_title">A bejövő fájlok önműködő letöltése szabályzat</string>
   <string name="pref_auto_download_max_size_title">Max. méret (bájtban)</string>
   <string name="pref_auto_download_disabled">Soha</string>

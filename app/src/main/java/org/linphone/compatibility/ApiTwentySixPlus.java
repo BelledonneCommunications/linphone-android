@@ -286,7 +286,7 @@ class ApiTwentySixPlus {
                 .setAutoCancel(true)
                 .setContentIntent(intent)
                 .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
-                //.setCategory(Notification.CATEGORY_EVENT) No one really matches "missed call"
+                // .setCategory(Notification.CATEGORY_EVENT) No one really matches "missed call"
                 .setVisibility(Notification.VISIBILITY_PRIVATE)
                 .setPriority(Notification.PRIORITY_HIGH)
                 .setWhen(System.currentTimeMillis())

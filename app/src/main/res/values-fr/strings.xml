@@ -615,6 +615,7 @@ Disponible gratuitement ici : %s</string>
   <string name="content_description_exit_conference">Quitter la conférence</string>
   <string name="content_title_notification_service">Notification de service Linphone</string>
   <string name="content_title_notification">Notifications des messages Linphone</string>
+  <string name="content_title_notification_missed_call">Notifications d\'appels Linphone manqués</string>
   <string name="content_description_conversation_subject">Sujet de la conversation de groupe</string>
   <string name="content_description_conversation_infos">Informations de la conversation de groupe</string>
   <string name="content_description_record_call">Enregistrer l\'appel</string>
