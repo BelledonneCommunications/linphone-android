@@ -197,10 +197,12 @@ android {
 
 repositories {
     maven {
+        name "local linphone-sdk maven repository"
         url file(LinphoneSdkBuildDir + '/maven_repository/')
     }
 
     maven {
+        name "linphone.org maven repository"
         url "https://linphone.org/maven_repository"
     }
 }
