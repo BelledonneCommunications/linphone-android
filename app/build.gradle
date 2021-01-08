@@ -46,7 +46,22 @@ task getGitVersion() {
     }
     project.version = gitVersion
 }
+
+task linphoneSdkSource() {
+    doLast {
+        configurations.implementation.canBeResolved = true
+        configurations.implementation.getIncoming().each {
+            it.getResolutionResult().allComponents.each {
+                if (it.id.getDisplayName().contains("linphone-sdk-android")) {
+                    println 'Linphone SDK used is ' + it.moduleVersion.version + ' from ' + it.properties["repositoryName"]
+                }
+            }
+        }
+    }
+}
+
 project.tasks['preBuild'].dependsOn 'getGitVersion'
+project.tasks['preBuild'].dependsOn 'linphoneSdkSource'
 
 android {
     compileSdkVersion 30
@@ -150,10 +165,12 @@ android {
 
 repositories {
     maven {
+        name "local linphone-sdk maven repository"
         url file(LinphoneSdkBuildDir + '/maven_repository/')
     }
 
     maven {
+        name "linphone.org maven repository"
         url "https://linphone.org/maven_repository"
     }
 }
