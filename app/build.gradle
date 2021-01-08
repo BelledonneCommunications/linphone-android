@@ -41,6 +41,22 @@ task getGitVersion() {
     project.version = gitVersion
 }
 
+configurations {
+	customImpl.extendsFrom(implementation)
+}
+
+task linphoneSdkSource() {
+    doLast {
+        configurations.customImpl.getIncoming().each {
+            it.getResolutionResult().allComponents.each {
+                if (it.id.getDisplayName().contains("linphone-sdk-android")) {
+                    println 'Linphone SDK used is ' + it.moduleVersion.version + ' from ' + it.properties["repositoryName"]
+                }
+            }
+        }
+    }
+}
+
 ///// Exclude Files /////
 
 def excludeFiles = []
@@ -63,14 +79,17 @@ excludePackage.add('**/LICENSE.txt')
 
 repositories {
     maven {
+        name "local linphone-sdk maven repository"
         url file(LinphoneSdkBuildDir + '/maven_repository/')
     }
     maven {
+        name "linphone.org maven repository"
         url "https://linphone.org/maven_repository"
     }
 }
 
 project.tasks['preBuild'].dependsOn 'getGitVersion'
+project.tasks['preBuild'].dependsOn 'linphoneSdkSource'
 
 android {
     lintOptions {
