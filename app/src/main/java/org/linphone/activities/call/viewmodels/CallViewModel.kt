@@ -28,11 +28,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.compatibility.Compatibility
 import org.linphone.contact.GenericContactViewModel
 import org.linphone.core.Call
 import org.linphone.core.CallListenerStub
+import org.linphone.core.Factory
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
+import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
 
 class CallViewModelFactory(private val call: Call) :
@@ -86,6 +89,23 @@ open class CallViewModel(val call: Call) : GenericContactViewModel(call.remoteAd
                 startTimer(call)
             }
         }
+
+        override fun onSnapshotTaken(call: Call, filePath: String) {
+            Log.i("[Call View Model] Snapshot taken, saved at $filePath")
+            val content = Factory.instance().createContent()
+            content.filePath = filePath
+            content.type = "image"
+            content.subtype = "jpeg"
+            content.name = filePath.substring(filePath.indexOf("/") + 1)
+
+            viewModelScope.launch {
+                if (Compatibility.addImageToMediaStore(coreContext.context, content)) {
+                    Log.i("[Call View Model] Adding snapshot ${content.name} to Media Store terminated")
+                } else {
+                    Log.e("[Call View Model] Something went wrong while copying file to Media Store...")
+                }
+            }
+        }
     }
 
     init {
@@ -117,6 +137,13 @@ open class CallViewModel(val call: Call) : GenericContactViewModel(call.remoteAd
         if (conference != null) {
             conference.removeParticipant(call.remoteAddress)
             if (call.core.conferenceSize <= 1) call.core.leaveConference()
+        }
+    }
+
+    fun takeScreenshot() {
+        if (call.currentParams.videoEnabled()) {
+            val fileName = System.currentTimeMillis().toString() + ".jpeg"
+            call.takeVideoSnapshot(FileUtils.getFileStoragePath(fileName).absolutePath)
         }
     }
 
