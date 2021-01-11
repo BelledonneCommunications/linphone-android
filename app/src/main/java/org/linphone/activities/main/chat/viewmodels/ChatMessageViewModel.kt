@@ -213,23 +213,23 @@ class ChatMessageViewModel(
             when (content.type) {
                 "image" -> {
                     if (Compatibility.addImageToMediaStore(coreContext.context, content)) {
-                        Log.i("[Chat Message] Adding image ${content.name} terminated")
+                        Log.i("[Chat Message] Adding image ${content.name} to Media Store terminated")
                     } else {
-                        Log.e("[Chat Message] Something went wrong while copying file...")
+                        Log.e("[Chat Message] Something went wrong while copying file to Media Store...")
                     }
                 }
                 "video" -> {
                     if (Compatibility.addVideoToMediaStore(coreContext.context, content)) {
-                        Log.i("[Chat Message] Adding video ${content.name} terminated")
+                        Log.i("[Chat Message] Adding video ${content.name} to Media Store terminated")
                     } else {
-                        Log.e("[Chat Message] Something went wrong while copying file...")
+                        Log.e("[Chat Message] Something went wrong while copying file to Media Store...")
                     }
                 }
                 "audio" -> {
                     if (Compatibility.addAudioToMediaStore(coreContext.context, content)) {
-                        Log.i("[Chat Message] Adding audio ${content.name} terminated")
+                        Log.i("[Chat Message] Adding audio ${content.name} to Media Store terminated")
                     } else {
-                        Log.e("[Chat Message] Something went wrong while copying file...")
+                        Log.e("[Chat Message] Something went wrong while copying file to Media Store...")
                     }
                 }
                 else -> {
