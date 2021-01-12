@@ -298,7 +298,12 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             sharedViewModel.filesToShare.value = list
         }
 
-        handleSendChatRoom(intent)
+        // Check that the current fragment hasn't already handled the event on filesToShare
+        // If it has, don't go further.
+        // For example this may happen when picking a GIF from the keyboard while inside a chat room
+        if (!sharedViewModel.filesToShare.value.isNullOrEmpty()) {
+            handleSendChatRoom(intent)
+        }
     }
 
     private suspend fun handleSendMultipleFiles(intent: Intent) {
