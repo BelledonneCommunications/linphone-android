@@ -146,6 +146,10 @@ class CallsViewModel : ViewModel() {
         }
     }
 
+    fun takeScreenshot() {
+        currentCallViewModel.value?.takeScreenshot()
+    }
+
     private fun addCallToPausedList(call: Call) {
         val list = arrayListOf<CallViewModel>()
         list.addAll(pausedCalls.value.orEmpty())

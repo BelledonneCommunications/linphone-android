@@ -72,6 +72,8 @@ class ControlsViewModel : ViewModel() {
 
     val audioRoutesEnabled = MutableLiveData<Boolean>()
 
+    val takeScreenshotEnabled = MutableLiveData<Boolean>()
+
     val chatClickedEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -209,6 +211,8 @@ class ControlsViewModel : ViewModel() {
         chatUnreadCountTranslateY.value = 0f
         optionsMenuTranslateY.value = AppUtils.getDimension(R.dimen.call_options_menu_translate_y)
         audioRoutesMenuTranslateY.value = AppUtils.getDimension(R.dimen.call_audio_routes_menu_translate_y)
+
+        takeScreenshotEnabled.value = corePreferences.showScreenshotButton
 
         updateUI()
         if (corePreferences.enableAnimations) bounceAnimator.start()
