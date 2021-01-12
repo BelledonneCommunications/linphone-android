@@ -148,19 +148,19 @@
 
         </LinearLayout>
 
-        <SearchView
+        <EditText
             android:id="@+id/searchBar"
-            queryValue="@={viewModel.filter}"
+            android:text="@={viewModel.filter}"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:gravity="center"
-            android:iconifiedByDefault="false"
             android:inputType="textPersonName"
             android:layout_below="@id/top_bar"
             android:layout_margin="10dp"
-            android:paddingRight="5dp"
-            android:queryBackground="@color/transparent_color"
-            android:queryHint="@string/contact_filter_hint"/>
+            android:drawableLeft="@android:drawable/ic_menu_search"
+            android:drawablePadding="10dp"
+            android:background="@color/transparent_color"
+            android:backgroundTint="@color/transparent_color"
+            android:hint="@string/contact_filter_hint"/>
 
         <View
             android:layout_width="match_parent"
