@@ -19,6 +19,7 @@
         <attr name="drawableTintColor" format="color"/>
         <attr name="drawableTintDisabledColor" format="color"/>
         <attr name="drawableTintOverColor" format="color"/>
+        <attr name="drawableTintColor2" format="color"/>
 
         <attr name="lightToolbarBackgroundColor" format="color"/>
         <attr name="lightToolbarBackgroundDisabledColor" format="color"/>
