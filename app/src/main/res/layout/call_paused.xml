@@ -55,7 +55,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:gravity="center_vertical"
-            android:src="@drawable/pause" />
+            android:src="@drawable/call_pause" />
 
     </LinearLayout>
 

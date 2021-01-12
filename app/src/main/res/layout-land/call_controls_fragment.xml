@@ -112,7 +112,7 @@
             android:layout_below="@id/active_call_header"
             android:layout_alignParentRight="true"
             android:layout_margin="20dp"
-            android:src="@drawable/pause" />
+            android:src="@drawable/call_pause" />
 
         <ImageView
             android:onClick="@{() -> controlsViewModel.switchCamera()}"

@@ -325,6 +325,9 @@ class CorePreferences constructor(private val context: Context) {
     val disableChat: Boolean
         get() = config.getBool("app", "disable_chat_feature", false)
 
+    val showScreenshotButton: Boolean
+        get() = config.getBool("app", "show_take_screenshot_button_in_call", false)
+
     /* Assistant */
 
     val showCreateAccount: Boolean

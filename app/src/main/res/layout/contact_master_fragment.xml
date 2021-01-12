@@ -126,7 +126,7 @@
             android:layout_below="@id/top_bar"
             android:layout_margin="10dp"
             android:inputType="textPersonName"
-            android:drawableLeft="@android:drawable/ic_menu_search"
+            android:drawableLeft="@drawable/search"
             android:drawablePadding="10dp"
             android:background="@color/transparent_color"
             android:backgroundTint="@color/transparent_color"
