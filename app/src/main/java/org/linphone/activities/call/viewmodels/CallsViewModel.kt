@@ -26,6 +26,7 @@ import org.linphone.core.Call
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.utils.Event
+import org.linphone.utils.PermissionHelper
 
 class CallsViewModel : ViewModel() {
     val currentCallViewModel = MutableLiveData<CallViewModel>()
@@ -44,6 +45,10 @@ class CallsViewModel : ViewModel() {
 
     val callUpdateEvent: MutableLiveData<Event<Call>> by lazy {
         MutableLiveData<Event<Call>>()
+    }
+
+    val askWriteExternalStoragePermissionEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
     }
 
     private val listener = object : CoreListenerStub() {
@@ -147,7 +152,11 @@ class CallsViewModel : ViewModel() {
     }
 
     fun takeScreenshot() {
-        currentCallViewModel.value?.takeScreenshot()
+        if (!PermissionHelper.get().hasWriteExternalStorage()) {
+            askWriteExternalStoragePermissionEvent.value = Event(true)
+        } else {
+            currentCallViewModel.value?.takeScreenshot()
+        }
     }
 
     private fun addCallToPausedList(call: Call) {

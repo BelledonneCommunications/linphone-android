@@ -88,6 +88,15 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
             }
         })
 
+        callsViewModel.askWriteExternalStoragePermissionEvent.observe(viewLifecycleOwner, {
+            it.consume {
+                if (!PermissionHelper.get().hasWriteExternalStorage()) {
+                    Log.i("[Controls Fragment] Asking for WRITE_EXTERNAL_STORAGE permission")
+                    requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
+                }
+            }
+        })
+
         callsViewModel.callUpdateEvent.observe(viewLifecycleOwner, {
             it.consume { call ->
                 if (call.state == Call.State.StreamsRunning) {
@@ -196,6 +205,8 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
                     }
                 }
             }
+        } else if (requestCode == 1 && grantResults[0] == PERMISSION_GRANTED) {
+            callsViewModel.takeScreenshot()
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
@@ -206,12 +217,12 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
 
         if (!PermissionHelper.get().hasRecordAudioPermission()) {
             Log.i("[Controls Fragment] Asking for RECORD_AUDIO permission")
-            permissionsRequiredList.add(android.Manifest.permission.RECORD_AUDIO)
+            permissionsRequiredList.add(Manifest.permission.RECORD_AUDIO)
         }
 
         if (coreContext.isVideoCallOrConferenceActive() && !PermissionHelper.get().hasCameraPermission()) {
             Log.i("[Controls Fragment] Asking for CAMERA permission")
-            permissionsRequiredList.add(android.Manifest.permission.CAMERA)
+            permissionsRequiredList.add(Manifest.permission.CAMERA)
         }
 
         if (permissionsRequiredList.isNotEmpty()) {

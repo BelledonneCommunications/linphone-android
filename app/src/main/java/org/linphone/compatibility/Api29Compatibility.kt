@@ -36,7 +36,7 @@ class Api29Compatibility {
         suspend fun addImageToMediaStore(context: Context, content: Content): Boolean {
             val filePath = content.filePath
             if (filePath == null) {
-                Log.e("[Chat Message] Content doesn't have a file path!")
+                Log.e("[Media Store] Content doesn't have a file path!")
                 return false
             }
 
@@ -44,7 +44,7 @@ class Api29Compatibility {
             val relativePath = "${Environment.DIRECTORY_PICTURES}/$appName"
             val fileName = content.name
             val mime = "${content.type}/${content.subtype}"
-            Log.i("[Chat Message] Adding image $filePath to Media Store with name $fileName and MIME $mime, asking to be stored in $relativePath")
+            Log.i("[Media Store] Adding image $filePath to Media Store with name $fileName and MIME $mime, asking to be stored in $relativePath")
 
             val values = ContentValues().apply {
                 put(MediaStore.Images.Media.DISPLAY_NAME, fileName)
@@ -56,7 +56,7 @@ class Api29Compatibility {
 
             val fileUri = context.contentResolver.insert(collection, values)
             if (fileUri == null) {
-                Log.e("[Chat Message] Failed to get a URI to where store the file, aborting")
+                Log.e("[Media Store] Failed to get a URI to where store the file, aborting")
                 return false
             }
 
@@ -78,7 +78,7 @@ class Api29Compatibility {
         suspend fun addVideoToMediaStore(context: Context, content: Content): Boolean {
             val filePath = content.filePath
             if (filePath == null) {
-                Log.e("[Chat Message] Content doesn't have a file path!")
+                Log.e("[Media Store] Content doesn't have a file path!")
                 return false
             }
 
@@ -86,7 +86,7 @@ class Api29Compatibility {
             val relativePath = "${Environment.DIRECTORY_MOVIES}/$appName"
             val fileName = content.name
             val mime = "${content.type}/${content.subtype}"
-            Log.i("[Chat Message] Adding video $filePath to Media Store with name $fileName and MIME $mime, asking to be stored in $relativePath")
+            Log.i("[Media Store] Adding video $filePath to Media Store with name $fileName and MIME $mime, asking to be stored in $relativePath")
 
             val values = ContentValues().apply {
                 put(MediaStore.Video.Media.TITLE, fileName)
@@ -99,7 +99,7 @@ class Api29Compatibility {
 
             val fileUri = context.contentResolver.insert(collection, values)
             if (fileUri == null) {
-                Log.e("[Chat Message] Failed to get a URI to where store the file, aborting")
+                Log.e("[Media Store] Failed to get a URI to where store the file, aborting")
                 return false
             }
 
@@ -121,7 +121,7 @@ class Api29Compatibility {
         suspend fun addAudioToMediaStore(context: Context, content: Content): Boolean {
             val filePath = content.filePath
             if (filePath == null) {
-                Log.e("[Chat Message] Content doesn't have a file path!")
+                Log.e("[Media Store] Content doesn't have a file path!")
                 return false
             }
 
@@ -129,7 +129,7 @@ class Api29Compatibility {
             val relativePath = "${Environment.DIRECTORY_MUSIC}/$appName"
             val fileName = content.name
             val mime = "${content.type}/${content.subtype}"
-            Log.i("[Chat Message] Adding audio $filePath to Media Store with name $fileName and MIME $mime, asking to be stored in $relativePath")
+            Log.i("[Media Store] Adding audio $filePath to Media Store with name $fileName and MIME $mime, asking to be stored in $relativePath")
 
             val values = ContentValues().apply {
                 put(MediaStore.Audio.Media.TITLE, fileName)
@@ -142,7 +142,7 @@ class Api29Compatibility {
 
             val fileUri = context.contentResolver.insert(collection, values)
             if (fileUri == null) {
-                Log.e("[Chat Message] Failed to get a URI to where store the file, aborting")
+                Log.e("[Media Store] Failed to get a URI to where store the file, aborting")
                 return false
             }
 
