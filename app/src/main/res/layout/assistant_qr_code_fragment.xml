@@ -40,7 +40,9 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_margin="5dp"
-                android:src="@drawable/switch_camera"/>
+                android:background="@drawable/round_button_background"
+                android:padding="10dp"
+                android:src="@drawable/camera_switch"/>
 
         </RelativeLayout>
 
