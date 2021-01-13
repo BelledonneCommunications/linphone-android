@@ -103,10 +103,10 @@ open class StatusViewModel : ViewModel() {
 
     private fun getStatusIconResource(state: RegistrationState): Int {
         return when (state) {
-            RegistrationState.Ok -> R.drawable.led_connected
-            RegistrationState.Progress -> R.drawable.led_inprogress
+            RegistrationState.Ok -> R.drawable.led_registered
+            RegistrationState.Progress -> R.drawable.led_registration_in_progress
             RegistrationState.Failed -> R.drawable.led_error
-            else -> R.drawable.led_disconnected
+            else -> R.drawable.led_not_registered
         }
     }
 }
