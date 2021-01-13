@@ -35,8 +35,6 @@
         android:layout_height="50dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
         android:gravity="center_vertical">
 
         <LinearLayout
@@ -44,6 +42,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="horizontal"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
             android:layout_alignParentRight="true">
 
             <ImageView
@@ -53,8 +53,6 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:adjustViewBounds="true"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
                 android:background="@drawable/history_detail_background"
                 android:src="@drawable/list_detail" />
 
@@ -73,6 +71,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_toLeftOf="@id/right"
+            android:layout_marginLeft="10dp"
             android:gravity="center_vertical">
 
             <ImageView
@@ -83,7 +82,6 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentLeft="true"
                 android:adjustViewBounds="true"
-                android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:paddingTop="7dp"
                 android:paddingBottom="7dp"/>
