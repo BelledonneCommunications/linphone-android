@@ -15,4 +15,6 @@
     <dimen name="call_button_size">60dp</dimen>
     <dimen name="call_options_menu_translate_y">300dp</dimen>
     <dimen name="call_audio_routes_menu_translate_y">240dp</dimen>
+    <dimen name="field_button_size">20dp</dimen>
+    <dimen name="field_shape_margin">3dp</dimen>
 </resources>
