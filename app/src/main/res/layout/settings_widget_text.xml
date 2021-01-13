@@ -38,7 +38,7 @@
             android:layout_height="20dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="20dp"
-            android:src="@drawable/clean_field"
+            android:src="@drawable/field_clean"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true" />
 

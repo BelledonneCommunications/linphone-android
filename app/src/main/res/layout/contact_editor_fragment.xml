@@ -161,13 +161,12 @@
 
                     <ImageView
                         android:onClick="@{() -> viewModel.addEmptySipAddress()}"
+                        android:contentDescription="@string/content_description_add_sip_address_field"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/field_add"
-                        android:contentDescription="@string/content_description_add_sip_address_field"
-                        android:background="@drawable/round_orange_button_background" />
+                        android:src="@drawable/field_add" />
 
                 </RelativeLayout>
 
@@ -199,8 +198,7 @@
                         android:layout_height="30dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/field_add"
-                        android:background="@drawable/round_orange_button_background" />
+                        android:src="@drawable/field_add" />
 
                 </RelativeLayout>
 

@@ -41,8 +41,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:src="@drawable/field_remove"
-            android:layout_marginLeft="5dp"
-            android:background="@drawable/field_button_background" />
+            android:layout_marginLeft="5dp" />
 
     </RelativeLayout>
 

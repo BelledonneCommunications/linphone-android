@@ -300,10 +300,10 @@ class AccountSettingsViewModel(val proxyConfig: ProxyConfig) : GenericSettingsVi
         }
 
         iconResource.value = when (proxyConfig.state) {
-            RegistrationState.Ok -> R.drawable.led_connected
+            RegistrationState.Ok -> R.drawable.led_registered
             RegistrationState.Failed -> R.drawable.led_error
-            RegistrationState.Progress -> R.drawable.led_inprogress
-            else -> R.drawable.led_disconnected
+            RegistrationState.Progress -> R.drawable.led_registration_in_progress
+            else -> R.drawable.led_not_registered
         }
         iconContentDescription.value = when (proxyConfig.state) {
             RegistrationState.Ok -> R.string.status_connected

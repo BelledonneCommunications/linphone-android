@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+	<item>
+		<shape android:shape="oval">
+			<solid android:color="@color/green_color"/>
+			<size android:width="@dimen/field_button_size" android:height="@dimen/field_button_size"/>
+		</shape>
+	</item>
+	<item android:drawable="@drawable/field_add_shape" />
+</layer-list>
