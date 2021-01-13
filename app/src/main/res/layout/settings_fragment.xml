@@ -102,43 +102,50 @@
                     layout="@layout/settings_widget_basic"
                     android:visibility="@{viewModel.showAudioSettings ? View.VISIBLE : View.GONE}"
                     linphone:listener="@{viewModel.audioSettingsListener}"
-                    linphone:title="@{@string/settings_audio_title}" />
+                    linphone:title="@{@string/settings_audio_title}"
+                    linphone:icon="@{@drawable/settings_audio}" />
 
                 <include
                     layout="@layout/settings_widget_basic"
                     android:visibility="@{viewModel.showVideoSettings ? View.VISIBLE : View.GONE}"
                     linphone:listener="@{viewModel.videoSettingsListener}"
-                    linphone:title="@{@string/settings_video_title}" />
+                    linphone:title="@{@string/settings_video_title}"
+                    linphone:icon="@{@drawable/settings_video}" />
 
                 <include
                     layout="@layout/settings_widget_basic"
                     android:visibility="@{viewModel.showCallSettings ? View.VISIBLE : View.GONE}"
                     linphone:listener="@{viewModel.callSettingsListener}"
-                    linphone:title="@{@string/settings_call_title}" />
+                    linphone:title="@{@string/settings_call_title}"
+                    linphone:icon="@{@drawable/settings_call}" />
 
                 <include
                     layout="@layout/settings_widget_basic"
                     android:visibility="@{viewModel.showChatSettings ? View.VISIBLE : View.GONE}"
                     linphone:listener="@{viewModel.chatSettingsListener}"
-                    linphone:title="@{@string/settings_chat_title}" />
+                    linphone:title="@{@string/settings_chat_title}"
+                    linphone:icon="@{@drawable/settings_chat}" />
 
                 <include
                     layout="@layout/settings_widget_basic"
                     android:visibility="@{viewModel.showNetworkSettings ? View.VISIBLE : View.GONE}"
                     linphone:listener="@{viewModel.networkSettingsListener}"
-                    linphone:title="@{@string/settings_network_title}" />
+                    linphone:title="@{@string/settings_network_title}"
+                    linphone:icon="@{@drawable/settings_network}" />
 
                 <include
                     layout="@layout/settings_widget_basic"
                     android:visibility="@{viewModel.showContactsSettings ? View.VISIBLE : View.GONE}"
                     linphone:listener="@{viewModel.contactsSettingsListener}"
-                    linphone:title="@{@string/settings_contacts_title}" />
+                    linphone:title="@{@string/settings_contacts_title}"
+                    linphone:icon="@{@drawable/settings_contacts}" />
 
                 <include
                     layout="@layout/settings_widget_basic"
                     android:visibility="@{viewModel.showAdvancedSettings ? View.VISIBLE : View.GONE}"
                     linphone:listener="@{viewModel.advancedSettingsListener}"
-                    linphone:title="@{@string/settings_advanced_title}" />
+                    linphone:title="@{@string/settings_advanced_title}"
+                    linphone:icon="@{@drawable/settings_advanced}" />
 
             </LinearLayout>
 

@@ -86,7 +86,8 @@
                     android:adjustViewBounds="true"
                     android:padding="10dp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/switch_camera" />
+                    android:background="@drawable/round_button_background"
+                    android:src="@drawable/camera_switch" />
 
                 <ImageView
                     android:id="@+id/pause_conference"
@@ -99,6 +100,7 @@
                     android:adjustViewBounds="true"
                     android:padding="10dp"
                     android:scaleType="fitCenter"
+                    android:background="@drawable/round_button_background"
                     android:src="@drawable/call_pause" />
 
             </RelativeLayout>
@@ -203,6 +205,8 @@
                 android:layout_height="40dp"
                 android:gravity="center_vertical"
                 android:contentDescription="@string/content_description_resume_conference"
+                android:background="@drawable/round_button_background"
+                android:padding="10dp"
                 android:src="@drawable/call_pause" />
 
         </LinearLayout>
@@ -218,6 +222,8 @@
             android:layout_below="@id/active_call_header"
             android:layout_alignParentRight="true"
             android:layout_margin="20dp"
+            android:background="@drawable/round_button_background"
+            android:padding="10dp"
             android:src="@drawable/call_pause" />
 
         <ImageView
@@ -231,7 +237,9 @@
             android:layout_below="@id/active_call_header"
             android:layout_alignParentLeft="true"
             android:layout_margin="20dp"
-            android:src="@drawable/switch_camera" />
+            android:background="@drawable/round_button_background"
+            android:padding="10dp"
+            android:src="@drawable/camera_switch" />
 
         <ImageView
             android:onClick="@{() -> viewModel.takeScreenshot()}"
@@ -243,6 +251,8 @@
             android:layout_below="@id/active_call_header"
             android:layout_toRightOf="@id/switch_camera"
             android:layout_margin="20dp"
+            android:background="@drawable/round_button_background"
+            android:padding="10dp"
             android:src="@drawable/call_screenshot" />
 
         <ImageView
