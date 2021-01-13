@@ -33,15 +33,16 @@
 
         <ImageView
             android:id="@+id/status_led"
-            android:src="@{viewModel.registrationStatusDrawable, default=@drawable/led_disconnected}"
+            android:background="@drawable/led_background"
+            android:src="@{viewModel.registrationStatusDrawable, default=@drawable/led_not_registered}"
             android:onClick="@{refreshClickListener}"
             android:contentDescription="@{viewModel.registrationStatusText}"
             android:layout_width="20dp"
             android:layout_height="wrap_content"
+            android:padding="2dp"
             android:layout_centerInParent="true"
             android:layout_toRightOf="@id/menu_button"
-            android:adjustViewBounds="true"
-            android:paddingLeft="5dp" />
+            android:adjustViewBounds="true" />
 
         <TextView
             android:text="@{viewModel.registrationStatusText, default=@string/status_not_connected}"
