@@ -99,14 +99,16 @@
             </LinearLayout>
 
             <ImageView
-                android:src="@{viewModel.defaultAccount.iconResource}"
+                android:background="@drawable/led_background"
+                android:src="@{viewModel.defaultAccount.iconResource, default=@drawable/led_not_registered}"
                 android:contentDescription="@{viewModel.defaultAccount.iconContentDescription}"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="10dp"
-                android:padding="5dp" />
+                android:layout_marginRight="10dp"
+                android:padding="2dp" />
 
             <View
                 android:layout_width="match_parent"

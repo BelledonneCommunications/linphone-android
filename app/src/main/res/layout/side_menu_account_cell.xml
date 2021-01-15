@@ -23,16 +23,19 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:paddingLeft="10dp" />
+            android:padding="2dp"
+            android:layout_marginLeft="10dp" />
 
         <ImageView
-            android:src="@{data.iconResource}"
+            android:src="@{data.iconResource, default=@drawable/led_not_registered}"
+            android:background="@drawable/led_background"
             android:contentDescription="@{data.iconContentDescription}"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:padding="5dp" />
+            android:layout_marginRight="10dp"
+            android:padding="2dp" />
 
         <View
             android:layout_width="match_parent"
