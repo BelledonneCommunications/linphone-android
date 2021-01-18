@@ -45,14 +45,15 @@ class ChatRoomViewModelFactory(private val chatRoom: ChatRoom) :
 class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactViewModelInterface {
     override val contact = MutableLiveData<Contact>()
 
-    override val displayName: String by lazy {
-        when {
-            chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt()) -> LinphoneUtils.getDisplayName(chatRoom.peerAddress)
-            chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) -> LinphoneUtils.getDisplayName(chatRoom.participants.firstOrNull()?.address ?: chatRoom.peerAddress)
-            chatRoom.hasCapability(ChatRoomCapabilities.Conference.toInt()) -> chatRoom.subject.orEmpty()
-            else -> chatRoom.peerAddress.asStringUriOnly()
+    override val displayName: String
+        get() {
+            return when {
+                chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt()) -> LinphoneUtils.getDisplayName(chatRoom.peerAddress)
+                chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) -> LinphoneUtils.getDisplayName(chatRoom.participants.firstOrNull()?.address ?: chatRoom.peerAddress)
+                chatRoom.hasCapability(ChatRoomCapabilities.Conference.toInt()) -> chatRoom.subject.orEmpty()
+                else -> chatRoom.peerAddress.asStringUriOnly()
+            }
         }
-    }
 
     override val securityLevel: ChatRoomSecurityLevel
         get() = chatRoom.securityLevel
@@ -172,6 +173,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactViewModelI
         override fun onConferenceJoined(chatRoom: ChatRoom, eventLog: EventLog) {
             contactLookup()
             updateSecurityIcon()
+            subject.value = chatRoom.subject
         }
 
         override fun onSecurityEvent(chatRoom: ChatRoom, eventLog: EventLog) {
