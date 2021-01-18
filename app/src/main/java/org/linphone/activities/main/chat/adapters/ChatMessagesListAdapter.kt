@@ -32,7 +32,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.main.chat.viewmodels.ChatMessageViewModel
 import org.linphone.activities.main.chat.viewmodels.EventViewModel
@@ -182,8 +181,7 @@ class ChatMessagesListAdapter(
                         popup.setOnMenuItemClickListener(this@ChatMessageViewHolder)
                         popup.inflate(R.menu.chat_message_menu)
 
-                        if ((!chatMessage.isOutgoing && !corePreferences.showIncomingChatMessagesDeliveryStatus) ||
-                            chatMessage.chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt()) ||
+                        if (chatMessage.chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) ||
                             chatMessage.state == ChatMessage.State.NotDelivered) { // No message id
                             popup.menu.removeItem(R.id.chat_message_menu_imdn_infos)
                         }
