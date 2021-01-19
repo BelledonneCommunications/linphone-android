@@ -26,6 +26,7 @@ import android.os.Bundle
 import android.view.Surface
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.navigation.ActivityNavigator
 import java.util.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -83,6 +84,11 @@ abstract class GenericActivity : AppCompatActivity() {
 
         // Remove service notification if it has been started by device boot
         coreContext.notificationsManager.stopForegroundNotificationIfPossible()
+    }
+
+    override fun finish() {
+        super.finish()
+        ActivityNavigator.applyPopAnimationsToPendingTransition(this)
     }
 
     fun isTablet(): Boolean {

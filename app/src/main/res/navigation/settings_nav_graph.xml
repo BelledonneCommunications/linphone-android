@@ -63,40 +63,31 @@
         android:label="TunnelSettingsFragment" />
     <action
         android:id="@+id/action_global_tunnelSettingsFragment"
-        app:destination="@id/tunnelSettingsFragment"
-        app:launchSingleTop="true" />
+        app:destination="@id/tunnelSettingsFragment" />
     <action
         android:id="@+id/action_global_videoSettingsFragment"
-        app:destination="@id/videoSettingsFragment"
-        app:launchSingleTop="true" />
+        app:destination="@id/videoSettingsFragment" />
     <action
         android:id="@+id/action_global_callSettingsFragment"
-        app:destination="@id/callSettingsFragment"
-        app:launchSingleTop="true" />
+        app:destination="@id/callSettingsFragment" />
     <action
         android:id="@+id/action_global_networkSettingsFragment"
-        app:destination="@id/networkSettingsFragment"
-        app:launchSingleTop="true" />
+        app:destination="@id/networkSettingsFragment" />
     <action
         android:id="@+id/action_global_chatSettingsFragment"
-        app:destination="@id/chatSettingsFragment"
-        app:launchSingleTop="true" />
+        app:destination="@id/chatSettingsFragment" />
     <action
         android:id="@+id/action_global_contactsSettingsFragment"
-        app:destination="@id/contactsSettingsFragment"
-        app:launchSingleTop="true" />
+        app:destination="@id/contactsSettingsFragment" />
     <action
         android:id="@+id/action_global_accountSettingsFragment"
-        app:destination="@id/accountSettingsFragment"
-        app:launchSingleTop="true" />
+        app:destination="@id/accountSettingsFragment" />
     <action
         android:id="@+id/action_global_advancedSettingsFragment"
-        app:destination="@id/advancedSettingsFragment"
-        app:launchSingleTop="true" />
+        app:destination="@id/advancedSettingsFragment" />
     <action
         android:id="@+id/action_global_audioSettingsFragment"
-        app:destination="@id/audioSettingsFragment"
-        app:launchSingleTop="true" />
+        app:destination="@id/audioSettingsFragment" />
     <fragment
         android:id="@+id/phoneAccountLinkingFragment"
         tools:layout="@layout/assistant_phone_account_linking_fragment"
@@ -124,10 +115,7 @@
         android:label="PhoneAccountValidationFragment" >
         <action
             android:id="@+id/action_phoneAccountValidationFragment_to_accountSettingsFragment"
-            app:destination="@id/accountSettingsFragment"
-            app:launchSingleTop="true"
-            app:popUpTo="@id/accountSettingsFragment"
-            app:popUpToInclusive="true" />
+            app:destination="@id/accountSettingsFragment" />
         <argument
             android:name="PhoneNumber"
             app:argType="string" />
