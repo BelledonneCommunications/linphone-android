@@ -20,6 +20,7 @@
 package org.linphone.activities.assistant.fragments
 
 import android.os.Bundle
+import androidx.activity.addCallback
 import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -29,20 +30,32 @@ import org.linphone.databinding.AssistantTopBarFragmentBinding
 class TopBarFragment : GenericFragment<AssistantTopBarFragmentBinding>() {
     override fun getLayoutId(): Int = R.layout.assistant_top_bar_fragment
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            goBack()
+        }
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         binding.lifecycleOwner = this
 
         binding.setBackClickListener {
-            if (!findNavController().popBackStack()) {
-                requireActivity().finish()
-                if (corePreferences.enableAnimations) {
-                    requireActivity().overridePendingTransition(
-                        R.anim.enter_left,
-                        R.anim.exit_right
-                    )
-                }
+            goBack()
+        }
+    }
+
+    private fun goBack() {
+        if (!findNavController().popBackStack()) {
+            requireActivity().finish()
+            if (corePreferences.enableAnimations) {
+                requireActivity().overridePendingTransition(
+                    R.anim.enter_left,
+                    R.anim.exit_right
+                )
             }
         }
     }

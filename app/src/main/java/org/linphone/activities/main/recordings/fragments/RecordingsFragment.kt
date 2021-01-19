@@ -57,15 +57,6 @@ class RecordingsFragment : MasterFragment<RecordingsFragmentBinding, RecordingsL
         _adapter = RecordingsListAdapter(listSelectionViewModel, viewLifecycleOwner)
         binding.recordingsList.adapter = adapter
 
-        // To ensure animation will be smooth
-        binding.recordingsList.apply {
-            postponeEnterTransition()
-            viewTreeObserver.addOnPreDrawListener {
-                startPostponedEnterTransition()
-                true
-            }
-        }
-
         val layoutManager = LinearLayoutManager(activity)
         binding.recordingsList.layoutManager = layoutManager
 

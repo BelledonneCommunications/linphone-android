@@ -21,8 +21,11 @@ package org.linphone.activities.main.fragments
 
 import android.app.Dialog
 import android.os.Bundle
+import android.view.View
+import androidx.core.view.doOnPreDraw
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import org.linphone.R
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
@@ -83,6 +86,21 @@ abstract class MasterFragment<T : ViewDataBinding, U : SelectionListAdapter<*, *
                 dialog.show()
             }
         })
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        // Do not use postponeEnterTransition when fragment is recreated from the back stack,
+        // otherwise the previous fragment will be visible until the animation starts
+        val resume = findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>("resume")?.value ?: false
+        if (!resume) {
+            findNavController().currentBackStackEntry?.savedStateHandle?.set("resume", true)
+            // To ensure animation will be smooth,
+            // wait until the adapter is loaded to display the fragment
+            postponeEnterTransition()
+            view.doOnPreDraw { startPostponedEnterTransition() }
+        }
+
+        super.onViewCreated(view, savedInstanceState)
     }
 
     private fun delete() {

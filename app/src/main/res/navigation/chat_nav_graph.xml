@@ -21,10 +21,7 @@
             app:destination="@id/groupInfoFragment" />
         <action
             android:id="@+id/action_detailChatRoomFragment_to_ephemeralFragment"
-            app:destination="@id/ephemeralFragment"
-            app:launchSingleTop="true"
-            app:popUpTo="@+id/ephemeralFragment"
-            app:popUpToInclusive="true" />
+            app:destination="@id/ephemeralFragment" />
     </fragment>
 
     <fragment
@@ -41,10 +38,7 @@
             app:destination="@id/groupInfoFragment" />
         <action
             android:id="@+id/action_chatRoomCreationFragment_to_detailChatRoomFragment"
-            app:destination="@id/detailChatRoomFragment"
-            app:launchSingleTop="true"
-            app:popUpTo="@+id/masterChatRoomsFragment"
-            app:popUpToInclusive="false" />
+            app:destination="@id/detailChatRoomFragment" />
     </fragment>
     <fragment
         android:id="@+id/devicesFragment"
@@ -58,16 +52,10 @@
         android:label="GroupInfoFragment" >
         <action
             android:id="@+id/action_groupInfoFragment_to_chatRoomCreationFragment"
-            app:destination="@id/chatRoomCreationFragment"
-            app:launchSingleTop="true"
-            app:popUpTo="@+id/chatRoomCreationFragment"
-            app:popUpToInclusive="true" />
+            app:destination="@id/chatRoomCreationFragment" />
         <action
             android:id="@+id/action_groupInfoFragment_to_detailChatRoomFragment"
-            app:destination="@id/detailChatRoomFragment"
-            app:launchSingleTop="true"
-            app:popUpTo="@+id/masterChatRoomsFragment"
-            app:popUpToInclusive="false" />
+            app:destination="@id/detailChatRoomFragment" />
     </fragment>
     <fragment
         android:id="@+id/imdnFragment"

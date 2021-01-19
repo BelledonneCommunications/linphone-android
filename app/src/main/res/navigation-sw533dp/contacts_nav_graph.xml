@@ -35,16 +35,10 @@
 
     <action
         android:id="@+id/action_global_detailContactFragment"
-        app:destination="@id/detailContactFragment"
-        app:launchSingleTop="true"
-        app:popUpTo="@+id/emptyContactFragment"
-        app:popUpToInclusive="true" />
+        app:destination="@id/detailContactFragment" />
 
     <action
         android:id="@+id/action_global_contactEditorFragment"
-        app:destination="@id/contactEditorFragment"
-        app:launchSingleTop="true"
-        app:popUpTo="@+id/contactEditorFragment"
-        app:popUpToInclusive="true" />
+        app:destination="@id/contactEditorFragment" />
 
 </navigation>
