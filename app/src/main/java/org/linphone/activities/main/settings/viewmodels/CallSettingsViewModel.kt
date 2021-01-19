@@ -59,6 +59,13 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
     }
     val encryptionMandatory = MutableLiveData<Boolean>()
 
+    val fullScreenListener = object : SettingListenerStub() {
+        override fun onBoolValueChanged(newValue: Boolean) {
+                prefs.fullScreenCallUI = newValue
+            }
+    }
+    val fullScreen = MutableLiveData<Boolean>()
+
     val overlayListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
             if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
@@ -146,6 +153,7 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
         initEncryptionList()
         encryptionMandatory.value = core.isMediaEncryptionMandatory
 
+        fullScreen.value = prefs.fullScreenCallUI
         overlay.value = prefs.showCallOverlay
         sipInfoDtmf.value = core.useInfoForDtmf
         rfc2833Dtmf.value = core.useRfc2833ForDtmf

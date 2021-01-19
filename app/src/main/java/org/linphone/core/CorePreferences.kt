@@ -206,6 +206,12 @@ class CorePreferences constructor(private val context: Context) {
             config.setBool("app", "call_right_away", value)
         }
 
+    var fullScreenCallUI: Boolean
+        get() = config.getBool("app", "full_screen_call", true)
+        set(value) {
+            config.setBool("app", "full_screen_call", value)
+        }
+
     /* Assistant */
 
     var firstStart: Boolean

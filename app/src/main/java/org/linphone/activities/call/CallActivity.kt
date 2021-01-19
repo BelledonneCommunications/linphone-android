@@ -20,11 +20,14 @@
 package org.linphone.activities.call
 
 import android.content.res.Configuration
+import android.content.res.Resources
 import android.os.Bundle
 import android.view.Gravity
 import android.view.MotionEvent
+import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import kotlinx.coroutines.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -83,7 +86,8 @@ class CallActivity : ProximitySensorActivity() {
                     previewY = v.y - event.rawY
                 }
                 MotionEvent.ACTION_MOVE -> {
-                    v.animate().x(event.rawX + previewX).y(event.rawY + previewY).setDuration(0).start()
+                    v.animate().x(event.rawX + previewX).y(event.rawY + previewY).setDuration(0)
+                        .start()
                 }
                 else -> {
                     v.performClick()
@@ -108,6 +112,20 @@ class CallActivity : ProximitySensorActivity() {
             finish()
         } else {
             coreContext.removeCallOverlay()
+        }
+
+        if (corePreferences.fullScreenCallUI) {
+            hideSystemUI()
+            window.decorView.setOnSystemUiVisibilityChangeListener { visibility ->
+                if (visibility and View.SYSTEM_UI_FLAG_FULLSCREEN == 0) {
+                    GlobalScope.launch {
+                        delay(2000)
+                        withContext(Dispatchers.Main) {
+                            hideSystemUI()
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -141,5 +159,22 @@ class CallActivity : ProximitySensorActivity() {
         } else {
             viewModel.isVideoPreviewResizedForPip.value = isInPictureInPictureMode
         }
+    }
+
+    override fun getTheme(): Resources.Theme {
+        val theme = super.getTheme()
+        if (corePreferences.fullScreenCallUI) {
+            theme.applyStyle(R.style.FullScreenTheme, true)
+        }
+        return theme
+    }
+
+    private fun hideSystemUI() {
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN or
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                View.SYSTEM_UI_FLAG_IMMERSIVE or
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
     }
 }
