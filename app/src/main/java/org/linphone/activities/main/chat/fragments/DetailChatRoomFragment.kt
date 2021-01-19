@@ -28,13 +28,15 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.provider.MediaStore
-import android.view.*
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import android.webkit.MimeTypeMap
+import androidx.activity.addCallback
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.view.menu.MenuPopupHelper
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
@@ -46,9 +48,6 @@ import org.linphone.activities.main.chat.ChatScrollListener
 import org.linphone.activities.main.chat.adapters.ChatMessagesListAdapter
 import org.linphone.activities.main.chat.viewmodels.*
 import org.linphone.activities.main.fragments.MasterFragment
-import org.linphone.activities.main.navigateToChatRooms
-import org.linphone.activities.main.navigateToContacts
-import org.linphone.activities.main.navigateToImdn
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.*
@@ -84,6 +83,14 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         super.onDestroyView()
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            navigateToChatRooms()
+        }
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -101,11 +108,16 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             arguments?.clear()
             val localAddress = Factory.instance().createAddress(localSipUri)
             val remoteSipAddress = Factory.instance().createAddress(remoteSipUri)
-            sharedViewModel.selectedChatRoom.value = coreContext.core.searchChatRoom(null, localAddress, remoteSipAddress, arrayOfNulls(0))
+            sharedViewModel.selectedChatRoom.value = coreContext.core.searchChatRoom(
+                null, localAddress, remoteSipAddress, arrayOfNulls(
+                    0
+                )
+            )
         }
 
         val chatRoom = sharedViewModel.selectedChatRoom.value
         chatRoom ?: return
+
         chatRoomAddress = chatRoom.peerAddress.asStringUriOnly()
         isSecure = chatRoom.currentParams.encryptionEnabled()
 
@@ -131,15 +143,6 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         // We need this adapter data observer to know when to scroll
         binding.chatMessagesList.adapter = adapter
         adapter.registerAdapterDataObserver(observer)
-
-        // To ensure animation will be smooth
-        binding.chatMessagesList.apply {
-            postponeEnterTransition()
-            viewTreeObserver.addOnPreDrawListener {
-                startPostponedEnterTransition()
-                true
-            }
-        }
 
         val layoutManager = LinearLayoutManager(activity)
         layoutManager.stackFromEnd = true
@@ -223,7 +226,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         })
 
         binding.setBackClickListener {
-            findNavController().popBackStack()
+            navigateToChatRooms()
         }
         binding.back.visibility = if (resources.getBoolean(R.bool.isTablet)) View.INVISIBLE else View.VISIBLE
 
@@ -249,7 +252,12 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 pickFile()
             } else {
                 Log.i("[Chat Room] Asking for READ_EXTERNAL_STORAGE and CAMERA permissions")
-                requestPermissions(arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.CAMERA), 0)
+                requestPermissions(
+                    arrayOf(
+                        android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                        android.Manifest.permission.CAMERA
+                    ), 0
+                )
             }
         }
 
@@ -330,7 +338,10 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             lifecycleScope.launch {
-                val fileToUploadPath = ImageUtils.getImageFilePathFromPickerIntent(data, chatSendingViewModel.temporaryFileUploadPath)
+                val fileToUploadPath = ImageUtils.getImageFilePathFromPickerIntent(
+                    data,
+                    chatSendingViewModel.temporaryFileUploadPath
+                )
                 if (fileToUploadPath != null) {
                     chatSendingViewModel.addAttachment(fileToUploadPath)
                 }
@@ -353,7 +364,9 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 dialog.dismiss()
             }
 
-            val okLabel = if (viewModel.oneParticipantOneDevice) getString(R.string.dialog_call) else getString(R.string.dialog_ok)
+            val okLabel = if (viewModel.oneParticipantOneDevice) getString(R.string.dialog_call) else getString(
+                R.string.dialog_ok
+            )
             dialogViewModel.showOkButton({ doNotAskAgain ->
                 if (doNotAskAgain) corePreferences.limeSecurityPopupEnabled = false
 
@@ -456,7 +469,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
     }
 
     private fun scrollToBottom() {
-        if (adapter.itemCount > 0) {
+        if (_adapter != null && adapter.itemCount > 0) {
             binding.chatMessagesList.scrollToPosition(adapter.itemCount - 1)
         }
     }
@@ -489,7 +502,10 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
         val chooserIntent =
             Intent.createChooser(galleryIntent, getString(R.string.chat_message_pick_file_dialog))
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(arrayOf<Parcelable>()))
+        chooserIntent.putExtra(
+            Intent.EXTRA_INITIAL_INTENTS,
+            cameraIntents.toArray(arrayOf<Parcelable>())
+        )
 
         startActivityForResult(chooserIntent, 0)
     }
@@ -524,7 +540,11 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         } catch (anfe: ActivityNotFoundException) {
             Log.e("[Chat Message] Couldn't find an activity to handle MIME type: $type")
 
-            val dialogViewModel = DialogViewModel(getString(R.string.dialog_try_open_file_as_text_body), getString(R.string.dialog_try_open_file_as_text_title))
+            val dialogViewModel = DialogViewModel(
+                getString(R.string.dialog_try_open_file_as_text_body), getString(
+                    R.string.dialog_try_open_file_as_text_title
+                )
+            )
             val dialog = DialogUtils.getDialog(requireContext(), dialogViewModel)
 
             dialogViewModel.showCancelButton {

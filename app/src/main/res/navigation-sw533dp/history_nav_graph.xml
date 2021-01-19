@@ -19,9 +19,6 @@
 
     <action
         android:id="@+id/action_global_detailCallLogFragment"
-        app:destination="@id/detailCallLogFragment"
-        app:launchSingleTop="true"
-        app:popUpTo="@+id/emptyFragment"
-        app:popUpToInclusive="true" />
+        app:destination="@id/detailCallLogFragment" />
 
 </navigation>

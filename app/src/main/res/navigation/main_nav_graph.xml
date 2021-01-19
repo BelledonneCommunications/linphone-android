@@ -12,23 +12,16 @@
         tools:layout="@layout/chat_room_master_fragment" >
         <action
             android:id="@+id/action_masterChatRoomsFragment_to_dialerFragment"
-            app:destination="@id/dialerFragment"
-            app:popUpTo="@+id/dialerFragment"
-            app:popUpToInclusive="true" />
+            app:destination="@id/dialerFragment" />
         <action
             android:id="@+id/action_masterChatRoomsFragment_to_masterCallLogsFragment"
-            app:destination="@id/masterCallLogsFragment"
-            app:popUpTo="@+id/masterCallLogsFragment"
-            app:popUpToInclusive="true" />
+            app:destination="@id/masterCallLogsFragment" />
         <action
             android:id="@+id/action_masterChatRoomsFragment_to_masterContactsFragment"
-            app:destination="@id/masterContactsFragment"
-            app:popUpTo="@+id/masterContactsFragment"
-            app:popUpToInclusive="true" />
+            app:destination="@id/masterContactsFragment" />
         <action
             android:id="@+id/action_masterChatRoomsFragment_to_detailChatRoomFragment"
-            app:destination="@id/chat_nav_graph.xml"
-            app:launchSingleTop="true" />
+            app:destination="@id/chat_nav_graph.xml" />
         <action
             android:id="@+id/action_masterChatRoomsFragment_to_chatRoomCreationFragment"
             app:destination="@id/chatRoomCreationFragment" />
@@ -56,27 +49,19 @@
         tools:layout="@layout/contact_master_fragment" >
         <action
             android:id="@+id/action_masterContactsFragment_to_masterCallLogsFragment"
-            app:destination="@id/masterCallLogsFragment"
-            app:popUpTo="@+id/masterCallLogsFragment"
-            app:popUpToInclusive="true" />
+            app:destination="@id/masterCallLogsFragment" />
         <action
             android:id="@+id/action_masterContactsFragment_to_dialerFragment"
-            app:destination="@id/dialerFragment"
-            app:popUpTo="@+id/dialerFragment"
-            app:popUpToInclusive="true" />
+            app:destination="@id/dialerFragment" />
         <action
             android:id="@+id/action_masterContactsFragment_to_masterChatRoomsFragment"
-            app:destination="@id/masterChatRoomsFragment"
-            app:popUpTo="@+id/masterChatRoomsFragment"
-            app:popUpToInclusive="true" />
+            app:destination="@id/masterChatRoomsFragment" />
         <action
             android:id="@+id/action_masterContactsFragment_to_detailContactFragment"
-            app:destination="@id/contacts_nav_graph.xml"
-            app:launchSingleTop="true" />
+            app:destination="@id/contacts_nav_graph.xml" />
         <action
             android:id="@+id/action_masterContactsFragment_to_contactEditorFragment"
-            app:destination="@id/contactEditorFragment"
-            app:launchSingleTop="false" />
+            app:destination="@id/contactEditorFragment" />
         <argument
             android:name="id"
             app:argType="string"
@@ -102,19 +87,13 @@
         tools:layout="@layout/history_master_fragment" >
         <action
             android:id="@+id/action_masterCallLogsFragment_to_dialerFragment"
-            app:destination="@id/dialerFragment"
-            app:popUpTo="@+id/dialerFragment"
-            app:popUpToInclusive="true" />
+            app:destination="@id/dialerFragment" />
         <action
             android:id="@+id/action_masterCallLogsFragment_to_masterContactsFragment"
-            app:destination="@id/masterContactsFragment"
-            app:popUpTo="@+id/masterContactsFragment"
-            app:popUpToInclusive="true" />
+            app:destination="@id/masterContactsFragment" />
         <action
             android:id="@+id/action_masterCallLogsFragment_to_masterChatRoomsFragment"
-            app:destination="@id/masterChatRoomsFragment"
-            app:popUpTo="@+id/masterChatRoomsFragment"
-            app:popUpToInclusive="true" />
+            app:destination="@id/masterChatRoomsFragment" />
         <action
             android:id="@+id/action_masterCallLogsFragment_to_detailCallLogFragment"
             app:destination="@id/history_nav_graph.xml" />
@@ -126,19 +105,13 @@
         tools:layout="@layout/dialer_fragment" >
         <action
             android:id="@+id/action_dialerFragment_to_masterCallLogsFragment"
-            app:destination="@id/masterCallLogsFragment"
-            app:popUpTo="@id/masterCallLogsFragment"
-            app:popUpToInclusive="true"/>
+            app:destination="@id/masterCallLogsFragment"/>
         <action
             android:id="@+id/action_dialerFragment_to_masterContactsFragment"
-            app:destination="@id/masterContactsFragment"
-            app:popUpTo="@+id/masterContactsFragment"
-            app:popUpToInclusive="true" />
+            app:destination="@id/masterContactsFragment" />
         <action
             android:id="@+id/action_dialerFragment_to_masterChatRoomsFragment"
-            app:destination="@id/masterChatRoomsFragment"
-            app:popUpTo="@+id/masterChatRoomsFragment"
-            app:popUpToInclusive="true" />
+            app:destination="@id/masterChatRoomsFragment" />
         <argument
             android:name="Transfer"
             app:argType="boolean"
@@ -167,16 +140,10 @@
             android:defaultValue="false" />
         <action
             android:id="@+id/action_chatRoomCreationFragment_to_groupInfoFragment"
-            app:destination="@id/groupInfoFragment"
-            app:launchSingleTop="true"
-            app:popUpTo="@+id/groupInfoFragment"
-            app:popUpToInclusive="true" />
+            app:destination="@id/groupInfoFragment" />
         <action
             android:id="@+id/action_chatRoomCreationFragment_to_detailChatRoomFragment"
-            app:destination="@id/chat_nav_graph.xml"
-            app:launchSingleTop="true"
-            app:popUpTo="@+id/masterChatRoomsFragment"
-            app:popUpToInclusive="false" />
+            app:destination="@id/chat_nav_graph.xml" />
     </fragment>
     <fragment
         android:id="@+id/groupInfoFragment"
@@ -185,16 +152,10 @@
         android:label="GroupInfoFragment" >
         <action
             android:id="@+id/action_groupInfoFragment_to_detailChatRoomFragment"
-            app:destination="@id/chat_nav_graph.xml"
-            app:launchSingleTop="true"
-            app:popUpTo="@+id/masterChatRoomsFragment"
-            app:popUpToInclusive="false" />
+            app:destination="@id/chat_nav_graph.xml" />
         <action
             android:id="@+id/action_groupInfoFragment_to_chatRoomCreationFragment"
-            app:destination="@id/chatRoomCreationFragment"
-            app:launchSingleTop="true"
-            app:popUpTo="@+id/chatRoomCreationFragment"
-            app:popUpToInclusive="true" />
+            app:destination="@id/chatRoomCreationFragment" />
     </fragment>
     <fragment
         android:id="@+id/aboutFragment"
@@ -203,10 +164,7 @@
         android:label="AboutFragment" />
     <action
         android:id="@+id/action_global_aboutFragment"
-        app:destination="@id/aboutFragment"
-        app:launchSingleTop="true"
-        app:popUpTo="@+id/aboutFragment"
-        app:popUpToInclusive="true" />
+        app:destination="@id/aboutFragment" />
     <fragment
         android:id="@+id/recordingsFragment"
         android:name="org.linphone.activities.main.recordings.fragments.RecordingsFragment"
@@ -214,10 +172,7 @@
         android:label="RecordingsFragment" />
     <action
         android:id="@+id/action_global_recordingsFragment"
-        app:destination="@id/recordingsFragment"
-        app:launchSingleTop="true"
-        app:popUpTo="@+id/recordingsFragment"
-        app:popUpToInclusive="true" />
+        app:destination="@id/recordingsFragment" />
     <fragment
         android:id="@+id/settingsFragment"
         android:name="org.linphone.activities.main.settings.fragments.SettingsFragment"
@@ -225,50 +180,31 @@
         android:label="SettingsFragment" >
         <action
             android:id="@+id/action_settingsFragment_to_chatSettingsFragment"
-            app:destination="@id/chatSettingsFragment"
-            app:popUpTo="@+id/settingsFragment"
-            app:popUpToInclusive="false" />
+            app:destination="@id/chatSettingsFragment" />
         <action
             android:id="@+id/action_settingsFragment_to_callSettingsFragment"
-            app:destination="@id/callSettingsFragment"
-            app:popUpTo="@+id/settingsFragment"
-            app:popUpToInclusive="false" />
+            app:destination="@id/callSettingsFragment" />
         <action
             android:id="@+id/action_settingsFragment_to_advancedSettingsFragment"
-            app:destination="@id/advancedSettingsFragment"
-            app:popUpTo="@+id/settingsFragment"
-            app:popUpToInclusive="false" />
+            app:destination="@id/advancedSettingsFragment" />
         <action
             android:id="@+id/action_settingsFragment_to_accountSettingsFragment"
-            app:destination="@id/accountSettingsFragment"
-            app:launchSingleTop="true"
-            app:popUpTo="@+id/accountSettingsFragment"
-            app:popUpToInclusive="true" />
+            app:destination="@id/accountSettingsFragment" />
         <action
             android:id="@+id/action_settingsFragment_to_audioSettingsFragment"
-            app:destination="@id/audioSettingsFragment"
-            app:popUpTo="@+id/settingsFragment"
-            app:popUpToInclusive="false" />
+            app:destination="@id/audioSettingsFragment" />
         <action
             android:id="@+id/action_settingsFragment_to_contactsSettingsFragment"
-            app:destination="@id/contactsSettingsFragment"
-            app:popUpTo="@+id/settingsFragment"
-            app:popUpToInclusive="false" />
+            app:destination="@id/contactsSettingsFragment" />
         <action
             android:id="@+id/action_settingsFragment_to_videoSettingsFragment"
-            app:destination="@id/videoSettingsFragment"
-            app:popUpTo="@+id/settingsFragment"
-            app:popUpToInclusive="false" />
+            app:destination="@id/videoSettingsFragment" />
         <action
             android:id="@+id/action_settingsFragment_to_networkSettingsFragment"
-            app:destination="@id/networkSettingsFragment"
-            app:popUpTo="@+id/settingsFragment"
-            app:popUpToInclusive="false" />
+            app:destination="@id/networkSettingsFragment" />
         <action
             android:id="@+id/action_settingsFragment_to_tunnelSettingsFragment"
-            app:destination="@id/tunnelSettingsFragment"
-            app:popUpTo="@+id/settingsFragment"
-            app:popUpToInclusive="false" />
+            app:destination="@id/tunnelSettingsFragment" />
         <deepLink
             android:id="@+id/settingsDeepLink"
             app:uri="linphone-android://settings/{Identity}"
@@ -276,10 +212,7 @@
     </fragment>
     <action
         android:id="@+id/action_global_settingsFragment"
-        app:destination="@id/settingsFragment"
-        app:launchSingleTop="true"
-        app:popUpTo="@+id/settingsFragment"
-        app:popUpToInclusive="true" />
+        app:destination="@id/settingsFragment" />
     <include app:graph="@navigation/settings_nav_graph" />
     <fragment
         android:id="@+id/accountSettingsFragment"
@@ -339,16 +272,10 @@
         android:label="TunnelSettingsFragment" />
     <action
         android:id="@+id/action_global_masterChatRoomsFragment"
-        app:destination="@id/masterChatRoomsFragment"
-        app:launchSingleTop="true"
-        app:popUpTo="@+id/masterChatRoomsFragment"
-        app:popUpToInclusive="true" />
+        app:destination="@id/masterChatRoomsFragment" />
     <action
         android:id="@+id/action_global_dialerFragment"
-        app:destination="@id/dialerFragment"
-        app:launchSingleTop="true"
-        app:popUpTo="@+id/dialerFragment"
-        app:popUpToInclusive="true" />
+        app:destination="@id/dialerFragment" />
     <fragment
         android:id="@+id/phoneAccountLinkingFragment"
         tools:layout="@layout/assistant_phone_account_linking_fragment"
@@ -376,10 +303,7 @@
         android:label="PhoneAccountValidationFragment" >
         <action
             android:id="@+id/action_phoneAccountValidationFragment_to_accountSettingsFragment"
-            app:destination="@id/accountSettingsFragment"
-            app:launchSingleTop="true"
-            app:popUpTo="@id/accountSettingsFragment"
-            app:popUpToInclusive="true" />
+            app:destination="@id/accountSettingsFragment" />
         <argument
             android:name="PhoneNumber"
             app:argType="string" />
