@@ -34,6 +34,7 @@ fun LoggingWrapper.logWarn(message: String, thr: Throwable? = null) {
     } else {
         message
     }
+    org.linphone.core.tools.Log.w(logMessage)
     Log.w(this.loggerTag, logMessage)
 }
 
@@ -43,5 +44,6 @@ fun LoggingWrapper.logError(message: String, thr: Throwable? = null) {
     } else {
         message
     }
+    org.linphone.core.tools.Log.e(logMessage)
     Log.e(this.loggerTag, logMessage)
 }
