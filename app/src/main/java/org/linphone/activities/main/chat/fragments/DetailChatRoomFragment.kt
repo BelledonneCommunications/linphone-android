@@ -57,7 +57,7 @@ import org.linphone.databinding.ChatRoomDetailFragmentBinding
 import org.linphone.utils.*
 import org.linphone.utils.Event
 
-class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, ChatMessagesListAdapter>() {
+class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, ChatMessagesListAdapter>(), LoggingWrapper {
     private lateinit var viewModel: ChatRoomViewModel
     private lateinit var chatSendingViewModel: ChatMessageSendingViewModel
     private lateinit var listViewModel: ChatMessagesListViewModel
@@ -522,7 +522,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         try {
             startActivity(intent)
         } catch (anfe: ActivityNotFoundException) {
-            Log.e("[Chat Message] Couldn't find an activity to handle MIME type: $type")
+            logError("[Chat Message] Couldn't find an activity to handle MIME type: $type", anfe)
 
             val dialogViewModel = DialogViewModel(getString(R.string.dialog_try_open_file_as_text_body), getString(R.string.dialog_try_open_file_as_text_title))
             val dialog = DialogUtils.getDialog(requireContext(), dialogViewModel)
@@ -537,7 +537,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 try {
                     startActivity(intent)
                 } catch (anfe: ActivityNotFoundException) {
-                    Log.e("[Chat Message] Couldn't find an activity to handle text/plain MIME type")
+                    logError("[Chat Message] Couldn't find an activity to handle text/plain MIME type", anfe)
                     val activity = requireActivity() as MainActivity
                     activity.showSnackBar(R.string.chat_room_cant_open_file_no_app_found)
                 }

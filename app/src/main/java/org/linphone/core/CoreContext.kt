@@ -45,11 +45,10 @@ import org.linphone.contact.ContactsManager
 import org.linphone.core.tools.Log
 import org.linphone.mediastream.Version
 import org.linphone.notifications.NotificationsManager
-import org.linphone.utils.AppUtils
+import org.linphone.utils.*
 import org.linphone.utils.Event
-import org.linphone.utils.LinphoneUtils
 
-class CoreContext(val context: Context, coreConfig: Config) {
+class CoreContext(val context: Context, coreConfig: Config): LoggingWrapper {
     var stopped = false
     val core: Core
     val handler: Handler = Handler(Looper.getMainLooper())
@@ -305,7 +304,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
         val f = File(userCertsPath)
         if (!f.exists()) {
             if (!f.mkdir()) {
-                Log.e("[Context] $userCertsPath can't be created.")
+                logError("[Context] $userCertsPath can't be created.")
             }
         }
         core.userCertificatesPath = userCertsPath
@@ -357,7 +356,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
     fun transferCallTo(addressToCall: String) {
         val currentCall = core.currentCall ?: core.calls.first()
         if (currentCall == null) {
-            Log.e("[Context] Couldn't find a call to transfer")
+            logError("[Context] Couldn't find a call to transfer")
         } else {
             Log.i("[Context] Transferring current call to $addressToCall")
             currentCall.transfer(addressToCall)
@@ -377,7 +376,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
 
         val address: Address? = core.interpretUrl(stringAddress)
         if (address == null) {
-            Log.e("[Context] Failed to parse $stringAddress, abort outgoing call")
+            logError("[Context] Failed to parse $stringAddress, abort outgoing call")
             callErrorMessageResourceId.value = Event(R.string.call_error_network_unreachable)
             return
         }
@@ -387,7 +386,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
 
     fun startCall(address: Address, forceZRTP: Boolean = false) {
         if (!core.isNetworkReachable) {
-            Log.e("[Context] Network unreachable, abort outgoing call")
+            logError("[Context] Network unreachable, abort outgoing call")
             callErrorMessageResourceId.value = Event(R.string.call_error_network_unreachable)
             return
         }
@@ -397,7 +396,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
             params?.mediaEncryption = MediaEncryption.ZRTP
         }
         if (LinphoneUtils.checkIfNetworkHasLowBandwidth(context)) {
-            Log.w("[Context] Enabling low bandwidth mode!")
+            logWarn("[Context] Enabling low bandwidth mode!")
             params?.enableLowBandwidth(true)
         }
         params?.recordFile = LinphoneUtils.getRecordingFilePathForAddress(address)
@@ -427,7 +426,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
         } else {
             val call = core.currentCall
             if (call == null) {
-                Log.w("[Context] Switching camera while not in call")
+                logWarn("[Context] Switching camera while not in call")
                 return
             }
             call.update(null)
@@ -545,6 +544,6 @@ class CoreContext(val context: Context, coreConfig: Config) {
                 return
             }
         }
-        Log.w("[Context] Didn't find any bluetooth audio device, keeping default audio route")
+        logWarn("[Context] Didn't find any bluetooth audio device, keeping default audio route")
     }
 }
