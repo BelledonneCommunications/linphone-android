@@ -165,17 +165,17 @@ internal fun TabsFragment.navigateToCallHistory() {
         R.id.masterContactsFragment -> findNavController().navigate(
             R.id.action_masterContactsFragment_to_masterCallLogsFragment,
             null,
-            getLeftTopToRightBottomNoPopAnimationNavOptions(R.id.masterCallLogsFragment)
+            getLeftTopToRightBottomAnimationNavOptions(R.id.masterCallLogsFragment)
         )
         R.id.dialerFragment -> findNavController().navigate(
             R.id.action_dialerFragment_to_masterCallLogsFragment,
             null,
-            getLeftTopToRightBottomNoPopAnimationNavOptions(R.id.masterCallLogsFragment)
+            getLeftTopToRightBottomAnimationNavOptions(R.id.masterCallLogsFragment)
         )
         R.id.masterChatRoomsFragment -> findNavController().navigate(
             R.id.action_masterChatRoomsFragment_to_masterCallLogsFragment,
             null,
-            getLeftTopToRightBottomNoPopAnimationNavOptions(R.id.masterCallLogsFragment)
+            getLeftTopToRightBottomAnimationNavOptions(R.id.masterCallLogsFragment)
         )
     }
 }
@@ -185,17 +185,17 @@ internal fun TabsFragment.navigateToContacts() {
         R.id.masterCallLogsFragment -> findNavController().navigate(
             R.id.action_masterCallLogsFragment_to_masterContactsFragment,
             null,
-            getRightBottomToLeftTopNoPopAnimationNavOptions(R.id.masterContactsFragment)
+            getRightBottomToLeftTopAnimationNavOptions(R.id.masterContactsFragment)
         )
         R.id.dialerFragment -> findNavController().navigate(
             R.id.action_dialerFragment_to_masterContactsFragment,
             null,
-            getLeftTopToRightBottomNoPopAnimationNavOptions(R.id.masterContactsFragment)
+            getLeftTopToRightBottomAnimationNavOptions(R.id.masterContactsFragment)
         )
         R.id.masterChatRoomsFragment -> findNavController().navigate(
             R.id.action_masterChatRoomsFragment_to_masterContactsFragment,
             null,
-            getLeftTopToRightBottomNoPopAnimationNavOptions(R.id.masterContactsFragment)
+            getLeftTopToRightBottomAnimationNavOptions(R.id.masterContactsFragment)
         )
     }
 }
@@ -205,17 +205,17 @@ internal fun TabsFragment.navigateToDialer() {
         R.id.masterCallLogsFragment -> findNavController().navigate(
             R.id.action_masterCallLogsFragment_to_dialerFragment,
             null,
-            getRightBottomToLeftTopNoPopAnimationNavOptions(R.id.dialerFragment)
+            getRightBottomToLeftTopAnimationNavOptions(R.id.dialerFragment)
         )
         R.id.masterContactsFragment -> findNavController().navigate(
             R.id.action_masterContactsFragment_to_dialerFragment,
             null,
-            getRightBottomToLeftTopNoPopAnimationNavOptions(R.id.dialerFragment)
+            getRightBottomToLeftTopAnimationNavOptions(R.id.dialerFragment)
         )
         R.id.masterChatRoomsFragment -> findNavController().navigate(
             R.id.action_masterChatRoomsFragment_to_dialerFragment,
             null,
-            getLeftTopToRightBottomNoPopAnimationNavOptions(R.id.dialerFragment)
+            getLeftTopToRightBottomAnimationNavOptions(R.id.dialerFragment)
         )
     }
 }
@@ -225,17 +225,17 @@ internal fun TabsFragment.navigateToChatRooms() {
         R.id.masterCallLogsFragment -> findNavController().navigate(
             R.id.action_masterCallLogsFragment_to_masterChatRoomsFragment,
             null,
-            getRightBottomToLeftTopNoPopAnimationNavOptions(R.id.masterChatRoomsFragment)
+            getRightBottomToLeftTopAnimationNavOptions(R.id.masterChatRoomsFragment)
         )
         R.id.masterContactsFragment -> findNavController().navigate(
             R.id.action_masterContactsFragment_to_masterChatRoomsFragment,
             null,
-            getRightBottomToLeftTopNoPopAnimationNavOptions(R.id.masterChatRoomsFragment)
+            getRightBottomToLeftTopAnimationNavOptions(R.id.masterChatRoomsFragment)
         )
         R.id.dialerFragment -> findNavController().navigate(
             R.id.action_dialerFragment_to_masterChatRoomsFragment,
             null,
-            getRightBottomToLeftTopNoPopAnimationNavOptions(R.id.masterChatRoomsFragment)
+            getRightBottomToLeftTopAnimationNavOptions(R.id.masterChatRoomsFragment)
         )
     }
 }
