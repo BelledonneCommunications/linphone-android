@@ -477,6 +477,8 @@
     <string name="call_settings_media_encryption_dtls">DTLS</string>
     <string name="call_settings_encryption_mandatory_title">Media encryption mandatory</string>
     <string name="call_settings_encryption_mandatory_summary"></string>
+    <string name="call_settings_full_screen_title">Full screen app while in call</string>
+    <string name="call_settings_full_screen_summary">Hides status and navigation bars</string>
     <string name="call_settings_overlay_title">Overlay call notification</string>
     <string name="call_settings_overlay_summary">You will be asked to grant overlay permission</string>
     <string name="call_settings_sipinfo_dtmf_title">Send out-band DTMFs (SIP INFO)</string>
