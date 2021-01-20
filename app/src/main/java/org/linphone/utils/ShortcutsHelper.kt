@@ -167,6 +167,15 @@ class ShortcutsHelper(val context: Context) {
                     }
                     subject = contact?.fullName ?: LinphoneUtils.getDisplayName(chatRoom.peerAddress)
                     icon = contact?.getPerson()?.icon ?: IconCompat.createWithResource(context, R.drawable.avatar)
+                } else if (chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) && chatRoom.participants.isNotEmpty()) {
+                    val address = chatRoom.participants.first().address
+                    val contact =
+                        coreContext.contactsManager.findContactByAddress(address)
+                    if (contact != null) {
+                        personsList.add(contact.getPerson())
+                    }
+                    subject = contact?.fullName ?: LinphoneUtils.getDisplayName(address)
+                    icon = contact?.getPerson()?.icon ?: IconCompat.createWithResource(context, R.drawable.avatar)
                 } else {
                     for (participant in chatRoom.participants) {
                         val contact =
@@ -198,7 +207,7 @@ class ShortcutsHelper(val context: Context) {
                     .setPersons(persons)
                     .setCategories(categories)
                     .setIntent(intent)
-                    .setLongLived(Version.sdkAboveOrEqual(30)) // TODO Use Android R API code
+                    .setLongLived(Version.sdkAboveOrEqual(Version.API30_ANDROID_11))
                     .build().toShortcutInfo()
             } catch (e: Exception) {
                 Log.e("[Shortcuts Helper] ShortcutInfo.Builder exception: $e")
