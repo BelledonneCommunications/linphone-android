@@ -89,14 +89,6 @@
 
                 <include
                     layout="@layout/settings_widget_switch"
-                    linphone:title="@{@string/network_settings_legacy_push_notification_format_title}"
-                    linphone:subtitle="@{@string/network_settings_legacy_push_notification_format_summary}"
-                    linphone:listener="@{viewModel.legacyPushNotificationFormatListener}"
-                    linphone:checked="@={viewModel.legacyPushNotificationFormat}"
-                    linphone:enabled="@{viewModel.pushNotificationsAvailable}"/>
-
-                <include
-                    layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/network_settings_random_ports_title}"
                     linphone:subtitle="@{@string/network_settings_random_ports_summary}"
                     linphone:listener="@{viewModel.randomPortsListener}"

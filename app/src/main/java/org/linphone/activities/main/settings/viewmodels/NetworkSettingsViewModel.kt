@@ -46,13 +46,6 @@ class NetworkSettingsViewModel : GenericSettingsViewModel() {
     val pushNotifications = MutableLiveData<Boolean>()
     val pushNotificationsAvailable = MutableLiveData<Boolean>()
 
-    val legacyPushNotificationFormatListener = object : SettingListenerStub() {
-        override fun onBoolValueChanged(newValue: Boolean) {
-            prefs.useLegacyPushNotificationFormat = newValue
-        }
-    }
-    val legacyPushNotificationFormat = MutableLiveData<Boolean>()
-
     val randomPortsListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
             val port = if (newValue) -1 else 5060
@@ -78,7 +71,6 @@ class NetworkSettingsViewModel : GenericSettingsViewModel() {
         allowIpv6.value = core.ipv6Enabled()
         pushNotifications.value = core.isPushNotificationEnabled
         pushNotificationsAvailable.value = core.isPushNotificationAvailable
-        legacyPushNotificationFormat.value = prefs.useLegacyPushNotificationFormat
         randomPorts.value = getTransportPort() == -1
         sipPort.value = getTransportPort()
     }
