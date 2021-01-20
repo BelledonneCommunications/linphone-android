@@ -91,7 +91,8 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactViewModelI
         get() = chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt())
 
     val peerSipUri: String
-        get() = chatRoom.peerAddress.asStringUriOnly()
+        get() = if (oneToOneChatRoom && !basicChatRoom) chatRoom.participants.first().address.asStringUriOnly()
+                else chatRoom.peerAddress.asStringUriOnly()
 
     val oneParticipantOneDevice: Boolean
         get() {

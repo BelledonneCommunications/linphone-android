@@ -254,12 +254,6 @@ class CorePreferences constructor(private val context: Context) {
             config.setInt("app", "version_check_url_last_timestamp", value)
         }
 
-    var useLegacyPushNotificationFormat: Boolean
-        get() = config.getBool("net", "use_legacy_push_notification_params", false)
-        set(value) {
-            config.setBool("net", "use_legacy_push_notification_params", value)
-        }
-
     var defaultAccountAvatarPath: String?
         get() = config.getString("app", "default_avatar_path", null)
         set(value) {
