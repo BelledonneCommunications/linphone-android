@@ -55,6 +55,8 @@ open class CallViewModel(val call: Call) : GenericContactViewModel(call.remoteAd
 
     val isPaused = MutableLiveData<Boolean>()
 
+    val isOutgoingEarlyMedia = MutableLiveData<Boolean>()
+
     val callEndedEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -70,6 +72,7 @@ open class CallViewModel(val call: Call) : GenericContactViewModel(call.remoteAd
             if (call != this@CallViewModel.call) return
 
             isPaused.value = state == Call.State.Paused
+            isOutgoingEarlyMedia.value = state == Call.State.OutgoingEarlyMedia
 
             if (state == Call.State.End || state == Call.State.Released || state == Call.State.Error) {
                 timer?.cancel()
