@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:bind="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View" />
@@ -272,14 +271,14 @@
         <include
             android:id="@+id/primary_buttons_row"
             layout="@layout/call_primary_buttons"
-            bind:viewModel="@{controlsViewModel}"
+            tools:viewModel="@{controlsViewModel}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"/>
 
         <include
             layout="@layout/numpad"
-            bind:keyListener="@{controlsViewModel.onKeyClick}"
+            tools:keyListener="@{controlsViewModel.onKeyClick}"
             android:layout_above="@id/primary_buttons_row"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -288,7 +287,7 @@
 
         <include
             layout="@layout/call_secondary_buttons"
-            bind:viewModel="@{controlsViewModel}"
+            tools:viewModel="@{controlsViewModel}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/primary_buttons_row" />

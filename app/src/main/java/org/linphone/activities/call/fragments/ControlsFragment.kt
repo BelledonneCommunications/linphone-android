@@ -176,21 +176,7 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
     override fun onStart() {
         super.onStart()
 
-        val metrics = DisplayMetrics()
-        val display: Display = requireActivity().getWindowManager().getDefaultDisplay()
-        display.getRealMetrics(metrics)
-        val screenWidth = metrics.widthPixels.toFloat()
-        numpadAnimator = ValueAnimator.ofFloat(screenWidth, 0f).apply {
-            addUpdateListener {
-                val value = it.animatedValue as Float
-                view?.findViewById<FlexboxLayout>(R.id.numpad)?.translationX = -value
-                duration = if (corePreferences.enableAnimations) 500 else 0
-            }
-        }
-        // Hide the numpad here as we can't set the translationX property on include tag in layout
-        if (controlsViewModel.numpadVisibility.value == false) {
-            view?.findViewById<FlexboxLayout>(R.id.numpad)?.translationX = -screenWidth
-        }
+        initNumpadLayout()
     }
 
     override fun onRequestPermissionsResult(
@@ -253,5 +239,23 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
         }, getString(R.string.dialog_accept))
 
         dialog?.show()
+    }
+
+    private fun initNumpadLayout() {
+        val metrics = DisplayMetrics()
+        val display: Display = requireActivity().windowManager.defaultDisplay
+        display.getRealMetrics(metrics)
+        val screenWidth = metrics.widthPixels.toFloat()
+        numpadAnimator = ValueAnimator.ofFloat(screenWidth, 0f).apply {
+            addUpdateListener {
+                val value = it.animatedValue as Float
+                view?.findViewById<FlexboxLayout>(R.id.numpad)?.translationX = -value
+                duration = if (corePreferences.enableAnimations) 500 else 0
+            }
+        }
+        // Hide the numpad here as we can't set the translationX property on include tag in layout
+        if (controlsViewModel.numpadVisibility.value == false) {
+            view?.findViewById<FlexboxLayout>(R.id.numpad)?.translationX = -screenWidth
+        }
     }
 }

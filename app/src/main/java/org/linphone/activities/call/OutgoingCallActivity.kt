@@ -20,11 +20,16 @@
 package org.linphone.activities.call
 
 import android.Manifest
+import android.animation.ValueAnimator
 import android.annotation.TargetApi
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.DisplayMetrics
+import android.view.Display
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.flexbox.FlexboxLayout
+import org.linphone.LinphoneApplication
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.call.viewmodels.CallViewModel
@@ -40,6 +45,9 @@ class OutgoingCallActivity : ProximitySensorActivity() {
     private lateinit var binding: CallOutgoingActivityBinding
     private lateinit var viewModel: CallViewModel
     private lateinit var controlsViewModel: ControlsViewModel
+
+    // We have to use lateinit here because we need to compute the screen width first
+    private lateinit var numpadAnimator: ValueAnimator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,9 +95,27 @@ class OutgoingCallActivity : ProximitySensorActivity() {
             }
         })
 
+        controlsViewModel.toggleNumpadEvent.observe(this, {
+            it.consume { open ->
+                if (this::numpadAnimator.isInitialized) {
+                    if (open) {
+                        numpadAnimator.start()
+                    } else {
+                        numpadAnimator.reverse()
+                    }
+                }
+            }
+        })
+
         if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
             checkPermissions()
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        initNumpadLayout()
     }
 
     override fun onResume() {
@@ -150,5 +176,23 @@ class OutgoingCallActivity : ProximitySensorActivity() {
             }
         }
         return null
+    }
+
+    private fun initNumpadLayout() {
+        val metrics = DisplayMetrics()
+        val display: Display = windowManager.defaultDisplay
+        display.getRealMetrics(metrics)
+        val screenWidth = metrics.widthPixels.toFloat()
+        numpadAnimator = ValueAnimator.ofFloat(screenWidth, 0f).apply {
+            addUpdateListener {
+                val value = it.animatedValue as Float
+                findViewById<FlexboxLayout>(R.id.numpad)?.translationX = -value
+                duration = if (LinphoneApplication.corePreferences.enableAnimations) 500 else 0
+            }
+        }
+        // Hide the numpad here as we can't set the translationX property on include tag in layout
+        if (controlsViewModel.numpadVisibility.value == false) {
+            findViewById<FlexboxLayout>(R.id.numpad)?.translationX = -screenWidth
+        }
     }
 }
