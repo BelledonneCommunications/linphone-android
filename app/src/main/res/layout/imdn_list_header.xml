@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 android:contentDescription="@{title}"
-                android:src="@{icon, default=@drawable/message_read}" />
+                android:src="@{icon, default=@drawable/chat_read}" />
 
         </LinearLayout>
 
