@@ -84,22 +84,22 @@ class ImdnAdapter(
             ChatMessage.State.Displayed -> {
                 binding.title = R.string.chat_message_imdn_displayed
                 binding.textColor = R.color.imdn_read_color
-                binding.icon = R.drawable.message_read
+                binding.icon = R.drawable.chat_read
             }
             ChatMessage.State.DeliveredToUser -> {
                 binding.title = R.string.chat_message_imdn_delivered
                 binding.textColor = R.color.grey_color
-                binding.icon = R.drawable.message_delivered
+                binding.icon = R.drawable.chat_delivered
             }
             ChatMessage.State.Delivered -> {
                 binding.title = R.string.chat_message_imdn_sent
                 binding.textColor = R.color.grey_color
-                binding.icon = R.drawable.message_delivered
+                binding.icon = R.drawable.chat_delivered
             }
             ChatMessage.State.NotDelivered -> {
                 binding.title = R.string.chat_message_imdn_undelivered
                 binding.textColor = R.color.red_color
-                binding.icon = R.drawable.message_undelivered
+                binding.icon = R.drawable.chat_error
             }
         }
         binding.executePendingBindings()

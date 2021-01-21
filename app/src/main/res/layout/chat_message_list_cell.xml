@@ -49,7 +49,7 @@
         <ImageView
             android:id="@+id/imdn"
             android:visibility="@{viewModel.chatMessage.outgoing ? (viewModel.showImdn ? View.VISIBLE : View.INVISIBLE) : View.INVISIBLE}"
-            android:src="@{viewModel.imdnIcon, default=@drawable/imdn_received}"
+            android:src="@{viewModel.imdnIcon, default=@drawable/chat_delivered}"
             android:contentDescription="@string/content_description_delivery_status"
             android:layout_width="10dp"
             android:layout_height="10dp"
