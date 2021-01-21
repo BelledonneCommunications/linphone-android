@@ -615,6 +615,7 @@
   <string name="content_description_exit_conference">Выйти из конференции</string>
   <string name="content_title_notification_service">Сервисное уведомление Linphone</string>
   <string name="content_title_notification">Уведомления мгновенных сообщений Linphone</string>
+  <string name="content_title_notification_missed_call">Уведомления о пропущенных звонках Linphone</string>
   <string name="content_description_conversation_subject">Тема группового чата</string>
   <string name="content_description_conversation_infos">Информация о групповом чате</string>
   <string name="content_description_record_call">Запись звонка</string>
