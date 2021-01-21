@@ -185,7 +185,6 @@ public class LinphoneManager implements SensorEventListener {
                                             if (mCore != null) {
                                                 if (mCore.getCallsNb() > 0) {
                                                     mCallManager.acceptCall(call);
-                                                    mAudioManager.routeAudioToEarPiece();
                                                 }
                                             }
                                         }

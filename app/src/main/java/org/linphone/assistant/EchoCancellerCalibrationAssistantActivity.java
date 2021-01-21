@@ -20,9 +20,7 @@
 package org.linphone.assistant;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
-import android.media.AudioManager;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -117,13 +115,9 @@ public class EchoCancellerCalibrationAssistantActivity extends AssistantActivity
                                     Core core, EcCalibratorStatus status, int delayMs) {
                                 if (status == EcCalibratorStatus.InProgress) return;
                                 core.removeListener(this);
-                                LinphoneManager.getAudioManager().routeAudioToEarPiece();
                                 goToLinphoneActivity();
-
-                                ((AudioManager) getSystemService(Context.AUDIO_SERVICE))
-                                        .setMode(AudioManager.MODE_NORMAL);
                             }
                         });
-        LinphoneManager.getAudioManager().startEcCalibration();
+        LinphoneManager.getCore().startEchoCancellerCalibration();
     }
 }
