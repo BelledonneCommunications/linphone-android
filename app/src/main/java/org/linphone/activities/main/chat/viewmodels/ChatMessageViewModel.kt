@@ -160,9 +160,9 @@ class ChatMessageViewModel(
         }
 
         imdnIcon.value = when (state) {
-            ChatMessage.State.DeliveredToUser -> R.drawable.imdn_received
-            ChatMessage.State.Displayed -> R.drawable.imdn_read
-            else -> R.drawable.imdn_error
+            ChatMessage.State.DeliveredToUser -> R.drawable.chat_delivered
+            ChatMessage.State.Displayed -> R.drawable.chat_read
+            else -> R.drawable.chat_error
         }
     }
 
