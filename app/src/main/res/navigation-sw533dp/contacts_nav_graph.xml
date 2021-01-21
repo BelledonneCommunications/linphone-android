@@ -24,6 +24,9 @@
             android:name="SipUri"
             app:argType="string"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_contactEditorFragment_to_detailContactFragment"
+            app:destination="@id/detailContactFragment" />
     </fragment>
 
     <fragment

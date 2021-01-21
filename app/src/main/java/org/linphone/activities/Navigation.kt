@@ -445,8 +445,13 @@ internal fun MasterContactsFragment.navigateToContactEditor(sipUriToAdd: String?
 }
 
 internal fun ContactEditorFragment.navigateToContact(contact: NativeContact) {
-    val deepLink = "linphone-android://contact/view/${contact.nativeId}"
-    findMasterNavController().navigate(Uri.parse(deepLink), getRightToLeftAnimationNavOptions())
+    val bundle = Bundle()
+    bundle.putString("id", contact.nativeId)
+    findNavController().navigate(
+        R.id.action_contactEditorFragment_to_detailContactFragment,
+        bundle,
+        getRightToLeftAnimationNavOptions(R.id.detailContactFragment, true)
+    )
 }
 
 internal fun DetailContactFragment.navigateToChatRoom(args: Bundle?) {
