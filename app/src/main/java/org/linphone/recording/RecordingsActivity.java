@@ -107,7 +107,6 @@ public class RecordingsActivity extends MainActivity
         hideTopBar();
         hideTabBar();
 
-        LinphoneManager.getAudioManager().setAudioManagerModeNormal();
         LinphoneManager.getAudioManager().routeAudioToSpeaker();
 
         removeDeletedRecordings();

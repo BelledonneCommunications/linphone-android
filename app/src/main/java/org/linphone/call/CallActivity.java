@@ -430,6 +430,14 @@ public class CallActivity extends LinphoneGenericActivity
                         updateButtons();
                         updateCallsList();
                     }
+
+                    @Override
+                    public void onAudioDevicesListUpdated(@NonNull Core core) {
+                        if (mAudioManager.isBluetoothHeadsetConnected()) {
+                            mAudioManager.routeAudioToBluetooth();
+                        }
+                        updateButtons();
+                    }
                 };
 
         mCore = LinphoneManager.getCore();
