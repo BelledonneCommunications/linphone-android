@@ -25,6 +25,10 @@
         android:id="@+id/contactEditorFragment"
         android:name="org.linphone.activities.main.contact.fragments.ContactEditorFragment"
         tools:layout="@layout/contact_editor_fragment"
-        android:label="ContactEditorFragment" />
+        android:label="ContactEditorFragment" >
+        <action
+            android:id="@+id/action_contactEditorFragment_to_detailContactFragment"
+            app:destination="@id/detailContactFragment" />
+    </fragment>
 
 </navigation>
