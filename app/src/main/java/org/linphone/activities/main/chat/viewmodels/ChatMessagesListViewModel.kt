@@ -135,9 +135,7 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
 
         override fun onEphemeralMessageDeleted(chatRoom: ChatRoom, eventLog: EventLog) {
             Log.i("[Chat Messages] An ephemeral chat message has expired, removing it from event list")
-            val chatMessage = eventLog.chatMessage
-            chatMessage ?: return
-            deleteMessage(chatMessage)
+            deleteEvent(eventLog)
         }
 
         override fun onEphemeralEvent(chatRoom: ChatRoom, eventLog: EventLog) {
@@ -221,5 +219,14 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
             list.add(message)
         }
         return list
+    }
+
+    private fun deleteEvent(eventLog: EventLog) {
+        val chatMessage = eventLog.chatMessage
+        if (chatMessage != null) {
+            LinphoneUtils.deleteFilesAttachedToChatMessage(chatMessage)
+            chatRoom.deleteMessage(chatMessage)
+        }
+        events.value = getEvents()
     }
 }
