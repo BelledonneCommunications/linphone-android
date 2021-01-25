@@ -117,6 +117,7 @@ class NotificationsManager(private val context: Context) {
             message: String
         ) {
             if (call == null) return
+            if (corePreferences.useTelecomManager) return
             Log.i("[Notifications Manager] Call state changed [$state]")
 
             when (state) {
