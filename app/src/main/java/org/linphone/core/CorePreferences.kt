@@ -267,6 +267,12 @@ class CorePreferences constructor(private val context: Context) {
             config.setBool("app", "call_right_away", value)
         }
 
+    var useTelecomManager: Boolean
+        get() = config.getBool("app", "use_native_dialer_ui", false)
+        set(value) {
+            config.setBool("app", "use_native_dialer_ui", value)
+        }
+
     var fullScreenCallUI: Boolean
         get() = config.getBool("app", "full_screen_call", true)
         set(value) {
