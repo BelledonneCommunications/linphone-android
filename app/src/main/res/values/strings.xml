@@ -400,6 +400,9 @@
     <string name="call_settings_media_encryption_zrtp">ZRTP</string>
     <string name="call_settings_media_encryption_dtls">DTLS</string>
     <string name="call_settings_encryption_mandatory_title">Media encryption mandatory</string>
+    <string name="call_settings_encryption_mandatory_summary"></string>
+    <string name="call_settings_use_telecom_manager_title">Use native dialer UI for calls</string>
+    <string name="call_settings_use_telecom_manager_summary">Experimental!</string>
     <string name="call_settings_full_screen_title">Full screen app while in call</string>
     <string name="call_settings_full_screen_summary">Hides status and navigation bars</string>
     <string name="call_settings_overlay_title">Overlay call notification</string>

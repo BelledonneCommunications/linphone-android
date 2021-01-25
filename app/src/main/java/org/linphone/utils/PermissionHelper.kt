@@ -69,4 +69,10 @@ class PermissionHelper private constructor(private val context: Context) {
     fun hasRecordAudioPermission(): Boolean {
         return hasPermission(Manifest.permission.RECORD_AUDIO)
     }
+
+    fun hasTelecomManagerPermissions(): Boolean {
+        return hasPermission(Manifest.permission.CALL_PHONE) &&
+                hasPermission(Manifest.permission.READ_PHONE_STATE) &&
+                hasPermission(Manifest.permission.MANAGE_OWN_CALLS)
+    }
 }

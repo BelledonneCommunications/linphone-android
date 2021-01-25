@@ -20,12 +20,13 @@
 package org.linphone.activities.main.settings.viewmodels
 
 import androidx.lifecycle.MutableLiveData
-import java.lang.NumberFormatException
 import org.linphone.R
 import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.core.MediaEncryption
 import org.linphone.mediastream.Version
+import org.linphone.telecom.TelecomHelper
 import org.linphone.utils.Event
+import org.linphone.utils.PermissionHelper
 
 class CallSettingsViewModel : GenericSettingsViewModel() {
     val deviceRingtoneListener = object : SettingListenerStub() {
@@ -61,6 +62,30 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
         }
     }
     val encryptionMandatory = MutableLiveData<Boolean>()
+
+    val useTelecomManagerListener = object : SettingListenerStub() {
+        override fun onBoolValueChanged(newValue: Boolean) {
+            if (newValue &&
+                (!PermissionHelper.get().hasTelecomManagerPermissions() ||
+                        !TelecomHelper.get().isAccountEnabled())) {
+                enableTelecomManagerEvent.value = Event(true)
+            } else {
+                if (!newValue) TelecomHelper.get().removeAccount()
+                prefs.useTelecomManager = newValue
+
+                // Disable Core ringing
+                // TODO FIXME How to enable it back correctly when disabling Telecom Manager?
+                if (newValue) {
+                    core.ring = null
+                    core.isNativeRingingEnabled = false
+                }
+            }
+        }
+    }
+    val useTelecomManager = MutableLiveData<Boolean>()
+    val enableTelecomManagerEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
 
     val fullScreenListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
@@ -192,6 +217,8 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
 
         initEncryptionList()
         encryptionMandatory.value = core.isMediaEncryptionMandatory
+
+        useTelecomManager.value = prefs.useTelecomManager
 
         fullScreen.value = prefs.fullScreenCallUI
         overlay.value = prefs.showCallOverlay

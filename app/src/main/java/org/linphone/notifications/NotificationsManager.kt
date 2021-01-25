@@ -111,6 +111,7 @@ class NotificationsManager(private val context: Context) {
             state: Call.State,
             message: String
         ) {
+            if (corePreferences.useTelecomManager) return
             Log.i("[Notifications Manager] Call state changed [$state]")
 
             if (corePreferences.preventInterfaceFromShowingUp) {
