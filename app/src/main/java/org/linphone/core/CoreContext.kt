@@ -60,6 +60,7 @@ import org.linphone.contact.ContactsManager
 import org.linphone.core.tools.Log
 import org.linphone.mediastream.Version
 import org.linphone.notifications.NotificationsManager
+import org.linphone.telecom.TelecomHelper
 import org.linphone.utils.*
 import org.linphone.utils.Event
 
@@ -158,10 +159,12 @@ class CoreContext(val context: Context, coreConfig: Config) {
         ) {
             Log.i("[Context] Call state changed [$state]")
             if (state == Call.State.IncomingReceived || state == Call.State.IncomingEarlyMedia) {
-                if (gsmCallActive) {
-                    Log.w("[Context] Refusing the call with reason busy because a GSM call is active")
-                    call.decline(Reason.Busy)
-                    return
+                if (!corePreferences.useTelecomManager) {
+                    if (gsmCallActive) {
+                        Log.w("[Context] Refusing the call with reason busy because a GSM call is active")
+                        call.decline(Reason.Busy)
+                        return
+                    }
                 }
 
                 // Starting SDK 24 (Android 7.0) we rely on the fullscreen intent of the call incoming notification
@@ -295,6 +298,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
         Log.i("[Context] Starting")
 
         notificationsManager.onCoreReady()
+        TelecomHelper.create(context)
 
         core.addListener(listener)
 
@@ -325,6 +329,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
 
         notificationsManager.destroy()
         contactsManager.destroy()
+        TelecomHelper.get().destroy()
 
         core.stop()
         core.removeListener(listener)
@@ -697,6 +702,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
     /* Start call related activities */
 
     private fun onIncomingReceived() {
+        if (corePreferences.useTelecomManager) return
         if (corePreferences.preventInterfaceFromShowingUp) {
             Log.w("[Context] We were asked to not show the incoming call screen")
             return
@@ -710,6 +716,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
     }
 
     private fun onOutgoingStarted() {
+        if (corePreferences.useTelecomManager) return
         if (corePreferences.preventInterfaceFromShowingUp) {
             Log.w("[Context] We were asked to not show the outgoing call screen")
             return
@@ -723,6 +730,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
     }
 
     fun onCallStarted() {
+        if (corePreferences.useTelecomManager) return
         if (corePreferences.preventInterfaceFromShowingUp) {
             Log.w("[Context] We were asked to not show the call screen")
             return

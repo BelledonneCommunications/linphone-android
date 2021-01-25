@@ -50,6 +50,7 @@ class CoreService : CoreService() {
     }
 
     override fun showForegroundServiceNotification() {
+        if (corePreferences.useTelecomManager) return
         Log.i("[Service] Starting service as foreground")
         coreContext.notificationsManager.startCallForeground(this)
     }
