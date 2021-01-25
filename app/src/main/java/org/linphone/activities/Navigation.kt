@@ -450,7 +450,7 @@ internal fun ContactEditorFragment.navigateToContact(contact: NativeContact) {
     findNavController().navigate(
         R.id.action_contactEditorFragment_to_detailContactFragment,
         bundle,
-        getRightToLeftAnimationNavOptions(R.id.detailContactFragment, true)
+        getRightToLeftAnimationNavOptions(R.id.masterContactsFragment, false)
     )
 }
 
