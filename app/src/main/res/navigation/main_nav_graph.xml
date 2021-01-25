@@ -126,6 +126,9 @@
             android:name="SipUri"
             app:argType="string"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_contactEditorFragment_to_detailContactFragment"
+            app:destination="@id/contacts_nav_graph.xml" />
     </fragment>
     <include app:graph="@navigation/chat_nav_graph" />
     <include app:graph="@navigation/contacts_nav_graph" />
