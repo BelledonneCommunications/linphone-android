@@ -318,7 +318,9 @@ public final class LinphoneUtils {
             int indexHttp = text.indexOf("http://");
             int indexFinHttp =
                     text.indexOf(" ", indexHttp) == -1
-                            ? text.length()
+                            ? (text.indexOf("<br>", indexHttp) == -1
+                                    ? text.length()
+                                    : text.indexOf("<br>", indexHttp))
                             : text.indexOf(" ", indexHttp);
             String link = text.substring(indexHttp, indexFinHttp);
             String linkWithoutScheme = link.replace("http://", "");
@@ -331,7 +333,9 @@ public final class LinphoneUtils {
             int indexHttp = text.indexOf("https://");
             int indexFinHttp =
                     text.indexOf(" ", indexHttp) == -1
-                            ? text.length()
+                            ? (text.indexOf("<br>", indexHttp) == -1
+                                    ? text.length()
+                                    : text.indexOf("<br>", indexHttp))
                             : text.indexOf(" ", indexHttp);
             String link = text.substring(indexHttp, indexFinHttp);
             String linkWithoutScheme = link.replace("https://", "");
