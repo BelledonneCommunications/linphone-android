@@ -20,7 +20,9 @@
 package org.linphone.activities.main.chat.viewmodels
 
 import android.os.CountDownTimer
-import android.text.Spanned
+import android.text.Spannable
+import android.text.util.Linkify
+import androidx.core.text.util.LinkifyCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
@@ -62,10 +64,7 @@ class ChatMessageViewModel(
 
     val ephemeralLifetime = MutableLiveData<String>()
 
-    val text: Spanned? by lazy {
-        val textContent = chatMessage.textContent
-        if (textContent != null) AppUtils.getTextWithHttpLinks(textContent) else null
-    }
+    val text = MutableLiveData<Spannable>()
 
     private var countDownTimer: CountDownTimer? = null
 
@@ -171,6 +170,10 @@ class ChatMessageViewModel(
         for (content in chatMessage.contents) {
             if (content.isFileTransfer || content.isFile) {
                 list.add(ChatMessageContentViewModel(content, chatMessage, contentListener))
+            } else if (content.isText) {
+                val spannable = Spannable.Factory.getInstance().newSpannable(content.utf8Text)
+                LinkifyCompat.addLinks(spannable, Linkify.WEB_URLS)
+                text.value = spannable
             }
         }
         contents.value = list

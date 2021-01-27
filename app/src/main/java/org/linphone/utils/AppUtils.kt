@@ -21,12 +21,9 @@ package org.linphone.utils
 
 import android.app.Activity
 import android.content.*
-import android.text.Spanned
 import android.util.TypedValue
-import androidx.core.text.HtmlCompat
 import androidx.emoji.text.EmojiCompat
 import java.util.*
-import java.util.regex.Pattern
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
@@ -50,48 +47,6 @@ class AppUtils {
 
         fun getDimension(id: Int): Float {
             return coreContext.context.resources.getDimension(id)
-        }
-
-        fun getTextWithHttpLinks(input: String): Spanned {
-            var text = input
-            if (text.contains("<")) {
-                text = text.replace("<", "&lt;")
-            }
-            if (text.contains(">")) {
-                text = text.replace(">", "&gt;")
-            }
-            if (text.contains("\n")) {
-                text = text.replace("\n", "<br>")
-            }
-            if (text.contains("http://")) {
-                val indexHttp = text.indexOf("http://")
-                val indexFinHttp =
-                    if (text.indexOf(" ", indexHttp) == -1) text.length else text.indexOf(
-                        " ",
-                        indexHttp
-                    )
-                val link = text.substring(indexHttp, indexFinHttp)
-                val linkWithoutScheme = link.replace("http://", "")
-                text = text.replaceFirst(
-                    Pattern.quote(link).toRegex(),
-                    "<a href=\"$link\">$linkWithoutScheme</a>"
-                )
-            }
-            if (text.contains("https://")) {
-                val indexHttp = text.indexOf("https://")
-                val indexFinHttp =
-                    if (text.indexOf(" ", indexHttp) == -1) text.length else text.indexOf(
-                        " ",
-                        indexHttp
-                    )
-                val link = text.substring(indexHttp, indexFinHttp)
-                val linkWithoutScheme = link.replace("https://", "")
-                text = text.replaceFirst(
-                    Pattern.quote(link).toRegex(),
-                    "<a href=\"$link\">$linkWithoutScheme</a>"
-                )
-            }
-            return HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_LEGACY)
         }
 
         fun getInitials(displayName: String, limit: Int = 2): String {
