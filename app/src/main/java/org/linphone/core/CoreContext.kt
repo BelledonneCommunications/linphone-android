@@ -341,8 +341,11 @@ class CoreContext(val context: Context, coreConfig: Config) {
     fun declineCall(call: Call) {
         val voiceMailUri = corePreferences.voiceMailUri
         if (voiceMailUri != null && corePreferences.redirectDeclinedCallToVoiceMail) {
-            Log.i("[Context] Redirecting call $call to voice mail")
-            call.redirect(voiceMailUri)
+            val voiceMailAddress = core.interpretUrl(voiceMailUri)
+            if (voiceMailAddress != null) {
+                Log.i("[Context] Redirecting call $call to voice mail URI: $voiceMailUri")
+                call.redirectTo(voiceMailAddress)
+            }
         } else {
             Log.i("[Context] Declining call $call")
             call.decline(Reason.Declined)
@@ -359,8 +362,11 @@ class CoreContext(val context: Context, coreConfig: Config) {
         if (currentCall == null) {
             Log.e("[Context] Couldn't find a call to transfer")
         } else {
-            Log.i("[Context] Transferring current call to $addressToCall")
-            currentCall.transfer(addressToCall)
+            val address = core.interpretUrl(addressToCall)
+            if (address != null) {
+                Log.i("[Context] Transferring current call to $addressToCall")
+                currentCall.transferTo(address)
+            }
         }
     }
 

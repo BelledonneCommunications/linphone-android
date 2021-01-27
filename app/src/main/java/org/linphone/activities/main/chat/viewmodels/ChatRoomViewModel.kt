@@ -240,7 +240,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactViewModelI
         var body = ""
         for (content in msg.contents) {
             if (content.isFile || content.isFileTransfer) body += content.name + " "
-            else if (content.isText) body += content.stringBuffer + " "
+            else if (content.isText) body += content.utf8Text + " "
         }
 
         return "$sender: $body"

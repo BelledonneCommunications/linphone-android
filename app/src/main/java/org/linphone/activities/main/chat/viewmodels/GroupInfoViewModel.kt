@@ -71,7 +71,7 @@ class GroupInfoViewModel(val chatRoom: ChatRoom?) : ErrorReportingViewModel() {
         }
 
         override fun onSubjectChanged(chatRoom: ChatRoom, eventLog: EventLog) {
-            subject.value = chatRoom?.subject
+            subject.value = chatRoom.subject
         }
 
         override fun onParticipantAdded(chatRoom: ChatRoom, eventLog: EventLog) {
@@ -83,7 +83,7 @@ class GroupInfoViewModel(val chatRoom: ChatRoom?) : ErrorReportingViewModel() {
         }
 
         override fun onParticipantAdminStatusChanged(chatRoom: ChatRoom, eventLog: EventLog) {
-            val admin = chatRoom?.me?.isAdmin ?: false
+            val admin = chatRoom.me?.isAdmin ?: false
             isMeAdmin.value = admin
             meAdminChangedEvent.value = Event(admin)
             updateParticipants()
