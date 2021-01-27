@@ -1213,10 +1213,13 @@ public class ChatMessagesFragment extends Fragment
     public void onNewEvent(@NonNull ChatRoom chatRoom, @NonNull EventLog eventLog) {}
 
     @Override
-    public void onChatMessageSent(ChatRoom cr, EventLog event) {
+    public void onChatMessageSending(ChatRoom cr, EventLog event) {
         ((ChatMessagesGenericAdapter) mChatEventsList.getAdapter()).addToHistory(event);
         scrollToBottom();
     }
+
+    @Override
+    public void onChatMessageSent(@NonNull ChatRoom chatRoom, @NonNull EventLog eventLog) {}
 
     @Override
     public void onConferenceAddressGeneration(ChatRoom cr) {}
