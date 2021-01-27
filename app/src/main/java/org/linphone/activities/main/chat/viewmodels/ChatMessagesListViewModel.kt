@@ -89,7 +89,7 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
             addEvent(eventLog)
         }
 
-        override fun onChatMessageSent(chatRoom: ChatRoom, eventLog: EventLog) {
+        override fun onChatMessageSending(chatRoom: ChatRoom, eventLog: EventLog) {
             val position = events.value.orEmpty().size
 
             if (eventLog.type == EventLog.Type.ConferenceChatMessage) {
@@ -208,7 +208,9 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
     private fun addEvent(eventLog: EventLog) {
         val list = arrayListOf<EventLog>()
         list.addAll(events.value.orEmpty())
-        list.add(eventLog)
+        if (!list.contains(eventLog)) {
+            list.add(eventLog)
+        }
         events.value = list
     }
 

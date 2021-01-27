@@ -24,7 +24,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import java.io.File
 import org.linphone.LinphoneApplication.Companion.corePreferences
-import org.linphone.core.*
+import org.linphone.core.ChatMessage
+import org.linphone.core.ChatRoom
+import org.linphone.core.ChatRoomCapabilities
+import org.linphone.core.Factory
 import org.linphone.utils.FileUtils
 
 class ChatMessageSendingViewModelFactory(private val chatRoom: ChatRoom) :
@@ -103,7 +106,7 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
 
         val toSend = textToSend.value
         if (toSend != null && toSend.isNotEmpty()) {
-            message.addTextContent(toSend)
+            message.addUtf8TextContent(toSend)
         }
 
         for (attachment in attachments.value.orEmpty()) {
