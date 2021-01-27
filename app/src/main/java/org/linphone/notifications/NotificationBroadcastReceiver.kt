@@ -79,7 +79,7 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
                 return
             }
 
-            val msg = room.createMessage(reply)
+            val msg = room.createMessageFromUtf8(reply)
             msg.userData = notificationId
             msg.addListener(coreContext.notificationsManager.chatListener)
             msg.send()
@@ -90,10 +90,11 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
     }
 
     private fun handleCallIntent(intent: Intent, notificationId: Int) {
-        val remoteAddress: String? = coreContext.notificationsManager.getSipUriForCallNotificationId(notificationId)
+        val remote: String = coreContext.notificationsManager.getSipUriForCallNotificationId(notificationId) ?: ""
         val core: Core = coreContext.core
 
-        val call = if (remoteAddress != null) core.findCallFromUri(remoteAddress) else null
+        val remoteAddress = core.interpretUrl(remote)
+        val call = if (remoteAddress != null) core.getCallByRemoteAddress2(remoteAddress) else null
         if (call == null) {
             Log.e("[Notification Broadcast Receiver] Couldn't find call from remote address $remoteAddress")
             return

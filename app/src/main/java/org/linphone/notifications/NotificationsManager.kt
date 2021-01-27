@@ -116,7 +116,6 @@ class NotificationsManager(private val context: Context) {
             state: Call.State,
             message: String
         ) {
-            if (call == null) return
             Log.i("[Notifications Manager] Call state changed [$state]")
 
             when (state) {
