@@ -99,7 +99,7 @@ project.tasks['preBuild'].dependsOn 'linphoneSdkSource'
 
 android {
     compileSdkVersion 30
-    buildToolsVersion '30.0.2'
+    buildToolsVersion '30.0.3'
     defaultConfig {
         minSdkVersion 23
         targetSdkVersion 29
