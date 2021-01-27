@@ -47,10 +47,14 @@ task getGitVersion() {
     project.version = gitVersion
 }
 
+configurations {
+    customImplementation
+    implementation.extendsFrom(customImplementation)
+}
+
 task linphoneSdkSource() {
     doLast {
-        configurations.implementation.canBeResolved = true
-        configurations.implementation.getIncoming().each {
+        configurations.customImplementation.getIncoming().each {
             it.getResolutionResult().allComponents.each {
                 if (it.id.getDisplayName().contains("linphone-sdk-android")) {
                     println 'Linphone SDK used is ' + it.moduleVersion.version + ' from ' + it.properties["repositoryName"]
@@ -65,7 +69,7 @@ project.tasks['preBuild'].dependsOn 'linphoneSdkSource'
 
 android {
     compileSdkVersion 30
-    buildToolsVersion '30.0.2'
+    buildToolsVersion '30.0.3'
     defaultConfig {
         minSdkVersion 23
         targetSdkVersion 30
