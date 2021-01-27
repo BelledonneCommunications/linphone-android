@@ -28,8 +28,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.CountDownTimer;
-import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.MimeTypeMap;
@@ -221,9 +221,8 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
         }
 
         if (message.hasTextContent()) {
-            String msg = message.getTextContent();
-            Spanned text = LinphoneUtils.getTextWithHttpLinks(msg);
-            messageText.setText(text);
+            messageText.setText(message.getTextContent());
+            Linkify.addLinks(messageText, Linkify.ALL);
             messageText.setMovementMethod(LinkMovementMethod.getInstance());
             messageText.setVisibility(View.VISIBLE);
         }
