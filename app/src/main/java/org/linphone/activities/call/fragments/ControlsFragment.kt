@@ -27,8 +27,6 @@ import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
 import android.os.SystemClock
-import android.util.DisplayMetrics
-import android.view.Display
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.flexbox.FlexboxLayout
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -242,10 +240,7 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
     }
 
     private fun initNumpadLayout() {
-        val metrics = DisplayMetrics()
-        val display: Display = requireActivity().windowManager.defaultDisplay
-        display.getRealMetrics(metrics)
-        val screenWidth = metrics.widthPixels.toFloat()
+        val screenWidth = coreContext.screenWidth
         numpadAnimator = ValueAnimator.ofFloat(screenWidth, 0f).apply {
             addUpdateListener {
                 val value = it.animatedValue as Float

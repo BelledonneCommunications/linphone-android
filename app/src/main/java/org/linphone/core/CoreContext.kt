@@ -56,6 +56,9 @@ class CoreContext(val context: Context, coreConfig: Config) {
     val core: Core
     val handler: Handler = Handler(Looper.getMainLooper())
 
+    var screenWidth: Float = 0f
+    var screenHeight: Float = 0f
+
     val appVersion: String by lazy {
         val appVersion = org.linphone.BuildConfig.VERSION_NAME
         val appBranch = context.getString(R.string.linphone_app_branch)
