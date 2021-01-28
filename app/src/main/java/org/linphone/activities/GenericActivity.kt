@@ -23,6 +23,8 @@ import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.DisplayMetrics
+import android.view.Display
 import android.view.Surface
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -73,6 +75,8 @@ abstract class GenericActivity : AppCompatActivity() {
                 }
             }
         }
+
+        updateScreenSize()
     }
 
     override fun onResume() {
@@ -101,5 +105,15 @@ abstract class GenericActivity : AppCompatActivity() {
 
     fun isTablet(): Boolean {
         return resources.getBoolean(R.bool.isTablet)
+    }
+
+    private fun updateScreenSize() {
+        val metrics = DisplayMetrics()
+        val display: Display = windowManager.defaultDisplay
+        display.getRealMetrics(metrics)
+        val screenWidth = metrics.widthPixels.toFloat()
+        val screenHeight = metrics.heightPixels.toFloat()
+        coreContext.screenWidth = screenWidth
+        coreContext.screenHeight = screenHeight
     }
 }
