@@ -27,6 +27,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.linphone.core.ChatMessage
+import org.linphone.core.ChatMessageListenerStub
 import org.linphone.core.Content
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
@@ -51,6 +52,8 @@ class ChatMessageContentViewModel(
 
     val downloadEnabled = MutableLiveData<Boolean>()
 
+    val downloadProgress = MutableLiveData<Int>()
+
     val isAlone: Boolean
         get() {
             var count = 0
@@ -61,6 +64,25 @@ class ChatMessageContentViewModel(
             }
             return count == 1
         }
+
+    private val chatMessageListener: ChatMessageListenerStub = object : ChatMessageListenerStub() {
+        override fun onFileTransferProgressIndication(
+            message: ChatMessage,
+            c: Content,
+            offset: Int,
+            total: Int
+        ) {
+            val percent = offset * 100 / total
+            if (!c.filePath.isNullOrEmpty() && !content.filePath.isNullOrEmpty() && c.filePath == content.filePath) {
+                Log.d("[Content] Download progress is: $offset / $total ($percent%)")
+                downloadProgress.postValue(percent)
+            }
+        }
+
+        override fun onMsgStateChanged(message: ChatMessage, state: ChatMessage.State) {
+            downloadEnabled.postValue(chatMessage.state != ChatMessage.State.FileTransferInProgress)
+        }
+    }
 
     init {
         fileName.value = if (content.name.isNullOrEmpty() && !content.filePath.isNullOrEmpty()) {
@@ -94,18 +116,15 @@ class ChatMessageContentViewModel(
                 isAudio.value = false
             }
         } else {
-            if (chatMessage.isFileTransferInProgress) {
-                Log.i("[Content] Found content currently being downloaded: ${content.name}")
-                downloadEnabled.value = false
-            } else {
-                Log.i("[Content] Found downloadable content: ${content.name}")
-                downloadEnabled.value = true
-            }
             downloadable.value = true
             isImage.value = false
             isVideo.value = false
             isAudio.value = false
         }
+
+        downloadEnabled.value = !chatMessage.isFileTransferInProgress
+        downloadProgress.value = 0
+        chatMessage.addListener(chatMessageListener)
     }
 
     fun download() {
