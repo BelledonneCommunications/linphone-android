@@ -48,8 +48,7 @@ task getGitVersion() {
 }
 
 configurations {
-    customImplementation
-    implementation.extendsFrom(customImplementation)
+    customImplementation.extendsFrom implementation
 }
 
 task linphoneSdkSource() {
