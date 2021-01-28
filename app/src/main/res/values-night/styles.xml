@@ -35,6 +35,7 @@
         <item name="drawableTintDisabledColor">@color/light_grey_color</item>
         <item name="drawableTintOverColor">@color/primary_color</item>
         <item name="drawableTintColor2">@color/dark_grey_color</item>
+        <item name="drawableTintColor3">@color/grey_color</item>
 
         <item name="lightToolbarBackgroundColor">@color/dark_grey_color</item>
         <item name="lightToolbarBackgroundDisabledColor">@color/light_grey_color</item>
