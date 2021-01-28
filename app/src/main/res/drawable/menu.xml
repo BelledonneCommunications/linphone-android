@@ -2,10 +2,10 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_enabled="false">
         <bitmap android:src="@drawable/menu_default"
-            android:tint="?attr/drawableTintDisabledColor"/>
+            android:tint="@color/light_grey_color"/>
     </item>
     <item>
         <bitmap android:src="@drawable/menu_default"
-            android:tint="?attr/drawableTintColor2"/>
+            android:tint="@color/white_color"/>
     </item>
 </selector>
