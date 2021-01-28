@@ -47,43 +47,83 @@
             android:layout_centerInParent="true"/>
 
         <TextView
-            android:onClick="@{() -> data.openFile()}"
-            android:onLongClick="@{longClickListener}"
-            android:textColor="?attr/secondaryTextColor"
-            android:textSize="12sp"
-            android:fontFamily="sans-serif"
-            android:textStyle="normal"
-            android:drawableTop="@drawable/file"
-            android:drawableTint="?attr/drawableTintColor2"
-            android:drawablePadding="5dp"
-            android:padding="5dp"
-            android:text="@{data.content.name}"
-            android:visibility="@{data.downloadable || data.image || data.video ? View.GONE : View.VISIBLE, default=gone}"
-            android:layout_width="150dp"
-            android:layout_height="match_parent"
-            android:maxHeight="100dp"
-            android:layout_margin="5dp"
-            android:background="@color/chat_bubble_text_color"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:textAlignment="center" />
-
-        <TextView
-            style="@style/button_font"
-            android:onClick="@{() -> data.download()}"
-            android:onLongClick="@{longClickListener}"
-            android:enabled="@{data.downloadEnabled}"
-            android:text="@string/chat_message_download_file"
-            android:visibility="@{data.downloadable ? View.VISIBLE : View.GONE}"
+            style="@style/chat_file_attachment_font"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:textColor="@drawable/assistant_button_text_color"
-            android:background="@drawable/resizable_assistant_button"
-            android:drawableLeft="@drawable/download"
-            android:drawablePadding="10dp"
+            android:singleLine="true"
             android:ellipsize="end"
-            android:padding="10dp" />
+            android:padding="10dp"
+            android:gravity="center_vertical"
+            android:text="@{data.fileName}"
+            android:onClick="@{() -> data.openFile()}"
+            android:onLongClick="@{longClickListener}"
+            android:visibility="@{data.downloadable || data.image || data.video || !data.alone ? View.GONE : View.VISIBLE, default=gone}"
+            android:drawablePadding="10dp"
+            app:drawableTint="@color/dark_grey_color"
+            android:drawableLeft="@{data.isAudio ? @drawable/audio : @drawable/file}"/>
+
+        <TextView
+            style="@style/chat_file_attachment_font"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:maxHeight="100dp"
+            android:layout_margin="5dp"
+            android:ellipsize="end"
+            android:padding="10dp"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:text="@{data.fileName}"
+            android:onClick="@{() -> data.openFile()}"
+            android:onLongClick="@{longClickListener}"
+            android:visibility="@{data.downloadable || data.image || data.video || data.alone ? View.GONE : View.VISIBLE, default=gone}"
+            android:drawablePadding="10dp"
+            app:drawableTint="@color/dark_grey_color"
+            android:drawableTop="@{data.isAudio ? @drawable/audio : @drawable/file}"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="@drawable/resizable_assistant_button"
+            android:visibility="@{data.downloadable ? View.VISIBLE : View.GONE}"
+            android:onClick="@{() -> data.download()}"
+            android:onLongClick="@{longClickListener}"
+            android:enabled="@{data.downloadEnabled}">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/download"
+                android:padding="10dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="10dp">
+
+                <TextView
+                    style="@style/button_small_font"
+                    android:text="@{data.fileName + ` (` + data.fileSize + `)`}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textColor="@drawable/assistant_button_text_color" />
+
+                <TextView
+                    style="@style/button_font"
+                    android:text="@string/chat_message_download_file"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@drawable/assistant_button_text_color"
+                    android:layout_marginTop="5dp"
+                    android:ellipsize="end" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </RelativeLayout>
 
