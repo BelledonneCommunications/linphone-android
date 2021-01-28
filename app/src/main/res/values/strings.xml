@@ -173,6 +173,7 @@
     <string name="chat_room_dummy_subject" translatable="false">dummy subject</string>
     <string name="chat_room_toast_choose_for_sharing">Select a conversation or create a new one</string>
     <string name="chat_room_cant_open_file_no_app_found">Can\'t open file, no application available for this format.</string>
+    <string name="chat_room_file_not_found">File not found</string>
     <string name="chat_room_creation_failed">Chat room creation failed</string>
     <string name="chat_room_context_menu_group_info">Group info</string>
     <string name="chat_room_context_menu_participants_devices">Conversation\'s devices</string>
