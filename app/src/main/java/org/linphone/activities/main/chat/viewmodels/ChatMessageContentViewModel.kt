@@ -29,6 +29,7 @@ import kotlinx.coroutines.withContext
 import org.linphone.core.ChatMessage
 import org.linphone.core.Content
 import org.linphone.core.tools.Log
+import org.linphone.utils.AppUtils
 import org.linphone.utils.FileUtils
 import org.linphone.utils.ImageUtils
 
@@ -39,7 +40,12 @@ class ChatMessageContentViewModel(
 ) : ViewModel() {
     val isImage = MutableLiveData<Boolean>()
     val isVideo = MutableLiveData<Boolean>()
+    val isAudio = MutableLiveData<Boolean>()
     val videoPreview = MutableLiveData<Bitmap>()
+
+    val fileName = MutableLiveData<String>()
+
+    val fileSize = MutableLiveData<String>()
 
     val downloadable = MutableLiveData<Boolean>()
 
@@ -57,6 +63,13 @@ class ChatMessageContentViewModel(
         }
 
     init {
+        fileName.value = if (content.name.isNullOrEmpty() && !content.filePath.isNullOrEmpty()) {
+            FileUtils.getNameFromFilePath(content.filePath!!)
+        } else {
+            content.name
+        }
+        fileSize.value = AppUtils.bytesToDisplayableSize(content.fileSize.toLong())
+
         if (content.isFile || (content.isFileTransfer && chatMessage.isOutgoing)) {
             val filePath = content.filePath ?: ""
             downloadable.value = filePath.isEmpty()
@@ -65,6 +78,7 @@ class ChatMessageContentViewModel(
                 Log.i("[Content] Found displayable content: $filePath")
                 isImage.value = FileUtils.isExtensionImage(filePath)
                 isVideo.value = FileUtils.isExtensionVideo(filePath)
+                isAudio.value = FileUtils.isExtensionAudio(filePath)
 
                 if (isVideo.value == true) {
                     viewModelScope.launch {
@@ -77,6 +91,7 @@ class ChatMessageContentViewModel(
                 Log.w("[Content] Found content with empty path...")
                 isImage.value = false
                 isVideo.value = false
+                isAudio.value = false
             }
         } else {
             if (chatMessage.isFileTransferInProgress) {
@@ -89,6 +104,7 @@ class ChatMessageContentViewModel(
             downloadable.value = true
             isImage.value = false
             isVideo.value = false
+            isAudio.value = false
         }
     }
 

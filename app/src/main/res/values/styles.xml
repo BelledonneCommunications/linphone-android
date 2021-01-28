@@ -224,6 +224,12 @@
         <item name="android:textSize">18sp</item>
     </style>
 
+    <style name="chat_file_attachment_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/dark_grey_color</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
     <style name="standard_text_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">?attr/primaryTextColor</item>
         <item name="android:textSize">18sp</item>
@@ -235,6 +241,11 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <style name="button_small_font" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">?attr/primaryTextColor</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
     <style name="standard_small_text_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">?attr/primarySubtextDarkColor</item>
         <item name="android:textSize">15sp</item>
@@ -244,4 +255,5 @@
         <item name="android:textColor">@color/white_color</item>
         <item name="android:textSize">10sp</item>
     </style>
+
 </resources>
