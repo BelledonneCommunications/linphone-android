@@ -59,6 +59,12 @@ class FileUtils {
             return extension
         }
 
+        fun isPlainTextFile(path: String): Boolean {
+            val extension = getExtensionFromFileName(path).toLowerCase(Locale.getDefault())
+            val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+            return type?.startsWith("text/plain") ?: false
+        }
+
         fun isExtensionImage(path: String): Boolean {
             val extension = getExtensionFromFileName(path).toLowerCase(Locale.getDefault())
             val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)

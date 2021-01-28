@@ -320,5 +320,20 @@
             android:name="IsLinking"
             app:argType="boolean" />
     </fragment>
+    <fragment
+        android:id="@+id/textViewerFragment"
+        android:name="org.linphone.activities.main.files.fragments.TextViewerFragment"
+        android:label="ImageViewerFragment" />
+    <action android:id="@+id/action_global_textViewerFragment" app:destination="@id/textViewerFragment" />
+    <fragment
+        android:id="@+id/imageViewerFragment"
+        android:name="org.linphone.activities.main.files.fragments.ImageViewerFragment"
+        android:label="ImageViewerFragment" />
+    <action android:id="@+id/action_global_imageViewerFragment" app:destination="@id/imageViewerFragment"/>
+    <fragment
+        android:id="@+id/videoViewerFragment"
+        android:name="org.linphone.activities.main.files.fragments.VideoViewerFragment"
+        android:label="ImageViewerFragment" />
+    <action android:id="@+id/action_global_videoViewerFragment" app:destination="@id/videoViewerFragment"/>
 
 </navigation>
