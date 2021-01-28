@@ -348,6 +348,38 @@ internal fun DetailChatRoomFragment.navigateToEphemeralInfo() {
     }
 }
 
+internal fun DetailChatRoomFragment.navigateToTextFileViewer() {
+    findMasterNavController().navigate(
+        R.id.action_global_textViewerFragment,
+        null,
+        getRightToLeftAnimationNavOptions()
+    )
+}
+
+internal fun DetailChatRoomFragment.navigateToPdfFileViewer() {
+    findMasterNavController().navigate(
+        R.id.action_global_pdfViewerFragment,
+        null,
+        getRightToLeftAnimationNavOptions()
+    )
+}
+
+internal fun DetailChatRoomFragment.navigateToImageFileViewer() {
+    findMasterNavController().navigate(
+        R.id.action_global_imageViewerFragment,
+        null,
+        getRightToLeftAnimationNavOptions()
+    )
+}
+
+internal fun DetailChatRoomFragment.navigateToVideoFileViewer() {
+    findMasterNavController().navigate(
+        R.id.action_global_videoViewerFragment,
+        null,
+        getRightToLeftAnimationNavOptions()
+    )
+}
+
 internal fun ChatRoomCreationFragment.navigateToGroupInfo() {
     if (findNavController().currentDestination?.id == R.id.chatRoomCreationFragment) {
         findNavController().navigate(
