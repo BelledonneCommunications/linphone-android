@@ -4,6 +4,10 @@
         <bitmap android:src="@drawable/settings_contacts_default"
             android:tint="?attr/accentColor"/>
     </item>
-    <item android:drawable="@drawable/settings_contacts_default" />
+
+    <item>
+        <bitmap android:src="@drawable/settings_contacts_default"
+            android:tint="?attr/drawableTintColor"/>
+    </item>
 </selector>
 

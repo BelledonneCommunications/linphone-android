@@ -4,6 +4,9 @@
         <bitmap android:src="@drawable/settings_video_default"
             android:tint="?attr/accentColor"/>
     </item>
-    <item android:drawable="@drawable/settings_video_default" />
+    <item>
+        <bitmap android:src="@drawable/settings_video_default"
+            android:tint="?attr/drawableTintColor"/>
+    </item>
 </selector>
 
