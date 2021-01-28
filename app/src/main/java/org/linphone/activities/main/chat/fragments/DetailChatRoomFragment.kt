@@ -537,6 +537,10 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
         try {
             startActivity(intent)
+
+            if (corePreferences.enableAnimations) {
+                requireActivity().overridePendingTransition(R.anim.enter_right, R.anim.exit_left)
+            }
         } catch (anfe: ActivityNotFoundException) {
             Log.e("[Chat Message] Couldn't find an activity to handle MIME type: $type")
 
