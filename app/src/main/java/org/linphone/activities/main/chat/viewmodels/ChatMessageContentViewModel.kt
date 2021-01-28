@@ -72,10 +72,14 @@ class ChatMessageContentViewModel(
             offset: Int,
             total: Int
         ) {
-            val percent = offset * 100 / total
-            if (!c.filePath.isNullOrEmpty() && !content.filePath.isNullOrEmpty() && c.filePath == content.filePath) {
+            if (c.filePath == content.filePath) {
+                val percent = offset * 100 / total
                 Log.d("[Content] Download progress is: $offset / $total ($percent%)")
                 downloadProgress.postValue(percent)
+
+                if (offset == total) {
+                    chatMessage.removeListener(this)
+                }
             }
         }
 
