@@ -21,6 +21,7 @@ package org.linphone.utils
 
 import android.app.Activity
 import android.content.*
+import android.text.format.Formatter.formatShortFileSize
 import android.util.TypedValue
 import androidx.emoji.text.EmojiCompat
 import java.util.*
@@ -77,6 +78,10 @@ class AppUtils {
                 pixels,
                 coreContext.context.resources.displayMetrics
             )
+        }
+
+        fun bytesToDisplayableSize(bytes: Long): String {
+            return formatShortFileSize(coreContext.context, bytes)
         }
 
         fun shareUploadedLogsUrl(activity: Activity, info: String) {

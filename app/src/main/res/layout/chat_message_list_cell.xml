@@ -6,6 +6,7 @@
     <data>
         <import type="android.view.View"/>
         <import type="android.view.Gravity"/>
+        <import type="com.google.android.flexbox.JustifyContent"/>
         <variable
             name="contextMenuClickListener"
             type="android.view.View.OnLongClickListener"/>
@@ -126,7 +127,7 @@
                 app:layout="@{@layout/chat_message_content_cell}"
                 app:onLongClick="@{contextMenuClickListener}"
                 app:flexWrap="wrap"
-                app:justifyContent="center"/>
+                app:justifyContent="@{viewModel.chatMessage.outgoing ? JustifyContent.FLEX_END : JustifyContent.FLEX_START}"/>
 
             <org.linphone.activities.main.chat.views.MultiLineWrapContentWidthTextView
                 android:onClick="@{clickListener}"
@@ -134,6 +135,7 @@
                 android:text="@{viewModel.text}"
                 android:visibility="@{viewModel.text.length > 0 ? View.VISIBLE : View.GONE}"
                 android:autoLink="web"
+                android:layout_gravity="@{viewModel.chatMessage.outgoing ? Gravity.RIGHT : Gravity.LEFT}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"

@@ -71,6 +71,12 @@ class FileUtils {
             return type?.startsWith("video/") ?: false
         }
 
+        fun isExtensionAudio(path: String): Boolean {
+            val extension = getExtensionFromFileName(path).toLowerCase(Locale.getDefault())
+            val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+            return type?.startsWith("audio/") ?: false
+        }
+
         fun getFileStorageDir(isPicture: Boolean = false): File {
             var path: File? = null
             if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {

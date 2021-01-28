@@ -137,6 +137,13 @@ fun setLayoutToLeftOf(view: View, oldTargetId: Int, newTargetId: Int) {
     view.layoutParams = layoutParams
 }
 
+@BindingAdapter("android:layout_gravity")
+fun setLayoutGravity(view: View, gravity: Int) {
+    val layoutParams = view.layoutParams as LinearLayout.LayoutParams
+    layoutParams.gravity = gravity
+    view.layoutParams = layoutParams
+}
+
 @BindingAdapter("layout_constraintGuide_percent")
 fun setLayoutConstraintGuidePercent(guideline: Guideline, percent: Float) {
     val params = guideline.layoutParams as ConstraintLayout.LayoutParams
