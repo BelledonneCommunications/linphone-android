@@ -86,6 +86,7 @@
             android:orientation="horizontal"
             android:gravity="center"
             android:background="@drawable/resizable_assistant_button"
+            android:layout_margin="5dp"
             android:visibility="@{data.downloadable ? View.VISIBLE : View.GONE}"
             android:onClick="@{() -> data.download()}"
             android:onLongClick="@{longClickListener}"
@@ -119,7 +120,18 @@
                     android:layout_height="wrap_content"
                     android:textColor="@drawable/assistant_button_text_color"
                     android:layout_marginTop="5dp"
-                    android:ellipsize="end" />
+                    android:ellipsize="end"
+                    android:visibility="@{data.downloadEnabled ? View.VISIBLE : View.GONE}" />
+
+                <ProgressBar
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    android:max="101"
+                    android:layout_marginTop="5dp"
+                    android:visibility="@{data.downloadProgress > 0 ? View.VISIBLE : View.GONE, default=gone}"
+                    android:progress="@{data.downloadProgress, default=50}"/>
 
             </LinearLayout>
 
