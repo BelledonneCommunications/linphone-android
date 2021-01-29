@@ -613,6 +613,7 @@
   <string name="content_description_exit_conference">Esci dalla conferenza</string>
   <string name="content_title_notification_service">Notifica del servizio Linphone</string>
   <string name="content_title_notification">Notifiche di messaggi istantanei Linphone</string>
+  <string name="content_title_notification_missed_call">Notifiche di chiamate Linphone perse</string>
   <string name="content_description_conversation_subject">Oggetto della chat room di gruppo</string>
   <string name="content_description_conversation_infos">Informazioni sulla chat room di gruppo</string>
   <string name="content_description_record_call">Registra chiamata</string>
