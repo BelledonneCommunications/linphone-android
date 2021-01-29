@@ -76,8 +76,6 @@ class ChatMessageViewModel(
             // TODO FIXME : find a way to refresh outgoing message downloaded
             if (state == ChatMessage.State.FileTransferDone && !message.isOutgoing) {
                 Log.i("[Chat Message] File transfer done")
-                // No need to refresh content lists on outgoing messages after file transfer is done
-                // It will even cause the app to crash if updateContentsList isn't called right after
                 updateContentsList()
 
                 if (!message.isEphemeral && corePreferences.makePublicMediaFilesDownloaded) {

@@ -95,43 +95,50 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/download"
-                android:padding="10dp" />
+                android:contentDescription="@string/chat_message_download_file"
+                android:padding="5dp"
+                android:src="@drawable/download" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:gravity="center"
-                android:padding="10dp">
+                android:gravity="center_vertical"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp">
 
                 <TextView
                     style="@style/button_small_font"
-                    android:text="@{data.fileName + ` (` + data.fileSize + `)`}"
+                    android:text="@{data.fileName}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAlignment="center"
+                    android:ellipsize="end"
                     android:textColor="@drawable/assistant_button_text_color" />
 
-                <TextView
-                    style="@style/button_font"
-                    android:text="@string/chat_message_download_file"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@drawable/assistant_button_text_color"
-                    android:layout_marginTop="5dp"
-                    android:ellipsize="end"
-                    android:visibility="@{data.downloadEnabled ? View.VISIBLE : View.GONE}" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-                <ProgressBar
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                    android:max="101"
-                    android:layout_marginTop="5dp"
-                    android:visibility="@{data.downloadProgress > 0 ? View.VISIBLE : View.GONE, default=gone}"
-                    android:progress="@{data.downloadProgress, default=50}"/>
+                    <TextView
+                        style="@style/button_tiny_font"
+                        android:text="@{data.fileSize}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:textColor="@drawable/assistant_button_text_color" />
+
+                    <ProgressBar
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                        android:max="100"
+                        android:visibility="@{data.downloadProgress > 0 ? View.VISIBLE : View.GONE, default=gone}"
+                        android:progress="@{data.downloadProgress, default=50}"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 
