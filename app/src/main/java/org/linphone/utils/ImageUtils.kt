@@ -71,17 +71,64 @@ class ImageUtils {
             return ThumbnailUtils.createVideoThumbnail(path, MediaStore.Images.Thumbnails.MINI_KIND)
         }
 
-        suspend fun getImageFilePathFromPickerIntent(data: Intent?, temporaryImageFilePath: File?): String? {
+        suspend fun getFilesPathFromPickerIntent(data: Intent?, temporaryImageFilePath: File?): List<String> {
             var imageFilePath: String? = null
             if (temporaryImageFilePath != null) {
                 if (data != null) {
-                    val dataUri = data.data
-                    if (dataUri != null) {
-                        imageFilePath = dataUri.toString()
-                        Log.i("[Image Utils] Using data URI $imageFilePath")
-                    } else if (temporaryImageFilePath.exists()) {
-                        imageFilePath = temporaryImageFilePath.absolutePath
-                        Log.i("[Image Utils] Data URI is null, using $imageFilePath")
+                    val clipData = data.clipData
+                    if (clipData != null) { // Multiple selection
+                        Log.i("[Image Utils] Found ${clipData.itemCount} elements")
+                        val list = arrayListOf<String>()
+                        for (i in 0 until clipData.itemCount) {
+                            val dataUri = clipData.getItemAt(i).uri
+                            if (dataUri != null) {
+                                imageFilePath = dataUri.toString()
+                                Log.i("[Image Utils] Using data URI $imageFilePath")
+                            }
+                            imageFilePath = cleanFilePath(imageFilePath)
+                            if (imageFilePath != null) list.add(imageFilePath)
+                        }
+                        return list
+                    } else { // Single selection
+                        val dataUri = data.data
+                        if (dataUri != null) {
+                            imageFilePath = dataUri.toString()
+                            Log.i("[Image Utils] Using data URI $imageFilePath")
+                        } else if (temporaryImageFilePath.exists()) {
+                            imageFilePath = temporaryImageFilePath.absolutePath
+                            Log.i("[Image Utils] Data URI is null, using $imageFilePath")
+                        }
+                        imageFilePath = cleanFilePath(imageFilePath)
+                        if (imageFilePath != null) return arrayListOf(imageFilePath)
+                    }
+                } else if (temporaryImageFilePath.exists()) {
+                    imageFilePath = temporaryImageFilePath.absolutePath
+                    Log.i("[Image Utils] Data is null, using $imageFilePath")
+                    imageFilePath = cleanFilePath(imageFilePath)
+                    if (imageFilePath != null) return arrayListOf(imageFilePath)
+                }
+            }
+            return arrayListOf()
+        }
+
+        suspend fun getFilePathFromPickerIntent(data: Intent?, temporaryImageFilePath: File?): String? {
+            var imageFilePath: String? = null
+            if (temporaryImageFilePath != null) {
+                if (data != null) {
+                    val clipData = data.clipData
+                    if (clipData != null) { // Multiple selection
+                        for (i in 0 until clipData.itemCount) {
+                            val uri = clipData.getItemAt(i).uri
+                        }
+                    } else { // Single selection
+                        val dataUri = data.data
+                        if (dataUri != null) {
+                            imageFilePath = dataUri.toString()
+                            Log.i("[Image Utils] Using data URI $imageFilePath")
+                        } else if (temporaryImageFilePath.exists()) {
+                            imageFilePath = temporaryImageFilePath.absolutePath
+                            Log.i("[Image Utils] Data URI is null, using $imageFilePath")
+                        }
                     }
                 } else if (temporaryImageFilePath.exists()) {
                     imageFilePath = temporaryImageFilePath.absolutePath
@@ -89,20 +136,24 @@ class ImageUtils {
                 }
             }
 
-            if (imageFilePath != null) {
-                if (imageFilePath.startsWith("content://") ||
-                    imageFilePath.startsWith("file://")
+            return cleanFilePath(imageFilePath)
+        }
+
+        private suspend fun cleanFilePath(filePath: String?): String? {
+            if (filePath != null) {
+                if (filePath.startsWith("content://") ||
+                    filePath.startsWith("file://")
                 ) {
-                    val uriToParse = Uri.parse(imageFilePath)
-                    imageFilePath = FileUtils.getFilePath(coreContext.context, uriToParse)
-                    Log.i("[Image Utils] Path was using a content or file scheme, real path is: $imageFilePath")
-                    if (imageFilePath == null) {
+                    val uriToParse = Uri.parse(filePath)
+                    val result = FileUtils.getFilePath(coreContext.context, uriToParse)
+                    Log.i("[Image Utils] Path was using a content or file scheme, real path is: $filePath")
+                    if (result == null) {
                         Log.e("[Image Utils] Failed to get access to file $uriToParse")
                     }
+                    return result
                 }
             }
-
-            return imageFilePath
+            return filePath
         }
 
         private fun getRoundBitmap(bitmap: Bitmap): Bitmap? {
