@@ -338,12 +338,10 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             lifecycleScope.launch {
-                val fileToUploadPath = ImageUtils.getImageFilePathFromPickerIntent(
-                    data,
-                    chatSendingViewModel.temporaryFileUploadPath
-                )
-                if (fileToUploadPath != null) {
-                    chatSendingViewModel.addAttachment(fileToUploadPath)
+                for (fileToUploadPath in ImageUtils.getFilesPathFromPickerIntent(data, chatSendingViewModel.temporaryFileUploadPath)) {
+                    if (fileToUploadPath != null) {
+                        chatSendingViewModel.addAttachment(fileToUploadPath)
+                    }
                 }
             }
         }
@@ -481,6 +479,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         val galleryIntent = Intent(Intent.ACTION_PICK)
         galleryIntent.type = "*/*"
         galleryIntent.putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("image/*", "video/*"))
+        galleryIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
 
         if (PermissionHelper.get().hasCameraPermission()) {
             // Allows to capture directly from the camera
@@ -497,6 +496,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             // Finally allow any kind of file
             val fileIntent = Intent(Intent.ACTION_GET_CONTENT)
             fileIntent.type = "*/*"
+            fileIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
             cameraIntents.add(fileIntent)
         }
 

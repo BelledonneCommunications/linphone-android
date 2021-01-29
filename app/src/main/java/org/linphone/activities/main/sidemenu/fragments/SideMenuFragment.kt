@@ -120,7 +120,7 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             lifecycleScope.launch {
-                val contactImageFilePath = ImageUtils.getImageFilePathFromPickerIntent(data, temporaryPicturePath)
+                val contactImageFilePath = ImageUtils.getFilePathFromPickerIntent(data, temporaryPicturePath)
                 if (contactImageFilePath != null) {
                     viewModel.setPictureFromPath(contactImageFilePath)
                 }
