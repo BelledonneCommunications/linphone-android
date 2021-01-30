@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.activities.GenericActivity
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.chat.adapters.ChatRoomsListAdapter
 import org.linphone.activities.main.chat.viewmodels.ChatRoomsListViewModel
@@ -141,8 +142,13 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
 
         adapter.selectedChatRoomEvent.observe(viewLifecycleOwner, {
             it.consume { chatRoom ->
-                sharedViewModel.selectedChatRoom.value = chatRoom
-                navigateToChatRoom()
+                if ((requireActivity() as GenericActivity).isDestructionPending) {
+                    Log.w("[Chat] Activity is pending destruction, don't start navigating now!")
+                    sharedViewModel.destructionPendingChatRoom = chatRoom
+                } else {
+                    sharedViewModel.selectedChatRoom.value = chatRoom
+                    navigateToChatRoom()
+                }
             }
         })
 
@@ -157,6 +163,14 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
         binding.setNewGroupChatRoomClickListener {
             sharedViewModel.selectedGroupChatRoom.value = null
             navigateToChatRoomCreation(true)
+        }
+
+        val pendingDestructionChatRoom = sharedViewModel.destructionPendingChatRoom
+        if (pendingDestructionChatRoom != null) {
+            Log.w("[Chat] Found pending chat room from before activity was recreated")
+            sharedViewModel.destructionPendingChatRoom = null
+            sharedViewModel.selectedChatRoom.value = pendingDestructionChatRoom
+            navigateToChatRoom()
         }
 
         val localSipUri = arguments?.getString("LocalSipUri")

@@ -36,6 +36,9 @@ import org.linphone.core.tools.Log
 
 abstract class GenericActivity : AppCompatActivity() {
     private var timer: Timer? = null
+    private var _isDestructionPending = false
+    val isDestructionPending: Boolean
+        get() = _isDestructionPending
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,19 +52,24 @@ abstract class GenericActivity : AppCompatActivity() {
             ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         }
 
+        _isDestructionPending = false
         val nightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         val darkModeEnabled = corePreferences.darkMode
         when (nightMode) {
             Configuration.UI_MODE_NIGHT_NO, Configuration.UI_MODE_NIGHT_UNDEFINED -> {
                 if (darkModeEnabled == 1) {
                     // Force dark mode
+                    Log.w("[Generic Activity] Forcing night mode")
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                    _isDestructionPending = true
                 }
             }
             Configuration.UI_MODE_NIGHT_YES -> {
                 if (darkModeEnabled == 0) {
                     // Force light mode
+                    Log.w("[Generic Activity] Forcing day mode")
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                    _isDestructionPending = true
                 }
             }
         }
