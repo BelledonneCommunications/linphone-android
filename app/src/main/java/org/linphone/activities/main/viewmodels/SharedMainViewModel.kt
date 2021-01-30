@@ -36,6 +36,7 @@ class SharedMainViewModel : ViewModel() {
     /* Chat */
 
     val selectedChatRoom = MutableLiveData<ChatRoom>()
+    var destructionPendingChatRoom: ChatRoom? = null
 
     val selectedGroupChatRoom = MutableLiveData<ChatRoom>()
 
