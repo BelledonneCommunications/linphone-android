@@ -326,7 +326,6 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
         // Prevent notifications for this chat room to be displayed
         coreContext.notificationsManager.currentlyDisplayedChatRoomAddress = chatRoomAddress
-        scrollToBottom()
     }
 
     override fun onPause() {
