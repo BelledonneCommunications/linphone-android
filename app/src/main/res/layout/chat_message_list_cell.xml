@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@id/time"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="10dp"
                 android:gravity="center"
                 app:viewModel="@{viewModel}"
                 tools:layout="@layout/contact_avatar" />
@@ -88,7 +88,7 @@
                 android:layout_toRightOf="@id/avatar"
                 android:layout_below="@id/time"
                 android:layout_marginBottom="1dp"
-                android:layout_marginRight="3dp"
+                android:layout_marginRight="@{viewModel.chatMessage.outgoing ? @dimen/outgoing_chat_message_bubble_right_margin : @dimen/incoming_chat_message_bubble_right_margin}"
                 android:layout_marginLeft="@{selectionListViewModel.isEditionEnabled ? @dimen/edit_chat_message_bubble_left_margin : !viewModel.chatMessage.outgoing ? @dimen/incoming_chat_message_bubble_left_margin : @dimen/outgoing_chat_message_bubble_left_margin}"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp">
