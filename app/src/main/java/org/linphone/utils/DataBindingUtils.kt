@@ -106,6 +106,13 @@ fun setLeftMargin(view: View, margin: Float) {
     view.layoutParams = layoutParams
 }
 
+@BindingAdapter("android:layout_marginRight")
+fun setRightMargin(view: View, margin: Float) {
+    val layoutParams = view.layoutParams as RelativeLayout.LayoutParams
+    layoutParams.rightMargin = margin.toInt()
+    view.layoutParams = layoutParams
+}
+
 @BindingAdapter("android:layout_weight")
 fun setLayoutWeight(view: View, weight: Float) {
     val layoutParams = view.layoutParams as LinearLayout.LayoutParams
