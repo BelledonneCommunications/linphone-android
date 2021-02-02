@@ -72,8 +72,6 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         }
     }
 
-    private var chatRoomAddress: String? = null
-
     override fun getLayoutId(): Int {
         return R.layout.chat_room_detail_fragment
     }
@@ -121,7 +119,6 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
         Compatibility.setLocusIdInContentCaptureSession(binding.root, chatRoom)
 
-        chatRoomAddress = chatRoom.peerAddress.asStringUriOnly()
         isSecure = chatRoom.currentParams.encryptionEnabled()
 
         viewModel = ViewModelProvider(
@@ -328,7 +325,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         super.onResume()
 
         // Prevent notifications for this chat room to be displayed
-        coreContext.notificationsManager.currentlyDisplayedChatRoomAddress = chatRoomAddress
+        coreContext.notificationsManager.currentlyDisplayedChatRoomAddress = viewModel.chatRoom.peerAddress.asStringUriOnly()
     }
 
     override fun onPause() {
