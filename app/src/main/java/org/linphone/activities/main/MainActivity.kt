@@ -211,6 +211,11 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                     handleTelOrSipUri(uri)
                 }
             }
+            Intent.ACTION_VIEW_LOCUS -> {
+                if (corePreferences.disableChat) return
+                val locus = Compatibility.extractLocusIdFromIntent(intent)
+                if (locus != null) handleLocus(locus)
+            }
             else -> {
                 when {
                     intent.hasExtra("ContactId") -> {
@@ -363,6 +368,19 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             val deepLink = "linphone-android://chat/"
             Log.i("[Main Activity] Starting deep link: $deepLink")
             findNavController(R.id.nav_host_fragment).navigate(Uri.parse(deepLink))
+        }
+    }
+
+    private fun handleLocus(id: String) {
+        Log.i("[Main Activity] Found chat room locus intent extra: $id")
+        val split = id.split("~")
+        if (split.size == 2) {
+            val localAddress = split[0]
+            val peerAddress = split[1]
+            val deepLink = "linphone-android://chat-room/$localAddress/$peerAddress"
+            findNavController(R.id.nav_host_fragment).navigate(Uri.parse(deepLink))
+        } else {
+            Log.e("[Main Activity] Failed to parse locus id: $id")
         }
     }
 }

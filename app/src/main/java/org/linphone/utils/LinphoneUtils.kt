@@ -23,7 +23,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.telephony.TelephonyManager.*
-import androidx.core.content.ContextCompat.getSystemService
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -135,6 +134,10 @@ class LinphoneUtils {
                 (callLog.status == Call.Status.Missed ||
                 callLog.status == Call.Status.Aborted ||
                 callLog.status == Call.Status.EarlyAborted))
+        }
+
+        fun getChatRoomId(localAddress: String, remoteAddress: String): String {
+            return "$localAddress~$remoteAddress"
         }
     }
 }

@@ -23,6 +23,7 @@ import android.annotation.TargetApi
 import android.content.Context
 import android.content.pm.ShortcutManager
 import org.linphone.core.ChatRoom
+import org.linphone.utils.LinphoneUtils
 
 @TargetApi(30)
 class Api30Compatibility {
@@ -32,7 +33,8 @@ class Api30Compatibility {
             val localAddress = chatRoom.localAddress.asStringUriOnly()
 
             val shortcutManager = context.getSystemService(ShortcutManager::class.java)
-            val shortcutsToRemoveList = arrayListOf("$localAddress#$peerAddress")
+            val id = LinphoneUtils.getChatRoomId(localAddress, peerAddress)
+            val shortcutsToRemoveList = arrayListOf(id)
             shortcutManager.removeLongLivedShortcuts(shortcutsToRemoveList)
         }
     }

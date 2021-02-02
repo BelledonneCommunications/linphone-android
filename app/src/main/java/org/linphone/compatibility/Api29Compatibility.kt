@@ -22,17 +22,37 @@ package org.linphone.compatibility
 import android.annotation.TargetApi
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.os.Environment
 import android.provider.MediaStore
+import android.view.View
+import android.view.contentcapture.ContentCaptureContext
+import android.view.contentcapture.ContentCaptureSession
 import org.linphone.R
+import org.linphone.core.ChatRoom
 import org.linphone.core.Content
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.FileUtils
+import org.linphone.utils.LinphoneUtils
 
 @TargetApi(29)
 class Api29Compatibility {
     companion object {
+        fun extractLocusIdFromIntent(intent: Intent): String? {
+            return intent.getStringExtra(Intent.EXTRA_LOCUS_ID)
+        }
+
+        fun setLocusIdInContentCaptureSession(root: View, chatRoom: ChatRoom) {
+            val session: ContentCaptureSession? = root.contentCaptureSession
+            if (session != null) {
+                val localAddress = chatRoom.localAddress.asStringUriOnly()
+                val peerAddress = chatRoom.peerAddress.asStringUriOnly()
+                val id = LinphoneUtils.getChatRoomId(localAddress, peerAddress)
+                session.contentCaptureContext = ContentCaptureContext.forLocusId(id)
+            }
+        }
+
         suspend fun addImageToMediaStore(context: Context, content: Content): Boolean {
             val filePath = content.filePath
             if (filePath == null) {
