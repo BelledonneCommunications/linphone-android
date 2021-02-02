@@ -20,6 +20,7 @@
 package org.linphone.compatibility
 
 import android.annotation.TargetApi
+import android.app.NotificationManager
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -51,6 +52,14 @@ class Api29Compatibility {
                 val id = LinphoneUtils.getChatRoomId(localAddress, peerAddress)
                 session.contentCaptureContext = ContentCaptureContext.forLocusId(id)
             }
+        }
+
+        fun canChatMessageChannelBubble(context: Context): Boolean {
+            val notificationManager: NotificationManager =
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val bubblesAllowed = notificationManager.areBubblesAllowed()
+            Log.i("[Notifications Manager] Bubbles notifications are ${if (bubblesAllowed) "allowed" else "forbidden"}")
+            return bubblesAllowed
         }
 
         suspend fun addImageToMediaStore(context: Context, content: Content): Boolean {
