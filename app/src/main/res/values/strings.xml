@@ -707,4 +707,6 @@
     <string name="content_description_toggle_call_stats">Show or hide call statistics</string>
     <string name="content_description_chat_message_video_attachment">Video attachment</string>
     <string name="content_description_take_screenshot">Take a screenshot of received video</string>
+    <string name="content_description_close_bubble">Close notification bubble</string>
+    <string name="content_description_open_app">Open conversation in app instead of bubble</string>
 </resources>

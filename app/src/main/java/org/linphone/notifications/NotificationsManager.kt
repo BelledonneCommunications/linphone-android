@@ -42,6 +42,7 @@ import org.linphone.R
 import org.linphone.activities.call.CallActivity
 import org.linphone.activities.call.IncomingCallActivity
 import org.linphone.activities.call.OutgoingCallActivity
+import org.linphone.activities.chat_bubble.ChatBubbleActivity
 import org.linphone.activities.main.MainActivity
 import org.linphone.compatibility.Compatibility
 import org.linphone.contact.Contact
@@ -68,7 +69,8 @@ private class NotifiableMessage(
     val time: Long,
     val senderAvatar: Bitmap? = null,
     var filePath: Uri? = null,
-    var fileMime: String? = null
+    var fileMime: String? = null,
+    val isOutgoing: Boolean = false
 )
 
 class NotificationsManager(private val context: Context) {
@@ -149,6 +151,10 @@ class NotificationsManager(private val context: Context) {
                 return
             }
 
+            if (corePreferences.chatRoomShortcuts) {
+                Log.i("[Notifications Manager] Ensure chat room shortcut exists for bubble notification")
+                Compatibility.createShortcutsToChatRooms(context)
+            }
             displayIncomingChatNotification(room, message)
         }
     }
@@ -238,6 +244,14 @@ class NotificationsManager(private val context: Context) {
             }
         }
         return null
+    }
+
+    fun getChatNotificationIdForSipUri(sipUri: String): Int {
+        val notifiable: Notifiable? = chatNotificationsMap[sipUri]
+        if (notifiable != null) {
+            return notifiable.notificationId
+        }
+        return 0
     }
 
     /* Service related */
@@ -529,8 +543,13 @@ class NotificationsManager(private val context: Context) {
             .setArguments(args)
             .createPendingIntent()
 
+        val target = Intent(context, ChatBubbleActivity::class.java)
+        target.putExtra("RemoteSipUri", peerAddress)
+        target.putExtra("LocalSipUri", localAddress)
+        val bubbleIntent = PendingIntent.getActivity(context, notifiable.notificationId, target, PendingIntent.FLAG_UPDATE_CURRENT)
+
         val id = LinphoneUtils.getChatRoomId(localAddress, peerAddress)
-        val notification = createMessageNotification(notifiable, pendingIntent, id)
+        val notification = createMessageNotification(notifiable, pendingIntent, bubbleIntent, id)
         notify(notifiable.notificationId, notification)
     }
 
@@ -548,7 +567,7 @@ class NotificationsManager(private val context: Context) {
                 text += content.name
             }
         }
-        val notifiableMessage = NotifiableMessage(text, contact, displayName, message.time, senderAvatar = roundPicture)
+        val notifiableMessage = NotifiableMessage(text, contact, displayName, message.time, senderAvatar = roundPicture, isOutgoing = message.isOutgoing)
         notifiable.messages.add(notifiableMessage)
 
         for (content in message.contents) {
@@ -601,7 +620,8 @@ class NotificationsManager(private val context: Context) {
             message.textContent.orEmpty(),
             null,
             notifiable.myself ?: LinphoneUtils.getDisplayName(message.fromAddress),
-            System.currentTimeMillis()
+            System.currentTimeMillis(),
+            isOutgoing = true
         )
         notifiable.messages.add(reply)
 
@@ -623,12 +643,14 @@ class NotificationsManager(private val context: Context) {
     private fun createMessageNotification(
         notifiable: Notifiable,
         pendingIntent: PendingIntent,
+        bubbleIntent: PendingIntent,
         id: String
     ): Notification {
         val me = Person.Builder().setName(notifiable.myself).build()
         val style = NotificationCompat.MessagingStyle(me)
         val largeIcon: Bitmap? = notifiable.messages.last().senderAvatar
 
+        var lastPerson: Person? = null
         for (message in notifiable.messages) {
             val contact = message.contact
             val person = if (contact != null) {
@@ -637,12 +659,17 @@ class NotificationsManager(private val context: Context) {
                 val builder = Person.Builder().setName(message.sender)
                 val userIcon =
                     if (message.senderAvatar != null) {
-                        IconCompat.createWithBitmap(message.senderAvatar)
+                        IconCompat.createWithAdaptiveBitmap(message.senderAvatar)
                     } else {
                         IconCompat.createWithResource(context, R.drawable.avatar)
                     }
                 if (userIcon != null) builder.setIcon(userIcon)
                 builder.build()
+            }
+
+            // We don't want to see our own avatar
+            if (!message.isOutgoing) {
+                lastPerson = person
             }
 
             val msg = if (!corePreferences.hideChatMessageContentInNotification) {
@@ -663,6 +690,10 @@ class NotificationsManager(private val context: Context) {
         }
         style.isGroupConversation = notifiable.isGroup
 
+        val icon = lastPerson?.icon ?: IconCompat.createWithResource(context, R.drawable.avatar)
+        val bubble = NotificationCompat.BubbleMetadata.Builder(bubbleIntent, icon)
+            .build()
+
         val notificationBuilder = NotificationCompat.Builder(context, context.getString(R.string.notification_channel_chat_id))
             .setSmallIcon(R.drawable.topbar_chat_notification)
             .setAutoCancel(true)
@@ -680,10 +711,15 @@ class NotificationsManager(private val context: Context) {
             .addAction(getMarkMessageAsReadAction(notifiable))
             .setShortcutId(id)
             .setLocusId(LocusIdCompat(id))
+
         if (corePreferences.markAsReadUponChatMessageNotificationDismissal) {
             Log.i("[Notifications Manager] Chat room will be marked as read when notification will be dismissed")
             notificationBuilder
                 .setDeleteIntent(getMarkMessageAsReadPendingIntent(notifiable))
+        }
+
+        if (Compatibility.canChatMessageChannelBubble(context)) {
+            notificationBuilder.bubbleMetadata = bubble
         }
         return notificationBuilder.build()
     }

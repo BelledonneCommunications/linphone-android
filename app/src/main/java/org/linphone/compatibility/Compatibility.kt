@@ -167,6 +167,13 @@ class Compatibility {
             }
         }
 
+        fun canChatMessageChannelBubble(context: Context): Boolean {
+            if (Version.sdkAboveOrEqual(Version.API29_ANDROID_10)) {
+                return Api29Compatibility.canChatMessageChannelBubble(context)
+            }
+            return false
+        }
+
         suspend fun addImageToMediaStore(context: Context, content: Content): Boolean {
             if (Version.sdkAboveOrEqual(Version.API29_ANDROID_10)) {
                 return Api29Compatibility.addImageToMediaStore(context, content)
