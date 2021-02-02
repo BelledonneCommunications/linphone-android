@@ -21,8 +21,10 @@ package org.linphone.compatibility
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Vibrator
+import android.view.View
 import android.view.WindowManager
 import androidx.core.app.NotificationManagerCompat
 import org.linphone.core.ChatRoom
@@ -149,6 +151,19 @@ class Compatibility {
         fun removeChatRoomShortcut(context: Context, chatRoom: ChatRoom) {
             if (Version.sdkAboveOrEqual(Version.API30_ANDROID_11)) {
                 Api30Compatibility.removeChatRoomShortcut(context, chatRoom)
+            }
+        }
+
+        fun extractLocusIdFromIntent(intent: Intent): String? {
+            if (Version.sdkAboveOrEqual(Version.API29_ANDROID_10)) {
+                return Api29Compatibility.extractLocusIdFromIntent(intent)
+            }
+            return null
+        }
+
+        fun setLocusIdInContentCaptureSession(root: View, chatRoom: ChatRoom) {
+            if (Version.sdkAboveOrEqual(Version.API29_ANDROID_10)) {
+                return Api29Compatibility.setLocusIdInContentCaptureSession(root, chatRoom)
             }
         }
 

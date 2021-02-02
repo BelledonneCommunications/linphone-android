@@ -33,6 +33,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.Person
 import androidx.core.app.RemoteInput
 import androidx.core.content.ContextCompat
+import androidx.core.content.LocusIdCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.navigation.NavDeepLinkBuilder
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -528,8 +529,9 @@ class NotificationsManager(private val context: Context) {
             .setArguments(args)
             .createPendingIntent()
 
-        val notification = createMessageNotification(notifiable, pendingIntent, "$localAddress#$peerAddress")
-        if (notification != null) notify(notifiable.notificationId, notification)
+        val id = LinphoneUtils.getChatRoomId(localAddress, peerAddress)
+        val notification = createMessageNotification(notifiable, pendingIntent, id)
+        notify(notifiable.notificationId, notification)
     }
 
     private fun displayIncomingChatNotification(room: ChatRoom, message: ChatMessage) {
@@ -621,8 +623,8 @@ class NotificationsManager(private val context: Context) {
     private fun createMessageNotification(
         notifiable: Notifiable,
         pendingIntent: PendingIntent,
-        shortcutId: String
-    ): Notification? {
+        id: String
+    ): Notification {
         val me = Person.Builder().setName(notifiable.myself).build()
         val style = NotificationCompat.MessagingStyle(me)
         val largeIcon: Bitmap? = notifiable.messages.last().senderAvatar
@@ -676,7 +678,8 @@ class NotificationsManager(private val context: Context) {
             .setColor(ContextCompat.getColor(context, R.color.primary_color))
             .addAction(getReplyMessageAction(notifiable))
             .addAction(getMarkMessageAsReadAction(notifiable))
-            .setShortcutId(shortcutId)
+            .setShortcutId(id)
+            .setLocusId(LocusIdCompat(id))
         if (corePreferences.markAsReadUponChatMessageNotificationDismissal) {
             Log.i("[Notifications Manager] Chat room will be marked as read when notification will be dismissed")
             notificationBuilder

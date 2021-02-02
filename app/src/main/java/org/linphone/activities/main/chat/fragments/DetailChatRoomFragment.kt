@@ -50,6 +50,7 @@ import org.linphone.activities.main.chat.viewmodels.*
 import org.linphone.activities.main.fragments.MasterFragment
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
+import org.linphone.compatibility.Compatibility
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatRoomDetailFragmentBinding
@@ -117,6 +118,8 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
         val chatRoom = sharedViewModel.selectedChatRoom.value
         chatRoom ?: return
+
+        Compatibility.setLocusIdInContentCaptureSession(binding.root, chatRoom)
 
         chatRoomAddress = chatRoom.peerAddress.asStringUriOnly()
         isSecure = chatRoom.currentParams.encryptionEnabled()
@@ -337,7 +340,10 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             lifecycleScope.launch {
-                for (fileToUploadPath in ImageUtils.getFilesPathFromPickerIntent(data, chatSendingViewModel.temporaryFileUploadPath)) {
+                for (fileToUploadPath in ImageUtils.getFilesPathFromPickerIntent(
+                    data,
+                    chatSendingViewModel.temporaryFileUploadPath
+                )) {
                     if (fileToUploadPath != null) {
                         chatSendingViewModel.addAttachment(fileToUploadPath)
                     }

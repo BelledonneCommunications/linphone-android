@@ -27,6 +27,7 @@ import android.content.pm.ShortcutManager
 import android.os.Bundle
 import androidx.collection.ArraySet
 import androidx.core.app.Person
+import androidx.core.content.LocusIdCompat
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.graphics.drawable.IconCompat
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -201,13 +202,15 @@ class ShortcutsHelper(val context: Context) {
                 intent.putExtra("RemoteSipUri", peerAddress)
                 intent.putExtra("LocalSipUri", localAddress)
 
-                return ShortcutInfoCompat.Builder(context, "$localAddress#$peerAddress")
+                val id = LinphoneUtils.getChatRoomId(localAddress, peerAddress)
+                return ShortcutInfoCompat.Builder(context, id)
                     .setShortLabel(subject)
                     .setIcon(icon)
                     .setPersons(persons)
                     .setCategories(categories)
                     .setIntent(intent)
                     .setLongLived(Version.sdkAboveOrEqual(Version.API30_ANDROID_11))
+                    .setLocusId(LocusIdCompat(id))
                     .build().toShortcutInfo()
             } catch (e: Exception) {
                 Log.e("[Shortcuts Helper] ShortcutInfo.Builder exception: $e")
