@@ -83,6 +83,8 @@ class ChatMessagesListAdapter(
         }
     }
 
+    private var contextMenuDisabled: Boolean = false
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             EventLog.Type.ConferenceChatMessage.toInt() -> createChatMessageViewHolder(parent)
@@ -117,6 +119,10 @@ class ChatMessagesListAdapter(
     override fun getItemViewType(position: Int): Int {
         val eventLog = getItem(position)
         return eventLog.type.toInt()
+    }
+
+    fun disableContextMenu() {
+        contextMenuDisabled = true
     }
 
     inner class ChatMessageViewHolder(
@@ -175,6 +181,8 @@ class ChatMessagesListAdapter(
                     chatMessageViewModel.updateBubbleBackground(hasPrevious, hasNext)
 
                     executePendingBindings()
+
+                    if (contextMenuDisabled) return
 
                     setContextMenuClickListener {
                         val popup = PopupMenu(root.context, background)
