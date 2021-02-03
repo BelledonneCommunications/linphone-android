@@ -107,6 +107,7 @@
 
                 <include
                     layout="@layout/settings_widget_switch"
+                    android:visibility="gone"
                     linphone:title="@{@string/chat_settings_launcher_shortcuts_title}"
                     linphone:subtitle="@{@string/chat_settings_launcher_shortcuts_summary}"
                     linphone:listener="@{viewModel.launcherShortcutsListener}"
