@@ -93,11 +93,7 @@ class NotificationsManager(private val context: Context) {
             field = value
             if (value != null) {
                 // When a chat room becomes visible, cancel unread chat notification if any
-                val notifiable: Notifiable? = chatNotificationsMap[value]
-                if (notifiable != null) {
-                    cancel(notifiable.notificationId)
-                    notifiable.messages.clear()
-                }
+                cancelChatNotificationIdForSipUri(value)
             }
         }
 
@@ -246,12 +242,12 @@ class NotificationsManager(private val context: Context) {
         return null
     }
 
-    fun getChatNotificationIdForSipUri(sipUri: String): Int {
+    fun cancelChatNotificationIdForSipUri(sipUri: String) {
         val notifiable: Notifiable? = chatNotificationsMap[sipUri]
         if (notifiable != null) {
-            return notifiable.notificationId
+            notifiable.messages.clear()
+            cancel(notifiable.notificationId)
         }
-        return 0
     }
 
     /* Service related */
