@@ -32,17 +32,15 @@
             android:background="?attr/lightToolbarBackgroundColor"
             android:orientation="horizontal">
 
-            <!-- Disabled for now -->
             <ImageView
                 android:contentDescription="@string/content_description_close_bubble"
-                android:visibility="gone"
                 android:onClick="@{closeBubbleClickListener}"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.2"
-                android:layout_margin="5dp"
+                android:padding="15dp"
                 android:background="?attr/button_background_drawable"
-                android:src="@drawable/menu_delete_default"
+                android:src="@drawable/collapse_default"
                 app:tint="?attr/drawableTintColor" />
 
             <LinearLayout
@@ -71,18 +69,16 @@
 
             </LinearLayout>
 
-            <!-- Disabled for now -->
             <ImageView
                 android:onClick="@{openAppClickListener}"
-                android:visibility="gone"
                 android:contentDescription="@string/content_description_open_app"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.2"
-                android:layout_margin="5dp"
+                android:padding="15dp"
                 android:background="?attr/button_background_drawable"
-                app:tint="?attr/colorPrimary"
-                android:src="@drawable/linphone_logo"/>
+                app:tint="?attr/drawableTintColor"
+                android:src="@drawable/fullscreen_default"/>
 
         </LinearLayout>
 

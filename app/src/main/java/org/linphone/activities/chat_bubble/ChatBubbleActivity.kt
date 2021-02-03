@@ -126,8 +126,7 @@ class ChatBubbleActivity : GenericActivity() {
         }
 
         binding.setCloseBubbleClickListener {
-            val notificationId = coreContext.notificationsManager.getChatNotificationIdForSipUri(viewModel.chatRoom.peerAddress.asStringUriOnly())
-            coreContext.notificationsManager.cancel(notificationId)
+            coreContext.notificationsManager.cancelChatNotificationIdForSipUri(viewModel.chatRoom.peerAddress.asStringUriOnly())
         }
 
         binding.setSendMessageClickListener {

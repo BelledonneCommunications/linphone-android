@@ -60,8 +60,12 @@ class CoreService : CoreService() {
 
     override fun onTaskRemoved(rootIntent: Intent?) {
         if (!corePreferences.keepServiceAlive) {
-            Log.i("[Service] Task removed, stopping Core")
-            coreContext.stop()
+            if (coreContext.core.isInBackground()) {
+                Log.i("[Service] Task removed, stopping Core")
+                coreContext.stop()
+            } else {
+                Log.w("[Service] Task removed but Core in not in background, skipping")
+            }
         }
 
         super.onTaskRemoved(rootIntent)
