@@ -214,7 +214,10 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             Intent.ACTION_VIEW_LOCUS -> {
                 if (corePreferences.disableChat) return
                 val locus = Compatibility.extractLocusIdFromIntent(intent)
-                if (locus != null) handleLocus(locus)
+                if (locus != null) {
+                    Log.i("[Main Activity] Found chat room locus intent extra: $locus")
+                    handleLocusOrShortcut(locus)
+                }
             }
             else -> {
                 when {
@@ -365,14 +368,19 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             Log.i("[Main Activity] Starting deep link: $deepLink")
             findNavController(R.id.nav_host_fragment).navigate(Uri.parse(deepLink))
         } else {
-            val deepLink = "linphone-android://chat/"
-            Log.i("[Main Activity] Starting deep link: $deepLink")
-            findNavController(R.id.nav_host_fragment).navigate(Uri.parse(deepLink))
+            val shortcutId = intent.getStringExtra("android.intent.extra.shortcut.ID") // Intent.EXTRA_SHORTCUT_ID
+            if (shortcutId != null) {
+                Log.i("[Main Activity] Found shortcut ID: $shortcutId")
+                handleLocusOrShortcut(shortcutId)
+            } else {
+                val deepLink = "linphone-android://chat/"
+                Log.i("[Main Activity] Starting deep link: $deepLink")
+                findNavController(R.id.nav_host_fragment).navigate(Uri.parse(deepLink))
+            }
         }
     }
 
-    private fun handleLocus(id: String) {
-        Log.i("[Main Activity] Found chat room locus intent extra: $id")
+    private fun handleLocusOrShortcut(id: String) {
         val split = id.split("~")
         if (split.size == 2) {
             val localAddress = split[0]
@@ -380,7 +388,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             val deepLink = "linphone-android://chat-room/$localAddress/$peerAddress"
             findNavController(R.id.nav_host_fragment).navigate(Uri.parse(deepLink))
         } else {
-            Log.e("[Main Activity] Failed to parse locus id: $id")
+            Log.e("[Main Activity] Failed to parse shortcut/locus id: $id")
         }
     }
 }

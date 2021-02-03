@@ -22,8 +22,11 @@ This version is a full rewrite of the app in kotlin, using modern Android compon
 - Improved preview when sharing video files through the chat
 - Android 11 people & conversation compliant
 - New animations between fragments and for unread chat messages / missed calls counters (can be disabled)
+- Bubble & conversation support for chat message notifications
+- Direct share support for chat room shortcuts
 - Option to mark messages as read when dismissing the notification
 - More settings are available
+- Call view can be displayed in full-screen
 
 ### Changed
 
@@ -32,6 +35,7 @@ This version is a full rewrite of the app in kotlin, using modern Android compon
 - Improved how Android native contacts are used
 - Switched to material design for text input fields & switches
 - Launcher shortcuts can be to either contacts or chat rooms
+- UI changes
 
 ### Removed
 

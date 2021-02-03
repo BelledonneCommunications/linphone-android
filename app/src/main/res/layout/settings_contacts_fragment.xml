@@ -98,6 +98,7 @@
 
                 <include
                     layout="@layout/settings_widget_switch"
+                    android:visibility="gone"
                     linphone:title="@{@string/contacts_settings_launcher_shortcuts_title}"
                     linphone:subtitle="@{@string/contacts_settings_launcher_shortcuts_summary}"
                     linphone:listener="@{viewModel.launcherShortcutsListener}"
