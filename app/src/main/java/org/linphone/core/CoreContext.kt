@@ -55,13 +55,17 @@ class CoreContext(val context: Context, coreConfig: Config) {
     val handler: Handler = Handler(Looper.getMainLooper())
 
     val appVersion: String by lazy {
-        "${org.linphone.BuildConfig.VERSION_NAME} (${org.linphone.BuildConfig.BUILD_TYPE})"
+        val appVersion = org.linphone.BuildConfig.VERSION_NAME
+        val appBranch = context.getString(R.string.linphone_app_branch)
+        val appBuildType = org.linphone.BuildConfig.BUILD_TYPE
+        "$appVersion ($appBranch, $appBuildType)"
     }
 
     val sdkVersion: String by lazy {
         val sdkVersion = context.getString(R.string.linphone_sdk_version)
         val sdkBranch = context.getString(R.string.linphone_sdk_branch)
-        "$sdkVersion ($sdkBranch)"
+        val sdkBuildType = org.linphone.core.BuildConfig.BUILD_TYPE
+        "$sdkVersion ($sdkBranch, $sdkBuildType)"
     }
 
     val contactsManager: ContactsManager by lazy {
