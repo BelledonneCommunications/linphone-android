@@ -15,6 +15,7 @@ static def firebaseEnabled() {
     return googleFile.exists()
 }
 
+def gitBranch = new ByteArrayOutputStream()
 task getGitVersion() {
     def gitVersion = "5.0.0"
     def gitVersionStream = new ByteArrayOutputStream()
@@ -33,6 +34,10 @@ task getGitVersion() {
         exec {
             executable "git" args "rev-parse", "--short", "HEAD"
             standardOutput = gitCommitHash
+        }
+        exec {
+            executable "git" args "name-rev", "--name-only", "HEAD"
+            standardOutput = gitBranch
         }
 
         if (gitCommitsCount.toString().toInteger() == 0) {
@@ -123,6 +128,7 @@ android {
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
+            resValue "string", "linphone_app_branch", gitBranch.toString().trim()
             resValue "string", "sync_account_type", getPackageName() + ".sync"
             resValue "string", "file_provider", getPackageName() + ".fileprovider"
             resValue "string", "linphone_address_mime_type", "vnd.android.cursor.item/vnd." + getPackageName() + ".provider.sip_address"
@@ -142,6 +148,7 @@ android {
             debuggable true
             jniDebuggable true
 
+            resValue "string", "linphone_app_branch", gitBranch.toString().trim()
             resValue "string", "sync_account_type", getPackageName() + ".sync"
             resValue "string", "file_provider", getPackageName() + ".debug.fileprovider"
             resValue "string", "linphone_address_mime_type", "vnd.android.cursor.item/vnd." + getPackageName() + ".provider.sip_address"
@@ -186,8 +193,8 @@ dependencies {
     implementation 'androidx.media:media:1.2.0'
     implementation 'androidx.fragment:fragment-ktx:1.2.5'
     implementation 'androidx.core:core-ktx:1.5.0-beta01'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.2'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.3.2'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.3'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.3'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
