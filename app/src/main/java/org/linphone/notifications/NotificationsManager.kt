@@ -88,15 +88,6 @@ class NotificationsManager(private val context: Context) {
         private const val MISSED_CALLS_NOTIF_ID = 2
     }
 
-    var currentlyDisplayedChatRoomAddress: String? = null
-        set(value) {
-            field = value
-            if (value != null) {
-                // When a chat room becomes visible, cancel unread chat notification if any
-                cancelChatNotificationIdForSipUri(value)
-            }
-        }
-
     private val notificationManager: NotificationManagerCompat by lazy {
         NotificationManagerCompat.from(context)
     }
@@ -106,7 +97,10 @@ class NotificationsManager(private val context: Context) {
     private var lastNotificationId: Int = 5
     private var currentForegroundServiceNotificationId: Int = 0
     private var serviceNotification: Notification? = null
+
     var service: CoreService? = null
+
+    var currentlyDisplayedChatRoomAddress: String? = null
 
     private val listener: CoreListenerStub = object : CoreListenerStub() {
         override fun onCallStateChanged(
@@ -248,6 +242,11 @@ class NotificationsManager(private val context: Context) {
             notifiable.messages.clear()
             cancel(notifiable.notificationId)
         }
+    }
+
+    fun resetChatNotificationCounterForSipUri(sipUri: String) {
+        val notifiable: Notifiable? = chatNotificationsMap[sipUri]
+        notifiable?.messages?.clear()
     }
 
     /* Service related */
