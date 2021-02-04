@@ -23,8 +23,11 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.GenericActivity
@@ -133,6 +136,26 @@ class ChatBubbleActivity : GenericActivity() {
             chatSendingViewModel.sendMessage()
             binding.message.text?.clear()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val peerAddress = viewModel.chatRoom.peerAddress.asStringUriOnly()
+        coreContext.notificationsManager.currentlyDisplayedChatRoomAddress = peerAddress
+        coreContext.notificationsManager.resetChatNotificationCounterForSipUri(peerAddress)
+
+        lifecycleScope.launch {
+            // Without the delay the scroll to bottom doesn't happen...
+            delay(100)
+            scrollToBottom()
+        }
+    }
+
+    override fun onPause() {
+        coreContext.notificationsManager.currentlyDisplayedChatRoomAddress = null
+
+        super.onPause()
     }
 
     private fun scrollToBottom() {
