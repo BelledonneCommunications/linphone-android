@@ -325,7 +325,9 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         super.onResume()
 
         // Prevent notifications for this chat room to be displayed
-        coreContext.notificationsManager.currentlyDisplayedChatRoomAddress = viewModel.chatRoom.peerAddress.asStringUriOnly()
+        val peerAddress = viewModel.chatRoom.peerAddress.asStringUriOnly()
+        coreContext.notificationsManager.currentlyDisplayedChatRoomAddress = peerAddress
+        coreContext.notificationsManager.cancelChatNotificationIdForSipUri(peerAddress)
     }
 
     override fun onPause() {
