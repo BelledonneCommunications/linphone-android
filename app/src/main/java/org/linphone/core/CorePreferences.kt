@@ -55,6 +55,12 @@ class CorePreferences constructor(private val context: Context) {
             config.setBool("app", "keep_service_alive", value)
         }
 
+    var readAndAgreeTermsAndPrivacy: Boolean
+        get() = config.getBool("app", "read_and_agree_terms_and_privacy", false)
+        set(value) {
+            config.setBool("app", "read_and_agree_terms_and_privacy", value)
+        }
+
     /* UI */
 
     var forcePortrait: Boolean

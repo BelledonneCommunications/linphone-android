@@ -66,8 +66,31 @@
                     android:layout_height="match_parent"
                     android:columnCount="1">
 
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="fill"
+                        android:layout_columnSpan="1"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_margin="10dp">
+
+                        <CheckBox
+                            android:enabled="@{!viewModel.termsAndPrivacyAccepted}"
+                            android:checked="@={viewModel.termsAndPrivacyAccepted}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                        <TextView
+                            android:id="@+id/terms_and_privacy"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
+
                     <TextView
                         android:id="@+id/account_creation"
+                        android:enabled="@{viewModel.termsAndPrivacyAccepted}"
                         android:visibility="@{viewModel.showCreateAccount ? View.VISIBLE : View.GONE}"
                         android:onClick="@{createAccountClickListener}"
                         style="@style/button_font"
@@ -76,7 +99,6 @@
                         android:layout_margin="20dp"
                         android:layout_width="wrap_content"
                         android:layout_gravity="fill"
-                        android:layout_columnWeight="1"
                         android:layout_height="wrap_content"
                         android:background="@drawable/assistant_button"
                         android:textColor="@drawable/assistant_button_text_color"
@@ -84,6 +106,7 @@
 
                     <TextView
                         android:id="@+id/account_connection"
+                        android:enabled="@{viewModel.termsAndPrivacyAccepted}"
                         android:visibility="@{viewModel.showLinphoneLogin ? View.VISIBLE : View.GONE}"
                         android:onClick="@{accountLoginClickListener}"
                         style="@style/button_font"
@@ -92,7 +115,6 @@
                         android:layout_margin="20dp"
                         android:layout_width="wrap_content"
                         android:layout_gravity="fill"
-                        android:layout_columnWeight="1"
                         android:layout_height="wrap_content"
                         android:background="@drawable/assistant_button"
                         android:textColor="@drawable/assistant_button_text_color"
@@ -100,6 +122,7 @@
 
                     <TextView
                         android:id="@+id/generic_connection"
+                        android:enabled="@{viewModel.termsAndPrivacyAccepted}"
                         android:visibility="@{viewModel.showGenericLogin ? View.VISIBLE : View.GONE}"
                         android:onClick="@{genericAccountLoginClickListener}"
                         style="@style/button_font"
@@ -108,7 +131,6 @@
                         android:layout_margin="20dp"
                         android:layout_width="wrap_content"
                         android:layout_gravity="fill"
-                        android:layout_columnWeight="1"
                         android:layout_height="wrap_content"
                         android:background="@drawable/assistant_button"
                         android:textColor="@drawable/assistant_button_text_color"
@@ -116,6 +138,7 @@
 
                     <TextView
                         android:id="@+id/remote_configuration"
+                        android:enabled="@{viewModel.termsAndPrivacyAccepted}"
                         android:visibility="@{viewModel.showRemoteProvisioning ? View.VISIBLE : View.GONE}"
                         android:onClick="@{remoteProvisioningClickListener}"
                         style="@style/button_font"
@@ -124,7 +147,6 @@
                         android:layout_margin="20dp"
                         android:layout_width="wrap_content"
                         android:layout_gravity="fill"
-                        android:layout_columnWeight="1"
                         android:layout_height="wrap_content"
                         android:background="@drawable/assistant_button"
                         android:textColor="@drawable/assistant_button_text_color"
