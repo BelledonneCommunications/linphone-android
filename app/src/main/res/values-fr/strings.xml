@@ -559,4 +559,10 @@
     <string name="account_settings_transport_title">Transport</string>
     <string name="content_description_clear_field">Vider le champ texte à côté</string>
     <string name="notification_channel_missed_call_name">Notifications d\'appels manqués &appName;</string>
+    <string name="content_description_take_screenshot">Prendre une capture d\'écran de la vidéo reçue</string>
+    <string name="assistant_general_terms">les conditions d\'utilisation</string>
+    <string name="content_description_close_bubble">Fermer la bulle de notification</string>
+    <string name="assistant_privacy_policy">la politique de confidentialité</string>
+    <string name="assistant_read_and_agree_terms">J\'accepte %1$s et %2$s de Belledonne Communications</string>
+    <string name="content_description_open_app">Ouvrir les conversations dans l\'application au lieu de la bulle</string>
 </resources>
