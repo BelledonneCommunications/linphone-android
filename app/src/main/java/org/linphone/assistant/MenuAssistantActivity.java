@@ -20,11 +20,22 @@
 package org.linphone.assistant;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.linphone.R;
 import org.linphone.settings.LinphonePreferences;
 
@@ -122,6 +133,8 @@ public class MenuAssistantActivity extends AssistantActivity {
                             PhoneAccountCreationAssistantActivity.class));
             finish();
         }
+
+        setUpTermsAndPrivacyLinks();
     }
 
     @Override
@@ -157,5 +170,93 @@ public class MenuAssistantActivity extends AssistantActivity {
             }
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    private void setUpTermsAndPrivacyLinks() {
+        String terms = getString(R.string.assistant_general_terms);
+        String privacy = getString(R.string.assistant_privacy_policy);
+
+        String label = getString(R.string.assistant_read_and_agree_terms, terms, privacy);
+        Spannable spannable = new SpannableString(label);
+
+        Matcher termsMatcher = Pattern.compile(terms).matcher(label);
+        if (termsMatcher.find()) {
+            ClickableSpan clickableSpan =
+                    new ClickableSpan() {
+                        @Override
+                        public void onClick(@NonNull View widget) {
+                            Intent browserIntent =
+                                    new Intent(
+                                            Intent.ACTION_VIEW,
+                                            Uri.parse(
+                                                    getString(
+                                                            R.string
+                                                                    .assistant_general_terms_link)));
+                            startActivity(browserIntent);
+                        }
+                    };
+            spannable.setSpan(
+                    clickableSpan,
+                    termsMatcher.start(0),
+                    termsMatcher.end(),
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        Matcher privacyMatcher = Pattern.compile(privacy).matcher(label);
+        if (privacyMatcher.find()) {
+            ClickableSpan clickableSpan =
+                    new ClickableSpan() {
+                        @Override
+                        public void onClick(@NonNull View widget) {
+                            Intent browserIntent =
+                                    new Intent(
+                                            Intent.ACTION_VIEW,
+                                            Uri.parse(
+                                                    getString(
+                                                            R.string
+                                                                    .assistant_privacy_policy_link)));
+                            startActivity(browserIntent);
+                        }
+                    };
+            spannable.setSpan(
+                    clickableSpan,
+                    privacyMatcher.start(0),
+                    privacyMatcher.end(),
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        TextView termsAndPrivacy = findViewById(R.id.terms_and_privacy);
+        final CheckBox termsAndPrivacyCheckBox = findViewById(R.id.terms_and_privacy_checkbox);
+
+        termsAndPrivacy.setText(spannable);
+        termsAndPrivacy.setMovementMethod(new LinkMovementMethod());
+        if (LinphonePreferences.instance().getReadAndAgreeTermsAndPrivacy()) {
+            termsAndPrivacyCheckBox.setEnabled(false);
+            termsAndPrivacyCheckBox.setChecked(true);
+        } else {
+            final TextView accountCreation = findViewById(R.id.account_creation);
+            final TextView accountConnection = findViewById(R.id.account_connection);
+            final TextView genericConnection = findViewById(R.id.generic_connection);
+            final TextView remoteConfiguration = findViewById(R.id.remote_configuration);
+            accountCreation.setEnabled(false);
+            accountConnection.setEnabled(false);
+            genericConnection.setEnabled(false);
+            remoteConfiguration.setEnabled(false);
+
+            termsAndPrivacyCheckBox.setOnCheckedChangeListener(
+                    new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                            if (isChecked) {
+                                LinphonePreferences.instance().setReadAndAgreeTermsAndPrivacy(true);
+                                termsAndPrivacyCheckBox.setEnabled(false);
+                                accountCreation.setEnabled(true);
+                                accountConnection.setEnabled(true);
+                                genericConnection.setEnabled(true);
+                                remoteConfiguration.setEnabled(true);
+                            }
+                        }
+                    });
+        }
     }
 }
