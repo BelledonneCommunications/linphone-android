@@ -350,6 +350,11 @@
     <string name="assistant_phone_number_info_content">\nThanks to your phone number, your friends will find you more easily.\n\n You will see in your address book who is using &appName; and your friends will know that they can reach you on &appName; as well.\n</string>
     <string name="assistant_phone_number_link_info_content">\nYour friends will find you more easily if you link your account to your phone number\n\nYou will see in your address book who is using &appName; and your friends will know that they can reach you on &appName; as well.\n</string>
     <string name="assistant_phone_number_link_info_content_already_account">You can only use your phone number with one &appName; account.\n\nIf you had already linked your number to an other account but you prefer to use this one, simply link it now and your number will automatically be moved to this account.</string>
+    <string name="assistant_general_terms_link" translatable="false">https://www.linphone.org/general-terms</string>
+    <string name="assistant_privacy_policy_link" translatable="false">https://www.linphone.org/privacy-policy</string>
+    <string name="assistant_general_terms">terms of use</string>
+    <string name="assistant_privacy_policy">privacy policy</string>
+    <string name="assistant_read_and_agree_terms">I accept Belledonne Communications\' %1$s and %2$s</string>
 
     <!-- Assistant errors -->
     <string name="assistant_error_phone_number_invalid_characters">Only digits are expected here</string>
