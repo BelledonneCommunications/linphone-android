@@ -84,8 +84,10 @@ class GroupInfoViewModel(val chatRoom: ChatRoom?) : ErrorReportingViewModel() {
 
         override fun onParticipantAdminStatusChanged(chatRoom: ChatRoom, eventLog: EventLog) {
             val admin = chatRoom.me?.isAdmin ?: false
-            isMeAdmin.value = admin
-            meAdminChangedEvent.value = Event(admin)
+            if (admin != isMeAdmin.value) {
+                isMeAdmin.value = admin
+                meAdminChangedEvent.value = Event(admin)
+            }
             updateParticipants()
         }
     }
