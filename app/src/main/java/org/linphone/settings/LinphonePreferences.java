@@ -203,6 +203,15 @@ public class LinphonePreferences {
         return ringtone;
     }
 
+    public boolean getReadAndAgreeTermsAndPrivacy() {
+        if (getConfig() == null) return false;
+        return getConfig().getBool("app", "read_and_agree_terms_and_privacy", false);
+    }
+
+    public void setReadAndAgreeTermsAndPrivacy(boolean value) {
+        getConfig().setBool("app", "read_and_agree_terms_and_privacy", value);
+    }
+
     // Accounts settings
     private ProxyConfig getProxyConfig(int n) {
         if (getLc() == null) return null;
