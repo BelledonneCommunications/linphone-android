@@ -300,6 +300,7 @@ public class ChatMessagesFragment extends Fragment
                 mMessageTextToSend.setText(sharedText);
                 Log.i("[Chat Messages Fragment] Found shared text: " + sharedText);
             }
+            getArguments().clear();
         }
 
         if (savedInstanceState != null) {
