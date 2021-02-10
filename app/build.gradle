@@ -6,6 +6,8 @@ apply plugin: 'kotlin-kapt'
 
 apply plugin: "org.jlleitschuh.gradle.ktlint"
 
+apply plugin: 'com.google.firebase.crashlytics'
+
 static def getPackageName() {
     return "org.linphone"
 }
@@ -156,6 +158,12 @@ android {
             if (!firebaseEnabled()) {
                 resValue "string", "gcm_defaultSenderId", "none"
             }
+
+            firebaseCrashlytics {
+                nativeSymbolUploadEnabled true
+                strippedNativeLibsDir file(LinphoneSdkBuildDir + '/libs/').toString()
+                unstrippedNativeLibsDir file(LinphoneSdkBuildDir + '/libs-debug/').toString()
+            }
         }
     }
 
@@ -209,8 +217,10 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.12.0'
     kapt 'com.github.bumptech.glide:compiler:4.12.0'
 
+    implementation platform('com.google.firebase:firebase-bom:26.4.0')
+    implementation 'com.google.firebase:firebase-crashlytics-ndk'
     if (firebaseEnabled()) {
-        implementation 'com.google.firebase:firebase-messaging:19.0.1'
+        implementation 'com.google.firebase:firebase-messaging'
     }
 
     implementation 'org.linphone:linphone-sdk-android:4.5+'
@@ -242,3 +252,7 @@ ktlint {
 }
 
 project.tasks['preBuild'].dependsOn 'ktlintFormat'
+
+project.tasks['build'].doLast() {
+    uploadCrashlyticsSymbolFileDebug
+}
