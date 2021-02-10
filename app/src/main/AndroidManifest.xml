@@ -35,7 +35,8 @@
         android:label="${appLabel}"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:extractNativeLibs="${extractNativeLibs}"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:allowNativeHeapPointerTagging="false">
 
         <activity
             android:name=".activities.launcher.LauncherActivity"
