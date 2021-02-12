@@ -21,7 +21,7 @@ android {
 repositories {
     maven {
         // Replace snapshots by releases for releases !
-        url "https://linphone.org/snapshots/maven_repository"
+        url "https://linphone.org/maven_repository"
     }
 }
 
