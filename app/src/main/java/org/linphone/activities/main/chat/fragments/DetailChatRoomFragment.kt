@@ -35,6 +35,7 @@ import android.webkit.MimeTypeMap
 import androidx.activity.addCallback
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.view.menu.MenuPopupHelper
+import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -343,9 +344,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                     data,
                     chatSendingViewModel.temporaryFileUploadPath
                 )) {
-                    if (fileToUploadPath != null) {
-                        chatSendingViewModel.addAttachment(fileToUploadPath)
-                    }
+                    chatSendingViewModel.addAttachment(fileToUploadPath)
                 }
             }
         }
@@ -489,10 +488,16 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             // Allows to capture directly from the camera
             val captureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             val tempFileName = System.currentTimeMillis().toString() + ".jpeg"
-            chatSendingViewModel.temporaryFileUploadPath =
-                FileUtils.getFileStoragePath(tempFileName)
-            val uri = Uri.fromFile(chatSendingViewModel.temporaryFileUploadPath)
-            captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
+            val file = FileUtils.getFileStoragePath(tempFileName)
+            chatSendingViewModel.temporaryFileUploadPath = file
+            val publicUri = FileProvider.getUriForFile(
+                requireContext(),
+                requireContext().getString(R.string.file_provider),
+                file
+            )
+            captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, publicUri)
+            captureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            captureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
             cameraIntents.add(captureIntent)
         }
 
