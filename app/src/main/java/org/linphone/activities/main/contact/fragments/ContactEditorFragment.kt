@@ -22,10 +22,10 @@ package org.linphone.activities.main.contact.fragments
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.provider.MediaStore
+import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -162,9 +162,16 @@ class ContactEditorFragment : GenericFragment<ContactEditorFragmentBinding>(), S
             // Allows to capture directly from the camera
             val captureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             val tempFileName = System.currentTimeMillis().toString() + ".jpeg"
-            temporaryPicturePath = FileUtils.getFileStoragePath(tempFileName)
-            val uri = Uri.fromFile(temporaryPicturePath)
-            captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
+            val file = FileUtils.getFileStoragePath(tempFileName)
+            temporaryPicturePath = file
+            val publicUri = FileProvider.getUriForFile(
+                requireContext(),
+                requireContext().getString(R.string.file_provider),
+                file
+            )
+            captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, publicUri)
+            captureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            captureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
             cameraIntents.add(captureIntent)
         }
 

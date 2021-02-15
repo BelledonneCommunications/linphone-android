@@ -73,69 +73,62 @@ class ImageUtils {
 
         suspend fun getFilesPathFromPickerIntent(data: Intent?, temporaryImageFilePath: File?): List<String> {
             var imageFilePath: String? = null
-            if (temporaryImageFilePath != null) {
-                if (data != null) {
-                    val clipData = data.clipData
-                    if (clipData != null) { // Multiple selection
-                        Log.i("[Image Utils] Found ${clipData.itemCount} elements")
-                        val list = arrayListOf<String>()
-                        for (i in 0 until clipData.itemCount) {
-                            val dataUri = clipData.getItemAt(i).uri
-                            if (dataUri != null) {
-                                imageFilePath = dataUri.toString()
-                                Log.i("[Image Utils] Using data URI $imageFilePath")
-                            }
-                            imageFilePath = cleanFilePath(imageFilePath)
-                            if (imageFilePath != null) list.add(imageFilePath)
-                        }
-                        return list
-                    } else { // Single selection
-                        val dataUri = data.data
+            if (data != null) {
+                val clipData = data.clipData
+                if (clipData != null) { // Multiple selection
+                    Log.i("[Image Utils] Found ${clipData.itemCount} elements")
+                    val list = arrayListOf<String>()
+                    for (i in 0 until clipData.itemCount) {
+                        val dataUri = clipData.getItemAt(i).uri
                         if (dataUri != null) {
                             imageFilePath = dataUri.toString()
                             Log.i("[Image Utils] Using data URI $imageFilePath")
-                        } else if (temporaryImageFilePath.exists()) {
-                            imageFilePath = temporaryImageFilePath.absolutePath
-                            Log.i("[Image Utils] Data URI is null, using $imageFilePath")
                         }
                         imageFilePath = cleanFilePath(imageFilePath)
-                        if (imageFilePath != null) return arrayListOf(imageFilePath)
+                        if (imageFilePath != null) list.add(imageFilePath)
                     }
-                } else if (temporaryImageFilePath.exists()) {
-                    imageFilePath = temporaryImageFilePath.absolutePath
-                    Log.i("[Image Utils] Data is null, using $imageFilePath")
+                    return list
+                } else { // Single selection
+                    val dataUri = data.data
+                    if (dataUri != null) {
+                        imageFilePath = dataUri.toString()
+                        Log.i("[Image Utils] Using data URI $imageFilePath")
+                    } else if (temporaryImageFilePath?.exists() == true) {
+                        imageFilePath = temporaryImageFilePath.absolutePath
+                        Log.i("[Image Utils] Data URI is null, using $imageFilePath")
+                    }
                     imageFilePath = cleanFilePath(imageFilePath)
                     if (imageFilePath != null) return arrayListOf(imageFilePath)
                 }
+            } else if (temporaryImageFilePath?.exists() == true) {
+                imageFilePath = temporaryImageFilePath.absolutePath
+                Log.i("[Image Utils] Data is null, using $imageFilePath")
+                imageFilePath = cleanFilePath(imageFilePath)
+                if (imageFilePath != null) return arrayListOf(imageFilePath)
             }
             return arrayListOf()
         }
 
         suspend fun getFilePathFromPickerIntent(data: Intent?, temporaryImageFilePath: File?): String? {
             var imageFilePath: String? = null
-            if (temporaryImageFilePath != null) {
-                if (data != null) {
-                    val clipData = data.clipData
-                    if (clipData != null) { // Multiple selection
-                        for (i in 0 until clipData.itemCount) {
-                            val uri = clipData.getItemAt(i).uri
-                        }
-                    } else { // Single selection
-                        val dataUri = data.data
-                        if (dataUri != null) {
-                            imageFilePath = dataUri.toString()
-                            Log.i("[Image Utils] Using data URI $imageFilePath")
-                        } else if (temporaryImageFilePath.exists()) {
-                            imageFilePath = temporaryImageFilePath.absolutePath
-                            Log.i("[Image Utils] Data URI is null, using $imageFilePath")
-                        }
+            if (data != null) {
+                val clipData = data.clipData
+                if (clipData != null) { // Multiple selection
+                    Log.e("[Image Utils] Expecting only one file, got ${clipData.itemCount}")
+                } else { // Single selection
+                    val dataUri = data.data
+                    if (dataUri != null) {
+                        imageFilePath = dataUri.toString()
+                        Log.i("[Image Utils] Using data URI $imageFilePath")
+                    } else if (temporaryImageFilePath?.exists() == true) {
+                        imageFilePath = temporaryImageFilePath.absolutePath
+                        Log.i("[Image Utils] Data URI is null, using $imageFilePath")
                     }
-                } else if (temporaryImageFilePath.exists()) {
-                    imageFilePath = temporaryImageFilePath.absolutePath
-                    Log.i("[Image Utils] Data is null, using $imageFilePath")
                 }
+            } else if (temporaryImageFilePath?.exists() == true) {
+                imageFilePath = temporaryImageFilePath.absolutePath
+                Log.i("[Image Utils] Data is null, using $imageFilePath")
             }
-
             return cleanFilePath(imageFilePath)
         }
 
