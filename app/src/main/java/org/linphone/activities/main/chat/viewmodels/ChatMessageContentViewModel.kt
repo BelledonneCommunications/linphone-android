@@ -76,14 +76,13 @@ class ChatMessageContentViewModel(
                 val percent = offset * 100 / total
                 Log.d("[Content] Download progress is: $offset / $total ($percent%)")
                 downloadProgress.postValue(percent)
-
-                if (offset == total) {
-                    chatMessage.removeListener(this)
-                }
             }
         }
 
         override fun onMsgStateChanged(message: ChatMessage, state: ChatMessage.State) {
+            if (state == ChatMessage.State.FileTransferDone || state == ChatMessage.State.FileTransferError) {
+                message.removeListener(this)
+            }
             downloadEnabled.postValue(chatMessage.state != ChatMessage.State.FileTransferInProgress)
         }
     }
