@@ -30,6 +30,7 @@ import org.linphone.LinphoneApplication
 import org.linphone.R
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
+import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.SelectionListAdapter
@@ -40,7 +41,13 @@ import org.linphone.utils.SelectionListAdapter
  */
 abstract class MasterFragment<T : ViewDataBinding, U : SelectionListAdapter<*, *>> : SecureFragment<T>() {
     protected var _adapter: U? = null
-    protected val adapter get() = _adapter!!
+    protected val adapter: U
+        get() {
+            if (_adapter == null) {
+                Log.e("[Master Fragment] Attempting to get a null adapter!")
+            }
+            return _adapter!!
+        }
 
     protected lateinit var listSelectionViewModel: ListTopBarViewModel
     protected open val dialogConfirmationMessageBeforeRemoval: Int = R.plurals.dialog_default_delete
