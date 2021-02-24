@@ -293,3 +293,10 @@ ktlint {
 }
 
 project.tasks['preBuild'].dependsOn 'ktlintFormat'
+
+if (crashlyticsEnabled()) {
+    afterEvaluate {
+        assembleDebug.finalizedBy(uploadCrashlyticsSymbolFileDebug)
+        packageDebugBundle.finalizedBy(uploadCrashlyticsSymbolFileDebug)
+    }
+}
