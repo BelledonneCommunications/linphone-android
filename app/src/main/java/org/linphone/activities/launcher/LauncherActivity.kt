@@ -43,6 +43,13 @@ class LauncherActivity : GenericActivity() {
 
     private fun onReady() {
         Log.i("[Launcher] Core is ready")
+
+        if (corePreferences.preventInterfaceFromShowingUp) {
+            Log.w("[Context] We were asked to not show the user interface")
+            finish()
+            return
+        }
+
         val intent = Intent()
         intent.setClass(this, MainActivity::class.java)
 

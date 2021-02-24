@@ -316,9 +316,6 @@ class CorePreferences constructor(private val context: Context) {
     val checkUpdateAvailableInterval: Int
         get() = config.getInt("app", "version_check_interval", 86400000)
 
-    val showIncomingChatMessagesDeliveryStatus: Boolean
-        get() = config.getBool("app", "show_incoming_messages_delivery_status", false)
-
     // If enabled, this will cause the video to "freeze" on your correspondent screen
     // as you won't send video packets anymore
     val hideCameraPreviewInPipMode: Boolean
@@ -333,6 +330,10 @@ class CorePreferences constructor(private val context: Context) {
 
     val showScreenshotButton: Boolean
         get() = config.getBool("app", "show_take_screenshot_button_in_call", false)
+
+    // This will prevent UI from showing up, except for the launcher & the foreground service notification
+    val preventInterfaceFromShowingUp: Boolean
+        get() = config.getBool("app", "keep_app_invisible", false)
 
     /* Assistant */
 
