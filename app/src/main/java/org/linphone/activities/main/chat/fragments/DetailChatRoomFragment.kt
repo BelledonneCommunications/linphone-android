@@ -78,8 +78,10 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
     }
 
     override fun onDestroyView() {
+        if (_adapter != null) {
+            adapter.unregisterAdapterDataObserver(observer)
+        }
         binding.chatMessagesList.adapter = null
-        adapter.unregisterAdapterDataObserver(observer)
         super.onDestroyView()
     }
 
@@ -325,10 +327,14 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
     override fun onResume() {
         super.onResume()
 
-        // Prevent notifications for this chat room to be displayed
-        val peerAddress = viewModel.chatRoom.peerAddress.asStringUriOnly()
-        coreContext.notificationsManager.currentlyDisplayedChatRoomAddress = peerAddress
-        coreContext.notificationsManager.cancelChatNotificationIdForSipUri(peerAddress)
+        if (this::viewModel.isInitialized) {
+            // Prevent notifications for this chat room to be displayed
+            val peerAddress = viewModel.chatRoom.peerAddress.asStringUriOnly()
+            coreContext.notificationsManager.currentlyDisplayedChatRoomAddress = peerAddress
+            coreContext.notificationsManager.cancelChatNotificationIdForSipUri(peerAddress)
+        } else {
+            Log.e("[Chat Room] Fragment resuming but viewModel lateinit property isn't initialized!")
+        }
     }
 
     override fun onPause() {
