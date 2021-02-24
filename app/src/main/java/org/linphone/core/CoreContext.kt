@@ -523,6 +523,11 @@ class CoreContext(val context: Context, coreConfig: Config) {
     /* Start call related activities */
 
     private fun onIncomingReceived() {
+        if (corePreferences.preventInterfaceFromShowingUp) {
+            Log.w("[Context] We were asked to not show the incoming call screen")
+            return
+        }
+
         Log.i("[Context] Starting IncomingCallActivity")
         val intent = Intent(context, IncomingCallActivity::class.java)
         // This flag is required to start an Activity from a Service context
@@ -531,6 +536,11 @@ class CoreContext(val context: Context, coreConfig: Config) {
     }
 
     private fun onOutgoingStarted() {
+        if (corePreferences.preventInterfaceFromShowingUp) {
+            Log.w("[Context] We were asked to not show the outgoing call screen")
+            return
+        }
+
         Log.i("[Context] Starting OutgoingCallActivity")
         val intent = Intent(context, OutgoingCallActivity::class.java)
         // This flag is required to start an Activity from a Service context
@@ -539,6 +549,11 @@ class CoreContext(val context: Context, coreConfig: Config) {
     }
 
     private fun onCallStarted() {
+        if (corePreferences.preventInterfaceFromShowingUp) {
+            Log.w("[Context] We were asked to not show the call screen")
+            return
+        }
+
         Log.i("[Context] Starting CallActivity")
         val intent = Intent(context, CallActivity::class.java)
         // This flag is required to start an Activity from a Service context
