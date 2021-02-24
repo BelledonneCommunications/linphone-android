@@ -111,6 +111,11 @@ class NotificationsManager(private val context: Context) {
         ) {
             Log.i("[Notifications Manager] Call state changed [$state]")
 
+            if (corePreferences.preventInterfaceFromShowingUp) {
+                Log.w("[Context] We were asked to not show the call notifications")
+                return
+            }
+
             when (state) {
                 Call.State.IncomingEarlyMedia, Call.State.IncomingReceived -> displayIncomingCallNotification(call)
                 Call.State.End, Call.State.Error -> dismissCallNotification(call)
@@ -125,6 +130,11 @@ class NotificationsManager(private val context: Context) {
 
         override fun onMessageReceived(core: Core, room: ChatRoom, message: ChatMessage) {
             if (message.isOutgoing || corePreferences.disableChat) return
+
+            if (corePreferences.preventInterfaceFromShowingUp) {
+                Log.w("[Context] We were asked to not show the chat notifications")
+                return
+            }
 
             if (currentlyDisplayedChatRoomAddress == room.peerAddress.asStringUriOnly()) {
                 Log.i("[Notifications Manager] Chat room is currently displayed, do not notify received message")
@@ -324,18 +334,22 @@ class NotificationsManager(private val context: Context) {
             .setDestination(R.id.dialerFragment)
             .createPendingIntent()
 
-        serviceNotification = NotificationCompat.Builder(context, context.getString(R.string.notification_channel_service_id))
+        val builder = NotificationCompat.Builder(context, context.getString(R.string.notification_channel_service_id))
             .setContentTitle(context.getString(R.string.service_name))
             .setContentText(if (useAutoStartDescription) context.getString(R.string.service_auto_start_description) else context.getString(R.string.service_description))
             .setSmallIcon(R.drawable.topbar_service_notification)
-            .setContentIntent(pendingIntent)
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
             .setVisibility(NotificationCompat.VISIBILITY_SECRET)
             .setWhen(System.currentTimeMillis())
             .setShowWhen(true)
             .setOngoing(true)
             .setColor(ContextCompat.getColor(context, R.color.primary_color))
-            .build()
+
+        if (!corePreferences.preventInterfaceFromShowingUp) {
+            builder.setContentIntent(pendingIntent)
+        }
+
+        serviceNotification = builder.build()
     }
 
     /* Call related */
@@ -378,12 +392,11 @@ class NotificationsManager(private val context: Context) {
             notificationLayoutHeadsUp.setImageViewBitmap(R.id.caller_picture, roundPicture)
         }
 
-        val notification = NotificationCompat.Builder(context, context.getString(R.string.notification_channel_incoming_call_id))
+        val builder = NotificationCompat.Builder(context, context.getString(R.string.notification_channel_incoming_call_id))
             .setStyle(NotificationCompat.DecoratedCustomViewStyle())
             .setSmallIcon(R.drawable.topbar_call_notification)
             .setContentTitle(displayName)
             .setContentText(context.getString(R.string.incoming_call_notification_title))
-            .setContentIntent(pendingIntent)
             .setCategory(NotificationCompat.CATEGORY_CALL)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -396,7 +409,12 @@ class NotificationsManager(private val context: Context) {
             .addAction(getCallDeclineAction(notifiable.notificationId))
             .addAction(getCallAnswerAction(notifiable.notificationId))
             .setCustomHeadsUpContentView(notificationLayoutHeadsUp)
-            .build()
+
+        if (!corePreferences.preventInterfaceFromShowingUp) {
+            builder.setContentIntent(pendingIntent)
+        }
+
+        val notification = builder.build()
 
         Log.i("[Notifications Manager] Notifying incoming call notification")
         notify(notifiable.notificationId, notification)
@@ -427,20 +445,25 @@ class NotificationsManager(private val context: Context) {
             .setDestination(R.id.masterCallLogsFragment)
             .createPendingIntent()
 
-        val notification = NotificationCompat.Builder(
+        val builder = NotificationCompat.Builder(
             context, context.getString(R.string.notification_channel_missed_call_id))
             .setContentTitle(context.getString(R.string.missed_call_notification_title))
             .setContentText(body)
             .setSmallIcon(R.drawable.topbar_missed_call_notification)
             .setAutoCancel(true)
-            .setContentIntent(pendingIntent)
             // .setCategory(NotificationCompat.CATEGORY_EVENT) No one really matches "missed call"
             .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
             .setWhen(System.currentTimeMillis())
             .setShowWhen(true)
             .setNumber(missedCallCount)
             .setColor(ContextCompat.getColor(context, R.color.notification_led_color))
-            .build()
+
+        if (!corePreferences.preventInterfaceFromShowingUp) {
+            builder.setContentIntent(pendingIntent)
+        }
+
+        val notification = builder.build()
+
         notify(MISSED_CALLS_NOTIF_ID, notification)
     }
 
@@ -489,14 +512,13 @@ class NotificationsManager(private val context: Context) {
         callNotificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         val pendingIntent = PendingIntent.getActivity(context, 0, callNotificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        val notification = NotificationCompat.Builder(
+        val builder = NotificationCompat.Builder(
             context, context.getString(R.string.notification_channel_service_id))
             .setContentTitle(contact?.fullName ?: displayName)
             .setContentText(context.getString(stringResourceId))
             .setSmallIcon(iconResourceId)
             .setLargeIcon(roundPicture)
             .setAutoCancel(false)
-            .setContentIntent(pendingIntent)
             .setCategory(NotificationCompat.CATEGORY_CALL)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setPriority(NotificationCompat.PRIORITY_LOW)
@@ -505,7 +527,13 @@ class NotificationsManager(private val context: Context) {
             .setOngoing(true)
             .setColor(ContextCompat.getColor(context, R.color.notification_led_color))
             .addAction(getCallDeclineAction(notifiable.notificationId))
-            .build()
+
+        if (!corePreferences.preventInterfaceFromShowingUp) {
+            builder.setContentIntent(pendingIntent)
+        }
+
+        val notification = builder.build()
+
         notify(notifiable.notificationId, notification)
 
         if (useAsForeground) {
@@ -692,7 +720,6 @@ class NotificationsManager(private val context: Context) {
         val notificationBuilder = NotificationCompat.Builder(context, context.getString(R.string.notification_channel_chat_id))
             .setSmallIcon(R.drawable.topbar_chat_notification)
             .setAutoCancel(true)
-            .setContentIntent(pendingIntent)
             .setLargeIcon(largeIcon)
             .setCategory(NotificationCompat.CATEGORY_MESSAGE)
             .setGroup(CHAT_NOTIFICATIONS_GROUP)
@@ -706,6 +733,10 @@ class NotificationsManager(private val context: Context) {
             .addAction(getMarkMessageAsReadAction(notifiable))
             .setShortcutId(id)
             .setLocusId(LocusIdCompat(id))
+
+        if (!corePreferences.preventInterfaceFromShowingUp) {
+            notificationBuilder.setContentIntent(pendingIntent)
+        }
 
         if (corePreferences.markAsReadUponChatMessageNotificationDismissal) {
             Log.i("[Notifications Manager] Chat room will be marked as read when notification will be dismissed")
