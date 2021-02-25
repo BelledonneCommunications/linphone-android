@@ -145,6 +145,8 @@ android {
             if (!firebaseEnabled()) {
                 resValue "string", "gcm_defaultSenderId", "none"
             }
+
+            resValue "bool", "crashlytics_enabled", "false"
         }
 
         releaseAppBundle {
@@ -167,11 +169,15 @@ android {
             }
 
             if (crashlyticsEnabled()) {
+                resValue "bool", "crashlytics_enabled", "true"
+
                 firebaseCrashlytics {
                     nativeSymbolUploadEnabled true
                     strippedNativeLibsDir file(LinphoneSdkBuildDir + '/libs/').toString()
                     unstrippedNativeLibsDir file(LinphoneSdkBuildDir + '/libs-debug/').toString()
                 }
+            } else {
+                resValue "bool", "crashlytics_enabled", "false"
             }
         }
     }
@@ -229,6 +235,8 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:26.4.0')
     if (crashlyticsEnabled()) {
         implementation 'com.google.firebase:firebase-crashlytics-ndk'
+    } else {
+        compileOnly 'com.google.firebase:firebase-crashlytics-ndk'
     }
     if (firebaseEnabled()) {
         implementation 'com.google.firebase:firebase-messaging'
