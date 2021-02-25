@@ -32,6 +32,7 @@ import android.view.*
 import androidx.emoji.bundled.BundledEmojiCompatConfig
 import androidx.emoji.text.EmojiCompat
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import java.io.File
 import kotlin.math.abs
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -78,6 +79,8 @@ class CoreContext(val context: Context, coreConfig: Config) {
     val callErrorMessageResourceId: MutableLiveData<Event<Int>> by lazy {
         MutableLiveData<Event<Int>>()
     }
+
+    private val loggingService = Factory.instance().loggingService
 
     private var gsmCallActive = false
     private val phoneStateListener = object : PhoneStateListener() {
@@ -214,8 +217,32 @@ class CoreContext(val context: Context, coreConfig: Config) {
         }
     }
 
+    private val loggingServiceListener = object : LoggingServiceListenerStub() {
+        override fun onLogMessageWritten(
+            logService: LoggingService,
+            domain: String,
+            level: LogLevel,
+            message: String
+        ) {
+            when (level) {
+                LogLevel.Error -> android.util.Log.e(domain, message)
+                LogLevel.Warning -> android.util.Log.w(domain, message)
+                LogLevel.Message -> android.util.Log.i(domain, message)
+                LogLevel.Fatal -> android.util.Log.wtf(domain, message)
+                else -> android.util.Log.d(domain, message)
+            }
+            FirebaseCrashlytics.getInstance().log("[$domain] [${level.name}] $message")
+        }
+    }
+
     init {
+        if (context.resources.getBoolean(R.bool.crashlytics_enabled)) {
+            loggingService.addListener(loggingServiceListener)
+            Log.i("[Context] Crashlytics enabled, register logging service listener")
+        }
+
         core = Factory.instance().createCoreWithConfig(coreConfig, context)
+
         stopped = false
         Log.i("[Context] Ready")
     }
@@ -256,6 +283,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
         core.stop()
         core.removeListener(listener)
         stopped = true
+        loggingService.removeListener(loggingServiceListener)
     }
 
     private fun configureCore() {
