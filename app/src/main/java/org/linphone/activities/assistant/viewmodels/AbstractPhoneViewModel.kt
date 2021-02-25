@@ -59,9 +59,10 @@ abstract class AbstractPhoneViewModel(val accountCreator: AccountCreator) : View
             Log.i("[Assistant] Found prefix from dial plan: ${dialPlan.countryCallingCode}")
             prefix.value = "+${dialPlan.countryCallingCode}"
         }
+
         if (number != null) {
             Log.i("[Assistant] Found phone number: $number")
-            phoneNumber.value = number
+            phoneNumber.value = number!!
         }
     }
 
