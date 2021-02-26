@@ -109,6 +109,7 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
             message.addUtf8TextContent(toSend)
         }
 
+        var fileContent = false
         for (attachment in attachments.value.orEmpty()) {
             val content = Factory.instance().createContent()
 
@@ -121,11 +122,14 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
             content.name = attachment.fileName
             content.filePath = attachment.path // Let the file body handler take care of the upload
 
-            if (isBasicChatRoom) {
+            // Do not send file in the same message as the text in a BasicChatRoom
+            // and don't send multiple files in the same message if setting says so
+            if (isBasicChatRoom or (corePreferences.preventMoreThanOneFilePerMessage and fileContent)) {
                 val fileMessage: ChatMessage = chatRoom.createFileTransferMessage(content)
                 fileMessage.send()
             } else {
                 message.addFileContent(content)
+                fileContent = true
             }
         }
 

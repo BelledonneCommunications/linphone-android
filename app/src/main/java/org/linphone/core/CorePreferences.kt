@@ -107,6 +107,13 @@ class CorePreferences constructor(private val context: Context) {
 
     /* Chat */
 
+    // iOS app currently can't display more than 1 file per message
+    var preventMoreThanOneFilePerMessage: Boolean
+        get() = config.getBool("app", "prevent_more_than_one_file_per_message", true)
+        set(value) {
+            config.setBool("app", "prevent_more_than_one_file_per_message", value)
+        }
+
     var markAsReadUponChatMessageNotificationDismissal: Boolean
         get() = config.getBool("app", "mark_as_read_notif_dismissal", false)
         set(value) {
