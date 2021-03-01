@@ -715,6 +715,7 @@ class NotificationsManager(private val context: Context) {
 
         val icon = lastPerson?.icon ?: IconCompat.createWithResource(context, R.drawable.avatar)
         val bubble = NotificationCompat.BubbleMetadata.Builder(bubbleIntent, icon)
+            .setDesiredHeightResId(R.dimen.chat_message_bubble_desired_height)
             .build()
 
         val notificationBuilder = NotificationCompat.Builder(context, context.getString(R.string.notification_channel_chat_id))
