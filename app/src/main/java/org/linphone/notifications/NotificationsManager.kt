@@ -671,7 +671,7 @@ class NotificationsManager(private val context: Context) {
     ): Notification {
         val me = Person.Builder().setName(notifiable.myself).build()
         val style = NotificationCompat.MessagingStyle(me)
-        val largeIcon: Bitmap? = notifiable.messages.last().senderAvatar
+        val largeIcon: Bitmap? = notifiable.messages.lastOrNull()?.senderAvatar
 
         var lastPerson: Person? = null
         for (message in notifiable.messages) {
