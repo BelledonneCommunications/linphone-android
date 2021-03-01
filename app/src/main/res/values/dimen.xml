@@ -7,6 +7,7 @@
     <dimen name="outgoing_chat_message_bubble_right_margin">3dp</dimen>
     <dimen name="chat_message_bubble_image_height_big">200dp</dimen>
     <dimen name="chat_message_bubble_image_height_small">100dp</dimen>
+    <dimen name="chat_message_bubble_desired_height">600dp</dimen>
     <dimen name="video_preview_max_size">200dp</dimen>
     <dimen name="video_preview_pip_max_size">50dp</dimen>
     <dimen name="main_activity_tabs_fragment_size">60dp</dimen>
