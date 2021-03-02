@@ -348,11 +348,11 @@ internal fun DetailChatRoomFragment.navigateToEphemeralInfo() {
     }
 }
 
-internal fun ChatRoomCreationFragment.navigateToGroupInfo(args: Bundle?) {
+internal fun ChatRoomCreationFragment.navigateToGroupInfo() {
     if (findNavController().currentDestination?.id == R.id.chatRoomCreationFragment) {
         findNavController().navigate(
             R.id.action_chatRoomCreationFragment_to_groupInfoFragment,
-            args,
+            null,
             getRightToLeftAnimationNavOptions()
         )
     }

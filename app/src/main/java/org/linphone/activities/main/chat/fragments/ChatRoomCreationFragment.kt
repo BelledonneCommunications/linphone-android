@@ -35,7 +35,6 @@ import org.linphone.activities.main.fragments.SecureFragment
 import org.linphone.activities.main.navigateToChatRoom
 import org.linphone.activities.main.navigateToGroupInfo
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
-import org.linphone.core.Address
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatRoomCreationFragmentBinding
 import org.linphone.utils.PermissionHelper
@@ -128,14 +127,13 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
             }
         })
 
-        addParticipantsFromBundle()
+        addParticipantsFromSharedViewModel()
 
         // Next button is only used to go to group chat info fragment
         binding.setNextClickListener {
             sharedViewModel.createEncryptedChatRoom = viewModel.isEncrypted.value == true
-            val args = Bundle()
-            args.putSerializable("participants", viewModel.selectedAddresses.value)
-            navigateToGroupInfo(args)
+            sharedViewModel.chatRoomParticipants.value = viewModel.selectedAddresses.value
+            navigateToGroupInfo()
         }
 
         viewModel.onErrorEvent.observe(viewLifecycleOwner, {
@@ -150,9 +148,8 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private fun addParticipantsFromBundle() {
-        val participants = arguments?.getSerializable("participants") as? ArrayList<Address>
+    private fun addParticipantsFromSharedViewModel() {
+        val participants = sharedViewModel.chatRoomParticipants.value
         if (participants != null && participants.size > 0) {
             viewModel.selectedAddresses.value = participants
         }
