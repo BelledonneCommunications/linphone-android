@@ -398,6 +398,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
     private fun showGroupInfo(chatRoom: ChatRoom) {
         sharedViewModel.selectedGroupChatRoom.value = chatRoom
+        sharedViewModel.chatRoomParticipants.value = arrayListOf()
         navigateToGroupInfo()
     }
 

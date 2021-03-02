@@ -104,7 +104,7 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
             }
         })
 
-        addParticipantsFromBundle()
+        addParticipantsFromSharedViewModel()
 
         binding.setBackClickListener {
             findNavController().popBackStack()
@@ -128,13 +128,14 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
         binding.setParticipantsClickListener {
             sharedViewModel.createEncryptedChatRoom = viewModel.isEncrypted.value == true
 
-            val args = Bundle()
-            args.putBoolean("createGroup", true)
             val list = arrayListOf<Address>()
             for (participant in viewModel.participants.value.orEmpty()) {
                 list.add(participant.address)
             }
-            args.putSerializable("participants", list)
+            sharedViewModel.chatRoomParticipants.value = list
+
+            val args = Bundle()
+            args.putBoolean("createGroup", true)
             navigateToChatRoomCreation(args)
         }
 
@@ -161,9 +162,8 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
         })
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private fun addParticipantsFromBundle() {
-        val participants = arguments?.getSerializable("participants") as? ArrayList<Address>
+    private fun addParticipantsFromSharedViewModel() {
+        val participants = sharedViewModel.chatRoomParticipants.value
         if (participants != null && participants.size > 0) {
             val list = arrayListOf<GroupChatRoomMember>()
 
