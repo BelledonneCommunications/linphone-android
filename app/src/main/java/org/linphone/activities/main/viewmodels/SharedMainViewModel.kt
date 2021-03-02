@@ -50,6 +50,8 @@ class SharedMainViewModel : ViewModel() {
 
     var createEncryptedChatRoom: Boolean = false
 
+    val chatRoomParticipants = MutableLiveData<ArrayList<Address>>()
+
     /* Contacts */
 
     val selectedContact = MutableLiveData<Contact>()
