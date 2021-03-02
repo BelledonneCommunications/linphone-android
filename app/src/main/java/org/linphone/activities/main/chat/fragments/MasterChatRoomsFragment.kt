@@ -157,11 +157,13 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
         }
 
         binding.setNewOneToOneChatRoomClickListener {
+            sharedViewModel.chatRoomParticipants.value = arrayListOf()
             navigateToChatRoomCreation(false)
         }
 
         binding.setNewGroupChatRoomClickListener {
             sharedViewModel.selectedGroupChatRoom.value = null
+            sharedViewModel.chatRoomParticipants.value = arrayListOf()
             navigateToChatRoomCreation(true)
         }
 
