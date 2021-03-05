@@ -55,7 +55,7 @@ class CountryPickerFragment(private val listener: CountryPickedListener) : Dialo
         binding.countryList.adapter = adapter
 
         binding.countryList.setOnItemClickListener { _, _, position, _ ->
-            if (position > 0 && position < adapter.count) {
+            if (position >= 0 && position < adapter.count) {
                 val dialPlan = adapter.getItem(position)
                 listener.onCountryClicked(dialPlan)
             }
