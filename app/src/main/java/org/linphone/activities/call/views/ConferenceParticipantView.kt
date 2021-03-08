@@ -26,11 +26,12 @@ import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.databinding.DataBindingUtil
 import org.linphone.R
-import org.linphone.activities.call.viewmodels.CallViewModel
-import org.linphone.databinding.CallConferenceBinding
+import org.linphone.activities.call.viewmodels.ConferenceParticipantViewModel
+import org.linphone.core.tools.Log
+import org.linphone.databinding.CallConferenceParticipantBinding
 
-class ConferenceCallView : LinearLayout {
-    private lateinit var binding: CallConferenceBinding
+class ConferenceParticipantView : LinearLayout {
+    private lateinit var binding: CallConferenceParticipantBinding
 
     constructor(context: Context) : super(context) {
         init(context)
@@ -53,15 +54,18 @@ class ConferenceCallView : LinearLayout {
 
     fun init(context: Context) {
         binding = DataBindingUtil.inflate(
-            LayoutInflater.from(context), R.layout.call_conference, this, true
+            LayoutInflater.from(context), R.layout.call_conference_participant, this, true
         )
     }
 
-    fun setViewModel(viewModel: CallViewModel) {
+    fun setViewModel(viewModel: ConferenceParticipantViewModel) {
         binding.viewModel = viewModel
 
-        binding.callTimer.base =
-            SystemClock.elapsedRealtime() - (1000 * viewModel.call.duration) // Linphone timestamps are in seconds
+        val currentTimeSecs = System.currentTimeMillis()
+        val participantTime = viewModel.participant.creationTime * 1000 // Linphone timestamps are in seconds
+        val diff = currentTimeSecs - participantTime
+        Log.i("[Conference Participant] Participant joined conference at $participantTime == ${diff / 1000} seconds ago.")
+        binding.callTimer.base = SystemClock.elapsedRealtime() - diff
         binding.callTimer.start()
     }
 }
