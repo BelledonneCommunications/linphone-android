@@ -133,7 +133,7 @@ class ContactsManager(private val context: Context) {
     }
 
     fun shouldDisplaySipContactsList(): Boolean {
-        return coreContext.core.defaultProxyConfig?.identityAddress?.domain == corePreferences.defaultDomain
+        return coreContext.core.defaultAccount?.params?.identityAddress?.domain == corePreferences.defaultDomain
     }
 
     @Synchronized
