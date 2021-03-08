@@ -375,6 +375,9 @@ public class ChatMessagesFragment extends Fragment
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
+        outState.putString("LocalSipUri", mChatRoom.getLocalAddress().asStringUriOnly());
+        outState.putString("RemoteSipUri", mChatRoom.getPeerAddress().asStringUriOnly());
+
         ArrayList<String> files = new ArrayList<>();
         for (int i = 0; i < mFilesUploadLayout.getChildCount(); i++) {
             View child = mFilesUploadLayout.getChildAt(i);
@@ -715,6 +718,7 @@ public class ChatMessagesFragment extends Fragment
                 || mRemoteSipUri == null
                 || mRemoteSipUri.isEmpty()
                 || core == null) {
+            Log.e("[Chat Messages Fragment] No local/remote SIP URI found!");
             // TODO error
             return;
         }
@@ -911,6 +915,12 @@ public class ChatMessagesFragment extends Fragment
     }
 
     private void onRestoreInstanceState(Bundle savedInstanceState) {
+
+        String localSipUri = savedInstanceState.getString("LocalSipUri");
+        mRemoteSipUri = savedInstanceState.getString("RemoteSipUri");
+        mLocalSipAddress = Factory.instance().createAddress(localSipUri);
+        mRemoteSipAddress = Factory.instance().createAddress(mRemoteSipUri);
+
         ArrayList<String> files = savedInstanceState.getStringArrayList("Files");
         if (files != null && !files.isEmpty()) {
             for (String file : files) {
