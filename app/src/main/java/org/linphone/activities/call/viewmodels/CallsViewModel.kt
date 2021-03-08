@@ -76,8 +76,9 @@ class CallsViewModel : ViewModel() {
                     removeCallFromPausedListIfPresent(call)
                     removeCallFromConferenceIfPresent(call)
                 }
-            } else if (state == Call.State.Pausing) {
+            } else if (state == Call.State.Paused) {
                 addCallToPausedList(call)
+                removeCallFromConferenceIfPresent(call)
             } else if (state == Call.State.Resuming) {
                 removeCallFromPausedListIfPresent(call)
             } else if (call.state == Call.State.UpdatedByRemote) {
