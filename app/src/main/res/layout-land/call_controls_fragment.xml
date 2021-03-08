@@ -12,6 +12,9 @@
         <variable
             name="controlsViewModel"
             type="org.linphone.activities.call.viewmodels.ControlsViewModel" />
+        <variable
+            name="conferenceViewModel"
+            type="org.linphone.activities.call.viewmodels.ConferenceViewModel" />
     </data>
 
     <RelativeLayout
@@ -55,7 +58,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="@{viewModel.conferenceCalls.size() == 0 || viewModel.isConferencePaused ? View.GONE : View.VISIBLE, default=gone}"
+            android:visibility="@{conferenceViewModel.conferenceParticipants.size() == 0 || conferenceViewModel.isConferencePaused ? View.GONE : View.VISIBLE, default=gone}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -80,8 +83,9 @@
                     android:onClick="@{() -> controlsViewModel.switchCamera()}"
                     android:visibility="@{controlsViewModel.isVideoEnabled ? View.VISIBLE : View.GONE, default=gone}"
                     android:contentDescription="@string/content_description_switch_camera"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="10dp"
                     android:layout_toLeftOf="@id/pause_conference"
                     android:adjustViewBounds="true"
                     android:padding="10dp"
@@ -91,7 +95,8 @@
 
                 <ImageView
                     android:id="@+id/pause_conference"
-                    android:onClick="@{() -> viewModel.pauseConference()}"
+                    android:visibility="@{conferenceViewModel.isMeConferenceFocus ? View.VISIBLE : View.GONE, default=gone}"
+                    android:onClick="@{() -> conferenceViewModel.pauseConference()}"
                     android:contentDescription="@string/content_description_pause_conference"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
@@ -111,18 +116,24 @@
                 android:layout_height="1dp"
                 android:background="?attr/dividerColor" />
 
-            <LinearLayout
+            <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:orientation="vertical"
-                app:entries="@{viewModel.conferenceCalls}"
-                app:layout="@{@layout/call_conference_cell}"/>
+                android:layout_gravity="top">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:entries="@{conferenceViewModel.conferenceParticipants}"
+                    app:layout="@{@layout/call_conference_cell}"/>
+
+            </ScrollView>
 
         </LinearLayout>
 
         <org.linphone.contact.BigContactAvatarView
-            android:visibility="@{controlsViewModel.isVideoEnabled ? View.GONE : View.VISIBLE, default=gone}"
+            android:visibility="@{controlsViewModel.isVideoEnabled || conferenceViewModel.conferenceParticipants.size() > 0 ? View.GONE : View.VISIBLE, default=gone}"
             android:id="@+id/avatar"
             android:layout_width="200dp"
             android:layout_height="200dp"
@@ -170,7 +181,7 @@
             app:layout="@{@layout/call_paused_cell}" />
 
         <LinearLayout
-            android:visibility="@{viewModel.isConferencePaused &amp;&amp; viewModel.conferenceCalls.size() > 1 ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{conferenceViewModel.isConferencePaused &amp;&amp; conferenceViewModel.conferenceParticipants.size() > 0 ? View.VISIBLE : View.GONE, default=gone}"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_above="@id/paused_calls"
@@ -200,7 +211,7 @@
                 android:text="@string/call_conference_title" />
 
             <ImageView
-                android:onClick="@{() -> viewModel.resumeConference()}"
+                android:onClick="@{() -> conferenceViewModel.resumeConference()}"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:gravity="center_vertical"
@@ -213,7 +224,7 @@
 
         <ImageView
             android:onClick="@{() -> viewModel.currentCallViewModel.pause()}"
-            android:visibility="@{viewModel.currentCallViewModel == null ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.currentCallViewModel == null || (conferenceViewModel.conferenceParticipants.size() != 0 &amp;&amp; !conferenceViewModel.isConferencePaused) ? View.GONE : View.VISIBLE}"
             android:selected="@{viewModel.currentCallViewModel.isPaused ?? false}"
             android:enabled="@{!viewModel.callPausedByRemote &amp;&amp; controlsViewModel.isPauseEnabled}"
             android:contentDescription="@string/content_description_pause_call"
@@ -230,7 +241,7 @@
             android:id="@+id/switch_camera"
             android:onClick="@{() -> controlsViewModel.switchCamera()}"
             android:enabled="@{!viewModel.callPausedByRemote}"
-            android:visibility="@{controlsViewModel.isVideoEnabled &amp;&amp; controlsViewModel.showSwitchCamera &amp;&amp; (viewModel.conferenceCalls.size() == 0 || viewModel.isConferencePaused) ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{controlsViewModel.isVideoEnabled &amp;&amp; controlsViewModel.showSwitchCamera &amp;&amp; (conferenceViewModel.conferenceParticipants.size() == 0 || conferenceViewModel.isConferencePaused) ? View.VISIBLE : View.GONE, default=gone}"
             android:contentDescription="@string/content_description_switch_camera"
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -244,7 +255,7 @@
         <ImageView
             android:onClick="@{() -> viewModel.takeScreenshot()}"
             android:enabled="@{!viewModel.callPausedByRemote}"
-            android:visibility="@{controlsViewModel.isVideoEnabled &amp;&amp; controlsViewModel.takeScreenshotEnabled &amp;&amp; (viewModel.conferenceCalls.size() == 0 || viewModel.isConferencePaused) ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{controlsViewModel.isVideoEnabled &amp;&amp; controlsViewModel.takeScreenshotEnabled &amp;&amp; (conferenceViewModel.conferenceParticipants.size() == 0 || conferenceViewModel.isConferencePaused) ? View.VISIBLE : View.GONE, default=gone}"
             android:contentDescription="@string/content_description_take_screenshot"
             android:layout_width="50dp"
             android:layout_height="50dp"
