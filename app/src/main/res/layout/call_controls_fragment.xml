@@ -92,8 +92,9 @@
                     android:id="@+id/pause_conference"
                     android:onClick="@{() -> viewModel.pauseConference()}"
                     android:contentDescription="@string/content_description_pause_conference"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="10dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:adjustViewBounds="true"
@@ -169,7 +170,7 @@
             app:layout="@{@layout/call_paused_cell}" />
 
         <LinearLayout
-            android:visibility="@{viewModel.isConferencePaused &amp;&amp; viewModel.conferenceCalls.size() > 0 ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{viewModel.isConferencePaused &amp;&amp; viewModel.conferenceCalls.size() > 1 ? View.VISIBLE : View.GONE, default=gone}"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_above="@id/paused_calls"
