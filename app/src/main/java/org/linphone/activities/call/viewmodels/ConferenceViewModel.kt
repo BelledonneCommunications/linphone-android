@@ -36,13 +36,19 @@ class ConferenceViewModel : ViewModel() {
 
     private val conferenceListener = object : ConferenceListenerStub() {
         override fun onParticipantAdded(conference: Conference, participant: Participant) {
-            Log.i("[Conference VM] Participant added")
-            updateParticipantsList(conference)
+            if (participant == conference.me) {
+            } else {
+                Log.i("[Conference VM] Participant added")
+                updateParticipantsList(conference)
+            }
         }
 
         override fun onParticipantRemoved(conference: Conference, participant: Participant) {
-            Log.i("[Conference VM] Participant removed")
-            updateParticipantsList(conference)
+            if (participant == conference.me) {
+            } else {
+                Log.i("[Conference VM] Participant removed")
+                updateParticipantsList(conference)
+            }
         }
 
         override fun onParticipantAdminStatusChanged(
