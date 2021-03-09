@@ -19,7 +19,10 @@
  */
 package org.linphone.notifications;
 
+import static android.content.Context.NOTIFICATION_SERVICE;
+
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.RemoteInput;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -34,27 +37,40 @@ import org.linphone.core.Call;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.Core;
+import org.linphone.core.Factory;
 import org.linphone.core.tools.Log;
+import org.linphone.settings.LinphonePreferences;
 
 public class NotificationBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(final Context context, Intent intent) {
         final int notifId = intent.getIntExtra(Compatibility.INTENT_NOTIF_ID, 0);
         final String localyIdentity = intent.getStringExtra(Compatibility.INTENT_LOCAL_IDENTITY);
+        final String remoteIdentity = intent.getStringExtra(Compatibility.INTENT_REMOTE_IDENTITY);
 
         if (!LinphoneContext.isReady()) {
-            Log.e("[Notification Broadcast Receiver] Context not ready, aborting...");
-            return;
+            Log.e("[Notification Broadcast Receiver] Context not ready...");
         }
 
         if (intent.getAction().equals(Compatibility.INTENT_REPLY_NOTIF_ACTION)
                 || intent.getAction().equals(Compatibility.INTENT_MARK_AS_READ_ACTION)) {
-            String remoteSipAddr =
-                    LinphoneContext.instance()
-                            .getNotificationManager()
-                            .getSipUriForNotificationId(notifId);
+            String remoteSipAddr = remoteIdentity;
 
-            Core core = LinphoneManager.getCore();
+            Core core;
+            boolean stopCoreWhenFinished = false;
+            if (!LinphoneContext.isReady()) {
+                String basePath = context.getFilesDir().getAbsolutePath();
+                core =
+                        Factory.instance()
+                                .createCore(
+                                        basePath + LinphonePreferences.LINPHONE_DEFAULT_RC,
+                                        basePath + LinphonePreferences.LINPHONE_FACTORY_RC,
+                                        context);
+                stopCoreWhenFinished = true;
+                Log.e("[Notification Broadcast Receiver] Created temporary Core");
+                core.start();
+            } else core = LinphoneManager.getCore();
+
             if (core == null) {
                 Log.e("[Notification Broadcast Receiver] Couldn't get Core instance");
                 onError(context, notifId);
@@ -102,15 +118,33 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
 
                 ChatMessage msg = room.createMessage(reply);
                 msg.setUserData(notifId);
-                msg.addListener(
-                        LinphoneContext.instance().getNotificationManager().getMessageListener());
+                if (!stopCoreWhenFinished) {
+                    msg.addListener(
+                            LinphoneContext.instance()
+                                    .getNotificationManager()
+                                    .getMessageListener());
+                }
                 msg.send();
                 Log.i("[Notification Broadcast Receiver] Reply sent for notif id " + notifId);
             } else {
-                LinphoneContext.instance().getNotificationManager().dismissNotification(notifId);
+                if (!stopCoreWhenFinished) {
+                    LinphoneContext.instance()
+                            .getNotificationManager()
+                            .dismissNotification(notifId);
+                } else {
+                    NotificationManager notificationManager =
+                            (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+                    notificationManager.cancel(notifId);
+                }
+            }
+
+            if (stopCoreWhenFinished) {
+                core.stopAsync();
             }
         } else if (intent.getAction().equals(Compatibility.INTENT_ANSWER_CALL_NOTIF_ACTION)
                 || intent.getAction().equals(Compatibility.INTENT_HANGUP_CALL_NOTIF_ACTION)) {
+            if (!LinphoneContext.isReady()) return;
+
             String remoteAddr =
                     LinphoneContext.instance()
                             .getNotificationManager()

@@ -28,6 +28,7 @@ public class Notifiable {
     private boolean mIsGroup;
     private String mGroupTitle;
     private String mLocalIdentity;
+    private String mRemoteIdentity;
     private String mMyself;
     private int mIconId;
     private int mTextId;
@@ -84,8 +85,16 @@ public class Notifiable {
         return mLocalIdentity;
     }
 
+    public String getRemoteIdentity() {
+        return mRemoteIdentity;
+    }
+
     public void setLocalIdentity(String localIdentity) {
         mLocalIdentity = localIdentity;
+    }
+
+    public void setRemoteIdentity(String remoteIdentity) {
+        mRemoteIdentity = remoteIdentity;
     }
 
     public int getIconResourceId() {

@@ -462,6 +462,7 @@ public class NotificationsManager {
         notif.setGroupTitle(subject);
         notif.setMyself(LinphoneUtils.getAddressDisplayName(localIdentity));
         notif.setLocalIdentity(localIdentity.asString());
+        notif.setRemoteIdentity(conferenceAddress);
 
         displayMessageNotificationFromNotifiable(
                 notif, conferenceAddress, localIdentity.asStringUriOnly());
@@ -496,6 +497,7 @@ public class NotificationsManager {
         notif.setIsGroup(false);
         notif.setMyself(LinphoneUtils.getAddressDisplayName(localIdentity));
         notif.setLocalIdentity(localIdentity.asString());
+        notif.setRemoteIdentity(fromSipUri);
 
         displayMessageNotificationFromNotifiable(
                 notif, fromSipUri, localIdentity.asStringUriOnly());
