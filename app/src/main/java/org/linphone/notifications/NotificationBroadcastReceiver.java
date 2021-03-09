@@ -35,6 +35,7 @@ import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.Core;
 import org.linphone.core.tools.Log;
+import org.linphone.service.LinphoneService;
 
 public class NotificationBroadcastReceiver extends BroadcastReceiver {
     @Override
@@ -42,9 +43,19 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
         final int notifId = intent.getIntExtra(Compatibility.INTENT_NOTIF_ID, 0);
         final String localyIdentity = intent.getStringExtra(Compatibility.INTENT_LOCAL_IDENTITY);
 
-        if (!LinphoneContext.isReady()) {
-            Log.e("[Notification Broadcast Receiver] Context not ready, aborting...");
-            return;
+        if (!LinphoneService.isReady()) {
+            if (!LinphoneContext.isReady()) {
+                new LinphoneContext(context);
+                LinphoneContext.instance().start(false);
+                Log.i("[Generic Activity] Context created & started");
+            }
+
+            Log.i("[Generic Activity] Starting Service");
+            try {
+                context.startService(new Intent().setClass(context, LinphoneService.class));
+            } catch (IllegalStateException ise) {
+                Log.e("[Generic Activity] Couldn't start service, exception: ", ise);
+            }
         }
 
         if (intent.getAction().equals(Compatibility.INTENT_REPLY_NOTIF_ACTION)
