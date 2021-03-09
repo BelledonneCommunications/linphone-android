@@ -37,6 +37,8 @@ class ConferenceViewModel : ViewModel() {
     private val conferenceListener = object : ConferenceListenerStub() {
         override fun onParticipantAdded(conference: Conference, participant: Participant) {
             if (participant == conference.me) {
+                Log.i("[Conference VM] Entered conference")
+                isConferencePaused.value = false
             } else {
                 Log.i("[Conference VM] Participant added")
                 updateParticipantsList(conference)
@@ -45,6 +47,8 @@ class ConferenceViewModel : ViewModel() {
 
         override fun onParticipantRemoved(conference: Conference, participant: Participant) {
             if (participant == conference.me) {
+                Log.i("[Conference VM] Left conference")
+                isConferencePaused.value = true
             } else {
                 Log.i("[Conference VM] Participant removed")
                 updateParticipantsList(conference)
@@ -67,7 +71,7 @@ class ConferenceViewModel : ViewModel() {
             state: Conference.State
         ) {
             Log.i("[Conference VM] Conference state changed: $state")
-            isConferencePaused.value = false // TODO FIXME
+            isConferencePaused.value = conference.isIn
 
             if (state == Conference.State.Instantiated) {
                 conference.addListener(conferenceListener)
@@ -85,7 +89,7 @@ class ConferenceViewModel : ViewModel() {
     init {
         coreContext.core.addListener(listener)
 
-        isConferencePaused.value = false // TODO FIXME
+        isConferencePaused.value = coreContext.core.conference?.isIn ?: false
         isMeConferenceFocus.value = false
         conferenceParticipants.value = arrayListOf()
         isInConference.value = false
@@ -107,7 +111,7 @@ class ConferenceViewModel : ViewModel() {
     fun pauseConference() {
         if (coreContext.core.isInConference) {
             Log.i("[Conference VM] Leaving conference temporarily")
-            coreContext.core.leaveConference()
+            coreContext.core.conference?.leave()
             isConferencePaused.value = true
         } else {
             Log.w("[Conference VM] We are not part of the conference")
@@ -117,7 +121,7 @@ class ConferenceViewModel : ViewModel() {
     fun resumeConference() {
         if (!coreContext.core.isInConference) {
             Log.i("[Conference VM] Entering back conference")
-            coreContext.core.enterConference()
+            coreContext.core.conference?.enter()
             isConferencePaused.value = false
         } else {
             Log.w("[Conference VM] We are already in the conference")
