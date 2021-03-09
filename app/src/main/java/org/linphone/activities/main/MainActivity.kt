@@ -263,6 +263,9 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         } else if (addressToCall.startsWith("linphone:")) {
             Log.i("[Main Activity] Removing linphone: prefix")
             addressToCall = addressToCall.substring("linphone:".length)
+        } else if (addressToCall.startsWith("sip-linphone:")) {
+            Log.i("[Main Activity] Removing linphone: sip-linphone")
+            addressToCall = addressToCall.substring("sip-linphone:".length)
         }
 
         val address = coreContext.core.interpretUrl(addressToCall)
@@ -348,6 +351,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             try {
                 addressToIM = URLDecoder.decode(stringUri, "UTF-8")
             } catch (e: UnsupportedEncodingException) {
+                Log.e("[Main Activity] UnsupportedEncodingException: $e")
             }
 
             when {

@@ -96,6 +96,7 @@
                 <data android:scheme="sip" />
                 <data android:scheme="sips" />
                 <data android:scheme="linphone" />
+                <data android:scheme="sip-linphone" />
             </intent-filter>
 
             <intent-filter>
