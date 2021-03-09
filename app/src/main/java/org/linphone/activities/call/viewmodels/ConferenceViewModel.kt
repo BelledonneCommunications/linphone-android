@@ -32,6 +32,8 @@ class ConferenceViewModel : ViewModel() {
 
     val conferenceParticipants = MutableLiveData<List<ConferenceParticipantViewModel>>()
 
+    val isInConference = MutableLiveData<Boolean>()
+
     private val conferenceListener = object : ConferenceListenerStub() {
         override fun onParticipantAdded(conference: Conference, participant: Participant) {
             Log.i("[Conference VM] Participant added")
@@ -67,6 +69,7 @@ class ConferenceViewModel : ViewModel() {
                 updateParticipantsList(conference)
                 isMeConferenceFocus.value = conference.me.isFocus
             } else if (state == Conference.State.Terminated || state == Conference.State.TerminationFailed) {
+                isInConference.value = false
                 conference.removeListener(conferenceListener)
                 conferenceParticipants.value = arrayListOf()
             }
@@ -79,6 +82,7 @@ class ConferenceViewModel : ViewModel() {
         isConferencePaused.value = false // TODO FIXME
         isMeConferenceFocus.value = false
         conferenceParticipants.value = arrayListOf()
+        isInConference.value = false
 
         val conference = coreContext.core.conference
         if (conference != null) {
@@ -122,5 +126,6 @@ class ConferenceViewModel : ViewModel() {
             participants.add(viewModel)
         }
         conferenceParticipants.value = participants
+        isInConference.value = participants.isNotEmpty()
     }
 }
