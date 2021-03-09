@@ -78,17 +78,8 @@ class CallsViewModel : ViewModel() {
                     call.deferUpdate()
                     callUpdateEvent.value = Event(call)
                 }
-            } else {
-
-                if (state == Call.State.StreamsRunning) {
-                    callUpdateEvent.value = Event(call)
-                }
-
-                if (state == Call.State.Pausing) {
-                    addCallToPausedList(call)
-                } else if (state == Call.State.Resuming) {
-                    removeCallFromPausedListIfPresent(call)
-                }
+            } else if (state == Call.State.StreamsRunning) {
+                callUpdateEvent.value = Event(call)
             }
         }
     }
@@ -131,6 +122,12 @@ class CallsViewModel : ViewModel() {
     private fun addCallToPausedList(call: Call) {
         val list = arrayListOf<CallViewModel>()
         list.addAll(pausedCalls.value.orEmpty())
+
+        for (pausedCallViewModel in list) {
+            if (pausedCallViewModel.call == call) {
+                return
+            }
+        }
 
         val viewModel = CallViewModel(call)
         list.add(viewModel)
