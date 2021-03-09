@@ -50,7 +50,6 @@
 
             <ImageView
                 android:id="@+id/pause_conference"
-                android:visibility="@{conferenceViewModel.isMeConferenceFocus ? View.VISIBLE : View.GONE}"
                 android:onClick="@{() -> conferenceViewModel.pauseConference()}"
                 android:contentDescription="@string/content_description_pause_conference"
                 android:layout_width="40dp"
