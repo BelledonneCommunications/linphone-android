@@ -120,7 +120,7 @@ class ConferenceViewModel : ViewModel() {
         val conference = remoteConference ?: localConference
 
         if (conference != null) {
-            Log.i("[Conference VM] Leaving conference temporarily")
+            Log.i("[Conference VM] Leaving conference with address ${conferenceAddress.value?.asStringUriOnly()} temporarily")
             conference.leave()
         } else {
             Log.w("[Conference VM] Unable to find conference with address ${conferenceAddress.value?.asStringUriOnly()}")
@@ -136,7 +136,7 @@ class ConferenceViewModel : ViewModel() {
         val conference = remoteConference ?: localConference
 
         if (conference != null) {
-            Log.i("[Conference VM] Entering again conference")
+            Log.i("[Conference VM] Entering again conference with address ${conferenceAddress.value?.asStringUriOnly()}")
             conference.enter()
         } else {
             Log.w("[Conference VM] Unable to find conference with address ${conferenceAddress.value?.asStringUriOnly()}")
