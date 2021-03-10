@@ -22,6 +22,7 @@
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:padding="5dp"
             android:contentDescription="@string/content_description_start_conference"
             android:src="@drawable/options_start_conference" />
 

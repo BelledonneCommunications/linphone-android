@@ -28,7 +28,7 @@
 
         <LinearLayout
             android:id="@+id/active_call_header"
-            android:visibility="@{viewModel.currentCallViewModel == null ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.currentCallViewModel == null || conferenceViewModel.isInConference() ? View.GONE : View.VISIBLE}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -121,7 +121,7 @@
 
         <ImageView
             android:onClick="@{() -> viewModel.currentCallViewModel.pause()}"
-            android:visibility="@{viewModel.currentCallViewModel == null || (conferenceViewModel.isInConference &amp;&amp; !conferenceViewModel.isConferencePaused) ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.currentCallViewModel == null || conferenceViewModel.isInConference ? View.GONE : View.VISIBLE}"
             android:selected="@{viewModel.currentCallViewModel.isPaused ?? false}"
             android:enabled="@{!viewModel.callPausedByRemote &amp;&amp; controlsViewModel.isPauseEnabled}"
             android:contentDescription="@string/content_description_pause_call"
@@ -138,7 +138,7 @@
             android:id="@+id/switch_camera"
             android:onClick="@{() -> controlsViewModel.switchCamera()}"
             android:enabled="@{!viewModel.callPausedByRemote}"
-            android:visibility="@{controlsViewModel.isVideoEnabled &amp;&amp; controlsViewModel.showSwitchCamera &amp;&amp; (!conferenceViewModel.isInConference || conferenceViewModel.isConferencePaused) ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{controlsViewModel.isVideoEnabled &amp;&amp; controlsViewModel.showSwitchCamera &amp;&amp; !conferenceViewModel.isInConference ? View.VISIBLE : View.GONE, default=gone}"
             android:contentDescription="@string/content_description_switch_camera"
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -152,7 +152,7 @@
         <ImageView
             android:onClick="@{() -> viewModel.takeScreenshot()}"
             android:enabled="@{!viewModel.callPausedByRemote}"
-            android:visibility="@{controlsViewModel.isVideoEnabled &amp;&amp; controlsViewModel.takeScreenshotEnabled &amp;&amp; (!conferenceViewModel.isInConference || conferenceViewModel.isConferencePaused) ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{controlsViewModel.isVideoEnabled &amp;&amp; controlsViewModel.takeScreenshotEnabled &amp;&amp; !conferenceViewModel.isInConference ? View.VISIBLE : View.GONE, default=gone}"
             android:contentDescription="@string/content_description_take_screenshot"
             android:layout_width="50dp"
             android:layout_height="50dp"
