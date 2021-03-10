@@ -49,7 +49,7 @@ class CallsViewModel : ViewModel() {
     private val listener = object : CoreListenerStub() {
         override fun onCallStateChanged(core: Core, call: Call, state: Call.State, message: String) {
             Log.i("[Calls VM] Call state changed: $state")
-            callPausedByRemote.value = state == Call.State.PausedByRemote
+            callPausedByRemote.value = (state == Call.State.PausedByRemote) and (call.conference == null)
 
             val currentCall = core.currentCall
             if (currentCall == null) {
@@ -120,6 +120,8 @@ class CallsViewModel : ViewModel() {
     }
 
     private fun addCallToPausedList(call: Call) {
+        if (call.conference != null) return // Conference will be displayed as paused, no need to display the call as well
+
         val list = arrayListOf<CallViewModel>()
         list.addAll(pausedCalls.value.orEmpty())
 

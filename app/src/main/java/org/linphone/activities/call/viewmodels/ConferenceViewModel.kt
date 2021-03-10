@@ -96,7 +96,6 @@ class ConferenceViewModel : ViewModel() {
         isMeConferenceFocus.value = false
         conferenceParticipants.value = arrayListOf()
         isInConference.value = false
-//        conferenceAddress.value
 
         val conference = coreContext.core.conference
         if (conference != null) {
@@ -118,13 +117,13 @@ class ConferenceViewModel : ViewModel() {
         val participants = arrayOf<Address>()
         val remoteConference = coreContext.core.searchConference(null, localAddress, conferenceAddress.value, participants)
         val localConference = coreContext.core.searchConference(null, conferenceAddress.value, conferenceAddress.value, participants)
-        val conference = if (localConference == null) remoteConference else localConference
+        val conference = remoteConference ?: localConference
 
         if (conference != null) {
             Log.i("[Conference VM] Leaving conference temporarily")
-            conference?.leave()
+            conference.leave()
         } else {
-            Log.w("[Conference VM] Unable to find conference with address ${conferenceAddress?.asStringUriOnly()}")
+            Log.w("[Conference VM] Unable to find conference with address ${conferenceAddress.value?.asStringUriOnly()}")
         }
     }
 
@@ -134,13 +133,13 @@ class ConferenceViewModel : ViewModel() {
         val participants = arrayOf<Address>()
         val remoteConference = coreContext.core.searchConference(null, localAddress, conferenceAddress.value, participants)
         val localConference = coreContext.core.searchConference(null, conferenceAddress.value, conferenceAddress.value, participants)
-        val conference = if (localConference == null) remoteConference else localConference
+        val conference = remoteConference ?: localConference
 
         if (conference != null) {
             Log.i("[Conference VM] Entering again conference")
-            conference?.enter()
+            conference.enter()
         } else {
-            Log.w("[Conference VM] Unable to find conference with address ${conferenceAddress?.asStringUriOnly()}")
+            Log.w("[Conference VM] Unable to find conference with address ${conferenceAddress.value?.asStringUriOnly()}")
         }
     }
 
