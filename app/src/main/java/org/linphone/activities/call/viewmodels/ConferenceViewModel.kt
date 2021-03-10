@@ -30,6 +30,8 @@ class ConferenceViewModel : ViewModel() {
 
     val isMeConferenceFocus = MutableLiveData<Boolean>()
 
+    val conferenceAddress = MutableLiveData<Address>()
+
     val conferenceParticipants = MutableLiveData<List<ConferenceParticipantViewModel>>()
 
     val isInConference = MutableLiveData<Boolean>()
@@ -78,6 +80,7 @@ class ConferenceViewModel : ViewModel() {
             } else if (state == Conference.State.Created) {
                 updateParticipantsList(conference)
                 isMeConferenceFocus.value = conference.me.isFocus
+                conferenceAddress.value = conference.conferenceAddress
             } else if (state == Conference.State.Terminated || state == Conference.State.TerminationFailed) {
                 isInConference.value = false
                 conference.removeListener(conferenceListener)
@@ -93,6 +96,7 @@ class ConferenceViewModel : ViewModel() {
         isMeConferenceFocus.value = false
         conferenceParticipants.value = arrayListOf()
         isInConference.value = false
+//        conferenceAddress.value
 
         val conference = coreContext.core.conference
         if (conference != null) {
@@ -109,20 +113,34 @@ class ConferenceViewModel : ViewModel() {
     }
 
     fun pauseConference() {
-        if (coreContext.core.isInConference) {
+        val defaultProxyConfig = coreContext.core.defaultProxyConfig
+        val localAddress = defaultProxyConfig?.identityAddress
+        val participants = arrayOf<Address>()
+        val remoteConference = coreContext.core.searchConference(null, localAddress, conferenceAddress.value, participants)
+        val localConference = coreContext.core.searchConference(null, conferenceAddress.value, conferenceAddress.value, participants)
+        val conference = if (localConference == null) remoteConference else localConference
+
+        if (conference != null) {
             Log.i("[Conference VM] Leaving conference temporarily")
-            coreContext.core.conference?.leave()
+            conference?.leave()
         } else {
-            Log.w("[Conference VM] We are not part of the conference")
+            Log.w("[Conference VM] Unable to find conference with address ${conferenceAddress?.asStringUriOnly()}")
         }
     }
 
     fun resumeConference() {
-        if (!coreContext.core.isInConference) {
-            Log.i("[Conference VM] Entering back conference")
-            coreContext.core.conference?.enter()
+        val defaultProxyConfig = coreContext.core.defaultProxyConfig
+        val localAddress = defaultProxyConfig?.identityAddress
+        val participants = arrayOf<Address>()
+        val remoteConference = coreContext.core.searchConference(null, localAddress, conferenceAddress.value, participants)
+        val localConference = coreContext.core.searchConference(null, conferenceAddress.value, conferenceAddress.value, participants)
+        val conference = if (localConference == null) remoteConference else localConference
+
+        if (conference != null) {
+            Log.i("[Conference VM] Entering again conference")
+            conference?.enter()
         } else {
-            Log.w("[Conference VM] We are already in the conference")
+            Log.w("[Conference VM] Unable to find conference with address ${conferenceAddress?.asStringUriOnly()}")
         }
     }
 
