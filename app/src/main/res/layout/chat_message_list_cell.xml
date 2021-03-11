@@ -133,6 +133,7 @@
                     app:layout="@{@layout/chat_message_content_cell}"
                     app:onLongClick="@{contextMenuClickListener}"
                     app:flexWrap="wrap"
+                    app:alignItems="center"
                     app:justifyContent="@{viewModel.chatMessage.outgoing ? JustifyContent.FLEX_END : JustifyContent.FLEX_START}"/>
 
                 <org.linphone.activities.main.chat.views.MultiLineWrapContentWidthTextView
