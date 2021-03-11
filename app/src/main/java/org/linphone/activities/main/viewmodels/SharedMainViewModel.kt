@@ -58,7 +58,7 @@ class SharedMainViewModel : ViewModel() {
 
     /* Accounts */
 
-    val proxyConfigRemoved = MutableLiveData<Boolean>()
+    val accountRemoved = MutableLiveData<Boolean>()
 
     /* Call */
 
