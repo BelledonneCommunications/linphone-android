@@ -66,7 +66,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
     private val observer = object : RecyclerView.AdapterDataObserver() {
         override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-            if (positionStart == adapter.itemCount - 1) {
+            if (itemCount == 1 && positionStart > 0) {
                 adapter.notifyItemChanged(positionStart - 1) // For grouping purposes
                 scrollToBottom()
             }
