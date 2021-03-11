@@ -82,6 +82,11 @@ fun View.setLayoutHeight(dimension: Float) {
     this.layoutParams.height = dimension.toInt()
 }
 
+@BindingAdapter("android:maxHeight")
+fun ImageView.setImageMaxHeight(dimension: Float) {
+    this.maxHeight = dimension.toInt()
+}
+
 @BindingAdapter("android:layout_size")
 fun View.setLayoutSize(dimension: Float) {
     this.layoutParams.height = dimension.toInt()
