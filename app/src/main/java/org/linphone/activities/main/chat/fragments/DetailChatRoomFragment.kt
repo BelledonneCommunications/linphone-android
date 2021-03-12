@@ -38,6 +38,7 @@ import androidx.appcompat.view.menu.MenuPopupHelper
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
@@ -89,7 +90,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         super.onCreate(savedInstanceState)
 
         requireActivity().onBackPressedDispatcher.addCallback(this) {
-            navigateToChatRooms()
+            goBack()
         }
     }
 
@@ -229,7 +230,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         })
 
         binding.setBackClickListener {
-            navigateToChatRooms()
+            goBack()
         }
         binding.back.visibility = if (resources.getBoolean(R.bool.isTablet)) View.INVISIBLE else View.VISIBLE
 
@@ -353,6 +354,12 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                     chatSendingViewModel.addAttachment(fileToUploadPath)
                 }
             }
+        }
+    }
+
+    private fun goBack() {
+        if (!findNavController().popBackStack(R.id.masterChatRoomsFragment, false)) {
+            navigateToChatRooms()
         }
     }
 
