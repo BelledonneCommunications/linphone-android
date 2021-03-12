@@ -120,7 +120,7 @@ class CallsViewModel : ViewModel() {
             if (call.state == Call.State.Paused || call.state == Call.State.Pausing) {
                 addCallToPausedList(call)
             } else {
-                if (call.conference != null && call.core.isInConference) {
+                if (call.conference != null) {
                     conferenceList.add(CallViewModel(call))
                 }
             }
