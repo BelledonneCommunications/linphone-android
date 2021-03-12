@@ -17,9 +17,10 @@ static def firebaseEnabled() {
 }
 
 def crashlyticsEnabled() {
+    File googleFile = new File('app/google-services.json')
     File linphoneLibrary = new File(LinphoneSdkBuildDir + '/libs/')
     File linphoneLibraryDebug = new File(LinphoneSdkBuildDir + '/libs-debug/')
-    return linphoneLibrary.exists() && linphoneLibraryDebug.exists()
+    return googleFile.exists() && linphoneLibrary.exists() && linphoneLibraryDebug.exists()
 }
 
 if (crashlyticsEnabled()) {
