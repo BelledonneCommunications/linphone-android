@@ -108,9 +108,24 @@ class NativeContact(val nativeId: String, private val lookupKey: String? = null)
                     return
                 }
 
-                Log.d("[Native Contact] Found phone number $data1 ($data4)")
+                val labelColumnIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.LABEL)
+                val label: String? = cursor.getString(labelColumnIndex)
+                val typeColumnIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE)
+                val type: Int = cursor.getInt(typeColumnIndex)
+                val typeLabel = ContactsContract.CommonDataKinds.Phone.getTypeLabel(
+                    coreContext.context.resources,
+                    type,
+                    label
+                ).toString()
+
                 val number = data4 ?: data1
-                if (number != null && number.isNotEmpty() && !phoneNumbers.contains(number)) phoneNumbers.add(number)
+                if (number != null && number.isNotEmpty()) {
+                    Log.d("[Native Contact] Found phone number $data1 ($data4), type label is $typeLabel")
+                    if (!rawPhoneNumbers.contains(number)) {
+                        phoneNumbers.add(PhoneNumber(number, typeLabel))
+                        rawPhoneNumbers.add(number)
+                    }
+                }
             }
             linphoneMime, ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE -> {
                 if (data1 == null) {
@@ -119,7 +134,7 @@ class NativeContact(val nativeId: String, private val lookupKey: String? = null)
                 }
 
                 Log.d("[Native Contact] Found SIP address $data1")
-                if (phoneNumbers.contains(data1)) {
+                if (rawPhoneNumbers.contains(data1)) {
                     Log.d("[Native Contact] SIP address value already exists in phone numbers list, skipping")
                     return
                 }
@@ -131,6 +146,7 @@ class NativeContact(val nativeId: String, private val lookupKey: String? = null)
                 }
 
                 val stringAddress = address.asStringUriOnly()
+                Log.d("[Native Contact] Found SIP address $stringAddress")
                 if (!rawSipAddresses.contains(stringAddress)) {
                     sipAddresses.add(address)
                     rawSipAddresses.add(stringAddress)
@@ -191,7 +207,7 @@ class NativeContact(val nativeId: String, private val lookupKey: String? = null)
             }
 
             for (address in sipAddresses) friend.addAddress(address)
-            for (number in phoneNumbers) friend.addPhoneNumber(number)
+            for (number in rawPhoneNumbers) friend.addPhoneNumber(number)
 
             friend.done()
             if (created) coreContext.core.defaultFriendList?.addFriend(friend)
@@ -220,6 +236,7 @@ class NativeContact(val nativeId: String, private val lookupKey: String? = null)
             sipAddresses.clear()
             rawSipAddresses.clear()
             phoneNumbers.clear()
+            rawPhoneNumbers.clear()
 
             while (cursor.moveToNext()) {
                 syncValuesFromAndroidCursor(cursor)
