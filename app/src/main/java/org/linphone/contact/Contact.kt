@@ -33,6 +33,12 @@ import org.linphone.core.PresenceBasicStatus
 import org.linphone.core.tools.Log
 import org.linphone.utils.ImageUtils
 
+data class PhoneNumber(val value: String, val typeLabel: String) : Comparable<PhoneNumber> {
+    override fun compareTo(other: PhoneNumber): Int {
+        return value.compareTo(other.value)
+    }
+}
+
 open class Contact : Comparable<Contact> {
     var fullName: String? = null
     var firstName: String? = null
@@ -40,7 +46,8 @@ open class Contact : Comparable<Contact> {
     var organization: String? = null
     var isStarred: Boolean = false
 
-    var phoneNumbers = arrayListOf<String>()
+    var phoneNumbers = arrayListOf<PhoneNumber>()
+    var rawPhoneNumbers = arrayListOf<String>()
     var sipAddresses = arrayListOf<Address>()
     // Raw SIP addresses are only used for contact edition
     var rawSipAddresses = arrayListOf<String>()
@@ -53,7 +60,7 @@ open class Contact : Comparable<Contact> {
         if (fn == otherFn) {
             if (phoneNumbers.size == other.phoneNumbers.size && phoneNumbers.size > 0) {
                 if (phoneNumbers != other.phoneNumbers) {
-                    for (i in 0..phoneNumbers.size) {
+                    for (i in 0 until phoneNumbers.size) {
                         val compare = phoneNumbers[i].compareTo(other.phoneNumbers[i])
                         if (compare != 0) return compare
                     }
@@ -64,7 +71,7 @@ open class Contact : Comparable<Contact> {
 
             if (sipAddresses.size == other.sipAddresses.size && sipAddresses.size > 0) {
                 if (sipAddresses != other.sipAddresses) {
-                    for (i in 0..sipAddresses.size) {
+                    for (i in 0 until sipAddresses.size) {
                         val compare = sipAddresses[i].asStringUriOnly().compareTo(other.sipAddresses[i].asStringUriOnly())
                         if (compare != 0) return compare
                     }
@@ -89,7 +96,10 @@ open class Contact : Comparable<Contact> {
 
         phoneNumbers.clear()
         for (number in friend.phoneNumbers) {
-            if (!phoneNumbers.contains(number)) phoneNumbers.add(number)
+            if (!rawPhoneNumbers.contains(number)) {
+                phoneNumbers.add(PhoneNumber(number, ""))
+                rawPhoneNumbers.add(number)
+            }
         }
 
         sipAddresses.clear()
@@ -151,7 +161,7 @@ open class Contact : Comparable<Contact> {
             val presenceModel = friend?.getPresenceModelForUriOrTel(address.asStringUriOnly())
             if (presenceModel != null && presenceModel.basicStatus == PresenceBasicStatus.Open) return true
         }
-        for (number in phoneNumbers) {
+        for (number in rawPhoneNumbers) {
             val presenceModel = friend?.getPresenceModelForUriOrTel(number)
             if (presenceModel != null && presenceModel.basicStatus == PresenceBasicStatus.Open) return true
         }
