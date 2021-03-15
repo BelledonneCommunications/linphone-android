@@ -175,14 +175,15 @@ class ContactViewModel(private val c: Contact) : ErrorReportingViewModel(), Cont
             val noa = ContactNumberOrAddressViewModel(address, hasPresence, displayValue, showSecureChat = secureChatAllowed, listener = listener)
             list.add(noa)
         }
-        for (number in contact.phoneNumbers) {
+        for (phoneNumber in contact.phoneNumbers) {
+            val number = phoneNumber.value
             val presenceModel = contact.friend?.getPresenceModelForUriOrTel(number)
             val hasPresence = presenceModel != null && presenceModel.basicStatus == PresenceBasicStatus.Open
             val contactAddress = presenceModel?.contact ?: number
             val address = coreContext.core.interpretUrl(contactAddress)
             val isMe = if (address != null) coreContext.core.defaultProxyConfig?.identityAddress?.weakEqual(address) ?: false else false
             val secureChatAllowed = !isMe && contact.friend?.getPresenceModelForUriOrTel(number)?.hasCapability(FriendCapability.LimeX3Dh) ?: false
-            val noa = ContactNumberOrAddressViewModel(address, hasPresence, number, isSip = false, showSecureChat = secureChatAllowed, listener = listener)
+            val noa = ContactNumberOrAddressViewModel(address, hasPresence, number, isSip = false, showSecureChat = secureChatAllowed, typeLabel = phoneNumber.typeLabel, listener = listener)
             list.add(noa)
         }
         numbersAndAddresses.value = list

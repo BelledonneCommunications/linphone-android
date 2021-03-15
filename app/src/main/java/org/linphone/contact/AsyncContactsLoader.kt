@@ -41,8 +41,8 @@ class AsyncContactsLoader(private val context: Context) :
             ContactsContract.Contacts.STARRED,
             ContactsContract.Contacts.LOOKUP_KEY,
             "data1", // Company, Phone or SIP Address
-            "data2", // ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME
-            "data3", // ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME
+            "data2", // ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.SipAddress.TYPE
+            "data3", // ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME, ContactsContract.CommonDataKinds.Phone.LABEL, ContactsContract.CommonDataKinds.SipAddress.LABEL
             "data4"
         )
     }
@@ -75,6 +75,7 @@ class AsyncContactsLoader(private val context: Context) :
                         contact.sipAddresses.clear()
                         contact.rawSipAddresses.clear()
                         contact.phoneNumbers.clear()
+                        contact.rawPhoneNumbers.clear()
                         androidContactsCache[contact.nativeId] = contact
                         nativeIds.add(contact.nativeId)
                     } else {
