@@ -345,7 +345,7 @@ class ContactsManager(private val context: Context) {
     }
 
     private fun storePresenceInNativeContact(contact: NativeContact) {
-        for (phoneNumber in contact.phoneNumbers) {
+        for (phoneNumber in contact.rawPhoneNumbers) {
             val sipAddress = contact.getContactForPhoneNumberOrAddress(phoneNumber)
             if (sipAddress != null) {
                 Log.d("[Contacts Manager] Found presence information to store in native contact $contact under Linphone sync account")

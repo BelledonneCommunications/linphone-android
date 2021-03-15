@@ -192,7 +192,7 @@ class ContactEditorViewModel(val c: Contact?) : ViewModel(), ContactViewModelInt
 
     private fun updateNumbersAndAddresses() {
         val phoneNumbers = arrayListOf<NumberOrAddressEditorViewModel>()
-        for (number in c?.phoneNumbers.orEmpty()) {
+        for (number in c?.rawPhoneNumbers.orEmpty()) {
             phoneNumbers.add(NumberOrAddressEditorViewModel(number, false))
         }
         if (phoneNumbers.isEmpty()) {
