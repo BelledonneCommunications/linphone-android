@@ -29,6 +29,7 @@ class ContactNumberOrAddressViewModel(
     val displayedValue: String,
     val isSip: Boolean = true,
     val showSecureChat: Boolean = false,
+    val typeLabel: String = "",
     private val listener: ContactNumberOrAddressClickListener
 ) : ViewModel() {
     val showInvite = !hasPresence && !isSip

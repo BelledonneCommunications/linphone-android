@@ -71,6 +71,15 @@
             android:scrollHorizontally="true"
             android:singleLine="true" />
 
+        <TextView
+            android:text="@{data.typeLabel}"
+            android:visibility="@{data.typeLabel.length() > 0 ? View.VISIBLE : View.GONE, default=gone}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="?attr/primarySubtextDarkColor"
+            android:textSize="13sp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
