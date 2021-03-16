@@ -145,9 +145,20 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
 
     fun login() {
         if (loginWithUsernamePassword.value == true) {
-            accountCreator.username = username.value
-            accountCreator.password = password.value
+            val result = accountCreator.setUsername(username.value)
+            if (result != AccountCreator.UsernameStatus.Ok) {
+                Log.e("[Assistant] [Account Login] Error [${result.name}] setting the username: ${username.value}")
+                // TODO: show error
+                return
+            }
             Log.i("[Assistant] [Account Login] Username is ${accountCreator.username}")
+
+            val result2 = accountCreator.setPassword(password.value)
+            if (result2 != AccountCreator.PasswordStatus.Ok) {
+                Log.e("[Assistant] [Account Login] Error [${result2.name}] setting the password")
+                // TODO: show error
+                return
+            }
 
             waitForServerAnswer.value = true
             coreContext.core.addListener(coreListener)
@@ -157,9 +168,21 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
                 // TODO: show error
             }
         } else {
-            accountCreator.setPhoneNumber(phoneNumber.value, prefix.value)
-            accountCreator.username = accountCreator.phoneNumber
+            val result = accountCreator.setPhoneNumber(phoneNumber.value, prefix.value)
+            if (result != AccountCreator.PhoneNumberStatus.Ok.toInt()) {
+                Log.e("[Assistant] [Account Login] Error [$result] setting the phone number: ${phoneNumber.value} with prefix: ${prefix.value}")
+                // TODO: show error
+                return
+            }
             Log.i("[Assistant] [Account Login] Phone number is ${accountCreator.phoneNumber}")
+
+            val result2 = accountCreator.setUsername(accountCreator.phoneNumber)
+            if (result2 != AccountCreator.UsernameStatus.Ok) {
+                Log.e("[Assistant] [Account Login] Error [${result2.name}] setting the username: ${accountCreator.phoneNumber}")
+                // TODO: show error
+                return
+            }
+            Log.i("[Assistant] [Account Login] Username is ${accountCreator.username}")
 
             waitForServerAnswer.value = true
             val status = accountCreator.recoverAccount()
