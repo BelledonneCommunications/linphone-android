@@ -39,8 +39,10 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
     val loginWithUsernamePassword = MutableLiveData<Boolean>()
 
     val username = MutableLiveData<String>()
+    val usernameError = MutableLiveData<String>()
 
     val password = MutableLiveData<String>()
+    val passwordError = MutableLiveData<String>()
 
     val loginEnabled: MediatorLiveData<Boolean> = MediatorLiveData()
 
@@ -148,7 +150,7 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
             val result = accountCreator.setUsername(username.value)
             if (result != AccountCreator.UsernameStatus.Ok) {
                 Log.e("[Assistant] [Account Login] Error [${result.name}] setting the username: ${username.value}")
-                // TODO: show error
+                usernameError.value = result.name
                 return
             }
             Log.i("[Assistant] [Account Login] Username is ${accountCreator.username}")
@@ -156,7 +158,7 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
             val result2 = accountCreator.setPassword(password.value)
             if (result2 != AccountCreator.PasswordStatus.Ok) {
                 Log.e("[Assistant] [Account Login] Error [${result2.name}] setting the password")
-                // TODO: show error
+                passwordError.value = result2.name
                 return
             }
 
@@ -168,10 +170,10 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
                 // TODO: show error
             }
         } else {
-            val result = accountCreator.setPhoneNumber(phoneNumber.value, prefix.value)
-            if (result != AccountCreator.PhoneNumberStatus.Ok.toInt()) {
+            val result = AccountCreator.PhoneNumberStatus.fromInt(accountCreator.setPhoneNumber(phoneNumber.value, prefix.value))
+            if (result != AccountCreator.PhoneNumberStatus.Ok) {
                 Log.e("[Assistant] [Account Login] Error [$result] setting the phone number: ${phoneNumber.value} with prefix: ${prefix.value}")
-                // TODO: show error
+                phoneNumberError.value = result.name
                 return
             }
             Log.i("[Assistant] [Account Login] Phone number is ${accountCreator.phoneNumber}")
@@ -179,7 +181,7 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
             val result2 = accountCreator.setUsername(accountCreator.phoneNumber)
             if (result2 != AccountCreator.UsernameStatus.Ok) {
                 Log.e("[Assistant] [Account Login] Error [${result2.name}] setting the username: ${accountCreator.phoneNumber}")
-                // TODO: show error
+                usernameError.value = result2.name
                 return
             }
             Log.i("[Assistant] [Account Login] Username is ${accountCreator.username}")
