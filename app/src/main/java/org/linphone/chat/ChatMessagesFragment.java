@@ -1084,15 +1084,18 @@ public class ChatMessagesFragment extends Fragment
 
             boolean split =
                     isBasicChatRoom; // Always split contents in basic chat rooms for compatibility
-            if (hasText && sendImageAndTextAsDifferentMessages) {
-                split = true;
-            } else if (mFilesUploadLayout.getChildCount() > 1
-                    && sendMultipleImagesAsDifferentMessages) {
-                split = true;
+            if (!split) {
+                if (hasText && sendImageAndTextAsDifferentMessages) {
+                    split = true;
+                } else if (mFilesUploadLayout.getChildCount() > 1
+                        && sendMultipleImagesAsDifferentMessages) {
+                    split = true;
 
-                // Allow the last image to be sent with text if image and text at the same time OK
-                if (hasText && i == filesCount - 1) {
-                    split = false;
+                    // Allow the last image to be sent with text if image and text at the same time
+                    // OK
+                    if (hasText && i == filesCount - 1) {
+                        split = false;
+                    }
                 }
             }
 
