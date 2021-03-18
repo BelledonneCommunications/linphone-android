@@ -409,6 +409,13 @@ public class CallActivity extends LinphoneGenericActivity
 
                             setCurrentCallContactInformation();
                             updateInterfaceDependingOnVideo();
+                        } else if (state == Call.State.Updating) {
+                            if (call.getCurrentParams().videoEnabled()) {
+                                if (!LinphoneManager.getAudioManager()
+                                        .isUsingBluetoothAudioRoute()) {
+                                    LinphoneManager.getAudioManager().routeAudioToSpeaker();
+                                }
+                            }
                         } else if (state == Call.State.UpdatedByRemote) {
                             // If the correspondent asks for video while in audio call
                             boolean videoEnabled = LinphonePreferences.instance().isVideoEnabled();
