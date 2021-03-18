@@ -144,6 +144,10 @@ public class CallManager {
             params.enableVideo(true);
             core.enableVideoCapture(true);
             core.enableVideoDisplay(true);
+
+            if (!LinphoneManager.getAudioManager().isUsingBluetoothAudioRoute()) {
+                LinphoneManager.getAudioManager().routeAudioToSpeaker();
+            }
         } else {
             params.enableVideo(false);
         }

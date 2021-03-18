@@ -500,9 +500,8 @@ public class ContactEditorFragment extends Fragment {
             } catch (IOException e) {
                 Log.e("[Contact Editor] Failed to get Exif rotation, error is ", e);
             }
-        } else {
-
         }
+
         if (image == null) {
             Log.e(
                     "[Contact Editor] Couldn't get bitmap from either filePath [",
