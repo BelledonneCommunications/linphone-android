@@ -130,6 +130,9 @@
   <string name="phone_number_link_info_content_already_account">A telefonszámát csak egy Linphone-fiókkal használhatja.\n\nHa már összekapcsolta telefonszámát egy másik fiókkal, de inkább ezt használja, egyszerűen kapcsolja össze, és a telefonszám önműködően átkerül ebbe a fiókba.</string>
   <string name="phone_number_overuse">Túl sok SMS-t küldtek erre a számra rövid idő alatt. Kérjük, várjon 24 órát, mielőtt újra megpróbálja.</string>
   <string name="account_doesnt_exist">Fiók nem létezik</string>
+  <string name="assistant_general_terms">használati feltételek</string>
+  <string name="assistant_privacy_policy">adatvédelmi szabályzat</string>
+  <string name="assistant_read_and_agree_terms">Elfogadom a Belledonne Communications %1$s és %2$s</string>
   <!--Status-->
   <string name="invalid_email">Érvénytelen e-mail</string>
   <string name="account_already_exist">Fiók már létezik</string>
@@ -613,6 +616,7 @@
   <string name="content_description_exit_conference">Konferencia elhagyása</string>
   <string name="content_title_notification_service">Linphone szolgáltatás-értesítés</string>
   <string name="content_title_notification">Linphone csevegőüzenetek értesítések</string>
+  <string name="content_title_notification_missed_call">Linphone nem fogadott hívások értesítései</string>
   <string name="content_description_conversation_subject">Csoportos csevegőszoba tárgya</string>
   <string name="content_description_conversation_infos">Csoportos csevegőszoba tájékoztatás</string>
   <string name="content_description_record_call">Hívás felvétele</string>

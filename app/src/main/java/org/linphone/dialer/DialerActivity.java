@@ -106,6 +106,9 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
                     @Override
                     public void onCallStateChanged(
                             Core core, Call call, Call.State state, String message) {
+                        if (state == Call.State.OutgoingInit) {
+                            if (mAddress != null) mAddress.setText("");
+                        }
                         updateLayout();
                     }
 
@@ -166,10 +169,6 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
                 };
 
         mIsTransfer = false;
-        if (getIntent() != null) {
-            mIsTransfer = getIntent().getBooleanExtra("isTransfer", false);
-        }
-
         handleIntentParams(getIntent());
     }
 
@@ -178,13 +177,6 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
         super.onNewIntent(intent);
 
         handleIntentParams(intent);
-
-        if (intent != null) {
-            mIsTransfer = intent.getBooleanExtra("isTransfer", mIsTransfer);
-            if (mAddress != null && intent.getStringExtra("SipUri") != null) {
-                mAddress.setText(intent.getStringExtra("SipUri"));
-            }
-        }
     }
 
     @Override
@@ -207,7 +199,6 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
     @Override
     protected void onPause() {
         enableVideoPreviewIfTablet(false);
-        if (mAddress != null) mAddress.setText("");
         Core core = LinphoneManager.getCore();
         if (core != null) {
             core.removeListener(mListener);
@@ -219,6 +210,7 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
     @Override
     protected void onDestroy() {
         if (mInterfaceLoaded) {
+            if (mAddress != null) mAddress.setText("");
             mAddress = null;
             mStartCall = null;
             mAddCall = null;
@@ -280,6 +272,7 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
                         intent.putExtra("EditOnClick", true);
                         intent.putExtra("SipAddress", mAddress.getText().toString());
                         startActivity(intent);
+                        if (mAddress != null) mAddress.setText("");
                     }
                 });
 
@@ -289,6 +282,7 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
                     @Override
                     public void onClick(View v) {
                         goBackToCall();
+                        if (mAddress != null) mAddress.setText("");
                     }
                 });
 
@@ -334,6 +328,7 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putSerializable("address", mAddress.getText().toString());
         outState.putSerializable("isTransfer", mIsTransfer);
     }
 
@@ -341,6 +336,7 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mIsTransfer = savedInstanceState.getBoolean("isTransfer");
+        mAddress.setText(savedInstanceState.getString("address"));
     }
 
     @Override
@@ -374,6 +370,8 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
 
     private void handleIntentParams(Intent intent) {
         if (intent == null) return;
+
+        mIsTransfer = intent.getBooleanExtra("isTransfer", mIsTransfer);
 
         String action = intent.getAction();
         String addressToCall = null;
@@ -409,7 +407,13 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
                     Log.i("[Dialer] " + action + " with number: " + addressToCall);
                 }
             } else {
-                Log.w("[Dialer] Intent data is null for action " + action);
+                String sipUri = intent.getStringExtra("SipUri");
+                if (sipUri != null) {
+                    Log.i("[Dialer] Found extra SIP URI: " + sipUri);
+                    addressToCall = sipUri;
+                } else {
+                    Log.w("[Dialer] Intent data is null for action " + action);
+                }
             }
         }
 
