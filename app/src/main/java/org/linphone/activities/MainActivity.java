@@ -559,6 +559,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
                     if (LinphoneContext.isReady()) {
                         ContactsManager.getInstance().enableContactsAccess();
                         ContactsManager.getInstance().initializeContactManager();
+                        ContactsManager.getInstance().fetchContactsAsync();
                     }
                 }
             } else if (permissions[i].equals(Manifest.permission.READ_EXTERNAL_STORAGE)) {
