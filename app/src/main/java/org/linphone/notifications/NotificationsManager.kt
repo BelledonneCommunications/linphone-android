@@ -146,7 +146,9 @@ class NotificationsManager(private val context: Context) {
                 return
             }
 
-            if (!message.hasTextContent() && message.fileTransferInformation == null) {
+            if (message.contents.find { content ->
+                    content.isFile or content.isFileTransfer or content.isText
+                } == null) {
                 Log.w("[Notifications Manager] Received message with neither text or attachment, do not notify")
                 return
             }
@@ -290,7 +292,7 @@ class NotificationsManager(private val context: Context) {
     }
 
     fun startForeground(coreService: CoreService, useAutoStartDescription: Boolean = true) {
-        Log.i("[Notifications Manager] Starting Service as foreground")
+        Log.i("[Notifications Manager] Starting service as foreground")
         if (serviceNotification == null) {
             createServiceNotification(useAutoStartDescription)
         }
@@ -301,7 +303,7 @@ class NotificationsManager(private val context: Context) {
 
     private fun startForeground(notificationId: Int, callNotification: Notification) {
         if (currentForegroundServiceNotificationId == 0 && service != null) {
-            Log.i("[Notifications Manager] Starting Service as foreground using call notification")
+            Log.i("[Notifications Manager] Starting service as foreground using call notification")
             currentForegroundServiceNotificationId = notificationId
             service?.startForeground(currentForegroundServiceNotificationId, callNotification)
         }
@@ -309,7 +311,7 @@ class NotificationsManager(private val context: Context) {
 
     private fun stopForegroundNotification() {
         if (service != null) {
-            Log.i("[Notifications Manager] Stopping Service as foreground")
+            Log.i("[Notifications Manager] Stopping service as foreground")
             service?.stopForeground(true)
             currentForegroundServiceNotificationId = 0
         }
@@ -317,12 +319,14 @@ class NotificationsManager(private val context: Context) {
 
     fun stopForegroundNotificationIfPossible() {
         if (service != null && currentForegroundServiceNotificationId == SERVICE_NOTIF_ID && !corePreferences.keepServiceAlive) {
+            Log.i("[Notifications Manager] Stopping auto-started service notification")
             stopForegroundNotification()
         }
     }
 
     fun stopCallForeground() {
         if (service != null && currentForegroundServiceNotificationId != SERVICE_NOTIF_ID && !corePreferences.keepServiceAlive) {
+            Log.i("[Notifications Manager] Stopping call notification used as foreground service")
             stopForegroundNotification()
         }
     }
@@ -582,14 +586,14 @@ class NotificationsManager(private val context: Context) {
         val roundPicture = ImageUtils.getRoundBitmapFromUri(context, pictureUri)
         val displayName = contact?.fullName ?: LinphoneUtils.getDisplayName(message.fromAddress)
 
-        val notifiable = getNotifiableForRoom(room)
-        var text = ""
-        if (message.hasTextContent()) text = message.textContent.orEmpty()
-        else {
+        var text: String = message.contents.find { content -> content.isText }?.utf8Text ?: ""
+        if (text.isEmpty()) {
             for (content in message.contents) {
                 text += content.name
             }
         }
+
+        val notifiable = getNotifiableForRoom(room)
         val notifiableMessage = NotifiableMessage(text, contact, displayName, message.time, senderAvatar = roundPicture, isOutgoing = message.isOutgoing)
         notifiable.messages.add(notifiableMessage)
 
@@ -639,8 +643,9 @@ class NotificationsManager(private val context: Context) {
     private fun displayReplyMessageNotification(message: ChatMessage, notifiable: Notifiable) {
         Log.i("[Notifications Manager] Updating message notification with reply for notification ${notifiable.notificationId}")
 
+        val text = message.contents.find { content -> content.isText }?.utf8Text ?: ""
         val reply = NotifiableMessage(
-            message.textContent.orEmpty(),
+            text,
             null,
             notifiable.myself ?: LinphoneUtils.getDisplayName(message.fromAddress),
             System.currentTimeMillis(),

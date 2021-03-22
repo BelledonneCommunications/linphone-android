@@ -35,7 +35,7 @@ class CoreService : CoreService() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent?.extras?.get("StartForeground") == true) {
-            Log.i("[Service] Starting as foreground")
+            Log.i("[Service] Starting as foreground due to device boot or app update")
             coreContext.notificationsManager.startForeground(this, true)
         } else if (corePreferences.keepServiceAlive) {
             Log.i("[Service] Starting as foreground to keep app alive in background")
@@ -60,7 +60,7 @@ class CoreService : CoreService() {
 
     override fun onTaskRemoved(rootIntent: Intent?) {
         if (!corePreferences.keepServiceAlive) {
-            if (coreContext.core.isInBackground()) {
+            if (coreContext.core.isInBackground) {
                 Log.i("[Service] Task removed, stopping Core")
                 coreContext.stop()
             } else {

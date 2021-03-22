@@ -196,7 +196,7 @@ class ChatMessagesListAdapter(
                         if (chatMessage.state != ChatMessage.State.NotDelivered) {
                             popup.menu.removeItem(R.id.chat_message_menu_resend)
                         }
-                        if (!chatMessage.hasTextContent()) {
+                        if (chatMessage.contents.find { content -> content.isText } == null) {
                             popup.menu.removeItem(R.id.chat_message_menu_copy_text)
                         }
                         if (chatMessageViewModel.contact.value != null) {
@@ -250,10 +250,14 @@ class ChatMessagesListAdapter(
 
         private fun copyTextToClipboard() {
             val chatMessage = binding.viewModel?.chatMessage
-            if (chatMessage != null && chatMessage.hasTextContent()) {
-                val clipboard: ClipboardManager = coreContext.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clip = ClipData.newPlainText("Message", chatMessage.textContent)
-                clipboard.setPrimaryClip(clip)
+            if (chatMessage != null) {
+                val content = chatMessage.contents.find { content -> content.isText }
+                if (content != null) {
+                    val clipboard: ClipboardManager =
+                        coreContext.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                    val clip = ClipData.newPlainText("Message", content.utf8Text)
+                    clipboard.setPrimaryClip(clip)
+                }
             }
         }
 
