@@ -1122,7 +1122,8 @@ public class CallActivity extends LinphoneGenericActivity
                 if (mCore.isInConference()) {
                     displayConferenceCall(call);
                     conferenceDisplayed = true;
-                } else if (!pausedConferenceDisplayed) {
+                } else if (!pausedConferenceDisplayed
+                        && mCore.getCallsNb() > 1) { // Workaround for temporary SDK issue
                     displayPausedConference();
                     pausedConferenceDisplayed = true;
                 }
