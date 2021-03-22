@@ -314,15 +314,6 @@ public class LinphoneManager implements SensorEventListener {
 
     private void destroyCore() {
         Log.w("[Manager] Destroying Core");
-        if (LinphonePreferences.instance() != null) {
-            // We set network reachable at false before destroying the Core
-            // to not send a register with expires at 0
-            if (LinphonePreferences.instance().isPushNotificationEnabled()) {
-                Log.w(
-                        "[Manager] Setting network reachability to False to prevent unregister and allow incoming push notifications");
-                mCore.setNetworkReachable(false);
-            }
-        }
         mCore.stop();
         mCore.removeListener(mCoreListener);
     }
