@@ -189,6 +189,7 @@ public class AndroidAudioManager {
         if (currentCall == null) currentCall = LinphoneManager.getCore().getCalls()[0];
         if (currentCall == null) return false;
         AudioDevice audioDevice = currentCall.getOutputAudioDevice();
+        if (audioDevice == null) return false;
         Log.i("[Audio Manager] Currently used audio device: ", audioDevice.getDeviceName());
         return audioDevice.getType() == AudioDevice.Type.Bluetooth;
     }
