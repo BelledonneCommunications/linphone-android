@@ -116,6 +116,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
             Log.i("[Context] Global state changed [$state]")
             if (state == GlobalState.On) {
                 contactsManager.fetchContactsAsync()
+                notificationsManager.stopForegroundNotificationIfPossible()
             }
         }
 
