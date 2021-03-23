@@ -70,6 +70,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     }
 
     private lateinit var tabsFragment: FragmentContainerView
+    private lateinit var statusFragment: FragmentContainerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -110,6 +111,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         }
 
         tabsFragment = findViewById(R.id.tabs_fragment)
+        statusFragment = findViewById(R.id.status_fragment)
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -150,6 +152,9 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         arguments: Bundle?
     ) {
         currentFocus?.hideKeyboard()
+        if (statusFragment.visibility == View.GONE) {
+            statusFragment.visibility = View.VISIBLE
+        }
 
         val motionLayout: MotionLayout = binding.content as MotionLayout
         if (corePreferences.enableAnimations) {
@@ -165,6 +170,10 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                 else -> motionLayout.setTransition(R.id.gone, R.id.gone)
             }
         }
+    }
+
+    fun hideStatusFragment() {
+        statusFragment.visibility = View.GONE
     }
 
     private fun View.hideKeyboard() {
