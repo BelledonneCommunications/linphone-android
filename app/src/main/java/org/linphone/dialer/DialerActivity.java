@@ -336,7 +336,7 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mIsTransfer = savedInstanceState.getBoolean("isTransfer");
-        mAddress.setText(savedInstanceState.getString("address"));
+        if (mAddress != null) mAddress.setText(savedInstanceState.getString("address"));
     }
 
     @Override
