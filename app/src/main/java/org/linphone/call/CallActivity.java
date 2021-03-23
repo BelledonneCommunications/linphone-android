@@ -407,15 +407,16 @@ public class CallActivity extends LinphoneGenericActivity
                         } else if (state == Call.State.StreamsRunning) {
                             mCallPausedByRemote.setVisibility(View.GONE);
 
-                            setCurrentCallContactInformation();
-                            updateInterfaceDependingOnVideo();
-                        } else if (state == Call.State.Updating) {
                             if (call.getCurrentParams().videoEnabled()) {
-                                if (!LinphoneManager.getAudioManager()
-                                        .isUsingBluetoothAudioRoute()) {
+                                AndroidAudioManager manager = LinphoneManager.getAudioManager();
+                                if (!manager.isUsingBluetoothAudioRoute()
+                                        && !manager.isWiredHeadsetAvailable()) {
                                     LinphoneManager.getAudioManager().routeAudioToSpeaker();
                                 }
                             }
+
+                            setCurrentCallContactInformation();
+                            updateInterfaceDependingOnVideo();
                         } else if (state == Call.State.UpdatedByRemote) {
                             // If the correspondent asks for video while in audio call
                             boolean videoEnabled = LinphonePreferences.instance().isVideoEnabled();
@@ -464,8 +465,11 @@ public class CallActivity extends LinphoneGenericActivity
 
             if (videoEnabled) {
                 mAudioManager = LinphoneManager.getAudioManager();
-                mAudioManager.routeAudioToSpeaker();
-                mSpeaker.setSelected(true);
+                if (!mAudioManager.isWiredHeadsetAvailable()
+                        && !mAudioManager.isUsingBluetoothAudioRoute()) {
+                    mAudioManager.routeAudioToSpeaker();
+                    mSpeaker.setSelected(true);
+                }
             }
         }
     }
