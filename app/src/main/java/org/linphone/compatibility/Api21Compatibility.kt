@@ -24,6 +24,7 @@ import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.content.ContentValues
 import android.content.Context
+import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.os.Vibrator
@@ -88,22 +89,12 @@ class Api21Compatibility {
                 put(MediaStore.Images.Media.MIME_TYPE, mime)
             }
             val collection = MediaStore.Images.Media.getContentUri("external")
-
-            val fileUri = context.contentResolver.insert(collection, values)
-            if (fileUri == null) {
-                Log.e("[Media Store] Failed to get a URI to where store the file, aborting")
-                return false
+            val mediaStoreFilePath = addContentValuesToCollection(context, filePath, collection, values)
+            if (mediaStoreFilePath.isNotEmpty()) {
+                content.userData = mediaStoreFilePath
+                return true
             }
-
-            var copyOk = false
-            context.contentResolver.openOutputStream(fileUri).use { out ->
-                copyOk = FileUtils.copyFileTo(filePath, out)
-            }
-
-            if (copyOk) {
-                content.userData = fileUri.toString()
-            }
-            return copyOk
+            return false
         }
 
         suspend fun addVideoToMediaStore(context: Context, content: Content): Boolean {
@@ -130,22 +121,12 @@ class Api21Compatibility {
                 put(MediaStore.Video.Media.MIME_TYPE, mime)
             }
             val collection = MediaStore.Video.Media.getContentUri("external")
-
-            val fileUri = context.contentResolver.insert(collection, values)
-            if (fileUri == null) {
-                Log.e("[Media Store] Failed to get a URI to where store the file, aborting")
-                return false
+            val mediaStoreFilePath = addContentValuesToCollection(context, filePath, collection, values)
+            if (mediaStoreFilePath.isNotEmpty()) {
+                content.userData = mediaStoreFilePath
+                return true
             }
-
-            var copyOk = false
-            context.contentResolver.openOutputStream(fileUri).use { out ->
-                copyOk = FileUtils.copyFileTo(filePath, out)
-            }
-
-            if (copyOk) {
-                content.userData = fileUri.toString()
-            }
-            return copyOk
+            return false
         }
 
         suspend fun addAudioToMediaStore(context: Context, content: Content): Boolean {
@@ -173,21 +154,36 @@ class Api21Compatibility {
             }
             val collection = MediaStore.Audio.Media.getContentUri("external")
 
-            val fileUri = context.contentResolver.insert(collection, values)
-            if (fileUri == null) {
-                Log.e("[Media Store] Failed to get a URI to where store the file, aborting")
-                return false
+            val mediaStoreFilePath = addContentValuesToCollection(context, filePath, collection, values)
+            if (mediaStoreFilePath.isNotEmpty()) {
+                content.userData = mediaStoreFilePath
+                return true
             }
+            return false
+        }
 
-            var copyOk = false
-            context.contentResolver.openOutputStream(fileUri).use { out ->
-                copyOk = FileUtils.copyFileTo(filePath, out)
-            }
+        private suspend fun addContentValuesToCollection(
+            context: Context,
+            filePath: String,
+            collection: Uri,
+            values: ContentValues
+        ): String {
+            try {
+                val fileUri = context.contentResolver.insert(collection, values)
+                if (fileUri == null) {
+                    Log.e("[Media Store] Failed to get a URI to where store the file, aborting")
+                    return ""
+                }
 
-            if (copyOk) {
-                content.userData = fileUri.toString()
+                context.contentResolver.openOutputStream(fileUri).use { out ->
+                    if (FileUtils.copyFileTo(filePath, out)) {
+                        return fileUri.toString()
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("[Media Store] Exception: $e")
             }
-            return copyOk
+            return ""
         }
 
         fun setShowWhenLocked(activity: Activity, enable: Boolean) {

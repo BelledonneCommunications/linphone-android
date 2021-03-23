@@ -24,6 +24,7 @@ import android.app.NotificationManager
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
 import android.view.View
@@ -82,26 +83,12 @@ class Api29Compatibility {
                 put(MediaStore.Images.Media.IS_PENDING, 1)
             }
             val collection = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
-
-            val fileUri = context.contentResolver.insert(collection, values)
-            if (fileUri == null) {
-                Log.e("[Media Store] Failed to get a URI to where store the file, aborting")
-                return false
+            val mediaStoreFilePath = addContentValuesToCollection(context, filePath, collection, values, MediaStore.Images.Media.IS_PENDING)
+            if (mediaStoreFilePath.isNotEmpty()) {
+                content.userData = mediaStoreFilePath
+                return true
             }
-
-            var copyOk = false
-            context.contentResolver.openOutputStream(fileUri).use { out ->
-                copyOk = FileUtils.copyFileTo(filePath, out)
-            }
-
-            values.clear()
-            values.put(MediaStore.Images.Media.IS_PENDING, 0)
-            context.contentResolver.update(fileUri, values, null, null)
-
-            if (copyOk) {
-                content.userData = fileUri.toString()
-            }
-            return copyOk
+            return false
         }
 
         suspend fun addVideoToMediaStore(context: Context, content: Content): Boolean {
@@ -125,26 +112,12 @@ class Api29Compatibility {
                 put(MediaStore.Video.Media.IS_PENDING, 1)
             }
             val collection = MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
-
-            val fileUri = context.contentResolver.insert(collection, values)
-            if (fileUri == null) {
-                Log.e("[Media Store] Failed to get a URI to where store the file, aborting")
-                return false
+            val mediaStoreFilePath = addContentValuesToCollection(context, filePath, collection, values, MediaStore.Video.Media.IS_PENDING)
+            if (mediaStoreFilePath.isNotEmpty()) {
+                content.userData = mediaStoreFilePath
+                return true
             }
-
-            var copyOk = false
-            context.contentResolver.openOutputStream(fileUri).use { out ->
-                copyOk = FileUtils.copyFileTo(filePath, out)
-            }
-
-            values.clear()
-            values.put(MediaStore.Video.Media.IS_PENDING, 0)
-            context.contentResolver.update(fileUri, values, null, null)
-
-            if (copyOk) {
-                content.userData = fileUri.toString()
-            }
-            return copyOk
+            return false
         }
 
         suspend fun addAudioToMediaStore(context: Context, content: Content): Boolean {
@@ -169,25 +142,41 @@ class Api29Compatibility {
             }
             val collection = MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
 
-            val fileUri = context.contentResolver.insert(collection, values)
-            if (fileUri == null) {
-                Log.e("[Media Store] Failed to get a URI to where store the file, aborting")
-                return false
+            val mediaStoreFilePath = addContentValuesToCollection(context, filePath, collection, values, MediaStore.Audio.Media.IS_PENDING)
+            if (mediaStoreFilePath.isNotEmpty()) {
+                content.userData = mediaStoreFilePath
+                return true
             }
+            return false
+        }
 
-            var copyOk = false
-            context.contentResolver.openOutputStream(fileUri).use { out ->
-                copyOk = FileUtils.copyFileTo(filePath, out)
+        private suspend fun addContentValuesToCollection(
+            context: Context,
+            filePath: String,
+            collection: Uri,
+            values: ContentValues,
+            pendingKey: String
+        ): String {
+            try {
+                val fileUri = context.contentResolver.insert(collection, values)
+                if (fileUri == null) {
+                    Log.e("[Media Store] Failed to get a URI to where store the file, aborting")
+                    return ""
+                }
+
+                context.contentResolver.openOutputStream(fileUri).use { out ->
+                    if (FileUtils.copyFileTo(filePath, out)) {
+                        values.clear()
+                        values.put(pendingKey, 0)
+                        context.contentResolver.update(fileUri, values, null, null)
+
+                        return fileUri.toString()
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("[Media Store] Exception: $e")
             }
-
-            values.clear()
-            values.put(MediaStore.Audio.Media.IS_PENDING, 0)
-            context.contentResolver.update(fileUri, values, null, null)
-
-            if (copyOk) {
-                content.userData = fileUri.toString()
-            }
-            return copyOk
+            return ""
         }
     }
 }
