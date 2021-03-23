@@ -205,6 +205,20 @@ public class AndroidAudioManager {
         return false;
     }
 
+    public synchronized boolean isWiredHeadsetAvailable() {
+        for (AudioDevice audioDevice : LinphoneManager.getCore().getExtendedAudioDevices()) {
+            Log.e("# AUDIO DEVICE TYPE IS " + audioDevice.getType().name());
+            if (audioDevice.getType() == AudioDevice.Type.Headphones
+                    || audioDevice.getType() == AudioDevice.Type.Headset) {
+                Log.i(
+                        "[Audio Manager] Found headset/headphone device: ",
+                        audioDevice.getDeviceName());
+                return true;
+            }
+        }
+        return false;
+    }
+
     public synchronized void routeAudioToBluetooth() {
         if (LinphoneManager.getCore().getCallsNb() == 0) return;
         Call currentCall = LinphoneManager.getCore().getCurrentCall();
