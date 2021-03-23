@@ -35,16 +35,14 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
         if (intent.action == NotificationsManager.INTENT_REPLY_NOTIF_ACTION || intent.action == NotificationsManager.INTENT_MARK_AS_READ_ACTION) {
             handleChatIntent(intent, notificationId)
         } else if (intent.action == NotificationsManager.INTENT_ANSWER_CALL_NOTIF_ACTION || intent.action == NotificationsManager.INTENT_HANGUP_CALL_NOTIF_ACTION) {
-            handleCallIntent(intent, notificationId)
+            handleCallIntent(intent)
         }
     }
 
     private fun handleChatIntent(intent: Intent, notificationId: Int) {
-        val localIdentity = intent.getStringExtra(NotificationsManager.INTENT_LOCAL_IDENTITY)
-
-        val remoteSipAddress: String? = coreContext.notificationsManager.getSipUriForChatNotificationId(notificationId)
+        val remoteSipAddress = intent.getStringExtra(NotificationsManager.INTENT_REMOTE_ADDRESS)
         if (remoteSipAddress == null) {
-            Log.e("[Notification Broadcast Receiver] Couldn't find remote address $remoteSipAddress for notification id $notificationId")
+            Log.e("[Notification Broadcast Receiver] Remote SIP address is null for notification id $notificationId")
             return
         }
         val core: Core = coreContext.core
@@ -55,6 +53,7 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
             return
         }
 
+        val localIdentity = intent.getStringExtra(NotificationsManager.INTENT_LOCAL_IDENTITY)
         if (localIdentity == null) {
             Log.e("[Notification Broadcast Receiver] Local identity is null for notification id $notificationId")
             return
@@ -89,14 +88,19 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
         }
     }
 
-    private fun handleCallIntent(intent: Intent, notificationId: Int) {
-        val remote: String = coreContext.notificationsManager.getSipUriForCallNotificationId(notificationId) ?: ""
+    private fun handleCallIntent(intent: Intent) {
+        val remoteSipAddress = intent.getStringExtra(NotificationsManager.INTENT_REMOTE_ADDRESS)
+        if (remoteSipAddress == null) {
+            Log.e("[Notification Broadcast Receiver] Remote SIP address is null for notification")
+            return
+        }
+
         val core: Core = coreContext.core
 
-        val remoteAddress = core.interpretUrl(remote)
+        val remoteAddress = core.interpretUrl(remoteSipAddress)
         val call = if (remoteAddress != null) core.getCallByRemoteAddress2(remoteAddress) else null
         if (call == null) {
-            Log.e("[Notification Broadcast Receiver] Couldn't find call from remote address $remoteAddress")
+            Log.e("[Notification Broadcast Receiver] Couldn't find call from remote address $remoteSipAddress")
             return
         }
 
