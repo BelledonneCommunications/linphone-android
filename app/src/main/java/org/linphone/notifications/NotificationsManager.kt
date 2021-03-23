@@ -60,6 +60,7 @@ private class Notifiable(val notificationId: Int) {
     var groupTitle: String? = null
     var localIdentity: String? = null
     var myself: String? = null
+    var remoteAddress: String? = null
 }
 
 private class NotifiableMessage(
@@ -81,8 +82,9 @@ class NotificationsManager(private val context: Context) {
         const val INTENT_REPLY_NOTIF_ACTION = "org.linphone.REPLY_ACTION"
         const val INTENT_HANGUP_CALL_NOTIF_ACTION = "org.linphone.HANGUP_CALL_ACTION"
         const val INTENT_ANSWER_CALL_NOTIF_ACTION = "org.linphone.ANSWER_CALL_ACTION"
-        const val INTENT_LOCAL_IDENTITY = "LOCAL_IDENTITY"
         const val INTENT_MARK_AS_READ_ACTION = "org.linphone.MARK_AS_READ_ACTION"
+        const val INTENT_LOCAL_IDENTITY = "LOCAL_IDENTITY"
+        const val INTENT_REMOTE_ADDRESS = "REMOTE_ADDRESS"
 
         private const val SERVICE_NOTIF_ID = 1
         private const val MISSED_CALLS_NOTIF_ID = 2
@@ -230,24 +232,6 @@ class NotificationsManager(private val context: Context) {
         notificationManager.cancel(id)
     }
 
-    fun getSipUriForChatNotificationId(notificationId: Int): String? {
-        for (address in chatNotificationsMap.keys) {
-            if (chatNotificationsMap[address]?.notificationId == notificationId) {
-                return address
-            }
-        }
-        return null
-    }
-
-    fun getSipUriForCallNotificationId(notificationId: Int): String? {
-        for (address in callNotificationsMap.keys) {
-            if (callNotificationsMap[address]?.notificationId == notificationId) {
-                return address
-            }
-        }
-        return null
-    }
-
     fun cancelChatNotificationIdForSipUri(sipUri: String) {
         val notifiable: Notifiable? = chatNotificationsMap[sipUri]
         if (notifiable != null) {
@@ -363,6 +347,8 @@ class NotificationsManager(private val context: Context) {
         var notifiable: Notifiable? = callNotificationsMap[address]
         if (notifiable == null) {
             notifiable = Notifiable(lastNotificationId)
+            notifiable.remoteAddress = call.remoteAddress.asStringUriOnly()
+
             lastNotificationId += 1
             callNotificationsMap[address] = notifiable
         }
@@ -410,8 +396,8 @@ class NotificationsManager(private val context: Context) {
             .setOngoing(true)
             .setColor(ContextCompat.getColor(context, R.color.primary_color))
             .setFullScreenIntent(pendingIntent, true)
-            .addAction(getCallDeclineAction(notifiable.notificationId))
-            .addAction(getCallAnswerAction(notifiable.notificationId))
+            .addAction(getCallDeclineAction(notifiable))
+            .addAction(getCallAnswerAction(notifiable))
             .setCustomHeadsUpContentView(notificationLayoutHeadsUp)
 
         if (!corePreferences.preventInterfaceFromShowingUp) {
@@ -530,7 +516,7 @@ class NotificationsManager(private val context: Context) {
             .setShowWhen(true)
             .setOngoing(true)
             .setColor(ContextCompat.getColor(context, R.color.notification_led_color))
-            .addAction(getCallDeclineAction(notifiable.notificationId))
+            .addAction(getCallDeclineAction(notifiable))
 
         if (!corePreferences.preventInterfaceFromShowingUp) {
             builder.setContentIntent(pendingIntent)
@@ -623,9 +609,6 @@ class NotificationsManager(private val context: Context) {
             notifiable.groupTitle = room.subject
         }
 
-        notifiable.myself = LinphoneUtils.getDisplayName(room.localAddress)
-        notifiable.localIdentity = room.localAddress.asStringUriOnly()
-
         displayChatNotifiable(room, notifiable)
     }
 
@@ -634,6 +617,10 @@ class NotificationsManager(private val context: Context) {
         var notifiable: Notifiable? = chatNotificationsMap[address]
         if (notifiable == null) {
             notifiable = Notifiable(lastNotificationId)
+            notifiable.myself = LinphoneUtils.getDisplayName(room.localAddress)
+            notifiable.localIdentity = room.localAddress.asStringUriOnly()
+            notifiable.remoteAddress = room.peerAddress.asStringUriOnly()
+
             lastNotificationId += 1
             chatNotificationsMap[address] = notifiable
         }
@@ -758,13 +745,14 @@ class NotificationsManager(private val context: Context) {
 
     /* Notifications actions */
 
-    private fun getCallAnswerAction(callId: Int): NotificationCompat.Action {
+    private fun getCallAnswerAction(notifiable: Notifiable): NotificationCompat.Action {
         val answerIntent = Intent(context, NotificationBroadcastReceiver::class.java)
         answerIntent.action = INTENT_ANSWER_CALL_NOTIF_ACTION
-        answerIntent.putExtra(INTENT_NOTIF_ID, callId)
+        answerIntent.putExtra(INTENT_NOTIF_ID, notifiable.notificationId)
+        answerIntent.putExtra(INTENT_REMOTE_ADDRESS, notifiable.remoteAddress)
 
         val answerPendingIntent = PendingIntent.getBroadcast(
-            context, callId, answerIntent, PendingIntent.FLAG_UPDATE_CURRENT
+            context, notifiable.notificationId, answerIntent, PendingIntent.FLAG_UPDATE_CURRENT
         )
 
         return NotificationCompat.Action.Builder(
@@ -774,13 +762,14 @@ class NotificationsManager(private val context: Context) {
         ).build()
     }
 
-    private fun getCallDeclineAction(callId: Int): NotificationCompat.Action {
+    private fun getCallDeclineAction(notifiable: Notifiable): NotificationCompat.Action {
         val hangupIntent = Intent(context, NotificationBroadcastReceiver::class.java)
         hangupIntent.action = INTENT_HANGUP_CALL_NOTIF_ACTION
-        hangupIntent.putExtra(INTENT_NOTIF_ID, callId)
+        hangupIntent.putExtra(INTENT_NOTIF_ID, notifiable.notificationId)
+        hangupIntent.putExtra(INTENT_REMOTE_ADDRESS, notifiable.remoteAddress)
 
         val hangupPendingIntent = PendingIntent.getBroadcast(
-            context, callId, hangupIntent, PendingIntent.FLAG_UPDATE_CURRENT
+            context, notifiable.notificationId, hangupIntent, PendingIntent.FLAG_UPDATE_CURRENT
         )
 
         return NotificationCompat.Action.Builder(
@@ -800,6 +789,7 @@ class NotificationsManager(private val context: Context) {
         replyIntent.action = INTENT_REPLY_NOTIF_ACTION
         replyIntent.putExtra(INTENT_NOTIF_ID, notifiable.notificationId)
         replyIntent.putExtra(INTENT_LOCAL_IDENTITY, notifiable.localIdentity)
+        replyIntent.putExtra(INTENT_REMOTE_ADDRESS, notifiable.remoteAddress)
 
         val replyPendingIntent = PendingIntent.getBroadcast(
             context,
@@ -823,6 +813,7 @@ class NotificationsManager(private val context: Context) {
         markAsReadIntent.action = INTENT_MARK_AS_READ_ACTION
         markAsReadIntent.putExtra(INTENT_NOTIF_ID, notifiable.notificationId)
         markAsReadIntent.putExtra(INTENT_LOCAL_IDENTITY, notifiable.localIdentity)
+        markAsReadIntent.putExtra(INTENT_REMOTE_ADDRESS, notifiable.remoteAddress)
 
         return PendingIntent.getBroadcast(
             context,
