@@ -58,12 +58,14 @@ public class EphemeralFragment extends Fragment {
 
         String address = getArguments().getString("RemoteSipUri");
         Address peerAddress = null;
+        String localSipUri = getArguments().getString("LocalSipUri");
+        Address localSipAddress = Factory.instance().createAddress(localSipUri);
         mChatRoom = null;
         if (address != null && address.length() > 0) {
             peerAddress = Factory.instance().createAddress(address);
         }
         if (peerAddress != null) {
-            mChatRoom = LinphoneManager.getCore().getChatRoom(peerAddress);
+            mChatRoom = LinphoneManager.getCore().getChatRoom(peerAddress, localSipAddress);
         }
         if (mChatRoom == null) {
             return null;
