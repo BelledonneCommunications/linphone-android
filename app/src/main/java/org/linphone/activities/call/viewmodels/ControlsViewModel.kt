@@ -188,7 +188,7 @@ class ControlsViewModel : ViewModel() {
         override fun onAudioDevicesListUpdated(core: Core) {
             if (core.callsNb == 0) return
             updateAudioRoutesState()
-            routeAudioToBluetoothIfAvailable(core.currentCall ?: core.calls[0])
+            coreContext.routeAudioToBluetoothIfAvailable(core.currentCall ?: core.calls[0])
         }
     }
 
@@ -441,18 +441,6 @@ class ControlsViewModel : ViewModel() {
     private fun updateBluetoothHeadsetState() {
         val audioDevice = coreContext.core.outputAudioDevice
         isBluetoothHeadsetSelected.value = audioDevice?.type == AudioDevice.Type.Bluetooth
-    }
-
-    private fun routeAudioToBluetoothIfAvailable(call: Call) {
-        for (audioDevice in coreContext.core.audioDevices) {
-            if (audioDevice.type == AudioDevice.Type.Bluetooth &&
-                audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
-                Log.i("[Call] Found bluetooth audio device [${audioDevice.deviceName}], routing audio to it")
-                call.outputAudioDevice = audioDevice
-                return
-            }
-        }
-        Log.w("[Call] Didn't find any bluetooth audio device, keeping current audio route")
     }
 
     private fun updateVideoAvailable() {

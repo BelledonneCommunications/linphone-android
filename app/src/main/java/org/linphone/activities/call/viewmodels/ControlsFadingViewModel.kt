@@ -55,7 +55,7 @@ class ControlsFadingViewModel : ViewModel() {
         ) {
             if (state == Call.State.StreamsRunning || state == Call.State.Updating || state == Call.State.UpdatedByRemote) {
                 val isVideoCall = coreContext.isVideoCallOrConferenceActive()
-                Log.i("[Controls Fading] Call is in state $state, video is enabled? $videoEnabled")
+                Log.i("[Controls Fading] Call is in state $state, video is ${if (isVideoCall) "enabled" else "disabled"}")
                 if (isVideoCall) {
                     videoEnabled.value = true
                     startTimer()
