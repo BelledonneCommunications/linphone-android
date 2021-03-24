@@ -154,6 +154,7 @@ public class ChatRoomCreationFragment extends Fragment
                                                 ? null
                                                 : Factory.instance()
                                                         .createAddress(mChatRoomAddress),
+                                        mChatRoom == null ? null : mChatRoom.getLocalAddress(),
                                         mSearchAdapter.getContactsSelectedList(),
                                         mChatRoomSubject,
                                         mSecurityToggle.isChecked());

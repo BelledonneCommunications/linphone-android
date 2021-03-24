@@ -1215,12 +1215,16 @@ public class ChatMessagesFragment extends Fragment
         boolean encrypted = mChatRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt());
         ((ChatActivity) getActivity())
                 .showChatRoomGroupInfo(
-                        mRemoteSipAddress, participants, mChatRoom.getSubject(), encrypted);
+                        mRemoteSipAddress,
+                        mLocalSipAddress,
+                        participants,
+                        mChatRoom.getSubject(),
+                        encrypted);
     }
 
     private void goToEphemeral() {
         if (mChatRoom == null) return;
-        ((ChatActivity) getActivity()).showChatRoomEphemeral(mRemoteSipAddress);
+        ((ChatActivity) getActivity()).showChatRoomEphemeral(mRemoteSipAddress, mLocalSipAddress);
     }
 
     /*
