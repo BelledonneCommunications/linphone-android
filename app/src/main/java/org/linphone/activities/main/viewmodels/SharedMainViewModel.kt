@@ -48,6 +48,8 @@ class SharedMainViewModel : ViewModel() {
         MutableLiveData<Event<ChatMessage>>()
     }
 
+    val fileToOpen = MutableLiveData<String>()
+
     var createEncryptedChatRoom: Boolean = false
 
     val chatRoomParticipants = MutableLiveData<ArrayList<Address>>()

@@ -24,8 +24,6 @@ import android.animation.ValueAnimator
 import android.annotation.TargetApi
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.DisplayMetrics
-import android.view.Display
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.flexbox.FlexboxLayout
@@ -179,10 +177,7 @@ class OutgoingCallActivity : ProximitySensorActivity() {
     }
 
     private fun initNumpadLayout() {
-        val metrics = DisplayMetrics()
-        val display: Display = windowManager.defaultDisplay
-        display.getRealMetrics(metrics)
-        val screenWidth = metrics.widthPixels.toFloat()
+        val screenWidth = coreContext.screenWidth
         numpadAnimator = ValueAnimator.ofFloat(screenWidth, 0f).apply {
             addUpdateListener {
                 val value = it.animatedValue as Float
