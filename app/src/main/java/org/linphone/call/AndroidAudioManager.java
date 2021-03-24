@@ -36,12 +36,14 @@ public class AndroidAudioManager {
     private Context mContext;
     private AudioManager mAudioManager;
     private boolean mEchoTesterIsRunning = false;
+    private boolean mPreviousStateIsConnected = false;
 
     private CoreListenerStub mListener;
 
     public AndroidAudioManager(Context context) {
         mContext = context;
         mAudioManager = ((AudioManager) context.getSystemService(Context.AUDIO_SERVICE));
+        mPreviousStateIsConnected = false;
 
         mListener =
                 new CoreListenerStub() {
@@ -63,11 +65,15 @@ public class AndroidAudioManager {
                                             routeAudioToEarPiece();
                                         }
                                     }
-                                } else {
-                                    routeAudioToBluetooth();
                                 }
                             }
+                        } else if (state == Call.State.StreamsRunning
+                                && mPreviousStateIsConnected) {
+                            if (isBluetoothHeadsetConnected()) {
+                                routeAudioToBluetooth();
+                            }
                         }
+                        mPreviousStateIsConnected = state == Call.State.Connected;
                     }
                 };
 
@@ -95,11 +101,11 @@ public class AndroidAudioManager {
     }
 
     public boolean isAudioRoutedToSpeaker() {
-        return mAudioManager.isSpeakerphoneOn() && !isUsingBluetoothAudioRoute();
+        return isUsingSpeakerAudioRoute() && !isUsingBluetoothAudioRoute();
     }
 
     public boolean isAudioRoutedToEarpiece() {
-        return !mAudioManager.isSpeakerphoneOn() && !isUsingBluetoothAudioRoute();
+        return !isUsingSpeakerAudioRoute() && !isUsingBluetoothAudioRoute();
     }
 
     /* Echo cancellation */
@@ -141,6 +147,21 @@ public class AndroidAudioManager {
             return true;
         }
         return false;
+    }
+
+    public synchronized boolean isUsingSpeakerAudioRoute() {
+        if (LinphoneManager.getCore().getCallsNb() == 0) return false;
+        Call currentCall = LinphoneManager.getCore().getCurrentCall();
+        if (currentCall == null) currentCall = LinphoneManager.getCore().getCalls()[0];
+        if (currentCall == null) return false;
+        AudioDevice audioDevice = currentCall.getOutputAudioDevice();
+        if (audioDevice == null) return false;
+        Log.i(
+                "[Audio Manager] Currently used audio device: ",
+                audioDevice.getDeviceName(),
+                "/",
+                audioDevice.getType().name());
+        return audioDevice.getType() == AudioDevice.Type.Speaker;
     }
 
     private void routeAudioToSpeakerHelper(boolean speakerOn) {
@@ -190,7 +211,11 @@ public class AndroidAudioManager {
         if (currentCall == null) return false;
         AudioDevice audioDevice = currentCall.getOutputAudioDevice();
         if (audioDevice == null) return false;
-        Log.i("[Audio Manager] Currently used audio device: ", audioDevice.getDeviceName());
+        Log.i(
+                "[Audio Manager] Currently used audio device: ",
+                audioDevice.getDeviceName(),
+                "/",
+                audioDevice.getType().name());
         return audioDevice.getType() == AudioDevice.Type.Bluetooth;
     }
 
@@ -198,7 +223,11 @@ public class AndroidAudioManager {
         for (AudioDevice audioDevice : LinphoneManager.getCore().getAudioDevices()) {
             if (audioDevice.getType() == AudioDevice.Type.Bluetooth
                     && audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
-                Log.i("[Audio Manager] Found bluetooth device: ", audioDevice.getDeviceName());
+                Log.i(
+                        "[Audio Manager] Found bluetooth device: ",
+                        audioDevice.getDeviceName(),
+                        "/",
+                        audioDevice.getType().name());
                 return true;
             }
         }
@@ -207,12 +236,13 @@ public class AndroidAudioManager {
 
     public synchronized boolean isWiredHeadsetAvailable() {
         for (AudioDevice audioDevice : LinphoneManager.getCore().getExtendedAudioDevices()) {
-            Log.e("# AUDIO DEVICE TYPE IS " + audioDevice.getType().name());
             if (audioDevice.getType() == AudioDevice.Type.Headphones
                     || audioDevice.getType() == AudioDevice.Type.Headset) {
                 Log.i(
                         "[Audio Manager] Found headset/headphone device: ",
-                        audioDevice.getDeviceName());
+                        audioDevice.getDeviceName(),
+                        "/",
+                        audioDevice.getType().name());
                 return true;
             }
         }
@@ -231,6 +261,8 @@ public class AndroidAudioManager {
                 Log.i(
                         "[Audio Manager] Found bluetooth audio device",
                         audioDevice.getDeviceName(),
+                        "/",
+                        audioDevice.getType().name(),
                         ", routing audio to it");
                 currentCall.setOutputAudioDevice(audioDevice);
                 return;
