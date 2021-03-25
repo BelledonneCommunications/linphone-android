@@ -53,6 +53,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10dp"
+                android:padding="10dp"
                 android:text="@string/contact_invite_friend"
                 android:textColor="?attr/accentColor"
                 android:textSize="16.7sp"
