@@ -82,7 +82,7 @@
     <string name="no_call_history">Aucun appel dans votre historique</string>
     <string name="no_missed_call_history">Aucun appel manqué dans votre historique</string>
     <string name="history_delete_many_dialog">Voulez-vous supprimer ces enregistrements \?</string>
-    <string name="contact_invite_friend">Contacts</string>
+    <string name="contact_invite_friend">Inviter</string>
     <string name="no_contact">Aucun contact dans votre carnet d\'adresses.</string>
     <string name="no_sip_contact">Aucun contact SIP dans votre carnet d\'adresses.</string>
     <string name="contact_filter_hint">Rechercher un contact</string>
