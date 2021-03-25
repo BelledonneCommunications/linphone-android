@@ -225,6 +225,19 @@ class CorePreferences constructor(private val context: Context) {
             config.setBool("app", "full_screen_call", value)
         }
 
+    var routeAudioToBluetoothIfAvailable: Boolean
+        get() = config.getBool("app", "route_audio_to_bluetooth_if_available", true)
+        set(value) {
+            config.setBool("app", "route_audio_to_bluetooth_if_available", value)
+        }
+
+    // This won't be done if bluetooth or wired headset is used
+    var routeAudioToSpeakerWhenVideoIsEnabled: Boolean
+        get() = config.getBool("app", "route_audio_to_speaker_when_video_enabled", true)
+        set(value) {
+            config.setBool("app", "route_audio_to_speaker_when_video_enabled", value)
+        }
+
     /* Assistant */
 
     var firstStart: Boolean

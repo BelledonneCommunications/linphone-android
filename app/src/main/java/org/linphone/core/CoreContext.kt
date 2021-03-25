@@ -47,6 +47,7 @@ import org.linphone.core.tools.Log
 import org.linphone.mediastream.Version
 import org.linphone.notifications.NotificationsManager
 import org.linphone.utils.AppUtils
+import org.linphone.utils.AudioRouteUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
@@ -110,6 +111,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
     private var overlayY = 0f
     private var callOverlay: View? = null
     private var isVibrating = false
+    private var previousCallState = Call.State.Idle
 
     private val listener: CoreListenerStub = object : CoreListenerStub() {
         override fun onGlobalStateChanged(core: Core, state: GlobalState, message: String) {
@@ -169,8 +171,8 @@ class CoreContext(val context: Context, coreConfig: Config) {
             } else if (state == Call.State.OutgoingInit) {
                 onOutgoingStarted()
             } else if (state == Call.State.OutgoingProgress) {
-                if (core.callsNb == 1) {
-                    routeAudioToBluetoothIfAvailable(call)
+                if (core.callsNb == 1 && corePreferences.routeAudioToBluetoothIfAvailable) {
+                    AudioRouteUtils.routeAudioToBluetooth(call)
                 }
             } else if (state == Call.State.Connected) {
                 if (isVibrating) {
@@ -180,11 +182,23 @@ class CoreContext(val context: Context, coreConfig: Config) {
                     isVibrating = false
                 }
 
-                if (call.dir == Call.Dir.Incoming && core.callsNb == 1) {
-                    routeAudioToBluetoothIfAvailable(call)
+                onCallStarted()
+            } else if (state == Call.State.StreamsRunning) {
+                // Do not automatically route audio to bluetooth after first call
+                if (core.callsNb == 1) {
+                    // Only try to route bluetooth when the call is in StreamsRunning for the first time
+                    if (previousCallState == Call.State.Connected && corePreferences.routeAudioToBluetoothIfAvailable) {
+                        AudioRouteUtils.routeAudioToBluetooth(call)
+                    }
                 }
 
-                onCallStarted()
+                if (corePreferences.routeAudioToSpeakerWhenVideoIsEnabled && call.currentParams.videoEnabled()) {
+                    // Do not turn speaker on when video is enabled if headset or bluetooth is used
+                    if (!AudioRouteUtils.isHeadsetAudioRouteAvailable() && !AudioRouteUtils.isBluetoothAudioRouteCurrentlyUsed(call)) {
+                        Log.i("[Context] Video enabled and no wired headset not bluetooth in use, routing audio to speaker")
+                        AudioRouteUtils.routeAudioToSpeaker(call)
+                    }
+                }
             } else if (state == Call.State.End || state == Call.State.Error || state == Call.State.Released) {
                 if (core.callsNb == 0) {
                     if (isVibrating) {
@@ -215,6 +229,8 @@ class CoreContext(val context: Context, coreConfig: Config) {
                     callErrorMessageResourceId.value = Event(id)
                 }
             }
+
+            previousCallState = state
         }
     }
 
@@ -547,18 +563,6 @@ class CoreContext(val context: Context, coreConfig: Config) {
             windowManager.removeView(callOverlay)
             callOverlay = null
         }
-    }
-
-    fun routeAudioToBluetoothIfAvailable(call: Call) {
-        for (audioDevice in core.audioDevices) {
-            if (audioDevice.type == AudioDevice.Type.Bluetooth &&
-                audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
-                Log.i("[Context] Found bluetooth audio device [${audioDevice.deviceName}], routing audio to it")
-                call.outputAudioDevice = audioDevice
-                return
-            }
-        }
-        Log.w("[Context] Didn't find any bluetooth audio device, keeping default audio route")
     }
 
     /* Start call related activities */
