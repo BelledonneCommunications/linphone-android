@@ -132,6 +132,10 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         Snackbar.make(findViewById(R.id.coordinator), resourceId, Snackbar.LENGTH_LONG).show()
     }
 
+    override fun showSnackBar(message: String) {
+        Snackbar.make(findViewById(R.id.coordinator), message, Snackbar.LENGTH_LONG).show()
+    }
+
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         findNavController(R.id.nav_host_fragment).addOnDestinationChangedListener(this)

@@ -54,6 +54,10 @@ class PhoneAccountCreationViewModel(accountCreator: AccountCreator) : AbstractPh
         MutableLiveData<Event<Boolean>>()
     }
 
+    val onErrorEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
     private val listener = object : AccountCreatorListenerStub() {
         override fun onIsAccountExist(
             creator: AccountCreator,
@@ -75,12 +79,12 @@ class PhoneAccountCreationViewModel(accountCreator: AccountCreator) : AbstractPh
                     Log.i("[Phone Account Creation] createAccount returned $createAccountStatus")
                     if (createAccountStatus != AccountCreator.Status.RequestOk) {
                         waitForServerAnswer.value = false
-                        // TODO: show error
+                        onErrorEvent.value = Event("Error: ${status.name}")
                     }
                 }
                 else -> {
                     waitForServerAnswer.value = false
-                    // TODO: show error
+                    onErrorEvent.value = Event("Error: ${status.name}")
                 }
             }
         }
@@ -100,7 +104,7 @@ class PhoneAccountCreationViewModel(accountCreator: AccountCreator) : AbstractPh
                     phoneNumberError.value = AppUtils.getString(R.string.assistant_error_phone_number_already_exists)
                 }
                 else -> {
-                    // TODO: show error
+                    onErrorEvent.value = Event("Error: ${status.name}")
                 }
             }
         }
@@ -149,7 +153,7 @@ class PhoneAccountCreationViewModel(accountCreator: AccountCreator) : AbstractPh
         Log.i("[Phone Account Creation] isAccountExist returned $status")
         if (status != AccountCreator.Status.RequestOk) {
             waitForServerAnswer.value = false
-            // TODO: show error
+            onErrorEvent.value = Event("Error: ${status.name}")
         }
     }
 

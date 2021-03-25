@@ -59,6 +59,10 @@ class GenericLoginViewModel(private val accountCreator: AccountCreator) : ViewMo
         MutableLiveData<Event<Boolean>>()
     }
 
+    val onErrorEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
     private var proxyConfigToCheck: ProxyConfig? = null
 
     private val coreListener = object : CoreListenerStub() {
@@ -130,7 +134,7 @@ class GenericLoginViewModel(private val accountCreator: AccountCreator) : ViewMo
         if (proxyConfig == null) {
             Log.e("[Assistant] [Generic Login] Account creator couldn't create proxy config")
             coreContext.core.removeListener(coreListener)
-            // TODO: show error
+            onErrorEvent.value = Event("Error: Failed to create account object")
             return
         }
 

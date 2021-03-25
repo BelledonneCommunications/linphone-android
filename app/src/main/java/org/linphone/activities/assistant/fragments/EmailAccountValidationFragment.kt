@@ -23,6 +23,7 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
 import org.linphone.activities.GenericFragment
+import org.linphone.activities.assistant.AssistantActivity
 import org.linphone.activities.assistant.viewmodels.*
 import org.linphone.activities.main.navigateToAccountLinking
 import org.linphone.databinding.AssistantEmailAccountValidationFragmentBinding
@@ -52,6 +53,12 @@ class EmailAccountValidationFragment : GenericFragment<AssistantEmailAccountVali
                 args.putString("Username", viewModel.accountCreator.username)
                 args.putString("Password", viewModel.accountCreator.password)
                 navigateToAccountLinking(args)
+            }
+        })
+
+        viewModel.onErrorEvent.observe(viewLifecycleOwner, {
+            it.consume { message ->
+                (requireActivity() as AssistantActivity).showSnackBar(message)
             }
         })
     }

@@ -44,4 +44,8 @@ class AssistantActivity : GenericActivity(), SnackBarActivity {
     override fun showSnackBar(resourceId: Int) {
         Snackbar.make(binding.coordinator, resourceId, Snackbar.LENGTH_LONG).show()
     }
+
+    override fun showSnackBar(message: String) {
+        Snackbar.make(binding.coordinator, message, Snackbar.LENGTH_LONG).show()
+    }
 }

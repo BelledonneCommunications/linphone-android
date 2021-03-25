@@ -44,6 +44,10 @@ class EmailAccountValidationViewModel(val accountCreator: AccountCreator) : View
 
     val leaveAssistantEvent = MutableLiveData<Event<Boolean>>()
 
+    val onErrorEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
     private val listener = object : AccountCreatorListenerStub() {
         override fun onIsAccountActivated(
             creator: AccountCreator,
@@ -58,14 +62,14 @@ class EmailAccountValidationViewModel(val accountCreator: AccountCreator) : View
                     if (createProxyConfig()) {
                         leaveAssistantEvent.value = Event(true)
                     } else {
-                        // TODO: show error
+                        onErrorEvent.value = Event("Error: ${status.name}")
                     }
                 }
                 AccountCreator.Status.AccountNotActivated -> {
-                    // TODO: show error
+                    onErrorEvent.value = Event("Error: ${status.name}")
                 }
                 else -> {
-                    // TODO: show error
+                    onErrorEvent.value = Event("Error: ${status.name}")
                 }
             }
         }
@@ -87,7 +91,7 @@ class EmailAccountValidationViewModel(val accountCreator: AccountCreator) : View
         Log.i("[Assistant] [Account Validation] Account exists returned $status")
         if (status != AccountCreator.Status.RequestOk) {
             waitForServerAnswer.value = false
-            // TODO: show error
+            onErrorEvent.value = Event("Error: ${status.name}")
         }
     }
 
@@ -96,7 +100,7 @@ class EmailAccountValidationViewModel(val accountCreator: AccountCreator) : View
 
         if (proxyConfig == null) {
             Log.e("[Assistant] [Account Validation] Account creator couldn't create proxy config")
-            // TODO: show error
+            onErrorEvent.value = Event("Error: Failed to create account object")
             return false
         }
 

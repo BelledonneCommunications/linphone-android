@@ -23,6 +23,7 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
 import org.linphone.activities.GenericFragment
+import org.linphone.activities.assistant.AssistantActivity
 import org.linphone.activities.assistant.viewmodels.EmailAccountCreationViewModel
 import org.linphone.activities.assistant.viewmodels.EmailAccountCreationViewModelFactory
 import org.linphone.activities.assistant.viewmodels.SharedAssistantViewModel
@@ -50,6 +51,12 @@ class EmailAccountCreationFragment : GenericFragment<AssistantEmailAccountCreati
         viewModel.goToEmailValidationEvent.observe(viewLifecycleOwner, {
             it.consume {
                 navigateToEmailAccountValidation()
+            }
+        })
+
+        viewModel.onErrorEvent.observe(viewLifecycleOwner, {
+            it.consume { message ->
+                (requireActivity() as AssistantActivity).showSnackBar(message)
             }
         })
     }
