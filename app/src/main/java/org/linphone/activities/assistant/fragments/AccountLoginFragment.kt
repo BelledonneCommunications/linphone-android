@@ -26,6 +26,7 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.activities.assistant.AssistantActivity
 import org.linphone.activities.assistant.viewmodels.AccountLoginViewModel
 import org.linphone.activities.assistant.viewmodels.AccountLoginViewModelFactory
 import org.linphone.activities.assistant.viewmodels.SharedAssistantViewModel
@@ -107,6 +108,12 @@ class AccountLoginFragment : AbstractPhoneFragment<AssistantAccountLoginFragment
                 }, getString(R.string.assistant_continue_even_if_credentials_invalid))
 
                 dialog.show()
+            }
+        })
+
+        viewModel.onErrorEvent.observe(viewLifecycleOwner, {
+            it.consume { message ->
+                (requireActivity() as AssistantActivity).showSnackBar(message)
             }
         })
 

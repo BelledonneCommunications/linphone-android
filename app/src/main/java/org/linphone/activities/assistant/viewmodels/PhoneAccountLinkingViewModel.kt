@@ -48,6 +48,10 @@ class PhoneAccountLinkingViewModel(accountCreator: AccountCreator) : AbstractPho
 
     val goToSmsValidationEvent = MutableLiveData<Event<Boolean>>()
 
+    val onErrorEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
     private val listener = object : AccountCreatorListenerStub() {
         override fun onIsAliasUsed(
             creator: AccountCreator,
@@ -61,16 +65,16 @@ class PhoneAccountLinkingViewModel(accountCreator: AccountCreator) : AbstractPho
                     if (creator.linkAccount() != AccountCreator.Status.RequestOk) {
                         Log.e("[Phone Account Linking] linkAccount status is $status")
                         waitForServerAnswer.value = false
-                        // TODO: show error
+                        onErrorEvent.value = Event("Error: ${status.name}")
                     }
                 }
                 AccountCreator.Status.AliasExist, AccountCreator.Status.AliasIsAccount -> {
                     waitForServerAnswer.value = false
-                    // TODO: show error
+                    onErrorEvent.value = Event("Error: ${status.name}")
                 }
                 else -> {
                     waitForServerAnswer.value = false
-                    // TODO: show error
+                    onErrorEvent.value = Event("Error: ${status.name}")
                 }
             }
         }
@@ -88,7 +92,7 @@ class PhoneAccountLinkingViewModel(accountCreator: AccountCreator) : AbstractPho
                     goToSmsValidationEvent.value = Event(true)
                 }
                 else -> {
-                    // TODO: show error
+                    onErrorEvent.value = Event("Error: ${status.name}")
                 }
             }
         }
@@ -124,7 +128,7 @@ class PhoneAccountLinkingViewModel(accountCreator: AccountCreator) : AbstractPho
         Log.i("[Phone Account Linking] isAliasUsed returned $status")
         if (status != AccountCreator.Status.RequestOk) {
             waitForServerAnswer.value = false
-            // TODO: show error
+            onErrorEvent.value = Event("Error: ${status.name}")
         }
     }
 
