@@ -154,7 +154,7 @@
                             android:layout_alignParentTop="true"
                             android:layout_alignParentRight="true"
                             android:contentDescription="@string/content_description_start_encrypted_chat"
-                            android:src="@drawable/security_toogle_icon_green" />
+                            android:src="@drawable/security_toggle_icon_green" />
 
                     </RelativeLayout>
 
