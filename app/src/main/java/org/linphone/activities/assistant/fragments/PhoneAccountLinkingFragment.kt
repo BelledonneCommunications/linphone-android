@@ -23,6 +23,7 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication
 import org.linphone.R
+import org.linphone.activities.assistant.AssistantActivity
 import org.linphone.activities.assistant.viewmodels.*
 import org.linphone.activities.main.navigateToEchoCancellerCalibration
 import org.linphone.activities.main.navigateToPhoneAccountValidation
@@ -85,6 +86,12 @@ class PhoneAccountLinkingFragment : AbstractPhoneFragment<AssistantPhoneAccountL
                 } else {
                     requireActivity().finish()
                 }
+            }
+        })
+
+        viewModel.onErrorEvent.observe(viewLifecycleOwner, {
+            it.consume { message ->
+                (requireActivity() as AssistantActivity).showSnackBar(message)
             }
         })
 

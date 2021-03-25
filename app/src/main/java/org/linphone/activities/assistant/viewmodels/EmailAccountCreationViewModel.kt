@@ -58,6 +58,10 @@ class EmailAccountCreationViewModel(val accountCreator: AccountCreator) : ViewMo
 
     val goToEmailValidationEvent = MutableLiveData<Event<Boolean>>()
 
+    val onErrorEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
     private val listener = object : AccountCreatorListenerStub() {
         override fun onIsAccountExist(
             creator: AccountCreator,
@@ -74,12 +78,12 @@ class EmailAccountCreationViewModel(val accountCreator: AccountCreator) : ViewMo
                     val createAccountStatus = creator.createAccount()
                     if (createAccountStatus != AccountCreator.Status.RequestOk) {
                         waitForServerAnswer.value = false
-                        // TODO: show error
+                        onErrorEvent.value = Event("Error: ${status.name}")
                     }
                 }
                 else -> {
                     waitForServerAnswer.value = false
-                    // TODO: show error
+                    onErrorEvent.value = Event("Error: ${status.name}")
                 }
             }
         }
@@ -97,7 +101,7 @@ class EmailAccountCreationViewModel(val accountCreator: AccountCreator) : ViewMo
                     goToEmailValidationEvent.value = Event(true)
                 }
                 else -> {
-                    // TODO: show error
+                    onErrorEvent.value = Event("Error: ${status.name}")
                 }
             }
         }
@@ -148,7 +152,7 @@ class EmailAccountCreationViewModel(val accountCreator: AccountCreator) : ViewMo
         Log.i("[Assistant] [Account Creation] Account exists returned $status")
         if (status != AccountCreator.Status.RequestOk) {
             waitForServerAnswer.value = false
-            // TODO: show error
+            onErrorEvent.value = Event("Error: ${status.name}")
         }
     }
 
