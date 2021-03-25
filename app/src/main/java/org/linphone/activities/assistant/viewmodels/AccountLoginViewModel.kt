@@ -60,6 +60,10 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
         MutableLiveData<Event<Boolean>>()
     }
 
+    val onErrorEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
     private val listener = object : AccountCreatorListenerStub() {
         override fun onRecoverAccount(
             creator: AccountCreator,
@@ -72,7 +76,7 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
             if (status == AccountCreator.Status.RequestOk) {
                 goToSmsValidationEvent.value = Event(true)
             } else {
-                // TODO: show error
+                onErrorEvent.value = Event("Error: ${status.name}")
             }
         }
     }
@@ -167,7 +171,7 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
             if (!createProxyConfig()) {
                 waitForServerAnswer.value = false
                 coreContext.core.removeListener(coreListener)
-                // TODO: show error
+                onErrorEvent.value = Event("Error: Failed to create account object")
             }
         } else {
             val result = AccountCreator.PhoneNumberStatus.fromInt(accountCreator.setPhoneNumber(phoneNumber.value, prefix.value))
@@ -191,7 +195,7 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
             Log.i("[Assistant] [Account Login] Recover account returned $status")
             if (status != AccountCreator.Status.RequestOk) {
                 waitForServerAnswer.value = false
-                // TODO: show error
+                onErrorEvent.value = Event("Error: ${status.name}")
             }
         }
     }
@@ -210,7 +214,7 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
 
         if (proxyConfig == null) {
             Log.e("[Assistant] [Account Login] Account creator couldn't create proxy config")
-            // TODO: show error
+            onErrorEvent.value = Event("Error: Failed to create account object")
             return false
         }
 

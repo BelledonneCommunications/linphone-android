@@ -22,6 +22,7 @@ package org.linphone.activities.assistant.fragments
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
+import org.linphone.activities.assistant.AssistantActivity
 import org.linphone.activities.assistant.viewmodels.PhoneAccountCreationViewModel
 import org.linphone.activities.assistant.viewmodels.PhoneAccountCreationViewModelFactory
 import org.linphone.activities.assistant.viewmodels.SharedAssistantViewModel
@@ -60,6 +61,12 @@ class PhoneAccountCreationFragment : AbstractPhoneFragment<AssistantPhoneAccount
                 args.putBoolean("IsCreation", true)
                 args.putString("PhoneNumber", viewModel.accountCreator.phoneNumber)
                 navigateToPhoneAccountValidation(args)
+            }
+        })
+
+        viewModel.onErrorEvent.observe(viewLifecycleOwner, {
+            it.consume { message ->
+                (requireActivity() as AssistantActivity).showSnackBar(message)
             }
         })
 
