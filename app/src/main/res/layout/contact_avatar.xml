@@ -104,7 +104,7 @@
             android:layout_height="20dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
-            android:src="@drawable/security_toogle_icon_green" />
+            android:src="@drawable/security_toggle_icon_green" />
 
     </RelativeLayout>
 
