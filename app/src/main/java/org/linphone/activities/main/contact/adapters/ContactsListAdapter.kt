@@ -29,6 +29,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
+import org.linphone.activities.main.adapters.SelectionListAdapter
 import org.linphone.activities.main.contact.viewmodels.ContactViewModel
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
 import org.linphone.contact.Contact
@@ -37,7 +38,6 @@ import org.linphone.databinding.GenericListHeaderBinding
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.HeaderAdapter
-import org.linphone.utils.SelectionListAdapter
 
 class ContactsListAdapter(
     selectionVM: ListTopBarViewModel,

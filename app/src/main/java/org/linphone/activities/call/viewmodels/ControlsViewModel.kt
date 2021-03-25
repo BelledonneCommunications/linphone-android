@@ -36,6 +36,7 @@ import org.linphone.compatibility.Compatibility
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
+import org.linphone.utils.AudioRouteUtils
 import org.linphone.utils.Event
 import org.linphone.utils.PermissionHelper
 
@@ -68,7 +69,7 @@ class ControlsViewModel : ViewModel() {
 
     val optionsVisibility = MutableLiveData<Boolean>()
 
-    val audioRoutesVisibility = MutableLiveData<Boolean>()
+    val audioRoutesSelected = MutableLiveData<Boolean>()
 
     val audioRoutesEnabled = MutableLiveData<Boolean>()
 
@@ -170,7 +171,9 @@ class ControlsViewModel : ViewModel() {
             state: Call.State,
             message: String
         ) {
-            if (state == Call.State.StreamsRunning) isVideoUpdateInProgress.value = false
+            if (state == Call.State.StreamsRunning) {
+                isVideoUpdateInProgress.value = false
+            }
 
             if (coreContext.isVideoCallOrConferenceActive() && !PermissionHelper.get().hasCameraPermission()) {
                 askPermissionEvent.value = Event(Manifest.permission.CAMERA)
@@ -186,9 +189,14 @@ class ControlsViewModel : ViewModel() {
         }
 
         override fun onAudioDevicesListUpdated(core: Core) {
-            if (core.callsNb == 0) return
+            Log.i("[Call] Audio devices list updated")
+            val wasBluetoothPreviouslyAvailable = audioRoutesEnabled.value == true
             updateAudioRoutesState()
-            coreContext.routeAudioToBluetoothIfAvailable(core.currentCall ?: core.calls[0])
+
+            if (!wasBluetoothPreviouslyAvailable && corePreferences.routeAudioToBluetoothIfAvailable) {
+                // Only attempt to route audio to bluetooth automatically when bluetooth device is connected
+                AudioRouteUtils.routeAudioToBluetooth()
+            }
         }
     }
 
@@ -202,7 +210,7 @@ class ControlsViewModel : ViewModel() {
 
         numpadVisibility.value = false
         optionsVisibility.value = false
-        audioRoutesVisibility.value = false
+        audioRoutesSelected.value = false
 
         isRecording.value = currentCall?.isRecording
         isVideoUpdateInProgress.value = false
@@ -309,8 +317,8 @@ class ControlsViewModel : ViewModel() {
 
     fun toggleRoutesMenu() {
         somethingClickedEvent.value = Event(true)
-        audioRoutesVisibility.value = audioRoutesVisibility.value != true
-        if (audioRoutesVisibility.value == true) {
+        audioRoutesSelected.value = audioRoutesSelected.value != true
+        if (audioRoutesSelected.value == true) {
             audioRoutesMenuAnimator.start()
         } else {
             audioRoutesMenuAnimator.reverse()
@@ -365,38 +373,17 @@ class ControlsViewModel : ViewModel() {
 
     fun forceEarpieceAudioRoute() {
         somethingClickedEvent.value = Event(true)
-        for (audioDevice in coreContext.core.audioDevices) {
-            if (audioDevice.type == AudioDevice.Type.Earpiece) {
-                Log.i("[Call] Found earpiece audio device [${audioDevice.deviceName}], routing audio to it")
-                coreContext.core.outputAudioDevice = audioDevice
-                return
-            }
-        }
-        Log.e("[Call] Couldn't find earpiece audio device")
+        AudioRouteUtils.routeAudioToEarpiece()
     }
 
     fun forceSpeakerAudioRoute() {
         somethingClickedEvent.value = Event(true)
-        for (audioDevice in coreContext.core.audioDevices) {
-            if (audioDevice.type == AudioDevice.Type.Speaker) {
-                Log.i("[Call] Found speaker audio device [${audioDevice.deviceName}], routing audio to it")
-                coreContext.core.outputAudioDevice = audioDevice
-                return
-            }
-        }
-        Log.e("[Call] Couldn't find speaker audio device")
+        AudioRouteUtils.routeAudioToSpeaker()
     }
 
     fun forceBluetoothAudioRoute() {
         somethingClickedEvent.value = Event(true)
-        for (audioDevice in coreContext.core.audioDevices) {
-            if ((audioDevice.type == AudioDevice.Type.Bluetooth) && audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
-                Log.i("[Call] Found bluetooth audio device [${audioDevice.deviceName}], routing audio to it")
-                coreContext.core.outputAudioDevice = audioDevice
-                return
-            }
-        }
-        Log.e("[Call] Couldn't find bluetooth audio device")
+        AudioRouteUtils.routeAudioToBluetooth()
     }
 
     private fun updateAudioRelated() {
@@ -425,21 +412,16 @@ class ControlsViewModel : ViewModel() {
     }
 
     private fun updateAudioRoutesState() {
-        var bluetoothDeviceAvailable = false
-        for (audioDevice in coreContext.core.audioDevices) {
-            if (audioDevice.type == AudioDevice.Type.Bluetooth) {
-                bluetoothDeviceAvailable = true
-                break
-            }
-        }
+        val bluetoothDeviceAvailable = AudioRouteUtils.isBluetoothAudioRouteAvailable()
         audioRoutesEnabled.value = bluetoothDeviceAvailable
         if (!bluetoothDeviceAvailable) {
-            audioRoutesVisibility.value = false
+            audioRoutesSelected.value = false
         }
     }
 
     private fun updateBluetoothHeadsetState() {
-        val audioDevice = coreContext.core.outputAudioDevice
+        if (coreContext.core.callsNb == 0) return
+        val audioDevice = (coreContext.core.currentCall ?: coreContext.core.calls[0]).outputAudioDevice
         isBluetoothHeadsetSelected.value = audioDevice?.type == AudioDevice.Type.Bluetooth
     }
 
