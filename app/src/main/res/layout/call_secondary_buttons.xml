@@ -144,7 +144,7 @@
                     android:id="@+id/audio_routes"
                     android:onClick="@{() -> viewModel.toggleRoutesMenu()}"
                     android:visibility="@{viewModel.audioRoutesEnabled ? View.VISIBLE : View.INVISIBLE, default=invisible}"
-                    android:selected="@{viewModel.audioRoutesVisibility}"
+                    android:selected="@{viewModel.audioRoutesSelected}"
                     android:contentDescription="@string/content_description_toggle_audio_menu"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/call_button_size"

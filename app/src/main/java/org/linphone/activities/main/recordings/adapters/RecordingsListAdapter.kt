@@ -30,6 +30,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
+import org.linphone.activities.main.adapters.SelectionListAdapter
 import org.linphone.activities.main.recordings.viewmodels.RecordingViewModel
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
 import org.linphone.databinding.GenericListHeaderBinding
