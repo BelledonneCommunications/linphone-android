@@ -60,7 +60,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:contentDescription="@string/content_description_e2e_encryption_disabled"
-                    android:src="@drawable/security_toogle_icon_grey"/>
+                    android:src="@drawable/security_toggle_icon_grey"/>
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
                     android:checked="@={viewModel.isEncrypted}"
@@ -79,7 +79,7 @@
                     android:contentDescription="@string/content_description_e2e_encryption_enabled"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:src="@drawable/security_toogle_icon_green" />
+                    android:src="@drawable/security_toggle_icon_green" />
 
             </LinearLayout>
 
