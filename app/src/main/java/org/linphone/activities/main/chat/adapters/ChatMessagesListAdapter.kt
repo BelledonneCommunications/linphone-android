@@ -33,6 +33,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.activities.main.adapters.SelectionListAdapter
 import org.linphone.activities.main.chat.viewmodels.ChatMessageViewModel
 import org.linphone.activities.main.chat.viewmodels.EventViewModel
 import org.linphone.activities.main.chat.viewmodels.OnContentClickedListener
@@ -43,7 +44,6 @@ import org.linphone.core.EventLog
 import org.linphone.databinding.ChatEventListCellBinding
 import org.linphone.databinding.ChatMessageListCellBinding
 import org.linphone.utils.Event
-import org.linphone.utils.SelectionListAdapter
 
 class ChatMessagesListAdapter(
     selectionVM: ListTopBarViewModel,
