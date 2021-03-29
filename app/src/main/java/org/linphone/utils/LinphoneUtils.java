@@ -29,8 +29,6 @@ import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.Looper;
 import android.telephony.TelephonyManager;
-import android.text.Html;
-import android.text.Spanned;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -41,7 +39,6 @@ import androidx.core.content.ContextCompat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
-import java.util.regex.Pattern;
 import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
@@ -300,48 +297,6 @@ public final class LinphoneUtils {
                     .setNeutralButton(ctxt.getString(R.string.ok), null)
                     .show();
         }
-    }
-
-    public static Spanned getTextWithHttpLinks(String text) {
-        if (text == null) return null;
-
-        if (text.contains("<")) {
-            text = text.replace("<", "&lt;");
-        }
-        if (text.contains(">")) {
-            text = text.replace(">", "&gt;");
-        }
-        if (text.contains("\n")) {
-            text = text.replace("\n", "<br>");
-        }
-        if (text.contains("http://")) {
-            int indexHttp = text.indexOf("http://");
-            int indexFinHttp =
-                    text.indexOf(" ", indexHttp) == -1
-                            ? text.length()
-                            : text.indexOf(" ", indexHttp);
-            String link = text.substring(indexHttp, indexFinHttp);
-            String linkWithoutScheme = link.replace("http://", "");
-            text =
-                    text.replaceFirst(
-                            Pattern.quote(link),
-                            "<a href=\"" + link + "\">" + linkWithoutScheme + "</a>");
-        }
-        if (text.contains("https://")) {
-            int indexHttp = text.indexOf("https://");
-            int indexFinHttp =
-                    text.indexOf(" ", indexHttp) == -1
-                            ? text.length()
-                            : text.indexOf(" ", indexHttp);
-            String link = text.substring(indexHttp, indexFinHttp);
-            String linkWithoutScheme = link.replace("https://", "");
-            text =
-                    text.replaceFirst(
-                            Pattern.quote(link),
-                            "<a href=\"" + link + "\">" + linkWithoutScheme + "</a>");
-        }
-
-        return Html.fromHtml(text);
     }
 
     public static void showTrustDeniedDialog(Context context) {

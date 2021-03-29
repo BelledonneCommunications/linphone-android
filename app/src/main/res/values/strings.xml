@@ -135,6 +135,11 @@
     <string name="phone_number_link_info_content_already_account">You can only use your phone number with one Linphone account.\n\nIf you had already linked your number to an other account but you prefer to use this one, simply link it now and your number will automatically be moved to this account.</string>
     <string name="phone_number_overuse">Too much SMS have been sent to this number in a short period of time, try again in 24 hours.</string>
     <string name="account_doesnt_exist">Account doesn\'t exist</string>
+    <string name="assistant_general_terms_link" translatable="false">https://www.linphone.org/general-terms</string>
+    <string name="assistant_privacy_policy_link" translatable="false">https://www.linphone.org/privacy-policy</string>
+    <string name="assistant_general_terms">terms of use</string>
+    <string name="assistant_privacy_policy">privacy policy</string>
+    <string name="assistant_read_and_agree_terms">I accept Belledonne Communications\' %1$s and %2$s</string>
 
     <!-- Status -->
     <string name="invalid_email">Invalid email</string>
@@ -644,6 +649,7 @@
     <string name="content_description_exit_conference">Exit conference</string>
     <string name="content_title_notification_service">Linphone service notification</string>
     <string name="content_title_notification">Linphone instant messages notifications</string>
+    <string name="content_title_notification_missed_call">Linphone missed calls notifications</string>
     <string name="content_description_conversation_subject">Group chat room subject</string>
     <string name="content_description_conversation_infos">Group chat room info</string>
     <string name="content_description_record_call">Record call</string>

@@ -43,10 +43,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.assistant.PhoneAccountLinkingAssistantActivity;
 import org.linphone.call.CallActivity;
 import org.linphone.call.CallIncomingActivity;
 import org.linphone.call.CallOutgoingActivity;
@@ -55,8 +58,9 @@ import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
+import org.linphone.core.AccountCreator;
+import org.linphone.core.AccountCreatorListenerStub;
 import org.linphone.core.Address;
-import org.linphone.core.AuthInfo;
 import org.linphone.core.Call;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
@@ -99,6 +103,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
     protected String[] mPermissionsToHave;
 
     private CoreListenerStub mListener;
+    private AccountCreatorListenerStub mAccountCreatorListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -228,15 +233,10 @@ public abstract class MainActivity extends LinphoneGenericActivity
                                             MainActivity.this);
 
                             if (getResources().getBoolean(R.bool.use_phone_number_validation)) {
-                                AuthInfo authInfo =
-                                        core.findAuthInfo(
-                                                proxyConfig.getRealm(),
-                                                proxyConfig.getIdentityAddress().getUsername(),
-                                                proxyConfig.getDomain());
-                                if (authInfo != null
-                                        && authInfo.getDomain()
-                                                .equals(getString(R.string.default_domain))) {
-                                    LinphoneManager.getInstance().isAccountWithAlias();
+                                if (proxyConfig
+                                        .getDomain()
+                                        .equals(getString(R.string.default_domain))) {
+                                    isAccountWithAlias();
                                 }
                             }
 
@@ -266,6 +266,39 @@ public abstract class MainActivity extends LinphoneGenericActivity
                                             Toast.LENGTH_SHORT)
                                     .show();
                             shareUploadedLogsUrl(info);
+                        }
+                    }
+                };
+
+        mAccountCreatorListener =
+                new AccountCreatorListenerStub() {
+                    @Override
+                    public void onIsAccountExist(
+                            AccountCreator accountCreator,
+                            AccountCreator.Status status,
+                            String resp) {
+                        if (status.equals(AccountCreator.Status.AccountExist)) {
+                            accountCreator.isAccountLinked();
+                        }
+                    }
+
+                    @Override
+                    public void onLinkAccount(
+                            AccountCreator accountCreator,
+                            AccountCreator.Status status,
+                            String resp) {
+                        if (status.equals(AccountCreator.Status.AccountNotLinked)) {
+                            askLinkWithPhoneNumber();
+                        }
+                    }
+
+                    @Override
+                    public void onIsAccountLinked(
+                            AccountCreator accountCreator,
+                            AccountCreator.Status status,
+                            String resp) {
+                        if (status.equals(AccountCreator.Status.AccountNotLinked)) {
+                            askLinkWithPhoneNumber();
                         }
                     }
                 };
@@ -559,6 +592,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
                     if (LinphoneContext.isReady()) {
                         ContactsManager.getInstance().enableContactsAccess();
                         ContactsManager.getInstance().initializeContactManager();
+                        ContactsManager.getInstance().fetchContactsAsync();
                     }
                 }
             } else if (permissions[i].equals(Manifest.permission.READ_EXTERNAL_STORAGE)) {
@@ -811,6 +845,101 @@ public abstract class MainActivity extends LinphoneGenericActivity
         Button delete = dialog.findViewById(R.id.dialog_delete_button);
         delete.setVisibility(View.GONE);
         dialog.show();
+    }
+
+    public void isAccountWithAlias() {
+        if (LinphoneManager.getCore().getDefaultProxyConfig() != null) {
+            long now = new Timestamp(new Date().getTime()).getTime();
+            AccountCreator accountCreator = LinphoneManager.getInstance().getAccountCreator();
+            accountCreator.setListener(mAccountCreatorListener);
+            if (LinphonePreferences.instance().getLinkPopupTime() == null
+                    || Long.parseLong(LinphonePreferences.instance().getLinkPopupTime()) < now) {
+                accountCreator.reset();
+                accountCreator.setUsername(
+                        LinphonePreferences.instance()
+                                .getAccountUsername(
+                                        LinphonePreferences.instance().getDefaultAccountIndex()));
+                accountCreator.isAccountExist();
+            }
+        } else {
+            LinphonePreferences.instance().setLinkPopupTime(null);
+        }
+    }
+
+    private void askLinkWithPhoneNumber() {
+        if (!LinphonePreferences.instance().isLinkPopupEnabled()) return;
+
+        long now = new Timestamp(new Date().getTime()).getTime();
+        if (LinphonePreferences.instance().getLinkPopupTime() != null
+                && Long.parseLong(LinphonePreferences.instance().getLinkPopupTime()) >= now) return;
+
+        ProxyConfig proxyConfig = LinphoneManager.getCore().getDefaultProxyConfig();
+        if (proxyConfig == null) return;
+        if (!proxyConfig.getDomain().equals(getString(R.string.default_domain))) return;
+
+        final Dialog dialog =
+                LinphoneUtils.getDialog(
+                        this,
+                        String.format(
+                                getString(R.string.link_account_popup),
+                                proxyConfig.getIdentityAddress().asStringUriOnly()));
+        Button delete = dialog.findViewById(R.id.dialog_delete_button);
+        delete.setVisibility(View.GONE);
+        Button ok = dialog.findViewById(R.id.dialog_ok_button);
+        ok.setText(getString(R.string.link));
+        ok.setVisibility(View.VISIBLE);
+        Button cancel = dialog.findViewById(R.id.dialog_cancel_button);
+        cancel.setText(getString(R.string.maybe_later));
+
+        dialog.findViewById(R.id.dialog_do_not_ask_again_layout).setVisibility(View.VISIBLE);
+        final CheckBox doNotAskAgain = dialog.findViewById(R.id.doNotAskAgain);
+        dialog.findViewById(R.id.doNotAskAgainLabel)
+                .setOnClickListener(
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                doNotAskAgain.setChecked(!doNotAskAgain.isChecked());
+                            }
+                        });
+
+        ok.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent assistant = new Intent();
+                        assistant.setClass(
+                                MainActivity.this, PhoneAccountLinkingAssistantActivity.class);
+                        startActivity(assistant);
+                        updatePopupTimestamp();
+                        dialog.dismiss();
+                    }
+                });
+
+        cancel.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (doNotAskAgain.isChecked()) {
+                            LinphonePreferences.instance().enableLinkPopup(false);
+                        }
+                        updatePopupTimestamp();
+                        dialog.dismiss();
+                    }
+                });
+        dialog.show();
+    }
+
+    private void updatePopupTimestamp() {
+        long future =
+                new Timestamp(
+                                getResources()
+                                        .getInteger(
+                                                R.integer.phone_number_linking_popup_time_interval))
+                        .getTime();
+        long now = new Timestamp(new Date().getTime()).getTime();
+        long newDate = now + future;
+
+        LinphonePreferences.instance().setLinkPopupTime(String.valueOf(newDate));
     }
 
     // Logs

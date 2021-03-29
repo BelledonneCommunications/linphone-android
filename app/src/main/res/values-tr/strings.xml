@@ -83,10 +83,10 @@
   <string name="assistant_login_linphone">Linphone hesabı kullan</string>
   <string name="assistant_login_generic">SIP hesabı kullan</string>
   <string name="assistant_remote_provisioning">Uzaktan yapılandırma al</string>
-  <string name="assistant_create_account_part_1">Lütfen ülke kodunuzu doğrulayın  ve telefon numaranızı girin</string>
-  <string name="assistant_create_account_part_2">Telefon numaranıza SMS ile bir doğrulama kodu gönderdik:</string>
-  <string name="assistant_create_account_part_3">Telefon numarası doğrulamayı tamamlamak için, lütfen 4 haneli kodu aşağı girin:\n</string>
-  <string name="assistant_create_account_part_email">Lütfen Linphone hesabınız için bir kullanıcı adı, e-posta ve parola girin</string>
+  <string name="assistant_create_account_part_1">Lütfen ülke kodunuzu doğrulayın ve telefon numaranızı girin</string>
+  <string name="assistant_create_account_part_2">Telefon numaranıza SMS ile doğrulama kodu gönderdik:</string>
+  <string name="assistant_create_account_part_3">Telefon numarası doğrulamayı tamamlamak için lütfen 4 haneli kodu aşağı girin:\n</string>
+  <string name="assistant_create_account_part_email">Lütfen Linphone hesabınız için kullanıcı adı, e-posta ve parola girin</string>
   <string name="assistant_display_name_optional">Görünen ad (isteğe bağlı)</string>
   <string name="assistant_linphone_account">Linphone hesabını kullan</string>
   <string name="assistant_generic_account">SIP hesabı kullan</string>
@@ -104,10 +104,10 @@
   <string name="assistant_codec_downloading">Cisco Systems, Inc. tarafından sağlanan OpenH264 Video çözücüsü indiriliyor.</string>
   <string name="assistant_openh264_downloading">OpenH264 indiriliyor</string>
   <string name="assistant_openh264_restart">OpenH264 çözücüyü kullanmadan önce %s yeniden başlatılmalı.</string>
-  <string name="assistant_openh264_error">Üzgünüz bir hata oluştu.</string>
+  <string name="assistant_openh264_error">Üzgünüz hata oluştu.</string>
   <string name="assistant_codec_downloaded">Cisco Systems, Inc. tarafından sağlanan OpenH264 Video çözücüsü indirildi.</string>
-  <string name="wizard_failed">Bir hata oluştu, daha sonra yeniden deneyin.</string>
-  <string name="wizard_server_unavailable">Sunucuya ulaşılamıyor,ağ bağlantınızı kontrol edin.</string>
+  <string name="wizard_failed">Hata oluştu, daha sonra yeniden deneyin.</string>
+  <string name="wizard_server_unavailable">Sunucuya ulaşılamıyor, ağ bağlantınızı gözden geçirin.</string>
   <string name="wizard_username_unavailable">Bu kullanıcı adı alınmış.</string>
   <string name="assistant_phone_number_unavailable">Bu telefon numarası zaten kullanılıyor.\nLütfen başka numara girin.\nEğer telefon numaranızı yeniden kullanmak istiyorsanız var olan hesabınızı silebilirsiniz.</string>
   <string name="wizard_username_incorrect">Kullanıcı adınız geçersiz.</string>
@@ -127,9 +127,12 @@
   <string name="phone_number_info_title">Telefon numaram ne için kullanılacak?</string>
   <string name="phone_number_info_content">\nTelefon numaranız sayesinde arkadaşlarınız sizi daha kolay bulacak.\n\n Adres defterinizde kimlerin Linphone kullandığını göreceksiniz ve arkadaşlarınız da size Linphone\'dan ulaşabileceklerini bilecek.\n</string>
   <string name="phone_number_link_info_content">\nEğer hesabını telefon numarana bağlarsan arkadaşların seni daha kolay bulacak\n\nAdres listende kimlerin Linphone kullandığını göreceksin ve arkadaşların da sana Linphone üzerinden ulaşabileceğini bilecek.\n</string>
-  <string name="phone_number_link_info_content_already_account">Telefon numaranı yalnızca tek Linphone hesabıyla kullanabilirsin.\n\nEğer hesabını zaten başka bir hesaba bağladıysan ama bunu kullanmak istiyorsan, şimdi bağla ve numaran kendiliğinden bu hesaba taşınsın.</string>
+  <string name="phone_number_link_info_content_already_account">Telefon numaranı yalnızca tek Linphone hesabıyla kullanabilirsin.\n\nEğer hesabını zaten başka hesaba bağladıysan ama bunu kullanmak istiyorsan, şimdi bağla ve numaran kendiliğinden bu hesaba taşınsın.</string>
   <string name="phone_number_overuse">Bu numaraya kısa zamanda birçok SMS gönderildi, 24 saat içinde yeniden deneyin.</string>
   <string name="account_doesnt_exist">Hesap yok</string>
+  <string name="assistant_general_terms">kullanım koşullarını</string>
+  <string name="assistant_privacy_policy">gizlilik ilkesini</string>
+  <string name="assistant_read_and_agree_terms">Belledonne Communications\'ın %1$s ve %2$s kabul ediyorum</string>
   <!--Status-->
   <string name="invalid_email">Geçersiz e-posta</string>
   <string name="account_already_exist">Hesap zaten var</string>
@@ -192,9 +195,9 @@
   <string name="copy_text">Metni kopyalama</string>
   <string name="image_picker_title">Kaynak seç</string>
   <string name="image_saved">Resim kaydedildi</string>
-  <string name="image_not_saved">Hata,resim kaydedilmedi</string>
+  <string name="image_not_saved">Hata, resim kaydedilmedi</string>
   <string name="wait">Lütfen bekle…</string>
-  <string name="image_transfert_error">Dosya aktarımı sırasında bir hata oluştu</string>
+  <string name="image_transfert_error">Dosya aktarımında hata oluştu</string>
   <string name="message_not_encrypted">Bu ileti şifrelenmemiş</string>
   <string name="message_cant_be_decrypted">%s\'den şifresi çözülemeyen bir şifrelenmiş ileti aldınız.\nEğer gelecekte alacağınız iletileri çözmek istiyorsanız, ZRTP anahtarlarınızın değiş tokuşu için eşinizi aramanız gerekiyor.</string>
   <string name="message_cant_be_decrypted_notif">Bu iletinin şifresini çözemezsiniz.</string>
@@ -235,7 +238,7 @@
   <string name="chat_room_devices">%s aygıtları</string>
   <string name="group_chat_room_devices">Konuşmanın aygıtları</string>
   <string name="add_to_contacts">Bağlantılara ekle</string>
-  <string name="lime_security_popup">Anlık iletiler, güvenli konuşmalarda uçtan uca şifrelenmiştir. Katılımcıların kimliğini doğrulayarak konuşmanın güvenlik düzeyi artırılabilir. Bunu yapmak için kişiyi arayın ve yetkilendirme sürecini takip edin.</string>
+  <string name="lime_security_popup">Anlık iletiler, güvenli konuşmalarda uçtan uca şifrelenmiştir. Katılımcıların kimliğini doğrulayarak konuşmanın güvenlik düzeyi artırılabilir. Bunu yapmak için kişiyi arayın ve yetkilendirme sürecini izleyin.</string>
   <string name="lime_identity_key_changed">%s için LIME kimlik anahtarı değiştirildi</string>
   <string name="man_in_the_middle_detected">%s için Man-in-the-middle saldırısı saptandı</string>
   <string name="security_level_downgraded">%s olduğundan güvenlik düzeyi düşürüldü</string>
@@ -272,7 +275,7 @@
   <string name="status_not_connected">Bağlanmadı</string>
   <string name="status_in_progress">Bağlantı sürüyor</string>
   <string name="status_error">Bağlantı başarısız</string>
-  <string name="voicemail_unread">okunmamış iletiler</string>
+  <string name="voicemail_unread">okunmamış ileti</string>
   <!--Side Menu-->
   <string name="menu_logout">Oturumu kapat</string>
   <string name="menu_assistant">Yardımcı</string>
@@ -286,7 +289,7 @@
   <string name="add_video_dialog">Görüştüğünüz kişi görüntüyü açmak istiyor</string>
   <string name="no_current_call">Etkin çağrı yok</string>
   <string name="call_paused_by_remote">Görüştüğünüz kişi çağrıyı duraklattı</string>
-  <string name="couldnt_accept_call">Gelen aramanın kabulünde bir hata oluştu</string>
+  <string name="couldnt_accept_call">Gelen aramanın kabulünde hata oluştu</string>
   <string name="zrtp_local_sas">Söyle:</string>
   <string name="zrtp_remote_sas">Muhatabınızın şunu söylediğini doğrulayın:</string>
   <string name="zrtp_dialog_title">İletişim güvenliği</string>
@@ -299,7 +302,7 @@
   <string name="call_stats_ip">IP Ailesi:</string>
   <string name="call_stats_upload">Karşıya yükleme hızı:</string>
   <string name="call_stats_download">İndirme hızı:</string>
-  <string name="call_stats_estimated_download">Tahmini indirme bant genişliği:</string>
+  <string name="call_stats_estimated_download">Öngörülen indirme bant genişliği:</string>
   <string name="call_stats_ice">İCE bağlanılabilirliği:</string>
   <string name="call_stats_video_resolution_sent">Giden görüntü çözünürlüğü:</string>
   <string name="call_stats_video_resolution_received">Alınan görüntü çözünürlüğü:</string>
@@ -335,7 +338,7 @@
   <string name="skipable_error_service_not_ready">Uyarı: hizmet hazır değil</string>
   <string name="error">Hata</string>
   <string name="file_transfer_error">Dosya aktarım hatası</string>
-  <string name="warning_wrong_destination_address">%s dan gidilecek adres inşa edilemiyor</string>
+  <string name="warning_wrong_destination_address">%s konumundan hedef adres inşa edilemiyor</string>
   <string name="error_unknown">Tanımlanmayan hata</string>
   <string name="error_call_declined">Reddedilen çağrı</string>
   <string name="error_user_busy">Kullanıcı meşgul</string>
@@ -361,12 +364,12 @@
   <string name="pref_enable_outbound_proxy">Giden vekil sunucu</string>
   <string name="pref_help_proxy">SIP vekil sunucu makine adı veya ip adresi (isteğe bağlı)</string>
   <string name="pref_help_outbound_proxy">Tüm çağrıları SIP vekil sunucuya yönlendir</string>
-  <string name="pref_help_username">Eğer hesabınız john@sip.example.org ise örneğin: john</string>
-  <string name="pref_help_domain">Eğer hesabınız john@sip.example.org ise sip.example.org</string>
+  <string name="pref_help_username">Eğer hesabınız inci@sip.ornek.org ise örneğin: inci</string>
+  <string name="pref_help_domain">Eğer hesabınız inci@sip.ornek.org ise sip.ornek.org</string>
   <string name="pref_help_password">Eğer kullanıcı adınızı ve/veya alan adınızı değiştirdiyseniz parolanızı yeniden girmeniz gerekir</string>
   <string name="pref_expire_title">Süre dolumu</string>
   <string name="pref_avpf">AVPF</string>
-  <string name="pref_avpf_rr_interval">AVPF düzenli RTCP aralığında ( 1 ile 5 saniye arasında)</string>
+  <string name="pref_avpf_rr_interval">Saniye türünde AVPF düzenli RTCP aralığı (1 ile 5 saniye arasında)</string>
   <string name="pref_escape_plus">+\'yı 00 ile değiştir</string>
   <string name="pref_link_account">Hesabını bağla</string>
   <string name="pref_auth_userid">Yetkilendirme kullanıcı kimliği</string>
@@ -466,12 +469,12 @@
   <string name="lime_encryption_entry_disabled">Devre dışı</string>
   <string name="lime_encryption_entry_mandatory">Zorunlu</string>
   <string name="lime_encryption_entry_preferred">Yeğlenen</string>
-  <string name="lime_encryption_enable_zrtp">LIME, ZRTP şifreleme gerektiriyor.\nLIME\'ı etkinleştirerek ZRTP ortam şifrelemeyi kendiliğinden etkinleştirmiş olacaksınız.</string>
+  <string name="lime_encryption_enable_zrtp">LIME, ZRTP şifreleme gerektiriyor.\nLIME\'ı etkinleştirerek ZRTP ortam şifrelemeyi kendiliğinden etkinleştireceksiniz.</string>
   <string name="pref_auto_download_policy_title">Gelen dosyaları kendiliğinden indirme ilkesi</string>
   <string name="pref_auto_download_max_size_title">Azami boyut (bayt)</string>
   <string name="pref_auto_download_disabled">Asla</string>
   <string name="pref_auto_download_always">Daima</string>
-  <string name="pref_auto_download_under_size">Eğer azami boyuttan hafifse</string>
+  <string name="pref_auto_download_under_size">Eğer azami boyuttan azsa</string>
   <string name="pref_android_app_hide_empty_chat_rooms_title">Boş konuşma odalarını gizle</string>
   <string name="pref_android_app_hide_chat_rooms_from_removed_proxies_title">Kaldırılan vekil yapılandırmalarından olan konuşma odalarını gizle</string>
   <string name="pref_android_app_hide_chat_rooms_from_removed_proxies_desc">Eğer eksik konuşma odalarınız varsa, bu seçeneğin imini kaldırmayı deneyin</string>
@@ -506,13 +509,13 @@
   <string name="pref_debug">Hata ayıklama</string>
   <string name="pref_java_debug">Java günlükleyici kullan</string>
   <string name="pref_friendlist_subscribe">Arkadaş listesi aboneliği</string>
-  <string name="pref_background_mode">Artalan kipi</string>
+  <string name="pref_background_mode">Art alan kipi</string>
   <string name="pref_background_mode_desc">Uygulamayı uyanık tutmak için bildirim göster</string>
   <string name="pref_background_mode_warning_desc">Linphone\'un arka plan kullanımı kısıtlandı, lütfen öncelikle yetkilendirin</string>
   <string name="pref_animation_enable_title">Animasyonlar etkin</string>
   <string name="pref_service_notification">Hizmet bildirimi etkin</string>
   <string name="pref_autostart">Başlangıçta çalıştır</string>
-  <string name="pref_incoming_call_timeout_title">Gelen çağrı kapandı (anında)</string>
+  <string name="pref_incoming_call_timeout_title">Gelen çağrı kapandı (saniye)</string>
   <string name="pref_device_name">Aygıt adı</string>
   <string name="pref_display_name_subtitle">Değişiklikler sonraki başlatımda uygulanacak</string>
   <string name="pref_remote_provisioning_title">Uzaktan yetkilendirme</string>
@@ -524,11 +527,11 @@
   <string name="pref_log_collection_sharing_server_title">Günlük gönderim sunucusu</string>
   <string name="pref_log_collection_sharing_server_desc">Ne yaptığınızı bilmiyorsanız değiştirmeyin!</string>
   <!--Audio hack settings-->
-  <string name="pref_audio_hacks_title">Ses kesme</string>
-  <string name="pref_audio_use_specific_mode_title">Özgün kesme kipi kullan</string>
-  <string name="pref_audio_use_specific_mode_summary">0=NORMAL_KİP (öntanımlı), 2=GELEN_ÇAĞRI_KİPİ</string>
-  <string name="pref_audio_hacks_use_routing_api_title">API hack yönlendirmesini kullanın</string>
-  <string name="pref_audio_hacks_use_galaxys_hack_title">Galaxy S ses kesmeyi kullan</string>
+  <string name="pref_audio_hacks_title">Ses ayarları</string>
+  <string name="pref_audio_use_specific_mode_title">Özgün kip ayarı kullan</string>
+  <string name="pref_audio_use_specific_mode_summary">0=MODE_NORMAL (öntanımlı), 2=MODE_IN_CALL</string>
+  <string name="pref_audio_hacks_use_routing_api_title">Yönlendirme API\'si ayarını kullan</string>
+  <string name="pref_audio_hacks_use_galaxys_hack_title">Galaxy S ses ayarını kullan</string>
   <!--Device specifics-->
   <string name="device_power_saver_dialog_title">Güç koruyucu algılandı!</string>
   <string name="device_power_saver_dialog_message">Aygıtınızın güç koruyucusu var. Uygulama, anlık bildirimler kullanarak arka planda ileti ve aramaları almak için beyaz listeye eklenmeli.</string>
@@ -601,7 +604,7 @@
   <string name="content_description_contact_last_name">Soyadı</string>
   <string name="content_description_contact_organization">Kuruluş</string>
   <string name="content_description_back_call">Çağrıya dön</string>
-  <string name="content_description_send_file">Bir dosya gönder</string>
+  <string name="content_description_send_file">Dosya gönder</string>
   <string name="content_description_incoming_file">Gelen dosya</string>
   <string name="content_description_message">İleti</string>
   <string name="content_description_unread_chat_message">Okunmamış konuşma iletisi</string>
@@ -612,7 +615,8 @@
   <string name="content_description_audio_route">Ses yolu</string>
   <string name="content_description_exit_conference">Görüşmeden çık</string>
   <string name="content_title_notification_service">Linphone hizmet bildirimi</string>
-  <string name="content_title_notification">Linphone anında iletiler bildirimleri</string>
+  <string name="content_title_notification">Linphone anında ileti bildirimleri</string>
+  <string name="content_title_notification_missed_call">Linphone yanıtsız çağrı bildirimleri</string>
   <string name="content_description_conversation_subject">Küme konuşma odası konusu</string>
   <string name="content_description_conversation_infos">Küme konuşma odası bilgisi</string>
   <string name="content_description_record_call">Çağrı kaydet</string>

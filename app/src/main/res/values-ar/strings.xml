@@ -6,15 +6,25 @@
   <string name="addressbook_label">لِنْفُونْ</string>
   <string name="notification_title">لِنْفُونْ</string>
   <string name="wait_dialog_text">يجري التشغيل</string>
+  <string name="notification_registered">%s متصل</string>
+  <string name="notification_register_failure">%s فشل في الاتصال</string>
   <string name="tunnel_host"></string>
   <string name="about_version">لِنْفُونْ أندرويد %s</string>
   <string name="about_liblinphone_version">Linphone Core %s</string>
+  <string name="about_privacy_policy">زُر سياسة خصوصيتنا</string>
   <string name="sync_account_name">جهات اتصال لِنْفُونْ</string>
   <!--Notifications-->
+  <string name="notification_reply_label">أجبْ</string>
+  <string name="notification_replied_label">الجواب المُرسَل : %s</string>
+  <string name="notification_call_hangup_label">أنْهِ المكالمة</string>
+  <string name="notification_call_answer_label">أجبْ</string>
+  <string name="notification_mark_as_read_label">حدِّد كمقروءة</string>
   <!--Common-->
   <string name="username">اسم المستخدم</string>
   <string name="userid">معرِّف المستخدم (اختياري)</string>
   <string name="phone_number">رقم الهاتف</string>
+  <string name="confirmation_code">رمز التأكيد</string>
+  <string name="international_prefix">بادِئَة رقم الهاتف الدولي</string>
   <string name="display_name">الاسم المعروض</string>
   <string name="password">كلمة السر</string>
   <string name="confirm_password">تأكيد كلمة السر</string>
@@ -26,6 +36,7 @@
   <string name="retry">إعادة المحاولة</string>
   <string name="cancel">إلغاء</string>
   <string name="accept">قبول</string>
+  <string name="open">افتح</string>
   <string name="continue_text">استمرار</string>
   <string name="about">حول</string>
   <string name="deny">رفض</string>
@@ -39,12 +50,15 @@
   <string name="decline">رفض</string>
   <string name="conference">اجتماع</string>
   <string name="link">الرابط</string>
+  <string name="link_account_popup">أ تريد ربط الحساب %s مع رقم هاتفك ؟</string>
   <string name="maybe_later">ربما لاحقا</string>
   <string name="later">لاحقا</string>
   <string name="no">لا</string>
   <string name="ok">حسنا</string>
   <string name="yes">نعم</string>
   <string name="link_account">اربط حسابك</string>
+  <string name="update_available">هناك تحديث متاح</string>
+  <string name="do_not_ask_again">لا تظهر مجددا</string>
   <!--Launch screen-->
   <string name="app_description">‫الزبون SIP <i>الحر</i>‬</string>
   <!--Assistant-->
@@ -75,10 +89,12 @@
   <string name="assistant_generic_account">استخدم حساب SIP</string>
   <string name="assistant_remote_provisioning_title">اجذب التهيئة البعيدة</string>
   <string name="assistant_fetch_apply">اجذبْ وطبِّق</string>
+  <string name="assistant_launch_qrcode">الرمز المربع</string>
   <string name="assistant_login">الولوج</string>
   <string name="assistant_ec_calibration">معايرة مزيل الصدى في طور الإنجاز</string>
   <string name="assistant_remote_provisioning_login">أدخل اسم الولوج</string>
   <string name="assistant_account_not_validated">لم يتم تأكيد حسابك بعد.</string>
+  <string name="assistant_error_confirmation_code">رمز التأكيد باطل.\nيُرجى إعادة المحاولة.</string>
   <string name="assistant_account_validated">تم تأكيد حسابك.</string>
   <string name="assistant_error_bad_credentials">اسم المسخدم أو كلمة السر غير صحيحة</string>
   <string name="assistant_codec_down_question">أأنت موافق على تنزيل مرماز الفيديو OpenH264 المُقدَّم من طرف شركة Cisco Systems, Inc. ؟</string>
@@ -88,6 +104,7 @@
   <string name="assistant_codec_downloaded">انتهى تنزيل مرماز الفيديو OpenH264 المُقدَّم من طرف شركة Cisco Systems, Inc.</string>
   <string name="wizard_failed">حدث خطأ، حاول لاحقا.</string>
   <string name="wizard_server_unavailable">انعدام الوصول للخادم، تأكد من اتصالك بالشبكة.</string>
+  <string name="wizard_username_unavailable">إسم المستخدم هذا محجوز مسبقا.</string>
   <string name="wizard_username_incorrect">اسم المستخدم غير صحيح.</string>
   <string name="assistant_phone_number_incorrect">رقم هاتفك غير صحيح.</string>
   <string name="wizard_email_incorrect">عنوانك الإلكتروني غير صحيح.</string>
@@ -106,6 +123,7 @@
   <string name="phone_number_link_info_content">
 \nسيجدك أصدقاؤك بسهولة إن ربطت حسابك برقم هاتفك\\n\nسوف تجد في دفتر عناوينك من يستخدم لِنْفُونْ وسيتمكن أصدقاؤك من الوصول إليك بواسطة لِنْفُونْ كذلك.لِنْفُونْ.\n</string>
   <string name="phone_number_link_info_content_already_account">يمكنك استخدام رقم هاتفي واحد مع حساب لنفون واحد.\n\nإن ربطت رقم هاتفك مع حساب آخر لكنك تود استخدام هذا الحساب، يمكنك ببساطة ربطه مع رقم هاتفك تلقائيا وسيُنقَل هذا الأخير إلى هذا الحساب.</string>
+  <string name="account_doesnt_exist">الحساب غير موجود</string>
   <!--Status-->
   <string name="invalid_email">البريد الإلكتروني غير صحيح</string>
   <string name="account_already_exist">الحساب موجود مسبقا</string>
@@ -120,11 +138,13 @@
   <string name="phone_number_too_long">رقم الهاتف طويل جدا</string>
   <string name="phone_number_too_short">رقم الهاتف قصير جدا</string>
   <string name="phone_number_invalid">رقم الهاتف غير صحيح</string>
+  <string name="activation_code_invalid">رمز التفعيل باطل</string>
   <string name="password_too_short">كلمة السر قصيرة جدا</string>
   <string name="password_too_long">كلمة السر طويلة جدا</string>
   <string name="request_failed">فشل في استعلام الخادم. يُرجى إعادة المحاولة لاحقا.</string>
   <string name="transport_unsupported">النقل غير مدعوم</string>
   <string name="country_code_invalid">رمز البلد غير صحيح</string>
+  <string name="invalid_characters">هناك حرف أو حروف غير صالحة</string>
   <!--In-app-->
   <string name="inapp">التبضع المحمول</string>
   <string name="inapp_notification_title">شراء بالتبضع محمول</string>
@@ -137,6 +157,7 @@
   <string name="delete_history_log">أتود حذف سجل المكالمات المحددة ؟</string>
   <string name="today">اليوم</string>
   <string name="yesterday">اﻷمس</string>
+  <string name="calls">المكالمات</string>
   <!--Contacts-->
   <string name="no_contact">لا وجود لأي جهة اتصال في دفتر عناوينك.</string>
   <string name="no_sip_contact">لا وجود لأي جهة اتصال SIP في دفتر عناوينك.</string>
@@ -146,10 +167,16 @@
   <string name="contact_first_name">اﻹسم</string>
   <string name="contact_last_name">اللقب</string>
   <string name="contact_organization">المنظمة</string>
+  <string name="invite_friend">ادعُ</string>
+  <string name="invite_friend_text">أهلا، انضم معي إلى لِنْفُونْ ! يمكنك تنزيله مجانا من %s</string>
+  <string name="toast_choose_contact_for_edition">اختر جهة الاتصال أو قم بإنشاء واحدة</string>
   <!--Chat-->
   <string name="no_chat_history">لا وجود لأي محادثة</string>
   <string name="delete_conversation">أتود حذف المحادثات المحددة ؟</string>
   <string name="delete_message">أتود حذف الرسالة المحددة ؟</string>
+  <string name="remote_composing">المُراسِل يكتب...</string>
+  <string name="remote_composing_single">%s يكتب...</string>
+  <string name="remote_composing_multiple">%s يكتبون...</string>
   <string name="share_picture_size_small">صغيرة</string>
   <string name="share_picture_size_medium">متوسطة</string>
   <string name="share_picture_size_large">كبيرة</string>
@@ -159,6 +186,7 @@
   <string name="image_picker_title">اختر المصدر</string>
   <string name="image_saved">حُفظَت الصورة</string>
   <string name="image_not_saved">خطأ، لم تُحفَظ الصورة</string>
+  <string name="wait">يُرجى الانتظار...</string>
   <string name="image_transfert_error">حدث خطأ أثناء نقل الملف</string>
   <string name="message_not_encrypted">إن الرسالة ليست مُعمَّاة</string>
   <string name="message_cant_be_decrypted">لقد استلمت رسالة مُعمَّاة لم تتمكن من فك تعميتها من  %s\nيجب عليك الاتصال بمخاطبك لتبادل مفاتيح ZRTP إذا أردت فك تعمية الرسائل اللاحقة التي ستستلمها.</string>
@@ -167,7 +195,12 @@
   <string name="processing_image">قد تستلزم معالجة الصور بضع ثوان حسب حجم الملف.</string>
   <string name="displayed">قُرِأ</string>
   <string name="delivered">سُلِّم</string>
+  <string name="undelivered">غير مُستلَم</string>
+  <string name="sent">أُرسل</string>
   <string name="resend">أعد اﻹرسال</string>
+  <string name="error_opening_file">حدث خطأ خلال فتح هذا الملف.</string>
+  <string name="conversation_information">معلومات</string>
+  <string name="chat_room_infos_title">معلومات</string>
   <string name="add_to_contacts">إضافة إلى جهات الاتصال</string>
   <string name="download_file">تنزيل</string>
   <string name="chat_room_ephemeral_message_disabled">غير مفعلة</string>
