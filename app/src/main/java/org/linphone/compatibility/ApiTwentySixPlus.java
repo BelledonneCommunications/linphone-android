@@ -107,6 +107,23 @@ class ApiTwentySixPlus {
         notificationManager.createNotificationChannel(channel);
     }
 
+    public static void createMissedCallChannel(Context context) {
+        NotificationManager notificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        // Create missed call notification channel
+        String id = context.getString(R.string.notification_missed_call_channel_id);
+        String name = context.getString(R.string.content_title_notification_missed_call);
+        String description = context.getString(R.string.content_title_notification_missed_call);
+        NotificationChannel channel =
+                new NotificationChannel(id, name, NotificationManager.IMPORTANCE_LOW);
+        channel.setDescription(description);
+        channel.setLightColor(context.getColor(R.color.notification_led_color));
+        channel.enableLights(true);
+        channel.enableVibration(true);
+        channel.setShowBadge(true);
+        notificationManager.createNotificationChannel(channel);
+    }
+
     public static Notification createMessageNotification(
             Context context, Notifiable notif, Bitmap contactIcon, PendingIntent intent) {
 
@@ -262,14 +279,14 @@ class ApiTwentySixPlus {
     public static Notification createMissedCallNotification(
             Context context, String title, String text, PendingIntent intent, int count) {
         return new Notification.Builder(
-                        context, context.getString(R.string.notification_channel_id))
+                        context, context.getString(R.string.notification_missed_call_channel_id))
                 .setContentTitle(title)
                 .setContentText(text)
                 .setSmallIcon(R.drawable.call_status_missed)
                 .setAutoCancel(true)
                 .setContentIntent(intent)
                 .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
-                .setCategory(Notification.CATEGORY_EVENT)
+                // .setCategory(Notification.CATEGORY_EVENT) No one really matches "missed call"
                 .setVisibility(Notification.VISIBILITY_PRIVATE)
                 .setPriority(Notification.PRIORITY_HIGH)
                 .setWhen(System.currentTimeMillis())

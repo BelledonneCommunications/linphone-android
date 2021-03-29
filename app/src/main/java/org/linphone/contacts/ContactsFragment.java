@@ -216,6 +216,7 @@ public class ContactsFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
+
         ContactsManager.getInstance().addContactsListener(this);
 
         mOnlyDisplayLinphoneContacts =
@@ -224,6 +225,7 @@ public class ContactsFragment extends Fragment
 
         changeContactsToggle();
         invalidate();
+        onContactsUpdated();
 
         ((ContactsActivity) (getActivity())).showTabBar();
     }

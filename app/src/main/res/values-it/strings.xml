@@ -130,6 +130,9 @@
   <string name="phone_number_link_info_content_already_account">Puoi utilizzare il tuo numero di telefono solo con un account Linphone.\n\nSe avevi già collegato il tuo numero a un altro account ma preferisci utilizzare questo, collegalo semplicemente ora e il tuo numero verrà automaticamente spostato su questo account.</string>
   <string name="phone_number_overuse">Troppi SMS sono stati inviati a questo numero in un breve periodo di tempo, riprova tra 24 ore.</string>
   <string name="account_doesnt_exist">L\'account non esiste</string>
+  <string name="assistant_general_terms">termini di utilizzo</string>
+  <string name="assistant_privacy_policy">informativa privacy</string>
+  <string name="assistant_read_and_agree_terms">Accetto %1$s e %2$s di Belledonne Communications</string>
   <!--Status-->
   <string name="invalid_email">E-mail non valida</string>
   <string name="account_already_exist">Account già esistente</string>
@@ -613,6 +616,7 @@
   <string name="content_description_exit_conference">Esci dalla conferenza</string>
   <string name="content_title_notification_service">Notifica del servizio Linphone</string>
   <string name="content_title_notification">Notifiche di messaggi istantanei Linphone</string>
+  <string name="content_title_notification_missed_call">Notifiche di chiamate Linphone perse</string>
   <string name="content_description_conversation_subject">Oggetto della chat room di gruppo</string>
   <string name="content_description_conversation_infos">Informazioni sulla chat room di gruppo</string>
   <string name="content_description_record_call">Registra chiamata</string>

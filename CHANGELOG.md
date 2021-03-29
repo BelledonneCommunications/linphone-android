@@ -10,10 +10,19 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
-### [4.4.0] - Unreleased
+### [4.4.0] - 2021-03-29
+
+### Added
+- Dedicated notification channel for missed calls
 
 ### Changed
+- SDK updated to 4.5.0
 - Min Android version updated from 21 to 23 (Android 6) due to SDK audio routes feature
+- Rely on SDK audio routes feature instead of doing it in the application
+- User can now check incoming messages delivery status in group chat rooms
+- Asking user to read and accept privacy policy and general terms
+- Updated translations
+- Various crashes & issues fixed
 
 ## [4.3.0] - 2020-06-23
 
