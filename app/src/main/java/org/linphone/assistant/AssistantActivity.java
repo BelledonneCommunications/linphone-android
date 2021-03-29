@@ -163,6 +163,8 @@ public abstract class AssistantActivity extends LinphoneGenericActivity
                 LinphoneContext.instance().getNotificationManager().startForeground();
             }
         }
+        LinphonePreferences.instance()
+                .setPushNotificationEnabled(!isGenericAccount || useLinphoneDefaultValues);
 
         if (proxyConfig == null) {
             Log.e("[Assistant] Account creator couldn't create proxy config");

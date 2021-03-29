@@ -20,9 +20,7 @@
 package org.linphone.settings;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
-import android.media.AudioManager;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -274,7 +272,6 @@ public class AudioSettingsFragment extends SettingsFragment {
                                     Core core, EcCalibratorStatus status, int delayMs) {
                                 if (status == EcCalibratorStatus.InProgress) return;
                                 core.removeListener(this);
-                                LinphoneManager.getAudioManager().routeAudioToEarPiece();
 
                                 if (status == EcCalibratorStatus.DoneNoEcho) {
                                     mEchoCalibration.setSubtitle(getString(R.string.no_echo));
@@ -287,12 +284,8 @@ public class AudioSettingsFragment extends SettingsFragment {
                                     mEchoCalibration.setSubtitle(getString(R.string.failed));
                                 }
                                 mEchoCanceller.setChecked(status != EcCalibratorStatus.DoneNoEcho);
-                                ((AudioManager)
-                                                getActivity()
-                                                        .getSystemService(Context.AUDIO_SERVICE))
-                                        .setMode(AudioManager.MODE_NORMAL);
                             }
                         });
-        LinphoneManager.getAudioManager().startEcCalibration();
+        LinphoneManager.getCore().startEchoCancellerCalibration();
     }
 }
