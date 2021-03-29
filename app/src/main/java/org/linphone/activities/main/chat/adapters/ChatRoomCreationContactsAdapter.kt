@@ -101,7 +101,7 @@ class ChatRoomCreationContactsAdapter(
             securityEnabled: Boolean
         ) {
             val searchAddress = searchResult.address
-            val isMyself = securityEnabled && searchAddress != null && coreContext.core.defaultProxyConfig?.identityAddress?.weakEqual(searchAddress) ?: false
+            val isMyself = securityEnabled && searchAddress != null && coreContext.core.defaultAccount?.params?.identityAddress?.weakEqual(searchAddress) ?: false
             val limeCheck = !securityEnabled || (securityEnabled && searchResult.hasCapability(FriendCapability.LimeX3Dh))
             val groupCheck = !groupChatEnabled || (groupChatEnabled && searchResult.hasCapability(FriendCapability.GroupChat))
             val disabled = if (searchResult.friend != null) !limeCheck || !groupCheck || isMyself else false // Generated entry from search filter
