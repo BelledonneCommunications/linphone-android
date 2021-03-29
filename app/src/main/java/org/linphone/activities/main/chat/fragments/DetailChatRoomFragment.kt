@@ -359,6 +359,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
     private fun goBack() {
         if (!findNavController().popBackStack(R.id.masterChatRoomsFragment, false)) {
+            Log.w("[Chat Room] No MasterChatRoomsFragment found in back stack")
             navigateToChatRooms()
         }
     }
