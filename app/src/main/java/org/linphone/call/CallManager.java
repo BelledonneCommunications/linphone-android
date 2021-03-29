@@ -144,6 +144,13 @@ public class CallManager {
             params.enableVideo(true);
             core.enableVideoCapture(true);
             core.enableVideoDisplay(true);
+
+            if (!LinphoneManager.getAudioManager().isUsingBluetoothAudioRoute()
+                    && !LinphoneManager.getAudioManager().isWiredHeadsetAvailable()) {
+                LinphoneManager.getAudioManager().routeAudioToSpeaker();
+            }
+        } else {
+            params.enableVideo(false);
         }
 
         call.acceptUpdate(params);
@@ -340,15 +347,17 @@ public class CallManager {
             Log.e("[Call Manager] Remote has low bandwidth, won't be able to do video");
             return false;
         }
+        if (call.getCurrentParams().videoEnabled()) {
+            Log.e("[Call Manager] Video is already enabled");
+            return false;
+        }
 
         CallParams params = core.createCallParams(call);
-        if (params.videoEnabled()) return false;
-
         // Check if video possible regarding bandwidth limitations
         mBandwidthManager.updateWithProfileSettings(params);
-
         // Abort if not enough bandwidth...
         if (!params.videoEnabled()) {
+            Log.e("[Call Manager] Video can't be enabled");
             return false;
         }
 

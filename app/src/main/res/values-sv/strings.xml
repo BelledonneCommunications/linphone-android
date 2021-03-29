@@ -613,6 +613,7 @@
   <string name="content_description_exit_conference">Avsluta konferens</string>
   <string name="content_title_notification_service">Linphone-tjänstavisering</string>
   <string name="content_title_notification">Linphone-chattaviseringar</string>
+  <string name="content_title_notification_missed_call">Missade Linphone-samtalsaviseringar</string>
   <string name="content_description_conversation_subject">Ämne för gruppchattrum</string>
   <string name="content_description_conversation_infos">Info för gruppchattrum</string>
   <string name="content_description_record_call">Spela in samtal</string>

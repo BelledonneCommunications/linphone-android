@@ -187,10 +187,14 @@
   <string name="contact_organization">组织</string>
   <string name="invite_friend">邀请</string>
   <string name="invite_friend_text">您好，在 Linphone 上加入我吧！您可以在 %s 免费下载。</string>
+  <string name="toast_choose_contact_for_edition">选择一个联系人或创建一个新的联系人</string>
   <!--Chat-->
   <string name="no_chat_history">无对话</string>
   <string name="delete_conversation">您想删除所选对话吗？</string>
   <string name="delete_message">您想删除所选信息吗？</string>
+  <string name="remote_composing">远程正在写入...</string>
+  <string name="remote_composing_single">%s 正在写</string>
+  <string name="remote_composing_multiple">%s 正在写</string>
   <string name="share_picture_size_small">小</string>
   <string name="share_picture_size_medium">中</string>
   <string name="share_picture_size_large">大</string>
@@ -200,6 +204,7 @@
   <string name="image_picker_title">选择源</string>
   <string name="image_saved">图片已保存</string>
   <string name="image_not_saved">错误，图片保存失败</string>
+  <string name="wait">请稍候...</string>
   <string name="image_transfert_error">文件传输出错</string>
   <string name="message_not_encrypted">此消息未加密</string>
   <string name="message_cant_be_decrypted">您收到了一个加密的消息，但您无法从%s中解密。如果您想要解密之后的消息，需要使用ZRTP密钥。</string>
@@ -208,14 +213,80 @@
   <string name="processing_image">根据文件的大小，处理图像可能需要几秒钟的时间</string>
   <string name="displayed">读取</string>
   <string name="delivered">已发送</string>
+  <string name="undelivered">未交付</string>
+  <string name="sent">已发送</string>
   <string name="resend">重发</string>
+  <string name="error_opening_file">打开此文件时发生错误。</string>
+  <string name="conversation_information">信息</string>
+  <string name="administrator">管理者</string>
+  <string name="conversation_subject_hint">为组命名</string>
+  <string name="chat_room_infos_title">信息</string>
+  <string name="chat_room_infos_admin">管理者</string>
+  <string name="chat_room_participants">参与者</string>
+  <string name="chat_room_leave_group">离开群组</string>
+  <string name="chat_room_creation_filter_hint">搜索联系人</string>
+  <string name="conference_created">您已加入群组</string>
+  <string name="conference_destroyed">您已离开群组</string>
+  <string name="participant_added">%s 已加入</string>
+  <string name="participant_removed">%s 以离开</string>
+  <string name="device_added">%s 的新设备</string>
+  <string name="device_removed">%s 的设备已删除</string>
+  <string name="subject_changed">新主题：%s</string>
+  <string name="admin_set">%s 是管理者</string>
+  <string name="admin_unset">%s 不再是管理者</string>
+  <string name="group_chat_notif" formatted="false">% 1：% 2</string>
+  <string name="chat_room_you_are_now_admin">您现在是管理员</string>
+  <string name="chat_room_you_are_no_longer_admin">您不再是管理员</string>
+  <string name="chat_room_creation_failed">聊天室创建失败</string>
+  <string name="chat_room_leave_dialog">你想离开这个对话吗？</string>
+  <string name="chat_room_leave_button">离开</string>
+  <string name="chat_room_delete_dialog">是否要删除并保留选定的对话？</string>
+  <string name="separator">：</string>
+  <string name="imdn_info">配送状态</string>
+  <string name="chat_room_devices">%s 的设备</string>
+  <string name="group_chat_room_devices">对话设备</string>
   <string name="add_to_contacts">添加联系人</string>
+  <string name="lime_security_popup">即时消息在安全的对话中进行端到端加密。可以通过对参与者进行身份验证来升级对话的安全级别。为此，请致电联系人并按照身份验证过程进行操作。</string>
+  <string name="lime_identity_key_changed">%s 的LIME身份密钥已更改</string>
+  <string name="man_in_the_middle_detected">%s 监测到中间人攻击</string>
+  <string name="security_level_downgraded">%s 造成安全级别下降</string>
+  <string name="participant_max_count_exceeded">参加人数上限超过 %s 人</string>
+  <string name="download_file">下载</string>
+  <string name="toast_choose_chat_room_for_sharing">选择一个对话或创建一个新的对话</string>
+  <string name="trust_denied">信任被拒绝。拨打电话以重新启动身份验证过程。</string>
+  <string name="cant_open_file_no_app_found">无法打开文件，没有适用于此格式的应用程序。</string>
+  <string name="chat_message_forwarded">已转发</string>
+  <string name="chat_room_context_menu_group_info">组信息</string>
+  <string name="chat_room_context_menu_participants_devices">对话设备</string>
+  <string name="chat_message_context_menu_ephemeral_messages">短暂消息</string>
+  <string name="chat_message_context_menu_delete_messages">删除信息</string>
+  <string name="chat_message_context_menu_forward">前进</string>
+  <string name="chat_room_ephemeral_fragment_title">短暂消息</string>
+  <string name="chat_room_ephemeral_messages_desc">读取此消息后和选定的超时后，将在两端删除。</string>
   <string name="chat_room_ephemeral_message_disabled">已禁用</string>
+  <string name="chat_room_ephemeral_message_one_minute">1 分钟</string>
+  <string name="chat_room_ephemeral_message_one_hour">1 小时</string>
+  <string name="chat_room_ephemeral_message_one_day">1 天</string>
+  <string name="chat_room_ephemeral_message_three_days">3 天</string>
+  <string name="chat_room_ephemeral_message_one_week">1周</string>
+  <plurals name="days">
+    <item quantity="other">%d 天</item>
+  </plurals>
+  <string name="chat_event_ephemeral_disabled">您禁用了短暂消息</string>
+  <string name="chat_event_ephemeral_enabled">您启用了短暂信息：%s</string>
+  <string name="chat_event_ephemeral_lifetime_changed">短暂信息到期日：%s </string>
+  <string name="chat_message_forward_confirmation_dialog">是否要在此会议室转发信息？</string>
   <!--Status Bar-->
+  <string name="status_connected">已连接</string>
+  <string name="status_not_connected">未连接</string>
+  <string name="status_in_progress">连接正在进行</string>
+  <string name="status_error">连接失败</string>
   <string name="voicemail_unread">未读消息</string>
   <!--Side Menu-->
+  <string name="menu_logout">注销</string>
   <string name="menu_assistant">助手</string>
   <string name="menu_settings">设置</string>
+  <string name="menu_recordings">录音</string>
   <string name="menu_about">关于</string>
   <string name="quit">退出</string>
   <!--Call-->
@@ -225,6 +296,11 @@
   <string name="no_current_call">没有来电</string>
   <string name="call_paused_by_remote">对方已结束电话</string>
   <string name="couldnt_accept_call">来电接通出错</string>
+  <string name="zrtp_local_sas">说：</string>
+  <string name="zrtp_remote_sas">确认您的对话者说：</string>
+  <string name="zrtp_dialog_title">通信安全</string>
+  <string name="zrtp_notification_title">SAS</string>
+  <string name="zrtp_notification_message">与您的代理确认之前的 SAS 代码</string>
   <string name="unknown_incoming_call_name">未知</string>
   <string name="call_stats_audio">请提供您配置文件的URL地址</string>
   <string name="call_stats_video">视频</string>
@@ -232,16 +308,25 @@
   <string name="call_stats_ip">IP Family:</string>
   <string name="call_stats_upload">上传带宽</string>
   <string name="call_stats_download">上传带宽</string>
+  <string name="call_stats_estimated_download">估计下载带宽：</string>
   <string name="call_stats_ice">ICE connectivity:</string>
   <string name="call_stats_video_resolution_sent">发送视频分辨率</string>
   <string name="call_stats_video_resolution_received">接受视频分辨率</string>
+  <string name="call_stats_video_fps_sent">已发送视频 fps：</string>
+  <string name="call_stats_video_fps_received">收到的视频 fps：</string>
   <string name="call_stats_sender_loss_rate">发送损失率</string>
   <string name="call_stats_receiver_loss_rate">接收损失率</string>
   <string name="call_stats_jitter_buffer">回音消除校正</string>
   <string name="call_stats_encoder_name">编码器:</string>
   <string name="call_stats_decoder_name">解码器:</string>
+  <string name="call_stats_player_filter">播放器过滤器：</string>
+  <string name="call_stats_display_filter">显示筛选器：</string>
+  <string name="call_stats_capture_filter">捕获过滤器：</string>
   <string name="call">电话</string>
+  <string name="call_log_delete_dialog">是否要删除选定的呼叫日志？</string>
   <!--Recordings-->
+  <string name="no_recordings">无录音</string>
+  <string name="recordings_delete_dialog">是否要删除选定的录音？</string>
   <!--About-->
   <string name="menu_send_log">发送日志</string>
   <string name="menu_reset_log">清除记录</string>
@@ -249,6 +334,8 @@
   <string name="incall_notif_active">音频调用正在进行</string>
   <string name="incall_notif_paused">暂停通话</string>
   <string name="incall_notif_video">视频捕获调用正在进行</string>
+  <string name="incall_notif_incoming">来电</string>
+  <string name="incall_notif_outgoing">拨打电话</string>
   <string name="notification_started">开始</string>
   <string name="unread_messages">%i未读消息</string>
   <string name="missed_calls_notif_title">未接来电</string>
@@ -256,6 +343,7 @@
   <!--Errors-->
   <string name="skipable_error_service_not_ready">警告：服务未准备</string>
   <string name="error">出错</string>
+  <string name="file_transfer_error">文件传输错误</string>
   <string name="warning_wrong_destination_address">无法从%s建立地址</string>
   <string name="error_unknown">未知错误</string>
   <string name="error_call_declined">拒接来电</string>
@@ -268,6 +356,7 @@
   <string name="error_unauthorized">未授权</string>
   <string name="error_io_error">网络错误</string>
   <string name="download_image_failed">下载失败，请检查您的网络连接货稍后再试</string>
+  <string name="remote_provisioning_failure">无法下载或应用远程配置文件...</string>
   <string name="remote_provisioning_again_title">移除配置文件</string>
   <string name="remote_provisioning_again_message">您想更换配置文件URI吗？</string>
   <!--Account Settings-->
@@ -294,6 +383,7 @@
   <string name="pref_display_name">显示名</string>
   <string name="pref_help_display_name">输入显示名(可选)</string>
   <string name="pref_prefix">前缀</string>
+  <string name="pref_prefix_desc">您所在国家的前缀（不包含 +）</string>
   <string name="pref_transport">传输</string>
   <string name="pref_transport_udp">UDP</string>
   <string name="pref_transport_tcp">TCP</string>
@@ -302,6 +392,7 @@
   <string name="pref_change_password">更换密码</string>
   <string name="pref_default_account">默认使用</string>
   <string name="pref_password_changed">密码已更换</string>
+  <string name="pref_proxy_push_notif">允许推送通知</string>
   <!--Settings-->
   <string name="pref_sipaccounts">SIP帐户</string>
   <string name="default_account_flag">默认账户</string>
@@ -310,6 +401,9 @@
   <string name="pref_tunnel_title">Tunnel隧道</string>
   <string name="pref_tunnel_host">主机名</string>
   <string name="pref_tunnel_port">端口</string>
+  <string name="pref_tunnel_dual_mode">启用双模式</string>
+  <string name="pref_tunnel_host_2">主机名（双模式的第二台服务器）</string>
+  <string name="pref_tunnel_port_2">端口（双模式的第二台服务器）</string>
   <string name="pref_tunnel_mode">模式</string>
   <!--do not change order without changing corresponding entry_values in non_localizable_strings.xml-->
   <string-array name="tunnel_mode_entries">
@@ -320,6 +414,7 @@
   </string-array>
   <string name="pref_none">没有</string>
   <string name="pref_preferences_title">偏好</string>
+  <string name="pref_video_enable_title">启用视频</string>
   <!--Audio settings-->
   <string name="pref_audio_title">音频</string>
   <string name="pref_echo_cancellation">回声消除</string>
@@ -332,9 +427,12 @@
   <string name="failed">失败</string>
   <string name="pref_adaptive_rate_control">自适应速率控制</string>
   <string name="pref_codec_bitrate_limit">编解码的比特率限制</string>
+  <string name="pref_mic_gain_db">麦克风增益（以 dB 为单位）</string>
+  <string name="pref_playback_gain_db">播放增益（以 dB 为单位）</string>
   <string name="pref_codecs">编解码器</string>
   <!--Video settings-->
   <string name="pref_video_title">视频</string>
+  <string name="pref_video_camera_device">摄像头</string>
   <string name="pref_overlay">Video overlay</string>
   <string name="pref_overlay_summary">在应用程序外显示视频</string>
   <string name="pref_video_use_front_camera_title">使用前置摄像头</string>
@@ -345,14 +443,30 @@
   <string name="pref_video_preset">视频预设</string>
   <string name="pref_preferred_video_size">视频尺寸偏好</string>
   <string name="pref_preferred_fps">FPS优先</string>
+  <string name="pref_preview_video">在拨号器上显示相机预览</string>
   <string name="pref_bandwidth_limit">带宽限制在kbits/s</string>
   <string name="pref_video_codecs_title">编解码器</string>
   <!--Contact settings-->
+  <string name="pref_contact_sync_title">本机联系人中的状态信息</string>
+  <string name="pref_contact_sync_subtitle">从 Linphone 联系人插入信息快捷方式到本机 Android 联系人</string>
+  <string name="pref_contact_title">联系人</string>
+  <string name="pref_contact_display_contact_organization_title">显示联系人组织</string>
+  <string name="pref_create_contact_shortcuts">在启动器中创建快捷方式</string>
   <!--Call settings-->
   <string name="pref_call_title">聊天</string>
   <string name="pref_device_ringtone">使用手机铃声</string>
+  <string name="pref_vibrate_on_incoming_calls">来电振铃时振动</string>
   <string name="pref_auto_answer">来电自动回复</string>
+  <string name="pref_auto_answer_time">自动应答时间（以毫秒为单位）</string>
+  <string name="pref_rfc2833_dtmf">发送带内 DTMF (RFC2833)</string>
+  <string name="pref_sipinfo_dtmf">发送带外 DTMF（SIP 信息）</string>
+  <string name="pref_call_timeout_title">呼叫超时（以秒为单位）</string>
   <string name="pref_voice_mail">语音邮箱URI</string>
+  <string name="pref_dialer_call">使用 Linphone 作为默认手机应用程序</string>
+  <string name="pref_accept_early_media">接受早期介质</string>
+  <string name="pref_grant_read_dnd_settings_permission_title">请勿打扰设置</string>
+  <string name="pref_grant_read_dnd_settings_permission_desc">我们需要您授予使用 “请勿打扰” 设置的访问权限，以便根据当前政策正确响铃或不响应</string>
+  <string name="pref_media_encryption_mandatory_title">强制介质加密</string>
   <!--Chat settings-->
   <string name="pref_chat_title">聊天</string>
   <string name="pref_image_sharing_server_title">分享服务器</string>
@@ -362,11 +476,26 @@
   <string name="lime_encryption_entry_mandatory">强制的</string>
   <string name="lime_encryption_entry_preferred">优先</string>
   <string name="lime_encryption_enable_zrtp">LIME需要ZRTP加密。通过激活LIME，你可以自动激活ZRTP媒体加密</string>
+  <string name="pref_auto_download_policy_title">自动下载传入文件策略</string>
+  <string name="pref_auto_download_max_size_title">最大（以字节为单位）</string>
+  <string name="pref_auto_download_disabled">永不</string>
+  <string name="pref_auto_download_always">总是</string>
+  <string name="pref_auto_download_under_size">如果比最大尺寸轻</string>
+  <string name="pref_android_app_hide_empty_chat_rooms_title">隐藏空聊天室</string>
+  <string name="pref_android_app_hide_chat_rooms_from_removed_proxies_title">隐藏已删除的代理配置中的聊天室</string>
+  <string name="pref_android_app_hide_chat_rooms_from_removed_proxies_desc">如果您有缺少聊天室，请尝试取消选中此设置</string>
+  <string name="pref_android_app_make_downloaded_images_visible_in_native_gallery_title">使下载的图像在本机图库中可见</string>
+  <string name="pref_android_app_make_downloaded_images_visible_in_native_gallery_desc">短暂消息中的图像将不会</string>
+  <string name="pref_android_app_enable_ephemeral_messages_beta">启用短暂消息（测试版）</string>
   <!--Network settings-->
   <string name="pref_network_title">网络连接</string>
   <string name="pref_wifi_only">只使用WiFi</string>
   <string name="pref_doze_mode">休眠模式</string>
+  <string name="pref_stun_server">眩晕/转向服务器</string>
   <string name="pref_ice_enable">启用ICE</string>
+  <string name="pref_turn_enable">启用转弯</string>
+  <string name="pref_turn_username_title">晕眩/转弯用户名（可选）</string>
+  <string name="pref_turn_passwd_title">眩晕/转动密码（可选）</string>
   <string name="pref_upnp_enable">启用UPNP</string>
   <string name="pref_transport_use_random_ports">使用随机端口</string>
   <string name="pref_sip_port_title">SIP端口</string>
@@ -377,30 +506,48 @@
   <string name="pref_media_encryption">媒介加密</string>
   <string name="pref_push_notification">允许推送通知</string>
   <string name="pref_ipv6_title">允许IPv6</string>
+  <string name="pref_protected_settings_title">电池保护应用程序设置</string>
+  <string name="pref_protected_settings_desc">必须启用此应用程序才能接收推送通知</string>
   <!--Advanced settings-->
   <string name="pref_advanced_title">高级</string>
+  <string name="pref_dark_mode">深色模式</string>
   <string name="pref_debug_title">诊断</string>
   <string name="pref_debug">诊断</string>
+  <string name="pref_java_debug">使用 Java 记录器</string>
   <string name="pref_friendlist_subscribe">订阅朋友列表</string>
   <string name="pref_background_mode">后台模式</string>
+  <string name="pref_background_mode_desc">显示通知以使应用保持活动状态</string>
+  <string name="pref_background_mode_warning_desc">LINphone 已被限制后台运作，请先授权</string>
   <string name="pref_animation_enable_title">允许动画</string>
   <string name="pref_service_notification">允许服务通知</string>
   <string name="pref_autostart">在开机时启动</string>
   <string name="pref_incoming_call_timeout_title">挂断来电 (几秒内)</string>
+  <string name="pref_device_name">设备名称</string>
+  <string name="pref_display_name_subtitle">更改将在下次启动时应用</string>
   <string name="pref_remote_provisioning_title">移除配置文件</string>
   <string name="pref_android_app_settings_title">安卓应用设置</string>
+  <string name="pref_android_app_notif_settings_title">安卓通知设置</string>
   <string name="pref_primary_account_title">初始帐户</string>
   <string name="pref_display_name_title">显示名</string>
   <string name="pref_user_name_title">用户名</string>
+  <string name="pref_log_collection_sharing_server_title">日志上传服务器</string>
   <string name="pref_log_collection_sharing_server_desc">请勿随意编辑</string>
   <!--Audio hack settings-->
   <string name="pref_audio_hacks_title">音频插件</string>
   <string name="pref_audio_use_specific_mode_title">使用特定的模式破解</string>
+  <string name="pref_audio_use_specific_mode_summary">0= 模式 _ 正常（默认值），2= 模式 _ 进入 _ 呼叫</string>
+  <string name="pref_audio_hacks_use_routing_api_title">使用路由 API 破解</string>
+  <string name="pref_audio_hacks_use_galaxys_hack_title">使用银河 S 音频破解</string>
   <!--Device specifics-->
+  <string name="device_power_saver_dialog_title">检测到节电程序！</string>
+  <string name="device_power_saver_dialog_message">似乎您的设备有一个节能程序。为了使应用能够在后台运作推送通知接收来电和消息，应用程序必须被列入白名单。</string>
   <string name="device_power_saver_dialog_button_go_to_settings">设置</string>
   <string name="device_power_saver_dialog_button_later">稍后</string>
   <!--Debug popup-->
   <string name="debug_popup_title">诊断</string>
+  <string name="debug_popup_enable_logs">启用日志</string>
+  <string name="debug_popup_disable_logs">禁用日志</string>
+  <string name="debug_popup_send_logs">发送日志</string>
   <!--Content description-->
   <string name="content_description_back">返回</string>
   <string name="content_description_dialer">拨号器</string>
@@ -416,6 +563,7 @@
   <string name="content_description_add_contact">添加联系人</string>
   <string name="content_description_new_contact">新的联系人</string>
   <string name="content_description_call">聊天</string>
+  <string name="content_description_backspace">退格</string>
   <string name="content_description_chat">聊天</string>
   <string name="content_description_dial_back">回拨</string>
   <string name="content_description_dialer_back">返回拨号器</string>
@@ -472,4 +620,9 @@
   <string name="content_description_call_options">通话选项</string>
   <string name="content_description_audio_route">音频路由</string>
   <string name="content_description_exit_conference">退出会话</string>
+  <string name="content_title_notification_service">Linphone 服务通知</string>
+  <string name="content_title_notification">Linphone 即时简讯通知</string>
+  <string name="content_description_conversation_subject">群聊天室主题</string>
+  <string name="content_description_conversation_infos">群聊天室信息</string>
+  <string name="content_description_record_call">通话录音</string>
 </resources>
