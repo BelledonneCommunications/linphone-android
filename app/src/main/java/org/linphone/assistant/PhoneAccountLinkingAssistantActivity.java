@@ -52,8 +52,11 @@ public class PhoneAccountLinkingAssistantActivity extends AssistantActivity {
 
         setContentView(R.layout.assistant_phone_account_linking);
 
-        if (getIntent() != null && getIntent().hasExtra("AccountNumber")) {
-            int proxyConfigIndex = getIntent().getExtras().getInt("AccountNumber");
+        if (getIntent() != null) {
+            int proxyConfigIndex = 0;
+            if (getIntent().hasExtra("AccountNumber"))
+                proxyConfigIndex = getIntent().getExtras().getInt("AccountNumber");
+
             Core core = LinphoneManager.getCore();
             if (core == null) {
                 Log.e("[Account Linking Assistant] Core not available");
@@ -96,10 +99,6 @@ public class PhoneAccountLinkingAssistantActivity extends AssistantActivity {
                 unexpectedError();
                 return;
             }
-        } else {
-            Log.e("[Account Linking Assistant] Proxy config index not found");
-            unexpectedError();
-            return;
         }
 
         mCountryPicker = findViewById(R.id.select_country);
