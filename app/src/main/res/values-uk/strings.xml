@@ -12,7 +12,7 @@
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone ядро %s</string>
   <string name="about_liblinphone_sdk_version">Linphone SDK %s</string>
-  <string name="about_privacy_policy">Відвідайте нашу політику конфіденційності</string>
+  <string name="about_privacy_policy">Відвідайте нашу політику конфіденційности</string>
   <string name="sync_account_name">контакти linphone</string>
   <!--Notifications-->
   <string name="notification_reply_label">Відповідь</string>
@@ -25,7 +25,7 @@
   <string name="userid">Ідентифікатор користувача (необов\'язково)</string>
   <string name="phone_number">Номер телефону</string>
   <string name="confirmation_code">Код підтвердження</string>
-  <string name="international_prefix">Префікс міжнародного номеру телефону</string>
+  <string name="international_prefix">Префікс міжнародного номера телефону</string>
   <string name="display_name">Показуване ім\'я</string>
   <string name="password">Пароль</string>
   <string name="confirm_password">Схвалення паролю</string>
@@ -130,6 +130,9 @@
   <string name="phone_number_link_info_content_already_account">Номер телефону можна використовувати лише з однією обліківкою Linphone.\n\nЯкщо ваш номер вже був зв\'язаний з иншою обліківкою, але ви волієте використовувати його, просто зв\'яжіть його зараз, й ваш номер буде автоматично перенесено в цю обліківку.</string>
   <string name="phone_number_overuse">Забагато SMS було відправлено на цей номер за короткий проміжок часу, повторіть спробу через 24 години.</string>
   <string name="account_doesnt_exist">Обліківки не існує</string>
+  <string name="assistant_general_terms">умови використання</string>
+  <string name="assistant_privacy_policy">політика конфіденційности</string>
+  <string name="assistant_read_and_agree_terms">Я приймаю %1$s та %2$s Belledonne Communications\'</string>
   <!--Status-->
   <string name="invalid_email">Неприпустима адреса електронної пошти</string>
   <string name="account_already_exist">Обліківка вже існує</string>
@@ -615,6 +618,7 @@
   <string name="content_description_exit_conference">Вийти з конференції</string>
   <string name="content_title_notification_service">Сервісне сповіщення Linphone</string>
   <string name="content_title_notification">Сповіщення миттєвих повідомлень Linphone</string>
+  <string name="content_title_notification_missed_call">Сповіщення про пропущені дзвінки Linphone</string>
   <string name="content_description_conversation_subject">Тема групового чату</string>
   <string name="content_description_conversation_infos">Інформація про груповий чат</string>
   <string name="content_description_record_call">Запис дзвінка</string>

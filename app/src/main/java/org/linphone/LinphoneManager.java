@@ -20,9 +20,7 @@
 package org.linphone;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -33,20 +31,13 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
 import java.io.File;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
-import org.linphone.assistant.PhoneAccountLinkingAssistantActivity;
 import org.linphone.call.AndroidAudioManager;
 import org.linphone.call.CallManager;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.core.AccountCreator;
-import org.linphone.core.AccountCreatorListenerStub;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
 import org.linphone.core.Core;
@@ -92,7 +83,6 @@ public class LinphoneManager implements SensorEventListener {
     private Core mCore;
     private CoreListenerStub mCoreListener;
     private AccountCreator mAccountCreator;
-    private AccountCreatorListenerStub mAccountCreatorListener;
 
     private boolean mExited;
     private boolean mCallGsmON;
@@ -185,7 +175,6 @@ public class LinphoneManager implements SensorEventListener {
                                             if (mCore != null) {
                                                 if (mCore.getCallsNb() > 0) {
                                                     mCallManager.acceptCall(call);
-                                                    mAudioManager.routeAudioToEarPiece();
                                                 }
                                             }
                                         }
@@ -222,39 +211,6 @@ public class LinphoneManager implements SensorEventListener {
                     @Override
                     public void onFriendListRemoved(Core core, FriendList list) {
                         list.removeListener(ContactsManager.getInstance());
-                    }
-                };
-
-        mAccountCreatorListener =
-                new AccountCreatorListenerStub() {
-                    @Override
-                    public void onIsAccountExist(
-                            AccountCreator accountCreator,
-                            AccountCreator.Status status,
-                            String resp) {
-                        if (status.equals(AccountCreator.Status.AccountExist)) {
-                            accountCreator.isAccountLinked();
-                        }
-                    }
-
-                    @Override
-                    public void onLinkAccount(
-                            AccountCreator accountCreator,
-                            AccountCreator.Status status,
-                            String resp) {
-                        if (status.equals(AccountCreator.Status.AccountNotLinked)) {
-                            askLinkWithPhoneNumber();
-                        }
-                    }
-
-                    @Override
-                    public void onIsAccountLinked(
-                            AccountCreator accountCreator,
-                            AccountCreator.Status status,
-                            String resp) {
-                        if (status.equals(AccountCreator.Status.AccountNotLinked)) {
-                            askLinkWithPhoneNumber();
-                        }
                     }
                 };
     }
@@ -315,15 +271,6 @@ public class LinphoneManager implements SensorEventListener {
 
     private void destroyCore() {
         Log.w("[Manager] Destroying Core");
-        if (LinphonePreferences.instance() != null) {
-            // We set network reachable at false before destroying the Core
-            // to not send a register with expires at 0
-            if (LinphonePreferences.instance().isPushNotificationEnabled()) {
-                Log.w(
-                        "[Manager] Setting network reachability to False to prevent unregister and allow incoming push notifications");
-                mCore.setNetworkReachable(false);
-            }
-        }
         mCore.stop();
         mCore.removeListener(mCoreListener);
     }
@@ -462,7 +409,6 @@ public class LinphoneManager implements SensorEventListener {
         resetCameraFromPreferences();
 
         mAccountCreator = mCore.createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
-        mAccountCreator.setListener(mAccountCreatorListener);
         mCallGsmON = false;
 
         Log.i("[Manager] Core configured");
@@ -499,97 +445,8 @@ public class LinphoneManager implements SensorEventListener {
             Log.w("[Manager] Account creator shouldn't be null !");
             mAccountCreator =
                     mCore.createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
-            mAccountCreator.setListener(mAccountCreatorListener);
         }
         return mAccountCreator;
-    }
-
-    public void isAccountWithAlias() {
-        if (mCore.getDefaultProxyConfig() != null) {
-            long now = new Timestamp(new Date().getTime()).getTime();
-            AccountCreator accountCreator = getAccountCreator();
-            if (LinphonePreferences.instance().getLinkPopupTime() == null
-                    || Long.parseLong(LinphonePreferences.instance().getLinkPopupTime()) < now) {
-                accountCreator.reset();
-                accountCreator.setUsername(
-                        LinphonePreferences.instance()
-                                .getAccountUsername(
-                                        LinphonePreferences.instance().getDefaultAccountIndex()));
-                accountCreator.isAccountExist();
-            }
-        } else {
-            LinphonePreferences.instance().setLinkPopupTime(null);
-        }
-    }
-
-    private void askLinkWithPhoneNumber() {
-        if (!LinphonePreferences.instance().isLinkPopupEnabled()) return;
-
-        long now = new Timestamp(new Date().getTime()).getTime();
-        if (LinphonePreferences.instance().getLinkPopupTime() != null
-                && Long.parseLong(LinphonePreferences.instance().getLinkPopupTime()) >= now) return;
-
-        ProxyConfig proxyConfig = mCore.getDefaultProxyConfig();
-        if (proxyConfig == null) return;
-        if (!proxyConfig.getDomain().equals(getString(R.string.default_domain))) return;
-
-        long future =
-                new Timestamp(
-                                mContext.getResources()
-                                        .getInteger(
-                                                R.integer.phone_number_linking_popup_time_interval))
-                        .getTime();
-        long newDate = now + future;
-
-        LinphonePreferences.instance().setLinkPopupTime(String.valueOf(newDate));
-
-        final Dialog dialog =
-                LinphoneUtils.getDialog(
-                        mContext,
-                        String.format(
-                                getString(R.string.link_account_popup),
-                                proxyConfig.getIdentityAddress().asStringUriOnly()));
-        Button delete = dialog.findViewById(R.id.dialog_delete_button);
-        delete.setVisibility(View.GONE);
-        Button ok = dialog.findViewById(R.id.dialog_ok_button);
-        ok.setText(getString(R.string.link));
-        ok.setVisibility(View.VISIBLE);
-        Button cancel = dialog.findViewById(R.id.dialog_cancel_button);
-        cancel.setText(getString(R.string.maybe_later));
-
-        dialog.findViewById(R.id.dialog_do_not_ask_again_layout).setVisibility(View.VISIBLE);
-        final CheckBox doNotAskAgain = dialog.findViewById(R.id.doNotAskAgain);
-        dialog.findViewById(R.id.doNotAskAgainLabel)
-                .setOnClickListener(
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                doNotAskAgain.setChecked(!doNotAskAgain.isChecked());
-                            }
-                        });
-
-        ok.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent assistant = new Intent();
-                        assistant.setClass(mContext, PhoneAccountLinkingAssistantActivity.class);
-                        mContext.startActivity(assistant);
-                        dialog.dismiss();
-                    }
-                });
-
-        cancel.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (doNotAskAgain.isChecked()) {
-                            LinphonePreferences.instance().enableLinkPopup(false);
-                        }
-                        dialog.dismiss();
-                    }
-                });
-        dialog.show();
     }
 
     /* Presence stuff */

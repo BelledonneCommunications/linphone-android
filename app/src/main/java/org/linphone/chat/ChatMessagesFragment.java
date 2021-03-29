@@ -50,6 +50,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.view.menu.MenuPopupHelper;
 import androidx.core.view.inputmethod.InputConnectionCompat;
@@ -299,6 +300,7 @@ public class ChatMessagesFragment extends Fragment
                 mMessageTextToSend.setText(sharedText);
                 Log.i("[Chat Messages Fragment] Found shared text: " + sharedText);
             }
+            getArguments().clear();
         }
 
         if (savedInstanceState != null) {
@@ -372,6 +374,9 @@ public class ChatMessagesFragment extends Fragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+
+        outState.putString("LocalSipUri", mChatRoom.getLocalAddress().asStringUriOnly());
+        outState.putString("RemoteSipUri", mChatRoom.getPeerAddress().asStringUriOnly());
 
         ArrayList<String> files = new ArrayList<>();
         for (int i = 0; i < mFilesUploadLayout.getChildCount(); i++) {
@@ -500,8 +505,7 @@ public class ChatMessagesFragment extends Fragment
             inflater.inflate(R.menu.chat_bubble_menu, menu);
         }
 
-        if (!message.isOutgoing()
-                || mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
+        if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
             // Do not show incoming messages IDMN state in 1 to 1 chat room as we don't receive IMDN
             // for them
             menu.removeItem(R.id.imdn_infos);
@@ -537,8 +541,6 @@ public class ChatMessagesFragment extends Fragment
         String messageId = message.getMessageId();
 
         if (item.getItemId() == R.id.resend) {
-            ((ChatMessagesGenericAdapter) mChatEventsList.getAdapter())
-                    .removeItem(mContextMenuMessagePosition);
             message.send();
             return true;
         }
@@ -666,10 +668,15 @@ public class ChatMessagesFragment extends Fragment
     }
 
     /** View initialization */
-    private void setReadOnly() {
-        mMessageTextToSend.setEnabled(false);
-        mAttachImageButton.setEnabled(false);
-        mSendMessageButton.setEnabled(false);
+    private void setReadOnly(boolean readOnly) {
+        if (readOnly) {
+            mMessageTextToSend.setText("");
+            mFilesUploadLayout.removeAllViews();
+        }
+
+        mMessageTextToSend.setEnabled(!readOnly);
+        mAttachImageButton.setEnabled(!readOnly);
+        mSendMessageButton.setEnabled(!readOnly);
         mSendEphemeralIcon.setEnabled(mSendMessageButton.isEnabled());
     }
 
@@ -716,6 +723,7 @@ public class ChatMessagesFragment extends Fragment
                 || mRemoteSipUri == null
                 || mRemoteSipUri.isEmpty()
                 || core == null) {
+            Log.e("[Chat Messages Fragment] No local/remote SIP URI found!");
             // TODO error
             return;
         }
@@ -798,7 +806,7 @@ public class ChatMessagesFragment extends Fragment
 
         mSendEphemeralIcon.setVisibility(mChatRoom.ephemeralEnabled() ? View.VISIBLE : View.GONE);
         if (mChatRoom.hasBeenLeft()) {
-            setReadOnly();
+            setReadOnly(true);
         }
 
         updateSecurityLevelIcon();
@@ -912,6 +920,12 @@ public class ChatMessagesFragment extends Fragment
     }
 
     private void onRestoreInstanceState(Bundle savedInstanceState) {
+
+        String localSipUri = savedInstanceState.getString("LocalSipUri");
+        mRemoteSipUri = savedInstanceState.getString("RemoteSipUri");
+        mLocalSipAddress = Factory.instance().createAddress(localSipUri);
+        mRemoteSipAddress = Factory.instance().createAddress(mRemoteSipUri);
+
         ArrayList<String> files = savedInstanceState.getStringArrayList("Files");
         if (files != null && !files.isEmpty()) {
             for (String file : files) {
@@ -1075,15 +1089,18 @@ public class ChatMessagesFragment extends Fragment
 
             boolean split =
                     isBasicChatRoom; // Always split contents in basic chat rooms for compatibility
-            if (hasText && sendImageAndTextAsDifferentMessages) {
-                split = true;
-            } else if (mFilesUploadLayout.getChildCount() > 1
-                    && sendMultipleImagesAsDifferentMessages) {
-                split = true;
+            if (!split) {
+                if (hasText && sendImageAndTextAsDifferentMessages) {
+                    split = true;
+                } else if (mFilesUploadLayout.getChildCount() > 1
+                        && sendMultipleImagesAsDifferentMessages) {
+                    split = true;
 
-                // Allow the last image to be sent with text if image and text at the same time OK
-                if (hasText && i == filesCount - 1) {
-                    split = false;
+                    // Allow the last image to be sent with text if image and text at the same time
+                    // OK
+                    if (hasText && i == filesCount - 1) {
+                        split = false;
+                    }
                 }
             }
 
@@ -1198,12 +1215,16 @@ public class ChatMessagesFragment extends Fragment
         boolean encrypted = mChatRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt());
         ((ChatActivity) getActivity())
                 .showChatRoomGroupInfo(
-                        mRemoteSipAddress, participants, mChatRoom.getSubject(), encrypted);
+                        mRemoteSipAddress,
+                        mLocalSipAddress,
+                        participants,
+                        mChatRoom.getSubject(),
+                        encrypted);
     }
 
     private void goToEphemeral() {
         if (mChatRoom == null) return;
-        ((ChatActivity) getActivity()).showChatRoomEphemeral(mRemoteSipAddress);
+        ((ChatActivity) getActivity()).showChatRoomEphemeral(mRemoteSipAddress, mLocalSipAddress);
     }
 
     /*
@@ -1211,10 +1232,16 @@ public class ChatMessagesFragment extends Fragment
      */
 
     @Override
-    public void onChatMessageSent(ChatRoom cr, EventLog event) {
+    public void onNewEvent(@NonNull ChatRoom chatRoom, @NonNull EventLog eventLog) {}
+
+    @Override
+    public void onChatMessageSending(ChatRoom cr, EventLog event) {
         ((ChatMessagesGenericAdapter) mChatEventsList.getAdapter()).addToHistory(event);
         scrollToBottom();
     }
+
+    @Override
+    public void onChatMessageSent(@NonNull ChatRoom chatRoom, @NonNull EventLog eventLog) {}
 
     @Override
     public void onConferenceAddressGeneration(ChatRoom cr) {}
@@ -1435,9 +1462,7 @@ public class ChatMessagesFragment extends Fragment
 
     @Override
     public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
-        if (mChatRoom.hasBeenLeft()) {
-            setReadOnly();
-        }
+        setReadOnly(mChatRoom.hasBeenLeft());
     }
 
     @Override

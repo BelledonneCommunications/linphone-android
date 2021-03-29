@@ -95,9 +95,16 @@ public class GroupInfoFragment extends Fragment {
             mGroupChatRoomAddress = Factory.instance().createAddress(address);
         }
 
+        Address localSipAddress = null;
+        String localSipUri = getArguments().getString("LocalSipUri");
+        if (localSipUri != null && localSipUri.length() > 0) {
+            localSipAddress = Factory.instance().createAddress(localSipUri);
+        }
+
         mIsAlreadyCreatedGroup = mGroupChatRoomAddress != null;
         if (mIsAlreadyCreatedGroup) {
-            mChatRoom = LinphoneManager.getCore().getChatRoom(mGroupChatRoomAddress);
+            mChatRoom =
+                    LinphoneManager.getCore().getChatRoom(mGroupChatRoomAddress, localSipAddress);
         }
 
         if (mChatRoom == null) {

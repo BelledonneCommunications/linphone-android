@@ -107,11 +107,6 @@ public final class LinphoneService extends Service {
             if (core != null) {
                 core.terminateAllCalls();
             }
-
-            // If push is enabled, don't unregister account, otherwise do unregister
-            if (LinphonePreferences.instance().isPushNotificationEnabled()) {
-                if (core != null) core.setNetworkReachable(false);
-            }
             stopSelf();
         }
         super.onTaskRemoved(rootIntent);

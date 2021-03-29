@@ -297,12 +297,16 @@ public class ChatActivity extends MainActivity {
 
     public void showChatRoomGroupInfo(
             Address peerAddress,
+            Address localAddress,
             ArrayList<ContactAddress> participants,
             String subject,
             boolean encrypted) {
         Bundle extras = new Bundle();
         if (peerAddress != null) {
             extras.putSerializable("RemoteSipUri", peerAddress.asStringUriOnly());
+        }
+        if (localAddress != null) {
+            extras.putSerializable("LocalSipUri", localAddress.asStringUriOnly());
         }
         extras.putSerializable("Participants", participants);
         extras.putString("Subject", subject);
@@ -313,10 +317,13 @@ public class ChatActivity extends MainActivity {
         changeFragment(fragment, "Chat room group info", true);
     }
 
-    public void showChatRoomEphemeral(Address peerAddress) {
+    public void showChatRoomEphemeral(Address peerAddress, Address localAddress) {
         Bundle extras = new Bundle();
         if (peerAddress != null) {
             extras.putSerializable("RemoteSipUri", peerAddress.asStringUriOnly());
+        }
+        if (localAddress != null) {
+            extras.putSerializable("LocalSipUri", localAddress.asStringUriOnly());
         }
         EphemeralFragment fragment = new EphemeralFragment();
         fragment.setArguments(extras);

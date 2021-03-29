@@ -7,7 +7,7 @@
   <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">啟動中</string>
   <string name="notification_registered">%s 已連線</string>
-  <string name="notification_register_failure">%s 無法連線</string>
+  <string name="notification_register_failure">%s 連線失敗</string>
   <string name="tunnel_host"></string>
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone Core %s</string>
@@ -58,7 +58,7 @@
   <string name="link_account">連結你的帳號</string>
   <string name="update_available">有更新可用</string>
   <string name="do_not_ask_again">不要再次顯示</string>
-  <string name="delete_contacts_text">妳確定要刪除這些聯絡人嗎？\n他們也會從您的電話中刪除！</string>
+  <string name="delete_contacts_text">您確定要刪除這些聯絡人嗎？\n他們將會從您的電話中刪除！</string>
   <string name="logs_url_copied_to_clipboard">記錄網址已複製到剪貼簿</string>
   <!--Launch screen-->
   <string name="app_description"><i>自由的</i> SIP 客戶端</string>
@@ -77,7 +77,7 @@
   <string name="assistant_login_desc">請輸入您 SIP 網域的使用者名稱與密碼</string>
   <string name="assistant_remote_provisioning_desc">請提供配置網址</string>
   <string name="transport">傳輸</string>
-  <string name="assistant_create_account_phone_number_address">你的 SIP 位置是</string>
+  <string name="assistant_create_account_phone_number_address">你的 SIP 地址是</string>
   <string name="assistant_login_linphone">使用 Linphone 帳號</string>
   <string name="assistant_login_generic">使用 SIP 帳號</string>
   <string name="assistant_remote_provisioning">擷取遠端設定</string>

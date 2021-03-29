@@ -23,6 +23,7 @@ import static org.linphone.compatibility.Compatibility.CHAT_NOTIFICATIONS_GROUP;
 import static org.linphone.compatibility.Compatibility.INTENT_LOCAL_IDENTITY;
 import static org.linphone.compatibility.Compatibility.INTENT_MARK_AS_READ_ACTION;
 import static org.linphone.compatibility.Compatibility.INTENT_NOTIF_ID;
+import static org.linphone.compatibility.Compatibility.INTENT_REMOTE_IDENTITY;
 import static org.linphone.compatibility.Compatibility.INTENT_REPLY_NOTIF_ACTION;
 import static org.linphone.compatibility.Compatibility.KEY_TEXT_REPLY;
 
@@ -132,6 +133,7 @@ class ApiTwentyEightPlus {
         replyIntent.setAction(INTENT_REPLY_NOTIF_ACTION);
         replyIntent.putExtra(INTENT_NOTIF_ID, notif.getNotificationId());
         replyIntent.putExtra(INTENT_LOCAL_IDENTITY, notif.getLocalIdentity());
+        replyIntent.putExtra(INTENT_REMOTE_IDENTITY, notif.getRemoteIdentity());
 
         PendingIntent replyPendingIntent =
                 PendingIntent.getBroadcast(
@@ -156,6 +158,7 @@ class ApiTwentyEightPlus {
         markAsReadIntent.setAction(INTENT_MARK_AS_READ_ACTION);
         markAsReadIntent.putExtra(INTENT_NOTIF_ID, notif.getNotificationId());
         markAsReadIntent.putExtra(INTENT_LOCAL_IDENTITY, notif.getLocalIdentity());
+        markAsReadIntent.putExtra(INTENT_REMOTE_IDENTITY, notif.getRemoteIdentity());
 
         PendingIntent markAsReadPendingIntent =
                 PendingIntent.getBroadcast(

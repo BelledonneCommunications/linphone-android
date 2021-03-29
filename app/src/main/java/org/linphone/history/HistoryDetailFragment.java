@@ -210,13 +210,8 @@ public class HistoryDetailFragment extends Fragment {
             Core core = LinphoneManager.getCore();
             if (address != null && core != null) {
                 address.clean();
-                ProxyConfig proxyConfig = core.getDefaultProxyConfig();
                 CallLog[] logs;
-                if (proxyConfig != null) {
-                    logs = core.getCallHistory(address, proxyConfig.getIdentityAddress());
-                } else {
-                    logs = core.getCallHistoryForAddress(address);
-                }
+                logs = core.getCallHistoryForAddress(address);
                 List<CallLog> logsList = Arrays.asList(logs);
                 mLogsList.setAdapter(
                         new HistoryLogAdapter(

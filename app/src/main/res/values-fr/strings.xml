@@ -131,6 +131,9 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="phone_number_link_info_content_already_account">Vous ne pouvez associer votre numéro qu\'à un seul compte Linphone.\n\nSi vous avez déjà associé votre numéro à un autre compte mais préférez utiliser ce compte-ci, suivez la procédure d\'association et votre numéro sera automatiquement transféré à ce compte.</string>
   <string name="phone_number_overuse">Trop de SMS ont été envoyés vers ce numéro en un court laps de temps, veuillez attendre 24h avant de réessayer.</string>
   <string name="account_doesnt_exist">Ce compte n\'existe pas</string>
+  <string name="assistant_general_terms">les conditions d’utilisation</string>
+  <string name="assistant_privacy_policy">la politique de confidentialité</string>
+  <string name="assistant_read_and_agree_terms">J’accepte %1$s et %2$s de Belledonne Communications</string>
   <!--Status-->
   <string name="invalid_email">Mail non valide</string>
   <string name="account_already_exist">Ce compte existe déjà</string>
@@ -615,6 +618,7 @@ Disponible gratuitement ici : %s</string>
   <string name="content_description_exit_conference">Quitter la conférence</string>
   <string name="content_title_notification_service">Notification de service Linphone</string>
   <string name="content_title_notification">Notifications des messages Linphone</string>
+  <string name="content_title_notification_missed_call">Notifications d\'appels Linphone manqués</string>
   <string name="content_description_conversation_subject">Sujet de la conversation de groupe</string>
   <string name="content_description_conversation_infos">Informations de la conversation de groupe</string>
   <string name="content_description_record_call">Enregistrer l\'appel</string>
