@@ -56,17 +56,17 @@ class LinphoneUtils {
             val core = coreContext.core
             return core.limeX3DhAvailable() && core.limeX3DhEnabled() &&
                     core.limeX3DhServerUrl != null &&
-                    core.defaultProxyConfig?.conferenceFactoryUri != null
+                    core.defaultAccount?.params?.conferenceFactoryUri != null
         }
 
         fun isGroupChatAvailable(): Boolean {
             val core = coreContext.core
-            return core.defaultProxyConfig?.conferenceFactoryUri != null
+            return core.defaultAccount?.params?.conferenceFactoryUri != null
         }
 
         fun createOneToOneChatRoom(participant: Address, isSecured: Boolean = false): ChatRoom? {
             val core: Core = coreContext.core
-            val defaultProxyConfig = core.defaultProxyConfig
+            val defaultAccount = core.defaultAccount
 
             val params = core.createDefaultChatRoomParams()
             params.enableGroup(false)
@@ -79,8 +79,8 @@ class LinphoneUtils {
 
             val participants = arrayOf(participant)
 
-            return core.searchChatRoom(params, defaultProxyConfig?.contact, null, participants)
-                ?: core.createChatRoom(params, defaultProxyConfig?.contact, participants)
+            return core.searchChatRoom(params, defaultAccount?.contactAddress, null, participants)
+                ?: core.createChatRoom(params, defaultAccount?.contactAddress, participants)
         }
 
         fun deleteFilesAttachedToEventLog(eventLog: EventLog) {
