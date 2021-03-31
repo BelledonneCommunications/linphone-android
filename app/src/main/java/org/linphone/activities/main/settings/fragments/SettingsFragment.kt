@@ -54,8 +54,8 @@ class SettingsFragment : SecureFragment<SettingsFragmentBinding>() {
 
         binding.setBackClickListener { findNavController().popBackStack() }
 
-        sharedViewModel.proxyConfigRemoved.observe(viewLifecycleOwner, {
-            Log.i("[Settings] Proxy config removed, update accounts list")
+        sharedViewModel.accountRemoved.observe(viewLifecycleOwner, {
+            Log.i("[Settings] Account removed, update accounts list")
             viewModel.updateAccountsList()
         })
 
@@ -68,7 +68,7 @@ class SettingsFragment : SecureFragment<SettingsFragmentBinding>() {
 
         viewModel.accountsSettingsListener = object : SettingListenerStub() {
             override fun onAccountClicked(identity: String) {
-                Log.i("[Settings] Navigation to settings for proxy with identity: $identity")
+                Log.i("[Settings] Navigation to settings for account with identity: $identity")
                 navigateToAccountSettings(identity)
             }
         }
