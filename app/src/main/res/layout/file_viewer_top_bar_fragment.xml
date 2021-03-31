@@ -6,6 +6,9 @@
         <variable
             name="backClickListener"
             type="android.view.View.OnClickListener"/>
+        <variable
+            name="exportClickListener"
+            type="android.view.View.OnClickListener"/>
     </data>
 
     <LinearLayout
@@ -30,8 +33,19 @@
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.8"
+            android:layout_weight="0.6"
             android:visibility="invisible" />
+
+        <ImageView
+            android:id="@+id/export"
+            android:onClick="@{exportClickListener}"
+            android:contentDescription="@string/content_description_export"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:background="?attr/button_background_drawable"
+            android:padding="18dp"
+            android:src="@drawable/settings_network" />
 
     </LinearLayout>
 
