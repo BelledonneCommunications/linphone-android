@@ -41,6 +41,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.io.File
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -225,7 +226,19 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
         adapter.openContentEvent.observe(viewLifecycleOwner, {
             it.consume { path ->
-                openFile(path)
+                if (!File(path).exists()) {
+                    (requireActivity() as MainActivity).showSnackBar(R.string.chat_room_file_not_found)
+                } else {
+                    Log.i("[Chat Message] Opening file: $path")
+                    sharedViewModel.fileToOpen.value = path
+                    when {
+                        FileUtils.isExtensionImage(path) -> navigateToImageFileViewer()
+                        FileUtils.isExtensionVideo(path) -> navigateToVideoFileViewer()
+                        FileUtils.isExtensionPdf(path) -> navigateToPdfFileViewer()
+                        FileUtils.isPlainTextFile(path) -> navigateToTextFileViewer()
+                        else -> openFile(path)
+                    }
+                }
             }
         })
 
@@ -581,14 +594,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
             dialogViewModel.showOkButton({
                 dialog.dismiss()
-                intent.setDataAndType(contentUri, "text/plain")
-                try {
-                    startActivity(intent)
-                } catch (anfe: ActivityNotFoundException) {
-                    Log.e("[Chat Message] Couldn't find an activity to handle text/plain MIME type")
-                    val activity = requireActivity() as MainActivity
-                    activity.showSnackBar(R.string.chat_room_cant_open_file_no_app_found)
-                }
+                navigateToTextFileViewer()
             })
 
             dialog.show()
