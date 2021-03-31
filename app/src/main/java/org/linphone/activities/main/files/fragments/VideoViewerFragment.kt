@@ -27,11 +27,14 @@ import org.linphone.activities.main.files.viewmodels.VideoFileViewModel
 import org.linphone.activities.main.files.viewmodels.VideoFileViewModelFactory
 import org.linphone.activities.main.fragments.SecureFragment
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
+import org.linphone.core.tools.Log
 import org.linphone.databinding.VideoViewerFragmentBinding
 
 class VideoViewerFragment : SecureFragment<VideoViewerFragmentBinding>() {
     private lateinit var viewModel: VideoFileViewModel
     private lateinit var sharedViewModel: SharedMainViewModel
+
+    private lateinit var mediaController: MediaController
 
     override fun getLayoutId(): Int = R.layout.video_viewer_fragment
 
@@ -56,7 +59,8 @@ class VideoViewerFragment : SecureFragment<VideoViewerFragmentBinding>() {
         )[VideoFileViewModel::class.java]
         binding.viewModel = viewModel
 
-        initVideoControls()
+        mediaController = MediaController(requireContext())
+        initMediaController()
 
         isSecure = arguments?.getBoolean("Secure") ?: false
     }
@@ -68,13 +72,38 @@ class VideoViewerFragment : SecureFragment<VideoViewerFragmentBinding>() {
     }
 
     override fun onPause() {
+        if (mediaController.isShowing) {
+            mediaController.hide()
+        }
         binding.videoView.pause()
 
         super.onPause()
     }
 
-    private fun initVideoControls() {
-        val mediaController = MediaController(requireContext())
-        viewModel.initMediaController(mediaController, binding.videoView)
+    private fun initMediaController() {
+        val videoView = binding.videoView
+
+        videoView.setOnPreparedListener { mediaPlayer ->
+            mediaPlayer.setOnVideoSizeChangedListener { _, _, _ ->
+                videoView.setMediaController(mediaController)
+                // The following will make the video controls above the video
+                // mediaController.setAnchorView(videoView)
+
+                // This will make the controls visible right away for 3 seconds
+                // If 0 as timeout, they will stay visible mediaController.hide() is called
+                mediaController.show()
+            }
+        }
+
+        videoView.setOnCompletionListener { mediaPlayer ->
+            mediaPlayer.release()
+        }
+
+        videoView.setOnErrorListener { _, what, extra ->
+            Log.e("[Video Viewer] Error: $what ($extra)")
+            false
+        }
+
+        videoView.setVideoPath(viewModel.filePath)
     }
 }

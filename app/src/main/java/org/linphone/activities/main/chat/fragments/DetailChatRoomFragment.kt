@@ -234,6 +234,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                     when {
                         FileUtils.isExtensionImage(path) -> navigateToImageFileViewer(viewModel.chatRoom.currentParams.encryptionEnabled())
                         FileUtils.isExtensionVideo(path) -> navigateToVideoFileViewer(viewModel.chatRoom.currentParams.encryptionEnabled())
+                        FileUtils.isExtensionAudio(path) -> navigateToAudioFileViewer(viewModel.chatRoom.currentParams.encryptionEnabled())
                         FileUtils.isExtensionPdf(path) -> navigateToPdfFileViewer(viewModel.chatRoom.currentParams.encryptionEnabled())
                         FileUtils.isPlainTextFile(path) -> navigateToTextFileViewer(viewModel.chatRoom.currentParams.encryptionEnabled())
                         else -> openFile(path)

@@ -384,6 +384,15 @@ internal fun DetailChatRoomFragment.navigateToVideoFileViewer(secure: Boolean) {
     )
 }
 
+internal fun DetailChatRoomFragment.navigateToAudioFileViewer(secure: Boolean) {
+    val bundle = bundleOf("Secure" to secure)
+    findMasterNavController().navigate(
+        R.id.action_global_videoViewerFragment,
+        bundle,
+        getRightToLeftAnimationNavOptions()
+    )
+}
+
 internal fun ChatRoomCreationFragment.navigateToGroupInfo() {
     if (findNavController().currentDestination?.id == R.id.chatRoomCreationFragment) {
         findNavController().navigate(
