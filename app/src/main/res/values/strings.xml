@@ -718,4 +718,5 @@
     <string name="content_description_take_screenshot">Take a screenshot of received video</string>
     <string name="content_description_close_bubble">Close notification bubble</string>
     <string name="content_description_open_app">Open conversation in app instead of bubble</string>
+    <string name="content_description_export">Export file in another app</string>
 </resources>

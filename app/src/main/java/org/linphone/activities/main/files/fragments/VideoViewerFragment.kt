@@ -47,6 +47,9 @@ class VideoViewerFragment : SecureFragment<VideoViewerFragmentBinding>() {
         val filePath = sharedViewModel.fileToOpen.value
         filePath ?: return
 
+        (childFragmentManager.findFragmentById(R.id.top_bar_fragment) as? TopBarFragment)
+            ?.setFilePath(filePath)
+
         viewModel = ViewModelProvider(
             this,
             VideoFileViewModelFactory(filePath)
@@ -56,6 +59,18 @@ class VideoViewerFragment : SecureFragment<VideoViewerFragmentBinding>() {
         initVideoControls()
 
         isSecure = arguments?.getBoolean("Secure") ?: false
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        binding.videoView.start()
+    }
+
+    override fun onPause() {
+        binding.videoView.pause()
+
+        super.onPause()
     }
 
     private fun initVideoControls() {
