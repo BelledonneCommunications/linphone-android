@@ -49,8 +49,6 @@ public final class LinphoneService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        setupActivityMonitor();
-
         misLinphoneContextOwned = false;
         if (!LinphoneContext.isReady()) {
             new LinphoneContext(getApplicationContext());
@@ -172,11 +170,5 @@ public final class LinphoneService extends Service {
             mOverlay.destroy();
         }
         mOverlay = null;
-    }
-
-    private void setupActivityMonitor() {
-        if (mActivityCallbacks != null) return;
-        getApplication()
-                .registerActivityLifecycleCallbacks(mActivityCallbacks = new ActivityMonitor());
     }
 }
