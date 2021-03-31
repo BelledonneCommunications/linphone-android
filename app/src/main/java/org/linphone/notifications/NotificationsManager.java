@@ -29,6 +29,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Vibrator;
 import android.service.notification.StatusBarNotification;
 import java.io.File;
 import java.util.HashMap;
@@ -76,6 +77,8 @@ public class NotificationsManager {
     private String mCurrentChatRoomAddress;
     private CoreListenerStub mListener;
     private ChatMessageListenerStub mMessageListener;
+    private Vibrator mVibrator;
+    private boolean mIsVibrating;
 
     public NotificationsManager(Context context) {
         mContext = context;
@@ -129,12 +132,46 @@ public class NotificationsManager {
                         Notification.PRIORITY_MIN,
                         true);
 
+        mVibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
+
         mListener =
                 new CoreListenerStub() {
                     @Override
                     public void onMessageSent(Core core, ChatRoom room, ChatMessage message) {
                         if (room.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
                             Compatibility.createChatShortcuts(mContext);
+                        }
+                    }
+
+                    @Override
+                    public void onCallStateChanged(
+                            final Core core,
+                            final Call call,
+                            final Call.State state,
+                            final String message) {
+                        Log.i("[Notifications Manager] Call state is [", state, "]");
+
+                        if (mContext.getResources().getBoolean(R.bool.enable_call_notification)) {
+                            displayCallNotification(call);
+                        }
+
+                        if (state == Call.State.IncomingReceived && core.getCallsNb() == 1) {
+                            if (LinphonePreferences.instance().isIncomingCallVibrationEnabled()) {
+                                if (mVibrator.hasVibrator()) {
+                                    Log.i("[Manager] Starting vibrator");
+                                    Compatibility.vibrate(mVibrator);
+                                    mIsVibrating = true;
+                                }
+                            }
+                        } else if (state == Call.State.End
+                                || state == Call.State.Error
+                                || state == Call.State.Connected) {
+                            // Stop vibrator if necessary
+                            if (mIsVibrating) {
+                                Log.i("[Manager] Stopping vibrator");
+                                mVibrator.cancel();
+                                mIsVibrating = false;
+                            }
                         }
                     }
 
