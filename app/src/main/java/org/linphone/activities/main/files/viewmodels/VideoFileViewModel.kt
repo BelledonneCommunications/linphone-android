@@ -19,11 +19,8 @@
  */
 package org.linphone.activities.main.files.viewmodels
 
-import android.widget.MediaController
-import android.widget.VideoView
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import org.linphone.core.tools.Log
 
 class VideoFileViewModelFactory(private val filePath: String) :
     ViewModelProvider.NewInstanceFactory() {
@@ -34,26 +31,4 @@ class VideoFileViewModelFactory(private val filePath: String) :
     }
 }
 
-class VideoFileViewModel(val filePath: String) : ViewModel() {
-
-    fun initMediaController(mediaController: MediaController, videoView: VideoView) {
-        videoView.setOnPreparedListener { mediaPlayer ->
-            mediaPlayer.setOnVideoSizeChangedListener { _, _, _ ->
-                videoView.setMediaController(mediaController)
-                // The following will make the video controls above the video
-                // mediaController.setAnchorView(videoView)
-            }
-        }
-
-        videoView.setOnCompletionListener { mediaPlayer ->
-            mediaPlayer.release()
-        }
-
-        videoView.setOnErrorListener { _, what, extra ->
-            Log.e("[Video Viewer] Error: $what ($extra)")
-            false
-        }
-
-        videoView.setVideoPath(filePath)
-    }
-}
+class VideoFileViewModel(val filePath: String) : ViewModel()
