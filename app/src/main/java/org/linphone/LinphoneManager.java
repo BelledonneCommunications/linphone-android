@@ -152,6 +152,7 @@ public class LinphoneManager implements SensorEventListener {
                             final State state,
                             final String message) {
                         Log.i("[Manager] Call state is [", state, "]");
+
                         if (state == State.IncomingReceived
                                 && !call.equals(core.getCurrentCall())) {
                             if (call.getReplacedCall() != null) {
@@ -165,21 +166,22 @@ public class LinphoneManager implements SensorEventListener {
                             if (mCore != null) {
                                 call.decline(Reason.Busy);
                             }
-                        } else if (state == State.IncomingReceived
-                                && (LinphonePreferences.instance().isAutoAnswerEnabled())
-                                && !getCallGsmON()) {
-                            LinphoneUtils.dispatchOnUIThreadAfter(
-                                    new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            if (mCore != null) {
-                                                if (mCore.getCallsNb() > 0) {
-                                                    mCallManager.acceptCall(call);
+                        } else if (state == State.IncomingReceived && !getCallGsmON()) {
+
+                            if (LinphonePreferences.instance().isAutoAnswerEnabled()) {
+                                LinphoneUtils.dispatchOnUIThreadAfter(
+                                        new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                if (mCore != null) {
+                                                    if (mCore.getCallsNb() > 0) {
+                                                        mCallManager.acceptCall(call);
+                                                    }
                                                 }
                                             }
-                                        }
-                                    },
-                                    mPrefs.getAutoAnswerTime());
+                                        },
+                                        mPrefs.getAutoAnswerTime());
+                            }
                         } else if (state == State.End || state == State.Error) {
                             if (mCore.getCallsNb() == 0) {
                                 // Disabling proximity sensor
@@ -305,7 +307,6 @@ public class LinphoneManager implements SensorEventListener {
                                     mPrefs.getLinphoneFactoryConfig(),
                                     mContext);
             mCore.addListener(listener);
-            mCore.addListener(mCoreListener);
 
             if (isPush) {
                 Log.w(
@@ -314,6 +315,7 @@ public class LinphoneManager implements SensorEventListener {
             }
 
             mCore.start();
+            mCore.addListener(mCoreListener);
 
             mIterateRunnable =
                     new Runnable() {

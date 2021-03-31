@@ -19,6 +19,8 @@
  */
 package org.linphone.service;
 
+import static android.content.Context.WINDOW_SERVICE;
+
 import android.app.Application;
 import android.app.Service;
 import android.content.Intent;
@@ -48,8 +50,6 @@ public final class LinphoneService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        setupActivityMonitor();
 
         misLinphoneContextOwned = false;
         if (!LinphoneContext.isReady()) {
@@ -172,11 +172,5 @@ public final class LinphoneService extends Service {
             mOverlay.destroy();
         }
         mOverlay = null;
-    }
-
-    private void setupActivityMonitor() {
-        if (mActivityCallbacks != null) return;
-        getApplication()
-                .registerActivityLifecycleCallbacks(mActivityCallbacks = new ActivityMonitor());
     }
 }
