@@ -143,10 +143,6 @@ public class LinphoneContext {
                             Core core, Call call, Call.State state, String message) {
                         Log.i("[Context] Call state is [", state, "]");
 
-                        if (mContext.getResources().getBoolean(R.bool.enable_call_notification)) {
-                            mNotificationManager.displayCallNotification(call);
-                        }
-
                         if (state == Call.State.IncomingReceived
                                 || state == Call.State.IncomingEarlyMedia) {
                             // Starting SDK 24 (Android 7.0) we rely on the fullscreen intent of the
