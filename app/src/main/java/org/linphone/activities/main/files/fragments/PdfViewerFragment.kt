@@ -46,6 +46,9 @@ class PdfViewerFragment : SecureFragment<PdfViewerFragmentBinding>() {
         val filePath = sharedViewModel.fileToOpen.value
         filePath ?: return
 
+        (childFragmentManager.findFragmentById(R.id.top_bar_fragment) as? TopBarFragment)
+            ?.setFilePath(filePath)
+
         viewModel = ViewModelProvider(
             this,
             PdfFileViewModelFactory(filePath)

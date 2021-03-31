@@ -55,6 +55,5 @@ class VideoFileViewModel(val filePath: String) : ViewModel() {
         }
 
         videoView.setVideoPath(filePath)
-        videoView.start()
     }
 }
