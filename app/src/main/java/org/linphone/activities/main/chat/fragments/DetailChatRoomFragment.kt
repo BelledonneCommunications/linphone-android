@@ -21,17 +21,14 @@ package org.linphone.activities.main.chat.fragments
 
 import android.app.Activity
 import android.app.Dialog
-import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.provider.MediaStore
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.webkit.MimeTypeMap
 import androidx.activity.addCallback
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.view.menu.MenuPopupHelper
@@ -231,13 +228,18 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 } else {
                     Log.i("[Chat Message] Opening file: $path")
                     sharedViewModel.fileToOpen.value = path
+                    val preventScreenshots = viewModel.chatRoom.currentParams.encryptionEnabled()
                     when {
-                        FileUtils.isExtensionImage(path) -> navigateToImageFileViewer(viewModel.chatRoom.currentParams.encryptionEnabled())
-                        FileUtils.isExtensionVideo(path) -> navigateToVideoFileViewer(viewModel.chatRoom.currentParams.encryptionEnabled())
-                        FileUtils.isExtensionAudio(path) -> navigateToAudioFileViewer(viewModel.chatRoom.currentParams.encryptionEnabled())
-                        FileUtils.isExtensionPdf(path) -> navigateToPdfFileViewer(viewModel.chatRoom.currentParams.encryptionEnabled())
-                        FileUtils.isPlainTextFile(path) -> navigateToTextFileViewer(viewModel.chatRoom.currentParams.encryptionEnabled())
-                        else -> openFile(path)
+                        FileUtils.isExtensionImage(path) -> navigateToImageFileViewer(preventScreenshots)
+                        FileUtils.isExtensionVideo(path) -> navigateToVideoFileViewer(preventScreenshots)
+                        FileUtils.isExtensionAudio(path) -> navigateToAudioFileViewer(preventScreenshots)
+                        FileUtils.isExtensionPdf(path) -> navigateToPdfFileViewer(preventScreenshots)
+                        FileUtils.isPlainTextFile(path) -> navigateToTextFileViewer(preventScreenshots)
+                        else -> {
+                            if (!FileUtils.openFileInThirdPartyApp(requireActivity(), path)) {
+                                showDialogToSuggestOpeningFileAsText()
+                            }
+                        }
                     }
                 }
             }
@@ -548,57 +550,22 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         startActivityForResult(chooserIntent, 0)
     }
 
-    private fun openFile(contentFilePath: String) {
-        val intent = Intent(Intent.ACTION_VIEW)
-        val contentUri: Uri = FileUtils.getPublicFilePath(requireContext(), contentFilePath)
-        val filePath: String = contentUri.toString()
-        Log.i("[Chat Message] Trying to open file: $filePath")
-        var type: String? = null
-        val extension = FileUtils.getExtensionFromFileName(filePath)
+    private fun showDialogToSuggestOpeningFileAsText() {
+        val dialogViewModel = DialogViewModel(
+            requireContext().getString(R.string.dialog_try_open_file_as_text_body),
+            requireContext().getString(R.string.dialog_try_open_file_as_text_title)
+        )
+        val dialog = DialogUtils.getDialog(requireContext(), dialogViewModel)
 
-        if (extension.isNotEmpty()) {
-            Log.i("[Chat Message] Found extension $extension")
-            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-        } else {
-            Log.e("[Chat Message] Couldn't find extension")
+        dialogViewModel.showCancelButton {
+            dialog.dismiss()
         }
 
-        if (type != null) {
-            Log.i("[Chat Message] Found matching MIME type $type")
-        } else {
-            type = "file/$extension"
-            Log.e("[Chat Message] Can't get MIME type from extension: $extension, will use $type")
-        }
+        dialogViewModel.showOkButton({
+            dialog.dismiss()
+            navigateToTextFileViewer(true)
+        })
 
-        intent.setDataAndType(contentUri, type)
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-
-        try {
-            startActivity(intent)
-
-            if (corePreferences.enableAnimations) {
-                requireActivity().overridePendingTransition(R.anim.enter_right, R.anim.exit_left)
-            }
-        } catch (anfe: ActivityNotFoundException) {
-            Log.e("[Chat Message] Couldn't find an activity to handle MIME type: $type")
-
-            val dialogViewModel = DialogViewModel(
-                getString(R.string.dialog_try_open_file_as_text_body), getString(
-                    R.string.dialog_try_open_file_as_text_title
-                )
-            )
-            val dialog = DialogUtils.getDialog(requireContext(), dialogViewModel)
-
-            dialogViewModel.showCancelButton {
-                dialog.dismiss()
-            }
-
-            dialogViewModel.showOkButton({
-                dialog.dismiss()
-                navigateToTextFileViewer(viewModel.chatRoom.currentParams.encryptionEnabled())
-            })
-
-            dialog.show()
-        }
+        dialog.show()
     }
 }

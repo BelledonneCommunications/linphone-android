@@ -296,6 +296,7 @@
         <item quantity="other">@string/chat_room_delete_many_dialog</item>
     </plurals>
     <string name="chat_message_notification_hidden_content">&lt;Redacted&gt;</string>
+    <string name="chat_message_no_app_found_to_handle_file_mime_type">No app available for this kind of file</string>
 
     <!-- Recordings -->
     <string name="recordings_empty_list">No recordings</string>

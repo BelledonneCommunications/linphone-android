@@ -19,7 +19,10 @@
  */
 package org.linphone.utils
 
+import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import android.database.CursorIndexOutOfBoundsException
 import android.net.Uri
 import android.os.Environment
@@ -33,6 +36,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
+import org.linphone.LinphoneApplication
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
@@ -291,6 +295,43 @@ class FileUtils {
                 }
             }
             return contentUri
+        }
+
+        fun openFileInThirdPartyApp(activity: Activity, contentFilePath: String): Boolean {
+            val intent = Intent(Intent.ACTION_VIEW)
+            val contentUri: Uri = getPublicFilePath(activity, contentFilePath)
+            val filePath: String = contentUri.toString()
+            Log.i("[File Viewer] Trying to open file: $filePath")
+            var type: String? = null
+            val extension = getExtensionFromFileName(filePath)
+
+            if (extension.isNotEmpty()) {
+                Log.i("[File Viewer] Found extension $extension")
+                type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+            } else {
+                Log.e("[File Viewer] Couldn't find extension")
+            }
+
+            if (type != null) {
+                Log.i("[File Viewer] Found matching MIME type $type")
+            } else {
+                type = "file/$extension"
+                Log.e("[File Viewer] Can't get MIME type from extension: $extension, will use $type")
+            }
+
+            intent.setDataAndType(contentUri, type)
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+
+            try {
+                activity.startActivity(intent)
+                if (LinphoneApplication.corePreferences.enableAnimations) {
+                    activity.overridePendingTransition(R.anim.enter_right, R.anim.exit_left)
+                }
+                return true
+            } catch (anfe: ActivityNotFoundException) {
+                Log.e("[File Viewer] Can't open file in third party app: $anfe")
+            }
+            return false
         }
     }
 }
