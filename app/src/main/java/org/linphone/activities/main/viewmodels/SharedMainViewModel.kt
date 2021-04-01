@@ -48,7 +48,7 @@ class SharedMainViewModel : ViewModel() {
         MutableLiveData<Event<ChatMessage>>()
     }
 
-    val fileToOpen = MutableLiveData<String>()
+    val contentToOpen = MutableLiveData<Content>()
 
     var createEncryptedChatRoom: Boolean = false
 

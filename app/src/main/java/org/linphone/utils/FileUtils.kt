@@ -297,7 +297,11 @@ class FileUtils {
             return contentUri
         }
 
-        fun openFileInThirdPartyApp(activity: Activity, contentFilePath: String): Boolean {
+        fun openFileInThirdPartyApp(
+            activity: Activity,
+            contentFilePath: String,
+            newTask: Boolean = false
+        ): Boolean {
             val intent = Intent(Intent.ACTION_VIEW)
             val contentUri: Uri = getPublicFilePath(activity, contentFilePath)
             val filePath: String = contentUri.toString()
@@ -321,6 +325,9 @@ class FileUtils {
 
             intent.setDataAndType(contentUri, type)
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            if (newTask) {
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
 
             try {
                 activity.startActivity(intent)

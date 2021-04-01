@@ -222,23 +222,46 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         })
 
         adapter.openContentEvent.observe(viewLifecycleOwner, {
-            it.consume { path ->
+            it.consume { content ->
+                val path = content.filePath.orEmpty()
+
                 if (!File(path).exists()) {
                     (requireActivity() as MainActivity).showSnackBar(R.string.chat_room_file_not_found)
                 } else {
                     Log.i("[Chat Message] Opening file: $path")
-                    sharedViewModel.fileToOpen.value = path
-                    val preventScreenshots = viewModel.chatRoom.currentParams.encryptionEnabled()
-                    when {
-                        FileUtils.isExtensionImage(path) -> navigateToImageFileViewer(preventScreenshots)
-                        FileUtils.isExtensionVideo(path) -> navigateToVideoFileViewer(preventScreenshots)
-                        FileUtils.isExtensionAudio(path) -> navigateToAudioFileViewer(preventScreenshots)
-                        FileUtils.isExtensionPdf(path) -> navigateToPdfFileViewer(preventScreenshots)
-                        FileUtils.isPlainTextFile(path) -> navigateToTextFileViewer(preventScreenshots)
-                        else -> {
-                            if (!FileUtils.openFileInThirdPartyApp(requireActivity(), path)) {
-                                showDialogToSuggestOpeningFileAsText()
+                    sharedViewModel.contentToOpen.value = content
+
+                    if (corePreferences.useInAppFileViewerForNonEncryptedFiles || content.isFileEncrypted) {
+                        val preventScreenshots =
+                            viewModel.chatRoom.currentParams.encryptionEnabled()
+                        when {
+                            FileUtils.isExtensionImage(path) -> navigateToImageFileViewer(
+                                preventScreenshots
+                            )
+                            FileUtils.isExtensionVideo(path) -> navigateToVideoFileViewer(
+                                preventScreenshots
+                            )
+                            FileUtils.isExtensionAudio(path) -> navigateToAudioFileViewer(
+                                preventScreenshots
+                            )
+                            FileUtils.isExtensionPdf(path) -> navigateToPdfFileViewer(
+                                preventScreenshots
+                            )
+                            FileUtils.isPlainTextFile(path) -> navigateToTextFileViewer(
+                                preventScreenshots
+                            )
+                            else -> {
+                                if (content.isFileEncrypted) {
+                                    Log.w("[Chat Message] File is encrypted and can't be opened in one of our viewers...")
+                                    // TODO: show dialog to ask user for consent before trying to export the file first
+                                } else if (!FileUtils.openFileInThirdPartyApp(requireActivity(), path)) {
+                                    showDialogToSuggestOpeningFileAsText()
+                                }
                             }
+                        }
+                    } else {
+                        if (!FileUtils.openFileInThirdPartyApp(requireActivity(), path)) {
+                            showDialogToSuggestOpeningFileAsText()
                         }
                     }
                 }

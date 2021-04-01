@@ -19,11 +19,9 @@
  */
 package org.linphone.activities.chat_bubble
 
-import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.webkit.MimeTypeMap
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -31,7 +29,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.linphone.LinphoneApplication
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.GenericActivity
@@ -113,8 +110,12 @@ class ChatBubbleActivity : GenericActivity() {
         adapter.disableContextMenu()
 
         adapter.openContentEvent.observe(this, {
-            it.consume { path ->
-                openFile(path)
+            it.consume { content ->
+                if (content.isFileEncrypted) {
+                    Toast.makeText(this, R.string.chat_bubble_cant_open_enrypted_file, Toast.LENGTH_LONG).show()
+                } else {
+                    FileUtils.openFileInThirdPartyApp(this, content.filePath.orEmpty(), true)
+                }
             }
         })
 
@@ -172,43 +173,6 @@ class ChatBubbleActivity : GenericActivity() {
     private fun scrollToBottom() {
         if (adapter.itemCount > 0) {
             binding.chatMessagesList.scrollToPosition(adapter.itemCount - 1)
-        }
-    }
-
-    private fun openFile(contentFilePath: String) {
-        val intent = Intent(Intent.ACTION_VIEW)
-        val contentUri: Uri = FileUtils.getPublicFilePath(this, contentFilePath)
-        val filePath: String = contentUri.toString()
-        Log.i("[Chat Bubble] Trying to open file: $filePath")
-        var type: String? = null
-        val extension = FileUtils.getExtensionFromFileName(filePath)
-
-        if (extension.isNotEmpty()) {
-            Log.i("[Chat Bubble] Found extension $extension")
-            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-        } else {
-            Log.e("[Chat Bubble] Couldn't find extension")
-        }
-
-        if (type != null) {
-            Log.i("[Chat Bubble] Found matching MIME type $type")
-        } else {
-            type = "file/$extension"
-            Log.e("[Chat Bubble] Can't get MIME type from extension: $extension, will use $type")
-        }
-
-        intent.setDataAndType(contentUri, type)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-
-        try {
-            startActivity(intent)
-
-            if (LinphoneApplication.corePreferences.enableAnimations) {
-                overridePendingTransition(R.anim.enter_right, R.anim.exit_left)
-            }
-        } catch (anfe: ActivityNotFoundException) {
-            Log.e("[Chat Bubble] Couldn't find an activity to handle MIME type: $type")
         }
     }
 }

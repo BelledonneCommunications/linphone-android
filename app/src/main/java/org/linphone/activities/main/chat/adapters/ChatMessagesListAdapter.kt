@@ -40,6 +40,7 @@ import org.linphone.activities.main.chat.viewmodels.OnContentClickedListener
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatRoomCapabilities
+import org.linphone.core.Content
 import org.linphone.core.EventLog
 import org.linphone.databinding.ChatEventListCellBinding
 import org.linphone.databinding.ChatMessageListCellBinding
@@ -73,13 +74,13 @@ class ChatMessagesListAdapter(
         MutableLiveData<Event<String>>()
     }
 
-    val openContentEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
+    val openContentEvent: MutableLiveData<Event<Content>> by lazy {
+        MutableLiveData<Event<Content>>()
     }
 
     private val contentClickedListener = object : OnContentClickedListener {
-        override fun onContentClicked(path: String) {
-            openContentEvent.value = Event(path)
+        override fun onContentClicked(content: Content) {
+            openContentEvent.value = Event(content)
         }
     }
 
