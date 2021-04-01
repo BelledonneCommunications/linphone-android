@@ -568,4 +568,5 @@
     <string name="content_description_open_app">Ouvrir les conversations dans l\'application au lieu de la bulle</string>
     <string name="content_description_export">Ouvrir le fichier dans une application tierce</string>
     <string name="chat_message_no_app_found_to_handle_file_mime_type">Aucune application n\'est disponible pour ouvrir ce type de fichier</string>
+    <string name="chat_bubble_cant_open_enrypted_file">Impossible d\'ouvrir un fichier chiffré dans la bulle de conversation</string>
 </resources>
