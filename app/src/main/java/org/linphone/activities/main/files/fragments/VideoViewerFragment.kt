@@ -75,9 +75,18 @@ class VideoViewerFragment : SecureFragment<VideoViewerFragmentBinding>() {
         if (mediaController.isShowing) {
             mediaController.hide()
         }
-        binding.videoView.pause()
+
+        if (binding.videoView.isPlaying) {
+            binding.videoView.pause()
+        }
 
         super.onPause()
+    }
+
+    override fun onDestroyView() {
+        binding.videoView.stopPlayback()
+
+        super.onDestroyView()
     }
 
     private fun initMediaController() {
@@ -93,10 +102,6 @@ class VideoViewerFragment : SecureFragment<VideoViewerFragmentBinding>() {
                 // If 0 as timeout, they will stay visible mediaController.hide() is called
                 mediaController.show()
             }
-        }
-
-        videoView.setOnCompletionListener { mediaPlayer ->
-            mediaPlayer.release()
         }
 
         videoView.setOnErrorListener { _, what, extra ->
