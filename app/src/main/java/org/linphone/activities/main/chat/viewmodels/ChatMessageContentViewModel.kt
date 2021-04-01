@@ -146,10 +146,10 @@ class ChatMessageContentViewModel(
     }
 
     fun openFile() {
-        listener?.onContentClicked(content.filePath.orEmpty())
+        listener?.onContentClicked(content)
     }
 }
 
 interface OnContentClickedListener {
-    fun onContentClicked(path: String)
+    fun onContentClicked(content: Content)
 }

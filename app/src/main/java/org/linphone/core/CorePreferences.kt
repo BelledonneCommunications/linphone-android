@@ -128,6 +128,12 @@ class CorePreferences constructor(private val context: Context) {
             config.setBool("app", "make_downloaded_images_public_in_gallery", value)
         }
 
+    var useInAppFileViewerForNonEncryptedFiles: Boolean
+        get() = config.getBool("app", "use_in_app_file_viewer_for_non_encrypted_files", true)
+        set(value) {
+            config.setBool("app", "use_in_app_file_viewer_for_non_encrypted_files", value)
+        }
+
     var hideChatMessageContentInNotification: Boolean
         get() = config.getBool("app", "hide_chat_message_content_in_notification", false)
         set(value) {
