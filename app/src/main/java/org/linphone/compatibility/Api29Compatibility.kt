@@ -20,6 +20,7 @@
 package org.linphone.compatibility
 
 import android.annotation.TargetApi
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.ContentValues
 import android.content.Context
@@ -30,6 +31,7 @@ import android.provider.MediaStore
 import android.view.View
 import android.view.contentcapture.ContentCaptureContext
 import android.view.contentcapture.ContentCaptureSession
+import androidx.core.app.NotificationManagerCompat
 import org.linphone.R
 import org.linphone.core.ChatRoom
 import org.linphone.core.Content
@@ -41,6 +43,24 @@ import org.linphone.utils.LinphoneUtils
 @TargetApi(29)
 class Api29Compatibility {
     companion object {
+        fun createMessageChannel(
+            context: Context,
+            notificationManager: NotificationManagerCompat
+        ) {
+            // Create messages notification channel
+            val id = context.getString(R.string.notification_channel_chat_id)
+            val name = context.getString(R.string.notification_channel_chat_name)
+            val description = context.getString(R.string.notification_channel_chat_name)
+            val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH)
+            channel.description = description
+            channel.lightColor = context.getColor(R.color.notification_led_color)
+            channel.enableLights(true)
+            channel.enableVibration(true)
+            channel.setShowBadge(true)
+            channel.setAllowBubbles(true)
+            notificationManager.createNotificationChannel(channel)
+        }
+
         fun extractLocusIdFromIntent(intent: Intent): String? {
             return intent.getStringExtra(Intent.EXTRA_LOCUS_ID)
         }

@@ -737,9 +737,11 @@ class NotificationsManager(private val context: Context) {
                 .setDeleteIntent(getMarkMessageAsReadPendingIntent(notifiable))
         }
 
-        if (Compatibility.canChatMessageChannelBubble(context)) {
-            notificationBuilder.bubbleMetadata = bubble
+        if (!Compatibility.canChatMessageChannelBubble(context)) {
+            Log.w("[Notifications Manager] This conversation wasn't granted bubble permission yet")
         }
+        // We still need to set the bubbleMetadata, otherwise user won't ever be able to enable bubbles!
+        notificationBuilder.bubbleMetadata = bubble
         return notificationBuilder.build()
     }
 

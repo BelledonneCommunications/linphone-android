@@ -84,7 +84,11 @@ class Compatibility {
                 Api26Compatibility.createServiceChannel(context, notificationManager)
                 Api26Compatibility.createMissedCallChannel(context, notificationManager)
                 Api26Compatibility.createIncomingCallChannel(context, notificationManager)
-                Api26Compatibility.createMessageChannel(context, notificationManager)
+                if (Version.sdkAboveOrEqual(Version.API29_ANDROID_10)) {
+                    Api29Compatibility.createMessageChannel(context, notificationManager)
+                } else {
+                    Api26Compatibility.createMessageChannel(context, notificationManager)
+                }
             }
         }
 
