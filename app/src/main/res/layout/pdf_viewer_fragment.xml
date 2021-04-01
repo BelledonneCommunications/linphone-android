@@ -23,19 +23,11 @@
             android:layout_alignParentTop="true"
             tools:layout="@layout/file_viewer_top_bar_fragment" />
 
-        <ScrollView
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/pdf_view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/top_bar_fragment">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                bind:entries="@{viewModel.pages}"
-                bind:layout="@{@layout/pdf_viewer_cell}"/>
-
-        </ScrollView>
+            android:layout_below="@id/top_bar_fragment" />
 
         <include
             layout="@layout/wait_layout"
