@@ -21,9 +21,6 @@ package org.linphone.activities.main.files.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.GestureDetector
-import android.view.MotionEvent
-import android.view.ScaleGestureDetector
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
 import org.linphone.activities.main.files.viewmodels.ImageFileViewModel
@@ -35,10 +32,6 @@ import org.linphone.databinding.ImageViewerFragmentBinding
 class ImageViewerFragment : SecureFragment<ImageViewerFragmentBinding>() {
     private lateinit var viewModel: ImageFileViewModel
     private lateinit var sharedViewModel: SharedMainViewModel
-
-    private lateinit var gestureDetector: GestureDetector
-    private lateinit var scaleGestureDetector: ScaleGestureDetector
-    private var scaleFactor = 1.0f
 
     override fun getLayoutId(): Int = R.layout.image_viewer_fragment
 
@@ -65,55 +58,5 @@ class ImageViewerFragment : SecureFragment<ImageViewerFragmentBinding>() {
         binding.viewModel = viewModel
 
         isSecure = arguments?.getBoolean("Secure") ?: false
-
-        gestureDetector = GestureDetector(requireContext(), object :
-            GestureDetector.SimpleOnGestureListener() {
-            override fun onDoubleTap(e: MotionEvent?): Boolean {
-                scaleFactor = if (scaleFactor == 1.0f) 2.0f else 1.0f
-                binding.imageView.scaleX = scaleFactor
-                binding.imageView.scaleY = scaleFactor
-                return true
-            }
-
-            override fun onScroll(
-                e1: MotionEvent?,
-                e2: MotionEvent?,
-                distanceX: Float,
-                distanceY: Float
-            ): Boolean {
-                if (scaleFactor <= 1.0f) return false
-
-                val scrollX = binding.imageView.scrollX + distanceX.toInt()
-                binding.imageView.scrollX = scrollX
-
-                val scrollY = binding.imageView.scrollY + distanceY.toInt()
-                binding.imageView.scrollY = scrollY
-                return true
-            }
-        })
-
-        scaleGestureDetector = ScaleGestureDetector(requireContext(), object :
-            ScaleGestureDetector.SimpleOnScaleGestureListener() {
-            override fun onScale(detector: ScaleGestureDetector): Boolean {
-                scaleFactor *= detector.scaleFactor
-                scaleFactor = scaleFactor.coerceIn(0.1f, 5.0f)
-                binding.imageView.scaleX = scaleFactor
-                binding.imageView.scaleY = scaleFactor
-                return false
-            }
-        })
-
-        binding.imageView.setOnTouchListener { _, event ->
-            val previousScaleFactor = scaleFactor
-            scaleGestureDetector.onTouchEvent(event)
-
-            if (previousScaleFactor != scaleFactor) {
-                // Prevent touch event from going further
-                return@setOnTouchListener true
-            }
-
-            gestureDetector.onTouchEvent(event)
-            return@setOnTouchListener true
-        }
     }
 }
