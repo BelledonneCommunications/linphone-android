@@ -348,6 +348,51 @@ internal fun DetailChatRoomFragment.navigateToEphemeralInfo() {
     }
 }
 
+internal fun DetailChatRoomFragment.navigateToTextFileViewer(secure: Boolean) {
+    val bundle = bundleOf("Secure" to secure)
+    findMasterNavController().navigate(
+        R.id.action_global_textViewerFragment,
+        bundle,
+        getRightToLeftAnimationNavOptions()
+    )
+}
+
+internal fun DetailChatRoomFragment.navigateToPdfFileViewer(secure: Boolean) {
+    val bundle = bundleOf("Secure" to secure)
+    findMasterNavController().navigate(
+        R.id.action_global_pdfViewerFragment,
+        bundle,
+        getRightToLeftAnimationNavOptions()
+    )
+}
+
+internal fun DetailChatRoomFragment.navigateToImageFileViewer(secure: Boolean) {
+    val bundle = bundleOf("Secure" to secure)
+    findMasterNavController().navigate(
+        R.id.action_global_imageViewerFragment,
+        bundle,
+        getRightToLeftAnimationNavOptions()
+    )
+}
+
+internal fun DetailChatRoomFragment.navigateToVideoFileViewer(secure: Boolean) {
+    val bundle = bundleOf("Secure" to secure)
+    findMasterNavController().navigate(
+        R.id.action_global_videoViewerFragment,
+        bundle,
+        getRightToLeftAnimationNavOptions()
+    )
+}
+
+internal fun DetailChatRoomFragment.navigateToAudioFileViewer(secure: Boolean) {
+    val bundle = bundleOf("Secure" to secure)
+    findMasterNavController().navigate(
+        R.id.action_global_videoViewerFragment,
+        bundle,
+        getRightToLeftAnimationNavOptions()
+    )
+}
+
 internal fun ChatRoomCreationFragment.navigateToGroupInfo() {
     if (findNavController().currentDestination?.id == R.id.chatRoomCreationFragment) {
         findNavController().navigate(
