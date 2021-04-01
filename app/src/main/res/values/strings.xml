@@ -201,6 +201,7 @@
     </plurals>
     <string name="chat_message_notification_hidden_content">&lt;Redacted&gt;</string>
     <string name="chat_message_no_app_found_to_handle_file_mime_type">No app available for this kind of file</string>
+    <string name="chat_bubble_cant_open_enrypted_file">Can\'t open encrypted file in chat bubble</string>
 
     <!-- Recordings -->
     <string name="recordings_empty_list">No recordings</string>
