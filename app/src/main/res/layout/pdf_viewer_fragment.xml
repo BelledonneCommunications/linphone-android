@@ -27,6 +27,7 @@
             android:id="@+id/pdf_view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:orientation="vertical"
             android:layout_below="@id/top_bar_fragment" />
 
         <include
