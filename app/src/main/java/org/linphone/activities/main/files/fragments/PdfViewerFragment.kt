@@ -22,6 +22,7 @@ package org.linphone.activities.main.files.fragments
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
+import org.linphone.activities.main.files.adapters.PdfPagesListAdapter
 import org.linphone.activities.main.files.viewmodels.PdfFileViewModel
 import org.linphone.activities.main.files.viewmodels.PdfFileViewModelFactory
 import org.linphone.activities.main.fragments.SecureFragment
@@ -31,6 +32,7 @@ import org.linphone.databinding.PdfViewerFragmentBinding
 class PdfViewerFragment : SecureFragment<PdfViewerFragmentBinding>() {
     private lateinit var viewModel: PdfFileViewModel
     private lateinit var sharedViewModel: SharedMainViewModel
+    private lateinit var adapter: PdfPagesListAdapter
 
     override fun getLayoutId(): Int = R.layout.pdf_viewer_fragment
 
@@ -56,5 +58,9 @@ class PdfViewerFragment : SecureFragment<PdfViewerFragmentBinding>() {
         binding.viewModel = viewModel
 
         isSecure = arguments?.getBoolean("Secure") ?: false
+
+        adapter = PdfPagesListAdapter(viewModel)
+        binding.pdfViewPager.adapter = adapter
+        adapter.notifyDataSetChanged()
     }
 }
