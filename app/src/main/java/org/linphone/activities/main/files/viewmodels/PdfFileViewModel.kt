@@ -22,14 +22,11 @@ package org.linphone.activities.main.files.viewmodels
 import android.graphics.Bitmap
 import android.graphics.pdf.PdfRenderer
 import android.os.ParcelFileDescriptor
+import android.widget.ImageView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
 import java.io.File
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.tools.Log
 
@@ -45,8 +42,6 @@ class PdfFileViewModelFactory(private val filePath: String) :
 class PdfFileViewModel(filePath: String) : ViewModel() {
     val operationInProgress = MutableLiveData<Boolean>()
 
-    val pages = MutableLiveData<ArrayList<PdfPageViewModel>>()
-
     private val pdfRenderer: PdfRenderer
 
     init {
@@ -55,54 +50,37 @@ class PdfFileViewModel(filePath: String) : ViewModel() {
         val input = ParcelFileDescriptor.open(File(filePath), ParcelFileDescriptor.MODE_READ_ONLY)
         pdfRenderer = PdfRenderer(input)
         Log.i("[PDF Viewer] ${pdfRenderer.pageCount} pages in file $filePath")
-
-        loadPdf()
     }
 
     override fun onCleared() {
-        for (page in pages.value.orEmpty()) {
-            page.destroy()
-        }
-        pages.value?.clear()
+        pdfRenderer.close()
         super.onCleared()
     }
 
-    private fun loadPdf() {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                try {
-                    operationInProgress.postValue(true)
-
-                    for (index in 0 until pdfRenderer.pageCount) {
-                        val page: PdfRenderer.Page = pdfRenderer.openPage(index)
-                        val width = if (coreContext.screenWidth <= coreContext.screenHeight) coreContext.screenWidth else coreContext.screenHeight
-                        val bm = Bitmap.createBitmap(
-                            width.toInt(),
-                            (width / page.width * page.height).toInt(),
-                            Bitmap.Config.ARGB_8888
-                        )
-                        page.render(bm, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
-                        page.close()
-
-                        val pageViewModel = PdfPageViewModel(bm)
-                        val list = arrayListOf<PdfPageViewModel>()
-                        list.addAll(pages.value.orEmpty())
-                        list.add(pageViewModel)
-                        pages.postValue(list)
-                    }
-
-                    operationInProgress.postValue(false)
-                } catch (e: Exception) {
-                    Log.e("[PDF Viewer] Exception: $e")
-                    operationInProgress.postValue(false)
-                }
-            }
-        }
+    fun getPagesCount(): Int {
+        return pdfRenderer.pageCount
     }
 
-    class PdfPageViewModel(val bitmap: Bitmap) {
-        fun destroy() {
-            bitmap.recycle()
+    fun loadPdfPageInto(index: Int, view: ImageView) {
+        try {
+            operationInProgress.value = true
+
+            val page: PdfRenderer.Page = pdfRenderer.openPage(index)
+            val width = if (coreContext.screenWidth <= coreContext.screenHeight) coreContext.screenWidth else coreContext.screenHeight
+            val bm = Bitmap.createBitmap(
+                width.toInt(),
+                (width / page.width * page.height).toInt(),
+                Bitmap.Config.ARGB_8888
+            )
+            page.render(bm, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+            page.close()
+
+            view.setImageBitmap(bm)
+
+            operationInProgress.value = false
+        } catch (e: Exception) {
+            Log.e("[PDF Viewer] Exception: $e")
+            operationInProgress.value = false
         }
     }
 }
