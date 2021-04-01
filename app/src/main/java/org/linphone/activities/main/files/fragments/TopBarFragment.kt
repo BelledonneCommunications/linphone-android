@@ -65,6 +65,16 @@ class TopBarFragment : GenericFragment<FileViewerTopBarFragmentBinding>() {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putString("FilePath", plainFilePath)
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        plainFilePath = savedInstanceState?.getString("FilePath") ?: plainFilePath
+    }
+
     override fun onDestroyView() {
         if (plainFilePath.isNotEmpty() && plainFilePath != content?.filePath.orEmpty()) {
             Log.i("[File Viewer] Destroying plain file path: $plainFilePath")
@@ -76,5 +86,6 @@ class TopBarFragment : GenericFragment<FileViewerTopBarFragmentBinding>() {
     fun setContent(c: Content) {
         Log.i("[File Viewer] Content file path is: ${c.filePath}")
         content = c
+        binding.fileName.text = c.name
     }
 }
