@@ -28,15 +28,15 @@ import org.linphone.activities.main.files.viewmodels.VideoFileViewModelFactory
 import org.linphone.activities.main.fragments.SecureFragment
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.tools.Log
-import org.linphone.databinding.VideoViewerFragmentBinding
+import org.linphone.databinding.FileVideoViewerFragmentBinding
 
-class VideoViewerFragment : SecureFragment<VideoViewerFragmentBinding>() {
+class VideoViewerFragment : SecureFragment<FileVideoViewerFragmentBinding>() {
     private lateinit var viewModel: VideoFileViewModel
     private lateinit var sharedViewModel: SharedMainViewModel
 
     private lateinit var mediaController: MediaController
 
-    override fun getLayoutId(): Int = R.layout.video_viewer_fragment
+    override fun getLayoutId(): Int = R.layout.file_video_viewer_fragment
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -61,10 +61,10 @@ class VideoViewerFragment : SecureFragment<VideoViewerFragmentBinding>() {
         )[VideoFileViewModel::class.java]
         binding.viewModel = viewModel
 
+        isSecure = arguments?.getBoolean("Secure") ?: false
+
         mediaController = MediaController(requireContext())
         initMediaController()
-
-        isSecure = arguments?.getBoolean("Secure") ?: false
     }
 
     override fun onResume() {
