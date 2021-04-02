@@ -20,23 +20,25 @@
 package org.linphone.activities.main.files.fragments
 
 import android.os.Bundle
+import android.view.KeyEvent
 import android.widget.MediaController
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import org.linphone.R
 import org.linphone.activities.main.files.viewmodels.VideoFileViewModel
 import org.linphone.activities.main.files.viewmodels.VideoFileViewModelFactory
 import org.linphone.activities.main.fragments.SecureFragment
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.tools.Log
-import org.linphone.databinding.VideoViewerFragmentBinding
+import org.linphone.databinding.FileVideoViewerFragmentBinding
 
-class VideoViewerFragment : SecureFragment<VideoViewerFragmentBinding>() {
+class VideoViewerFragment : SecureFragment<FileVideoViewerFragmentBinding>() {
     private lateinit var viewModel: VideoFileViewModel
     private lateinit var sharedViewModel: SharedMainViewModel
 
     private lateinit var mediaController: MediaController
 
-    override fun getLayoutId(): Int = R.layout.video_viewer_fragment
+    override fun getLayoutId(): Int = R.layout.file_video_viewer_fragment
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -61,10 +63,19 @@ class VideoViewerFragment : SecureFragment<VideoViewerFragmentBinding>() {
         )[VideoFileViewModel::class.java]
         binding.viewModel = viewModel
 
-        mediaController = MediaController(requireContext())
-        initMediaController()
-
         isSecure = arguments?.getBoolean("Secure") ?: false
+
+        mediaController = object : MediaController(requireContext()) {
+            // This is to prevent the first back key press to only hide to media controls
+            override fun dispatchKeyEvent(event: KeyEvent?): Boolean {
+                if (event?.keyCode == KeyEvent.KEYCODE_BACK) {
+                    findNavController().popBackStack()
+                    return true
+                }
+                return super.dispatchKeyEvent(event)
+            }
+        }
+        initMediaController()
     }
 
     override fun onResume() {
