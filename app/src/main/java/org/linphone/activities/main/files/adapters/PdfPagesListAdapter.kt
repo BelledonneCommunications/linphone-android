@@ -25,13 +25,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.activities.main.files.viewmodels.PdfFileViewModel
-import org.linphone.databinding.PdfViewerCellBinding
+import org.linphone.databinding.FilePdfViewerCellBinding
 
 class PdfPagesListAdapter(private val pdfViewModel: PdfFileViewModel) : RecyclerView.Adapter<PdfPagesListAdapter.PdfPageViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PdfPageViewHolder {
-        val binding: PdfViewerCellBinding = DataBindingUtil.inflate(
+        val binding: FilePdfViewerCellBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
-            R.layout.pdf_viewer_cell, parent, false
+            R.layout.file_pdf_viewer_cell, parent, false
         )
         return PdfPageViewHolder(binding)
     }
@@ -44,7 +44,7 @@ class PdfPagesListAdapter(private val pdfViewModel: PdfFileViewModel) : Recycler
         holder.bind(position)
     }
 
-    inner class PdfPageViewHolder(private val binding: PdfViewerCellBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class PdfPageViewHolder(private val binding: FilePdfViewerCellBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(index: Int) {
             with(binding) {
                 pdfViewModel.loadPdfPageInto(index, pdfImage)

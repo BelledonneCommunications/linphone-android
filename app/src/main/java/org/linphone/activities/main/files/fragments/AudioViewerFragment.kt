@@ -21,19 +21,24 @@ package org.linphone.activities.main.files.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.KeyEvent
+import android.widget.MediaController
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import org.linphone.R
-import org.linphone.activities.main.files.viewmodels.ImageFileViewModel
-import org.linphone.activities.main.files.viewmodels.ImageFileViewModelFactory
+import org.linphone.activities.main.files.viewmodels.AudioFileViewModel
+import org.linphone.activities.main.files.viewmodels.AudioFileViewModelFactory
 import org.linphone.activities.main.fragments.SecureFragment
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
-import org.linphone.databinding.FileImageViewerFragmentBinding
+import org.linphone.databinding.FileAudioViewerFragmentBinding
 
-class ImageViewerFragment : SecureFragment<FileImageViewerFragmentBinding>() {
-    private lateinit var viewModel: ImageFileViewModel
+class AudioViewerFragment : SecureFragment<FileAudioViewerFragmentBinding>() {
+    private lateinit var viewModel: AudioFileViewModel
     private lateinit var sharedViewModel: SharedMainViewModel
 
-    override fun getLayoutId(): Int = R.layout.file_image_viewer_fragment
+    private lateinit var mediaController: MediaController
+
+    override fun getLayoutId(): Int = R.layout.file_audio_viewer_fragment
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -55,10 +60,47 @@ class ImageViewerFragment : SecureFragment<FileImageViewerFragmentBinding>() {
 
         viewModel = ViewModelProvider(
             this,
-            ImageFileViewModelFactory(filePath)
-        )[ImageFileViewModel::class.java]
+            AudioFileViewModelFactory(filePath)
+        )[AudioFileViewModel::class.java]
         binding.viewModel = viewModel
 
         isSecure = arguments?.getBoolean("Secure") ?: false
+
+        mediaController = object : MediaController(requireContext()) {
+            // This hack is even if media controller is showed with timeout=0
+            // Once a control is touched, it will disappear 3 seconds later anyway
+            override fun show(timeout: Int) {
+                super.show(0)
+            }
+
+            // This is to prevent the first back key press to only hide to media controls
+            override fun dispatchKeyEvent(event: KeyEvent?): Boolean {
+                if (event?.keyCode == KeyEvent.KEYCODE_BACK) {
+                    findNavController().popBackStack()
+                    return true
+                }
+                return super.dispatchKeyEvent(event)
+            }
+        }
+        mediaController.setMediaPlayer(viewModel)
+
+        viewModel.mediaPlayer.setOnPreparedListener {
+            mediaController.setAnchorView(binding.anchor)
+            // This will make the controls visible forever
+            mediaController.show(0)
+        }
+    }
+
+    override fun onPause() {
+        mediaController.hide()
+        viewModel.mediaPlayer.pause()
+
+        super.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        mediaController.show(0)
     }
 }

@@ -27,14 +27,14 @@ import org.linphone.activities.main.files.viewmodels.PdfFileViewModel
 import org.linphone.activities.main.files.viewmodels.PdfFileViewModelFactory
 import org.linphone.activities.main.fragments.SecureFragment
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
-import org.linphone.databinding.PdfViewerFragmentBinding
+import org.linphone.databinding.FilePdfViewerFragmentBinding
 
-class PdfViewerFragment : SecureFragment<PdfViewerFragmentBinding>() {
+class PdfViewerFragment : SecureFragment<FilePdfViewerFragmentBinding>() {
     private lateinit var viewModel: PdfFileViewModel
     private lateinit var sharedViewModel: SharedMainViewModel
     private lateinit var adapter: PdfPagesListAdapter
 
-    override fun getLayoutId(): Int = R.layout.pdf_viewer_fragment
+    override fun getLayoutId(): Int = R.layout.file_pdf_viewer_fragment
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
