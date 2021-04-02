@@ -26,13 +26,13 @@ import org.linphone.activities.main.files.viewmodels.TextFileViewModel
 import org.linphone.activities.main.files.viewmodels.TextFileViewModelFactory
 import org.linphone.activities.main.fragments.SecureFragment
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
-import org.linphone.databinding.TextViewerFragmentBinding
+import org.linphone.databinding.FileTextViewerFragmentBinding
 
-class TextViewerFragment : SecureFragment<TextViewerFragmentBinding>() {
+class TextViewerFragment : SecureFragment<FileTextViewerFragmentBinding>() {
     private lateinit var viewModel: TextFileViewModel
     private lateinit var sharedViewModel: SharedMainViewModel
 
-    override fun getLayoutId(): Int = R.layout.text_viewer_fragment
+    override fun getLayoutId(): Int = R.layout.file_text_viewer_fragment
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

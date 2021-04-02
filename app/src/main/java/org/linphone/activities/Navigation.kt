@@ -387,7 +387,7 @@ internal fun DetailChatRoomFragment.navigateToVideoFileViewer(secure: Boolean) {
 internal fun DetailChatRoomFragment.navigateToAudioFileViewer(secure: Boolean) {
     val bundle = bundleOf("Secure" to secure)
     findMasterNavController().navigate(
-        R.id.action_global_videoViewerFragment,
+        R.id.action_global_audioViewerFragment,
         bundle,
         getRightToLeftAnimationNavOptions()
     )
