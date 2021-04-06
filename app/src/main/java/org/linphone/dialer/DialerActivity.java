@@ -38,6 +38,7 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.linphone.BuildConfig;
+import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.activities.MainActivity;
@@ -239,8 +240,10 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
             int currentTimeStamp = (int) System.currentTimeMillis();
             int interval = getResources().getInteger(R.integer.time_between_update_check); // 24h
             if (lastTimestamp == 0 || currentTimeStamp - lastTimestamp >= interval) {
-                LinphoneManager.getCore().checkForUpdate(BuildConfig.VERSION_NAME);
-                LinphonePreferences.instance().setLastCheckReleaseTimestamp(currentTimeStamp);
+                if (LinphoneContext.isReady()) {
+                    LinphoneManager.getCore().checkForUpdate(BuildConfig.VERSION_NAME);
+                    LinphonePreferences.instance().setLastCheckReleaseTimestamp(currentTimeStamp);
+                }
             }
         }
     }
@@ -328,7 +331,7 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("address", mAddress.getText().toString());
+        if (mAddress != null) outState.putSerializable("address", mAddress.getText().toString());
         outState.putSerializable("isTransfer", mIsTransfer);
     }
 
