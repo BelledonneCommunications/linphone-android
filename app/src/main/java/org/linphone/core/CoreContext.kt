@@ -37,9 +37,6 @@ import android.view.*
 import androidx.emoji.bundled.BundledEmojiCompatConfig
 import androidx.emoji.text.EmojiCompat
 import androidx.lifecycle.MutableLiveData
-import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKey
-import androidx.security.crypto.MasterKey.Builder
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import java.io.File
 import java.math.BigInteger
@@ -292,7 +289,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
         }
 
         if (corePreferences.vfsEnabled) {
-            setupVFS()
+            activateVFS()
         }
         core = Factory.instance().createCoreWithConfig(coreConfig, context)
 
@@ -649,7 +646,6 @@ class CoreContext(val context: Context, coreConfig: Config) {
         private const val ANDROID_KEY_STORE = "AndroidKeyStore"
         private const val ALIAS = "vfs"
         private const val LINPHONE_VFS_ENCRYPTION_AES256GCM128_SHA256 = 2
-        private const val VFS_FILE = "vfs.prefs"
         private const val VFS_IV = "vfsiv"
         private const val VFS_KEY = "vfskey"
     }
@@ -734,24 +730,14 @@ class CoreContext(val context: Context, coreConfig: Config) {
         )
     }
 
-    fun setupVFS() {
+    fun activateVFS() {
         try {
-            Log.i("[Context] Enabling VFS")
+            Log.i("[Context] Activating VFS")
 
-            val masterKey: MasterKey = Builder(
-                context,
-                MasterKey.DEFAULT_MASTER_KEY_ALIAS
-            ).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build()
-            val sharedPreferences: SharedPreferences = EncryptedSharedPreferences.create(
-                context, VFS_FILE, masterKey,
-                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-            )
-
-            if (sharedPreferences.getString(VFS_IV, null) == null) {
+            if (corePreferences.encryptedSharedPreferences.getString(VFS_IV, null) == null) {
                 generateSecretKey()
                    generateToken()?.let { encryptToken(it) }?.let { data ->
-                       sharedPreferences
+                       corePreferences.encryptedSharedPreferences
                            .edit()
                            .putString(VFS_IV, data.first)
                            .putString(VFS_KEY, data.second)
@@ -760,13 +746,13 @@ class CoreContext(val context: Context, coreConfig: Config) {
             }
             Factory.instance().setVfsEncryption(
                 LINPHONE_VFS_ENCRYPTION_AES256GCM128_SHA256,
-                getVfsKey(sharedPreferences).toByteArray().copyOfRange(0, 32),
+                getVfsKey(corePreferences.encryptedSharedPreferences).toByteArray().copyOfRange(0, 32),
                 32
             )
 
-            Log.i("[Context] VFS enabled")
+            Log.i("[Context] VFS activated with key ${getVfsKey(corePreferences.encryptedSharedPreferences)}")
         } catch (e: Exception) {
-            Log.f("[Context] Unable to setup VFS encryption: $e")
+            Log.f("[Context] Unable to activate VFS encryption: $e")
         }
     }
 }
