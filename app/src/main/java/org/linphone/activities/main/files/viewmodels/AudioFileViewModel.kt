@@ -25,17 +25,18 @@ import android.widget.MediaController
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import java.lang.IllegalStateException
+import org.linphone.core.Content
 
-class AudioFileViewModelFactory(private val filePath: String) :
+class AudioFileViewModelFactory(private val content: Content) :
     ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return AudioFileViewModel(filePath) as T
+        return AudioFileViewModel(content) as T
     }
 }
 
-class AudioFileViewModel(val filePath: String) : ViewModel(), MediaController.MediaPlayerControl {
+class AudioFileViewModel(content: Content) : FileViewerViewModel(content), MediaController.MediaPlayerControl {
     val mediaPlayer = MediaPlayer()
 
     init {

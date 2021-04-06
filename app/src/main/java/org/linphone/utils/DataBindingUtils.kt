@@ -36,6 +36,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.Guideline
 import androidx.databinding.*
 import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
@@ -320,7 +321,15 @@ fun loadAvatarWithGlideFallback(imageView: ImageView, path: String?) {
 @BindingAdapter("glidePath")
 fun loadImageWithGlide(imageView: ImageView, path: String) {
     if (path.isNotEmpty() && FileUtils.isExtensionImage(path)) {
-        GlideApp.with(imageView).load(path).into(imageView)
+        if (corePreferences.vfsEnabled) {
+            GlideApp.with(imageView)
+                .load(path)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .into(imageView)
+        } else {
+            GlideApp.with(imageView).load(path).into(imageView)
+        }
     } else {
         Log.w("[Data Binding] [Glide] Can't load $path")
     }

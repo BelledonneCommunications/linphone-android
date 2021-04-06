@@ -581,6 +581,8 @@
     <string name="advanced_settings_go_to_battery_optimization_settings">Battery optimization settings</string>
     <string name="advanced_settings_go_to_power_manager_settings">Power manager settings</string>
     <string name="advanced_settings_go_to_android_app_settings">Android app settings</string>
+    <string name="advanced_settings_vfs_title">Encrypt everything</string>
+    <string name="advanced_settings_vfs_summary">Once enabled it can\'t be disabled!</string>
 
     <!-- Tunnel settings -->
     <string name="tunnel_settings_hostname_url_title">Hostname</string>
