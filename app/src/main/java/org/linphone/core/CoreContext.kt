@@ -21,19 +21,36 @@ package org.linphone.core
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.PixelFormat
 import android.media.AudioManager
 import android.os.Handler
 import android.os.Looper
 import android.os.Vibrator
+import android.security.keystore.KeyGenParameterSpec
+import android.security.keystore.KeyProperties
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
+import android.util.Base64
+import android.util.Pair
 import android.view.*
 import androidx.emoji.bundled.BundledEmojiCompatConfig
 import androidx.emoji.text.EmojiCompat
 import androidx.lifecycle.MutableLiveData
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
+import androidx.security.crypto.MasterKey.Builder
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import java.io.File
+import java.math.BigInteger
+import java.nio.charset.StandardCharsets
+import java.security.KeyStore
+import java.security.MessageDigest
+import java.util.*
+import javax.crypto.Cipher
+import javax.crypto.KeyGenerator
+import javax.crypto.SecretKey
+import javax.crypto.spec.GCMParameterSpec
 import kotlin.math.abs
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -197,7 +214,9 @@ class CoreContext(val context: Context, coreConfig: Config) {
 
                 if (corePreferences.routeAudioToSpeakerWhenVideoIsEnabled && call.currentParams.videoEnabled()) {
                     // Do not turn speaker on when video is enabled if headset or bluetooth is used
-                    if (!AudioRouteUtils.isHeadsetAudioRouteAvailable() && !AudioRouteUtils.isBluetoothAudioRouteCurrentlyUsed(call)) {
+                    if (!AudioRouteUtils.isHeadsetAudioRouteAvailable() && !AudioRouteUtils.isBluetoothAudioRouteCurrentlyUsed(
+                            call
+                        )) {
                         Log.i("[Context] Video enabled and no wired headset not bluetooth in use, routing audio to speaker")
                         AudioRouteUtils.routeAudioToSpeaker(call)
                     }
@@ -261,6 +280,9 @@ class CoreContext(val context: Context, coreConfig: Config) {
             Log.i("[Context] Crashlytics enabled, register logging service listener")
         }
 
+        if (corePreferences.vfsEnabled) {
+            setupVFS(context)
+        }
         core = Factory.instance().createCoreWithConfig(coreConfig, context)
 
         stopped = false
@@ -607,5 +629,123 @@ class CoreContext(val context: Context, coreConfig: Config) {
         // This flag is required to start an Activity from a Service context
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
         context.startActivity(intent)
+    }
+
+    /* VFS */
+
+    companion object {
+        private val TRANSFORMATION = "AES/GCM/NoPadding"
+        private val ANDROID_KEY_STORE = "AndroidKeyStore"
+        private val ALIAS = "vfs"
+        private val LINPHONE_VFS_ENCRYPTION_AES256GCM128_SHA256 = 2
+    }
+
+    @Throws(java.lang.Exception::class)
+    private fun generateSecretKey() {
+        val keyGenerator: KeyGenerator
+        keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEY_STORE)
+        keyGenerator.init(
+            KeyGenParameterSpec.Builder(
+                ALIAS,
+                KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
+            )
+                .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+                .build()
+        )
+        keyGenerator.generateKey()
+    }
+
+    @Throws(java.lang.Exception::class)
+    private fun getSecretKey(): SecretKey? {
+        val ks = KeyStore.getInstance(ANDROID_KEY_STORE)
+        ks.load(null)
+        val entry = ks.getEntry(ALIAS, null) as KeyStore.SecretKeyEntry
+        return entry.secretKey
+    }
+
+    @Throws(java.lang.Exception::class)
+    fun generateToken(): String? {
+        return sha512(UUID.randomUUID().toString())
+    }
+
+    @Throws(java.lang.Exception::class)
+    private fun encryptData(textToEncrypt: String): Pair<ByteArray, ByteArray> {
+        val cipher = Cipher.getInstance(TRANSFORMATION)
+        cipher.init(Cipher.ENCRYPT_MODE, getSecretKey())
+        val iv = cipher.iv
+        return Pair<ByteArray, ByteArray>(
+            iv,
+            cipher.doFinal(textToEncrypt.toByteArray(StandardCharsets.UTF_8))
+        )
+    }
+
+    @Throws(java.lang.Exception::class)
+    private fun decryptData(encrypted: String?, encryptionIv: ByteArray): String {
+        val cipher = Cipher.getInstance(TRANSFORMATION)
+        val spec = GCMParameterSpec(128, encryptionIv)
+        cipher.init(Cipher.DECRYPT_MODE, getSecretKey(), spec)
+        val encryptedData = Base64.decode(encrypted, Base64.DEFAULT)
+        return String(cipher.doFinal(encryptedData), StandardCharsets.UTF_8)
+    }
+
+    @Throws(java.lang.Exception::class)
+    fun encryptToken(string_to_encrypt: String): Pair<String?, String?>? {
+        val encryptedData = encryptData(string_to_encrypt)
+        return Pair<String?, String?>(
+            Base64.encodeToString(encryptedData.first, Base64.DEFAULT),
+            Base64.encodeToString(encryptedData.second, Base64.DEFAULT)
+        )
+    }
+
+    @Throws(java.lang.Exception::class)
+    fun sha512(input: String): String? {
+        val md = MessageDigest.getInstance("SHA-512")
+        val messageDigest = md.digest(input.toByteArray())
+        val no = BigInteger(1, messageDigest)
+        var hashtext = no.toString(16)
+        while (hashtext.length < 32) {
+            hashtext = "0$hashtext"
+        }
+        return hashtext
+    }
+
+    @Throws(java.lang.Exception::class)
+    fun getVfsKey(sharedPreferences: SharedPreferences): String? {
+        val keyStore = KeyStore.getInstance(ANDROID_KEY_STORE)
+        keyStore.load(null)
+        return decryptData(
+            sharedPreferences.getString("vfskey", null),
+            Base64.decode(sharedPreferences.getString("vfsiv", null), Base64.DEFAULT)
+        )
+    }
+
+    private fun setupVFS(c: Context) {
+        try {
+            val masterKey: MasterKey = Builder(
+                c,
+                MasterKey.DEFAULT_MASTER_KEY_ALIAS
+            ).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build()
+            val sharedPreferences: SharedPreferences = EncryptedSharedPreferences.create(
+                c, "vfs.prefs", masterKey,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            )
+            if (sharedPreferences.getString("vfsiv", null) == null) {
+                generateSecretKey()
+               generateToken()?.let { encryptToken(it) }?.let { data ->
+                   sharedPreferences.edit().putString("vfsiv", data.first)
+                       .putString("vfskey", data.second).commit()
+                }
+            }
+            Factory.instance().setVfsEncryption(
+                LINPHONE_VFS_ENCRYPTION_AES256GCM128_SHA256,
+                Arrays.copyOfRange(getVfsKey(sharedPreferences)?.toByteArray(), 0, 32),
+                32
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw RuntimeException("Unable to setup VFS encryption")
+        }
     }
 }
