@@ -20,6 +20,9 @@
 package org.linphone.core
 
 import android.content.Context
+import android.content.SharedPreferences
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -37,14 +40,30 @@ class CorePreferences constructor(private val context: Context) {
 
     /* VFS encryption */
 
+    companion object {
+        private const val encryptedSharedPreferencesFile = "encrypted.pref"
+    }
+
+    val encryptedSharedPreferences: SharedPreferences by lazy {
+        val masterKey: MasterKey = MasterKey.Builder(
+            context,
+            MasterKey.DEFAULT_MASTER_KEY_ALIAS
+        ).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build()
+        EncryptedSharedPreferences.create(
+            context, encryptedSharedPreferencesFile, masterKey,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
+    }
+
     var vfsEnabled: Boolean
-        get() = config.getBool("app", "vfs", false)
+        get() = encryptedSharedPreferences.getBoolean("vfs_enabled", false)
         set(value) {
-            if (!value && config.getBool("app", "vfs", false)) {
+            if (!value && encryptedSharedPreferences.getBoolean("vfs_enabled", false)) {
                 Log.w("[VFS] It is not possible to disable VFS once it has been enabled")
                 return
             }
-            config.setBool("app", "vfs", value)
+            encryptedSharedPreferences.edit().putBoolean("vfs_enabled", value).apply()
         }
 
     /* App settings */

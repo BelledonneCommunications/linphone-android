@@ -107,7 +107,7 @@ class AdvancedSettingsViewModel : GenericSettingsViewModel() {
     val vfsListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
             prefs.vfsEnabled = newValue
-            if (newValue) coreContext.setupVFS()
+            if (newValue) coreContext.activateVFS()
         }
     }
     val vfs = MutableLiveData<Boolean>()
