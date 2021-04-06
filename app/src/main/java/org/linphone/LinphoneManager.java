@@ -483,8 +483,12 @@ public class LinphoneManager implements SensorEventListener {
     private void changeStatusToOffline() {
         if (mCore != null) {
             PresenceModel model = mCore.getPresenceModel();
-            model.setBasicStatus(PresenceBasicStatus.Closed);
-            mCore.setPresenceModel(model);
+            if (model != null) {
+                model.setBasicStatus(PresenceBasicStatus.Closed);
+                mCore.setPresenceModel(model);
+            } else {
+                Log.e("[Manager] Presence model is null!");
+            }
         }
     }
 

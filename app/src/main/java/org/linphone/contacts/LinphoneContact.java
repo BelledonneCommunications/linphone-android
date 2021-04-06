@@ -394,7 +394,11 @@ public class LinphoneContact extends AndroidContact
             mFriend.done();
         }
         if (created) {
-            core.getDefaultFriendList().addFriend(mFriend);
+            if (core.getDefaultFriendList() != null) {
+                core.getDefaultFriendList().addFriend(mFriend);
+            } else {
+                Log.e("[Contact] Default friend list not found in Core!");
+            }
         }
 
         if (!ContactsManager.getInstance().hasReadContactsAccess()) {

@@ -24,6 +24,7 @@ import java.io.Serializable;
 import org.linphone.core.Address;
 import org.linphone.core.Factory;
 import org.linphone.core.FriendCapability;
+import org.linphone.core.tools.Log;
 
 public class ContactAddress implements Serializable {
     private LinphoneContact mContact;
@@ -76,7 +77,14 @@ public class ContactAddress implements Serializable {
                                     ? mPhoneNumber
                                     : mAddress);
         }
-        Address addr = Factory.instance().createAddress(presence != null ? presence : mAddress);
+
+        presence = presence != null ? presence : mAddress;
+        Address addr = Factory.instance().createAddress(presence);
+        if (addr == null) {
+            Log.e("[Contact Address] Failed to parse: ", presence);
+            return null;
+        }
+
         // Remove the user=phone URI param if existing, it will break everything otherwise
         if (addr.hasUriParam("user")) {
             addr.removeUriParam("user");
