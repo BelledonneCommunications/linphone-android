@@ -41,7 +41,7 @@ class CorePreferences constructor(private val context: Context) {
         get() = config.getBool("app", "vfs", false)
         set(value) {
             if (!value && config.getBool("app", "vfs", false)) {
-                Log.w("[VFS] It is not possible to deactivate VFS after it has been activated")
+                Log.w("[VFS] It is not possible to disable VFS once it has been enabled")
                 return
             }
             config.setBool("app", "vfs", value)
@@ -141,7 +141,7 @@ class CorePreferences constructor(private val context: Context) {
         }
 
     var useInAppFileViewerForNonEncryptedFiles: Boolean
-        get() = config.getBool("app", "use_in_app_file_viewer_for_non_encrypted_files", true)
+        get() = config.getBool("app", "use_in_app_file_viewer_for_non_encrypted_files", false)
         set(value) {
             config.setBool("app", "use_in_app_file_viewer_for_non_encrypted_files", value)
         }
