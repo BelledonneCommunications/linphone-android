@@ -35,6 +35,18 @@ class CorePreferences constructor(private val context: Context) {
             _config = value
         }
 
+    /* VFS encryption */
+
+    var vfsEnabled: Boolean
+        get() = config.getBool("app", "vfs", false)
+        set(value) {
+            if (!value && config.getBool("app", "vfs", false)) {
+                Log.w("[VFS] It is not possible to deactivate VFS after it has been activated")
+                return
+            }
+            config.setBool("app", "vfs", value)
+        }
+
     /* App settings */
 
     var debugLogs: Boolean
