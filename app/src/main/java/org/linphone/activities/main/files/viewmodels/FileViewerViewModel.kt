@@ -20,16 +20,24 @@
 package org.linphone.activities.main.files.viewmodels
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import org.linphone.core.Content
+import org.linphone.core.tools.Log
+import org.linphone.utils.FileUtils
 
-class ImageFileViewModelFactory(private val content: Content) :
-    ViewModelProvider.NewInstanceFactory() {
+open class FileViewerViewModel(val content: Content) : ViewModel() {
+    val filePath: String
+    private val deleteAfterUse: Boolean = content.isFileEncrypted
 
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return ImageFileViewModel(content) as T
+    init {
+        filePath = if (deleteAfterUse) content.plainFilePath else content.filePath.orEmpty()
+    }
+
+    override fun onCleared() {
+        if (deleteAfterUse) {
+            Log.i("[File Viewer] Deleting temporary plain file: $filePath")
+            FileUtils.deleteFile(filePath)
+        }
+
+        super.onCleared()
     }
 }
-
-class ImageFileViewModel(content: Content) : FileViewerViewModel(content)

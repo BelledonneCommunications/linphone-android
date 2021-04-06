@@ -48,7 +48,7 @@ class TopBarFragment : GenericFragment<FileViewerTopBarFragmentBinding>() {
             if (content != null) {
                 val filePath = content?.plainFilePath.orEmpty()
                 plainFilePath = if (filePath.isEmpty()) content?.filePath.orEmpty() else filePath
-                Log.i("[File Viewer] Plain file path is: $filePath")
+                Log.i("[File Viewer] Plain file path is: $plainFilePath")
                 if (plainFilePath.isNotEmpty()) {
                     if (!FileUtils.openFileInThirdPartyApp(requireActivity(), plainFilePath)) {
                         (requireActivity() as SnackBarActivity).showSnackBar(R.string.chat_message_no_app_found_to_handle_file_mime_type)
