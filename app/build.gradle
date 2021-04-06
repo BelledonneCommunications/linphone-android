@@ -253,6 +253,8 @@ dependencies {
 
     // Only enable leak canary prior to release
     //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
+    implementation "androidx.security:security-crypto:1.1.0-alpha03"
+
 }
 
 if (firebaseEnabled()) {
