@@ -121,6 +121,17 @@ class CoreContext(val context: Context, coreConfig: Config) {
             Log.i("[Context] Global state changed [$state]")
             if (state == GlobalState.On) {
                 contactsManager.fetchContactsAsync()
+            }
+        }
+
+        override fun onAccountRegistrationStateChanged(
+            core: Core,
+            account: Account,
+            state: RegistrationState?,
+            message: String
+        ) {
+            Log.i("[Context] Account [${account.params.identityAddress?.asStringUriOnly()}] registration state changed [$state]")
+            if (state == RegistrationState.Ok && account == core.defaultAccount) {
                 notificationsManager.stopForegroundNotificationIfPossible()
             }
         }
