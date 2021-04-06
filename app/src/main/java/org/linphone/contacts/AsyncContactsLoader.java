@@ -29,6 +29,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.compatibility.Compatibility;
@@ -118,6 +119,8 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
                 }
             }
         }
+
+        if (!LinphoneContext.isReady()) return data;
 
         if (ContactsManager.getInstance().hasReadContactsAccess()) {
             String selection = null;
@@ -255,6 +258,8 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
 
     @Override
     protected void onPostExecute(AsyncContactsData data) {
+        if (!LinphoneContext.isReady()) return;
+
         Log.i(
                 "[Contacts Manager] "
                         + data.contacts.size()

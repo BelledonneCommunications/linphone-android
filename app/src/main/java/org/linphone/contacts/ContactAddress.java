@@ -77,6 +77,8 @@ public class ContactAddress implements Serializable {
                                     : mAddress);
         }
         Address addr = Factory.instance().createAddress(presence != null ? presence : mAddress);
+        if (addr == null) return null;
+
         // Remove the user=phone URI param if existing, it will break everything otherwise
         if (addr.hasUriParam("user")) {
             addr.removeUriParam("user");
