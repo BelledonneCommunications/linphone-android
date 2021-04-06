@@ -52,15 +52,13 @@ class AudioViewerFragment : SecureFragment<FileAudioViewerFragmentBinding>() {
 
         val content = sharedViewModel.contentToOpen.value
         content ?: return
-        val filePath = content.filePath
-        filePath ?: return
 
         (childFragmentManager.findFragmentById(R.id.top_bar_fragment) as? TopBarFragment)
             ?.setContent(content)
 
         viewModel = ViewModelProvider(
             this,
-            AudioFileViewModelFactory(filePath)
+            AudioFileViewModelFactory(content)
         )[AudioFileViewModel::class.java]
         binding.viewModel = viewModel
 

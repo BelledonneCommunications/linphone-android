@@ -126,6 +126,14 @@
                     linphone:defaultValue="@{viewModel.remoteProvisioningUrl}"
                     linphone:inputType="@{InputType.TYPE_TEXT_VARIATION_URI}"/>
 
+                <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/advanced_settings_vfs_title}"
+                    linphone:subtitle="@{@string/advanced_settings_vfs_summary}"
+                    linphone:listener="@{viewModel.vfsListener}"
+                    linphone:checked="@={viewModel.vfs}"
+                    linphone:enabled="@{!viewModel.vfs}"/>
+
                 <TextView
                     style="@style/settings_category_font"
                     android:id="@+id/pref_video_codecs_header"

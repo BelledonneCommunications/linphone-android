@@ -292,7 +292,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
         }
 
         if (corePreferences.vfsEnabled) {
-            setupVFS(context)
+            setupVFS()
         }
         core = Factory.instance().createCoreWithConfig(coreConfig, context)
 
@@ -645,16 +645,19 @@ class CoreContext(val context: Context, coreConfig: Config) {
     /* VFS */
 
     companion object {
-        private val TRANSFORMATION = "AES/GCM/NoPadding"
-        private val ANDROID_KEY_STORE = "AndroidKeyStore"
-        private val ALIAS = "vfs"
-        private val LINPHONE_VFS_ENCRYPTION_AES256GCM128_SHA256 = 2
+        private const val TRANSFORMATION = "AES/GCM/NoPadding"
+        private const val ANDROID_KEY_STORE = "AndroidKeyStore"
+        private const val ALIAS = "vfs"
+        private const val LINPHONE_VFS_ENCRYPTION_AES256GCM128_SHA256 = 2
+        private const val VFS_FILE = "vfs.prefs"
+        private const val VFS_IV = "vfsiv"
+        private const val VFS_KEY = "vfskey"
     }
 
     @Throws(java.lang.Exception::class)
     private fun generateSecretKey() {
-        val keyGenerator: KeyGenerator
-        keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEY_STORE)
+        val keyGenerator =
+            KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEY_STORE)
         keyGenerator.init(
             KeyGenParameterSpec.Builder(
                 ALIAS,
@@ -701,7 +704,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
     }
 
     @Throws(java.lang.Exception::class)
-    fun encryptToken(string_to_encrypt: String): Pair<String?, String?>? {
+    fun encryptToken(string_to_encrypt: String): Pair<String?, String?> {
         val encryptedData = encryptData(string_to_encrypt)
         return Pair<String?, String?>(
             Base64.encodeToString(encryptedData.first, Base64.DEFAULT),
@@ -710,7 +713,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
     }
 
     @Throws(java.lang.Exception::class)
-    fun sha512(input: String): String? {
+    fun sha512(input: String): String {
         val md = MessageDigest.getInstance("SHA-512")
         val messageDigest = md.digest(input.toByteArray())
         val no = BigInteger(1, messageDigest)
@@ -722,41 +725,48 @@ class CoreContext(val context: Context, coreConfig: Config) {
     }
 
     @Throws(java.lang.Exception::class)
-    fun getVfsKey(sharedPreferences: SharedPreferences): String? {
+    fun getVfsKey(sharedPreferences: SharedPreferences): String {
         val keyStore = KeyStore.getInstance(ANDROID_KEY_STORE)
         keyStore.load(null)
         return decryptData(
-            sharedPreferences.getString("vfskey", null),
-            Base64.decode(sharedPreferences.getString("vfsiv", null), Base64.DEFAULT)
+            sharedPreferences.getString(VFS_KEY, null),
+            Base64.decode(sharedPreferences.getString(VFS_IV, null), Base64.DEFAULT)
         )
     }
 
-    private fun setupVFS(c: Context) {
+    fun setupVFS() {
         try {
+            Log.i("[Context] Enabling VFS")
+
             val masterKey: MasterKey = Builder(
-                c,
+                context,
                 MasterKey.DEFAULT_MASTER_KEY_ALIAS
             ).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build()
             val sharedPreferences: SharedPreferences = EncryptedSharedPreferences.create(
-                c, "vfs.prefs", masterKey,
+                context, VFS_FILE, masterKey,
                 EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
                 EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
             )
-            if (sharedPreferences.getString("vfsiv", null) == null) {
+
+            if (sharedPreferences.getString(VFS_IV, null) == null) {
                 generateSecretKey()
-               generateToken()?.let { encryptToken(it) }?.let { data ->
-                   sharedPreferences.edit().putString("vfsiv", data.first)
-                       .putString("vfskey", data.second).commit()
+                   generateToken()?.let { encryptToken(it) }?.let { data ->
+                       sharedPreferences
+                           .edit()
+                           .putString(VFS_IV, data.first)
+                           .putString(VFS_KEY, data.second)
+                           .commit()
                 }
             }
             Factory.instance().setVfsEncryption(
                 LINPHONE_VFS_ENCRYPTION_AES256GCM128_SHA256,
-                Arrays.copyOfRange(getVfsKey(sharedPreferences)?.toByteArray(), 0, 32),
+                getVfsKey(sharedPreferences).toByteArray().copyOfRange(0, 32),
                 32
             )
+
+            Log.i("[Context] VFS enabled")
         } catch (e: Exception) {
-            e.printStackTrace()
-            throw RuntimeException("Unable to setup VFS encryption")
+            Log.f("[Context] Unable to setup VFS encryption: $e")
         }
     }
 }

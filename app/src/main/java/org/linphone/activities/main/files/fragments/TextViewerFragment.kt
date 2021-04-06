@@ -45,15 +45,13 @@ class TextViewerFragment : SecureFragment<FileTextViewerFragmentBinding>() {
 
         val content = sharedViewModel.contentToOpen.value
         content ?: return
-        val filePath = content.filePath
-        filePath ?: return
 
         (childFragmentManager.findFragmentById(R.id.top_bar_fragment) as? TopBarFragment)
             ?.setContent(content)
 
         viewModel = ViewModelProvider(
             this,
-            TextFileViewModelFactory(filePath)
+            TextFileViewModelFactory(content)
         )[TextFileViewModel::class.java]
         binding.viewModel = viewModel
 

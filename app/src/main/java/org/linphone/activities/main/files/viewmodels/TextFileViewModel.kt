@@ -29,18 +29,19 @@ import java.lang.StringBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.linphone.core.Content
 import org.linphone.core.tools.Log
 
-class TextFileViewModelFactory(private val filePath: String) :
+class TextFileViewModelFactory(private val content: Content) :
     ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return TextFileViewModel(filePath) as T
+        return TextFileViewModel(content) as T
     }
 }
 
-class TextFileViewModel(filePath: String) : ViewModel() {
+class TextFileViewModel(content: Content) : FileViewerViewModel(content) {
     val operationInProgress = MutableLiveData<Boolean>()
 
     val text = MutableLiveData<String>()
@@ -48,18 +49,18 @@ class TextFileViewModel(filePath: String) : ViewModel() {
     init {
         operationInProgress.value = false
 
-        openFile(filePath)
+        openFile()
     }
 
-    private fun openFile(filePath: String) {
+    private fun openFile() {
+        operationInProgress.value = true
+
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                operationInProgress.postValue(true)
-
                 try {
                     val br = BufferedReader(FileReader(filePath))
                     var line: String?
-                    var textBuilder = StringBuilder()
+                    val textBuilder = StringBuilder()
                     while (br.readLine().also { line = it } != null) {
                         textBuilder.append(line)
                         textBuilder.append('\n')

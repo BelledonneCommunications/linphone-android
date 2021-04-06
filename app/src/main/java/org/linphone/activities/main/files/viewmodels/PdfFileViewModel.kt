@@ -28,18 +28,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import java.io.File
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.core.Content
 import org.linphone.core.tools.Log
 
-class PdfFileViewModelFactory(private val filePath: String) :
+class PdfFileViewModelFactory(private val content: Content) :
     ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return PdfFileViewModel(filePath) as T
+        return PdfFileViewModel(content) as T
     }
 }
 
-class PdfFileViewModel(filePath: String) : ViewModel() {
+class PdfFileViewModel(content: Content) : FileViewerViewModel(content) {
     val operationInProgress = MutableLiveData<Boolean>()
 
     private val pdfRenderer: PdfRenderer
