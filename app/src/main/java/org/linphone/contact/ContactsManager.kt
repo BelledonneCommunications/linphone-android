@@ -84,6 +84,8 @@ class ContactsManager(private val context: Context) {
         magicSearch
     }
 
+    var latestContactFetch: String = ""
+
     private val contactsUpdatedListeners = ArrayList<ContactsUpdatedListener>()
 
     private var loadContactsTask: AsyncContactsLoader? = null
@@ -138,6 +140,8 @@ class ContactsManager(private val context: Context) {
 
     @Synchronized
     fun fetchContactsAsync() {
+        latestContactFetch = System.currentTimeMillis().toString()
+
         if (loadContactsTask != null) {
             Log.w("[Contacts Manager] Cancelling existing async task")
             loadContactsTask?.cancel(true)
