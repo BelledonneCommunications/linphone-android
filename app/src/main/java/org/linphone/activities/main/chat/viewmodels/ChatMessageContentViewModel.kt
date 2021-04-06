@@ -46,6 +46,8 @@ class ChatMessageContentViewModel(
 
     val fileName = MutableLiveData<String>()
 
+    val filePath = MutableLiveData<String>()
+
     val fileSize = MutableLiveData<String>()
 
     val downloadable = MutableLiveData<Boolean>()
@@ -96,19 +98,20 @@ class ChatMessageContentViewModel(
         fileSize.value = AppUtils.bytesToDisplayableSize(content.fileSize.toLong())
 
         if (content.isFile || (content.isFileTransfer && chatMessage.isOutgoing)) {
-            val filePath = content.filePath ?: ""
-            downloadable.value = filePath.isEmpty()
+            val path = if (content.isFileEncrypted) content.plainFilePath else content.filePath ?: ""
+            downloadable.value = content.filePath.orEmpty().isEmpty()
 
-            if (filePath.isNotEmpty()) {
-                Log.i("[Content] Found displayable content: $filePath")
-                isImage.value = FileUtils.isExtensionImage(filePath)
-                isVideo.value = FileUtils.isExtensionVideo(filePath)
-                isAudio.value = FileUtils.isExtensionAudio(filePath)
+            if (path.isNotEmpty()) {
+                Log.i("[Content] Found displayable content: $path")
+                filePath.value = path
+                isImage.value = FileUtils.isExtensionImage(path)
+                isVideo.value = FileUtils.isExtensionVideo(path)
+                isAudio.value = FileUtils.isExtensionAudio(path)
 
                 if (isVideo.value == true) {
                     viewModelScope.launch {
                         withContext(Dispatchers.IO) {
-                            videoPreview.postValue(ImageUtils.getVideoPreview(filePath))
+                            videoPreview.postValue(ImageUtils.getVideoPreview(path))
                         }
                     }
                 }
@@ -128,6 +131,17 @@ class ChatMessageContentViewModel(
         downloadEnabled.value = !chatMessage.isFileTransferInProgress
         downloadProgress.value = 0
         chatMessage.addListener(chatMessageListener)
+    }
+
+    override fun onCleared() {
+        val path = filePath.value.orEmpty()
+        if (content.isFileEncrypted && path.isNotEmpty()) {
+            Log.i("[Content] Deleting file used for preview: $path")
+            FileUtils.deleteFile(path)
+            filePath.value = ""
+        }
+
+        super.onCleared()
     }
 
     fun download() {

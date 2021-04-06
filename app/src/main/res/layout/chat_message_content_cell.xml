@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:maxHeight="@{data.alone ? @dimen/chat_message_bubble_image_height_big : @dimen/chat_message_bubble_image_height_small}"
             android:layout_margin="5dp"
-            app:glidePath="@{data.content.filePath}"
+            app:glidePath="@{data.filePath}"
             android:visibility="@{data.image ? View.VISIBLE : View.GONE}"
             android:adjustViewBounds="true" />
 

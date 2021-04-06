@@ -43,6 +43,8 @@ import org.linphone.core.tools.Log
 
 class FileUtils {
     companion object {
+        private const val VFS_PLAIN_FILE_EXTENSION = ".bctbx_evfs_plain"
+
         fun getNameFromFilePath(filePath: String): String {
             var name = filePath
             val i = filePath.lastIndexOf('/')
@@ -53,13 +55,19 @@ class FileUtils {
         }
 
         fun getExtensionFromFileName(fileName: String): String {
-            var extension = MimeTypeMap.getFileExtensionFromUrl(fileName)
-            if (extension == null || extension.isEmpty()) {
-                val i = fileName.lastIndexOf('.')
+            val realFileName = if (fileName.endsWith(VFS_PLAIN_FILE_EXTENSION)) {
+                fileName.substring(0, fileName.length - VFS_PLAIN_FILE_EXTENSION.length)
+            } else fileName
+
+            var extension = MimeTypeMap.getFileExtensionFromUrl(realFileName)
+            if (extension.isNullOrEmpty()) {
+                val i = realFileName.lastIndexOf('.')
                 if (i > 0) {
-                    extension = fileName.substring(i + 1)
+                    extension = realFileName.substring(i + 1)
                 }
             }
+
+            Log.i("[File Utils] Found extension [$extension] for file [$realFileName]")
             return extension
         }
 
