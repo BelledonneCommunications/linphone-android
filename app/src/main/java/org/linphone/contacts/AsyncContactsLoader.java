@@ -29,6 +29,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import org.linphone.LinphoneContext;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.compatibility.Compatibility;
@@ -119,7 +120,7 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
             }
         }
 
-        if (ContactsManager.getInstance().hasReadContactsAccess()) {
+        if (LinphoneContext.isReady() && ContactsManager.getInstance().hasReadContactsAccess()) {
             String selection = null;
             if (mContext.getResources().getBoolean(R.bool.fetch_contacts_from_default_directory)) {
                 Log.i("[Contacts Manager] Only fetching contacts in default directory");
