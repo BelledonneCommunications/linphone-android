@@ -311,7 +311,7 @@ public class ContactsManager extends ContentObserver
                             .build(),
                     values);
             Log.i("[Contacts Manager] Contacts account made visible");
-        } catch (RemoteException e) {
+        } catch (RemoteException | SecurityException e) {
             Log.e("[Contacts Manager] Couldn't make contacts account visible: " + e);
         }
         Compatibility.closeContentProviderClient(client);
