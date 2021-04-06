@@ -23,7 +23,6 @@ import android.content.Context
 import android.database.Cursor
 import android.os.AsyncTask
 import android.provider.ContactsContract
-import com.bumptech.glide.Glide
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.*
@@ -105,9 +104,6 @@ class AsyncContactsLoader(private val context: Context) :
         }
 
         if (PermissionHelper.required(context).hasReadContactsPermission()) {
-            // Clear Glide cache to be able to display new contact avatars
-            Glide.get(context).clearDiskCache()
-
             var selection: String? = null
             if (corePreferences.fetchContactsFromDefaultDirectory) {
                 Log.i("[Contacts Loader] Only fetching contacts in default directory")

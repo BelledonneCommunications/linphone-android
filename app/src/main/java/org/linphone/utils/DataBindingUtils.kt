@@ -40,8 +40,10 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
+import com.bumptech.glide.signature.ObjectKey
 import com.google.android.material.switchmaterial.SwitchMaterial
 import org.linphone.BR
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.GenericActivity
@@ -304,9 +306,11 @@ fun <T> setEntries(
 @BindingAdapter("glideAvatarFallback")
 fun loadAvatarWithGlideFallback(imageView: ImageView, path: String?) {
     if (path != null && path.isNotEmpty() && FileUtils.isExtensionImage(path)) {
-        GlideApp.with(imageView).load(path).apply(RequestOptions.circleCropTransform()).into(
-            imageView
-        )
+        GlideApp.with(imageView)
+            .load(path)
+            .signature(ObjectKey(coreContext.contactsManager.latestContactFetch))
+            .apply(RequestOptions.circleCropTransform())
+            .into(imageView)
     } else {
         Log.w("[Data Binding] [Glide] Can't load $path")
         imageView.setImageResource(R.drawable.avatar)
@@ -330,7 +334,11 @@ fun loadAvatarWithGlide(imageView: ImageView, path: Uri?) {
 @BindingAdapter("glideAvatar")
 fun loadAvatarWithGlide(imageView: ImageView, path: String?) {
     if (path != null) {
-        GlideApp.with(imageView).load(path).apply(RequestOptions.circleCropTransform()).listener(
+        GlideApp
+            .with(imageView)
+            .load(path)
+            .signature(ObjectKey(coreContext.contactsManager.latestContactFetch))
+            .apply(RequestOptions.circleCropTransform()).listener(
             object :
                 RequestListener<Drawable?> {
                 override fun onLoadFailed(
@@ -354,7 +362,8 @@ fun loadAvatarWithGlide(imageView: ImageView, path: String?) {
                     imageView.visibility = View.VISIBLE
                     return false
                 }
-            }).into(imageView)
+            })
+            .into(imageView)
     } else {
         imageView.visibility = View.GONE
     }
