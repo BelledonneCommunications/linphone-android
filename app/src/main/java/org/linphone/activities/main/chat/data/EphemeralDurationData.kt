@@ -17,14 +17,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.activities.main.chat.viewmodels
+package org.linphone.activities.main.chat.data
 
-import org.linphone.contact.GenericContactViewModel
-import org.linphone.core.ParticipantImdnState
-import org.linphone.utils.TimestampUtils
+class EphemeralDurationData(
+    val textResource: Int,
+    selectedDuration: Long,
+    private val duration: Long,
+    private val listener: DurationItemClicked
+) {
+    val selected: Boolean = selectedDuration == duration
 
-class ImdnParticipantViewModel(imdnState: ParticipantImdnState) : GenericContactViewModel(imdnState.participant.address) {
-    val sipUri: String = imdnState.participant.address.asStringUriOnly()
+    fun setSelected() {
+        listener.onDurationValueChanged(duration)
+    }
+}
 
-    val time: String = TimestampUtils.toString(imdnState.stateChangeTime)
+interface DurationItemClicked {
+    fun onDurationValueChanged(duration: Long)
 }

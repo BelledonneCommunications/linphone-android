@@ -29,7 +29,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.activities.main.chat.GroupChatRoomMember
-import org.linphone.activities.main.chat.viewmodels.GroupInfoParticipantViewModel
+import org.linphone.activities.main.chat.data.GroupInfoParticipantData
 import org.linphone.databinding.ChatRoomGroupInfoParticipantCellBinding
 import org.linphone.utils.Event
 
@@ -55,17 +55,21 @@ class GroupInfoParticipantsAdapter(
         (holder as ViewHolder).bind(getItem(position))
     }
 
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        (holder as ViewHolder).binding.viewModel?.destroy()
+    }
+
     fun showAdminControls(show: Boolean) {
         showAdmin = show
         notifyDataSetChanged()
     }
 
     inner class ViewHolder(
-        private val binding: ChatRoomGroupInfoParticipantCellBinding
+        val binding: ChatRoomGroupInfoParticipantCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(participant: GroupChatRoomMember) {
             with(binding) {
-                val participantViewModel = GroupInfoParticipantViewModel(participant)
+                val participantViewModel = GroupInfoParticipantData(participant)
                 participantViewModel.showAdminControls.value = showAdmin
                 viewModel = participantViewModel
 

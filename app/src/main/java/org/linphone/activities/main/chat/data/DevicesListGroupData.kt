@@ -17,17 +17,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.activities.main.chat.viewmodels
+package org.linphone.activities.main.chat.data
 
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
-import org.linphone.contact.GenericContactViewModel
+import org.linphone.contact.GenericContactData
 import org.linphone.core.ChatRoomSecurityLevel
 import org.linphone.core.Participant
 import org.linphone.utils.LinphoneUtils
 
-class DevicesListGroupViewModel(private val participant: Participant) : GenericContactViewModel(participant.address) {
+class DevicesListGroupData(private val participant: Participant) : GenericContactData(participant.address) {
     override val securityLevel: ChatRoomSecurityLevel
         get() = participant.securityLevel
 
@@ -53,14 +53,14 @@ class DevicesListGroupViewModel(private val participant: Participant) : GenericC
 
     val isExpanded = MutableLiveData<Boolean>()
 
-    val devices = MutableLiveData<ArrayList<DevicesListChildViewModel>>()
+    val devices = MutableLiveData<ArrayList<DevicesListChildData>>()
 
     init {
         isExpanded.value = false
 
-        val list = arrayListOf<DevicesListChildViewModel>()
+        val list = arrayListOf<DevicesListChildData>()
         for (device in participant.devices) {
-            list.add(DevicesListChildViewModel((device)))
+            list.add(DevicesListChildData((device)))
         }
         devices.value = list
     }

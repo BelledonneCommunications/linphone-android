@@ -22,6 +22,7 @@ package org.linphone.activities.main.chat.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import org.linphone.activities.main.chat.data.DevicesListGroupData
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomListenerStub
 import org.linphone.core.EventLog
@@ -36,7 +37,7 @@ class DevicesListViewModelFactory(private val chatRoom: ChatRoom) :
 }
 
 class DevicesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
-    val participants = MutableLiveData<ArrayList<DevicesListGroupViewModel>>()
+    val participants = MutableLiveData<ArrayList<DevicesListGroupData>>()
 
     private val listener = object : ChatRoomListenerStub() {
         override fun onParticipantDeviceAdded(chatRoom: ChatRoom, eventLog: EventLog) {
@@ -62,17 +63,21 @@ class DevicesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
     }
 
     override fun onCleared() {
+        participants.value.orEmpty().forEach(DevicesListGroupData::destroy)
         chatRoom.removeListener(listener)
         super.onCleared()
     }
 
     private fun updateParticipants() {
-        val list = arrayListOf<DevicesListGroupViewModel>()
+        participants.value.orEmpty().forEach(DevicesListGroupData::destroy)
+
+        val list = arrayListOf<DevicesListGroupData>()
         val me = chatRoom.me
-        if (me != null) list.add(DevicesListGroupViewModel(me))
+        if (me != null) list.add(DevicesListGroupData(me))
         for (participant in chatRoom.participants) {
-            list.add(DevicesListGroupViewModel(participant))
+            list.add(DevicesListGroupData(participant))
         }
+
         participants.value = list
     }
 }

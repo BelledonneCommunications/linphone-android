@@ -25,7 +25,7 @@ import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.contact.Contact
-import org.linphone.contact.ContactViewModelInterface
+import org.linphone.contact.ContactDataInterface
 import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.core.*
 import org.linphone.core.tools.Log
@@ -42,7 +42,7 @@ class ChatRoomViewModelFactory(private val chatRoom: ChatRoom) :
     }
 }
 
-class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactViewModelInterface {
+class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterface {
     override val contact = MutableLiveData<Contact>()
 
     override val displayName: String
