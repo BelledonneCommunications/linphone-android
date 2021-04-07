@@ -20,6 +20,9 @@
 package org.linphone.core
 
 import android.content.Context
+import android.content.SharedPreferences
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -33,6 +36,34 @@ class CorePreferences constructor(private val context: Context) {
         get() = _config ?: coreContext.core.config
         set(value) {
             _config = value
+        }
+
+    /* VFS encryption */
+
+    companion object {
+        private const val encryptedSharedPreferencesFile = "encrypted.pref"
+    }
+
+    val encryptedSharedPreferences: SharedPreferences by lazy {
+        val masterKey: MasterKey = MasterKey.Builder(
+            context,
+            MasterKey.DEFAULT_MASTER_KEY_ALIAS
+        ).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build()
+        EncryptedSharedPreferences.create(
+            context, encryptedSharedPreferencesFile, masterKey,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
+    }
+
+    var vfsEnabled: Boolean
+        get() = encryptedSharedPreferences.getBoolean("vfs_enabled", false)
+        set(value) {
+            if (!value && encryptedSharedPreferences.getBoolean("vfs_enabled", false)) {
+                Log.w("[VFS] It is not possible to disable VFS once it has been enabled")
+                return
+            }
+            encryptedSharedPreferences.edit().putBoolean("vfs_enabled", value).apply()
         }
 
     /* App settings */
@@ -129,7 +160,7 @@ class CorePreferences constructor(private val context: Context) {
         }
 
     var useInAppFileViewerForNonEncryptedFiles: Boolean
-        get() = config.getBool("app", "use_in_app_file_viewer_for_non_encrypted_files", true)
+        get() = config.getBool("app", "use_in_app_file_viewer_for_non_encrypted_files", false)
         set(value) {
             config.setBool("app", "use_in_app_file_viewer_for_non_encrypted_files", value)
         }

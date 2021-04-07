@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2021 Belledonne Communications SARL.
+ * Copyright (c) 2010-2020 Belledonne Communications SARL.
  *
  * This file is part of linphone-android
  * (see https://www.linphone.org).
@@ -17,19 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.activities.main.files.viewmodels
+package org.linphone.activities.main.chat.data
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import org.linphone.core.Content
+import org.linphone.contact.GenericContactData
+import org.linphone.core.ParticipantImdnState
+import org.linphone.utils.TimestampUtils
 
-class ImageFileViewModelFactory(private val content: Content) :
-    ViewModelProvider.NewInstanceFactory() {
+class ImdnParticipantData(imdnState: ParticipantImdnState) : GenericContactData(imdnState.participant.address) {
+    val sipUri: String = imdnState.participant.address.asStringUriOnly()
 
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return ImageFileViewModel(content) as T
-    }
+    val time: String = TimestampUtils.toString(imdnState.stateChangeTime)
 }
-
-class ImageFileViewModel(content: Content) : FileViewerViewModel(content)

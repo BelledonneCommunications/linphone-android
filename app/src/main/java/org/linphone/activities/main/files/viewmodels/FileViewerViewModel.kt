@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2020 Belledonne Communications SARL.
+ * Copyright (c) 2010-2021 Belledonne Communications SARL.
  *
  * This file is part of linphone-android
  * (see https://www.linphone.org).
@@ -17,23 +17,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.activities.main.chat.viewmodels
+package org.linphone.activities.main.files.viewmodels
 
 import androidx.lifecycle.ViewModel
+import org.linphone.core.Content
+import org.linphone.core.tools.Log
+import org.linphone.utils.FileUtils
 
-class EphemeralDurationViewModel(
-    val textResource: Int,
-    selectedDuration: Long,
-    private val duration: Long,
-    private val listener: DurationItemClicked
-) : ViewModel() {
-    val selected: Boolean = selectedDuration == duration
+open class FileViewerViewModel(val content: Content) : ViewModel() {
+    val filePath: String
+    private val deleteAfterUse: Boolean = content.isFileEncrypted
 
-    fun setSelected() {
-        listener.onDurationValueChanged(duration)
+    init {
+        filePath = if (deleteAfterUse) content.plainFilePath else content.filePath.orEmpty()
     }
-}
 
-interface DurationItemClicked {
-    fun onDurationValueChanged(duration: Long)
+    override fun onCleared() {
+        if (deleteAfterUse) {
+            Log.i("[File Viewer] Deleting temporary plain file: $filePath")
+            FileUtils.deleteFile(filePath)
+        }
+
+        super.onCleared()
+    }
 }

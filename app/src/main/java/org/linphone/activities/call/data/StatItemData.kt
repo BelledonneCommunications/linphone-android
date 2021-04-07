@@ -20,7 +20,6 @@
 package org.linphone.activities.call.viewmodels
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import java.text.DecimalFormat
 import org.linphone.R
 import org.linphone.core.AddressFamily
@@ -48,7 +47,7 @@ enum class StatType(val nameResource: Int) {
     ESTIMATED_AVAILABLE_DOWNLOAD_BW(R.string.call_stats_estimated_download)
 }
 
-class StatItemViewModel(val type: StatType) : ViewModel() {
+class StatItemData(val type: StatType) {
     val value = MutableLiveData<String>()
 
     fun update(call: Call, stats: CallStats) {

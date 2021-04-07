@@ -24,6 +24,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import java.io.File
 import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.activities.main.chat.data.ChatMessageAttachmentData
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomCapabilities
@@ -42,7 +43,7 @@ class ChatMessageSendingViewModelFactory(private val chatRoom: ChatRoom) :
 class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() {
     var temporaryFileUploadPath: File? = null
 
-    val attachments = MutableLiveData<ArrayList<ChatMessageAttachmentViewModel>>()
+    val attachments = MutableLiveData<ArrayList<ChatMessageAttachmentData>>()
 
     val attachFileEnabled = MutableLiveData<Boolean>()
 
@@ -60,6 +61,11 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         isReadOnly.value = chatRoom.hasBeenLeft()
     }
 
+    override fun onCleared() {
+        attachments.value.orEmpty().forEach(ChatMessageAttachmentData::destroy)
+        super.onCleared()
+    }
+
     fun onTextToSendChanged(value: String) {
         sendMessageEnabled.value = value.isNotEmpty() || attachments.value?.isNotEmpty() ?: false
         if (value.isNotEmpty()) {
@@ -75,9 +81,9 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
     }
 
     fun addAttachment(path: String) {
-        val list = arrayListOf<ChatMessageAttachmentViewModel>()
+        val list = arrayListOf<ChatMessageAttachmentData>()
         list.addAll(attachments.value.orEmpty())
-        list.add(ChatMessageAttachmentViewModel(path) {
+        list.add(ChatMessageAttachmentData(path) {
             removeAttachment(it)
         })
         attachments.value = list
@@ -88,10 +94,11 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         }
     }
 
-    private fun removeAttachment(attachment: ChatMessageAttachmentViewModel) {
-        val list = arrayListOf<ChatMessageAttachmentViewModel>()
+    private fun removeAttachment(attachment: ChatMessageAttachmentData) {
+        val list = arrayListOf<ChatMessageAttachmentData>()
         list.addAll(attachments.value.orEmpty())
         list.remove(attachment)
+        attachment.destroy()
         attachments.value = list
 
         sendMessageEnabled.value = textToSend.value.orEmpty().isNotEmpty() || list.isNotEmpty()
@@ -137,6 +144,7 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
             message.send()
         }
 
+        attachments.value.orEmpty().forEach(ChatMessageAttachmentData::destroy)
         attachments.value = arrayListOf()
     }
 

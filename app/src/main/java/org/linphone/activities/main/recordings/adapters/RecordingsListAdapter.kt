@@ -31,7 +31,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.activities.main.adapters.SelectionListAdapter
-import org.linphone.activities.main.recordings.viewmodels.RecordingViewModel
+import org.linphone.activities.main.recordings.data.RecordingData
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
 import org.linphone.databinding.GenericListHeaderBinding
 import org.linphone.databinding.RecordingListCellBinding
@@ -40,7 +40,7 @@ import org.linphone.utils.*
 class RecordingsListAdapter(
     selectionVM: ListTopBarViewModel,
     private val viewLifecycleOwner: LifecycleOwner
-) : SelectionListAdapter<RecordingViewModel, RecyclerView.ViewHolder>(selectionVM, RecordingDiffCallback()), HeaderAdapter {
+) : SelectionListAdapter<RecordingData, RecyclerView.ViewHolder>(selectionVM, RecordingDiffCallback()), HeaderAdapter {
     val isVideoRecordingPlayingEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -63,10 +63,14 @@ class RecordingsListAdapter(
         (holder as ViewHolder).bind(getItem(position))
     }
 
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        (holder as ViewHolder).binding.viewModel?.destroy()
+    }
+
     inner class ViewHolder(
-        private val binding: RecordingListCellBinding
+        val binding: RecordingListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(recording: RecordingViewModel) {
+        fun bind(recording: RecordingData) {
             with(binding) {
                 viewModel = recording
 
@@ -136,17 +140,17 @@ class RecordingsListAdapter(
     }
 }
 
-private class RecordingDiffCallback : DiffUtil.ItemCallback<RecordingViewModel>() {
+private class RecordingDiffCallback : DiffUtil.ItemCallback<RecordingData>() {
     override fun areItemsTheSame(
-        oldItem: RecordingViewModel,
-        newItem: RecordingViewModel
+        oldItem: RecordingData,
+        newItem: RecordingData
     ): Boolean {
         return oldItem.compareTo(newItem) == 0
     }
 
     override fun areContentsTheSame(
-        oldItem: RecordingViewModel,
-        newItem: RecordingViewModel
+        oldItem: RecordingData,
+        newItem: RecordingData
     ): Boolean {
         return false // for headers
     }

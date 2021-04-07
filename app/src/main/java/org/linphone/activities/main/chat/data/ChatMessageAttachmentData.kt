@@ -17,35 +17,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.activities.main.chat.viewmodels
+package org.linphone.activities.main.chat.data
 
 import android.graphics.Bitmap
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import org.linphone.utils.FileUtils
 import org.linphone.utils.ImageUtils
 
-class ChatMessageAttachmentViewModel(
+class ChatMessageAttachmentData(
     val path: String,
-    private val deleteCallback: (attachment: ChatMessageAttachmentViewModel) -> Unit
-) : ViewModel() {
+    private val deleteCallback: (attachment: ChatMessageAttachmentData) -> Unit
+) {
     val fileName: String = FileUtils.getNameFromFilePath(path)
     val isImage: Boolean = FileUtils.isExtensionImage(path)
     val isVideo: Boolean = FileUtils.isExtensionVideo(path)
     val videoPreview = MutableLiveData<Bitmap>()
 
+    private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+
     init {
         if (isVideo) {
-            viewModelScope.launch {
+            scope.launch {
                 withContext(Dispatchers.IO) {
                     videoPreview.postValue(ImageUtils.getVideoPreview(path))
                 }
             }
         }
+    }
+
+    fun destroy() {
+        scope.cancel()
     }
 
     fun delete() {

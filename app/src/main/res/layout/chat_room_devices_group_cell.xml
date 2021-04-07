@@ -7,7 +7,7 @@
         <import type="android.view.View"/>
         <variable
             name="data"
-            type="org.linphone.activities.main.chat.viewmodels.DevicesListGroupViewModel" />
+            type="org.linphone.activities.main.chat.data.DevicesListGroupData" />
     </data>
 
     <LinearLayout

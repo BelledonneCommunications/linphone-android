@@ -17,11 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.activities.main.chat.viewmodels
+package org.linphone.activities.main.chat.data
 
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.contact.Contact
@@ -29,7 +28,7 @@ import org.linphone.core.EventLog
 import org.linphone.core.tools.Log
 import org.linphone.utils.LinphoneUtils
 
-class EventViewModel(private val eventLog: EventLog) : ViewModel() {
+class EventData(private val eventLog: EventLog) {
     val text = MutableLiveData<String>()
 
     val isSecurity: Boolean by lazy {

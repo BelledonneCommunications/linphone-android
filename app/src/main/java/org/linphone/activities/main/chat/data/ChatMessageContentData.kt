@@ -17,15 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.activities.main.chat.viewmodels
+package org.linphone.activities.main.chat.data
 
 import android.graphics.Bitmap
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatMessageListenerStub
 import org.linphone.core.Content
@@ -34,17 +30,19 @@ import org.linphone.utils.AppUtils
 import org.linphone.utils.FileUtils
 import org.linphone.utils.ImageUtils
 
-class ChatMessageContentViewModel(
+class ChatMessageContentData(
     val content: Content,
     private val chatMessage: ChatMessage,
     private val listener: OnContentClickedListener?
-) : ViewModel() {
+) {
     val isImage = MutableLiveData<Boolean>()
     val isVideo = MutableLiveData<Boolean>()
     val isAudio = MutableLiveData<Boolean>()
     val videoPreview = MutableLiveData<Bitmap>()
 
     val fileName = MutableLiveData<String>()
+
+    val filePath = MutableLiveData<String>()
 
     val fileSize = MutableLiveData<String>()
 
@@ -87,7 +85,10 @@ class ChatMessageContentViewModel(
         }
     }
 
+    private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+
     init {
+        filePath.value = ""
         fileName.value = if (content.name.isNullOrEmpty() && !content.filePath.isNullOrEmpty()) {
             FileUtils.getNameFromFilePath(content.filePath!!)
         } else {
@@ -96,19 +97,20 @@ class ChatMessageContentViewModel(
         fileSize.value = AppUtils.bytesToDisplayableSize(content.fileSize.toLong())
 
         if (content.isFile || (content.isFileTransfer && chatMessage.isOutgoing)) {
-            val filePath = content.filePath ?: ""
-            downloadable.value = filePath.isEmpty()
+            val path = if (content.isFileEncrypted) content.plainFilePath else content.filePath ?: ""
+            downloadable.value = content.filePath.orEmpty().isEmpty()
 
-            if (filePath.isNotEmpty()) {
-                Log.i("[Content] Found displayable content: $filePath")
-                isImage.value = FileUtils.isExtensionImage(filePath)
-                isVideo.value = FileUtils.isExtensionVideo(filePath)
-                isAudio.value = FileUtils.isExtensionAudio(filePath)
+            if (path.isNotEmpty()) {
+                Log.i("[Content] Found displayable content: $path")
+                filePath.value = path
+                isImage.value = FileUtils.isExtensionImage(path)
+                isVideo.value = FileUtils.isExtensionVideo(path)
+                isAudio.value = FileUtils.isExtensionAudio(path)
 
                 if (isVideo.value == true) {
-                    viewModelScope.launch {
+                    scope.launch {
                         withContext(Dispatchers.IO) {
-                            videoPreview.postValue(ImageUtils.getVideoPreview(filePath))
+                            videoPreview.postValue(ImageUtils.getVideoPreview(path))
                         }
                     }
                 }
@@ -128,6 +130,17 @@ class ChatMessageContentViewModel(
         downloadEnabled.value = !chatMessage.isFileTransferInProgress
         downloadProgress.value = 0
         chatMessage.addListener(chatMessageListener)
+    }
+
+    fun destroy() {
+        scope.cancel()
+
+        val path = filePath.value.orEmpty()
+        if (content.isFileEncrypted && path.isNotEmpty()) {
+            Log.i("[Content] Deleting file used for preview: $path")
+            FileUtils.deleteFile(path)
+            filePath.value = ""
+        }
     }
 
     fun download() {

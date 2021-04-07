@@ -372,8 +372,12 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
     }
 
     override fun onCleared() {
-        account.removeListener(listener)
+        destroy()
         super.onCleared()
+    }
+
+    fun destroy() {
+        account.removeListener(listener)
     }
 
     private fun update() {

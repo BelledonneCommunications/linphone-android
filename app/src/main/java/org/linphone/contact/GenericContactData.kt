@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2020 Belledonne Communications SARL.
+ * Copyright (c) 2010-2021 Belledonne Communications SARL.
  *
  * This file is part of linphone-android
  * (see https://www.linphone.org).
@@ -20,12 +20,24 @@
 package org.linphone.contact
 
 import androidx.lifecycle.MutableLiveData
-import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.activities.main.viewmodels.ErrorReportingViewModel
+import org.linphone.LinphoneApplication
 import org.linphone.core.Address
+import org.linphone.core.ChatRoomSecurityLevel
 import org.linphone.utils.LinphoneUtils
 
-abstract class GenericContactViewModel(private val sipAddress: Address) : ErrorReportingViewModel(), ContactDataInterface {
+interface ContactDataInterface {
+    val contact: MutableLiveData<Contact>
+
+    val displayName: String
+
+    val securityLevel: ChatRoomSecurityLevel
+        get() = ChatRoomSecurityLevel.ClearText
+
+    val showGroupChatAvatar: Boolean
+        get() = false
+}
+
+open class GenericContactData(private val sipAddress: Address) : ContactDataInterface {
     override val displayName: String = LinphoneUtils.getDisplayName(sipAddress)
 
     override val contact = MutableLiveData<Contact>()
@@ -37,17 +49,15 @@ abstract class GenericContactViewModel(private val sipAddress: Address) : ErrorR
     }
 
     init {
-        coreContext.contactsManager.addListener(contactsUpdatedListener)
+        LinphoneApplication.coreContext.contactsManager.addListener(contactsUpdatedListener)
         contactLookup()
     }
 
-    override fun onCleared() {
-        coreContext.contactsManager.removeListener(contactsUpdatedListener)
-
-        super.onCleared()
+    open fun destroy() {
+        LinphoneApplication.coreContext.contactsManager.removeListener(contactsUpdatedListener)
     }
 
     private fun contactLookup() {
-        contact.value = coreContext.contactsManager.findContactByAddress(sipAddress)
+        contact.value = LinphoneApplication.coreContext.contactsManager.findContactByAddress(sipAddress)
     }
 }

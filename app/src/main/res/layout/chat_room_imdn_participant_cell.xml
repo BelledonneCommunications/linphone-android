@@ -7,7 +7,7 @@
         <import type="android.view.View"/>
         <variable
             name="viewModel"
-            type="org.linphone.activities.main.chat.viewmodels.ImdnParticipantViewModel" />
+            type="org.linphone.activities.main.chat.data.ImdnParticipantData" />
     </data>
 
     <RelativeLayout

@@ -29,6 +29,7 @@ import java.io.ByteArrayOutputStream
 import java.io.IOException
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.activities.main.contact.data.NumberOrAddressEditorData
 import org.linphone.contact.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.ImageUtils
@@ -43,7 +44,7 @@ class ContactEditorViewModelFactory(private val contact: Contact?) :
     }
 }
 
-class ContactEditorViewModel(val c: Contact?) : ViewModel(), ContactViewModelInterface {
+class ContactEditorViewModel(val c: Contact?) : ViewModel(), ContactDataInterface {
     override val contact = MutableLiveData<Contact>()
 
     override val displayName: String
@@ -60,9 +61,9 @@ class ContactEditorViewModel(val c: Contact?) : ViewModel(), ContactViewModelInt
     val tempPicturePath = MutableLiveData<String>()
     private var picture: ByteArray? = null
 
-    val numbers = MutableLiveData<ArrayList<NumberOrAddressEditorViewModel>>()
+    val numbers = MutableLiveData<ArrayList<NumberOrAddressEditorData>>()
 
-    val addresses = MutableLiveData<ArrayList<NumberOrAddressEditorViewModel>>()
+    val addresses = MutableLiveData<ArrayList<NumberOrAddressEditorData>>()
 
     var syncAccountName: String? = null
     var syncAccountType: String? = null
@@ -177,35 +178,35 @@ class ContactEditorViewModel(val c: Contact?) : ViewModel(), ContactViewModelInt
     }
 
     fun addEmptySipAddress() {
-        val list = arrayListOf<NumberOrAddressEditorViewModel>()
+        val list = arrayListOf<NumberOrAddressEditorData>()
         list.addAll(addresses.value.orEmpty())
-        list.add(NumberOrAddressEditorViewModel("", true))
+        list.add(NumberOrAddressEditorData("", true))
         addresses.value = list
     }
 
     fun addEmptyPhoneNumber() {
-        val list = arrayListOf<NumberOrAddressEditorViewModel>()
+        val list = arrayListOf<NumberOrAddressEditorData>()
         list.addAll(numbers.value.orEmpty())
-        list.add(NumberOrAddressEditorViewModel("", false))
+        list.add(NumberOrAddressEditorData("", false))
         numbers.value = list
     }
 
     private fun updateNumbersAndAddresses() {
-        val phoneNumbers = arrayListOf<NumberOrAddressEditorViewModel>()
+        val phoneNumbers = arrayListOf<NumberOrAddressEditorData>()
         for (number in c?.rawPhoneNumbers.orEmpty()) {
-            phoneNumbers.add(NumberOrAddressEditorViewModel(number, false))
+            phoneNumbers.add(NumberOrAddressEditorData(number, false))
         }
         if (phoneNumbers.isEmpty()) {
-            phoneNumbers.add(NumberOrAddressEditorViewModel("", false))
+            phoneNumbers.add(NumberOrAddressEditorData("", false))
         }
         numbers.value = phoneNumbers
 
-        val sipAddresses = arrayListOf<NumberOrAddressEditorViewModel>()
+        val sipAddresses = arrayListOf<NumberOrAddressEditorData>()
         for (address in c?.rawSipAddresses.orEmpty()) {
-            sipAddresses.add(NumberOrAddressEditorViewModel(address, true))
+            sipAddresses.add(NumberOrAddressEditorData(address, true))
         }
         if (sipAddresses.isEmpty()) {
-            sipAddresses.add(NumberOrAddressEditorViewModel("", true))
+            sipAddresses.add(NumberOrAddressEditorData("", true))
         }
         addresses.value = sipAddresses
     }

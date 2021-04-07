@@ -38,6 +38,13 @@ class AdvancedSettingsViewModel : GenericSettingsViewModel() {
     }
     val debugMode = MutableLiveData<Boolean>()
 
+    val logsServerUrlListener = object : SettingListenerStub() {
+        override fun onTextValueChanged(newValue: String) {
+            core.logCollectionUploadServerUrl = newValue
+        }
+    }
+    val logsServerUrl = MutableLiveData<String>()
+
     val backgroundModeListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
             prefs.keepServiceAlive = newValue
@@ -97,12 +104,13 @@ class AdvancedSettingsViewModel : GenericSettingsViewModel() {
     }
     val remoteProvisioningUrl = MutableLiveData<String>()
 
-    val logsServerUrlListener = object : SettingListenerStub() {
-        override fun onTextValueChanged(newValue: String) {
-            core.logCollectionUploadServerUrl = newValue
+    val vfsListener = object : SettingListenerStub() {
+        override fun onBoolValueChanged(newValue: Boolean) {
+            prefs.vfsEnabled = newValue
+            if (newValue) coreContext.activateVFS()
         }
     }
-    val logsServerUrl = MutableLiveData<String>()
+    val vfs = MutableLiveData<Boolean>()
 
     val goToBatterySettingsListener = object : SettingListenerStub() {
         override fun onClicked() {
@@ -129,6 +137,7 @@ class AdvancedSettingsViewModel : GenericSettingsViewModel() {
 
     init {
         debugMode.value = prefs.debugLogs
+        logsServerUrl.value = core.logCollectionUploadServerUrl
         backgroundMode.value = prefs.keepServiceAlive
         autoStart.value = prefs.autoStart
 
@@ -142,7 +151,7 @@ class AdvancedSettingsViewModel : GenericSettingsViewModel() {
         animations.value = prefs.enableAnimations
         deviceName.value = prefs.deviceName
         remoteProvisioningUrl.value = core.provisioningUri
-        logsServerUrl.value = core.logCollectionUploadServerUrl
+        vfs.value = prefs.vfsEnabled
 
         batterySettingsVisibility.value = Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)
     }
