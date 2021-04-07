@@ -23,6 +23,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
+import org.linphone.activities.main.chat.data.DurationItemClicked
+import org.linphone.activities.main.chat.data.EphemeralDurationData
 import org.linphone.core.ChatRoom
 import org.linphone.core.tools.Log
 
@@ -36,7 +38,7 @@ class EphemeralViewModelFactory(private val chatRoom: ChatRoom) :
 }
 
 class EphemeralViewModel(private val chatRoom: ChatRoom) : ViewModel() {
-    val durationsList = MutableLiveData<ArrayList<EphemeralDurationViewModel>>()
+    val durationsList = MutableLiveData<ArrayList<EphemeralDurationData>>()
 
     var currentSelectedDuration: Long = 0
 
@@ -74,13 +76,13 @@ class EphemeralViewModel(private val chatRoom: ChatRoom) : ViewModel() {
     }
 
     private fun computeEphemeralDurationValues() {
-        val list = arrayListOf<EphemeralDurationViewModel>()
-        list.add(EphemeralDurationViewModel(R.string.chat_room_ephemeral_message_disabled, currentSelectedDuration, 0, listener))
-        list.add(EphemeralDurationViewModel(R.string.chat_room_ephemeral_message_one_minute, currentSelectedDuration, 60, listener))
-        list.add(EphemeralDurationViewModel(R.string.chat_room_ephemeral_message_one_hour, currentSelectedDuration, 3600, listener))
-        list.add(EphemeralDurationViewModel(R.string.chat_room_ephemeral_message_one_day, currentSelectedDuration, 86400, listener))
-        list.add(EphemeralDurationViewModel(R.string.chat_room_ephemeral_message_three_days, currentSelectedDuration, 259200, listener))
-        list.add(EphemeralDurationViewModel(R.string.chat_room_ephemeral_message_one_week, currentSelectedDuration, 604800, listener))
+        val list = arrayListOf<EphemeralDurationData>()
+        list.add(EphemeralDurationData(R.string.chat_room_ephemeral_message_disabled, currentSelectedDuration, 0, listener))
+        list.add(EphemeralDurationData(R.string.chat_room_ephemeral_message_one_minute, currentSelectedDuration, 60, listener))
+        list.add(EphemeralDurationData(R.string.chat_room_ephemeral_message_one_hour, currentSelectedDuration, 3600, listener))
+        list.add(EphemeralDurationData(R.string.chat_room_ephemeral_message_one_day, currentSelectedDuration, 86400, listener))
+        list.add(EphemeralDurationData(R.string.chat_room_ephemeral_message_three_days, currentSelectedDuration, 259200, listener))
+        list.add(EphemeralDurationData(R.string.chat_room_ephemeral_message_one_week, currentSelectedDuration, 604800, listener))
         durationsList.value = list
     }
 }
