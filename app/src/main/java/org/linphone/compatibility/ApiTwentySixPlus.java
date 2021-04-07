@@ -339,10 +339,7 @@ class ApiTwentySixPlus {
         long[] timings = {0, 1000, 1000};
         int[] amplitudes = {0, VibrationEffect.DEFAULT_AMPLITUDE, 0};
         VibrationEffect effect = VibrationEffect.createWaveform(timings, amplitudes, 1);
-        AudioAttributes audioAttrs =
-                new AudioAttributes.Builder()
-                        .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
-                        .build();
+        AudioAttributes audioAttrs = new AudioAttributes.Builder().build();
         vibrator.vibrate(effect, audioAttrs);
     }
 }
