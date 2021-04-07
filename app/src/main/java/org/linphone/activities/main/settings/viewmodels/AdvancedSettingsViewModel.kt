@@ -23,6 +23,7 @@ import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.main.settings.SettingListenerStub
+import org.linphone.core.CoreContext
 import org.linphone.core.Factory
 import org.linphone.mediastream.Version
 import org.linphone.utils.AppUtils
@@ -107,7 +108,7 @@ class AdvancedSettingsViewModel : GenericSettingsViewModel() {
     val vfsListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
             prefs.vfsEnabled = newValue
-            if (newValue) coreContext.activateVFS()
+            if (newValue) CoreContext.activateVFS()
         }
     }
     val vfs = MutableLiveData<Boolean>()
