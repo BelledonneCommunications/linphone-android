@@ -321,7 +321,7 @@ fun loadAvatarWithGlideFallback(imageView: ImageView, path: String?) {
 @BindingAdapter("glidePath")
 fun loadImageWithGlide(imageView: ImageView, path: String) {
     if (path.isNotEmpty() && FileUtils.isExtensionImage(path)) {
-        if (corePreferences.vfsEnabled) {
+        if (corePreferences.vfsEnabled && path.endsWith(FileUtils.VFS_PLAIN_FILE_EXTENSION)) {
             GlideApp.with(imageView)
                 .load(path)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -347,9 +347,8 @@ fun loadAvatarWithGlide(imageView: ImageView, path: String?) {
             .with(imageView)
             .load(path)
             .signature(ObjectKey(coreContext.contactsManager.latestContactFetch))
-            .apply(RequestOptions.circleCropTransform()).listener(
-            object :
-                RequestListener<Drawable?> {
+            .apply(RequestOptions.circleCropTransform())
+            .listener(object : RequestListener<Drawable?> {
                 override fun onLoadFailed(
                     e: GlideException?,
                     model: Any?,
