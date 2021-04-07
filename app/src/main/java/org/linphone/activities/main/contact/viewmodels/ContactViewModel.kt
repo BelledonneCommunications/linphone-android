@@ -27,6 +27,8 @@ import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.activities.main.contact.data.ContactNumberOrAddressClickListener
+import org.linphone.activities.main.contact.data.ContactNumberOrAddressData
 import org.linphone.activities.main.viewmodels.ErrorReportingViewModel
 import org.linphone.contact.Contact
 import org.linphone.contact.ContactDataInterface
@@ -55,7 +57,7 @@ class ContactViewModel(private val c: Contact) : ErrorReportingViewModel(), Cont
 
     val displayOrganization = corePreferences.displayOrganization
 
-    val numbersAndAddresses = MutableLiveData<ArrayList<ContactNumberOrAddressViewModel>>()
+    val numbersAndAddresses = MutableLiveData<ArrayList<ContactNumberOrAddressData>>()
 
     val sendSmsToEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
@@ -129,8 +131,12 @@ class ContactViewModel(private val c: Contact) : ErrorReportingViewModel(), Cont
     }
 
     override fun onCleared() {
-        coreContext.contactsManager.removeListener(contactsUpdatedListener)
+        destroy()
         super.onCleared()
+    }
+
+    fun destroy() {
+        coreContext.contactsManager.removeListener(contactsUpdatedListener)
     }
 
     fun deleteContact() {
@@ -164,7 +170,7 @@ class ContactViewModel(private val c: Contact) : ErrorReportingViewModel(), Cont
     }
 
     private fun updateNumbersAndAddresses(contact: Contact) {
-        val list = arrayListOf<ContactNumberOrAddressViewModel>()
+        val list = arrayListOf<ContactNumberOrAddressData>()
         for (address in contact.sipAddresses) {
             val value = address.asStringUriOnly()
             val presenceModel = contact.friend?.getPresenceModelForUriOrTel(value)
@@ -172,7 +178,7 @@ class ContactViewModel(private val c: Contact) : ErrorReportingViewModel(), Cont
             val isMe = coreContext.core.defaultAccount?.params?.identityAddress?.weakEqual(address) ?: false
             val secureChatAllowed = !isMe && contact.friend?.getPresenceModelForUriOrTel(value)?.hasCapability(FriendCapability.LimeX3Dh) ?: false
             val displayValue = if (coreContext.core.defaultAccount?.params?.domain == address.domain) (address.username ?: value) else value
-            val noa = ContactNumberOrAddressViewModel(address, hasPresence, displayValue, showSecureChat = secureChatAllowed, listener = listener)
+            val noa = ContactNumberOrAddressData(address, hasPresence, displayValue, showSecureChat = secureChatAllowed, listener = listener)
             list.add(noa)
         }
         for (phoneNumber in contact.phoneNumbers) {
@@ -183,7 +189,7 @@ class ContactViewModel(private val c: Contact) : ErrorReportingViewModel(), Cont
             val address = coreContext.core.interpretUrl(contactAddress)
             val isMe = if (address != null) coreContext.core.defaultAccount?.params?.identityAddress?.weakEqual(address) ?: false else false
             val secureChatAllowed = !isMe && contact.friend?.getPresenceModelForUriOrTel(number)?.hasCapability(FriendCapability.LimeX3Dh) ?: false
-            val noa = ContactNumberOrAddressViewModel(address, hasPresence, number, isSip = false, showSecureChat = secureChatAllowed, typeLabel = phoneNumber.typeLabel, listener = listener)
+            val noa = ContactNumberOrAddressData(address, hasPresence, number, isSip = false, showSecureChat = secureChatAllowed, typeLabel = phoneNumber.typeLabel, listener = listener)
             list.add(noa)
         }
         numbersAndAddresses.value = list
