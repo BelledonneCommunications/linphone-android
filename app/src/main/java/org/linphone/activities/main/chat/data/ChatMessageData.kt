@@ -76,7 +76,7 @@ class ChatMessageData(
                 Log.i("[Chat Message] File transfer done")
                 updateContentsList()
 
-                if (!message.isEphemeral && corePreferences.makePublicMediaFilesDownloaded) {
+                if (!message.isEphemeral && !corePreferences.vfsEnabled && corePreferences.makePublicMediaFilesDownloaded) {
                     if (Version.sdkAboveOrEqual(Version.API29_ANDROID_10) || PermissionHelper.get().hasWriteExternalStorage()) {
                         for (content in message.contents) {
                             if (content.isFile && content.filePath != null && content.userData == null) {

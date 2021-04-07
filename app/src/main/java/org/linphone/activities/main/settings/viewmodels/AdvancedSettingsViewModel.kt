@@ -108,7 +108,11 @@ class AdvancedSettingsViewModel : GenericSettingsViewModel() {
     val vfsListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
             prefs.vfsEnabled = newValue
-            if (newValue) CoreContext.activateVFS()
+            if (newValue) {
+                CoreContext.activateVFS()
+                // Don't do that when VFS is enabled
+                prefs.makePublicMediaFilesDownloaded = false
+            }
         }
     }
     val vfs = MutableLiveData<Boolean>()
