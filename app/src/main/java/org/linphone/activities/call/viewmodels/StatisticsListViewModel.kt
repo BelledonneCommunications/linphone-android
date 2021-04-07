@@ -22,12 +22,13 @@ package org.linphone.activities.call.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.activities.call.data.CallStatisticsData
 import org.linphone.core.Call
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 
 class StatisticsListViewModel : ViewModel() {
-    val callStatsList = MutableLiveData<ArrayList<CallStatisticsViewModel>>()
+    val callStatsList = MutableLiveData<ArrayList<CallStatisticsData>>()
 
     private val listener = object : CoreListenerStub() {
         override fun onCallStateChanged(
@@ -37,10 +38,12 @@ class StatisticsListViewModel : ViewModel() {
             message: String
         ) {
             if (state == Call.State.End || state == Call.State.Error) {
-                val newList = arrayListOf<CallStatisticsViewModel>()
+                val newList = arrayListOf<CallStatisticsData>()
                 for (stat in callStatsList.value.orEmpty()) {
                     if (stat.call != call) {
                         newList.add(stat)
+                    } else {
+                        stat.destroy()
                     }
                 }
                 callStatsList.value = newList
@@ -51,16 +54,17 @@ class StatisticsListViewModel : ViewModel() {
     init {
         coreContext.core.addListener(listener)
 
-        val list = arrayListOf<CallStatisticsViewModel>()
+        val list = arrayListOf<CallStatisticsData>()
         for (call in coreContext.core.calls) {
             if (call.state != Call.State.End && call.state != Call.State.Released && call.state != Call.State.Error) {
-                list.add(CallStatisticsViewModel(call))
+                list.add(CallStatisticsData(call))
             }
         }
         callStatsList.value = list
     }
 
     override fun onCleared() {
+        callStatsList.value.orEmpty().forEach(CallStatisticsData::destroy)
         coreContext.core.removeListener(listener)
 
         super.onCleared()

@@ -59,8 +59,12 @@ class ContactsListAdapter(
         (holder as ViewHolder).bind(getItem(position))
     }
 
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        (holder as ViewHolder).binding.viewModel?.destroy()
+    }
+
     inner class ViewHolder(
-        private val binding: ContactListCellBinding
+        val binding: ContactListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(contact: Contact) {
             with(binding) {

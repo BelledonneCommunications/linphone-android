@@ -118,9 +118,13 @@ open class CallViewModel(val call: Call) : GenericContactViewModel(call.remoteAd
     }
 
     override fun onCleared() {
-        call.removeListener(listener)
-
+        destroy()
         super.onCleared()
+    }
+
+    fun destroy() {
+        // TODO: call it from CallsViewModel (after conference rework merge)
+        call.removeListener(listener)
     }
 
     fun terminateCall() {
