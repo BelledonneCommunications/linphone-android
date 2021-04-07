@@ -17,21 +17,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.activities.main.recordings.viewmodels
+package org.linphone.activities.main.recordings.data
 
 import android.graphics.SurfaceTexture
 import android.view.TextureView
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ticker
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.AudioDevice
 import org.linphone.core.Player
@@ -39,7 +35,7 @@ import org.linphone.core.PlayerListener
 import org.linphone.core.tools.Log
 import org.linphone.utils.LinphoneUtils
 
-class RecordingViewModel(val path: String) : ViewModel(), Comparable<RecordingViewModel> {
+class RecordingData(val path: String) : Comparable<RecordingData> {
     companion object {
         val RECORD_PATTERN: Pattern =
             Pattern.compile(".*/(.*)_(\\d{2}-\\d{2}-\\d{4}-\\d{2}-\\d{2}-\\d{2})\\..*")
@@ -87,6 +83,8 @@ class RecordingViewModel(val path: String) : ViewModel(), Comparable<RecordingVi
         }
     }
 
+    private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+
     init {
         val m = RECORD_PATTERN.matcher(path)
         if (m.matches() && m.groupCount() >= 2) {
@@ -101,17 +99,18 @@ class RecordingViewModel(val path: String) : ViewModel(), Comparable<RecordingVi
         initPlayer()
     }
 
-    override fun onCleared() {
-        tickerChannel.cancel()
-        player.setWindowId(null)
-        if (!isClosed()) player.close()
-        player.removeListener(listener)
-
-        super.onCleared()
+    override fun compareTo(other: RecordingData): Int {
+        return -date.compareTo(other.date)
     }
 
-    override fun compareTo(other: RecordingViewModel): Int {
-        return -date.compareTo(other.date)
+    fun destroy() {
+        scope.cancel()
+        tickerChannel.cancel()
+
+        player.setWindowId(null)
+        if (!isClosed()) player.close()
+
+        player.removeListener(listener)
     }
 
     fun play() {
@@ -122,7 +121,7 @@ class RecordingViewModel(val path: String) : ViewModel(), Comparable<RecordingVi
         player.start()
         isPlaying.value = true
 
-        viewModelScope.launch {
+        scope.launch {
             withContext(Dispatchers.IO) {
                 for (tick in tickerChannel) {
                     if (player.state == Player.State.Playing) {

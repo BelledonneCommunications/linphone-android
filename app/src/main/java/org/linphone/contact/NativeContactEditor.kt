@@ -27,7 +27,7 @@ import android.provider.ContactsContract.CommonDataKinds
 import android.provider.ContactsContract.RawContacts
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
-import org.linphone.activities.main.contact.viewmodels.NumberOrAddressEditorViewModel
+import org.linphone.activities.main.contact.data.NumberOrAddressEditorData
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.PermissionHelper
@@ -170,7 +170,7 @@ class NativeContactEditor(val contact: NativeContact) {
         return this
     }
 
-    fun setPhoneNumbers(value: List<NumberOrAddressEditorViewModel>): NativeContactEditor {
+    fun setPhoneNumbers(value: List<NumberOrAddressEditorData>): NativeContactEditor {
         var addCount = 0
         var removeCount = 0
         var editCount = 0
@@ -205,7 +205,7 @@ class NativeContactEditor(val contact: NativeContact) {
         return this
     }
 
-    fun setSipAddresses(value: List<NumberOrAddressEditorViewModel>): NativeContactEditor {
+    fun setSipAddresses(value: List<NumberOrAddressEditorData>): NativeContactEditor {
         var addCount = 0
         var removeCount = 0
         var editCount = 0

@@ -129,6 +129,14 @@ class CallLogViewModel(val callLog: CallLog) : GenericContactViewModel(callLog.r
         waitForChatRoomCreation.value = false
     }
 
+    override fun onCleared() {
+        destroy()
+        super.onCleared()
+    }
+
+    fun destroy() {
+    }
+
     fun startCall() {
         startCallEvent.value = Event(callLog.remoteAddress)
     }

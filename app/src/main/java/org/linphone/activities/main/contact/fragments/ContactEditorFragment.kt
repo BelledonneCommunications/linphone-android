@@ -35,6 +35,7 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.MainActivity
+import org.linphone.activities.main.contact.data.NumberOrAddressEditorData
 import org.linphone.activities.main.contact.viewmodels.*
 import org.linphone.activities.main.navigateToContact
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
@@ -90,10 +91,10 @@ class ContactEditorFragment : GenericFragment<ContactEditorFragmentBinding>(), S
         val sipUri = arguments?.getString("SipUri")
         if (sipUri != null) {
             Log.i("[Contact Editor] Found SIP URI in arguments: $sipUri")
-            val newSipUri = NumberOrAddressEditorViewModel("", true)
+            val newSipUri = NumberOrAddressEditorData("", true)
             newSipUri.newValue.value = sipUri
 
-            val list = arrayListOf<NumberOrAddressEditorViewModel>()
+            val list = arrayListOf<NumberOrAddressEditorData>()
             list.addAll(viewModel.addresses.value.orEmpty())
             list.add(newSipUri)
             viewModel.addresses.value = list

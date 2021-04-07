@@ -14,7 +14,7 @@
             type="Integer"/>
         <variable
             name="viewModel"
-            type="org.linphone.activities.main.recordings.viewmodels.RecordingViewModel" />
+            type="org.linphone.activities.main.recordings.data.RecordingData" />
         <variable
             name="selectionListViewModel"
             type="org.linphone.activities.main.viewmodels.ListTopBarViewModel" />

@@ -30,8 +30,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.activities.main.adapters.SelectionListAdapter
+import org.linphone.activities.main.history.data.GroupedCallLogData
 import org.linphone.activities.main.history.viewmodels.CallLogViewModel
-import org.linphone.activities.main.history.viewmodels.GroupedCallLogViewModel
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
 import org.linphone.core.Address
 import org.linphone.databinding.GenericListHeaderBinding
@@ -41,9 +41,9 @@ import org.linphone.utils.*
 class CallLogsListAdapter(
     selectionVM: ListTopBarViewModel,
     private val viewLifecycleOwner: LifecycleOwner
-) : SelectionListAdapter<GroupedCallLogViewModel, RecyclerView.ViewHolder>(selectionVM, CallLogDiffCallback()), HeaderAdapter {
-    val selectedCallLogEvent: MutableLiveData<Event<GroupedCallLogViewModel>> by lazy {
-        MutableLiveData<Event<GroupedCallLogViewModel>>()
+) : SelectionListAdapter<GroupedCallLogData, RecyclerView.ViewHolder>(selectionVM, CallLogDiffCallback()), HeaderAdapter {
+    val selectedCallLogEvent: MutableLiveData<Event<GroupedCallLogData>> by lazy {
+        MutableLiveData<Event<GroupedCallLogData>>()
     }
 
     val startCallToEvent: MutableLiveData<Event<Address>> by lazy {
@@ -62,10 +62,14 @@ class CallLogsListAdapter(
         (holder as ViewHolder).bind(getItem(position))
     }
 
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        (holder as ViewHolder).binding.viewModel?.destroy()
+    }
+
     inner class ViewHolder(
-        private val binding: HistoryListCellBinding
+        val binding: HistoryListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(callLogGroup: GroupedCallLogViewModel) {
+        fun bind(callLogGroup: GroupedCallLogData) {
             with(binding) {
                 val callLogViewModel = CallLogViewModel(callLogGroup.lastCallLog)
                 viewModel = callLogViewModel
@@ -140,17 +144,17 @@ class CallLogsListAdapter(
     }
 }
 
-private class CallLogDiffCallback : DiffUtil.ItemCallback<GroupedCallLogViewModel>() {
+private class CallLogDiffCallback : DiffUtil.ItemCallback<GroupedCallLogData>() {
     override fun areItemsTheSame(
-        oldItem: GroupedCallLogViewModel,
-        newItem: GroupedCallLogViewModel
+        oldItem: GroupedCallLogData,
+        newItem: GroupedCallLogData
     ): Boolean {
         return oldItem.lastCallLog.callId == newItem.lastCallLog.callId
     }
 
     override fun areContentsTheSame(
-        oldItem: GroupedCallLogViewModel,
-        newItem: GroupedCallLogViewModel
+        oldItem: GroupedCallLogData,
+        newItem: GroupedCallLogData
     ): Boolean {
         return false // For headers
     }

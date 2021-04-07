@@ -17,11 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.activities.main.contact.viewmodels
+package org.linphone.activities.main.contact.data
 
 import androidx.lifecycle.MutableLiveData
 
-class NumberOrAddressEditorViewModel(val currentValue: String, val isSipAddress: Boolean) {
+class NumberOrAddressEditorData(val currentValue: String, val isSipAddress: Boolean) {
     val newValue = MutableLiveData<String>()
 
     val toRemove = MutableLiveData<Boolean>()

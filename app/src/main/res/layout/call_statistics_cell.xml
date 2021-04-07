@@ -7,7 +7,7 @@
         <import type="android.view.View" />
         <variable
             name="data"
-            type="org.linphone.activities.call.viewmodels.CallStatisticsViewModel" />
+            type="org.linphone.activities.call.data.CallStatisticsData" />
     </data>
 
     <LinearLayout

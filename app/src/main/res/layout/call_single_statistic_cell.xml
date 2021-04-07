@@ -5,7 +5,7 @@
         <import type="android.view.View" />
         <variable
             name="data"
-            type="org.linphone.activities.call.viewmodels.StatItemViewModel" />
+            type="org.linphone.activities.call.viewmodels.StatItemData" />
     </data>
 
     <LinearLayout

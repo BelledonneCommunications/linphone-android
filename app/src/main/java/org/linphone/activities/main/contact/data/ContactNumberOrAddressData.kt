@@ -17,13 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.activities.main.contact.viewmodels
+package org.linphone.activities.main.contact.data
 
-import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.Address
 
-class ContactNumberOrAddressViewModel(
+class ContactNumberOrAddressData(
     val address: Address?,
     val hasPresence: Boolean,
     val displayedValue: String,
@@ -31,7 +30,7 @@ class ContactNumberOrAddressViewModel(
     val showSecureChat: Boolean = false,
     val typeLabel: String = "",
     private val listener: ContactNumberOrAddressClickListener
-) : ViewModel() {
+) {
     val showInvite = !hasPresence && !isSip
 
     val chatAllowed = !corePreferences.disableChat

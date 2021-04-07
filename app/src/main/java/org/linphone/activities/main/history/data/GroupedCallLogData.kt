@@ -17,11 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.activities.main.history.viewmodels
+package org.linphone.activities.main.history.data
 
 import org.linphone.core.CallLog
 
-class GroupedCallLogViewModel(callLog: CallLog) {
+class GroupedCallLogData(callLog: CallLog) {
     var lastCallLog: CallLog = callLog
     val callLogs = arrayListOf(callLog)
 }

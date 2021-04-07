@@ -26,7 +26,7 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.activities.main.settings.SettingListenerStub
 
 class SettingsViewModel : ViewModel() {
-    val tunnelAvailable: Boolean = coreContext.core.tunnelAvailable()
+    private val tunnelAvailable: Boolean = coreContext.core.tunnelAvailable()
 
     val showAccountSettings: Boolean = corePreferences.showAccountSettings
     val showTunnelSettings: Boolean = tunnelAvailable && corePreferences.showTunnelSettings
@@ -68,7 +68,14 @@ class SettingsViewModel : ViewModel() {
         updateAccountsList()
     }
 
+    override fun onCleared() {
+        accounts.value.orEmpty().forEach(AccountSettingsViewModel::destroy)
+        super.onCleared()
+    }
+
     fun updateAccountsList() {
+        accounts.value.orEmpty().forEach(AccountSettingsViewModel::destroy)
+
         val list = arrayListOf<AccountSettingsViewModel>()
         if (coreContext.core.accountList.isNotEmpty()) {
             for (account in coreContext.core.accountList) {
@@ -77,6 +84,7 @@ class SettingsViewModel : ViewModel() {
                 list.add(viewModel)
             }
         }
+
         accounts.value = list
     }
 }

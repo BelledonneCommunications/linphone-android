@@ -28,7 +28,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.R
 import org.linphone.activities.main.fragments.MasterFragment
 import org.linphone.activities.main.recordings.adapters.RecordingsListAdapter
-import org.linphone.activities.main.recordings.viewmodels.RecordingViewModel
+import org.linphone.activities.main.recordings.data.RecordingData
 import org.linphone.activities.main.recordings.viewmodels.RecordingsViewModel
 import org.linphone.databinding.RecordingsFragmentBinding
 import org.linphone.utils.RecyclerViewHeaderDecoration
@@ -104,7 +104,7 @@ class RecordingsFragment : MasterFragment<RecordingsFragmentBinding, RecordingsL
     }
 
     override fun deleteItems(indexesOfItemToDelete: ArrayList<Int>) {
-        val list = ArrayList<RecordingViewModel>()
+        val list = ArrayList<RecordingData>()
         for (index in indexesOfItemToDelete) {
             val recording = adapter.currentList[index]
             list.add(recording)

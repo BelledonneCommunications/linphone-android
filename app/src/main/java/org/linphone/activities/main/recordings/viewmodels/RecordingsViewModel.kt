@@ -22,11 +22,12 @@ package org.linphone.activities.main.recordings.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlin.collections.ArrayList
+import org.linphone.activities.main.recordings.data.RecordingData
 import org.linphone.core.tools.Log
 import org.linphone.utils.FileUtils
 
 class RecordingsViewModel : ViewModel() {
-    val recordingsList = MutableLiveData<ArrayList<RecordingViewModel>>()
+    val recordingsList = MutableLiveData<ArrayList<RecordingData>>()
 
     val isVideoVisible = MutableLiveData<Boolean>()
 
@@ -35,7 +36,7 @@ class RecordingsViewModel : ViewModel() {
         isVideoVisible.value = false
     }
 
-    fun deleteRecordings(list: ArrayList<RecordingViewModel>) {
+    fun deleteRecordings(list: ArrayList<RecordingData>) {
         for (recording in list) {
             Log.i("[Recordings] Deleting recording ${recording.path}")
             FileUtils.deleteFile(recording.path)
@@ -44,13 +45,13 @@ class RecordingsViewModel : ViewModel() {
     }
 
     private fun getRecordings() {
-        val list = arrayListOf<RecordingViewModel>()
+        val list = arrayListOf<RecordingData>()
 
         for (f in FileUtils.getFileStorageDir().listFiles().orEmpty()) {
             Log.i("[Recordings] Found file ${f.path}")
-            if (RecordingViewModel.RECORD_PATTERN.matcher(f.path).matches()) {
+            if (RecordingData.RECORD_PATTERN.matcher(f.path).matches()) {
                 list.add(
-                    RecordingViewModel(
+                    RecordingData(
                         f.path
                     )
                 )

@@ -31,8 +31,8 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.main.fragments.MasterFragment
 import org.linphone.activities.main.history.adapters.CallLogsListAdapter
+import org.linphone.activities.main.history.data.GroupedCallLogData
 import org.linphone.activities.main.history.viewmodels.CallLogsListViewModel
-import org.linphone.activities.main.history.viewmodels.GroupedCallLogViewModel
 import org.linphone.activities.main.navigateToCallHistory
 import org.linphone.activities.main.navigateToDialer
 import org.linphone.activities.main.viewmodels.DialogViewModel
@@ -194,7 +194,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
     }
 
     override fun deleteItems(indexesOfItemToDelete: ArrayList<Int>) {
-        val list = ArrayList<GroupedCallLogViewModel>()
+        val list = ArrayList<GroupedCallLogData>()
         for (index in indexesOfItemToDelete) {
             val callLogGroup = adapter.currentList[index]
             list.add(callLogGroup)
