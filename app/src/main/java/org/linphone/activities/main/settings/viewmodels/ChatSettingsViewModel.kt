@@ -118,6 +118,8 @@ class ChatSettingsViewModel : GenericSettingsViewModel() {
     }
     val goToAndroidNotificationSettingsEvent = MutableLiveData<Event<Boolean>>()
 
+    val vfs = MutableLiveData<Boolean>()
+
     init {
         markAsReadNotifDismissal.value = prefs.markAsReadUponChatMessageNotificationDismissal
         downloadedMediaPublic.value = prefs.makePublicMediaFilesDownloaded
@@ -127,6 +129,7 @@ class ChatSettingsViewModel : GenericSettingsViewModel() {
         hideEmptyRooms.value = prefs.hideEmptyRooms
         hideRoomsRemovedProxies.value = prefs.hideRoomsFromRemovedProxies
         fileSharingUrl.value = core.fileTransferServer
+        vfs.value = prefs.vfsEnabled
     }
 
     private fun initAutoDownloadList() {
