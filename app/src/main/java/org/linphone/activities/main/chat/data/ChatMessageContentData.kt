@@ -85,6 +85,8 @@ class ChatMessageContentData(
         }
     }
 
+    private val isEncrypted = content.isFileEncrypted
+
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     init {
@@ -136,7 +138,7 @@ class ChatMessageContentData(
         scope.cancel()
 
         val path = filePath.value.orEmpty()
-        if (content.isFileEncrypted && path.isNotEmpty()) {
+        if (path.isNotEmpty() && isEncrypted) {
             Log.i("[Content] Deleting file used for preview: $path")
             FileUtils.deleteFile(path)
             filePath.value = ""

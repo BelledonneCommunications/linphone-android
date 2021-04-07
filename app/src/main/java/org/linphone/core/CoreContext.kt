@@ -682,6 +682,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
         private const val LINPHONE_VFS_ENCRYPTION_AES256GCM128_SHA256 = 2
         private const val VFS_IV = "vfsiv"
         private const val VFS_KEY = "vfskey"
+
         @Throws(java.lang.Exception::class)
         private fun generateSecretKey() {
             val keyGenerator =
@@ -761,6 +762,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
                 Base64.decode(sharedPreferences.getString(VFS_IV, null), Base64.DEFAULT)
             )
         }
+
         fun activateVFS() {
             try {
                 Log.i("[Context] Activating VFS")
@@ -781,7 +783,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
                     32
                 )
 
-                Log.i("[Context] VFS activated.")
+                Log.i("[Context] VFS activated")
             } catch (e: Exception) {
                 Log.f("[Context] Unable to activate VFS encryption: $e")
             }

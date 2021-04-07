@@ -74,7 +74,6 @@ class ChatMessageData(
             // TODO FIXME : find a way to refresh outgoing message downloaded
             if (state == ChatMessage.State.FileTransferDone && !message.isOutgoing) {
                 Log.i("[Chat Message] File transfer done")
-                contents.value.orEmpty().forEach(ChatMessageContentData::destroy)
                 updateContentsList()
 
                 if (!message.isEphemeral && corePreferences.makePublicMediaFilesDownloaded) {
