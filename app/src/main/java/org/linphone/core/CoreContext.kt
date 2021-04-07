@@ -49,6 +49,7 @@ import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 import kotlin.math.abs
+import kotlinx.coroutines.*
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.call.CallActivity
@@ -99,6 +100,8 @@ class CoreContext(val context: Context, coreConfig: Config) {
     }
 
     private val loggingService = Factory.instance().loggingService
+
+    private val coroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     private var gsmCallActive = false
     private val phoneStateListener = object : PhoneStateListener() {
@@ -322,6 +325,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
 
     fun stop() {
         Log.i("[Context] Stopping")
+        coroutineScope.cancel()
 
         val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         Log.i("[Context] Unregistering phone state listener")
@@ -595,6 +599,39 @@ class CoreContext(val context: Context, coreConfig: Config) {
             val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
             windowManager.removeView(callOverlay)
             callOverlay = null
+        }
+    }
+
+    /* Coroutine related */
+
+    fun addContentToMediaStore(content: Content) {
+        coroutineScope.launch {
+            when (content.type) {
+                "image" -> {
+                    if (Compatibility.addImageToMediaStore(context, content)) {
+                        Log.i("[Context] Adding image ${content.name} to Media Store terminated")
+                    } else {
+                        Log.e("[Context] Something went wrong while copying file to Media Store...")
+                    }
+                }
+                "video" -> {
+                    if (Compatibility.addVideoToMediaStore(context, content)) {
+                        Log.i("[Context] Adding video ${content.name} to Media Store terminated")
+                    } else {
+                        Log.e("[Context] Something went wrong while copying file to Media Store...")
+                    }
+                }
+                "audio" -> {
+                    if (Compatibility.addAudioToMediaStore(context, content)) {
+                        Log.i("[Context] Adding audio ${content.name} to Media Store terminated")
+                    } else {
+                        Log.e("[Context] Something went wrong while copying file to Media Store...")
+                    }
+                }
+                else -> {
+                    Log.w("[Context] File ${content.name} isn't either an image, an audio file or a video, can't add it to the Media Store")
+                }
+            }
         }
     }
 

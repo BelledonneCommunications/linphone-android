@@ -17,17 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.activities.main.chat.viewmodels
+package org.linphone.activities.main.chat.data
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.contact.Contact
-import org.linphone.contact.ContactViewModelInterface
+import org.linphone.contact.ContactDataInterface
 import org.linphone.core.*
 import org.linphone.utils.LinphoneUtils
 
-class ChatRoomCreationContactViewModel(private val searchResult: SearchResult) : ViewModel(), ContactViewModelInterface {
+class ChatRoomCreationContactData(private val searchResult: SearchResult) : ContactDataInterface {
     override val contact = MutableLiveData<Contact>()
 
     override val displayName: String by lazy {
@@ -58,8 +57,6 @@ class ChatRoomCreationContactViewModel(private val searchResult: SearchResult) :
     val hasLimeX3DHCapability: Boolean
         get() = searchResult.hasCapability(FriendCapability.LimeX3Dh)
 
-    var listener: ChatRoomCreationContactSelectionListener? = null
-
     init {
         isDisabled.value = false
         isSelected.value = false
@@ -74,8 +71,4 @@ class ChatRoomCreationContactViewModel(private val searchResult: SearchResult) :
             contact.value = coreContext.contactsManager.findContactByPhoneNumber(searchResult.phoneNumber.orEmpty())
         }
     }
-}
-
-interface ChatRoomCreationContactSelectionListener {
-    fun onUnSelected(searchResult: SearchResult)
 }

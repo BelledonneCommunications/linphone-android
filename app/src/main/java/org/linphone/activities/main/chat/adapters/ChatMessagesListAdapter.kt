@@ -34,9 +34,9 @@ import androidx.recyclerview.widget.RecyclerView
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.main.adapters.SelectionListAdapter
-import org.linphone.activities.main.chat.viewmodels.ChatMessageViewModel
-import org.linphone.activities.main.chat.viewmodels.EventViewModel
-import org.linphone.activities.main.chat.viewmodels.OnContentClickedListener
+import org.linphone.activities.main.chat.data.ChatMessageData
+import org.linphone.activities.main.chat.data.EventData
+import org.linphone.activities.main.chat.data.OnContentClickedListener
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatRoomCapabilities
@@ -117,6 +117,12 @@ class ChatMessagesListAdapter(
         }
     }
 
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        when (holder) {
+            is ChatMessageViewHolder -> holder.binding.viewModel?.destroy()
+        }
+    }
+
     override fun getItemViewType(position: Int): Int {
         val eventLog = getItem(position)
         return eventLog.type.toInt()
@@ -127,14 +133,14 @@ class ChatMessagesListAdapter(
     }
 
     inner class ChatMessageViewHolder(
-        private val binding: ChatMessageListCellBinding
+        val binding: ChatMessageListCellBinding
     ) : RecyclerView.ViewHolder(binding.root), PopupMenu.OnMenuItemClickListener {
         fun bind(eventLog: EventLog) {
             with(binding) {
                 if (eventLog.type == EventLog.Type.ConferenceChatMessage) {
                     val chatMessage = eventLog.chatMessage
                     chatMessage ?: return
-                    val chatMessageViewModel = ChatMessageViewModel(chatMessage, contentClickedListener)
+                    val chatMessageViewModel = ChatMessageData(chatMessage, contentClickedListener)
                     viewModel = chatMessageViewModel
 
                     lifecycleOwner = viewLifecycleOwner
@@ -298,7 +304,7 @@ class ChatMessagesListAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(eventLog: EventLog) {
             with(binding) {
-                val eventViewModel = EventViewModel(eventLog)
+                val eventViewModel = EventData(eventLog)
                 viewModel = eventViewModel
 
                 binding.lifecycleOwner = viewLifecycleOwner

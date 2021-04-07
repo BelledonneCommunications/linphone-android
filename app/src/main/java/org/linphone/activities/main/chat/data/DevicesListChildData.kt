@@ -17,15 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.activities.main.chat.viewmodels
+package org.linphone.activities.main.chat.data
 
-import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.ChatRoomSecurityLevel
 import org.linphone.core.ParticipantDevice
 
-class DevicesListChildViewModel(private val device: ParticipantDevice) : ViewModel() {
+class DevicesListChildData(private val device: ParticipantDevice) {
     val deviceName: String = device.name.orEmpty()
 
     val securityLevelIcon: Int by lazy {

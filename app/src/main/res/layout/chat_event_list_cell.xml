@@ -11,7 +11,7 @@
             type="android.view.View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.activities.main.chat.viewmodels.EventViewModel" />
+            type="org.linphone.activities.main.chat.data.EventData" />
         <variable
             name="selectionListViewModel"
             type="org.linphone.activities.main.viewmodels.ListTopBarViewModel" />

@@ -10,7 +10,7 @@
             type="android.view.View.OnClickListener"/>
         <variable
             name="viewModel"
-            type="org.linphone.activities.main.chat.viewmodels.ChatRoomCreationContactViewModel" />
+            type="org.linphone.activities.main.chat.data.ChatRoomCreationContactData" />
     </data>
 
     <FrameLayout

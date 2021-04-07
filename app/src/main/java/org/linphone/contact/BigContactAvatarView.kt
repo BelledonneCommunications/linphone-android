@@ -51,7 +51,7 @@ class BigContactAvatarView : LinearLayout {
         )
     }
 
-    fun setViewModel(viewModel: ContactViewModelInterface?) {
+    fun setViewModel(viewModel: ContactDataInterface?) {
         if (viewModel == null) {
             binding.root.visibility = View.GONE
             return

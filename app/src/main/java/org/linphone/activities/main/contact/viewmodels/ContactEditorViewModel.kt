@@ -43,7 +43,7 @@ class ContactEditorViewModelFactory(private val contact: Contact?) :
     }
 }
 
-class ContactEditorViewModel(val c: Contact?) : ViewModel(), ContactViewModelInterface {
+class ContactEditorViewModel(val c: Contact?) : ViewModel(), ContactDataInterface {
     override val contact = MutableLiveData<Contact>()
 
     override val displayName: String

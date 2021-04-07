@@ -18,7 +18,7 @@
             type="Integer"/>
         <variable
             name="viewModel"
-            type="org.linphone.activities.main.chat.viewmodels.ChatMessageViewModel" />
+            type="org.linphone.activities.main.chat.data.ChatMessageData" />
         <variable
             name="selectionListViewModel"
             type="org.linphone.activities.main.viewmodels.ListTopBarViewModel" />

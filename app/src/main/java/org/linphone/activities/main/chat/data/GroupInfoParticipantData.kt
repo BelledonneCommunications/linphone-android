@@ -17,15 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.activities.main.chat.viewmodels
+package org.linphone.activities.main.chat.data
 
 import androidx.lifecycle.MutableLiveData
 import org.linphone.activities.main.chat.GroupChatRoomMember
-import org.linphone.contact.GenericContactViewModel
+import org.linphone.contact.GenericContactData
 import org.linphone.core.ChatRoomSecurityLevel
 import org.linphone.utils.LinphoneUtils
 
-class GroupInfoParticipantViewModel(private val participant: GroupChatRoomMember) : GenericContactViewModel(participant.address) {
+class GroupInfoParticipantData(private val participant: GroupChatRoomMember) : GenericContactData(participant.address) {
     override val securityLevel: ChatRoomSecurityLevel
         get() = participant.securityLevel
 

@@ -17,15 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.activities.main.chat.viewmodels
+package org.linphone.activities.main.chat.data
 
 import android.graphics.Bitmap
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatMessageListenerStub
 import org.linphone.core.Content
@@ -34,11 +30,11 @@ import org.linphone.utils.AppUtils
 import org.linphone.utils.FileUtils
 import org.linphone.utils.ImageUtils
 
-class ChatMessageContentViewModel(
+class ChatMessageContentData(
     val content: Content,
     private val chatMessage: ChatMessage,
     private val listener: OnContentClickedListener?
-) : ViewModel() {
+) {
     val isImage = MutableLiveData<Boolean>()
     val isVideo = MutableLiveData<Boolean>()
     val isAudio = MutableLiveData<Boolean>()
@@ -89,6 +85,8 @@ class ChatMessageContentViewModel(
         }
     }
 
+    private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+
     init {
         filePath.value = ""
         fileName.value = if (content.name.isNullOrEmpty() && !content.filePath.isNullOrEmpty()) {
@@ -110,7 +108,7 @@ class ChatMessageContentViewModel(
                 isAudio.value = FileUtils.isExtensionAudio(path)
 
                 if (isVideo.value == true) {
-                    viewModelScope.launch {
+                    scope.launch {
                         withContext(Dispatchers.IO) {
                             videoPreview.postValue(ImageUtils.getVideoPreview(path))
                         }
@@ -134,15 +132,15 @@ class ChatMessageContentViewModel(
         chatMessage.addListener(chatMessageListener)
     }
 
-    override fun onCleared() {
+    fun destroy() {
+        scope.cancel()
+
         val path = filePath.value.orEmpty()
         if (content.isFileEncrypted && path.isNotEmpty()) {
             Log.i("[Content] Deleting file used for preview: $path")
             FileUtils.deleteFile(path)
             filePath.value = ""
         }
-
-        super.onCleared()
     }
 
     fun download() {

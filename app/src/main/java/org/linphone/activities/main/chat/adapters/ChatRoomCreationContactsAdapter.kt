@@ -29,7 +29,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
-import org.linphone.activities.main.chat.viewmodels.ChatRoomCreationContactViewModel
+import org.linphone.activities.main.chat.data.ChatRoomCreationContactData
 import org.linphone.core.Address
 import org.linphone.core.FriendCapability
 import org.linphone.core.SearchResult
@@ -74,7 +74,7 @@ class ChatRoomCreationContactsAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(searchResult: SearchResult) {
             with(binding) {
-                val searchResultViewModel = ChatRoomCreationContactViewModel(searchResult)
+                val searchResultViewModel = ChatRoomCreationContactData(searchResult)
                 viewModel = searchResultViewModel
 
                 lifecycleOwner = viewLifecycleOwner
@@ -97,7 +97,7 @@ class ChatRoomCreationContactsAdapter(
 
         private fun updateSecurity(
             searchResult: SearchResult,
-            viewModel: ChatRoomCreationContactViewModel,
+            viewModel: ChatRoomCreationContactData,
             securityEnabled: Boolean
         ) {
             val searchAddress = searchResult.address

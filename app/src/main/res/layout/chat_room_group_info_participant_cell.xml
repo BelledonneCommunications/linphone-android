@@ -11,7 +11,7 @@
             type="android.view.View.OnClickListener"/>
         <variable
             name="viewModel"
-            type="org.linphone.activities.main.chat.viewmodels.GroupInfoParticipantViewModel" />
+            type="org.linphone.activities.main.chat.data.GroupInfoParticipantData" />
         <variable
             name="isEncrypted"
             type="Boolean" />

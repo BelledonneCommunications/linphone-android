@@ -29,7 +29,7 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.main.viewmodels.ErrorReportingViewModel
 import org.linphone.contact.Contact
-import org.linphone.contact.ContactViewModelInterface
+import org.linphone.contact.ContactDataInterface
 import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.contact.NativeContact
 import org.linphone.core.*
@@ -46,7 +46,7 @@ class ContactViewModelFactory(private val contact: Contact) :
     }
 }
 
-class ContactViewModel(private val c: Contact) : ErrorReportingViewModel(), ContactViewModelInterface {
+class ContactViewModel(private val c: Contact) : ErrorReportingViewModel(), ContactDataInterface {
     override val contact = MutableLiveData<Contact>()
 
     override val displayName: String by lazy {

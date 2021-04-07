@@ -51,7 +51,7 @@ class ContactAvatarView : LinearLayout {
         )
     }
 
-    fun setViewModel(viewModel: ContactViewModelInterface) {
+    fun setViewModel(viewModel: ContactDataInterface) {
         val contact: Contact? = viewModel.contact.value
         val initials = if (contact != null) {
             AppUtils.getInitials(contact.fullName ?: contact.firstName + " " + contact.lastName)
