@@ -787,7 +787,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
                 32
             )
 
-            Log.i("[Context] VFS activated with key ${getVfsKey(corePreferences.encryptedSharedPreferences)}")
+            Log.i("[Context] VFS activated.")
         } catch (e: Exception) {
             Log.f("[Context] Unable to activate VFS encryption: $e")
         }
