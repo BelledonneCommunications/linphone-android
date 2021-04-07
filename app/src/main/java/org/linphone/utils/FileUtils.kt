@@ -43,7 +43,7 @@ import org.linphone.core.tools.Log
 
 class FileUtils {
     companion object {
-        private const val VFS_PLAIN_FILE_EXTENSION = ".bctbx_evfs_plain"
+        const val VFS_PLAIN_FILE_EXTENSION = ".bctbx_evfs_plain"
 
         fun getNameFromFilePath(filePath: String): String {
             var name = filePath
