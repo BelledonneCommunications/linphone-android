@@ -17,17 +17,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.activities.call.viewmodels
+package org.linphone.activities.call.data
 
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.contact.GenericContactViewModel
+import org.linphone.activities.call.viewmodels.StatItemData
+import org.linphone.activities.call.viewmodels.StatType
+import org.linphone.contact.GenericContactData
 import org.linphone.core.*
 
-class CallStatisticsViewModel(val call: Call) : GenericContactViewModel(call.remoteAddress) {
-    val audioStats = MutableLiveData<ArrayList<StatItemViewModel>>()
+class CallStatisticsData(val call: Call) : GenericContactData(call.remoteAddress) {
+    val audioStats = MutableLiveData<ArrayList<StatItemData>>()
 
-    val videoStats = MutableLiveData<ArrayList<StatItemViewModel>>()
+    val videoStats = MutableLiveData<ArrayList<StatItemData>>()
 
     val isVideoEnabled = MutableLiveData<Boolean>()
 
@@ -35,7 +37,7 @@ class CallStatisticsViewModel(val call: Call) : GenericContactViewModel(call.rem
 
     private val listener = object : CoreListenerStub() {
         override fun onCallStatsUpdated(core: Core, call: Call, stats: CallStats) {
-            if (call == this@CallStatisticsViewModel.call) {
+            if (call == this@CallStatisticsData.call) {
                 isVideoEnabled.value = call.currentParams.videoEnabled()
                 updateCallStats(stats)
             }
@@ -56,10 +58,9 @@ class CallStatisticsViewModel(val call: Call) : GenericContactViewModel(call.rem
         isExpanded.value = coreContext.core.currentCall == call
     }
 
-    override fun onCleared() {
+    override fun destroy() {
         coreContext.core.removeListener(listener)
-
-        super.onCleared()
+        super.destroy()
     }
 
     fun toggleExpanded() {
@@ -67,38 +68,38 @@ class CallStatisticsViewModel(val call: Call) : GenericContactViewModel(call.rem
     }
 
     private fun initCallStats() {
-        val audioList = arrayListOf<StatItemViewModel>()
-        audioList.add(StatItemViewModel(StatType.CAPTURE))
-        audioList.add(StatItemViewModel(StatType.PLAYBACK))
-        audioList.add(StatItemViewModel(StatType.PAYLOAD))
-        audioList.add(StatItemViewModel(StatType.ENCODER))
-        audioList.add(StatItemViewModel(StatType.DECODER))
-        audioList.add(StatItemViewModel(StatType.DOWNLOAD_BW))
-        audioList.add(StatItemViewModel(StatType.UPLOAD_BW))
-        audioList.add(StatItemViewModel(StatType.ICE))
-        audioList.add(StatItemViewModel(StatType.IP_FAM))
-        audioList.add(StatItemViewModel(StatType.SENDER_LOSS))
-        audioList.add(StatItemViewModel(StatType.RECEIVER_LOSS))
-        audioList.add(StatItemViewModel(StatType.JITTER))
+        val audioList = arrayListOf<StatItemData>()
+        audioList.add(StatItemData(StatType.CAPTURE))
+        audioList.add(StatItemData(StatType.PLAYBACK))
+        audioList.add(StatItemData(StatType.PAYLOAD))
+        audioList.add(StatItemData(StatType.ENCODER))
+        audioList.add(StatItemData(StatType.DECODER))
+        audioList.add(StatItemData(StatType.DOWNLOAD_BW))
+        audioList.add(StatItemData(StatType.UPLOAD_BW))
+        audioList.add(StatItemData(StatType.ICE))
+        audioList.add(StatItemData(StatType.IP_FAM))
+        audioList.add(StatItemData(StatType.SENDER_LOSS))
+        audioList.add(StatItemData(StatType.RECEIVER_LOSS))
+        audioList.add(StatItemData(StatType.JITTER))
         audioStats.value = audioList
 
-        val videoList = arrayListOf<StatItemViewModel>()
-        videoList.add(StatItemViewModel(StatType.CAPTURE))
-        videoList.add(StatItemViewModel(StatType.PLAYBACK))
-        videoList.add(StatItemViewModel(StatType.PAYLOAD))
-        videoList.add(StatItemViewModel(StatType.ENCODER))
-        videoList.add(StatItemViewModel(StatType.DECODER))
-        videoList.add(StatItemViewModel(StatType.DOWNLOAD_BW))
-        videoList.add(StatItemViewModel(StatType.UPLOAD_BW))
-        videoList.add(StatItemViewModel(StatType.ESTIMATED_AVAILABLE_DOWNLOAD_BW))
-        videoList.add(StatItemViewModel(StatType.ICE))
-        videoList.add(StatItemViewModel(StatType.IP_FAM))
-        videoList.add(StatItemViewModel(StatType.SENDER_LOSS))
-        videoList.add(StatItemViewModel(StatType.RECEIVER_LOSS))
-        videoList.add(StatItemViewModel(StatType.SENT_RESOLUTION))
-        videoList.add(StatItemViewModel(StatType.RECEIVED_RESOLUTION))
-        videoList.add(StatItemViewModel(StatType.SENT_FPS))
-        videoList.add(StatItemViewModel(StatType.RECEIVED_FPS))
+        val videoList = arrayListOf<StatItemData>()
+        videoList.add(StatItemData(StatType.CAPTURE))
+        videoList.add(StatItemData(StatType.PLAYBACK))
+        videoList.add(StatItemData(StatType.PAYLOAD))
+        videoList.add(StatItemData(StatType.ENCODER))
+        videoList.add(StatItemData(StatType.DECODER))
+        videoList.add(StatItemData(StatType.DOWNLOAD_BW))
+        videoList.add(StatItemData(StatType.UPLOAD_BW))
+        videoList.add(StatItemData(StatType.ESTIMATED_AVAILABLE_DOWNLOAD_BW))
+        videoList.add(StatItemData(StatType.ICE))
+        videoList.add(StatItemData(StatType.IP_FAM))
+        videoList.add(StatItemData(StatType.SENDER_LOSS))
+        videoList.add(StatItemData(StatType.RECEIVER_LOSS))
+        videoList.add(StatItemData(StatType.SENT_RESOLUTION))
+        videoList.add(StatItemData(StatType.RECEIVED_RESOLUTION))
+        videoList.add(StatItemData(StatType.SENT_FPS))
+        videoList.add(StatItemData(StatType.RECEIVED_FPS))
         videoStats.value = videoList
     }
 
