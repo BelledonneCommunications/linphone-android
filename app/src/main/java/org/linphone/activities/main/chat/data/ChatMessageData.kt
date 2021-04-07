@@ -17,20 +17,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.activities.main.chat.viewmodels
+package org.linphone.activities.main.chat.data
 
 import android.os.CountDownTimer
 import android.text.Spannable
 import android.text.util.Linkify
 import androidx.core.text.util.LinkifyCompat
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
-import org.linphone.compatibility.Compatibility
-import org.linphone.contact.GenericContactViewModel
+import org.linphone.contact.GenericContactData
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatMessageListenerStub
 import org.linphone.core.Content
@@ -40,10 +38,10 @@ import org.linphone.utils.AppUtils
 import org.linphone.utils.PermissionHelper
 import org.linphone.utils.TimestampUtils
 
-class ChatMessageViewModel(
+class ChatMessageData(
     val chatMessage: ChatMessage,
     private var contentListener: OnContentClickedListener? = null
-) : GenericContactViewModel(chatMessage.fromAddress) {
+) : GenericContactData(chatMessage.fromAddress) {
     val sendInProgress = MutableLiveData<Boolean>()
 
     val transferInProgress = MutableLiveData<Boolean>()
@@ -58,7 +56,7 @@ class ChatMessageViewModel(
 
     val hideTime = MutableLiveData<Boolean>()
 
-    val contents = MutableLiveData<ArrayList<ChatMessageContentViewModel>>()
+    val contents = MutableLiveData<ArrayList<ChatMessageContentData>>()
 
     val time = MutableLiveData<String>()
 
@@ -76,6 +74,7 @@ class ChatMessageViewModel(
             // TODO FIXME : find a way to refresh outgoing message downloaded
             if (state == ChatMessage.State.FileTransferDone && !message.isOutgoing) {
                 Log.i("[Chat Message] File transfer done")
+                contents.value.orEmpty().forEach(ChatMessageContentData::destroy)
                 updateContentsList()
 
                 if (!message.isEphemeral && corePreferences.makePublicMediaFilesDownloaded) {
@@ -109,11 +108,12 @@ class ChatMessageViewModel(
         updateContentsList()
     }
 
-    override fun onCleared() {
+    override fun destroy() {
+        super.destroy()
+
+        contents.value.orEmpty().forEach(ChatMessageContentData::destroy)
         chatMessage.removeListener(listener)
         contentListener = null
-
-        super.onCleared()
     }
 
     fun updateBubbleBackground(hasPrevious: Boolean, hasNext: Boolean) {
@@ -164,16 +164,19 @@ class ChatMessageViewModel(
     }
 
     private fun updateContentsList() {
-        val list = arrayListOf<ChatMessageContentViewModel>()
+        contents.value.orEmpty().forEach(ChatMessageContentData::destroy)
+
+        val list = arrayListOf<ChatMessageContentData>()
         for (content in chatMessage.contents) {
             if (content.isFileTransfer || content.isFile) {
-                list.add(ChatMessageContentViewModel(content, chatMessage, contentListener))
+                list.add(ChatMessageContentData(content, chatMessage, contentListener))
             } else if (content.isText) {
                 val spannable = Spannable.Factory.getInstance().newSpannable(content.utf8Text)
                 LinkifyCompat.addLinks(spannable, Linkify.WEB_URLS)
                 text.value = spannable
             }
         }
+
         contents.value = list
     }
 
@@ -210,33 +213,6 @@ class ChatMessageViewModel(
     }
 
     private fun addContentToMediaStore(content: Content) {
-        viewModelScope.launch {
-            when (content.type) {
-                "image" -> {
-                    if (Compatibility.addImageToMediaStore(coreContext.context, content)) {
-                        Log.i("[Chat Message] Adding image ${content.name} to Media Store terminated")
-                    } else {
-                        Log.e("[Chat Message] Something went wrong while copying file to Media Store...")
-                    }
-                }
-                "video" -> {
-                    if (Compatibility.addVideoToMediaStore(coreContext.context, content)) {
-                        Log.i("[Chat Message] Adding video ${content.name} to Media Store terminated")
-                    } else {
-                        Log.e("[Chat Message] Something went wrong while copying file to Media Store...")
-                    }
-                }
-                "audio" -> {
-                    if (Compatibility.addAudioToMediaStore(coreContext.context, content)) {
-                        Log.i("[Chat Message] Adding audio ${content.name} to Media Store terminated")
-                    } else {
-                        Log.e("[Chat Message] Something went wrong while copying file to Media Store...")
-                    }
-                }
-                else -> {
-                    Log.w("[Chat Message] File ${content.name} isn't either an image, an audio file or a video, can't add it to the Media Store")
-                }
-            }
-        }
+        coreContext.addContentToMediaStore(content)
     }
 }

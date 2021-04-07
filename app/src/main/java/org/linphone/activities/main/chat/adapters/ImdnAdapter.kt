@@ -29,7 +29,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
-import org.linphone.activities.main.chat.viewmodels.ImdnParticipantViewModel
+import org.linphone.activities.main.chat.data.ImdnParticipantData
 import org.linphone.core.ChatMessage
 import org.linphone.core.ParticipantImdnState
 import org.linphone.databinding.ChatRoomImdnParticipantCellBinding
@@ -51,12 +51,16 @@ class ImdnAdapter(
         (holder as ViewHolder).bind(getItem(position))
     }
 
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        (holder as ViewHolder).binding.viewModel?.destroy()
+    }
+
     inner class ViewHolder(
-        private val binding: ChatRoomImdnParticipantCellBinding
+        val binding: ChatRoomImdnParticipantCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(participantImdnState: ParticipantImdnState) {
             with(binding) {
-                viewModel = ImdnParticipantViewModel(participantImdnState)
+                viewModel = ImdnParticipantData(participantImdnState)
 
                 lifecycleOwner = viewLifecycleOwner
 

@@ -22,6 +22,7 @@ package org.linphone.activities.main.chat.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import org.linphone.activities.main.chat.data.ChatMessageData
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatMessageListenerStub
 import org.linphone.core.ParticipantImdnState
@@ -38,7 +39,7 @@ class ImdnViewModelFactory(private val chatMessage: ChatMessage) :
 class ImdnViewModel(private val chatMessage: ChatMessage) : ViewModel() {
     val participants = MutableLiveData<ArrayList<ParticipantImdnState>>()
 
-    val chatMessageViewModel = ChatMessageViewModel(chatMessage)
+    val chatMessageViewModel = ChatMessageData(chatMessage)
 
     private val listener = object : ChatMessageListenerStub() {
         override fun onParticipantImdnStateChanged(
