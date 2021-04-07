@@ -44,6 +44,10 @@ class LinphoneApplication : Application() {
             corePreferences = CorePreferences(context)
             corePreferences.copyAssetsFromPackage()
 
+            if (corePreferences.vfsEnabled) {
+                CoreContext.activateVFS()
+            }
+
             val config = Factory.instance().createConfigWithFactory(corePreferences.configPath, corePreferences.factoryConfigPath)
             corePreferences.config = config
 
