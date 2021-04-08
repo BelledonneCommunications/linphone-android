@@ -100,6 +100,14 @@
 
                 <include
                     layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/chat_settings_use_in_app_file_viewer_title}"
+                    linphone:subtitle="@{@string/chat_settings_use_in_app_file_viewer_summary}"
+                    linphone:enabled="@{!viewModel.vfs}"
+                    linphone:listener="@{viewModel.useInAppFileViewerListener}"
+                    linphone:checked="@={viewModel.useInAppFileViewer}"/>
+
+                <include
+                    layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/chat_settings_hide_notification_content_title}"
                     linphone:subtitle="@{@string/chat_settings_hide_notification_content_summary}"
                     linphone:listener="@{viewModel.hideNotificationContentListener}"

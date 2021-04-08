@@ -569,4 +569,8 @@
     <string name="content_description_export">Ouvrir le fichier dans une application tierce</string>
     <string name="chat_message_no_app_found_to_handle_file_mime_type">Aucune application n\'est disponible pour ouvrir ce type de fichier</string>
     <string name="chat_bubble_cant_open_enrypted_file">Impossible d\'ouvrir un fichier chiffré dans la bulle de conversation</string>
+    <string name="advanced_settings_vfs_title">Chiffrer tous les fichiers</string>
+    <string name="advanced_settings_vfs_summary">Attention, ne pourra pas être désactivé !</string>
+    <string name="chat_settings_use_in_app_file_viewer_title">Ouvrir les fichiers dans l\'application</string>
+    <string name="chat_settings_use_in_app_file_viewer_summary">Vous pourrez toujours les exporter dans une appli tierce</string>
 </resources>
