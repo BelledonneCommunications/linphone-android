@@ -88,6 +88,14 @@ class ChatSettingsViewModel : GenericSettingsViewModel() {
     }
     val hideNotificationContent = MutableLiveData<Boolean>()
 
+    val useInAppFileViewerListener = object : SettingListenerStub() {
+        override fun onBoolValueChanged(newValue: Boolean) {
+            prefs.useInAppFileViewerForNonEncryptedFiles = newValue
+            useInAppFileViewer.value = newValue
+        }
+    }
+    val useInAppFileViewer = MutableLiveData<Boolean>()
+
     val launcherShortcutsListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
             prefs.chatRoomShortcuts = newValue
@@ -122,7 +130,8 @@ class ChatSettingsViewModel : GenericSettingsViewModel() {
 
     init {
         markAsReadNotifDismissal.value = prefs.markAsReadUponChatMessageNotificationDismissal
-        downloadedMediaPublic.value = prefs.makePublicMediaFilesDownloaded
+        downloadedMediaPublic.value = prefs.makePublicMediaFilesDownloaded && !prefs.vfsEnabled
+        useInAppFileViewer.value = prefs.useInAppFileViewerForNonEncryptedFiles || prefs.vfsEnabled
         hideNotificationContent.value = prefs.hideChatMessageContentInNotification
         initAutoDownloadList()
         launcherShortcuts.value = prefs.chatRoomShortcuts
