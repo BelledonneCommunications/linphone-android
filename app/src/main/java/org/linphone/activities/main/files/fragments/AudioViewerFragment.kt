@@ -22,6 +22,7 @@ package org.linphone.activities.main.files.fragments
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.KeyEvent
+import android.view.View
 import android.widget.MediaController
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -41,8 +42,8 @@ class AudioViewerFragment : SecureFragment<FileAudioViewerFragmentBinding>() {
     override fun getLayoutId(): Int = R.layout.file_audio_viewer_fragment
 
     @SuppressLint("ClickableViewAccessibility")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = this
 

@@ -21,6 +21,7 @@ package org.linphone.activities.assistant.fragments
 
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -38,8 +39,8 @@ class QrCodeFragment : GenericFragment<AssistantQrCodeFragmentBinding>() {
 
     override fun getLayoutId(): Int = R.layout.assistant_qr_code_fragment
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = this
 

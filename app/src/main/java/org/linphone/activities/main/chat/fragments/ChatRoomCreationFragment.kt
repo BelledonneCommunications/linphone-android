@@ -46,8 +46,8 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
 
     override fun getLayoutId(): Int = R.layout.chat_room_creation_fragment
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = this
 

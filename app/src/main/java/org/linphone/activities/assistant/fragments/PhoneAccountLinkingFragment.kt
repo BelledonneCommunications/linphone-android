@@ -20,6 +20,7 @@
 package org.linphone.activities.assistant.fragments
 
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication
 import org.linphone.R
@@ -36,8 +37,8 @@ class PhoneAccountLinkingFragment : AbstractPhoneFragment<AssistantPhoneAccountL
 
     override fun getLayoutId(): Int = R.layout.assistant_phone_account_linking_fragment
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = this
 
