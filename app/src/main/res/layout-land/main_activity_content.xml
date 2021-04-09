@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.motion.widget.MotionLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layoutDescription="@xml/motion_main_activity_tabs_land">
+    android:layout_alignParentBottom="true">
 
     <!-- For proper snack bar placement -->
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinator"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintLeft_toRightOf="@id/tabs_fragment"
-        app:layout_constraintRight_toRightOf="parent">
+        android:layout_toRightOf="@id/tabs_fragment">
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/nav_host_fragment"
@@ -31,7 +30,7 @@
         android:name="org.linphone.activities.main.fragments.TabsFragment"
         android:layout_width="@dimen/main_activity_tabs_fragment_size"
         android:layout_height="match_parent"
-        tools:layout="@layout/tabs_fragment"
-        app:layout_constraintLeft_toLeftOf="parent"/>
+        android:layout_alignParentLeft="true"
+        tools:layout="@layout/tabs_fragment"/>
 
-</androidx.constraintlayout.motion.widget.MotionLayout>
+</RelativeLayout>
