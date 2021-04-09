@@ -27,7 +27,6 @@ import android.os.Parcelable
 import android.view.Gravity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
@@ -160,19 +159,10 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             statusFragment.visibility = View.VISIBLE
         }
 
-        val motionLayout: MotionLayout = binding.content as MotionLayout
-        if (corePreferences.enableAnimations) {
-            when (destination.id) {
-                R.id.masterCallLogsFragment, R.id.masterContactsFragment, R.id.dialerFragment, R.id.masterChatRoomsFragment ->
-                    motionLayout.transitionToState(R.id.visible)
-                else -> motionLayout.transitionToState(R.id.gone)
-            }
-        } else {
-            when (destination.id) {
-                R.id.masterCallLogsFragment, R.id.masterContactsFragment, R.id.dialerFragment, R.id.masterChatRoomsFragment ->
-                    motionLayout.setTransition(R.id.visible, R.id.visible)
-                else -> motionLayout.setTransition(R.id.gone, R.id.gone)
-            }
+        when (destination.id) {
+            R.id.masterCallLogsFragment, R.id.masterContactsFragment, R.id.dialerFragment, R.id.masterChatRoomsFragment ->
+                tabsFragment.visibility = View.VISIBLE
+            else -> tabsFragment.visibility = View.GONE
         }
     }
 
