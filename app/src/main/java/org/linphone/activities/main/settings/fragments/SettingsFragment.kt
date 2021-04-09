@@ -20,6 +20,7 @@
 package org.linphone.activities.main.settings.fragments
 
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
@@ -40,8 +41,8 @@ class SettingsFragment : SecureFragment<SettingsFragmentBinding>() {
 
     override fun getLayoutId(): Int = R.layout.settings_fragment
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = this
 

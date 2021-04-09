@@ -27,6 +27,7 @@ import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
 import android.os.SystemClock
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.flexbox.FlexboxLayout
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -59,8 +60,8 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
     // We have to use lateinit here because we need to compute the screen width first
     private lateinit var numpadAnimator: ValueAnimator
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = this
 

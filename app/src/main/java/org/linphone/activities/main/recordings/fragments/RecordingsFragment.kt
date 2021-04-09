@@ -21,6 +21,7 @@ package org.linphone.activities.main.recordings.fragments
 
 import android.os.Bundle
 import android.view.MotionEvent
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -46,8 +47,8 @@ class RecordingsFragment : MasterFragment<RecordingsFragmentBinding, RecordingsL
         super.onDestroyView()
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = this
 

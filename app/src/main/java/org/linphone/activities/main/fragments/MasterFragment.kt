@@ -51,8 +51,13 @@ abstract class MasterFragment<T : ViewDataBinding, U : SelectionListAdapter<*, *
     protected lateinit var listSelectionViewModel: ListTopBarViewModel
     protected open val dialogConfirmationMessageBeforeRemoval: Int = R.plurals.dialog_default_delete
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        if (LinphoneApplication.corePreferences.enableAnimations) {
+            postponeEnterTransition()
+            view.doOnPreDraw { startPostponedEnterTransition() }
+        }
+
+        super.onViewCreated(view, savedInstanceState)
 
         // List selection
         listSelectionViewModel = ViewModelProvider(this).get(ListTopBarViewModel::class.java)
@@ -93,15 +98,6 @@ abstract class MasterFragment<T : ViewDataBinding, U : SelectionListAdapter<*, *
                 dialog.show()
             }
         })
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        if (LinphoneApplication.corePreferences.enableAnimations) {
-            postponeEnterTransition()
-            view.doOnPreDraw { startPostponedEnterTransition() }
-        }
-
-        super.onViewCreated(view, savedInstanceState)
     }
 
     private fun delete() {
