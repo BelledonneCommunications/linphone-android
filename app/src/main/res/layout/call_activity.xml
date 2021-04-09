@@ -53,7 +53,7 @@
                     tools:layout="@layout/call_status_fragment" />
 
                 <androidx.fragment.app.FragmentContainerView
-                    android:id="@+id/call_fragment"
+                    android:id="@+id/call_controls_fragment"
                     android:name="org.linphone.activities.call.fragments.ControlsFragment"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
