@@ -26,7 +26,10 @@ import android.os.Vibrator
 import android.view.animation.LinearInterpolator
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlin.math.max
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -386,6 +389,11 @@ class ControlsViewModel : ViewModel() {
         AudioRouteUtils.routeAudioToBluetooth()
     }
 
+    fun updateMuteMicState() {
+        isMicrophoneMuted.value = !PermissionHelper.get().hasRecordAudioPermission() || !coreContext.core.micEnabled()
+        isMuteMicrophoneEnabled.value = coreContext.core.currentCall != null || coreContext.core.isInConference
+    }
+
     private fun updateAudioRelated() {
         updateSpeakerState()
         updateBluetoothHeadsetState()
@@ -399,11 +407,14 @@ class ControlsViewModel : ViewModel() {
         isPauseEnabled.value = currentCall != null && !currentCall.mediaInProgress()
         isMuteMicrophoneEnabled.value = currentCall != null || coreContext.core.isInConference
         updateConferenceState()
-    }
 
-    fun updateMuteMicState() {
-        isMicrophoneMuted.value = !PermissionHelper.get().hasRecordAudioPermission() || !coreContext.core.micEnabled()
-        isMuteMicrophoneEnabled.value = coreContext.core.currentCall != null || coreContext.core.isInConference
+        // Check periodically until mediaInProgress is false
+        if (currentCall != null && currentCall.mediaInProgress()) {
+            viewModelScope.launch {
+                delay(1000)
+                updateUI()
+            }
+        }
     }
 
     private fun updateSpeakerState() {
