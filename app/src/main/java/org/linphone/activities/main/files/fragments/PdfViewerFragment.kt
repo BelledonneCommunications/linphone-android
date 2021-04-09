@@ -26,13 +26,10 @@ import org.linphone.R
 import org.linphone.activities.main.files.adapters.PdfPagesListAdapter
 import org.linphone.activities.main.files.viewmodels.PdfFileViewModel
 import org.linphone.activities.main.files.viewmodels.PdfFileViewModelFactory
-import org.linphone.activities.main.fragments.SecureFragment
-import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.databinding.FilePdfViewerFragmentBinding
 
-class PdfViewerFragment : SecureFragment<FilePdfViewerFragmentBinding>() {
+class PdfViewerFragment : GenericViewerFragment<FilePdfViewerFragmentBinding>() {
     private lateinit var viewModel: PdfFileViewModel
-    private lateinit var sharedViewModel: SharedMainViewModel
     private lateinit var adapter: PdfPagesListAdapter
 
     override fun getLayoutId(): Int = R.layout.file_pdf_viewer_fragment
@@ -42,23 +39,14 @@ class PdfViewerFragment : SecureFragment<FilePdfViewerFragmentBinding>() {
 
         binding.lifecycleOwner = this
 
-        sharedViewModel = requireActivity().run {
-            ViewModelProvider(this).get(SharedMainViewModel::class.java)
-        }
-
         val content = sharedViewModel.contentToOpen.value
         content ?: return
-
-        (childFragmentManager.findFragmentById(R.id.top_bar_fragment) as? TopBarFragment)
-            ?.setContent(content)
 
         viewModel = ViewModelProvider(
             this,
             PdfFileViewModelFactory(content)
         )[PdfFileViewModel::class.java]
         binding.viewModel = viewModel
-
-        isSecure = arguments?.getBoolean("Secure") ?: false
 
         adapter = PdfPagesListAdapter(viewModel)
         binding.pdfViewPager.adapter = adapter
