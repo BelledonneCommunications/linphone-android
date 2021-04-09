@@ -29,13 +29,10 @@ import androidx.navigation.fragment.findNavController
 import org.linphone.R
 import org.linphone.activities.main.files.viewmodels.AudioFileViewModel
 import org.linphone.activities.main.files.viewmodels.AudioFileViewModelFactory
-import org.linphone.activities.main.fragments.SecureFragment
-import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.databinding.FileAudioViewerFragmentBinding
 
-class AudioViewerFragment : SecureFragment<FileAudioViewerFragmentBinding>() {
+class AudioViewerFragment : GenericViewerFragment<FileAudioViewerFragmentBinding>() {
     private lateinit var viewModel: AudioFileViewModel
-    private lateinit var sharedViewModel: SharedMainViewModel
 
     private lateinit var mediaController: MediaController
 
@@ -47,23 +44,14 @@ class AudioViewerFragment : SecureFragment<FileAudioViewerFragmentBinding>() {
 
         binding.lifecycleOwner = this
 
-        sharedViewModel = requireActivity().run {
-            ViewModelProvider(this).get(SharedMainViewModel::class.java)
-        }
-
         val content = sharedViewModel.contentToOpen.value
         content ?: return
-
-        (childFragmentManager.findFragmentById(R.id.top_bar_fragment) as? TopBarFragment)
-            ?.setContent(content)
 
         viewModel = ViewModelProvider(
             this,
             AudioFileViewModelFactory(content)
         )[AudioFileViewModel::class.java]
         binding.viewModel = viewModel
-
-        isSecure = arguments?.getBoolean("Secure") ?: false
 
         mediaController = object : MediaController(requireContext()) {
             // This hack is even if media controller is showed with timeout=0
