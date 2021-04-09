@@ -293,8 +293,9 @@ class ChatMessagesListAdapter(
         private fun addSenderToContacts() {
             val chatMessage = binding.viewModel?.chatMessage
             if (chatMessage != null) {
-                chatMessage.fromAddress.clean() // To remove gruu if any
-                addSipUriToContactEvent.value = Event(chatMessage.fromAddress.asStringUriOnly())
+                val copy = chatMessage.fromAddress.clone()
+                copy.clean() // To remove gruu if any
+                addSipUriToContactEvent.value = Event(copy.asStringUriOnly())
             }
         }
     }
