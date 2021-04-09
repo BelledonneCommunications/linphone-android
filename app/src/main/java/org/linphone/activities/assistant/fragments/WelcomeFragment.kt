@@ -45,8 +45,8 @@ class WelcomeFragment : GenericFragment<AssistantWelcomeFragmentBinding>() {
 
     override fun getLayoutId(): Int = R.layout.assistant_welcome_fragment
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = this
 

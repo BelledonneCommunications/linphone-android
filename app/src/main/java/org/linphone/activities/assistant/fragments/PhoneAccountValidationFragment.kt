@@ -22,6 +22,7 @@ package org.linphone.activities.assistant.fragments
 import android.content.ClipboardManager
 import android.content.Context.CLIPBOARD_SERVICE
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
@@ -40,8 +41,8 @@ class PhoneAccountValidationFragment : GenericFragment<AssistantPhoneAccountVali
 
     override fun getLayoutId(): Int = R.layout.assistant_phone_account_validation_fragment
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = this
 
