@@ -21,6 +21,7 @@ package org.linphone.activities.main.files.fragments
 
 import android.os.Bundle
 import android.view.KeyEvent
+import android.view.View
 import android.widget.MediaController
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -40,8 +41,8 @@ class VideoViewerFragment : SecureFragment<FileVideoViewerFragmentBinding>() {
 
     override fun getLayoutId(): Int = R.layout.file_video_viewer_fragment
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = this
 

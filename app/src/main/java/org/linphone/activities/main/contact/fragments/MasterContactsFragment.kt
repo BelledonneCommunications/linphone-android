@@ -22,6 +22,7 @@ package org.linphone.activities.main.contact.fragments
 import android.app.Dialog
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -60,8 +61,8 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
         super.onDestroyView()
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = this
 

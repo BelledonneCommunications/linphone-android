@@ -21,6 +21,7 @@ package org.linphone.activities.assistant.fragments
 
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
 import org.linphone.activities.GenericFragment
@@ -34,8 +35,8 @@ class EchoCancellerCalibrationFragment : GenericFragment<AssistantEchoCancellerC
 
     override fun getLayoutId(): Int = R.layout.assistant_echo_canceller_calibration_fragment
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = this
 

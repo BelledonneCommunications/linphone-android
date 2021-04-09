@@ -22,6 +22,7 @@ package org.linphone.activities.main.about
 import android.content.*
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
@@ -35,8 +36,8 @@ class AboutFragment : SecureFragment<AboutFragmentBinding>() {
 
     override fun getLayoutId(): Int = R.layout.about_fragment
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = this
 

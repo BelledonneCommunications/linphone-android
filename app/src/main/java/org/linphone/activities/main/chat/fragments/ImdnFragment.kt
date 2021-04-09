@@ -20,6 +20,7 @@
 package org.linphone.activities.main.chat.fragments
 
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -43,8 +44,8 @@ class ImdnFragment : SecureFragment<ChatRoomImdnFragmentBinding>() {
         return R.layout.chat_room_imdn_fragment
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = this
 

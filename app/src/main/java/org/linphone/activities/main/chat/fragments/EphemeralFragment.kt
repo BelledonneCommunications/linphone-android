@@ -20,6 +20,7 @@
 package org.linphone.activities.main.chat.fragments
 
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
@@ -37,8 +38,8 @@ class EphemeralFragment : SecureFragment<ChatRoomEphemeralFragmentBinding>() {
         return R.layout.chat_room_ephemeral_fragment
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         isSecure = true
         binding.lifecycleOwner = this

@@ -20,6 +20,7 @@
 package org.linphone.activities.assistant.fragments
 
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
 import org.linphone.activities.GenericFragment
@@ -36,8 +37,8 @@ class EmailAccountCreationFragment : GenericFragment<AssistantEmailAccountCreati
 
     override fun getLayoutId(): Int = R.layout.assistant_email_account_creation_fragment
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = this
 

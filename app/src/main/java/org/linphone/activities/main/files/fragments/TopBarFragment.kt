@@ -20,6 +20,7 @@
 package org.linphone.activities.main.files.fragments
 
 import android.os.Bundle
+import android.view.View
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
 import org.linphone.activities.GenericFragment
@@ -35,8 +36,8 @@ class TopBarFragment : GenericFragment<FileViewerTopBarFragmentBinding>() {
 
     override fun getLayoutId(): Int = R.layout.file_viewer_top_bar_fragment
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = this
 

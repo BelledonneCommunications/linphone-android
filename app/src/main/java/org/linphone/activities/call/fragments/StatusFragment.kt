@@ -21,6 +21,7 @@ package org.linphone.activities.call.fragments
 
 import android.app.Dialog
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import java.util.*
 import org.linphone.R
@@ -41,8 +42,8 @@ class StatusFragment : GenericFragment<CallStatusFragmentBinding>() {
 
     override fun getLayoutId(): Int = R.layout.call_status_fragment
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = this
 

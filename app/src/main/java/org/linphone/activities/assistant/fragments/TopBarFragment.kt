@@ -20,6 +20,7 @@
 package org.linphone.activities.assistant.fragments
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.addCallback
 import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -38,8 +39,8 @@ class TopBarFragment : GenericFragment<AssistantTopBarFragmentBinding>() {
         }
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = this
 
