@@ -69,8 +69,9 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
         binding.back.visibility = if (resources.getBoolean(R.bool.isTablet)) View.INVISIBLE else View.VISIBLE
 
         binding.setNewContactClickListener {
-            viewModel.callLog.remoteAddress.clean()
-            Log.i("[History] Creating contact with SIP URI: ${viewModel.callLog.remoteAddress.asStringUriOnly()}")
+            val copy = viewModel.callLog.remoteAddress.clone()
+            copy.clean()
+            Log.i("[History] Creating contact with SIP URI: ${copy.asStringUriOnly()}")
             navigateToContacts(viewModel.callLog.remoteAddress.asStringUriOnly())
         }
 
@@ -80,10 +81,10 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
                 Log.i("[History] Displaying contact $contact")
                 navigateToContact(contact)
             } else {
-                val address = viewModel.callLog.remoteAddress
-                address.clean()
-                Log.i("[History] Displaying friend with address ${address.asStringUriOnly()}")
-                navigateToFriend(address)
+                val copy = viewModel.callLog.remoteAddress.clone()
+                copy.clean()
+                Log.i("[History] Displaying friend with address ${copy.asStringUriOnly()}")
+                navigateToFriend(copy)
             }
         }
 
