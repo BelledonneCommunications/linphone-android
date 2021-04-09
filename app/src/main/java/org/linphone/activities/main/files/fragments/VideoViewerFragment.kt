@@ -28,14 +28,11 @@ import androidx.navigation.fragment.findNavController
 import org.linphone.R
 import org.linphone.activities.main.files.viewmodels.VideoFileViewModel
 import org.linphone.activities.main.files.viewmodels.VideoFileViewModelFactory
-import org.linphone.activities.main.fragments.SecureFragment
-import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.tools.Log
 import org.linphone.databinding.FileVideoViewerFragmentBinding
 
-class VideoViewerFragment : SecureFragment<FileVideoViewerFragmentBinding>() {
+class VideoViewerFragment : GenericViewerFragment<FileVideoViewerFragmentBinding>() {
     private lateinit var viewModel: VideoFileViewModel
-    private lateinit var sharedViewModel: SharedMainViewModel
 
     private lateinit var mediaController: MediaController
 
@@ -46,23 +43,14 @@ class VideoViewerFragment : SecureFragment<FileVideoViewerFragmentBinding>() {
 
         binding.lifecycleOwner = this
 
-        sharedViewModel = requireActivity().run {
-            ViewModelProvider(this).get(SharedMainViewModel::class.java)
-        }
-
         val content = sharedViewModel.contentToOpen.value
         content ?: return
-
-        (childFragmentManager.findFragmentById(R.id.top_bar_fragment) as? TopBarFragment)
-            ?.setContent(content)
 
         viewModel = ViewModelProvider(
             this,
             VideoFileViewModelFactory(content)
         )[VideoFileViewModel::class.java]
         binding.viewModel = viewModel
-
-        isSecure = arguments?.getBoolean("Secure") ?: false
 
         mediaController = object : MediaController(requireContext()) {
             // This is to prevent the first back key press to only hide to media controls

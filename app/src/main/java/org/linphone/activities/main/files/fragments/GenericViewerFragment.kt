@@ -21,29 +21,32 @@ package org.linphone.activities.main.files.fragments
 
 import android.os.Bundle
 import android.view.View
+import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
-import org.linphone.activities.main.files.viewmodels.TextFileViewModel
-import org.linphone.activities.main.files.viewmodels.TextFileViewModelFactory
-import org.linphone.databinding.FileTextViewerFragmentBinding
+import org.linphone.activities.main.fragments.SecureFragment
+import org.linphone.activities.main.viewmodels.SharedMainViewModel
 
-class TextViewerFragment : GenericViewerFragment<FileTextViewerFragmentBinding>() {
-    private lateinit var viewModel: TextFileViewModel
-
-    override fun getLayoutId(): Int = R.layout.file_text_viewer_fragment
+abstract class GenericViewerFragment<T : ViewDataBinding> : SecureFragment<T>() {
+    protected lateinit var sharedViewModel: SharedMainViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = this
+        sharedViewModel = requireActivity().run {
+            ViewModelProvider(this).get(SharedMainViewModel::class.java)
+        }
+
+        isSecure = arguments?.getBoolean("Secure") ?: false
+    }
+
+    override fun onStart() {
+        super.onStart()
 
         val content = sharedViewModel.contentToOpen.value
         content ?: return
 
-        viewModel = ViewModelProvider(
-            this,
-            TextFileViewModelFactory(content)
-        )[TextFileViewModel::class.java]
-        binding.viewModel = viewModel
+        (childFragmentManager.findFragmentById(R.id.top_bar_fragment) as? TopBarFragment)
+            ?.setContent(content)
     }
 }
