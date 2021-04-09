@@ -26,13 +26,10 @@ import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
 import org.linphone.activities.main.files.viewmodels.ImageFileViewModel
 import org.linphone.activities.main.files.viewmodels.ImageFileViewModelFactory
-import org.linphone.activities.main.fragments.SecureFragment
-import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.databinding.FileImageViewerFragmentBinding
 
-class ImageViewerFragment : SecureFragment<FileImageViewerFragmentBinding>() {
+class ImageViewerFragment : GenericViewerFragment<FileImageViewerFragmentBinding>() {
     private lateinit var viewModel: ImageFileViewModel
-    private lateinit var sharedViewModel: SharedMainViewModel
 
     override fun getLayoutId(): Int = R.layout.file_image_viewer_fragment
 
@@ -42,22 +39,13 @@ class ImageViewerFragment : SecureFragment<FileImageViewerFragmentBinding>() {
 
         binding.lifecycleOwner = this
 
-        sharedViewModel = requireActivity().run {
-            ViewModelProvider(this).get(SharedMainViewModel::class.java)
-        }
-
         val content = sharedViewModel.contentToOpen.value
         content ?: return
-
-        (childFragmentManager.findFragmentById(R.id.top_bar_fragment) as? TopBarFragment)
-            ?.setContent(content)
 
         viewModel = ViewModelProvider(
             this,
             ImageFileViewModelFactory(content)
         )[ImageFileViewModel::class.java]
         binding.viewModel = viewModel
-
-        isSecure = arguments?.getBoolean("Secure") ?: false
     }
 }
