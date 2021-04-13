@@ -113,7 +113,7 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
 
         val toSend = textToSend.value
         if (toSend != null && toSend.isNotEmpty()) {
-            message.addUtf8TextContent(toSend)
+            message.addUtf8TextContent(toSend.trim())
         }
 
         var fileContent = false
