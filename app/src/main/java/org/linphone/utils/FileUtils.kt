@@ -326,8 +326,12 @@ class FileUtils {
             if (type != null) {
                 Log.i("[File Viewer] Found matching MIME type $type")
             } else {
-                type = "file/$extension"
-                Log.e("[File Viewer] Can't get MIME type from extension: $extension, will use $type")
+                type = if (extension == "linphonerc") {
+                    "text/plain"
+                } else {
+                    "file/$extension"
+                }
+                Log.w("[File Viewer] Can't get MIME type from extension: $extension, will use $type")
             }
 
             intent.setDataAndType(contentUri, type)
