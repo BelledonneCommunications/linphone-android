@@ -573,4 +573,6 @@
     <string name="advanced_settings_vfs_summary">Attention, ne pourra pas être désactivé !</string>
     <string name="chat_settings_use_in_app_file_viewer_title">Ouvrir les fichiers dans l\'application</string>
     <string name="chat_settings_use_in_app_file_viewer_summary">Vous pourrez toujours les exporter dans une appli tierce</string>
+    <string name="call_settings_ring_during_early_media_title">Sonner durant un appel entrant avec early-media</string>
+    <string name="call_settings_ring_during_early_media_summary"></string>
 </resources>
