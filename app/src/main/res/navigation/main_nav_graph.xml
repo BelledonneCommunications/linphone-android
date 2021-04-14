@@ -345,5 +345,10 @@
         android:name="org.linphone.activities.main.files.fragments.AudioViewerFragment"
         android:label="AudioViewerFragment" />
     <action android:id="@+id/action_global_audioViewerFragment" app:destination="@id/audioViewerFragment"/>
+    <fragment
+        android:id="@+id/configViewerFragment"
+        android:name="org.linphone.activities.main.dialer.fragments.ConfigViewerFragment"
+        android:label="ConfigViewerFragment" />
+    <action android:id="@+id/action_global_configViewerFragment" app:destination="@id/configViewerFragment" />
 
 </navigation>

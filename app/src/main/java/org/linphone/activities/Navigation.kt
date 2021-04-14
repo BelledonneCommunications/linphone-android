@@ -250,6 +250,15 @@ internal fun DialerFragment.navigateToContacts(uriToAdd: String?) {
     )
 }
 
+internal fun DialerFragment.navigateToConfigFileViewer() {
+    val bundle = bundleOf("Secure" to true)
+    findMasterNavController().navigate(
+        R.id.action_global_configViewerFragment,
+        bundle,
+        getRightToLeftAnimationNavOptions()
+    )
+}
+
 /* Chat related */
 
 internal fun MasterChatRoomsFragment.navigateToChatRoom() {
