@@ -116,14 +116,6 @@ class Api26Compatibility {
             return WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
         }
 
-        fun vibrate(vibrator: Vibrator) {
-            val effect = VibrationEffect.createWaveform(longArrayOf(0L, 1000L, 1000L), intArrayOf(0, VibrationEffect.DEFAULT_AMPLITUDE, 0), 1)
-            val audioAttrs = AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
-                .build()
-            vibrator.vibrate(effect, audioAttrs)
-        }
-
         fun eventVibration(vibrator: Vibrator) {
             val effect = VibrationEffect.createWaveform(longArrayOf(0L, 100L, 100L), intArrayOf(0, VibrationEffect.DEFAULT_AMPLITUDE, 0), -1)
             val audioAttrs = AudioAttributes.Builder()

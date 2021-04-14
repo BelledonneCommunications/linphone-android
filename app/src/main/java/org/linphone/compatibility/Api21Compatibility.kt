@@ -56,11 +56,6 @@ class Api21Compatibility {
             return name
         }
 
-        fun vibrate(vibrator: Vibrator) {
-            val pattern = longArrayOf(0, 1000, 1000)
-            vibrator.vibrate(pattern, 1)
-        }
-
         fun eventVibration(vibrator: Vibrator) {
             val pattern = longArrayOf(0, 100, 100)
             vibrator.vibrate(pattern, -1)
