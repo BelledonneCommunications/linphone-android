@@ -37,7 +37,7 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
 
     val vibrateOnIncomingCallListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
-            prefs.vibrateWhileIncomingCall = newValue
+            core.isVibrationOnIncomingCallEnabled = newValue
         }
     }
     val vibrateOnIncomingCall = MutableLiveData<Boolean>()
@@ -155,7 +155,7 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
 
     init {
         deviceRingtone.value = core.ring == null
-        vibrateOnIncomingCall.value = prefs.vibrateWhileIncomingCall
+        vibrateOnIncomingCall.value = core.isVibrationOnIncomingCallEnabled
 
         initEncryptionList()
         encryptionMandatory.value = core.isMediaEncryptionMandatory

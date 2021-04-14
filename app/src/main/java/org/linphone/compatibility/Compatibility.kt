@@ -114,14 +114,6 @@ class Compatibility {
             }
         }
 
-        fun vibrate(vibrator: Vibrator) {
-            if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
-                Api26Compatibility.vibrate(vibrator)
-            } else {
-                Api21Compatibility.vibrate(vibrator)
-            }
-        }
-
         fun eventVibration(vibrator: Vibrator) {
             if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
                 Api26Compatibility.eventVibration(vibrator)
