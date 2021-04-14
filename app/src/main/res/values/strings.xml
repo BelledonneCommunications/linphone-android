@@ -116,13 +116,16 @@
     <string name="debug_popup_enable_logs">Enable logs</string>
     <string name="debug_popup_disable_logs">Disable logs</string>
     <string name="debug_popup_send_logs">Send logs</string>
+    <string name="debug_popup_show_config_file">Show config file</string>
     <string-array name="popup_send_log" translatable="false">
         <item>@string/debug_popup_disable_logs</item>
         <item>@string/debug_popup_send_logs</item>
+        <item>@string/debug_popup_show_config_file</item>
         <item>@string/cancel</item>
     </string-array>
     <string-array name="popup_enable_log" translatable="false">
         <item>@string/debug_popup_enable_logs</item>
+        <item>@string/debug_popup_show_config_file</item>
         <item>@string/cancel</item>
     </string-array>
 

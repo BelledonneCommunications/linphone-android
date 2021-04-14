@@ -36,6 +36,7 @@ import org.linphone.R
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.dialer.viewmodels.DialerViewModel
 import org.linphone.activities.main.fragments.SecureFragment
+import org.linphone.activities.main.navigateToConfigFileViewer
 import org.linphone.activities.main.navigateToContacts
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
@@ -152,23 +153,31 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
     private fun displayDebugPopup() {
         val alertDialog = MaterialAlertDialogBuilder(requireContext())
         alertDialog.setTitle(getString(R.string.debug_popup_title))
-        if (corePreferences.debugLogs) {
-            alertDialog.setItems(resources.getStringArray(R.array.popup_send_log)) { _, which ->
-                if (which == 0) {
+
+        val items = if (corePreferences.debugLogs) {
+            resources.getStringArray(R.array.popup_send_log)
+        } else {
+            resources.getStringArray(R.array.popup_enable_log)
+        }
+
+        alertDialog.setItems(items) { _, which ->
+            when (items[which]) {
+                getString(R.string.debug_popup_disable_logs) -> {
                     corePreferences.debugLogs = false
                 }
-                if (which == 1) {
+                getString(R.string.debug_popup_enable_logs) -> {
+                    corePreferences.debugLogs = true
+                }
+                getString(R.string.debug_popup_send_logs) -> {
                     uploadLogsInitiatedByUs = true
                     viewModel.uploadLogs()
                 }
-            }
-        } else {
-            alertDialog.setItems(resources.getStringArray(R.array.popup_enable_log)) { _, which ->
-                if (which == 0) {
-                    corePreferences.debugLogs = true
+                getString(R.string.debug_popup_show_config_file) -> {
+                    navigateToConfigFileViewer()
                 }
             }
         }
+
         alertDialog.show()
     }
 
