@@ -23,10 +23,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.PixelFormat
-import android.media.AudioManager
 import android.os.Handler
 import android.os.Looper
-import android.os.Vibrator
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.telephony.PhoneStateListener
@@ -130,7 +128,6 @@ class CoreContext(val context: Context, coreConfig: Config) {
     private var overlayX = 0f
     private var overlayY = 0f
     private var callOverlay: View? = null
-    private var isVibrating = false
     private var previousCallState = Call.State.Idle
 
     private val listener: CoreListenerStub = object : CoreListenerStub() {
@@ -167,19 +164,6 @@ class CoreContext(val context: Context, coreConfig: Config) {
                     return
                 }
 
-                if (core.callsNb == 1 && corePreferences.vibrateWhileIncomingCall) {
-                    val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-                    if ((audioManager.ringerMode == AudioManager.RINGER_MODE_VIBRATE ||
-                                audioManager.ringerMode == AudioManager.RINGER_MODE_NORMAL)) {
-                        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-                        if (vibrator.hasVibrator()) {
-                            Log.i("[Context] Starting incoming call vibration")
-                            Compatibility.vibrate(vibrator)
-                            isVibrating = true
-                        }
-                    }
-                }
-
                 // Starting SDK 24 (Android 7.0) we rely on the fullscreen intent of the call incoming notification
                 if (Version.sdkStrictlyBelow(Version.API24_NOUGAT_70)) {
                     onIncomingReceived()
@@ -206,13 +190,6 @@ class CoreContext(val context: Context, coreConfig: Config) {
                     AudioRouteUtils.routeAudioToBluetooth(call)
                 }
             } else if (state == Call.State.Connected) {
-                if (isVibrating) {
-                    Log.i("[Context] Stopping vibration")
-                    val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-                    vibrator.cancel()
-                    isVibrating = false
-                }
-
                 onCallStarted()
             } else if (state == Call.State.StreamsRunning) {
                 // Do not automatically route audio to bluetooth after first call
@@ -234,13 +211,6 @@ class CoreContext(val context: Context, coreConfig: Config) {
                 }
             } else if (state == Call.State.End || state == Call.State.Error || state == Call.State.Released) {
                 if (core.callsNb == 0) {
-                    if (isVibrating) {
-                        Log.i("[Context] Stopping vibration")
-                        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-                        vibrator.cancel()
-                        isVibrating = false
-                    }
-
                     removeCallOverlay()
                 }
 
@@ -341,6 +311,12 @@ class CoreContext(val context: Context, coreConfig: Config) {
         Log.i("[Context] Configuring Core")
 
         core.staticPicture = corePreferences.staticPicturePath
+
+        // Migration code
+        if (core.config.getBool("app", "incoming_call_vibration", true)) {
+            core.isVibrationOnIncomingCallEnabled = true
+            core.config.setBool("app", "incoming_call_vibration", false)
+        }
 
         initUserCertificates()
 

@@ -30,7 +30,6 @@ import androidx.lifecycle.viewModelScope
 import kotlin.math.max
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.linphone.LinphoneApplication
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -149,7 +148,7 @@ class ControlsViewModel : ViewModel() {
             somethingClickedEvent.value = Event(true)
             coreContext.core.currentCall?.sendDtmf(key)
 
-            if (vibrator.hasVibrator() && LinphoneApplication.corePreferences.dtmfKeypadVibration) {
+            if (vibrator.hasVibrator() && corePreferences.dtmfKeypadVibration) {
                 Compatibility.eventVibration(vibrator)
             }
         }

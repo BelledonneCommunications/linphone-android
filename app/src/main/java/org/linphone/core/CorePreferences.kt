@@ -221,12 +221,6 @@ class CorePreferences constructor(private val context: Context) {
 
     /* Call */
 
-    var vibrateWhileIncomingCall: Boolean
-        get() = config.getBool("app", "incoming_call_vibration", true)
-        set(value) {
-            config.setBool("app", "incoming_call_vibration", value)
-        }
-
     var acceptEarlyMedia: Boolean
         get() = config.getBool("sip", "incoming_calls_early_media", false)
         set(value) {
