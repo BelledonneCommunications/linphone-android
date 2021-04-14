@@ -1152,13 +1152,12 @@ public class LinphonePreferences {
     }
 
     public boolean isIncomingCallVibrationEnabled() {
-        if (getConfig() == null) return true;
-        return getConfig().getBool("app", "incoming_call_vibration", true);
+        if (getLc() == null) return false;
+        return getLc().isVibrationOnIncomingCallEnabled();
     }
 
     public void enableIncomingCallVibration(boolean enable) {
-        if (getConfig() == null) return;
-        getConfig().setBool("app", "incoming_call_vibration", enable);
+        getLc().setVibrationOnIncomingCallEnabled(enable);
     }
 
     public boolean isBisFeatureEnabled() {

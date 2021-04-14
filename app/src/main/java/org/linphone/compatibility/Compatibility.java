@@ -30,7 +30,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
-import android.os.Vibrator;
 import android.provider.Settings;
 import android.service.notification.StatusBarNotification;
 import org.linphone.core.Address;
@@ -326,13 +325,5 @@ public class Compatibility {
         }
 
         return new StatusBarNotification[0];
-    }
-
-    public static void vibrate(Vibrator vibrator) {
-        if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
-            ApiTwentySixPlus.vibrate(vibrator);
-        } else {
-            ApiTwentyOnePlus.vibrate(vibrator);
-        }
     }
 }
