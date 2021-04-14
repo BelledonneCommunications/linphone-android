@@ -171,6 +171,14 @@
                     linphone:checked="@={viewModel.acceptEarlyMedia}"/>
 
                 <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/call_settings_ring_during_early_media_title}"
+                    linphone:subtitle="@{@string/call_settings_ring_during_early_media_summary}"
+                    linphone:listener="@{viewModel.ringDuringEarlyMediaListener}"
+                    linphone:checked="@={viewModel.ringDuringEarlyMedia}"
+                    linphone:enabled="@{viewModel.acceptEarlyMedia}"/>
+
+                <include
                     layout="@layout/settings_widget_basic"
                     linphone:listener="@{viewModel.goToAndroidNotificationSettingsListener}"
                     linphone:title="@{@string/call_settings_go_to_android_notification_settings}" />
