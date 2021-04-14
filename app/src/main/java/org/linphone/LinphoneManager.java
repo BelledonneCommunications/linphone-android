@@ -371,6 +371,12 @@ public class LinphoneManager implements SensorEventListener {
 
         mCore.migrateLogsFromRcToDb();
 
+        // Migration code
+        if (mCore.getConfig().getBool("app", "incoming_call_vibration", true)) {
+            mCore.setVibrationOnIncomingCallEnabled(true);
+            mCore.getConfig().setBool("app", "incoming_call_vibration", false);
+        }
+
         // Migrate existing linphone accounts to have conference factory uri and LIME X3Dh url set
         String uri = getString(R.string.default_conference_factory_uri);
         for (ProxyConfig lpc : mCore.getProxyConfigList()) {

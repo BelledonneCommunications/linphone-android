@@ -216,6 +216,12 @@
             android:label="@string/service_name" />
 
         <service
+            android:name="org.linphone.core.tools.service.CoreService"
+            android:foregroundServiceType="phoneCall"
+            android:stopWithTask="false"
+            android:label="@string/app_name" />
+
+        <service
             android:name=".sync.SyncService"
             android:exported="true">
             <intent-filter>

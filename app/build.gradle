@@ -10,7 +10,7 @@ static def firebaseEnabled() {
 }
 
 task getGitVersion() {
-    def gitVersion = "4.4.1"
+    def gitVersion = "4.4.2"
     def gitVersionStream = new ByteArrayOutputStream()
     def gitCommitsCount = new ByteArrayOutputStream()
     def gitCommitHash = new ByteArrayOutputStream()
@@ -100,7 +100,7 @@ android {
     defaultConfig {
         minSdkVersion 23
         targetSdkVersion 29
-        versionCode 4401
+        versionCode 4402
         versionName "${project.version}"
         applicationId getPackageName()
         multiDexEnabled true
