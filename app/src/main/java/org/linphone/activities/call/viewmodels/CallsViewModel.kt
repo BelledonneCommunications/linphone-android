@@ -53,6 +53,7 @@ class CallsViewModel : ViewModel() {
 
             val currentCall = core.currentCall
             if (currentCall == null) {
+                currentCallViewModel.value?.destroy()
                 currentCallViewModel.value = null
             } else if (currentCallViewModel.value == null) {
                 currentCallViewModel.value = CallViewModel(currentCall)
@@ -89,6 +90,7 @@ class CallsViewModel : ViewModel() {
 
         val currentCall = coreContext.core.currentCall
         if (currentCall != null) {
+            currentCallViewModel.value?.destroy()
             currentCallViewModel.value = CallViewModel(currentCall)
         }
 
@@ -142,6 +144,7 @@ class CallsViewModel : ViewModel() {
 
         for (pausedCallViewModel in list) {
             if (pausedCallViewModel.call == call) {
+                pausedCallViewModel.destroy()
                 list.remove(pausedCallViewModel)
                 break
             }

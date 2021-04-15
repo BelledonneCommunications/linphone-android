@@ -9,7 +9,7 @@
             name="clickListener"
             type="android.view.View.OnClickListener"/>
         <variable
-            name="viewModel"
+            name="data"
             type="org.linphone.activities.main.chat.data.ChatRoomCreationContactData" />
     </data>
 
@@ -19,7 +19,7 @@
 
         <RelativeLayout
             android:onClick="@{clickListener}"
-            android:enabled="@{!viewModel.isDisabled}"
+            android:enabled="@{!data.isDisabled}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
@@ -32,8 +32,8 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 tools:layout="@layout/contact_avatar"
-                app:showLimeCapability="@{viewModel.hasLimeX3DHCapability}"
-                app:viewModel="@{viewModel}"/>
+                app:showLimeCapability="@{data.hasLimeX3DHCapability}"
+                app:data="@{data}"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -47,7 +47,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:text="@{viewModel.contact.fullName ?? viewModel.displayName}"
+                    android:text="@{data.contact.fullName ?? data.displayName}"
                     style="@style/contact_name_list_cell_font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -55,7 +55,7 @@
                     android:lines="1" />
 
                 <TextView
-                    android:text="@{viewModel.sipUri}"
+                    android:text="@{data.sipUri}"
                     style="@style/sip_uri_font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
             </LinearLayout>
 
             <ImageView
-                android:visibility="@{viewModel.linphoneUser ? View.VISIBLE : View.INVISIBLE}"
+                android:visibility="@{data.linphoneUser ? View.VISIBLE : View.INVISIBLE}"
                 android:id="@+id/linphone_user"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
@@ -77,7 +77,7 @@
                 android:src="@drawable/linphone_logo_tinted" />
 
             <ImageView
-                android:visibility="@{viewModel.isSelected ? View.VISIBLE : View.INVISIBLE}"
+                android:visibility="@{data.isSelected ? View.VISIBLE : View.INVISIBLE}"
                 android:id="@+id/contact_is_select"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
@@ -91,7 +91,7 @@
         </RelativeLayout>
 
         <View
-            android:visibility="@{viewModel.isDisabled ? View.VISIBLE : View.GONE}"
+            android:visibility="@{data.isDisabled ? View.VISIBLE : View.GONE}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/contact_disabled_color"/>
