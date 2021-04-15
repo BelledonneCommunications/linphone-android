@@ -55,7 +55,7 @@
             layout="@layout/chat_message_list_cell"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:viewModel="@{viewModel.chatMessageViewModel}"
+            app:data="@{viewModel.chatMessageViewModel}"
             android:layout_margin="20dp" />
 
         <androidx.recyclerview.widget.RecyclerView
