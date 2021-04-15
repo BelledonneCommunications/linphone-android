@@ -38,7 +38,7 @@ class ConferenceViewModel : ViewModel() {
 
     private val conferenceListener = object : ConferenceListenerStub() {
         override fun onParticipantAdded(conference: Conference, participant: Participant) {
-            if (participant == conference.me) {
+            if (conference.isMe(participant.address)) {
                 Log.i("[Conference VM] Entered conference")
                 isConferencePaused.value = false
             } else {
@@ -48,7 +48,7 @@ class ConferenceViewModel : ViewModel() {
         }
 
         override fun onParticipantRemoved(conference: Conference, participant: Participant) {
-            if (participant == conference.me) {
+            if (conference.isMe(participant.address)) {
                 Log.i("[Conference VM] Left conference")
                 isConferencePaused.value = true
             } else {
