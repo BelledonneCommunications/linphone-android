@@ -75,7 +75,7 @@ class ChatRoomCreationContactsAdapter(
         fun bind(searchResult: SearchResult) {
             with(binding) {
                 val searchResultViewModel = ChatRoomCreationContactData(searchResult)
-                viewModel = searchResultViewModel
+                data = searchResultViewModel
 
                 lifecycleOwner = viewLifecycleOwner
 
