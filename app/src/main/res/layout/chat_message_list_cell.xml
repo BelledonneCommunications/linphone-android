@@ -17,7 +17,7 @@
             name="position"
             type="Integer"/>
         <variable
-            name="viewModel"
+            name="data"
             type="org.linphone.activities.main.chat.data.ChatMessageData" />
         <variable
             name="selectionListViewModel"
@@ -55,8 +55,8 @@
 
             <ImageView
                 android:id="@+id/imdn"
-                android:visibility="@{viewModel.chatMessage.outgoing ? (viewModel.showImdn ? View.VISIBLE : View.INVISIBLE) : View.INVISIBLE}"
-                android:src="@{viewModel.imdnIcon, default=@drawable/chat_delivered}"
+                android:visibility="@{data.chatMessage.outgoing ? (data.showImdn ? View.VISIBLE : View.INVISIBLE) : View.INVISIBLE}"
+                android:src="@{data.imdnIcon, default=@drawable/chat_delivered}"
                 android:contentDescription="@string/content_description_delivery_status"
                 android:layout_width="10dp"
                 android:layout_height="10dp"
@@ -65,36 +65,36 @@
 
             <org.linphone.contact.ContactAvatarView
                 android:id="@+id/avatar"
-                android:visibility="@{viewModel.chatMessage.outgoing || selectionListViewModel.isEditionEnabled ? View.GONE : (viewModel.hideAvatar ? View.INVISIBLE : View.VISIBLE)}"
+                android:visibility="@{data.chatMessage.outgoing || selectionListViewModel.isEditionEnabled ? View.GONE : (data.hideAvatar ? View.INVISIBLE : View.VISIBLE)}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@id/time"
                 android:layout_marginLeft="10dp"
                 android:gravity="center"
-                app:viewModel="@{viewModel}"
+                app:data="@{data}"
                 tools:layout="@layout/contact_avatar" />
 
             <LinearLayout
                 android:id="@+id/background"
                 android:onClick="@{clickListener}"
                 android:onLongClick="@{contextMenuClickListener}"
-                android:background="@{viewModel.backgroundRes, default=@drawable/chat_bubble_outgoing_full}"
+                android:background="@{data.backgroundRes, default=@drawable/chat_bubble_outgoing_full}"
                 android:descendantFocusability="blocksDescendants"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_toLeftOf="@{viewModel.chatMessage.outgoing || selectionListViewModel.isEditionEnabled ? @id/imdn : 0}"
+                android:layout_toLeftOf="@{data.chatMessage.outgoing || selectionListViewModel.isEditionEnabled ? @id/imdn : 0}"
                 android:layout_toRightOf="@id/avatar"
                 android:layout_below="@id/time"
                 android:layout_marginBottom="1dp"
-                android:layout_marginRight="@{viewModel.chatMessage.outgoing ? @dimen/outgoing_chat_message_bubble_right_margin : @dimen/incoming_chat_message_bubble_right_margin}"
-                android:layout_marginLeft="@{selectionListViewModel.isEditionEnabled ? @dimen/edit_chat_message_bubble_left_margin : !viewModel.chatMessage.outgoing ? @dimen/incoming_chat_message_bubble_left_margin : @dimen/outgoing_chat_message_bubble_left_margin}"
+                android:layout_marginRight="@{data.chatMessage.outgoing ? @dimen/outgoing_chat_message_bubble_right_margin : @dimen/incoming_chat_message_bubble_right_margin}"
+                android:layout_marginLeft="@{selectionListViewModel.isEditionEnabled ? @dimen/edit_chat_message_bubble_left_margin : !data.chatMessage.outgoing ? @dimen/incoming_chat_message_bubble_left_margin : @dimen/outgoing_chat_message_bubble_left_margin}"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp">
 
                 <LinearLayout
-                    android:visibility="@{viewModel.chatMessage.forward ? View.VISIBLE : View.GONE, default=gone}"
+                    android:visibility="@{data.chatMessage.forward ? View.VISIBLE : View.GONE, default=gone}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -129,20 +129,20 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:longClickable="true"
-                    app:entries="@{viewModel.contents}"
+                    app:entries="@{data.contents}"
                     app:layout="@{@layout/chat_message_content_cell}"
                     app:onLongClick="@{contextMenuClickListener}"
                     app:flexWrap="wrap"
                     app:alignItems="center"
-                    app:justifyContent="@{viewModel.chatMessage.outgoing ? JustifyContent.FLEX_END : JustifyContent.FLEX_START}"/>
+                    app:justifyContent="@{data.chatMessage.outgoing ? JustifyContent.FLEX_END : JustifyContent.FLEX_START}"/>
 
                 <org.linphone.activities.main.chat.views.MultiLineWrapContentWidthTextView
                     android:onClick="@{clickListener}"
                     android:onLongClick="@{contextMenuClickListener}"
-                    android:text="@{viewModel.text}"
-                    android:visibility="@{viewModel.text.length > 0 ? View.VISIBLE : View.GONE}"
+                    android:text="@{data.text}"
+                    android:visibility="@{data.text.length > 0 ? View.VISIBLE : View.GONE}"
                     android:autoLink="web"
-                    android:layout_gravity="@{viewModel.chatMessage.outgoing ? Gravity.RIGHT : Gravity.LEFT}"
+                    android:layout_gravity="@{data.chatMessage.outgoing ? Gravity.RIGHT : Gravity.LEFT}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -157,7 +157,7 @@
                     android:lineSpacingExtra="-1.7sp"/>
 
                 <LinearLayout
-                    android:visibility="@{viewModel.chatMessage.ephemeral ? View.VISIBLE : View.GONE, default=gone}"
+                    android:visibility="@{data.chatMessage.ephemeral ? View.VISIBLE : View.GONE, default=gone}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -167,7 +167,7 @@
                     android:layout_marginLeft="5dp">
 
                     <TextView
-                        android:text="@{viewModel.ephemeralLifetime}"
+                        android:text="@{data.ephemeralLifetime}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="5dp"
@@ -190,13 +190,13 @@
 
             <TextView
                 android:id="@+id/time"
-                android:text="@{viewModel.chatMessage.outgoing ? viewModel.time : viewModel.time + ` - ` + (viewModel.contact.fullName ?? viewModel.displayName)}"
-                android:visibility="@{viewModel.hideTime ? View.GONE : View.VISIBLE}"
+                android:text="@{data.chatMessage.outgoing ? data.time : data.time + ` - ` + (data.contact.fullName ?? data.displayName)}"
+                android:visibility="@{data.hideTime ? View.GONE : View.VISIBLE}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_alignLeft="@{viewModel.chatMessage.outgoing || selectionListViewModel.isEditionEnabled ? 0 : @id/background}"
-                android:layout_alignRight="@{viewModel.chatMessage.outgoing || selectionListViewModel.isEditionEnabled ? @id/background : 0}"
+                android:layout_alignLeft="@{data.chatMessage.outgoing || selectionListViewModel.isEditionEnabled ? 0 : @id/background}"
+                android:layout_alignRight="@{data.chatMessage.outgoing || selectionListViewModel.isEditionEnabled ? @id/background : 0}"
                 android:layout_marginTop="7dp"
                 android:textColor="@color/chat_bubble_text_color"
                 android:textSize="13sp"
@@ -205,7 +205,7 @@
                 android:lineSpacingExtra="0sp" />
 
             <ProgressBar
-                android:visibility="@{viewModel.transferInProgress || viewModel.sendInProgress ? View.VISIBLE : View.GONE}"
+                android:visibility="@{data.transferInProgress || data.sendInProgress ? View.VISIBLE : View.GONE}"
                 android:layout_width="10dp"
                 android:layout_height="10dp"
                 android:layout_toRightOf="@id/background"

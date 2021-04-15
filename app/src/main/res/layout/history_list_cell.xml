@@ -92,7 +92,7 @@
                 android:layout_height="match_parent"
                 android:layout_toRightOf="@id/icon"
                 android:gravity="center"
-                app:viewModel="@{viewModel}"
+                app:data="@{viewModel}"
                 tools:layout="@layout/contact_avatar" />
 
             <org.linphone.views.MarqueeTextView

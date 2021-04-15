@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            app:viewModel="@{viewModel}"
+            app:data="@{viewModel}"
             tools:layout="@layout/contact_avatar" />
 
         <org.linphone.views.MarqueeTextView

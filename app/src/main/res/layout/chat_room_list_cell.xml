@@ -45,7 +45,7 @@
                 tools:layout="@layout/contact_avatar"
                 android:layout_centerHorizontal="true"
                 app:showSecurityLevel="@{viewModel.encryptedChatRoom}"
-                app:viewModel="@{viewModel}"/>
+                app:data="@{viewModel}"/>
 
             <TextView
                 android:id="@+id/date"
