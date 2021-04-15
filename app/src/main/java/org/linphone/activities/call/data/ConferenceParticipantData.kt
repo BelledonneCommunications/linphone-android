@@ -17,19 +17,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.activities.call.viewmodels
+package org.linphone.activities.call.data
 
 import androidx.lifecycle.MutableLiveData
-import org.linphone.contact.GenericContactViewModel
+import org.linphone.contact.GenericContactData
 import org.linphone.core.Conference
 import org.linphone.core.Participant
 import org.linphone.core.tools.Log
 
-class ConferenceParticipantViewModel(
+class ConferenceParticipantData(
     private val conference: Conference,
     val participant: Participant
 ) :
-    GenericContactViewModel(participant.address) {
+    GenericContactData(participant.address) {
     private val isAdmin = MutableLiveData<Boolean>()
     val isMeAdmin = MutableLiveData<Boolean>()
 

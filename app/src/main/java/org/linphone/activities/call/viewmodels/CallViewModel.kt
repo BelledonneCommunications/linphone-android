@@ -124,7 +124,6 @@ open class CallViewModel(val call: Call) : GenericContactViewModel(call.remoteAd
     }
 
     fun destroy() {
-        // TODO: call it from CallsViewModel (after conference rework merge)
         call.removeListener(listener)
     }
 
