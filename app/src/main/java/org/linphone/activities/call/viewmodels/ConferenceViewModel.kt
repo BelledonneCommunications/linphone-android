@@ -22,6 +22,7 @@ package org.linphone.activities.call.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.activities.call.data.ConferenceParticipantData
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 
@@ -32,7 +33,7 @@ class ConferenceViewModel : ViewModel() {
 
     val conferenceAddress = MutableLiveData<Address>()
 
-    val conferenceParticipants = MutableLiveData<List<ConferenceParticipantViewModel>>()
+    val conferenceParticipants = MutableLiveData<List<ConferenceParticipantData>>()
 
     val isInConference = MutableLiveData<Boolean>()
 
@@ -144,10 +145,10 @@ class ConferenceViewModel : ViewModel() {
     }
 
     private fun updateParticipantsList(conference: Conference) {
-        val participants = arrayListOf<ConferenceParticipantViewModel>()
+        val participants = arrayListOf<ConferenceParticipantData>()
         for (participant in conference.participantList) {
             Log.i("[Conference VM] Participant found: ${participant.address.asStringUriOnly()}")
-            val viewModel = ConferenceParticipantViewModel(conference, participant)
+            val viewModel = ConferenceParticipantData(conference, participant)
             participants.add(viewModel)
         }
         conferenceParticipants.value = participants

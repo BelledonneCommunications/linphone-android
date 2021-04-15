@@ -64,7 +64,7 @@ class RecordingsListAdapter(
     }
 
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
-        (holder as ViewHolder).binding.viewModel?.destroy()
+        (holder as ViewHolder).binding.data?.destroy()
     }
 
     inner class ViewHolder(
@@ -72,7 +72,7 @@ class RecordingsListAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(recording: RecordingData) {
             with(binding) {
-                viewModel = recording
+                data = recording
 
                 lifecycleOwner = viewLifecycleOwner
 

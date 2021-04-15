@@ -119,7 +119,7 @@ class ChatMessagesListAdapter(
 
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
         when (holder) {
-            is ChatMessageViewHolder -> holder.binding.viewModel?.destroy()
+            is ChatMessageViewHolder -> holder.binding.data?.destroy()
         }
     }
 
@@ -141,7 +141,7 @@ class ChatMessagesListAdapter(
                     val chatMessage = eventLog.chatMessage
                     chatMessage ?: return
                     val chatMessageViewModel = ChatMessageData(chatMessage, contentClickedListener)
-                    viewModel = chatMessageViewModel
+                    data = chatMessageViewModel
 
                     lifecycleOwner = viewLifecycleOwner
 
@@ -248,7 +248,7 @@ class ChatMessagesListAdapter(
         }
 
         private fun resendMessage() {
-            val chatMessage = binding.viewModel?.chatMessage
+            val chatMessage = binding.data?.chatMessage
             if (chatMessage != null) {
                 chatMessage.userData = adapterPosition
                 resendMessageEvent.value = Event(chatMessage)
@@ -256,7 +256,7 @@ class ChatMessagesListAdapter(
         }
 
         private fun copyTextToClipboard() {
-            val chatMessage = binding.viewModel?.chatMessage
+            val chatMessage = binding.data?.chatMessage
             if (chatMessage != null) {
                 val content = chatMessage.contents.find { content -> content.isText }
                 if (content != null) {
@@ -269,21 +269,21 @@ class ChatMessagesListAdapter(
         }
 
         private fun forwardMessage() {
-            val chatMessage = binding.viewModel?.chatMessage
+            val chatMessage = binding.data?.chatMessage
             if (chatMessage != null) {
                 forwardMessageEvent.value = Event(chatMessage)
             }
         }
 
         private fun showImdnDeliveryFragment() {
-            val chatMessage = binding.viewModel?.chatMessage
+            val chatMessage = binding.data?.chatMessage
             if (chatMessage != null) {
                 showImdnForMessageEvent.value = Event(chatMessage)
             }
         }
 
         private fun deleteMessage() {
-            val chatMessage = binding.viewModel?.chatMessage
+            val chatMessage = binding.data?.chatMessage
             if (chatMessage != null) {
                 chatMessage.userData = adapterPosition
                 deleteMessageEvent.value = Event(chatMessage)
@@ -291,7 +291,7 @@ class ChatMessagesListAdapter(
         }
 
         private fun addSenderToContacts() {
-            val chatMessage = binding.viewModel?.chatMessage
+            val chatMessage = binding.data?.chatMessage
             if (chatMessage != null) {
                 val copy = chatMessage.fromAddress.clone()
                 copy.clean() // To remove gruu if any
@@ -306,7 +306,7 @@ class ChatMessagesListAdapter(
         fun bind(eventLog: EventLog) {
             with(binding) {
                 val eventViewModel = EventData(eventLog)
-                viewModel = eventViewModel
+                data = eventViewModel
 
                 binding.lifecycleOwner = viewLifecycleOwner
 

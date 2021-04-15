@@ -31,7 +31,7 @@
                 android:layout_margin="5dp"
                 android:gravity="center"
                 app:showSecurityLevel="@{true}"
-                app:viewModel="@{data}"
+                app:data="@{data}"
                 tools:layout="@layout/contact_avatar" />
 
             <LinearLayout

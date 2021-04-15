@@ -13,7 +13,7 @@
             name="position"
             type="Integer"/>
         <variable
-            name="viewModel"
+            name="data"
             type="org.linphone.activities.main.recordings.data.RecordingData" />
         <variable
             name="selectionListViewModel"
@@ -32,7 +32,7 @@
         <ImageView
             android:id="@+id/record_play_pause"
             android:onClick="@{playListener}"
-            android:selected="@{viewModel.isPlaying}"
+            android:selected="@{data.isPlaying}"
             android:contentDescription="@string/content_description_recording_toggle_play"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -69,7 +69,7 @@
                 android:layout_alignParentTop="true">
 
                 <TextView
-                    android:text="@{viewModel.name}"
+                    android:text="@{data.name}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
@@ -79,7 +79,7 @@
                     android:text=" - " />
 
                 <TextView
-                    android:text="@{viewModel.formattedDate}"
+                    android:text="@{data.formattedDate}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
@@ -95,7 +95,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:text="@{viewModel.formattedPosition}"
+                    android:text="@{data.formattedPosition}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center" />
@@ -106,7 +106,7 @@
                     android:text="/" />
 
                 <TextView
-                    android:text="@{viewModel.formattedDuration}"
+                    android:text="@{data.formattedDuration}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
@@ -114,9 +114,9 @@
 
             <SeekBar
                 android:id="@+id/record_progression_bar"
-                onProgressChanged="@{(progress) -> viewModel.onProgressChanged(progress)}"
-                android:max="@{viewModel.duration}"
-                android:progress="@{viewModel.position}"
+                onProgressChanged="@{(progress) -> data.onProgressChanged(progress)}"
+                android:max="@{data.duration}"
+                android:progress="@{data.position}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"

@@ -56,7 +56,7 @@ class GroupInfoParticipantsAdapter(
     }
 
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
-        (holder as ViewHolder).binding.viewModel?.destroy()
+        (holder as ViewHolder).binding.data?.destroy()
     }
 
     fun showAdminControls(show: Boolean) {
@@ -71,7 +71,7 @@ class GroupInfoParticipantsAdapter(
             with(binding) {
                 val participantViewModel = GroupInfoParticipantData(participant)
                 participantViewModel.showAdminControls.value = showAdmin
-                viewModel = participantViewModel
+                data = participantViewModel
 
                 lifecycleOwner = viewLifecycleOwner
 
