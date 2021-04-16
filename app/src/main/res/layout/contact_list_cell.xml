@@ -39,7 +39,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             tools:layout="@layout/contact_avatar"
-            app:viewModel="@{viewModel}"/>
+            app:data="@{viewModel}"/>
 
         <LinearLayout
             android:id="@+id/right"

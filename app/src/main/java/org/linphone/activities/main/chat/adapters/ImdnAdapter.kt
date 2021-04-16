@@ -52,7 +52,7 @@ class ImdnAdapter(
     }
 
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
-        (holder as ViewHolder).binding.viewModel?.destroy()
+        (holder as ViewHolder).binding.data?.destroy()
     }
 
     inner class ViewHolder(
@@ -60,7 +60,7 @@ class ImdnAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(participantImdnState: ParticipantImdnState) {
             with(binding) {
-                viewModel = ImdnParticipantData(participantImdnState)
+                data = ImdnParticipantData(participantImdnState)
 
                 lifecycleOwner = viewLifecycleOwner
 
