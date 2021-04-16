@@ -285,8 +285,8 @@ class ControlsViewModel : ViewModel() {
 
         if (conference != null && core.isInConference) {
             val params = core.createConferenceParams()
-            val videoEnabled = conference.currentParams.videoEnabled()
-            params.enableVideo(!videoEnabled)
+            val videoEnabled = conference.currentParams.isVideoEnabled()
+            params.setVideoEnabled(!videoEnabled)
             Log.i("[Controls VM] Conference current param for video is $videoEnabled")
             conference.updateParams(params)
         } else if (currentCall != null) {
@@ -362,7 +362,7 @@ class ControlsViewModel : ViewModel() {
         val currentCallVideoEnabled = core.currentCall?.currentParams?.videoEnabled() ?: false
 
         val params = core.createConferenceParams()
-        params.enableVideo(currentCallVideoEnabled)
+        params.setVideoEnabled(currentCallVideoEnabled)
         Log.i("[Call] Setting videoEnabled to [$currentCallVideoEnabled] in conference params")
 
         val conference = core.conference ?: core.createConferenceWithParams(params)
