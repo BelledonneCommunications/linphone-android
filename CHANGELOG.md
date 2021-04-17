@@ -10,6 +10,43 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [4.5.0] - Unreleased
+
+This version is a full rewrite of the app in kotlin, using modern Android components like navigation, viewmodel, databinding, coroutines, etc...
+
+### Added
+
+- Using linphone SDK 5.0 API to better handle audio route (see linphone-sdk changelog)
+- All files used by the app can now be encrypted for more security (VFS setting)
+- In-app file viewers for PDFs, images, videos, sounds and texts
+- Ephemeral messages
+- Messages can be forwarded between chat rooms
+- Numpad can be displayed in outgoing call view if the call has early media
+- Display video in recordings if available
+- "Swipe left to delete" action available on calls history, contacts & chat rooms list
+- Android 11 people & conversation compliant
+- New animations between fragments and for unread chat messages / missed calls counters (can be disabled)
+- Bubble & conversation support for chat message notifications
+- Direct share support for chat room shortcuts
+- Option to mark messages as read when dismissing the notification
+- More settings are available
+- Call view can be displayed in full-screen
+
+### Changed
+
+- Call history view groups call from the same SIP URI (like linphone-iphone)
+- Reworked conference (using new linphone-sdk APIs)
+- Improved how Android native contacts are used
+- Switched to material design for text input fields & switches
+- Launcher shortcuts can be to either contacts or chat rooms
+- Improved preview when sharing video files through the chat
+- UI changes
+
+### Removed
+
+- "back-to-call" button from dialer & chat views, use notification or overlay (see call settings)
+- Previous translations, starting again from scratch using Weblate instead of Transifex
+
 ### [4.4.0] - 2021-03-29
 
 ### Added
@@ -23,6 +60,16 @@ Group changes to describe their impact on the project, as follows:
 - Asking user to read and accept privacy policy and general terms
 - Updated translations
 - Various crashes & issues fixed
+
+## [4.3.1] - 2020-09-25
+
+### Fixed
+- Added phoneCall foregroundServiceType for Android Q and newer
+- Contact sorting when first character has an accent
+
+### Changed
+- SDK updated to 4.4.2
+- Updated translations
 
 ## [4.3.0] - 2020-06-23
 

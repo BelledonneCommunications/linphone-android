@@ -1,74 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/secondary_bar"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="bottom"
-    android:minHeight="60dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <View
-        android:id="@+id/vertical_divider"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_centerHorizontal="true" />
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.call.viewmodels.ControlsViewModel" />
+    </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_toLeftOf="@id/vertical_divider">
+        android:layout_height="300dp">
 
         <View
-            android:id="@+id/left_vertical_divider"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_alignParentBottom="true"
-            android:layout_toLeftOf="@id/left_vertical_divider">
-
-            <ImageView
-                android:id="@+id/video"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/button_background_drawable"
-                android:contentDescription="@string/content_description_switch_video"
-                android:padding="20dp"
-                android:src="@drawable/camera" />
-
-            <ProgressBar
-                android:id="@+id/video_in_progress"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:visibility="gone" />
-
-        </RelativeLayout>
-
-        <ImageView
-            android:id="@+id/micro"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_toRightOf="@id/left_vertical_divider"
-            android:layout_alignParentBottom="true"
-            android:background="?attr/button_background_drawable"
-            android:contentDescription="@string/content_description_toggle_micro"
-            android:padding="10dp"
-            android:src="@drawable/micro" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_toRightOf="@id/vertical_divider">
-
-        <View
-            android:id="@+id/right_vertical_divider"
+            android:id="@+id/vertical_divider_2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true" />
@@ -76,125 +22,208 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_toLeftOf="@id/right_vertical_divider">
+            android:layout_toLeftOf="@id/vertical_divider_2">
+
+            <View
+                android:id="@+id/left_vertical_divider_2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/call_button_size"
+                android:layout_alignParentBottom="true"
+                android:layout_toLeftOf="@id/left_vertical_divider_2">
+
+                <ImageView
+                    android:onClick="@{() -> viewModel.toggleVideo()}"
+                    android:selected="@{viewModel.isVideoEnabled}"
+                    android:enabled="@{viewModel.isVideoAvailable &amp;&amp; !viewModel.isVideoUpdateInProgress}"
+                    android:contentDescription="@{viewModel.isVideoEnabled ? @string/content_description_disable_video : @string/content_description_enable_video}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/button_background_drawable"
+                    android:padding="20dp"
+                    android:src="@drawable/camera" />
+
+                <ProgressBar
+                    android:visibility="@{viewModel.isVideoUpdateInProgress ? View.VISIBLE : View.GONE, default=gone}"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true" />
+
+            </RelativeLayout>
 
             <ImageView
-                android:id="@+id/speaker"
+                android:onClick="@{() -> viewModel.toggleMuteMicrophone()}"
+                android:selected="@{viewModel.isMicrophoneMuted}"
+                android:enabled="@{viewModel.isMuteMicrophoneEnabled}"
+                android:contentDescription="@{viewModel.isMicrophoneMuted ? @string/content_description_disable_mic_mute : @string/content_description_enable_mic_mute}"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="@dimen/call_button_size"
+                android:layout_toRightOf="@id/left_vertical_divider_2"
                 android:layout_alignParentBottom="true"
                 android:background="?attr/button_background_drawable"
-                android:contentDescription="@string/content_description_toggle_speaker"
-                android:padding="15dp"
-                android:src="@drawable/speaker" />
-
-            <ImageView
-                android:id="@+id/audio_route"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_alignParentBottom="true"
-                android:background="?attr/button_background_drawable"
-                android:contentDescription="@string/content_description_audio_route"
-                android:padding="15dp"
-                android:src="@drawable/routes"
-                android:visibility="gone" />
-
-            <ImageView
-                android:id="@+id/route_bluetooth"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_above="@id/audio_route"
-                android:background="?attr/button_background_drawable"
-                android:contentDescription="@string/content_description_bluetooth"
-                android:padding="15dp"
-                android:src="@drawable/route_bluetooth"
-                android:visibility="gone" />
-
-            <ImageView
-                android:id="@+id/route_earpiece"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_above="@id/route_bluetooth"
-                android:background="?attr/button_background_drawable"
-                android:contentDescription="@string/content_description_earpiece"
-                android:padding="15dp"
-                android:src="@drawable/route_earpiece"
-                android:visibility="gone" />
-
-            <ImageView
-                android:id="@+id/route_speaker"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_above="@id/route_earpiece"
-                android:background="?attr/button_background_drawable"
-                android:contentDescription="@string/content_description_toggle_speaker"
-                android:padding="15dp"
-                android:src="@drawable/route_speaker"
-                android:visibility="gone" />
+                android:padding="10dp"
+                android:src="@drawable/micro" />
 
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_toRightOf="@id/right_vertical_divider">
+            android:layout_toRightOf="@id/vertical_divider_2">
 
-            <ImageView
-                android:id="@+id/options"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_alignParentBottom="true"
-                android:background="?attr/button_background_drawable"
-                android:contentDescription="@string/content_description_call_options"
-                android:padding="15dp"
-                android:src="@drawable/options" />
+            <View
+                android:id="@+id/right_vertical_divider_2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true" />
 
-            <ImageView
-                android:id="@+id/record_call"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_above="@id/options"
-                android:background="?attr/button_background_drawable"
-                android:contentDescription="@string/content_description_record_call"
-                android:padding="15dp"
-                android:src="@drawable/options_rec"
-                android:visibility="gone" />
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@id/right_vertical_divider_2">
 
-            <ImageView
-                android:id="@+id/add_call"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_above="@id/record_call"
-                android:background="?attr/button_background_drawable"
-                android:contentDescription="@string/content_description_add_call"
-                android:padding="15dp"
-                android:src="@drawable/options_add_call"
-                android:visibility="gone" />
+                <ImageView
+                    android:onClick="@{() -> viewModel.toggleSpeaker()}"
+                    android:selected="@{viewModel.isSpeakerSelected}"
+                    android:visibility="@{viewModel.audioRoutesEnabled ? View.GONE : View.VISIBLE}"
+                    android:contentDescription="@{viewModel.isSpeakerSelected ? @string/content_description_disable_speaker : @string/content_description_enable_speaker}"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/call_button_size"
+                    android:layout_alignParentBottom="true"
+                    android:background="?attr/button_background_drawable"
+                    android:padding="15dp"
+                    android:src="@drawable/speaker" />
 
-            <ImageView
-                android:id="@+id/transfer"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_above="@id/add_call"
-                android:background="?attr/button_background_drawable"
-                android:contentDescription="@string/content_description_transfer"
-                android:padding="15dp"
-                android:src="@drawable/options_transfer_call"
-                android:visibility="gone" />
+                <LinearLayout
+                    android:id="@+id/audio_routes_menu"
+                    android:translationY="@{viewModel.audioRoutesMenuTranslateY, default=@dimen/call_audio_routes_menu_translate_y}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@id/audio_routes"
+                    android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/conference"
+                    <ImageView
+                        android:selected="@{viewModel.isBluetoothHeadsetSelected}"
+                        android:onClick="@{() -> viewModel.forceBluetoothAudioRoute()}"
+                        android:contentDescription="@string/content_description_use_bluetooth_headset"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/call_button_size"
+                        android:background="?attr/button_background_drawable"
+                        android:padding="15dp"
+                        android:src="@drawable/route_bluetooth" />
+
+                    <ImageView
+                        android:selected="@{!viewModel.isSpeakerSelected &amp;&amp; !viewModel.isBluetoothHeadsetSelected}"
+                        android:onClick="@{() -> viewModel.forceEarpieceAudioRoute()}"
+                        android:contentDescription="@string/content_description_use_earpiece"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/call_button_size"
+                        android:background="?attr/button_background_drawable"
+                        android:padding="15dp"
+                        android:src="@drawable/route_earpiece" />
+
+                    <ImageView
+                        android:selected="@{viewModel.isSpeakerSelected}"
+                        android:onClick="@{() -> viewModel.forceSpeakerAudioRoute()}"
+                        android:contentDescription="@string/content_description_use_speaker"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/call_button_size"
+                        android:background="?attr/button_background_drawable"
+                        android:padding="15dp"
+                        android:src="@drawable/route_speaker" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/audio_routes"
+                    android:onClick="@{() -> viewModel.toggleRoutesMenu()}"
+                    android:visibility="@{viewModel.audioRoutesEnabled ? View.VISIBLE : View.INVISIBLE, default=invisible}"
+                    android:selected="@{viewModel.audioRoutesSelected}"
+                    android:contentDescription="@string/content_description_toggle_audio_menu"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/call_button_size"
+                    android:layout_alignParentBottom="true"
+                    android:background="?attr/button_background_drawable"
+                    android:padding="15dp"
+                    android:src="@drawable/routes" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_above="@id/transfer"
-                android:background="?attr/button_background_drawable"
-                android:contentDescription="@string/content_description_conference"
-                android:padding="15dp"
-                android:src="@drawable/options_start_conference"
-                android:visibility="gone" />
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/right_vertical_divider_2">
+
+                <LinearLayout
+                    android:id="@+id/options_menu"
+                    android:translationY="@{viewModel.optionsMenuTranslateY, default=@dimen/call_options_menu_translate_y}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@id/options"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:onClick="@{() -> viewModel.startConference()}"
+                        android:enabled="@{viewModel.isConferencingAvailable}"
+                        android:contentDescription="@string/content_description_start_conference"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/call_button_size"
+                        android:background="?attr/button_background_drawable"
+                        android:padding="15dp"
+                        android:src="@drawable/options_start_conference" />
+
+                    <ImageView
+                        android:onClick="@{() -> viewModel.onTransferCallClicked()}"
+                        android:contentDescription="@string/content_description_transfer_call"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/call_button_size"
+                        android:background="?attr/button_background_drawable"
+                        android:padding="15dp"
+                        android:src="@drawable/options_transfer_call" />
+
+                    <ImageView
+                        android:onClick="@{() -> viewModel.onAddCallClicked()}"
+                        android:contentDescription="@string/content_description_add_call"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/call_button_size"
+                        android:background="?attr/button_background_drawable"
+                        android:padding="15dp"
+                        android:src="@drawable/options_add_call" />
+
+                    <ImageView
+                        android:onClick="@{() -> viewModel.toggleRecording(true)}"
+                        android:selected="@{viewModel.isRecording}"
+                        android:contentDescription="@string/content_description_toggle_recording"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/call_button_size"
+                        android:background="?attr/button_background_drawable"
+                        android:padding="15dp"
+                        android:src="@drawable/options_rec" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/options"
+                    android:onClick="@{() -> viewModel.toggleOptionsMenu()}"
+                    android:selected="@{viewModel.optionsVisibility}"
+                    android:contentDescription="@string/content_description_toggle_call_menu"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/call_button_size"
+                    android:layout_alignParentBottom="true"
+                    android:background="?attr/button_background_drawable"
+                    android:padding="15dp"
+                    android:src="@drawable/options" />
+
+            </RelativeLayout>
 
         </RelativeLayout>
 
     </RelativeLayout>
 
-</RelativeLayout>
+</layout>

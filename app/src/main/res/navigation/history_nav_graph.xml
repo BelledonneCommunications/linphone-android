@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/history_nav_graph.xml"
+    app:startDestination="@id/detailCallLogFragment">
+
+    <fragment
+        android:id="@+id/detailCallLogFragment"
+        android:name="org.linphone.activities.main.history.fragments.DetailCallLogFragment"
+        tools:layout="@layout/history_detail_fragment"
+        android:label="DetailCallLogFragment">
+
+        <action
+            android:id="@+id/action_detailCallLogFragment_to_detailContactFragment"
+            app:destination="@id/contacts_nav_graph.xml" />
+
+        <action
+            android:id="@+id/action_detailCallLogFragment_to_detailChatRoomFragment"
+            app:destination="@id/chat_nav_graph.xml" />
+
+    </fragment>
+
+</navigation>

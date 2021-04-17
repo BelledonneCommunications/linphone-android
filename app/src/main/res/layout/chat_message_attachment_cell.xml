@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="data"
+            type="org.linphone.activities.main.chat.data.ChatMessageAttachmentData" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:layout_margin="5dp"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/pendingImageForUpload"
+            android:visibility="@{data.image ? View.VISIBLE : View.GONE}"
+            android:contentDescription="@string/content_description_pending_file_transfer"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:adjustViewBounds="true"
+            app:glidePath="@{data.path}"/>
+
+        <ImageView
+            android:visibility="@{data.image ? View.VISIBLE : View.GONE}"
+            android:onClick="@{() -> data.delete()}"
+            android:contentDescription="@string/content_description_remove_pending_file_transfer"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignTop="@id/pendingImageForUpload"
+            android:layout_alignRight="@id/pendingImageForUpload"
+            android:src="@drawable/field_clean" />
+
+        <ImageView
+            android:id="@+id/pendingVideoForUpload"
+            android:visibility="@{data.video ? View.VISIBLE : View.GONE, default=gone}"
+            android:contentDescription="@string/content_description_pending_file_transfer"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:adjustViewBounds="true"
+            android:src="@{data.videoPreview}"/>
+
+        <ImageView
+            android:visibility="@{data.video ? View.VISIBLE : View.GONE, default=gone}"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/recording_play_pause"
+            android:contentDescription="@string/content_description_chat_message_video_attachment"
+            android:layout_centerInParent="true"/>
+
+        <ImageView
+            android:visibility="@{data.video ? View.VISIBLE : View.GONE, default=gone}"
+            android:onClick="@{() -> data.delete()}"
+            android:contentDescription="@string/content_description_remove_pending_file_transfer"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignTop="@id/pendingVideoForUpload"
+            android:layout_alignRight="@id/pendingVideoForUpload"
+            android:src="@drawable/field_clean" />
+
+        <TextView
+            android:id="@+id/pendingFileForUpload"
+            android:visibility="@{data.image || data.video ? View.GONE : View.VISIBLE, default=gone}"
+            android:text="@{data.fileName}"
+            android:textColor="?attr/secondaryTextColor"
+            android:textSize="21sp"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textAlignment="center" />
+
+        <ImageView
+            android:visibility="@{data.image || data.video ? View.GONE : View.VISIBLE, default=gone}"
+            android:onClick="@{() -> data.delete()}"
+            android:contentDescription="@string/content_description_remove_pending_file_transfer"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignTop="@id/pendingFileForUpload"
+            android:layout_alignRight="@id/pendingFileForUpload"
+            android:src="@drawable/field_clean" />
+
+    </RelativeLayout>
+
+</layout>
