@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="newOneToOneChatRoomClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="newGroupChatRoomClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="editClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.main.chat.viewmodels.ChatRoomsListViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="?attr/lightToolbarBackgroundColor"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:onClick="@{newOneToOneChatRoomClickListener}"
+                android:contentDescription="@string/content_description_create_one_to_one_chat_room"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:background="?attr/button_background_drawable"
+                android:padding="15dp"
+                android:src="@drawable/chat_new" />
+
+            <ImageView
+                android:visibility="@{viewModel.groupChatAvailable ? View.VISIBLE : View.GONE}"
+                android:onClick="@{newGroupChatRoomClickListener}"
+                android:contentDescription="@string/content_description_create_group_chat_room"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:background="?attr/button_background_drawable"
+                android:padding="15dp"
+                android:src="@drawable/chat_group_new" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.4" />
+
+            <ImageView
+                android:onClick="@{editClickListener}"
+                android:enabled="@{!viewModel.chatRooms.empty}"
+                android:contentDescription="@string/content_description_enter_edition_mode"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:background="?attr/button_background_drawable"
+                android:padding="15dp"
+                android:src="@drawable/delete" />
+
+        </LinearLayout>
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/list_edit_top_bar_fragment"
+            android:name="org.linphone.activities.main.fragments.ListTopBarFragment"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignTop="@id/top_bar"
+            tools:layout="@layout/list_edit_top_bar_fragment" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/chatList"
+            android:layout_below="@id/top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            style="@style/empty_list_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/no_chat_history"
+            android:visibility="@{viewModel.chatRooms.empty ? View.VISIBLE : View.GONE}" />
+
+    </RelativeLayout>
+
+</layout>

@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="backClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="newContactClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="contactClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.main.history.viewmodels.CallLogViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="?attr/lightToolbarBackgroundColor"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/back"
+                android:onClick="@{backClickListener}"
+                android:contentDescription="@string/content_description_go_back"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:background="?attr/button_background_drawable"
+                android:padding="18dp"
+                android:src="@drawable/back" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.6" />
+
+            <ImageView
+                android:onClick="@{newContactClickListener}"
+                android:visibility="@{viewModel.contact != null ? View.GONE : View.VISIBLE}"
+                android:contentDescription="@string/content_description_add_contact"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:background="?attr/button_background_drawable"
+                android:padding="15dp"
+                android:src="@drawable/contact_add" />
+
+            <ImageView
+                android:onClick="@{contactClickListener}"
+                android:visibility="@{viewModel.contact == null ? View.GONE : View.VISIBLE}"
+                android:contentDescription="@string/content_description_go_to_contact"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:background="?attr/button_background_drawable"
+                android:padding="15dp"
+                android:src="@drawable/contact" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/top_bar"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="5dp">
+
+                <org.linphone.contact.BigContactAvatarView
+                    android:id="@+id/avatar"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:gravity="center"
+                    bind:layout="@layout/contact_avatar_big"
+                    app:viewModel="@{viewModel}"/>
+
+                <TextView
+                    android:text="@{viewModel.contact.fullName ?? viewModel.displayName}"
+                    style="@style/big_contact_name_font"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal" />
+
+                <org.linphone.views.MarqueeTextView
+                    android:text="@{viewModel.peerSipUri}"
+                    style="@style/sip_uri_font"
+                    android:singleLine="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:onClick="@{() -> viewModel.startCall()}"
+                        android:contentDescription="@string/content_description_start_call"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/round_orange_button_background"
+                        android:src="@drawable/call_start_default" />
+
+                    <ImageView
+                        android:onClick="@{() -> viewModel.startChat(false)}"
+                        android:visibility="@{viewModel.chatAllowed ? View.VISIBLE : View.GONE}"
+                        android:contentDescription="@string/content_description_start_chat"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/round_orange_button_background"
+                        android:src="@drawable/chat_start_default" />
+
+                    <RelativeLayout
+                        android:onClick="@{() -> viewModel.startChat(true)}"
+                        android:visibility="@{viewModel.chatAllowed &amp;&amp; viewModel.secureChatAllowed ? View.VISIBLE : View.GONE}"
+                        android:layout_width="65dp"
+                        android:layout_height="60dp"
+                        android:layout_margin="10dp">
+
+                        <ImageView
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:contentDescription="@string/content_description_start_encrypted_chat"
+                            android:background="@drawable/round_orange_button_background"
+                            android:src="@drawable/chat_start_default" />
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentRight="true"
+                            android:contentDescription="@string/content_description_start_encrypted_chat"
+                            android:src="@drawable/security_toggle_icon_green" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="?attr/dividerColor" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="5dp">
+
+                <TextView
+                    style="@style/assistant_input_field_header_font"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/history_calls_list"
+                    android:textAllCaps="true" />
+
+                <androidx.core.widget.NestedScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:entries="@{viewModel.callsHistory}"
+                        app:layout="@{@layout/history_detail_cell}"/>
+
+                </androidx.core.widget.NestedScrollView>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <include
+            layout="@layout/wait_layout"
+            bind:visibility="@{viewModel.waitForChatRoomCreation}"/>
+
+    </RelativeLayout>
+
+</layout>

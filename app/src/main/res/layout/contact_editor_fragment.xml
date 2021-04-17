@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="backClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="avatarClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="saveChangesClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.main.contact.viewmodels.ContactEditorViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="?attr/lightToolbarBackgroundColor"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/cancel"
+                android:contentDescription="@string/content_description_cancel_contact_edit"
+                android:onClick="@{backClickListener}"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:background="?attr/button_background_drawable"
+                android:padding="15dp"
+                android:src="@drawable/cancel_edit" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.6" />
+
+            <ImageView
+                android:id="@+id/ok"
+                android:enabled="@{!viewModel.firstName.empty || !viewModel.lastName.empty}"
+                android:contentDescription="@string/content_description_confirm_contact_edit"
+                android:onClick="@{saveChangesClickListener}"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:background="?attr/button_background_drawable"
+                android:padding="18dp"
+                android:src="@drawable/valid" />
+
+        </LinearLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/top_bar">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingTop="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp">
+
+                <FrameLayout
+                    android:layout_width="100dp"
+                    android:layout_height="100dp">
+
+                    <org.linphone.contact.BigContactAvatarView
+                        android:id="@+id/avatar"
+                        android:onClick="@{avatarClickListener}"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:gravity="center"
+                        tools:layout="@layout/contact_avatar_big"
+                        app:viewModel="@{viewModel}"/>
+
+                    <ImageView
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:gravity="center"
+                        android:contentDescription="@string/content_description_change_contact_picture"
+                        glideAvatar="@{viewModel.tempPicturePath}"/>
+
+                </FrameLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/contact_last_name">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:text="@={viewModel.lastName}"
+                        android:imeOptions="actionDone"
+                        android:singleLine="true"
+                        android:inputType="textPersonName|textCapWords"
+                        android:background="@color/transparent_color"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/contact_first_name">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:text="@={viewModel.firstName}"
+                        android:imeOptions="actionDone"
+                        android:singleLine="true"
+                        android:inputType="textPersonName|textCapWords"
+                        android:background="@color/transparent_color"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:visibility="@{viewModel.displayOrganization ? View.VISIBLE : View.GONE}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/contact_organization">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:text="@={viewModel.organization}"
+                        android:imeOptions="actionDone"
+                        android:singleLine="true"
+                        android:inputType="textPersonName|textCapWords"
+                        android:background="@color/transparent_color"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="center">
+
+                    <TextView
+                        style="@style/contact_edit_form_label_font"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="@string/sip_addresses"
+                        android:textAllCaps="true" />
+
+                    <ImageView
+                        android:onClick="@{() -> viewModel.addEmptySipAddress()}"
+                        android:contentDescription="@string/content_description_add_sip_address_field"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/field_add" />
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:entries="@{viewModel.addresses}"
+                    app:layout="@{@layout/contact_number_address_editor_cell}"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="center">
+
+                    <TextView
+                        style="@style/contact_edit_form_label_font"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="@string/phone_numbers"
+                        android:textAllCaps="true" />
+
+                    <ImageView
+                        android:onClick="@{() -> viewModel.addEmptyPhoneNumber()}"
+                        android:contentDescription="@string/content_description_add_phone_number_field"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/field_add" />
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:entries="@{viewModel.numbers}"
+                    app:layout="@{@layout/contact_number_address_editor_cell}"/>
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </RelativeLayout>
+
+</layout>

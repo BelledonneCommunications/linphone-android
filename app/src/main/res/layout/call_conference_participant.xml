@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="data"
+            type="org.linphone.activities.call.data.ConferenceParticipantData" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_margin="10dp">
+
+            <org.linphone.contact.ContactAvatarView
+                android:id="@+id/avatar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                app:data="@{data}"
+                tools:layout="@layout/contact_avatar" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:paddingLeft="5dp"
+                android:paddingRight="10dp"
+                android:orientation="vertical">
+
+                <org.linphone.views.MarqueeTextView
+                    android:text="@{data.contact.fullName ?? data.displayName}"
+                    style="@style/contact_name_list_cell_font"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|left"
+                    android:singleLine="true"/>
+
+                <Chronometer
+                    android:id="@+id/call_timer"
+                    android:textColor="?attr/accentColor"
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|right" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:onClick="@{() -> data.removeFromConference()}"
+                android:visibility="@{data.isMeAdmin ? View.VISIBLE : View.GONE, default=gone}"
+                android:contentDescription="@string/content_description_remove_from_conference"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="10dp"
+                android:layout_gravity="center_vertical"
+                android:adjustViewBounds="true"
+                android:gravity="center_vertical"
+                android:src="@drawable/conference_remove_participant" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?attr/dividerColor" />
+
+    </LinearLayout>
+
+</layout>

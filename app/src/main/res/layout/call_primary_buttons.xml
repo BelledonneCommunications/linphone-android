@@ -1,86 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/main_bar"
-    android:layout_width="match_parent"
-    android:layout_height="60dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <View
-        android:id="@+id/vertical_divider"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_centerHorizontal="true" />
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.call.viewmodels.ControlsViewModel" />
+    </data>
 
-    <ImageView
-        android:id="@+id/hang_up"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/hangup"
-        android:contentDescription="@string/content_description_hang_up"
-        android:padding="12dp"
-        android:src="@drawable/call_hangup" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_toLeftOf="@id/vertical_divider">
-
-        <View
-            android:id="@+id/left_vertical_divider"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"/>
+        android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/dialer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/left_vertical_divider"
+            android:onClick="@{() -> viewModel.toggleNumpadVisibility()}"
+            android:selected="@{viewModel.numpadVisibility}"
+            android:contentDescription="@string/content_description_show_numpad"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/call_button_size"
+            android:layout_weight="0.25"
             android:background="@drawable/button_background_dark"
-            android:contentDescription="@string/content_description_numpad"
             android:padding="15dp"
             android:src="@drawable/call_numpad" />
 
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_toRightOf="@id/vertical_divider">
-
-        <View
-            android:id="@+id/right_vertical_divider"
+        <ImageView
+            android:onClick="@{() -> viewModel.terminateCall()}"
+            android:contentDescription="@string/content_description_terminate_call"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"/>
+            android:layout_height="@dimen/call_button_size"
+            android:layout_weight="0.5"
+            android:background="@drawable/call_hangup_background"
+            android:padding="12dp"
+            android:src="@drawable/call_hangup" />
 
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/right_vertical_divider"
+            android:onClick="@{() -> viewModel.onChatClicked()}"
+            android:visibility="@{viewModel.chatAllowed ? View.VISIBLE : View.GONE}"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/call_button_size"
+            android:layout_weight="0.25"
             android:background="@drawable/footer_button">
 
             <ImageView
-                android:id="@+id/chat"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_centerInParent="true"
                 android:background="@drawable/button_background_dark"
-                android:contentDescription="@string/content_description_chat_button"
+                android:contentDescription="@string/content_description_go_to_chat"
                 android:padding="15dp"
                 android:src="@drawable/footer_chat" />
 
             <TextView
-                android:id="@+id/missed_chats"
+                android:translationY="@{viewModel.chatUnreadCountTranslateY}"
+                android:text="@{String.valueOf(viewModel.unreadMessagesCount)}"
+                android:visibility="@{viewModel.unreadMessagesCount == 0 ? View.GONE : View.VISIBLE}"
                 style="@style/unread_count_font"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="15dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="25dp"
+                android:layout_marginTop="5dp"
                 android:background="@drawable/unread_message_count_bg"
-                android:gravity="center"
-                android:visibility="gone" />
+                android:gravity="center" />
 
         </RelativeLayout>
 
-    </RelativeLayout>
+    </LinearLayout>
 
-</RelativeLayout>
+</layout>
