@@ -10,16 +10,20 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
-## [5.0.0] - Unreleased
+## [4.5.0] - Unreleased
 
 This version is a full rewrite of the app in kotlin, using modern Android components like navigation, viewmodel, databinding, coroutines, etc...
 
 ### Added
 
 - Using linphone SDK 5.0 API to better handle audio route (see linphone-sdk changelog)
+- All files used by the app can now be encrypted for more security (VFS setting)
+- In-app file viewers for PDFs, images, videos, sounds and texts
+- Ephemeral messages
+- Messages can be forwarded between chat rooms
+- Numpad can be displayed in outgoing call view if the call has early media
 - Display video in recordings if available
 - "Swipe left to delete" action available on calls history, contacts & chat rooms list
-- Improved preview when sharing video files through the chat
 - Android 11 people & conversation compliant
 - New animations between fragments and for unread chat messages / missed calls counters (can be disabled)
 - Bubble & conversation support for chat message notifications
@@ -30,16 +34,18 @@ This version is a full rewrite of the app in kotlin, using modern Android compon
 
 ### Changed
 
-- Dropped Android 5 compatibility, Android 6 or higher (API 23) is now required to install the app
 - Call history view groups call from the same SIP URI (like linphone-iphone)
+- Reworked conference (using new linphone-sdk APIs)
 - Improved how Android native contacts are used
 - Switched to material design for text input fields & switches
 - Launcher shortcuts can be to either contacts or chat rooms
+- Improved preview when sharing video files through the chat
 - UI changes
 
 ### Removed
 
-- Removed "back-to-call" button from dialer & chat views, use notification or overlay (see call settings)
+- "back-to-call" button from dialer & chat views, use notification or overlay (see call settings)
+- Previous translations, starting again from scratch using Weblate instead of Transifex
 
 ### [4.4.0] - 2021-03-29
 
