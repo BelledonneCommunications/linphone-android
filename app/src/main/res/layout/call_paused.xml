@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.call.viewmodels.CallViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:alpha="0.5"
+        android:background="?attr/accentColor"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <org.linphone.contact.ContactAvatarView
+            android:id="@+id/avatar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            app:data="@{viewModel}"
+            tools:layout="@layout/contact_avatar" />
+
+        <org.linphone.views.MarqueeTextView
+            android:text="@{viewModel.contact.fullName ?? viewModel.displayName}"
+            android:textColor="?attr/secondaryTextColor"
+            android:textSize="21sp"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical|left"
+            android:singleLine="true"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" />
+
+        <Chronometer
+            android:id="@+id/call_timer"
+            android:textColor="?attr/secondaryTextColor"
+            android:textSize="15sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|right"
+            android:paddingLeft="10dp"
+            android:paddingRight="20dp" />
+
+        <ImageView
+            android:onClick="@{() -> viewModel.resume()}"
+            android:contentDescription="@string/content_description_resume_call"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/round_button_background"
+            android:padding="10dp"
+            android:src="@drawable/call_pause" />
+
+    </LinearLayout>
+
+</layout>

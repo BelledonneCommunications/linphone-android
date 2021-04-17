@@ -14,15 +14,9 @@ Copyright © Belledonne Communications
 
 Linphone is dual licensed, and is available either :
 
- - under a [GNU/GPLv3 license](https://www.gnu.org/licenses/gpl-3.0.en.html), for free (open source). Please make sure that you
+ - under a [GNU/GPLv3 license](https://www.gnu.org/licenses/gpl-3.0.en.html), for free (open source). Please make sure that you understand and agree with the terms  of this license before using it (see LICENSE file for details).
 
-understand and agree with the terms of this license before using it (see LICENSE file for
-
-details).
-
- - under a proprietary license, for a fee, to be used in closed source applications. Contact
-
-[Belledonne Communications](https://www.linphone.org/contact) for any question about costs and services.
+ - under a proprietary license, for a fee, to be used in closed source applications. Contact [Belledonne Communications](https://www.linphone.org/contact) for any question about costs and services.
 
 ### Documentation
 
@@ -58,6 +52,10 @@ to install the generated APK in the previous step (use installRelease instead if
 
 APK files are stored within ```./app/build/outputs/apk/debug/``` and ```./app/build/outputs/apk/release/``` directories.
 
+When building a release AppBundle, use releaseAppBundle target instead of release. 
+Also make sure you have a NDK installed and that you have an environment variable named ```ANDROID_NDK_HOME``` that contains the path to the NDK.
+This is to be able to include native libraries symbols into app bundle for the Play Store.
+
 ## Building a local SDK
 
 1. Clone the linphone-sdk repository from out gitlab:
@@ -67,7 +65,7 @@ git clone https://gitlab.linphone.org/BC/public/linphone-sdk.git --recursive
 
 2. Follow the instructions in the linphone-sdk/README file to build the SDK.
 
-3. Create or edit the gradle.properties file in $GRADLE_USER_HOME (usually ~/.gradle) file and add the absolute path to your linphone-sdk build directory, for example:
+3. Create or edit the gradle.properties file in $GRADLE_USER_HOME (usually ~/.gradle/) and add the absolute path to your linphone-sdk build directory, for example:
 ```
 LinphoneSdkBuildDir=/home/<username>/linphone-sdk/build/
 ```
@@ -88,13 +86,22 @@ LinphoneSdkBuildDir=/home/<username>/linphone-sdk/build/
 
 6. Debug app.
 
+## Known issues
+
+- If you encounter the `couldn't find "libc++_shared.so"` crash when the app starts, simply clean the project in Android Studio (under Build menu) and build again.
+Also check you have built the SDK for the right CPU architecture using the `-DLINPHONESDK_ANDROID_ARCHS=armv7,arm64,x86,x86_64` cmake parameter.
+
+- Push notification might not work when app has been started by Android Studio consecutively to an install. Remove the app from the recent activity view and start it again using the launcher icon to resolve this.
+
 ## Troubleshouting
 
-If you encounter the `couldn't find "libc++_shared.so"` crash when the app starts, simply clean the project in Android Studio (under Build menu) and build again.
+When submitting an issue on our [Github repository](https://github.com/BelledonneCommunications/linphone-android), please attach the matching library logs:
 
-When submitting an issue, please attach the matching library logs. To enable them, go to Settings -> Advanced and toggle "Debug Mode".
+1. To enable them, go to Settings -> Advanced and toggle `Debug Mode`. If they are already enabled, clear them first using the `Reset logs` button on the About page.
 
-Then restart the app, reproduce the issue and upload the logs using the "Upload logs" button on the About page.
+2. Then restart the app, reproduce the issue and upload the logs using the `Send logs` button on the About page.
+
+3. Finally paste the link to the uploaded logs (link is already in the clipboard after a sucessful upload).
 
 ## Create an APK with a different package name
 
@@ -109,10 +116,11 @@ If you build the app as release, the package name will be ```org.linphone```.
 
 Now that Google Cloud Messaging has been deprecated and will be completely removed on April 11th 2019, the only official way of using push notifications is through Firebase.
 
-However to make Firebase push notifications work, the project needs to have a file named app/google-services.json that contains some confidential informations, so you won't find it (it has been added to the .gitignore file).
-This means that if you compile this project, you won't have push notification feature working in the app!
+However to make Firebase push notifications work, the project needs to have a ```app/google-services.json``` file that contains the configuration.
+We have archived our own, so you can build your linphone-android application and still receive push notifications from our free SIP service (sip.linphone.org).
+If you delete it, you won't receive any push notification.
 
-To enable them, just add your own ```google-services.json``` in the app folder.
+If you have your own push server, replace this file by yours.
 
 ## Translations
 

@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="allContactsToggleClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="sipContactsToggleClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="newContactClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="editClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.main.contact.viewmodels.ContactsListViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    android:id="@+id/top_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="?attr/lightToolbarBackgroundColor"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2">
+
+                        <ImageView
+                            android:onClick="@{allContactsToggleClickListener}"
+                            android:enabled="@{viewModel.sipContactsSelected}"
+                            android:contentDescription="@string/content_description_show_all_contacts"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="?attr/button_background_drawable"
+                            android:padding="15dp"
+                            android:src="@drawable/contacts_all" />
+
+                        <View
+                            android:visibility="@{viewModel.sipContactsSelected ? View.GONE : View.VISIBLE}"
+                            android:layout_width="match_parent"
+                            android:layout_height="5dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="?attr/accentColor" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2">
+
+                        <ImageView
+                            android:onClick="@{sipContactsToggleClickListener}"
+                            android:enabled="@{!viewModel.sipContactsSelected}"
+                            android:contentDescription="@string/content_description_show_sip_contacts"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="?attr/button_background_drawable"
+                            android:gravity="center"
+                            android:padding="15dp"
+                            android:src="@drawable/contacts_sip" />
+
+                        <View
+                            android:visibility="@{viewModel.sipContactsSelected ? View.VISIBLE : View.GONE}"
+                            android:layout_width="match_parent"
+                            android:layout_height="5dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="?attr/accentColor" />
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2" />
+
+                    <ImageView
+                        android:onClick="@{newContactClickListener}"
+                        android:contentDescription="@string/content_description_add_contact"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:background="?attr/button_background_drawable"
+                        android:padding="15dp"
+                        android:src="@drawable/contact_add" />
+
+                    <ImageView
+                        android:onClick="@{editClickListener}"
+                        android:enabled="@{!viewModel.contactsList.empty}"
+                        android:contentDescription="@string/content_description_enter_edition_mode"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:background="?attr/button_background_drawable"
+                        android:padding="15dp"
+                        android:src="@drawable/delete" />
+
+                </LinearLayout>
+
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/list_edit_top_bar_fragment"
+                    android:name="org.linphone.activities.main.fragments.ListTopBarFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_alignTop="@id/top_bar"
+                    tools:layout="@layout/list_edit_top_bar_fragment" />
+
+                <EditText
+                    android:id="@+id/searchBar"
+                    android:text="@={viewModel.filter}"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:inputType="textPersonName"
+                    android:layout_below="@id/top_bar"
+                    android:layout_margin="10dp"
+                    android:drawableLeft="@drawable/search"
+                    android:drawablePadding="10dp"
+                    android:background="@color/transparent_color"
+                    android:backgroundTint="@color/transparent_color"
+                    android:hint="@string/contact_filter_hint"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/searchBar"
+                    android:background="?attr/dividerColor" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/contactsList"
+                    android:layout_marginTop="5dp"
+                    android:layout_below="@id/searchBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    style="@style/empty_list_font"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="@string/no_sip_contact"
+                    android:visibility="@{viewModel.sipContactsSelected &amp;&amp; viewModel.contactsList.empty ? View.VISIBLE : View.GONE}" />
+
+                <TextView
+                    style="@style/empty_list_font"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="@string/no_contact"
+                    android:visibility="@{!viewModel.sipContactsSelected &amp;&amp; viewModel.contactsList.empty ? View.VISIBLE : View.GONE}" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="?attr/dividerColor" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/contacts_nav_container"
+                    android:name="androidx.navigation.fragment.NavHostFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:defaultNavHost="false"
+                    app:navGraph="@navigation/contacts_nav_graph"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</layout>

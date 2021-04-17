@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="data"
+            type="org.linphone.activities.main.chat.data.DevicesListChildData" />
+    </data>
+
+    <RelativeLayout
+        android:onClick="@{() -> data.onClick()}"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="?attr/backgroundColor2"
+        android:gravity="center_vertical">
+
+        <org.linphone.views.MarqueeTextView
+            android:text="@{data.deviceName}"
+            style="@style/contact_name_list_cell_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="55dp"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@id/security_level"
+            android:singleLine="true" />
+
+        <ImageView
+            android:id="@+id/security_level"
+            android:src="@{data.securityLevelIcon, default=@drawable/security_alert_indicator}"
+            android:contentDescription="@{data.securityContentDescription}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="?attr/dividerColor" />
+
+    </RelativeLayout>
+
+</layout>
