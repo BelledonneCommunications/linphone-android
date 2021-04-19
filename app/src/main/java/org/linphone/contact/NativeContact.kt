@@ -147,9 +147,9 @@ class NativeContact(val nativeId: String, private val lookupKey: String? = null)
 
                 val stringAddress = address.asStringUriOnly()
                 Log.d("[Native Contact] Found SIP address $stringAddress")
-                if (!rawSipAddresses.contains(stringAddress)) {
+                if (!rawSipAddresses.contains(data1)) {
                     sipAddresses.add(address)
-                    rawSipAddresses.add(stringAddress)
+                    rawSipAddresses.add(data1)
                 }
             }
             ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE -> {
