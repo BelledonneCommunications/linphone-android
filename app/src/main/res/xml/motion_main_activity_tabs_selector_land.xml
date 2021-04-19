@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        motion:constraintSetStart="@+id/dialer"
+        motion:constraintSetEnd="@+id/chat_rooms"/>
+
+    <Transition
+        motion:constraintSetStart="@+id/call_history"
+        motion:constraintSetEnd="@+id/contacts"/>
+
+    <Transition
+        motion:constraintSetStart="@+id/call_history"
+        motion:constraintSetEnd="@+id/dialer"/>
+
+    <Transition
+        motion:constraintSetStart="@+id/call_history"
+        motion:constraintSetEnd="@+id/chat_rooms"/>
+
+    <Transition
+        motion:constraintSetStart="@+id/contacts"
+        motion:constraintSetEnd="@+id/dialer"/>
+
+    <Transition
+        motion:constraintSetStart="@+id/contacts"
+        motion:constraintSetEnd="@+id/chat_rooms"/>
+
+    <ConstraintSet android:id="@+id/call_history">
+
+        <Constraint
+            android:id="@id/selector"
+            android:layout_width="@dimen/tabs_fragment_selector_size"
+            motion:layout_constraintLeft_toLeftOf="parent"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintBottom_toBottomOf="@id/guidelineTop" />
+
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/contacts">
+
+        <Constraint
+            android:id="@id/selector"
+            android:layout_width="@dimen/tabs_fragment_selector_size"
+            motion:layout_constraintLeft_toLeftOf="parent"
+            motion:layout_constraintTop_toTopOf="@id/guidelineTop"
+            motion:layout_constraintBottom_toBottomOf="@id/guidelineMiddle" />
+
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/dialer">
+
+        <Constraint
+            android:id="@id/selector"
+            android:layout_width="@dimen/tabs_fragment_selector_size"
+            motion:layout_constraintLeft_toLeftOf="parent"
+            motion:layout_constraintTop_toTopOf="@id/guidelineMiddle"
+            motion:layout_constraintBottom_toBottomOf="@id/guidelineBottom" />
+
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/chat_rooms">
+
+        <Constraint
+            android:id="@id/selector"
+            android:layout_width="@dimen/tabs_fragment_selector_size"
+            motion:layout_constraintLeft_toLeftOf="parent"
+            motion:layout_constraintTop_toTopOf="@id/guidelineBottom"
+            motion:layout_constraintBottom_toBottomOf="parent" />
+
+    </ConstraintSet>
+
+</MotionScene>

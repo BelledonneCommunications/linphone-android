@@ -2,6 +2,7 @@
 <resources>
     <declare-styleable name="LinphoneAppTheme">
         <attr name="accentColor" format="color"/>
+        <attr name="colorPrimary" format="color"/>
         <attr name="accentColorLight30" format="color"/>
 
         <attr name="accentTextColor" format="color"/>
@@ -18,10 +19,12 @@
         <attr name="drawableTintColor" format="color"/>
         <attr name="drawableTintDisabledColor" format="color"/>
         <attr name="drawableTintOverColor" format="color"/>
+        <attr name="drawableTintColor2" format="color"/>
+        <attr name="drawableTintColor3" format="color"/>
 
-        <attr name="lighToolbarBackgroundColor" format="color"/>
-        <attr name="lighToolbarBackgroundDisabledColor" format="color"/>
-        <attr name="lighToolbarTextColor" format="color"/>
+        <attr name="lightToolbarBackgroundColor" format="color"/>
+        <attr name="lightToolbarBackgroundDisabledColor" format="color"/>
+        <attr name="lightToolbarTextColor" format="color"/>
         <attr name="darkToolbarBackgroundColor" format="color"/>
         <attr name="darkToolbarTextColor" format="color"/>
 
@@ -34,5 +37,8 @@
         <attr name="hint" format="string" />
         <attr name="list_items_names" format="reference" />
         <attr name="list_items_values" format="reference" />
+        <attr name="checked" format="boolean" />
+        <attr name="value" format="string" />
+        <attr name="image" format="reference" />
     </declare-styleable>
 </resources>

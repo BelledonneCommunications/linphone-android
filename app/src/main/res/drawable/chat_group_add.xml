@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <bitmap android:src="@drawable/chat_group_add_default"
+            android:tint="?attr/drawableTintColor" />
+    </item>
+</selector>
+
