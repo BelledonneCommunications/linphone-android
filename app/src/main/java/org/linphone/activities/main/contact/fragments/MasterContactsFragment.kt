@@ -93,7 +93,7 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
         val white = ContextCompat.getColor(requireContext(), R.color.white_color)
 
         swipeConfiguration.rightToLeftAction = RecyclerViewSwipeConfiguration.Action(
-            "Delete",
+            requireContext().getString(R.string.dialog_delete),
             white,
             ContextCompat.getColor(requireContext(), R.color.red_color)
         )
