@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="clickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="data"
+            type="org.linphone.activities.main.chat.data.ChatRoomCreationContactData" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+
+        <RelativeLayout
+            android:onClick="@{clickListener}"
+            android:enabled="@{!data.isDisabled}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <org.linphone.contact.ContactAvatarView
+                android:id="@+id/avatar"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                tools:layout="@layout/contact_avatar"
+                app:showLimeCapability="@{data.hasLimeX3DHCapability}"
+                app:data="@{data}"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_toRightOf="@id/avatar"
+                android:layout_toLeftOf="@id/linphone_user"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:text="@{data.contact.fullName ?? data.displayName}"
+                    style="@style/contact_name_list_cell_font"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="top|left"
+                    android:lines="1" />
+
+                <TextView
+                    android:text="@{data.sipUri}"
+                    style="@style/sip_uri_font"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="bottom|left"
+                    android:lines="1" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:visibility="@{data.linphoneUser ? View.VISIBLE : View.INVISIBLE}"
+                android:id="@+id/linphone_user"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_toLeftOf="@id/contact_is_select"
+                android:layout_centerVertical="true"
+                android:paddingRight="10dp"
+                android:contentDescription="@string/content_description_linphone_user"
+                android:src="@drawable/linphone_logo_tinted" />
+
+            <ImageView
+                android:visibility="@{data.isSelected ? View.VISIBLE : View.INVISIBLE}"
+                android:id="@+id/contact_is_select"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:layout_gravity="right"
+                android:paddingRight="20dp"
+                android:contentDescription="@string/content_description_contact_selected"
+                android:src="@drawable/check_selected" />
+
+        </RelativeLayout>
+
+        <View
+            android:visibility="@{data.isDisabled ? View.VISIBLE : View.GONE}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/contact_disabled_color"/>
+
+    </FrameLayout>
+
+</layout>

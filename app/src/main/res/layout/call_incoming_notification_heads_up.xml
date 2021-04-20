@@ -32,6 +32,7 @@
 
     <ImageView
         android:id="@+id/caller_picture"
+        android:contentDescription="@null"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:adjustViewBounds="true"

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <import type="android.view.View" />
+        <import type="android.text.InputType" />
+        <variable
+            name="data"
+            type="org.linphone.activities.main.contact.data.NumberOrAddressEditorData" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="@{data.toRemove ? View.GONE : View.VISIBLE, default=visible}"
+        android:paddingBottom="5dp">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/delete"
+            android:paddingRight="5dp"
+            android:hint="@{data.sipAddress ? @string/sip_address : @string/phone_number, default=@string/sip_address}">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:text="@={data.newValue}"
+                android:imeOptions="actionDone"
+                android:singleLine="true"
+                android:inputType="@{data.sipAddress ? InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS : InputType.TYPE_CLASS_PHONE}"
+                android:background="@color/transparent_color"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageView
+            android:id="@+id/delete"
+            android:onClick="@{() -> data.remove()}"
+            android:contentDescription="@string/content_description_clear_field"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/field_remove"
+            android:layout_marginLeft="5dp" />
+
+    </RelativeLayout>
+
+</layout>

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"/>
+        <import type="org.linphone.core.TransportType"/>
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.assistant.viewmodels.GenericLoginViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/top_bar_fragment"
+            android:name="org.linphone.activities.assistant.fragments.TopBarFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            tools:layout="@layout/assistant_top_bar_fragment" />
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_below="@id/top_bar_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/standard_text_font"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/assistant_generic_account"
+                    android:paddingTop="10dp"
+                    android:textAllCaps="true" />
+
+                <TextView
+                    style="@style/standard_small_text_font"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_gravity="top"
+                    android:paddingTop="20dp"
+                    android:text="@string/assistant_login_desc" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/username">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:text="@={viewModel.username}"
+                        android:imeOptions="actionNext"
+                        android:singleLine="true"
+                        android:inputType="text|textNoSuggestions"
+                        android:background="@color/transparent_color"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:endIconMode="password_toggle"
+                    android:hint="@string/password">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:text="@={viewModel.password}"
+                        android:imeOptions="actionNext"
+                        android:singleLine="true"
+                        android:inputType="textPassword"
+                        android:background="@color/transparent_color"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/domain">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:text="@={viewModel.domain}"
+                        android:imeOptions="actionNext"
+                        android:singleLine="true"
+                        android:inputType="textUri"
+                        android:background="@color/transparent_color"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/assistant_display_name_optional">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:text="@={viewModel.displayName}"
+                        android:imeOptions="actionDone"
+                        android:singleLine="true"
+                        android:inputType="textPersonName"
+                        android:background="@color/transparent_color"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/assistant_input_field_header_font"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="@string/transport"
+                        android:textAllCaps="true" />
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:checked="@{viewModel.transport == TransportType.Udp}"
+                        android:onClick="@{() -> viewModel.setTransport(TransportType.Udp)}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:textColor="?attr/primaryTextColor"
+                        android:text="@string/transport_udp" />
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:checked="@{viewModel.transport == TransportType.Tcp}"
+                        android:onClick="@{() -> viewModel.setTransport(TransportType.Tcp)}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:textColor="?attr/primaryTextColor"
+                        android:text="@string/transport_tcp" />
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:checked="@{viewModel.transport == TransportType.Tls}"
+                        android:onClick="@{() -> viewModel.setTransport(TransportType.Tls)}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:textColor="?attr/primaryTextColor"
+                        android:text="@string/transport_tls" />
+
+                </RadioGroup>
+
+                <TextView
+                    android:onClick="@{() -> viewModel.createProxyConfig()}"
+                    android:enabled="@{viewModel.loginEnabled, default=false}"
+                    android:text="@string/assistant_login"
+                    android:background="@drawable/assistant_button"
+                    android:textColor="@drawable/assistant_button_text_color"
+                    style="@style/button_font"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:padding="10dp"/>
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <include
+            layout="@layout/wait_layout"
+            bind:visibility="@{viewModel.waitForServerAnswer}"/>
+
+    </RelativeLayout>
+
+</layout>

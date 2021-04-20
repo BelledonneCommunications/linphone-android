@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="backClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="titleClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="editClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="menuClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="securityIconClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="attachFileClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="sendMessageClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="startCallClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.main.chat.viewmodels.ChatRoomViewModel" />
+        <variable
+            name="chatSendingViewModel"
+            type="org.linphone.activities.main.chat.viewmodels.ChatMessageSendingViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="?attr/lightToolbarBackgroundColor"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/back"
+                android:contentDescription="@string/content_description_go_back"
+                android:onClick="@{backClickListener}"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:background="?attr/button_background_drawable"
+                android:padding="18dp"
+                android:src="@drawable/back" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical|left"
+                android:layout_weight="@{viewModel.oneToOneChatRoom ? 0.4f : 0.6f}"
+                android:gravity="center_vertical|left"
+                android:orientation="vertical"
+                android:paddingLeft="5dp">
+
+                <org.linphone.views.MarqueeTextView
+                    android:onClick="@{titleClickListener}"
+                    android:text="@{viewModel.oneToOneChatRoom ? (viewModel.contact.fullName ?? viewModel.displayName) : viewModel.subject}"
+                    style="@style/toolbar_small_title_font"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true" />
+
+                <org.linphone.views.MarqueeTextView
+                    android:text="@{viewModel.participants}"
+                    android:visibility="@{viewModel.oneToOneChatRoom ? View.GONE : View.VISIBLE}"
+                    style="@style/toolbar_small_title_font"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true" />
+
+                <org.linphone.views.MarqueeTextView
+                    android:id="@+id/sip_uri"
+                    android:text="@{viewModel.peerSipUri}"
+                    android:visibility="gone"
+                    style="@style/sip_uri_small_font"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:onClick="@{startCallClickListener}"
+                android:contentDescription="@string/content_description_start_call"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:background="?attr/button_background_drawable"
+                android:padding="15dp"
+                android:visibility="@{viewModel.oneToOneChatRoom ? View.VISIBLE : View.GONE}"
+                android:src="@drawable/call_alt_start" />
+
+            <ImageView
+                android:id="@+id/menu"
+                android:visibility="@{viewModel.basicChatRoom ? View.GONE : View.VISIBLE}"
+                android:onClick="@{menuClickListener}"
+                android:contentDescription="@string/content_description_show_chat_room_menu"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:background="?attr/button_background_drawable"
+                android:padding="15dp"
+                android:src="@drawable/menu_more"/>
+
+            <ImageView
+                android:onClick="@{editClickListener}"
+                android:visibility="@{viewModel.basicChatRoom ? View.VISIBLE : View.GONE}"
+                android:contentDescription="@string/content_description_enter_edition_mode"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:background="?attr/button_background_drawable"
+                android:padding="15dp"
+                android:src="@drawable/delete" />
+
+        </LinearLayout>
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/list_edit_top_bar_fragment"
+            android:name="org.linphone.activities.main.fragments.ListTopBarFragment"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignTop="@id/top_bar"
+            tools:layout="@layout/list_edit_top_bar_fragment" />
+
+        <LinearLayout
+            android:id="@+id/footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="?attr/lightToolbarBackgroundColor"
+            android:orientation="vertical">
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/darkToolbarBackgroundColor"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:entries="@{chatSendingViewModel.attachments}"
+                    app:layout="@{@layout/chat_message_attachment_cell}"/>
+
+            </HorizontalScrollView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:background="?attr/backgroundColor"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:onClick="@{attachFileClickListener}"
+                    android:enabled="@{chatSendingViewModel.attachFileEnabled &amp;&amp; !chatSendingViewModel.isReadOnly}"
+                    android:contentDescription="@string/content_description_attach_file"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:src="@drawable/chat_file" />
+
+                <org.linphone.activities.main.chat.views.RichEditText
+                    android:id="@+id/message"
+                    android:enabled="@{!chatSendingViewModel.isReadOnly}"
+                    android:text="@={chatSendingViewModel.textToSend}"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/resizable_text_field"
+                    android:imeOptions="flagNoExtractUi"
+                    android:inputType="textShortMessage|textMultiLine|textAutoComplete|textAutoCorrect|textCapSentences"
+                    android:maxLines="6"
+                    android:padding="5dp"
+                    android:textColor="@color/black_color"
+                    android:textCursorDrawable="@null" />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/send_message"
+                        android:onClick="@{sendMessageClickListener}"
+                        android:enabled="@{chatSendingViewModel.sendMessageEnabled &amp;&amp; !chatSendingViewModel.isReadOnly}"
+                        android:contentDescription="@string/content_description_send_message"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:src="@drawable/chat_send_message" />
+
+                    <ImageView
+                        android:visibility="@{viewModel.chatRoom.ephemeralEnabled() ? View.VISIBLE : View.GONE, default=gone}"
+                        android:enabled="@{chatSendingViewModel.sendMessageEnabled &amp;&amp; !chatSendingViewModel.isReadOnly}"
+                        android:contentDescription="@string/content_description_ephemeral_message"
+                        android:clickable="false"
+                        android:layout_width="20dp"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:layout_alignRight="@id/send_message"
+                        android:layout_alignBottom="@id/send_message"
+                        android:padding="5dp"
+                        android:src="@drawable/ephemeral_messages" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/remote_composing"
+            android:text="@{viewModel.composingList, default=@string/chat_remote_is_composing}"
+            android:visibility="@{viewModel.remoteIsComposing ? View.VISIBLE : View.INVISIBLE}"
+            android:layout_marginLeft="5dp"
+            style="@style/standard_small_text_font"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/footer" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/chat_messages_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/remote_composing"
+            android:layout_below="@+id/top_bar"
+            android:cacheColorHint="@color/transparent_color"
+            android:choiceMode="multipleChoice"
+            android:divider="@android:color/transparent"
+            android:listSelector="@color/transparent_color"
+            android:transcriptMode="normal" />
+
+        <ImageView
+            android:src="@{viewModel.securityLevelIcon, default=@drawable/security_alert_indicator}"
+            android:visibility="@{viewModel.encryptedChatRoom ? View.VISIBLE : View.GONE}"
+            android:onClick="@{securityIconClickListener}"
+            android:contentDescription="@{viewModel.securityLevelContentDescription}"
+            android:adjustViewBounds="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/top_bar"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp" />
+
+    </RelativeLayout>
+
+</layout>

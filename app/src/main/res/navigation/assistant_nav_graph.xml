@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/assistant_nav_graph.xml"
+    app:startDestination="@id/welcomeFragment">
+
+    <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="org.linphone.activities.assistant.fragments.WelcomeFragment"
+        tools:layout="@layout/assistant_welcome_fragment"
+        android:label="WelcomeFragment" >
+        <action
+            android:id="@+id/action_welcomeFragment_to_accountLoginFragment"
+            app:destination="@id/accountLoginFragment" />
+        <action
+            android:id="@+id/action_welcomeFragment_to_emailAccountCreationFragment"
+            app:destination="@id/emailAccountCreationFragment" />
+        <action
+            android:id="@+id/action_welcomeFragment_to_phoneAccountCreationFragment"
+            app:destination="@id/phoneAccountCreationFragment" />
+        <action
+            android:id="@+id/action_welcomeFragment_to_genericAccountLoginFragment"
+            app:destination="@id/genericAccountLoginFragment" />
+        <action
+            android:id="@+id/action_welcomeFragment_to_remoteProvisioningFragment"
+            app:destination="@id/remoteProvisioningFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/accountLoginFragment"
+        android:name="org.linphone.activities.assistant.fragments.AccountLoginFragment"
+        tools:layout="@layout/assistant_account_login_fragment"
+        android:label="AccountLoginFragment" >
+        <action
+            android:id="@+id/action_accountLoginFragment_to_echoCancellerCalibrationFragment"
+            app:destination="@id/echoCancellerCalibrationFragment" />
+        <action
+            android:id="@+id/action_accountLoginFragment_to_phoneAccountValidationFragment"
+            app:destination="@id/phoneAccountValidationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/genericAccountLoginFragment"
+        android:name="org.linphone.activities.assistant.fragments.GenericAccountLoginFragment"
+        tools:layout="@layout/assistant_generic_account_login_fragment"
+        android:label="GenericAccountLoginFragment" >
+        <action
+            android:id="@+id/action_genericAccountLoginFragment_to_echoCancellerCalibrationFragment"
+            app:destination="@id/echoCancellerCalibrationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/remoteProvisioningFragment"
+        android:name="org.linphone.activities.assistant.fragments.RemoteProvisioningFragment"
+        tools:layout="@layout/assistant_remote_provisioning_fragment"
+        android:label="RemoteProvisioningFragment" >
+        <action
+            android:id="@+id/action_remoteProvisioningFragment_to_qrCodeFragment"
+            app:destination="@id/qrCodeFragment" />
+        <action
+            android:id="@+id/action_remoteProvisioningFragment_to_echoCancellerCalibrationFragment"
+            app:destination="@id/echoCancellerCalibrationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/emailAccountCreationFragment"
+        android:name="org.linphone.activities.assistant.fragments.EmailAccountCreationFragment"
+        tools:layout="@layout/assistant_email_account_creation_fragment"
+        android:label="EmailAccountCreationFragment" >
+        <action
+            android:id="@+id/action_emailAccountCreationFragment_to_emailAccountValidationFragment"
+            app:destination="@id/emailAccountValidationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/emailAccountValidationFragment"
+        android:name="org.linphone.activities.assistant.fragments.EmailAccountValidationFragment"
+        tools:layout="@layout/assistant_email_account_validation_fragment"
+        android:label="EmailAccountValidationFragment" >
+        <action
+            android:id="@+id/action_emailAccountValidationFragment_to_phoneAccountLinkingFragment"
+            app:destination="@id/phoneAccountLinkingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/phoneAccountCreationFragment"
+        android:name="org.linphone.activities.assistant.fragments.PhoneAccountCreationFragment"
+        tools:layout="@layout/assistant_phone_account_creation_fragment"
+        android:label="PhoneAccountCreationFragment" >
+        <action
+            android:id="@+id/action_phoneAccountCreationFragment_to_phoneAccountValidationFragment"
+            app:destination="@id/phoneAccountValidationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/phoneAccountValidationFragment"
+        android:name="org.linphone.activities.assistant.fragments.PhoneAccountValidationFragment"
+        tools:layout="@layout/assistant_phone_account_validation_fragment"
+        android:label="PhoneAccountValidationFragment" >
+        <action
+            android:id="@+id/action_phoneAccountValidationFragment_to_echoCancellerCalibrationFragment"
+            app:destination="@id/echoCancellerCalibrationFragment" />
+        <argument
+            android:name="PhoneNumber"
+            app:argType="string" />
+        <argument
+            android:name="IsLogin"
+            app:argType="boolean" />
+        <argument
+            android:name="IsCreation"
+            app:argType="boolean" />
+        <argument
+            android:name="IsLinking"
+            app:argType="boolean" />
+    </fragment>
+    <fragment
+        android:id="@+id/qrCodeFragment"
+        android:name="org.linphone.activities.assistant.fragments.QrCodeFragment"
+        tools:layout="@layout/assistant_qr_code_fragment"
+        android:label="QrCodeFragment" />
+    <fragment
+        android:id="@+id/echoCancellerCalibrationFragment"
+        android:name="org.linphone.activities.assistant.fragments.EchoCancellerCalibrationFragment"
+        tools:layout="@layout/assistant_echo_canceller_calibration_fragment"
+        android:label="EchoCancellerCalibrationFragment" />
+    <fragment
+        android:id="@+id/phoneAccountLinkingFragment"
+        tools:layout="@layout/assistant_phone_account_linking_fragment"
+        android:name="org.linphone.activities.assistant.fragments.PhoneAccountLinkingFragment"
+        android:label="PhoneAccountLinkingFragment" >
+        <argument
+            android:name="Username"
+            app:argType="string" />
+        <argument
+            android:name="Password"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="HA1"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_phoneAccountLinkingFragment_to_phoneAccountValidationFragment"
+            app:destination="@id/phoneAccountValidationFragment" >
+            <argument
+                android:name="IsCreation"
+                android:defaultValue="false" />
+            <argument
+                android:name="IsLinking"
+                android:defaultValue="false" />
+            <argument
+                android:name="IsLogin"
+                android:defaultValue="false" />
+        </action>
+        <argument
+            android:name="AllowSkip"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <action
+            android:id="@+id/action_phoneAccountLinkingFragment_to_echoCancellerCalibrationFragment"
+            app:destination="@id/echoCancellerCalibrationFragment" />
+    </fragment>
+</navigation>
