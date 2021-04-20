@@ -93,7 +93,11 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
         val swipeConfiguration = RecyclerViewSwipeConfiguration()
         val white = ContextCompat.getColor(requireContext(), R.color.white_color)
 
-        swipeConfiguration.rightToLeftAction = RecyclerViewSwipeConfiguration.Action("Delete", white, ContextCompat.getColor(requireContext(), R.color.red_color))
+        swipeConfiguration.rightToLeftAction = RecyclerViewSwipeConfiguration.Action(
+            requireContext().getString(R.string.dialog_delete),
+            white,
+            ContextCompat.getColor(requireContext(), R.color.red_color)
+        )
         val swipeListener = object : RecyclerViewSwipeListener {
             override fun onLeftToRightSwipe(viewHolder: RecyclerView.ViewHolder) {}
 
