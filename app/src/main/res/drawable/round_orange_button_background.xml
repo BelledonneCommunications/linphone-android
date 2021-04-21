@@ -2,6 +2,8 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 	<item android:state_pressed="true"
 		  android:drawable="@drawable/round_orange_button_background_over" />
+	<item android:state_enabled="false"
+		android:drawable="@drawable/round_orange_button_background_disabled" />
 	<item
 		android:drawable="@drawable/round_orange_button_background_default" />
 </selector>

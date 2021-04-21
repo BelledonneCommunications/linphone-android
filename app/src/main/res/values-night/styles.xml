@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="LinphoneStyle" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Disable animations between activities -->
         <item name="android:windowAnimationStyle">@null</item>
-        <item name="android:windowBackground">@drawable/launch_screen</item>
+        <item name="android:windowBackground">@color/dark_grey_color</item>
 
         <!-- Android theme override -->
         <item name="colorAccent">@color/primary_color</item>
+        <item name="colorPrimary">@color/primary_color</item>
         <item name="android:colorPrimary">@color/primary_color</item>
         <!-- Comment out the following line to disable system's status bar coloring -->
         <item name="android:colorPrimaryDark">@color/primary_dark_color</item>
@@ -32,10 +34,12 @@
         <item name="drawableTintColor">@color/white_color</item>
         <item name="drawableTintDisabledColor">@color/light_grey_color</item>
         <item name="drawableTintOverColor">@color/primary_color</item>
+        <item name="drawableTintColor2">@color/dark_grey_color</item>
+        <item name="drawableTintColor3">@color/grey_color</item>
 
-        <item name="lighToolbarBackgroundColor">@color/dark_grey_color</item>
-        <item name="lighToolbarBackgroundDisabledColor">@color/light_grey_color</item>
-        <item name="lighToolbarTextColor">@color/white_color</item>
+        <item name="lightToolbarBackgroundColor">@color/dark_grey_color</item>
+        <item name="lightToolbarBackgroundDisabledColor">@color/light_grey_color</item>
+        <item name="lightToolbarTextColor">@color/white_color</item>
         <item name="darkToolbarBackgroundColor">@color/dark_grey_color</item>
         <item name="darkToolbarTextColor">@color/white_color</item>
 

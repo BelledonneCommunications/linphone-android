@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="allCallLogsToggleClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="missedCallLogsToggleClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="editClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.main.history.viewmodels.CallLogsListViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    android:id="@+id/top_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="?attr/lightToolbarBackgroundColor"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2">
+
+                        <ImageView
+                            android:onClick="@{allCallLogsToggleClickListener}"
+                            android:enabled="@{viewModel.missedCallLogsSelected}"
+                            android:contentDescription="@string/content_description_show_all_calls"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="?attr/button_background_drawable"
+                            android:padding="15dp"
+                            android:src="@drawable/history_all" />
+
+                        <View
+                            android:visibility="@{viewModel.missedCallLogsSelected ? View.GONE : View.VISIBLE}"
+                            android:layout_width="match_parent"
+                            android:layout_height="5dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="?attr/accentColor" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2">
+
+                        <ImageView
+                            android:onClick="@{missedCallLogsToggleClickListener}"
+                            android:enabled="@{!viewModel.missedCallLogsSelected}"
+                            android:contentDescription="@string/content_description_show_missed_calls"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="?attr/button_background_drawable"
+                            android:gravity="center"
+                            android:padding="15dp"
+                            android:src="@drawable/history_missed" />
+
+                        <View
+                            android:visibility="@{viewModel.missedCallLogsSelected ? View.VISIBLE : View.GONE}"
+                            android:layout_width="match_parent"
+                            android:layout_height="5dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="?attr/accentColor" />
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.4" />
+
+                    <ImageView
+                        android:onClick="@{editClickListener}"
+                        android:enabled="@{viewModel.missedCallLogsSelected ? !viewModel.missedCallLogs.empty : !viewModel.callLogs.empty}"
+                        android:contentDescription="@string/content_description_enter_edition_mode"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:background="?attr/button_background_drawable"
+                        android:padding="15dp"
+                        android:src="@drawable/delete" />
+
+                </LinearLayout>
+
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/list_edit_top_bar_fragment"
+                    android:name="org.linphone.activities.main.fragments.ListTopBarFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_alignTop="@id/top_bar"
+                    tools:layout="@layout/list_edit_top_bar_fragment" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/callLogsList"
+                    android:layout_below="@id/top_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    style="@style/empty_list_font"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="@string/no_call_history"
+                    android:visibility="@{viewModel.callLogs.empty &amp;&amp; !viewModel.missedCallLogsSelected ? View.VISIBLE : View.GONE}" />
+
+                <TextView
+                    style="@style/empty_list_font"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="@string/no_missed_call_history"
+                    android:visibility="@{viewModel.missedCallLogs.empty &amp;&amp; viewModel.missedCallLogsSelected ? View.VISIBLE : View.GONE}" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="?attr/dividerColor" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/history_nav_container"
+                    android:name="androidx.navigation.fragment.NavHostFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:defaultNavHost="false"
+                    app:navGraph="@navigation/history_nav_graph"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</layout>

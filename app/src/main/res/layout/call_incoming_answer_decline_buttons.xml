@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.call.viewmodels.IncomingCallViewModel" />
+    </data>
+
+    <LinearLayout
+        android:baselineAligned="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/decline_button"
+            android:onClick="@{() -> viewModel.decline(!viewModel.screenLocked)}"
+            android:focusable="true"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:background="@color/red_color"
+            android:gravity="center"
+            android:padding="12dp">
+
+            <ImageView
+                android:src="@drawable/call_hangup"
+                android:contentDescription="@string/content_description_terminate_call"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:id="@+id/declineUnlock"
+                android:visibility="@{viewModel.screenLocked ? View.VISIBLE : View.GONE}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/arrow_hangup_1"
+                    android:contentDescription="@string/content_description_slide_right_hangup"
+                    android:src="@drawable/arrow_hangup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ImageView
+                    android:id="@+id/arrow_hangup_2"
+                    android:src="@drawable/arrow_hangup"
+                    android:contentDescription="@null"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.6"/>
+
+                <ImageView
+                    android:id="@+id/arrow_hangup_3"
+                    android:src="@drawable/arrow_hangup"
+                    android:contentDescription="@null"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.4"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/answer_button"
+            android:onClick="@{() -> viewModel.answer(!viewModel.screenLocked)}"
+            android:focusable="true"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:background="@color/green_color"
+            android:gravity="center"
+            android:padding="12dp">
+
+            <LinearLayout
+                android:id="@+id/acceptUnlock"
+                android:visibility="@{viewModel.screenLocked ? View.VISIBLE : View.GONE}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/arrow_accept_3"
+                    android:src="@drawable/arrow_accept"
+                    android:contentDescription="@null"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.4"/>
+
+                <ImageView
+                    android:id="@+id/arrow_accept_2"
+                    android:src="@drawable/arrow_accept"
+                    android:contentDescription="@null"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.6"/>
+
+                <ImageView
+                    android:id="@+id/arrow_accept_1"
+                    android:src="@drawable/arrow_accept"
+                    android:contentDescription="@string/content_description_slide_left_answer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/acceptIcon"
+                android:src="@{viewModel.inviteWithVideo ? @drawable/call_video_start : @drawable/call_audio_start, default=@drawable/call_audio_start}"
+                android:contentDescription="@string/content_description_answer_call"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</layout>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View" />
+        <import type="android.graphics.Typeface" />
+        <variable
+            name="data"
+            type="org.linphone.activities.main.chat.data.EphemeralDurationData" />
+    </data>
+
+    <RelativeLayout
+        android:onClick="@{() -> data.setSelected()}"
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="@{data.textResource}"
+            android:layout_marginLeft="20dp"
+            android:layout_toLeftOf="@id/selected"
+            android:textColor="?attr/primaryTextColor"
+            android:textSize="20sp"
+            android:textStyle="@{data.selected ? Typeface.BOLD : Typeface.NORMAL}" />
+
+        <ImageView
+            android:id="@+id/selected"
+            android:visibility="@{data.selected ? View.VISIBLE : View.GONE}"
+            android:contentDescription="@string/content_description_ephemeral_duration_selected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:layout_centerVertical="true"
+            android:adjustViewBounds="true"
+            android:src="@drawable/check_selected" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="?attr/dividerColor" />
+
+    </RelativeLayout>
+
+</layout>
