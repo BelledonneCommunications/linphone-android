@@ -79,7 +79,12 @@ class ChatBubbleActivity : GenericActivity() {
             )
         }
 
-        chatRoom ?: return
+        if (chatRoom == null) {
+            Log.e("[Chat Bubble] Chat room is null, aborting!")
+            finish()
+            return
+        }
+
         chatRoom.markAsRead()
 
         viewModel = ViewModelProvider(

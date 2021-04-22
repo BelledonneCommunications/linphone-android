@@ -23,9 +23,12 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import org.linphone.R
+import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.files.viewmodels.ImageFileViewModel
 import org.linphone.activities.main.files.viewmodels.ImageFileViewModelFactory
+import org.linphone.core.tools.Log
 import org.linphone.databinding.FileImageViewerFragmentBinding
 
 class ImageViewerFragment : GenericViewerFragment<FileImageViewerFragmentBinding>() {
@@ -40,7 +43,12 @@ class ImageViewerFragment : GenericViewerFragment<FileImageViewerFragmentBinding
         binding.lifecycleOwner = this
 
         val content = sharedViewModel.contentToOpen.value
-        content ?: return
+        if (content == null) {
+            Log.e("[Image Viewer] Content is null, aborting!")
+            (activity as MainActivity).showSnackBar(R.string.error)
+            findNavController().navigateUp()
+            return
+        }
 
         viewModel = ViewModelProvider(
             this,

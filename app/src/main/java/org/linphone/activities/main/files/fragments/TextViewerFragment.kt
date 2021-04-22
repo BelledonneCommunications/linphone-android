@@ -22,9 +22,12 @@ package org.linphone.activities.main.files.fragments
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import org.linphone.R
+import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.files.viewmodels.TextFileViewModel
 import org.linphone.activities.main.files.viewmodels.TextFileViewModelFactory
+import org.linphone.core.tools.Log
 import org.linphone.databinding.FileTextViewerFragmentBinding
 
 class TextViewerFragment : GenericViewerFragment<FileTextViewerFragmentBinding>() {
@@ -38,7 +41,12 @@ class TextViewerFragment : GenericViewerFragment<FileTextViewerFragmentBinding>(
         binding.lifecycleOwner = this
 
         val content = sharedViewModel.contentToOpen.value
-        content ?: return
+        if (content == null) {
+            Log.e("[Text Viewer] Content is null, aborting!")
+            (activity as MainActivity).showSnackBar(R.string.error)
+            findNavController().navigateUp()
+            return
+        }
 
         viewModel = ViewModelProvider(
             this,
