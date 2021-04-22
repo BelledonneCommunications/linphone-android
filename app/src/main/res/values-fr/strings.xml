@@ -576,4 +576,8 @@
     <string name="call_settings_ring_during_early_media_title">Sonner durant un appel entrant avec early-media</string>
     <string name="call_settings_ring_during_early_media_summary"></string>
     <string name="debug_popup_show_config_file">Voir le fichier de config</string>
+    <string name="chat_message_cant_open_file_in_app_dialog_title">Il semblerait que l\'on ne puisse pas afficher ce fichier.</string>
+    <string name="chat_message_cant_open_file_in_app_dialog_message">Voulez-vous essayer de l\'ouvrir comme texte ou de l\'exporter (en clair) vers une appli tierce si disponible ?</string>
+    <string name="chat_message_cant_open_file_in_app_dialog_export_button">Exporter</string>
+    <string name="chat_message_cant_open_file_in_app_dialog_open_as_text_button">Ouvrir comme texte</string>
 </resources>

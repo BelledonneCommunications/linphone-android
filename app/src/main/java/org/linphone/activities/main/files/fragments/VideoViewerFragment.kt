@@ -26,6 +26,7 @@ import android.widget.MediaController
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
+import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.files.viewmodels.VideoFileViewModel
 import org.linphone.activities.main.files.viewmodels.VideoFileViewModelFactory
 import org.linphone.core.tools.Log
@@ -44,7 +45,12 @@ class VideoViewerFragment : GenericViewerFragment<FileVideoViewerFragmentBinding
         binding.lifecycleOwner = this
 
         val content = sharedViewModel.contentToOpen.value
-        content ?: return
+        if (content == null) {
+            Log.e("[Video Viewer] Content is null, aborting!")
+            (activity as MainActivity).showSnackBar(R.string.error)
+            findNavController().navigateUp()
+            return
+        }
 
         viewModel = ViewModelProvider(
             this,
