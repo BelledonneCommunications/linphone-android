@@ -27,8 +27,10 @@ import android.widget.MediaController
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
+import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.files.viewmodels.AudioFileViewModel
 import org.linphone.activities.main.files.viewmodels.AudioFileViewModelFactory
+import org.linphone.core.tools.Log
 import org.linphone.databinding.FileAudioViewerFragmentBinding
 
 class AudioViewerFragment : GenericViewerFragment<FileAudioViewerFragmentBinding>() {
@@ -45,7 +47,12 @@ class AudioViewerFragment : GenericViewerFragment<FileAudioViewerFragmentBinding
         binding.lifecycleOwner = this
 
         val content = sharedViewModel.contentToOpen.value
-        content ?: return
+        if (content == null) {
+            Log.e("[Audio Viewer] Content is null, aborting!")
+            (activity as MainActivity).showSnackBar(R.string.error)
+            findNavController().navigateUp()
+            return
+        }
 
         viewModel = ViewModelProvider(
             this,

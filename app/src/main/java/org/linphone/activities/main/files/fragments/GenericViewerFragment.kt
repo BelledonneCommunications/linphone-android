@@ -23,9 +23,12 @@ import android.os.Bundle
 import android.view.View
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import org.linphone.R
+import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.fragments.SecureFragment
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
+import org.linphone.core.tools.Log
 
 abstract class GenericViewerFragment<T : ViewDataBinding> : SecureFragment<T>() {
     protected lateinit var sharedViewModel: SharedMainViewModel
@@ -44,7 +47,12 @@ abstract class GenericViewerFragment<T : ViewDataBinding> : SecureFragment<T>() 
         super.onStart()
 
         val content = sharedViewModel.contentToOpen.value
-        content ?: return
+        if (content == null) {
+            Log.e("[Generic Viewer] Content is null, aborting!")
+            (activity as MainActivity).showSnackBar(R.string.error)
+            findNavController().navigateUp()
+            return
+        }
 
         (childFragmentManager.findFragmentById(R.id.top_bar_fragment) as? TopBarFragment)
             ?.setContent(content)

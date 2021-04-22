@@ -24,10 +24,12 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
+import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.chat.viewmodels.EphemeralViewModel
 import org.linphone.activities.main.chat.viewmodels.EphemeralViewModelFactory
 import org.linphone.activities.main.fragments.SecureFragment
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
+import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatRoomEphemeralFragmentBinding
 
 class EphemeralFragment : SecureFragment<ChatRoomEphemeralFragmentBinding>() {
@@ -49,7 +51,12 @@ class EphemeralFragment : SecureFragment<ChatRoomEphemeralFragmentBinding>() {
         }
 
         val chatRoom = sharedViewModel.selectedChatRoom.value
-        chatRoom ?: return
+        if (chatRoom == null) {
+            Log.e("[Ephemeral] Chat room is null, aborting!")
+            (activity as MainActivity).showSnackBar(R.string.error)
+            findNavController().navigateUp()
+            return
+        }
 
         viewModel = ViewModelProvider(
             this,

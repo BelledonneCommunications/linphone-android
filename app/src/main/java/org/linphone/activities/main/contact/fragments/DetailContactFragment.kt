@@ -63,7 +63,12 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
         }
 
         val contact = sharedViewModel.selectedContact.value
-        contact ?: return
+        if (contact == null) {
+            Log.e("[Contact] Contact is null, aborting!")
+            (activity as MainActivity).showSnackBar(R.string.error)
+            findNavController().navigateUp()
+            return
+        }
 
         viewModel = ViewModelProvider(
             this,

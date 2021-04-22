@@ -117,7 +117,12 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         }
 
         val chatRoom = sharedViewModel.selectedChatRoom.value
-        chatRoom ?: return
+        if (chatRoom == null) {
+            Log.e("[Chat Room] Chat room is null, aborting!")
+            (activity as MainActivity).showSnackBar(R.string.error)
+            findNavController().navigateUp()
+            return
+        }
 
         Compatibility.setLocusIdInContentCaptureSession(binding.root, chatRoom)
 
@@ -253,7 +258,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                             else -> {
                                 if (content.isFileEncrypted) {
                                     Log.w("[Chat Message] File is encrypted and can't be opened in one of our viewers...")
-                                    // TODO: show dialog to ask user for consent before trying to export the file first
+                                    showDialogForUserConsentBeforeExportingFileInThirdPartyApp(path)
                                 } else if (!FileUtils.openFileInThirdPartyApp(requireActivity(), path)) {
                                     showDialogToSuggestOpeningFileAsText()
                                 }
@@ -575,8 +580,8 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
     private fun showDialogToSuggestOpeningFileAsText() {
         val dialogViewModel = DialogViewModel(
-            requireContext().getString(R.string.dialog_try_open_file_as_text_body),
-            requireContext().getString(R.string.dialog_try_open_file_as_text_title)
+            getString(R.string.dialog_try_open_file_as_text_body),
+            getString(R.string.dialog_try_open_file_as_text_title)
         )
         val dialog = DialogUtils.getDialog(requireContext(), dialogViewModel)
 
@@ -588,6 +593,32 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             dialog.dismiss()
             navigateToTextFileViewer(true)
         })
+
+        dialog.show()
+    }
+
+    private fun showDialogForUserConsentBeforeExportingFileInThirdPartyApp(path: String) {
+        val dialogViewModel = DialogViewModel(
+            getString(R.string.chat_message_cant_open_file_in_app_dialog_message),
+            getString(R.string.chat_message_cant_open_file_in_app_dialog_title)
+        )
+        val dialog = DialogUtils.getDialog(requireContext(), dialogViewModel)
+
+        dialogViewModel.showDeleteButton({
+            dialog.dismiss()
+            if (!FileUtils.openFileInThirdPartyApp(requireActivity(), path)) {
+                showDialogToSuggestOpeningFileAsText()
+            }
+        }, getString(R.string.chat_message_cant_open_file_in_app_dialog_export_button))
+
+        dialogViewModel.showOkButton({
+            dialog.dismiss()
+            navigateToTextFileViewer(true)
+        }, getString(R.string.chat_message_cant_open_file_in_app_dialog_open_as_text_button))
+
+        dialogViewModel.showCancelButton {
+            dialog.dismiss()
+        }
 
         dialog.show()
     }

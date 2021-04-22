@@ -24,10 +24,12 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
+import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.chat.viewmodels.DevicesListViewModel
 import org.linphone.activities.main.chat.viewmodels.DevicesListViewModelFactory
 import org.linphone.activities.main.fragments.SecureFragment
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
+import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatRoomDevicesFragmentBinding
 
 class DevicesFragment : SecureFragment<ChatRoomDevicesFragmentBinding>() {
@@ -46,7 +48,12 @@ class DevicesFragment : SecureFragment<ChatRoomDevicesFragmentBinding>() {
         }
 
         val chatRoom = sharedViewModel.selectedChatRoom.value
-        chatRoom ?: return
+        if (chatRoom == null) {
+            Log.e("[Devices] Chat room is null, aborting!")
+            (activity as MainActivity).showSnackBar(R.string.error)
+            findNavController().navigateUp()
+            return
+        }
 
         isSecure = chatRoom.currentParams.encryptionEnabled()
 

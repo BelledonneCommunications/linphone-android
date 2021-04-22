@@ -26,6 +26,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.R
+import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.chat.adapters.ImdnAdapter
 import org.linphone.activities.main.chat.viewmodels.ImdnViewModel
 import org.linphone.activities.main.chat.viewmodels.ImdnViewModelFactory
@@ -54,7 +55,12 @@ class ImdnFragment : SecureFragment<ChatRoomImdnFragmentBinding>() {
         }
 
         val chatRoom = sharedViewModel.selectedChatRoom.value
-        chatRoom ?: return
+        if (chatRoom == null) {
+            Log.e("[IMDN] Chat room is null, aborting!")
+            (activity as MainActivity).showSnackBar(R.string.error)
+            findNavController().navigateUp()
+            return
+        }
 
         isSecure = chatRoom.currentParams.encryptionEnabled()
 

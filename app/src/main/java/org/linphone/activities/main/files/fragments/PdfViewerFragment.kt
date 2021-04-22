@@ -22,10 +22,13 @@ package org.linphone.activities.main.files.fragments
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import org.linphone.R
+import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.files.adapters.PdfPagesListAdapter
 import org.linphone.activities.main.files.viewmodels.PdfFileViewModel
 import org.linphone.activities.main.files.viewmodels.PdfFileViewModelFactory
+import org.linphone.core.tools.Log
 import org.linphone.databinding.FilePdfViewerFragmentBinding
 
 class PdfViewerFragment : GenericViewerFragment<FilePdfViewerFragmentBinding>() {
@@ -40,7 +43,12 @@ class PdfViewerFragment : GenericViewerFragment<FilePdfViewerFragmentBinding>() 
         binding.lifecycleOwner = this
 
         val content = sharedViewModel.contentToOpen.value
-        content ?: return
+        if (content == null) {
+            Log.e("[PDF Viewer] Content is null, aborting!")
+            (activity as MainActivity).showSnackBar(R.string.error)
+            findNavController().navigateUp()
+            return
+        }
 
         viewModel = ViewModelProvider(
             this,

@@ -205,6 +205,10 @@
     <string name="chat_message_notification_hidden_content">&lt;Redacted&gt;</string>
     <string name="chat_message_no_app_found_to_handle_file_mime_type">No app available for this kind of file</string>
     <string name="chat_bubble_cant_open_enrypted_file">Can\'t open encrypted file in chat bubble</string>
+    <string name="chat_message_cant_open_file_in_app_dialog_title">It seems we can\'t display the file.</string>
+    <string name="chat_message_cant_open_file_in_app_dialog_message">Would you like to open it as text or export it (unencrypted) to a third party app if available?</string>
+    <string name="chat_message_cant_open_file_in_app_dialog_export_button">Export</string>
+    <string name="chat_message_cant_open_file_in_app_dialog_open_as_text_button">Open as text</string>
 
     <!-- Recordings -->
     <string name="recordings_empty_list">No recordings</string>
