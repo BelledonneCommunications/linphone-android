@@ -355,6 +355,22 @@ class NotificationsManager(private val context: Context) {
         return notifiable
     }
 
+    private fun getPerson(contact: Contact?, displayName: String, picture: Bitmap?): Person {
+        return if (contact != null) {
+            contact.getPerson()
+        } else {
+            val builder = Person.Builder().setName(displayName)
+            val userIcon =
+                if (picture != null) {
+                    IconCompat.createWithAdaptiveBitmap(picture)
+                } else {
+                    IconCompat.createWithResource(context, R.drawable.avatar)
+                }
+            if (userIcon != null) builder.setIcon(userIcon)
+            builder.build()
+        }
+    }
+
     private fun displayIncomingCallNotification(call: Call, useAsForeground: Boolean = false) {
         val address = LinphoneUtils.getDisplayableAddress(call.remoteAddress)
         val notifiable = getNotifiableForCall(call)
@@ -384,6 +400,7 @@ class NotificationsManager(private val context: Context) {
 
         val builder = NotificationCompat.Builder(context, context.getString(R.string.notification_channel_incoming_call_id))
             .setStyle(NotificationCompat.DecoratedCustomViewStyle())
+            .addPerson(getPerson(contact, displayName, roundPicture))
             .setSmallIcon(R.drawable.topbar_call_notification)
             .setContentTitle(displayName)
             .setContentText(context.getString(R.string.incoming_call_notification_title))
@@ -508,6 +525,7 @@ class NotificationsManager(private val context: Context) {
             .setContentText(context.getString(stringResourceId))
             .setSmallIcon(iconResourceId)
             .setLargeIcon(roundPicture)
+            .addPerson(getPerson(contact, displayName, roundPicture))
             .setAutoCancel(false)
             .setCategory(NotificationCompat.CATEGORY_CALL)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
@@ -668,19 +686,7 @@ class NotificationsManager(private val context: Context) {
         var lastPerson: Person? = null
         for (message in notifiable.messages) {
             val contact = message.contact
-            val person = if (contact != null) {
-                contact.getPerson()
-            } else {
-                val builder = Person.Builder().setName(message.sender)
-                val userIcon =
-                    if (message.senderAvatar != null) {
-                        IconCompat.createWithAdaptiveBitmap(message.senderAvatar)
-                    } else {
-                        IconCompat.createWithResource(context, R.drawable.avatar)
-                    }
-                if (userIcon != null) builder.setIcon(userIcon)
-                builder.build()
-            }
+            val person = getPerson(contact, message.sender, message.senderAvatar)
 
             // We don't want to see our own avatar
             if (!message.isOutgoing) {
