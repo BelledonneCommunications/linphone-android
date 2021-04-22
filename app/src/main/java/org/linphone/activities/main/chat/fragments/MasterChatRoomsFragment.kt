@@ -103,8 +103,18 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
             white,
             ContextCompat.getColor(requireContext(), R.color.red_color)
         )
+        swipeConfiguration.leftToRightAction = RecyclerViewSwipeConfiguration.Action(
+            requireContext().getString(R.string.received_chat_notification_mark_as_read_label),
+            white,
+            ContextCompat.getColor(requireContext(), R.color.imdn_read_color)
+        )
         val swipeListener = object : RecyclerViewSwipeListener {
-            override fun onLeftToRightSwipe(viewHolder: RecyclerView.ViewHolder) {}
+            override fun onLeftToRightSwipe(viewHolder: RecyclerView.ViewHolder) {
+                adapter.notifyItemChanged(viewHolder.adapterPosition)
+                val chatRoom = adapter.currentList[viewHolder.adapterPosition]
+                chatRoom.markAsRead()
+                coreContext.notificationsManager.dismissChatNotification(chatRoom)
+            }
 
             override fun onRightToLeftSwipe(viewHolder: RecyclerView.ViewHolder) {
                 val viewModel = DialogViewModel(getString(R.string.chat_room_delete_one_dialog))
@@ -123,7 +133,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
                 dialog.show()
             }
         }
-        RecyclerViewSwipeUtils(ItemTouchHelper.LEFT, swipeConfiguration, swipeListener)
+        RecyclerViewSwipeUtils(ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT, swipeConfiguration, swipeListener)
             .attachToRecyclerView(binding.chatList)
 
         // Divider between items

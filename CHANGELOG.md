@@ -25,6 +25,7 @@ This version is a full rewrite of the app in kotlin, using modern Android compon
 - Can display multiple files in the same chat bubble
 - Display video in recordings if available
 - "Swipe left to delete" action available on calls history, contacts & chat rooms list
+- "Swipe right" to mark a chat room as read
 - Android 11 people & conversation compliant
 - New animations between fragments and for unread chat messages / missed calls counters (can be disabled)
 - Bubble & conversation support for chat message notifications
