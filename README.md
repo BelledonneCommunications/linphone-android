@@ -6,7 +6,7 @@ Linphone is an open source softphone for voice and video over IP calling and ins
 
 It is fully SIP-based, for all calling, presence and IM features.
 
-General description is available from [linphone web site](https://www.linphone.org/technical-corner/linphone)
+General description is available from [linphone web site](https://www.linphone.org/technical-corner/linphone).
 
 ### License
 
@@ -24,20 +24,24 @@ Linphone is dual licensed, and is available either :
 
 - Linphone public wiki : https://wiki.linphone.org/xwiki/wiki/public/view/Linphone/
 
+- Tutorials : https://gitlab.linphone.org/BC/public/tutorials/-/tree/master/android/kotlin
+
 # What's new
 
-Now the default way of building linphone-android is to download the AAR SDK in our maven repository.
-Compared to previous versions, this project no longer uses submodules developper has to build in order to get a working app.
-However, if you wish to use a locally compiled SDK see below how to proceed.
+App has been totally rewritten in Kotlin using modern components such as Navigation, Data Binding, View Models, coroutines, etc...  
+Check the [CHANGELOG](./CHANGELOG.md) file for a more detailled list.  
+The first linphone-android release that will be based on this will be 4.5.0, using 5.0.0 SDK.
 
-We offer different flavors for the SDK in our maven repository: org.linphone.no-video (a build without video) and org.linphone.legacy (old java wrapper if you didn't migrate your app code to the new one yet).
+We're also taking a fresh start regarding translations so less languages will be available for a while.  
+If you want to contribute, you are welcome to do so, check the [Translations](#Translations) section below.
 
-The repository structure has also been cleaned and updated, and changing the package name can now be done in a single step.
-This allows developpers to keep a stable version as well as a developpment one on the same device easily.
+org.linphone.legacy flavor (old java wrapper if you didn't migrate your app code to the new one yet) is no longer supported starting 5.0.0 SDK.
+
+The sample project has been removed, we now recommend you to take a look at our [tutorials](https://gitlab.linphone.org/BC/public/tutorials/-/tree/master/android/kotlin).
 
 # Building the app
 
-If you have Android Studio, simply open the project, wait for the gradle synchronization and then build/install the app.
+If you have Android Studio, simply open the project, wait for the gradle synchronization and then build/install the app.  
 It will download the linphone library from our Maven repository as an AAR file so you don't have to build anything yourself.
 
 If you don't have Android Studio, you can build and install the app using gradle:
@@ -52,8 +56,8 @@ to install the generated APK in the previous step (use installRelease instead if
 
 APK files are stored within ```./app/build/outputs/apk/debug/``` and ```./app/build/outputs/apk/release/``` directories.
 
-When building a release AppBundle, use releaseAppBundle target instead of release. 
-Also make sure you have a NDK installed and that you have an environment variable named ```ANDROID_NDK_HOME``` that contains the path to the NDK.
+When building a release AppBundle, use releaseAppBundle target instead of release.   
+Also make sure you have a NDK installed and that you have an environment variable named ```ANDROID_NDK_HOME``` that contains the path to the NDK.  
 This is to be able to include native libraries symbols into app bundle for the Play Store.
 
 ## Building a local SDK
@@ -95,7 +99,7 @@ Also check you have built the SDK for the right CPU architecture using the `-DLI
 
 ## Troubleshouting
 
-When submitting an issue on our [Github repository](https://github.com/BelledonneCommunications/linphone-android), please attach the matching library logs:
+When submitting an issue on our [Github repository](https://github.com/BelledonneCommunications/linphone-android), please follow the template and attach the matching library logs:
 
 1. To enable them, go to Settings -> Advanced and toggle `Debug Mode`. If they are already enabled, clear them first using the `Reset logs` button on the About page.
 
@@ -105,18 +109,18 @@ When submitting an issue on our [Github repository](https://github.com/Belledonn
 
 ## Create an APK with a different package name
 
-Before the 4.1 release, there were a lot of files to edit to change the package name.
-Now, simply edit the app/build.gradle file and change the value returned by method ```getPackageName()```
+Before the 4.1 release, there were a lot of files to edit to change the package name.  
+Now, simply edit the app/build.gradle file and change the value returned by method ```getPackageName()```  
 The next build will automatically use this value everywhere thanks to ```manifestPlaceholders``` feature of gradle and Android.
 
-You may have already noticed that the app installed by Android Studio has ```org.linphone.debug``` package name.
+You may have already noticed that the app installed by Android Studio has ```org.linphone.debug``` package name.  
 If you build the app as release, the package name will be ```org.linphone```.
 
 ## Firebase push notifications
 
 Now that Google Cloud Messaging has been deprecated and will be completely removed on April 11th 2019, the only official way of using push notifications is through Firebase.
 
-However to make Firebase push notifications work, the project needs to have a ```app/google-services.json``` file that contains the configuration.
+However to make Firebase push notifications work, the project needs to have a ```app/google-services.json``` file that contains the configuration.  
 We have archived our own, so you can build your linphone-android application and still receive push notifications from our free SIP service (sip.linphone.org).
 If you delete it, you won't receive any push notification.
 
@@ -124,17 +128,9 @@ If you have your own push server, replace this file by yours.
 
 ## Translations
 
-We use transifex so the community can translate the strings of the app in their own language.
+We no longer use transifex for the translation process, instead we have deployed our own instance of [Weblate](https://weblate.linphone.org/).
 
-Note for developpers: here's how to push/pull string resources to/from transifex:
-```
-tx pull -af
-```
-to update local translations with latest transifex changes
-```
-tx push -s -f --no-interactive
-```
-to push new strings to transifex so they can be translated.
+Inscriptions are currently disabled but you can [contact us](https://weblate.linphone.org/contact/) to request an access if you want to contribute.
 
 # CONTRIBUTIONS
 
