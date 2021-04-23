@@ -39,6 +39,7 @@ This version is a full rewrite of the app in kotlin, using modern Android compon
 
 - Call history view groups call from the same SIP URI (like linphone-iphone)
 - Reworked conference (using new linphone-sdk APIs)
+- Route audio to headset / headphones / bluetooth device automatically when available
 - Improved how Android native contacts are used
 - Switched to material design for text input fields & switches
 - Launcher shortcuts can be to either contacts or chat rooms

@@ -68,16 +68,34 @@ class AudioRouteUtils {
             val currentCall = call ?: coreContext.core.currentCall ?: coreContext.core.calls[0]
 
             for (audioDevice in coreContext.core.audioDevices) {
-                if (audioDevice.type == AudioDevice.Type.Bluetooth && audioDevice.hasCapability(
-                        AudioDevice.Capabilities.CapabilityPlay
-                    )
-                ) {
-                    Log.i("[Audio Route Helper] Found bluetooth audio device [${audioDevice.deviceName}], routing audio to it")
-                    currentCall.outputAudioDevice = audioDevice
-                    return
+                if (audioDevice.type == AudioDevice.Type.Bluetooth) {
+                    if (audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
+                        Log.i("[Audio Route Helper] Found bluetooth audio device [${audioDevice.deviceName}], routing audio to it")
+                        currentCall.outputAudioDevice = audioDevice
+                        return
+                    }
                 }
             }
             Log.e("[Audio Route Helper] Couldn't find bluetooth audio device")
+        }
+
+        fun routeAudioToHeadset(call: Call? = null) {
+            if (coreContext.core.callsNb == 0) {
+                Log.e("[Audio Route Helper] No call found, aborting headset audio route change")
+                return
+            }
+            val currentCall = call ?: coreContext.core.currentCall ?: coreContext.core.calls[0]
+
+            for (audioDevice in coreContext.core.audioDevices) {
+                if (audioDevice.type == AudioDevice.Type.Headphones || audioDevice.type == AudioDevice.Type.Headset) {
+                    if (audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
+                        Log.i("[Audio Route Helper] Found headset audio device [${audioDevice.deviceName}], routing audio to it")
+                        currentCall.outputAudioDevice = audioDevice
+                        return
+                    }
+                }
+            }
+            Log.e("[Audio Route Helper] Couldn't find headset audio device")
         }
 
         fun isBluetoothAudioRouteCurrentlyUsed(call: Call? = null): Boolean {
@@ -94,10 +112,8 @@ class AudioRouteUtils {
 
         fun isBluetoothAudioRouteAvailable(): Boolean {
             for (audioDevice in coreContext.core.audioDevices) {
-                if (audioDevice.type == AudioDevice.Type.Bluetooth && audioDevice.hasCapability(
-                        AudioDevice.Capabilities.CapabilityPlay
-                    )
-                ) {
+                if (audioDevice.type == AudioDevice.Type.Bluetooth &&
+                        audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
                     Log.i("[Audio Route Helper] Found bluetooth audio device [${audioDevice.deviceName}]")
                     return true
                 }
@@ -107,7 +123,8 @@ class AudioRouteUtils {
 
         fun isHeadsetAudioRouteAvailable(): Boolean {
             for (audioDevice in coreContext.core.audioDevices) {
-                if (audioDevice.type == AudioDevice.Type.Headset || audioDevice.type == AudioDevice.Type.Headphones) {
+                if ((audioDevice.type == AudioDevice.Type.Headset || audioDevice.type == AudioDevice.Type.Headphones) &&
+                        audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
                     Log.i("[Audio Route Helper] Found headset/headphones audio device [${audioDevice.deviceName}]")
                     return true
                 }
