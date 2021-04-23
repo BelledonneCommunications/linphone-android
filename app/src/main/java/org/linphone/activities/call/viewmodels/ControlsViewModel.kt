@@ -195,9 +195,13 @@ class ControlsViewModel : ViewModel() {
             val wasBluetoothPreviouslyAvailable = audioRoutesEnabled.value == true
             updateAudioRoutesState()
 
-            if (!wasBluetoothPreviouslyAvailable && corePreferences.routeAudioToBluetoothIfAvailable) {
+            if (AudioRouteUtils.isHeadsetAudioRouteAvailable()) {
+                AudioRouteUtils.routeAudioToHeadset()
+            } else if (!wasBluetoothPreviouslyAvailable && corePreferences.routeAudioToBluetoothIfAvailable) {
                 // Only attempt to route audio to bluetooth automatically when bluetooth device is connected
-                AudioRouteUtils.routeAudioToBluetooth()
+                if (AudioRouteUtils.isBluetoothAudioRouteAvailable()) {
+                    AudioRouteUtils.routeAudioToBluetooth()
+                }
             }
         }
     }
@@ -375,7 +379,12 @@ class ControlsViewModel : ViewModel() {
 
     fun forceEarpieceAudioRoute() {
         somethingClickedEvent.value = Event(true)
-        AudioRouteUtils.routeAudioToEarpiece()
+        if (AudioRouteUtils.isHeadsetAudioRouteAvailable()) {
+            Log.i("[Call] Headset found, route audio to it instead of earpiece")
+            AudioRouteUtils.routeAudioToHeadset()
+        } else {
+            AudioRouteUtils.routeAudioToEarpiece()
+        }
     }
 
     fun forceSpeakerAudioRoute() {
