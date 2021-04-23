@@ -36,10 +36,10 @@ import org.linphone.R
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.dialer.viewmodels.DialerViewModel
 import org.linphone.activities.main.fragments.SecureFragment
-import org.linphone.activities.main.navigateToConfigFileViewer
-import org.linphone.activities.main.navigateToContacts
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
+import org.linphone.activities.navigateToConfigFileViewer
+import org.linphone.activities.navigateToContacts
 import org.linphone.core.tools.Log
 import org.linphone.databinding.DialerFragmentBinding
 import org.linphone.utils.AppUtils

@@ -19,6 +19,7 @@
  */
 package org.linphone.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
@@ -114,6 +115,7 @@ class LinphoneUtils {
             return SimpleDateFormat(RECORDING_DATE_PATTERN, Locale.getDefault()).parse(name)
         }
 
+        @SuppressLint("MissingPermission")
         fun checkIfNetworkHasLowBandwidth(context: Context): Boolean {
             val connMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val networkInfo: NetworkInfo? = connMgr.activeNetworkInfo

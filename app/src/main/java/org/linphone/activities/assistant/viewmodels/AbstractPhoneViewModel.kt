@@ -62,7 +62,7 @@ abstract class AbstractPhoneViewModel(val accountCreator: AccountCreator) : View
 
         if (number != null) {
             Log.i("[Assistant] Found phone number: $number")
-            phoneNumber.value = number!!
+            phoneNumber.value = number
         }
     }
 

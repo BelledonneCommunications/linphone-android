@@ -30,8 +30,8 @@ import org.linphone.activities.assistant.AssistantActivity
 import org.linphone.activities.assistant.viewmodels.GenericLoginViewModel
 import org.linphone.activities.assistant.viewmodels.GenericLoginViewModelFactory
 import org.linphone.activities.assistant.viewmodels.SharedAssistantViewModel
-import org.linphone.activities.main.navigateToEchoCancellerCalibration
 import org.linphone.activities.main.viewmodels.DialogViewModel
+import org.linphone.activities.navigateToEchoCancellerCalibration
 import org.linphone.databinding.AssistantGenericAccountLoginFragmentBinding
 import org.linphone.utils.DialogUtils
 

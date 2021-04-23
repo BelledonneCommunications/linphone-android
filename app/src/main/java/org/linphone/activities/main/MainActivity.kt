@@ -46,6 +46,7 @@ import org.linphone.activities.SnackBarActivity
 import org.linphone.activities.assistant.AssistantActivity
 import org.linphone.activities.call.CallActivity
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
+import org.linphone.activities.navigateToDialer
 import org.linphone.compatibility.Compatibility
 import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.core.tools.Log
@@ -260,15 +261,19 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         val stringUri = uri.toString()
         var addressToCall: String = stringUri
 
-        if (addressToCall.startsWith("tel:")) {
-            Log.i("[Main Activity] Removing tel: prefix")
-            addressToCall = addressToCall.substring("tel:".length)
-        } else if (addressToCall.startsWith("linphone:")) {
-            Log.i("[Main Activity] Removing linphone: prefix")
-            addressToCall = addressToCall.substring("linphone:".length)
-        } else if (addressToCall.startsWith("sip-linphone:")) {
-            Log.i("[Main Activity] Removing linphone: sip-linphone")
-            addressToCall = addressToCall.substring("sip-linphone:".length)
+        when {
+            addressToCall.startsWith("tel:") -> {
+                Log.i("[Main Activity] Removing tel: prefix")
+                addressToCall = addressToCall.substring("tel:".length)
+            }
+            addressToCall.startsWith("linphone:") -> {
+                Log.i("[Main Activity] Removing linphone: prefix")
+                addressToCall = addressToCall.substring("linphone:".length)
+            }
+            addressToCall.startsWith("sip-linphone:") -> {
+                Log.i("[Main Activity] Removing linphone: sip-linphone")
+                addressToCall = addressToCall.substring("sip-linphone:".length)
+            }
         }
 
         val address = coreContext.core.interpretUrl(addressToCall)
