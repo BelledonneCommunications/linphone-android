@@ -22,6 +22,7 @@ package org.linphone.activities.main.dialer.viewmodels
 import android.content.Context
 import android.os.Vibrator
 import android.provider.Settings
+import android.text.Editable
 import android.widget.EditText
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -56,9 +57,14 @@ class DialerViewModel : LogsUploadViewModel() {
     private var addressWaitingNetworkToBeCalled: String? = null
     private var timeAtWitchWeTriedToCall: Long = 0
 
+    private var enteredUriCursorPosition: Int = 0
+
     val onKeyClick: NumpadDigitListener = object : NumpadDigitListener {
         override fun handleClick(key: Char) {
-            enteredUri.value += key.toString()
+            val sb: StringBuilder = StringBuilder(enteredUri.value)
+            sb.insert(enteredUriCursorPosition, key.toString())
+            enteredUri.value = sb.toString()
+
             if (coreContext.core.callsNb == 0) {
                 val contentResolver = coreContext.context.contentResolver
                 if (Settings.System.getInt(contentResolver, Settings.System.DTMF_TONE_WHEN_DIALING) == 1) {
@@ -142,8 +148,16 @@ class DialerViewModel : LogsUploadViewModel() {
     }
 
     // This is to workaround the cursor being set to the start when pressing a digit
-    fun onUriChanged(input: EditText) {
-        input.setSelection(input.text.length)
+    fun onBeforeUriChanged(editText: EditText, count: Int, after: Int) {
+        enteredUriCursorPosition = editText.selectionEnd
+        enteredUriCursorPosition += after - count
+    }
+
+    fun onAfterUriChanged(editText: EditText, editable: Editable?) {
+        val newLength = editable?.length ?: 0
+        if (newLength <= enteredUriCursorPosition) enteredUriCursorPosition = newLength
+        if (enteredUriCursorPosition < 0) enteredUriCursorPosition = 0
+        editText.setSelection(enteredUriCursorPosition)
     }
 
     fun updateShowVideoPreview() {
