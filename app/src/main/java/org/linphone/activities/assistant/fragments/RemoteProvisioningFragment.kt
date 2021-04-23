@@ -28,8 +28,8 @@ import org.linphone.activities.GenericFragment
 import org.linphone.activities.assistant.AssistantActivity
 import org.linphone.activities.assistant.viewmodels.RemoteProvisioningViewModel
 import org.linphone.activities.assistant.viewmodels.SharedAssistantViewModel
-import org.linphone.activities.main.navigateToEchoCancellerCalibration
-import org.linphone.activities.main.navigateToQrCode
+import org.linphone.activities.navigateToEchoCancellerCalibration
+import org.linphone.activities.navigateToQrCode
 import org.linphone.databinding.AssistantRemoteProvisioningFragmentBinding
 
 class RemoteProvisioningFragment : GenericFragment<AssistantRemoteProvisioningFragmentBinding>() {

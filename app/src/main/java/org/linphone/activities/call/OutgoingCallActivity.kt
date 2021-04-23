@@ -131,11 +131,11 @@ class OutgoingCallActivity : ProximitySensorActivity() {
         val permissionsRequiredList = arrayListOf<String>()
         if (!PermissionHelper.get().hasRecordAudioPermission()) {
             Log.i("[Outgoing Call Activity] Asking for RECORD_AUDIO permission")
-            permissionsRequiredList.add(android.Manifest.permission.RECORD_AUDIO)
+            permissionsRequiredList.add(Manifest.permission.RECORD_AUDIO)
         }
         if (viewModel.call.currentParams.videoEnabled() && !PermissionHelper.get().hasCameraPermission()) {
             Log.i("[Outgoing Call Activity] Asking for CAMERA permission")
-            permissionsRequiredList.add(android.Manifest.permission.CAMERA)
+            permissionsRequiredList.add(Manifest.permission.CAMERA)
         }
         if (permissionsRequiredList.isNotEmpty()) {
             val permissionsRequired = arrayOfNulls<String>(permissionsRequiredList.size)
@@ -163,6 +163,7 @@ class OutgoingCallActivity : ProximitySensorActivity() {
                 }
             }
         }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun findOutgoingCall(): Call? {

@@ -24,14 +24,15 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
-import org.linphone.activities.main.*
+import org.linphone.activities.*
 import org.linphone.activities.main.fragments.SecureFragment
-import org.linphone.activities.main.navigateToAccountSettings
-import org.linphone.activities.main.navigateToAudioSettings
-import org.linphone.activities.main.navigateToTunnelSettings
 import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.activities.main.settings.viewmodels.SettingsViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
+import org.linphone.activities.navigateToAccountSettings
+import org.linphone.activities.navigateToAudioSettings
+import org.linphone.activities.navigateToTunnelSettings
+import org.linphone.activities.navigateToVideoSettings
 import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsFragmentBinding
 
