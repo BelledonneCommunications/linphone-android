@@ -194,9 +194,14 @@ class CoreContext(val context: Context, coreConfig: Config) {
             } else if (state == Call.State.StreamsRunning) {
                 // Do not automatically route audio to bluetooth after first call
                 if (core.callsNb == 1) {
-                    // Only try to route bluetooth when the call is in StreamsRunning for the first time
-                    if (previousCallState == Call.State.Connected && corePreferences.routeAudioToBluetoothIfAvailable) {
-                        AudioRouteUtils.routeAudioToBluetooth(call)
+                    // Only try to route bluetooth / headphone / headset when the call is in StreamsRunning for the first time
+                    if (previousCallState == Call.State.Connected) {
+                        Log.i("[Context] First call going into StreamsRunning state for the first time, trying to route audio to headset or bluetooth if available")
+                        if (AudioRouteUtils.isHeadsetAudioRouteAvailable()) {
+                            AudioRouteUtils.routeAudioToHeadset(call)
+                        } else if (corePreferences.routeAudioToBluetoothIfAvailable && AudioRouteUtils.isBluetoothAudioRouteAvailable()) {
+                            AudioRouteUtils.routeAudioToBluetooth(call)
+                        }
                     }
                 }
 
