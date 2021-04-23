@@ -19,6 +19,7 @@
  */
 package org.linphone.compatibility
 
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
@@ -56,6 +57,7 @@ class Api21Compatibility {
             return name
         }
 
+        @SuppressLint("MissingPermission")
         fun eventVibration(vibrator: Vibrator) {
             val pattern = longArrayOf(0, 100, 100)
             vibrator.vibrate(pattern, -1)

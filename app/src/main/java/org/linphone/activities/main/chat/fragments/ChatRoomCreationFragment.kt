@@ -32,9 +32,9 @@ import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.chat.adapters.ChatRoomCreationContactsAdapter
 import org.linphone.activities.main.chat.viewmodels.ChatRoomCreationViewModel
 import org.linphone.activities.main.fragments.SecureFragment
-import org.linphone.activities.main.navigateToChatRoom
-import org.linphone.activities.main.navigateToGroupInfo
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
+import org.linphone.activities.navigateToChatRoom
+import org.linphone.activities.navigateToGroupInfo
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatRoomCreationFragmentBinding
 import org.linphone.utils.PermissionHelper

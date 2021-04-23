@@ -35,10 +35,10 @@ import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.contact.adapters.ContactsListAdapter
 import org.linphone.activities.main.contact.viewmodels.ContactsListViewModel
 import org.linphone.activities.main.fragments.MasterFragment
-import org.linphone.activities.main.navigateToContact
-import org.linphone.activities.main.navigateToContactEditor
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
+import org.linphone.activities.navigateToContact
+import org.linphone.activities.navigateToContactEditor
 import org.linphone.contact.Contact
 import org.linphone.core.Factory
 import org.linphone.core.tools.Log

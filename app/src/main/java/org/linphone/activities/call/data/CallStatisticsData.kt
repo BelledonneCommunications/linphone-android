@@ -21,8 +21,6 @@ package org.linphone.activities.call.data
 
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.activities.call.viewmodels.StatItemData
-import org.linphone.activities.call.viewmodels.StatType
 import org.linphone.contact.GenericContactData
 import org.linphone.core.*
 
