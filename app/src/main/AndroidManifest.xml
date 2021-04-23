@@ -216,7 +216,7 @@
             android:label="@string/service_name" />
 
         <service
-            android:name="org.linphone.core.tools.service.CoreService"
+            android:name=".service.CoreService"
             android:foregroundServiceType="phoneCall"
             android:stopWithTask="false"
             android:label="@string/app_name" />
