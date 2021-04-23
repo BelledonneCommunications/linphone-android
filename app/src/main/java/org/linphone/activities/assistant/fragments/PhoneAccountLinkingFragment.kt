@@ -26,8 +26,8 @@ import org.linphone.LinphoneApplication
 import org.linphone.R
 import org.linphone.activities.assistant.AssistantActivity
 import org.linphone.activities.assistant.viewmodels.*
-import org.linphone.activities.main.navigateToEchoCancellerCalibration
-import org.linphone.activities.main.navigateToPhoneAccountValidation
+import org.linphone.activities.navigateToEchoCancellerCalibration
+import org.linphone.activities.navigateToPhoneAccountValidation
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantPhoneAccountLinkingFragmentBinding
 

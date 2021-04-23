@@ -34,6 +34,7 @@
             android:layout_marginLeft="10dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
+            android:contentDescription="@null"
             android:src="@{icon}" />
 
         <org.linphone.views.MarqueeTextView

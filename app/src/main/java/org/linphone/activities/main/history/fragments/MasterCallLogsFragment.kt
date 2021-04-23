@@ -34,11 +34,11 @@ import org.linphone.activities.main.fragments.MasterFragment
 import org.linphone.activities.main.history.adapters.CallLogsListAdapter
 import org.linphone.activities.main.history.data.GroupedCallLogData
 import org.linphone.activities.main.history.viewmodels.CallLogsListViewModel
-import org.linphone.activities.main.navigateToCallHistory
-import org.linphone.activities.main.navigateToDialer
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.main.viewmodels.TabsViewModel
+import org.linphone.activities.navigateToCallHistory
+import org.linphone.activities.navigateToDialer
 import org.linphone.core.tools.Log
 import org.linphone.databinding.HistoryMasterFragmentBinding
 import org.linphone.utils.*

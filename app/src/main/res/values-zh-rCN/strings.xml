@@ -172,7 +172,7 @@
     <string name="received_chat_notification_mark_as_read_label">标记为已读</string>
     <string name="missed_call_notification_title">未接来电</string>
     <string name="missed_call_notification_body">来自%s 的未接来电</string>
-    <string name="missed_calls_notification_body">%sd 未接来电</string>
+    <string name="missed_calls_notification_body">%d 未接来电</string>
     <string name="zrtp_dialog_title">通讯安全</string>
     <string name="zrtp_dialog_ok_button_label">接受</string>
     <string name="content_description_forwarded_message">信息已转发</string>

@@ -4,7 +4,7 @@
     <!ENTITY appName "Linphone">
 ]>
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" translatable="false">&appName;</string>
     <string name="app_name_debug" translatable="false">&appName; (debug)</string>
     <string name="service_name">&appName; Service</string>
@@ -582,7 +582,7 @@
     <string name="received_chat_notification_mark_as_read_label">Mark as read</string>
     <string name="missed_call_notification_title">Missed call</string>
     <string name="missed_call_notification_body">Missed call from %s</string>
-    <string name="missed_calls_notification_body">%d missed calls</string>
+    <string name="missed_calls_notification_body" tools:ignore="PluralsCandidate">%d missed calls</string>
 
     <!-- Dialog -->
     <string name="zrtp_dialog_title">Communication security</string>

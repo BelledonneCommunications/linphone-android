@@ -144,7 +144,7 @@ class ChatRoomsListViewModel : ErrorReportingViewModel() {
     }
 
     private fun updateChatRooms() {
-        var list = arrayListOf<ChatRoom>()
+        val list = arrayListOf<ChatRoom>()
 
         list.addAll(coreContext.core.chatRooms)
 

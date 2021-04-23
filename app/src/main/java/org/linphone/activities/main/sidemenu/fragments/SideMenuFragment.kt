@@ -35,13 +35,13 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.assistant.AssistantActivity
-import org.linphone.activities.main.navigateToAbout
-import org.linphone.activities.main.navigateToAccountSettings
-import org.linphone.activities.main.navigateToRecordings
-import org.linphone.activities.main.navigateToSettings
 import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.activities.main.sidemenu.viewmodels.SideMenuViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
+import org.linphone.activities.navigateToAbout
+import org.linphone.activities.navigateToAccountSettings
+import org.linphone.activities.navigateToRecordings
+import org.linphone.activities.navigateToSettings
 import org.linphone.core.tools.Log
 import org.linphone.databinding.SideMenuFragmentBinding
 import org.linphone.utils.Event

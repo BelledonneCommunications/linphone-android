@@ -33,10 +33,10 @@ import org.linphone.activities.main.chat.adapters.GroupInfoParticipantsAdapter
 import org.linphone.activities.main.chat.viewmodels.GroupInfoViewModel
 import org.linphone.activities.main.chat.viewmodels.GroupInfoViewModelFactory
 import org.linphone.activities.main.fragments.SecureFragment
-import org.linphone.activities.main.navigateToChatRoom
-import org.linphone.activities.main.navigateToChatRoomCreation
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
+import org.linphone.activities.navigateToChatRoom
+import org.linphone.activities.navigateToChatRoomCreation
 import org.linphone.core.Address
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomCapabilities

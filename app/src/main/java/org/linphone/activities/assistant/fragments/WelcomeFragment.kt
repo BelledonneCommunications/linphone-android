@@ -31,13 +31,12 @@ import androidx.lifecycle.ViewModelProvider
 import java.util.regex.Pattern
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
-import org.linphone.activities.GenericFragment
+import org.linphone.activities.*
 import org.linphone.activities.assistant.viewmodels.WelcomeViewModel
-import org.linphone.activities.main.*
-import org.linphone.activities.main.navigateToAccountLogin
-import org.linphone.activities.main.navigateToEmailAccountCreation
-import org.linphone.activities.main.navigateToGenericLogin
-import org.linphone.activities.main.navigateToRemoteProvisioning
+import org.linphone.activities.navigateToAccountLogin
+import org.linphone.activities.navigateToEmailAccountCreation
+import org.linphone.activities.navigateToGenericLogin
+import org.linphone.activities.navigateToRemoteProvisioning
 import org.linphone.databinding.AssistantWelcomeFragmentBinding
 
 class WelcomeFragment : GenericFragment<AssistantWelcomeFragmentBinding>() {

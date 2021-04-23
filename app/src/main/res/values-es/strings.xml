@@ -372,7 +372,7 @@
     <string name="call_stats_capture_filter">Filtro de captura:</string>
     <string name="assistant_welcome_title">Bienvenido</string>
     <string name="assistant_create_account">Crear cuenta</string>
-    <string name="assistant_login_linphone">Utilize %appNombre; cuenta</string>
+    <string name="assistant_login_linphone">Utilize &appName; cuenta</string>
     <string name="assistant_login_generic">Utilizar cuenta SIP</string>
     <string name="assistant_remote_provisioning">Buscar la configuración remota</string>
     <string name="assistant_ec_calibration">Calibración del cancelador de eco en curso</string>

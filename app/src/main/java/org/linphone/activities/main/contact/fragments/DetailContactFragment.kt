@@ -32,10 +32,11 @@ import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.*
 import org.linphone.activities.main.contact.viewmodels.ContactViewModel
 import org.linphone.activities.main.contact.viewmodels.ContactViewModelFactory
-import org.linphone.activities.main.navigateToContactEditor
-import org.linphone.activities.main.navigateToDialer
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
+import org.linphone.activities.navigateToChatRoom
+import org.linphone.activities.navigateToContactEditor
+import org.linphone.activities.navigateToDialer
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactDetailFragmentBinding
 import org.linphone.utils.DialogUtils

@@ -23,7 +23,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import java.lang.NumberFormatException
-import java.util.*
 import kotlin.collections.ArrayList
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -251,7 +250,7 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
             val params = account.params.clone()
             params.transport = TransportType.fromInt(position)
             account.params = params
-            proxy.value = account.params.serverAddr
+            proxy.value = account.params.serverAddress?.asStringUriOnly()
         }
     }
     val transportIndex = MutableLiveData<Int>()
@@ -260,9 +259,12 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
     val proxyListener = object : SettingListenerStub() {
         override fun onTextValueChanged(newValue: String) {
             val params = account.params.clone()
-            params.serverAddr = newValue
-            account.params = params
-            transportIndex.value = account.params.transport.toInt()
+            val address = Factory.instance().createAddress(newValue)
+            if (address != null) {
+                params.serverAddress = address
+                account.params = params
+                transportIndex.value = account.params.transport.toInt()
+            }
         }
     }
     val proxy = MutableLiveData<String>()
@@ -408,7 +410,7 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
         disable.value = !params.registerEnabled
         pushNotification.value = params.pushNotificationAllowed
         pushNotificationsAvailable.value = core.isPushNotificationAvailable
-        proxy.value = params.serverAddr
+        proxy.value = params.serverAddress?.asStringUriOnly()
         outboundProxy.value = params.outboundProxyEnabled
         stunServer.value = params.natPolicy?.stunServer
         ice.value = params.natPolicy?.iceEnabled()

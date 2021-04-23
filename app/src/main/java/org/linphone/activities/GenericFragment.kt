@@ -38,7 +38,7 @@ abstract class GenericFragment<T : ViewDataBinding> : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = DataBindingUtil.inflate<T>(inflater, getLayoutId(), container, false)
+        _binding = DataBindingUtil.inflate(inflater, getLayoutId(), container, false)
         return _binding!!.root
     }
 

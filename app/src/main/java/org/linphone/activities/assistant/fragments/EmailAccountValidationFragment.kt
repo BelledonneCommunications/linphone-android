@@ -26,7 +26,7 @@ import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.assistant.AssistantActivity
 import org.linphone.activities.assistant.viewmodels.*
-import org.linphone.activities.main.navigateToAccountLinking
+import org.linphone.activities.navigateToAccountLinking
 import org.linphone.databinding.AssistantEmailAccountValidationFragmentBinding
 
 class EmailAccountValidationFragment : GenericFragment<AssistantEmailAccountValidationFragmentBinding>() {

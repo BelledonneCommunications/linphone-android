@@ -19,6 +19,7 @@
  */
 package org.linphone.compatibility
 
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Activity
 import android.app.NotificationChannel
@@ -116,6 +117,7 @@ class Api26Compatibility {
             return WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
         }
 
+        @SuppressLint("MissingPermission")
         fun eventVibration(vibrator: Vibrator) {
             val effect = VibrationEffect.createWaveform(longArrayOf(0L, 100L, 100L), intArrayOf(0, VibrationEffect.DEFAULT_AMPLITUDE, 0), -1)
             val audioAttrs = AudioAttributes.Builder()
