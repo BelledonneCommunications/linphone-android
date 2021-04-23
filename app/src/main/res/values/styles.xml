@@ -52,7 +52,6 @@
     </style>
 
     <style name="FullScreenTheme" parent="@style/AppTheme">
-        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
     </style>

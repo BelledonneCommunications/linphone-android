@@ -487,9 +487,8 @@ class CoreContext(val context: Context, coreConfig: Config) {
             }
         }
 
-        if (core.conference != null && core.isInConference) {
-            // Nothing to do
-        } else {
+        val conference = core.conference
+        if (conference == null || !conference.isIn) {
             val call = core.currentCall
             if (call == null) {
                 Log.w("[Context] Switching camera while not in call")
@@ -505,8 +504,8 @@ class CoreContext(val context: Context, coreConfig: Config) {
 
     fun isVideoCallOrConferenceActive(): Boolean {
         val conference = core.conference
-        return if (conference != null && core.isInConference) {
-            conference.currentParams.isVideoEnabled()
+        return if (conference != null && conference.isIn) {
+            conference.currentParams.isVideoEnabled
         } else {
             core.currentCall?.currentParams?.videoEnabled() ?: false
         }
@@ -684,7 +683,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
         }
 
         @Throws(java.lang.Exception::class)
-        fun generateToken(): String? {
+        fun generateToken(): String {
             return sha512(UUID.randomUUID().toString())
         }
 
@@ -745,7 +744,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
 
                 if (corePreferences.encryptedSharedPreferences.getString(VFS_IV, null) == null) {
                     generateSecretKey()
-                    generateToken()?.let { encryptToken(it) }?.let { data ->
+                    encryptToken(generateToken()).let { data ->
                         corePreferences.encryptedSharedPreferences
                             .edit()
                             .putString(VFS_IV, data.first)

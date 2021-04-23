@@ -31,9 +31,9 @@ import org.linphone.activities.assistant.AssistantActivity
 import org.linphone.activities.assistant.viewmodels.AccountLoginViewModel
 import org.linphone.activities.assistant.viewmodels.AccountLoginViewModelFactory
 import org.linphone.activities.assistant.viewmodels.SharedAssistantViewModel
-import org.linphone.activities.main.navigateToEchoCancellerCalibration
-import org.linphone.activities.main.navigateToPhoneAccountValidation
 import org.linphone.activities.main.viewmodels.DialogViewModel
+import org.linphone.activities.navigateToEchoCancellerCalibration
+import org.linphone.activities.navigateToPhoneAccountValidation
 import org.linphone.databinding.AssistantAccountLoginFragmentBinding
 import org.linphone.utils.DialogUtils
 

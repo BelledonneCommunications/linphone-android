@@ -112,12 +112,12 @@ class IncomingCallActivity : GenericActivity() {
         val permissionsRequiredList = arrayListOf<String>()
         if (!PermissionHelper.get().hasRecordAudioPermission()) {
             Log.i("[Incoming Call Activity] Asking for RECORD_AUDIO permission")
-            permissionsRequiredList.add(android.Manifest.permission.RECORD_AUDIO)
+            permissionsRequiredList.add(Manifest.permission.RECORD_AUDIO)
         }
 
         if (viewModel.call.currentParams.videoEnabled() && !PermissionHelper.get().hasCameraPermission()) {
             Log.i("[Incoming Call Activity] Asking for CAMERA permission")
-            permissionsRequiredList.add(android.Manifest.permission.CAMERA)
+            permissionsRequiredList.add(Manifest.permission.CAMERA)
         }
 
         if (permissionsRequiredList.isNotEmpty()) {
@@ -145,6 +145,7 @@ class IncomingCallActivity : GenericActivity() {
                 }
             }
         }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun findIncomingCall(): Call? {
