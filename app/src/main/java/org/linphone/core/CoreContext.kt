@@ -612,6 +612,20 @@ class CoreContext(val context: Context, coreConfig: Config) {
         }
     }
 
+    fun checkIfForegroundServiceNotificationCanBeRemovedAfterDelay(delayInMs: Long) {
+        coroutineScope.launch {
+            withContext(Dispatchers.Default) {
+                delay(delayInMs)
+                withContext(Dispatchers.Main) {
+                    if (core.defaultAccount != null && core.defaultAccount?.state == RegistrationState.Ok) {
+                        Log.i("[Context] Default account is registered, cancel foreground service notification if possible")
+                        notificationsManager.stopForegroundNotificationIfPossible()
+                    }
+                }
+            }
+        }
+    }
+
     /* Start call related activities */
 
     private fun onIncomingReceived() {
