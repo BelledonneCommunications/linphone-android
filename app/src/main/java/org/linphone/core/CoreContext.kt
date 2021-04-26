@@ -654,7 +654,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
         context.startActivity(intent)
     }
 
-    private fun onCallStarted() {
+    fun onCallStarted() {
         if (corePreferences.preventInterfaceFromShowingUp) {
             Log.w("[Context] We were asked to not show the call screen")
             return

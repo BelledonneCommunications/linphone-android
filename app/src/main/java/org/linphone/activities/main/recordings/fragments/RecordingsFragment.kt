@@ -85,7 +85,11 @@ class RecordingsFragment : MasterFragment<RecordingsFragmentBinding, RecordingsL
                     videoY = v.y - event.rawY
                 }
                 MotionEvent.ACTION_MOVE -> {
-                    v.animate().x(event.rawX + videoX).y(event.rawY + videoY).setDuration(0).start()
+                    v.animate()
+                        .x(event.rawX + videoX)
+                        .y(event.rawY + videoY)
+                        .setDuration(0)
+                        .start()
                 }
                 else -> {
                     v.performClick()

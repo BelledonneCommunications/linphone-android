@@ -509,7 +509,7 @@
     <string name="advanced_settings_remote_provisioning_url_title">URL de aprovisionamiento remoto</string>
     <string name="advanced_settings_logs_server_url_title">Registra la URL del servidor de carga</string>
     <string name="advanced_settings_logs_server_url_summary">No edites a menos que sepas lo que estás haciendo!</string>
-    <string name="android_settings_codecs_title">Android</string>
+    <string name="advanced_settings_android_title">Android</string>
     <string name="advanced_settings_go_to_battery_optimization_settings">Ajustes de optimización de la batería</string>
     <string name="advanced_settings_go_to_android_app_settings">Ajustes de app Android</string>
     <string name="tunnel_settings_hostname_url_title">Nombre de usuario</string>
@@ -559,4 +559,8 @@
     <string name="chat_message_context_menu_imdn_info">Estado de envío</string>
     <string name="chat_room_cant_open_file_no_app_found">No se puede abrir el archivo, no hay una apliación disponible para este formato.</string>
     <string name="dialog_lime_security_message">Los mensajes instantáneos se cifran de extremo a extremo en conversaciones seguras. Es posible mejorar el nivel de seguridad de una conversación autenticando a los participantes. Para ello, llame al contacto y siga el proceso de autenticación.</string>
+    <string name="advanced_settings_send_debug_logs_title">Enviar registros</string>
+    <string name="advanced_settings_send_debug_logs_summary"></string>
+    <string name="advanced_settings_reset_debug_logs_title">Restablecer registros</string>
+    <string name="advanced_settings_reset_debug_logs_summary"></string>
 </resources>

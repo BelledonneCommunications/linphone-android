@@ -25,6 +25,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
@@ -37,6 +38,7 @@ import androidx.navigation.findNavController
 import com.google.android.material.snackbar.Snackbar
 import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
+import kotlin.math.abs
 import kotlinx.coroutines.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -45,6 +47,7 @@ import org.linphone.activities.GenericActivity
 import org.linphone.activities.SnackBarActivity
 import org.linphone.activities.assistant.AssistantActivity
 import org.linphone.activities.call.CallActivity
+import org.linphone.activities.main.viewmodels.CallOverlayViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.navigateToDialer
 import org.linphone.compatibility.Compatibility
@@ -57,6 +60,7 @@ import org.linphone.utils.FileUtils
 class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestinationChangedListener {
     private lateinit var binding: MainActivityBinding
     private lateinit var sharedViewModel: SharedMainViewModel
+    private lateinit var callOverlayViewModel: CallOverlayViewModel
 
     private val listener = object : ContactsUpdatedListenerStub() {
         override fun onContactsUpdated() {
@@ -72,6 +76,12 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     private lateinit var tabsFragment: FragmentContainerView
     private lateinit var statusFragment: FragmentContainerView
 
+    private var overlayX = 0f
+    private var overlayY = 0f
+    private var initPosX = 0f
+    private var initPosY = 0f
+    private var overlay: View? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -80,6 +90,9 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
         sharedViewModel = ViewModelProvider(this).get(SharedMainViewModel::class.java)
         binding.viewModel = sharedViewModel
+
+        callOverlayViewModel = ViewModelProvider(this).get(CallOverlayViewModel::class.java)
+        binding.callOverlayViewModel = callOverlayViewModel
 
         sharedViewModel.toggleDrawerEvent.observe(this, {
             it.consume {
@@ -112,6 +125,8 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
         tabsFragment = findViewById(R.id.tabs_fragment)
         statusFragment = findViewById(R.id.status_fragment)
+
+        initOverlay()
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -401,6 +416,41 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             findNavController(R.id.nav_host_fragment).navigate(Uri.parse(deepLink))
         } else {
             Log.e("[Main Activity] Failed to parse shortcut/locus id: $id")
+        }
+    }
+
+    private fun initOverlay() {
+        overlay = binding.root.findViewById(R.id.call_overlay)
+        val callOverlay = overlay
+        callOverlay ?: return
+
+        callOverlay.setOnTouchListener { view, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    overlayX = view.x - event.rawX
+                    overlayY = view.y - event.rawY
+                    initPosX = view.x
+                    initPosY = view.y
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    view.animate()
+                        .x(event.rawX + overlayX)
+                        .y(event.rawY + overlayY)
+                        .setDuration(0)
+                        .start()
+                }
+                MotionEvent.ACTION_UP -> {
+                    if (abs(initPosX - view.x) < 5 && abs(initPosY - view.y) < 5) {
+                        view.performClick()
+                    }
+                }
+                else -> return@setOnTouchListener false
+            }
+            true
+        }
+
+        callOverlay.setOnClickListener {
+            coreContext.onCallStarted()
         }
     }
 }

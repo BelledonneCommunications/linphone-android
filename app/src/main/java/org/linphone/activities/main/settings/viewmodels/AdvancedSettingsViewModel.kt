@@ -21,15 +21,20 @@ package org.linphone.activities.main.settings.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.main.settings.SettingListenerStub
+import org.linphone.activities.main.viewmodels.LogsUploadViewModel
 import org.linphone.core.CoreContext
 import org.linphone.core.Factory
 import org.linphone.mediastream.Version
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
-class AdvancedSettingsViewModel : GenericSettingsViewModel() {
+class AdvancedSettingsViewModel : LogsUploadViewModel() {
+    protected val prefs = corePreferences
+    protected val core = coreContext.core
+
     val debugModeListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
             prefs.debugLogs = newValue
@@ -45,6 +50,18 @@ class AdvancedSettingsViewModel : GenericSettingsViewModel() {
         }
     }
     val logsServerUrl = MutableLiveData<String>()
+
+    val sendDebugLogsListener = object : SettingListenerStub() {
+        override fun onClicked() {
+            uploadLogs()
+        }
+    }
+
+    val resetDebugLogsListener = object : SettingListenerStub() {
+        override fun onClicked() {
+            resetLogs()
+        }
+    }
 
     val backgroundModeListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
