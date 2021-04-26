@@ -176,48 +176,11 @@
                         android:layout_height="1dp"
                         android:background="?attr/dividerColor" />
 
-                    <LinearLayout
-                        android:visibility="@{viewModel.showLogsButtons ? View.VISIBLE : View.GONE}"
-                        android:background="?attr/backgroundColor"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:paddingTop="20dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:onClick="@{() -> viewModel.uploadLogs()}"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:background="@drawable/assistant_button"
-                            android:textColor="@drawable/assistant_button_text_color"
-                            style="@style/button_font"
-                            android:padding="10dp"
-                            android:text="@string/about_send_log" />
-
-                        <TextView
-                            android:onClick="@{() -> viewModel.resetLogs()}"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:background="@drawable/assistant_button"
-                            android:textColor="@drawable/assistant_button_text_color"
-                            style="@style/button_font"
-                            android:padding="10dp"
-                            android:text="@string/about_reset_log" />
-
-                    </LinearLayout>
-
                 </LinearLayout>
 
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
-
-        <include
-            layout="@layout/wait_layout"
-            bind:visibility="@{viewModel.uploadInProgress}"/>
 
     </RelativeLayout>
 

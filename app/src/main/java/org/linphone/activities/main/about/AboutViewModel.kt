@@ -19,14 +19,11 @@
  */
 package org.linphone.activities.main.about
 
+import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.LinphoneApplication.Companion.corePreferences
-import org.linphone.activities.main.viewmodels.LogsUploadViewModel
 
-class AboutViewModel : LogsUploadViewModel() {
+class AboutViewModel : ViewModel() {
     val appVersion: String = coreContext.appVersion
 
     val sdkVersion: String = coreContext.sdkVersion
-
-    val showLogsButtons: Boolean = corePreferences.debugLogs
 }

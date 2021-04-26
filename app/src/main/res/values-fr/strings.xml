@@ -358,7 +358,7 @@
     <string name="advanced_settings_remote_provisioning_url_title">URL de configuration distante</string>
     <string name="advanced_settings_logs_server_url_title">URL du serveur de téléchargement des traces</string>
     <string name="advanced_settings_logs_server_url_summary">Ne changez pas cette valeur sans savoir ce que vous faites !</string>
-    <string name="android_settings_codecs_title">Android</string>
+    <string name="advanced_settings_android_title">Android</string>
     <string name="advanced_settings_go_to_battery_optimization_settings">Paramètres d\'optimisation de la batterie</string>
     <string name="advanced_settings_go_to_power_manager_settings">Paramètres de gestion de l\'énergie</string>
     <string name="advanced_settings_go_to_android_app_settings">Paramètres de l\'app Android</string>
@@ -580,4 +580,10 @@
     <string name="chat_message_cant_open_file_in_app_dialog_message">Voulez-vous essayer de l\'ouvrir comme texte ou de l\'exporter (en clair) vers une appli tierce si disponible ?</string>
     <string name="chat_message_cant_open_file_in_app_dialog_export_button">Exporter</string>
     <string name="chat_message_cant_open_file_in_app_dialog_open_as_text_button">Ouvrir comme texte</string>
+    <string name="advanced_settings_send_debug_logs_title">Envoyer les traces</string>
+    <string name="advanced_settings_send_debug_logs_summary"></string>
+    <string name="advanced_settings_reset_debug_logs_title">Vider les traces</string>
+    <string name="advanced_settings_reset_debug_logs_summary"></string>
+    <string name="advanced_settings_debug_title">Paramètres de deboggage</string>
+    <string name="advanced_settings_other_title">Autres paramètres</string>
 </resources>

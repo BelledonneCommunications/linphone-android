@@ -65,6 +65,15 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <TextView
+                    style="@style/settings_category_font"
+                    android:text="@string/advanced_settings_debug_title"
+                    android:paddingTop="15dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/advanced_settings_debug_mode_title}"
@@ -80,6 +89,29 @@
                     linphone:defaultValue="@{viewModel.logsServerUrl}"
                     linphone:inputType="@{InputType.TYPE_TEXT_VARIATION_URI}"
                     linphone:enabled="@{viewModel.debugMode}"/>
+
+                <include
+                    layout="@layout/settings_widget_basic"
+                    linphone:title="@{@string/advanced_settings_send_debug_logs_title}"
+                    linphone:subtitle="@{@string/advanced_settings_send_debug_logs_summary}"
+                    linphone:listener="@{viewModel.sendDebugLogsListener}"
+                    linphone:enabled="@{viewModel.debugMode}"/>
+
+                <include
+                    layout="@layout/settings_widget_basic"
+                    linphone:title="@{@string/advanced_settings_reset_debug_logs_title}"
+                    linphone:subtitle="@{@string/advanced_settings_reset_debug_logs_summary}"
+                    linphone:listener="@{viewModel.resetDebugLogsListener}"
+                    linphone:enabled="@{viewModel.debugMode}"/>
+
+                <TextView
+                    style="@style/settings_category_font"
+                    android:text="@string/advanced_settings_other_title"
+                    android:paddingTop="15dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
 
                 <include
                     layout="@layout/settings_widget_switch"
@@ -136,8 +168,7 @@
 
                 <TextView
                     style="@style/settings_category_font"
-                    android:id="@+id/pref_video_codecs_header"
-                    android:text="@string/android_settings_codecs_title"
+                    android:text="@string/advanced_settings_android_title"
                     android:paddingTop="15dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
@@ -164,6 +195,10 @@
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
+
+        <include
+            layout="@layout/wait_layout"
+            bind:visibility="@{viewModel.uploadInProgress}"/>
 
     </RelativeLayout>
 

@@ -123,7 +123,7 @@
     <string name="account_settings_display_name_title">显示名</string>
     <string name="tunnel_settings_dual_port_summary">双模式下需要</string>
     <string name="tunnel_settings_mode_title">模式</string>
-    <string name="android_settings_codecs_title">安卓</string>
+    <string name="advanced_settings_android_title">安卓</string>
     <string name="advanced_settings_go_to_battery_optimization_settings">电池优化设置</string>
     <string name="advanced_settings_go_to_power_manager_settings">电源管理设置</string>
     <string name="tunnel_settings_hostname_url_title">主机名</string>
@@ -565,4 +565,8 @@
         <item quantity="other">\@string/contact_delete_one_dialog</item>
     </plurals>
     <string name="chat_settings_mark_as_read_notif_dismissal_title">撤消通知后标记为已读</string>
+    <string name="advanced_settings_send_debug_logs_title">发送日志</string>
+    <string name="advanced_settings_send_debug_logs_summary"></string>
+    <string name="advanced_settings_reset_debug_logs_title">重启日志</string>
+    <string name="advanced_settings_reset_debug_logs_summary"></string>
 </resources>

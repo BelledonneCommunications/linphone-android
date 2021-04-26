@@ -19,8 +19,7 @@
  */
 package org.linphone.activities.main.settings.fragments
 
-import android.content.ActivityNotFoundException
-import android.content.Intent
+import android.content.*
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -31,10 +30,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
 import org.linphone.activities.GenericFragment
+import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.settings.viewmodels.AdvancedSettingsViewModel
 import org.linphone.core.tools.Log
 import org.linphone.core.tools.compatibility.DeviceUtils
 import org.linphone.databinding.SettingsAdvancedFragmentBinding
+import org.linphone.utils.AppUtils
 import org.linphone.utils.PowerManagerUtils
 
 class AdvancedSettingsFragment : GenericFragment<SettingsAdvancedFragmentBinding>() {
@@ -52,6 +53,20 @@ class AdvancedSettingsFragment : GenericFragment<SettingsAdvancedFragmentBinding
 
         binding.setBackClickListener { findNavController().popBackStack() }
         binding.back.visibility = if (resources.getBoolean(R.bool.isTablet)) View.INVISIBLE else View.VISIBLE
+
+        viewModel.uploadFinishedEvent.observe(viewLifecycleOwner, {
+            it.consume { url ->
+                val clipboard =
+                    requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clip = ClipData.newPlainText("Logs url", url)
+                clipboard.setPrimaryClip(clip)
+
+                val activity = requireActivity() as MainActivity
+                activity.showSnackBar(R.string.logs_url_copied_to_clipboard)
+
+                AppUtils.shareUploadedLogsUrl(activity, url)
+            }
+        })
 
         viewModel.setNightModeEvent.observe(viewLifecycleOwner, {
             it.consume { value ->
