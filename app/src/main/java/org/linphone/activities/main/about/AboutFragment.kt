@@ -26,10 +26,8 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
-import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.fragments.SecureFragment
 import org.linphone.databinding.AboutFragmentBinding
-import org.linphone.utils.AppUtils
 
 class AboutFragment : SecureFragment<AboutFragmentBinding>() {
     private lateinit var viewModel: AboutViewModel
@@ -61,19 +59,5 @@ class AboutFragment : SecureFragment<AboutFragmentBinding>() {
             )
             startActivity(browserIntent)
         }
-
-        viewModel.uploadFinishedEvent.observe(viewLifecycleOwner, {
-            it.consume { url ->
-                val clipboard =
-                    requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clip = ClipData.newPlainText("Logs url", url)
-                clipboard.setPrimaryClip(clip)
-
-                val activity = requireActivity() as MainActivity
-                activity.showSnackBar(R.string.logs_url_copied_to_clipboard)
-
-                AppUtils.shareUploadedLogsUrl(activity, url)
-            }
-        })
     }
 }

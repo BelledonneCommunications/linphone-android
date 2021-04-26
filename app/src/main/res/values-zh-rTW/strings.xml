@@ -382,9 +382,13 @@
     <string name="advanced_settings_device_name_summary">更改將在下一啟動時應用</string>
     <string name="advanced_settings_remote_provisioning_url_title">遠程配置網址</string>
     <string name="advanced_settings_logs_server_url_title">日誌上傳伺服器網址</string>
-    <string name="android_settings_codecs_title">安卓</string>
+    <string name="advanced_settings_android_title">安卓</string>
     <string name="advanced_settings_go_to_power_manager_settings">電源管理設置</string>
     <string name="advanced_settings_go_to_android_app_settings">安卓應用設置</string>
+    <string name="advanced_settings_send_debug_logs_title">發送日誌</string>
+    <string name="advanced_settings_send_debug_logs_summary"></string>
+    <string name="advanced_settings_reset_debug_logs_title">重啓日誌</string>
+    <string name="advanced_settings_reset_debug_logs_summary"></string>
     <string name="tunnel_settings_hostname_url_title">主機名</string>
     <string name="tunnel_settings_port_title">端口</string>
     <string name="tunnel_settings_dual_mode_title">啟用雙模式</string>
