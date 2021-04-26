@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <ImageView
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:background="@drawable/background_round_primary_color"
-        android:contentDescription="@string/content_description_go_back_to_call"
-        android:adjustViewBounds="true"
-        android:padding="10dp"
-        android:src="@drawable/call_back" />
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="visibility"
+            type="Boolean" />
+    </data>
 
-</RelativeLayout>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="@{visibility ? View.VISIBLE : View.GONE}">
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/background_round_primary_color"
+            android:contentDescription="@string/content_description_go_back_to_call"
+            android:adjustViewBounds="true"
+            android:padding="10dp"
+            android:src="@drawable/call_back" />
+
+    </RelativeLayout>
+
+</layout>
