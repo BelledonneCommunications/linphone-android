@@ -86,7 +86,10 @@ class CallActivity : ProximitySensorActivity() {
                     previewY = v.y - event.rawY
                 }
                 MotionEvent.ACTION_MOVE -> {
-                    v.animate().x(event.rawX + previewX).y(event.rawY + previewY).setDuration(0)
+                    v.animate()
+                        .x(event.rawX + previewX)
+                        .y(event.rawY + previewY)
+                        .setDuration(0)
                         .start()
                 }
                 else -> {

@@ -10,6 +10,9 @@
         <variable
             name="viewModel"
             type="org.linphone.activities.main.viewmodels.SharedMainViewModel" />
+        <variable
+            name="callOverlayViewModel"
+            type="org.linphone.activities.main.viewmodels.CallOverlayViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -35,7 +38,10 @@
                 android:layout_height="match_parent"
                 android:layout_below="@id/status_fragment">
 
-                <include android:id="@+id/content" layout="@layout/main_activity_content" />
+                <include
+                    android:id="@+id/content"
+                    layout="@layout/main_activity_content"
+                    tools:callOverlayViewModel="@{callOverlayViewModel}"/>
 
                 <!-- Side Menu -->
                 <RelativeLayout
