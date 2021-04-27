@@ -5,9 +5,6 @@
     <data>
         <import type="android.view.View" />
         <variable
-            name="goBackToCallClickListener"
-            type="android.view.View.OnClickListener" />
-        <variable
             name="viewModel"
             type="org.linphone.activities.main.viewmodels.SharedMainViewModel" />
         <variable

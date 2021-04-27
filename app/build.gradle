@@ -155,6 +155,18 @@ android {
         releaseAppBundle {
             initWith release
             ndk.debugSymbolLevel = 'FULL'
+
+            if (crashlyticsEnabled()) {
+                resValue "bool", "crashlytics_enabled", "true"
+
+                firebaseCrashlytics {
+                    nativeSymbolUploadEnabled true
+                    strippedNativeLibsDir file(LinphoneSdkBuildDir + '/libs/').toString()
+                    unstrippedNativeLibsDir file(LinphoneSdkBuildDir + '/libs-debug/').toString()
+                }
+            } else {
+                resValue "bool", "crashlytics_enabled", "false"
+            }
         }
 
         debug {
@@ -293,5 +305,8 @@ if (crashlyticsEnabled()) {
     afterEvaluate {
         assembleDebug.finalizedBy(uploadCrashlyticsSymbolFileDebug)
         packageDebugBundle.finalizedBy(uploadCrashlyticsSymbolFileDebug)
+
+        assembleReleaseAppBundle.finalizedBy(uploadCrashlyticsSymbolFileReleaseAppBundle)
+        packageReleaseAppBundleBundle.finalizedBy(uploadCrashlyticsSymbolFileReleaseAppBundle)
     }
 }
