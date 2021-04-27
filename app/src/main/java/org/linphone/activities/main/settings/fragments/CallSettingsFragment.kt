@@ -50,7 +50,7 @@ class CallSettingsFragment : GenericFragment<SettingsCallFragmentBinding>() {
         binding.setBackClickListener { findNavController().popBackStack() }
         binding.back.visibility = if (resources.getBoolean(R.bool.isTablet)) View.INVISIBLE else View.VISIBLE
 
-        viewModel.overlayEnabledEvent.observe(viewLifecycleOwner, {
+        viewModel.systemWideOverlayEnabledEvent.observe(viewLifecycleOwner, {
             it.consume {
                 if (!Compatibility.canDrawOverlay(requireContext())) {
                     val intent = Intent("android.settings.action.MANAGE_OVERLAY_PERMISSION", Uri.parse("package:${requireContext().packageName}"))
@@ -81,7 +81,7 @@ class CallSettingsFragment : GenericFragment<SettingsCallFragmentBinding>() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (!Compatibility.canDrawOverlay(requireContext())) {
-            viewModel.overlayListener.onBoolValueChanged(false)
+            viewModel.systemWideOverlayListener.onBoolValueChanged(false)
         }
     }
 }

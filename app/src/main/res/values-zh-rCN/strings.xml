@@ -71,7 +71,7 @@
     <string name="video_settings_preferred_fps_title">每秒帧数（FPS）偏好设置</string>
     <string name="call_settings_encryption_title">媒体加密</string>
     <string name="call_settings_overlay_title">重叠来电通知</string>
-    <string name="call_settings_overlay_summary">系统将要求您授予重叠权限</string>
+    <string name="call_settings_system_wide_overlay_summary">系统将要求您授予重叠权限</string>
     <string name="call_settings_sipinfo_dtmf_title">发送带外DTMFs（SIP INFO）</string>
     <string name="call_settings_rfc2833_dtmf_title">发送带内DTMFs（RFC 2833）</string>
     <string name="call_settings_auto_answer_delay_summary">毫秒</string>

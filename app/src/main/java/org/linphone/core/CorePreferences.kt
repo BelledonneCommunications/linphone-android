@@ -239,10 +239,18 @@ class CorePreferences constructor(private val context: Context) {
             config.setInt("app", "auto_answer_delay", value)
         }
 
+    // Show overlay inside of application
     var showCallOverlay: Boolean
-        get() = config.getBool("app", "call_overlay", false)
+        get() = config.getBool("app", "call_overlay", true)
         set(value) {
             config.setBool("app", "call_overlay", value)
+        }
+
+    // Show overlay even when app is in background, requires permission
+    var systemWideCallOverlay: Boolean
+        get() = config.getBool("app", "system_wide_call_overlay", false)
+        set(value) {
+            config.setBool("app", "system_wide_call_overlay", value)
         }
 
     var callRightAway: Boolean

@@ -49,7 +49,7 @@ This version is a full rewrite of the app in kotlin, using modern Android compon
 
 ### Removed
 
-- "back-to-call" button from dialer & chat views, use notification or overlay (see call settings)
+- "back-to-call" button from dialer & chat views, use notification or overlay (see call settings for in-app/system-wide overlay)
 - Don't ask for "Do not disturb settings" permission anymore
 - Previous translations, starting again from scratch using Weblate instead of Transifex
 

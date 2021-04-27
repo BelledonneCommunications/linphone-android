@@ -293,7 +293,7 @@
     <string name="call_settings_media_encryption_srtp">SRTP 安全實時傳輸協議</string>
     <string name="call_settings_media_encryption_zrtp">ZRTP 密鑰</string>
     <string name="call_settings_media_encryption_dtls">DTLS 數據包傳輸層安全性協議</string>
-    <string name="call_settings_overlay_summary">系統將要求您授予重疊權限</string>
+    <string name="call_settings_system_wide_overlay_summary">系統將要求您授予重疊權限</string>
     <string name="call_settings_rfc2833_dtmf_title">發送帶内DTMFs（RFC 2833）</string>
     <string name="call_settings_auto_start_title">立即開始通話</string>
     <string name="call_settings_auto_start_summary">如果從其他應用程序開始，則通話將自動開始</string>
