@@ -460,7 +460,7 @@
     <string name="call_settings_media_encryption_dtls">DTLS</string>
     <string name="call_settings_encryption_mandatory_title">La encriptación de los medios es obligatoria</string>
     <string name="call_settings_overlay_title">Notificación de llamada superpuesta</string>
-    <string name="call_settings_overlay_summary">Se le pedirá que conceda el permiso de superposición</string>
+    <string name="call_settings_system_wide_overlay_summary">Se le pedirá que conceda el permiso de superposición</string>
     <string name="call_settings_rfc2833_dtmf_title">Enviar DTMF en banda (RFC 2833)</string>
     <string name="call_settings_auto_start_title">Comienza la llamada inmediatamente</string>
     <string name="call_settings_auto_answer_title">Respuesta automática a las llamadas entrantes</string>

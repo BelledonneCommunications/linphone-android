@@ -48,7 +48,9 @@ class CallOverlayViewModel : ViewModel() {
     }
 
     init {
-        displayCallOverlay.value = coreContext.core.callsNb > 0
+        displayCallOverlay.value = corePreferences.showCallOverlay &&
+                !corePreferences.systemWideCallOverlay &&
+                coreContext.core.callsNb > 0
 
         coreContext.core.addListener(listener)
     }
@@ -60,8 +62,8 @@ class CallOverlayViewModel : ViewModel() {
     }
 
     private fun createCallOverlay() {
-        // If system-wide call overlay is enabled or if already visible, abort
-        if (corePreferences.showCallOverlay) {
+        // If overlay is disabled or if system-wide call overlay is enabled, abort
+        if (!corePreferences.showCallOverlay || corePreferences.systemWideCallOverlay) {
             return
         }
 

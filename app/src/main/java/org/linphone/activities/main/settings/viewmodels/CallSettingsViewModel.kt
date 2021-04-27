@@ -68,14 +68,21 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
 
     val overlayListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
-            if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
-                if (newValue) overlayEnabledEvent.value = Event(true)
-            }
             prefs.showCallOverlay = newValue
         }
     }
     val overlay = MutableLiveData<Boolean>()
-    val overlayEnabledEvent = MutableLiveData<Event<Boolean>>()
+
+    val systemWideOverlayListener = object : SettingListenerStub() {
+        override fun onBoolValueChanged(newValue: Boolean) {
+            if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
+                if (newValue) systemWideOverlayEnabledEvent.value = Event(true)
+            }
+            prefs.systemWideCallOverlay = newValue
+        }
+    }
+    val systemWideOverlay = MutableLiveData<Boolean>()
+    val systemWideOverlayEnabledEvent = MutableLiveData<Event<Boolean>>()
 
     val sipInfoDtmfListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
@@ -162,6 +169,7 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
 
         fullScreen.value = prefs.fullScreenCallUI
         overlay.value = prefs.showCallOverlay
+        systemWideOverlay.value = prefs.systemWideCallOverlay
         sipInfoDtmf.value = core.useInfoForDtmf
         rfc2833Dtmf.value = core.useRfc2833ForDtmf
         autoStart.value = prefs.callRightAway
