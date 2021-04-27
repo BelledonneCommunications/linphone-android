@@ -517,7 +517,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
     }
 
     fun createCallOverlay() {
-        if (!corePreferences.showCallOverlay || callOverlay != null) {
+        if (!corePreferences.showCallOverlay || !corePreferences.systemWideCallOverlay || callOverlay != null) {
             return
         }
 

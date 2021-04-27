@@ -37,8 +37,7 @@
 
                 <include
                     android:id="@+id/content"
-                    layout="@layout/main_activity_content"
-                    tools:callOverlayViewModel="@{callOverlayViewModel}"/>
+                    layout="@layout/main_activity_content"/>
 
                 <!-- Side Menu -->
                 <RelativeLayout
@@ -57,6 +56,15 @@
                 </RelativeLayout>
 
             </androidx.drawerlayout.widget.DrawerLayout>
+
+            <include
+                android:id="@+id/call_overlay"
+                layout="@layout/call_overlay"
+                android:layout_width="@dimen/call_overlay_size"
+                android:layout_height="@dimen/call_overlay_size"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                tools:visibility="@{callOverlayViewModel.displayCallOverlay}"/>
 
         </RelativeLayout>
 
