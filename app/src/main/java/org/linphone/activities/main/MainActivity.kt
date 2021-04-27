@@ -46,7 +46,6 @@ import org.linphone.R
 import org.linphone.activities.GenericActivity
 import org.linphone.activities.SnackBarActivity
 import org.linphone.activities.assistant.AssistantActivity
-import org.linphone.activities.call.CallActivity
 import org.linphone.activities.main.viewmodels.CallOverlayViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.navigateToDialer
@@ -109,12 +108,6 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                 showSnackBar(messageResourceId)
             }
         })
-
-        binding.setGoBackToCallClickListener {
-            val intent = Intent(this, CallActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-            startActivity(intent)
-        }
 
         if (coreContext.core.accountList.isEmpty()) {
             if (corePreferences.firstStart) {
