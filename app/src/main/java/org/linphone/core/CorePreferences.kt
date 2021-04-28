@@ -124,17 +124,11 @@ class CorePreferences constructor(private val context: Context) {
 
     /* Audio */
 
-    val echoCancellerCalibration: Int
-        get() = config.getInt("sound", "ec_delay", -1)
-
     /* Video */
 
     var videoPreview: Boolean
         get() = config.getBool("app", "video_preview", false)
         set(value) = config.setBool("app", "video_preview", value)
-
-    val hideStaticImageCamera: Boolean
-        get() = config.getBool("app", "hide_static_image_camera", true)
 
     /* Chat */
 
@@ -326,19 +320,65 @@ class CorePreferences constructor(private val context: Context) {
             config.setString("app", "default_avatar_path", value)
         }
 
-    /* Read only application settings, some were previously in non_localizable_custom */
+    /* *** Read only application settings, some were previously in non_localizable_custom *** */
+
+    /* UI related */
+
+    val hideContactsWithoutPresence: Boolean
+        get() = config.getBool("app", "hide_contacts_without_presence", false)
+
+    val contactOrganizationVisible: Boolean
+        get() = config.getBool("app", "display_contact_organization", true)
+
+    val showBorderOnContactAvatar: Boolean
+        get() = config.getBool("app", "show_border_on_contact_avatar", false)
+
+    val showBorderOnBigContactAvatar: Boolean
+        get() = config.getBool("app", "show_border_on_big_contact_avatar", true)
+
+    private val darkModeAllowed: Boolean
+        get() = config.getBool("app", "dark_mode_allowed", true)
+
+    /* Feature related */
+
+    val showScreenshotButton: Boolean
+        get() = config.getBool("app", "show_take_screenshot_button_in_call", false)
+
+    val dtmfKeypadVibration: Boolean
+        get() = config.getBool("app", "dtmf_keypad_vibraton", false)
+
+    val allowMultipleFilesAndTextInSameMessage: Boolean
+        get() = config.getBool("app", "allow_multiple_files_and_text_in_same_message", true)
+
+    val fetchContactsFromDefaultDirectory: Boolean
+        get() = config.getBool("app", "fetch_contacts_from_default_directory", true)
+
+    val hideStaticImageCamera: Boolean
+        get() = config.getBool("app", "hide_static_image_camera", true)
+
+    // Will disable chat feature completely
+    val disableChat: Boolean
+        get() = config.getBool("app", "disable_chat_feature", false)
+
+    // If enabled, this will cause the video to "freeze" on your correspondent screen
+    // as you won't send video packets anymore
+    val hideCameraPreviewInPipMode: Boolean
+        get() = config.getBool("app", "hide_camera_preview_in_pip_mode", false)
+
+    // This will prevent UI from showing up, except for the launcher & the foreground service notification
+    val preventInterfaceFromShowingUp: Boolean
+        get() = config.getBool("app", "keep_app_invisible", false)
+
+    /* Default values related */
+
+    val echoCancellerCalibration: Int
+        get() = config.getInt("sound", "ec_delay", -1)
 
     val defaultDomain: String
         get() = config.getString("app", "default_domain", "sip.linphone.org")!!
 
     val debugPopupCode: String
         get() = config.getString("app", "debug_popup_magic", "#1234#")!!
-
-    val fetchContactsFromDefaultDirectory: Boolean
-        get() = config.getBool("app", "fetch_contacts_from_default_directory", true)
-
-    val hideContactsWithoutPresence: Boolean
-        get() = config.getBool("app", "hide_contacts_without_presence", false)
 
     val conferenceServerUri: String
         get() = config.getString(
@@ -354,18 +394,6 @@ class CorePreferences constructor(private val context: Context) {
             "https://lime.linphone.org/lime-server/lime-server.php"
         )!!
 
-    val allowMultipleFilesAndTextInSameMessage: Boolean
-        get() = config.getBool("app", "allow_multiple_files_and_text_in_same_message", true)
-
-    val contactOrganizationVisible: Boolean
-        get() = config.getBool("app", "display_contact_organization", true)
-
-    val showBorderOnContactAvatar: Boolean
-        get() = config.getBool("app", "show_border_on_contact_avatar", false)
-
-    val showBorderOnBigContactAvatar: Boolean
-        get() = config.getBool("app", "show_border_on_big_contact_avatar", true)
-
     val checkIfUpdateAvailableUrl: String?
         get() = config.getString(
             "misc",
@@ -375,25 +403,6 @@ class CorePreferences constructor(private val context: Context) {
 
     val checkUpdateAvailableInterval: Int
         get() = config.getInt("app", "version_check_interval", 86400000)
-
-    // If enabled, this will cause the video to "freeze" on your correspondent screen
-    // as you won't send video packets anymore
-    val hideCameraPreviewInPipMode: Boolean
-        get() = config.getBool("app", "hide_camera_preview_in_pip_mode", false)
-
-    val dtmfKeypadVibration: Boolean
-        get() = config.getBool("app", "dtmf_keypad_vibraton", false)
-
-    // Will disable chat feature completely
-    val disableChat: Boolean
-        get() = config.getBool("app", "disable_chat_feature", false)
-
-    val showScreenshotButton: Boolean
-        get() = config.getBool("app", "show_take_screenshot_button_in_call", false)
-
-    // This will prevent UI from showing up, except for the launcher & the foreground service notification
-    val preventInterfaceFromShowingUp: Boolean
-        get() = config.getBool("app", "keep_app_invisible", false)
 
     /* Assistant */
 
@@ -483,11 +492,6 @@ class CorePreferences constructor(private val context: Context) {
 
     val staticPicturePath: String
         get() = context.filesDir.absolutePath + "/share/images/nowebcamcif.jpg"
-
-    /* Other stuff */
-
-    private val darkModeAllowed: Boolean
-        get() = config.getBool("app", "dark_mode_allowed", true)
 
     fun copyAssetsFromPackage() {
         copy("linphonerc_default", configPath)
