@@ -262,12 +262,12 @@ internal fun DialerFragment.navigateToConfigFileViewer() {
 
 /* Chat related */
 
-internal fun MasterChatRoomsFragment.navigateToChatRoom() {
+internal fun MasterChatRoomsFragment.navigateToChatRoom(args: Bundle) {
     if (!resources.getBoolean(R.bool.isTablet)) {
         if (findNavController().currentDestination?.id == R.id.masterChatRoomsFragment) {
             findNavController().navigate(
                 R.id.action_masterChatRoomsFragment_to_detailChatRoomFragment,
-                null,
+                args,
                 getRightToLeftAnimationNavOptions()
             )
         }
@@ -276,7 +276,7 @@ internal fun MasterChatRoomsFragment.navigateToChatRoom() {
             childFragmentManager.findFragmentById(R.id.chat_nav_container) as NavHostFragment
         navHostFragment.navController.navigate(
             R.id.action_global_detailChatRoomFragment,
-            null,
+            args,
             getRightToLeftAnimationNavOptions(R.id.emptyChatFragment, true)
         )
     }

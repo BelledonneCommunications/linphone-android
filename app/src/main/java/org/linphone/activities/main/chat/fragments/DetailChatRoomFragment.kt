@@ -108,10 +108,14 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
         val localSipUri = arguments?.getString("LocalSipUri")
         val remoteSipUri = arguments?.getString("RemoteSipUri")
+
+        val textToShare = arguments?.getString("TextToShare")
+        val filestoShare = arguments?.getStringArrayList("FilesToShare")
+
         arguments?.clear()
         if (localSipUri != null && remoteSipUri != null) {
             Log.i("[Chat Room] Found local [$localSipUri] & remote [$remoteSipUri] addresses in arguments")
-            arguments?.clear()
+
             val localAddress = Factory.instance().createAddress(localSipUri)
             val remoteSipAddress = Factory.instance().createAddress(remoteSipUri)
             sharedViewModel.selectedChatRoom.value = coreContext.core.searchChatRoom(
@@ -323,23 +327,16 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             coreContext.startCall(viewModel.addressToCall)
         }
 
-        sharedViewModel.textToShare.observe(viewLifecycleOwner, {
-            if (it.isNotEmpty()) {
-                Log.i("[Chat Room] Found text to share")
-                chatSendingViewModel.textToSend.value = it
-                sharedViewModel.textToShare.value = ""
+        if (textToShare?.isNotEmpty() == true) {
+            Log.i("[Chat Room] Found text to share")
+            chatSendingViewModel.textToSend.value = textToShare
+        }
+        if (filestoShare?.isNotEmpty() == true) {
+            for (path in filestoShare) {
+                Log.i("[Chat Room] Found $path file to share")
+                chatSendingViewModel.addAttachment(path)
             }
-        })
-
-        sharedViewModel.filesToShare.observe(viewLifecycleOwner, {
-            if (it.isNotEmpty()) {
-                for (path in it) {
-                    Log.i("[Chat Room] Found $path file to share")
-                    chatSendingViewModel.addAttachment(path)
-                }
-                sharedViewModel.filesToShare.value = arrayListOf()
-            }
-        })
+        }
 
         sharedViewModel.messageToForwardEvent.observe(viewLifecycleOwner, {
             it.consume { chatMessage ->
