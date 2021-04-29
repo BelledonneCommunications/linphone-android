@@ -287,7 +287,7 @@
     <string name="assistant_linphone_login_desc">Please enter your username and password of &appName; account</string>
     <string name="assistant_login_with_username">Use your username and password instead of your phone number</string>
     <string name="assistant_login_forgotten_password">Forgot your password?</string>
-    <string name="assistant_forgotten_password_link" translatable="false">https://linphone.org/freesip/recover</string>
+    <string name="assistant_forgotten_password_link" translatable="false">https://subscribe.linphone.org/</string>
     <string name="assistant_login">Login</string>
     <string name="assistant_finish">Finish configuration</string>
     <string name="assistant_confirmation_code">Confirmation code</string>
