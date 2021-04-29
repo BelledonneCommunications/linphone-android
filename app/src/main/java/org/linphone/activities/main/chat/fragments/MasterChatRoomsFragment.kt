@@ -162,7 +162,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
                     sharedViewModel.destructionPendingChatRoom = chatRoom
                 } else {
                     sharedViewModel.selectedChatRoom.value = chatRoom
-                    navigateToChatRoom()
+                    navigateToChatRoom(createBundleWithSharedTextAndFiles())
                 }
             }
         })
@@ -187,7 +187,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
             Log.w("[Chat] Found pending chat room from before activity was recreated")
             sharedViewModel.destructionPendingChatRoom = null
             sharedViewModel.selectedChatRoom.value = pendingDestructionChatRoom
-            navigateToChatRoom()
+            navigateToChatRoom(createBundleWithSharedTextAndFiles())
         }
 
         val localSipUri = arguments?.getString("LocalSipUri")
@@ -246,5 +246,17 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
 
     private fun scrollToTop() {
         binding.chatList.scrollToPosition(0)
+    }
+
+    private fun createBundleWithSharedTextAndFiles(): Bundle {
+        val bundle = Bundle()
+        bundle.putString("TextToShare", sharedViewModel.textToShare.value.orEmpty())
+        bundle.putStringArrayList("FilesToShare", sharedViewModel.filesToShare.value)
+
+        // Remove values from shared view model
+        sharedViewModel.textToShare.value = ""
+        sharedViewModel.filesToShare.value = arrayListOf()
+
+        return bundle
     }
 }
