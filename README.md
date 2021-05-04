@@ -130,7 +130,7 @@ If you have your own push server, replace this file by yours.
 
 We no longer use transifex for the translation process, instead we have deployed our own instance of [Weblate](https://weblate.linphone.org/).
 
-Inscriptions are currently disabled but you can [contact us](https://weblate.linphone.org/contact/) to request an access if you want to contribute.
+Due to the full app rewrite we can't re-use previous translations, so we'll be very happy if you want to contribute.
 
 # CONTRIBUTIONS
 

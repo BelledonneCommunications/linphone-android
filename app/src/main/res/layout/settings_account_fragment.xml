@@ -235,7 +235,8 @@
                     linphone:title="@{@string/account_settings_apply_prefix_for_calls_title}"
                     linphone:subtitle="@{@string/account_settings_apply_prefix_for_calls_summary}"
                     linphone:listener="@{viewModel.dialPrefixListener}"
-                    linphone:checked="@={viewModel.dialPrefix}"/>
+                    linphone:checked="@={viewModel.dialPrefix}"
+                    android:visibility="gone"/>
 
                 <include
                     layout="@layout/settings_widget_switch"
