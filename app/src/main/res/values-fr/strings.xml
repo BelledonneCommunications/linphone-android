@@ -587,4 +587,9 @@
     <string name="advanced_settings_debug_title">Paramètres de deboggage</string>
     <string name="advanced_settings_other_title">Autres paramètres</string>
     <string name="call_settings_system_wide_overlay_title">Afficher la notification flottante en dehors de l\'app</string>
+    <string name="account_settings_apply_prefix_for_calls_summary">Quand un nombre est saisi, applique le préfixe</string>
+    <string name="call_settings_full_screen_title">Plein écran pendant un appel</string>
+    <string name="call_settings_full_screen_summary">Cache la barre de status et de navigation</string>
+    <string name="chat_room_file_not_found">Fichier non trouvé</string>
+    <string name="account_settings_apply_prefix_for_calls_title">Applique le préfixe pour les appels sortant et les messages</string>
 </resources>
