@@ -76,6 +76,7 @@ class SideMenuViewModel : ViewModel() {
     }
 
     fun updateAccountsList() {
+        defaultAccountFound.value = false // Do not assume a default account will still be found
         val list = arrayListOf<AccountSettingsViewModel>()
         if (coreContext.core.accountList.isNotEmpty()) {
             val defaultAccount = coreContext.core.defaultAccount
