@@ -59,10 +59,8 @@ import org.linphone.contact.ContactsManager
 import org.linphone.core.tools.Log
 import org.linphone.mediastream.Version
 import org.linphone.notifications.NotificationsManager
-import org.linphone.utils.AppUtils
-import org.linphone.utils.AudioRouteUtils
+import org.linphone.utils.*
 import org.linphone.utils.Event
-import org.linphone.utils.LinphoneUtils
 
 class CoreContext(val context: Context, coreConfig: Config) {
     var stopped = false
@@ -239,6 +237,21 @@ class CoreContext(val context: Context, coreConfig: Config) {
             }
 
             previousCallState = state
+        }
+
+        override fun onMessageReceived(core: Core, chatRoom: ChatRoom, message: ChatMessage) {
+            if (core.maxSizeForAutoDownloadIncomingFiles != -1) {
+                var hasFile = false
+                for (content in message.contents) {
+                    if (content.isFile) {
+                        hasFile = true
+                        break
+                    }
+                }
+                if (hasFile) {
+                    exportFilesInMessageToMediaStore(message)
+                }
+            }
         }
     }
 
@@ -580,6 +593,31 @@ class CoreContext(val context: Context, coreConfig: Config) {
     }
 
     /* Coroutine related */
+
+    fun exportFilesInMessageToMediaStore(message: ChatMessage) {
+        if (message.isEphemeral) {
+            Log.w("[Context] Do not make ephemeral file(s) public")
+            return
+        }
+        if (corePreferences.vfsEnabled) {
+            Log.w("[Context] Do not make received file(s) public when VFS is enabled")
+            return
+        }
+        if (!corePreferences.makePublicMediaFilesDownloaded) {
+            Log.w("[Context] Making received files public setting disabled")
+            return
+        }
+
+        if (Version.sdkAboveOrEqual(Version.API29_ANDROID_10) || PermissionHelper.get().hasWriteExternalStorage()) {
+            for (content in message.contents) {
+                if (content.isFile && content.filePath != null && content.userData == null) {
+                    addContentToMediaStore(content)
+                }
+            }
+        } else {
+            Log.e("[Context] Can't make file public, app doesn't have WRITE_EXTERNAL_STORAGE permission")
+        }
+    }
 
     fun addContentToMediaStore(content: Content) {
         coroutineScope.launch {
