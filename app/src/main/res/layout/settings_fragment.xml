@@ -4,6 +4,7 @@
 
     <data>
         <import type="android.view.View"/>
+        <import type="android.text.InputType"/>
         <variable
             name="backClickListener"
             type="android.view.View.OnClickListener"/>
@@ -65,6 +66,33 @@
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
                 android:orientation="vertical">
+
+                <TextView
+                    style="@style/settings_category_font"
+                    android:text="@string/settings_primary_account_title"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{viewModel.accounts.empty ? View.VISIBLE : View.GONE}"/>
+
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/settings_primary_account_display_name_title}"
+                    linphone:subtitle="@{@string/settings_primary_account_display_name_summary}"
+                    linphone:listener="@{viewModel.primaryAccountDisplayNameListener}"
+                    linphone:defaultValue="@{viewModel.primaryAccountDisplayName}"
+                    linphone:inputType="@{InputType.TYPE_CLASS_TEXT}"
+                    android:visibility="@{viewModel.accounts.empty ? View.VISIBLE : View.GONE}"/>
+
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/settings_primary_account_username_title}"
+                    linphone:subtitle="@{@string/settings_primary_account_username_summary}"
+                    linphone:listener="@{viewModel.primaryAccountUsernameListener}"
+                    linphone:defaultValue="@{viewModel.primaryAccountUsername}"
+                    linphone:inputType="@{InputType.TYPE_CLASS_TEXT}"
+                    android:visibility="@{viewModel.accounts.empty ? View.VISIBLE : View.GONE}"/>
 
                 <TextView
                     style="@style/settings_category_font"
