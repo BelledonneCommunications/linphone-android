@@ -25,16 +25,13 @@ import android.text.util.Linkify
 import androidx.core.text.util.LinkifyCompat
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.contact.GenericContactData
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatMessageListenerStub
 import org.linphone.core.Content
 import org.linphone.core.tools.Log
-import org.linphone.mediastream.Version
 import org.linphone.utils.AppUtils
-import org.linphone.utils.PermissionHelper
 import org.linphone.utils.TimestampUtils
 
 class ChatMessageData(
@@ -75,17 +72,7 @@ class ChatMessageData(
                 Log.i("[Chat Message] File transfer done")
                 updateContentsList()
 
-                if (!message.isEphemeral && !corePreferences.vfsEnabled && corePreferences.makePublicMediaFilesDownloaded) {
-                    if (Version.sdkAboveOrEqual(Version.API29_ANDROID_10) || PermissionHelper.get().hasWriteExternalStorage()) {
-                        for (content in message.contents) {
-                            if (content.isFile && content.filePath != null && content.userData == null) {
-                                addContentToMediaStore(content)
-                            }
-                        }
-                    } else {
-                        Log.e("[Chat Message] Can't make file public, app doesn't have WRITE_EXTERNAL_STORAGE permission")
-                    }
-                }
+                coreContext.exportFilesInMessageToMediaStore(message)
             }
         }
 
