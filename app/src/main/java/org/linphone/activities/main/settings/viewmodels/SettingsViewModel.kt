@@ -64,8 +64,38 @@ class SettingsViewModel : ViewModel() {
 
     lateinit var advancedSettingsListener: SettingListenerStub
 
+    val primaryAccountDisplayNameListener = object : SettingListenerStub() {
+        override fun onTextValueChanged(newValue: String) {
+            val address = coreContext.core.createPrimaryContactParsed()
+            address ?: return
+            address.displayName = newValue
+            address.username = primaryAccountUsername.value
+            coreContext.core.primaryContact = address.asString()
+
+            primaryAccountDisplayName.value = newValue
+        }
+    }
+    val primaryAccountDisplayName = MutableLiveData<String>()
+
+    val primaryAccountUsernameListener = object : SettingListenerStub() {
+        override fun onTextValueChanged(newValue: String) {
+            val address = coreContext.core.createPrimaryContactParsed()
+            address ?: return
+            address.username = newValue
+            address.displayName = primaryAccountDisplayName.value
+            coreContext.core.primaryContact = address.asString()
+
+            primaryAccountUsername.value = newValue
+        }
+    }
+    val primaryAccountUsername = MutableLiveData<String>()
+
     init {
         updateAccountsList()
+
+        val address = coreContext.core.createPrimaryContactParsed()
+        primaryAccountDisplayName.value = address?.displayName ?: ""
+        primaryAccountUsername.value = address?.username ?: ""
     }
 
     override fun onCleared() {

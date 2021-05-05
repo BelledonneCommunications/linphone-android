@@ -592,4 +592,9 @@
     <string name="call_settings_full_screen_summary">Cache la barre de status et de navigation</string>
     <string name="chat_room_file_not_found">Fichier non trouvé</string>
     <string name="account_settings_apply_prefix_for_calls_title">Applique le préfixe pour les appels sortant et les messages</string>
+    <string name="settings_primary_account_title">Compte principal</string>
+    <string name="settings_primary_account_display_name_title">Nom d\'affichage</string>
+    <string name="settings_primary_account_display_name_summary"></string>
+    <string name="settings_primary_account_username_title">Nom d\'utilisateur</string>
+    <string name="settings_primary_account_username_summary"></string>
 </resources>
