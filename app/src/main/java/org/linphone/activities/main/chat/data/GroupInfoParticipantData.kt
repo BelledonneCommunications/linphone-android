@@ -35,9 +35,13 @@ class GroupInfoParticipantData(private val participant: GroupChatRoomMember) : G
 
     val showAdminControls = MutableLiveData<Boolean>()
 
+    // A participant not yet added to a group can't be set admin at the same time it's added
+    val canBeSetAdmin = MutableLiveData<Boolean>()
+
     init {
         isAdmin.value = participant.isAdmin
         showAdminControls.value = false
+        canBeSetAdmin.value = participant.canBeSetAdmin
     }
 
     fun setAdmin() {

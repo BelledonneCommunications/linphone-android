@@ -47,7 +47,7 @@
             android:src="@drawable/chat_group_delete" />
 
         <LinearLayout
-            android:visibility="@{data.showAdminControls ? View.VISIBLE : View.GONE}"
+            android:visibility="@{data.showAdminControls &amp;&amp; data.canBeSetAdmin ? View.VISIBLE : View.GONE}"
             android:id="@+id/adminLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
