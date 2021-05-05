@@ -43,6 +43,10 @@ open class StatusViewModel : ViewModel() {
         ) {
             if (account == core.defaultAccount) {
                 updateDefaultAccountRegistrationStatus(state)
+            } else if (core.accountList.isEmpty()) {
+                // Update registration status when default account is removed
+                registrationStatusText.value = getStatusIconText(state)
+                registrationStatusDrawable.value = getStatusIconResource(state)
             }
         }
 
