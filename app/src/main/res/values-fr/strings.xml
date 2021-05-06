@@ -42,8 +42,6 @@
     <string name="service_auto_start_description">&appName; a démarré automatiquement</string>
     <string name="sync_account_name">Contacts &appName;</string>
     <string name="about_privacy_policy">Consultez notre politique de confidentialité</string>
-    <string name="about_send_log">Envoyer les traces</string>
-    <string name="about_reset_log">Vider les traces</string>
     <string name="logs_url_copied_to_clipboard">Url des traces copiée dans le presse-papier</string>
     <string name="error">Erreur</string>
     <string name="phone_number">Numéro de téléphone</string>
@@ -597,4 +595,6 @@
     <string name="settings_primary_account_display_name_summary"></string>
     <string name="settings_primary_account_username_title">Nom d\'utilisateur</string>
     <string name="settings_primary_account_username_summary"></string>
+    <string name="logs_upload_failure">Erreur pendant l\'envoi des journaux !</string>
+    <string name="logs_reset_complete">Les journaux ont été néttoyés</string>
 </resources>
