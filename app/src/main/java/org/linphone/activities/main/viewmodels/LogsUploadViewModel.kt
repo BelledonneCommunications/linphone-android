@@ -30,8 +30,16 @@ import org.linphone.utils.Event
 open class LogsUploadViewModel : ViewModel() {
     val uploadInProgress = MutableLiveData<Boolean>()
 
+    val resetCompleteEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     val uploadFinishedEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
+    }
+
+    val uploadErrorEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
     }
 
     private val listener = object : CoreListenerStub() {
@@ -45,6 +53,7 @@ open class LogsUploadViewModel : ViewModel() {
                 uploadFinishedEvent.value = Event(info)
             } else if (state == Core.LogCollectionUploadState.NotDelivered) {
                 uploadInProgress.value = false
+                uploadErrorEvent.value = Event(true)
             }
         }
     }
@@ -67,5 +76,6 @@ open class LogsUploadViewModel : ViewModel() {
 
     fun resetLogs() {
         coreContext.core.resetLogCollection()
+        resetCompleteEvent.value = Event(true)
     }
 }

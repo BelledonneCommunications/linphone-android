@@ -68,6 +68,20 @@ class AdvancedSettingsFragment : GenericFragment<SettingsAdvancedFragmentBinding
             }
         })
 
+        viewModel.uploadErrorEvent.observe(viewLifecycleOwner, {
+            it.consume {
+                val activity = requireActivity() as MainActivity
+                activity.showSnackBar(R.string.logs_upload_failure)
+            }
+        })
+
+        viewModel.resetCompleteEvent.observe(viewLifecycleOwner, {
+            it.consume {
+                val activity = requireActivity() as MainActivity
+                activity.showSnackBar(R.string.logs_reset_complete)
+            }
+        })
+
         viewModel.setNightModeEvent.observe(viewLifecycleOwner, {
             it.consume { value ->
                 AppCompatDelegate.setDefaultNightMode(
