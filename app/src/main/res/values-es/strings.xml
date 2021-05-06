@@ -9,8 +9,6 @@
     <string name="service_description">Esto es necesario para recibir llamadas en segundo plano</string>
     <string name="sync_account_name">&appName; contactos</string>
     <string name="about_privacy_policy">Visite nuestra política de privacidad</string>
-    <string name="about_send_log">Enviar registros</string>
-    <string name="about_reset_log">Restablecer registros</string>
     <string name="error">Error</string>
     <string name="phone_number">Número de teléfono</string>
     <string name="phone_numbers">Números de teléfonos</string>

@@ -20,8 +20,10 @@
     <string name="about_liblinphone_sdk_version" translatable="false">&appName; SDK %s</string>
     <string name="about_privacy_policy">Visit our privacy policy</string>
     <string name="about_text" translatable="false">GNU General Public License V3\n © 2010–2020 Belledonne Communications</string>
-    <string name="about_send_log">Send logs</string>
-    <string name="about_reset_log">Reset logs</string>
+
+    <!-- Logs -->
+    <string name="logs_upload_failure">Failed to upload logs!</string>
+    <string name="logs_reset_complete">Logs have been cleared</string>
     <string name="logs_url_copied_to_clipboard">Logs url copied into clipboard</string>
     <string name="about_bugreport_email" translatable="false">linphone-android@belledonne-communications.com</string>
 

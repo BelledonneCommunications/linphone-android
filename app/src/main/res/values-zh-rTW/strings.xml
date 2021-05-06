@@ -7,8 +7,6 @@
     <string name="service_description">若要在後台可接聽電話，這是必選項</string>
     <string name="sync_account_name">&appName;聯絡人</string>
     <string name="about_privacy_policy">訪問我們的隱私政策</string>
-    <string name="about_send_log">發送日誌</string>
-    <string name="about_reset_log">重啓日誌</string>
     <string name="logs_url_copied_to_clipboard">日誌網址複製到剪貼板</string>
     <string name="error">錯誤</string>
     <string name="phone_number">電話號碼</string>

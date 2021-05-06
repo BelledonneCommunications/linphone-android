@@ -18,8 +18,6 @@
     <string name="about_liblinphone_sdk_version"></string>
     <string name="about_privacy_policy">Bekijk onze privacyverklaring</string>
     <string name="about_text"></string>
-    <string name="about_send_log">Verstuur logs</string>
-    <string name="about_reset_log">Logs wissen</string>
     <string name="logs_url_copied_to_clipboard">Logs url gekopieerd naar klembord</string>
     <string name="about_bugreport_email"></string>
     <string name="error">Fout</string>
