@@ -42,7 +42,7 @@
     <string name="service_auto_start_description">&appName; a démarré automatiquement</string>
     <string name="sync_account_name">Contacts &appName;</string>
     <string name="about_privacy_policy">Consultez notre politique de confidentialité</string>
-    <string name="logs_url_copied_to_clipboard">Url des traces copiée dans le presse-papier</string>
+    <string name="logs_url_copied_to_clipboard">URL des traces copiée dans le presse-papier</string>
     <string name="error">Erreur</string>
     <string name="phone_number">Numéro de téléphone</string>
     <string name="phone_numbers">Numéros de téléphone</string>
