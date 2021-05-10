@@ -42,9 +42,7 @@
     <string name="service_auto_start_description">&appName; a démarré automatiquement</string>
     <string name="sync_account_name">Contacts &appName;</string>
     <string name="about_privacy_policy">Consultez notre politique de confidentialité</string>
-    <string name="about_send_log">Envoyer les traces</string>
-    <string name="about_reset_log">Vider les traces</string>
-    <string name="logs_url_copied_to_clipboard">Url des traces copiée dans le presse-papier</string>
+    <string name="logs_url_copied_to_clipboard">URL des traces copiée dans le presse-papier</string>
     <string name="error">Erreur</string>
     <string name="phone_number">Numéro de téléphone</string>
     <string name="phone_numbers">Numéros de téléphone</string>
@@ -587,4 +585,16 @@
     <string name="advanced_settings_debug_title">Paramètres de deboggage</string>
     <string name="advanced_settings_other_title">Autres paramètres</string>
     <string name="call_settings_system_wide_overlay_title">Afficher la notification flottante en dehors de l\'app</string>
+    <string name="account_settings_apply_prefix_for_calls_summary">Quand un nombre est saisi, applique le préfixe</string>
+    <string name="call_settings_full_screen_title">Plein écran pendant un appel</string>
+    <string name="call_settings_full_screen_summary">Cache la barre de status et de navigation</string>
+    <string name="chat_room_file_not_found">Fichier non trouvé</string>
+    <string name="account_settings_apply_prefix_for_calls_title">Applique le préfixe pour les appels sortant et les messages</string>
+    <string name="settings_primary_account_title">Compte principal</string>
+    <string name="settings_primary_account_display_name_title">Nom d\'affichage</string>
+    <string name="settings_primary_account_display_name_summary"></string>
+    <string name="settings_primary_account_username_title">Nom d\'utilisateur</string>
+    <string name="settings_primary_account_username_summary"></string>
+    <string name="logs_upload_failure">Erreur pendant l\'envoi des journaux !</string>
+    <string name="logs_reset_complete">Les journaux ont été néttoyés</string>
 </resources>

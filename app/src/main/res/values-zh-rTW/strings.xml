@@ -7,8 +7,6 @@
     <string name="service_description">若要在後台可接聽電話，這是必選項</string>
     <string name="sync_account_name">&appName;聯絡人</string>
     <string name="about_privacy_policy">訪問我們的隱私政策</string>
-    <string name="about_send_log">發送日誌</string>
-    <string name="about_reset_log">重啓日誌</string>
     <string name="logs_url_copied_to_clipboard">日誌網址複製到剪貼板</string>
     <string name="error">錯誤</string>
     <string name="phone_number">電話號碼</string>
@@ -558,4 +556,8 @@
     <string name="content_description_call_security_pending">通話安全性待定</string>
     <string name="content_description_toggle_call_stats">顯示後隱藏通話統計</string>
     <string name="content_description_chat_message_video_attachment">視頻附件</string>
+    <string name="settings_primary_account_display_name_title">顯示名</string>
+    <string name="settings_primary_account_display_name_summary"></string>
+    <string name="settings_primary_account_username_title">用戶名</string>
+    <string name="settings_primary_account_username_summary"></string>
 </resources>

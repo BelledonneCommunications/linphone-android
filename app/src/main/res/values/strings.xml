@@ -20,9 +20,11 @@
     <string name="about_liblinphone_sdk_version" translatable="false">&appName; SDK %s</string>
     <string name="about_privacy_policy">Visit our privacy policy</string>
     <string name="about_text" translatable="false">GNU General Public License V3\n © 2010–2020 Belledonne Communications</string>
-    <string name="about_send_log">Send logs</string>
-    <string name="about_reset_log">Reset logs</string>
-    <string name="logs_url_copied_to_clipboard">Logs url copied into clipboard</string>
+
+    <!-- Logs -->
+    <string name="logs_upload_failure">Failed to upload logs!</string>
+    <string name="logs_reset_complete">Logs have been cleared</string>
+    <string name="logs_url_copied_to_clipboard">Logs URL copied into clipboard</string>
     <string name="about_bugreport_email" translatable="false">linphone-android@belledonne-communications.com</string>
 
     <!-- Common -->
@@ -93,7 +95,7 @@
     <string name="contact_invite_friend">Invite</string>
     <string name="no_contact">No contact in your address book.</string>
     <string name="no_sip_contact">No SIP contact in your address book.</string>
-    <string name="contact_filter_hint">Search a contact</string>
+    <string name="contact_filter_hint">Search contacts</string>
     <string name="contact_send_sms_invite_text">Hello, join me on &appName;! You can download it for free at %s</string>
     <string name="contact_send_sms_invite_download_link" translatable="false">https://linphone.org/download</string>
     <string name="contact_last_name">Last name</string>
@@ -116,7 +118,7 @@
     <string name="debug_popup_enable_logs">Enable logs</string>
     <string name="debug_popup_disable_logs">Disable logs</string>
     <string name="debug_popup_send_logs">Send logs</string>
-    <string name="debug_popup_show_config_file">Show config file</string>
+    <string name="debug_popup_show_config_file">View config file</string>
     <string-array name="popup_send_log" translatable="false">
         <item>@string/debug_popup_disable_logs</item>
         <item>@string/debug_popup_send_logs</item>
@@ -276,7 +278,7 @@
     <string name="assistant_error_phone_number_already_exists">There is already an account using this number</string>
     <string name="assistant_error_username_invalid_characters">Invalid characters found</string>
     <string name="assistant_error_passwords_dont_match">Passwords do not match</string>
-    <string name="assistant_error_invalid_email_address">Email address isn\t valid</string>
+    <string name="assistant_error_invalid_email_address">Email address is not valid</string>
     <string name="assistant_error_username_too_long">Username has too many characters</string>
     <string name="assistant_error_account_not_activated">Your account has not been validated yet</string>
     <string name="assistant_error_invalid_credentials">Account does not exist or password does not match</string>
@@ -300,12 +302,12 @@
     <string name="assistant_password_hash_algorithm">Hash algorithm</string>
 
     <!-- Assistant create -->
-    <string name="assistant_create_account_part_email">Please enter an username, email and password for your &appName; account</string>
+    <string name="assistant_create_account_part_email">Please enter a username, email and password for your &appName; account</string>
     <string name="assistant_confirm_password">Password confirmation</string>
     <string name="assistant_validate_account_1">Your account is created. Please check your mails to validate your account:</string>
     <string name="assistant_validate_account_2">Once it is done, come back here and click on the button.</string>
     <string name="assistant_use_username_instead_or_phone_number">Use a username (optional)</string>
-    <string name="assistant_create_account_part_2">We have sent you a SMS with a validation code to your phone number:</string>
+    <string name="assistant_create_account_part_2">We have sent you an SMS with a validation code to your phone number:</string>
     <string name="assistant_create_account_part_3">To complete your phone number verification, please enter the 4 digit code below:\n</string>
     <string name="assistant_link_phone_number">You will link with your phone number the following username:</string>
     <string name="assistant_link_phone_number_skip">Skip</string>
@@ -334,6 +336,11 @@
     <string name="settings_network_title">Network</string>
     <string name="settings_contacts_title">Contacts</string>
     <string name="settings_advanced_title">Advanced</string>
+    <string name="settings_primary_account_title">Primary Account</string>
+    <string name="settings_primary_account_display_name_title">Display Name</string>
+    <string name="settings_primary_account_display_name_summary"></string>
+    <string name="settings_primary_account_username_title">Username</string>
+    <string name="settings_primary_account_username_summary"></string>
 
     <!-- Audio settings -->
     <string name="audio_settings_echo_cancellation_title">Echo cancellation</string>

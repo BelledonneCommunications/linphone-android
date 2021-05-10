@@ -336,8 +336,6 @@
     <string name="service_description">若要在后台可接听电话这是必要的</string>
     <string name="sync_account_name">&appName; 联系人</string>
     <string name="about_privacy_policy">查看我们的隐私策略</string>
-    <string name="about_send_log">发送日志</string>
-    <string name="about_reset_log">重启日志</string>
     <string name="logs_url_copied_to_clipboard">日志链接已复制到剪贴板</string>
     <string name="error">出错</string>
     <string name="phone_number">电话号码</string>
@@ -569,4 +567,8 @@
     <string name="advanced_settings_send_debug_logs_summary"></string>
     <string name="advanced_settings_reset_debug_logs_title">重启日志</string>
     <string name="advanced_settings_reset_debug_logs_summary"></string>
+    <string name="settings_primary_account_display_name_title">显示名</string>
+    <string name="settings_primary_account_display_name_summary"></string>
+    <string name="settings_primary_account_username_title">用户名</string>
+    <string name="settings_primary_account_username_summary"></string>
 </resources>
