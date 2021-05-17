@@ -173,6 +173,14 @@
 
                 <include
                     layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/call_settings_redirect_to_voice_mail_declined_calls_title}"
+                    linphone:subtitle="@{@string/call_settings_redirect_to_voice_mail_declined_calls_summary}"
+                    linphone:listener="@{viewModel.redirectToVoiceMailIncomingDeclinedCallsListener}"
+                    linphone:checked="@={viewModel.redirectToVoiceMailIncomingDeclinedCalls}"
+                    linphone:enabled="@{viewModel.voiceMailUri.length() > 0}"/>
+
+                <include
+                    layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/call_settings_accept_early_media_title}"
                     linphone:subtitle="@{@string/call_settings_accept_early_media_summary}"
                     linphone:listener="@{viewModel.acceptEarlyMediaListener}"

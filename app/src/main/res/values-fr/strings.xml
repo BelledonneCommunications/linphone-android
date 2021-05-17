@@ -597,4 +597,5 @@
     <string name="settings_primary_account_username_summary"></string>
     <string name="logs_upload_failure">Erreur pendant l\'envoi des journaux !</string>
     <string name="logs_reset_complete">Les journaux ont été néttoyés</string>
+    <string name="call_settings_redirect_to_voice_mail_declined_calls_title">Rediriger les appels déclinés vers la boîte vocale</string>
 </resources>
