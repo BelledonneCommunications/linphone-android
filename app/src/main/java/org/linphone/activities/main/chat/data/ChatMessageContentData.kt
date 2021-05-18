@@ -39,6 +39,8 @@ class ChatMessageContentData(
     val isVideo = MutableLiveData<Boolean>()
     val isAudio = MutableLiveData<Boolean>()
     val videoPreview = MutableLiveData<Bitmap>()
+    val isPdf = MutableLiveData<Boolean>()
+    val isGenericFile = MutableLiveData<Boolean>()
 
     val fileName = MutableLiveData<String>()
 
@@ -108,6 +110,7 @@ class ChatMessageContentData(
                 isImage.value = FileUtils.isExtensionImage(path)
                 isVideo.value = FileUtils.isExtensionVideo(path)
                 isAudio.value = FileUtils.isExtensionAudio(path)
+                isPdf.value = FileUtils.isExtensionPdf(path)
 
                 if (isVideo.value == true) {
                     scope.launch {
@@ -121,14 +124,17 @@ class ChatMessageContentData(
                 isImage.value = false
                 isVideo.value = false
                 isAudio.value = false
+                isPdf.value = false
             }
         } else {
             downloadable.value = true
-            isImage.value = false
-            isVideo.value = false
-            isAudio.value = false
+            isImage.value = FileUtils.isExtensionImage(fileName.value!!)
+            isVideo.value = FileUtils.isExtensionVideo(fileName.value!!)
+            isAudio.value = FileUtils.isExtensionAudio(fileName.value!!)
+            isPdf.value = FileUtils.isExtensionPdf(fileName.value!!)
         }
 
+        isGenericFile.value = !isPdf.value!! && !isAudio.value!! && !isVideo.value!! && !isImage.value!!
         downloadEnabled.value = !chatMessage.isFileTransferInProgress
         downloadProgress.value = 0
         chatMessage.addListener(chatMessageListener)
