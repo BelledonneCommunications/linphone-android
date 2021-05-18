@@ -22,6 +22,7 @@ package org.linphone.activities.main.chat.data
 import android.graphics.Bitmap
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.*
+import org.linphone.R
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatMessageListenerStub
 import org.linphone.core.Content
@@ -39,18 +40,17 @@ class ChatMessageContentData(
     val isVideo = MutableLiveData<Boolean>()
     val isAudio = MutableLiveData<Boolean>()
     val videoPreview = MutableLiveData<Bitmap>()
+    val isPdf = MutableLiveData<Boolean>()
+    val isGenericFile = MutableLiveData<Boolean>()
 
     val fileName = MutableLiveData<String>()
-
     val filePath = MutableLiveData<String>()
-
     val fileSize = MutableLiveData<String>()
 
     val downloadable = MutableLiveData<Boolean>()
-
     val downloadEnabled = MutableLiveData<Boolean>()
-
     val downloadProgress = MutableLiveData<Int>()
+    val downloadLabel = MutableLiveData<String>()
 
     val isAlone: Boolean
         get() {
@@ -97,6 +97,7 @@ class ChatMessageContentData(
             content.name
         }
         fileSize.value = AppUtils.bytesToDisplayableSize(content.fileSize.toLong())
+        downloadLabel.value = "${AppUtils.getString(R.string.chat_message_download_file)} (${fileSize.value})"
 
         if (content.isFile || (content.isFileTransfer && chatMessage.isOutgoing)) {
             val path = if (content.isFileEncrypted) content.plainFilePath else content.filePath ?: ""
@@ -108,6 +109,7 @@ class ChatMessageContentData(
                 isImage.value = FileUtils.isExtensionImage(path)
                 isVideo.value = FileUtils.isExtensionVideo(path)
                 isAudio.value = FileUtils.isExtensionAudio(path)
+                isPdf.value = FileUtils.isExtensionPdf(path)
 
                 if (isVideo.value == true) {
                     scope.launch {
@@ -121,14 +123,17 @@ class ChatMessageContentData(
                 isImage.value = false
                 isVideo.value = false
                 isAudio.value = false
+                isPdf.value = false
             }
         } else {
             downloadable.value = true
-            isImage.value = false
-            isVideo.value = false
-            isAudio.value = false
+            isImage.value = FileUtils.isExtensionImage(fileName.value!!)
+            isVideo.value = FileUtils.isExtensionVideo(fileName.value!!)
+            isAudio.value = FileUtils.isExtensionAudio(fileName.value!!)
+            isPdf.value = FileUtils.isExtensionPdf(fileName.value!!)
         }
 
+        isGenericFile.value = !isPdf.value!! && !isAudio.value!! && !isVideo.value!! && !isImage.value!!
         downloadEnabled.value = !chatMessage.isFileTransferInProgress
         downloadProgress.value = 0
         chatMessage.addListener(chatMessageListener)

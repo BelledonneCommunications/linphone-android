@@ -92,6 +92,7 @@ fun ImageView.setImageMaxHeight(dimension: Float) {
 
 @BindingAdapter("android:layout_size")
 fun View.setLayoutSize(dimension: Float) {
+    if (dimension == 0f) return
     this.layoutParams.height = dimension.toInt()
     this.layoutParams.width = dimension.toInt()
 }
@@ -302,6 +303,11 @@ fun <T> setEntries(
     parent: Any?
 ) {
     setEntries(viewGroup, entries, layoutId, null, parent)
+}
+
+@BindingAdapter("android:scaleType")
+fun setImageViewScaleType(imageView: ImageView, scaleType: ImageView.ScaleType) {
+    imageView.scaleType = scaleType
 }
 
 @BindingAdapter("glideAvatarFallback")

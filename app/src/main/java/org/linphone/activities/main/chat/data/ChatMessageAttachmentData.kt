@@ -32,6 +32,8 @@ class ChatMessageAttachmentData(
     val fileName: String = FileUtils.getNameFromFilePath(path)
     val isImage: Boolean = FileUtils.isExtensionImage(path)
     val isVideo: Boolean = FileUtils.isExtensionVideo(path)
+    val isAudio: Boolean = FileUtils.isExtensionAudio(path)
+    val isPdf: Boolean = FileUtils.isExtensionPdf(path)
     val videoPreview = MutableLiveData<Bitmap>()
 
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())

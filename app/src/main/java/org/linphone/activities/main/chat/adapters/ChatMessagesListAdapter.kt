@@ -23,9 +23,11 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.ViewGroup
-import androidx.appcompat.widget.PopupMenu
+import androidx.appcompat.view.menu.MenuBuilder
+import androidx.appcompat.view.menu.MenuPopupHelper
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
@@ -134,7 +136,7 @@ class ChatMessagesListAdapter(
 
     inner class ChatMessageViewHolder(
         val binding: ChatMessageListCellBinding
-    ) : RecyclerView.ViewHolder(binding.root), PopupMenu.OnMenuItemClickListener {
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(eventLog: EventLog) {
             with(binding) {
                 if (eventLog.type == EventLog.Type.ConferenceChatMessage) {
@@ -192,58 +194,63 @@ class ChatMessagesListAdapter(
                     if (contextMenuDisabled) return
 
                     setContextMenuClickListener {
-                        val popup = PopupMenu(root.context, background)
-                        popup.setOnMenuItemClickListener(this@ChatMessageViewHolder)
-                        popup.inflate(R.menu.chat_message_menu)
+                        val builder = MenuBuilder(root.context)
+                        val popupMenu = MenuPopupHelper(root.context, builder, background)
+                        popupMenu.setForceShowIcon(true)
+                        MenuInflater(root.context).inflate(R.menu.chat_message_menu, builder)
 
                         if (chatMessage.chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) ||
                             chatMessage.state == ChatMessage.State.NotDelivered) { // No message id
-                            popup.menu.removeItem(R.id.chat_message_menu_imdn_infos)
+                            builder.removeItem(R.id.chat_message_menu_imdn_infos)
                         }
                         if (chatMessage.state != ChatMessage.State.NotDelivered) {
-                            popup.menu.removeItem(R.id.chat_message_menu_resend)
+                            builder.removeItem(R.id.chat_message_menu_resend)
                         }
                         if (chatMessage.contents.find { content -> content.isText } == null) {
-                            popup.menu.removeItem(R.id.chat_message_menu_copy_text)
+                            builder.removeItem(R.id.chat_message_menu_copy_text)
                         }
-                        if (chatMessageViewModel.contact.value != null) {
-                            popup.menu.removeItem(R.id.chat_message_menu_add_to_contacts)
+                        if (chatMessage.isOutgoing || chatMessageViewModel.contact.value != null) {
+                            builder.removeItem(R.id.chat_message_menu_add_to_contacts)
                         }
 
-                        popup.show()
+                        builder.setCallback(object : MenuBuilder.Callback {
+                            override fun onMenuModeChange(menu: MenuBuilder) {}
+
+                            override fun onMenuItemSelected(menu: MenuBuilder, item: MenuItem): Boolean {
+                                return when (item.itemId) {
+                                    R.id.chat_message_menu_imdn_infos -> {
+                                        showImdnDeliveryFragment()
+                                        true
+                                    }
+                                    R.id.chat_message_menu_resend -> {
+                                        resendMessage()
+                                        true
+                                    }
+                                    R.id.chat_message_menu_copy_text -> {
+                                        copyTextToClipboard()
+                                        true
+                                    }
+                                    R.id.chat_message_forward_message -> {
+                                        forwardMessage()
+                                        true
+                                    }
+                                    R.id.chat_message_menu_delete_message -> {
+                                        deleteMessage()
+                                        true
+                                    }
+                                    R.id.chat_message_menu_add_to_contacts -> {
+                                        addSenderToContacts()
+                                        true
+                                    }
+                                    else -> false
+                                }
+                            }
+                        })
+
+                        popupMenu.show()
                         true
                     }
                 }
-            }
-        }
-
-        override fun onMenuItemClick(item: MenuItem): Boolean {
-            return when (item.itemId) {
-                R.id.chat_message_menu_imdn_infos -> {
-                    showImdnDeliveryFragment()
-                    true
-                }
-                R.id.chat_message_menu_resend -> {
-                    resendMessage()
-                    true
-                }
-                R.id.chat_message_menu_copy_text -> {
-                    copyTextToClipboard()
-                    true
-                }
-                R.id.chat_message_forward_message -> {
-                    forwardMessage()
-                    true
-                }
-                R.id.chat_message_menu_delete_message -> {
-                    deleteMessage()
-                    true
-                }
-                R.id.chat_message_menu_add_to_contacts -> {
-                    addSenderToContacts()
-                    true
-                }
-                else -> false
             }
         }
 
