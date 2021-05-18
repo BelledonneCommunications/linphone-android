@@ -132,10 +132,8 @@ class CorePreferences constructor(private val context: Context) {
 
     /* Chat */
 
-    // iOS and Android 4.4.x releases currently can't display more than 1 file per message
-    // TODO: Remove for the release, this won't be necessary anymore
     var preventMoreThanOneFilePerMessage: Boolean
-        get() = config.getBool("app", "prevent_more_than_one_file_per_message", true)
+        get() = config.getBool("app", "prevent_more_than_one_file_per_message", false)
         set(value) {
             config.setBool("app", "prevent_more_than_one_file_per_message", value)
         }

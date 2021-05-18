@@ -225,7 +225,7 @@
     </style>
 
     <style name="chat_file_attachment_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">@color/dark_grey_color</item>
+        <item name="android:textColor">?attr/primaryTextColor</item>
         <item name="android:textSize">12sp</item>
         <item name="android:fontFamily">sans-serif</item>
     </style>
