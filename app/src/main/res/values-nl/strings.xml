@@ -188,7 +188,6 @@
     <string name="call_error_incompatible_media_params">Incompatibele media parameters</string>
     <string name="call_error_network_unreachable">Netwerk is onbereikbaar</string>
     <string name="call_error_io_error">Netwerkfout</string>
-    <string name="call_error_unknown">Onbekende fout</string>
     <string name="call_video_update_requested_dialog">Tegenpartij wenst dat u video inschakelt</string>
     <string name="call_stats_audio">Audio</string>
     <string name="call_stats_video">Video</string>

@@ -152,7 +152,6 @@
     <string name="call_error_incompatible_media_params">不兼容的媒體參數</string>
     <string name="call_error_network_unreachable">無法連接網路</string>
     <string name="call_error_io_error">網路錯誤</string>
-    <string name="call_error_unknown">未知錯誤</string>
     <string name="call_stats_audio">音頻</string>
     <string name="call_stats_video">視頻</string>
     <string name="call_stats_codec">編解碼器：</string>

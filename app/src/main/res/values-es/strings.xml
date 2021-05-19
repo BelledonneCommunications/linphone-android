@@ -349,7 +349,6 @@
     <string name="call_error_incompatible_media_params">Parámetros de medios incompatibles</string>
     <string name="call_error_network_unreachable">La red es inalcanzable</string>
     <string name="call_error_io_error">Error de red</string>
-    <string name="call_error_unknown">Error desconocido</string>
     <string name="call_stats_audio">Audio</string>
     <string name="call_stats_video">Video</string>
     <string name="call_stats_codec">Codec:</string>

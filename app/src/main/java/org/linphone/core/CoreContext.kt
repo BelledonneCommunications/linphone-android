@@ -91,8 +91,8 @@ class CoreContext(val context: Context, coreConfig: Config) {
         NotificationsManager(context)
     }
 
-    val callErrorMessageResourceId: MutableLiveData<Event<Int>> by lazy {
-        MutableLiveData<Event<Int>>()
+    val callErrorMessageResourceId: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
     }
 
     private val loggingService = Factory.instance().loggingService
@@ -218,21 +218,23 @@ class CoreContext(val context: Context, coreConfig: Config) {
                 }
 
                 if (state == Call.State.Error) {
-                    Log.w("[Context] Call error reason is ${call.errorInfo.reason}")
-                    val id = when (call.errorInfo.reason) {
-                        Reason.Busy -> R.string.call_error_user_busy
-                        Reason.IOError -> R.string.call_error_io_error
-                        Reason.NotAcceptable -> R.string.call_error_incompatible_media_params
-                        Reason.NotFound -> R.string.call_error_user_not_found
-                        else -> R.string.call_error_unknown
+                    Log.w("[Context] Call error reason is ${call.errorInfo.protocolCode} / ${call.errorInfo.reason} / ${call.errorInfo.phrase}")
+                    val message = when (call.errorInfo.reason) {
+                        Reason.Busy -> context.getString(R.string.call_error_user_busy)
+                        Reason.IOError -> context.getString(R.string.call_error_io_error)
+                        Reason.NotAcceptable -> context.getString(R.string.call_error_incompatible_media_params)
+                        Reason.NotFound -> context.getString(R.string.call_error_user_not_found)
+                        Reason.ServerTimeout -> context.getString(R.string.call_error_server_timeout)
+                        Reason.TemporarilyUnavailable -> context.getString(R.string.call_error_temporarily_unavailable)
+                        else -> context.getString(R.string.call_error_generic).format("${call.errorInfo.protocolCode} / ${call.errorInfo.phrase}")
                     }
-                    callErrorMessageResourceId.value = Event(id)
+                    callErrorMessageResourceId.value = Event(message)
                 } else if (state == Call.State.End &&
                         call.dir == Call.Dir.Outgoing &&
                         call.errorInfo.reason == Reason.Declined) {
                     Log.i("[Context] Call has been declined")
-                    val id = R.string.call_error_declined
-                    callErrorMessageResourceId.value = Event(id)
+                    val message = context.getString(R.string.call_error_declined)
+                    callErrorMessageResourceId.value = Event(message)
                 }
             }
 
@@ -461,7 +463,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
         val address: Address? = core.interpretUrl(stringAddress)
         if (address == null) {
             Log.e("[Context] Failed to parse $stringAddress, abort outgoing call")
-            callErrorMessageResourceId.value = Event(R.string.call_error_network_unreachable)
+            callErrorMessageResourceId.value = Event(context.getString(R.string.call_error_network_unreachable))
             return
         }
 
@@ -471,7 +473,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
     fun startCall(address: Address, forceZRTP: Boolean = false) {
         if (!core.isNetworkReachable) {
             Log.e("[Context] Network unreachable, abort outgoing call")
-            callErrorMessageResourceId.value = Event(R.string.call_error_network_unreachable)
+            callErrorMessageResourceId.value = Event(context.getString(R.string.call_error_network_unreachable))
             return
         }
 
