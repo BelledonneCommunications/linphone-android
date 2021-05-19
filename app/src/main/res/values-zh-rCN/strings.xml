@@ -458,7 +458,6 @@
     <string name="call_error_incompatible_media_params">不兼容的媒体参数</string>
     <string name="call_error_network_unreachable">无法获取网络</string>
     <string name="call_error_io_error">网络出错</string>
-    <string name="call_error_unknown">未知错误</string>
     <string name="call_stats_audio">音频</string>
     <string name="call_stats_video">视频</string>
     <string name="call_stats_codec">编解码器：</string>

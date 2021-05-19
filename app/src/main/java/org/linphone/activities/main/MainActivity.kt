@@ -104,8 +104,8 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         })
 
         coreContext.callErrorMessageResourceId.observe(this, {
-            it.consume { messageResourceId ->
-                showSnackBar(messageResourceId)
+            it.consume { message ->
+                showSnackBar(message)
             }
         })
 

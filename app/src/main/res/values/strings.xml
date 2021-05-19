@@ -228,8 +228,10 @@
     <string name="call_error_user_not_found">User hasn\'t been found</string>
     <string name="call_error_incompatible_media_params">Incompatible media parameters</string>
     <string name="call_error_network_unreachable">Network is unreachable</string>
-    <string name="call_error_io_error">Network error</string>
-    <string name="call_error_unknown">Unknown error</string>
+    <string name="call_error_io_error">Service unavailable or network error</string>
+    <string name="call_error_server_timeout">Server timeout</string>
+    <string name="call_error_temporarily_unavailable">Temporarily unavailable</string>
+    <string name="call_error_generic">Error: %s</string>
     <string name="call_video_update_requested_dialog">Correspondent would like to turn the video on</string>
 
     <!-- Call stats -->
