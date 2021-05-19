@@ -162,8 +162,7 @@
     <string name="call_error_user_busy">L\'utilisateur est occupé</string>
     <string name="call_error_user_not_found">L\'utilisateur n\'a pu être trouvé</string>
     <string name="call_error_network_unreachable">Le réseau n\'est pas joignable</string>
-    <string name="call_error_io_error">Erreur réseau</string>
-    <string name="call_error_unknown">Erreur inconnue</string>
+    <string name="call_error_io_error">Service indisponible ou erreur réseau</string>
     <string name="call_video_update_requested_dialog">Votre interlocuteur souhaite activer la vidéo</string>
     <string name="call_stats_audio">Audio</string>
     <string name="video_settings_camera_device_title">Appareil photo</string>
@@ -598,4 +597,7 @@
     <string name="logs_upload_failure">Erreur pendant l\'envoi des journaux !</string>
     <string name="logs_reset_complete">Les journaux ont été néttoyés</string>
     <string name="call_settings_redirect_to_voice_mail_declined_calls_title">Rediriger les appels déclinés vers la boîte vocale</string>
+    <string name="call_error_server_timeout">Délai d\'attente serveur expiré</string>
+    <string name="call_error_temporarily_unavailable">Temporairement indisponible</string>
+    <string name="call_error_generic">Erreur : %s</string>
 </resources>

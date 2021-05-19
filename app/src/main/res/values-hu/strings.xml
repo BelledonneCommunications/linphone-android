@@ -391,7 +391,6 @@
     <string name="chat_room_delete_one_dialog">Biztosan törli ezt a beszélgetést\?</string>
     <string name="chat_message_cant_open_file_in_app_dialog_title">Úgy tűnik, hogy nem tudjuk megjeleníteni a fájlt.</string>
     <string name="call_incoming_title">Bejövő hívás</string>
-    <string name="call_error_unknown">Ismeretlen hiba</string>
     <string name="call_stats_estimated_download">Becsült letöltési sávszélesség:</string>
     <string name="call_video_update_requested_dialog">A hívott fél szeretné bekapcsolni a videót</string>
     <string name="call_stats_decoder_name">Dekóder:</string>
