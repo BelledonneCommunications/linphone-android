@@ -20,6 +20,10 @@
 package org.linphone.activities.main.chat.data
 
 import android.graphics.Bitmap
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.UnderlineSpan
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.*
 import org.linphone.R
@@ -51,7 +55,7 @@ class ChatMessageContentData(
     val downloadEnabled = MutableLiveData<Boolean>()
     val downloadProgress = MutableLiveData<Int>()
     val downloadProgressString = MutableLiveData<String>()
-    val downloadLabel = MutableLiveData<String>()
+    val downloadLabel = MutableLiveData<Spannable>()
 
     val isAlone: Boolean
         get() {
@@ -99,7 +103,9 @@ class ChatMessageContentData(
             content.name
         }
         fileSize.value = AppUtils.bytesToDisplayableSize(content.fileSize.toLong())
-        downloadLabel.value = "${AppUtils.getString(R.string.chat_message_download_file)} (${fileSize.value})"
+        var spannable = SpannableString("${AppUtils.getString(R.string.chat_message_download_file)} (${fileSize.value})")
+        spannable.setSpan(UnderlineSpan(), 0, spannable.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        downloadLabel.value = spannable
 
         if (content.isFile || (content.isFileTransfer && chatMessage.isOutgoing)) {
             val path = if (content.isFileEncrypted) content.plainFilePath else content.filePath ?: ""
