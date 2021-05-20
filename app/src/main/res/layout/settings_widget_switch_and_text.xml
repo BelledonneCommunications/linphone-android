@@ -94,10 +94,10 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/settings_input"
-                onValueChanged="@{() -> listener.onTextValueChanged(settingsInput.getText().toString())}"
                 android:text="@{defaultValue}"
                 android:imeOptions="actionDone"
                 android:inputType="@{InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS}"
+                onValueChanged="@{() -> listener.onTextValueChanged(settingsInput.getText().toString())}"
                 android:singleLine="true"
                 android:background="@color/transparent_color"
                 android:layout_width="match_parent"

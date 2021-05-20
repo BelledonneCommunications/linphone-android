@@ -109,7 +109,10 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
         override fun onTextValueChanged(newValue: String) {
             val authInfo = account.findAuthInfo()
             if (authInfo != null) {
-                authInfo.userid = newValue
+                val newAuthInfo = authInfo.clone()
+                newAuthInfo.userid = newValue
+                core.removeAuthInfo(authInfo)
+                core.addAuthInfo(newAuthInfo)
             } else {
                 Log.e("[Account Settings] Failed to find the matching auth info")
             }
@@ -121,7 +124,10 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
         override fun onTextValueChanged(newValue: String) {
             val authInfo = account.findAuthInfo()
             if (authInfo != null) {
-                authInfo.password = newValue
+                val newAuthInfo = authInfo.clone()
+                newAuthInfo.password = newValue
+                core.removeAuthInfo(authInfo)
+                core.addAuthInfo(newAuthInfo)
             } else {
                 Log.w("[Account Settings] Failed to find the matching auth info")
                 val params = account.params
@@ -145,7 +151,10 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
             if (identity != null) {
                 val authInfo = account.findAuthInfo()
                 if (authInfo != null) {
-                    authInfo.domain = newValue
+                    val newAuthInfo = authInfo.clone()
+                    newAuthInfo.domain = newValue
+                    core.removeAuthInfo(authInfo)
+                    core.addAuthInfo(newAuthInfo)
                 } else {
                     Log.e("[Account Settings] Failed to find the matching auth info")
                 }
@@ -264,6 +273,8 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
                 params.serverAddress = address
                 account.params = params
                 transportIndex.value = account.params.transport.toInt()
+            } else {
+                Log.e("[Account Settings] Couldn't parse address: $address")
             }
         }
     }
