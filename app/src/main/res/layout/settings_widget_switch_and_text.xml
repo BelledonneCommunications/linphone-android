@@ -94,16 +94,29 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/settings_input"
-                onValueChanged="@{() -> listener.onTextValueChanged(settingsInput.getText().toString())}"
                 android:text="@{defaultValue}"
                 android:imeOptions="actionDone"
                 android:inputType="@{InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS}"
+                onFocusChangeVisibilityOf="@{settingsCommitInput}"
                 android:singleLine="true"
                 android:background="@color/transparent_color"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
         </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageView
+            android:id="@+id/settings_commit_input"
+            android:onClick="@{() -> listener.onTextValueChanged(settingsInput.getText().toString())}"
+            android:visibility="invisible"
+            android:contentDescription="@string/content_description_confirm_contact_edit"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/valid"
+            android:layout_alignLeft="@id/setting_switch"
+            android:layout_alignBottom="@id/settings_input_layout"/>
 
         <View
             android:layout_marginTop="15dp"

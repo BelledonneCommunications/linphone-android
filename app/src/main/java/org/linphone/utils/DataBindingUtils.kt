@@ -29,7 +29,6 @@ import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import android.widget.*
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -171,33 +170,6 @@ fun setLayoutConstraintGuidePercent(guideline: Guideline, percent: Float) {
 fun switchSetting(view: View, switchId: Int) {
     val switch: SwitchMaterial = view.findViewById(switchId)
     view.setOnClickListener { switch.isChecked = !switch.isChecked }
-}
-
-@BindingAdapter("onValueChanged")
-fun editTextSetting(view: EditText, lambda: () -> Unit) {
-    view.setOnFocusChangeListener { _, hasFocus ->
-        if (!hasFocus) lambda()
-    }
-
-    view.setOnEditorActionListener { _, actionId, _ ->
-        if (actionId == EditorInfo.IME_ACTION_DONE) {
-            lambda()
-            true
-        }
-        false
-    }
-
-    view.addTextChangedListener(object : TextWatcher {
-        override fun afterTextChanged(s: Editable?) {
-            if (s?.isEmpty() == true) {
-                lambda()
-            }
-        }
-
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-    })
 }
 
 @BindingAdapter("onFocusChangeVisibilityOf")
