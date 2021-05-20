@@ -50,6 +50,7 @@ class ChatMessageContentData(
     val downloadable = MutableLiveData<Boolean>()
     val downloadEnabled = MutableLiveData<Boolean>()
     val downloadProgress = MutableLiveData<Int>()
+    val downloadProgressString = MutableLiveData<String>()
     val downloadLabel = MutableLiveData<String>()
 
     val isAlone: Boolean
@@ -74,6 +75,7 @@ class ChatMessageContentData(
                 val percent = offset * 100 / total
                 Log.d("[Content] Download progress is: $offset / $total ($percent%)")
                 downloadProgress.postValue(percent)
+                downloadProgressString.postValue("$percent%")
             }
         }
 
@@ -136,6 +138,7 @@ class ChatMessageContentData(
         isGenericFile.value = !isPdf.value!! && !isAudio.value!! && !isVideo.value!! && !isImage.value!!
         downloadEnabled.value = !chatMessage.isFileTransferInProgress
         downloadProgress.value = 0
+        downloadProgressString.value = "0%"
         chatMessage.addListener(chatMessageListener)
     }
 
