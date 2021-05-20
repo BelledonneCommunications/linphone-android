@@ -306,7 +306,7 @@
     <!-- Assistant create -->
     <string name="assistant_create_account_part_email">Please enter a username, email and password for your &appName; account</string>
     <string name="assistant_confirm_password">Password confirmation</string>
-    <string name="assistant_validate_account_1">Your account is created. Please check your mails to validate your account:</string>
+    <string name="assistant_validate_account_1">Your account is created. Please check your emails to validate your account:</string>
     <string name="assistant_validate_account_2">Once it is done, come back here and click on the button.</string>
     <string name="assistant_use_username_instead_or_phone_number">Use a username (optional)</string>
     <string name="assistant_create_account_part_2">We have sent you an SMS with a validation code to your phone number:</string>
@@ -568,7 +568,7 @@
     <string name="account_settings_proxy_summary"></string>
     <string name="account_settings_outbound_proxy_title">Outbound proxy</string>
     <string name="account_settings_outbound_proxy_summary">Route all calls through above SIP proxy</string>
-    <string name="account_settings_stun_server_title">STUN / TURN server</string>
+    <string name="account_settings_stun_server_title">STUN/TURN server</string>
     <string name="account_settings_stun_server_summary"></string>
     <string name="account_settings_ice_title">Enable ICE</string>
     <string name="account_settings_ice_summary"></string>
@@ -705,7 +705,7 @@
     <string name="content_description_show_call_details">Go to call details</string>
     <string name="content_description_exit_edition_mode">Quit edition mode</string>
     <string name="content_description_select_all">Select all items in list</string>
-    <string name="content_description_unselect_all">Un-select all items in list</string>
+    <string name="content_description_unselect_all">Unselect all items in list</string>
     <string name="content_description_delete_selection">Delete selected items in list</string>
     <string name="content_description_numpad_1">1</string>
     <string name="content_description_numpad_2">2</string>
