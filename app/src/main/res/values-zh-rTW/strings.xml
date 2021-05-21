@@ -383,9 +383,7 @@
     <string name="advanced_settings_go_to_power_manager_settings">電源管理設置</string>
     <string name="advanced_settings_go_to_android_app_settings">安卓應用設置</string>
     <string name="advanced_settings_send_debug_logs_title">發送日誌</string>
-    <string name="advanced_settings_send_debug_logs_summary"></string>
     <string name="advanced_settings_reset_debug_logs_title">重啓日誌</string>
-    <string name="advanced_settings_reset_debug_logs_summary"></string>
     <string name="tunnel_settings_hostname_url_title">主機名</string>
     <string name="tunnel_settings_port_title">端口</string>
     <string name="tunnel_settings_dual_mode_title">啟用雙模式</string>
@@ -556,7 +554,5 @@
     <string name="content_description_toggle_call_stats">顯示後隱藏通話統計</string>
     <string name="content_description_chat_message_video_attachment">視頻附件</string>
     <string name="settings_primary_account_display_name_title">顯示名</string>
-    <string name="settings_primary_account_display_name_summary"></string>
     <string name="settings_primary_account_username_title">用戶名</string>
-    <string name="settings_primary_account_username_summary"></string>
 </resources>

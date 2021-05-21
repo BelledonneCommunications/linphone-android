@@ -571,16 +571,13 @@
     <string name="chat_settings_use_in_app_file_viewer_title">Ouvrir les fichiers dans l\'application</string>
     <string name="chat_settings_use_in_app_file_viewer_summary">Vous pourrez toujours les exporter dans une appli tierce</string>
     <string name="call_settings_ring_during_early_media_title">Sonner durant un appel entrant avec early-media</string>
-    <string name="call_settings_ring_during_early_media_summary"></string>
     <string name="debug_popup_show_config_file">Voir le fichier de config</string>
     <string name="chat_message_cant_open_file_in_app_dialog_title">Il semblerait que l\'on ne puisse pas afficher ce fichier.</string>
     <string name="chat_message_cant_open_file_in_app_dialog_message">Voulez-vous essayer de l\'ouvrir comme texte ou de l\'exporter (en clair) vers une appli tierce si disponible ?</string>
     <string name="chat_message_cant_open_file_in_app_dialog_export_button">Exporter</string>
     <string name="chat_message_cant_open_file_in_app_dialog_open_as_text_button">Ouvrir comme texte</string>
     <string name="advanced_settings_send_debug_logs_title">Envoyer les traces</string>
-    <string name="advanced_settings_send_debug_logs_summary"></string>
     <string name="advanced_settings_reset_debug_logs_title">Vider les traces</string>
-    <string name="advanced_settings_reset_debug_logs_summary"></string>
     <string name="advanced_settings_debug_title">Paramètres de deboggage</string>
     <string name="advanced_settings_other_title">Autres paramètres</string>
     <string name="call_settings_system_wide_overlay_title">Afficher la notification flottante en dehors de l\'app</string>
@@ -591,13 +588,12 @@
     <string name="account_settings_apply_prefix_for_calls_title">Applique le préfixe pour les appels sortant et les messages</string>
     <string name="settings_primary_account_title">Compte principal</string>
     <string name="settings_primary_account_display_name_title">Nom d\'affichage</string>
-    <string name="settings_primary_account_display_name_summary"></string>
     <string name="settings_primary_account_username_title">Nom d\'utilisateur</string>
-    <string name="settings_primary_account_username_summary"></string>
     <string name="logs_upload_failure">Erreur pendant l\'envoi des journaux !</string>
     <string name="logs_reset_complete">Les journaux ont été néttoyés</string>
     <string name="call_settings_redirect_to_voice_mail_declined_calls_title">Rediriger les appels déclinés vers la boîte vocale</string>
     <string name="call_error_server_timeout">Délai d\'attente serveur expiré</string>
     <string name="call_error_temporarily_unavailable">Temporairement indisponible</string>
     <string name="call_error_generic">Erreur : %s</string>
+    <string name="call_settings_pause_calls_lost_audio_focus_title">Mettre en pause les appels quand le focus audio est perdu</string>
 </resources>
