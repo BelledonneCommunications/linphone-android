@@ -68,14 +68,12 @@
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/video_settings_enable_title}"
-                    linphone:subtitle="@{@string/video_settings_enable_summary}"
                     linphone:listener="@{viewModel.enableVideoListener}"
                     linphone:checked="@={viewModel.enableVideo}"/>
 
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/video_settings_tablet_preview_title}"
-                    linphone:subtitle="@{@string/video_settings_tablet_preview_summary}"
                     linphone:listener="@{viewModel.tabletPreviewListener}"
                     linphone:checked="@={viewModel.tabletPreview}"
                     linphone:enabled="@{viewModel.enableVideo}"
@@ -100,7 +98,6 @@
                 <include
                     layout="@layout/settings_widget_list"
                     linphone:title="@{@string/video_settings_camera_device_title}"
-                    linphone:subtitle="@{@string/video_settings_camera_device_summary}"
                     linphone:listener="@{viewModel.cameraDeviceListener}"
                     linphone:selectedIndex="@{viewModel.cameraDeviceIndex}"
                     linphone:labels="@{viewModel.cameraDeviceLabels}"
@@ -109,7 +106,6 @@
                 <include
                     layout="@layout/settings_widget_list"
                     linphone:title="@{@string/video_settings_video_size_title}"
-                    linphone:subtitle="@{@string/video_settings_video_size_summary}"
                     linphone:listener="@{viewModel.videoSizeListener}"
                     linphone:selectedIndex="@{viewModel.videoSizeIndex}"
                     linphone:labels="@{viewModel.videoSizeLabels}"
@@ -118,7 +114,6 @@
                 <include
                     layout="@layout/settings_widget_list"
                     linphone:title="@{@string/video_settings_video_preset_title}"
-                    linphone:subtitle="@{@string/video_settings_video_preset_summary}"
                     linphone:listener="@{viewModel.videoPresetListener}"
                     linphone:selectedIndex="@{viewModel.videoPresetIndex}"
                     linphone:labels="@{viewModel.videoPresetLabels}"
@@ -127,7 +122,6 @@
                 <include
                     layout="@layout/settings_widget_list"
                     linphone:title="@{@string/video_settings_preferred_fps_title}"
-                    linphone:subtitle="@{@string/video_settings_preferred_fps_summary}"
                     linphone:listener="@{viewModel.preferredFpsListener}"
                     linphone:selectedIndex="@{viewModel.preferredFpsIndex}"
                     linphone:labels="@{viewModel.preferredFpsLabels}"

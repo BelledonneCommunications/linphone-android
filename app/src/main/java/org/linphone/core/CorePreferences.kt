@@ -270,6 +270,13 @@ class CorePreferences constructor(private val context: Context) {
             config.setBool("app", "route_audio_to_speaker_when_video_enabled", value)
         }
 
+    // Automatically handled by SDK
+    var pauseCallsWhenAudioFocusIsLost: Boolean
+        get() = config.getBool("audio", "android_pause_calls_when_audio_focus_lost", true)
+        set(value) {
+            config.setBool("audio", "android_pause_calls_when_audio_focus_lost", value)
+        }
+
     /* Assistant */
 
     var firstStart: Boolean
