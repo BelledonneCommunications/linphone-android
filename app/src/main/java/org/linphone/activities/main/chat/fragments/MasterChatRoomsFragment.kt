@@ -171,6 +171,13 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
             listSelectionViewModel.isEditionEnabled.value = true
         }
 
+        binding.setCancelForwardClickListener {
+            sharedViewModel.messageToForwardEvent.value?.consume {
+                Log.i("[Chat] Cancelling message forward")
+            }
+            listViewModel.forwardPending.value = false
+        }
+
         binding.setNewOneToOneChatRoomClickListener {
             sharedViewModel.chatRoomParticipants.value = arrayListOf()
             navigateToChatRoomCreation(false)
@@ -221,9 +228,12 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
             sharedViewModel.messageToForwardEvent.observe(viewLifecycleOwner, {
                 if (!it.consumed()) {
                     Log.i("[Chat] Found chat message to transfer")
+                    listViewModel.forwardPending.value = true
 
                     val activity = requireActivity() as MainActivity
                     activity.showSnackBar(R.string.chat_room_toast_choose_for_sharing)
+                } else {
+                    listViewModel.forwardPending.value = false
                 }
             })
 

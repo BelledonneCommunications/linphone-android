@@ -14,6 +14,9 @@
             name="editClickListener"
             type="android.view.View.OnClickListener"/>
         <variable
+            name="cancelForwardClickListener"
+            type="android.view.View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.activities.main.chat.viewmodels.ChatRoomsListViewModel" />
     </data>
@@ -28,6 +31,17 @@
             android:layout_height="60dp"
             android:background="?attr/lightToolbarBackgroundColor"
             android:orientation="horizontal">
+
+            <ImageView
+                android:onClick="@{cancelForwardClickListener}"
+                android:visibility="@{viewModel.forwardPending ? View.VISIBLE : View.GONE}"
+                android:contentDescription="@string/content_description_cancel_contact_edit"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:background="?attr/button_background_drawable"
+                android:padding="15dp"
+                android:src="@drawable/cancel_edit" />
 
             <ImageView
                 android:onClick="@{newOneToOneChatRoomClickListener}"
@@ -58,6 +72,7 @@
             <ImageView
                 android:onClick="@{editClickListener}"
                 android:enabled="@{!viewModel.chatRooms.empty}"
+                android:visibility="@{viewModel.forwardPending ? View.GONE : View.VISIBLE}"
                 android:contentDescription="@string/content_description_enter_edition_mode"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
