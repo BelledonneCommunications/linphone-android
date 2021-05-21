@@ -161,6 +161,14 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
     }
     val ringDuringEarlyMedia = MutableLiveData<Boolean>()
 
+    val pauseCallsWhenAudioFocusIsLostListener = object : SettingListenerStub() {
+        override fun onBoolValueChanged(newValue: Boolean) {
+            prefs.pauseCallsWhenAudioFocusIsLost = newValue
+        }
+    }
+
+    val pauseCallsWhenAudioFocusIsLost = MutableLiveData<Boolean>()
+
     val goToAndroidNotificationSettingsListener = object : SettingListenerStub() {
         override fun onClicked() {
             goToAndroidNotificationSettingsEvent.value = Event(true)
@@ -188,6 +196,7 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
         redirectToVoiceMailIncomingDeclinedCalls.value = prefs.redirectDeclinedCallToVoiceMail
         acceptEarlyMedia.value = prefs.acceptEarlyMedia
         ringDuringEarlyMedia.value = core.ringDuringIncomingEarlyMedia
+        pauseCallsWhenAudioFocusIsLost.value = prefs.pauseCallsWhenAudioFocusIsLost
     }
 
     private fun initEncryptionList() {

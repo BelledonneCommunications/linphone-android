@@ -87,7 +87,6 @@
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/audio_settings_adaptive_rate_control_title}"
-                    linphone:subtitle="@{@string/audio_settings_adaptive_rate_control_summary}"
                     linphone:listener="@{viewModel.adaptiveRateControlListener}"
                     linphone:checked="@={viewModel.adaptiveRateControl}"/>
 
@@ -110,7 +109,6 @@
                 <include
                     layout="@layout/settings_widget_list"
                     linphone:title="@{@string/audio_settings_codec_bitrate_title}"
-                    linphone:subtitle="@{@string/audio_settings_codec_bitrate_summary}"
                     linphone:listener="@{viewModel.codecBitrateListener}"
                     linphone:selectedIndex="@{viewModel.codecBitrateIndex}"
                     linphone:labels="@{viewModel.codecBitrateLabels}"/>

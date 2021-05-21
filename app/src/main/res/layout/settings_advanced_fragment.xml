@@ -77,7 +77,6 @@
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/advanced_settings_debug_mode_title}"
-                    linphone:subtitle="@{@string/advanced_settings_debug_mode_summary}"
                     linphone:listener="@{viewModel.debugModeListener}"
                     linphone:checked="@={viewModel.debugMode}"/>
 
@@ -93,14 +92,12 @@
                 <include
                     layout="@layout/settings_widget_basic"
                     linphone:title="@{@string/advanced_settings_send_debug_logs_title}"
-                    linphone:subtitle="@{@string/advanced_settings_send_debug_logs_summary}"
                     linphone:listener="@{viewModel.sendDebugLogsListener}"
                     linphone:enabled="@{viewModel.debugMode}"/>
 
                 <include
                     layout="@layout/settings_widget_basic"
                     linphone:title="@{@string/advanced_settings_reset_debug_logs_title}"
-                    linphone:subtitle="@{@string/advanced_settings_reset_debug_logs_summary}"
                     linphone:listener="@{viewModel.resetDebugLogsListener}"
                     linphone:enabled="@{viewModel.debugMode}"/>
 
@@ -124,14 +121,12 @@
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/advanced_settings_auto_start_title}"
-                    linphone:subtitle="@{@string/advanced_settings_auto_start_summary}"
                     linphone:listener="@{viewModel.autoStartListener}"
                     linphone:checked="@={viewModel.autoStart}"/>
 
                 <include
                     layout="@layout/settings_widget_list"
                     linphone:title="@{@string/advanced_settings_dark_mode_title}"
-                    linphone:subtitle="@{@string/advanced_settings_dark_mode_summary}"
                     linphone:listener="@{viewModel.darkModeListener}"
                     linphone:selectedIndex="@{viewModel.darkModeIndex}"
                     linphone:labels="@{viewModel.darkModeLabels}"/>
@@ -139,7 +134,6 @@
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/advanced_settings_animations_title}"
-                    linphone:subtitle="@{@string/advanced_settings_animations_summary}"
                     linphone:listener="@{viewModel.animationsListener}"
                     linphone:checked="@={viewModel.animations}"/>
 
@@ -153,7 +147,6 @@
                 <include
                     layout="@layout/settings_widget_text"
                     linphone:title="@{@string/advanced_settings_remote_provisioning_url_title}"
-                    linphone:subtitle="@{@string/advanced_settings_remote_provisioning_url_summary}"
                     linphone:listener="@{viewModel.remoteProvisioningUrlListener}"
                     linphone:defaultValue="@{viewModel.remoteProvisioningUrl}"
                     linphone:inputType="@{InputType.TYPE_TEXT_VARIATION_URI}"/>

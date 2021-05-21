@@ -563,11 +563,7 @@
     </plurals>
     <string name="chat_settings_mark_as_read_notif_dismissal_title">撤消通知后标记为已读</string>
     <string name="advanced_settings_send_debug_logs_title">发送日志</string>
-    <string name="advanced_settings_send_debug_logs_summary"></string>
     <string name="advanced_settings_reset_debug_logs_title">重启日志</string>
-    <string name="advanced_settings_reset_debug_logs_summary"></string>
     <string name="settings_primary_account_display_name_title">显示名</string>
-    <string name="settings_primary_account_display_name_summary"></string>
     <string name="settings_primary_account_username_title">用户名</string>
-    <string name="settings_primary_account_username_summary"></string>
 </resources>
