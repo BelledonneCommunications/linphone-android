@@ -39,6 +39,8 @@ class ChatRoomsListViewModel : ErrorReportingViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val forwardPending = MutableLiveData<Boolean>()
+
     val groupChatAvailable: Boolean = LinphoneUtils.isGroupChatAvailable()
 
     private val contactsUpdatedListener = object : ContactsUpdatedListenerStub() {
