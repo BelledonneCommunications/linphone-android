@@ -178,6 +178,13 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
             listViewModel.forwardPending.value = false
         }
 
+        binding.setCancelSharingClickListener {
+            Log.i("[Chat] Cancelling text/files sharing")
+            sharedViewModel.textToShare.value = ""
+            sharedViewModel.filesToShare.value = arrayListOf()
+            listViewModel.sharingPending.value = false
+        }
+
         binding.setNewOneToOneChatRoomClickListener {
             sharedViewModel.chatRoomParticipants.value = arrayListOf()
             navigateToChatRoomCreation(false)
@@ -216,6 +223,11 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
                     Log.i("[Chat] Found text to share")
                     val activity = requireActivity() as MainActivity
                     activity.showSnackBar(R.string.chat_room_toast_choose_for_sharing)
+                    listViewModel.sharingPending.value = true
+                } else {
+                    if (sharedViewModel.filesToShare.value.isNullOrEmpty()) {
+                        listViewModel.sharingPending.value = false
+                    }
                 }
             })
             sharedViewModel.filesToShare.observe(viewLifecycleOwner, {
@@ -223,6 +235,11 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
                     Log.i("[Chat] Found ${it.size} files to share")
                     val activity = requireActivity() as MainActivity
                     activity.showSnackBar(R.string.chat_room_toast_choose_for_sharing)
+                    listViewModel.sharingPending.value = true
+                } else {
+                    if (sharedViewModel.textToShare.value.isNullOrEmpty()) {
+                        listViewModel.sharingPending.value = false
+                    }
                 }
             })
             sharedViewModel.messageToForwardEvent.observe(viewLifecycleOwner, {
