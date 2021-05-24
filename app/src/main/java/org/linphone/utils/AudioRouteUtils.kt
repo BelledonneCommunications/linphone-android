@@ -98,6 +98,18 @@ class AudioRouteUtils {
             Log.e("[Audio Route Helper] Couldn't find headset audio device")
         }
 
+        fun isSpeakerAudioRouteCurrentlyUsed(call: Call? = null): Boolean {
+            if (coreContext.core.callsNb == 0) {
+                Log.w("[Audio Route Helper] No call found, so speaker audio route isn't used")
+                return false
+            }
+            val currentCall = call ?: coreContext.core.currentCall ?: coreContext.core.calls[0]
+
+            val audioDevice = currentCall.outputAudioDevice
+            Log.i("[Audio Route Helper] Audio device currently in use is [${audioDevice?.deviceName}] with type (${audioDevice?.type})")
+            return audioDevice?.type == AudioDevice.Type.Speaker
+        }
+
         fun isBluetoothAudioRouteCurrentlyUsed(call: Call? = null): Boolean {
             if (coreContext.core.callsNb == 0) {
                 Log.w("[Audio Route Helper] No call found, so bluetooth audio route isn't used")
@@ -106,7 +118,7 @@ class AudioRouteUtils {
             val currentCall = call ?: coreContext.core.currentCall ?: coreContext.core.calls[0]
 
             val audioDevice = currentCall.outputAudioDevice
-            Log.i("[Audio Route Helper] Audio device currently in use is [${audioDevice?.deviceName}]")
+            Log.i("[Audio Route Helper] Audio device currently in use is [${audioDevice?.deviceName}] with type (${audioDevice?.type})")
             return audioDevice?.type == AudioDevice.Type.Bluetooth
         }
 
