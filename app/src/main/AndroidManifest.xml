@@ -41,7 +41,8 @@
         <activity
             android:name=".activities.launcher.LauncherActivity"
             android:noHistory="true"
-            android:theme="@style/LauncherTheme">
+            android:theme="@style/LauncherTheme"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -53,7 +54,8 @@
 
         <activity android:name=".activities.main.MainActivity"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:exported="true">
             <nav-graph android:value="@navigation/main_nav_graph" />
 
             <intent-filter>
@@ -162,7 +164,8 @@
                 android:resource="@xml/contacts" />
         </service>
 
-        <service android:name=".contact.DummyAuthenticationService">
+        <service android:name=".contact.DummyAuthenticationService"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
@@ -174,7 +177,8 @@
 
         <!-- Receivers -->
 
-        <receiver android:name=".core.CorePushReceiver">
+        <receiver android:name=".core.CorePushReceiver"
+            android:exported="false">
             <intent-filter>
                 <action android:name="org.linphone.core.action.PUSH_RECEIVED"/>
             </intent-filter>
@@ -185,7 +189,8 @@
             android:enabled="true"
             android:exported="false" />
 
-        <receiver android:name=".core.BootReceiver">
+        <receiver android:name=".core.BootReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
