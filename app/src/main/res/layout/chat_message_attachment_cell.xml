@@ -10,37 +10,31 @@
     </data>
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="100dp"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
         android:layout_margin="5dp"
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/pendingImageForUpload"
             android:visibility="@{data.image ? View.VISIBLE : View.GONE}"
             android:contentDescription="@string/content_description_pending_file_transfer"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="100dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
             android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
             app:glidePath="@{data.path}"/>
 
         <ImageView
-            android:visibility="@{data.image ? View.VISIBLE : View.GONE}"
-            android:onClick="@{() -> data.delete()}"
-            android:contentDescription="@string/content_description_remove_pending_file_transfer"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_alignTop="@id/pendingImageForUpload"
-            android:layout_alignRight="@id/pendingImageForUpload"
-            android:src="@drawable/field_clean" />
-
-        <ImageView
-            android:id="@+id/pendingVideoForUpload"
-            android:visibility="@{data.video ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{data.video ? View.VISIBLE : View.GONE}"
             android:contentDescription="@string/content_description_pending_file_transfer"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="100dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
             android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
             android:src="@{data.videoPreview}"/>
 
         <ImageView
@@ -51,36 +45,39 @@
             android:contentDescription="@string/content_description_chat_message_video_attachment"
             android:layout_centerInParent="true"/>
 
-        <ImageView
-            android:visibility="@{data.video ? View.VISIBLE : View.GONE, default=gone}"
-            android:onClick="@{() -> data.delete()}"
-            android:contentDescription="@string/content_description_remove_pending_file_transfer"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_alignTop="@id/pendingVideoForUpload"
-            android:layout_alignRight="@id/pendingVideoForUpload"
-            android:src="@drawable/field_clean" />
-
-        <TextView
-            android:id="@+id/pendingFileForUpload"
-            android:visibility="@{data.image || data.video ? View.GONE : View.VISIBLE, default=gone}"
-            android:text="@{data.fileName}"
-            android:textColor="?attr/secondaryTextColor"
-            android:textSize="21sp"
-            android:textStyle="bold"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        <LinearLayout
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:orientation="vertical"
             android:gravity="center"
-            android:textAlignment="center" />
+            android:background="?attr/backgroundColor"
+            android:visibility="@{data.image || data.video ? View.GONE : View.VISIBLE}">
+
+            <TextView
+                style="@style/chat_file_attachment_font"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:ellipsize="middle"
+                android:singleLine="true"
+                android:padding="10dp"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:drawablePadding="5dp"
+                android:drawableTop="@{data.pdf ? @drawable/file_pdf : (data.audio ? @drawable/file_audio : @drawable/file), default=@drawable/file}"
+                android:text="@{data.fileName, default=`test.txt`}"/>
+
+        </LinearLayout>
 
         <ImageView
-            android:visibility="@{data.image || data.video ? View.GONE : View.VISIBLE, default=gone}"
             android:onClick="@{() -> data.delete()}"
             android:contentDescription="@string/content_description_remove_pending_file_transfer"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_alignTop="@id/pendingFileForUpload"
-            android:layout_alignRight="@id/pendingFileForUpload"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
             android:src="@drawable/field_clean" />
 
     </RelativeLayout>

@@ -32,13 +32,20 @@ class AudioRouteUtils {
                 return
             }
             val currentCall = call ?: coreContext.core.currentCall ?: coreContext.core.calls[0]
+            val conference = coreContext.core.conference
 
             for (audioDevice in coreContext.core.audioDevices) {
-                if (audioDevice.type == AudioDevice.Type.Earpiece) {
-                    Log.i("[Audio Route Helper] Found earpiece audio device [${audioDevice.deviceName}], routing audio to it")
-                    currentCall.outputAudioDevice = audioDevice
-                    return
-                }
+                 if (audioDevice.type == AudioDevice.Type.Earpiece) {
+                    if (conference != null && conference.isIn) {
+                        Log.i("[Audio Route Helper] Found earpiece audio device [${audioDevice.deviceName}], routing audio of conference to it")
+                        conference.outputAudioDevice = audioDevice
+                        return
+                    } else {
+                        Log.i("[Audio Route Helper] Found earpiece audio device [${audioDevice.deviceName}], routing audio of call to it")
+                        currentCall.outputAudioDevice = audioDevice
+                        return
+                    }
+                 }
             }
             Log.e("[Audio Route Helper] Couldn't find earpiece audio device")
         }
@@ -48,13 +55,21 @@ class AudioRouteUtils {
                 Log.e("[Audio Route Helper] No call found, aborting speaker audio route change")
                 return
             }
+
             val currentCall = call ?: coreContext.core.currentCall ?: coreContext.core.calls[0]
+            val conference = coreContext.core.conference
 
             for (audioDevice in coreContext.core.audioDevices) {
                 if (audioDevice.type == AudioDevice.Type.Speaker) {
-                    Log.i("[Audio Route Helper] Found speaker audio device [${audioDevice.deviceName}], routing audio to it")
-                    currentCall.outputAudioDevice = audioDevice
-                    return
+                    if (conference != null && conference.isIn) {
+                        Log.i("[Audio Route Helper] Found speaker audio device [${audioDevice.deviceName}], routing audio of conference to it")
+                        conference.outputAudioDevice = audioDevice
+                        return
+                    } else {
+                        Log.i("[Audio Route Helper] Found speaker audio device [${audioDevice.deviceName}], routing audio of call to it")
+                        currentCall.outputAudioDevice = audioDevice
+                        return
+                    }
                 }
             }
             Log.e("[Audio Route Helper] Couldn't find speaker audio device")
@@ -66,13 +81,20 @@ class AudioRouteUtils {
                 return
             }
             val currentCall = call ?: coreContext.core.currentCall ?: coreContext.core.calls[0]
+            val conference = coreContext.core.conference
 
             for (audioDevice in coreContext.core.audioDevices) {
                 if (audioDevice.type == AudioDevice.Type.Bluetooth) {
                     if (audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
-                        Log.i("[Audio Route Helper] Found bluetooth audio device [${audioDevice.deviceName}], routing audio to it")
-                        currentCall.outputAudioDevice = audioDevice
-                        return
+                        if (conference != null && conference.isIn) {
+                            Log.i("[Audio Route Helper] Found bluetooth audio device [${audioDevice.deviceName}], routing audio of conference to it")
+                            conference.outputAudioDevice = audioDevice
+                            return
+                        } else {
+                            Log.i("[Audio Route Helper] Found bluetooth audio device [${audioDevice.deviceName}], routing audio of call to it")
+                            currentCall.outputAudioDevice = audioDevice
+                            return
+                        }
                     }
                 }
             }
@@ -85,17 +107,37 @@ class AudioRouteUtils {
                 return
             }
             val currentCall = call ?: coreContext.core.currentCall ?: coreContext.core.calls[0]
+            val conference = coreContext.core.conference
 
             for (audioDevice in coreContext.core.audioDevices) {
                 if (audioDevice.type == AudioDevice.Type.Headphones || audioDevice.type == AudioDevice.Type.Headset) {
                     if (audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
-                        Log.i("[Audio Route Helper] Found headset audio device [${audioDevice.deviceName}], routing audio to it")
-                        currentCall.outputAudioDevice = audioDevice
-                        return
+                        if (conference != null && conference.isIn) {
+                            Log.i("[Audio Route Helper] Found headset audio device [${audioDevice.deviceName}], routing audio of conference to it")
+                            conference.outputAudioDevice = audioDevice
+                            return
+                        } else {
+                            Log.i("[Audio Route Helper] Found headset audio device [${audioDevice.deviceName}], routing audio of call to it")
+                            currentCall.outputAudioDevice = audioDevice
+                            return
+                        }
                     }
                 }
             }
             Log.e("[Audio Route Helper] Couldn't find headset audio device")
+        }
+
+        fun isSpeakerAudioRouteCurrentlyUsed(call: Call? = null): Boolean {
+            if (coreContext.core.callsNb == 0) {
+                Log.w("[Audio Route Helper] No call found, so speaker audio route isn't used")
+                return false
+            }
+            val currentCall = call ?: coreContext.core.currentCall ?: coreContext.core.calls[0]
+            val conference = coreContext.core.conference
+
+            val audioDevice = if (conference != null && conference.isIn) conference.outputAudioDevice else currentCall.outputAudioDevice
+            Log.i("[Audio Route Helper] Audio device currently in use is [${audioDevice?.deviceName}] with type (${audioDevice?.type})")
+            return audioDevice?.type == AudioDevice.Type.Speaker
         }
 
         fun isBluetoothAudioRouteCurrentlyUsed(call: Call? = null): Boolean {
@@ -104,9 +146,10 @@ class AudioRouteUtils {
                 return false
             }
             val currentCall = call ?: coreContext.core.currentCall ?: coreContext.core.calls[0]
+            val conference = coreContext.core.conference
 
-            val audioDevice = currentCall.outputAudioDevice
-            Log.i("[Audio Route Helper] Audio device currently in use is [${audioDevice?.deviceName}]")
+            val audioDevice = if (conference != null && conference.isIn) conference.outputAudioDevice else currentCall.outputAudioDevice
+            Log.i("[Audio Route Helper] Audio device currently in use is [${audioDevice?.deviceName}] with type (${audioDevice?.type})")
             return audioDevice?.type == AudioDevice.Type.Bluetooth
         }
 

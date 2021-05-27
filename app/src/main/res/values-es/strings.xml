@@ -349,7 +349,6 @@
     <string name="call_error_incompatible_media_params">Parámetros de medios incompatibles</string>
     <string name="call_error_network_unreachable">La red es inalcanzable</string>
     <string name="call_error_io_error">Error de red</string>
-    <string name="call_error_unknown">Error desconocido</string>
     <string name="call_stats_audio">Audio</string>
     <string name="call_stats_video">Video</string>
     <string name="call_stats_codec">Codec:</string>
@@ -558,11 +557,7 @@
     <string name="chat_room_cant_open_file_no_app_found">No se puede abrir el archivo, no hay una apliación disponible para este formato.</string>
     <string name="dialog_lime_security_message">Los mensajes instantáneos se cifran de extremo a extremo en conversaciones seguras. Es posible mejorar el nivel de seguridad de una conversación autenticando a los participantes. Para ello, llame al contacto y siga el proceso de autenticación.</string>
     <string name="advanced_settings_send_debug_logs_title">Enviar registros</string>
-    <string name="advanced_settings_send_debug_logs_summary"></string>
     <string name="advanced_settings_reset_debug_logs_title">Restablecer registros</string>
-    <string name="advanced_settings_reset_debug_logs_summary"></string>
     <string name="settings_primary_account_display_name_title">Nombre de la pantalla</string>
-    <string name="settings_primary_account_display_name_summary"></string>
     <string name="settings_primary_account_username_title">Nombre de usuario</string>
-    <string name="settings_primary_account_username_summary"></string>
 </resources>
