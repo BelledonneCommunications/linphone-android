@@ -33,7 +33,6 @@ import org.linphone.activities.main.adapters.SelectionListAdapter
 import org.linphone.activities.main.history.data.GroupedCallLogData
 import org.linphone.activities.main.history.viewmodels.CallLogViewModel
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
-import org.linphone.core.Address
 import org.linphone.databinding.GenericListHeaderBinding
 import org.linphone.databinding.HistoryListCellBinding
 import org.linphone.utils.*
@@ -46,8 +45,8 @@ class CallLogsListAdapter(
         MutableLiveData<Event<GroupedCallLogData>>()
     }
 
-    val startCallToEvent: MutableLiveData<Event<Address>> by lazy {
-        MutableLiveData<Event<Address>>()
+    val startCallToEvent: MutableLiveData<Event<GroupedCallLogData>> by lazy {
+        MutableLiveData<Event<GroupedCallLogData>>()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -86,7 +85,7 @@ class CallLogsListAdapter(
                     if (selectionViewModel.isEditionEnabled.value == true) {
                         selectionViewModel.onToggleSelect(adapterPosition)
                     } else {
-                        startCallToEvent.value = Event(callLogGroup.lastCallLog.remoteAddress)
+                        startCallToEvent.value = Event(callLogGroup)
                     }
                 }
 
