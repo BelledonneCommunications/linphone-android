@@ -41,6 +41,7 @@ import java.math.BigInteger
 import java.nio.charset.StandardCharsets
 import java.security.KeyStore
 import java.security.MessageDigest
+import java.text.Collator
 import java.util.*
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
@@ -84,6 +85,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
         "$sdkVersion ($sdkBranch, $sdkBuildType)"
     }
 
+    val collator = Collator.getInstance()
     val contactsManager: ContactsManager by lazy {
         ContactsManager(context)
     }
@@ -308,6 +310,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
         telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE)
 
         EmojiCompat.init(BundledEmojiCompatConfig(context))
+        collator.strength = Collator.NO_DECOMPOSITION
     }
 
     fun stop() {
