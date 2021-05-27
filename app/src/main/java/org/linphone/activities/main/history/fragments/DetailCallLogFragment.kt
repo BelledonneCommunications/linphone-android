@@ -94,7 +94,8 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
         }
 
         viewModel.startCallEvent.observe(viewLifecycleOwner, {
-            it.consume { address ->
+            it.consume { callLog ->
+                val address = callLog.remoteAddress
                 if (coreContext.core.callsNb > 0) {
                     Log.i("[History] Starting dialer with pre-filled URI ${address.asStringUriOnly()}, is transfer? ${sharedViewModel.pendingCallTransfer}")
                     val args = Bundle()
@@ -103,7 +104,8 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
                     args.putBoolean("SkipAutoCallStart", true) // If auto start call setting is enabled, ignore it
                     navigateToDialer(args)
                 } else {
-                    coreContext.startCall(address)
+                    val localAddress = callLog.localAddress
+                    coreContext.startCall(address, localAddress = localAddress)
                 }
             }
         })
