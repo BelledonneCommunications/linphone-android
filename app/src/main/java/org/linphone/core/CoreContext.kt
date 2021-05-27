@@ -470,7 +470,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
         startCall(address)
     }
 
-    fun startCall(address: Address, forceZRTP: Boolean = false) {
+    fun startCall(address: Address, forceZRTP: Boolean = false, localAddress: Address? = null) {
         if (!core.isNetworkReachable) {
             Log.e("[Context] Network unreachable, abort outgoing call")
             callErrorMessageResourceId.value = Event(context.getString(R.string.call_error_network_unreachable))
@@ -478,20 +478,31 @@ class CoreContext(val context: Context, coreConfig: Config) {
         }
 
         val params = core.createCallParams(null)
+        if (params == null) {
+            val call = core.inviteAddress(address)
+            Log.w("[Context] Starting call $call without params")
+            return
+        }
+
         if (forceZRTP) {
-            params?.mediaEncryption = MediaEncryption.ZRTP
+            params.mediaEncryption = MediaEncryption.ZRTP
         }
         if (LinphoneUtils.checkIfNetworkHasLowBandwidth(context)) {
             Log.w("[Context] Enabling low bandwidth mode!")
-            params?.enableLowBandwidth(true)
+            params.enableLowBandwidth(true)
         }
-        params?.recordFile = LinphoneUtils.getRecordingFilePathForAddress(address)
+        params.recordFile = LinphoneUtils.getRecordingFilePathForAddress(address)
 
-        val call = if (params != null) {
-            core.inviteAddressWithParams(address, params)
-        } else {
-            core.inviteAddress(address)
+        if (localAddress != null) {
+            params.proxyConfig = core.proxyConfigList.find { proxyConfig ->
+                proxyConfig.identityAddress?.weakEqual(localAddress) ?: false
+            }
+            if (params.proxyConfig != null) {
+                Log.i("[Context] Using proxy config matching address ${localAddress.asStringUriOnly()} as From")
+            }
         }
+
+        val call = core.inviteAddressWithParams(address, params)
         Log.i("[Context] Starting call $call")
     }
 
