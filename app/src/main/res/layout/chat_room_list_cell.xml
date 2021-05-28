@@ -15,6 +15,9 @@
             name="position"
             type="Integer"/>
         <variable
+            name="forwardPending"
+            type="Boolean"/>
+        <variable
             name="viewModel"
             type="org.linphone.activities.main.chat.viewmodels.ChatRoomViewModel" />
         <variable
@@ -63,7 +66,8 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="match_parent"
             android:paddingLeft="10dp">
 
@@ -83,6 +87,8 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/lastMessage"
                 android:layout_alignParentRight="true"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -132,6 +138,15 @@
                 android:src="@drawable/ephemeral_messages"/>
 
         </RelativeLayout>
+
+        <ImageView
+            android:visibility="@{forwardPending ? View.VISIBLE : View.GONE, default=gone}"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="10dp"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/forward_message_default"
+            android:background="@drawable/background_round_secondary_color" />
 
     </LinearLayout>
 

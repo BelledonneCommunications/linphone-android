@@ -365,7 +365,7 @@
     <string name="content_description_edit_contact">Névjegy szerkesztése</string>
     <string name="content_description_delete_contact">Névjegy törlése</string>
     <string name="content_description_confirm_contact_edit">Változtatások mentése</string>
-    <string name="content_description_cancel_contact_edit">Változtatások elvetése</string>
+    <string name="content_description_discard_changes">Változtatások elvetése</string>
     <string name="content_description_change_contact_picture">Névjegyfénykép módosítása</string>
     <string name="content_description_change_own_picture">Saját névjegyfénykép módosítása</string>
     <string name="content_description_call_direction">Hívásirány</string>

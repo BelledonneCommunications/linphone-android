@@ -462,7 +462,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
     private fun showForwardConfirmationDialog(chatMessage: ChatMessage) {
         val viewModel = DialogViewModel(getString(R.string.chat_message_forward_confirmation_dialog))
-        viewModel.iconResource = R.drawable.forward_message_dialog_default
+        viewModel.iconResource = R.drawable.forward_message_default
         viewModel.showIcon = true
         val dialog: Dialog = DialogUtils.getDialog(requireContext(), viewModel)
 

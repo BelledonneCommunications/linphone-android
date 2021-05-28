@@ -331,7 +331,7 @@
     <string name="content_description_ephemeral_duration_change">通過選定值更改「閱後即焚」信息的時效</string>
     <string name="content_description_contact_can_do_encryption">可在加密的對話中邀請聯絡人</string>
     <string name="content_description_start_encrypted_chat">進入加密對話</string>
-    <string name="content_description_cancel_contact_edit">放棄更改</string>
+    <string name="content_description_discard_changes">放棄更改</string>
     <string name="content_description_unselect_all">取消選擇所有項目</string>
     <string name="content_description_recording_toggle_play">播放或暫停錄音</string>
     <string name="content_description_show_missed_calls">只顯示未接來電</string>
