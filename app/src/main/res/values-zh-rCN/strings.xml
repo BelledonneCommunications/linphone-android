@@ -236,7 +236,7 @@
     <string name="content_description_start_encrypted_chat">进入加密对话</string>
     <string name="content_description_edit_contact">编辑联系人</string>
     <string name="content_description_delete_contact">删除联系人</string>
-    <string name="content_description_cancel_contact_edit">放弃更改</string>
+    <string name="content_description_discard_changes">放弃更改</string>
     <string name="content_description_confirm_contact_edit">保存更改</string>
     <string name="content_description_change_contact_picture">更改联系人图片</string>
     <string name="content_description_change_own_picture">更改自己的图像</string>

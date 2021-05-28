@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:width="120dp"
+        android:height="120dp"
+        android:bottom="@dimen/field_shape_margin"
+        android:top="@dimen/field_shape_margin"
+        android:end="@dimen/field_shape_margin"
+        android:start="@dimen/field_shape_margin">
+        <rotate
+            android:fromDegrees="45"
+            android:pivotX="50%"
+            android:pivotY="50%">
+            <shape android:shape="line">
+                <stroke android:width="7dp" android:color="?attr/drawableTintColor" />
+            </shape>
+        </rotate>
+    </item>
+    <item
+        android:width="120dp"
+        android:height="120dp"
+        android:bottom="@dimen/field_shape_margin"
+        android:top="@dimen/field_shape_margin"
+        android:end="@dimen/field_shape_margin"
+        android:start="@dimen/field_shape_margin">
+        <rotate
+            android:fromDegrees="135"
+            android:pivotX="50%"
+            android:pivotY="50%">
+            <shape android:shape="line">
+                <stroke android:width="7dp" android:color="?attr/drawableTintColor" />
+            </shape>
+        </rotate>
+    </item>
+</layer-list>
