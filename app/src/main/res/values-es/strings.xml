@@ -166,7 +166,7 @@
     <string name="content_description_start_encrypted_chat">Entra en una conversación encriptada</string>
     <string name="content_description_edit_contact">Editar contacto</string>
     <string name="content_description_delete_contact">Borrar contacto</string>
-    <string name="content_description_cancel_contact_edit">Descartar los cambios</string>
+    <string name="content_description_discard_changes">Descartar los cambios</string>
     <string name="content_description_confirm_contact_edit">Guardar los cambios</string>
     <string name="content_description_change_contact_picture">Cambiar foto de contacto</string>
     <string name="content_description_change_own_picture">Cambiar mi propia foto</string>

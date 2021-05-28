@@ -44,7 +44,7 @@
         <LinearLayout
             android:id="@+id/top_bar"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="@dimen/main_activity_top_bar_size"
             android:background="?attr/lightToolbarBackgroundColor"
             android:orientation="horizontal">
 
@@ -135,7 +135,7 @@
             android:id="@+id/list_edit_top_bar_fragment"
             android:name="org.linphone.activities.main.fragments.ListTopBarFragment"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="@dimen/main_activity_top_bar_size"
             android:layout_alignTop="@id/top_bar"
             tools:layout="@layout/list_edit_top_bar_fragment" />
 

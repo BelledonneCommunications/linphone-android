@@ -62,7 +62,7 @@
             <RelativeLayout
                 android:id="@+id/address_bar"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="@dimen/main_activity_top_bar_size"
                 android:layout_alignParentTop="true"
                 android:background="?attr/lightToolbarBackgroundColor">
 
@@ -104,7 +104,7 @@
                 android:id="@+id/controls"
                 android:layout_alignParentBottom="true"
                 android:layout_width="match_parent"
-                android:layout_height="60dp">
+                android:layout_height="@dimen/main_activity_top_bar_size">
 
                 <ImageView
                     android:onClick="@{newContactClickListener}"

@@ -176,6 +176,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
                 Log.i("[Chat] Cancelling message forward")
             }
             listViewModel.forwardPending.value = false
+            adapter.forwardPending(false)
         }
 
         binding.setCancelSharingClickListener {
@@ -221,8 +222,8 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
             sharedViewModel.textToShare.observe(viewLifecycleOwner, {
                 if (it.isNotEmpty()) {
                     Log.i("[Chat] Found text to share")
-                    val activity = requireActivity() as MainActivity
-                    activity.showSnackBar(R.string.chat_room_toast_choose_for_sharing)
+                    // val activity = requireActivity() as MainActivity
+                    // activity.showSnackBar(R.string.chat_room_toast_choose_for_sharing)
                     listViewModel.sharingPending.value = true
                 } else {
                     if (sharedViewModel.filesToShare.value.isNullOrEmpty()) {
@@ -233,8 +234,8 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
             sharedViewModel.filesToShare.observe(viewLifecycleOwner, {
                 if (it.isNotEmpty()) {
                     Log.i("[Chat] Found ${it.size} files to share")
-                    val activity = requireActivity() as MainActivity
-                    activity.showSnackBar(R.string.chat_room_toast_choose_for_sharing)
+                    // val activity = requireActivity() as MainActivity
+                    // activity.showSnackBar(R.string.chat_room_toast_choose_for_sharing)
                     listViewModel.sharingPending.value = true
                 } else {
                     if (sharedViewModel.textToShare.value.isNullOrEmpty()) {
@@ -245,12 +246,13 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
             sharedViewModel.messageToForwardEvent.observe(viewLifecycleOwner, {
                 if (!it.consumed()) {
                     Log.i("[Chat] Found chat message to transfer")
+                    // val activity = requireActivity() as MainActivity
+                    // activity.showSnackBar(R.string.chat_room_toast_choose_for_sharing)
                     listViewModel.forwardPending.value = true
-
-                    val activity = requireActivity() as MainActivity
-                    activity.showSnackBar(R.string.chat_room_toast_choose_for_sharing)
+                    adapter.forwardPending(true)
                 } else {
                     listViewModel.forwardPending.value = false
+                    adapter.forwardPending(false)
                 }
             })
 

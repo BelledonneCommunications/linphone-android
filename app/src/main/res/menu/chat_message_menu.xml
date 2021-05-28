@@ -28,7 +28,7 @@
 
     <item
         android:id="@+id/chat_message_menu_add_to_contacts"
-        android:icon="@drawable/contact_add_default"
+        android:icon="@drawable/menu_add_contact"
         android:title="@string/chat_message_context_menu_add_to_contacts" />
 
 </menu>

@@ -28,7 +28,7 @@
         <LinearLayout
             android:id="@+id/top_bar"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="@dimen/main_activity_top_bar_size"
             android:background="?attr/lightToolbarBackgroundColor"
             android:orientation="horizontal">
 

@@ -177,6 +177,8 @@
     <string name="chat_message_forward_confirmation_dialog">Do you want to forward the message in this room?</string>
     <string name="chat_room_dummy_subject" translatable="false">dummy subject</string>
     <string name="chat_room_toast_choose_for_sharing">Select a conversation or create a new one</string>
+    <string name="chat_room_choose_conversation_for_message_forward">Select a conversation or create a new one</string>
+    <string name="chat_room_choose_conversation_for_file_sharing">Select a conversation or create a new one</string>
     <string name="chat_room_cant_open_file_no_app_found">Can\'t open file, no application available for this format.</string>
     <string name="chat_room_file_not_found">File not found</string>
     <string name="chat_room_creation_failed">Chat room creation failed</string>
@@ -646,7 +648,7 @@
     <string name="content_description_start_encrypted_chat">Go into encrypted conversation</string>
     <string name="content_description_edit_contact">Edit contact</string>
     <string name="content_description_delete_contact">Delete contact</string>
-    <string name="content_description_cancel_contact_edit">Discard changes</string>
+    <string name="content_description_discard_changes">Discard changes</string>
     <string name="content_description_confirm_contact_edit">Save changes</string>
     <string name="content_description_change_contact_picture">Change contact picture</string>
     <string name="content_description_change_own_picture">Change own picture</string>
@@ -702,4 +704,6 @@
     <string name="content_description_close_bubble">Close notification bubble</string>
     <string name="content_description_open_app">Open conversation in app instead of bubble</string>
     <string name="content_description_export">Open file in third-party app</string>
+    <string name="content_description_cancel_forward">Cancel message forward</string>
+    <string name="content_description_cancel_sharing">Cancel sharing</string>
 </resources>
