@@ -42,6 +42,8 @@ class ChatRoomsListAdapter(
         MutableLiveData<Event<ChatRoom>>()
     }
 
+    private var isForwardPending = false
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding: ChatRoomListCellBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
@@ -52,6 +54,11 @@ class ChatRoomsListAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         (holder as ViewHolder).bind(getItem(position))
+    }
+
+    fun forwardPending(pending: Boolean) {
+        isForwardPending = pending
+        notifyDataSetChanged()
     }
 
     inner class ViewHolder(
@@ -69,6 +76,8 @@ class ChatRoomsListAdapter(
                 selectionViewModel.isEditionEnabled.observe(viewLifecycleOwner, {
                     position = adapterPosition
                 })
+
+                forwardPending = isForwardPending
 
                 setClickListener {
                     if (selectionViewModel.isEditionEnabled.value == true) {
