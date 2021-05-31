@@ -24,4 +24,6 @@
     <dimen name="field_button_size">20dp</dimen>
     <dimen name="field_shape_margin">3dp</dimen>
     <dimen name="call_overlay_size">60dp</dimen>
+    <dimen name="chat_message_popup_width">250dp</dimen>
+    <dimen name="chat_message_popup_item_height">40dp</dimen>
 </resources>
