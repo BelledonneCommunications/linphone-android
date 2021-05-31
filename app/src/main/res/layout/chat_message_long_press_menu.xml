@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="resendClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="copyTextClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="forwardClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="imdnClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="addToContactsClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="deleteClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="resendHidden"
+            type="Boolean" />
+        <variable
+            name="imdnHidden"
+            type="Boolean" />
+        <variable
+            name="copyTextHidden"
+            type="Boolean" />
+        <variable
+            name="addToContactsHidden"
+            type="Boolean" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="@dimen/chat_message_popup_width"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="?attr/backgroundColor">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chat_message_popup_item_height"
+            android:visibility="@{resendHidden ? View.GONE : View.VISIBLE}"
+            android:onClick="@{resendClickListener}"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:drawableRight="@drawable/chat_send_message"
+            android:textColor="?attr/primaryTextColor"
+            android:text="@string/chat_message_context_menu_resend" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chat_message_popup_item_height"
+            android:visibility="@{copyTextHidden ? View.GONE : View.VISIBLE}"
+            android:onClick="@{copyTextClickListener}"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:drawableRight="@drawable/menu_copy_text"
+            android:textColor="?attr/primaryTextColor"
+            android:text="@string/chat_message_context_menu_copy_text" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chat_message_popup_item_height"
+            android:onClick="@{forwardClickListener}"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:drawableRight="@drawable/menu_forward"
+            android:textColor="?attr/primaryTextColor"
+            android:text="@string/chat_message_context_menu_forward" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chat_message_popup_item_height"
+            android:visibility="@{imdnHidden ? View.GONE : View.VISIBLE}"
+            android:onClick="@{imdnClickListener}"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:drawableRight="@drawable/menu_imdn_info"
+            android:textColor="?attr/primaryTextColor"
+            android:text="@string/chat_message_context_menu_imdn_info" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chat_message_popup_item_height"
+            android:visibility="@{addToContactsHidden ? View.GONE : View.VISIBLE}"
+            android:onClick="@{addToContactsClickListener}"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:drawableRight="@drawable/menu_add_contact"
+            android:textColor="?attr/primaryTextColor"
+            android:text="@string/chat_message_context_menu_add_to_contacts" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chat_message_popup_item_height"
+            android:onClick="@{deleteClickListener}"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:drawableRight="@drawable/menu_delete"
+            android:drawableTint="@color/red_color"
+            android:textColor="@color/red_color"
+            android:text="@string/chat_message_context_menu_delete" />
+
+    </LinearLayout>
+
+</layout>
