@@ -26,7 +26,7 @@ import org.linphone.core.tools.Log
 
 class AudioRouteUtils {
     companion object {
-        private fun routeAudioTo(types : List<AudioDevice.Type>, call: Call? = null) {
+        private fun routeAudioTo(types: List<AudioDevice.Type>, call: Call? = null) {
             val listSize = types.size
             val stringBuilder = StringBuilder()
             var index = 0
