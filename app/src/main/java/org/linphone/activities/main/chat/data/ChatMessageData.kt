@@ -67,12 +67,11 @@ class ChatMessageData(
             time.value = TimestampUtils.toString(chatMessage.time)
             updateChatMessageState(state)
 
-            // TODO FIXME : find a way to refresh outgoing message downloaded
-            if (state == ChatMessage.State.FileTransferDone && !message.isOutgoing) {
+            if (state == ChatMessage.State.FileTransferDone) {
                 Log.i("[Chat Message] File transfer done")
-                updateContentsList()
-
-                coreContext.exportFilesInMessageToMediaStore(message)
+                if (!message.isOutgoing) {
+                    coreContext.exportFilesInMessageToMediaStore(message)
+                }
             }
         }
 
@@ -150,11 +149,13 @@ class ChatMessageData(
 
     private fun updateContentsList() {
         contents.value.orEmpty().forEach(ChatMessageContentData::destroy)
-
         val list = arrayListOf<ChatMessageContentData>()
-        for (content in chatMessage.contents) {
+
+        val contentsList = chatMessage.contents
+        for (index in 0 until contentsList.size) {
+            val content = contentsList[index]
             if (content.isFileTransfer || content.isFile) {
-                list.add(ChatMessageContentData(content, chatMessage, contentListener))
+                list.add(ChatMessageContentData(chatMessage, index, contentListener))
             } else if (content.isText) {
                 val spannable = Spannable.Factory.getInstance().newSpannable(content.utf8Text)
                 LinkifyCompat.addLinks(spannable, Linkify.WEB_URLS)

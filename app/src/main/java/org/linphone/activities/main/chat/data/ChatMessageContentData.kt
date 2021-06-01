@@ -36,8 +36,8 @@ import org.linphone.utils.FileUtils
 import org.linphone.utils.ImageUtils
 
 class ChatMessageContentData(
-    val content: Content,
     private val chatMessage: ChatMessage,
+    private val contentIndex: Int,
     private val listener: OnContentClickedListener?
 ) {
     val isImage = MutableLiveData<Boolean>()
@@ -68,6 +68,9 @@ class ChatMessageContentData(
             return count == 1
         }
 
+    var isFileEncrypted: Boolean = false
+    private lateinit var content: Content
+
     private val chatMessageListener: ChatMessageListenerStub = object : ChatMessageListenerStub() {
         override fun onFileTransferProgressIndication(
             message: ChatMessage,
@@ -75,31 +78,67 @@ class ChatMessageContentData(
             offset: Int,
             total: Int
         ) {
-            if (message == chatMessage) {
-                if (c.filePath == content.filePath) {
-                    val percent = offset * 100 / total
-                    Log.d("[Content] Download progress is: $offset / $total ($percent%)")
-                    downloadProgressInt.postValue(percent)
-                    downloadProgressString.postValue("$percent%")
-                }
+            if (c.filePath == content.filePath) {
+                val percent = offset * 100 / total
+                Log.d("[Content] Download progress is: $offset / $total ($percent%)")
+
+                downloadProgressInt.value = percent
+                downloadProgressString.value = "$percent%"
             }
         }
 
         override fun onMsgStateChanged(message: ChatMessage, state: ChatMessage.State) {
-            downloadEnabled.postValue(chatMessage.state != ChatMessage.State.FileTransferInProgress)
-            if (message == chatMessage) {
-                if (state == ChatMessage.State.FileTransferDone || state == ChatMessage.State.FileTransferError) {
-                    downloadProgressInt.value = 0
-                }
+            downloadEnabled.value = state != ChatMessage.State.FileTransferInProgress
+
+            if (state == ChatMessage.State.FileTransferDone || state == ChatMessage.State.FileTransferError) {
+                updateContent()
             }
         }
     }
 
-    private val isEncrypted = content.isFileEncrypted
-
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     init {
+        updateContent()
+        chatMessage.addListener(chatMessageListener)
+    }
+
+    fun destroy() {
+        scope.cancel()
+
+        val path = filePath.value.orEmpty()
+        if (path.isNotEmpty() && isFileEncrypted) {
+            Log.i("[Content] Deleting file used for preview: $path")
+            FileUtils.deleteFile(path)
+            filePath.value = ""
+        }
+
+        chatMessage.removeListener(chatMessageListener)
+    }
+
+    fun download() {
+        val filePath = content.filePath
+        if (content.isFileTransfer && (filePath == null || filePath.isEmpty())) {
+            val contentName = content.name
+            if (contentName != null) {
+                val file = FileUtils.getFileStoragePath(contentName)
+                content.filePath = file.path
+                downloadEnabled.value = false
+
+                Log.i("[Content] Started downloading $contentName into ${content.filePath}")
+                chatMessage.downloadContent(content)
+            }
+        }
+    }
+
+    fun openFile() {
+        listener?.onContentClicked(content)
+    }
+
+    private fun updateContent() {
+        content = chatMessage.contents[contentIndex]
+        isFileEncrypted = content.isFileEncrypted
+
         filePath.value = ""
         fileName.value = if (content.name.isNullOrEmpty() && !content.filePath.isNullOrEmpty()) {
             FileUtils.getNameFromFilePath(content.filePath!!)
@@ -151,39 +190,6 @@ class ChatMessageContentData(
         downloadEnabled.value = !chatMessage.isFileTransferInProgress
         downloadProgressInt.value = 0
         downloadProgressString.value = "0%"
-        chatMessage.addListener(chatMessageListener)
-    }
-
-    fun destroy() {
-        scope.cancel()
-
-        val path = filePath.value.orEmpty()
-        if (path.isNotEmpty() && isEncrypted) {
-            Log.i("[Content] Deleting file used for preview: $path")
-            FileUtils.deleteFile(path)
-            filePath.value = ""
-        }
-
-        chatMessage.removeListener(chatMessageListener)
-    }
-
-    fun download() {
-        val filePath = content.filePath
-        if (content.isFileTransfer && (filePath == null || filePath.isEmpty())) {
-            val contentName = content.name
-            if (contentName != null) {
-                val file = FileUtils.getFileStoragePath(contentName)
-                content.filePath = file.path
-                downloadEnabled.value = false
-
-                Log.i("[Content] Started downloading $contentName into ${content.filePath}")
-                chatMessage.downloadContent(content)
-            }
-        }
-    }
-
-    fun openFile() {
-        listener?.onContentClicked(content)
     }
 }
 
