@@ -90,7 +90,6 @@
             android:layout_height="@dimen/chat_message_popup_item_height"
             android:onClick="@{deleteClickListener}"
             android:drawableRight="@drawable/menu_delete"
-            android:drawableTint="@color/red_color"
             style="@style/popup_item_font"
             android:textColor="@color/red_color"
             android:text="@string/chat_message_context_menu_delete" />
