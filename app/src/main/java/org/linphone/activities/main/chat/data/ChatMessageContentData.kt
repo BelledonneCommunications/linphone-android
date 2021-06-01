@@ -53,7 +53,7 @@ class ChatMessageContentData(
 
     val downloadable = MutableLiveData<Boolean>()
     val downloadEnabled = MutableLiveData<Boolean>()
-    val downloadProgress = MutableLiveData<Int>()
+    val downloadProgressInt = MutableLiveData<Int>()
     val downloadProgressString = MutableLiveData<String>()
     val downloadLabel = MutableLiveData<Spannable>()
 
@@ -75,19 +75,23 @@ class ChatMessageContentData(
             offset: Int,
             total: Int
         ) {
-            if (c.filePath == content.filePath) {
-                val percent = offset * 100 / total
-                Log.d("[Content] Download progress is: $offset / $total ($percent%)")
-                downloadProgress.postValue(percent)
-                downloadProgressString.postValue("$percent%")
+            if (message == chatMessage) {
+                if (c.filePath == content.filePath) {
+                    val percent = offset * 100 / total
+                    Log.d("[Content] Download progress is: $offset / $total ($percent%)")
+                    downloadProgressInt.postValue(percent)
+                    downloadProgressString.postValue("$percent%")
+                }
             }
         }
 
         override fun onMsgStateChanged(message: ChatMessage, state: ChatMessage.State) {
-            if (state == ChatMessage.State.FileTransferDone || state == ChatMessage.State.FileTransferError) {
-                message.removeListener(this)
-            }
             downloadEnabled.postValue(chatMessage.state != ChatMessage.State.FileTransferInProgress)
+            if (message == chatMessage) {
+                if (state == ChatMessage.State.FileTransferDone || state == ChatMessage.State.FileTransferError) {
+                    downloadProgressInt.value = 0
+                }
+            }
         }
     }
 
@@ -102,8 +106,10 @@ class ChatMessageContentData(
         } else {
             content.name
         }
+
+        // Display download size and underline text
         fileSize.value = AppUtils.bytesToDisplayableSize(content.fileSize.toLong())
-        var spannable = SpannableString("${AppUtils.getString(R.string.chat_message_download_file)} (${fileSize.value})")
+        val spannable = SpannableString("${AppUtils.getString(R.string.chat_message_download_file)} (${fileSize.value})")
         spannable.setSpan(UnderlineSpan(), 0, spannable.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         downloadLabel.value = spannable
 
@@ -143,7 +149,7 @@ class ChatMessageContentData(
 
         isGenericFile.value = !isPdf.value!! && !isAudio.value!! && !isVideo.value!! && !isImage.value!!
         downloadEnabled.value = !chatMessage.isFileTransferInProgress
-        downloadProgress.value = 0
+        downloadProgressInt.value = 0
         downloadProgressString.value = "0%"
         chatMessage.addListener(chatMessageListener)
     }
@@ -157,6 +163,8 @@ class ChatMessageContentData(
             FileUtils.deleteFile(path)
             filePath.value = ""
         }
+
+        chatMessage.removeListener(chatMessageListener)
     }
 
     fun download() {
