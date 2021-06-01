@@ -56,7 +56,7 @@ class ContactsListViewModel : ViewModel() {
         super.onCleared()
     }
 
-    private fun getContactsList(): ArrayList<Contact> {
+    private fun getSelectedContactsList(): ArrayList<Contact> {
         return if (sipContactsSelected.value == true) coreContext.contactsManager.sipContacts else coreContext.contactsManager.contacts
     }
 
@@ -65,11 +65,11 @@ class ContactsListViewModel : ViewModel() {
 
         val filterValue = filter.value.orEmpty()
         list = if (filterValue.isNotEmpty()) {
-            getContactsList().filter { contact ->
+            getSelectedContactsList().filter { contact ->
                 contact.fullName?.contains(filterValue, true) ?: false
             } as ArrayList<Contact>
         } else {
-            getContactsList()
+            getSelectedContactsList()
         }
 
         // Prevent blinking items when list hasn't changed
