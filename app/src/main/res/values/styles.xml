@@ -269,4 +269,9 @@
         <item name="android:textSize">10sp</item>
     </style>
 
+    <style name="file_transfer_progress_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/secondaryTextColor</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
 </resources>
