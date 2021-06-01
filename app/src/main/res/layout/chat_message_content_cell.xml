@@ -89,7 +89,7 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="@{data.downloadProgress > 0 ? View.VISIBLE : View.GONE}"
+            android:visibility="@{data.downloadProgressInt > 0 ? View.VISIBLE : View.GONE}"
             android:layout_centerInParent="true">
 
             <com.google.android.material.progressindicator.CircularProgressIndicator
@@ -98,7 +98,7 @@
                 android:max="100"
                 android:layout_centerInParent="true"
                 app:trackColor="?attr/backgroundColor"
-                android:progress="@{data.downloadProgress, default=50}"
+                android:progress="@{data.downloadProgressInt, default=50}"
                 android:background="@drawable/background_round_secondary_color"/>
 
             <TextView
@@ -106,6 +106,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:textColor="?attr/secondaryTextColor"
+                style="@style/file_transfer_progress_font"
                 android:text="@{data.downloadProgressString, default=`50%`}"/>
 
         </RelativeLayout>

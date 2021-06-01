@@ -73,6 +73,8 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             if (itemCount == 1 && positionStart > 0) {
                 adapter.notifyItemChanged(positionStart - 1) // For grouping purposes
                 scrollToBottom()
+            } else if (positionStart > 0) {
+                scrollToBottom()
             }
         }
     }
