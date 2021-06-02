@@ -117,7 +117,7 @@
                         android:visibility="@{viewModel.sharingPending ? View.VISIBLE : View.GONE, default=gone}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="?attr/backgroundContastColor"
+                        android:background="?attr/backgroundContrastColor"
                         android:textColor="?attr/secondaryTextColor"
                         android:padding="10dp"
                         android:text="@string/chat_room_choose_conversation_for_file_sharing" />
@@ -126,7 +126,7 @@
                         android:visibility="@{viewModel.forwardPending ? View.VISIBLE : View.GONE, default=gone}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="?attr/backgroundContastColor"
+                        android:background="?attr/backgroundContrastColor"
                         android:textColor="?attr/secondaryTextColor"
                         android:padding="10dp"
                         android:text="@string/chat_room_choose_conversation_for_message_forward" />
