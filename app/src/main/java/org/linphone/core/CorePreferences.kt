@@ -132,10 +132,8 @@ class CorePreferences constructor(private val context: Context) {
 
     /* Chat */
 
-    // iOS and Android 4.4.x releases currently can't display more than 1 file per message
-    // TODO: Remove for the release, this won't be necessary anymore
     var preventMoreThanOneFilePerMessage: Boolean
-        get() = config.getBool("app", "prevent_more_than_one_file_per_message", true)
+        get() = config.getBool("app", "prevent_more_than_one_file_per_message", false)
         set(value) {
             config.setBool("app", "prevent_more_than_one_file_per_message", value)
         }
@@ -270,6 +268,13 @@ class CorePreferences constructor(private val context: Context) {
         get() = config.getBool("app", "route_audio_to_speaker_when_video_enabled", true)
         set(value) {
             config.setBool("app", "route_audio_to_speaker_when_video_enabled", value)
+        }
+
+    // Automatically handled by SDK
+    var pauseCallsWhenAudioFocusIsLost: Boolean
+        get() = config.getBool("audio", "android_pause_calls_when_audio_focus_lost", true)
+        set(value) {
+            config.setBool("audio", "android_pause_calls_when_audio_focus_lost", value)
         }
 
     /* Assistant */

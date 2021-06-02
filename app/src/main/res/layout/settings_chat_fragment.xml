@@ -20,7 +20,7 @@
         <LinearLayout
             android:id="@+id/top_bar"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="@dimen/main_activity_top_bar_size"
             android:layout_gravity="center_horizontal"
             android:background="?attr/lightToolbarBackgroundColor"
             android:orientation="horizontal">
@@ -68,7 +68,6 @@
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/chat_settings_mark_as_read_notif_dismissal_title}"
-                    linphone:subtitle="@{@string/chat_settings_mark_as_read_notif_dismissal_summary}"
                     linphone:listener="@{viewModel.markAsReadNotifDismissalListener}"
                     linphone:checked="@={viewModel.markAsReadNotifDismissal}"/>
 
@@ -124,7 +123,6 @@
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/chat_settings_hide_empty_rooms_title}"
-                    linphone:subtitle="@{@string/chat_settings_hide_empty_rooms_summary}"
                     linphone:listener="@{viewModel.hideEmptyRoomsListener}"
                     linphone:checked="@={viewModel.hideEmptyRooms}"/>
 

@@ -20,8 +20,13 @@
 package org.linphone.activities.main.chat.data
 
 import android.graphics.Bitmap
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.UnderlineSpan
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.*
+import org.linphone.R
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatMessageListenerStub
 import org.linphone.core.Content
@@ -31,26 +36,26 @@ import org.linphone.utils.FileUtils
 import org.linphone.utils.ImageUtils
 
 class ChatMessageContentData(
-    val content: Content,
     private val chatMessage: ChatMessage,
+    private val contentIndex: Int,
     private val listener: OnContentClickedListener?
 ) {
     val isImage = MutableLiveData<Boolean>()
     val isVideo = MutableLiveData<Boolean>()
     val isAudio = MutableLiveData<Boolean>()
     val videoPreview = MutableLiveData<Bitmap>()
+    val isPdf = MutableLiveData<Boolean>()
+    val isGenericFile = MutableLiveData<Boolean>()
 
     val fileName = MutableLiveData<String>()
-
     val filePath = MutableLiveData<String>()
-
     val fileSize = MutableLiveData<String>()
 
     val downloadable = MutableLiveData<Boolean>()
-
     val downloadEnabled = MutableLiveData<Boolean>()
-
-    val downloadProgress = MutableLiveData<Int>()
+    val downloadProgressInt = MutableLiveData<Int>()
+    val downloadProgressString = MutableLiveData<String>()
+    val downloadLabel = MutableLiveData<Spannable>()
 
     val isAlone: Boolean
         get() {
@@ -63,6 +68,9 @@ class ChatMessageContentData(
             return count == 1
         }
 
+    var isFileEncrypted: Boolean = false
+    private lateinit var content: Content
+
     private val chatMessageListener: ChatMessageListenerStub = object : ChatMessageListenerStub() {
         override fun onFileTransferProgressIndication(
             message: ChatMessage,
@@ -73,64 +81,25 @@ class ChatMessageContentData(
             if (c.filePath == content.filePath) {
                 val percent = offset * 100 / total
                 Log.d("[Content] Download progress is: $offset / $total ($percent%)")
-                downloadProgress.postValue(percent)
+
+                downloadProgressInt.value = percent
+                downloadProgressString.value = "$percent%"
             }
         }
 
         override fun onMsgStateChanged(message: ChatMessage, state: ChatMessage.State) {
+            downloadEnabled.value = state != ChatMessage.State.FileTransferInProgress
+
             if (state == ChatMessage.State.FileTransferDone || state == ChatMessage.State.FileTransferError) {
-                message.removeListener(this)
+                updateContent()
             }
-            downloadEnabled.postValue(chatMessage.state != ChatMessage.State.FileTransferInProgress)
         }
     }
-
-    private val isEncrypted = content.isFileEncrypted
 
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     init {
-        filePath.value = ""
-        fileName.value = if (content.name.isNullOrEmpty() && !content.filePath.isNullOrEmpty()) {
-            FileUtils.getNameFromFilePath(content.filePath!!)
-        } else {
-            content.name
-        }
-        fileSize.value = AppUtils.bytesToDisplayableSize(content.fileSize.toLong())
-
-        if (content.isFile || (content.isFileTransfer && chatMessage.isOutgoing)) {
-            val path = if (content.isFileEncrypted) content.plainFilePath else content.filePath ?: ""
-            downloadable.value = content.filePath.orEmpty().isEmpty()
-
-            if (path.isNotEmpty()) {
-                Log.i("[Content] Found displayable content: $path")
-                filePath.value = path
-                isImage.value = FileUtils.isExtensionImage(path)
-                isVideo.value = FileUtils.isExtensionVideo(path)
-                isAudio.value = FileUtils.isExtensionAudio(path)
-
-                if (isVideo.value == true) {
-                    scope.launch {
-                        withContext(Dispatchers.IO) {
-                            videoPreview.postValue(ImageUtils.getVideoPreview(path))
-                        }
-                    }
-                }
-            } else {
-                Log.w("[Content] Found content with empty path...")
-                isImage.value = false
-                isVideo.value = false
-                isAudio.value = false
-            }
-        } else {
-            downloadable.value = true
-            isImage.value = false
-            isVideo.value = false
-            isAudio.value = false
-        }
-
-        downloadEnabled.value = !chatMessage.isFileTransferInProgress
-        downloadProgress.value = 0
+        updateContent()
         chatMessage.addListener(chatMessageListener)
     }
 
@@ -138,11 +107,13 @@ class ChatMessageContentData(
         scope.cancel()
 
         val path = filePath.value.orEmpty()
-        if (path.isNotEmpty() && isEncrypted) {
+        if (path.isNotEmpty() && isFileEncrypted) {
             Log.i("[Content] Deleting file used for preview: $path")
             FileUtils.deleteFile(path)
             filePath.value = ""
         }
+
+        chatMessage.removeListener(chatMessageListener)
     }
 
     fun download() {
@@ -162,6 +133,63 @@ class ChatMessageContentData(
 
     fun openFile() {
         listener?.onContentClicked(content)
+    }
+
+    private fun updateContent() {
+        content = chatMessage.contents[contentIndex]
+        isFileEncrypted = content.isFileEncrypted
+
+        filePath.value = ""
+        fileName.value = if (content.name.isNullOrEmpty() && !content.filePath.isNullOrEmpty()) {
+            FileUtils.getNameFromFilePath(content.filePath!!)
+        } else {
+            content.name
+        }
+
+        // Display download size and underline text
+        fileSize.value = AppUtils.bytesToDisplayableSize(content.fileSize.toLong())
+        val spannable = SpannableString("${AppUtils.getString(R.string.chat_message_download_file)} (${fileSize.value})")
+        spannable.setSpan(UnderlineSpan(), 0, spannable.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        downloadLabel.value = spannable
+
+        if (content.isFile || (content.isFileTransfer && chatMessage.isOutgoing)) {
+            val path = if (content.isFileEncrypted) content.plainFilePath else content.filePath ?: ""
+            downloadable.value = content.filePath.orEmpty().isEmpty()
+
+            if (path.isNotEmpty()) {
+                Log.i("[Content] Found displayable content: $path")
+                filePath.value = path
+                isImage.value = FileUtils.isExtensionImage(path)
+                isVideo.value = FileUtils.isExtensionVideo(path)
+                isAudio.value = FileUtils.isExtensionAudio(path)
+                isPdf.value = FileUtils.isExtensionPdf(path)
+
+                if (isVideo.value == true) {
+                    scope.launch {
+                        withContext(Dispatchers.IO) {
+                            videoPreview.postValue(ImageUtils.getVideoPreview(path))
+                        }
+                    }
+                }
+            } else {
+                Log.w("[Content] Found content with empty path...")
+                isImage.value = false
+                isVideo.value = false
+                isAudio.value = false
+                isPdf.value = false
+            }
+        } else {
+            downloadable.value = true
+            isImage.value = FileUtils.isExtensionImage(fileName.value!!)
+            isVideo.value = FileUtils.isExtensionVideo(fileName.value!!)
+            isAudio.value = FileUtils.isExtensionAudio(fileName.value!!)
+            isPdf.value = FileUtils.isExtensionPdf(fileName.value!!)
+        }
+
+        isGenericFile.value = !isPdf.value!! && !isAudio.value!! && !isVideo.value!! && !isImage.value!!
+        downloadEnabled.value = !chatMessage.isFileTransferInProgress
+        downloadProgressInt.value = 0
+        downloadProgressString.value = "0%"
     }
 }
 

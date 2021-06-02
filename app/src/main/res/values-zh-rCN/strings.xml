@@ -236,7 +236,7 @@
     <string name="content_description_start_encrypted_chat">进入加密对话</string>
     <string name="content_description_edit_contact">编辑联系人</string>
     <string name="content_description_delete_contact">删除联系人</string>
-    <string name="content_description_cancel_contact_edit">放弃更改</string>
+    <string name="content_description_discard_changes">放弃更改</string>
     <string name="content_description_confirm_contact_edit">保存更改</string>
     <string name="content_description_change_contact_picture">更改联系人图片</string>
     <string name="content_description_change_own_picture">更改自己的图像</string>
@@ -458,7 +458,6 @@
     <string name="call_error_incompatible_media_params">不兼容的媒体参数</string>
     <string name="call_error_network_unreachable">无法获取网络</string>
     <string name="call_error_io_error">网络出错</string>
-    <string name="call_error_unknown">未知错误</string>
     <string name="call_stats_audio">音频</string>
     <string name="call_stats_video">视频</string>
     <string name="call_stats_codec">编解码器：</string>
@@ -564,11 +563,7 @@
     </plurals>
     <string name="chat_settings_mark_as_read_notif_dismissal_title">撤消通知后标记为已读</string>
     <string name="advanced_settings_send_debug_logs_title">发送日志</string>
-    <string name="advanced_settings_send_debug_logs_summary"></string>
     <string name="advanced_settings_reset_debug_logs_title">重启日志</string>
-    <string name="advanced_settings_reset_debug_logs_summary"></string>
     <string name="settings_primary_account_display_name_title">显示名</string>
-    <string name="settings_primary_account_display_name_summary"></string>
     <string name="settings_primary_account_username_title">用户名</string>
-    <string name="settings_primary_account_username_summary"></string>
 </resources>

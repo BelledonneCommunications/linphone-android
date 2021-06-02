@@ -15,6 +15,12 @@
             name="editClickListener"
             type="android.view.View.OnClickListener"/>
         <variable
+            name="cancelForwardClickListener"
+            type="android.view.View.OnClickListener" />
+        <variable
+            name="cancelSharingClickListener"
+            type="android.view.View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.activities.main.chat.viewmodels.ChatRoomsListViewModel" />
     </data>
@@ -36,46 +42,94 @@
                 <LinearLayout
                     android:id="@+id/top_bar"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="wrap_content"
                     android:background="?attr/lightToolbarBackgroundColor"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
-                    <ImageView
-                        android:onClick="@{newOneToOneChatRoomClickListener}"
-                        android:contentDescription="@string/content_description_create_one_to_one_chat_room"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.2"
-                        android:background="?attr/button_background_drawable"
-                        android:padding="15dp"
-                        android:src="@drawable/chat_new" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/main_activity_top_bar_size"
+                        android:orientation="horizontal">
 
-                    <ImageView
-                        android:visibility="@{viewModel.groupChatAvailable ? View.VISIBLE : View.GONE}"
-                        android:onClick="@{newGroupChatRoomClickListener}"
-                        android:contentDescription="@string/content_description_create_group_chat_room"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.2"
-                        android:background="?attr/button_background_drawable"
-                        android:padding="15dp"
-                        android:src="@drawable/chat_group_new" />
+                        <ImageView
+                            android:onClick="@{cancelForwardClickListener}"
+                            android:visibility="@{viewModel.forwardPending ? View.VISIBLE : View.GONE}"
+                            android:contentDescription="@string/content_description_cancel_forward"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.2"
+                            android:background="?attr/button_background_drawable"
+                            android:padding="10dp"
+                            android:src="@drawable/cancel" />
 
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.4" />
+                        <ImageView
+                            android:onClick="@{cancelSharingClickListener}"
+                            android:visibility="@{viewModel.sharingPending ? View.VISIBLE : View.GONE}"
+                            android:contentDescription="@string/content_description_cancel_sharing"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.2"
+                            android:background="?attr/button_background_drawable"
+                            android:padding="10dp"
+                            android:src="@drawable/cancel" />
 
-                    <ImageView
-                        android:onClick="@{editClickListener}"
-                        android:enabled="@{!viewModel.chatRooms.empty}"
-                        android:contentDescription="@string/content_description_enter_edition_mode"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.2"
-                        android:background="?attr/button_background_drawable"
-                        android:padding="15dp"
-                        android:src="@drawable/delete" />
+                        <ImageView
+                            android:onClick="@{newOneToOneChatRoomClickListener}"
+                            android:contentDescription="@string/content_description_create_one_to_one_chat_room"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.2"
+                            android:background="?attr/button_background_drawable"
+                            android:padding="15dp"
+                            android:src="@drawable/chat_new" />
+
+                        <ImageView
+                            android:visibility="@{viewModel.groupChatAvailable ? View.VISIBLE : View.GONE}"
+                            android:onClick="@{newGroupChatRoomClickListener}"
+                            android:contentDescription="@string/content_description_create_group_chat_room"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.2"
+                            android:background="?attr/button_background_drawable"
+                            android:padding="15dp"
+                            android:src="@drawable/chat_group_new" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.4" />
+
+                        <ImageView
+                            android:onClick="@{editClickListener}"
+                            android:enabled="@{!viewModel.chatRooms.empty}"
+                            android:visibility="@{viewModel.forwardPending || viewModel.sharingPending ? View.GONE : View.VISIBLE}"
+                            android:contentDescription="@string/content_description_enter_edition_mode"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.2"
+                            android:background="?attr/button_background_drawable"
+                            android:padding="15dp"
+                            android:src="@drawable/delete" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:visibility="@{viewModel.sharingPending ? View.VISIBLE : View.GONE, default=gone}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/backgroundContastColor"
+                        android:textColor="?attr/secondaryTextColor"
+                        android:padding="10dp"
+                        android:text="@string/chat_room_choose_conversation_for_file_sharing" />
+
+                    <TextView
+                        android:visibility="@{viewModel.forwardPending ? View.VISIBLE : View.GONE, default=gone}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/backgroundContastColor"
+                        android:textColor="?attr/secondaryTextColor"
+                        android:padding="10dp"
+                        android:text="@string/chat_room_choose_conversation_for_message_forward" />
 
                 </LinearLayout>
 
@@ -83,7 +137,7 @@
                     android:id="@+id/list_edit_top_bar_fragment"
                     android:name="org.linphone.activities.main.fragments.ListTopBarFragment"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="@dimen/main_activity_top_bar_size"
                     android:layout_alignTop="@id/top_bar"
                     tools:layout="@layout/list_edit_top_bar_fragment" />
 

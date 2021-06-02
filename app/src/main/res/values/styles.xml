@@ -169,6 +169,14 @@
         <item name="android:lineSpacingExtra">8.3sp</item>
     </style>
 
+    <style name="popup_item_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/primaryTextColor</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
+    </style>
+
     <!-- Settings -->
 
     <style name="settings_category_font" parent="@android:style/TextAppearance.Medium">
@@ -225,7 +233,7 @@
     </style>
 
     <style name="chat_file_attachment_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">@color/dark_grey_color</item>
+        <item name="android:textColor">?attr/primaryTextColor</item>
         <item name="android:textSize">12sp</item>
         <item name="android:fontFamily">sans-serif</item>
     </style>
@@ -259,6 +267,11 @@
     <style name="unread_count_font" parent="@android:style/TextAppearance.Small">
         <item name="android:textColor">@color/white_color</item>
         <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="file_transfer_progress_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/secondaryTextColor</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
 </resources>

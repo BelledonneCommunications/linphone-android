@@ -56,20 +56,25 @@ class ContactsListViewModel : ViewModel() {
         super.onCleared()
     }
 
-    fun updateContactsList() {
-        var list = arrayListOf<Contact>()
-        list.addAll(if (sipContactsSelected.value == true) coreContext.contactsManager.sipContacts else coreContext.contactsManager.contacts)
+    private fun getSelectedContactsList(): ArrayList<Contact> {
+        return if (sipContactsSelected.value == true) coreContext.contactsManager.sipContacts else coreContext.contactsManager.contacts
+    }
 
-        val filterValue = filter.value.orEmpty().toLowerCase(Locale.getDefault())
-        if (filterValue.isNotEmpty()) {
-            list = list.filter { contact ->
-                contact.fullName?.toLowerCase(Locale.getDefault())?.contains(filterValue) ?: false
+    fun updateContactsList() {
+        val list: ArrayList<Contact>
+
+        val filterValue = filter.value.orEmpty()
+        list = if (filterValue.isNotEmpty()) {
+            getSelectedContactsList().filter { contact ->
+                contact.fullName?.contains(filterValue, true) ?: false
             } as ArrayList<Contact>
+        } else {
+            getSelectedContactsList()
         }
 
         // Prevent blinking items when list hasn't changed
         if (list.isEmpty() || list.size != contactsList.value.orEmpty().size) {
-            contactsList.value = list
+            contactsList.postValue(list)
         }
     }
 
