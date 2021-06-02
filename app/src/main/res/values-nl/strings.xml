@@ -2,7 +2,7 @@
 
 <!DOCTYPE resources [
     <!ENTITY appName "Linphone">
-    ]>
+]>
 
 <resources>
     <string name="service_auto_start_description">&appName; is automatisch gestart</string>
