@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!DOCTYPE resources [
-<!ENTITY appName "Linphone">
+    <!ENTITY appName "Linphone">
 ]>
+
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="logs_upload_failure">Nem sikerült feltölteni a naplókat!</string>
     <string name="logs_reset_complete">A naplók törlésre kerültek</string>
