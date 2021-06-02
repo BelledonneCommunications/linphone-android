@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!DOCTYPE resources [
-<!ENTITY appName "Linphone">
+    <!ENTITY appName "Linphone">
 ]>
+
 <resources>
     <string name="call_stats_video">Vidéo</string>
     <string name="assistant_remote_provisioning_failure">Erreur durant le téléchargement ou l\'application de la configuration distante…</string>

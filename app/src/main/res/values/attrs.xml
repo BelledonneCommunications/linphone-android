@@ -13,7 +13,7 @@
 
         <attr name="backgroundColor" format="color"/>
         <attr name="backgroundColor2" format="color"/>
-        <attr name="backgroundContastColor" format="color"/>
+        <attr name="backgroundContrastColor" format="color"/>
         <attr name="dividerColor" format="color"/>
 
         <attr name="drawableTintColor" format="color"/>

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!DOCTYPE resources [
-<!ENTITY appName "Linphone">
+    <!ENTITY appName "Linphone">
 ]>
+
 <resources>
     <string name="transport">传输</string>
     <string name="transport_udp">UDP 用户数据报协议</string>
