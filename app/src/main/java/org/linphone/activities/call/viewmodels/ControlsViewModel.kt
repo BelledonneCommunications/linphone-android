@@ -369,9 +369,7 @@ class ControlsViewModel : ViewModel() {
         Log.i("[Call] Setting videoEnabled to [$currentCallVideoEnabled] in conference params")
 
         val conference = core.conference ?: core.createConferenceWithParams(params)
-        for (call in core.calls) {
-            conference?.addParticipant(call)
-        }
+        conference?.addParticipants(core.calls)
 
         toggleOptionsMenu()
     }
