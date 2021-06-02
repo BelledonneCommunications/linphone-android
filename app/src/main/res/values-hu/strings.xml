@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!DOCTYPE resources [
-<!ENTITY appName "Linphone">
+    <!ENTITY appName "Linphone">
 ]>
+
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="logs_upload_failure">Nem sikerült feltölteni a naplókat!</string>
     <string name="logs_reset_complete">A naplók törlésre kerültek</string>
@@ -595,4 +597,9 @@
     <string name="call_settings_redirect_to_voice_mail_declined_calls_title">Az elutasított hívások átirányítása a hangposta URI-ra</string>
     <string name="content_description_show_call_details">Ugrás a hívás részleteire</string>
     <string name="content_description_unselect_all">A lista összes elemének kijelölése megszüntetése</string>
+    <string name="call_settings_pause_calls_lost_audio_focus_title">Hívás szüneteltetése, ha a hang bemenet vagy kimenet megszűnése esetén</string>
+    <string name="content_description_cancel_sharing">Megosztás leállítása</string>
+    <string name="chat_room_choose_conversation_for_message_forward">Beszélgetés kiválasztása vagy új létrehozása</string>
+    <string name="chat_room_choose_conversation_for_file_sharing">Beszélgetés kiválasztása vagy új létrehozása</string>
+    <string name="content_description_cancel_forward">Az üzenet továbbításának visszavonása</string>
 </resources>
