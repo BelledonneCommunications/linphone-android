@@ -44,6 +44,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="@dimen/chat_message_popup_item_height"
+            android:background="@drawable/menu_background"
             android:visibility="@{resendHidden ? View.GONE : View.VISIBLE}"
             android:onClick="@{resendClickListener}"
             android:drawableRight="@drawable/chat_send_message"
@@ -53,6 +54,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="@dimen/chat_message_popup_item_height"
+            android:background="@drawable/menu_background"
             android:visibility="@{copyTextHidden ? View.GONE : View.VISIBLE}"
             android:onClick="@{copyTextClickListener}"
             android:drawableRight="@drawable/menu_copy_text"
@@ -62,6 +64,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="@dimen/chat_message_popup_item_height"
+            android:background="@drawable/menu_background"
             android:onClick="@{forwardClickListener}"
             android:drawableRight="@drawable/menu_forward"
             style="@style/popup_item_font"
@@ -70,6 +73,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="@dimen/chat_message_popup_item_height"
+            android:background="@drawable/menu_background"
             android:visibility="@{imdnHidden ? View.GONE : View.VISIBLE}"
             android:onClick="@{imdnClickListener}"
             android:drawableRight="@drawable/menu_imdn_info"
@@ -79,6 +83,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="@dimen/chat_message_popup_item_height"
+            android:background="@drawable/menu_background"
             android:visibility="@{addToContactsHidden ? View.GONE : View.VISIBLE}"
             android:onClick="@{addToContactsClickListener}"
             android:drawableRight="@drawable/menu_add_contact"
@@ -88,6 +93,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="@dimen/chat_message_popup_item_height"
+            android:background="@drawable/menu_background"
             android:onClick="@{deleteClickListener}"
             android:drawableRight="@drawable/menu_delete"
             style="@style/popup_item_font"
