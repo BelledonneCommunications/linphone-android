@@ -29,7 +29,7 @@
 
         <item name="backgroundColor">@color/white_color</item>
         <item name="backgroundColor2">@color/header_background_color</item>
-        <item name="backgroundContastColor">@color/dark_grey_color</item>
+        <item name="backgroundContrastColor">@color/dark_grey_color</item>
         <item name="dividerColor">@color/light_grey_color</item>
 
         <item name="drawableTintColor">@color/dark_grey_color</item>
