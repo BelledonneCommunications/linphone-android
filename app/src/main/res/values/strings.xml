@@ -639,6 +639,7 @@
     <string name="content_description_show_chat_room_menu">Show chat room menu</string>
     <string name="content_description_enter_edition_mode">Enter edition mode</string>
     <string name="content_description_attach_file">Attach a file to the message</string>
+    <string name="content_description_attached_file">File attached to the message</string>
     <string name="content_description_send_message">Send message</string>
     <string name="content_description_toggle_participant_devices_list">Show or hide the participant devices</string>
     <string name="content_description_ephemeral_duration_selected">Ephemeral duration selected</string>
