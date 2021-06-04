@@ -177,8 +177,9 @@
     <string name="chat_message_forward_confirmation_dialog">Do you want to forward the message in this room?</string>
     <string name="chat_room_dummy_subject" translatable="false">dummy subject</string>
     <string name="chat_room_toast_choose_for_sharing">Select a conversation or create a new one</string>
-    <string name="chat_room_choose_conversation_for_message_forward">Select a conversation or create a new one</string>
-    <string name="chat_room_choose_conversation_for_file_sharing">Select a conversation or create a new one</string>
+    <string name="chat_room_choose_conversation_for_message_forward">Select or create a conversation to forward the message</string>
+    <string name="chat_room_choose_conversation_for_file_sharing">Select or create a conversation to share the file(s)</string>
+    <string name="chat_room_choose_conversation_for_text_sharing">Select or create a conversation to share the text</string>
     <string name="chat_room_cant_open_file_no_app_found">Can\'t open file, no application available for this format.</string>
     <string name="chat_room_file_not_found">File not found</string>
     <string name="chat_room_creation_failed">Chat room creation failed</string>

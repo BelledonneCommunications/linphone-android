@@ -600,6 +600,8 @@
     <string name="call_settings_pause_calls_lost_audio_focus_title">Mettre en pause les appels quand le focus audio est perdu</string>
     <string name="content_description_cancel_forward">Annuler le transfert de message</string>
     <string name="content_description_cancel_sharing">Annuler le partage</string>
-    <string name="chat_room_choose_conversation_for_message_forward">Sélectionnez une conversation ou créez-en une nouvelle</string>
-    <string name="chat_room_choose_conversation_for_file_sharing">Sélectionnez une conversation ou créez-en une nouvelle</string>
+    <string name="content_description_forward_message">Transférer le message dans cette conversation</string>
+    <string name="chat_room_choose_conversation_for_message_forward">Sélectionnez ou créez une conversation pour transférer le message</string>
+    <string name="chat_room_choose_conversation_for_file_sharing">Sélectionnez ou créez une conversation pour partager le(s) fichier(s)</string>
+    <string name="chat_room_choose_conversation_for_text_sharing">Sélectionnez ou créez une conversation pour partager le texte</string>
 </resources>
