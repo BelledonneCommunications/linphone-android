@@ -168,9 +168,11 @@
     <string name="chat_message_imdn_undelivered">Undelivered</string>
     <string name="chat_message_imdn_sent">Sent</string>
     <string name="chat_message_forwarded">Forwarded</string>
+    <string name="chat_message_replied">Reply</string>
     <string name="chat_message_context_menu_resend">Resend</string>
     <string name="chat_message_context_menu_copy_text">Copy text</string>
     <string name="chat_message_context_menu_forward">Forward</string>
+    <string name="chat_message_context_menu_reply">Reply</string>
     <string name="chat_message_context_menu_imdn_info">Delivery status</string>
     <string name="chat_message_context_menu_delete">Delete</string>
     <string name="chat_message_context_menu_add_to_contacts">Add to contacts</string>
@@ -214,6 +216,8 @@
     <string name="chat_message_cant_open_file_in_app_dialog_message">Would you like to open it as text or export it (unencrypted) to a third party app if available?</string>
     <string name="chat_message_cant_open_file_in_app_dialog_export_button">Export</string>
     <string name="chat_message_cant_open_file_in_app_dialog_open_as_text_button">Open as text</string>
+    <string name="chat_room_sending_reply_hint">Reply</string>
+    <string name="chat_room_sending_message_hint">Message</string>
 
     <!-- Recordings -->
     <string name="recordings_empty_list">No recordings</string>
@@ -622,6 +626,7 @@
     <string name="content_description_downloaded_file_transfer">Attached file</string>
     <string name="content_description_delivery_status">Message delivery status</string>
     <string name="content_description_forwarded_message">Message has been forwarded</string>
+    <string name="content_description_replied_message">Message is a reply</string>
     <string name="content_description_forward_message">Forward message in this conversation</string>
     <string name="content_description_ephemeral_message">Message is ephemeral</string>
     <string name="content_description_linphone_user">Contact is a &appName; user</string>
@@ -636,6 +641,7 @@
     <string name="content_description_show_chat_room_menu">Show chat room menu</string>
     <string name="content_description_enter_edition_mode">Enter edition mode</string>
     <string name="content_description_attach_file">Attach a file to the message</string>
+    <string name="content_description_attached_file">File attached to the message</string>
     <string name="content_description_send_message">Send message</string>
     <string name="content_description_toggle_participant_devices_list">Show or hide the participant devices</string>
     <string name="content_description_ephemeral_duration_selected">Ephemeral duration selected</string>
