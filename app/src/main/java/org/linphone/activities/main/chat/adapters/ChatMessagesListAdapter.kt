@@ -84,6 +84,10 @@ class ChatMessagesListAdapter(
         MutableLiveData<Event<Content>>()
     }
 
+    val scrollToChatMessageEvent: MutableLiveData<Event<ChatMessage>> by lazy {
+        MutableLiveData<Event<ChatMessage>>()
+    }
+
     private val contentClickedListener = object : OnContentClickedListener {
         override fun onContentClicked(content: Content) {
             openContentEvent.value = Event(content)
@@ -160,6 +164,13 @@ class ChatMessagesListAdapter(
                     setClickListener {
                         if (selectionViewModel.isEditionEnabled.value == true) {
                             selectionViewModel.onToggleSelect(adapterPosition)
+                        }
+                    }
+
+                    setReplyClickListener {
+                        val reply = chatMessageViewModel.replyData.value?.chatMessage
+                        if (reply != null) {
+                            scrollToChatMessageEvent.value = Event(reply)
                         }
                     }
 
