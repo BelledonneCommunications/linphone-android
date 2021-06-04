@@ -20,13 +20,18 @@
     <color name="toolbar_color">#e1e1e1</color>
     <color name="header_background_color">#f3f3f3</color>
     <color name="security_gray_color">#c2c2c2</color>
+
     <color name="chat_bubble_text_color">#a1a1a1</color>
     <color name="chat_bubble_incoming_color">#f3f3f3</color>
+    <color name="chat_bubble_incoming_color_dark">#9b9b9b</color>
     <!-- Do not use a color with transparency here, it will look bad when in dark mode!
     We use a solid color representation of the primary color but with 10% transparency.
     For each RGB value of the color, the math to get is:
     C' = C * (A / 255) + 255 * (1 - (A / 255)) so for 10% transparency: C' = C * 0.1 + 229.5 -->
     <color name="chat_bubble_outgoing_color">#ffeee5</color>
+    <color name="chat_bubble_outgoing_color_dark">#ff9e67</color>
+    <color name="chat_bubble_file_background_color">#f4f4f4</color>
+    <color name="chat_bubble_file_background_border_color">#dedede</color>
 
     <color name="disabled_color">#808080</color>
     <color name="contact_disabled_color">#99ffffff</color>
