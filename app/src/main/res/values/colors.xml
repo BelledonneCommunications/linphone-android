@@ -27,6 +27,8 @@
     For each RGB value of the color, the math to get is:
     C' = C * (A / 255) + 255 * (1 - (A / 255)) so for 10% transparency: C' = C * 0.1 + 229.5 -->
     <color name="chat_bubble_outgoing_color">#ffeee5</color>
+    <color name="chat_bubble_file_background_color">#f4f4f4</color>
+    <color name="chat_bubble_file_background_border_color">#dedede</color>
 
     <color name="disabled_color">#808080</color>
     <color name="contact_disabled_color">#99ffffff</color>
