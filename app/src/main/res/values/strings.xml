@@ -216,6 +216,8 @@
     <string name="chat_message_cant_open_file_in_app_dialog_message">Would you like to open it as text or export it (unencrypted) to a third party app if available?</string>
     <string name="chat_message_cant_open_file_in_app_dialog_export_button">Export</string>
     <string name="chat_message_cant_open_file_in_app_dialog_open_as_text_button">Open as text</string>
+    <string name="chat_room_sending_reply_hint">Reply</string>
+    <string name="chat_room_sending_message_hint">Message</string>
 
     <!-- Recordings -->
     <string name="recordings_empty_list">No recordings</string>
