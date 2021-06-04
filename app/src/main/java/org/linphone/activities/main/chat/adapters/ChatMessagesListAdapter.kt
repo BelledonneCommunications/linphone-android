@@ -69,6 +69,10 @@ class ChatMessagesListAdapter(
         MutableLiveData<Event<ChatMessage>>()
     }
 
+    val replyMessageEvent: MutableLiveData<Event<ChatMessage>> by lazy {
+        MutableLiveData<Event<ChatMessage>>()
+    }
+
     val showImdnForMessageEvent: MutableLiveData<Event<ChatMessage>> by lazy {
         MutableLiveData<Event<ChatMessage>>()
     }
@@ -79,6 +83,10 @@ class ChatMessagesListAdapter(
 
     val openContentEvent: MutableLiveData<Event<Content>> by lazy {
         MutableLiveData<Event<Content>>()
+    }
+
+    val scrollToChatMessageEvent: MutableLiveData<Event<ChatMessage>> by lazy {
+        MutableLiveData<Event<ChatMessage>>()
     }
 
     private val contentClickedListener = object : OnContentClickedListener {
@@ -160,6 +168,13 @@ class ChatMessagesListAdapter(
                         }
                     }
 
+                    setReplyClickListener {
+                        val reply = chatMessageViewModel.replyData.value?.chatMessage
+                        if (reply != null) {
+                            scrollToChatMessageEvent.value = Event(reply)
+                        }
+                    }
+
                     // Grouping
                     var hasPrevious = false
                     var hasNext = false
@@ -201,7 +216,7 @@ class ChatMessagesListAdapter(
                         )
 
                         val itemSize = AppUtils.getDimension(R.dimen.chat_message_popup_item_height).toInt()
-                        var totalSize = itemSize * 6
+                        var totalSize = itemSize * 7
                         if (chatMessage.chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) ||
                                 chatMessage.state == ChatMessage.State.NotDelivered) { // No message id
                             popupView.imdnHidden = true
@@ -240,6 +255,10 @@ class ChatMessagesListAdapter(
                         }
                         popupView.setForwardClickListener {
                             forwardMessage()
+                            popupWindow.dismiss()
+                        }
+                        popupView.setReplyClickListener {
+                            replyMessage()
                             popupWindow.dismiss()
                         }
                         popupView.setImdnClickListener {
@@ -289,6 +308,13 @@ class ChatMessagesListAdapter(
             val chatMessage = binding.data?.chatMessage
             if (chatMessage != null) {
                 forwardMessageEvent.value = Event(chatMessage)
+            }
+        }
+
+        private fun replyMessage() {
+            val chatMessage = binding.data?.chatMessage
+            if (chatMessage != null) {
+                replyMessageEvent.value = Event(chatMessage)
             }
         }
 
