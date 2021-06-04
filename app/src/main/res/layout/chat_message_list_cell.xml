@@ -14,6 +14,9 @@
             name="clickListener"
             type="android.view.View.OnClickListener" />
         <variable
+            name="replyClickListener"
+            type="android.view.View.OnClickListener" />
+        <variable
             name="position"
             type="Integer"/>
         <variable
@@ -153,9 +156,15 @@
 
                 </LinearLayout>
 
+                <include layout="@layout/chat_message_reply_bubble"
+                    app:data="@{data.replyData}"
+                    app:clickListener="@{replyClickListener}"
+                    android:visibility="@{data.chatMessage.reply ? View.VISIBLE : View.GONE, default=gone}" />
+
                 <com.google.android.flexbox.FlexboxLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:longClickable="true"
