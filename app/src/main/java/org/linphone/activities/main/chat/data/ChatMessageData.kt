@@ -28,6 +28,7 @@ import org.linphone.R
 import org.linphone.contact.GenericContactData
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatMessageListenerStub
+import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.TimestampUtils
 
@@ -56,6 +57,8 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
 
     val text = MutableLiveData<Spannable>()
 
+    val replyData = MutableLiveData<ChatMessageData>()
+
     private var countDownTimer: CountDownTimer? = null
 
     private val listener = object : ChatMessageListenerStub() {
@@ -74,6 +77,15 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
 
         backgroundRes.value = if (chatMessage.isOutgoing) R.drawable.chat_bubble_outgoing_full else R.drawable.chat_bubble_incoming_full
         hideAvatar.value = false
+
+        if (chatMessage.isReply) {
+            val reply = chatMessage.replyMessage
+            if (reply != null) {
+                Log.i("[Chat Message Data] Message is a reply of message id [${chatMessage.replyMessageId}] sent by [${chatMessage.replyMessageSenderAddress?.asStringUriOnly()}]")
+                replyData.value = ChatMessageData(reply)
+            }
+        }
+
         time.value = TimestampUtils.toString(chatMessage.time)
         updateEphemeralTimer()
 
@@ -83,6 +95,10 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
 
     override fun destroy() {
         super.destroy()
+
+        if (chatMessage.isReply) {
+            replyData.value?.destroy()
+        }
 
         contents.value.orEmpty().forEach(ChatMessageContentData::destroy)
         chatMessage.removeListener(listener)

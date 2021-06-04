@@ -111,6 +111,20 @@
         <item name="android:textSize">13sp</item>
     </style>
 
+    <!-- Chat related -->
+
+    <style name="chat_message_reply_sender_font">
+        <item name="android:textColor">?attr/primaryTextColor</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="chat_message_reply_font">
+        <item name="android:textColor">?attr/primaryTextColor</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
     <!-- Call stats -->
 
     <style name="call_stats_title_font" parent="@android:style/TextAppearance.Medium">

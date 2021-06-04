@@ -29,7 +29,7 @@ if (crashlyticsEnabled()) {
 
 def gitBranch = new ByteArrayOutputStream()
 task getGitVersion() {
-    def gitVersion = "4.5.0"
+    def gitVersion = "4.6.0"
     def gitVersionStream = new ByteArrayOutputStream()
     def gitCommitsCount = new ByteArrayOutputStream()
     def gitCommitHash = new ByteArrayOutputStream()
@@ -269,7 +269,7 @@ dependencies {
         implementation 'com.google.firebase:firebase-messaging'
     }
 
-    implementation 'org.linphone:linphone-sdk-android:5.0+'
+    implementation 'org.linphone:linphone-sdk-android:5.1+'
 
     // Only enable leak canary prior to release
     //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'

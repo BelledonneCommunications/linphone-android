@@ -41,6 +41,15 @@ class LinphoneUtils {
         private const val RECORDING_DATE_PATTERN = "dd-MM-yyyy-HH-mm-ss"
 
         fun getDisplayName(address: Address): String {
+            if (address.displayName == null) {
+                val account = coreContext.core.accountList.find { account ->
+                    account.params.identityAddress?.asStringUriOnly() == address.asStringUriOnly()
+                }
+                val localDisplayName = account?.params?.identityAddress?.displayName
+                if (localDisplayName != null) {
+                    return localDisplayName
+                }
+            }
             return address.displayName ?: address.username ?: ""
         }
 

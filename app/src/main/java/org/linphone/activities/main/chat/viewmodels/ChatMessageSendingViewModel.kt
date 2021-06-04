@@ -25,6 +25,7 @@ import androidx.lifecycle.ViewModelProvider
 import java.io.File
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.activities.main.chat.data.ChatMessageAttachmentData
+import org.linphone.activities.main.chat.data.ChatMessageData
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomCapabilities
@@ -52,6 +53,10 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
     val isReadOnly = MutableLiveData<Boolean>()
 
     var textToSend = MutableLiveData<String>()
+
+    val isPendingAnswer = MutableLiveData<Boolean>()
+
+    var pendingChatMessageToReplyTo = MutableLiveData<ChatMessageData>()
 
     init {
         attachments.value = arrayListOf()
@@ -108,14 +113,18 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
     }
 
     fun sendMessage() {
-        val isBasicChatRoom: Boolean = chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt())
-        val message: ChatMessage = chatRoom.createEmptyMessage()
+        val pendingMessageToReplyTo = pendingChatMessageToReplyTo.value
+        val message: ChatMessage = if (isPendingAnswer.value == true && pendingMessageToReplyTo != null)
+            chatRoom.createReplyMessage(pendingMessageToReplyTo.chatMessage)
+        else
+            chatRoom.createEmptyMessage()
 
         val toSend = textToSend.value
         if (toSend != null && toSend.isNotEmpty()) {
             message.addUtf8TextContent(toSend.trim())
         }
 
+        val isBasicChatRoom: Boolean = chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt())
         var fileContent = false
         for (attachment in attachments.value.orEmpty()) {
             val content = Factory.instance().createContent()
@@ -144,6 +153,7 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
             message.send()
         }
 
+        cancelReply()
         attachments.value.orEmpty().forEach(ChatMessageAttachmentData::destroy)
         attachments.value = arrayListOf()
     }
@@ -151,5 +161,10 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
     fun transferMessage(chatMessage: ChatMessage) {
         val message = chatRoom.createForwardMessage(chatMessage)
         message.send()
+    }
+
+    fun cancelReply() {
+        pendingChatMessageToReplyTo.value?.destroy()
+        isPendingAnswer.value = false
     }
 }
