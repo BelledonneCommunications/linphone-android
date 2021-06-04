@@ -123,6 +123,36 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:visibility="@{data.chatMessage.reply ? View.VISIBLE : View.GONE, default=gone}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="5dp">
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/replied_message_default"
+                        android:contentDescription="@string/content_description_replied_message"
+                        android:layout_marginRight="3dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/chat_bubble_text_color"
+                        android:textSize="10sp"
+                        android:fontFamily="sans-serif"
+                        android:textStyle="normal"
+                        android:lineSpacingExtra="3.3sp"
+                        android:text="@string/chat_message_replied"
+                        tools:ignore="SmallSp" />
+
+                </LinearLayout>
+
                 <com.google.android.flexbox.FlexboxLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
