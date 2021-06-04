@@ -47,6 +47,7 @@ import org.linphone.activities.*
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.chat.ChatScrollListener
 import org.linphone.activities.main.chat.adapters.ChatMessagesListAdapter
+import org.linphone.activities.main.chat.data.ChatMessageData
 import org.linphone.activities.main.chat.viewmodels.*
 import org.linphone.activities.main.fragments.MasterFragment
 import org.linphone.activities.main.viewmodels.DialogViewModel
@@ -219,6 +220,14 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 sharedViewModel.messageToForwardEvent.value = Event(chatMessage)
                 Log.i("[Chat Room] Forwarding message, going to chat rooms list")
                 navigateToChatRooms()
+            }
+        })
+
+        adapter.replyMessageEvent.observe(viewLifecycleOwner, {
+            it.consume { chatMessage ->
+                chatSendingViewModel.pendingChatMessageToReplyTo.value?.destroy()
+                chatSendingViewModel.pendingChatMessageToReplyTo.value = ChatMessageData(chatMessage)
+                chatSendingViewModel.isPendingAnswer.value = true
             }
         })
 

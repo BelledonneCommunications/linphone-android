@@ -147,6 +147,12 @@
             android:background="?attr/lightToolbarBackgroundColor"
             android:orientation="vertical">
 
+            <include
+                android:visibility="@{chatSendingViewModel.isPendingAnswer ? View.VISIBLE : View.GONE, default=gone}"
+                app:data="@{chatSendingViewModel.pendingChatMessageToReplyTo}"
+                app:cancelClickListener="@{() -> chatSendingViewModel.cancelReply()}"
+                layout="@layout/chat_message_reply" />
+
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -166,7 +172,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:background="?attr/backgroundColor"
+                android:background="@color/light_grey_color"
                 android:orientation="horizontal">
 
                 <ImageView
