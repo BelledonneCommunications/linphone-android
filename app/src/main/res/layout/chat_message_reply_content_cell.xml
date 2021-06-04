@@ -44,7 +44,7 @@
         <ImageView
             android:layout_width="@dimen/chat_message_small_bubble_file_size"
             android:layout_height="@dimen/chat_message_small_bubble_file_size"
-            android:background="?attr/backgroundColor"
+            android:background="@drawable/reply_file_background"
             android:padding="10dp"
             android:contentDescription="@{data.fileName}"
             android:visibility="@{data.downloadable || data.pdf || data.audio || data.genericFile ? View.VISIBLE : View.GONE}"
