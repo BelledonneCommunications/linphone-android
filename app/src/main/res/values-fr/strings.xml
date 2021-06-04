@@ -604,4 +604,6 @@
     <string name="chat_room_choose_conversation_for_message_forward">Sélectionnez ou créez une conversation pour transférer le message</string>
     <string name="chat_room_choose_conversation_for_file_sharing">Sélectionnez ou créez une conversation pour partager le(s) fichier(s)</string>
     <string name="chat_room_choose_conversation_for_text_sharing">Sélectionnez ou créez une conversation pour partager le texte</string>
+    <string name="chat_room_sending_reply_hint">Réponse</string>
+    <string name="chat_room_sending_message_hint">Message</string>
 </resources>
