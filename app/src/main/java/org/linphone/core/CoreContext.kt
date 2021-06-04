@@ -636,31 +636,42 @@ class CoreContext(val context: Context, coreConfig: Config) {
     }
 
     fun addContentToMediaStore(content: Content) {
-        coroutineScope.launch {
-            when (content.type) {
-                "image" -> {
-                    if (Compatibility.addImageToMediaStore(context, content)) {
-                        Log.i("[Context] Adding image ${content.name} to Media Store terminated")
-                    } else {
-                        Log.e("[Context] Something went wrong while copying file to Media Store...")
+        if (corePreferences.vfsEnabled) {
+            Log.w("[Context] Do not make received file(s) public when VFS is enabled")
+            return
+        }
+        if (!corePreferences.makePublicMediaFilesDownloaded) {
+            Log.w("[Context] Making received files public setting disabled")
+            return
+        }
+
+        if (Version.sdkAboveOrEqual(Version.API29_ANDROID_10) || PermissionHelper.get().hasWriteExternalStorage()) {
+            coroutineScope.launch {
+                when (content.type) {
+                    "image" -> {
+                        if (Compatibility.addImageToMediaStore(context, content)) {
+                            Log.i("[Context] Adding image ${content.name} to Media Store terminated")
+                        } else {
+                            Log.e("[Context] Something went wrong while copying file to Media Store...")
+                        }
                     }
-                }
-                "video" -> {
-                    if (Compatibility.addVideoToMediaStore(context, content)) {
-                        Log.i("[Context] Adding video ${content.name} to Media Store terminated")
-                    } else {
-                        Log.e("[Context] Something went wrong while copying file to Media Store...")
+                    "video" -> {
+                        if (Compatibility.addVideoToMediaStore(context, content)) {
+                            Log.i("[Context] Adding video ${content.name} to Media Store terminated")
+                        } else {
+                            Log.e("[Context] Something went wrong while copying file to Media Store...")
+                        }
                     }
-                }
-                "audio" -> {
-                    if (Compatibility.addAudioToMediaStore(context, content)) {
-                        Log.i("[Context] Adding audio ${content.name} to Media Store terminated")
-                    } else {
-                        Log.e("[Context] Something went wrong while copying file to Media Store...")
+                    "audio" -> {
+                        if (Compatibility.addAudioToMediaStore(context, content)) {
+                            Log.i("[Context] Adding audio ${content.name} to Media Store terminated")
+                        } else {
+                            Log.e("[Context] Something went wrong while copying file to Media Store...")
+                        }
                     }
-                }
-                else -> {
-                    Log.w("[Context] File ${content.name} isn't either an image, an audio file or a video, can't add it to the Media Store")
+                    else -> {
+                        Log.w("[Context] File ${content.name} isn't either an image, an audio file or a video, can't add it to the Media Store")
+                    }
                 }
             }
         }
