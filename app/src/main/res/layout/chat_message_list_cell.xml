@@ -93,7 +93,6 @@
                 android:layout_marginBottom="1dp"
                 android:layout_marginRight="@{data.chatMessage.outgoing ? @dimen/outgoing_chat_message_bubble_right_margin : @dimen/incoming_chat_message_bubble_right_margin}"
                 android:layout_marginLeft="@{selectionListViewModel.isEditionEnabled ? @dimen/edit_chat_message_bubble_left_margin : !data.chatMessage.outgoing ? @dimen/incoming_chat_message_bubble_left_margin : @dimen/outgoing_chat_message_bubble_left_margin}"
-                android:paddingTop="5dp"
                 android:paddingBottom="5dp">
 
                 <LinearLayout
