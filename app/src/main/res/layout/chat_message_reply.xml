@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <import type="android.view.View"/>
@@ -31,7 +32,23 @@
                 android:textColor="?attr/primaryTextColor"
                 android:text="@{data.contact.fullName ?? data.displayName, default=Tintin}"/>
 
+            <HorizontalScrollView
+                android:visibility="@{data.contents.size() == 0 ? View.GONE : View.VISIBLE}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:entries="@{data.contents}"
+                    app:layout="@{@layout/chat_message_reply_content_cell}"/>
+
+            </HorizontalScrollView>
+
             <TextView
+                android:visibility="@{data.text.length() == 0 ? View.GONE : View.VISIBLE}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
