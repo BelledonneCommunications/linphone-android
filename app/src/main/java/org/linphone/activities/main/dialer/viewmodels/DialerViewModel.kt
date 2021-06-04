@@ -101,14 +101,15 @@ class DialerViewModel : LogsUploadViewModel() {
         }
 
         override fun onNetworkReachable(core: Core, reachable: Boolean) {
-            if (reachable && addressWaitingNetworkToBeCalled.orEmpty().isNotEmpty()) {
+            val address = addressWaitingNetworkToBeCalled.orEmpty()
+            if (reachable && address.isNotEmpty()) {
                 val now = System.currentTimeMillis()
                 if (now - timeAtWitchWeTriedToCall > 1000) {
-                    Log.e("[Dialer] More than 1 second has passed waiting for network, abort auto call to $addressWaitingNetworkToBeCalled")
-                    enteredUri.value = addressWaitingNetworkToBeCalled
+                    Log.e("[Dialer] More than 1 second has passed waiting for network, abort auto call to $address")
+                    enteredUri.value = address
                 } else {
-                    Log.i("[Dialer] Network is available, continue auto call to $addressWaitingNetworkToBeCalled")
-                    coreContext.startCall(addressWaitingNetworkToBeCalled.orEmpty())
+                    Log.i("[Dialer] Network is available, continue auto call to $address")
+                    coreContext.startCall(address)
                 }
 
                 addressWaitingNetworkToBeCalled = null
