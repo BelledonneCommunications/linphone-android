@@ -39,7 +39,9 @@ class ChatRoomsListViewModel : ErrorReportingViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
-    val sharingPending = MutableLiveData<Boolean>()
+    val fileSharingPending = MutableLiveData<Boolean>()
+
+    val textSharingPending = MutableLiveData<Boolean>()
 
     val forwardPending = MutableLiveData<Boolean>()
 

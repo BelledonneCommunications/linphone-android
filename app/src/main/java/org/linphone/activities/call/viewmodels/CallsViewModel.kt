@@ -54,8 +54,7 @@ class CallsViewModel : ViewModel() {
             val currentCall = core.currentCall
             if (currentCall == null) {
                 currentCallViewModel.value?.destroy()
-                currentCallViewModel.value = null
-            } else if (currentCallViewModel.value == null) {
+            } else if (currentCallViewModel.value?.call != currentCall) {
                 currentCallViewModel.value = CallViewModel(currentCall)
             }
 
