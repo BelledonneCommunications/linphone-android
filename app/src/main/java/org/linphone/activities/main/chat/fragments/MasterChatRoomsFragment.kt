@@ -183,7 +183,8 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
             Log.i("[Chat] Cancelling text/files sharing")
             sharedViewModel.textToShare.value = ""
             sharedViewModel.filesToShare.value = arrayListOf()
-            listViewModel.sharingPending.value = false
+            listViewModel.fileSharingPending.value = false
+            listViewModel.textSharingPending.value = false
         }
 
         binding.setNewOneToOneChatRoomClickListener {
@@ -224,10 +225,10 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
                     Log.i("[Chat] Found text to share")
                     // val activity = requireActivity() as MainActivity
                     // activity.showSnackBar(R.string.chat_room_toast_choose_for_sharing)
-                    listViewModel.sharingPending.value = true
+                    listViewModel.textSharingPending.value = true
                 } else {
                     if (sharedViewModel.filesToShare.value.isNullOrEmpty()) {
-                        listViewModel.sharingPending.value = false
+                        listViewModel.textSharingPending.value = false
                     }
                 }
             })
@@ -236,10 +237,10 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
                     Log.i("[Chat] Found ${it.size} files to share")
                     // val activity = requireActivity() as MainActivity
                     // activity.showSnackBar(R.string.chat_room_toast_choose_for_sharing)
-                    listViewModel.sharingPending.value = true
+                    listViewModel.fileSharingPending.value = true
                 } else {
                     if (sharedViewModel.textToShare.value.isNullOrEmpty()) {
-                        listViewModel.sharingPending.value = false
+                        listViewModel.fileSharingPending.value = false
                     }
                 }
             })

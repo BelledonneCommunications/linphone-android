@@ -53,7 +53,7 @@
 
                 <ImageView
                     android:onClick="@{cancelSharingClickListener}"
-                    android:visibility="@{viewModel.sharingPending ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.fileSharingPending || viewModel.textSharingPending ? View.VISIBLE : View.GONE}"
                     android:contentDescription="@string/content_description_cancel_sharing"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -91,7 +91,7 @@
                 <ImageView
                     android:onClick="@{editClickListener}"
                     android:enabled="@{!viewModel.chatRooms.empty}"
-                    android:visibility="@{viewModel.forwardPending || viewModel.sharingPending ? View.GONE : View.VISIBLE}"
+                    android:visibility="@{viewModel.forwardPending || viewModel.fileSharingPending || viewModel.textSharingPending ? View.GONE : View.VISIBLE}"
                     android:contentDescription="@string/content_description_enter_edition_mode"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -103,22 +103,13 @@
             </LinearLayout>
 
             <TextView
-                android:visibility="@{viewModel.sharingPending ? View.VISIBLE : View.GONE, default=gone}"
+                android:visibility="@{viewModel.fileSharingPending || viewModel.textSharingPending || viewModel.forwardPending ? View.VISIBLE : View.GONE, default=gone}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/backgroundContrastColor"
                 android:textColor="?attr/secondaryTextColor"
                 android:padding="10dp"
-                android:text="@string/chat_room_choose_conversation_for_file_sharing" />
-
-            <TextView
-                android:visibility="@{viewModel.forwardPending ? View.VISIBLE : View.GONE, default=gone}"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/backgroundContrastColor"
-                android:textColor="?attr/secondaryTextColor"
-                android:padding="10dp"
-                android:text="@string/chat_room_choose_conversation_for_message_forward" />
+                android:text="@{viewModel.fileSharingPending ? @string/chat_room_choose_conversation_for_file_sharing : (viewModel.textSharingPending ? @string/chat_room_choose_conversation_for_text_sharing : @string/chat_room_choose_conversation_for_message_forward)}" />
 
         </LinearLayout>
 
