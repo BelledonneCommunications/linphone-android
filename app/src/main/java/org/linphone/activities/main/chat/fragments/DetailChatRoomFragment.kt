@@ -315,6 +315,15 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             }
         })
 
+        adapter.scrollToChatMessageEvent.observe(viewLifecycleOwner, {
+            it.consume { chatMessage ->
+                val events = listViewModel.events.value.orEmpty()
+                val eventLog = events.find { eventLog -> eventLog.chatMessage?.messageId == chatMessage.messageId }
+                val index = events.indexOf(eventLog)
+                binding.chatMessagesList.smoothScrollToPosition(index)
+            }
+        })
+
         binding.setBackClickListener {
             goBack()
         }
