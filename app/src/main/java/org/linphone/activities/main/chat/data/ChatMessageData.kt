@@ -24,13 +24,10 @@ import android.text.Spannable
 import android.text.util.Linkify
 import androidx.core.text.util.LinkifyCompat
 import androidx.lifecycle.MutableLiveData
-import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.contact.GenericContactData
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatMessageListenerStub
-import org.linphone.core.Content
-import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.TimestampUtils
 
@@ -66,13 +63,6 @@ class ChatMessageData(
         override fun onMsgStateChanged(message: ChatMessage, state: ChatMessage.State) {
             time.value = TimestampUtils.toString(chatMessage.time)
             updateChatMessageState(state)
-
-            if (state == ChatMessage.State.FileTransferDone) {
-                Log.i("[Chat Message] File transfer done")
-                if (!message.isOutgoing) {
-                    coreContext.exportFilesInMessageToMediaStore(message)
-                }
-            }
         }
 
         override fun onEphemeralMessageTimerStarted(message: ChatMessage) {
@@ -196,9 +186,5 @@ class ChatMessageData(
             days >= 1L -> AppUtils.getStringWithPlural(R.plurals.days, days.toInt())
             else -> String.format("%02d:%02d:%02d", seconds / 3600, (seconds % 3600) / 60, (seconds % 60))
         }
-    }
-
-    private fun addContentToMediaStore(content: Content) {
-        coreContext.addContentToMediaStore(content)
     }
 }

@@ -26,6 +26,7 @@ import android.text.Spanned
 import android.text.style.UnderlineSpan
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.*
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatMessageListenerStub
@@ -92,6 +93,14 @@ class ChatMessageContentData(
 
             if (state == ChatMessage.State.FileTransferDone || state == ChatMessage.State.FileTransferError) {
                 updateContent()
+
+                if (state == ChatMessage.State.FileTransferDone) {
+                    Log.i("[Chat Message] File transfer done")
+                    if (!message.isOutgoing && !message.isEphemeral) {
+                        Log.i("[Chat Message] Adding content to media store")
+                        coreContext.addContentToMediaStore(content)
+                    }
+                }
             }
         }
     }
