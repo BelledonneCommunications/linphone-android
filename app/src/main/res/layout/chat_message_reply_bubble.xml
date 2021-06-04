@@ -13,12 +13,12 @@
     </data>
 
     <LinearLayout
-        android:background="?attr/backgroundColor"
+        android:background="@drawable/reply_background"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal"
         android:onClick="@{clickListener}">
 
