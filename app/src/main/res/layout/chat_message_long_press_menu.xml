@@ -13,6 +13,9 @@
             name="forwardClickListener"
             type="View.OnClickListener" />
         <variable
+            name="replyClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="imdnClickListener"
             type="View.OnClickListener" />
         <variable
@@ -69,6 +72,15 @@
             android:drawableRight="@drawable/menu_forward"
             style="@style/popup_item_font"
             android:text="@string/chat_message_context_menu_forward" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chat_message_popup_item_height"
+            android:background="@drawable/menu_background"
+            android:onClick="@{replyClickListener}"
+            android:drawableRight="@drawable/menu_reply"
+            style="@style/popup_item_font"
+            android:text="@string/chat_message_context_menu_reply" />
 
         <TextView
             android:layout_width="match_parent"
