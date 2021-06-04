@@ -190,6 +190,7 @@
                     android:id="@+id/message"
                     android:enabled="@{!chatSendingViewModel.isReadOnly}"
                     android:text="@={chatSendingViewModel.textToSend}"
+                    android:hint="@{chatSendingViewModel.isPendingAnswer ? @string/chat_room_sending_reply_hint : @string/chat_room_sending_message_hint}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"

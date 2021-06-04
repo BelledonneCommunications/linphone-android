@@ -60,6 +60,8 @@ class ChatMessageData(
 
     val text = MutableLiveData<Spannable>()
 
+    val replyData = MutableLiveData<ChatMessageData>()
+
     private var countDownTimer: CountDownTimer? = null
 
     private val listener = object : ChatMessageListenerStub() {
@@ -85,6 +87,15 @@ class ChatMessageData(
 
         backgroundRes.value = if (chatMessage.isOutgoing) R.drawable.chat_bubble_outgoing_full else R.drawable.chat_bubble_incoming_full
         hideAvatar.value = false
+
+        if (chatMessage.isReply) {
+            val reply = chatMessage.replyMessage
+            if (reply != null) {
+                Log.i("[Chat Message Data] Message is a reply of message id [${chatMessage.replyMessageId}] sent by [${chatMessage.replyMessageSenderAddress?.asStringUriOnly()}]")
+                replyData.value = ChatMessageData(reply)
+            }
+        }
+
         time.value = TimestampUtils.toString(chatMessage.time)
         updateEphemeralTimer()
 
@@ -94,6 +105,10 @@ class ChatMessageData(
 
     override fun destroy() {
         super.destroy()
+
+        if (chatMessage.isReply) {
+            replyData.value?.destroy()
+        }
 
         contents.value.orEmpty().forEach(ChatMessageContentData::destroy)
         chatMessage.removeListener(listener)
