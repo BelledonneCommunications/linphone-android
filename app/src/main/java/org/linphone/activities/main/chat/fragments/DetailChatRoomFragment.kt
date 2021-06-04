@@ -39,6 +39,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.io.File
+import java.lang.IllegalArgumentException
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -47,6 +48,7 @@ import org.linphone.activities.*
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.chat.ChatScrollListener
 import org.linphone.activities.main.chat.adapters.ChatMessagesListAdapter
+import org.linphone.activities.main.chat.data.ChatMessageData
 import org.linphone.activities.main.chat.viewmodels.*
 import org.linphone.activities.main.fragments.MasterFragment
 import org.linphone.activities.main.viewmodels.DialogViewModel
@@ -165,6 +167,28 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         layoutManager.stackFromEnd = true
         binding.chatMessagesList.layoutManager = layoutManager
 
+        // Swipe action
+        /*val swipeConfiguration = RecyclerViewSwipeConfiguration()
+        swipeConfiguration.leftToRightAction = RecyclerViewSwipeConfiguration.Action(icon = R.drawable.menu_reply_default)
+        val swipeListener = object : RecyclerViewSwipeListener {
+            override fun onLeftToRightSwipe(viewHolder: RecyclerView.ViewHolder) {
+                adapter.notifyItemChanged(viewHolder.adapterPosition)
+
+                val chatMessageEventLog = adapter.currentList[viewHolder.adapterPosition]
+                val chatMessage = chatMessageEventLog.chatMessage
+                if (chatMessage != null) {
+                    chatSendingViewModel.pendingChatMessageToReplyTo.value?.destroy()
+                    chatSendingViewModel.pendingChatMessageToReplyTo.value =
+                        ChatMessageData(chatMessage)
+                    chatSendingViewModel.isPendingAnswer.value = true
+                }
+            }
+
+            override fun onRightToLeftSwipe(viewHolder: RecyclerView.ViewHolder) {}
+        }
+        RecyclerViewSwipeUtils(ItemTouchHelper.RIGHT, swipeConfiguration, swipeListener)
+            .attachToRecyclerView(binding.chatMessagesList)*/
+
         val chatScrollListener: ChatScrollListener = object : ChatScrollListener(layoutManager) {
             override fun onLoadMore(totalItemsCount: Int) {
                 listViewModel.loadMoreData(totalItemsCount)
@@ -212,6 +236,14 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 sharedViewModel.messageToForwardEvent.value = Event(chatMessage)
                 Log.i("[Chat Room] Forwarding message, going to chat rooms list")
                 navigateToChatRooms()
+            }
+        })
+
+        adapter.replyMessageEvent.observe(viewLifecycleOwner, {
+            it.consume { chatMessage ->
+                chatSendingViewModel.pendingChatMessageToReplyTo.value?.destroy()
+                chatSendingViewModel.pendingChatMessageToReplyTo.value = ChatMessageData(chatMessage)
+                chatSendingViewModel.isPendingAnswer.value = true
             }
         })
 
@@ -273,6 +305,19 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                             showDialogToSuggestOpeningFileAsText()
                         }
                     }
+                }
+            }
+        })
+
+        adapter.scrollToChatMessageEvent.observe(viewLifecycleOwner, {
+            it.consume { chatMessage ->
+                val events = listViewModel.events.value.orEmpty()
+                val eventLog = events.find { eventLog -> eventLog.chatMessage?.messageId == chatMessage.messageId }
+                val index = events.indexOf(eventLog)
+                try {
+                    binding.chatMessagesList.smoothScrollToPosition(index)
+                } catch (iae: IllegalArgumentException) {
+                    Log.e("[Chat Room] Can't scroll to position $index")
                 }
             }
         })
