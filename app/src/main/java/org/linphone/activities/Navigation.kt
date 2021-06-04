@@ -166,17 +166,17 @@ internal fun TabsFragment.navigateToCallHistory() {
         R.id.masterContactsFragment -> findNavController().navigate(
             R.id.action_masterContactsFragment_to_masterCallLogsFragment,
             null,
-            getLeftTopToRightBottomAnimationNavOptions(R.id.masterCallLogsFragment)
+            getLeftTopToRightBottomAnimationNavOptions()
         )
         R.id.dialerFragment -> findNavController().navigate(
             R.id.action_dialerFragment_to_masterCallLogsFragment,
             null,
-            getLeftTopToRightBottomAnimationNavOptions(R.id.masterCallLogsFragment)
+            getLeftTopToRightBottomAnimationNavOptions()
         )
         R.id.masterChatRoomsFragment -> findNavController().navigate(
             R.id.action_masterChatRoomsFragment_to_masterCallLogsFragment,
             null,
-            getLeftTopToRightBottomAnimationNavOptions(R.id.masterCallLogsFragment)
+            getLeftTopToRightBottomAnimationNavOptions()
         )
     }
 }
@@ -186,17 +186,17 @@ internal fun TabsFragment.navigateToContacts() {
         R.id.masterCallLogsFragment -> findNavController().navigate(
             R.id.action_masterCallLogsFragment_to_masterContactsFragment,
             null,
-            getRightBottomToLeftTopAnimationNavOptions(R.id.masterContactsFragment)
+            getRightBottomToLeftTopAnimationNavOptions()
         )
         R.id.dialerFragment -> findNavController().navigate(
             R.id.action_dialerFragment_to_masterContactsFragment,
             null,
-            getLeftTopToRightBottomAnimationNavOptions(R.id.masterContactsFragment)
+            getLeftTopToRightBottomAnimationNavOptions()
         )
         R.id.masterChatRoomsFragment -> findNavController().navigate(
             R.id.action_masterChatRoomsFragment_to_masterContactsFragment,
             null,
-            getLeftTopToRightBottomAnimationNavOptions(R.id.masterContactsFragment)
+            getLeftTopToRightBottomAnimationNavOptions()
         )
     }
 }
@@ -206,17 +206,17 @@ internal fun TabsFragment.navigateToDialer() {
         R.id.masterCallLogsFragment -> findNavController().navigate(
             R.id.action_masterCallLogsFragment_to_dialerFragment,
             null,
-            getRightBottomToLeftTopAnimationNavOptions(R.id.dialerFragment)
+            getRightBottomToLeftTopAnimationNavOptions()
         )
         R.id.masterContactsFragment -> findNavController().navigate(
             R.id.action_masterContactsFragment_to_dialerFragment,
             null,
-            getRightBottomToLeftTopAnimationNavOptions(R.id.dialerFragment)
+            getRightBottomToLeftTopAnimationNavOptions()
         )
         R.id.masterChatRoomsFragment -> findNavController().navigate(
             R.id.action_masterChatRoomsFragment_to_dialerFragment,
             null,
-            getLeftTopToRightBottomAnimationNavOptions(R.id.dialerFragment)
+            getLeftTopToRightBottomAnimationNavOptions()
         )
     }
 }
@@ -226,17 +226,17 @@ internal fun TabsFragment.navigateToChatRooms() {
         R.id.masterCallLogsFragment -> findNavController().navigate(
             R.id.action_masterCallLogsFragment_to_masterChatRoomsFragment,
             null,
-            getRightBottomToLeftTopAnimationNavOptions(R.id.masterChatRoomsFragment)
+            getRightBottomToLeftTopAnimationNavOptions()
         )
         R.id.masterContactsFragment -> findNavController().navigate(
             R.id.action_masterContactsFragment_to_masterChatRoomsFragment,
             null,
-            getRightBottomToLeftTopAnimationNavOptions(R.id.masterChatRoomsFragment)
+            getRightBottomToLeftTopAnimationNavOptions()
         )
         R.id.dialerFragment -> findNavController().navigate(
             R.id.action_dialerFragment_to_masterChatRoomsFragment,
             null,
-            getRightBottomToLeftTopAnimationNavOptions(R.id.masterChatRoomsFragment)
+            getRightBottomToLeftTopAnimationNavOptions()
         )
     }
 }
