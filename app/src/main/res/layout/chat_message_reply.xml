@@ -43,7 +43,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     app:entries="@{data.contents}"
-                    app:layout="@{@layout/chat_message_reply_content_cell}"/>
+                    app:layout="@{@layout/chat_message_reply_preview_content_cell}"/>
 
             </HorizontalScrollView>
 
