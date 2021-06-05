@@ -606,4 +606,5 @@
     <string name="chat_room_choose_conversation_for_text_sharing">Sélectionnez ou créez une conversation pour partager le texte</string>
     <string name="chat_room_sending_reply_hint">Réponse</string>
     <string name="chat_room_sending_message_hint">Message</string>
+    <string name="chat_message_replied">Réponse</string>
 </resources>

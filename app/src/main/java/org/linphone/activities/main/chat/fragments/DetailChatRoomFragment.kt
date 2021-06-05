@@ -40,13 +40,13 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.io.File
+import java.lang.IllegalArgumentException
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.*
 import org.linphone.activities.main.MainActivity
-import org.linphone.activities.main.chat.ChatScrollListener
 import org.linphone.activities.main.chat.adapters.ChatMessagesListAdapter
 import org.linphone.activities.main.chat.data.ChatMessageData
 import org.linphone.activities.main.chat.viewmodels.*
@@ -321,7 +321,11 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 val events = listViewModel.events.value.orEmpty()
                 val eventLog = events.find { eventLog -> eventLog.chatMessage?.messageId == chatMessage.messageId }
                 val index = events.indexOf(eventLog)
-                binding.chatMessagesList.smoothScrollToPosition(index)
+                try {
+                    binding.chatMessagesList.smoothScrollToPosition(index)
+                } catch (iae: IllegalArgumentException) {
+                    Log.e("[Chat Room] Can't scroll to position $index")
+                }
             }
         })
 
