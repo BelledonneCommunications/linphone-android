@@ -100,7 +100,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="center_vertical|right"
+                    android:gravity="center_vertical"
                     android:layout_marginTop="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginLeft="5dp">
@@ -131,7 +131,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="center_vertical|right"
+                    android:gravity="center_vertical"
                     android:layout_marginTop="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginLeft="5dp">
@@ -158,6 +158,12 @@
                 </LinearLayout>
 
                 <include layout="@layout/chat_message_reply_bubble"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_gravity="@{data.chatMessage.outgoing ? Gravity.RIGHT : Gravity.LEFT}"
                     app:data="@{data.replyData}"
                     app:clickListener="@{replyClickListener}"
                     android:visibility="@{data.chatMessage.reply ? View.VISIBLE : View.GONE, default=gone}" />
