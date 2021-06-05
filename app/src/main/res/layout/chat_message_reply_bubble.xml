@@ -14,7 +14,7 @@
 
     <LinearLayout
         android:background="@drawable/reply_background"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
@@ -70,7 +70,7 @@
                 android:singleLine="false"
                 android:layout_marginTop="5dp"
                 android:textColor="?attr/primaryTextColor"
-                android:text="@{data.text, default=`Lorem Ipsum`}"/>
+                android:text="@{data.text, default=`Lorem ipsum`}"/>
 
         </LinearLayout>
 
