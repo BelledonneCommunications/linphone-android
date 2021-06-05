@@ -70,7 +70,7 @@
                 android:singleLine="false"
                 android:layout_marginTop="5dp"
                 android:textColor="?attr/primaryTextColor"
-                android:text="@{data.text, default=`Lorem Ipsum`}"/>
+                android:text="@{data.text, default=`Lorem ipsum`}"/>
 
         </LinearLayout>
 
