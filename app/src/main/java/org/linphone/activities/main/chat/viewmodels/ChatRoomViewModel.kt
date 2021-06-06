@@ -130,6 +130,12 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         ) {
             callInProgress.value = core.callsNb > 0
         }
+
+        override fun onChatRoomRead(core: Core, room: ChatRoom) {
+            if (room == chatRoom) {
+                unreadMessagesCount.value = 0
+            }
+        }
     }
 
     private val chatRoomListener: ChatRoomListenerStub = object : ChatRoomListenerStub() {
@@ -216,11 +222,14 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
     }
 
     override fun onCleared() {
+        destroy()
+        super.onCleared()
+    }
+
+    fun destroy() {
         coreContext.contactsManager.removeListener(contactsUpdatedListener)
         chatRoom.removeListener(chatRoomListener)
         chatRoom.core.removeListener(coreListener)
-
-        super.onCleared()
     }
 
     fun contactLookup() {
