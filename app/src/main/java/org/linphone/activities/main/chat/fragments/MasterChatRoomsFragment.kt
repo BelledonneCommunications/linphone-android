@@ -110,10 +110,10 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
         )
         val swipeListener = object : RecyclerViewSwipeListener {
             override fun onLeftToRightSwipe(viewHolder: RecyclerView.ViewHolder) {
+                val chatRoomViewModel = adapter.currentList[viewHolder.adapterPosition]
+                chatRoomViewModel.chatRoom.markAsRead()
+                coreContext.notificationsManager.dismissChatNotification(chatRoomViewModel.chatRoom)
                 adapter.notifyItemChanged(viewHolder.adapterPosition)
-                val chatRoom = adapter.currentList[viewHolder.adapterPosition]
-                chatRoom.markAsRead()
-                coreContext.notificationsManager.dismissChatNotification(chatRoom)
             }
 
             override fun onRightToLeftSwipe(viewHolder: RecyclerView.ViewHolder) {
@@ -126,7 +126,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
                 }
 
                 viewModel.showDeleteButton({
-                    listViewModel.deleteChatRoom(adapter.currentList[viewHolder.adapterPosition])
+                    listViewModel.deleteChatRoom(adapter.currentList[viewHolder.adapterPosition].chatRoom)
                     dialog.dismiss()
                 }, getString(R.string.dialog_delete))
 
@@ -143,10 +143,6 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
 
         listViewModel.chatRooms.observe(viewLifecycleOwner, { chatRooms ->
             adapter.submitList(chatRooms)
-        })
-
-        listViewModel.latestUpdatedChatRoomId.observe(viewLifecycleOwner, { position ->
-            adapter.notifyItemChanged(position)
         })
 
         listViewModel.contactsUpdatedEvent.observe(viewLifecycleOwner, {
@@ -268,8 +264,8 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
     override fun deleteItems(indexesOfItemToDelete: ArrayList<Int>) {
         val list = ArrayList<ChatRoom>()
         for (index in indexesOfItemToDelete) {
-            val chatRoom = adapter.currentList[index]
-            list.add(chatRoom)
+            val chatRoomViewModel = adapter.currentList[index]
+            list.add(chatRoomViewModel.chatRoom)
         }
         listViewModel.deleteChatRooms(list)
     }
