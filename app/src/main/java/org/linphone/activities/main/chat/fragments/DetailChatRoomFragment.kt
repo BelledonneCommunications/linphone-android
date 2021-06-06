@@ -39,6 +39,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.io.File
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -70,12 +71,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
     private val observer = object : RecyclerView.AdapterDataObserver() {
         override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-            if (itemCount == 1 && positionStart > 0) {
-                adapter.notifyItemChanged(positionStart - 1) // For grouping purposes
-                scrollToBottom()
-            } else if (positionStart > 0) {
-                scrollToBottom()
-            }
+            adapter.notifyItemChanged(positionStart - 1) // For grouping purposes
         }
     }
 
@@ -112,7 +108,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         val remoteSipUri = arguments?.getString("RemoteSipUri")
 
         val textToShare = arguments?.getString("TextToShare")
-        val filestoShare = arguments?.getStringArrayList("FilesToShare")
+        val filesToShare = arguments?.getStringArrayList("FilesToShare")
 
         arguments?.clear()
         if (localSipUri != null && remoteSipUri != null) {
@@ -189,7 +185,10 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
         listViewModel.scrollToBottomOnMessageReceivedEvent.observe(viewLifecycleOwner, {
             it.consume {
-                scrollToBottom()
+                viewLifecycleOwner.lifecycleScope.launch {
+                    delay(100)
+                    scrollToBottom()
+                }
             }
         })
 
@@ -333,8 +332,8 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             Log.i("[Chat Room] Found text to share")
             chatSendingViewModel.textToSend.value = textToShare
         }
-        if (filestoShare?.isNotEmpty() == true) {
-            for (path in filestoShare) {
+        if (filesToShare?.isNotEmpty() == true) {
+            for (path in filesToShare) {
                 Log.i("[Chat Room] Found $path file to share")
                 chatSendingViewModel.addAttachment(path)
             }
