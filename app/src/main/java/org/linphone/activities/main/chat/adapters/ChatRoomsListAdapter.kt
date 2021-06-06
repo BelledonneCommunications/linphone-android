@@ -37,7 +37,7 @@ import org.linphone.utils.Event
 class ChatRoomsListAdapter(
     selectionVM: ListTopBarViewModel,
     private val viewLifecycleOwner: LifecycleOwner
-) : SelectionListAdapter<ChatRoom, RecyclerView.ViewHolder>(selectionVM, ChatRoomDiffCallback()) {
+) : SelectionListAdapter<ChatRoomViewModel, RecyclerView.ViewHolder>(selectionVM, ChatRoomDiffCallback()) {
     val selectedChatRoomEvent: MutableLiveData<Event<ChatRoom>> by lazy {
         MutableLiveData<Event<ChatRoom>>()
     }
@@ -64,9 +64,8 @@ class ChatRoomsListAdapter(
     inner class ViewHolder(
         private val binding: ChatRoomListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(chatRoom: ChatRoom) {
+        fun bind(chatRoomViewModel: ChatRoomViewModel) {
             with(binding) {
-                val chatRoomViewModel = ChatRoomViewModel(chatRoom)
                 viewModel = chatRoomViewModel
 
                 lifecycleOwner = viewLifecycleOwner
@@ -83,8 +82,8 @@ class ChatRoomsListAdapter(
                     if (selectionViewModel.isEditionEnabled.value == true) {
                         selectionViewModel.onToggleSelect(adapterPosition)
                     } else {
-                        selectedChatRoomEvent.value = Event(chatRoom)
-                        chatRoom.markAsRead()
+                        selectedChatRoomEvent.value = Event(chatRoomViewModel.chatRoom)
+                        chatRoomViewModel.chatRoom.markAsRead()
                     }
                 }
 
@@ -103,19 +102,19 @@ class ChatRoomsListAdapter(
     }
 }
 
-private class ChatRoomDiffCallback : DiffUtil.ItemCallback<ChatRoom>() {
+private class ChatRoomDiffCallback : DiffUtil.ItemCallback<ChatRoomViewModel>() {
     override fun areItemsTheSame(
-        oldItem: ChatRoom,
-        newItem: ChatRoom
+        oldItem: ChatRoomViewModel,
+        newItem: ChatRoomViewModel
     ): Boolean {
-        return oldItem.localAddress.weakEqual(newItem.localAddress) &&
-                oldItem.peerAddress.weakEqual(newItem.peerAddress)
+        return oldItem.chatRoom.localAddress.weakEqual(newItem.chatRoom.localAddress) &&
+                oldItem.chatRoom.peerAddress.weakEqual(newItem.chatRoom.peerAddress)
     }
 
     override fun areContentsTheSame(
-        oldItem: ChatRoom,
-        newItem: ChatRoom
+        oldItem: ChatRoomViewModel,
+        newItem: ChatRoomViewModel
     ): Boolean {
-        return newItem.unreadMessagesCount == 0
+        return newItem.chatRoom.unreadMessagesCount == 0
     }
 }
