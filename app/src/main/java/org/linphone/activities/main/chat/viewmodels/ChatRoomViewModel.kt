@@ -216,11 +216,14 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
     }
 
     override fun onCleared() {
+        destroy()
+        super.onCleared()
+    }
+
+    fun destroy() {
         coreContext.contactsManager.removeListener(contactsUpdatedListener)
         chatRoom.removeListener(chatRoomListener)
         chatRoom.core.removeListener(coreListener)
-
-        super.onCleared()
     }
 
     fun contactLookup() {

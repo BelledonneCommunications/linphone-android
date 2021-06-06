@@ -552,9 +552,10 @@ class CoreContext(val context: Context, coreConfig: Config) {
 
         if (overlayY == 0f) overlayY = AppUtils.pixelsToDp(40f)
         val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        // WRAP_CONTENT doesn't work well on some launchers...
         val params: WindowManager.LayoutParams = WindowManager.LayoutParams(
-            WindowManager.LayoutParams.WRAP_CONTENT,
-            WindowManager.LayoutParams.WRAP_CONTENT,
+            AppUtils.getDimension(R.dimen.call_overlay_size).toInt(),
+            AppUtils.getDimension(R.dimen.call_overlay_size).toInt(),
             Compatibility.getOverlayType(),
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
             PixelFormat.TRANSLUCENT
