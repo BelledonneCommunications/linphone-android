@@ -83,7 +83,6 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
                         }
                     }
                 }
-                scrollToBottomOnMessageReceivedEvent.value = Event(true)
             }
 
             addEvent(eventLog)
@@ -212,6 +211,8 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
             list.add(eventLog)
         }
         events.value = list
+
+        scrollToBottomOnMessageReceivedEvent.value = Event(true)
     }
 
     private fun getEvents(): ArrayList<EventLog> {
