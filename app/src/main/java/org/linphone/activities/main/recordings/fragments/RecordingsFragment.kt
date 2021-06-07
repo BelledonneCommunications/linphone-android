@@ -56,6 +56,7 @@ class RecordingsFragment : MasterFragment<RecordingsFragmentBinding, RecordingsL
         binding.viewModel = viewModel
 
         _adapter = RecordingsListAdapter(listSelectionViewModel, viewLifecycleOwner)
+        binding.recordingsList.setHasFixedSize(true)
         binding.recordingsList.adapter = adapter
 
         val layoutManager = LinearLayoutManager(activity)

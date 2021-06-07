@@ -74,6 +74,7 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
         }
 
         _adapter = ContactsListAdapter(listSelectionViewModel, viewLifecycleOwner)
+        binding.contactsList.setHasFixedSize(true)
         binding.contactsList.adapter = adapter
 
         binding.setEditClickListener {

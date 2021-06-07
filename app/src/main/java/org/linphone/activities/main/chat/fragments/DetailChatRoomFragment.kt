@@ -325,7 +325,10 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         }
 
         binding.setStartCallClickListener {
-            coreContext.startCall(viewModel.addressToCall)
+            val address = viewModel.addressToCall
+            if (address != null) {
+                coreContext.startCall(address)
+            }
         }
 
         if (textToShare?.isNotEmpty() == true) {
@@ -432,8 +435,11 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             dialogViewModel.showOkButton({ doNotAskAgain ->
                 if (doNotAskAgain) corePreferences.limeSecurityPopupEnabled = false
 
+                val address = viewModel.onlyParticipantOnlyDeviceAddress
                 if (viewModel.oneParticipantOneDevice) {
-                    coreContext.startCall(viewModel.onlyParticipantOnlyDeviceAddress, true)
+                    if (address != null) {
+                        coreContext.startCall(address, true)
+                    }
                 } else {
                     navigateToDevices()
                 }
@@ -443,8 +449,11 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
             dialog.show()
         } else {
+            val address = viewModel.onlyParticipantOnlyDeviceAddress
             if (viewModel.oneParticipantOneDevice) {
-                coreContext.startCall(viewModel.onlyParticipantOnlyDeviceAddress, true)
+                if (address != null) {
+                    coreContext.startCall(address, true)
+                }
             } else {
                 navigateToDevices()
             }
