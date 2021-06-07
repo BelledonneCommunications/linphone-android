@@ -89,6 +89,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
         // SubmitList is done on a background thread
         // We need this adapter data observer to know when to scroll
         adapter.registerAdapterDataObserver(observer)
+        binding.chatList.setHasFixedSize(true)
         binding.chatList.adapter = adapter
 
         val layoutManager = LinearLayoutManager(activity)
