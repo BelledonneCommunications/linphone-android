@@ -80,6 +80,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
         // SubmitList is done on a background thread
         // We need this adapter data observer to know when to scroll
         adapter.registerAdapterDataObserver(observer)
+        binding.callLogsList.setHasFixedSize(true)
         binding.callLogsList.adapter = adapter
 
         binding.setEditClickListener {
