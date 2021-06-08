@@ -599,8 +599,10 @@
     <string name="content_description_unselect_all">A lista összes elemének kijelölése megszüntetése</string>
     <string name="call_settings_pause_calls_lost_audio_focus_title">Hívás szüneteltetése, ha a hang bemenet vagy kimenet megszűnése esetén</string>
     <string name="content_description_cancel_sharing">Megosztás leállítása</string>
-    <string name="chat_room_choose_conversation_for_message_forward">Beszélgetés kiválasztása vagy új létrehozása</string>
-    <string name="chat_room_choose_conversation_for_file_sharing">Beszélgetés kiválasztása vagy új létrehozása</string>
+    <string name="chat_room_choose_conversation_for_message_forward">Beszélgetés kiválasztása vagy létrehozása az üzenet továbbításához</string>
+    <string name="chat_room_choose_conversation_for_file_sharing">Beszélgetés kiválasztása vagy létrehozása a fájl(ok) megosztásához</string>
     <string name="content_description_cancel_forward">Az üzenet továbbításának visszavonása</string>
     <string name="chat_settins_enable_ephemeral_messages_beta_title">Ideiglenes üzenetek engedélyezése (béta)</string>
+    <string name="chat_room_choose_conversation_for_text_sharing">Beszélgetés kiválasztása vagy létrehozása a szöveg megosztásához</string>
+    <string name="content_description_forward_message">Üzenet továbbítása ebben a beszélgetésben</string>
 </resources>
