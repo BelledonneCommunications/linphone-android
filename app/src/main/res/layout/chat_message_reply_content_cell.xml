@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:maxHeight="@dimen/chat_message_bubble_image_height_small"
             android:layout_size="@{data.alone ? 0f : @dimen/chat_message_small_bubble_file_size}"
-            android:background="@drawable/reply_file_background"
+            android:background="@drawable/chat_bubble_reply_file_background"
             android:padding="10dp"
             android:contentDescription="@{data.fileName}"
             android:visibility="@{data.downloadable || data.pdf || data.audio || data.genericFile ? View.VISIBLE : View.GONE}"
