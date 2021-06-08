@@ -31,6 +31,7 @@
         android:paddingBottom="5dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:background="?attr/backgroundColor"
         android:gravity="center_vertical">
 
         <org.linphone.contact.ContactAvatarView
