@@ -602,4 +602,5 @@
     <string name="chat_room_choose_conversation_for_message_forward">Beszélgetés kiválasztása vagy új létrehozása</string>
     <string name="chat_room_choose_conversation_for_file_sharing">Beszélgetés kiválasztása vagy új létrehozása</string>
     <string name="content_description_cancel_forward">Az üzenet továbbításának visszavonása</string>
+    <string name="chat_settins_enable_ephemeral_messages_beta_title">Ideiglenes üzenetek engedélyezése (béta)</string>
 </resources>

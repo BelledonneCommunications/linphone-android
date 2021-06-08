@@ -505,11 +505,16 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 builder.removeItem(R.id.chat_room_participants_devices)
             }
         }
+
         if (!viewModel.encryptedChatRoom) {
             builder.removeItem(R.id.chat_room_participants_devices)
             builder.removeItem(R.id.chat_room_ephemeral_messages)
+        } else {
+            // TODO: Remove for 4.6 release
+            if (!corePreferences.ephemeralMessagesEnabled) {
+                builder.removeItem(R.id.chat_room_ephemeral_messages)
+            }
         }
-        // TODO: hide ephemeral menu if not all participants support the feature
 
         builder.setCallback(object : MenuBuilder.Callback {
             override fun onMenuModeChange(menu: MenuBuilder) {}

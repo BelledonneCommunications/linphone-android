@@ -132,6 +132,13 @@ class CorePreferences constructor(private val context: Context) {
 
     /* Chat */
 
+    // TODO: Remove for 4.6 release
+    var ephemeralMessagesEnabled: Boolean
+        get() = config.getBool("app", "ephemeral", false)
+        set(value) {
+            config.setBool("app", "ephemeral", value)
+        }
+
     var preventMoreThanOneFilePerMessage: Boolean
         get() = config.getBool("app", "prevent_more_than_one_file_per_message", false)
         set(value) {
