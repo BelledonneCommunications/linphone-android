@@ -35,6 +35,7 @@
         android:layout_height="50dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
+        android:background="?attr/backgroundColor"
         android:gravity="center_vertical">
 
         <LinearLayout
