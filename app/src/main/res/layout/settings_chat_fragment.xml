@@ -134,6 +134,12 @@
                     linphone:checked="@={viewModel.hideRoomsRemovedProxies}"/>
 
                 <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/chat_settins_enable_ephemeral_messages_beta_title}"
+                    linphone:listener="@{viewModel.ephemeralMessagesBetaListener}"
+                    linphone:checked="@={viewModel.ephemeralMessagesBeta}"/>
+
+                <include
                     layout="@layout/settings_widget_text"
                     linphone:title="@{@string/chat_settings_file_sharing_url_title}"
                     linphone:subtitle="@{@string/chat_settings_file_sharing_url_summary}"
