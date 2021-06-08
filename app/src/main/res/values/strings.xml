@@ -438,6 +438,7 @@
     <string name="chat_settings_go_to_android_notification_settings">Android notification settings</string>
     <string name="chat_settings_use_in_app_file_viewer_title">Always open files inside this app</string>
     <string name="chat_settings_use_in_app_file_viewer_summary">You\'ll still be able to export them in third-party apps</string>
+    <string name="chat_settins_enable_ephemeral_messages_beta_title">Enable ephemeral messages (beta)</string>
 
     <!-- Network settings -->
     <string name="network_settings_wifi_only_title">Use WiFi only</string>
