@@ -13,7 +13,7 @@
     </data>
 
     <LinearLayout
-        android:background="@drawable/reply_background"
+        android:background="@drawable/chat_bubble_reply_background"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
@@ -26,7 +26,7 @@
             android:id="@+id/color"
             android:layout_width="10dp"
             android:layout_height="match_parent"
-            android:background="@{data.chatMessage.isOutgoing ? @color/chat_bubble_outgoing_color : @color/chat_bubble_incoming_color, default=@color/chat_bubble_outgoing_color}" />
+            android:background="@{data.chatMessage.isOutgoing ? @drawable/chat_bubble_reply_outgoing_indicator : @drawable/chat_bubble_reply_incoming_indicator, default=@drawable/chat_bubble_reply_outgoing_indicator}" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
