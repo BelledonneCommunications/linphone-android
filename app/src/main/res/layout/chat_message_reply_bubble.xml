@@ -60,7 +60,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="?attr/primaryTextColor"
+                style="@style/chat_message_reply_sender_font"
                 android:text="@{data.contact.fullName ?? data.displayName, default=Tintin}"/>
 
             <TextView
@@ -69,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:singleLine="false"
                 android:layout_marginTop="5dp"
-                android:textColor="?attr/primaryTextColor"
+                style="@style/chat_message_reply_font"
                 android:text="@{data.text, default=`Lorem ipsum`}"/>
 
         </LinearLayout>
