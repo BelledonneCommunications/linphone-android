@@ -41,4 +41,12 @@
         <attr name="value" format="string" />
         <attr name="image" format="reference" />
     </declare-styleable>
+
+    <declare-styleable name="VoiceRecordProgressBar">
+        <attr name="max" format="integer" />
+        <attr name="progressDrawable" format="reference" />
+        <attr name="secondaryProgressTint" format="color" />
+        <attr name="primaryLeftMargin" format="dimension" />
+        <attr name="primaryRightMargin" format="dimension" />
+    </declare-styleable>
 </resources>

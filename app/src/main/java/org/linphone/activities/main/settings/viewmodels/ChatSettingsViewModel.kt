@@ -72,6 +72,14 @@ class ChatSettingsViewModel : GenericSettingsViewModel() {
     }
     val autoDownloadMaxSize = MutableLiveData<Int>()
 
+    val autoDownloadVoiceRecordingsListener = object : SettingListenerStub() {
+        override fun onBoolValueChanged(newValue: Boolean) {
+            core.isAutoDownloadVoiceRecordingsEnabled = newValue
+            autoDownloadVoiceRecordings.value = newValue
+        }
+    }
+    val autoDownloadVoiceRecordings = MutableLiveData<Boolean>()
+
     val downloadedMediaPublicListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
             prefs.makePublicMediaFilesDownloaded = newValue
@@ -141,6 +149,7 @@ class ChatSettingsViewModel : GenericSettingsViewModel() {
         useInAppFileViewer.value = prefs.useInAppFileViewerForNonEncryptedFiles || prefs.vfsEnabled
         hideNotificationContent.value = prefs.hideChatMessageContentInNotification
         initAutoDownloadList()
+        autoDownloadVoiceRecordings.value = core.isAutoDownloadVoiceRecordingsEnabled
         launcherShortcuts.value = prefs.chatRoomShortcuts
         hideEmptyRooms.value = prefs.hideEmptyRooms
         hideRoomsRemovedProxies.value = prefs.hideRoomsFromRemovedProxies

@@ -39,9 +39,11 @@
 
         <ImageView
             android:visibility="@{data.video ? View.VISIBLE : View.GONE, default=gone}"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/recording_play_pause"
+            android:layout_width="@dimen/play_pause_button_size"
+            android:layout_height="@dimen/play_pause_button_size"
+            android:padding="9dp"
+            android:src="@drawable/record_play_dark"
+            android:background="@drawable/round_recording_button_background_dark"
             android:contentDescription="@string/content_description_chat_message_video_attachment"
             android:layout_centerInParent="true"/>
 

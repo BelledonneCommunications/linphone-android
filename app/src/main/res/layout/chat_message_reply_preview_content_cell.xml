@@ -12,13 +12,13 @@
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:contentDescription="@string/content_description_downloaded_file_transfer"
             android:layout_width="@dimen/chat_message_small_bubble_file_size"
             android:layout_height="@dimen/chat_message_small_bubble_file_size"
+            android:layout_margin="5dp"
             app:glidePath="@{data.filePath}"
             android:visibility="@{data.image ? View.VISIBLE : View.GONE}"
             android:scaleType="@{ScaleType.CENTER_CROP}"
@@ -28,6 +28,7 @@
             android:contentDescription="@string/content_description_downloaded_file_transfer"
             android:layout_width="@dimen/chat_message_small_bubble_file_size"
             android:layout_height="@dimen/chat_message_small_bubble_file_size"
+            android:layout_margin="5dp"
             android:src="@{data.videoPreview}"
             android:visibility="@{data.video ? View.VISIBLE : View.GONE}"
             android:scaleType="@{ScaleType.CENTER_CROP}"
@@ -35,15 +36,29 @@
 
         <ImageView
             android:visibility="@{data.video ? View.VISIBLE : View.GONE}"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/recording_play_pause"
+            android:layout_width="@dimen/play_pause_button_size"
+            android:layout_height="@dimen/play_pause_button_size"
+            android:layout_margin="5dp"
+            android:padding="9dp"
+            android:src="@drawable/record_play_dark"
+            android:background="@drawable/round_recording_button_background_dark"
             android:contentDescription="@string/content_description_chat_message_video_attachment"
             android:layout_centerInParent="true"/>
+
+        <TextView
+            android:visibility="@{data.isVoiceRecording ? View.VISIBLE : View.GONE}"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/progress_bar_height"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:text="@{data.formattedDuration, default=`00:00`}"
+            android:textColor="@color/light_primary_text_color"
+            android:drawableLeft="@drawable/audio_recording_reply_preview_default"/>
 
         <ImageView
             android:layout_width="@dimen/chat_message_small_bubble_file_size"
             android:layout_height="@dimen/chat_message_small_bubble_file_size"
+            android:layout_margin="5dp"
             android:background="@drawable/chat_bubble_reply_file_background"
             android:padding="10dp"
             android:contentDescription="@{data.fileName}"
