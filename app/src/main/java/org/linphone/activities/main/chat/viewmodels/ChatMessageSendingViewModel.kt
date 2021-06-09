@@ -58,6 +58,12 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
 
     var pendingChatMessageToReplyTo = MutableLiveData<ChatMessageData>()
 
+    val isPendingVoiceRecord = MutableLiveData<Boolean>()
+
+    val isVoiceRecording = MutableLiveData<Boolean>()
+
+    val isPlayingVoiceRecording = MutableLiveData<Boolean>()
+
     init {
         attachments.value = arrayListOf()
 
@@ -156,6 +162,7 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         cancelReply()
         attachments.value.orEmpty().forEach(ChatMessageAttachmentData::destroy)
         attachments.value = arrayListOf()
+        textToSend.value = ""
     }
 
     fun transferMessage(chatMessage: ChatMessage) {
@@ -166,5 +173,27 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
     fun cancelReply() {
         pendingChatMessageToReplyTo.value?.destroy()
         isPendingAnswer.value = false
+    }
+
+    fun startVoiceRecording() {
+        isPendingVoiceRecord.value = true
+        isVoiceRecording.value = true
+    }
+
+    fun cancelVoiceRecording() {
+        isPendingVoiceRecord.value = false
+        isVoiceRecording.value = false
+    }
+
+    fun stopVoiceRecording() {
+        isVoiceRecording.value = false
+    }
+
+    fun playRecordedMessage() {
+        isPlayingVoiceRecording.value = true
+    }
+
+    fun pauseRecordedMessage() {
+        isPlayingVoiceRecording.value = false
     }
 }
