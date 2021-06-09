@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.main.chat.viewmodels.ChatMessageSendingViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:background="@color/header_background_color"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
+
+        <ImageView
+            android:id="@+id/cancel_recording"
+            android:onClick="@{() -> viewModel.cancelVoiceRecording()}"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/delete" />
+
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_toRightOf="@id/cancel_recording"
+            android:layout_toLeftOf="@id/play_pause_stop"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:progressDrawable="@drawable/chat_message_audio_record_preview_progress"
+            android:max="100"
+            android:progress="0"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_toRightOf="@id/cancel_recording"
+            android:layout_toLeftOf="@id/chrono"
+            android:layout_centerVertical="true"
+            android:adjustViewBounds="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/audio_recording_default" />
+
+        <Chronometer
+            android:id="@+id/chrono"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/play_pause_stop"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp" />
+
+        <LinearLayout
+            android:id="@+id/play_pause_stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true">
+
+            <ImageView
+                android:visibility="@{viewModel.isVoiceRecording ? View.VISIBLE : View.GONE}"
+                android:onClick="@{() -> viewModel.stopVoiceRecording()}"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:padding="9dp"
+                android:background="@drawable/round_recording_button_background_light"
+                android:src="@drawable/record_stop_light" />
+
+            <ImageView
+                android:visibility="@{!viewModel.isVoiceRecording &amp;&amp; !viewModel.isPlayingVoiceRecording ? View.VISIBLE : View.GONE, default=gone}"
+                android:onClick="@{() -> viewModel.playRecordedMessage()}"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:padding="9dp"
+                android:background="@drawable/round_recording_button_background_light"
+                android:src="@drawable/record_play_light" />
+
+            <ImageView
+                android:visibility="@{!viewModel.isVoiceRecording &amp;&amp; viewModel.isPlayingVoiceRecording ? View.VISIBLE : View.GONE, default=gone}"
+                android:onClick="@{() -> viewModel.pauseRecordedMessage()}"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:padding="9dp"
+                android:background="@drawable/round_recording_button_background_light"
+                android:src="@drawable/record_pause_light" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</layout>

@@ -41,6 +41,8 @@ class ChatMessageContentData(
     private val contentIndex: Int,
     private val listener: OnContentClickedListener?
 ) {
+    val isOutgoing = chatMessage.isOutgoing
+
     val isImage = MutableLiveData<Boolean>()
     val isVideo = MutableLiveData<Boolean>()
     val isAudio = MutableLiveData<Boolean>()
