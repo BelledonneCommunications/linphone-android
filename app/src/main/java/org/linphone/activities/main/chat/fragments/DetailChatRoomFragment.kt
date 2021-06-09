@@ -28,6 +28,7 @@ import android.os.Parcelable
 import android.provider.MediaStore
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
 import androidx.activity.addCallback
 import androidx.appcompat.view.menu.MenuBuilder
@@ -201,6 +202,13 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             chatSendingViewModel.onTextToSendChanged(it)
         })
 
+        chatSendingViewModel.requestRecordAudioPermissionEvent.observe(viewLifecycleOwner, {
+            it.consume {
+                Log.i("[Chat Room] Asking for RECORD_AUDIO permission")
+                requestPermissions(arrayOf(android.Manifest.permission.RECORD_AUDIO), 2)
+            }
+        })
+
         listViewModel.events.observe(viewLifecycleOwner, { events ->
             adapter.submitList(events)
         })
@@ -363,16 +371,28 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             }
         }
 
-        binding.setSendMessageClickListener {
-            chatSendingViewModel.sendMessage()
-            binding.message.text?.clear()
-        }
-
-        binding.setStartCallClickListener {
-            val address = viewModel.addressToCall
-            if (address != null) {
-                coreContext.startCall(address)
+        binding.setVoiceRecordingTouchListener { _, event ->
+            if (corePreferences.holdToRecordVoiceMessage) {
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        Log.i("[Chat Room] Start recording voice message as long as recording button is held")
+                        chatSendingViewModel.startVoiceRecording()
+                    }
+                    MotionEvent.ACTION_UP -> {
+                        val voiceRecordingDuration = chatSendingViewModel.voiceRecordingDuration.value ?: 0
+                        if (voiceRecordingDuration < 1000) {
+                            Log.w("[Chat Room] Voice recording button has been held for less than a second, considering miss click")
+                            chatSendingViewModel.cancelVoiceRecording()
+                            (requireActivity() as MainActivity).showSnackBar(R.string.chat_message_voice_recording_hold_to_record)
+                        } else {
+                            Log.i("[Chat Room] Voice recording button has been released, stop recording")
+                            chatSendingViewModel.stopVoiceRecording()
+                        }
+                    }
+                }
+                true
             }
+            false
         }
 
         if (textToShare?.isNotEmpty() == true) {
@@ -408,13 +428,21 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        if (requestCode == 0) {
-            var atLeastOneGranted = false
-            for (result in grantResults) {
-                atLeastOneGranted = atLeastOneGranted || result == PackageManager.PERMISSION_GRANTED
+        var atLeastOneGranted = false
+        for (result in grantResults) {
+            atLeastOneGranted = atLeastOneGranted || result == PackageManager.PERMISSION_GRANTED
+        }
+
+        when (requestCode) {
+            0 -> {
+                if (atLeastOneGranted) {
+                    pickFile()
+                }
             }
-            if (atLeastOneGranted) {
-                pickFile()
+            2 -> {
+                if (atLeastOneGranted) {
+                    chatSendingViewModel.startVoiceRecording()
+                }
             }
         }
     }
