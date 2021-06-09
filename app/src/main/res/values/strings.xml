@@ -218,6 +218,7 @@
     <string name="chat_message_cant_open_file_in_app_dialog_open_as_text_button">Open as text</string>
     <string name="chat_room_sending_reply_hint">Reply</string>
     <string name="chat_room_sending_message_hint">Message</string>
+    <string name="chat_message_voice_recording_hold_to_record">Hold button to record voice message</string>
 
     <!-- Recordings -->
     <string name="recordings_empty_list">No recordings</string>
@@ -643,6 +644,7 @@
     <string name="content_description_attach_file">Attach a file to the message</string>
     <string name="content_description_attached_file">File attached to the message</string>
     <string name="content_description_send_message">Send message</string>
+    <string name="content_description_record_audio_message">Record audio message</string>
     <string name="content_description_toggle_participant_devices_list">Show or hide the participant devices</string>
     <string name="content_description_ephemeral_duration_selected">Ephemeral duration selected</string>
     <string name="content_description_ephemeral_duration_change">Change ephemeral duration by selected value</string>
@@ -715,4 +717,10 @@
     <string name="content_description_export">Open file in third-party app</string>
     <string name="content_description_cancel_forward">Cancel message forward</string>
     <string name="content_description_cancel_sharing">Cancel sharing</string>
+    <string name="content_description_cancel_reply">Cancel reply</string>
+    <string name="content_description_voice_recording">Record a voice message</string>
+    <string name="content_description_stop_voice_recording">Stop voice recording</string>
+    <string name="content_description_cancel_voice_recording">Cancel voice recording</string>
+    <string name="content_description_pause_voice_recording_playback">Pause voice recording</string>
+    <string name="content_description_play_voice_recording">Play voice recording</string>
 </resources>

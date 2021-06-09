@@ -225,6 +225,13 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         }
     }
 
+    fun startCall() {
+        val address = addressToCall
+        if (address != null) {
+            coreContext.startCall(address)
+        }
+    }
+
     private fun formatLastMessage(msg: ChatMessage?): String {
         if (msg == null) return ""
 

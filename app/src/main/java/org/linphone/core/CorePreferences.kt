@@ -201,6 +201,20 @@ class CorePreferences constructor(private val context: Context) {
             config.setBool("app", "chat_room_shortcuts", value)
         }
 
+    /* Voice Recordings */
+
+    var voiceRecordingMaxDuration: Int
+        get() = config.getInt("app", "voice_recording_max_duration", 600000) // in ms
+        set(value) = config.setInt("app", "voice_recording_max_duration", value)
+
+    var holdToRecordVoiceMessage: Boolean
+        get() = config.getBool("app", "voice_recording_hold_and_release_mode", false)
+        set(value) = config.setBool("app", "voice_recording_hold_and_release_mode", value)
+
+    var sendVoiceRecordingRightAway: Boolean
+        get() = config.getBool("app", "voice_recording_send_right_away", false)
+        set(value) = config.setBool("app", "voice_recording_send_right_away", value)
+
     /* Contacts */
 
     var storePresenceInNativeContact: Boolean

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/background"
+        android:gravity="fill_horizontal">
+        <shape android:shape="rectangle" android:tint="@color/white_color">
+            <corners android:radius="@dimen/chat_message_round_corner_radius"/>
+            <size android:height="40dp" />
+        </shape>
+    </item>
+    <item android:id="@android:id/secondaryProgress"
+        android:gravity="center_vertical|fill_horizontal">
+        <scale android:scaleWidth="100%">
+            <shape android:shape="rectangle" android:tint="@color/green_color">
+                <corners android:radius="@dimen/chat_message_round_corner_radius"/>
+                <size android:height="40dp" />
+            </shape>
+        </scale>
+    </item>
+    <item android:id="@android:id/progress"
+        android:gravity="fill_horizontal">
+        <bitmap android:src="@drawable/audio_recording_default"
+            android:gravity="center_vertical"
+            android:tileModeX="repeat"/>
+    </item>
+</layer-list>
