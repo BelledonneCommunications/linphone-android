@@ -51,7 +51,7 @@ class ChatBubbleActivity : GenericActivity() {
 
     private val observer = object : RecyclerView.AdapterDataObserver() {
         override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-            if (positionStart == adapter.itemCount - 1) {
+            if (positionStart == adapter.itemCount - itemCount) {
                 adapter.notifyItemChanged(positionStart - 1) // For grouping purposes
                 scrollToBottom()
             }

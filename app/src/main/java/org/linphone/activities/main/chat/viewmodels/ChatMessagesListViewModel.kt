@@ -54,10 +54,6 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
-    val scrollToBottomOnMessageReceivedEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
-    }
-
     private val chatRoomListener: ChatRoomListenerStub = object : ChatRoomListenerStub() {
         override fun onChatMessageReceived(chatRoom: ChatRoom, eventLog: EventLog) {
             chatRoom.markAsRead()
@@ -211,8 +207,6 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
             list.add(eventLog)
         }
         events.value = list
-
-        scrollToBottomOnMessageReceivedEvent.value = Event(true)
     }
 
     private fun getEvents(): ArrayList<EventLog> {

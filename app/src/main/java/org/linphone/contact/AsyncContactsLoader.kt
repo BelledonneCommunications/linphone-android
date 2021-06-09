@@ -238,8 +238,8 @@ class AsyncContactsLoader(private val context: Context) :
             for (list in core.friendsLists) {
                 if (list.rlsAddress == null) {
                     Log.w("[Contacts Loader] Friend list subscription enabled but RLS URI not set!")
-                    val defaultRlsUri = core.config.getString("sip", "rls_uri", null)
-                    if (defaultRlsUri != null) {
+                    val defaultRlsUri = corePreferences.defaultRlsUri
+                    if (defaultRlsUri.isNotEmpty()) {
                         val rlsAddress = core.interpretUrl(defaultRlsUri)
                         if (rlsAddress != null) {
                             Log.i("[Contacts Loader] Using new RLS URI: ${rlsAddress.asStringUriOnly()}")
