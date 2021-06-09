@@ -25,12 +25,13 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.UnderlineSpan
 import androidx.lifecycle.MutableLiveData
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.ticker
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
-import org.linphone.core.ChatMessage
-import org.linphone.core.ChatMessageListenerStub
-import org.linphone.core.Content
+import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.FileUtils
@@ -42,6 +43,8 @@ class ChatMessageContentData(
 
 ) {
     var listener: OnContentClickedListener? = null
+    
+    val isOutgoing = chatMessage.isOutgoing
 
     val isImage = MutableLiveData<Boolean>()
     val isVideo = MutableLiveData<Boolean>()
@@ -60,6 +63,11 @@ class ChatMessageContentData(
     val downloadProgressString = MutableLiveData<String>()
     val downloadLabel = MutableLiveData<Spannable>()
 
+    val voiceRecordDuration = MutableLiveData<Int>()
+    val formattedDuration = MutableLiveData<String>()
+    val voiceRecordPlayingPosition = MutableLiveData<Int>()
+    val isVoiceRecordPlaying = MutableLiveData<Boolean>()
+
     val isAlone: Boolean
         get() {
             var count = 0
@@ -73,6 +81,13 @@ class ChatMessageContentData(
 
     var isFileEncrypted: Boolean = false
     private lateinit var content: Content
+
+    private val tickerChannel = ticker(100, 0)
+    private lateinit var voiceRecordingPlayer: Player
+    private val playerListener = PlayerListener {
+        Log.i("[Voice Recording] End of file reached")
+        stopVoiceRecording()
+    }
 
     private val chatMessageListener: ChatMessageListenerStub = object : ChatMessageListenerStub() {
         override fun onFileTransferProgressIndication(
@@ -110,8 +125,16 @@ class ChatMessageContentData(
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     init {
+        isVoiceRecordPlaying.value = false
+        voiceRecordDuration.value = 0
+        voiceRecordPlayingPosition.value = 0
+
         updateContent()
         chatMessage.addListener(chatMessageListener)
+
+        if (isAudio.value == true) {
+            initVoiceRecordPlayer()
+        }
     }
 
     fun destroy() {
@@ -125,6 +148,10 @@ class ChatMessageContentData(
         }
 
         chatMessage.removeListener(chatMessageListener)
+
+        if (isAudio.value == true) {
+            destroyVoiceRecordPlayer()
+        }
     }
 
     fun download() {
@@ -201,6 +228,92 @@ class ChatMessageContentData(
         downloadEnabled.value = !chatMessage.isFileTransferInProgress
         downloadProgressInt.value = 0
         downloadProgressString.value = "0%"
+    }
+
+    /** Voice recording specifics */
+
+    fun playVoiceRecording() {
+        Log.i("[Voice Recording] Playing voice record")
+        if (isPlayerClosed()) {
+            Log.w("[Voice Recording] Player closed, let's open it first")
+            voiceRecordingPlayer.open(filePath.value.orEmpty())
+            voiceRecordingPlayer.seek(0)
+        }
+
+        voiceRecordingPlayer.start()
+        isVoiceRecordPlaying.value = true
+
+        scope.launch {
+            withContext(Dispatchers.IO) {
+                for (tick in tickerChannel) {
+                    if (voiceRecordingPlayer.state == Player.State.Playing) {
+                        if (!isPlayerClosed()) {
+                            voiceRecordPlayingPosition.postValue(voiceRecordingPlayer.currentPosition)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun pauseVoiceRecording() {
+        Log.i("[Voice Recording] Pausing voice record")
+        voiceRecordingPlayer.pause()
+        isVoiceRecordPlaying.value = false
+    }
+
+    private fun initVoiceRecordPlayer() {
+        Log.i("[Voice Recording] Creating player for voice record")
+        // Use speaker sound card to play recordings, otherwise use earpiece
+        // If none are available, default one will be used
+        var speakerCard: String? = null
+        var earpieceCard: String? = null
+        for (device in coreContext.core.audioDevices) {
+            if (device.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
+                if (device.type == AudioDevice.Type.Speaker) {
+                    speakerCard = device.id
+                } else if (device.type == AudioDevice.Type.Earpiece) {
+                    earpieceCard = device.id
+                }
+            }
+        }
+
+        val localPlayer = coreContext.core.createLocalPlayer(speakerCard ?: earpieceCard, null, null)
+        if (localPlayer != null) {
+            voiceRecordingPlayer = localPlayer
+        } else {
+            Log.e("[Voice Recording] Couldn't create local player!")
+            return
+        }
+        voiceRecordingPlayer.addListener(playerListener)
+
+        voiceRecordingPlayer.open(filePath.value.orEmpty())
+        voiceRecordDuration.value = voiceRecordingPlayer.duration
+        formattedDuration.value = SimpleDateFormat("mm:ss", Locale.getDefault()).format(voiceRecordingPlayer.duration) // is already in milliseconds
+        Log.i("[Voice Recording] Duration is ${voiceRecordDuration.value} (${voiceRecordingPlayer.duration})")
+    }
+
+    private fun stopVoiceRecording() {
+        Log.i("[Voice Recording] Stopping voice record")
+        pauseVoiceRecording()
+        voiceRecordingPlayer.seek(0)
+        voiceRecordPlayingPosition.value = 0
+        voiceRecordingPlayer.close()
+    }
+
+    private fun destroyVoiceRecordPlayer() {
+        Log.i("[Voice Recording] Destroying voice record")
+        tickerChannel.cancel()
+
+        voiceRecordingPlayer.setWindowId(null)
+        if (!isPlayerClosed()) voiceRecordingPlayer.close()
+
+        voiceRecordingPlayer.removeListener(playerListener)
+    }
+
+    private fun isPlayerClosed(): Boolean {
+        Log.i("[Voice Recording] Player state is ${voiceRecordingPlayer.state.name}")
+        return voiceRecordingPlayer.state == Player.State.Closed
     }
 }
 
