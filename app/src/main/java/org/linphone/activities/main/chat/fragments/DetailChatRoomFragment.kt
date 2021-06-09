@@ -39,7 +39,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.io.File
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -72,6 +71,10 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
     private val observer = object : RecyclerView.AdapterDataObserver() {
         override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
             adapter.notifyItemChanged(positionStart - 1) // For grouping purposes
+
+            if (positionStart == adapter.itemCount - itemCount) {
+                scrollToBottom()
+            }
         }
     }
 
@@ -180,15 +183,6 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         listViewModel.messageUpdatedEvent.observe(viewLifecycleOwner, {
             it.consume { position ->
                 adapter.notifyItemChanged(position)
-            }
-        })
-
-        listViewModel.scrollToBottomOnMessageReceivedEvent.observe(viewLifecycleOwner, {
-            it.consume {
-                viewLifecycleOwner.lifecycleScope.launch {
-                    delay(100)
-                    scrollToBottom()
-                }
             }
         })
 

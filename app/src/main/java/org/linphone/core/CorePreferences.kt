@@ -389,6 +389,9 @@ class CorePreferences constructor(private val context: Context) {
     val defaultDomain: String
         get() = config.getString("app", "default_domain", "sip.linphone.org")!!
 
+    val defaultRlsUri: String
+        get() = config.getString("sip", "rls_uri", "sips:rls@sip.linphone.org")!!
+
     val debugPopupCode: String
         get() = config.getString("app", "debug_popup_magic", "#1234#")!!
 
