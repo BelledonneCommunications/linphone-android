@@ -358,18 +358,6 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             }
         }
 
-        binding.setSendMessageClickListener {
-            chatSendingViewModel.sendMessage()
-            binding.message.text?.clear()
-        }
-
-        binding.setStartCallClickListener {
-            val address = viewModel.addressToCall
-            if (address != null) {
-                coreContext.startCall(address)
-            }
-        }
-
         if (textToShare?.isNotEmpty() == true) {
             Log.i("[Chat Room] Found text to share")
             chatSendingViewModel.textToSend.value = textToShare

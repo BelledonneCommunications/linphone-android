@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/background"
+        android:gravity="center_vertical|fill_horizontal">
+        <shape android:shape="rectangle" android:tint="@color/chat_bubble_incoming_color">
+            <corners android:radius="@dimen/chat_message_round_corner_radius"/>
+            <size android:height="40dp" />
+        </shape>
+    </item>
+    <item android:id="@android:id/progress"
+        android:gravity="center_vertical|fill_horizontal">
+        <scale android:scaleWidth="100%">
+            <shape android:shape="rectangle" android:tint="@color/chat_bubble_incoming_color_dark">
+                <corners android:radius="@dimen/chat_message_round_corner_radius"/>
+                <size android:height="40dp" />
+            </shape>
+        </scale>
+    </item>
+</layer-list>
