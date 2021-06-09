@@ -201,6 +201,13 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             chatSendingViewModel.onTextToSendChanged(it)
         })
 
+        chatSendingViewModel.requestRecordAudioPermissionEvent.observe(viewLifecycleOwner, {
+            it.consume {
+                Log.i("[Chat Room] Asking for RECORD_AUDIO permission")
+                requestPermissions(arrayOf(android.Manifest.permission.RECORD_AUDIO), 2)
+            }
+        })
+
         listViewModel.events.observe(viewLifecycleOwner, { events ->
             adapter.submitList(events)
         })
@@ -363,18 +370,6 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             }
         }
 
-        binding.setSendMessageClickListener {
-            chatSendingViewModel.sendMessage()
-            binding.message.text?.clear()
-        }
-
-        binding.setStartCallClickListener {
-            val address = viewModel.addressToCall
-            if (address != null) {
-                coreContext.startCall(address)
-            }
-        }
-
         if (textToShare?.isNotEmpty() == true) {
             Log.i("[Chat Room] Found text to share")
             chatSendingViewModel.textToSend.value = textToShare
@@ -408,13 +403,21 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        if (requestCode == 0) {
-            var atLeastOneGranted = false
-            for (result in grantResults) {
-                atLeastOneGranted = atLeastOneGranted || result == PackageManager.PERMISSION_GRANTED
+        var atLeastOneGranted = false
+        for (result in grantResults) {
+            atLeastOneGranted = atLeastOneGranted || result == PackageManager.PERMISSION_GRANTED
+        }
+
+        when (requestCode) {
+            0 -> {
+                if (atLeastOneGranted) {
+                    pickFile()
+                }
             }
-            if (atLeastOneGranted) {
-                pickFile()
+            2 -> {
+                if (atLeastOneGranted) {
+                    chatSendingViewModel.startVoiceRecording()
+                }
             }
         }
     }

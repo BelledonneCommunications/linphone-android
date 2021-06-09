@@ -201,6 +201,12 @@ class CorePreferences constructor(private val context: Context) {
             config.setBool("app", "chat_room_shortcuts", value)
         }
 
+    /* Voice Recordings */
+
+    var voiceRecordingMaxDuration: Int
+        get() = config.getInt("app", "voice_recording_max_duration", 600000)
+        set(value) = config.setInt("app", "voice_recording_max_duration", value)
+
     /* Contacts */
 
     var storePresenceInNativeContact: Boolean
