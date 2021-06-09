@@ -24,12 +24,6 @@
             name="attachFileClickListener"
             type="android.view.View.OnClickListener"/>
         <variable
-            name="sendMessageClickListener"
-            type="android.view.View.OnClickListener"/>
-        <variable
-            name="startCallClickListener"
-            type="android.view.View.OnClickListener"/>
-        <variable
             name="viewModel"
             type="org.linphone.activities.main.chat.viewmodels.ChatRoomViewModel" />
         <variable
@@ -96,7 +90,7 @@
             </LinearLayout>
 
             <ImageView
-                android:onClick="@{startCallClickListener}"
+                android:onClick="@{() -> viewModel.startCall()}"
                 android:contentDescription="@string/content_description_start_call"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -153,10 +147,21 @@
                 app:cancelClickListener="@{() -> chatSendingViewModel.cancelReply()}"
                 layout="@layout/chat_message_reply" />
 
+            <include
+                android:visibility="@{chatSendingViewModel.isPendingVoiceRecord ? View.VISIBLE : View.GONE, default=gone}"
+                app:viewModel="@{chatSendingViewModel}"
+                layout="@layout/chat_message_voice_recording" />
+
+            <View
+                android:visibility="@{chatSendingViewModel.isPendingVoiceRecord &amp;&amp; chatSendingViewModel.attachments.size() > 0 ? View.VISIBLE : View.GONE, default=gone}"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/dividerColor" />
+
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/lightToolbarBackgroundColor"
+                android:background="?attr/backgroundColor2"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -172,7 +177,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:background="@color/toolbar_color"
+                android:background="?attr/lightToolbarBackgroundColor"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:orientation="horizontal">
@@ -205,13 +210,24 @@
                     android:textColor="@color/black_color"
                     android:textCursorDrawable="@null" />
 
+                <ImageView
+                    android:id="@+id/voice_record"
+                    android:onClick="@{() -> chatSendingViewModel.startVoiceRecording()}"
+                    android:enabled="@{!chatSendingViewModel.isReadOnly &amp;&amp; !chatSendingViewModel.isVoiceRecording}"
+                    android:selected="@{chatSendingViewModel.isVoiceRecording}"
+                    android:contentDescription="@string/content_description_send_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:src="@drawable/record_audio_message" />
+
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
                     <ImageView
                         android:id="@+id/send_message"
-                        android:onClick="@{sendMessageClickListener}"
+                        android:onClick="@{() -> chatSendingViewModel.sendMessage()}"
                         android:enabled="@{chatSendingViewModel.sendMessageEnabled &amp;&amp; !chatSendingViewModel.isReadOnly}"
                         android:contentDescription="@string/content_description_send_message"
                         android:layout_width="wrap_content"
