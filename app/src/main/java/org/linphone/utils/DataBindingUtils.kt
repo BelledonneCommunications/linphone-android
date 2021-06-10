@@ -50,6 +50,7 @@ import org.linphone.activities.GenericActivity
 import org.linphone.activities.main.settings.SettingListener
 import org.linphone.contact.ContactAvatarView
 import org.linphone.core.tools.Log
+import org.linphone.views.VoiceRecordProgressBar
 
 /**
  * This file contains all the data binding necessary for the app
@@ -531,4 +532,19 @@ fun setEditTextErrorListener(editText: EditText, attrChange: InverseBindingListe
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     })
+}
+
+@BindingAdapter("android:max")
+fun VoiceRecordProgressBar.setProgressMax(max: Int) {
+    setMax(max)
+}
+
+@BindingAdapter("android:progress")
+fun VoiceRecordProgressBar.setPrimaryProgress(progress: Int) {
+    setProgress(progress)
+}
+
+@BindingAdapter("android:secondaryProgress")
+fun VoiceRecordProgressBar.setSecProgress(progress: Int) {
+    setSecondaryProgress(progress)
 }
