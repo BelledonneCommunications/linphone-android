@@ -129,10 +129,6 @@ class ChatMessageContentData(
 
         updateContent()
         chatMessage.addListener(chatMessageListener)
-
-        if (isAudio.value == true) {
-            initVoiceRecordPlayer()
-        }
     }
 
     fun destroy() {
@@ -147,7 +143,7 @@ class ChatMessageContentData(
 
         chatMessage.removeListener(chatMessageListener)
 
-        if (isAudio.value == true) {
+        if (this::voiceRecordingPlayer.isInitialized) {
             destroyVoiceRecordPlayer()
         }
     }
@@ -234,8 +230,7 @@ class ChatMessageContentData(
         Log.i("[Voice Recording] Playing voice record")
         if (isPlayerClosed()) {
             Log.w("[Voice Recording] Player closed, let's open it first")
-            voiceRecordingPlayer.open(filePath.value.orEmpty())
-            voiceRecordingPlayer.seek(0)
+            initVoiceRecordPlayer()
         }
 
         voiceRecordingPlayer.start()
@@ -310,8 +305,7 @@ class ChatMessageContentData(
     }
 
     private fun isPlayerClosed(): Boolean {
-        Log.i("[Voice Recording] Player state is ${voiceRecordingPlayer.state.name}")
-        return voiceRecordingPlayer.state == Player.State.Closed
+        return !this::voiceRecordingPlayer.isInitialized || voiceRecordingPlayer.state == Player.State.Closed
     }
 }
 
