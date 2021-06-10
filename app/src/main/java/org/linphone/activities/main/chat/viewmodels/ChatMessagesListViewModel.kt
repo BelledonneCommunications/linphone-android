@@ -24,6 +24,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import java.util.*
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.activities.main.chat.data.ChatMessageContentData
 import org.linphone.activities.main.chat.data.EventLogData
 import org.linphone.core.*
 import org.linphone.core.tools.Log
@@ -150,6 +151,7 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
     }
 
     override fun onCleared() {
+        events.value.orEmpty().forEach(EventLogData::destroy)
         chatRoom.removeListener(chatRoomListener)
 
         super.onCleared()
