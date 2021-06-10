@@ -31,10 +31,9 @@ import org.linphone.core.ChatMessageListenerStub
 import org.linphone.utils.AppUtils
 import org.linphone.utils.TimestampUtils
 
-class ChatMessageData(
-    val chatMessage: ChatMessage,
-    private var contentListener: OnContentClickedListener? = null
-) : GenericContactData(chatMessage.fromAddress) {
+class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMessage.fromAddress) {
+    var contentListener: OnContentClickedListener? = null
+
     val sendInProgress = MutableLiveData<Boolean>()
 
     val transferInProgress = MutableLiveData<Boolean>()
