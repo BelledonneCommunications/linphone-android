@@ -18,6 +18,18 @@
         android:layout_height="wrap_content"
         android:onLongClick="@{longClickListener}">
 
+        <org.linphone.views.VoiceRecordProgressBar
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:progress="@{data.voiceRecordPlayingPosition}"
+            android:secondaryProgress="@{data.voiceRecordPlayingPosition}"
+            app:max="@{data.voiceRecordDuration}"
+            app:progressDrawable="@drawable/chat_message_audio_record_progress"
+            app:primaryLeftMargin="40dp"
+            app:primaryRightMargin="50dp"/>
+
         <ImageView
             android:id="@+id/play_voice_record"
             android:layout_width="30dp"
@@ -30,21 +42,6 @@
             android:onClick="@{() -> data.isVoiceRecordPlaying() ? data.pauseVoiceRecording() : data.playVoiceRecording()}"
             android:padding="9dp"
             android:src="@{data.isVoiceRecordPlaying() ? @drawable/record_pause_dark : @drawable/record_play_dark, default=@drawable/record_play_dark}" />
-
-        <ProgressBar
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@id/recording_duration"
-            android:layout_toRightOf="@id/play_voice_record"
-            android:max="@{data.voiceRecordDuration, default=100}"
-            android:progress="@{data.voiceRecordPlayingPosition, default=50}"
-            android:progressDrawable="@drawable/chat_message_audio_record_progress"
-            android:secondaryProgressTint="@{data.outgoing ? @color/chat_bubble_outgoing_color_dark : @color/chat_bubble_incoming_color_dark, default=@color/chat_bubble_outgoing_color_dark}"
-            android:secondaryProgress="@{data.voiceRecordPlayingPosition, default=50}" />
 
         <TextView
             android:id="@+id/recording_duration"
