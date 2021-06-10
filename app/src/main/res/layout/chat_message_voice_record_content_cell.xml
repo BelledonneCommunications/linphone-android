@@ -18,15 +18,6 @@
         android:layout_height="wrap_content"
         android:onLongClick="@{longClickListener}">
 
-        <ProgressBar
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_centerVertical="true"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:progressDrawable="@{data.isOutgoing ? @drawable/chat_message_audio_record_outgoing_progress : @drawable/chat_message_audio_record_incoming_progress, default=@drawable/chat_message_audio_record_outgoing_progress}"
-            android:max="@{data.voiceRecordDuration, default=100}"
-            android:progress="@{data.voiceRecordPlayingPosition, default=25}"/>
-
         <ImageView
             android:id="@+id/play_voice_record"
             android:onClick="@{() -> data.isVoiceRecordPlaying() ? data.pauseVoiceRecording() : data.playVoiceRecording()}"
@@ -40,16 +31,19 @@
             android:background="@drawable/round_recording_button_background_dark"
             android:src="@{data.isVoiceRecordPlaying() ? @drawable/record_pause_dark : @drawable/record_play_dark, default=@drawable/record_play_dark}" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
             android:layout_toRightOf="@id/play_voice_record"
             android:layout_toLeftOf="@id/recording_duration"
-            android:layout_centerVertical="true"
-            android:adjustViewBounds="true"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:src="@drawable/audio_recording_default" />
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:progressDrawable="@{data.outgoing ? @drawable/chat_message_audio_record_outgoing_progress : @drawable/chat_message_audio_record_incoming_progress, default=@drawable/chat_message_audio_record_outgoing_progress}"
+            android:max="@{data.voiceRecordDuration, default=100}"
+            android:secondaryProgress="@{data.voiceRecordPlayingPosition, default=50}"
+            android:progress="@{data.voiceRecordPlayingPosition, default=50}"/>
 
         <TextView
             android:id="@+id/recording_duration"
