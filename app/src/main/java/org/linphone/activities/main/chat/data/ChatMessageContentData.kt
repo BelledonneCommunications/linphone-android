@@ -29,6 +29,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ticker
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.*
@@ -36,6 +39,7 @@ import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.FileUtils
 import org.linphone.utils.ImageUtils
+import java.lang.Exception
 
 class ChatMessageContentData(
     private val chatMessage: ChatMessage,
@@ -82,7 +86,6 @@ class ChatMessageContentData(
     var isFileEncrypted: Boolean = false
     private lateinit var content: Content
 
-    private val tickerChannel = ticker(100, 0)
     private lateinit var voiceRecordingPlayer: Player
     private val playerListener = PlayerListener {
         Log.i("[Voice Recording] End of file reached")
@@ -122,7 +125,7 @@ class ChatMessageContentData(
         }
     }
 
-    private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     init {
         isVoiceRecordPlaying.value = false
@@ -146,7 +149,9 @@ class ChatMessageContentData(
         chatMessage.removeListener(chatMessageListener)
 
         if (this::voiceRecordingPlayer.isInitialized) {
-            destroyVoiceRecordPlayer()
+            Log.i("[Voice Recording] Destroying voice record")
+            stopVoiceRecording()
+            voiceRecordingPlayer.removeListener(playerListener)
         }
     }
 
@@ -200,9 +205,7 @@ class ChatMessageContentData(
 
                 if (isVideo.value == true) {
                     scope.launch {
-                        withContext(Dispatchers.IO) {
-                            videoPreview.postValue(ImageUtils.getVideoPreview(path))
-                        }
+                        videoPreview.postValue(ImageUtils.getVideoPreview(path))
                     }
                 }
             } else {
@@ -237,24 +240,24 @@ class ChatMessageContentData(
 
         voiceRecordingPlayer.start()
         isVoiceRecordPlaying.value = true
-
-        scope.launch {
-            withContext(Dispatchers.IO) {
-                for (tick in tickerChannel) {
-                    if (voiceRecordingPlayer.state == Player.State.Playing) {
-                        if (!isPlayerClosed()) {
-                            voiceRecordPlayingPosition.postValue(voiceRecordingPlayer.currentPosition)
-                        }
-                    }
-                }
-            }
-        }
+        tickerFlow().onEach {
+            voiceRecordPlayingPosition.postValue(voiceRecordingPlayer.currentPosition)
+        }.launchIn(scope)
     }
 
     fun pauseVoiceRecording() {
         Log.i("[Voice Recording] Pausing voice record")
-        voiceRecordingPlayer.pause()
+        if (!isPlayerClosed()) {
+            voiceRecordingPlayer.pause()
+        }
         isVoiceRecordPlaying.value = false
+    }
+
+    private fun tickerFlow() = flow {
+        while (isVoiceRecordPlaying.value == true) {
+            emit(Unit)
+            delay(100)
+        }
     }
 
     private fun initVoiceRecordPlayer() {
@@ -290,21 +293,13 @@ class ChatMessageContentData(
     }
 
     private fun stopVoiceRecording() {
-        Log.i("[Voice Recording] Stopping voice record")
-        pauseVoiceRecording()
-        voiceRecordingPlayer.seek(0)
-        voiceRecordPlayingPosition.value = 0
-        voiceRecordingPlayer.close()
-    }
-
-    private fun destroyVoiceRecordPlayer() {
-        Log.i("[Voice Recording] Destroying voice record")
-        tickerChannel.cancel()
-
-        voiceRecordingPlayer.setWindowId(null)
-        if (!isPlayerClosed()) voiceRecordingPlayer.close()
-
-        voiceRecordingPlayer.removeListener(playerListener)
+        if (!isPlayerClosed()) {
+            Log.i("[Voice Recording] Stopping voice record")
+            pauseVoiceRecording()
+            voiceRecordingPlayer.seek(0)
+            voiceRecordPlayingPosition.value = 0
+            voiceRecordingPlayer.close()
+        }
     }
 
     private fun isPlayerClosed(): Boolean {
