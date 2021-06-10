@@ -31,10 +31,9 @@ import org.linphone.core.ChatMessageListenerStub
 import org.linphone.utils.AppUtils
 import org.linphone.utils.TimestampUtils
 
-class ChatMessageData(
-    val chatMessage: ChatMessage,
+class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMessage.fromAddress) {
     private var contentListener: OnContentClickedListener? = null
-) : GenericContactData(chatMessage.fromAddress) {
+
     val sendInProgress = MutableLiveData<Boolean>()
 
     val transferInProgress = MutableLiveData<Boolean>()
@@ -120,6 +119,14 @@ class ChatMessageData(
         }
     }
 
+    fun setContentClickListener(listener: OnContentClickedListener) {
+        contentListener = listener
+
+        for (data in contents.value.orEmpty()) {
+            data.listener = listener
+        }
+    }
+
     private fun updateChatMessageState(state: ChatMessage.State) {
         transferInProgress.value = state == ChatMessage.State.FileTransferInProgress
 
@@ -145,7 +152,9 @@ class ChatMessageData(
         for (index in 0 until contentsList.size) {
             val content = contentsList[index]
             if (content.isFileTransfer || content.isFile) {
-                list.add(ChatMessageContentData(chatMessage, index, contentListener))
+                val data = ChatMessageContentData(chatMessage, index)
+                data.listener = contentListener
+                list.add(data)
             } else if (content.isText) {
                 val spannable = Spannable.Factory.getInstance().newSpannable(content.utf8Text)
                 LinkifyCompat.addLinks(spannable, Linkify.WEB_URLS)
