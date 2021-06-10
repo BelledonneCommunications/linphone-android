@@ -36,6 +36,7 @@ import org.linphone.R
 import org.linphone.activities.main.adapters.SelectionListAdapter
 import org.linphone.activities.main.chat.data.ChatMessageData
 import org.linphone.activities.main.chat.data.EventData
+import org.linphone.activities.main.chat.data.EventLogData
 import org.linphone.activities.main.chat.data.OnContentClickedListener
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
 import org.linphone.core.ChatMessage
@@ -51,7 +52,7 @@ import org.linphone.utils.Event
 class ChatMessagesListAdapter(
     selectionVM: ListTopBarViewModel,
     private val viewLifecycleOwner: LifecycleOwner
-) : SelectionListAdapter<EventLog, RecyclerView.ViewHolder>(selectionVM, ChatMessageDiffCallback()) {
+) : SelectionListAdapter<EventLogData, RecyclerView.ViewHolder>(selectionVM, ChatMessageDiffCallback()) {
     companion object {
         const val MAX_TIME_TO_GROUP_MESSAGES = 60 // 1 minute
     }
@@ -127,7 +128,7 @@ class ChatMessagesListAdapter(
 
     override fun getItemViewType(position: Int): Int {
         val eventLog = getItem(position)
-        return eventLog.type.toInt()
+        return eventLog.eventLog.type.toInt()
     }
 
     fun disableContextMenu() {
@@ -137,12 +138,13 @@ class ChatMessagesListAdapter(
     inner class ChatMessageViewHolder(
         val binding: ChatMessageListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(eventLog: EventLog) {
+        fun bind(eventLog: EventLogData) {
             with(binding) {
-                if (eventLog.type == EventLog.Type.ConferenceChatMessage) {
-                    val chatMessage = eventLog.chatMessage
-                    chatMessage ?: return
-                    val chatMessageViewModel = ChatMessageData(chatMessage, contentClickedListener)
+                if (eventLog.eventLog.type == EventLog.Type.ConferenceChatMessage) {
+                    val chatMessageViewModel = eventLog.data as ChatMessageData
+                    chatMessageViewModel.setContentClickListener(contentClickedListener)
+
+                    val chatMessage = chatMessageViewModel.chatMessage
                     data = chatMessageViewModel
 
                     lifecycleOwner = viewLifecycleOwner
@@ -165,8 +167,8 @@ class ChatMessagesListAdapter(
 
                     if (adapterPosition > 0) {
                         val previousItem = getItem(adapterPosition - 1)
-                        if (previousItem.type == EventLog.Type.ConferenceChatMessage) {
-                            val previousMessage = previousItem.chatMessage
+                        if (previousItem.eventLog.type == EventLog.Type.ConferenceChatMessage) {
+                            val previousMessage = previousItem.eventLog.chatMessage
                             if (previousMessage != null && previousMessage.fromAddress.weakEqual(chatMessage.fromAddress)) {
                                 if (chatMessage.time - previousMessage.time < MAX_TIME_TO_GROUP_MESSAGES) {
                                     hasPrevious = true
@@ -177,8 +179,8 @@ class ChatMessagesListAdapter(
 
                     if (adapterPosition >= 0 && adapterPosition < itemCount - 1) {
                         val nextItem = getItem(adapterPosition + 1)
-                        if (nextItem.type == EventLog.Type.ConferenceChatMessage) {
-                            val nextMessage = nextItem.chatMessage
+                        if (nextItem.eventLog.type == EventLog.Type.ConferenceChatMessage) {
+                            val nextMessage = nextItem.eventLog.chatMessage
                             if (nextMessage != null && nextMessage.fromAddress.weakEqual(chatMessage.fromAddress)) {
                                 if (nextMessage.time - chatMessage.time < MAX_TIME_TO_GROUP_MESSAGES) {
                                     hasNext = true
@@ -319,9 +321,9 @@ class ChatMessagesListAdapter(
     inner class EventViewHolder(
         private val binding: ChatEventListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(eventLog: EventLog) {
+        fun bind(eventLog: EventLogData) {
             with(binding) {
-                val eventViewModel = EventData(eventLog)
+                val eventViewModel = eventLog.data as EventData
                 data = eventViewModel
 
                 binding.lifecycleOwner = viewLifecycleOwner
@@ -344,24 +346,24 @@ class ChatMessagesListAdapter(
     }
 }
 
-private class ChatMessageDiffCallback : DiffUtil.ItemCallback<EventLog>() {
+private class ChatMessageDiffCallback : DiffUtil.ItemCallback<EventLogData>() {
     override fun areItemsTheSame(
-        oldItem: EventLog,
-        newItem: EventLog
+        oldItem: EventLogData,
+        newItem: EventLogData
     ): Boolean {
-        return if (oldItem.type == EventLog.Type.ConferenceChatMessage &&
-            newItem.type == EventLog.Type.ConferenceChatMessage) {
-            oldItem.chatMessage?.time == newItem.chatMessage?.time &&
-                    oldItem.chatMessage?.isOutgoing == newItem.chatMessage?.isOutgoing
-        } else oldItem.notifyId == newItem.notifyId
+        return if (oldItem.eventLog.type == EventLog.Type.ConferenceChatMessage &&
+            newItem.eventLog.type == EventLog.Type.ConferenceChatMessage) {
+            oldItem.eventLog.chatMessage?.time == newItem.eventLog.chatMessage?.time &&
+                    oldItem.eventLog.chatMessage?.isOutgoing == newItem.eventLog.chatMessage?.isOutgoing
+        } else oldItem.eventLog.notifyId == newItem.eventLog.notifyId
     }
 
     override fun areContentsTheSame(
-        oldItem: EventLog,
-        newItem: EventLog
+        oldItem: EventLogData,
+        newItem: EventLogData
     ): Boolean {
-        return if (newItem.type == EventLog.Type.ConferenceChatMessage) {
-            newItem.chatMessage?.state == ChatMessage.State.Displayed
-        } else false
+        return if (newItem.eventLog.type == EventLog.Type.ConferenceChatMessage) {
+            newItem.eventLog.chatMessage?.state == ChatMessage.State.Displayed
+        } else true
     }
 }
