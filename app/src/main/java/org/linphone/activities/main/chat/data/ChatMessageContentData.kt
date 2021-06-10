@@ -282,7 +282,8 @@ class ChatMessageContentData(
         }
         voiceRecordingPlayer.addListener(playerListener)
 
-        voiceRecordingPlayer.open(filePath.value.orEmpty())
+        val path = if (content.isFileEncrypted) content.plainFilePath else content.filePath ?: ""
+        voiceRecordingPlayer.open(path.orEmpty())
         voiceRecordDuration.value = voiceRecordingPlayer.duration
         formattedDuration.value = SimpleDateFormat("mm:ss", Locale.getDefault()).format(voiceRecordingPlayer.duration) // is already in milliseconds
         Log.i("[Voice Recording] Duration is ${voiceRecordDuration.value} (${voiceRecordingPlayer.duration})")
