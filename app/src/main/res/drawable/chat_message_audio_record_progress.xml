@@ -9,7 +9,7 @@
     <item android:id="@android:id/secondaryProgress"
         android:gravity="center_vertical|fill_horizontal">
         <scale android:scaleWidth="100%">
-            <shape android:shape="rectangle" android:tint="@color/chat_bubble_outgoing_color_dark">
+            <shape android:shape="rectangle">
                 <corners android:radius="@dimen/chat_message_round_corner_radius"/>
                 <size android:height="40dp" />
             </shape>
