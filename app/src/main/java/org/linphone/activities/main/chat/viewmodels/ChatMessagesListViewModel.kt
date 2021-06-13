@@ -24,6 +24,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import java.util.*
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.activities.main.chat.data.EventLogData
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.mediastream.Version
@@ -45,7 +46,7 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
         private const val MESSAGES_PER_PAGE = 20
     }
 
-    val events = MutableLiveData<ArrayList<EventLog>>()
+    val events = MutableLiveData<ArrayList<EventLogData>>()
 
     val messageUpdatedEvent: MutableLiveData<Event<Int>> by lazy {
         MutableLiveData<Event<Int>>()
@@ -67,8 +68,8 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
                 chatMessage ?: return
                 chatMessage.userData = events.value.orEmpty().size
 
-                val existingEvent = events.value.orEmpty().find {
-                    it.type == EventLog.Type.ConferenceChatMessage && it.chatMessage == chatMessage
+                val existingEvent = events.value.orEmpty().find { data ->
+                    data.eventLog == eventLog
                 }
                 if (existingEvent != null) {
                     Log.w("[Chat Messages] Found already present chat message, don't add it it's probably the result of an auto download")
@@ -165,19 +166,19 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
         LinphoneUtils.deleteFilesAttachedToChatMessage(chatMessage)
         chatRoom.deleteMessage(chatMessage)
 
-        val list = arrayListOf<EventLog>()
+        val list = arrayListOf<EventLogData>()
         list.addAll(events.value.orEmpty())
         list.removeAt(position)
         events.value = list
     }
 
-    fun deleteEventLogs(listToDelete: ArrayList<EventLog>) {
-        val list = arrayListOf<EventLog>()
+    fun deleteEventLogs(listToDelete: ArrayList<EventLogData>) {
+        val list = arrayListOf<EventLogData>()
         list.addAll(events.value.orEmpty())
 
         for (eventLog in listToDelete) {
-            LinphoneUtils.deleteFilesAttachedToEventLog(eventLog)
-            eventLog.deleteFromDatabase()
+            LinphoneUtils.deleteFilesAttachedToEventLog(eventLog.eventLog)
+            eventLog.eventLog.deleteFromDatabase()
             list.remove(eventLog)
         }
 
@@ -195,9 +196,9 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
             }
 
             val history: Array<EventLog> = chatRoom.getHistoryRangeEvents(totalItemsCount, upperBound)
-            val list = arrayListOf<EventLog>()
-            for (message in history) {
-                list.add(message)
+            val list = arrayListOf<EventLogData>()
+            for (eventLog in history) {
+                list.add(EventLogData(eventLog))
             }
             list.addAll(events.value.orEmpty())
             events.value = list
@@ -205,19 +206,19 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
     }
 
     private fun addEvent(eventLog: EventLog) {
-        val list = arrayListOf<EventLog>()
+        val list = arrayListOf<EventLogData>()
         list.addAll(events.value.orEmpty())
         if (!list.contains(eventLog)) {
-            list.add(eventLog)
+            list.add(EventLogData(eventLog))
         }
         events.value = list
     }
 
-    private fun getEvents(): ArrayList<EventLog> {
-        val list = arrayListOf<EventLog>()
+    private fun getEvents(): ArrayList<EventLogData> {
+        val list = arrayListOf<EventLogData>()
         val history = chatRoom.getHistoryEvents(MESSAGES_PER_PAGE)
-        for (message in history) {
-            list.add(message)
+        for (eventLog in history) {
+            list.add(EventLogData(eventLog))
         }
         return list
     }

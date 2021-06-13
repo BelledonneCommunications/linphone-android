@@ -39,8 +39,10 @@ import org.linphone.utils.ImageUtils
 class ChatMessageContentData(
     private val chatMessage: ChatMessage,
     private val contentIndex: Int,
-    private val listener: OnContentClickedListener?
+
 ) {
+    var listener: OnContentClickedListener? = null
+
     val isImage = MutableLiveData<Boolean>()
     val isVideo = MutableLiveData<Boolean>()
     val isAudio = MutableLiveData<Boolean>()
