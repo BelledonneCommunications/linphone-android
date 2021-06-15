@@ -30,6 +30,8 @@ import org.linphone.utils.PermissionHelper
 class CallsViewModel : ViewModel() {
     val currentCallViewModel = MutableLiveData<CallViewModel>()
 
+    val noActiveCall = MutableLiveData<Boolean>()
+
     val callPausedByRemote = MutableLiveData<Boolean>()
 
     val pausedCalls = MutableLiveData<ArrayList<CallViewModel>>()
@@ -52,6 +54,7 @@ class CallsViewModel : ViewModel() {
             callPausedByRemote.value = (state == Call.State.PausedByRemote) and (call.conference == null)
 
             val currentCall = core.currentCall
+            noActiveCall.value = currentCall == null
             if (currentCall == null) {
                 currentCallViewModel.value?.destroy()
             } else if (currentCallViewModel.value?.call != currentCall) {
@@ -88,6 +91,7 @@ class CallsViewModel : ViewModel() {
         coreContext.core.addListener(listener)
 
         val currentCall = coreContext.core.currentCall
+        noActiveCall.value = currentCall == null
         if (currentCall != null) {
             currentCallViewModel.value?.destroy()
             currentCallViewModel.value = CallViewModel(currentCall)
