@@ -29,7 +29,7 @@
 
         <LinearLayout
             android:id="@+id/active_call_header"
-            android:visibility="@{viewModel.currentCallViewModel == null || conferenceViewModel.isInConference() ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.noActiveCall || conferenceViewModel.isInConference() ? View.GONE : View.VISIBLE}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -66,7 +66,7 @@
             app:conferenceViewModel="@{conferenceViewModel}" />
 
         <org.linphone.contact.BigContactAvatarView
-            android:visibility="@{controlsViewModel.isVideoEnabled || conferenceViewModel.isInConference ? View.GONE : View.VISIBLE, default=gone}"
+            android:visibility="@{viewModel.noActiveCall || controlsViewModel.isVideoEnabled || conferenceViewModel.isInConference ? View.GONE : View.VISIBLE, default=gone}"
             android:id="@+id/avatar"
             android:layout_width="200dp"
             android:layout_height="200dp"
@@ -121,8 +121,7 @@
 
         <ImageView
             android:onClick="@{() -> viewModel.currentCallViewModel.pause()}"
-            android:visibility="@{viewModel.currentCallViewModel == null || conferenceViewModel.isInConference ? View.GONE : View.VISIBLE}"
-            android:selected="@{viewModel.currentCallViewModel.isPaused ?? false}"
+            android:visibility="@{viewModel.noActiveCall || conferenceViewModel.isInConference ? View.GONE : View.VISIBLE}"
             android:enabled="@{!viewModel.callPausedByRemote &amp;&amp; controlsViewModel.isPauseEnabled}"
             android:contentDescription="@string/content_description_pause_call"
             android:layout_width="50dp"
