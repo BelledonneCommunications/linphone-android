@@ -49,7 +49,9 @@ class LinphoneUtils {
             return if (corePreferences.replaceSipUriByUsername) {
                 address.username ?: address.asStringUriOnly()
             } else {
-                address.asStringUriOnly()
+                val copy = address.clone()
+                copy.clean() // To remove gruu if any
+                copy.asStringUriOnly()
             }
         }
 
