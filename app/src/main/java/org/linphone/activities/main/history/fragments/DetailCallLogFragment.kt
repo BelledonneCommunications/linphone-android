@@ -77,7 +77,7 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
             val copy = viewModel.callLog.remoteAddress.clone()
             copy.clean()
             Log.i("[History] Creating contact with SIP URI: ${copy.asStringUriOnly()}")
-            navigateToContacts(viewModel.callLog.remoteAddress.asStringUriOnly())
+            navigateToContacts(copy.asStringUriOnly())
         }
 
         binding.setContactClickListener {
