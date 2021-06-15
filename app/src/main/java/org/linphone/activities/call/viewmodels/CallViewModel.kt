@@ -49,9 +49,7 @@ class CallViewModelFactory(private val call: Call) :
 
 open class CallViewModel(val call: Call) : GenericContactViewModel(call.remoteAddress) {
     val address: String by lazy {
-        val copy = call.remoteAddress.clone()
-        copy.clean() // To remove gruu if any
-        LinphoneUtils.getDisplayableAddress(copy)
+        LinphoneUtils.getDisplayableAddress(call.remoteAddress)
     }
 
     val isPaused = MutableLiveData<Boolean>()
