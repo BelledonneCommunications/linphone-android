@@ -413,18 +413,18 @@ internal fun ChatRoomCreationFragment.navigateToGroupInfo() {
     }
 }
 
-internal fun ChatRoomCreationFragment.navigateToChatRoom() {
+internal fun ChatRoomCreationFragment.navigateToChatRoom(args: Bundle) {
     if (findNavController().currentDestination?.id == R.id.chatRoomCreationFragment) {
         if (!resources.getBoolean(R.bool.isTablet)) {
             findNavController().navigate(
                 R.id.action_chatRoomCreationFragment_to_detailChatRoomFragment,
-                null,
+                args,
                 getRightToLeftAnimationNavOptions()
             )
         } else {
             findNavController().navigate(
                 R.id.action_chatRoomCreationFragment_to_detailChatRoomFragment,
-                null,
+                args,
                 getRightToLeftAnimationNavOptions(R.id.emptyFragment, true)
             )
         }
@@ -440,18 +440,18 @@ internal fun GroupInfoFragment.navigateToChatRoomCreation(args: Bundle?) {
     }
 }
 
-internal fun GroupInfoFragment.navigateToChatRoom() {
+internal fun GroupInfoFragment.navigateToChatRoom(args: Bundle?) {
     if (findNavController().currentDestination?.id == R.id.groupInfoFragment) {
         if (!resources.getBoolean(R.bool.isTablet)) {
             findNavController().navigate(
                 R.id.action_groupInfoFragment_to_detailChatRoomFragment,
-                null,
+                args,
                 getRightToLeftAnimationNavOptions()
             )
         } else {
             findNavController().navigate(
                 R.id.action_groupInfoFragment_to_detailChatRoomFragment,
-                null,
+                args,
                 getRightToLeftAnimationNavOptions(R.id.emptyFragment, true)
             )
         }

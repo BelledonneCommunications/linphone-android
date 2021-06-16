@@ -23,7 +23,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.R
 import org.linphone.activities.main.MainActivity
@@ -34,6 +33,7 @@ import org.linphone.activities.main.fragments.SecureFragment
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatRoomImdnFragmentBinding
+import org.linphone.utils.AppUtils
 import org.linphone.utils.RecyclerViewHeaderDecoration
 
 class ImdnFragment : SecureFragment<ChatRoomImdnFragmentBinding>() {
@@ -92,9 +92,7 @@ class ImdnFragment : SecureFragment<ChatRoomImdnFragmentBinding>() {
         binding.participantsList.layoutManager = layoutManager
 
         // Divider between items
-        val dividerItemDecoration = DividerItemDecoration(context, layoutManager.orientation)
-        dividerItemDecoration.setDrawable(resources.getDrawable(R.drawable.divider, null))
-        binding.participantsList.addItemDecoration(dividerItemDecoration)
+        binding.participantsList.addItemDecoration(AppUtils.getDividerDecoration(requireContext(), layoutManager))
 
         // Displays state header
         val headerItemDecoration = RecyclerViewHeaderDecoration(adapter)

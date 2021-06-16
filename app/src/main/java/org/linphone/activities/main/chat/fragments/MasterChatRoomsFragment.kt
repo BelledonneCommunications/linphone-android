@@ -24,7 +24,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -138,9 +137,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
             .attachToRecyclerView(binding.chatList)
 
         // Divider between items
-        val dividerItemDecoration = DividerItemDecoration(context, layoutManager.orientation)
-        dividerItemDecoration.setDrawable(resources.getDrawable(R.drawable.divider, null))
-        binding.chatList.addItemDecoration(dividerItemDecoration)
+        binding.chatList.addItemDecoration(AppUtils.getDividerDecoration(requireContext(), layoutManager))
 
         listViewModel.chatRooms.observe(viewLifecycleOwner, { chatRooms ->
             adapter.submitList(chatRooms)
@@ -159,7 +156,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
                     sharedViewModel.destructionPendingChatRoom = chatRoom
                 } else {
                     sharedViewModel.selectedChatRoom.value = chatRoom
-                    navigateToChatRoom(createBundleWithSharedTextAndFiles())
+                    navigateToChatRoom(AppUtils.createBundleWithSharedTextAndFiles(sharedViewModel))
                 }
             }
         })
@@ -200,7 +197,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
             Log.w("[Chat] Found pending chat room from before activity was recreated")
             sharedViewModel.destructionPendingChatRoom = null
             sharedViewModel.selectedChatRoom.value = pendingDestructionChatRoom
-            navigateToChatRoom(createBundleWithSharedTextAndFiles())
+            navigateToChatRoom(AppUtils.createBundleWithSharedTextAndFiles(sharedViewModel))
         }
 
         val localSipUri = arguments?.getString("LocalSipUri")
@@ -273,17 +270,5 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
 
     private fun scrollToTop() {
         binding.chatList.scrollToPosition(0)
-    }
-
-    private fun createBundleWithSharedTextAndFiles(): Bundle {
-        val bundle = Bundle()
-        bundle.putString("TextToShare", sharedViewModel.textToShare.value.orEmpty())
-        bundle.putStringArrayList("FilesToShare", sharedViewModel.filesToShare.value)
-
-        // Remove values from shared view model
-        sharedViewModel.textToShare.value = ""
-        sharedViewModel.filesToShare.value = arrayListOf()
-
-        return bundle
     }
 }

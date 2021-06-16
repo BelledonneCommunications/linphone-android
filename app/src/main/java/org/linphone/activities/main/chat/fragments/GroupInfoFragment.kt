@@ -24,7 +24,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.R
 import org.linphone.activities.main.MainActivity
@@ -41,6 +40,7 @@ import org.linphone.core.Address
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomCapabilities
 import org.linphone.databinding.ChatRoomGroupInfoFragmentBinding
+import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
 
 class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
@@ -81,9 +81,7 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
         binding.participants.layoutManager = layoutManager
 
         // Divider between items
-        val dividerItemDecoration = DividerItemDecoration(context, layoutManager.orientation)
-        dividerItemDecoration.setDrawable(resources.getDrawable(R.drawable.divider, null))
-        binding.participants.addItemDecoration(dividerItemDecoration)
+        binding.participants.addItemDecoration(AppUtils.getDividerDecoration(requireContext(), layoutManager))
 
         viewModel.participants.observe(viewLifecycleOwner, {
             adapter.submitList(it)
@@ -114,7 +112,7 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
         viewModel.createdChatRoomEvent.observe(viewLifecycleOwner, {
             it.consume { chatRoom ->
                 sharedViewModel.selectedChatRoom.value = chatRoom
-                navigateToChatRoom()
+                navigateToChatRoom(AppUtils.createBundleWithSharedTextAndFiles(sharedViewModel))
             }
         })
 

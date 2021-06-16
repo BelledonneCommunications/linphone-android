@@ -24,7 +24,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.LinphoneApplication
 import org.linphone.R
@@ -37,6 +36,7 @@ import org.linphone.activities.navigateToChatRoom
 import org.linphone.activities.navigateToGroupInfo
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatRoomCreationFragmentBinding
+import org.linphone.utils.AppUtils
 import org.linphone.utils.PermissionHelper
 
 class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>() {
@@ -73,9 +73,7 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
         binding.contactsList.layoutManager = layoutManager
 
         // Divider between items
-        val dividerItemDecoration = DividerItemDecoration(context, layoutManager.orientation)
-        dividerItemDecoration.setDrawable(resources.getDrawable(R.drawable.divider, null))
-        binding.contactsList.addItemDecoration(dividerItemDecoration)
+        binding.contactsList.addItemDecoration(AppUtils.getDividerDecoration(requireContext(), layoutManager))
 
         binding.setBackClickListener {
             findNavController().popBackStack()
@@ -109,7 +107,7 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
         viewModel.chatRoomCreatedEvent.observe(viewLifecycleOwner, {
             it.consume { chatRoom ->
                 sharedViewModel.selectedChatRoom.value = chatRoom
-                navigateToChatRoom()
+                navigateToChatRoom(AppUtils.createBundleWithSharedTextAndFiles(sharedViewModel))
             }
         })
 
@@ -148,13 +146,6 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
         }
     }
 
-    private fun addParticipantsFromSharedViewModel() {
-        val participants = sharedViewModel.chatRoomParticipants.value
-        if (participants != null && participants.size > 0) {
-            viewModel.selectedAddresses.value = participants
-        }
-    }
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -169,6 +160,13 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
             } else {
                 Log.w("[Chat Room Creation] READ_CONTACTS permission denied")
             }
+        }
+    }
+
+    private fun addParticipantsFromSharedViewModel() {
+        val participants = sharedViewModel.chatRoomParticipants.value
+        if (participants != null && participants.size > 0) {
+            viewModel.selectedAddresses.value = participants
         }
     }
 }
