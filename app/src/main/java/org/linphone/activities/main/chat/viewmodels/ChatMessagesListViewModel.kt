@@ -150,6 +150,7 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
     }
 
     override fun onCleared() {
+        events.value.orEmpty().forEach(EventLogData::destroy)
         chatRoom.removeListener(chatRoomListener)
 
         super.onCleared()

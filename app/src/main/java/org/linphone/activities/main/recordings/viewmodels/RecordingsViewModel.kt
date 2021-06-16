@@ -36,6 +36,11 @@ class RecordingsViewModel : ViewModel() {
         isVideoVisible.value = false
     }
 
+    override fun onCleared() {
+        recordingsList.value.orEmpty().forEach(RecordingData::destroy)
+        super.onCleared()
+    }
+
     fun deleteRecordings(list: ArrayList<RecordingData>) {
         for (recording in list) {
             Log.i("[Recordings] Deleting recording ${recording.path}")

@@ -110,7 +110,7 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
                 }
 
                 viewModel.showDeleteButton({
-                    listViewModel.deleteContact(adapter.currentList[viewHolder.adapterPosition])
+                    listViewModel.deleteContact(adapter.currentList[viewHolder.adapterPosition].contactInternal)
                     dialog.dismiss()
                 }, getString(R.string.dialog_delete))
 
@@ -219,7 +219,7 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
     override fun deleteItems(indexesOfItemToDelete: ArrayList<Int>) {
         val list = ArrayList<Contact>()
         for (index in indexesOfItemToDelete) {
-            val contact = adapter.currentList[index]
+            val contact = adapter.currentList[index].contactInternal
             list.add(contact)
         }
         listViewModel.deleteContacts(list)

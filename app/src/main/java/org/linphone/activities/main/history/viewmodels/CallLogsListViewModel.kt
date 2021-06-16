@@ -67,6 +67,9 @@ class CallLogsListViewModel : ViewModel() {
     }
 
     override fun onCleared() {
+        callLogs.value.orEmpty().forEach(GroupedCallLogData::destroy)
+        missedCallLogs.value.orEmpty().forEach(GroupedCallLogData::destroy)
+
         coreContext.contactsManager.removeListener(contactsUpdatedListener)
         coreContext.core.removeListener(listener)
 
