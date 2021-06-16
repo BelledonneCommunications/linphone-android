@@ -36,7 +36,7 @@ import org.linphone.utils.Event
 class GroupInfoParticipantsAdapter(
     private val viewLifecycleOwner: LifecycleOwner,
     private val isEncryptionEnabled: Boolean
-) : ListAdapter<GroupChatRoomMember, RecyclerView.ViewHolder>(ParticipantDiffCallback()) {
+) : ListAdapter<GroupInfoParticipantData, RecyclerView.ViewHolder>(ParticipantDiffCallback()) {
     private var showAdmin: Boolean = false
 
     val participantRemovedEvent: MutableLiveData<Event<GroupChatRoomMember>> by lazy {
@@ -67,16 +67,15 @@ class GroupInfoParticipantsAdapter(
     inner class ViewHolder(
         val binding: ChatRoomGroupInfoParticipantCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(participant: GroupChatRoomMember) {
+        fun bind(participantViewModel: GroupInfoParticipantData) {
             with(binding) {
-                val participantViewModel = GroupInfoParticipantData(participant)
                 participantViewModel.showAdminControls.value = showAdmin
                 data = participantViewModel
 
                 lifecycleOwner = viewLifecycleOwner
 
                 setRemoveClickListener {
-                    participantRemovedEvent.value = Event(participant)
+                    participantRemovedEvent.value = Event(participantViewModel.participant)
                 }
                 isEncrypted = isEncryptionEnabled
 
@@ -86,17 +85,17 @@ class GroupInfoParticipantsAdapter(
     }
 }
 
-private class ParticipantDiffCallback : DiffUtil.ItemCallback<GroupChatRoomMember>() {
+private class ParticipantDiffCallback : DiffUtil.ItemCallback<GroupInfoParticipantData>() {
     override fun areItemsTheSame(
-        oldItem: GroupChatRoomMember,
-        newItem: GroupChatRoomMember
+        oldItem: GroupInfoParticipantData,
+        newItem: GroupInfoParticipantData
     ): Boolean {
-        return oldItem.address.weakEqual(newItem.address)
+        return oldItem.sipUri == newItem.sipUri
     }
 
     override fun areContentsTheSame(
-        oldItem: GroupChatRoomMember,
-        newItem: GroupChatRoomMember
+        oldItem: GroupInfoParticipantData,
+        newItem: GroupInfoParticipantData
     ): Boolean {
         return false
     }
