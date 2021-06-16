@@ -25,7 +25,7 @@ import org.linphone.contact.GenericContactData
 import org.linphone.core.ChatRoomSecurityLevel
 import org.linphone.utils.LinphoneUtils
 
-class GroupInfoParticipantData(private val participant: GroupChatRoomMember) : GenericContactData(participant.address) {
+class GroupInfoParticipantData(val participant: GroupChatRoomMember) : GenericContactData(participant.address) {
     override val securityLevel: ChatRoomSecurityLevel
         get() = participant.securityLevel
 
@@ -42,6 +42,10 @@ class GroupInfoParticipantData(private val participant: GroupChatRoomMember) : G
         isAdmin.value = participant.isAdmin
         showAdminControls.value = false
         canBeSetAdmin.value = participant.canBeSetAdmin
+    }
+
+    override fun destroy() {
+        super.destroy()
     }
 
     fun setAdmin() {

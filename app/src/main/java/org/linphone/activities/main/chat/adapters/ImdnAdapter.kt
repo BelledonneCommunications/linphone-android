@@ -31,14 +31,13 @@ import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.activities.main.chat.data.ImdnParticipantData
 import org.linphone.core.ChatMessage
-import org.linphone.core.ParticipantImdnState
 import org.linphone.databinding.ChatRoomImdnParticipantCellBinding
 import org.linphone.databinding.ImdnListHeaderBinding
 import org.linphone.utils.HeaderAdapter
 
 class ImdnAdapter(
     private val viewLifecycleOwner: LifecycleOwner
-) : ListAdapter<ParticipantImdnState, RecyclerView.ViewHolder>(ParticipantImdnStateDiffCallback()), HeaderAdapter {
+) : ListAdapter<ImdnParticipantData, RecyclerView.ViewHolder>(ParticipantImdnStateDiffCallback()), HeaderAdapter {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding: ChatRoomImdnParticipantCellBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
@@ -58,9 +57,9 @@ class ImdnAdapter(
     inner class ViewHolder(
         val binding: ChatRoomImdnParticipantCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(participantImdnState: ParticipantImdnState) {
+        fun bind(participantImdnData: ImdnParticipantData) {
             with(binding) {
-                data = ImdnParticipantData(participantImdnState)
+                data = participantImdnData
 
                 lifecycleOwner = viewLifecycleOwner
 
@@ -74,12 +73,12 @@ class ImdnAdapter(
         val participantImdnState = getItem(position)
         val previousPosition = position - 1
         return if (previousPosition >= 0) {
-            getItem(previousPosition).state != participantImdnState.state
+            getItem(previousPosition).imdnState != participantImdnState.imdnState
         } else true
     }
 
     override fun getHeaderViewForPosition(context: Context, position: Int): View {
-        val participantImdnState = getItem(position)
+        val participantImdnState = getItem(position).imdnState
         val binding: ImdnListHeaderBinding = DataBindingUtil.inflate(
             LayoutInflater.from(context),
             R.layout.imdn_list_header, null, false
@@ -111,17 +110,17 @@ class ImdnAdapter(
     }
 }
 
-private class ParticipantImdnStateDiffCallback : DiffUtil.ItemCallback<ParticipantImdnState>() {
+private class ParticipantImdnStateDiffCallback : DiffUtil.ItemCallback<ImdnParticipantData>() {
     override fun areItemsTheSame(
-        oldItem: ParticipantImdnState,
-        newItem: ParticipantImdnState
+        oldItem: ImdnParticipantData,
+        newItem: ImdnParticipantData
     ): Boolean {
-        return oldItem.participant.address.weakEqual(newItem.participant.address)
+        return oldItem.sipUri == newItem.sipUri
     }
 
     override fun areContentsTheSame(
-        oldItem: ParticipantImdnState,
-        newItem: ParticipantImdnState
+        oldItem: ImdnParticipantData,
+        newItem: ImdnParticipantData
     ): Boolean {
         return false
     }

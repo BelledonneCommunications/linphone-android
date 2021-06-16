@@ -63,10 +63,6 @@ class RecordingsListAdapter(
         (holder as ViewHolder).bind(getItem(position))
     }
 
-    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
-        (holder as ViewHolder).binding.data?.destroy()
-    }
-
     inner class ViewHolder(
         val binding: RecordingListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
