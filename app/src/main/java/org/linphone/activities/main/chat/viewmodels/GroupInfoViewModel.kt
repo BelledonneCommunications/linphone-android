@@ -25,6 +25,7 @@ import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.main.chat.GroupChatRoomMember
+import org.linphone.activities.main.chat.data.GroupInfoParticipantData
 import org.linphone.activities.main.viewmodels.ErrorReportingViewModel
 import org.linphone.core.*
 import org.linphone.core.tools.Log
@@ -44,7 +45,7 @@ class GroupInfoViewModel(val chatRoom: ChatRoom?) : ErrorReportingViewModel() {
 
     val subject = MutableLiveData<String>()
 
-    val participants = MutableLiveData<ArrayList<GroupChatRoomMember>>()
+    val participants = MutableLiveData<ArrayList<GroupInfoParticipantData>>()
 
     val isEncrypted = MutableLiveData<Boolean>()
 
@@ -105,6 +106,7 @@ class GroupInfoViewModel(val chatRoom: ChatRoom?) : ErrorReportingViewModel() {
     }
 
     override fun onCleared() {
+        participants.value.orEmpty().forEach(GroupInfoParticipantData::destroy)
         chatRoom?.removeListener(listener)
 
         super.onCleared()
@@ -120,8 +122,8 @@ class GroupInfoViewModel(val chatRoom: ChatRoom?) : ErrorReportingViewModel() {
         val addresses = arrayOfNulls<Address>(participants.value.orEmpty().size)
         var index = 0
         for (participant in participants.value.orEmpty()) {
-            addresses[index] = participant.address
-            Log.i("[Chat Room Group Info] Participant ${participant.address.asStringUriOnly()} will be added to group")
+            addresses[index] = participant.participant.address
+            Log.i("[Chat Room Group Info] Participant ${participant.sipUri} will be added to group")
             index += 1
         }
 
@@ -147,7 +149,7 @@ class GroupInfoViewModel(val chatRoom: ChatRoom?) : ErrorReportingViewModel() {
             val participantsToRemove = arrayListOf<Participant>()
             for (participant in chatRoom.participants) {
                 val member = participants.value.orEmpty().find { member ->
-                    participant.address.weakEqual(member.address)
+                    participant.address.weakEqual(member.participant.address)
                 }
                 if (member == null) {
                     Log.w("[Chat Room Group Info] Participant ${participant.address.asStringUriOnly()} will be removed from group")
@@ -162,19 +164,19 @@ class GroupInfoViewModel(val chatRoom: ChatRoom?) : ErrorReportingViewModel() {
             val participantsToAdd = arrayListOf<Address>()
             for (member in participants.value.orEmpty()) {
                 val participant = chatRoom.participants.find { participant ->
-                    participant.address.weakEqual(member.address)
+                    participant.address.weakEqual(member.participant.address)
                 }
                 if (participant != null) {
                     // Participant found, check if admin status needs to be updated
-                    if (member.isAdmin != participant.isAdmin) {
+                    if (member.participant.isAdmin != participant.isAdmin) {
                         if (chatRoom.me?.isAdmin == true) {
-                            Log.i("[Chat Room Group Info] Participant ${member.address.asStringUriOnly()} will be admin? ${member.isAdmin}")
-                            chatRoom.setParticipantAdminStatus(participant, member.isAdmin)
+                            Log.i("[Chat Room Group Info] Participant ${member.sipUri} will be admin? ${member.isAdmin}")
+                            chatRoom.setParticipantAdminStatus(participant, member.participant.isAdmin)
                         }
                     }
                 } else {
-                    Log.i("[Chat Room Group Info] Participant ${member.address.asStringUriOnly()} will be added to group")
-                    participantsToAdd.add(member.address)
+                    Log.i("[Chat Room Group Info] Participant ${member.sipUri} will be added to group")
+                    participantsToAdd.add(member.participant.address)
                 }
             }
             val toAdd = arrayOfNulls<Address>(participantsToAdd.size)
@@ -195,18 +197,23 @@ class GroupInfoViewModel(val chatRoom: ChatRoom?) : ErrorReportingViewModel() {
     }
 
     fun removeParticipant(participant: GroupChatRoomMember) {
-        val list = arrayListOf<GroupChatRoomMember>()
-        list.addAll(participants.value.orEmpty())
-        list.remove(participant)
+        val list = arrayListOf<GroupInfoParticipantData>()
+        for (data in participants.value.orEmpty()) {
+            if (!data.participant.address.weakEqual(participant.address)) {
+                list.add(data)
+            }
+        }
         participants.value = list
     }
 
     private fun updateParticipants() {
-        val list = arrayListOf<GroupChatRoomMember>()
+        val list = arrayListOf<GroupInfoParticipantData>()
 
         if (chatRoom != null) {
             for (participant in chatRoom.participants) {
-                list.add(GroupChatRoomMember(participant.address, participant.isAdmin, participant.securityLevel, canBeSetAdmin = true))
+                list.add(GroupInfoParticipantData(
+                    GroupChatRoomMember(participant.address, participant.isAdmin, participant.securityLevel, canBeSetAdmin = true)
+                ))
             }
         }
 

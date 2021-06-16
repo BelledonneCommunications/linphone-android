@@ -31,7 +31,6 @@ import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.activities.main.adapters.SelectionListAdapter
 import org.linphone.activities.main.history.data.GroupedCallLogData
-import org.linphone.activities.main.history.viewmodels.CallLogViewModel
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
 import org.linphone.databinding.GenericListHeaderBinding
 import org.linphone.databinding.HistoryListCellBinding
@@ -61,16 +60,12 @@ class CallLogsListAdapter(
         (holder as ViewHolder).bind(getItem(position))
     }
 
-    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
-        (holder as ViewHolder).binding.viewModel?.destroy()
-    }
-
     inner class ViewHolder(
         val binding: HistoryListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(callLogGroup: GroupedCallLogData) {
             with(binding) {
-                val callLogViewModel = CallLogViewModel(callLogGroup.lastCallLog)
+                val callLogViewModel = callLogGroup.lastCallLogViewModel
                 viewModel = callLogViewModel
 
                 lifecycleOwner = viewLifecycleOwner

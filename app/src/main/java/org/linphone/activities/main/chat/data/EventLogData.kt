@@ -28,4 +28,8 @@ class EventLogData(val eventLog: EventLog) {
     } else {
         EventData(eventLog)
     }
+
+    fun destroy() {
+        data.destroy()
+    }
 }

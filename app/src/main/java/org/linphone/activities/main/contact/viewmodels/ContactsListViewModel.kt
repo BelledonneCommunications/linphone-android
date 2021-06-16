@@ -33,7 +33,7 @@ import org.linphone.core.tools.Log
 class ContactsListViewModel : ViewModel() {
     val sipContactsSelected = MutableLiveData<Boolean>()
 
-    val contactsList = MutableLiveData<ArrayList<Contact>>()
+    val contactsList = MutableLiveData<ArrayList<ContactViewModel>>()
 
     val filter = MutableLiveData<String>()
 
@@ -51,23 +51,31 @@ class ContactsListViewModel : ViewModel() {
     }
 
     override fun onCleared() {
+        contactsList.value.orEmpty().forEach(ContactViewModel::destroy)
         coreContext.contactsManager.removeListener(contactsUpdatedListener)
 
         super.onCleared()
     }
 
-    private fun getSelectedContactsList(): ArrayList<Contact> {
-        return if (sipContactsSelected.value == true) coreContext.contactsManager.sipContacts else coreContext.contactsManager.contacts
+    private fun getSelectedContactsList(): ArrayList<ContactViewModel> {
+        val list = arrayListOf<ContactViewModel>()
+        val source =
+            if (sipContactsSelected.value == true) coreContext.contactsManager.sipContacts
+            else coreContext.contactsManager.contacts
+        for (contact in source) {
+            list.add(ContactViewModel(contact))
+        }
+        return list
     }
 
     fun updateContactsList() {
-        val list: ArrayList<Contact>
+        val list: ArrayList<ContactViewModel>
 
         val filterValue = filter.value.orEmpty()
         list = if (filterValue.isNotEmpty()) {
             getSelectedContactsList().filter { contact ->
-                contact.fullName?.contains(filterValue, true) ?: false
-            } as ArrayList<Contact>
+                contact.displayName.contains(filterValue, true) ?: false
+            } as ArrayList<ContactViewModel>
         } else {
             getSelectedContactsList()
         }

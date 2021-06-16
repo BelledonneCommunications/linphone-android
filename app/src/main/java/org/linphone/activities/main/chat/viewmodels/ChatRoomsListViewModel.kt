@@ -96,6 +96,7 @@ class ChatRoomsListViewModel : ErrorReportingViewModel() {
     }
 
     override fun onCleared() {
+        chatRooms.value.orEmpty().forEach(ChatRoomViewModel::destroy)
         coreContext.contactsManager.removeListener(contactsUpdatedListener)
         coreContext.core.removeListener(listener)
 
