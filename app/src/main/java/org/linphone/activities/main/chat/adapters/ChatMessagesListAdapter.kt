@@ -120,12 +120,6 @@ class ChatMessagesListAdapter(
         }
     }
 
-    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
-        when (holder) {
-            is ChatMessageViewHolder -> holder.binding.data?.destroy()
-        }
-    }
-
     override fun getItemViewType(position: Int): Int {
         val eventLog = getItem(position)
         return eventLog.eventLog.type.toInt()
