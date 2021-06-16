@@ -25,7 +25,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -122,9 +121,7 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
             .attachToRecyclerView(binding.contactsList)
 
         // Divider between items
-        val dividerItemDecoration = DividerItemDecoration(context, layoutManager.orientation)
-        dividerItemDecoration.setDrawable(resources.getDrawable(R.drawable.divider, null))
-        binding.contactsList.addItemDecoration(dividerItemDecoration)
+        binding.contactsList.addItemDecoration(AppUtils.getDividerDecoration(requireContext(), layoutManager))
 
         // Displays the first letter header
         val headerItemDecoration = RecyclerViewHeaderDecoration(adapter)
