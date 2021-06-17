@@ -23,13 +23,20 @@ import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.DisplayMetrics
 import android.view.Display
 import android.view.Surface
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.util.Consumer
 import androidx.navigation.ActivityNavigator
+import androidx.window.FoldingFeature
+import androidx.window.WindowLayoutInfo
+import androidx.window.WindowManager
 import java.util.*
+import java.util.concurrent.Executor
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.LinphoneApplication.Companion.ensureCoreExists
@@ -42,11 +49,38 @@ abstract class GenericActivity : AppCompatActivity() {
     val isDestructionPending: Boolean
         get() = _isDestructionPending
 
+    inner class LayoutStateChangeCallback : Consumer<WindowLayoutInfo> {
+        override fun accept(newLayoutInfo: WindowLayoutInfo) {
+            Log.i("[Layout State Change] $newLayoutInfo")
+
+            for (feature in newLayoutInfo.displayFeatures) {
+                val foldingFeature = feature as? FoldingFeature
+                if (foldingFeature != null) {
+                    // TODO
+                }
+            }
+        }
+    }
+    private val layoutStateChangeCallback = LayoutStateChangeCallback()
+
+    private fun runOnUiThreadExecutor(): Executor {
+        val handler = Handler(Looper.getMainLooper())
+        return Executor() {
+            handler.post(it)
+        }
+    }
+
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         ensureCoreExists(applicationContext)
+
+        val windowManager = WindowManager(this)
+        windowManager.registerLayoutChangeCallback(
+            runOnUiThreadExecutor(),
+            layoutStateChangeCallback
+        )
 
         requestedOrientation = if (corePreferences.forcePortrait) {
             ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
