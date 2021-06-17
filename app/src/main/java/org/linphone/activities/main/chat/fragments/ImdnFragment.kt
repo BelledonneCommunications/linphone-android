@@ -94,7 +94,7 @@ class ImdnFragment : SecureFragment<ChatRoomImdnFragmentBinding>() {
         binding.participantsList.addItemDecoration(AppUtils.getDividerDecoration(requireContext(), layoutManager))
 
         // Displays state header
-        val headerItemDecoration = RecyclerViewHeaderDecoration(adapter)
+        val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
         binding.participantsList.addItemDecoration(headerItemDecoration)
 
         viewModel.participants.observe(viewLifecycleOwner, {
@@ -102,7 +102,7 @@ class ImdnFragment : SecureFragment<ChatRoomImdnFragmentBinding>() {
         })
 
         binding.setBackClickListener {
-            findNavController().popBackStack()
+            goBack()
         }
     }
 }

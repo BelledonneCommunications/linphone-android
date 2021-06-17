@@ -23,7 +23,6 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.R
 import org.linphone.activities.main.MainActivity
@@ -107,7 +106,7 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
         addParticipantsFromSharedViewModel()
 
         binding.setBackClickListener {
-            findNavController().popBackStack()
+            goBack()
         }
 
         viewModel.createdChatRoomEvent.observe(viewLifecycleOwner, {
