@@ -74,7 +74,7 @@ class ContactsListViewModel : ViewModel() {
         val filterValue = filter.value.orEmpty()
         list = if (filterValue.isNotEmpty()) {
             getSelectedContactsList().filter { contact ->
-                contact.displayName.contains(filterValue, true) ?: false
+                contact.name.contains(filterValue, true)
             } as ArrayList<ContactViewModel>
         } else {
             getSelectedContactsList()

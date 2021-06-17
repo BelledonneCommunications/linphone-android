@@ -43,21 +43,9 @@ class ChatRoomViewModelFactory(private val chatRoom: ChatRoom) :
 }
 
 class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterface {
-    override val contact = MutableLiveData<Contact>()
-
-    override val displayName: String = when {
-        chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt()) -> LinphoneUtils.getDisplayName(
-            chatRoom.peerAddress
-        )
-        chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) -> LinphoneUtils.getDisplayName(
-            chatRoom.participants.firstOrNull()?.address ?: chatRoom.peerAddress
-        )
-        chatRoom.hasCapability(ChatRoomCapabilities.Conference.toInt()) -> chatRoom.subject.orEmpty()
-        else -> chatRoom.peerAddress.asStringUriOnly()
-    }
-
-    override val securityLevel: ChatRoomSecurityLevel = chatRoom.securityLevel
-
+    override val contact: MutableLiveData<Contact> = MutableLiveData<Contact>()
+    override val displayName: MutableLiveData<String> = MutableLiveData<String>()
+    override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
     override val showGroupChatAvatar: Boolean = chatRoom.hasCapability(ChatRoomCapabilities.Conference.toInt()) &&
             !chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())
 
@@ -219,6 +207,17 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
     }
 
     fun contactLookup() {
+        displayName.value = when {
+            chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt()) -> LinphoneUtils.getDisplayName(
+                chatRoom.peerAddress
+            )
+            chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) -> LinphoneUtils.getDisplayName(
+                chatRoom.participants.firstOrNull()?.address ?: chatRoom.peerAddress
+            )
+            chatRoom.hasCapability(ChatRoomCapabilities.Conference.toInt()) -> chatRoom.subject.orEmpty()
+            else -> chatRoom.peerAddress.asStringUriOnly()
+        }
+
         if (chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
             searchMatchingContact()
         } else {
@@ -280,6 +279,8 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
     }
 
     private fun updateSecurityIcon() {
+        securityLevel.value = chatRoom.securityLevel
+
         securityLevelIcon.value = when (chatRoom.securityLevel) {
             ChatRoomSecurityLevel.Safe -> R.drawable.security_2_indicator
             ChatRoomSecurityLevel.Encrypted -> R.drawable.security_1_indicator
