@@ -63,7 +63,7 @@ class DevicesFragment : SecureFragment<ChatRoomDevicesFragmentBinding>() {
         binding.viewModel = listViewModel
 
         binding.setBackClickListener {
-            findNavController().popBackStack()
+            goBack()
         }
     }
 }

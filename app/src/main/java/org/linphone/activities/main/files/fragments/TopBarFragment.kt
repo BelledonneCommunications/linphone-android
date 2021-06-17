@@ -21,7 +21,6 @@ package org.linphone.activities.main.files.fragments
 
 import android.os.Bundle
 import android.view.View
-import androidx.navigation.fragment.findNavController
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.SnackBarActivity
@@ -42,7 +41,7 @@ class TopBarFragment : GenericFragment<FileViewerTopBarFragmentBinding>() {
         binding.lifecycleOwner = this
 
         binding.setBackClickListener {
-            findNavController().popBackStack()
+            goBack()
         }
 
         binding.setExportClickListener {
