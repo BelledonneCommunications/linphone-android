@@ -75,6 +75,12 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         }
 
+        sharedViewModel.closeSlidingPaneEvent.observe(viewLifecycleOwner, {
+            it.consume {
+                binding.slidingPane.close()
+            }
+        })
+
         _adapter = CallLogsListAdapter(listSelectionViewModel, viewLifecycleOwner)
         // SubmitList is done on a background thread
         // We need this adapter data observer to know when to scroll
@@ -125,7 +131,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
         binding.callLogsList.addItemDecoration(AppUtils.getDividerDecoration(requireContext(), layoutManager))
 
         // Displays formatted date header
-        val headerItemDecoration = RecyclerViewHeaderDecoration(adapter)
+        val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
         binding.callLogsList.addItemDecoration(headerItemDecoration)
 
         listViewModel.callLogs.observe(viewLifecycleOwner, { callLogs ->
@@ -157,6 +163,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
         adapter.selectedCallLogEvent.observe(viewLifecycleOwner, {
             it.consume { callLog ->
                 sharedViewModel.selectedCallLogGroup.value = callLog
+                binding.slidingPane.openPane()
                 navigateToCallHistory()
             }
         })

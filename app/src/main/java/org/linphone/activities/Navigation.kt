@@ -50,11 +50,7 @@ import org.linphone.contact.NativeContact
 import org.linphone.core.Address
 
 internal fun Fragment.findMasterNavController(): NavController {
-    return if (!resources.getBoolean(R.bool.isTablet)) {
-        findNavController()
-    } else {
-        parentFragment?.parentFragment?.findNavController() ?: findNavController()
-    }
+    return parentFragment?.parentFragment?.findNavController() ?: findNavController()
 }
 
 fun getRightToLeftAnimationNavOptions(
@@ -147,6 +143,16 @@ fun getLeftTopToRightBottomNoPopAnimationNavOptions(
         .setEnterAnim(R.anim.enter_left_or_top)
         .setExitAnim(R.anim.exit_right_or_bottom)
         .build()
+}
+
+fun popupTo(
+    popUpTo: Int = -1,
+    popUpInclusive: Boolean = false,
+    singleTop: Boolean = true
+): NavOptions {
+    val builder = NavOptions.Builder()
+    builder.setPopUpTo(popUpTo, popUpInclusive).setLaunchSingleTop(singleTop)
+    return builder.build()
 }
 
 /* Main activity related */
@@ -546,23 +552,13 @@ internal fun DetailContactFragment.navigateToContactEditor() {
 /* History related */
 
 internal fun MasterCallLogsFragment.navigateToCallHistory() {
-    if (!resources.getBoolean(R.bool.isTablet)) {
-        if (findNavController().currentDestination?.id == R.id.masterCallLogsFragment) {
-            findNavController().navigate(
-                R.id.action_masterCallLogsFragment_to_detailCallLogFragment,
-                null,
-                getRightToLeftAnimationNavOptions()
-            )
-        }
-    } else {
-        val navHostFragment =
-            childFragmentManager.findFragmentById(R.id.history_nav_container) as NavHostFragment
-        navHostFragment.navController.navigate(
-            R.id.action_global_detailCallLogFragment,
-            null,
-            getRightToLeftAnimationNavOptions(R.id.emptyFragment, true)
-        )
-    }
+    val navHostFragment =
+        childFragmentManager.findFragmentById(R.id.history_nav_container) as NavHostFragment
+    navHostFragment.navController.navigate(
+        R.id.action_global_detailCallLogFragment,
+        null,
+        popupTo(R.id.emptyFragment, true)
+    )
 }
 
 internal fun MasterCallLogsFragment.navigateToDialer(args: Bundle?) {
@@ -579,18 +575,8 @@ internal fun DetailCallLogFragment.navigateToContacts(sipUriToAdd: String) {
 }
 
 internal fun DetailCallLogFragment.navigateToContact(contact: NativeContact) {
-    if (!resources.getBoolean(R.bool.isTablet)) {
-        val args = Bundle()
-        args.putString("id", contact.nativeId)
-        findMasterNavController().navigate(
-            R.id.action_detailCallLogFragment_to_detailContactFragment,
-            args,
-            getRightBottomToLeftTopAnimationNavOptions()
-        )
-    } else {
-        val deepLink = "linphone-android://contact/view/${contact.nativeId}"
-        findMasterNavController().navigate(Uri.parse(deepLink), getRightBottomToLeftTopAnimationNavOptions())
-    }
+    val deepLink = "linphone-android://contact/view/${contact.nativeId}"
+    findMasterNavController().navigate(Uri.parse(deepLink), getRightBottomToLeftTopAnimationNavOptions())
 }
 
 internal fun DetailCallLogFragment.navigateToFriend(friendAddress: Address) {
@@ -599,19 +585,11 @@ internal fun DetailCallLogFragment.navigateToFriend(friendAddress: Address) {
 }
 
 internal fun DetailCallLogFragment.navigateToChatRoom(args: Bundle?) {
-    if (!resources.getBoolean(R.bool.isTablet)) {
-        findNavController().navigate(
-            R.id.action_detailCallLogFragment_to_detailChatRoomFragment,
-            args,
-            getRightBottomToLeftTopAnimationNavOptions()
-        )
-    } else {
-        findMasterNavController().navigate(
-            R.id.action_global_masterChatRoomsFragment,
-            args,
-            getRightBottomToLeftTopAnimationNavOptions()
-        )
-    }
+    findMasterNavController().navigate(
+        R.id.action_global_masterChatRoomsFragment,
+        args,
+        getRightBottomToLeftTopAnimationNavOptions()
+    )
 }
 
 internal fun DetailCallLogFragment.navigateToDialer(args: Bundle?) {

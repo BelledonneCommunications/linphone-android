@@ -36,6 +36,7 @@ import org.linphone.activities.navigateToFriend
 import org.linphone.contact.NativeContact
 import org.linphone.core.tools.Log
 import org.linphone.databinding.HistoryDetailFragmentBinding
+import org.linphone.utils.Event
 
 class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
     private lateinit var viewModel: CallLogViewModel
@@ -69,7 +70,7 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
         viewModel.relatedCallLogs.value = callLogGroup.callLogs
 
         binding.setBackClickListener {
-            findNavController().popBackStack()
+            sharedViewModel.closeSlidingPaneEvent.value = Event(true)
         }
         binding.back.visibility = if (resources.getBoolean(R.bool.isTablet)) View.INVISIBLE else View.VISIBLE
 
