@@ -12,6 +12,9 @@
         <variable
             name="viewModel"
             type="org.linphone.activities.main.settings.viewmodels.AccountSettingsViewModel"/>
+        <variable
+            name="sharedMainViewModel"
+            type="org.linphone.activities.main.viewmodels.SharedMainViewModel" />
     </data>
 
     <RelativeLayout
@@ -29,6 +32,7 @@
             <ImageView
                 android:id="@+id/back"
                 android:onClick="@{backClickListener}"
+                android:visibility="@{sharedMainViewModel.canSlidingPaneBeClosed ? View.VISIBLE : View.INVISIBLE}"
                 android:contentDescription="@string/content_description_go_back"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
