@@ -55,7 +55,7 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
         val callLogGroup = sharedViewModel.selectedCallLogGroup.value
         if (callLogGroup == null) {
             Log.e("[History] Call log group is null, aborting!")
-            (activity as MainActivity).showSnackBar(R.string.error)
+            // (activity as MainActivity).showSnackBar(R.string.error)
             findNavController().navigateUp()
             return
         }
