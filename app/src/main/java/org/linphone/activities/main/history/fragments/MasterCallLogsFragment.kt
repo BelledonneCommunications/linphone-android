@@ -23,10 +23,12 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.main.fragments.MasterFragment
@@ -71,9 +73,29 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
         listViewModel = ViewModelProvider(this).get(CallLogsListViewModel::class.java)
         binding.viewModel = listViewModel
 
+        /* Shared view model & sliding pane related */
+
         sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         }
+
+        view.doOnPreDraw { sharedViewModel.canSlidingPaneBeClosed.value = binding.slidingPane.isSlideable }
+
+        sharedViewModel.closeSlidingPaneEvent.observe(viewLifecycleOwner, {
+            it.consume {
+                if (!binding.slidingPane.closePane()) {
+                    goBack()
+                }
+            }
+        })
+        sharedViewModel.layoutChangedEvent.observe(viewLifecycleOwner, {
+            it.consume {
+                sharedViewModel.canSlidingPaneBeClosed.value = binding.slidingPane.isSlideable
+            }
+        })
+        binding.slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
+
+        /* End of hared view model & sliding pane related */
 
         _adapter = CallLogsListAdapter(listSelectionViewModel, viewLifecycleOwner)
         // SubmitList is done on a background thread
@@ -125,7 +147,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
         binding.callLogsList.addItemDecoration(AppUtils.getDividerDecoration(requireContext(), layoutManager))
 
         // Displays formatted date header
-        val headerItemDecoration = RecyclerViewHeaderDecoration(adapter)
+        val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
         binding.callLogsList.addItemDecoration(headerItemDecoration)
 
         listViewModel.callLogs.observe(viewLifecycleOwner, { callLogs ->
@@ -157,6 +179,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
         adapter.selectedCallLogEvent.observe(viewLifecycleOwner, {
             it.consume { callLog ->
                 sharedViewModel.selectedCallLogGroup.value = callLog
+                binding.slidingPane.openPane()
                 navigateToCallHistory()
             }
         })
