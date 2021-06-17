@@ -28,7 +28,6 @@ import org.linphone.core.AudioDevice
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.EcCalibratorStatus
-import org.linphone.core.tools.Log
 import org.linphone.utils.Event
 import org.linphone.utils.PermissionHelper
 
