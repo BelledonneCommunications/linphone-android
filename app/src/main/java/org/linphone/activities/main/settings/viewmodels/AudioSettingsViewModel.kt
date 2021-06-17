@@ -28,6 +28,7 @@ import org.linphone.core.AudioDevice
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.EcCalibratorStatus
+import org.linphone.core.tools.Log
 import org.linphone.utils.Event
 import org.linphone.utils.PermissionHelper
 
@@ -207,33 +208,41 @@ class AudioSettingsViewModel : GenericSettingsViewModel() {
     private fun initInputAudioDevicesList() {
         val labels = arrayListOf<String>()
         val values = arrayListOf<AudioDevice>()
+        var index = 0
+        val default = core.defaultInputAudioDevice
+
         for (audioDevice in core.extendedAudioDevices) {
             if (audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityRecord)) {
                 labels.add(audioDevice.id)
                 values.add(audioDevice)
+                if (audioDevice.id == default.id) {
+                    inputAudioDeviceIndex.value = index
+                }
+                index += 1
             }
         }
         inputAudioDeviceLabels.value = labels
         inputAudioDeviceValues.value = values
-
-        val default = core.defaultInputAudioDevice
-        inputAudioDeviceIndex.value = values.indexOf(default)
     }
 
     private fun initOutputAudioDevicesList() {
         val labels = arrayListOf<String>()
         val values = arrayListOf<AudioDevice>()
+        var index = 0
+        val default = core.defaultOutputAudioDevice
+
         for (audioDevice in core.extendedAudioDevices) {
             if (audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
                 labels.add(audioDevice.id)
                 values.add(audioDevice)
+                if (audioDevice.id == default.id) {
+                    outputAudioDeviceIndex.value = index
+                }
+                index += 1
             }
         }
         outputAudioDeviceLabels.value = labels
         outputAudioDeviceValues.value = values
-
-        val default = core.defaultOutputAudioDevice
-        outputAudioDeviceIndex.value = values.indexOf(default)
     }
 
     private fun initCodecBitrateList() {
