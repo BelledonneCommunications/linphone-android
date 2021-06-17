@@ -27,6 +27,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.main.fragments.MasterFragment
@@ -74,6 +75,21 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
         sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         }
+
+        sharedViewModel.closeSlidingPaneEvent.observe(viewLifecycleOwner, {
+            it.consume {
+                if (!binding.slidingPane.closePane()) {
+                    goBack()
+                }
+            }
+        })
+        sharedViewModel.layoutChangedEvent.observe(viewLifecycleOwner, {
+            it.consume {
+                sharedViewModel.canSlidingPaneBeClosed.value = binding.slidingPane.isSlideable
+            }
+        })
+        sharedViewModel.canSlidingPaneBeClosed.value = binding.slidingPane.isSlideable
+        binding.slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
 
         _adapter = CallLogsListAdapter(listSelectionViewModel, viewLifecycleOwner)
         // SubmitList is done on a background thread
@@ -125,7 +141,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
         binding.callLogsList.addItemDecoration(AppUtils.getDividerDecoration(requireContext(), layoutManager))
 
         // Displays formatted date header
-        val headerItemDecoration = RecyclerViewHeaderDecoration(adapter)
+        val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
         binding.callLogsList.addItemDecoration(headerItemDecoration)
 
         listViewModel.callLogs.observe(viewLifecycleOwner, { callLogs ->
@@ -157,6 +173,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
         adapter.selectedCallLogEvent.observe(viewLifecycleOwner, {
             it.consume { callLog ->
                 sharedViewModel.selectedCallLogGroup.value = callLog
+                binding.slidingPane.openPane()
                 navigateToCallHistory()
             }
         })
@@ -188,6 +205,8 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
 
     override fun onResume() {
         super.onResume()
+
+        sharedViewModel.canSlidingPaneBeClosed.value = binding.slidingPane.isSlideable
 
         coreContext.core.resetMissedCallsCount()
         coreContext.notificationsManager.dismissMissedCallNotification()

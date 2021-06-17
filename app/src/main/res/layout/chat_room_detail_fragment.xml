@@ -35,6 +35,9 @@
         <variable
             name="chatSendingViewModel"
             type="org.linphone.activities.main.chat.viewmodels.ChatMessageSendingViewModel" />
+        <variable
+            name="sharedMainViewModel"
+            type="org.linphone.activities.main.viewmodels.SharedMainViewModel" />
     </data>
 
     <RelativeLayout
@@ -52,6 +55,7 @@
                 android:id="@+id/back"
                 android:contentDescription="@string/content_description_go_back"
                 android:onClick="@{backClickListener}"
+                android:visibility="@{sharedMainViewModel.canSlidingPaneBeClosed ? View.VISIBLE : View.GONE}"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.2"
@@ -66,7 +70,7 @@
                 android:layout_weight="@{viewModel.oneToOneChatRoom ? 0.4f : 0.6f}"
                 android:gravity="center_vertical|left"
                 android:orientation="vertical"
-                android:paddingLeft="5dp">
+                android:paddingLeft="15dp">
 
                 <org.linphone.views.MarqueeTextView
                     android:onClick="@{titleClickListener}"
