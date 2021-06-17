@@ -24,7 +24,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import org.linphone.R
 import org.linphone.activities.main.fragments.SecureFragment
 import org.linphone.databinding.AboutFragmentBinding
@@ -42,7 +41,7 @@ class AboutFragment : SecureFragment<AboutFragmentBinding>() {
         viewModel = ViewModelProvider(this).get(AboutViewModel::class.java)
         binding.viewModel = viewModel
 
-        binding.setBackClickListener { findNavController().popBackStack() }
+        binding.setBackClickListener { goBack() }
 
         binding.setPrivacyPolicyClickListener {
             val browserIntent = Intent(
