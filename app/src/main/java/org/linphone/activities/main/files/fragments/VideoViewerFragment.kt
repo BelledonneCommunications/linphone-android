@@ -61,7 +61,7 @@ class VideoViewerFragment : GenericViewerFragment<FileVideoViewerFragmentBinding
             // This is to prevent the first back key press to only hide to media controls
             override fun dispatchKeyEvent(event: KeyEvent?): Boolean {
                 if (event?.keyCode == KeyEvent.KEYCODE_BACK) {
-                    findNavController().popBackStack()
+                    goBack()
                     return true
                 }
                 return super.dispatchKeyEvent(event)

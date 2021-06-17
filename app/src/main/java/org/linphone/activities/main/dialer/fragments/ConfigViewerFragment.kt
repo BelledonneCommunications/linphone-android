@@ -24,7 +24,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import org.linphone.R
 import org.linphone.activities.main.dialer.viewmodels.ConfigFileViewModel
 import org.linphone.activities.main.fragments.SecureFragment
@@ -47,7 +46,7 @@ class ConfigViewerFragment : SecureFragment<FileConfigViewerFragmentBinding>() {
         isSecure = arguments?.getBoolean("Secure") ?: false
 
         binding.setBackClickListener {
-            findNavController().popBackStack()
+            goBack()
         }
 
         binding.setExportClickListener {

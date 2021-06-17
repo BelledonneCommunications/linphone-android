@@ -26,15 +26,17 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.settings.viewmodels.CallSettingsViewModel
+import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.compatibility.Compatibility
 import org.linphone.databinding.SettingsCallFragmentBinding
 import org.linphone.mediastream.Version
+import org.linphone.utils.Event
 
 class CallSettingsFragment : GenericFragment<SettingsCallFragmentBinding>() {
+    private lateinit var sharedViewModel: SharedMainViewModel
     private lateinit var viewModel: CallSettingsViewModel
 
     override fun getLayoutId(): Int = R.layout.settings_call_fragment
@@ -44,11 +46,15 @@ class CallSettingsFragment : GenericFragment<SettingsCallFragmentBinding>() {
 
         binding.lifecycleOwner = this
 
+        sharedViewModel = requireActivity().run {
+            ViewModelProvider(this).get(SharedMainViewModel::class.java)
+        }
+        binding.sharedMainViewModel = sharedViewModel
+
         viewModel = ViewModelProvider(this).get(CallSettingsViewModel::class.java)
         binding.viewModel = viewModel
 
-        binding.setBackClickListener { findNavController().popBackStack() }
-        binding.back.visibility = if (resources.getBoolean(R.bool.isTablet)) View.INVISIBLE else View.VISIBLE
+        binding.setBackClickListener { goBack() }
 
         viewModel.systemWideOverlayEnabledEvent.observe(viewLifecycleOwner, {
             it.consume {
@@ -83,5 +89,9 @@ class CallSettingsFragment : GenericFragment<SettingsCallFragmentBinding>() {
         if (!Compatibility.canDrawOverlay(requireContext())) {
             viewModel.systemWideOverlayListener.onBoolValueChanged(false)
         }
+    }
+
+    override fun goBack() {
+        sharedViewModel.closeSlidingPaneEvent.value = Event(true)
     }
 }

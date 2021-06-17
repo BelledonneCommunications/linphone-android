@@ -37,6 +37,7 @@ import org.linphone.activities.navigateToGroupInfo
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatRoomCreationFragmentBinding
 import org.linphone.utils.AppUtils
+import org.linphone.utils.Event
 import org.linphone.utils.PermissionHelper
 
 class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>() {
@@ -76,7 +77,7 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
         binding.contactsList.addItemDecoration(AppUtils.getDividerDecoration(requireContext(), layoutManager))
 
         binding.setBackClickListener {
-            findNavController().popBackStack()
+            goBack()
         }
         binding.back.visibility = if (resources.getBoolean(R.bool.isTablet)) View.INVISIBLE else View.VISIBLE
 
@@ -143,6 +144,12 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
         if (!PermissionHelper.get().hasReadContactsPermission()) {
             Log.i("[Chat Room Creation] Asking for READ_CONTACTS permission")
             requestPermissions(arrayOf(android.Manifest.permission.READ_CONTACTS), 0)
+        }
+    }
+
+    override fun goBack() {
+        if (!findNavController().popBackStack()) {
+            sharedViewModel.closeSlidingPaneEvent.value = Event(true)
         }
     }
 

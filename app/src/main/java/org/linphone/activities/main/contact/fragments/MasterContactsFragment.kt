@@ -24,10 +24,12 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.main.MainActivity
@@ -68,9 +70,44 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
         listViewModel = ViewModelProvider(this).get(ContactsListViewModel::class.java)
         binding.viewModel = listViewModel
 
+        /* Shared view model & sliding pane related */
+
         sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         }
+
+        view.doOnPreDraw { sharedViewModel.canSlidingPaneBeClosed.value = binding.slidingPane.isSlideable }
+
+        sharedViewModel.closeSlidingPaneEvent.observe(viewLifecycleOwner, {
+            it.consume {
+                if (!binding.slidingPane.closePane()) {
+                    goBack()
+                }
+            }
+        })
+        sharedViewModel.layoutChangedEvent.observe(viewLifecycleOwner, {
+            it.consume {
+                sharedViewModel.canSlidingPaneBeClosed.value = binding.slidingPane.isSlideable
+            }
+        })
+        binding.slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
+        /*binding.slidingPane.addPanelSlideListener(object : SlidingPaneLayout.PanelSlideListener {
+            override fun onPanelSlide(panel: View, slideOffset: Float) { }
+
+            override fun onPanelOpened(panel: View) {
+                if (binding.slidingPane.isSlideable) {
+                    (requireActivity() as MainActivity).hideTabsFragment()
+                }
+            }
+
+            override fun onPanelClosed(panel: View) {
+                if (binding.slidingPane.isSlideable) {
+                    (requireActivity() as MainActivity).showTabsFragment()
+                }
+            }
+        })*/
+
+        /* End of hared view model & sliding pane related */
 
         _adapter = ContactsListAdapter(listSelectionViewModel, viewLifecycleOwner)
         binding.contactsList.setHasFixedSize(true)
@@ -124,7 +161,7 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
         binding.contactsList.addItemDecoration(AppUtils.getDividerDecoration(requireContext(), layoutManager))
 
         // Displays the first letter header
-        val headerItemDecoration = RecyclerViewHeaderDecoration(adapter)
+        val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
         binding.contactsList.addItemDecoration(headerItemDecoration)
 
         adapter.selectedContactEvent.observe(viewLifecycleOwner, {
@@ -133,6 +170,7 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
                 sharedViewModel.selectedContact.value = contact
                 listViewModel.filter.value = ""
 
+                binding.slidingPane.openPane()
                 if (editOnClick) {
                     navigateToContactEditor(sipUriToAdd)
                     editOnClick = false
@@ -174,6 +212,8 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
         binding.setNewContactClickListener {
             // Remove any previously selected contact
             sharedViewModel.selectedContact.value = null
+
+            binding.slidingPane.openPane()
             navigateToContactEditor(sipUriToAdd)
         }
 

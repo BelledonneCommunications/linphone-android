@@ -23,7 +23,6 @@ import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.R
 import org.linphone.activities.main.fragments.MasterFragment
@@ -66,14 +65,14 @@ class RecordingsFragment : MasterFragment<RecordingsFragmentBinding, RecordingsL
         binding.recordingsList.addItemDecoration(AppUtils.getDividerDecoration(requireContext(), layoutManager))
 
         // Displays the first letter header
-        val headerItemDecoration = RecyclerViewHeaderDecoration(adapter)
+        val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
         binding.recordingsList.addItemDecoration(headerItemDecoration)
 
         viewModel.recordingsList.observe(viewLifecycleOwner, { recordings ->
             adapter.submitList(recordings)
         })
 
-        binding.setBackClickListener { findNavController().popBackStack() }
+        binding.setBackClickListener { goBack() }
 
         binding.setEditClickListener { listSelectionViewModel.isEditionEnabled.value = true }
 

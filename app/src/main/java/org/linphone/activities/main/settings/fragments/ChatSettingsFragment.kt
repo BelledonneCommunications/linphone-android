@@ -25,15 +25,17 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.settings.viewmodels.ChatSettingsViewModel
+import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.compatibility.Compatibility
 import org.linphone.databinding.SettingsChatFragmentBinding
 import org.linphone.mediastream.Version
+import org.linphone.utils.Event
 
 class ChatSettingsFragment : GenericFragment<SettingsChatFragmentBinding>() {
+    private lateinit var sharedViewModel: SharedMainViewModel
     private lateinit var viewModel: ChatSettingsViewModel
 
     override fun getLayoutId(): Int = R.layout.settings_chat_fragment
@@ -43,11 +45,15 @@ class ChatSettingsFragment : GenericFragment<SettingsChatFragmentBinding>() {
 
         binding.lifecycleOwner = this
 
+        sharedViewModel = requireActivity().run {
+            ViewModelProvider(this).get(SharedMainViewModel::class.java)
+        }
+        binding.sharedMainViewModel = sharedViewModel
+
         viewModel = ViewModelProvider(this).get(ChatSettingsViewModel::class.java)
         binding.viewModel = viewModel
 
-        binding.setBackClickListener { findNavController().popBackStack() }
-        binding.back.visibility = if (resources.getBoolean(R.bool.isTablet)) View.INVISIBLE else View.VISIBLE
+        binding.setBackClickListener { goBack() }
 
         viewModel.launcherShortcutsEvent.observe(viewLifecycleOwner, {
             it.consume { newValue ->
@@ -75,5 +81,9 @@ class ChatSettingsFragment : GenericFragment<SettingsChatFragmentBinding>() {
                 startActivity(i)
             }
         } })
+    }
+
+    override fun goBack() {
+        sharedViewModel.closeSlidingPaneEvent.value = Event(true)
     }
 }

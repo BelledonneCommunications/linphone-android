@@ -22,13 +22,15 @@ package org.linphone.activities.main.settings.fragments
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.settings.viewmodels.NetworkSettingsViewModel
+import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.databinding.SettingsNetworkFragmentBinding
+import org.linphone.utils.Event
 
 class NetworkSettingsFragment : GenericFragment<SettingsNetworkFragmentBinding>() {
+    private lateinit var sharedViewModel: SharedMainViewModel
     private lateinit var viewModel: NetworkSettingsViewModel
 
     override fun getLayoutId(): Int = R.layout.settings_network_fragment
@@ -38,10 +40,18 @@ class NetworkSettingsFragment : GenericFragment<SettingsNetworkFragmentBinding>(
 
         binding.lifecycleOwner = this
 
+        sharedViewModel = requireActivity().run {
+            ViewModelProvider(this).get(SharedMainViewModel::class.java)
+        }
+        binding.sharedMainViewModel = sharedViewModel
+
         viewModel = ViewModelProvider(this).get(NetworkSettingsViewModel::class.java)
         binding.viewModel = viewModel
 
-        binding.setBackClickListener { findNavController().popBackStack() }
-        binding.back.visibility = if (resources.getBoolean(R.bool.isTablet)) View.INVISIBLE else View.VISIBLE
+        binding.setBackClickListener { goBack() }
+    }
+
+    override fun goBack() {
+        sharedViewModel.closeSlidingPaneEvent.value = Event(true)
     }
 }

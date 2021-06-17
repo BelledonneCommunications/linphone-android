@@ -21,8 +21,9 @@ package org.linphone.activities.main.settings.fragments
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
+import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import org.linphone.R
 import org.linphone.activities.*
 import org.linphone.activities.main.fragments.SecureFragment
@@ -47,14 +48,34 @@ class SettingsFragment : SecureFragment<SettingsFragmentBinding>() {
 
         binding.lifecycleOwner = this
 
+        /* Shared view model & sliding pane related */
+
         sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         }
 
+        view.doOnPreDraw { sharedViewModel.canSlidingPaneBeClosed.value = binding.slidingPane.isSlideable }
+
+        sharedViewModel.closeSlidingPaneEvent.observe(viewLifecycleOwner, {
+            it.consume {
+                if (!binding.slidingPane.closePane()) {
+                    goBack()
+                }
+            }
+        })
+        sharedViewModel.layoutChangedEvent.observe(viewLifecycleOwner, {
+            it.consume {
+                sharedViewModel.canSlidingPaneBeClosed.value = binding.slidingPane.isSlideable
+            }
+        })
+        binding.slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
+
+        /* End of hared view model & sliding pane related */
+
         viewModel = ViewModelProvider(this).get(SettingsViewModel::class.java)
         binding.viewModel = viewModel
 
-        binding.setBackClickListener { findNavController().popBackStack() }
+        binding.setBackClickListener { goBack() }
 
         sharedViewModel.accountRemoved.observe(viewLifecycleOwner, {
             Log.i("[Settings] Account removed, update accounts list")
@@ -65,60 +86,70 @@ class SettingsFragment : SecureFragment<SettingsFragmentBinding>() {
         if (identity != null) {
             Log.i("[Settings] Found identity parameter in arguments: $identity")
             arguments?.clear()
+            binding.slidingPane.openPane()
             navigateToAccountSettings(identity)
         }
 
         viewModel.accountsSettingsListener = object : SettingListenerStub() {
             override fun onAccountClicked(identity: String) {
                 Log.i("[Settings] Navigation to settings for account with identity: $identity")
+                binding.slidingPane.openPane()
                 navigateToAccountSettings(identity)
             }
         }
 
         viewModel.tunnelSettingsListener = object : SettingListenerStub() {
             override fun onClicked() {
+                binding.slidingPane.openPane()
                 navigateToTunnelSettings()
             }
         }
 
         viewModel.audioSettingsListener = object : SettingListenerStub() {
             override fun onClicked() {
+                binding.slidingPane.openPane()
                 navigateToAudioSettings()
             }
         }
 
         viewModel.videoSettingsListener = object : SettingListenerStub() {
             override fun onClicked() {
+                binding.slidingPane.openPane()
                 navigateToVideoSettings()
             }
         }
 
         viewModel.callSettingsListener = object : SettingListenerStub() {
             override fun onClicked() {
+                binding.slidingPane.openPane()
                 navigateToCallSettings()
             }
         }
 
         viewModel.chatSettingsListener = object : SettingListenerStub() {
             override fun onClicked() {
+                binding.slidingPane.openPane()
                 navigateToChatSettings()
             }
         }
 
         viewModel.networkSettingsListener = object : SettingListenerStub() {
             override fun onClicked() {
+                binding.slidingPane.openPane()
                 navigateToNetworkSettings()
             }
         }
 
         viewModel.contactsSettingsListener = object : SettingListenerStub() {
             override fun onClicked() {
+                binding.slidingPane.openPane()
                 navigateToContactsSettings()
             }
         }
 
         viewModel.advancedSettingsListener = object : SettingListenerStub() {
             override fun onClicked() {
+                binding.slidingPane.openPane()
                 navigateToAdvancedSettings()
             }
         }

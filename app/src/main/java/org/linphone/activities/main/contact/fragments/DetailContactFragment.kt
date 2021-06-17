@@ -40,6 +40,7 @@ import org.linphone.activities.navigateToDialer
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactDetailFragmentBinding
 import org.linphone.utils.DialogUtils
+import org.linphone.utils.Event
 
 class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
     private lateinit var viewModel: ContactViewModel
@@ -55,6 +56,7 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
         sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         }
+        binding.sharedMainViewModel = sharedViewModel
 
         val id = arguments?.getString("id")
         arguments?.clear()
@@ -108,9 +110,8 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
         })
 
         binding.setBackClickListener {
-            findNavController().popBackStack()
+            goBack()
         }
-        binding.back.visibility = if (resources.getBoolean(R.bool.isTablet)) View.INVISIBLE else View.VISIBLE
 
         binding.setEditClickListener {
             navigateToContactEditor()
@@ -125,6 +126,10 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
                 (activity as MainActivity).showSnackBar(messageResourceId)
             }
         })
+    }
+
+    override fun goBack() {
+        sharedViewModel.closeSlidingPaneEvent.value = Event(true)
     }
 
     private fun confirmContactRemoval() {

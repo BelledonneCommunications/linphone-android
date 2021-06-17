@@ -11,6 +11,9 @@
         <variable
             name="viewModel"
             type="org.linphone.activities.main.settings.viewmodels.VideoSettingsViewModel"/>
+        <variable
+            name="sharedMainViewModel"
+            type="org.linphone.activities.main.viewmodels.SharedMainViewModel" />
     </data>
 
     <RelativeLayout
@@ -28,6 +31,7 @@
             <ImageView
                 android:id="@+id/back"
                 android:onClick="@{backClickListener}"
+                android:visibility="@{sharedMainViewModel.canSlidingPaneBeClosed ? View.VISIBLE : View.GONE}"
                 android:contentDescription="@string/content_description_go_back"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -51,7 +55,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.2"
-                android:visibility="invisible" />
+                android:visibility="@{sharedMainViewModel.canSlidingPaneBeClosed ? View.INVISIBLE : View.GONE}" />
 
         </LinearLayout>
 

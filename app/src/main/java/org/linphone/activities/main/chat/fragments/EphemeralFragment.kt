@@ -64,12 +64,12 @@ class EphemeralFragment : SecureFragment<ChatRoomEphemeralFragmentBinding>() {
         binding.viewModel = viewModel
 
         binding.setBackClickListener {
-            findNavController().popBackStack()
+            goBack()
         }
 
         binding.setValidClickListener {
             viewModel.updateChatRoomEphemeralDuration()
-            findNavController().popBackStack()
+            goBack()
         }
     }
 }

@@ -26,18 +26,20 @@ import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import org.linphone.BR
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.activities.main.settings.viewmodels.AudioSettingsViewModel
+import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsAudioFragmentBinding
+import org.linphone.utils.Event
 import org.linphone.utils.PermissionHelper
 
 class AudioSettingsFragment : GenericFragment<SettingsAudioFragmentBinding>() {
+    private lateinit var sharedViewModel: SharedMainViewModel
     private lateinit var viewModel: AudioSettingsViewModel
 
     override fun getLayoutId(): Int = R.layout.settings_audio_fragment
@@ -47,11 +49,15 @@ class AudioSettingsFragment : GenericFragment<SettingsAudioFragmentBinding>() {
 
         binding.lifecycleOwner = this
 
+        sharedViewModel = requireActivity().run {
+            ViewModelProvider(this).get(SharedMainViewModel::class.java)
+        }
+        binding.sharedMainViewModel = sharedViewModel
+
         viewModel = ViewModelProvider(this).get(AudioSettingsViewModel::class.java)
         binding.viewModel = viewModel
 
-        binding.setBackClickListener { findNavController().popBackStack() }
-        binding.back.visibility = if (resources.getBoolean(R.bool.isTablet)) View.INVISIBLE else View.VISIBLE
+        binding.setBackClickListener { goBack() }
 
         viewModel.askAudioRecordPermissionForEchoCancellerCalibrationEvent.observe(viewLifecycleOwner, {
             it.consume {
@@ -109,5 +115,9 @@ class AudioSettingsFragment : GenericFragment<SettingsAudioFragmentBinding>() {
             list.add(binding)
         }
         viewModel.audioCodecs.value = list
+    }
+
+    override fun goBack() {
+        sharedViewModel.closeSlidingPaneEvent.value = Event(true)
     }
 }

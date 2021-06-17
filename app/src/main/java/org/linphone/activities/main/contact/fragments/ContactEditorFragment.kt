@@ -70,7 +70,7 @@ class ContactEditorFragment : GenericFragment<ContactEditorFragmentBinding>(), S
         binding.viewModel = viewModel
 
         binding.setBackClickListener {
-            findNavController().popBackStack()
+            goBack()
         }
 
         binding.setAvatarClickListener {

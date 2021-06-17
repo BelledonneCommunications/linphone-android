@@ -31,6 +31,7 @@ import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.navigateToPhoneLinking
 import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsAccountFragmentBinding
+import org.linphone.utils.Event
 
 class AccountSettingsFragment : GenericFragment<SettingsAccountFragmentBinding>() {
     private lateinit var sharedViewModel: SharedMainViewModel
@@ -46,6 +47,7 @@ class AccountSettingsFragment : GenericFragment<SettingsAccountFragmentBinding>(
         sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         }
+        binding.sharedMainViewModel = sharedViewModel
 
         val identity = arguments?.getString("Identity")
         if (identity == null) {
@@ -58,8 +60,7 @@ class AccountSettingsFragment : GenericFragment<SettingsAccountFragmentBinding>(
         viewModel = ViewModelProvider(this, AccountSettingsViewModelFactory(identity)).get(AccountSettingsViewModel::class.java)
         binding.viewModel = viewModel
 
-        binding.setBackClickListener { findNavController().popBackStack() }
-        binding.back.visibility = if (resources.getBoolean(R.bool.isTablet)) View.INVISIBLE else View.VISIBLE
+        binding.setBackClickListener { goBack() }
 
         viewModel.linkPhoneNumberEvent.observe(viewLifecycleOwner, {
             it.consume {
@@ -82,5 +83,9 @@ class AccountSettingsFragment : GenericFragment<SettingsAccountFragmentBinding>(
                 findNavController().navigateUp()
             }
         })
+    }
+
+    override fun goBack() {
+        sharedViewModel.closeSlidingPaneEvent.value = Event(true)
     }
 }
