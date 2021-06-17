@@ -21,6 +21,7 @@ package org.linphone.activities.main.history.fragments
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.addCallback
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -36,12 +37,21 @@ import org.linphone.activities.navigateToFriend
 import org.linphone.contact.NativeContact
 import org.linphone.core.tools.Log
 import org.linphone.databinding.HistoryDetailFragmentBinding
+import org.linphone.utils.Event
 
 class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
     private lateinit var viewModel: CallLogViewModel
     private lateinit var sharedViewModel: SharedMainViewModel
 
     override fun getLayoutId(): Int = R.layout.history_detail_fragment
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            goBack()
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -69,9 +79,10 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
         viewModel.relatedCallLogs.value = callLogGroup.callLogs
 
         binding.setBackClickListener {
-            findNavController().popBackStack()
+            goBack()
         }
-        binding.back.visibility = if (resources.getBoolean(R.bool.isTablet)) View.INVISIBLE else View.VISIBLE
+        binding.back.visibility =
+            if (sharedViewModel.canSlidingPaneBeClosed) View.VISIBLE else View.INVISIBLE
 
         binding.setNewContactClickListener {
             val copy = viewModel.callLog.remoteAddress.clone()
@@ -101,7 +112,10 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
                     val args = Bundle()
                     args.putString("URI", address.asStringUriOnly())
                     args.putBoolean("Transfer", sharedViewModel.pendingCallTransfer)
-                    args.putBoolean("SkipAutoCallStart", true) // If auto start call setting is enabled, ignore it
+                    args.putBoolean(
+                        "SkipAutoCallStart",
+                        true
+                    ) // If auto start call setting is enabled, ignore it
                     navigateToDialer(args)
                 } else {
                     val localAddress = callLog.localAddress
@@ -124,5 +138,9 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
                 (activity as MainActivity).showSnackBar(messageResourceId)
             }
         })
+    }
+
+    private fun goBack() {
+        sharedViewModel.closeSlidingPaneEvent.value = Event(true)
     }
 }

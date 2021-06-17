@@ -66,7 +66,7 @@ class RecordingsFragment : MasterFragment<RecordingsFragmentBinding, RecordingsL
         binding.recordingsList.addItemDecoration(AppUtils.getDividerDecoration(requireContext(), layoutManager))
 
         // Displays the first letter header
-        val headerItemDecoration = RecyclerViewHeaderDecoration(adapter)
+        val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
         binding.recordingsList.addItemDecoration(headerItemDecoration)
 
         viewModel.recordingsList.observe(viewLifecycleOwner, { recordings ->
