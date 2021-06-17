@@ -36,6 +36,7 @@ import org.linphone.activities.navigateToFriend
 import org.linphone.contact.NativeContact
 import org.linphone.core.tools.Log
 import org.linphone.databinding.HistoryDetailFragmentBinding
+import org.linphone.utils.Event
 
 class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
     private lateinit var viewModel: CallLogViewModel
@@ -51,6 +52,7 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
         sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         }
+        binding.sharedMainViewModel = sharedViewModel
 
         val callLogGroup = sharedViewModel.selectedCallLogGroup.value
         if (callLogGroup == null) {
@@ -69,9 +71,8 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
         viewModel.relatedCallLogs.value = callLogGroup.callLogs
 
         binding.setBackClickListener {
-            findNavController().popBackStack()
+            goBack()
         }
-        binding.back.visibility = if (resources.getBoolean(R.bool.isTablet)) View.INVISIBLE else View.VISIBLE
 
         binding.setNewContactClickListener {
             val copy = viewModel.callLog.remoteAddress.clone()
@@ -101,7 +102,10 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
                     val args = Bundle()
                     args.putString("URI", address.asStringUriOnly())
                     args.putBoolean("Transfer", sharedViewModel.pendingCallTransfer)
-                    args.putBoolean("SkipAutoCallStart", true) // If auto start call setting is enabled, ignore it
+                    args.putBoolean(
+                        "SkipAutoCallStart",
+                        true
+                    ) // If auto start call setting is enabled, ignore it
                     navigateToDialer(args)
                 } else {
                     val localAddress = callLog.localAddress
@@ -124,5 +128,9 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
                 (activity as MainActivity).showSnackBar(messageResourceId)
             }
         })
+    }
+
+    override fun goBack() {
+        sharedViewModel.closeSlidingPaneEvent.value = Event(true)
     }
 }
