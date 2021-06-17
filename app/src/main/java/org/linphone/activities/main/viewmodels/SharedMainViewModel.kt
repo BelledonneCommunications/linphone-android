@@ -29,6 +29,8 @@ import org.linphone.utils.Event
 class SharedMainViewModel : ViewModel() {
     val toggleDrawerEvent = MutableLiveData<Event<Boolean>>()
 
+    val cloneSlidingPaneEvent = MutableLiveData<Event<Boolean>>()
+
     /* Call history */
 
     val selectedCallLogGroup = MutableLiveData<GroupedCallLogData>()
