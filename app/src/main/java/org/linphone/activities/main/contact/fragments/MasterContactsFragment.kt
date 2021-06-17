@@ -124,7 +124,7 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
         binding.contactsList.addItemDecoration(AppUtils.getDividerDecoration(requireContext(), layoutManager))
 
         // Displays the first letter header
-        val headerItemDecoration = RecyclerViewHeaderDecoration(adapter)
+        val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
         binding.contactsList.addItemDecoration(headerItemDecoration)
 
         adapter.selectedContactEvent.observe(viewLifecycleOwner, {
