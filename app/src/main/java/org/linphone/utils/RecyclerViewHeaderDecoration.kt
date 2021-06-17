@@ -26,9 +26,8 @@ import android.util.SparseArray
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import org.linphone.R
 
-class RecyclerViewHeaderDecoration(private val adapter: HeaderAdapter) : RecyclerView.ItemDecoration() {
+class RecyclerViewHeaderDecoration(private val context: Context, private val adapter: HeaderAdapter) : RecyclerView.ItemDecoration() {
     private val headers: SparseArray<View> = SparseArray()
 
     override fun getItemOffsets(
@@ -54,10 +53,8 @@ class RecyclerViewHeaderDecoration(private val adapter: HeaderAdapter) : Recycle
             view.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         }
 
-        val displayMetrics = parent.context.resources.displayMetrics
-        val width = if (view.resources.getBoolean(R.bool.isTablet)) displayMetrics.widthPixels / 2 else displayMetrics.widthPixels
-        val widthSpec = View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY)
-        val heightSpec = View.MeasureSpec.makeMeasureSpec(displayMetrics.heightPixels, View.MeasureSpec.EXACTLY)
+        val widthSpec = View.MeasureSpec.makeMeasureSpec(parent.width, View.MeasureSpec.EXACTLY)
+        val heightSpec = View.MeasureSpec.makeMeasureSpec(parent.height, View.MeasureSpec.EXACTLY)
         val childWidth = ViewGroup.getChildMeasureSpec(widthSpec, parent.paddingLeft + parent.paddingRight, view.layoutParams.width)
         val childHeight = ViewGroup.getChildMeasureSpec(heightSpec, parent.paddingTop + parent.paddingBottom, view.layoutParams.height)
 
@@ -71,7 +68,7 @@ class RecyclerViewHeaderDecoration(private val adapter: HeaderAdapter) : Recycle
             val position = parent.getChildAdapterPosition(child)
             if (position != RecyclerView.NO_POSITION && adapter.displayHeaderForPosition(position)) {
                 canvas.save()
-                val headerView: View = headers.get(position) ?: adapter.getHeaderViewForPosition(parent.context, position)
+                val headerView: View = headers.get(position) ?: adapter.getHeaderViewForPosition(context, position)
                 canvas.translate(0f, child.y - headerView.height)
                 headerView.draw(canvas)
                 canvas.restore()
