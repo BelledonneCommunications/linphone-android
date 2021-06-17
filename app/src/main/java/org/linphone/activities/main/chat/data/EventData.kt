@@ -50,7 +50,7 @@ class EventData(private val eventLog: EventLog) : GenericContactData(
     }
 
     private fun getName(): String {
-        return contact.value?.fullName ?: displayName
+        return contact.value?.fullName ?: displayName.value ?: ""
     }
 
     private fun updateEventText() {

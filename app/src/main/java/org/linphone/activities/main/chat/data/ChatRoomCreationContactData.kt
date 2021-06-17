@@ -27,12 +27,9 @@ import org.linphone.core.*
 import org.linphone.utils.LinphoneUtils
 
 class ChatRoomCreationContactData(private val searchResult: SearchResult) : ContactDataInterface {
-    override val contact = MutableLiveData<Contact>()
-
-    override val displayName: String by lazy {
-        val address = searchResult.address
-        searchResult.friend?.name ?: if (address != null) LinphoneUtils.getDisplayName(address) else searchResult.phoneNumber.orEmpty()
-    }
+    override val contact: MutableLiveData<Contact> = MutableLiveData<Contact>()
+    override val displayName: MutableLiveData<String> = MutableLiveData<String>()
+    override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
 
     val isDisabled: MutableLiveData<Boolean> by lazy {
         MutableLiveData<Boolean>()
@@ -67,8 +64,10 @@ class ChatRoomCreationContactData(private val searchResult: SearchResult) : Cont
         val address = searchResult.address
         if (address != null) {
             contact.value = coreContext.contactsManager.findContactByAddress(address)
+            displayName.value = searchResult.friend?.name ?: LinphoneUtils.getDisplayName(address)
         } else if (searchResult.phoneNumber != null) {
             contact.value = coreContext.contactsManager.findContactByPhoneNumber(searchResult.phoneNumber.orEmpty())
+            displayName.value = searchResult.friend?.name ?: searchResult.phoneNumber.orEmpty()
         }
     }
 }

@@ -49,11 +49,12 @@ class ContactViewModelFactory(private val contact: Contact) :
 }
 
 class ContactViewModel(val contactInternal: Contact) : ErrorReportingViewModel(), ContactDataInterface {
-    override val contact = MutableLiveData<Contact>()
+    override val contact: MutableLiveData<Contact> = MutableLiveData<Contact>()
+    override val displayName: MutableLiveData<String> = MutableLiveData<String>()
+    override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
 
-    override val displayName: String by lazy {
-        contactInternal.fullName ?: contactInternal.firstName + " " + contactInternal.lastName
-    }
+    val name: String
+        get() = displayName.value ?: ""
 
     val displayOrganization = corePreferences.displayOrganization
 
@@ -125,6 +126,8 @@ class ContactViewModel(val contactInternal: Contact) : ErrorReportingViewModel()
 
     init {
         contact.value = contactInternal
+        displayName.value = contactInternal.fullName ?: contactInternal.firstName + " " + contactInternal.lastName
+
         updateNumbersAndAddresses(contactInternal)
         coreContext.contactsManager.addListener(contactsUpdatedListener)
         waitForChatRoomCreation.value = false

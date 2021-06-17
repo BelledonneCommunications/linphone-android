@@ -22,13 +22,9 @@ package org.linphone.activities.main.chat.data
 import androidx.lifecycle.MutableLiveData
 import org.linphone.activities.main.chat.GroupChatRoomMember
 import org.linphone.contact.GenericContactData
-import org.linphone.core.ChatRoomSecurityLevel
 import org.linphone.utils.LinphoneUtils
 
 class GroupInfoParticipantData(val participant: GroupChatRoomMember) : GenericContactData(participant.address) {
-    override val securityLevel: ChatRoomSecurityLevel
-        get() = participant.securityLevel
-
     val sipUri: String get() = LinphoneUtils.getDisplayableAddress(participant.address)
 
     val isAdmin = MutableLiveData<Boolean>()
@@ -39,6 +35,7 @@ class GroupInfoParticipantData(val participant: GroupChatRoomMember) : GenericCo
     val canBeSetAdmin = MutableLiveData<Boolean>()
 
     init {
+        securityLevel.value = participant.securityLevel
         isAdmin.value = participant.isAdmin
         showAdminControls.value = false
         canBeSetAdmin.value = participant.canBeSetAdmin

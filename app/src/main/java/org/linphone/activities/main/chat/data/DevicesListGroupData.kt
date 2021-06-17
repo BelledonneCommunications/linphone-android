@@ -28,9 +28,6 @@ import org.linphone.core.Participant
 import org.linphone.utils.LinphoneUtils
 
 class DevicesListGroupData(private val participant: Participant) : GenericContactData(participant.address) {
-    override val securityLevel: ChatRoomSecurityLevel
-        get() = participant.securityLevel
-
     private val device = if (participant.devices.isEmpty()) null else participant.devices.first()
 
     val securityLevelIcon: Int by lazy {
@@ -56,6 +53,7 @@ class DevicesListGroupData(private val participant: Participant) : GenericContac
     val devices = MutableLiveData<ArrayList<DevicesListChildData>>()
 
     init {
+        securityLevel.value = participant.securityLevel
         isExpanded.value = false
 
         val list = arrayListOf<DevicesListChildData>()

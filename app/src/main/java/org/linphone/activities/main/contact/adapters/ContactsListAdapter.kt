@@ -99,17 +99,17 @@ class ContactsListAdapter(
     override fun displayHeaderForPosition(position: Int): Boolean {
         if (position >= itemCount) return false
         val contact = getItem(position)
-        val firstLetter = contact.displayName.first().toString()
+        val firstLetter = contact.name.first().toString()
         val previousPosition = position - 1
         return if (previousPosition >= 0) {
-            val previousItemFirstLetter = getItem(previousPosition).displayName.first().toString()
+            val previousItemFirstLetter = getItem(previousPosition).name.first().toString()
             previousItemFirstLetter != firstLetter
         } else true
     }
 
     override fun getHeaderViewForPosition(context: Context, position: Int): View {
         val contact = getItem(position)
-        val firstLetter = AppUtils.getInitials(contact.displayName, 1)
+        val firstLetter = AppUtils.getInitials(contact.name, 1)
         val binding: GenericListHeaderBinding = DataBindingUtil.inflate(
             LayoutInflater.from(context),
             R.layout.generic_list_header, null, false
