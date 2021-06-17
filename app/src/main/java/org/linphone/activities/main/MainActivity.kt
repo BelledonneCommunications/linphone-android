@@ -35,6 +35,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
+import androidx.window.FoldingFeature
 import com.google.android.material.snackbar.Snackbar
 import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
@@ -54,6 +55,7 @@ import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.databinding.MainActivityBinding
 import org.linphone.utils.AppUtils
+import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 
 class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestinationChangedListener {
@@ -80,6 +82,10 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     private var initPosX = 0f
     private var initPosY = 0f
     private var overlay: View? = null
+
+    override fun onLayoutChanges(foldingFeature: FoldingFeature?) {
+        sharedViewModel.layoutChangedEvent.value = Event(true)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -170,9 +176,17 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
         when (destination.id) {
             R.id.masterCallLogsFragment, R.id.masterContactsFragment, R.id.dialerFragment, R.id.masterChatRoomsFragment ->
-                tabsFragment.visibility = View.VISIBLE
-            else -> tabsFragment.visibility = View.GONE
+                showTabsFragment()
+            else -> hideTabsFragment()
         }
+    }
+
+    fun showTabsFragment() {
+        tabsFragment.visibility = View.VISIBLE
+    }
+
+    fun hideTabsFragment() {
+        tabsFragment.visibility = View.GONE
     }
 
     fun hideStatusFragment() {
