@@ -55,7 +55,9 @@ class ChatRoomsListViewModel : ErrorReportingViewModel() {
     private val listener: CoreListenerStub = object : CoreListenerStub() {
         override fun onChatRoomStateChanged(core: Core, chatRoom: ChatRoom, state: ChatRoom.State) {
             if (state == ChatRoom.State.Created) {
-                addChatRoom(chatRoom)
+                if (chatRoom in core.chatRooms) { // Don't add empty chat room if 1-1 depending on policy
+                    addChatRoom(chatRoom)
+                }
             } else if (state == ChatRoom.State.TerminationFailed) {
                 Log.e("[Chat Rooms] Group chat room removal for address ${chatRoom.peerAddress.asStringUriOnly()} has failed !")
                 onErrorEvent.value = Event(R.string.chat_room_removal_failed_snack)
@@ -63,11 +65,19 @@ class ChatRoomsListViewModel : ErrorReportingViewModel() {
         }
 
         override fun onMessageSent(core: Core, chatRoom: ChatRoom, message: ChatMessage) {
-            if (findChatRoomIndex(chatRoom) != 0) reorderChatRooms()
+            when (findChatRoomIndex(chatRoom)) {
+                -1 -> addChatRoom(chatRoom)
+                0 -> {}
+                else -> reorderChatRooms()
+            }
         }
 
         override fun onMessageReceived(core: Core, chatRoom: ChatRoom, message: ChatMessage) {
-            if (findChatRoomIndex(chatRoom) != 0) reorderChatRooms()
+            when (findChatRoomIndex(chatRoom)) {
+                -1 -> addChatRoom(chatRoom)
+                0 -> {}
+                else -> reorderChatRooms()
+            }
         }
     }
 
