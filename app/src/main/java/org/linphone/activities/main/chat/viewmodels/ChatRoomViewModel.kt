@@ -229,7 +229,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         if (msg == null) return ""
 
         val account = coreContext.core.accountList.find { account ->
-            account.params.identityAddress?.asStringUriOnly() == msg.fromAddress.asStringUriOnly()
+            account.params.identityAddress?.weakEqual(msg.fromAddress) ?: false
         }
         val localDisplayName = account?.params?.identityAddress?.displayName
 
