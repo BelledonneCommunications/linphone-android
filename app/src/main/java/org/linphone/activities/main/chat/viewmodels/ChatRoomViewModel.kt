@@ -228,18 +228,9 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
     private fun formatLastMessage(msg: ChatMessage?): String {
         if (msg == null) return ""
 
-        val account = coreContext.core.accountList.find { account ->
-            account.params.identityAddress?.weakEqual(msg.fromAddress) ?: false
-        }
-        val localDisplayName = account?.params?.identityAddress?.displayName
-
         val sender: String =
-            if (msg.isOutgoing && localDisplayName != null) {
-                localDisplayName
-            } else {
-                coreContext.contactsManager.findContactByAddress(msg.fromAddress)?.fullName
-                    ?: LinphoneUtils.getDisplayName(msg.fromAddress)
-            }
+            coreContext.contactsManager.findContactByAddress(msg.fromAddress)?.fullName
+                ?: LinphoneUtils.getDisplayName(msg.fromAddress)
         var body = ""
         for (content in msg.contents) {
             if (content.isFile || content.isFileTransfer) body += content.name + " "

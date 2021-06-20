@@ -60,7 +60,8 @@ open class GenericContactData(private val sipAddress: Address) : ContactDataInte
 
     private fun contactLookup() {
         displayName.value = LinphoneUtils.getDisplayName(sipAddress)
-        contact.value = LinphoneApplication.coreContext.contactsManager.findContactByAddress(sipAddress)
+        contact.value =
+            LinphoneApplication.coreContext.contactsManager.findContactByAddress(sipAddress)
     }
 }
 

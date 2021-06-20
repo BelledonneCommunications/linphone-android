@@ -101,5 +101,6 @@ class SideMenuViewModel : ViewModel() {
     fun setPictureFromPath(picturePath: String) {
         corePreferences.defaultAccountAvatarPath = picturePath
         defaultAccountAvatar.value = corePreferences.defaultAccountAvatarPath
+        coreContext.contactsManager.updateLocalContacts()
     }
 }
