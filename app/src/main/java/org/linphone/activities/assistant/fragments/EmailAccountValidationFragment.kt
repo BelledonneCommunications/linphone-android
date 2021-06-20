@@ -22,6 +22,7 @@ package org.linphone.activities.assistant.fragments
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.assistant.AssistantActivity
@@ -49,6 +50,8 @@ class EmailAccountValidationFragment : GenericFragment<AssistantEmailAccountVali
 
         viewModel.leaveAssistantEvent.observe(viewLifecycleOwner, {
             it.consume {
+                coreContext.contactsManager.updateLocalContacts()
+
                 val args = Bundle()
                 args.putBoolean("AllowSkip", true)
                 args.putString("Username", viewModel.accountCreator.username)

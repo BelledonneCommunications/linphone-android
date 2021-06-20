@@ -51,6 +51,8 @@ open class Contact : Comparable<Contact> {
     // Raw SIP addresses are only used for contact edition
     var rawSipAddresses = arrayListOf<String>()
 
+    var thumbnailUri: Uri? = null
+
     var friend: Friend? = null
 
     override fun compareTo(other: Contact): Int {
@@ -126,7 +128,11 @@ open class Contact : Comparable<Contact> {
     }
 
     open fun getContactThumbnailPictureUri(): Uri? {
-        return null
+        return thumbnailUri
+    }
+
+    fun setContactThumbnailPictureUri(uri: Uri) {
+        thumbnailUri = uri
     }
 
     open fun getContactPictureUri(): Uri? {

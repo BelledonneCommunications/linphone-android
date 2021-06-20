@@ -84,6 +84,9 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
                 deleteAccount(account)
             } else {
                 update()
+                if (state == RegistrationState.Ok) {
+                    coreContext.contactsManager.updateLocalContacts()
+                }
             }
         }
     }

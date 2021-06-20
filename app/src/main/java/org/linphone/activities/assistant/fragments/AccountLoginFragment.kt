@@ -85,6 +85,8 @@ class AccountLoginFragment : AbstractPhoneFragment<AssistantAccountLoginFragment
 
         viewModel.leaveAssistantEvent.observe(viewLifecycleOwner, {
             it.consume {
+                coreContext.contactsManager.updateLocalContacts()
+
                 if (coreContext.core.isEchoCancellerCalibrationRequired) {
                     navigateToEchoCancellerCalibration()
                 } else {
