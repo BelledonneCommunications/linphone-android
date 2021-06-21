@@ -27,6 +27,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.GenericActivity
@@ -71,6 +72,11 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
         super.onDestroyView()
     }
 
+    override fun onResume() {
+        super.onResume()
+        sharedViewModel.canSlidingPaneBeClosed.value = binding.slidingPane.isSlideable
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -83,6 +89,13 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
         sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         }
+
+        sharedViewModel.closeSlidingPaneEvent.observe(viewLifecycleOwner, {
+            it.consume {
+                binding.slidingPane.close()
+            }
+        })
+        binding.slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
 
         _adapter = ChatRoomsListAdapter(listSelectionViewModel, viewLifecycleOwner)
         // SubmitList is done on a background thread
@@ -155,6 +168,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
                     Log.w("[Chat] Activity is pending destruction, don't start navigating now!")
                     sharedViewModel.destructionPendingChatRoom = chatRoom
                 } else {
+                    binding.slidingPane.openPane()
                     sharedViewModel.selectedChatRoom.value = chatRoom
                     navigateToChatRoom(AppUtils.createBundleWithSharedTextAndFiles(sharedViewModel))
                 }
@@ -182,11 +196,13 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
         }
 
         binding.setNewOneToOneChatRoomClickListener {
+            binding.slidingPane.openPane()
             sharedViewModel.chatRoomParticipants.value = arrayListOf()
             navigateToChatRoomCreation(false)
         }
 
         binding.setNewGroupChatRoomClickListener {
+            binding.slidingPane.openPane()
             sharedViewModel.selectedGroupChatRoom.value = null
             sharedViewModel.chatRoomParticipants.value = arrayListOf()
             navigateToChatRoomCreation(true)
@@ -194,6 +210,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
 
         val pendingDestructionChatRoom = sharedViewModel.destructionPendingChatRoom
         if (pendingDestructionChatRoom != null) {
+            binding.slidingPane.openPane()
             Log.w("[Chat] Found pending chat room from before activity was recreated")
             sharedViewModel.destructionPendingChatRoom = null
             sharedViewModel.selectedChatRoom.value = pendingDestructionChatRoom

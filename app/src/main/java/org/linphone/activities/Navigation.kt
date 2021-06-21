@@ -269,59 +269,31 @@ internal fun DialerFragment.navigateToConfigFileViewer() {
 /* Chat related */
 
 internal fun MasterChatRoomsFragment.navigateToChatRoom(args: Bundle) {
-    if (!resources.getBoolean(R.bool.isTablet)) {
-        if (findNavController().currentDestination?.id == R.id.masterChatRoomsFragment) {
-            findNavController().navigate(
-                R.id.action_masterChatRoomsFragment_to_detailChatRoomFragment,
-                args,
-                getRightToLeftAnimationNavOptions()
-            )
-        }
-    } else {
-        val navHostFragment =
-            childFragmentManager.findFragmentById(R.id.chat_nav_container) as NavHostFragment
-        navHostFragment.navController.navigate(
-            R.id.action_global_detailChatRoomFragment,
-            args,
-            getRightToLeftAnimationNavOptions(R.id.emptyChatFragment, true)
-        )
-    }
+    val navHostFragment =
+        childFragmentManager.findFragmentById(R.id.chat_nav_container) as NavHostFragment
+    navHostFragment.navController.navigate(
+        R.id.action_global_detailChatRoomFragment,
+        args,
+        popupTo(R.id.emptyChatFragment, true)
+    )
 }
 
 internal fun MasterChatRoomsFragment.navigateToChatRoomCreation(
     createGroupChatRoom: Boolean = false
 ) {
     val bundle = bundleOf("createGroup" to createGroupChatRoom)
-    if (!resources.getBoolean(R.bool.isTablet)) {
-        if (findNavController().currentDestination?.id == R.id.masterChatRoomsFragment) {
-            findNavController().navigate(
-                R.id.action_masterChatRoomsFragment_to_chatRoomCreationFragment,
-                bundle,
-                getRightToLeftAnimationNavOptions()
-            )
-        }
-    } else {
-        val navHostFragment =
-            childFragmentManager.findFragmentById(R.id.chat_nav_container) as NavHostFragment
-        navHostFragment.navController.navigate(
-            R.id.action_global_chatRoomCreationFragment,
-            bundle,
-            getRightToLeftAnimationNavOptions(R.id.emptyChatFragment, true)
-        )
-    }
+    val navHostFragment =
+        childFragmentManager.findFragmentById(R.id.chat_nav_container) as NavHostFragment
+    navHostFragment.navController.navigate(
+        R.id.action_global_chatRoomCreationFragment,
+        bundle,
+        popupTo(R.id.emptyChatFragment, true)
+    )
 }
 
 internal fun DetailChatRoomFragment.navigateToContacts(sipUriToAdd: String) {
     val deepLink = "linphone-android://contact/new/$sipUriToAdd"
     findMasterNavController().navigate(Uri.parse(deepLink), getLeftToRightAnimationNavOptions())
-}
-
-internal fun DetailChatRoomFragment.navigateToChatRooms() {
-    findMasterNavController().navigate(
-        R.id.action_global_masterChatRoomsFragment,
-        null,
-        getLeftToRightAnimationNavOptions(R.id.masterChatRoomsFragment)
-    )
 }
 
 internal fun DetailChatRoomFragment.navigateToImdn(args: Bundle?) {
@@ -421,19 +393,11 @@ internal fun ChatRoomCreationFragment.navigateToGroupInfo() {
 
 internal fun ChatRoomCreationFragment.navigateToChatRoom(args: Bundle) {
     if (findNavController().currentDestination?.id == R.id.chatRoomCreationFragment) {
-        if (!resources.getBoolean(R.bool.isTablet)) {
-            findNavController().navigate(
-                R.id.action_chatRoomCreationFragment_to_detailChatRoomFragment,
-                args,
-                getRightToLeftAnimationNavOptions()
-            )
-        } else {
-            findNavController().navigate(
-                R.id.action_chatRoomCreationFragment_to_detailChatRoomFragment,
-                args,
-                getRightToLeftAnimationNavOptions(R.id.emptyFragment, true)
-            )
-        }
+        findNavController().navigate(
+            R.id.action_chatRoomCreationFragment_to_detailChatRoomFragment,
+            args,
+            getRightToLeftAnimationNavOptions(R.id.emptyFragment, true)
+        )
     }
 }
 
@@ -448,19 +412,11 @@ internal fun GroupInfoFragment.navigateToChatRoomCreation(args: Bundle?) {
 
 internal fun GroupInfoFragment.navigateToChatRoom(args: Bundle?) {
     if (findNavController().currentDestination?.id == R.id.groupInfoFragment) {
-        if (!resources.getBoolean(R.bool.isTablet)) {
-            findNavController().navigate(
-                R.id.action_groupInfoFragment_to_detailChatRoomFragment,
-                args,
-                getRightToLeftAnimationNavOptions()
-            )
-        } else {
-            findNavController().navigate(
-                R.id.action_groupInfoFragment_to_detailChatRoomFragment,
-                args,
-                getRightToLeftAnimationNavOptions(R.id.emptyFragment, true)
-            )
-        }
+        findNavController().navigate(
+            R.id.action_groupInfoFragment_to_detailChatRoomFragment,
+            args,
+            getRightToLeftAnimationNavOptions(R.id.emptyFragment, true)
+        )
     }
 }
 
