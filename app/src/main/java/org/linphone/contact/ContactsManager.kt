@@ -166,7 +166,7 @@ class ContactsManager(private val context: Context) {
 
         for (account in coreContext.core.accountList) {
             val localContact = Contact()
-            localContact.fullName = account.params.identityAddress?.displayName
+            localContact.fullName = account.params.identityAddress?.displayName ?: account.params.identityAddress?.username
             val pictureUri = corePreferences.defaultAccountAvatarPath
             if (pictureUri != null) {
                 localContact.setContactThumbnailPictureUri(Uri.fromFile(File(pictureUri)))
