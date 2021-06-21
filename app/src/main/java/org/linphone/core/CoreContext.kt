@@ -266,12 +266,14 @@ class CoreContext(val context: Context, coreConfig: Config) {
             level: LogLevel,
             message: String
         ) {
-            when (level) {
-                LogLevel.Error -> android.util.Log.e(domain, message)
-                LogLevel.Warning -> android.util.Log.w(domain, message)
-                LogLevel.Message -> android.util.Log.i(domain, message)
-                LogLevel.Fatal -> android.util.Log.wtf(domain, message)
-                else -> android.util.Log.d(domain, message)
+            if (corePreferences.logcatLogsOutput) {
+                when (level) {
+                    LogLevel.Error -> android.util.Log.e(domain, message)
+                    LogLevel.Warning -> android.util.Log.w(domain, message)
+                    LogLevel.Message -> android.util.Log.i(domain, message)
+                    LogLevel.Fatal -> android.util.Log.wtf(domain, message)
+                    else -> android.util.Log.d(domain, message)
+                }
             }
             FirebaseCrashlytics.getInstance().log("[$domain] [${level.name}] $message")
         }
