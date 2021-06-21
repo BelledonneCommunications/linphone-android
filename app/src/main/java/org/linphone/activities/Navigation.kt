@@ -533,16 +533,8 @@ internal fun DetailCallLogFragment.navigateToDialer(args: Bundle?) {
 /* Settings related */
 
 internal fun SettingsFragment.navigateToAccountSettings(identity: String) {
-    val bundle = bundleOf("Identity" to identity)
-    if (!resources.getBoolean(R.bool.isTablet)) {
-        if (findNavController().currentDestination?.id == R.id.settingsFragment) {
-            findNavController().navigate(
-                R.id.action_settingsFragment_to_accountSettingsFragment,
-                bundle,
-                getRightToLeftAnimationNavOptions()
-            )
-        }
-    } else {
+    if (findNavController().currentDestination?.id == R.id.settingsFragment) {
+        val bundle = bundleOf("Identity" to identity)
         val navHostFragment =
             childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
         navHostFragment.navController.navigate(
@@ -554,15 +546,7 @@ internal fun SettingsFragment.navigateToAccountSettings(identity: String) {
 }
 
 internal fun SettingsFragment.navigateToTunnelSettings() {
-    if (!resources.getBoolean(R.bool.isTablet)) {
-        if (findNavController().currentDestination?.id == R.id.settingsFragment) {
-            findNavController().navigate(
-                R.id.action_settingsFragment_to_tunnelSettingsFragment,
-                null,
-                getRightToLeftAnimationNavOptions()
-            )
-        }
-    } else {
+    if (findNavController().currentDestination?.id == R.id.settingsFragment) {
         val navHostFragment =
             childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
         navHostFragment.navController.navigate(
@@ -574,15 +558,7 @@ internal fun SettingsFragment.navigateToTunnelSettings() {
 }
 
 internal fun SettingsFragment.navigateToAudioSettings() {
-    if (!resources.getBoolean(R.bool.isTablet)) {
-        if (findNavController().currentDestination?.id == R.id.settingsFragment) {
-            findNavController().navigate(
-                R.id.action_settingsFragment_to_audioSettingsFragment,
-                null,
-                getRightToLeftAnimationNavOptions()
-            )
-        }
-    } else {
+    if (findNavController().currentDestination?.id == R.id.settingsFragment) {
         val navHostFragment =
             childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
         navHostFragment.navController.navigate(
@@ -594,15 +570,7 @@ internal fun SettingsFragment.navigateToAudioSettings() {
 }
 
 internal fun SettingsFragment.navigateToVideoSettings() {
-    if (!resources.getBoolean(R.bool.isTablet)) {
-        if (findNavController().currentDestination?.id == R.id.settingsFragment) {
-            findNavController().navigate(
-                R.id.action_settingsFragment_to_videoSettingsFragment,
-                null,
-                getRightToLeftAnimationNavOptions()
-            )
-        }
-    } else {
+    if (findNavController().currentDestination?.id == R.id.settingsFragment) {
         val navHostFragment =
             childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
         navHostFragment.navController.navigate(
@@ -614,15 +582,7 @@ internal fun SettingsFragment.navigateToVideoSettings() {
 }
 
 internal fun SettingsFragment.navigateToCallSettings() {
-    if (!resources.getBoolean(R.bool.isTablet)) {
-        if (findNavController().currentDestination?.id == R.id.settingsFragment) {
-            findNavController().navigate(
-                R.id.action_settingsFragment_to_callSettingsFragment,
-                null,
-                getRightToLeftAnimationNavOptions()
-            )
-        }
-    } else {
+    if (findNavController().currentDestination?.id == R.id.settingsFragment) {
         val navHostFragment =
             childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
         navHostFragment.navController.navigate(
@@ -634,35 +594,19 @@ internal fun SettingsFragment.navigateToCallSettings() {
 }
 
 internal fun SettingsFragment.navigateToChatSettings() {
-    if (!resources.getBoolean(R.bool.isTablet)) {
-        if (findNavController().currentDestination?.id == R.id.settingsFragment) {
-            findNavController().navigate(
-                R.id.action_settingsFragment_to_chatSettingsFragment,
-                null,
-                getRightToLeftAnimationNavOptions()
-            )
-        }
-    } else {
+    if (findNavController().currentDestination?.id == R.id.settingsFragment) {
         val navHostFragment =
             childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
         navHostFragment.navController.navigate(
             R.id.action_global_chatSettingsFragment,
             null,
             getRightToLeftAnimationNavOptions()
-            )
+        )
     }
 }
 
 internal fun SettingsFragment.navigateToNetworkSettings() {
-    if (!resources.getBoolean(R.bool.isTablet)) {
-        if (findNavController().currentDestination?.id == R.id.settingsFragment) {
-            findNavController().navigate(
-                R.id.action_settingsFragment_to_networkSettingsFragment,
-                null,
-                getRightToLeftAnimationNavOptions()
-            )
-        }
-    } else {
+    if (findNavController().currentDestination?.id == R.id.settingsFragment) {
         val navHostFragment =
             childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
         navHostFragment.navController.navigate(
@@ -674,15 +618,7 @@ internal fun SettingsFragment.navigateToNetworkSettings() {
 }
 
 internal fun SettingsFragment.navigateToContactsSettings() {
-    if (!resources.getBoolean(R.bool.isTablet)) {
-        if (findNavController().currentDestination?.id == R.id.settingsFragment) {
-            findNavController().navigate(
-                R.id.action_settingsFragment_to_contactsSettingsFragment,
-                null,
-                getRightToLeftAnimationNavOptions()
-            )
-        }
-    } else {
+    if (findNavController().currentDestination?.id == R.id.settingsFragment) {
         val navHostFragment =
             childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
         navHostFragment.navController.navigate(
@@ -694,15 +630,7 @@ internal fun SettingsFragment.navigateToContactsSettings() {
 }
 
 internal fun SettingsFragment.navigateToAdvancedSettings() {
-    if (!resources.getBoolean(R.bool.isTablet)) {
-        if (findNavController().currentDestination?.id == R.id.settingsFragment) {
-            findNavController().navigate(
-                R.id.action_settingsFragment_to_advancedSettingsFragment,
-                null,
-                getRightToLeftAnimationNavOptions()
-            )
-        }
-    } else {
+    if (findNavController().currentDestination?.id == R.id.settingsFragment) {
         val navHostFragment =
             childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
         navHostFragment.navController.navigate(
