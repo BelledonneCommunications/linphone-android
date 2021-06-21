@@ -27,8 +27,8 @@ import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.activities.main.viewmodels.LogsUploadViewModel
 import org.linphone.core.CoreContext
 import org.linphone.core.Factory
+import org.linphone.core.LogLevel
 import org.linphone.mediastream.Version
-import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
 class AdvancedSettingsViewModel : LogsUploadViewModel() {
@@ -38,8 +38,8 @@ class AdvancedSettingsViewModel : LogsUploadViewModel() {
     val debugModeListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
             prefs.debugLogs = newValue
-            val appName = AppUtils.getString(R.string.app_name)
-            Factory.instance().setDebugMode(prefs.debugLogs, appName)
+            val logLevel = if (newValue) LogLevel.Message else LogLevel.Error
+            Factory.instance().loggingService.setLogLevel(logLevel)
         }
     }
     val debugMode = MutableLiveData<Boolean>()
