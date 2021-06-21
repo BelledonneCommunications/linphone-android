@@ -64,6 +64,9 @@ class CorePreferences constructor(private val context: Context) {
                 return
             }
             encryptedSharedPreferences.edit().putBoolean("vfs_enabled", value).apply()
+            // When VFS is enabled we disable logcat output for linphone logs
+            // TODO: decide if we do it
+            // logcatLogsOutput = false
         }
 
     /* App settings */
@@ -72,6 +75,12 @@ class CorePreferences constructor(private val context: Context) {
         get() = config.getBool("app", "debug", org.linphone.BuildConfig.DEBUG)
         set(value) {
             config.setBool("app", "debug", value)
+        }
+
+    var logcatLogsOutput: Boolean
+        get() = config.getBool("app", "print_logs_into_logcat", true)
+        set(value) {
+            config.setBool("app", "print_logs_into_logcat", value)
         }
 
     var autoStart: Boolean
