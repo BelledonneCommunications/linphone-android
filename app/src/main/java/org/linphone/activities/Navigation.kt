@@ -467,42 +467,24 @@ internal fun GroupInfoFragment.navigateToChatRoom(args: Bundle?) {
 /* Contacts related */
 
 internal fun MasterContactsFragment.navigateToContact() {
-    if (!resources.getBoolean(R.bool.isTablet)) {
-        if (findNavController().currentDestination?.id == R.id.masterContactsFragment) {
-            findNavController().navigate(R.id.action_masterContactsFragment_to_detailContactFragment,
-            null,
-            getRightToLeftAnimationNavOptions())
-        }
-    } else {
-        val navHostFragment =
-            childFragmentManager.findFragmentById(R.id.contacts_nav_container) as NavHostFragment
-        navHostFragment.navController.navigate(
-            R.id.action_global_detailContactFragment,
-            null,
-            getRightToLeftAnimationNavOptions(R.id.emptyContactFragment, true)
-        )
-    }
+    val navHostFragment =
+        childFragmentManager.findFragmentById(R.id.contacts_nav_container) as NavHostFragment
+    navHostFragment.navController.navigate(
+        R.id.action_global_detailContactFragment,
+        null,
+        popupTo(R.id.emptyContactFragment, true)
+    )
 }
 
 internal fun MasterContactsFragment.navigateToContactEditor(sipUriToAdd: String? = null) {
     val bundle = if (sipUriToAdd != null) bundleOf("SipUri" to sipUriToAdd) else Bundle()
-    if (!resources.getBoolean(R.bool.isTablet)) {
-        if (findNavController().currentDestination?.id == R.id.masterContactsFragment) {
-            findNavController().navigate(
-                R.id.action_masterContactsFragment_to_contactEditorFragment,
-                bundle,
-                getRightToLeftAnimationNavOptions()
-            )
-        }
-    } else {
-        val navHostFragment =
-            childFragmentManager.findFragmentById(R.id.contacts_nav_container) as NavHostFragment
-        navHostFragment.navController.navigate(
-            R.id.action_global_contactEditorFragment,
-            bundle,
-            getRightToLeftAnimationNavOptions()
-        )
-    }
+    val navHostFragment =
+        childFragmentManager.findFragmentById(R.id.contacts_nav_container) as NavHostFragment
+    navHostFragment.navController.navigate(
+        R.id.action_global_contactEditorFragment,
+        bundle,
+        popupTo()
+    )
 }
 
 internal fun ContactEditorFragment.navigateToContact(contact: NativeContact) {
@@ -511,24 +493,16 @@ internal fun ContactEditorFragment.navigateToContact(contact: NativeContact) {
     findNavController().navigate(
         R.id.action_contactEditorFragment_to_detailContactFragment,
         bundle,
-        getRightToLeftAnimationNavOptions(R.id.masterContactsFragment, false)
+        popupTo(R.id.masterContactsFragment, false)
     )
 }
 
 internal fun DetailContactFragment.navigateToChatRoom(args: Bundle?) {
-    if (!resources.getBoolean(R.bool.isTablet)) {
-        findNavController().navigate(
-            R.id.action_detailContactFragment_to_detailChatRoomFragment,
-            args,
-            getRightBottomToLeftTopAnimationNavOptions()
-        )
-    } else {
-        findMasterNavController().navigate(
-            R.id.action_global_masterChatRoomsFragment,
-            args,
-            getRightBottomToLeftTopAnimationNavOptions()
-        )
-    }
+    findMasterNavController().navigate(
+        R.id.action_global_masterChatRoomsFragment,
+        args,
+        getRightBottomToLeftTopAnimationNavOptions()
+    )
 }
 
 internal fun DetailContactFragment.navigateToDialer(args: Bundle?) {
@@ -544,7 +518,7 @@ internal fun DetailContactFragment.navigateToContactEditor() {
         findNavController().navigate(
             R.id.action_detailContactFragment_to_contactEditorFragment,
             null,
-            getRightToLeftAnimationNavOptions()
+            popupTo()
         )
     }
 }
