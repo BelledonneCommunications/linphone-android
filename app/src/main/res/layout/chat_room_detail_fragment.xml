@@ -70,7 +70,7 @@
                 android:layout_weight="@{viewModel.oneToOneChatRoom ? 0.4f : 0.6f}"
                 android:gravity="center_vertical|left"
                 android:orientation="vertical"
-                android:paddingLeft="5dp">
+                android:paddingLeft="15dp">
 
                 <org.linphone.views.MarqueeTextView
                     android:onClick="@{titleClickListener}"

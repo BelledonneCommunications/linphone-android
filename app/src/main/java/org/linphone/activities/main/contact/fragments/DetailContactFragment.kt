@@ -24,7 +24,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import androidx.activity.addCallback
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -48,14 +47,6 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
     private lateinit var sharedViewModel: SharedMainViewModel
 
     override fun getLayoutId(): Int = R.layout.contact_detail_fragment
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        requireActivity().onBackPressedDispatcher.addCallback(this) {
-            goBack()
-        }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -137,7 +128,7 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
         })
     }
 
-    private fun goBack() {
+    override fun goBack() {
         sharedViewModel.closeSlidingPaneEvent.value = Event(true)
     }
 

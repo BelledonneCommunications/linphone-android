@@ -80,9 +80,11 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
 
         sharedViewModel.closeSlidingPaneEvent.observe(viewLifecycleOwner, {
             it.consume {
-                    binding.slidingPane.close()
+                if (!binding.slidingPane.closePane()) {
+                    goBack()
                 }
-            })
+            }
+        })
         binding.slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
 
         _adapter = ContactsListAdapter(listSelectionViewModel, viewLifecycleOwner)

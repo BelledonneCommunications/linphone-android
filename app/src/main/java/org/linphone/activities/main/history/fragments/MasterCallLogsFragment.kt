@@ -78,7 +78,9 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
 
         sharedViewModel.closeSlidingPaneEvent.observe(viewLifecycleOwner, {
             it.consume {
-                binding.slidingPane.close()
+                if (!binding.slidingPane.closePane()) {
+                    goBack()
+                }
             }
         })
         binding.slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
