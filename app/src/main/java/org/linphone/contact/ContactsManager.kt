@@ -111,9 +111,7 @@ class ContactsManager(private val context: Context) {
             if (sipContactsListUpdated) {
                 sipContacts.sort()
                 Log.i("[Contacts Manager] Notifying observers that list has changed")
-                for (listener in contactsUpdatedListeners) {
-                    listener.onContactsUpdated()
-                }
+                notifyListeners()
             }
         }
     }
@@ -193,9 +191,7 @@ class ContactsManager(private val context: Context) {
         updateLocalContacts()
 
         Log.i("[Contacts Manager] Async fetching finished, notifying observers")
-        for (listener in contactsUpdatedListeners) {
-            listener.onContactsUpdated()
-        }
+        notifyListeners()
     }
 
     @Synchronized
@@ -264,6 +260,22 @@ class ContactsManager(private val context: Context) {
     @Synchronized
     fun removeListener(listener: ContactsUpdatedListener) {
         contactsUpdatedListeners.remove(listener)
+    }
+
+    @Synchronized
+    fun notifyListeners() {
+        val list = contactsUpdatedListeners.toMutableList()
+        for (listener in list) {
+            listener.onContactsUpdated()
+        }
+    }
+
+    @Synchronized
+    fun notifyListeners(contact: Contact) {
+        val list = contactsUpdatedListeners.toMutableList()
+        for (listener in list) {
+            listener.onContactUpdated(contact)
+        }
     }
 
     @Synchronized
@@ -351,9 +363,7 @@ class ContactsManager(private val context: Context) {
         if (loadContactsTask?.status == AsyncTask.Status.RUNNING) {
             Log.w("[Contacts Manager] Async contacts loader running, skip onContactUpdated listener notify")
         } else {
-            for (listener in contactsUpdatedListeners) {
-                listener.onContactUpdated(contact)
-            }
+            notifyListeners(contact)
         }
 
         if (!sipContacts.contains(contact)) {
@@ -376,9 +386,7 @@ class ContactsManager(private val context: Context) {
                         if (loadContactsTask?.status == AsyncTask.Status.RUNNING) {
                             Log.w("[Contacts Manager] Async contacts loader running, skip onContactUpdated listener notify")
                         } else {
-                            for (listener in contactsUpdatedListeners) {
-                                listener.onContactUpdated(contact)
-                            }
+                            notifyListeners(contact)
                         }
                     }
                 }
