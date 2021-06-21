@@ -29,7 +29,7 @@ import org.linphone.utils.Event
 class SharedMainViewModel : ViewModel() {
     val toggleDrawerEvent = MutableLiveData<Event<Boolean>>()
 
-    var canSlidingPaneBeClosed: Boolean = false
+    var canSlidingPaneBeClosed = MutableLiveData<Boolean>()
     val closeSlidingPaneEvent = MutableLiveData<Event<Boolean>>()
 
     /* Call history */

@@ -61,6 +61,7 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
         sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         }
+        binding.sharedMainViewModel = sharedViewModel
 
         val callLogGroup = sharedViewModel.selectedCallLogGroup.value
         if (callLogGroup == null) {
@@ -81,8 +82,6 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
         binding.setBackClickListener {
             goBack()
         }
-        binding.back.visibility =
-            if (sharedViewModel.canSlidingPaneBeClosed) View.VISIBLE else View.INVISIBLE
 
         binding.setNewContactClickListener {
             val copy = viewModel.callLog.remoteAddress.clone()

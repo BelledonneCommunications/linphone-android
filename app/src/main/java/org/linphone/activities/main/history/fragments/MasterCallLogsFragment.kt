@@ -82,7 +82,6 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
             }
         })
         binding.slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
-        sharedViewModel.canSlidingPaneBeClosed = binding.slidingPane.isSlideable
 
         _adapter = CallLogsListAdapter(listSelectionViewModel, viewLifecycleOwner)
         // SubmitList is done on a background thread
@@ -198,6 +197,8 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
 
     override fun onResume() {
         super.onResume()
+
+        sharedViewModel.canSlidingPaneBeClosed.value = binding.slidingPane.isSlideable
 
         coreContext.core.resetMissedCallsCount()
         coreContext.notificationsManager.dismissMissedCallNotification()

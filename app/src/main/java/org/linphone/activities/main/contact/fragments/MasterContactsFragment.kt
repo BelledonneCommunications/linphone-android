@@ -28,6 +28,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.main.MainActivity
@@ -60,6 +61,11 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
         super.onDestroyView()
     }
 
+    override fun onResume() {
+        super.onResume()
+        sharedViewModel.canSlidingPaneBeClosed.value = binding.slidingPane.isSlideable
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -71,6 +77,13 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
         sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         }
+
+        sharedViewModel.closeSlidingPaneEvent.observe(viewLifecycleOwner, {
+            it.consume {
+                    binding.slidingPane.close()
+                }
+            })
+        binding.slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
 
         _adapter = ContactsListAdapter(listSelectionViewModel, viewLifecycleOwner)
         binding.contactsList.setHasFixedSize(true)
@@ -133,6 +146,7 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
                 sharedViewModel.selectedContact.value = contact
                 listViewModel.filter.value = ""
 
+                binding.slidingPane.openPane()
                 if (editOnClick) {
                     navigateToContactEditor(sipUriToAdd)
                     editOnClick = false
@@ -174,6 +188,8 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
         binding.setNewContactClickListener {
             // Remove any previously selected contact
             sharedViewModel.selectedContact.value = null
+
+            binding.slidingPane.openPane()
             navigateToContactEditor(sipUriToAdd)
         }
 
