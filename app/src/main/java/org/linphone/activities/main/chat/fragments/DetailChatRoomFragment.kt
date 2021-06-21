@@ -107,6 +107,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         }
+        binding.sharedMainViewModel = sharedViewModel
 
         val localSipUri = arguments?.getString("LocalSipUri")
         val remoteSipUri = arguments?.getString("RemoteSipUri")
@@ -281,7 +282,6 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         binding.setBackClickListener {
             goBack()
         }
-        binding.back.visibility = if (resources.getBoolean(R.bool.isTablet)) View.INVISIBLE else View.VISIBLE
 
         binding.setTitleClickListener {
             binding.sipUri.visibility = if (!viewModel.oneToOneChatRoom ||
@@ -403,10 +403,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
     }
 
     private fun goBack() {
-        if (!findNavController().popBackStack(R.id.masterChatRoomsFragment, false)) {
-            Log.w("[Chat Room] No MasterChatRoomsFragment found in back stack")
-            navigateToChatRooms()
-        }
+        sharedViewModel.closeSlidingPaneEvent.value = Event(true)
     }
 
     private fun enterEditionMode() {
