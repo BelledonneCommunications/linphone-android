@@ -143,6 +143,12 @@
             android:text="@string/no_chat_history"
             android:visibility="@{viewModel.chatRooms.empty ? View.VISIBLE : View.GONE}" />
 
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="?attr/dividerColor" />
+
     </RelativeLayout>
 
     <androidx.fragment.app.FragmentContainerView

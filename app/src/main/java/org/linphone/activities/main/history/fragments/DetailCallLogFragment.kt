@@ -21,7 +21,6 @@ package org.linphone.activities.main.history.fragments
 
 import android.os.Bundle
 import android.view.View
-import androidx.activity.addCallback
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -44,14 +43,6 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
     private lateinit var sharedViewModel: SharedMainViewModel
 
     override fun getLayoutId(): Int = R.layout.history_detail_fragment
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        requireActivity().onBackPressedDispatcher.addCallback(this) {
-            goBack()
-        }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -139,7 +130,7 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
         })
     }
 
-    private fun goBack() {
+    override fun goBack() {
         sharedViewModel.closeSlidingPaneEvent.value = Event(true)
     }
 }
