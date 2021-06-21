@@ -80,10 +80,7 @@ class ContactsListViewModel : ViewModel() {
             getSelectedContactsList()
         }
 
-        // Prevent blinking items when list hasn't changed
-        if (list.isEmpty() || list.size != contactsList.value.orEmpty().size) {
-            contactsList.postValue(list)
-        }
+        contactsList.postValue(list)
     }
 
     fun deleteContact(contact: Contact?) {
