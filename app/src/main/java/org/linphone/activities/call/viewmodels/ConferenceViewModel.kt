@@ -37,6 +37,8 @@ class ConferenceViewModel : ViewModel() {
 
     val isInConference = MutableLiveData<Boolean>()
 
+    val isVideoConference = MutableLiveData<Boolean>()
+
     private val conferenceListener = object : ConferenceListenerStub() {
         override fun onParticipantAdded(conference: Conference, participant: Participant) {
             if (conference.isMe(participant.address)) {
@@ -75,6 +77,7 @@ class ConferenceViewModel : ViewModel() {
         ) {
             Log.i("[Conference VM] Conference state changed: $state")
             isConferencePaused.value = !conference.isIn
+            isVideoConference.value = coreContext.core.conference?.currentParams?.isVideoEnabled
 
             if (state == Conference.State.Instantiated) {
                 conference.addListener(conferenceListener)
@@ -97,6 +100,7 @@ class ConferenceViewModel : ViewModel() {
         isMeConferenceFocus.value = false
         conferenceParticipants.value = arrayListOf()
         isInConference.value = false
+        isVideoConference.value = coreContext.core.conference?.currentParams?.isVideoEnabled
 
         val conference = coreContext.core.conference
         if (conference != null) {

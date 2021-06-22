@@ -27,6 +27,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Patterns
 import android.view.LayoutInflater
+import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -47,6 +48,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.GenericActivity
+import org.linphone.activities.call.data.ConferenceParticipantData
 import org.linphone.activities.main.settings.SettingListener
 import org.linphone.contact.ContactAvatarView
 import org.linphone.core.tools.Log
@@ -531,4 +533,11 @@ fun setEditTextErrorListener(editText: EditText, attrChange: InverseBindingListe
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     })
+}
+
+@BindingAdapter("participantTextureView")
+fun setParticipantTextureView(textureView: TextureView, participant: ConferenceParticipantData) {
+    Log.i("[Conference] Setting textureView [$textureView] for participant [${participant.participant.address.asStringUriOnly()}] with [${participant.participant.devices.size}] devices")
+    // TODO handle multi devices participant
+    participant.participant.devices.firstOrNull()?.nativeVideoWindowId = textureView
 }

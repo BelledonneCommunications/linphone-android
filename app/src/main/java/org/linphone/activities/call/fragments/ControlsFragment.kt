@@ -77,7 +77,9 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
         controlsViewModel = ViewModelProvider(this).get(ControlsViewModel::class.java)
         binding.controlsViewModel = controlsViewModel
 
-        conferenceViewModel = ViewModelProvider(this).get(ConferenceViewModel::class.java)
+        conferenceViewModel = requireActivity().run {
+            ViewModelProvider(this).get(ConferenceViewModel::class.java)
+        }
         binding.conferenceViewModel = conferenceViewModel
 
         callsViewModel.currentCallViewModel.observe(viewLifecycleOwner, {
