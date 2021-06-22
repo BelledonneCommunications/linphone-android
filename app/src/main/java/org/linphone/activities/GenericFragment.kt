@@ -63,11 +63,18 @@ abstract class GenericFragment<T : ViewDataBinding> : Fragment() {
     }
 
     protected open fun goBack() {
-        if (!findNavController().popBackStack()) {
-            if (!findNavController().navigateUp()) {
-                onBackPressedCallback.isEnabled = false
-                requireActivity().onBackPressed()
+        // Be careful, not all GenericFragment subclass are using NavController
+        try {
+            val navController = findNavController()
+            if (!navController.popBackStack()) {
+                if (!navController.navigateUp()) {
+                    onBackPressedCallback.isEnabled = false
+                    requireActivity().onBackPressed()
+                }
             }
+        } catch (ise: IllegalStateException) {
+            onBackPressedCallback.isEnabled = false
+            requireActivity().onBackPressed()
         }
     }
 }

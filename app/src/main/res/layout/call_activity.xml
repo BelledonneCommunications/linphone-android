@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <import type="android.view.View" />
@@ -10,6 +11,9 @@
         <variable
             name="viewModel"
             type="org.linphone.activities.call.viewmodels.ControlsFadingViewModel" />
+        <variable
+            name="conferenceViewModel"
+            type="org.linphone.activities.call.viewmodels.ConferenceViewModel" />
     </data>
 
     <androidx.drawerlayout.widget.DrawerLayout
@@ -24,10 +28,23 @@
             android:layout_height="match_parent">
 
             <TextureView
-                android:onClick="@{() -> viewModel.showMomentarily()}"
                 android:id="@+id/remote_video_surface"
+                android:onClick="@{() -> viewModel.showMomentarily()}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
+
+            <com.google.android.flexbox.FlexboxLayout
+                android:onClick="@{() -> viewModel.showMomentarily()}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:longClickable="true"
+                app:entries="@{conferenceViewModel.conferenceParticipants}"
+                app:layout="@{@layout/call_video_conference_cell}"
+                app:flexWrap="wrap"
+                app:alignItems="center"
+                app:justifyContent="center"/>
 
             <org.linphone.mediastream.video.capture.CaptureTextureView
                 android:onTouch="@{previewTouchListener}"
