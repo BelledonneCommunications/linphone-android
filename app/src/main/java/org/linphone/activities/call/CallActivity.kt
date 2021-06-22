@@ -31,6 +31,7 @@ import kotlinx.coroutines.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.activities.call.viewmodels.ConferenceViewModel
 import org.linphone.activities.call.viewmodels.ControlsFadingViewModel
 import org.linphone.activities.call.viewmodels.SharedCallViewModel
 import org.linphone.compatibility.Compatibility
@@ -40,6 +41,7 @@ import org.linphone.databinding.CallActivityBinding
 class CallActivity : ProximitySensorActivity() {
     private lateinit var binding: CallActivityBinding
     private lateinit var viewModel: ControlsFadingViewModel
+    private lateinit var conferenceViewModel: ConferenceViewModel
     private lateinit var sharedViewModel: SharedCallViewModel
 
     private var previewX: Float = 0f
@@ -57,6 +59,9 @@ class CallActivity : ProximitySensorActivity() {
 
         viewModel = ViewModelProvider(this).get(ControlsFadingViewModel::class.java)
         binding.viewModel = viewModel
+
+        conferenceViewModel = ViewModelProvider(this).get(ConferenceViewModel::class.java)
+        binding.conferenceViewModel = conferenceViewModel
 
         sharedViewModel = ViewModelProvider(this).get(SharedCallViewModel::class.java)
 
