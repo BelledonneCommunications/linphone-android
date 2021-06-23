@@ -32,7 +32,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.util.Consumer
 import androidx.navigation.ActivityNavigator
-import androidx.window.FoldingFeature
 import androidx.window.WindowLayoutInfo
 import androidx.window.WindowManager
 import java.util.*
@@ -54,17 +53,7 @@ abstract class GenericActivity : AppCompatActivity() {
     inner class LayoutStateChangeCallback : Consumer<WindowLayoutInfo> {
         override fun accept(newLayoutInfo: WindowLayoutInfo) {
             Log.i("[Layout State Change] $newLayoutInfo")
-
-            if (newLayoutInfo.displayFeatures.isEmpty()) {
-                onLayoutChanges(null)
-            } else {
-                for (feature in newLayoutInfo.displayFeatures) {
-                    val foldingFeature = feature as? FoldingFeature
-                    if (foldingFeature != null) {
-                        onLayoutChanges(foldingFeature)
-                    }
-                }
-            }
+            onLayoutChanges(newLayoutInfo)
         }
     }
     private val layoutStateChangeCallback = LayoutStateChangeCallback()
@@ -91,7 +80,7 @@ abstract class GenericActivity : AppCompatActivity() {
         windowManagerX.unregisterLayoutChangeCallback(layoutStateChangeCallback)
     }
 
-    open fun onLayoutChanges(foldingFeature: FoldingFeature?) {
+    open fun onLayoutChanges(newLayoutInfo: WindowLayoutInfo) {
     }
 
     @SuppressLint("SourceLockedOrientationActivity")
