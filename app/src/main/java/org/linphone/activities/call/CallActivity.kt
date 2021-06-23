@@ -25,8 +25,11 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.window.FoldingFeature
+import androidx.window.WindowLayoutInfo
 import kotlinx.coroutines.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -105,6 +108,29 @@ class CallActivity : ProximitySensorActivity() {
         viewModel.proximitySensorEnabled.observe(this, {
             enableProximitySensor(it)
         })
+    }
+
+    override fun onLayoutChanges(newLayoutInfo: WindowLayoutInfo) {
+        if (newLayoutInfo.displayFeatures.isEmpty()) return
+
+        val foldingFeature = newLayoutInfo.displayFeatures.first() as? FoldingFeature
+        if (foldingFeature != null) {
+            val constraintLayout = binding.constraintLayout
+            val set = ConstraintSet()
+            set.clone(constraintLayout)
+
+            if (foldingFeature.state == FoldingFeature.STATE_HALF_OPENED) {
+                set.setGuidelinePercent(R.id.hinge_top, 0.5f)
+                set.setGuidelinePercent(R.id.hinge_bottom, 0.5f)
+                viewModel.disable(true)
+            } else {
+                set.setGuidelinePercent(R.id.hinge_top, 0f)
+                set.setGuidelinePercent(R.id.hinge_bottom, 1f)
+                viewModel.disable(false)
+            }
+
+            set.applyTo(constraintLayout)
+        }
     }
 
     override fun onResume() {
