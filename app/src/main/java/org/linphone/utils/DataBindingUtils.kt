@@ -27,6 +27,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Patterns
 import android.view.LayoutInflater
+import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -47,6 +48,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.GenericActivity
+import org.linphone.activities.call.fragments.VideoRenderable
 import org.linphone.activities.main.settings.SettingListener
 import org.linphone.contact.ContactAvatarView
 import org.linphone.core.tools.Log
@@ -531,4 +533,29 @@ fun setEditTextErrorListener(editText: EditText, attrChange: InverseBindingListe
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     })
+}
+
+@BindingAdapter("app:max")
+fun VoiceRecordProgressBar.setProgressMax(max: Int) {
+    setMax(max)
+}
+
+@BindingAdapter("android:progress")
+fun VoiceRecordProgressBar.setPrimaryProgress(progress: Int) {
+    setProgress(progress)
+}
+
+@BindingAdapter("android:secondaryProgress")
+fun VoiceRecordProgressBar.setSecProgress(progress: Int) {
+    setSecondaryProgress(progress)
+}
+
+@BindingAdapter("app:secondaryProgressTint")
+fun VoiceRecordProgressBar.setSecProgressTint(color: Int) {
+    setSecondaryProgressTint(color)
+}
+
+@BindingAdapter("participantTextureView")
+fun setParticipantTextureView(textureView: TextureView, videoRenderable: VideoRenderable) {
+    videoRenderable.setTextureView(textureView)
 }
