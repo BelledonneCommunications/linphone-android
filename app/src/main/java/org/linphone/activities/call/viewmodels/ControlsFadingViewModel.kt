@@ -40,11 +40,15 @@ class ControlsFadingViewModel : ViewModel() {
     val isVideoPreviewHidden = MutableLiveData<Boolean>()
     val isVideoPreviewResizedForPip = MutableLiveData<Boolean>()
 
-    private val videoEnabled = MutableLiveData<Boolean>()
-    private val nonEarpieceOutputAudioDevice = MutableLiveData<Boolean>()
+    val videoEnabled = MutableLiveData<Boolean>()
+
     val proximitySensorEnabled: MediatorLiveData<Boolean> = MediatorLiveData()
 
+    private val nonEarpieceOutputAudioDevice = MutableLiveData<Boolean>()
+
     private var timer: Timer? = null
+
+    private var disabled: Boolean = false
 
     private val listener = object : CoreListenerStub() {
         override fun onCallStateChanged(
@@ -109,6 +113,15 @@ class ControlsFadingViewModel : ViewModel() {
         startTimer()
     }
 
+    fun disable(disable: Boolean) {
+        disabled = disable
+        if (disabled) {
+            stopTimer()
+        } else {
+            startTimer()
+        }
+    }
+
     private fun shouldEnableProximitySensor(): Boolean {
         return !(videoEnabled.value ?: false) && !(nonEarpieceOutputAudioDevice.value ?: false)
     }
@@ -121,6 +134,7 @@ class ControlsFadingViewModel : ViewModel() {
 
     private fun startTimer() {
         timer?.cancel()
+        if (disabled) return
 
         timer = Timer("Hide UI controls scheduler")
         timer?.schedule(object : TimerTask() {
