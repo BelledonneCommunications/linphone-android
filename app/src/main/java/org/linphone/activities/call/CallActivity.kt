@@ -24,16 +24,17 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
 import android.view.Gravity
-import android.view.MotionEvent
 import android.view.View
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.window.FoldingFeature
+import androidx.window.WindowLayoutInfo
 import kotlinx.coroutines.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
-import org.linphone.activities.call.viewmodels.ControlsFadingViewModel
-import org.linphone.activities.call.viewmodels.SharedCallViewModel
+import org.linphone.activities.call.viewmodels.*
 import org.linphone.activities.main.MainActivity
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
@@ -44,9 +45,7 @@ class CallActivity : ProximitySensorActivity() {
     private lateinit var viewModel: ControlsFadingViewModel
     private lateinit var sharedViewModel: SharedCallViewModel
 
-    private var previewX: Float = 0f
-    private var previewY: Float = 0f
-    private lateinit var videoZoomHelper: VideoZoomHelper
+    private var foldingFeature: FoldingFeature? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +57,7 @@ class CallActivity : ProximitySensorActivity() {
         binding.lifecycleOwner = this
 
         viewModel = ViewModelProvider(this).get(ControlsFadingViewModel::class.java)
-        binding.viewModel = viewModel
+        binding.controlsFadingViewModel = viewModel
 
         sharedViewModel = ViewModelProvider(this).get(SharedCallViewModel::class.java)
 
@@ -78,35 +77,23 @@ class CallActivity : ProximitySensorActivity() {
             }
         })
 
-        coreContext.core.nativeVideoWindowId = binding.remoteVideoSurface
-        coreContext.core.nativePreviewWindowId = binding.localPreviewVideoSurface
-
-        binding.setPreviewTouchListener { v, event ->
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    previewX = v.x - event.rawX
-                    previewY = v.y - event.rawY
-                }
-                MotionEvent.ACTION_MOVE -> {
-                    v.animate()
-                        .x(event.rawX + previewX)
-                        .y(event.rawY + previewY)
-                        .setDuration(0)
-                        .start()
-                }
-                else -> {
-                    v.performClick()
-                    false
-                }
-            }
-            true
-        }
-
-        videoZoomHelper = VideoZoomHelper(this, binding.remoteVideoSurface)
-
         viewModel.proximitySensorEnabled.observe(this, {
             enableProximitySensor(it)
         })
+
+        viewModel.videoEnabled.observe(this, {
+            updateConstraintSetDependingOnFoldingState()
+        })
+    }
+
+    override fun onLayoutChanges(newLayoutInfo: WindowLayoutInfo) {
+        if (newLayoutInfo.displayFeatures.isEmpty()) return
+
+        val feature = newLayoutInfo.displayFeatures.first() as? FoldingFeature
+        if (feature != null) {
+            foldingFeature = feature
+            updateConstraintSetDependingOnFoldingState()
+        }
     }
 
     override fun onResume() {
@@ -196,5 +183,24 @@ class CallActivity : ProximitySensorActivity() {
                 View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
                 View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+    }
+
+    private fun updateConstraintSetDependingOnFoldingState() {
+        val feature = foldingFeature ?: return
+        val constraintLayout = binding.constraintLayout
+        val set = ConstraintSet()
+        set.clone(constraintLayout)
+
+        if (feature.state == FoldingFeature.State.HALF_OPENED && viewModel.videoEnabled.value == true) {
+            set.setGuidelinePercent(R.id.hinge_top, 0.5f)
+            set.setGuidelinePercent(R.id.hinge_bottom, 0.5f)
+            viewModel.disable(true)
+        } else {
+            set.setGuidelinePercent(R.id.hinge_top, 0f)
+            set.setGuidelinePercent(R.id.hinge_bottom, 1f)
+            viewModel.disable(false)
+        }
+
+        set.applyTo(constraintLayout)
     }
 }

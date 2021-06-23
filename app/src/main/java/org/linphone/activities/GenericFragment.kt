@@ -73,6 +73,7 @@ abstract class GenericFragment<T : ViewDataBinding> : Fragment() {
             }
         } catch (ise: IllegalStateException) {
             Log.e("[Generic Fragment] Can't go back: $ise")
+            // No NavController found
             onBackPressedCallback.isEnabled = false
             requireActivity().onBackPressed()
         }

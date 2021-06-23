@@ -39,7 +39,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
-import androidx.window.FoldingFeature
+import androidx.window.WindowLayoutInfo
 import com.google.android.material.snackbar.Snackbar
 import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
@@ -102,7 +102,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         }
     }
 
-    override fun onLayoutChanges(foldingFeature: FoldingFeature?) {
+    override fun onLayoutChanges(newLayoutInfo: WindowLayoutInfo) {
         sharedViewModel.layoutChangedEvent.value = Event(true)
     }
 
