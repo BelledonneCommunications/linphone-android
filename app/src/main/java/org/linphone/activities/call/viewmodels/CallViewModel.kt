@@ -19,6 +19,7 @@
  */
 package org.linphone.activities.call.viewmodels
 
+import android.view.TextureView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -28,6 +29,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.activities.call.fragments.VideoRenderable
 import org.linphone.compatibility.Compatibility
 import org.linphone.contact.GenericContactViewModel
 import org.linphone.core.Call
@@ -47,7 +49,7 @@ class CallViewModelFactory(private val call: Call) :
     }
 }
 
-open class CallViewModel(val call: Call) : GenericContactViewModel(call.remoteAddress) {
+open class CallViewModel(val call: Call) : GenericContactViewModel(call.remoteAddress), VideoRenderable {
     val address: String by lazy {
         LinphoneUtils.getDisplayableAddress(call.remoteAddress)
     }
@@ -119,6 +121,10 @@ open class CallViewModel(val call: Call) : GenericContactViewModel(call.remoteAd
     override fun onCleared() {
         destroy()
         super.onCleared()
+    }
+
+    override fun setTextureView(textureView: TextureView) {
+        coreContext.core.nativeVideoWindowId = textureView
     }
 
     fun destroy() {

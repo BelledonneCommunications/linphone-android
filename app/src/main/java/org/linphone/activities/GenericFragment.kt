@@ -63,11 +63,17 @@ abstract class GenericFragment<T : ViewDataBinding> : Fragment() {
     }
 
     protected open fun goBack() {
-        if (!findNavController().popBackStack()) {
-            if (!findNavController().navigateUp()) {
-                onBackPressedCallback.isEnabled = false
-                requireActivity().onBackPressed()
+        try {
+            if (!findNavController().popBackStack()) {
+                if (!findNavController().navigateUp()) {
+                    onBackPressedCallback.isEnabled = false
+                    requireActivity().onBackPressed()
+                }
             }
+        } catch (ise: IllegalStateException) {
+            // No NavController found
+            onBackPressedCallback.isEnabled = false
+            requireActivity().onBackPressed()
         }
     }
 }
