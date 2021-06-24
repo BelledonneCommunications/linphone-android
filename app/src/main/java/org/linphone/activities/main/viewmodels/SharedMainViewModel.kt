@@ -54,6 +54,8 @@ class SharedMainViewModel : ViewModel() {
 
     val chatRoomParticipants = MutableLiveData<ArrayList<Address>>()
 
+    var chatRoomSubject: String = ""
+
     /* Contacts */
 
     val selectedContact = MutableLiveData<Contact>()
