@@ -68,6 +68,11 @@ class ControlsFadingViewModel : ViewModel() {
                     stopTimer()
                 }
             }
+
+            if (core.currentCall == null) {
+                videoEnabled.value = false
+                stopTimer()
+            }
         }
 
         override fun onAudioDeviceChanged(core: Core, audioDevice: AudioDevice) {
