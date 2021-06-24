@@ -21,23 +21,31 @@
 
         <TextureView
             android:id="@+id/remote_video_surface"
+            android:onClick="@{() -> controlsFadingViewModel.showMomentarily()}"
+            android:visibility="@{conferenceViewModel.isVideoConference ? View.GONE : View.VISIBLE}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
 
-        <!--<com.google.android.flexbox.FlexboxLayout
+        <androidx.core.widget.NestedScrollView
             android:onClick="@{() -> controlsFadingViewModel.showMomentarily()}"
-            android:id="@+id/remote_video_mosaic_surfaces"
+            android:visibility="@{conferenceViewModel.isVideoConference ? View.VISIBLE : View.GONE, default=visible}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:entries="@{conferenceViewModel.activeCallsViewModel}"
-            app:layout="@{@layout/call_video_remote_cell}"
-            app:flexWrap="wrap"
-            app:alignItems="stretch"
-            app:justifyContent="flex_start" />-->
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <com.google.android.flexbox.FlexboxLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:entries="@{conferenceViewModel.conferenceParticipantDevices}"
+                app:layout="@{@layout/call_video_remote_cell}"
+                app:flexDirection="row"
+                app:flexWrap="wrap"
+                app:justifyContent="center"/>
+
+        </androidx.core.widget.NestedScrollView>
 
         <org.linphone.mediastream.video.capture.CaptureTextureView
             android:onTouch="@{previewTouchListener}"
