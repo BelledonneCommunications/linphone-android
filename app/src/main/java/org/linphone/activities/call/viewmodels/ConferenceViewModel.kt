@@ -23,6 +23,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.activities.call.data.ConferenceParticipantData
+import org.linphone.activities.call.data.ConferenceParticipantDeviceData
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 
@@ -34,8 +35,11 @@ class ConferenceViewModel : ViewModel() {
     val conferenceAddress = MutableLiveData<Address>()
 
     val conferenceParticipants = MutableLiveData<List<ConferenceParticipantData>>()
+    val conferenceParticipantDevices = MutableLiveData<List<ConferenceParticipantDeviceData>>()
 
     val isInConference = MutableLiveData<Boolean>()
+
+    val isVideoConference = MutableLiveData<Boolean>()
 
     private val conferenceListener = object : ConferenceListenerStub() {
         override fun onParticipantAdded(conference: Conference, participant: Participant) {
@@ -75,6 +79,7 @@ class ConferenceViewModel : ViewModel() {
         ) {
             Log.i("[Conference VM] Conference state changed: $state")
             isConferencePaused.value = !conference.isIn
+            isVideoConference.value = coreContext.core.conference?.currentParams?.isVideoEnabled
 
             if (state == Conference.State.Instantiated) {
                 conference.addListener(conferenceListener)
@@ -84,6 +89,7 @@ class ConferenceViewModel : ViewModel() {
                 conferenceAddress.value = conference.conferenceAddress
             } else if (state == Conference.State.Terminated || state == Conference.State.TerminationFailed) {
                 isInConference.value = false
+                isVideoConference.value = false
                 conference.removeListener(conferenceListener)
                 conferenceParticipants.value = arrayListOf()
             }
@@ -97,6 +103,7 @@ class ConferenceViewModel : ViewModel() {
         isMeConferenceFocus.value = false
         conferenceParticipants.value = arrayListOf()
         isInConference.value = false
+        isVideoConference.value = coreContext.core.conference?.currentParams?.isVideoEnabled
 
         val conference = coreContext.core.conference
         if (conference != null) {
@@ -146,12 +153,20 @@ class ConferenceViewModel : ViewModel() {
 
     private fun updateParticipantsList(conference: Conference) {
         val participants = arrayListOf<ConferenceParticipantData>()
+        val devices = arrayListOf<ConferenceParticipantDeviceData>()
+
         for (participant in conference.participantList) {
             Log.i("[Conference VM] Participant found: ${participant.address.asStringUriOnly()}")
-            val viewModel = ConferenceParticipantData(conference, participant)
-            participants.add(viewModel)
+            val participantData = ConferenceParticipantData(conference, participant)
+            participants.add(participantData)
+            for (device in participant.devices) {
+                val deviceData = ConferenceParticipantDeviceData(device)
+                devices.add(deviceData)
+            }
         }
+
         conferenceParticipants.value = participants
+        conferenceParticipantDevices.value = devices
         isInConference.value = participants.isNotEmpty()
     }
 }
