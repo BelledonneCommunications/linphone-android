@@ -28,10 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.core.AudioDevice
-import org.linphone.core.Call
-import org.linphone.core.Core
-import org.linphone.core.CoreListenerStub
+import org.linphone.core.*
 import org.linphone.core.tools.Log
 
 class ControlsFadingViewModel : ViewModel() {
@@ -57,17 +54,19 @@ class ControlsFadingViewModel : ViewModel() {
             state: Call.State,
             message: String
         ) {
-            if (state == Call.State.StreamsRunning || state == Call.State.Updating || state == Call.State.UpdatedByRemote) {
-                val isVideoCall = coreContext.isVideoCallOrConferenceActive()
-                Log.i("[Controls Fading] Call is in state $state, video is ${if (isVideoCall) "enabled" else "disabled"}")
-                if (isVideoCall) {
-                    videoEnabled.value = true
-                    startTimer()
-                } else {
-                    videoEnabled.value = false
-                    stopTimer()
-                }
-            }
+            val isVideoCall = coreContext.isVideoCallOrConferenceActive()
+            Log.i("[Controls Fading] Call is in state $state, video is ${if (isVideoCall) "enabled" else "disabled"}")
+            setVideoEnabled(isVideoCall)
+        }
+
+        override fun onConferenceStateChanged(
+            core: Core,
+            conference: Conference,
+            state: Conference.State?
+        ) {
+            val isVideoCall = coreContext.isVideoCallOrConferenceActive()
+            Log.i("[Controls Fading] Conference is in state $state, video is ${if (isVideoCall) "enabled" else "disabled"}")
+            setVideoEnabled(isVideoCall)
         }
 
         override fun onAudioDeviceChanged(core: Core, audioDevice: AudioDevice) {
@@ -119,6 +118,16 @@ class ControlsFadingViewModel : ViewModel() {
             stopTimer()
         } else {
             startTimer()
+        }
+    }
+
+    private fun setVideoEnabled(enabled: Boolean) {
+        if (enabled) {
+            videoEnabled.value = true
+            startTimer()
+        } else {
+            videoEnabled.value = false
+            stopTimer()
         }
     }
 

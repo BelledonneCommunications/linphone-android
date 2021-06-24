@@ -4,19 +4,26 @@
         <import type="android.view.View"/>
         <variable
             name="data"
-            type="org.linphone.activities.call.fragments.VideoRenderable" />
+            type="org.linphone.activities.call.data.ConferenceParticipantDeviceData" />
     </data>
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         android:background="@drawable/call_video_conference_participant_background">
 
         <TextureView
-            android:id="@+id/video_surface"
             participantTextureView="@{data}"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_width="175dp"
+            android:layout_height="100dp" />
+
+        <TextView
+            android:text="@{data.contact.fullName ?? data.displayName}"
+            android:textColor="@color/white_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"/>
 
     </RelativeLayout>
 
