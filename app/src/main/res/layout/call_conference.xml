@@ -70,7 +70,7 @@
             android:layout_height="1dp"
             android:background="?attr/dividerColor" />
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top">
@@ -82,7 +82,7 @@
                 app:entries="@{conferenceViewModel.conferenceParticipants}"
                 app:layout="@{@layout/call_conference_cell}"/>
 
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
 
     </LinearLayout>
 
