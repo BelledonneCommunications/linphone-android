@@ -57,13 +57,19 @@
 
         </LinearLayout>
 
-        <include layout="@layout/call_conference"
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            app:controlsViewModel="@{controlsViewModel}"
-            app:conferenceViewModel="@{conferenceViewModel}" />
+            android:layout_centerHorizontal="true">
+
+            <include layout="@layout/call_conference"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:controlsViewModel="@{controlsViewModel}"
+                app:conferenceViewModel="@{conferenceViewModel}" />
+
+        </androidx.core.widget.NestedScrollView>
 
         <org.linphone.contact.BigContactAvatarView
             android:visibility="@{viewModel.noActiveCall || controlsViewModel.isVideoEnabled || conferenceViewModel.isInConference ? View.GONE : View.VISIBLE, default=gone}"
@@ -102,16 +108,22 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
             android:id="@+id/paused_calls"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@id/primary_buttons_row"
-            android:layout_gravity="bottom"
-            android:background="?attr/backgroundColor"
-            android:orientation="vertical"
-            app:entries="@{viewModel.pausedCalls}"
-            app:layout="@{@layout/call_paused_cell}" />
+            android:layout_above="@id/primary_buttons_row">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="?attr/backgroundColor"
+                android:orientation="vertical"
+                app:entries="@{viewModel.pausedCalls}"
+                app:layout="@{@layout/call_paused_cell}" />
+
+        </androidx.core.widget.NestedScrollView>
 
         <include layout="@layout/conference_paused"
             android:layout_width="match_parent"
