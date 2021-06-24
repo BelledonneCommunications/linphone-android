@@ -48,7 +48,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.GenericActivity
-import org.linphone.activities.call.fragments.VideoRenderable
+import org.linphone.activities.call.data.ConferenceParticipantDeviceData
 import org.linphone.activities.main.settings.SettingListener
 import org.linphone.contact.ContactAvatarView
 import org.linphone.core.tools.Log
@@ -557,6 +557,9 @@ fun VoiceRecordProgressBar.setSecProgressTint(color: Int) {
 }
 
 @BindingAdapter("participantTextureView")
-fun setParticipantTextureView(textureView: TextureView, videoRenderable: VideoRenderable) {
-    videoRenderable.setTextureView(textureView)
+fun setParticipantTextureView(
+    textureView: TextureView,
+    conferenceParticipantData: ConferenceParticipantDeviceData
+) {
+    conferenceParticipantData.setTextureView(textureView)
 }
