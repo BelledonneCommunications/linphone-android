@@ -21,7 +21,6 @@ package org.linphone.activities.call.fragments
 
 import android.os.Bundle
 import android.view.MotionEvent
-import android.view.TextureView
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -32,10 +31,6 @@ import org.linphone.activities.call.viewmodels.CallsViewModel
 import org.linphone.activities.call.viewmodels.ConferenceViewModel
 import org.linphone.activities.call.viewmodels.ControlsFadingViewModel
 import org.linphone.databinding.CallVideoFragmentBinding
-
-interface VideoRenderable {
-    fun setTextureView(textureView: TextureView)
-}
 
 class VideoRenderingFragment : GenericFragment<CallVideoFragmentBinding>() {
     private lateinit var controlsFadingViewModel: ControlsFadingViewModel
