@@ -133,6 +133,7 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
                 list.add(participant.participant.address)
             }
             sharedViewModel.chatRoomParticipants.value = list
+            sharedViewModel.chatRoomSubject = viewModel.subject.value.orEmpty()
 
             val args = Bundle()
             args.putBoolean("createGroup", true)
@@ -182,6 +183,11 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
             }
 
             viewModel.participants.value = list
+        }
+
+        if (sharedViewModel.chatRoomSubject.isNotEmpty()) {
+            viewModel.subject.value = sharedViewModel.chatRoomSubject
+            sharedViewModel.chatRoomSubject = ""
         }
     }
 
