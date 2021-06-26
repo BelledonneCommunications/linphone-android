@@ -39,7 +39,7 @@
 
         <TextView
             android:id="@+id/recording_duration"
-            android:text="00:00"
+            android:text="@{viewModel.voiceRecordingDuration, default=`00:00`}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/play_pause_stop"

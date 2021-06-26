@@ -213,7 +213,7 @@
                 <ImageView
                     android:id="@+id/voice_record"
                     android:onClick="@{() -> chatSendingViewModel.startVoiceRecording()}"
-                    android:enabled="@{!chatSendingViewModel.isReadOnly}"
+                    android:enabled="@{!chatSendingViewModel.isReadOnly &amp;&amp; !chatSendingViewModel.isVoiceRecording}"
                     android:selected="@{chatSendingViewModel.isVoiceRecording}"
                     android:contentDescription="@string/content_description_send_message"
                     android:layout_width="wrap_content"
