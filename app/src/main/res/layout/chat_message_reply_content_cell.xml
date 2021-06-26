@@ -47,6 +47,16 @@
             android:contentDescription="@string/content_description_chat_message_video_attachment"
             android:layout_centerInParent="true"/>
 
+        <TextView
+            android:visibility="@{data.isVoiceRecording ? View.VISIBLE : View.GONE}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="2dp"
+            android:gravity="center"
+            android:text="@{data.formattedDuration, default=`00:00`}"
+            android:textColor="?attr/primaryTextColor"
+            android:drawableTop="@drawable/audio_recording_reply_preview_default"/>
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

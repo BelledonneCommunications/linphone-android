@@ -56,6 +56,7 @@ class ChatMessageContentData(
     val videoPreview = MutableLiveData<Bitmap>()
     val isPdf = MutableLiveData<Boolean>()
     val isGenericFile = MutableLiveData<Boolean>()
+    val isVoiceRecording = MutableLiveData<Boolean>()
 
     val fileName = MutableLiveData<String>()
     val filePath = MutableLiveData<String>()
@@ -197,11 +198,20 @@ class ChatMessageContentData(
 
             if (path.isNotEmpty()) {
                 Log.i("[Content] Found displayable content: $path")
+                val isVoiceRecord = content.isVoiceRecording
                 filePath.value = path
                 isImage.value = FileUtils.isExtensionImage(path)
                 isVideo.value = FileUtils.isExtensionVideo(path)
-                isAudio.value = FileUtils.isExtensionAudio(path)
+                isAudio.value = FileUtils.isExtensionAudio(path) && !isVoiceRecord
                 isPdf.value = FileUtils.isExtensionPdf(path)
+                isVoiceRecording.value = isVoiceRecord
+
+                if (isVoiceRecord) {
+                    val duration = content.fileDuration// duration is in ms
+                    voiceRecordDuration.value = duration
+                    formattedDuration.value = SimpleDateFormat("mm:ss", Locale.getDefault()).format(duration)
+                    Log.i("[Voice Recording] Duration is ${voiceRecordDuration.value} ($duration)")
+                }
 
                 if (isVideo.value == true) {
                     scope.launch {
@@ -214,6 +224,7 @@ class ChatMessageContentData(
                 isVideo.value = false
                 isAudio.value = false
                 isPdf.value = false
+                isVoiceRecording.value = false
             }
         } else {
             downloadable.value = true
@@ -221,9 +232,10 @@ class ChatMessageContentData(
             isVideo.value = FileUtils.isExtensionVideo(fileName.value!!)
             isAudio.value = FileUtils.isExtensionAudio(fileName.value!!)
             isPdf.value = FileUtils.isExtensionPdf(fileName.value!!)
+            isVoiceRecording.value = false
         }
 
-        isGenericFile.value = !isPdf.value!! && !isAudio.value!! && !isVideo.value!! && !isImage.value!!
+        isGenericFile.value = !isPdf.value!! && !isAudio.value!! && !isVideo.value!! && !isImage.value!! && !isVoiceRecording.value!!
         downloadEnabled.value = !chatMessage.isFileTransferInProgress
         downloadProgressInt.value = 0
         downloadProgressString.value = "0%"
