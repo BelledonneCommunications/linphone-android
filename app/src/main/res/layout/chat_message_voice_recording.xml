@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <import type="android.view.View"/>
@@ -26,20 +27,33 @@
             android:layout_marginRight="10dp"
             android:src="@drawable/delete" />
 
+        <org.linphone.views.VoiceRecordProgressBar
+            android:visibility="@{viewModel.isVoiceRecording ? View.GONE : View.VISIBLE}"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_toRightOf="@id/cancel_recording"
+            android:layout_toLeftOf="@id/recording_duration"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:progress="@{viewModel.voiceRecordPlayingPosition}"
+            android:secondaryProgress="@{viewModel.voiceRecordPlayingPosition}"
+            app:max="@{viewModel.voiceRecordingDuration}"
+            app:progressDrawable="@drawable/chat_message_audio_record_progress"
+            app:secondaryProgressTint="@{@color/green_color}"/>
+
         <ProgressBar
+            android:visibility="@{viewModel.isVoiceRecording ? View.VISIBLE : View.GONE}"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_toRightOf="@id/cancel_recording"
             android:layout_toLeftOf="@id/recording_duration"
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:progressDrawable="@drawable/chat_message_audio_record_preview_progress"
-            android:max="100"
-            android:secondaryProgress="25"
-            android:progress="50"/>
+            android:max="@{viewModel.voiceRecordingProgressBarMax}"
+            android:progress="@{viewModel.voiceRecordingDuration}"/>
 
         <TextView
             android:id="@+id/recording_duration"
-            android:text="00:00"
+            android:text="@{viewModel.formattedDuration, default=`00:00`}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/play_pause_stop"
