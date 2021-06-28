@@ -64,6 +64,7 @@ class ChatMessageContentData(
         get() {
             var count = 0
             for (content in chatMessage.contents) {
+                val content = getContent()
                 if (content.isFileTransfer || content.isFile) {
                     count += 1
                 }
@@ -72,7 +73,10 @@ class ChatMessageContentData(
         }
 
     var isFileEncrypted: Boolean = false
-    private lateinit var content: Content
+
+    private fun getContent(): Content {
+        return chatMessage.contents[contentIndex]
+    }
 
     private val chatMessageListener: ChatMessageListenerStub = object : ChatMessageListenerStub() {
         override fun onFileTransferProgressIndication(
@@ -81,7 +85,7 @@ class ChatMessageContentData(
             offset: Int,
             total: Int
         ) {
-            if (c.filePath == content.filePath) {
+            if (c.filePath == getContent().filePath) {
                 val percent = offset * 100 / total
                 Log.d("[Content] Download progress is: $offset / $total ($percent%)")
 
@@ -100,7 +104,7 @@ class ChatMessageContentData(
                     Log.i("[Chat Message] File transfer done")
                     if (!message.isOutgoing && !message.isEphemeral) {
                         Log.i("[Chat Message] Adding content to media store")
-                        coreContext.addContentToMediaStore(content)
+                        coreContext.addContentToMediaStore(getContent())
                     }
                 }
             }
@@ -128,6 +132,7 @@ class ChatMessageContentData(
     }
 
     fun download() {
+        val content = getContent()
         val filePath = content.filePath
         if (content.isFileTransfer && (filePath == null || filePath.isEmpty())) {
             val contentName = content.name
@@ -143,11 +148,11 @@ class ChatMessageContentData(
     }
 
     fun openFile() {
-        listener?.onContentClicked(content)
+        listener?.onContentClicked(getContent())
     }
 
     private fun updateContent() {
-        content = chatMessage.contents[contentIndex]
+        val content = getContent()
         isFileEncrypted = content.isFileEncrypted
 
         filePath.value = ""
