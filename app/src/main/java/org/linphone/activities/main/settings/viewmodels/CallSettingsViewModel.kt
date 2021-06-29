@@ -46,6 +46,9 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
         override fun onListValueChanged(position: Int) {
             core.mediaEncryption = MediaEncryption.fromInt(encryptionValues[position])
             encryptionIndex.value = position
+            if (position == 0) {
+                encryptionMandatory.value = false
+            }
         }
     }
     val encryptionIndex = MutableLiveData<Int>()
