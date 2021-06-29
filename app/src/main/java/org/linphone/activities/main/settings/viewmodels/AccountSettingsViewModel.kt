@@ -46,7 +46,9 @@ class AccountSettingsViewModelFactory(private val identity: String) :
         if (defaultAccount != null) {
             return AccountSettingsViewModel(defaultAccount) as T
         }
-        return coreContext.core.accountList.firstOrNull() as T
+
+        val firstAccount = coreContext.core.accountList.first()
+        return AccountSettingsViewModel(firstAccount) as T
     }
 }
 

@@ -108,8 +108,12 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
                 if (call.state == Call.State.StreamsRunning) {
                     dialog?.dismiss()
                 } else if (call.state == Call.State.UpdatedByRemote) {
-                    if (call.currentParams.videoEnabled() != call.remoteParams?.videoEnabled()) {
-                        showCallVideoUpdateDialog(call)
+                    if (coreContext.core.videoCaptureEnabled() || coreContext.core.videoDisplayEnabled()) {
+                        if (call.currentParams.videoEnabled() != call.remoteParams?.videoEnabled()) {
+                            showCallVideoUpdateDialog(call)
+                        }
+                    } else {
+                        Log.w("[Controls Fragment] Video display & capture are disabled, don't show video dialog")
                     }
                 }
             }
