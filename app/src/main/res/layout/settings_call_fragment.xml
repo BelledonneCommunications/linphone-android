@@ -89,8 +89,7 @@
                     linphone:title="@{@string/call_settings_encryption_mandatory_title}"
                     linphone:listener="@{viewModel.encryptionMandatoryListener}"
                     linphone:checked="@={viewModel.encryptionMandatory}"
-                    linphone:enabled="@{viewModel.encryptionIndex != 0}"
-                    android:visibility="@{viewModel.encryptionIndex != 0 ? View.VISIBLE : View.GONE}"/>
+                    linphone:enabled="@{viewModel.encryptionIndex != 0}" />
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/call_settings_full_screen_title}"

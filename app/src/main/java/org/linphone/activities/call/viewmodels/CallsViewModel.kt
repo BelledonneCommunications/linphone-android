@@ -78,8 +78,12 @@ class CallsViewModel : ViewModel() {
                 val localVideo = call.currentParams.videoEnabled()
                 val autoAccept = call.core.videoActivationPolicy.automaticallyAccept
                 if (remoteVideo && !localVideo && !autoAccept) {
-                    call.deferUpdate()
-                    callUpdateEvent.value = Event(call)
+                    if (coreContext.core.videoCaptureEnabled() || coreContext.core.videoDisplayEnabled()) {
+                        call.deferUpdate()
+                        callUpdateEvent.value = Event(call)
+                    } else {
+                        coreContext.answerCallVideoUpdateRequest(call, false)
+                    }
                 }
             } else if (state == Call.State.StreamsRunning) {
                 callUpdateEvent.value = Event(call)

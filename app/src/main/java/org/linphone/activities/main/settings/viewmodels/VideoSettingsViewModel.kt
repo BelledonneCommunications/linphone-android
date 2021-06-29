@@ -33,6 +33,11 @@ class VideoSettingsViewModel : GenericSettingsViewModel() {
         override fun onBoolValueChanged(newValue: Boolean) {
             core.enableVideoCapture(newValue)
             core.enableVideoDisplay(newValue)
+            if (!newValue) {
+                tabletPreview.value = false
+                initiateCall.value = false
+                autoAccept.value = false
+            }
         }
     }
     val enableVideo = MutableLiveData<Boolean>()
