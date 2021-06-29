@@ -75,7 +75,7 @@ class ImageUtils {
             var imageFilePath: String? = null
             if (data != null) {
                 val clipData = data.clipData
-                if (clipData != null) { // Multiple selection
+                if (clipData != null && clipData.itemCount > 1) { // Multiple selection
                     Log.i("[Image Utils] Found ${clipData.itemCount} elements")
                     val list = arrayListOf<String>()
                     for (i in 0 until clipData.itemCount) {
@@ -89,7 +89,11 @@ class ImageUtils {
                     }
                     return list
                 } else { // Single selection
-                    val dataUri = data.data
+                    val dataUri = if (clipData != null && clipData.itemCount == 1) {
+                        clipData.getItemAt(0).uri
+                    } else {
+                        data.data
+                    }
                     if (dataUri != null) {
                         imageFilePath = dataUri.toString()
                         Log.i("[Image Utils] Using data URI $imageFilePath")
@@ -113,10 +117,14 @@ class ImageUtils {
             var imageFilePath: String? = null
             if (data != null) {
                 val clipData = data.clipData
-                if (clipData != null) { // Multiple selection
+                if (clipData != null && clipData.itemCount > 1) { // Multiple selection
                     Log.e("[Image Utils] Expecting only one file, got ${clipData.itemCount}")
                 } else { // Single selection
-                    val dataUri = data.data
+                    val dataUri = if (clipData != null && clipData.itemCount == 1) {
+                        clipData.getItemAt(0).uri
+                    } else {
+                        data.data
+                    }
                     if (dataUri != null) {
                         imageFilePath = dataUri.toString()
                         Log.i("[Image Utils] Using data URI $imageFilePath")
