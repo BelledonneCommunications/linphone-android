@@ -89,7 +89,7 @@ android {
     defaultConfig {
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 4495
+        versionCode 4500
         versionName "${project.version}"
         applicationId getPackageName()
     }
