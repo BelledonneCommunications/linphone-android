@@ -118,139 +118,144 @@
 
         </RelativeLayout>
 
-        <LinearLayout
-            android:visibility="@{viewModel.showAccounts ? View.VISIBLE : View.GONE}"
-            android:id="@+id/additional_accounts"
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_below="@id/main_account"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:entries="@{viewModel.accounts}"
-            app:layout="@{@layout/side_menu_account_cell}"/>
-
-        <LinearLayout
-            android:layout_below="@id/additional_accounts"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_above="@id/side_menu_quit">
 
             <LinearLayout
-                android:onClick="@{assistantClickListener}"
-                android:visibility="@{viewModel.showAssistant ? View.VISIBLE : View.GONE}"
                 android:layout_width="match_parent"
-                android:layout_height="45dp">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <ImageView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:padding="10dp"
-                    android:contentDescription="@string/assistant"
-                    android:src="@drawable/menu_assistant" />
-
-                <TextView
-                    android:text="@string/assistant"
-                    style="@style/standard_text_font"
+                <LinearLayout
+                    android:visibility="@{viewModel.showAccounts ? View.VISIBLE : View.GONE}"
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="16dp" />
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:entries="@{viewModel.accounts}"
+                    app:layout="@{@layout/side_menu_account_cell}"/>
+
+                <LinearLayout
+                    android:onClick="@{assistantClickListener}"
+                    android:visibility="@{viewModel.showAssistant ? View.VISIBLE : View.GONE}"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp">
+
+                    <ImageView
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:padding="10dp"
+                        android:contentDescription="@string/assistant"
+                        android:src="@drawable/menu_assistant" />
+
+                    <TextView
+                        android:text="@string/assistant"
+                        style="@style/standard_text_font"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="16dp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?dividerColor" />
+
+                <LinearLayout
+                    android:onClick="@{settingsClickListener}"
+                    android:visibility="@{viewModel.showSettings ? View.VISIBLE : View.GONE}"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp">
+
+                    <ImageView
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:padding="10dp"
+                        android:contentDescription="@string/settings"
+                        android:src="@drawable/menu_options" />
+
+                    <TextView
+                        android:text="@string/settings"
+                        style="@style/standard_text_font"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="16dp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?dividerColor" />
+
+                <LinearLayout
+                    android:onClick="@{recordingsClickListener}"
+                    android:visibility="@{viewModel.showRecordings ? View.VISIBLE : View.GONE}"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp">
+
+                    <ImageView
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:padding="10dp"
+                        android:contentDescription="@string/recordings"
+                        android:src="@drawable/menu_recordings" />
+
+                    <TextView
+                        android:text="@string/recordings"
+                        style="@style/standard_text_font"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="16dp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?dividerColor" />
+
+                <LinearLayout
+                    android:onClick="@{aboutClickListener}"
+                    android:visibility="@{viewModel.showAbout ? View.VISIBLE : View.GONE}"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp">
+
+                    <ImageView
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:padding="10dp"
+                        android:contentDescription="@string/about"
+                        android:src="@drawable/menu_about" />
+
+                    <TextView
+                        android:text="@string/about"
+                        style="@style/standard_text_font"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="16dp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?dividerColor" />
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?dividerColor" />
-
-            <LinearLayout
-                android:onClick="@{settingsClickListener}"
-                android:visibility="@{viewModel.showSettings ? View.VISIBLE : View.GONE}"
-                android:layout_width="match_parent"
-                android:layout_height="45dp">
-
-                <ImageView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:padding="10dp"
-                    android:contentDescription="@string/settings"
-                    android:src="@drawable/menu_options" />
-
-                <TextView
-                    android:text="@string/settings"
-                    style="@style/standard_text_font"
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="16dp" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?dividerColor" />
-
-            <LinearLayout
-                android:onClick="@{recordingsClickListener}"
-                android:visibility="@{viewModel.showRecordings ? View.VISIBLE : View.GONE}"
-                android:layout_width="match_parent"
-                android:layout_height="45dp">
-
-                <ImageView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:padding="10dp"
-                    android:contentDescription="@string/recordings"
-                    android:src="@drawable/menu_recordings" />
-
-                <TextView
-                    android:text="@string/recordings"
-                    style="@style/standard_text_font"
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="16dp" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?dividerColor" />
-
-            <LinearLayout
-                android:onClick="@{aboutClickListener}"
-                android:visibility="@{viewModel.showAbout ? View.VISIBLE : View.GONE}"
-                android:layout_width="match_parent"
-                android:layout_height="45dp">
-
-                <ImageView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:padding="10dp"
-                    android:contentDescription="@string/about"
-                    android:src="@drawable/menu_about" />
-
-                <TextView
-                    android:text="@string/about"
-                    style="@style/standard_text_font"
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="16dp" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?dividerColor" />
-
-        </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
 
         <LinearLayout
             android:id="@+id/side_menu_quit"

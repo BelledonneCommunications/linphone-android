@@ -74,11 +74,12 @@ class GenericLoginViewModel(private val accountCreator: AccountCreator) : ViewMo
         ) {
             if (cfg == proxyConfigToCheck) {
                 Log.i("[Assistant] [Generic Login] Registration state is $state: $message")
-                waitForServerAnswer.value = false
                 if (state == RegistrationState.Ok) {
+                    waitForServerAnswer.value = false
                     leaveAssistantEvent.value = Event(true)
                     core.removeListener(this)
                 } else if (state == RegistrationState.Failed) {
+                    waitForServerAnswer.value = false
                     invalidCredentialsEvent.value = Event(true)
                     core.removeListener(this)
                 }
