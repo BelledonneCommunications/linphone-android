@@ -98,12 +98,6 @@ class RecordingsFragment : MasterFragment<RecordingsFragmentBinding, RecordingsL
             true
         }
 
-        adapter.isVideoRecordingPlayingEvent.observe(viewLifecycleOwner, {
-            it.consume { value ->
-                viewModel.isVideoVisible.value = value
-            }
-        })
-
         adapter.setVideoTextureView(binding.recordingVideoSurface)
     }
 

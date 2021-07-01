@@ -35,7 +35,7 @@ import org.linphone.core.PlayerListener
 import org.linphone.core.tools.Log
 import org.linphone.utils.LinphoneUtils
 
-class RecordingData(val path: String) : Comparable<RecordingData> {
+class RecordingData(val path: String, private val recordingListener: RecordingListener) : Comparable<RecordingData> {
     companion object {
         val RECORD_PATTERN: Pattern =
             Pattern.compile(".*/(.*)_(\\d{2}-\\d{2}-\\d{4}-\\d{2}-\\d{2}-\\d{2})\\..*")
@@ -57,6 +57,7 @@ class RecordingData(val path: String) : Comparable<RecordingData> {
     private val listener = PlayerListener {
         Log.i("[Recording] End of file reached")
         stop()
+        recordingListener.onPlayingEnded()
     }
 
     private val textureViewListener = object : TextureView.SurfaceTextureListener {
@@ -118,6 +119,8 @@ class RecordingData(val path: String) : Comparable<RecordingData> {
             player.open(path)
             player.seek(0)
         }
+        recordingListener.onPlayingStarted(isVideoAvailable())
+
         player.start()
         isPlaying.value = true
 
@@ -201,5 +204,10 @@ class RecordingData(val path: String) : Comparable<RecordingData> {
 
     private fun isClosed(): Boolean {
         return player.state == Player.State.Closed
+    }
+
+    interface RecordingListener {
+        fun onPlayingStarted(videoAvailable: Boolean)
+        fun onPlayingEnded()
     }
 }
