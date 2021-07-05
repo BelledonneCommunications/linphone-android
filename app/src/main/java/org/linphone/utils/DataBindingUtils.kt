@@ -29,7 +29,6 @@ import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import android.widget.*
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -51,6 +50,7 @@ import org.linphone.activities.GenericActivity
 import org.linphone.activities.main.settings.SettingListener
 import org.linphone.contact.ContactAvatarView
 import org.linphone.core.tools.Log
+import org.linphone.views.VoiceRecordProgressBar
 
 /**
  * This file contains all the data binding necessary for the app
@@ -92,6 +92,7 @@ fun ImageView.setImageMaxHeight(dimension: Float) {
 
 @BindingAdapter("android:layout_size")
 fun View.setLayoutSize(dimension: Float) {
+    if (dimension == 0f) return
     this.layoutParams.height = dimension.toInt()
     this.layoutParams.width = dimension.toInt()
 }
@@ -174,23 +175,9 @@ fun switchSetting(view: View, switchId: Int) {
 
 @BindingAdapter("onValueChanged")
 fun editTextSetting(view: EditText, lambda: () -> Unit) {
-    view.setOnFocusChangeListener { _, hasFocus ->
-        if (!hasFocus) lambda()
-    }
-
-    view.setOnEditorActionListener { _, actionId, _ ->
-        if (actionId == EditorInfo.IME_ACTION_DONE) {
-            lambda()
-            true
-        }
-        false
-    }
-
     view.addTextChangedListener(object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
-            if (s?.isEmpty() == true) {
-                lambda()
-            }
+            lambda()
         }
 
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -302,6 +289,11 @@ fun <T> setEntries(
     parent: Any?
 ) {
     setEntries(viewGroup, entries, layoutId, null, parent)
+}
+
+@BindingAdapter("android:scaleType")
+fun setImageViewScaleType(imageView: ImageView, scaleType: ImageView.ScaleType) {
+    imageView.scaleType = scaleType
 }
 
 @BindingAdapter("glideAvatarFallback")
@@ -540,4 +532,24 @@ fun setEditTextErrorListener(editText: EditText, attrChange: InverseBindingListe
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     })
+}
+
+@BindingAdapter("app:max")
+fun VoiceRecordProgressBar.setProgressMax(max: Int) {
+    setMax(max)
+}
+
+@BindingAdapter("android:progress")
+fun VoiceRecordProgressBar.setPrimaryProgress(progress: Int) {
+    setProgress(progress)
+}
+
+@BindingAdapter("android:secondaryProgress")
+fun VoiceRecordProgressBar.setSecProgress(progress: Int) {
+    setSecondaryProgress(progress)
+}
+
+@BindingAdapter("app:secondaryProgressTint")
+fun VoiceRecordProgressBar.setSecProgressTint(color: Int) {
+    setSecondaryProgressTint(color)
 }

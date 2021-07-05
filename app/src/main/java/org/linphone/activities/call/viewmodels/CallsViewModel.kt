@@ -30,6 +30,8 @@ import org.linphone.utils.PermissionHelper
 class CallsViewModel : ViewModel() {
     val currentCallViewModel = MutableLiveData<CallViewModel>()
 
+    val noActiveCall = MutableLiveData<Boolean>()
+
     val callPausedByRemote = MutableLiveData<Boolean>()
 
     val pausedCalls = MutableLiveData<ArrayList<CallViewModel>>()
@@ -52,10 +54,10 @@ class CallsViewModel : ViewModel() {
             callPausedByRemote.value = (state == Call.State.PausedByRemote) and (call.conference == null)
 
             val currentCall = core.currentCall
+            noActiveCall.value = currentCall == null
             if (currentCall == null) {
                 currentCallViewModel.value?.destroy()
-                currentCallViewModel.value = null
-            } else if (currentCallViewModel.value == null) {
+            } else if (currentCallViewModel.value?.call != currentCall) {
                 currentCallViewModel.value = CallViewModel(currentCall)
             }
 
@@ -76,8 +78,12 @@ class CallsViewModel : ViewModel() {
                 val localVideo = call.currentParams.videoEnabled()
                 val autoAccept = call.core.videoActivationPolicy.automaticallyAccept
                 if (remoteVideo && !localVideo && !autoAccept) {
-                    call.deferUpdate()
-                    callUpdateEvent.value = Event(call)
+                    if (coreContext.core.videoCaptureEnabled() || coreContext.core.videoDisplayEnabled()) {
+                        call.deferUpdate()
+                        callUpdateEvent.value = Event(call)
+                    } else {
+                        coreContext.answerCallVideoUpdateRequest(call, false)
+                    }
                 }
             } else if (state == Call.State.StreamsRunning) {
                 callUpdateEvent.value = Event(call)
@@ -89,6 +95,7 @@ class CallsViewModel : ViewModel() {
         coreContext.core.addListener(listener)
 
         val currentCall = coreContext.core.currentCall
+        noActiveCall.value = currentCall == null
         if (currentCall != null) {
             currentCallViewModel.value?.destroy()
             currentCallViewModel.value = CallViewModel(currentCall)

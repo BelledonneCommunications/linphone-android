@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="clickListener"
+            type="android.view.View.OnClickListener" />
+        <variable
+            name="data"
+            type="org.linphone.activities.main.chat.data.ChatMessageData" />
+    </data>
+
+    <LinearLayout
+        android:background="@drawable/chat_bubble_reply_background"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        android:onClick="@{clickListener}">
+
+        <View
+            android:id="@+id/color"
+            android:layout_width="10dp"
+            android:layout_height="match_parent"
+            android:background="@{data.chatMessage.isOutgoing ? @drawable/chat_bubble_reply_outgoing_indicator : @drawable/chat_bubble_reply_incoming_indicator, default=@drawable/chat_bubble_reply_outgoing_indicator}" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:visibility="@{data.contents.size() > 0 ? View.VISIBLE : View.GONE}">
+
+            <com.google.android.flexbox.FlexboxLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintWidth_max="120dp"
+                app:entries="@{data.contents}"
+                app:layout="@{@layout/chat_message_reply_content_cell}"
+                app:flexWrap="wrap"
+                app:alignItems="center"
+                app:justifyContent="flex_start"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/chat_message_reply_sender_font"
+                android:text="@{data.contact.fullName ?? data.displayName, default=Tintin}"/>
+
+            <TextView
+                android:visibility="@{data.text.length() == 0 ? View.GONE : View.VISIBLE}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="false"
+                android:layout_marginTop="5dp"
+                style="@style/chat_message_reply_font"
+                android:text="@{data.text, default=`Lorem ipsum`}"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</layout>

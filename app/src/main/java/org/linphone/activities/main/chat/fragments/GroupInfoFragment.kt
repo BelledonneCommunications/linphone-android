@@ -24,12 +24,12 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.R
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.chat.GroupChatRoomMember
 import org.linphone.activities.main.chat.adapters.GroupInfoParticipantsAdapter
+import org.linphone.activities.main.chat.data.GroupInfoParticipantData
 import org.linphone.activities.main.chat.viewmodels.GroupInfoViewModel
 import org.linphone.activities.main.chat.viewmodels.GroupInfoViewModelFactory
 import org.linphone.activities.main.fragments.SecureFragment
@@ -41,6 +41,7 @@ import org.linphone.core.Address
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomCapabilities
 import org.linphone.databinding.ChatRoomGroupInfoFragmentBinding
+import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
 
 class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
@@ -81,9 +82,7 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
         binding.participants.layoutManager = layoutManager
 
         // Divider between items
-        val dividerItemDecoration = DividerItemDecoration(context, layoutManager.orientation)
-        dividerItemDecoration.setDrawable(resources.getDrawable(R.drawable.divider, null))
-        binding.participants.addItemDecoration(dividerItemDecoration)
+        binding.participants.addItemDecoration(AppUtils.getDividerDecoration(requireContext(), layoutManager))
 
         viewModel.participants.observe(viewLifecycleOwner, {
             adapter.submitList(it)
@@ -114,7 +113,7 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
         viewModel.createdChatRoomEvent.observe(viewLifecycleOwner, {
             it.consume { chatRoom ->
                 sharedViewModel.selectedChatRoom.value = chatRoom
-                navigateToChatRoom()
+                navigateToChatRoom(AppUtils.createBundleWithSharedTextAndFiles(sharedViewModel))
             }
         })
 
@@ -131,9 +130,10 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
 
             val list = arrayListOf<Address>()
             for (participant in viewModel.participants.value.orEmpty()) {
-                list.add(participant.address)
+                list.add(participant.participant.address)
             }
             sharedViewModel.chatRoomParticipants.value = list
+            sharedViewModel.chatRoomSubject = viewModel.subject.value.orEmpty()
 
             val args = Bundle()
             args.putBoolean("createGroup", true)
@@ -166,21 +166,28 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
     private fun addParticipantsFromSharedViewModel() {
         val participants = sharedViewModel.chatRoomParticipants.value
         if (participants != null && participants.size > 0) {
-            val list = arrayListOf<GroupChatRoomMember>()
+            val list = arrayListOf<GroupInfoParticipantData>()
 
             for (address in participants) {
                 val exists = viewModel.participants.value?.find {
-                    it.address.weakEqual(address)
+                    it.participant.address.weakEqual(address)
                 }
 
                 if (exists != null) {
                     list.add(exists)
                 } else {
-                    list.add(GroupChatRoomMember(address, false, hasLimeX3DHCapability = viewModel.isEncrypted.value == true))
+                    list.add(GroupInfoParticipantData(
+                        GroupChatRoomMember(address, false, hasLimeX3DHCapability = viewModel.isEncrypted.value == true)
+                    ))
                 }
             }
 
             viewModel.participants.value = list
+        }
+
+        if (sharedViewModel.chatRoomSubject.isNotEmpty()) {
+            viewModel.subject.value = sharedViewModel.chatRoomSubject
+            sharedViewModel.chatRoomSubject = ""
         }
     }
 

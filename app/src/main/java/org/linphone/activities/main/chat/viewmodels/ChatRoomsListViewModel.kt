@@ -31,13 +31,17 @@ import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
 class ChatRoomsListViewModel : ErrorReportingViewModel() {
-    val chatRooms = MutableLiveData<ArrayList<ChatRoom>>()
-
-    val latestUpdatedChatRoomId = MutableLiveData<Int>()
+    val chatRooms = MutableLiveData<ArrayList<ChatRoomViewModel>>()
 
     val contactsUpdatedEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
+
+    val fileSharingPending = MutableLiveData<Boolean>()
+
+    val textSharingPending = MutableLiveData<Boolean>()
+
+    val forwardPending = MutableLiveData<Boolean>()
 
     val groupChatAvailable: Boolean = LinphoneUtils.isGroupChatAvailable()
 
@@ -51,46 +55,43 @@ class ChatRoomsListViewModel : ErrorReportingViewModel() {
     private val listener: CoreListenerStub = object : CoreListenerStub() {
         override fun onChatRoomStateChanged(core: Core, chatRoom: ChatRoom, state: ChatRoom.State) {
             if (state == ChatRoom.State.Created) {
-                updateChatRooms()
+                if (chatRoom in core.chatRooms) { // Don't add empty chat room if 1-1 depending on policy
+                    addChatRoom(chatRoom)
+                }
             } else if (state == ChatRoom.State.TerminationFailed) {
                 Log.e("[Chat Rooms] Group chat room removal for address ${chatRoom.peerAddress.asStringUriOnly()} has failed !")
                 onErrorEvent.value = Event(R.string.chat_room_removal_failed_snack)
             }
         }
 
-        override fun onChatRoomSubjectChanged(core: Core, chatRoom: ChatRoom) {
-            updateChatRoom(chatRoom)
-        }
-
-        override fun onChatRoomRead(core: Core, chatRoom: ChatRoom) {
-            updateChatRoom(chatRoom)
-        }
-
         override fun onMessageSent(core: Core, chatRoom: ChatRoom, message: ChatMessage) {
-            if (chatRooms.value?.indexOf(chatRoom) == 0) updateChatRoom(chatRoom)
-            else updateChatRooms()
+            when (findChatRoomIndex(chatRoom)) {
+                -1 -> addChatRoom(chatRoom)
+                0 -> {}
+                else -> reorderChatRooms()
+            }
         }
 
         override fun onMessageReceived(core: Core, chatRoom: ChatRoom, message: ChatMessage) {
-            if (chatRooms.value?.indexOf(chatRoom) == 0) updateChatRoom(chatRoom)
-            else updateChatRooms()
-        }
-
-        override fun onMessageReceivedUnableDecrypt(
-            core: Core,
-            chatRoom: ChatRoom,
-            message: ChatMessage
-        ) {
-            updateChatRooms()
+            when (findChatRoomIndex(chatRoom)) {
+                -1 -> addChatRoom(chatRoom)
+                0 -> {}
+                else -> reorderChatRooms()
+            }
         }
     }
 
     private val chatRoomListener = object : ChatRoomListenerStub() {
         override fun onStateChanged(chatRoom: ChatRoom, newState: ChatRoom.State) {
             if (newState == ChatRoom.State.Deleted) {
-                val list = arrayListOf<ChatRoom>()
-                list.addAll(chatRooms.value.orEmpty())
-                list.remove(chatRoom)
+                val list = arrayListOf<ChatRoomViewModel>()
+                for (chatRoomViewModel in chatRooms.value.orEmpty()) {
+                    if (chatRoomViewModel.chatRoom != chatRoom) {
+                        list.add(chatRoomViewModel)
+                    } else {
+                        chatRoomViewModel.destroy()
+                    }
+                }
                 chatRooms.value = list
             }
         }
@@ -105,6 +106,7 @@ class ChatRoomsListViewModel : ErrorReportingViewModel() {
     }
 
     override fun onCleared() {
+        chatRooms.value.orEmpty().forEach(ChatRoomViewModel::destroy)
         coreContext.contactsManager.removeListener(contactsUpdatedListener)
         coreContext.core.removeListener(listener)
 
@@ -139,15 +141,42 @@ class ChatRoomsListViewModel : ErrorReportingViewModel() {
         }
     }
 
-    private fun updateChatRoom(chatRoom: ChatRoom) {
-        latestUpdatedChatRoomId.value = chatRooms.value?.indexOf(chatRoom)
+    private fun updateChatRooms() {
+        for (chatRoomViewModel in chatRooms.value.orEmpty()) {
+            chatRoomViewModel.destroy()
+        }
+
+        val list = arrayListOf<ChatRoomViewModel>()
+        for (chatRoom in coreContext.core.chatRooms) {
+            val viewModel = ChatRoomViewModel(chatRoom)
+            list.add(viewModel)
+        }
+        chatRooms.value = list
     }
 
-    private fun updateChatRooms() {
-        val list = arrayListOf<ChatRoom>()
-
-        list.addAll(coreContext.core.chatRooms)
-
+    private fun addChatRoom(chatRoom: ChatRoom) {
+        val list = arrayListOf<ChatRoomViewModel>()
+        val viewModel = ChatRoomViewModel(chatRoom)
+        list.add(viewModel)
+        list.addAll(chatRooms.value.orEmpty())
         chatRooms.value = list
+    }
+
+    private fun reorderChatRooms() {
+        val list = arrayListOf<ChatRoomViewModel>()
+        list.addAll(chatRooms.value.orEmpty())
+        list.sortByDescending { chatRoomViewModel -> chatRoomViewModel.chatRoom.lastUpdateTime }
+        chatRooms.value = list
+    }
+
+    private fun findChatRoomIndex(chatRoom: ChatRoom): Int {
+        var index = 0
+        for (chatRoomViewModel in chatRooms.value.orEmpty()) {
+            if (chatRoomViewModel.chatRoom == chatRoom) {
+                return index
+            }
+            index++
+        }
+        return -1
     }
 }

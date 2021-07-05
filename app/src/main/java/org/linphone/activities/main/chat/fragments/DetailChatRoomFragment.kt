@@ -28,6 +28,7 @@ import android.os.Parcelable
 import android.provider.MediaStore
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
 import androidx.activity.addCallback
 import androidx.appcompat.view.menu.MenuBuilder
@@ -39,6 +40,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.io.File
+import java.lang.IllegalArgumentException
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -47,6 +49,8 @@ import org.linphone.activities.*
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.chat.ChatScrollListener
 import org.linphone.activities.main.chat.adapters.ChatMessagesListAdapter
+import org.linphone.activities.main.chat.data.ChatMessageData
+import org.linphone.activities.main.chat.data.EventLogData
 import org.linphone.activities.main.chat.viewmodels.*
 import org.linphone.activities.main.fragments.MasterFragment
 import org.linphone.activities.main.viewmodels.DialogViewModel
@@ -70,8 +74,9 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
     private val observer = object : RecyclerView.AdapterDataObserver() {
         override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-            if (itemCount == 1 && positionStart > 0) {
-                adapter.notifyItemChanged(positionStart - 1) // For grouping purposes
+            adapter.notifyItemChanged(positionStart - 1) // For grouping purposes
+
+            if (positionStart == adapter.itemCount - itemCount) {
                 scrollToBottom()
             }
         }
@@ -110,7 +115,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         val remoteSipUri = arguments?.getString("RemoteSipUri")
 
         val textToShare = arguments?.getString("TextToShare")
-        val filestoShare = arguments?.getStringArrayList("FilesToShare")
+        val filesToShare = arguments?.getStringArrayList("FilesToShare")
 
         arguments?.clear()
         if (localSipUri != null && remoteSipUri != null) {
@@ -128,7 +133,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         val chatRoom = sharedViewModel.selectedChatRoom.value
         if (chatRoom == null) {
             Log.e("[Chat Room] Chat room is null, aborting!")
-            (activity as MainActivity).showSnackBar(R.string.error)
+            // (activity as MainActivity).showSnackBar(R.string.error)
             findNavController().navigateUp()
             return
         }
@@ -164,6 +169,28 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         layoutManager.stackFromEnd = true
         binding.chatMessagesList.layoutManager = layoutManager
 
+        // Swipe action
+        /*val swipeConfiguration = RecyclerViewSwipeConfiguration()
+        swipeConfiguration.leftToRightAction = RecyclerViewSwipeConfiguration.Action(icon = R.drawable.menu_reply_default)
+        val swipeListener = object : RecyclerViewSwipeListener {
+            override fun onLeftToRightSwipe(viewHolder: RecyclerView.ViewHolder) {
+                adapter.notifyItemChanged(viewHolder.adapterPosition)
+
+                val chatMessageEventLog = adapter.currentList[viewHolder.adapterPosition]
+                val chatMessage = chatMessageEventLog.chatMessage
+                if (chatMessage != null) {
+                    chatSendingViewModel.pendingChatMessageToReplyTo.value?.destroy()
+                    chatSendingViewModel.pendingChatMessageToReplyTo.value =
+                        ChatMessageData(chatMessage)
+                    chatSendingViewModel.isPendingAnswer.value = true
+                }
+            }
+
+            override fun onRightToLeftSwipe(viewHolder: RecyclerView.ViewHolder) {}
+        }
+        RecyclerViewSwipeUtils(ItemTouchHelper.RIGHT, swipeConfiguration, swipeListener)
+            .attachToRecyclerView(binding.chatMessagesList)*/
+
         val chatScrollListener: ChatScrollListener = object : ChatScrollListener(layoutManager) {
             override fun onLoadMore(totalItemsCount: Int) {
                 listViewModel.loadMoreData(totalItemsCount)
@@ -175,6 +202,13 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             chatSendingViewModel.onTextToSendChanged(it)
         })
 
+        chatSendingViewModel.requestRecordAudioPermissionEvent.observe(viewLifecycleOwner, {
+            it.consume {
+                Log.i("[Chat Room] Asking for RECORD_AUDIO permission")
+                requestPermissions(arrayOf(android.Manifest.permission.RECORD_AUDIO), 2)
+            }
+        })
+
         listViewModel.events.observe(viewLifecycleOwner, { events ->
             adapter.submitList(events)
         })
@@ -182,12 +216,6 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         listViewModel.messageUpdatedEvent.observe(viewLifecycleOwner, {
             it.consume { position ->
                 adapter.notifyItemChanged(position)
-            }
-        })
-
-        listViewModel.scrollToBottomOnMessageReceivedEvent.observe(viewLifecycleOwner, {
-            it.consume {
-                scrollToBottom()
             }
         })
 
@@ -217,6 +245,14 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 sharedViewModel.messageToForwardEvent.value = Event(chatMessage)
                 Log.i("[Chat Room] Forwarding message, going to chat rooms list")
                 navigateToChatRooms()
+            }
+        })
+
+        adapter.replyMessageEvent.observe(viewLifecycleOwner, {
+            it.consume { chatMessage ->
+                chatSendingViewModel.pendingChatMessageToReplyTo.value?.destroy()
+                chatSendingViewModel.pendingChatMessageToReplyTo.value = ChatMessageData(chatMessage)
+                chatSendingViewModel.isPendingAnswer.value = true
             }
         })
 
@@ -282,6 +318,23 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             }
         })
 
+        adapter.scrollToChatMessageEvent.observe(viewLifecycleOwner, {
+            it.consume { chatMessage ->
+                val events = listViewModel.events.value.orEmpty()
+                val eventLog = events.find { eventLog ->
+                    if (eventLog.eventLog.type == EventLog.Type.ConferenceChatMessage) {
+                        (eventLog.data as ChatMessageData).chatMessage.messageId == chatMessage.messageId
+                    } else false
+                }
+                val index = events.indexOf(eventLog)
+                try {
+                    binding.chatMessagesList.smoothScrollToPosition(index)
+                } catch (iae: IllegalArgumentException) {
+                    Log.e("[Chat Room] Can't scroll to position $index")
+                }
+            }
+        })
+
         binding.setBackClickListener {
             goBack()
         }
@@ -318,21 +371,36 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             }
         }
 
-        binding.setSendMessageClickListener {
-            chatSendingViewModel.sendMessage()
-            binding.message.text?.clear()
-        }
-
-        binding.setStartCallClickListener {
-            coreContext.startCall(viewModel.addressToCall)
+        binding.setVoiceRecordingTouchListener { _, event ->
+            if (corePreferences.holdToRecordVoiceMessage) {
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        Log.i("[Chat Room] Start recording voice message as long as recording button is held")
+                        chatSendingViewModel.startVoiceRecording()
+                    }
+                    MotionEvent.ACTION_UP -> {
+                        val voiceRecordingDuration = chatSendingViewModel.voiceRecordingDuration.value ?: 0
+                        if (voiceRecordingDuration < 1000) {
+                            Log.w("[Chat Room] Voice recording button has been held for less than a second, considering miss click")
+                            chatSendingViewModel.cancelVoiceRecording()
+                            (requireActivity() as MainActivity).showSnackBar(R.string.chat_message_voice_recording_hold_to_record)
+                        } else {
+                            Log.i("[Chat Room] Voice recording button has been released, stop recording")
+                            chatSendingViewModel.stopVoiceRecording()
+                        }
+                    }
+                }
+                true
+            }
+            false
         }
 
         if (textToShare?.isNotEmpty() == true) {
             Log.i("[Chat Room] Found text to share")
             chatSendingViewModel.textToSend.value = textToShare
         }
-        if (filestoShare?.isNotEmpty() == true) {
-            for (path in filestoShare) {
+        if (filesToShare?.isNotEmpty() == true) {
+            for (path in filesToShare) {
                 Log.i("[Chat Room] Found $path file to share")
                 chatSendingViewModel.addAttachment(path)
             }
@@ -347,7 +415,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
     }
 
     override fun deleteItems(indexesOfItemToDelete: ArrayList<Int>) {
-        val list = ArrayList<EventLog>()
+        val list = ArrayList<EventLogData>()
         for (index in indexesOfItemToDelete) {
             val eventLog = adapter.currentList[index]
             list.add(eventLog)
@@ -360,13 +428,21 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        if (requestCode == 0) {
-            var atLeastOneGranted = false
-            for (result in grantResults) {
-                atLeastOneGranted = atLeastOneGranted || result == PackageManager.PERMISSION_GRANTED
+        var atLeastOneGranted = false
+        for (result in grantResults) {
+            atLeastOneGranted = atLeastOneGranted || result == PackageManager.PERMISSION_GRANTED
+        }
+
+        when (requestCode) {
+            0 -> {
+                if (atLeastOneGranted) {
+                    pickFile()
+                }
             }
-            if (atLeastOneGranted) {
-                pickFile()
+            2 -> {
+                if (atLeastOneGranted) {
+                    chatSendingViewModel.startVoiceRecording()
+                }
             }
         }
     }
@@ -431,8 +507,11 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             dialogViewModel.showOkButton({ doNotAskAgain ->
                 if (doNotAskAgain) corePreferences.limeSecurityPopupEnabled = false
 
+                val address = viewModel.onlyParticipantOnlyDeviceAddress
                 if (viewModel.oneParticipantOneDevice) {
-                    coreContext.startCall(viewModel.onlyParticipantOnlyDeviceAddress, true)
+                    if (address != null) {
+                        coreContext.startCall(address, true)
+                    }
                 } else {
                     navigateToDevices()
                 }
@@ -442,8 +521,11 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
             dialog.show()
         } else {
+            val address = viewModel.onlyParticipantOnlyDeviceAddress
             if (viewModel.oneParticipantOneDevice) {
-                coreContext.startCall(viewModel.onlyParticipantOnlyDeviceAddress, true)
+                if (address != null) {
+                    coreContext.startCall(address, true)
+                }
             } else {
                 navigateToDevices()
             }
@@ -462,7 +544,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
     private fun showForwardConfirmationDialog(chatMessage: ChatMessage) {
         val viewModel = DialogViewModel(getString(R.string.chat_message_forward_confirmation_dialog))
-        viewModel.iconResource = R.drawable.forward_message_dialog_default
+        viewModel.iconResource = R.drawable.forward_message_default
         viewModel.showIcon = true
         val dialog: Dialog = DialogUtils.getDialog(requireContext(), viewModel)
 
@@ -495,11 +577,16 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 builder.removeItem(R.id.chat_room_participants_devices)
             }
         }
+
         if (!viewModel.encryptedChatRoom) {
             builder.removeItem(R.id.chat_room_participants_devices)
             builder.removeItem(R.id.chat_room_ephemeral_messages)
+        } else {
+            // TODO: Remove for 4.6 release
+            if (!corePreferences.ephemeralMessagesEnabled) {
+                builder.removeItem(R.id.chat_room_ephemeral_messages)
+            }
         }
-        // TODO: hide ephemeral menu if not all participants support the feature
 
         builder.setCallback(object : MenuBuilder.Callback {
             override fun onMenuModeChange(menu: MenuBuilder) {}

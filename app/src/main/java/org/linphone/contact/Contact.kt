@@ -24,7 +24,6 @@ import android.graphics.Bitmap
 import android.net.Uri
 import androidx.core.app.Person
 import androidx.core.graphics.drawable.IconCompat
-import java.text.Collator
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Address
@@ -52,11 +51,14 @@ open class Contact : Comparable<Contact> {
     // Raw SIP addresses are only used for contact edition
     var rawSipAddresses = arrayListOf<String>()
 
+    var thumbnailUri: Uri? = null
+
     var friend: Friend? = null
 
     override fun compareTo(other: Contact): Int {
         val fn = fullName ?: ""
         val otherFn = other.fullName ?: ""
+
         if (fn == otherFn) {
             if (phoneNumbers.size == other.phoneNumbers.size && phoneNumbers.size > 0) {
                 if (phoneNumbers != other.phoneNumbers) {
@@ -84,9 +86,8 @@ open class Contact : Comparable<Contact> {
             val otherOrg = other.organization ?: ""
             return org.compareTo(otherOrg)
         }
-        val collator = Collator.getInstance()
-        collator.strength = Collator.NO_DECOMPOSITION
-        return collator.compare(fn, otherFn)
+
+        return coreContext.collator.compare(fn, otherFn)
     }
 
     @Synchronized
@@ -127,7 +128,11 @@ open class Contact : Comparable<Contact> {
     }
 
     open fun getContactThumbnailPictureUri(): Uri? {
-        return null
+        return thumbnailUri
+    }
+
+    fun setContactThumbnailPictureUri(uri: Uri) {
+        thumbnailUri = uri
     }
 
     open fun getContactPictureUri(): Uri? {

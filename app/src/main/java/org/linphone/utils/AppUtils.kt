@@ -20,13 +20,20 @@
 package org.linphone.utils
 
 import android.app.Activity
-import android.content.*
+import android.content.ActivityNotFoundException
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
 import android.text.format.Formatter.formatShortFileSize
 import android.util.TypedValue
+import androidx.core.content.res.ResourcesCompat
 import androidx.emoji.text.EmojiCompat
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import java.util.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.tools.Log
 
 /**
@@ -80,6 +87,10 @@ class AppUtils {
             )
         }
 
+        fun dpToPixels(context: Context, dp: Float): Float {
+            return dp * context.resources.displayMetrics.density
+        }
+
         fun bytesToDisplayableSize(bytes: Long): String {
             return formatShortFileSize(coreContext.context, bytes)
         }
@@ -100,6 +111,25 @@ class AppUtils {
             } catch (ex: ActivityNotFoundException) {
                 Log.e(ex)
             }
+        }
+
+        fun getDividerDecoration(context: Context, layoutManager: LinearLayoutManager): DividerItemDecoration {
+            val dividerItemDecoration = DividerItemDecoration(context, layoutManager.orientation)
+            val divider = ResourcesCompat.getDrawable(context.resources, R.drawable.divider, null)
+            if (divider != null) dividerItemDecoration.setDrawable(divider)
+            return dividerItemDecoration
+        }
+
+        fun createBundleWithSharedTextAndFiles(sharedViewModel: SharedMainViewModel): Bundle {
+            val bundle = Bundle()
+            bundle.putString("TextToShare", sharedViewModel.textToShare.value.orEmpty())
+            bundle.putStringArrayList("FilesToShare", sharedViewModel.filesToShare.value)
+
+            // Remove values from shared view model
+            sharedViewModel.textToShare.value = ""
+            sharedViewModel.filesToShare.value = arrayListOf()
+
+            return bundle
         }
     }
 }

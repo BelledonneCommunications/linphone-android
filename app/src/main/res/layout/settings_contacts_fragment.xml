@@ -19,7 +19,7 @@
         <LinearLayout
             android:id="@+id/top_bar"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="@dimen/main_activity_top_bar_size"
             android:layout_gravity="center_horizontal"
             android:background="?attr/lightToolbarBackgroundColor"
             android:orientation="horizontal">
@@ -67,7 +67,6 @@
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/contacts_settings_friendlist_subscribe_title}"
-                    linphone:subtitle="@{@string/contacts_settings_friendlist_subscribe_summary}"
                     linphone:listener="@{viewModel.friendListSubscribeListener}"
                     linphone:checked="@={viewModel.friendListSubscribe}"
                     linphone:enabled="@{viewModel.readContactsPermissionGranted}"/>
@@ -91,7 +90,6 @@
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/contacts_settings_show_organization_title}"
-                    linphone:subtitle="@{@string/contacts_settings_show_organization_summary}"
                     linphone:listener="@{viewModel.showOrganizationListener}"
                     linphone:checked="@={viewModel.showOrganization}"
                     linphone:enabled="@{viewModel.readContactsPermissionGranted}"/>

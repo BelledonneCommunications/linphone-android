@@ -31,6 +31,7 @@ import android.os.AsyncTask
 import android.os.AsyncTask.THREAD_POOL_EXECUTOR
 import android.provider.ContactsContract
 import android.util.Patterns
+import java.io.File
 import kotlinx.coroutines.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -78,6 +79,12 @@ class ContactsManager(private val context: Context) {
         @Synchronized
         private set
 
+    var localAccountsContacts = ArrayList<Contact>()
+        @Synchronized
+        get
+        @Synchronized
+        private set
+
     val magicSearch: MagicSearch by lazy {
         val magicSearch = coreContext.core.createMagicSearch()
         magicSearch.limitedSearch = false
@@ -104,9 +111,7 @@ class ContactsManager(private val context: Context) {
             if (sipContactsListUpdated) {
                 sipContacts.sort()
                 Log.i("[Contacts Manager] Notifying observers that list has changed")
-                for (listener in contactsUpdatedListeners) {
-                    listener.onContactsUpdated()
-                }
+                notifyListeners()
             }
         }
     }
@@ -156,6 +161,26 @@ class ContactsManager(private val context: Context) {
     }
 
     @Synchronized
+    fun updateLocalContacts() {
+        localAccountsContacts.clear()
+
+        for (account in coreContext.core.accountList) {
+            val localContact = Contact()
+            localContact.fullName = account.params.identityAddress?.displayName ?: account.params.identityAddress?.username
+            val pictureUri = corePreferences.defaultAccountAvatarPath
+            if (pictureUri != null) {
+                localContact.setContactThumbnailPictureUri(Uri.fromFile(File(pictureUri)))
+            }
+            val address = account.params.identityAddress
+            if (address != null) {
+                localContact.sipAddresses.add(address)
+                localContact.rawSipAddresses.add(address.asStringUriOnly())
+            }
+            localAccountsContacts.add(localContact)
+        }
+    }
+
+    @Synchronized
     fun updateContacts(all: ArrayList<Contact>, sip: ArrayList<Contact>) {
         contacts.clear()
         sipContacts.clear()
@@ -163,10 +188,10 @@ class ContactsManager(private val context: Context) {
         contacts.addAll(all)
         sipContacts.addAll(sip)
 
+        updateLocalContacts()
+
         Log.i("[Contacts Manager] Async fetching finished, notifying observers")
-        for (listener in contactsUpdatedListeners) {
-            listener.onContactsUpdated()
-        }
+        notifyListeners()
     }
 
     @Synchronized
@@ -208,6 +233,13 @@ class ContactsManager(private val context: Context) {
 
     @Synchronized
     fun findContactByAddress(address: Address): Contact? {
+        val localContact = localAccountsContacts.find { localContact ->
+            localContact.sipAddresses.find { localAddress ->
+                address.weakEqual(localAddress)
+            } != null
+        }
+        if (localContact != null) return localContact
+
         val friend: Friend? = coreContext.core.findFriend(address)
         val contact: Contact? = friend?.userData as? Contact
         if (contact != null) return contact
@@ -220,12 +252,30 @@ class ContactsManager(private val context: Context) {
         return null
     }
 
+    @Synchronized
     fun addListener(listener: ContactsUpdatedListener) {
         contactsUpdatedListeners.add(listener)
     }
 
+    @Synchronized
     fun removeListener(listener: ContactsUpdatedListener) {
         contactsUpdatedListeners.remove(listener)
+    }
+
+    @Synchronized
+    fun notifyListeners() {
+        val list = contactsUpdatedListeners.toMutableList()
+        for (listener in list) {
+            listener.onContactsUpdated()
+        }
+    }
+
+    @Synchronized
+    fun notifyListeners(contact: Contact) {
+        val list = contactsUpdatedListeners.toMutableList()
+        for (listener in list) {
+            listener.onContactUpdated(contact)
+        }
     }
 
     @Synchronized
@@ -313,9 +363,7 @@ class ContactsManager(private val context: Context) {
         if (loadContactsTask?.status == AsyncTask.Status.RUNNING) {
             Log.w("[Contacts Manager] Async contacts loader running, skip onContactUpdated listener notify")
         } else {
-            for (listener in contactsUpdatedListeners) {
-                listener.onContactUpdated(contact)
-            }
+            notifyListeners(contact)
         }
 
         if (!sipContacts.contains(contact)) {
@@ -338,9 +386,7 @@ class ContactsManager(private val context: Context) {
                         if (loadContactsTask?.status == AsyncTask.Status.RUNNING) {
                             Log.w("[Contacts Manager] Async contacts loader running, skip onContactUpdated listener notify")
                         } else {
-                            for (listener in contactsUpdatedListeners) {
-                                listener.onContactUpdated(contact)
-                            }
+                            notifyListeners(contact)
                         }
                     }
                 }
