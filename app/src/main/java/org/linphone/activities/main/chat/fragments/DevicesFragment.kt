@@ -24,7 +24,6 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
-import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.chat.viewmodels.DevicesListViewModel
 import org.linphone.activities.main.chat.viewmodels.DevicesListViewModelFactory
 import org.linphone.activities.main.fragments.SecureFragment
@@ -50,7 +49,7 @@ class DevicesFragment : SecureFragment<ChatRoomDevicesFragmentBinding>() {
         val chatRoom = sharedViewModel.selectedChatRoom.value
         if (chatRoom == null) {
             Log.e("[Devices] Chat room is null, aborting!")
-            (activity as MainActivity).showSnackBar(R.string.error)
+            // (activity as MainActivity).showSnackBar(R.string.error)
             findNavController().navigateUp()
             return
         }

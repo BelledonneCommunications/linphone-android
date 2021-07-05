@@ -21,7 +21,7 @@
         <LinearLayout
             android:id="@+id/top_bar"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="@dimen/main_activity_top_bar_size"
             android:layout_gravity="center_horizontal"
             android:background="?attr/lightToolbarBackgroundColor"
             android:orientation="horizontal">
@@ -101,7 +101,6 @@
                 <include
                     layout="@layout/settings_widget_text"
                     linphone:title="@{@string/account_settings_display_name_title}"
-                    linphone:subtitle="@{@string/account_settings_display_name_summary}"
                     linphone:listener="@{viewModel.displayNameListener}"
                     linphone:defaultValue="@{viewModel.displayName}"
                     linphone:inputType="@{InputType.TYPE_TEXT_VARIATION_PERSON_NAME}"/>
@@ -118,14 +117,12 @@
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/account_settings_disable_title}"
-                    linphone:subtitle="@{@string/account_settings_disable_summary}"
                     linphone:listener="@{viewModel.disableListener}"
                     linphone:checked="@={viewModel.disable}"/>
 
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/account_settings_default_title}"
-                    linphone:subtitle="@{@string/account_settings_default_summary}"
                     linphone:listener="@{viewModel.isDefaultListener}"
                     linphone:checked="@={viewModel.isDefault}"
                     linphone:enabled="@{!viewModel.isDefault}"/>
@@ -133,13 +130,11 @@
                 <include
                     layout="@layout/settings_widget_basic"
                     linphone:title="@{@string/account_settings_link_phone_number_title}"
-                    linphone:subtitle="@{@string/account_settings_link_phone_number_summary}"
                     linphone:listener="@{viewModel.linkPhoneNumberListener}"/>
 
                 <include
                     layout="@layout/settings_widget_basic"
                     linphone:title="@{@string/account_settings_delete_title}"
-                    linphone:subtitle="@{@string/account_settings_delete_summary}"
                     linphone:listener="@{viewModel.deleteListener}"/>
 
                 <TextView
@@ -162,7 +157,6 @@
                 <include
                     layout="@layout/settings_widget_list"
                     linphone:title="@{@string/account_settings_transport_title}"
-                    linphone:subtitle="@{@string/account_settings_transport_summary}"
                     linphone:listener="@{viewModel.transportListener}"
                     linphone:selectedIndex="@{viewModel.transportIndex}"
                     linphone:labels="@{viewModel.transportLabels}"/>
@@ -170,7 +164,6 @@
                 <include
                     layout="@layout/settings_widget_text"
                     linphone:title="@{@string/account_settings_proxy_title}"
-                    linphone:subtitle="@{@string/account_settings_proxy_summary}"
                     linphone:listener="@{viewModel.proxyListener}"
                     linphone:defaultValue="@{viewModel.proxy}"
                     linphone:inputType="@{InputType.TYPE_TEXT_VARIATION_URI}"/>
@@ -185,7 +178,6 @@
                 <include
                     layout="@layout/settings_widget_text"
                     linphone:title="@{@string/account_settings_stun_server_title}"
-                    linphone:subtitle="@{@string/account_settings_stun_server_summary}"
                     linphone:listener="@{viewModel.stunServerListener}"
                     linphone:defaultValue="@{viewModel.stunServer}"
                     linphone:inputType="@{InputType.TYPE_TEXT_VARIATION_URI}"/>
@@ -193,7 +185,6 @@
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/account_settings_ice_title}"
-                    linphone:subtitle="@{@string/account_settings_ice_summary}"
                     linphone:listener="@{viewModel.iceListener}"
                     linphone:checked="@={viewModel.ice}"
                     linphone:enabled="@{viewModel.stunServer.length() > 0}"/>
@@ -201,7 +192,6 @@
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/account_settings_avpf_title}"
-                    linphone:subtitle="@{@string/account_settings_avpf_summary}"
                     linphone:listener="@{viewModel.avpfListener}"
                     linphone:checked="@={viewModel.avpf}"/>
 
@@ -241,7 +231,6 @@
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/account_settings_escape_plus_title}"
-                    linphone:subtitle="@{@string/account_settings_escape_plus_summary}"
                     linphone:listener="@{viewModel.escapePlusListener}"
                     linphone:checked="@={viewModel.escapePlus}"/>
 

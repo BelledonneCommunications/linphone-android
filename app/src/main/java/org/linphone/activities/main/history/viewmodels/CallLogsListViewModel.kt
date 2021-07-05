@@ -67,6 +67,9 @@ class CallLogsListViewModel : ViewModel() {
     }
 
     override fun onCleared() {
+        callLogs.value.orEmpty().forEach(GroupedCallLogData::destroy)
+        missedCallLogs.value.orEmpty().forEach(GroupedCallLogData::destroy)
+
         coreContext.contactsManager.removeListener(contactsUpdatedListener)
         coreContext.core.removeListener(listener)
 
@@ -102,7 +105,8 @@ class CallLogsListViewModel : ViewModel() {
         for (callLog in coreContext.core.callLogs) {
             if (previousCallLogGroup == null) {
                 previousCallLogGroup = GroupedCallLogData(callLog)
-            } else if (previousCallLogGroup.lastCallLog.localAddress.weakEqual(callLog.localAddress) && previousCallLogGroup.lastCallLog.remoteAddress.weakEqual(callLog.remoteAddress)) {
+            } else if (previousCallLogGroup.lastCallLog.localAddress.weakEqual(callLog.localAddress) &&
+                    previousCallLogGroup.lastCallLog.remoteAddress.weakEqual(callLog.remoteAddress)) {
                 if (TimestampUtils.isSameDay(previousCallLogGroup.lastCallLog.startDate, callLog.startDate)) {
                     previousCallLogGroup.callLogs.add(callLog)
                     previousCallLogGroup.lastCallLog = callLog
@@ -118,7 +122,8 @@ class CallLogsListViewModel : ViewModel() {
             if (LinphoneUtils.isCallLogMissed(callLog)) {
                 if (previousMissedCallLogGroup == null) {
                     previousMissedCallLogGroup = GroupedCallLogData(callLog)
-                } else if (previousMissedCallLogGroup.lastCallLog.localAddress.weakEqual(callLog.localAddress) && previousMissedCallLogGroup.lastCallLog.remoteAddress.weakEqual(callLog.remoteAddress)) {
+                } else if (previousMissedCallLogGroup.lastCallLog.localAddress.weakEqual(callLog.localAddress) &&
+                        previousMissedCallLogGroup.lastCallLog.remoteAddress.weakEqual(callLog.remoteAddress)) {
                     if (TimestampUtils.isSameDay(previousMissedCallLogGroup.lastCallLog.startDate, callLog.startDate)) {
                         previousMissedCallLogGroup.callLogs.add(callLog)
                         previousMissedCallLogGroup.lastCallLog = callLog

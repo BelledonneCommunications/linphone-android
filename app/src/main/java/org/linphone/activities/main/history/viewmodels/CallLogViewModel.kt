@@ -45,9 +45,7 @@ class CallLogViewModelFactory(private val callLog: CallLog) :
 
 class CallLogViewModel(val callLog: CallLog) : GenericContactViewModel(callLog.remoteAddress) {
     val peerSipUri: String by lazy {
-        val copy = callLog.remoteAddress.clone()
-        copy.clean() // To remove gruu if any
-        LinphoneUtils.getDisplayableAddress(copy)
+        LinphoneUtils.getDisplayableAddress(callLog.remoteAddress)
     }
 
     val statusIconResource: Int by lazy {
@@ -97,8 +95,8 @@ class CallLogViewModel(val callLog: CallLog) : GenericContactViewModel(callLog.r
         TimestampUtils.toString(callLog.startDate, shortDate = false, hideYear = false)
     }
 
-    val startCallEvent: MutableLiveData<Event<Address>> by lazy {
-        MutableLiveData<Event<Address>>()
+    val startCallEvent: MutableLiveData<Event<CallLog>> by lazy {
+        MutableLiveData<Event<CallLog>>()
     }
 
     val chatRoomCreatedEvent: MutableLiveData<Event<ChatRoom>> by lazy {
@@ -139,7 +137,7 @@ class CallLogViewModel(val callLog: CallLog) : GenericContactViewModel(callLog.r
     }
 
     fun startCall() {
-        startCallEvent.value = Event(callLog.remoteAddress)
+        startCallEvent.value = Event(callLog)
     }
 
     fun startChat(isSecured: Boolean) {

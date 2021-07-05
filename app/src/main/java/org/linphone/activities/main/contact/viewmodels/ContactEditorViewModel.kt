@@ -31,6 +31,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.activities.main.contact.data.NumberOrAddressEditorData
 import org.linphone.contact.*
+import org.linphone.core.ChatRoomSecurityLevel
 import org.linphone.core.tools.Log
 import org.linphone.utils.ImageUtils
 import org.linphone.utils.PermissionHelper
@@ -45,10 +46,9 @@ class ContactEditorViewModelFactory(private val contact: Contact?) :
 }
 
 class ContactEditorViewModel(val c: Contact?) : ViewModel(), ContactDataInterface {
-    override val contact = MutableLiveData<Contact>()
-
-    override val displayName: String
-        get() = if (c == null) "" else c.fullName ?: c.firstName + " " + c.lastName
+    override val contact: MutableLiveData<Contact> = MutableLiveData<Contact>()
+    override val displayName: MutableLiveData<String> = MutableLiveData<String>()
+    override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
 
     val firstName = MutableLiveData<String>()
 
@@ -69,7 +69,12 @@ class ContactEditorViewModel(val c: Contact?) : ViewModel(), ContactDataInterfac
     var syncAccountType: String? = null
 
     init {
-        if (c != null) contact.value = c!!
+        if (c != null) {
+            contact.value = c!!
+            displayName.value = c.fullName ?: c.firstName + " " + c.lastName
+        } else {
+            displayName.value = ""
+        }
         firstName.value = c?.firstName ?: ""
         lastName.value = c?.lastName ?: ""
         organization.value = c?.organization ?: ""

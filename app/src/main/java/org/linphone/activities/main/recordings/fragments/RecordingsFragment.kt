@@ -24,7 +24,6 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.R
 import org.linphone.activities.main.fragments.MasterFragment
@@ -32,6 +31,7 @@ import org.linphone.activities.main.recordings.adapters.RecordingsListAdapter
 import org.linphone.activities.main.recordings.data.RecordingData
 import org.linphone.activities.main.recordings.viewmodels.RecordingsViewModel
 import org.linphone.databinding.RecordingsFragmentBinding
+import org.linphone.utils.AppUtils
 import org.linphone.utils.RecyclerViewHeaderDecoration
 
 class RecordingsFragment : MasterFragment<RecordingsFragmentBinding, RecordingsListAdapter>() {
@@ -56,15 +56,14 @@ class RecordingsFragment : MasterFragment<RecordingsFragmentBinding, RecordingsL
         binding.viewModel = viewModel
 
         _adapter = RecordingsListAdapter(listSelectionViewModel, viewLifecycleOwner)
+        binding.recordingsList.setHasFixedSize(true)
         binding.recordingsList.adapter = adapter
 
         val layoutManager = LinearLayoutManager(activity)
         binding.recordingsList.layoutManager = layoutManager
 
         // Divider between items
-        val dividerItemDecoration = DividerItemDecoration(context, layoutManager.orientation)
-        dividerItemDecoration.setDrawable(resources.getDrawable(R.drawable.divider, null))
-        binding.recordingsList.addItemDecoration(dividerItemDecoration)
+        binding.recordingsList.addItemDecoration(AppUtils.getDividerDecoration(requireContext(), layoutManager))
 
         // Displays the first letter header
         val headerItemDecoration = RecyclerViewHeaderDecoration(adapter)

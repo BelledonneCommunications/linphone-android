@@ -33,7 +33,7 @@ import org.linphone.core.tools.Log
 class ContactsListViewModel : ViewModel() {
     val sipContactsSelected = MutableLiveData<Boolean>()
 
-    val contactsList = MutableLiveData<ArrayList<Contact>>()
+    val contactsList = MutableLiveData<ArrayList<ContactViewModel>>()
 
     val filter = MutableLiveData<String>()
 
@@ -51,26 +51,36 @@ class ContactsListViewModel : ViewModel() {
     }
 
     override fun onCleared() {
+        contactsList.value.orEmpty().forEach(ContactViewModel::destroy)
         coreContext.contactsManager.removeListener(contactsUpdatedListener)
 
         super.onCleared()
     }
 
+    private fun getSelectedContactsList(): ArrayList<ContactViewModel> {
+        val list = arrayListOf<ContactViewModel>()
+        val source =
+            if (sipContactsSelected.value == true) coreContext.contactsManager.sipContacts
+            else coreContext.contactsManager.contacts
+        for (contact in source) {
+            list.add(ContactViewModel(contact))
+        }
+        return list
+    }
+
     fun updateContactsList() {
-        var list = arrayListOf<Contact>()
-        list.addAll(if (sipContactsSelected.value == true) coreContext.contactsManager.sipContacts else coreContext.contactsManager.contacts)
+        val list: ArrayList<ContactViewModel>
 
-        val filterValue = filter.value.orEmpty().toLowerCase(Locale.getDefault())
-        if (filterValue.isNotEmpty()) {
-            list = list.filter { contact ->
-                contact.fullName?.toLowerCase(Locale.getDefault())?.contains(filterValue) ?: false
-            } as ArrayList<Contact>
+        val filterValue = filter.value.orEmpty()
+        list = if (filterValue.isNotEmpty()) {
+            getSelectedContactsList().filter { contact ->
+                contact.name.contains(filterValue, true)
+            } as ArrayList<ContactViewModel>
+        } else {
+            getSelectedContactsList()
         }
 
-        // Prevent blinking items when list hasn't changed
-        if (list.isEmpty() || list.size != contactsList.value.orEmpty().size) {
-            contactsList.value = list
-        }
+        contactsList.postValue(list)
     }
 
     fun deleteContact(contact: Contact?) {

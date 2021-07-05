@@ -4,6 +4,7 @@
 
     <data>
         <import type="android.view.View"/>
+        <import type="android.widget.ImageView.ScaleType"/>
         <variable
             name="data"
             type="org.linphone.activities.main.chat.data.ChatMessageContentData" />
@@ -14,7 +15,8 @@
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
 
         <ImageView
             android:onClick="@{() -> data.openFile()}"
@@ -22,10 +24,11 @@
             android:contentDescription="@string/content_description_downloaded_file_transfer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxHeight="@{data.alone ? @dimen/chat_message_bubble_image_height_big : @dimen/chat_message_bubble_image_height_small}"
-            android:layout_margin="5dp"
+            android:maxHeight="@dimen/chat_message_bubble_image_height_big"
+            android:layout_size="@{data.alone ? 0f : @dimen/chat_message_bubble_file_size}"
             app:glidePath="@{data.filePath}"
-            android:visibility="@{data.image ? View.VISIBLE : View.GONE}"
+            android:visibility="@{!data.downloadable &amp;&amp; data.image ? View.VISIBLE : View.GONE}"
+            android:scaleType="@{data.alone ? ScaleType.FIT_CENTER : ScaleType.CENTER_CROP}"
             android:adjustViewBounds="true" />
 
         <ImageView
@@ -34,117 +37,86 @@
             android:contentDescription="@string/content_description_downloaded_file_transfer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxHeight="@{data.alone ? @dimen/chat_message_bubble_image_height_big : @dimen/chat_message_bubble_image_height_small}"
-            android:layout_margin="5dp"
+            android:maxHeight="@dimen/chat_message_bubble_image_height_big"
+            android:layout_size="@{data.alone ? 0f : @dimen/chat_message_bubble_file_size}"
             android:src="@{data.videoPreview}"
-            android:visibility="@{data.video ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{!data.downloadable &amp;&amp; data.video ? View.VISIBLE : View.GONE}"
+            android:scaleType="@{data.alone ? ScaleType.FIT_CENTER : ScaleType.CENTER_CROP}"
             android:adjustViewBounds="true" />
 
         <ImageView
-            android:visibility="@{data.video ? View.VISIBLE : View.GONE, default=gone}"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/recording_play_pause"
+            android:visibility="@{!data.downloadable &amp;&amp; data.video ? View.VISIBLE : View.GONE}"
+            android:layout_width="@dimen/play_pause_button_size"
+            android:layout_height="@dimen/play_pause_button_size"
+            android:padding="9dp"
+            android:src="@drawable/record_play_dark"
+            android:background="@drawable/round_recording_button_background_dark"
             android:contentDescription="@string/content_description_chat_message_video_attachment"
             android:layout_centerInParent="true"/>
 
-        <TextView
-            style="@style/chat_file_attachment_font"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:ellipsize="end"
-            android:padding="10dp"
-            android:gravity="center_vertical"
-            android:text="@{data.fileName}"
-            android:onClick="@{() -> data.openFile()}"
-            android:onLongClick="@{longClickListener}"
-            android:visibility="@{data.downloadable || data.image || data.video || !data.alone ? View.GONE : View.VISIBLE, default=gone}"
-            android:drawablePadding="10dp"
-            app:drawableTint="@color/dark_grey_color"
-            android:drawableLeft="@{data.isAudio ? @drawable/audio : @drawable/file}"/>
-
-        <TextView
-            style="@style/chat_file_attachment_font"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:maxHeight="100dp"
-            android:layout_margin="5dp"
-            android:ellipsize="end"
-            android:padding="10dp"
-            android:gravity="center"
-            android:textAlignment="center"
-            android:text="@{data.fileName}"
-            android:onClick="@{() -> data.openFile()}"
-            android:onLongClick="@{longClickListener}"
-            android:visibility="@{data.downloadable || data.image || data.video || data.alone ? View.GONE : View.VISIBLE, default=gone}"
-            android:drawablePadding="10dp"
-            app:drawableTint="@color/dark_grey_color"
-            android:drawableTop="@{data.isAudio ? @drawable/audio : @drawable/file}"/>
+        <include layout="@layout/chat_message_voice_record_content_cell"
+            app:data="@{data}"
+            app:longClickListener="@{longClickListener}"
+            android:visibility="@{!data.downloadable &amp;&amp; data.voiceRecording ? View.VISIBLE : View.GONE, default=gone}" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_width="@dimen/chat_message_bubble_file_size"
+            android:layout_height="@dimen/chat_message_bubble_file_size"
+            android:orientation="vertical"
             android:gravity="center"
-            android:background="@drawable/resizable_assistant_button"
-            android:layout_margin="5dp"
-            android:visibility="@{data.downloadable ? View.VISIBLE : View.GONE}"
-            android:onClick="@{() -> data.download()}"
-            android:onLongClick="@{longClickListener}"
-            android:enabled="@{data.downloadEnabled}">
+            android:background="?attr/backgroundColor"
+            android:visibility="@{data.downloadable || data.audio || data.pdf || data.genericFile ? View.VISIBLE : View.GONE}">
 
-            <ImageView
+            <TextView
+                style="@style/chat_file_attachment_font"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:ellipsize="middle"
+                android:singleLine="true"
+                android:padding="10dp"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:drawablePadding="5dp"
+                android:drawableTop="@{data.video ? @drawable/file_video : (data.image ? @drawable/file_picture : (data.pdf ? @drawable/file_pdf : (data.audio ? @drawable/file_audio : (data.voiceRecording ? @drawable/audio_recording_reply_preview_default : @drawable/file)))), default=@drawable/file}"
+                android:text="@{data.fileName, default=`test.pdf`}"
+                android:onClick="@{() -> data.downloadable ? data.download() : data.openFile()}"
+                android:onLongClick="@{longClickListener}"/>
+
+            <TextView
+                style="@style/chat_file_attachment_font"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/chat_message_download_file"
-                android:padding="5dp"
-                android:src="@drawable/download" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center_vertical"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp">
-
-                <TextView
-                    style="@style/button_small_font"
-                    android:text="@{data.fileName}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:textColor="@drawable/assistant_button_text_color" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        style="@style/button_tiny_font"
-                        android:text="@{data.fileSize}"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
-                        android:textColor="@drawable/assistant_button_text_color" />
-
-                    <ProgressBar
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                        android:max="100"
-                        android:visibility="@{data.downloadProgress > 0 ? View.VISIBLE : View.GONE, default=gone}"
-                        android:progress="@{data.downloadProgress, default=50}"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
+                android:text="@{data.downloadLabel}"
+                android:onClick="@{() -> data.download()}"
+                android:visibility="@{data.downloadable ? View.VISIBLE : View.GONE}"/>
 
         </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{data.downloadProgressInt > 0 ? View.VISIBLE : View.GONE, default=gone}"
+            android:layout_centerInParent="true">
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:max="100"
+                android:layout_centerInParent="true"
+                app:trackColor="?attr/backgroundColor"
+                android:progress="@{data.downloadProgressInt, default=50}"
+                android:background="@drawable/background_round_secondary_color"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textColor="?attr/secondaryTextColor"
+                style="@style/file_transfer_progress_font"
+                android:text="@{data.downloadProgressString, default=`50%`}"/>
+
+        </RelativeLayout>
 
     </RelativeLayout>
 

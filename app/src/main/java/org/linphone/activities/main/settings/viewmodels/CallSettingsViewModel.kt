@@ -46,6 +46,9 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
         override fun onListValueChanged(position: Int) {
             core.mediaEncryption = MediaEncryption.fromInt(encryptionValues[position])
             encryptionIndex.value = position
+            if (position == 0) {
+                encryptionMandatory.value = false
+            }
         }
     }
     val encryptionIndex = MutableLiveData<Int>()
@@ -134,10 +137,18 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
 
     val voiceMailUriListener = object : SettingListenerStub() {
         override fun onTextValueChanged(newValue: String) {
+            voiceMailUri.value = newValue
             prefs.voiceMailUri = newValue
         }
     }
     val voiceMailUri = MutableLiveData<String>()
+
+    val redirectToVoiceMailIncomingDeclinedCallsListener = object : SettingListenerStub() {
+        override fun onBoolValueChanged(newValue: Boolean) {
+            prefs.redirectDeclinedCallToVoiceMail = newValue
+        }
+    }
+    val redirectToVoiceMailIncomingDeclinedCalls = MutableLiveData<Boolean>()
 
     val acceptEarlyMediaListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
@@ -152,6 +163,14 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
         }
     }
     val ringDuringEarlyMedia = MutableLiveData<Boolean>()
+
+    val pauseCallsWhenAudioFocusIsLostListener = object : SettingListenerStub() {
+        override fun onBoolValueChanged(newValue: Boolean) {
+            prefs.pauseCallsWhenAudioFocusIsLost = newValue
+        }
+    }
+
+    val pauseCallsWhenAudioFocusIsLost = MutableLiveData<Boolean>()
 
     val goToAndroidNotificationSettingsListener = object : SettingListenerStub() {
         override fun onClicked() {
@@ -177,8 +196,10 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
         autoAnswerDelay.value = prefs.autoAnswerDelay
         incomingTimeout.value = core.incTimeout
         voiceMailUri.value = prefs.voiceMailUri
+        redirectToVoiceMailIncomingDeclinedCalls.value = prefs.redirectDeclinedCallToVoiceMail
         acceptEarlyMedia.value = prefs.acceptEarlyMedia
         ringDuringEarlyMedia.value = core.ringDuringIncomingEarlyMedia
+        pauseCallsWhenAudioFocusIsLost.value = prefs.pauseCallsWhenAudioFocusIsLost
     }
 
     private fun initEncryptionList() {

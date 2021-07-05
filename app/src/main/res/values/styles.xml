@@ -5,7 +5,7 @@
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Disable animations between activities -->
         <item name="android:windowAnimationStyle">@null</item>
-        <item name="android:windowBackground">@color/white_color</item>
+        <item name="android:windowBackground">@drawable/launch_screen</item>
 
         <!-- Android theme override -->
         <item name="colorAccent">@color/primary_color</item>
@@ -29,7 +29,7 @@
 
         <item name="backgroundColor">@color/white_color</item>
         <item name="backgroundColor2">@color/header_background_color</item>
-        <item name="backgroundContastColor">@color/dark_grey_color</item>
+        <item name="backgroundContrastColor">@color/dark_grey_color</item>
         <item name="dividerColor">@color/light_grey_color</item>
 
         <item name="drawableTintColor">@color/dark_grey_color</item>
@@ -45,10 +45,6 @@
         <item name="darkToolbarTextColor">@color/white_color</item>
 
         <item name="button_background_drawable">@drawable/button_background_light</item>
-    </style>
-
-    <style name="LauncherTheme" parent="@style/AppTheme">
-        <item name="android:windowBackground">@drawable/launch_screen</item>
     </style>
 
     <style name="FullScreenTheme" parent="@style/AppTheme">
@@ -115,6 +111,20 @@
         <item name="android:textSize">13sp</item>
     </style>
 
+    <!-- Chat related -->
+
+    <style name="chat_message_reply_sender_font">
+        <item name="android:textColor">@color/light_primary_text_color</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="chat_message_reply_font">
+        <item name="android:textColor">@color/light_primary_text_color</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
     <!-- Call stats -->
 
     <style name="call_stats_title_font" parent="@android:style/TextAppearance.Medium">
@@ -167,6 +177,14 @@
         <item name="android:textSize">20sp</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:lineSpacingExtra">8.3sp</item>
+    </style>
+
+    <style name="popup_item_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/primaryTextColor</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
     </style>
 
     <!-- Settings -->
@@ -225,7 +243,7 @@
     </style>
 
     <style name="chat_file_attachment_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">@color/dark_grey_color</item>
+        <item name="android:textColor">?attr/primaryTextColor</item>
         <item name="android:textSize">12sp</item>
         <item name="android:fontFamily">sans-serif</item>
     </style>
@@ -259,6 +277,11 @@
     <style name="unread_count_font" parent="@android:style/TextAppearance.Small">
         <item name="android:textColor">@color/white_color</item>
         <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="file_transfer_progress_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/secondaryTextColor</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
 </resources>

@@ -19,17 +19,17 @@
  */
 package org.linphone
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
-import org.linphone.core.CoreContext
-import org.linphone.core.CorePreferences
-import org.linphone.core.Factory
-import org.linphone.core.LogCollectionState
+import org.linphone.core.*
 import org.linphone.core.tools.Log
 
 class LinphoneApplication : Application() {
     companion object {
+        @SuppressLint("StaticFieldLeak")
         lateinit var corePreferences: CorePreferences
+        @SuppressLint("StaticFieldLeak")
         lateinit var coreContext: CoreContext
 
         fun ensureCoreExists(context: Context, pushReceived: Boolean = false) {
@@ -52,7 +52,11 @@ class LinphoneApplication : Application() {
             corePreferences.config = config
 
             val appName = context.getString(R.string.app_name)
-            Factory.instance().setDebugMode(corePreferences.debugLogs, appName)
+            Factory.instance().setLoggerDomain(appName)
+            Factory.instance().enableLogcatLogs(corePreferences.logcatLogsOutput)
+            if (corePreferences.debugLogs) {
+                Factory.instance().loggingService.setLogLevel(LogLevel.Message)
+            }
 
             Log.i("[Application] Core context created ${if (pushReceived) "from push" else ""}")
             coreContext = CoreContext(context, config)

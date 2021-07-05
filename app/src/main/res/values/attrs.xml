@@ -13,7 +13,7 @@
 
         <attr name="backgroundColor" format="color"/>
         <attr name="backgroundColor2" format="color"/>
-        <attr name="backgroundContastColor" format="color"/>
+        <attr name="backgroundContrastColor" format="color"/>
         <attr name="dividerColor" format="color"/>
 
         <attr name="drawableTintColor" format="color"/>
@@ -40,5 +40,13 @@
         <attr name="checked" format="boolean" />
         <attr name="value" format="string" />
         <attr name="image" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="VoiceRecordProgressBar">
+        <attr name="max" format="integer" />
+        <attr name="progressDrawable" format="reference" />
+        <attr name="secondaryProgressTint" format="color" />
+        <attr name="primaryLeftMargin" format="dimension" />
+        <attr name="primaryRightMargin" format="dimension" />
     </declare-styleable>
 </resources>

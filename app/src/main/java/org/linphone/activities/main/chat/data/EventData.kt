@@ -23,12 +23,19 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
-import org.linphone.contact.Contact
+import org.linphone.contact.GenericContactData
 import org.linphone.core.EventLog
-import org.linphone.core.tools.Log
-import org.linphone.utils.LinphoneUtils
 
-class EventData(private val eventLog: EventLog) {
+class EventData(private val eventLog: EventLog) : GenericContactData(
+    if (eventLog.type == EventLog.Type.ConferenceSecurityEvent) {
+        eventLog.securityEventFaultyDeviceAddress!!
+    } else {
+        if (eventLog.participantAddress == null) {
+            eventLog.peerAddress!!
+        } else {
+            eventLog.participantAddress!!
+        }
+    }) {
     val text = MutableLiveData<String>()
 
     val isSecurity: Boolean by lazy {
@@ -38,32 +45,12 @@ class EventData(private val eventLog: EventLog) {
         }
     }
 
-    private val contact: Contact? by lazy {
-        val address = eventLog.participantAddress ?: eventLog.securityEventFaultyDeviceAddress
-        if (address != null) {
-            coreContext.contactsManager.findContactByAddress(address)
-        } else {
-            Log.e("[Event ViewModel] Unexpected null address for event $eventLog")
-            null
-        }
-    }
-
-    private val displayName: String by lazy {
-        val address = eventLog.participantAddress ?: eventLog.securityEventFaultyDeviceAddress
-        if (address != null) {
-            LinphoneUtils.getDisplayName(address)
-        } else {
-            Log.e("[Event ViewModel] Unexpected null address for event $eventLog")
-            ""
-        }
-    }
-
     init {
         updateEventText()
     }
 
     private fun getName(): String {
-        return contact?.fullName ?: displayName
+        return contact.value?.fullName ?: displayName.value ?: ""
     }
 
     private fun updateEventText() {

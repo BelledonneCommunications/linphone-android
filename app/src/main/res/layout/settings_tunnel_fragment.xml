@@ -20,7 +20,7 @@
         <LinearLayout
             android:id="@+id/top_bar"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="@dimen/main_activity_top_bar_size"
             android:layout_gravity="center_horizontal"
             android:background="?attr/lightToolbarBackgroundColor"
             android:orientation="horizontal">
@@ -68,7 +68,6 @@
                 <include
                     layout="@layout/settings_widget_text"
                     linphone:title="@{@string/tunnel_settings_hostname_url_title}"
-                    linphone:subtitle="@{@string/tunnel_settings_hostname_url_summary}"
                     linphone:listener="@{viewModel.hostnameUrlListener}"
                     linphone:defaultValue="@{viewModel.hostnameUrl}"
                     linphone:inputType="@{InputType.TYPE_TEXT_VARIATION_URI}"/>
@@ -76,7 +75,6 @@
                 <include
                     layout="@layout/settings_widget_text"
                     linphone:title="@{@string/tunnel_settings_port_title}"
-                    linphone:subtitle="@{@string/tunnel_settings_port_summary}"
                     linphone:listener="@{viewModel.portListener}"
                     linphone:defaultValue="@{viewModel.port.toString()}"
                     linphone:inputType="@{InputType.TYPE_CLASS_NUMBER}"/>
@@ -111,7 +109,6 @@
                 <include
                     layout="@layout/settings_widget_list"
                     linphone:title="@{@string/tunnel_settings_mode_title}"
-                    linphone:subtitle="@{@string/tunnel_settings_mode_summary}"
                     linphone:listener="@{viewModel.modeListener}"
                     linphone:selectedIndex="@{viewModel.modeIndex}"
                     linphone:labels="@{viewModel.modeLabels}"/>

@@ -20,7 +20,7 @@
         <LinearLayout
             android:id="@+id/top_bar"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="@dimen/main_activity_top_bar_size"
             android:layout_gravity="center_horizontal"
             android:background="?attr/lightToolbarBackgroundColor"
             android:orientation="horizontal">
@@ -79,7 +79,6 @@
                 <include
                     layout="@layout/settings_widget_text"
                     linphone:title="@{@string/settings_primary_account_display_name_title}"
-                    linphone:subtitle="@{@string/settings_primary_account_display_name_summary}"
                     linphone:listener="@{viewModel.primaryAccountDisplayNameListener}"
                     linphone:defaultValue="@{viewModel.primaryAccountDisplayName}"
                     linphone:inputType="@{InputType.TYPE_CLASS_TEXT}"
@@ -88,7 +87,6 @@
                 <include
                     layout="@layout/settings_widget_text"
                     linphone:title="@{@string/settings_primary_account_username_title}"
-                    linphone:subtitle="@{@string/settings_primary_account_username_summary}"
                     linphone:listener="@{viewModel.primaryAccountUsernameListener}"
                     linphone:defaultValue="@{viewModel.primaryAccountUsername}"
                     linphone:inputType="@{InputType.TYPE_CLASS_TEXT}"
