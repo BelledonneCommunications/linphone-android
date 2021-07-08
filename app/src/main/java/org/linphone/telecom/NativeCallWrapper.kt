@@ -28,7 +28,9 @@ import org.linphone.core.tools.Log
 class NativeCallWrapper(var callId: String) : Connection() {
     init {
         var capabilities = connectionCapabilities
-        capabilities = capabilities or CAPABILITY_MUTE or CAPABILITY_SUPPORT_HOLD or CAPABILITY_HOLD
+        capabilities = capabilities or CAPABILITY_MUTE or CAPABILITY_SUPPORT_HOLD or CAPABILITY_HOLD or
+                CAPABILITY_SUPPORTS_VT_LOCAL_BIDIRECTIONAL or CAPABILITY_SUPPORTS_VT_REMOTE_BIDIRECTIONAL or
+                CAPABILITY_CAN_PAUSE_VIDEO
         connectionCapabilities = capabilities
     }
 
