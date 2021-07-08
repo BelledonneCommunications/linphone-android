@@ -10,7 +10,9 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
-## [4.5.0] - Unreleased
+## [4.5.1] - Unreleased
+
+## [4.5.0] - 2021-07-08
 
 This version is a full rewrite of the app in kotlin, using modern Android components like navigation, viewmodel, databinding, coroutines, etc...
 
