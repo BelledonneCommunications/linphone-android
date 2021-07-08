@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.main.chat.viewmodels.ChatMessageSendingViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:background="?attr/backgroundColor2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
+
+        <ImageView
+            android:id="@+id/cancel_recording"
+            android:onClick="@{() -> viewModel.cancelVoiceRecording()}"
+            android:contentDescription="@string/content_description_cancel_voice_recording"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/delete" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:layout_toRightOf="@id/cancel_recording"
+            android:layout_toLeftOf="@id/play_pause_stop"
+            android:background="@drawable/chat_message_voice_recording_background">
+
+            <org.linphone.views.VoiceRecordProgressBar
+                android:visibility="@{viewModel.isVoiceRecording ? View.GONE : View.VISIBLE}"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="@dimen/progress_bar_height"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:progress="@{viewModel.voiceRecordPlayingPosition}"
+                android:secondaryProgress="@{viewModel.voiceRecordPlayingPosition}"
+                app:max="@{viewModel.voiceRecordingDuration}"
+                app:progressDrawable="@drawable/chat_message_audio_record_progress"
+                app:secondaryProgressTint="@{@color/green_color}"/>
+
+            <ProgressBar
+                android:visibility="@{viewModel.isVoiceRecording ? View.VISIBLE : View.GONE}"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="@dimen/progress_bar_height"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:progressDrawable="@drawable/chat_message_audio_record_preview_progress"
+                android:max="@{viewModel.voiceRecordingProgressBarMax}"
+                android:progress="@{viewModel.voiceRecordingDuration}"/>
+
+            <TextView
+                android:text="@{viewModel.formattedDuration, default=`00:00`}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:textColor="@color/light_primary_text_color"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/play_pause_stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true">
+
+            <ImageView
+                android:visibility="@{viewModel.isVoiceRecording ? View.VISIBLE : View.GONE}"
+                android:onClick="@{() -> viewModel.stopVoiceRecording()}"
+                android:contentDescription="@string/content_description_stop_voice_recording"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:padding="9dp"
+                android:background="@drawable/round_recording_button_background_light"
+                android:src="@drawable/record_stop_light" />
+
+            <ImageView
+                android:visibility="@{!viewModel.isVoiceRecording &amp;&amp; !viewModel.isPlayingVoiceRecording ? View.VISIBLE : View.GONE, default=gone}"
+                android:onClick="@{() -> viewModel.playRecordedMessage()}"
+                android:contentDescription="@string/content_description_play_voice_recording"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:padding="9dp"
+                android:background="@drawable/round_recording_button_background_light"
+                android:src="@drawable/record_play_light" />
+
+            <ImageView
+                android:visibility="@{!viewModel.isVoiceRecording &amp;&amp; viewModel.isPlayingVoiceRecording ? View.VISIBLE : View.GONE, default=gone}"
+                android:onClick="@{() -> viewModel.pauseRecordedMessage()}"
+                android:contentDescription="@string/content_description_pause_voice_recording_playback"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:padding="9dp"
+                android:background="@drawable/round_recording_button_background_light"
+                android:src="@drawable/record_pause_light" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</layout>

@@ -9,6 +9,7 @@
     <dimen name="chat_message_bubble_image_height_small">100dp</dimen>
     <dimen name="chat_message_bubble_file_size">120dp</dimen>
     <dimen name="chat_message_bubble_file_icon_size">30dp</dimen>
+    <dimen name="chat_message_small_bubble_file_size">50dp</dimen>
     <dimen name="chat_message_bubble_desired_height">600dp</dimen>
     <dimen name="video_preview_max_size">200dp</dimen>
     <dimen name="video_preview_pip_max_size">45dp</dimen>
@@ -26,4 +27,7 @@
     <dimen name="call_overlay_size">60dp</dimen>
     <dimen name="chat_message_popup_width">250dp</dimen>
     <dimen name="chat_message_popup_item_height">50dp</dimen>
+    <dimen name="chat_message_round_corner_radius">6.7dp</dimen>
+    <dimen name="play_pause_button_size">30dp</dimen>
+    <dimen name="progress_bar_height">40dp</dimen>
 </resources>
