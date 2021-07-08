@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="?attr/dividerColor"/>
+    <size
+        android:width="@dimen/chat_message_popup_width"
+        android:height="@dimen/chat_message_popup_item_height" />
+</shape>

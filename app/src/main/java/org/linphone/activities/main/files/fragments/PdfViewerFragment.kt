@@ -24,7 +24,6 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
-import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.files.adapters.PdfPagesListAdapter
 import org.linphone.activities.main.files.viewmodels.PdfFileViewModel
 import org.linphone.activities.main.files.viewmodels.PdfFileViewModelFactory
@@ -45,7 +44,7 @@ class PdfViewerFragment : GenericViewerFragment<FilePdfViewerFragmentBinding>() 
         val content = sharedViewModel.contentToOpen.value
         if (content == null) {
             Log.e("[PDF Viewer] Content is null, aborting!")
-            (activity as MainActivity).showSnackBar(R.string.error)
+            // (activity as MainActivity).showSnackBar(R.string.error)
             findNavController().navigateUp()
             return
         }

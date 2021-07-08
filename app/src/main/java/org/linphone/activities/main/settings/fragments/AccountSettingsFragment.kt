@@ -25,7 +25,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
 import org.linphone.activities.GenericFragment
-import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.settings.viewmodels.AccountSettingsViewModel
 import org.linphone.activities.main.settings.viewmodels.AccountSettingsViewModelFactory
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
@@ -51,7 +50,7 @@ class AccountSettingsFragment : GenericFragment<SettingsAccountFragmentBinding>(
         val identity = arguments?.getString("Identity")
         if (identity == null) {
             Log.e("[Account Settings] Identity is null, aborting!")
-            (activity as MainActivity).showSnackBar(R.string.error)
+            // (activity as MainActivity).showSnackBar(R.string.error)
             findNavController().navigateUp()
             return
         }

@@ -19,7 +19,7 @@
     <string name="about_version" translatable="false">&appName; Android %s</string>
     <string name="about_liblinphone_sdk_version" translatable="false">&appName; SDK %s</string>
     <string name="about_privacy_policy">Visit our privacy policy</string>
-    <string name="about_text" translatable="false">GNU General Public License V3\n © 2010–2020 Belledonne Communications</string>
+    <string name="about_text" translatable="false">GNU General Public License v3.0\n © 2010–2021 Belledonne Communications</string>
 
     <!-- Logs -->
     <string name="logs_upload_failure">Failed to upload logs!</string>
@@ -177,6 +177,9 @@
     <string name="chat_message_forward_confirmation_dialog">Do you want to forward the message in this room?</string>
     <string name="chat_room_dummy_subject" translatable="false">dummy subject</string>
     <string name="chat_room_toast_choose_for_sharing">Select a conversation or create a new one</string>
+    <string name="chat_room_choose_conversation_for_message_forward">Select or create a conversation to forward the message</string>
+    <string name="chat_room_choose_conversation_for_file_sharing">Select or create a conversation to share the file(s)</string>
+    <string name="chat_room_choose_conversation_for_text_sharing">Select or create a conversation to share the text</string>
     <string name="chat_room_cant_open_file_no_app_found">Can\'t open file, no application available for this format.</string>
     <string name="chat_room_file_not_found">File not found</string>
     <string name="chat_room_creation_failed">Chat room creation failed</string>
@@ -228,8 +231,10 @@
     <string name="call_error_user_not_found">User hasn\'t been found</string>
     <string name="call_error_incompatible_media_params">Incompatible media parameters</string>
     <string name="call_error_network_unreachable">Network is unreachable</string>
-    <string name="call_error_io_error">Network error</string>
-    <string name="call_error_unknown">Unknown error</string>
+    <string name="call_error_io_error">Service unavailable or network error</string>
+    <string name="call_error_server_timeout">Server timeout</string>
+    <string name="call_error_temporarily_unavailable">Temporarily unavailable</string>
+    <string name="call_error_generic">Error: %s</string>
     <string name="call_video_update_requested_dialog">Correspondent would like to turn the video on</string>
 
     <!-- Call stats -->
@@ -278,7 +283,7 @@
     <string name="assistant_error_phone_number_already_exists">There is already an account using this number</string>
     <string name="assistant_error_username_invalid_characters">Invalid characters found</string>
     <string name="assistant_error_passwords_dont_match">Passwords do not match</string>
-    <string name="assistant_error_invalid_email_address">Email address is not valid</string>
+    <string name="assistant_error_invalid_email_address">Email address is invalid</string>
     <string name="assistant_error_username_too_long">Username has too many characters</string>
     <string name="assistant_error_account_not_activated">Your account has not been validated yet</string>
     <string name="assistant_error_invalid_credentials">Account does not exist or password does not match</string>
@@ -304,7 +309,7 @@
     <!-- Assistant create -->
     <string name="assistant_create_account_part_email">Please enter a username, email and password for your &appName; account</string>
     <string name="assistant_confirm_password">Password confirmation</string>
-    <string name="assistant_validate_account_1">Your account is created. Please check your mails to validate your account:</string>
+    <string name="assistant_validate_account_1">Your account is created. Please check your emails to validate your account:</string>
     <string name="assistant_validate_account_2">Once it is done, come back here and click on the button.</string>
     <string name="assistant_use_username_instead_or_phone_number">Use a username (optional)</string>
     <string name="assistant_create_account_part_2">We have sent you an SMS with a validation code to your phone number:</string>
@@ -338,9 +343,7 @@
     <string name="settings_advanced_title">Advanced</string>
     <string name="settings_primary_account_title">Primary Account</string>
     <string name="settings_primary_account_display_name_title">Display Name</string>
-    <string name="settings_primary_account_display_name_summary"></string>
     <string name="settings_primary_account_username_title">Username</string>
-    <string name="settings_primary_account_username_summary"></string>
 
     <!-- Audio settings -->
     <string name="audio_settings_echo_cancellation_title">Echo cancellation</string>
@@ -356,13 +359,11 @@
     <string name="audio_settings_echo_tester_summary_is_stopped">Echo tester is stopped</string>
     <string name="audio_settings_echo_tester_summary_is_running">Echo tester is running</string>
     <string name="audio_settings_adaptive_rate_control_title">Adaptive rate control</string>
-    <string name="audio_settings_adaptive_rate_control_summary"></string>
     <string name="audio_settings_input_device_title">Default input audio device</string>
     <string name="audio_settings_input_device_summary">Changes will take effect starting next call</string>
     <string name="audio_settings_output_device_title">Default output audio device</string>
     <string name="audio_settings_output_device_summary">Changes will take effect starting next call</string>
     <string name="audio_settings_codec_bitrate_title">Codec bitrate limit</string>
-    <string name="audio_settings_codec_bitrate_summary"></string>
     <string name="audio_settings_microphone_gain_title">Microphone gain</string>
     <string name="audio_settings_microphone_gain_summary">(in decibels)</string>
     <string name="audio_settings_playback_gain_title">Playback gain</string>
@@ -371,67 +372,51 @@
 
     <!-- Video settings -->
     <string name="video_settings_enable_title">Enable video</string>
-    <string name="video_settings_enable_summary"></string>
     <string name="video_settings_tablet_preview_title">Display camera preview on dialer</string>
-    <string name="video_settings_tablet_preview_summary"></string>
     <string name="video_settings_initiate_call_title">Initiate video calls</string>
     <string name="video_settings_initiate_call_summary">Always send video requests</string>
     <string name="video_settings_automatically_accept_title">Accept incoming video requests</string>
     <string name="video_settings_automatically_accept_summary">Always accept video requests</string>
     <string name="video_settings_camera_device_title">Camera</string>
-    <string name="video_settings_camera_device_summary"></string>
     <string name="video_settings_video_size_title">Preferred video size</string>
-    <string name="video_settings_video_size_summary"></string>
     <string name="video_settings_video_preset_title">Video preset</string>
-    <string name="video_settings_video_preset_summary"></string>
     <string name="video_settings_preferred_fps_title">Preferred FPS</string>
-    <string name="video_settings_preferred_fps_summary"></string>
     <string name="video_settings_bandwidth_limit_title">Bandwidth limit</string>
     <string name="video_settings_bandwidth_limit_summary">in kbits/s</string>
     <string name="video_settings_codecs_title">Codecs</string>
 
     <!-- Call settings -->
     <string name="call_settings_device_ringtone_title">Use device ringtone</string>
-    <string name="call_settings_device_ringtone_summary"></string>
     <string name="call_settings_vibrate_title">Vibrate while incoming call is ringing</string>
-    <string name="call_settings_vibrate_summary"></string>
     <string name="call_settings_encryption_title">Media encryption</string>
-    <string name="call_settings_encryption_summary"></string>
     <string name="call_settings_media_encryption_none">None</string>
     <string name="call_settings_media_encryption_srtp">SRTP</string>
     <string name="call_settings_media_encryption_zrtp">ZRTP</string>
     <string name="call_settings_media_encryption_dtls">DTLS</string>
     <string name="call_settings_encryption_mandatory_title">Media encryption mandatory</string>
-    <string name="call_settings_encryption_mandatory_summary"></string>
     <string name="call_settings_full_screen_title">Full screen app while in call</string>
     <string name="call_settings_full_screen_summary">Hides status and navigation bars</string>
     <string name="call_settings_overlay_title">Overlay call notification</string>
-    <string name="call_settings_overlay_summary"></string>
     <string name="call_settings_system_wide_overlay_title">Show overlay outside of app</string>
     <string name="call_settings_system_wide_overlay_summary">You will be asked to grant overlay permission</string>
     <string name="call_settings_sipinfo_dtmf_title">Send out-band DTMFs (SIP INFO)</string>
-    <string name="call_settings_sipinfo_dtmf_summary"></string>
     <string name="call_settings_rfc2833_dtmf_title">Send in-band DTMFs (RFC 2833)</string>
-    <string name="call_settings_rfc2833_dtmf_summary"></string>
     <string name="call_settings_auto_start_title">Start call immediately</string>
     <string name="call_settings_auto_start_summary">The call will start automatically if started from another application</string>
     <string name="call_settings_auto_answer_title">Auto answer incoming calls</string>
-    <string name="call_settings_auto_answer_summary"></string>
     <string name="call_settings_auto_answer_delay_title">Auto answer time</string>
     <string name="call_settings_auto_answer_delay_summary">in milliseconds</string>
     <string name="call_settings_incoming_timeout_title">Incoming call timeout</string>
     <string name="call_settings_incoming_timeout_summary">in seconds</string>
     <string name="call_settings_voice_mail_uri_title">Voice mail URI</string>
+    <string name="call_settings_redirect_to_voice_mail_declined_calls_title">Redirect declined calls to voice mail URI</string>
     <string name="call_settings_accept_early_media_title">Accept early media</string>
-    <string name="call_settings_accept_early_media_summary"></string>
     <string name="call_settings_ring_during_early_media_title">Ring during incoming early media</string>
-    <string name="call_settings_ring_during_early_media_summary"></string>
-    <string name="call_settings_voice_mail_uri_summary"></string>
+    <string name="call_settings_pause_calls_lost_audio_focus_title">Pause calls when audio focus is lost</string>
     <string name="call_settings_go_to_android_notification_settings">Android notification settings</string>
 
     <!-- Chat settings -->
     <string name="chat_settings_mark_as_read_notif_dismissal_title">Mark as read upon notification dismissal</string>
-    <string name="chat_settings_mark_as_read_notif_dismissal_summary"></string>
     <string name="chat_settings_file_sharing_url_title">Sharing server URL</string>
     <string name="chat_settings_file_sharing_url_summary">Do not edit unless you know what you are doing!</string>
     <string name="chat_settings_auto_download_title">Auto download incoming files policy</string>
@@ -448,34 +433,27 @@
     <string name="chat_settings_launcher_shortcuts_title">Create shortcuts to chat rooms in launcher</string>
     <string name="chat_settings_launcher_shortcuts_summary">Will be replaced by contacts shortcuts if enabled</string>
     <string name="chat_settings_hide_empty_rooms_title">Hide empty chat rooms</string>
-    <string name="chat_settings_hide_empty_rooms_summary"></string>
     <string name="chat_settings_hide_rooms_removed_proxies_title">Hide chat rooms from removed proxy configs</string>
     <string name="chat_settings_hide_rooms_removed_proxies_summary">If you are missing chat rooms, try to uncheck this setting</string>
     <string name="chat_settings_go_to_android_notification_settings">Android notification settings</string>
     <string name="chat_settings_use_in_app_file_viewer_title">Always open files inside this app</string>
     <string name="chat_settings_use_in_app_file_viewer_summary">You\'ll still be able to export them in third-party apps</string>
+    <string name="chat_settins_enable_ephemeral_messages_beta_title">Enable ephemeral messages (beta)</string>
 
     <!-- Network settings -->
     <string name="network_settings_wifi_only_title">Use WiFi only</string>
-    <string name="network_settings_wifi_only_summary"></string>
     <string name="network_settings_allow_ipv6_title">Allow IPv6</string>
-    <string name="network_settings_allow_ipv6_summary"></string>
     <string name="network_settings_push_notifications_title">Enable push notifications</string>
-    <string name="network_settings_push_notifications_summary"></string>
     <string name="network_settings_legacy_push_notification_format_title">Use legacy push notification params</string>
     <string name="network_settings_legacy_push_notification_format_summary">Required when using Flexisip &lt; 2.0</string>
     <string name="network_settings_random_ports_title">Use random ports</string>
-    <string name="network_settings_random_ports_summary"></string>
     <string name="network_settings_sip_port_title">SIP port to use</string>
-    <string name="network_settings_sip_port_summary"></string>
 
     <!-- Contacts settings -->
     <string name="contacts_settings_friendlist_subscribe_title">Friendlist subscribe</string>
-    <string name="contacts_settings_friendlist_subscribe_summary"></string>
     <string name="contacts_settings_native_presence_title">Presence information in native contact</string>
     <string name="contacts_settings_native_presence_summary">Inserting information shortcuts from the &appName; contact into native Android contacts</string>
     <string name="contacts_settings_show_organization_title">Display contact organization</string>
-    <string name="contacts_settings_show_organization_summary"></string>
     <string name="contacts_settings_launcher_shortcuts_title">Create shortcuts to contacts in launcher</string>
     <string name="contacts_settings_launcher_shortcuts_summary">Will replace chat room shortcuts if any</string>
     <string name="contacts_settings_show_new_contact_account_dialog_title">Always ask in which account save newly created contact</string>
@@ -483,22 +461,17 @@
 
     <!-- Advanced settings -->
     <string name="advanced_settings_debug_mode_title">Debug logs</string>
-    <string name="advanced_settings_debug_mode_summary"></string>
     <string name="advanced_settings_background_mode_title">Background mode</string>
     <string name="advanced_settings_background_mode_summary">Shows a notification to keep the app alive</string>
     <string name="advanced_settings_auto_start_title">Start at boot time</string>
-    <string name="advanced_settings_auto_start_summary"></string>
     <string name="advanced_settings_dark_mode_title">Dark theme</string>
-    <string name="advanced_settings_dark_mode_summary"></string>
     <string name="advanced_settings_dark_mode_label_auto">Auto</string>
     <string name="advanced_settings_dark_mode_label_no">No</string>
     <string name="advanced_settings_dark_mode_label_yes">Yes</string>
     <string name="advanced_settings_animations_title">Animations</string>
-    <string name="advanced_settings_animations_summary"></string>
     <string name="advanced_settings_device_name_title">Device name</string>
     <string name="advanced_settings_device_name_summary">Changes will be applied at next start up</string>
     <string name="advanced_settings_remote_provisioning_url_title">Remote provisioning URL</string>
-    <string name="advanced_settings_remote_provisioning_url_summary"></string>
     <string name="advanced_settings_logs_server_url_title">Logs upload server URL</string>
     <string name="advanced_settings_logs_server_url_summary">Do not edit unless you know what you are doing!</string>
     <string name="advanced_settings_android_title">Android</string>
@@ -508,17 +481,13 @@
     <string name="advanced_settings_vfs_title">Encrypt everything</string>
     <string name="advanced_settings_vfs_summary">Once enabled it can\'t be disabled!</string>
     <string name="advanced_settings_send_debug_logs_title">Send logs</string>
-    <string name="advanced_settings_send_debug_logs_summary"></string>
     <string name="advanced_settings_reset_debug_logs_title">Reset logs</string>
-    <string name="advanced_settings_reset_debug_logs_summary"></string>
     <string name="advanced_settings_debug_title">Debug settings</string>
     <string name="advanced_settings_other_title">Other settings</string>
 
     <!-- Tunnel settings -->
     <string name="tunnel_settings_hostname_url_title">Hostname</string>
-    <string name="tunnel_settings_hostname_url_summary"></string>
     <string name="tunnel_settings_port_title">Port</string>
-    <string name="tunnel_settings_port_summary"></string>
     <string name="tunnel_settings_dual_mode_title">Dual mode enabled</string>
     <string name="tunnel_settings_dual_mode_summary">Will use one server for upload and another one for download</string>
     <string name="tunnel_settings_dual_hostname_url_title">Second server hostname</string>
@@ -526,7 +495,6 @@
     <string name="tunnel_settings_dual_port_title">Second server port</string>
     <string name="tunnel_settings_dual_port_summary">Required in dual mode</string>
     <string name="tunnel_settings_mode_title">Mode</string>
-    <string name="tunnel_settings_mode_summary"></string>
     <string name="tunnel_settings_disabled_mode">Disabled</string>
     <string name="tunnel_settings_always_mode">Always</string>
     <string name="tunnel_settings_auto_mode">Auto</string>
@@ -541,35 +509,25 @@
     <string name="account_settings_domain_title">Domain</string>
     <string name="account_settings_domain_summary">Example: sip.example.org if your account is john@sip.example.org</string>
     <string name="account_settings_display_name_title">Display name</string>
-    <string name="account_settings_display_name_summary"></string>
     <string name="account_settings_manage_title">Manage</string>
     <string name="account_settings_disable_title">Disable</string>
-    <string name="account_settings_disable_summary"></string>
     <string name="account_settings_default_title">Used as default</string>
-    <string name="account_settings_default_summary"></string>
     <string name="account_settings_link_phone_number_title">Link your account</string>
-    <string name="account_settings_link_phone_number_summary"></string>
     <string name="account_settings_delete_title">Delete</string>
-    <string name="account_settings_delete_summary"></string>
     <string name="account_settings_advanced_title">Advanced</string>
     <string name="account_settings_push_notification_title">Allow push notification</string>
     <string name="account_settings_push_notification_summary">Proxy config won\'t unregister</string>
     <string name="account_settings_transport_title">Transport</string>
-    <string name="account_settings_transport_summary"></string>
     <string name="account_settings_transport_udp">UDP</string>
     <string name="account_settings_transport_tcp">TCP</string>
     <string name="account_settings_transport_tls">TLS</string>
     <string name="account_settings_transport_dtls">DTLS</string>
     <string name="account_settings_proxy_title">SIP proxy</string>
-    <string name="account_settings_proxy_summary"></string>
     <string name="account_settings_outbound_proxy_title">Outbound proxy</string>
     <string name="account_settings_outbound_proxy_summary">Route all calls through above SIP proxy</string>
-    <string name="account_settings_stun_server_title">STUN / TURN server</string>
-    <string name="account_settings_stun_server_summary"></string>
+    <string name="account_settings_stun_server_title">STUN/TURN server</string>
     <string name="account_settings_ice_title">Enable ICE</string>
-    <string name="account_settings_ice_summary"></string>
     <string name="account_settings_avpf_title">AVPF</string>
-    <string name="account_settings_avpf_summary"></string>
     <string name="account_settings_avpf_rr_interval_title">AVPF regular RTCP interval</string>
     <string name="account_settings_avpf_rr_interval_summary">in seconds (between 1 and 5)</string>
     <string name="account_settings_expires_title">Expire</string>
@@ -579,7 +537,6 @@
     <string name="account_settings_apply_prefix_for_calls_title">Apply prefix for outgoing calls and chat</string>
     <string name="account_settings_apply_prefix_for_calls_summary">If a number is entered, apply prefix to number</string>
     <string name="account_settings_escape_plus_title">Replace + by 00</string>
-    <string name="account_settings_escape_plus_summary"></string>
 
     <!-- Notifications -->
     <string name="notification_channel_service_id" translatable="false">linphone_notification_service_id</string>
@@ -665,6 +622,7 @@
     <string name="content_description_downloaded_file_transfer">Attached file</string>
     <string name="content_description_delivery_status">Message delivery status</string>
     <string name="content_description_forwarded_message">Message has been forwarded</string>
+    <string name="content_description_forward_message">Forward message in this conversation</string>
     <string name="content_description_ephemeral_message">Message is ephemeral</string>
     <string name="content_description_linphone_user">Contact is a &appName; user</string>
     <string name="content_description_contact_selected">Contact is selected</string>
@@ -693,7 +651,7 @@
     <string name="content_description_start_encrypted_chat">Go into encrypted conversation</string>
     <string name="content_description_edit_contact">Edit contact</string>
     <string name="content_description_delete_contact">Delete contact</string>
-    <string name="content_description_cancel_contact_edit">Discard changes</string>
+    <string name="content_description_discard_changes">Discard changes</string>
     <string name="content_description_confirm_contact_edit">Save changes</string>
     <string name="content_description_change_contact_picture">Change contact picture</string>
     <string name="content_description_change_own_picture">Change own picture</string>
@@ -701,7 +659,7 @@
     <string name="content_description_show_call_details">Go to call details</string>
     <string name="content_description_exit_edition_mode">Quit edition mode</string>
     <string name="content_description_select_all">Select all items in list</string>
-    <string name="content_description_unselect_all">Un-select all items in list</string>
+    <string name="content_description_unselect_all">Unselect all items in list</string>
     <string name="content_description_delete_selection">Delete selected items in list</string>
     <string name="content_description_numpad_1">1</string>
     <string name="content_description_numpad_2">2</string>
@@ -749,4 +707,6 @@
     <string name="content_description_close_bubble">Close notification bubble</string>
     <string name="content_description_open_app">Open conversation in app instead of bubble</string>
     <string name="content_description_export">Open file in third-party app</string>
+    <string name="content_description_cancel_forward">Cancel message forward</string>
+    <string name="content_description_cancel_sharing">Cancel sharing</string>
 </resources>

@@ -20,7 +20,7 @@
         <LinearLayout
             android:id="@+id/top_bar"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="@dimen/main_activity_top_bar_size"
             android:layout_gravity="center_horizontal"
             android:background="?attr/lightToolbarBackgroundColor"
             android:orientation="horizontal">
@@ -68,21 +68,18 @@
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/call_settings_device_ringtone_title}"
-                    linphone:subtitle="@{@string/call_settings_device_ringtone_summary}"
                     linphone:listener="@{viewModel.deviceRingtoneListener}"
                     linphone:checked="@={viewModel.deviceRingtone}"/>
 
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/call_settings_vibrate_title}"
-                    linphone:subtitle="@{@string/call_settings_vibrate_summary}"
                     linphone:listener="@{viewModel.vibrateOnIncomingCallListener}"
                     linphone:checked="@={viewModel.vibrateOnIncomingCall}"/>
 
                 <include
                     layout="@layout/settings_widget_list"
                     linphone:title="@{@string/call_settings_encryption_title}"
-                    linphone:subtitle="@{@string/call_settings_encryption_summary}"
                     linphone:listener="@{viewModel.encryptionListener}"
                     linphone:selectedIndex="@{viewModel.encryptionIndex}"
                     linphone:labels="@{viewModel.encryptionLabels}"/>
@@ -90,11 +87,9 @@
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/call_settings_encryption_mandatory_title}"
-                    linphone:subtitle="@{@string/call_settings_encryption_mandatory_summary}"
                     linphone:listener="@{viewModel.encryptionMandatoryListener}"
                     linphone:checked="@={viewModel.encryptionMandatory}"
-                    linphone:enabled="@{viewModel.encryptionIndex != 0}"
-                    android:visibility="@{viewModel.encryptionIndex != 0 ? View.VISIBLE : View.GONE}"/>
+                    linphone:enabled="@{viewModel.encryptionIndex != 0}" />
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/call_settings_full_screen_title}"
@@ -105,7 +100,6 @@
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/call_settings_overlay_title}"
-                    linphone:subtitle="@{@string/call_settings_overlay_summary}"
                     linphone:listener="@{viewModel.overlayListener}"
                     linphone:checked="@={viewModel.overlay}"/>
 
@@ -120,14 +114,12 @@
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/call_settings_sipinfo_dtmf_title}"
-                    linphone:subtitle="@{@string/call_settings_sipinfo_dtmf_summary}"
                     linphone:listener="@{viewModel.sipInfoDtmfListener}"
                     linphone:checked="@={viewModel.sipInfoDtmf}"/>
 
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/call_settings_rfc2833_dtmf_title}"
-                    linphone:subtitle="@{@string/call_settings_rfc2833_dtmf_summary}"
                     linphone:listener="@{viewModel.rfc2833DtmfListener}"
                     linphone:checked="@={viewModel.rfc2833Dtmf}"/>
 
@@ -141,7 +133,6 @@
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/call_settings_auto_answer_title}"
-                    linphone:subtitle="@{@string/call_settings_auto_answer_summary}"
                     linphone:listener="@{viewModel.autoAnswerListener}"
                     linphone:checked="@={viewModel.autoAnswer}"/>
 
@@ -166,25 +157,35 @@
                 <include
                     layout="@layout/settings_widget_text"
                     linphone:title="@{@string/call_settings_voice_mail_uri_title}"
-                    linphone:subtitle="@{@string/call_settings_voice_mail_uri_summary}"
                     linphone:listener="@{viewModel.voiceMailUriListener}"
                     linphone:defaultValue="@{viewModel.voiceMailUri}"
                     linphone:inputType="@{InputType.TYPE_TEXT_VARIATION_URI}"/>
 
                 <include
                     layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/call_settings_redirect_to_voice_mail_declined_calls_title}"
+                    linphone:listener="@{viewModel.redirectToVoiceMailIncomingDeclinedCallsListener}"
+                    linphone:checked="@={viewModel.redirectToVoiceMailIncomingDeclinedCalls}"
+                    linphone:enabled="@{viewModel.voiceMailUri.length() > 0}"/>
+
+                <include
+                    layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/call_settings_accept_early_media_title}"
-                    linphone:subtitle="@{@string/call_settings_accept_early_media_summary}"
                     linphone:listener="@{viewModel.acceptEarlyMediaListener}"
                     linphone:checked="@={viewModel.acceptEarlyMedia}"/>
 
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/call_settings_ring_during_early_media_title}"
-                    linphone:subtitle="@{@string/call_settings_ring_during_early_media_summary}"
                     linphone:listener="@{viewModel.ringDuringEarlyMediaListener}"
                     linphone:checked="@={viewModel.ringDuringEarlyMedia}"
                     linphone:enabled="@{viewModel.acceptEarlyMedia}"/>
+
+                <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/call_settings_pause_calls_lost_audio_focus_title}"
+                    linphone:listener="@{viewModel.pauseCallsWhenAudioFocusIsLostListener}"
+                    linphone:checked="@={viewModel.pauseCallsWhenAudioFocusIsLost}"/>
 
                 <include
                     layout="@layout/settings_widget_basic"

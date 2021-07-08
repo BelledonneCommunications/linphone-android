@@ -82,7 +82,11 @@ abstract class SecureFragment<T : ViewDataBinding> : GenericFragment<T>() {
 
         if (ViewCompat.isAttachedToWindow(window.decorView)) {
             Log.d("[Secure Fragment] Redrawing window decorView to apply flag")
-            windowManager.updateViewLayout(window.decorView, window.attributes)
+            try {
+                windowManager.updateViewLayout(window.decorView, window.attributes)
+            } catch (ise: IllegalStateException) {
+                Log.e("[Secure Fragment] Failed to update view layout: $ise")
+            }
         }
     }
 }

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!DOCTYPE resources [
-<!ENTITY appName "Linphone">
+    <!ENTITY appName "Linphone">
 ]>
+
 <resources>
     <string name="call_stats_video">Vidéo</string>
     <string name="assistant_remote_provisioning_failure">Erreur durant le téléchargement ou l\'application de la configuration distante…</string>
@@ -162,8 +164,7 @@
     <string name="call_error_user_busy">L\'utilisateur est occupé</string>
     <string name="call_error_user_not_found">L\'utilisateur n\'a pu être trouvé</string>
     <string name="call_error_network_unreachable">Le réseau n\'est pas joignable</string>
-    <string name="call_error_io_error">Erreur réseau</string>
-    <string name="call_error_unknown">Erreur inconnue</string>
+    <string name="call_error_io_error">Service indisponible ou erreur réseau</string>
     <string name="call_video_update_requested_dialog">Votre interlocuteur souhaite activer la vidéo</string>
     <string name="call_stats_audio">Audio</string>
     <string name="video_settings_camera_device_title">Appareil photo</string>
@@ -449,7 +450,7 @@
     <string name="content_description_start_encrypted_chat">Rejoindre la conversation chiffrée</string>
     <string name="content_description_edit_contact">Editer le contact</string>
     <string name="content_description_delete_contact">Supprimer le contact</string>
-    <string name="content_description_cancel_contact_edit">Annuler les modifications</string>
+    <string name="content_description_discard_changes">Annuler les modifications</string>
     <string name="content_description_confirm_contact_edit">Sauvegarder les modifications</string>
     <string name="content_description_change_contact_picture">Modifier la photo du contact</string>
     <string name="content_description_change_own_picture">Modifier ma photo</string>
@@ -572,16 +573,13 @@
     <string name="chat_settings_use_in_app_file_viewer_title">Ouvrir les fichiers dans l\'application</string>
     <string name="chat_settings_use_in_app_file_viewer_summary">Vous pourrez toujours les exporter dans une appli tierce</string>
     <string name="call_settings_ring_during_early_media_title">Sonner durant un appel entrant avec early-media</string>
-    <string name="call_settings_ring_during_early_media_summary"></string>
     <string name="debug_popup_show_config_file">Voir le fichier de config</string>
     <string name="chat_message_cant_open_file_in_app_dialog_title">Il semblerait que l\'on ne puisse pas afficher ce fichier.</string>
     <string name="chat_message_cant_open_file_in_app_dialog_message">Voulez-vous essayer de l\'ouvrir comme texte ou de l\'exporter (en clair) vers une appli tierce si disponible ?</string>
     <string name="chat_message_cant_open_file_in_app_dialog_export_button">Exporter</string>
     <string name="chat_message_cant_open_file_in_app_dialog_open_as_text_button">Ouvrir comme texte</string>
     <string name="advanced_settings_send_debug_logs_title">Envoyer les traces</string>
-    <string name="advanced_settings_send_debug_logs_summary"></string>
     <string name="advanced_settings_reset_debug_logs_title">Vider les traces</string>
-    <string name="advanced_settings_reset_debug_logs_summary"></string>
     <string name="advanced_settings_debug_title">Paramètres de deboggage</string>
     <string name="advanced_settings_other_title">Autres paramètres</string>
     <string name="call_settings_system_wide_overlay_title">Afficher la notification flottante en dehors de l\'app</string>
@@ -592,9 +590,19 @@
     <string name="account_settings_apply_prefix_for_calls_title">Applique le préfixe pour les appels sortant et les messages</string>
     <string name="settings_primary_account_title">Compte principal</string>
     <string name="settings_primary_account_display_name_title">Nom d\'affichage</string>
-    <string name="settings_primary_account_display_name_summary"></string>
     <string name="settings_primary_account_username_title">Nom d\'utilisateur</string>
-    <string name="settings_primary_account_username_summary"></string>
     <string name="logs_upload_failure">Erreur pendant l\'envoi des journaux !</string>
     <string name="logs_reset_complete">Les journaux ont été néttoyés</string>
+    <string name="call_settings_redirect_to_voice_mail_declined_calls_title">Rediriger les appels déclinés vers la boîte vocale</string>
+    <string name="call_error_server_timeout">Délai d\'attente serveur expiré</string>
+    <string name="call_error_temporarily_unavailable">Temporairement indisponible</string>
+    <string name="call_error_generic">Erreur : %s</string>
+    <string name="call_settings_pause_calls_lost_audio_focus_title">Mettre en pause les appels quand le focus audio est perdu</string>
+    <string name="content_description_cancel_forward">Annuler le transfert de message</string>
+    <string name="content_description_cancel_sharing">Annuler le partage</string>
+    <string name="content_description_forward_message">Transférer le message dans cette conversation</string>
+    <string name="chat_room_choose_conversation_for_message_forward">Sélectionnez ou créez une conversation pour transférer le message</string>
+    <string name="chat_room_choose_conversation_for_file_sharing">Sélectionnez ou créez une conversation pour partager le(s) fichier(s)</string>
+    <string name="chat_room_choose_conversation_for_text_sharing">Sélectionnez ou créez une conversation pour partager le texte</string>
+    <string name="chat_settins_enable_ephemeral_messages_beta_title">Messages éphémères (bêta)</string>
 </resources>

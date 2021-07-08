@@ -24,7 +24,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -80,6 +79,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
         // SubmitList is done on a background thread
         // We need this adapter data observer to know when to scroll
         adapter.registerAdapterDataObserver(observer)
+        binding.callLogsList.setHasFixedSize(true)
         binding.callLogsList.adapter = adapter
 
         binding.setEditClickListener {
@@ -122,9 +122,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
             .attachToRecyclerView(binding.callLogsList)
 
         // Divider between items
-        val dividerItemDecoration = DividerItemDecoration(context, layoutManager.orientation)
-        dividerItemDecoration.setDrawable(resources.getDrawable(R.drawable.divider, null))
-        binding.callLogsList.addItemDecoration(dividerItemDecoration)
+        binding.callLogsList.addItemDecoration(AppUtils.getDividerDecoration(requireContext(), layoutManager))
 
         // Displays formatted date header
         val headerItemDecoration = RecyclerViewHeaderDecoration(adapter)
@@ -164,16 +162,18 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
         })
 
         adapter.startCallToEvent.observe(viewLifecycleOwner, {
-            it.consume { address ->
+            it.consume { callLogGroup ->
+                val remoteAddress = callLogGroup.lastCallLog.remoteAddress
                 if (coreContext.core.callsNb > 0) {
-                    Log.i("[History] Starting dialer with pre-filled URI ${address.asStringUriOnly()}, is transfer? ${sharedViewModel.pendingCallTransfer}")
+                    Log.i("[History] Starting dialer with pre-filled URI ${remoteAddress.asStringUriOnly()}, is transfer? ${sharedViewModel.pendingCallTransfer}")
                     val args = Bundle()
-                    args.putString("URI", address.asStringUriOnly())
+                    args.putString("URI", remoteAddress.asStringUriOnly())
                     args.putBoolean("Transfer", sharedViewModel.pendingCallTransfer)
                     args.putBoolean("SkipAutoCallStart", true) // If auto start call setting is enabled, ignore it
                     navigateToDialer(args)
                 } else {
-                    coreContext.startCall(address)
+                    val localAddress = callLogGroup.lastCallLog.localAddress
+                    coreContext.startCall(remoteAddress, localAddress = localAddress)
                 }
             }
         })

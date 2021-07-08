@@ -255,8 +255,7 @@ class ControlsViewModel : ViewModel() {
 
     fun toggleSpeaker() {
         somethingClickedEvent.value = Event(true)
-        val audioDevice = coreContext.core.outputAudioDevice
-        if (audioDevice?.type == AudioDevice.Type.Speaker) {
+        if (AudioRouteUtils.isSpeakerAudioRouteCurrentlyUsed()) {
             forceEarpieceAudioRoute()
         } else {
             forceSpeakerAudioRoute()
@@ -272,7 +271,7 @@ class ControlsViewModel : ViewModel() {
         val core = coreContext.core
         when {
             core.currentCall != null -> core.currentCall?.terminate()
-            core.isInConference -> core.terminateConference()
+            core.conference?.isIn == true -> core.terminateConference()
             else -> core.terminateAllCalls()
         }
     }
@@ -287,7 +286,7 @@ class ControlsViewModel : ViewModel() {
         val currentCall = core.currentCall
         val conference = core.conference
 
-        if (conference != null && core.isInConference) {
+        if (conference != null && conference.isIn) {
             val params = core.createConferenceParams()
             val videoEnabled = conference.currentParams.isVideoEnabled
             params.isVideoEnabled = !videoEnabled
@@ -370,9 +369,7 @@ class ControlsViewModel : ViewModel() {
         Log.i("[Call] Setting videoEnabled to [$currentCallVideoEnabled] in conference params")
 
         val conference = core.conference ?: core.createConferenceWithParams(params)
-        for (call in core.calls) {
-            conference?.addParticipant(call)
-        }
+        conference?.addParticipants(core.calls)
 
         toggleOptionsMenu()
     }
@@ -399,7 +396,7 @@ class ControlsViewModel : ViewModel() {
 
     fun updateMuteMicState() {
         isMicrophoneMuted.value = !PermissionHelper.get().hasRecordAudioPermission() || !coreContext.core.micEnabled()
-        isMuteMicrophoneEnabled.value = coreContext.core.currentCall != null || coreContext.core.isInConference
+        isMuteMicrophoneEnabled.value = coreContext.core.currentCall != null || coreContext.core.conference?.isIn == true
     }
 
     private fun updateAudioRelated() {
@@ -413,7 +410,7 @@ class ControlsViewModel : ViewModel() {
         updateVideoAvailable()
         updateVideoEnabled()
         isPauseEnabled.value = currentCall != null && !currentCall.mediaInProgress()
-        isMuteMicrophoneEnabled.value = currentCall != null || coreContext.core.isInConference
+        isMuteMicrophoneEnabled.value = currentCall != null || coreContext.core.conference?.isIn == true
         updateConferenceState()
 
         // Check periodically until mediaInProgress is false
@@ -426,8 +423,7 @@ class ControlsViewModel : ViewModel() {
     }
 
     private fun updateSpeakerState() {
-        val audioDevice = coreContext.core.outputAudioDevice
-        isSpeakerSelected.value = audioDevice?.type == AudioDevice.Type.Speaker
+        isSpeakerSelected.value = AudioRouteUtils.isSpeakerAudioRouteCurrentlyUsed()
     }
 
     private fun updateAudioRoutesState() {
@@ -439,9 +435,7 @@ class ControlsViewModel : ViewModel() {
     }
 
     private fun updateBluetoothHeadsetState() {
-        if (coreContext.core.callsNb == 0) return
-        val audioDevice = (coreContext.core.currentCall ?: coreContext.core.calls[0]).outputAudioDevice
-        isBluetoothHeadsetSelected.value = audioDevice?.type == AudioDevice.Type.Bluetooth
+        isBluetoothHeadsetSelected.value = AudioRouteUtils.isBluetoothAudioRouteCurrentlyUsed()
     }
 
     private fun updateVideoAvailable() {
@@ -449,7 +443,7 @@ class ControlsViewModel : ViewModel() {
         val currentCall = core.currentCall
         isVideoAvailable.value = (core.videoCaptureEnabled() || core.videoPreviewEnabled()) &&
                 ((currentCall != null && !currentCall.mediaInProgress()) ||
-                        (core.conference != null && core.isInConference))
+                        core.conference?.isIn == true)
     }
 
     private fun updateVideoEnabled() {
@@ -459,6 +453,6 @@ class ControlsViewModel : ViewModel() {
 
     private fun updateConferenceState() {
         val core = coreContext.core
-        isConferencingAvailable.value = core.callsNb > max(1, core.conferenceSize) && !core.soundResourcesLocked()
+        isConferencingAvailable.value = core.callsNb > max(1, core.conference?.participantCount ?: 0) && !core.soundResourcesLocked()
     }
 }

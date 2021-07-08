@@ -56,7 +56,7 @@ class ContactAvatarView : LinearLayout {
         val initials = if (contact != null) {
             AppUtils.getInitials(contact.fullName ?: contact.firstName + " " + contact.lastName)
         } else {
-            AppUtils.getInitials(data.displayName)
+            AppUtils.getInitials(data.displayName.value ?: "")
         }
 
         binding.initials = initials
@@ -66,12 +66,12 @@ class ContactAvatarView : LinearLayout {
         binding.imagePath = contact?.getContactThumbnailPictureUri()
         binding.borderVisibility = corePreferences.showBorderOnContactAvatar
 
-        binding.securityIcon = when (data.securityLevel) {
+        binding.securityIcon = when (data.securityLevel.value) {
             ChatRoomSecurityLevel.Safe -> R.drawable.security_2_indicator
             ChatRoomSecurityLevel.Encrypted -> R.drawable.security_1_indicator
             else -> R.drawable.security_alert_indicator
         }
-        binding.securityContentDescription = when (data.securityLevel) {
+        binding.securityContentDescription = when (data.securityLevel.value) {
             ChatRoomSecurityLevel.Safe -> R.string.content_description_security_level_safe
             ChatRoomSecurityLevel.Encrypted -> R.string.content_description_security_level_encrypted
             else -> R.string.content_description_security_level_unsafe

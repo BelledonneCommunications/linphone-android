@@ -41,6 +41,7 @@ import java.math.BigInteger
 import java.nio.charset.StandardCharsets
 import java.security.KeyStore
 import java.security.MessageDigest
+import java.text.Collator
 import java.util.*
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
@@ -84,6 +85,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
         "$sdkVersion ($sdkBranch, $sdkBuildType)"
     }
 
+    val collator = Collator.getInstance()
     val contactsManager: ContactsManager by lazy {
         ContactsManager(context)
     }
@@ -91,8 +93,8 @@ class CoreContext(val context: Context, coreConfig: Config) {
         NotificationsManager(context)
     }
 
-    val callErrorMessageResourceId: MutableLiveData<Event<Int>> by lazy {
-        MutableLiveData<Event<Int>>()
+    val callErrorMessageResourceId: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
     }
 
     private val loggingService = Factory.instance().loggingService
@@ -218,21 +220,23 @@ class CoreContext(val context: Context, coreConfig: Config) {
                 }
 
                 if (state == Call.State.Error) {
-                    Log.w("[Context] Call error reason is ${call.errorInfo.reason}")
-                    val id = when (call.errorInfo.reason) {
-                        Reason.Busy -> R.string.call_error_user_busy
-                        Reason.IOError -> R.string.call_error_io_error
-                        Reason.NotAcceptable -> R.string.call_error_incompatible_media_params
-                        Reason.NotFound -> R.string.call_error_user_not_found
-                        else -> R.string.call_error_unknown
+                    Log.w("[Context] Call error reason is ${call.errorInfo.protocolCode} / ${call.errorInfo.reason} / ${call.errorInfo.phrase}")
+                    val message = when (call.errorInfo.reason) {
+                        Reason.Busy -> context.getString(R.string.call_error_user_busy)
+                        Reason.IOError -> context.getString(R.string.call_error_io_error)
+                        Reason.NotAcceptable -> context.getString(R.string.call_error_incompatible_media_params)
+                        Reason.NotFound -> context.getString(R.string.call_error_user_not_found)
+                        Reason.ServerTimeout -> context.getString(R.string.call_error_server_timeout)
+                        Reason.TemporarilyUnavailable -> context.getString(R.string.call_error_temporarily_unavailable)
+                        else -> context.getString(R.string.call_error_generic).format("${call.errorInfo.protocolCode} / ${call.errorInfo.phrase}")
                     }
-                    callErrorMessageResourceId.value = Event(id)
+                    callErrorMessageResourceId.value = Event(message)
                 } else if (state == Call.State.End &&
                         call.dir == Call.Dir.Outgoing &&
                         call.errorInfo.reason == Reason.Declined) {
                     Log.i("[Context] Call has been declined")
-                    val id = R.string.call_error_declined
-                    callErrorMessageResourceId.value = Event(id)
+                    val message = context.getString(R.string.call_error_declined)
+                    callErrorMessageResourceId.value = Event(message)
                 }
             }
 
@@ -262,12 +266,14 @@ class CoreContext(val context: Context, coreConfig: Config) {
             level: LogLevel,
             message: String
         ) {
-            when (level) {
-                LogLevel.Error -> android.util.Log.e(domain, message)
-                LogLevel.Warning -> android.util.Log.w(domain, message)
-                LogLevel.Message -> android.util.Log.i(domain, message)
-                LogLevel.Fatal -> android.util.Log.wtf(domain, message)
-                else -> android.util.Log.d(domain, message)
+            if (corePreferences.logcatLogsOutput) {
+                when (level) {
+                    LogLevel.Error -> android.util.Log.e(domain, message)
+                    LogLevel.Warning -> android.util.Log.w(domain, message)
+                    LogLevel.Message -> android.util.Log.i(domain, message)
+                    LogLevel.Fatal -> android.util.Log.wtf(domain, message)
+                    else -> android.util.Log.d(domain, message)
+                }
             }
             FirebaseCrashlytics.getInstance().log("[$domain] [${level.name}] $message")
         }
@@ -306,6 +312,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
         telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE)
 
         EmojiCompat.init(BundledEmojiCompatConfig(context))
+        collator.strength = Collator.NO_DECOMPOSITION
     }
 
     fun stop() {
@@ -461,35 +468,46 @@ class CoreContext(val context: Context, coreConfig: Config) {
         val address: Address? = core.interpretUrl(stringAddress)
         if (address == null) {
             Log.e("[Context] Failed to parse $stringAddress, abort outgoing call")
-            callErrorMessageResourceId.value = Event(R.string.call_error_network_unreachable)
+            callErrorMessageResourceId.value = Event(context.getString(R.string.call_error_network_unreachable))
             return
         }
 
         startCall(address)
     }
 
-    fun startCall(address: Address, forceZRTP: Boolean = false) {
+    fun startCall(address: Address, forceZRTP: Boolean = false, localAddress: Address? = null) {
         if (!core.isNetworkReachable) {
             Log.e("[Context] Network unreachable, abort outgoing call")
-            callErrorMessageResourceId.value = Event(R.string.call_error_network_unreachable)
+            callErrorMessageResourceId.value = Event(context.getString(R.string.call_error_network_unreachable))
             return
         }
 
         val params = core.createCallParams(null)
+        if (params == null) {
+            val call = core.inviteAddress(address)
+            Log.w("[Context] Starting call $call without params")
+            return
+        }
+
         if (forceZRTP) {
-            params?.mediaEncryption = MediaEncryption.ZRTP
+            params.mediaEncryption = MediaEncryption.ZRTP
         }
         if (LinphoneUtils.checkIfNetworkHasLowBandwidth(context)) {
             Log.w("[Context] Enabling low bandwidth mode!")
-            params?.enableLowBandwidth(true)
+            params.enableLowBandwidth(true)
         }
-        params?.recordFile = LinphoneUtils.getRecordingFilePathForAddress(address)
+        params.recordFile = LinphoneUtils.getRecordingFilePathForAddress(address)
 
-        val call = if (params != null) {
-            core.inviteAddressWithParams(address, params)
-        } else {
-            core.inviteAddress(address)
+        if (localAddress != null) {
+            params.proxyConfig = core.proxyConfigList.find { proxyConfig ->
+                proxyConfig.identityAddress?.weakEqual(localAddress) ?: false
+            }
+            if (params.proxyConfig != null) {
+                Log.i("[Context] Using proxy config matching address ${localAddress.asStringUriOnly()} as From")
+            }
         }
+
+        val call = core.inviteAddressWithParams(address, params)
         Log.i("[Context] Starting call $call")
     }
 
@@ -536,9 +554,10 @@ class CoreContext(val context: Context, coreConfig: Config) {
 
         if (overlayY == 0f) overlayY = AppUtils.pixelsToDp(40f)
         val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        // WRAP_CONTENT doesn't work well on some launchers...
         val params: WindowManager.LayoutParams = WindowManager.LayoutParams(
-            WindowManager.LayoutParams.WRAP_CONTENT,
-            WindowManager.LayoutParams.WRAP_CONTENT,
+            AppUtils.getDimension(R.dimen.call_overlay_size).toInt(),
+            AppUtils.getDimension(R.dimen.call_overlay_size).toInt(),
             Compatibility.getOverlayType(),
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
             PixelFormat.TRANSLUCENT
@@ -620,31 +639,42 @@ class CoreContext(val context: Context, coreConfig: Config) {
     }
 
     fun addContentToMediaStore(content: Content) {
-        coroutineScope.launch {
-            when (content.type) {
-                "image" -> {
-                    if (Compatibility.addImageToMediaStore(context, content)) {
-                        Log.i("[Context] Adding image ${content.name} to Media Store terminated")
-                    } else {
-                        Log.e("[Context] Something went wrong while copying file to Media Store...")
+        if (corePreferences.vfsEnabled) {
+            Log.w("[Context] Do not make received file(s) public when VFS is enabled")
+            return
+        }
+        if (!corePreferences.makePublicMediaFilesDownloaded) {
+            Log.w("[Context] Making received files public setting disabled")
+            return
+        }
+
+        if (Version.sdkAboveOrEqual(Version.API29_ANDROID_10) || PermissionHelper.get().hasWriteExternalStorage()) {
+            coroutineScope.launch {
+                when (content.type) {
+                    "image" -> {
+                        if (Compatibility.addImageToMediaStore(context, content)) {
+                            Log.i("[Context] Adding image ${content.name} to Media Store terminated")
+                        } else {
+                            Log.e("[Context] Something went wrong while copying file to Media Store...")
+                        }
                     }
-                }
-                "video" -> {
-                    if (Compatibility.addVideoToMediaStore(context, content)) {
-                        Log.i("[Context] Adding video ${content.name} to Media Store terminated")
-                    } else {
-                        Log.e("[Context] Something went wrong while copying file to Media Store...")
+                    "video" -> {
+                        if (Compatibility.addVideoToMediaStore(context, content)) {
+                            Log.i("[Context] Adding video ${content.name} to Media Store terminated")
+                        } else {
+                            Log.e("[Context] Something went wrong while copying file to Media Store...")
+                        }
                     }
-                }
-                "audio" -> {
-                    if (Compatibility.addAudioToMediaStore(context, content)) {
-                        Log.i("[Context] Adding audio ${content.name} to Media Store terminated")
-                    } else {
-                        Log.e("[Context] Something went wrong while copying file to Media Store...")
+                    "audio" -> {
+                        if (Compatibility.addAudioToMediaStore(context, content)) {
+                            Log.i("[Context] Adding audio ${content.name} to Media Store terminated")
+                        } else {
+                            Log.e("[Context] Something went wrong while copying file to Media Store...")
+                        }
                     }
-                }
-                else -> {
-                    Log.w("[Context] File ${content.name} isn't either an image, an audio file or a video, can't add it to the Media Store")
+                    else -> {
+                        Log.w("[Context] File ${content.name} isn't either an image, an audio file or a video, can't add it to the Media Store")
+                    }
                 }
             }
         }

@@ -26,7 +26,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
@@ -41,9 +40,6 @@ class RecordingsListAdapter(
     selectionVM: ListTopBarViewModel,
     private val viewLifecycleOwner: LifecycleOwner
 ) : SelectionListAdapter<RecordingData, RecyclerView.ViewHolder>(selectionVM, RecordingDiffCallback()), HeaderAdapter {
-    val isVideoRecordingPlayingEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
-    }
 
     private lateinit var videoSurface: TextureView
 
@@ -61,10 +57,6 @@ class RecordingsListAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         (holder as ViewHolder).bind(getItem(position))
-    }
-
-    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
-        (holder as ViewHolder).binding.data?.destroy()
     }
 
     inner class ViewHolder(
@@ -89,12 +81,10 @@ class RecordingsListAdapter(
                 setPlayListener {
                     if (recording.isPlaying.value == true) {
                         recording.pause()
-                        isVideoRecordingPlayingEvent.value = Event(false)
                     } else {
                         recording.play()
                         if (recording.isVideoAvailable()) {
                             recording.setTextureView(videoSurface)
-                            isVideoRecordingPlayingEvent.value = Event(true)
                         }
                     }
                 }

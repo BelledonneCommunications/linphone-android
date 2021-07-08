@@ -24,7 +24,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -89,6 +88,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
         // SubmitList is done on a background thread
         // We need this adapter data observer to know when to scroll
         adapter.registerAdapterDataObserver(observer)
+        binding.chatList.setHasFixedSize(true)
         binding.chatList.adapter = adapter
 
         val layoutManager = LinearLayoutManager(activity)
@@ -110,10 +110,10 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
         )
         val swipeListener = object : RecyclerViewSwipeListener {
             override fun onLeftToRightSwipe(viewHolder: RecyclerView.ViewHolder) {
+                val chatRoomViewModel = adapter.currentList[viewHolder.adapterPosition]
+                chatRoomViewModel.chatRoom.markAsRead()
+                coreContext.notificationsManager.dismissChatNotification(chatRoomViewModel.chatRoom)
                 adapter.notifyItemChanged(viewHolder.adapterPosition)
-                val chatRoom = adapter.currentList[viewHolder.adapterPosition]
-                chatRoom.markAsRead()
-                coreContext.notificationsManager.dismissChatNotification(chatRoom)
             }
 
             override fun onRightToLeftSwipe(viewHolder: RecyclerView.ViewHolder) {
@@ -126,7 +126,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
                 }
 
                 viewModel.showDeleteButton({
-                    listViewModel.deleteChatRoom(adapter.currentList[viewHolder.adapterPosition])
+                    listViewModel.deleteChatRoom(adapter.currentList[viewHolder.adapterPosition].chatRoom)
                     dialog.dismiss()
                 }, getString(R.string.dialog_delete))
 
@@ -137,16 +137,10 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
             .attachToRecyclerView(binding.chatList)
 
         // Divider between items
-        val dividerItemDecoration = DividerItemDecoration(context, layoutManager.orientation)
-        dividerItemDecoration.setDrawable(resources.getDrawable(R.drawable.divider, null))
-        binding.chatList.addItemDecoration(dividerItemDecoration)
+        binding.chatList.addItemDecoration(AppUtils.getDividerDecoration(requireContext(), layoutManager))
 
         listViewModel.chatRooms.observe(viewLifecycleOwner, { chatRooms ->
             adapter.submitList(chatRooms)
-        })
-
-        listViewModel.latestUpdatedChatRoomId.observe(viewLifecycleOwner, { position ->
-            adapter.notifyItemChanged(position)
         })
 
         listViewModel.contactsUpdatedEvent.observe(viewLifecycleOwner, {
@@ -162,13 +156,29 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
                     sharedViewModel.destructionPendingChatRoom = chatRoom
                 } else {
                     sharedViewModel.selectedChatRoom.value = chatRoom
-                    navigateToChatRoom(createBundleWithSharedTextAndFiles())
+                    navigateToChatRoom(AppUtils.createBundleWithSharedTextAndFiles(sharedViewModel))
                 }
             }
         })
 
         binding.setEditClickListener {
             listSelectionViewModel.isEditionEnabled.value = true
+        }
+
+        binding.setCancelForwardClickListener {
+            sharedViewModel.messageToForwardEvent.value?.consume {
+                Log.i("[Chat] Cancelling message forward")
+            }
+            listViewModel.forwardPending.value = false
+            adapter.forwardPending(false)
+        }
+
+        binding.setCancelSharingClickListener {
+            Log.i("[Chat] Cancelling text/files sharing")
+            sharedViewModel.textToShare.value = ""
+            sharedViewModel.filesToShare.value = arrayListOf()
+            listViewModel.fileSharingPending.value = false
+            listViewModel.textSharingPending.value = false
         }
 
         binding.setNewOneToOneChatRoomClickListener {
@@ -187,7 +197,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
             Log.w("[Chat] Found pending chat room from before activity was recreated")
             sharedViewModel.destructionPendingChatRoom = null
             sharedViewModel.selectedChatRoom.value = pendingDestructionChatRoom
-            navigateToChatRoom(createBundleWithSharedTextAndFiles())
+            navigateToChatRoom(AppUtils.createBundleWithSharedTextAndFiles(sharedViewModel))
         }
 
         val localSipUri = arguments?.getString("LocalSipUri")
@@ -207,23 +217,37 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
             sharedViewModel.textToShare.observe(viewLifecycleOwner, {
                 if (it.isNotEmpty()) {
                     Log.i("[Chat] Found text to share")
-                    val activity = requireActivity() as MainActivity
-                    activity.showSnackBar(R.string.chat_room_toast_choose_for_sharing)
+                    // val activity = requireActivity() as MainActivity
+                    // activity.showSnackBar(R.string.chat_room_toast_choose_for_sharing)
+                    listViewModel.textSharingPending.value = true
+                } else {
+                    if (sharedViewModel.filesToShare.value.isNullOrEmpty()) {
+                        listViewModel.textSharingPending.value = false
+                    }
                 }
             })
             sharedViewModel.filesToShare.observe(viewLifecycleOwner, {
                 if (it.isNotEmpty()) {
                     Log.i("[Chat] Found ${it.size} files to share")
-                    val activity = requireActivity() as MainActivity
-                    activity.showSnackBar(R.string.chat_room_toast_choose_for_sharing)
+                    // val activity = requireActivity() as MainActivity
+                    // activity.showSnackBar(R.string.chat_room_toast_choose_for_sharing)
+                    listViewModel.fileSharingPending.value = true
+                } else {
+                    if (sharedViewModel.textToShare.value.isNullOrEmpty()) {
+                        listViewModel.fileSharingPending.value = false
+                    }
                 }
             })
             sharedViewModel.messageToForwardEvent.observe(viewLifecycleOwner, {
                 if (!it.consumed()) {
                     Log.i("[Chat] Found chat message to transfer")
-
-                    val activity = requireActivity() as MainActivity
-                    activity.showSnackBar(R.string.chat_room_toast_choose_for_sharing)
+                    // val activity = requireActivity() as MainActivity
+                    // activity.showSnackBar(R.string.chat_room_toast_choose_for_sharing)
+                    listViewModel.forwardPending.value = true
+                    adapter.forwardPending(true)
+                } else {
+                    listViewModel.forwardPending.value = false
+                    adapter.forwardPending(false)
                 }
             })
 
@@ -238,25 +262,13 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
     override fun deleteItems(indexesOfItemToDelete: ArrayList<Int>) {
         val list = ArrayList<ChatRoom>()
         for (index in indexesOfItemToDelete) {
-            val chatRoom = adapter.currentList[index]
-            list.add(chatRoom)
+            val chatRoomViewModel = adapter.currentList[index]
+            list.add(chatRoomViewModel.chatRoom)
         }
         listViewModel.deleteChatRooms(list)
     }
 
     private fun scrollToTop() {
         binding.chatList.scrollToPosition(0)
-    }
-
-    private fun createBundleWithSharedTextAndFiles(): Bundle {
-        val bundle = Bundle()
-        bundle.putString("TextToShare", sharedViewModel.textToShare.value.orEmpty())
-        bundle.putStringArrayList("FilesToShare", sharedViewModel.filesToShare.value)
-
-        // Remove values from shared view model
-        sharedViewModel.textToShare.value = ""
-        sharedViewModel.filesToShare.value = arrayListOf()
-
-        return bundle
     }
 }

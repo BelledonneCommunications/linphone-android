@@ -20,7 +20,7 @@
         <LinearLayout
             android:id="@+id/top_bar"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="@dimen/main_activity_top_bar_size"
             android:layout_gravity="center_horizontal"
             android:background="?attr/lightToolbarBackgroundColor"
             android:orientation="horizontal">
@@ -68,21 +68,18 @@
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/network_settings_wifi_only_title}"
-                    linphone:subtitle="@{@string/network_settings_wifi_only_summary}"
                     linphone:listener="@{viewModel.wifiOnlyListener}"
                     linphone:checked="@={viewModel.wifiOnly}"/>
 
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/network_settings_allow_ipv6_title}"
-                    linphone:subtitle="@{@string/network_settings_allow_ipv6_summary}"
                     linphone:listener="@{viewModel.allowIpv6Listener}"
                     linphone:checked="@={viewModel.allowIpv6}"/>
 
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/network_settings_push_notifications_title}"
-                    linphone:subtitle="@{@string/network_settings_push_notifications_summary}"
                     linphone:listener="@{viewModel.pushNotificationsListener}"
                     linphone:checked="@={viewModel.pushNotifications}"
                     linphone:enabled="@{viewModel.pushNotificationsAvailable}"/>
@@ -90,14 +87,12 @@
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/network_settings_random_ports_title}"
-                    linphone:subtitle="@{@string/network_settings_random_ports_summary}"
                     linphone:listener="@{viewModel.randomPortsListener}"
                     linphone:checked="@={viewModel.randomPorts}"/>
 
                 <include
                     layout="@layout/settings_widget_text"
                     linphone:title="@{@string/network_settings_sip_port_title}"
-                    linphone:subtitle="@{@string/network_settings_sip_port_summary}"
                     linphone:listener="@{viewModel.sipPortListener}"
                     linphone:defaultValue="@{viewModel.sipPort.toString()}"
                     linphone:inputType="@{InputType.TYPE_CLASS_NUMBER}"

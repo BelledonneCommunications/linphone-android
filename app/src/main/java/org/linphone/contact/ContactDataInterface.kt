@@ -21,6 +21,7 @@ package org.linphone.contact
 
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication
+import org.linphone.activities.main.viewmodels.ErrorReportingViewModel
 import org.linphone.core.Address
 import org.linphone.core.ChatRoomSecurityLevel
 import org.linphone.utils.LinphoneUtils
@@ -28,19 +29,18 @@ import org.linphone.utils.LinphoneUtils
 interface ContactDataInterface {
     val contact: MutableLiveData<Contact>
 
-    val displayName: String
+    val displayName: MutableLiveData<String>
 
-    val securityLevel: ChatRoomSecurityLevel
-        get() = ChatRoomSecurityLevel.ClearText
+    val securityLevel: MutableLiveData<ChatRoomSecurityLevel>
 
     val showGroupChatAvatar: Boolean
         get() = false
 }
 
 open class GenericContactData(private val sipAddress: Address) : ContactDataInterface {
-    override val displayName: String = LinphoneUtils.getDisplayName(sipAddress)
-
-    override val contact = MutableLiveData<Contact>()
+    final override val contact: MutableLiveData<Contact> = MutableLiveData<Contact>()
+    final override val displayName: MutableLiveData<String> = MutableLiveData<String>()
+    final override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
 
     private val contactsUpdatedListener = object : ContactsUpdatedListenerStub() {
         override fun onContactUpdated(contact: Contact) {
@@ -49,6 +49,7 @@ open class GenericContactData(private val sipAddress: Address) : ContactDataInte
     }
 
     init {
+        securityLevel.value = ChatRoomSecurityLevel.ClearText
         LinphoneApplication.coreContext.contactsManager.addListener(contactsUpdatedListener)
         contactLookup()
     }
@@ -58,6 +59,37 @@ open class GenericContactData(private val sipAddress: Address) : ContactDataInte
     }
 
     private fun contactLookup() {
+        displayName.value = LinphoneUtils.getDisplayName(sipAddress)
+        contact.value =
+            LinphoneApplication.coreContext.contactsManager.findContactByAddress(sipAddress)
+    }
+}
+
+abstract class GenericContactViewModel(private val sipAddress: Address) : ErrorReportingViewModel(), ContactDataInterface {
+    final override val contact: MutableLiveData<Contact> = MutableLiveData<Contact>()
+    final override val displayName: MutableLiveData<String> = MutableLiveData<String>()
+    final override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
+
+    private val contactsUpdatedListener = object : ContactsUpdatedListenerStub() {
+        override fun onContactUpdated(contact: Contact) {
+            contactLookup()
+        }
+    }
+
+    init {
+        securityLevel.value = ChatRoomSecurityLevel.ClearText
+        LinphoneApplication.coreContext.contactsManager.addListener(contactsUpdatedListener)
+        contactLookup()
+    }
+
+    override fun onCleared() {
+        LinphoneApplication.coreContext.contactsManager.removeListener(contactsUpdatedListener)
+
+        super.onCleared()
+    }
+
+    private fun contactLookup() {
+        displayName.value = LinphoneUtils.getDisplayName(sipAddress)
         contact.value = LinphoneApplication.coreContext.contactsManager.findContactByAddress(sipAddress)
     }
 }

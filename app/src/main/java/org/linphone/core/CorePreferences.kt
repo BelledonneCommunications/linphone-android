@@ -64,6 +64,9 @@ class CorePreferences constructor(private val context: Context) {
                 return
             }
             encryptedSharedPreferences.edit().putBoolean("vfs_enabled", value).apply()
+            // When VFS is enabled we disable logcat output for linphone logs
+            // TODO: decide if we do it
+            // logcatLogsOutput = false
         }
 
     /* App settings */
@@ -72,6 +75,12 @@ class CorePreferences constructor(private val context: Context) {
         get() = config.getBool("app", "debug", org.linphone.BuildConfig.DEBUG)
         set(value) {
             config.setBool("app", "debug", value)
+        }
+
+    var logcatLogsOutput: Boolean
+        get() = config.getBool("app", "print_logs_into_logcat", true)
+        set(value) {
+            config.setBool("app", "print_logs_into_logcat", value)
         }
 
     var autoStart: Boolean
@@ -132,10 +141,15 @@ class CorePreferences constructor(private val context: Context) {
 
     /* Chat */
 
-    // iOS and Android 4.4.x releases currently can't display more than 1 file per message
-    // TODO: Remove for the release, this won't be necessary anymore
+    // TODO: Remove for 4.6 release
+    var ephemeralMessagesEnabled: Boolean
+        get() = config.getBool("app", "ephemeral", false)
+        set(value) {
+            config.setBool("app", "ephemeral", value)
+        }
+
     var preventMoreThanOneFilePerMessage: Boolean
-        get() = config.getBool("app", "prevent_more_than_one_file_per_message", true)
+        get() = config.getBool("app", "prevent_more_than_one_file_per_message", false)
         set(value) {
             config.setBool("app", "prevent_more_than_one_file_per_message", value)
         }
@@ -272,6 +286,13 @@ class CorePreferences constructor(private val context: Context) {
             config.setBool("app", "route_audio_to_speaker_when_video_enabled", value)
         }
 
+    // Automatically handled by SDK
+    var pauseCallsWhenAudioFocusIsLost: Boolean
+        get() = config.getBool("audio", "android_pause_calls_when_audio_focus_lost", true)
+        set(value) {
+            config.setBool("audio", "android_pause_calls_when_audio_focus_lost", value)
+        }
+
     /* Assistant */
 
     var firstStart: Boolean
@@ -376,6 +397,9 @@ class CorePreferences constructor(private val context: Context) {
 
     val defaultDomain: String
         get() = config.getString("app", "default_domain", "sip.linphone.org")!!
+
+    val defaultRlsUri: String
+        get() = config.getString("sip", "rls_uri", "sips:rls@sip.linphone.org")!!
 
     val debugPopupCode: String
         get() = config.getString("app", "debug_popup_magic", "#1234#")!!

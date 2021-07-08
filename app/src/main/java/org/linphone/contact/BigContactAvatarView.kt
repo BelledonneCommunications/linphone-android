@@ -62,7 +62,7 @@ class BigContactAvatarView : LinearLayout {
         val initials = if (contact != null) {
             AppUtils.getInitials(contact.fullName ?: contact.firstName + " " + contact.lastName)
         } else {
-            AppUtils.getInitials(viewModel.displayName)
+            AppUtils.getInitials(viewModel.displayName.value ?: "")
         }
 
         binding.initials = initials

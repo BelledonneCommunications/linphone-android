@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="resendClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="copyTextClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="forwardClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="imdnClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="addToContactsClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="deleteClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="resendHidden"
+            type="Boolean" />
+        <variable
+            name="imdnHidden"
+            type="Boolean" />
+        <variable
+            name="copyTextHidden"
+            type="Boolean" />
+        <variable
+            name="addToContactsHidden"
+            type="Boolean" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="@dimen/chat_message_popup_width"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="?attr/backgroundColor">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chat_message_popup_item_height"
+            android:background="@drawable/menu_background"
+            android:visibility="@{resendHidden ? View.GONE : View.VISIBLE}"
+            android:onClick="@{resendClickListener}"
+            android:drawableRight="@drawable/chat_send_message"
+            style="@style/popup_item_font"
+            android:text="@string/chat_message_context_menu_resend" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chat_message_popup_item_height"
+            android:background="@drawable/menu_background"
+            android:visibility="@{copyTextHidden ? View.GONE : View.VISIBLE}"
+            android:onClick="@{copyTextClickListener}"
+            android:drawableRight="@drawable/menu_copy_text"
+            style="@style/popup_item_font"
+            android:text="@string/chat_message_context_menu_copy_text" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chat_message_popup_item_height"
+            android:background="@drawable/menu_background"
+            android:onClick="@{forwardClickListener}"
+            android:drawableRight="@drawable/menu_forward"
+            style="@style/popup_item_font"
+            android:text="@string/chat_message_context_menu_forward" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chat_message_popup_item_height"
+            android:background="@drawable/menu_background"
+            android:visibility="@{imdnHidden ? View.GONE : View.VISIBLE}"
+            android:onClick="@{imdnClickListener}"
+            android:drawableRight="@drawable/menu_imdn_info"
+            style="@style/popup_item_font"
+            android:text="@string/chat_message_context_menu_imdn_info" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chat_message_popup_item_height"
+            android:background="@drawable/menu_background"
+            android:visibility="@{addToContactsHidden ? View.GONE : View.VISIBLE}"
+            android:onClick="@{addToContactsClickListener}"
+            android:drawableRight="@drawable/menu_add_contact"
+            style="@style/popup_item_font"
+            android:text="@string/chat_message_context_menu_add_to_contacts" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chat_message_popup_item_height"
+            android:background="@drawable/menu_background"
+            android:onClick="@{deleteClickListener}"
+            android:drawableRight="@drawable/menu_delete"
+            style="@style/popup_item_font"
+            android:textColor="@color/red_color"
+            android:text="@string/chat_message_context_menu_delete" />
+
+    </LinearLayout>
+
+</layout>

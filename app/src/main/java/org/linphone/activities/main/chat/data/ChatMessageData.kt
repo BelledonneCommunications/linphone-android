@@ -24,20 +24,16 @@ import android.text.Spannable
 import android.text.util.Linkify
 import androidx.core.text.util.LinkifyCompat
 import androidx.lifecycle.MutableLiveData
-import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.contact.GenericContactData
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatMessageListenerStub
-import org.linphone.core.Content
-import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.TimestampUtils
 
-class ChatMessageData(
-    val chatMessage: ChatMessage,
+class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMessage.fromAddress) {
     private var contentListener: OnContentClickedListener? = null
-) : GenericContactData(chatMessage.fromAddress) {
+
     val sendInProgress = MutableLiveData<Boolean>()
 
     val transferInProgress = MutableLiveData<Boolean>()
@@ -66,14 +62,6 @@ class ChatMessageData(
         override fun onMsgStateChanged(message: ChatMessage, state: ChatMessage.State) {
             time.value = TimestampUtils.toString(chatMessage.time)
             updateChatMessageState(state)
-
-            // TODO FIXME : find a way to refresh outgoing message downloaded
-            if (state == ChatMessage.State.FileTransferDone && !message.isOutgoing) {
-                Log.i("[Chat Message] File transfer done")
-                updateContentsList()
-
-                coreContext.exportFilesInMessageToMediaStore(message)
-            }
         }
 
         override fun onEphemeralMessageTimerStarted(message: ChatMessage) {
@@ -131,6 +119,14 @@ class ChatMessageData(
         }
     }
 
+    fun setContentClickListener(listener: OnContentClickedListener) {
+        contentListener = listener
+
+        for (data in contents.value.orEmpty()) {
+            data.listener = listener
+        }
+    }
+
     private fun updateChatMessageState(state: ChatMessage.State) {
         transferInProgress.value = state == ChatMessage.State.FileTransferInProgress
 
@@ -150,11 +146,15 @@ class ChatMessageData(
 
     private fun updateContentsList() {
         contents.value.orEmpty().forEach(ChatMessageContentData::destroy)
-
         val list = arrayListOf<ChatMessageContentData>()
-        for (content in chatMessage.contents) {
+
+        val contentsList = chatMessage.contents
+        for (index in 0 until contentsList.size) {
+            val content = contentsList[index]
             if (content.isFileTransfer || content.isFile) {
-                list.add(ChatMessageContentData(content, chatMessage, contentListener))
+                val data = ChatMessageContentData(chatMessage, index)
+                data.listener = contentListener
+                list.add(data)
             } else if (content.isText) {
                 val spannable = Spannable.Factory.getInstance().newSpannable(content.utf8Text)
                 LinkifyCompat.addLinks(spannable, Linkify.WEB_URLS)
@@ -195,9 +195,5 @@ class ChatMessageData(
             days >= 1L -> AppUtils.getStringWithPlural(R.plurals.days, days.toInt())
             else -> String.format("%02d:%02d:%02d", seconds / 3600, (seconds % 3600) / 60, (seconds % 60))
         }
-    }
-
-    private fun addContentToMediaStore(content: Content) {
-        coreContext.addContentToMediaStore(content)
     }
 }

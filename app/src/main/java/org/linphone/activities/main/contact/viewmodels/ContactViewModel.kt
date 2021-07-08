@@ -48,12 +48,13 @@ class ContactViewModelFactory(private val contact: Contact) :
     }
 }
 
-class ContactViewModel(private val c: Contact) : ErrorReportingViewModel(), ContactDataInterface {
-    override val contact = MutableLiveData<Contact>()
+class ContactViewModel(val contactInternal: Contact) : ErrorReportingViewModel(), ContactDataInterface {
+    override val contact: MutableLiveData<Contact> = MutableLiveData<Contact>()
+    override val displayName: MutableLiveData<String> = MutableLiveData<String>()
+    override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
 
-    override val displayName: String by lazy {
-        c.fullName ?: c.firstName + " " + c.lastName
-    }
+    val name: String
+        get() = displayName.value ?: ""
 
     val displayOrganization = corePreferences.displayOrganization
 
@@ -75,7 +76,7 @@ class ContactViewModel(private val c: Contact) : ErrorReportingViewModel(), Cont
 
     private val contactsUpdatedListener = object : ContactsUpdatedListenerStub() {
         override fun onContactUpdated(contact: Contact) {
-            if (c is NativeContact && contact is NativeContact && c.nativeId == contact.nativeId) {
+            if (contact is NativeContact && contactInternal is NativeContact && contact.nativeId == contactInternal.nativeId) {
                 Log.d("[Contact] $contact has changed")
                 updateNumbersAndAddresses(contact)
             }
@@ -124,8 +125,10 @@ class ContactViewModel(private val c: Contact) : ErrorReportingViewModel(), Cont
     }
 
     init {
-        contact.value = c
-        updateNumbersAndAddresses(c)
+        contact.value = contactInternal
+        displayName.value = contactInternal.fullName ?: contactInternal.firstName + " " + contactInternal.lastName
+
+        updateNumbersAndAddresses(contactInternal)
         coreContext.contactsManager.addListener(contactsUpdatedListener)
         waitForChatRoomCreation.value = false
     }
@@ -143,8 +146,8 @@ class ContactViewModel(private val c: Contact) : ErrorReportingViewModel(), Cont
         val select = ContactsContract.Data.CONTACT_ID + " = ?"
         val ops = java.util.ArrayList<ContentProviderOperation>()
 
-        if (c is NativeContact) {
-            val nativeContact: NativeContact = c
+        if (contactInternal is NativeContact) {
+            val nativeContact: NativeContact = contactInternal
             Log.i("[Contact] Setting Android contact id ${nativeContact.nativeId} to batch removal")
             val args = arrayOf(nativeContact.nativeId)
             ops.add(
@@ -154,9 +157,9 @@ class ContactViewModel(private val c: Contact) : ErrorReportingViewModel(), Cont
             )
         }
 
-        if (c.friend != null) {
+        if (contactInternal.friend != null) {
             Log.i("[Contact] Removing friend")
-            c.friend?.remove()
+            contactInternal.friend?.remove()
         }
 
         if (ops.isNotEmpty()) {

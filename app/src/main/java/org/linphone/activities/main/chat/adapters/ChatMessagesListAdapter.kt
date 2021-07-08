@@ -22,10 +22,10 @@ package org.linphone.activities.main.chat.adapters
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.ViewGroup
-import androidx.appcompat.widget.PopupMenu
+import android.widget.PopupWindow
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
@@ -36,6 +36,7 @@ import org.linphone.R
 import org.linphone.activities.main.adapters.SelectionListAdapter
 import org.linphone.activities.main.chat.data.ChatMessageData
 import org.linphone.activities.main.chat.data.EventData
+import org.linphone.activities.main.chat.data.EventLogData
 import org.linphone.activities.main.chat.data.OnContentClickedListener
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
 import org.linphone.core.ChatMessage
@@ -44,12 +45,14 @@ import org.linphone.core.Content
 import org.linphone.core.EventLog
 import org.linphone.databinding.ChatEventListCellBinding
 import org.linphone.databinding.ChatMessageListCellBinding
+import org.linphone.databinding.ChatMessageLongPressMenuBindingImpl
+import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
 class ChatMessagesListAdapter(
     selectionVM: ListTopBarViewModel,
     private val viewLifecycleOwner: LifecycleOwner
-) : SelectionListAdapter<EventLog, RecyclerView.ViewHolder>(selectionVM, ChatMessageDiffCallback()) {
+) : SelectionListAdapter<EventLogData, RecyclerView.ViewHolder>(selectionVM, ChatMessageDiffCallback()) {
     companion object {
         const val MAX_TIME_TO_GROUP_MESSAGES = 60 // 1 minute
     }
@@ -117,15 +120,9 @@ class ChatMessagesListAdapter(
         }
     }
 
-    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
-        when (holder) {
-            is ChatMessageViewHolder -> holder.binding.data?.destroy()
-        }
-    }
-
     override fun getItemViewType(position: Int): Int {
         val eventLog = getItem(position)
-        return eventLog.type.toInt()
+        return eventLog.eventLog.type.toInt()
     }
 
     fun disableContextMenu() {
@@ -134,13 +131,14 @@ class ChatMessagesListAdapter(
 
     inner class ChatMessageViewHolder(
         val binding: ChatMessageListCellBinding
-    ) : RecyclerView.ViewHolder(binding.root), PopupMenu.OnMenuItemClickListener {
-        fun bind(eventLog: EventLog) {
+    ) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(eventLog: EventLogData) {
             with(binding) {
-                if (eventLog.type == EventLog.Type.ConferenceChatMessage) {
-                    val chatMessage = eventLog.chatMessage
-                    chatMessage ?: return
-                    val chatMessageViewModel = ChatMessageData(chatMessage, contentClickedListener)
+                if (eventLog.eventLog.type == EventLog.Type.ConferenceChatMessage) {
+                    val chatMessageViewModel = eventLog.data as ChatMessageData
+                    chatMessageViewModel.setContentClickListener(contentClickedListener)
+
+                    val chatMessage = chatMessageViewModel.chatMessage
                     data = chatMessageViewModel
 
                     lifecycleOwner = viewLifecycleOwner
@@ -163,8 +161,8 @@ class ChatMessagesListAdapter(
 
                     if (adapterPosition > 0) {
                         val previousItem = getItem(adapterPosition - 1)
-                        if (previousItem.type == EventLog.Type.ConferenceChatMessage) {
-                            val previousMessage = previousItem.chatMessage
+                        if (previousItem.eventLog.type == EventLog.Type.ConferenceChatMessage) {
+                            val previousMessage = previousItem.eventLog.chatMessage
                             if (previousMessage != null && previousMessage.fromAddress.weakEqual(chatMessage.fromAddress)) {
                                 if (chatMessage.time - previousMessage.time < MAX_TIME_TO_GROUP_MESSAGES) {
                                     hasPrevious = true
@@ -175,8 +173,8 @@ class ChatMessagesListAdapter(
 
                     if (adapterPosition >= 0 && adapterPosition < itemCount - 1) {
                         val nextItem = getItem(adapterPosition + 1)
-                        if (nextItem.type == EventLog.Type.ConferenceChatMessage) {
-                            val nextMessage = nextItem.chatMessage
+                        if (nextItem.eventLog.type == EventLog.Type.ConferenceChatMessage) {
+                            val nextMessage = nextItem.eventLog.chatMessage
                             if (nextMessage != null && nextMessage.fromAddress.weakEqual(chatMessage.fromAddress)) {
                                 if (nextMessage.time - chatMessage.time < MAX_TIME_TO_GROUP_MESSAGES) {
                                     hasNext = true
@@ -192,58 +190,72 @@ class ChatMessagesListAdapter(
                     if (contextMenuDisabled) return
 
                     setContextMenuClickListener {
-                        val popup = PopupMenu(root.context, background)
-                        popup.setOnMenuItemClickListener(this@ChatMessageViewHolder)
-                        popup.inflate(R.menu.chat_message_menu)
+                        val popupView: ChatMessageLongPressMenuBindingImpl = DataBindingUtil.inflate(
+                            LayoutInflater.from(root.context),
+                            R.layout.chat_message_long_press_menu, null, false
+                        )
 
+                        val itemSize = AppUtils.getDimension(R.dimen.chat_message_popup_item_height).toInt()
+                        var totalSize = itemSize * 6
                         if (chatMessage.chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) ||
-                            chatMessage.state == ChatMessage.State.NotDelivered) { // No message id
-                            popup.menu.removeItem(R.id.chat_message_menu_imdn_infos)
+                                chatMessage.state == ChatMessage.State.NotDelivered) { // No message id
+                            popupView.imdnHidden = true
+                            totalSize -= itemSize
                         }
                         if (chatMessage.state != ChatMessage.State.NotDelivered) {
-                            popup.menu.removeItem(R.id.chat_message_menu_resend)
+                            popupView.resendHidden = true
+                            totalSize -= itemSize
                         }
                         if (chatMessage.contents.find { content -> content.isText } == null) {
-                            popup.menu.removeItem(R.id.chat_message_menu_copy_text)
+                            popupView.copyTextHidden = true
+                            totalSize -= itemSize
                         }
-                        if (chatMessageViewModel.contact.value != null) {
-                            popup.menu.removeItem(R.id.chat_message_menu_add_to_contacts)
+                        if (chatMessage.isOutgoing || chatMessageViewModel.contact.value != null) {
+                            popupView.addToContactsHidden = true
+                            totalSize -= itemSize
                         }
 
-                        popup.show()
+                        // When using WRAP_CONTENT instead of real size, fails to place the
+                        // popup window above if not enough space is available below
+                        val popupWindow = PopupWindow(popupView.root,
+                            AppUtils.getDimension(R.dimen.chat_message_popup_width).toInt(),
+                            totalSize,
+                            true
+                        )
+                        // Elevation is for showing a shadow around the popup
+                        popupWindow.elevation = 20f
+
+                        popupView.setResendClickListener {
+                            resendMessage()
+                            popupWindow.dismiss()
+                        }
+                        popupView.setCopyTextClickListener {
+                            copyTextToClipboard()
+                            popupWindow.dismiss()
+                        }
+                        popupView.setForwardClickListener {
+                            forwardMessage()
+                            popupWindow.dismiss()
+                        }
+                        popupView.setImdnClickListener {
+                            showImdnDeliveryFragment()
+                            popupWindow.dismiss()
+                        }
+                        popupView.setAddToContactsClickListener {
+                            addSenderToContacts()
+                            popupWindow.dismiss()
+                        }
+                        popupView.setDeleteClickListener {
+                            deleteMessage()
+                            popupWindow.dismiss()
+                        }
+
+                        val gravity = if (chatMessage.isOutgoing) Gravity.END else Gravity.START
+                        popupWindow.showAsDropDown(background, 0, 0, gravity or Gravity.TOP)
+
                         true
                     }
                 }
-            }
-        }
-
-        override fun onMenuItemClick(item: MenuItem): Boolean {
-            return when (item.itemId) {
-                R.id.chat_message_menu_imdn_infos -> {
-                    showImdnDeliveryFragment()
-                    true
-                }
-                R.id.chat_message_menu_resend -> {
-                    resendMessage()
-                    true
-                }
-                R.id.chat_message_menu_copy_text -> {
-                    copyTextToClipboard()
-                    true
-                }
-                R.id.chat_message_forward_message -> {
-                    forwardMessage()
-                    true
-                }
-                R.id.chat_message_menu_delete_message -> {
-                    deleteMessage()
-                    true
-                }
-                R.id.chat_message_menu_add_to_contacts -> {
-                    addSenderToContacts()
-                    true
-                }
-                else -> false
             }
         }
 
@@ -303,9 +315,9 @@ class ChatMessagesListAdapter(
     inner class EventViewHolder(
         private val binding: ChatEventListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(eventLog: EventLog) {
+        fun bind(eventLog: EventLogData) {
             with(binding) {
-                val eventViewModel = EventData(eventLog)
+                val eventViewModel = eventLog.data as EventData
                 data = eventViewModel
 
                 binding.lifecycleOwner = viewLifecycleOwner
@@ -328,24 +340,24 @@ class ChatMessagesListAdapter(
     }
 }
 
-private class ChatMessageDiffCallback : DiffUtil.ItemCallback<EventLog>() {
+private class ChatMessageDiffCallback : DiffUtil.ItemCallback<EventLogData>() {
     override fun areItemsTheSame(
-        oldItem: EventLog,
-        newItem: EventLog
+        oldItem: EventLogData,
+        newItem: EventLogData
     ): Boolean {
-        return if (oldItem.type == EventLog.Type.ConferenceChatMessage &&
-            newItem.type == EventLog.Type.ConferenceChatMessage) {
-            oldItem.chatMessage?.time == newItem.chatMessage?.time &&
-                    oldItem.chatMessage?.isOutgoing == newItem.chatMessage?.isOutgoing
-        } else oldItem.notifyId == newItem.notifyId
+        return if (oldItem.eventLog.type == EventLog.Type.ConferenceChatMessage &&
+            newItem.eventLog.type == EventLog.Type.ConferenceChatMessage) {
+            oldItem.eventLog.chatMessage?.time == newItem.eventLog.chatMessage?.time &&
+                    oldItem.eventLog.chatMessage?.isOutgoing == newItem.eventLog.chatMessage?.isOutgoing
+        } else oldItem.eventLog.notifyId == newItem.eventLog.notifyId
     }
 
     override fun areContentsTheSame(
-        oldItem: EventLog,
-        newItem: EventLog
+        oldItem: EventLogData,
+        newItem: EventLogData
     ): Boolean {
-        return if (newItem.type == EventLog.Type.ConferenceChatMessage) {
-            newItem.chatMessage?.state == ChatMessage.State.Displayed
-        } else false
+        return if (newItem.eventLog.type == EventLog.Type.ConferenceChatMessage) {
+            newItem.eventLog.chatMessage?.state == ChatMessage.State.Displayed
+        } else true
     }
 }

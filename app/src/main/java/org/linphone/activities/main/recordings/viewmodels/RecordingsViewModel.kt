@@ -31,9 +31,24 @@ class RecordingsViewModel : ViewModel() {
 
     val isVideoVisible = MutableLiveData<Boolean>()
 
+    private val recordingListener = object : RecordingData.RecordingListener {
+        override fun onPlayingStarted(videoAvailable: Boolean) {
+            isVideoVisible.value = videoAvailable
+        }
+
+        override fun onPlayingEnded() {
+            isVideoVisible.value = false
+        }
+    }
+
     init {
         getRecordings()
         isVideoVisible.value = false
+    }
+
+    override fun onCleared() {
+        recordingsList.value.orEmpty().forEach(RecordingData::destroy)
+        super.onCleared()
     }
 
     fun deleteRecordings(list: ArrayList<RecordingData>) {
@@ -52,7 +67,8 @@ class RecordingsViewModel : ViewModel() {
             if (RecordingData.RECORD_PATTERN.matcher(f.path).matches()) {
                 list.add(
                     RecordingData(
-                        f.path
+                        f.path,
+                        recordingListener
                     )
                 )
                 Log.i("[Recordings] Found record ${f.path}")

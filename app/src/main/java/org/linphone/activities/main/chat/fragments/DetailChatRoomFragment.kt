@@ -47,6 +47,7 @@ import org.linphone.activities.*
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.chat.ChatScrollListener
 import org.linphone.activities.main.chat.adapters.ChatMessagesListAdapter
+import org.linphone.activities.main.chat.data.EventLogData
 import org.linphone.activities.main.chat.viewmodels.*
 import org.linphone.activities.main.fragments.MasterFragment
 import org.linphone.activities.main.viewmodels.DialogViewModel
@@ -70,8 +71,9 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
     private val observer = object : RecyclerView.AdapterDataObserver() {
         override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-            if (itemCount == 1 && positionStart > 0) {
-                adapter.notifyItemChanged(positionStart - 1) // For grouping purposes
+            adapter.notifyItemChanged(positionStart - 1) // For grouping purposes
+
+            if (positionStart == adapter.itemCount - itemCount) {
                 scrollToBottom()
             }
         }
@@ -110,7 +112,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         val remoteSipUri = arguments?.getString("RemoteSipUri")
 
         val textToShare = arguments?.getString("TextToShare")
-        val filestoShare = arguments?.getStringArrayList("FilesToShare")
+        val filesToShare = arguments?.getStringArrayList("FilesToShare")
 
         arguments?.clear()
         if (localSipUri != null && remoteSipUri != null) {
@@ -128,7 +130,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         val chatRoom = sharedViewModel.selectedChatRoom.value
         if (chatRoom == null) {
             Log.e("[Chat Room] Chat room is null, aborting!")
-            (activity as MainActivity).showSnackBar(R.string.error)
+            // (activity as MainActivity).showSnackBar(R.string.error)
             findNavController().navigateUp()
             return
         }
@@ -182,12 +184,6 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         listViewModel.messageUpdatedEvent.observe(viewLifecycleOwner, {
             it.consume { position ->
                 adapter.notifyItemChanged(position)
-            }
-        })
-
-        listViewModel.scrollToBottomOnMessageReceivedEvent.observe(viewLifecycleOwner, {
-            it.consume {
-                scrollToBottom()
             }
         })
 
@@ -324,15 +320,18 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         }
 
         binding.setStartCallClickListener {
-            coreContext.startCall(viewModel.addressToCall)
+            val address = viewModel.addressToCall
+            if (address != null) {
+                coreContext.startCall(address)
+            }
         }
 
         if (textToShare?.isNotEmpty() == true) {
             Log.i("[Chat Room] Found text to share")
             chatSendingViewModel.textToSend.value = textToShare
         }
-        if (filestoShare?.isNotEmpty() == true) {
-            for (path in filestoShare) {
+        if (filesToShare?.isNotEmpty() == true) {
+            for (path in filesToShare) {
                 Log.i("[Chat Room] Found $path file to share")
                 chatSendingViewModel.addAttachment(path)
             }
@@ -347,7 +346,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
     }
 
     override fun deleteItems(indexesOfItemToDelete: ArrayList<Int>) {
-        val list = ArrayList<EventLog>()
+        val list = ArrayList<EventLogData>()
         for (index in indexesOfItemToDelete) {
             val eventLog = adapter.currentList[index]
             list.add(eventLog)
@@ -431,8 +430,11 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             dialogViewModel.showOkButton({ doNotAskAgain ->
                 if (doNotAskAgain) corePreferences.limeSecurityPopupEnabled = false
 
+                val address = viewModel.onlyParticipantOnlyDeviceAddress
                 if (viewModel.oneParticipantOneDevice) {
-                    coreContext.startCall(viewModel.onlyParticipantOnlyDeviceAddress, true)
+                    if (address != null) {
+                        coreContext.startCall(address, true)
+                    }
                 } else {
                     navigateToDevices()
                 }
@@ -442,8 +444,11 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
             dialog.show()
         } else {
+            val address = viewModel.onlyParticipantOnlyDeviceAddress
             if (viewModel.oneParticipantOneDevice) {
-                coreContext.startCall(viewModel.onlyParticipantOnlyDeviceAddress, true)
+                if (address != null) {
+                    coreContext.startCall(address, true)
+                }
             } else {
                 navigateToDevices()
             }
@@ -462,7 +467,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
     private fun showForwardConfirmationDialog(chatMessage: ChatMessage) {
         val viewModel = DialogViewModel(getString(R.string.chat_message_forward_confirmation_dialog))
-        viewModel.iconResource = R.drawable.forward_message_dialog_default
+        viewModel.iconResource = R.drawable.forward_message_default
         viewModel.showIcon = true
         val dialog: Dialog = DialogUtils.getDialog(requireContext(), viewModel)
 
@@ -495,11 +500,16 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 builder.removeItem(R.id.chat_room_participants_devices)
             }
         }
+
         if (!viewModel.encryptedChatRoom) {
             builder.removeItem(R.id.chat_room_participants_devices)
             builder.removeItem(R.id.chat_room_ephemeral_messages)
+        } else {
+            // TODO: Remove for 4.6 release
+            if (!corePreferences.ephemeralMessagesEnabled) {
+                builder.removeItem(R.id.chat_room_ephemeral_messages)
+            }
         }
-        // TODO: hide ephemeral menu if not all participants support the feature
 
         builder.setCallback(object : MenuBuilder.Callback {
             override fun onMenuModeChange(menu: MenuBuilder) {}
