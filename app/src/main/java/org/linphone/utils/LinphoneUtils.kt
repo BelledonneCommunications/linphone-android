@@ -23,6 +23,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
+import android.telecom.VideoProfile
 import android.telephony.TelephonyManager.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -142,6 +143,17 @@ class LinphoneUtils {
 
         fun getChatRoomId(localAddress: String, remoteAddress: String): String {
             return "$localAddress~$remoteAddress"
+        }
+
+        fun videoStateToString(videoState: Int?): String {
+            return when (videoState) {
+                VideoProfile.STATE_AUDIO_ONLY -> "[Audio only]"
+                VideoProfile.STATE_BIDIRECTIONAL -> "[Send/Receive video]"
+                VideoProfile.STATE_PAUSED -> "[Video paused]"
+                VideoProfile.STATE_RX_ENABLED -> "[Send only video]"
+                VideoProfile.STATE_TX_ENABLED -> "[Receive only video]"
+                else -> "[$videoState]"
+            }
         }
     }
 }

@@ -28,15 +28,18 @@ import android.os.Bundle
 import android.telecom.PhoneAccount
 import android.telecom.PhoneAccountHandle
 import android.telecom.TelecomManager
+import android.telecom.VideoProfile
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Call
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
+import org.linphone.core.MediaDirection
 import org.linphone.core.tools.Log
+import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.SingletonHolder
 
-class TelecomHelper private constructor(private val context: Context) {
+class TelecomHelper private constructor(context: Context) {
     companion object : SingletonHolder<TelecomHelper, Context>(::TelecomHelper)
 
     private val telecomManager: TelecomManager = context.getSystemService(Context.TELECOM_SERVICE) as TelecomManager
@@ -126,7 +129,7 @@ class TelecomHelper private constructor(private val context: Context) {
             .setAddress(Uri.parse(identity))
             .setIcon(Icon.createWithResource(context, R.drawable.linphone_logo_tinted))
             .setSubscriptionAddress(null)
-            .setCapabilities(PhoneAccount.CAPABILITY_CALL_PROVIDER)
+            .setCapabilities(PhoneAccount.CAPABILITY_CALL_PROVIDER or PhoneAccount.CAPABILITY_VIDEO_CALLING)
             .setHighlightColor(context.getColor(R.color.primary_color))
             .setShortDescription(context.getString(R.string.app_description))
             .setSupportedUriSchemes(listOf(PhoneAccount.SCHEME_SIP))
@@ -171,6 +174,21 @@ class TelecomHelper private constructor(private val context: Context) {
         extras.putParcelable(TelecomManager.EXTRA_PHONE_ACCOUNT_HANDLE, account.accountHandle)
         extras.putString("Call-ID", call.callLog.callId)
         extras.putString("DisplayName", call.remoteAddress.displayName)
+
+        if (call.currentParams.videoEnabled()) {
+            val videoProfile = when (call.currentParams.videoDirection) {
+                MediaDirection.SendRecv -> VideoProfile.STATE_BIDIRECTIONAL
+                MediaDirection.SendOnly -> VideoProfile.STATE_TX_ENABLED
+                MediaDirection.RecvOnly -> VideoProfile.STATE_RX_ENABLED
+                MediaDirection.Inactive -> VideoProfile.STATE_PAUSED
+                else -> VideoProfile.STATE_AUDIO_ONLY
+            }
+            Log.i("[Telecom Helper] Setting video state ${LinphoneUtils.videoStateToString(videoProfile)} in bundle")
+            extras.putInt(
+                TelecomManager.EXTRA_START_CALL_WITH_VIDEO_STATE,
+                videoProfile
+            )
+        }
 
         val b = Bundle()
         extras.putBundle(bundleKey, b)

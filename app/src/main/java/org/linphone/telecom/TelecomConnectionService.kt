@@ -23,11 +23,13 @@ import android.content.ComponentName
 import android.content.Intent
 import android.net.Uri
 import android.telecom.*
+import android.telecom.TelecomManager.EXTRA_START_CALL_WITH_VIDEO_STATE
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Call
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
+import org.linphone.utils.LinphoneUtils
 
 class TelecomConnectionService : ConnectionService() {
     private val connections = arrayListOf<NativeCallWrapper>()
@@ -93,6 +95,11 @@ class TelecomConnectionService : ConnectionService() {
             connection.setCallerDisplayName(displayName, TelecomManager.PRESENTATION_ALLOWED)
             Log.i("[Telecom Connection Service] Address is $providedHandle")
 
+            connection.videoProvider = NativeVideoProvider()
+            val videoState = request.extras.getInt(EXTRA_START_CALL_WITH_VIDEO_STATE)
+            Log.i("[Telecom Connection Service] Video state is ${LinphoneUtils.videoStateToString(videoState)}")
+            connection.videoState = videoState
+
             connections.add(connection)
             connection
         } else {
@@ -131,6 +138,11 @@ class TelecomConnectionService : ConnectionService() {
             connection.setAddress(providedHandle, TelecomManager.PRESENTATION_ALLOWED)
             connection.setCallerDisplayName(displayName, TelecomManager.PRESENTATION_ALLOWED)
             Log.i("[Telecom Connection Service] Address is $providedHandle")
+
+            connection.videoProvider = NativeVideoProvider()
+            val videoState = request.extras.getInt(EXTRA_START_CALL_WITH_VIDEO_STATE)
+            Log.i("[Telecom Connection Service] Video state is ${LinphoneUtils.videoStateToString(videoState)}")
+            connection.videoState = videoState
 
             connections.add(connection)
             connection

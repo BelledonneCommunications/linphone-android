@@ -208,7 +208,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
                     }
                 }
 
-                if (corePreferences.routeAudioToSpeakerWhenVideoIsEnabled && call.currentParams.videoEnabled()) {
+                if (!corePreferences.useTelecomManager && corePreferences.routeAudioToSpeakerWhenVideoIsEnabled && call.currentParams.videoEnabled()) {
                     // Do not turn speaker on when video is enabled if headset or bluetooth is used
                     if (!AudioRouteUtils.isHeadsetAudioRouteAvailable() && !AudioRouteUtils.isBluetoothAudioRouteCurrentlyUsed(
                             call
