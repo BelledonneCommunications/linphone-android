@@ -23,6 +23,10 @@ def crashlyticsEnabled() {
     return googleFile.exists() && linphoneLibrary.exists() && linphoneLibraryDebug.exists()
 }
 
+if (firebaseEnabled()) {
+    apply plugin: 'com.google.gms.google-services'
+}
+
 if (crashlyticsEnabled()) {
     apply plugin: 'com.google.firebase.crashlytics'
 }
@@ -94,14 +98,6 @@ android {
         applicationId getPackageName()
     }
 
-    // Required to be able to generate app bundle with native libraries symbols, see releaseAppBundle below
-    def ndkHome = System.getenv('ANDROID_NDK_HOME')
-    if (ndkHome == null || !new File(ndkHome + "/source.properties").exists()) {
-        ndkVersion "21.3.6528147"
-    } else {
-        ndkPath ndkHome
-    }
-
     applicationVariants.all { variant ->
         variant.outputs.all {
             outputFileName = "linphone-android-${variant.buildType.name}-${project.version}.apk"
@@ -152,16 +148,14 @@ android {
             resValue "bool", "crashlytics_enabled", "false"
         }
 
-        releaseAppBundle {
+        releaseWithCrashlytics {
             initWith release
-            ndk.debugSymbolLevel = 'FULL'
 
             if (crashlyticsEnabled()) {
                 resValue "bool", "crashlytics_enabled", "true"
 
                 firebaseCrashlytics {
                     nativeSymbolUploadEnabled true
-                    strippedNativeLibsDir file(LinphoneSdkBuildDir + '/libs/').toString()
                     unstrippedNativeLibsDir file(LinphoneSdkBuildDir + '/libs-debug/').toString()
                 }
             } else {
@@ -188,7 +182,6 @@ android {
 
                 firebaseCrashlytics {
                     nativeSymbolUploadEnabled true
-                    strippedNativeLibsDir file(LinphoneSdkBuildDir + '/libs/').toString()
                     unstrippedNativeLibsDir file(LinphoneSdkBuildDir + '/libs-debug/').toString()
                 }
             } else {
@@ -235,23 +228,23 @@ dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.3.0'
     implementation 'androidx.media:media:1.2.0'
-    implementation 'androidx.fragment:fragment-ktx:1.4.0-alpha03'
-    implementation 'androidx.core:core-ktx:1.6.0-rc01'
+    implementation 'androidx.fragment:fragment-ktx:1.4.0-alpha04'
+    implementation 'androidx.core:core-ktx:1.6.0'
 
     def nav_version = "2.3.5"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
-    implementation "androidx.slidingpanelayout:slidingpanelayout:1.2.0-alpha02"
-    implementation "androidx.window:window:1.0.0-alpha08"
+    implementation "androidx.slidingpanelayout:slidingpanelayout:1.2.0-alpha03"
+    implementation "androidx.window:window:1.0.0-alpha09"
 
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
-    implementation "androidx.security:security-crypto:1.1.0-alpha03"
+    implementation "androidx.security:security-crypto-ktx:1.1.0-alpha03"
 
-    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'com.google.android.material:material:1.4.0'
     implementation 'com.google.android:flexbox:2.0.0'
 
     implementation 'androidx.emoji:emoji:1.1.0'
@@ -276,10 +269,6 @@ dependencies {
 
     // Only enable leak canary prior to release
     //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
-}
-
-if (firebaseEnabled()) {
-    apply plugin: 'com.google.gms.google-services'
 }
 
 task generateContactsXml(type: Copy) {
@@ -307,7 +296,7 @@ if (crashlyticsEnabled()) {
         assembleDebug.finalizedBy(uploadCrashlyticsSymbolFileDebug)
         packageDebugBundle.finalizedBy(uploadCrashlyticsSymbolFileDebug)
 
-        assembleReleaseAppBundle.finalizedBy(uploadCrashlyticsSymbolFileReleaseAppBundle)
-        packageReleaseAppBundleBundle.finalizedBy(uploadCrashlyticsSymbolFileReleaseAppBundle)
+        assembleReleaseWithCrashlytics.finalizedBy(uploadCrashlyticsSymbolFileReleaseWithCrashlytics)
+        packageReleaseWithCrashlytics.finalizedBy(uploadCrashlyticsSymbolFileReleaseWithCrashlytics)
     }
 }

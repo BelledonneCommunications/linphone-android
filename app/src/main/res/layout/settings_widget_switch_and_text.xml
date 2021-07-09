@@ -44,38 +44,47 @@
             android:onCheckedChanged="@{(switch, value) -> listener.onBoolValueChanged(value)}"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="@dimen/settings_margin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <org.linphone.views.MarqueeTextView
+        <TextView
             android:id="@+id/settings_title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="25dp"
+            android:gravity="center_vertical"
             android:text="@{switch_title}"
             android:enabled="@{enabled ?? true}"
             android:visibility="@{switch_title.length() > 0 ? View.VISIBLE : View.GONE}"
-            android:singleLine="true"
+            android:maxLines="1"
             android:layout_toLeftOf="@id/setting_switch"
             android:layout_marginTop="15dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="10dp"
-            style="@style/settings_item_font"/>
+            android:layout_marginLeft="@dimen/settings_margin"
+            android:layout_marginRight="@dimen/settings_margin"
+            style="@style/settings_item_font"
+            app:autoSizeTextType="uniform"
+            app:autoSizeMinTextSize="@dimen/setting_title_min_size"
+            app:autoSizeMaxTextSize="@dimen/setting_title_max_size"
+            app:autoSizeStepGranularity="@dimen/settings_granularity_step"/>
 
-        <org.linphone.views.MarqueeTextView
+        <TextView
             android:id="@+id/settings_subtitle"
             android:text="@{switch_subtitle}"
             android:enabled="@{enabled ?? true}"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="20dp"
+            android:gravity="center_vertical"
             android:visibility="@{switch_subtitle.length() > 0 ? View.VISIBLE : View.GONE}"
-            android:singleLine="true"
+            android:maxLines="1"
             android:layout_below="@id/settings_title"
             android:layout_toLeftOf="@id/setting_switch"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="10dp"
-            style="@style/settings_item_subtitle_font"/>
+            android:layout_marginLeft="@dimen/settings_margin"
+            android:layout_marginRight="@dimen/settings_margin"
+            style="@style/settings_item_subtitle_font"
+            app:autoSizeTextType="uniform"
+            app:autoSizeMinTextSize="@dimen/setting_subtitle_min_size"
+            app:autoSizeMaxTextSize="@dimen/setting_subtitle_max_size"
+            app:autoSizeStepGranularity="@dimen/settings_granularity_step"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/settings_input_layout"
@@ -85,8 +94,8 @@
             android:layout_below="@id/settings_subtitle"
             android:layout_toLeftOf="@id/setting_switch"
             android:layout_marginTop="5dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="@dimen/settings_margin"
+            android:layout_marginRight="@dimen/settings_margin"
             android:enabled="@{enabled ?? true}"
             android:hint="@{text_title}"
             app:helperText="@{text_subtitle}"
@@ -98,7 +107,7 @@
                 android:imeOptions="actionDone"
                 android:inputType="@{InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS}"
                 onValueChanged="@{() -> listener.onTextValueChanged(settingsInput.getText().toString())}"
-                android:singleLine="true"
+                android:maxLines="1"
                 android:background="@color/transparent_color"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>

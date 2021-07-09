@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <import type="android.view.View"/>
@@ -31,39 +32,50 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="@dimen/settings_margin"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:contentDescription="@null"
+            android:visibility="@{icon != null ? View.VISIBLE : View.GONE}"
             android:src="@{icon}" />
 
-        <org.linphone.views.MarqueeTextView
+        <TextView
             android:id="@+id/settings_title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="25dp"
+            android:gravity="center_vertical"
             android:text="@{title}"
             android:enabled="@{enabled ?? true}"
             android:visibility="@{title.length() > 0 ? View.VISIBLE : View.GONE}"
-            android:singleLine="true"
+            android:maxLines="1"
             android:layout_marginTop="15dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="@dimen/settings_margin"
+            android:layout_marginRight="@dimen/settings_margin"
             android:layout_toRightOf="@id/icon"
-            style="@style/settings_item_font"/>
+            style="@style/settings_item_font"
+            app:autoSizeTextType="uniform"
+            app:autoSizeMinTextSize="@dimen/setting_title_min_size"
+            app:autoSizeMaxTextSize="@dimen/setting_title_max_size"
+            app:autoSizeStepGranularity="@dimen/settings_granularity_step"/>
 
-        <org.linphone.views.MarqueeTextView
+        <TextView
             android:id="@+id/settings_subtitle"
             android:text="@{subtitle}"
             android:enabled="@{enabled ?? true}"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="20dp"
+            android:gravity="center_vertical"
             android:visibility="@{subtitle.length() > 0 ? View.VISIBLE : View.GONE}"
-            android:singleLine="true"
+            android:maxLines="1"
             android:layout_below="@id/settings_title"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="@dimen/settings_margin"
+            android:layout_marginRight="@dimen/settings_margin"
             android:layout_toRightOf="@id/icon"
-            style="@style/settings_item_subtitle_font"/>
+            style="@style/settings_item_subtitle_font"
+            app:autoSizeTextType="uniform"
+            app:autoSizeMinTextSize="@dimen/setting_subtitle_min_size"
+            app:autoSizeMaxTextSize="@dimen/setting_subtitle_max_size"
+            app:autoSizeStepGranularity="@dimen/settings_granularity_step"/>
 
         <View
             android:layout_marginTop="15dp"

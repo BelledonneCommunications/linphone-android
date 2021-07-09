@@ -24,7 +24,7 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:padding="2dp"
-            android:layout_marginLeft="10dp" />
+            android:layout_marginLeft="@dimen/settings_margin" />
 
         <ImageView
             android:src="@{data.iconResource, default=@drawable/led_not_registered}"
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="@dimen/settings_margin"
             android:padding="2dp" />
 
         <View
