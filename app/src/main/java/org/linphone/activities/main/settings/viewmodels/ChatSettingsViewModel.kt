@@ -127,13 +127,6 @@ class ChatSettingsViewModel : GenericSettingsViewModel() {
     }
     val hideRoomsRemovedProxies = MutableLiveData<Boolean>()
 
-    val ephemeralMessagesBetaListener = object : SettingListenerStub() {
-        override fun onBoolValueChanged(newValue: Boolean) {
-            prefs.ephemeralMessagesEnabled = newValue
-        }
-    }
-    val ephemeralMessagesBeta = MutableLiveData<Boolean>()
-
     val goToAndroidNotificationSettingsListener = object : SettingListenerStub() {
         override fun onClicked() {
             goToAndroidNotificationSettingsEvent.value = Event(true)
@@ -153,7 +146,6 @@ class ChatSettingsViewModel : GenericSettingsViewModel() {
         launcherShortcuts.value = prefs.chatRoomShortcuts
         hideEmptyRooms.value = prefs.hideEmptyRooms
         hideRoomsRemovedProxies.value = prefs.hideRoomsFromRemovedProxies
-        ephemeralMessagesBeta.value = prefs.ephemeralMessagesEnabled
         fileSharingUrl.value = core.fileTransferServer
         vfs.value = prefs.vfsEnabled
     }
