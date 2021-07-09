@@ -209,7 +209,8 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
     private fun addEvent(eventLog: EventLog) {
         val list = arrayListOf<EventLogData>()
         list.addAll(events.value.orEmpty())
-        if (!list.contains(eventLog)) {
+        val found = list.find { data -> data.eventLog == eventLog }
+        if (found == null) {
             list.add(EventLogData(eventLog))
         }
         events.value = list

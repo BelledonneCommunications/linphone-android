@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <import type="android.view.View"/>
@@ -33,38 +34,47 @@
             android:onCheckedChanged="@{(switch, value) -> listener.onBoolValueChanged(value)}"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="@dimen/settings_margin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <org.linphone.views.MarqueeTextView
+        <TextView
             android:id="@+id/settings_title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="25dp"
+            android:gravity="center_vertical"
             android:text="@{title}"
             android:enabled="@{enabled ?? true}"
             android:visibility="@{title.length() > 0 ? View.VISIBLE : View.GONE}"
-            android:singleLine="true"
+            android:maxLines="1"
             android:layout_toLeftOf="@id/setting_switch"
             android:layout_marginTop="15dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="10dp"
-            style="@style/settings_item_font"/>
+            android:layout_marginLeft="@dimen/settings_margin"
+            android:layout_marginRight="@dimen/settings_margin"
+            style="@style/settings_item_font"
+            app:autoSizeTextType="uniform"
+            app:autoSizeMinTextSize="12sp"
+            app:autoSizeMaxTextSize="18sp"
+            app:autoSizeStepGranularity="1sp"/>
 
-        <org.linphone.views.MarqueeTextView
+        <TextView
             android:id="@+id/settings_subtitle"
             android:text="@{subtitle}"
             android:enabled="@{enabled ?? true}"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="20dp"
+            android:gravity="center_vertical"
             android:visibility="@{subtitle.length() > 0 ? View.VISIBLE : View.GONE}"
-            android:singleLine="true"
+            android:maxLines="1"
             android:layout_below="@id/settings_title"
             android:layout_toLeftOf="@id/setting_switch"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="10dp"
-            style="@style/settings_item_subtitle_font"/>
+            android:layout_marginLeft="@dimen/settings_margin"
+            android:layout_marginRight="@dimen/settings_margin"
+            style="@style/settings_item_subtitle_font"
+            app:autoSizeTextType="uniform"
+            app:autoSizeMinTextSize="8sp"
+            app:autoSizeMaxTextSize="14sp"
+            app:autoSizeStepGranularity="1sp"/>
 
         <View
             android:layout_marginTop="15dp"
