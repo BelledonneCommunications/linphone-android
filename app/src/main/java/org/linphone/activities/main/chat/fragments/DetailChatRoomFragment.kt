@@ -30,7 +30,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
-import androidx.activity.addCallback
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.view.menu.MenuPopupHelper
 import androidx.core.content.FileProvider
@@ -55,7 +54,6 @@ import org.linphone.activities.main.chat.viewmodels.*
 import org.linphone.activities.main.fragments.MasterFragment
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
-import org.linphone.activities.navigateToChatRooms
 import org.linphone.activities.navigateToContacts
 import org.linphone.activities.navigateToImageFileViewer
 import org.linphone.activities.navigateToImdn
@@ -94,14 +92,6 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         super.onDestroyView()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        requireActivity().onBackPressedDispatcher.addCallback(this) {
-            goBack()
-        }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -110,6 +100,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         }
+        binding.sharedMainViewModel = sharedViewModel
 
         val localSipUri = arguments?.getString("LocalSipUri")
         val remoteSipUri = arguments?.getString("RemoteSipUri")
@@ -244,7 +235,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 sharedViewModel.messageToForwardEvent.removeObservers(viewLifecycleOwner)
                 sharedViewModel.messageToForwardEvent.value = Event(chatMessage)
                 Log.i("[Chat Room] Forwarding message, going to chat rooms list")
-                navigateToChatRooms()
+                goBack()
             }
         })
 
@@ -338,7 +329,6 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         binding.setBackClickListener {
             goBack()
         }
-        binding.back.visibility = if (resources.getBoolean(R.bool.isTablet)) View.INVISIBLE else View.VISIBLE
 
         binding.setTitleClickListener {
             binding.sipUri.visibility = if (!viewModel.oneToOneChatRoom ||
@@ -479,10 +469,9 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         }
     }
 
-    private fun goBack() {
-        if (!findNavController().popBackStack(R.id.masterChatRoomsFragment, false)) {
-            Log.w("[Chat Room] No MasterChatRoomsFragment found in back stack")
-            navigateToChatRooms()
+    override fun goBack() {
+        if (!findNavController().popBackStack()) {
+            sharedViewModel.closeSlidingPaneEvent.value = Event(true)
         }
     }
 
