@@ -22,6 +22,7 @@ package org.linphone.activities.call
 import android.Manifest
 import android.animation.ValueAnimator
 import android.annotation.TargetApi
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
@@ -33,6 +34,7 @@ import org.linphone.R
 import org.linphone.activities.call.viewmodels.CallViewModel
 import org.linphone.activities.call.viewmodels.CallViewModelFactory
 import org.linphone.activities.call.viewmodels.ControlsViewModel
+import org.linphone.activities.main.MainActivity
 import org.linphone.core.Call
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallOutgoingActivityBinding
@@ -122,7 +124,15 @@ class OutgoingCallActivity : ProximitySensorActivity() {
         val outgoingCall: Call? = findOutgoingCall()
         if (outgoingCall == null) {
             Log.e("[Outgoing Call Activity] Couldn't find call in state Outgoing")
-            finish()
+            if (isTaskRoot) {
+                // When resuming app from recent tasks make sure MainActivity will be launched if there is no call
+                val intent = Intent()
+                intent.setClass(this, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+            } else {
+                finish()
+            }
         }
     }
 
