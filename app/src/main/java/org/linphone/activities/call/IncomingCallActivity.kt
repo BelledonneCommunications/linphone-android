@@ -23,6 +23,7 @@ import android.Manifest
 import android.annotation.TargetApi
 import android.app.KeyguardManager
 import android.content.Context
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -33,6 +34,7 @@ import org.linphone.R
 import org.linphone.activities.GenericActivity
 import org.linphone.activities.call.viewmodels.IncomingCallViewModel
 import org.linphone.activities.call.viewmodels.IncomingCallViewModelFactory
+import org.linphone.activities.main.MainActivity
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.Call
 import org.linphone.core.tools.Log
@@ -58,7 +60,15 @@ class IncomingCallActivity : GenericActivity() {
         val incomingCall: Call? = findIncomingCall()
         if (incomingCall == null) {
             Log.e("[Incoming Call Activity] Couldn't find call in state Incoming")
-            finish()
+            if (isTaskRoot) {
+                // When resuming app from recent tasks make sure MainActivity will be launched if there is no call
+                val intent = Intent()
+                intent.setClass(this, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+            } else {
+                finish()
+            }
             return
         }
 
@@ -103,7 +113,15 @@ class IncomingCallActivity : GenericActivity() {
         val incomingCall: Call? = findIncomingCall()
         if (incomingCall == null) {
             Log.e("[Incoming Call Activity] Couldn't find call in state Incoming")
-            finish()
+            if (isTaskRoot) {
+                // When resuming app from recent tasks make sure MainActivity will be launched if there is no call
+                val intent = Intent()
+                intent.setClass(this, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+            } else {
+                finish()
+            }
         }
     }
 
