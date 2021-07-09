@@ -19,6 +19,7 @@
  */
 package org.linphone.activities.call
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
@@ -33,6 +34,7 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.call.viewmodels.ControlsFadingViewModel
 import org.linphone.activities.call.viewmodels.SharedCallViewModel
+import org.linphone.activities.main.MainActivity
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallActivityBinding
@@ -112,7 +114,15 @@ class CallActivity : ProximitySensorActivity() {
 
         if (coreContext.core.callsNb == 0) {
             Log.w("[Call Activity] Resuming but no call found...")
-            finish()
+            if (isTaskRoot) {
+                // When resuming app from recent tasks make sure MainActivity will be launched if there is no call
+                val intent = Intent()
+                intent.setClass(this, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+            } else {
+                finish()
+            }
         } else {
             coreContext.removeCallOverlay()
         }
