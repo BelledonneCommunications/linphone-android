@@ -12,6 +12,15 @@ Group changes to describe their impact on the project, as follows:
 
 ## [4.5.1] - Unreleased
 
+### Added
+- Reply to chat message feature
+- Voice recordings messages
+
+### Changed
+- Navigation was reworked using SlidingPane widget, reducing code & improving UI on foldables
+
+### Removed
+
 ## [4.5.0] - 2021-07-08
 
 This version is a full rewrite of the app in kotlin, using modern Android components like navigation, viewmodel, databinding, coroutines, etc...
