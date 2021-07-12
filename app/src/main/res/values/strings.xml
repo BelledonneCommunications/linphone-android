@@ -219,6 +219,7 @@
     <string name="chat_room_sending_reply_hint">Reply</string>
     <string name="chat_room_sending_message_hint">Message</string>
     <string name="chat_message_voice_recording_hold_to_record">Hold button to record voice message</string>
+    <string name="chat_message_voice_recording_playback_low_volume">Your media volume is low, you may want to increase it</string>
 
     <!-- Recordings -->
     <string name="recordings_empty_list">No recordings</string>

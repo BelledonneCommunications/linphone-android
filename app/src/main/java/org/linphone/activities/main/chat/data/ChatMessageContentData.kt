@@ -24,6 +24,7 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.UnderlineSpan
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import java.text.SimpleDateFormat
 import java.util.*
@@ -291,6 +292,11 @@ class ChatMessageContentData(
                     earpieceCard = device.id
                 }
             }
+        }
+        Log.i("[Voice Recording] Found speaker sound card [$speakerCard] and earpiece sound card [$earpieceCard]")
+
+        if (AppUtils.isMediaVolumeLow(coreContext.context)) {
+            Toast.makeText(coreContext.context, R.string.chat_message_voice_recording_playback_low_volume, Toast.LENGTH_LONG).show()
         }
 
         val localPlayer = coreContext.core.createLocalPlayer(speakerCard ?: earpieceCard, null, null)

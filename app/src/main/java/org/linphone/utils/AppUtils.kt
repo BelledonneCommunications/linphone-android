@@ -23,6 +23,7 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.media.AudioManager
 import android.os.Bundle
 import android.text.format.Formatter.formatShortFileSize
 import android.util.TypedValue
@@ -130,6 +131,14 @@ class AppUtils {
             sharedViewModel.filesToShare.value = arrayListOf()
 
             return bundle
+        }
+
+        fun isMediaVolumeLow(context: Context): Boolean {
+            val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            val currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
+            val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+            Log.i("[Media Volume] Current value is $currentVolume, max value is $maxVolume")
+            return currentVolume <= maxVolume * 0.5
         }
     }
 }
