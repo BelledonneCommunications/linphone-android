@@ -618,4 +618,5 @@
     <string name="content_description_replied_message">Az üzenet válasz</string>
     <string name="content_description_cancel_reply">Válasz visszavonása</string>
     <string name="content_description_cancel_voice_recording">Hangfelvétel visszavonása</string>
+    <string name="chat_message_voice_recording_playback_low_volume">A média hangereje alacsony, lehet hogy, szeretné növelni</string>
 </resources>
