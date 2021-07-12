@@ -234,8 +234,12 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 // as we don't want to forward it in this chat room
                 sharedViewModel.messageToForwardEvent.removeObservers(viewLifecycleOwner)
                 sharedViewModel.messageToForwardEvent.value = Event(chatMessage)
-                Log.i("[Chat Room] Forwarding message, going to chat rooms list")
-                goBack()
+                sharedViewModel.isPendingMessageForward.value = true
+
+                if (sharedViewModel.canSlidingPaneBeClosed.value == true) {
+                    Log.i("[Chat Room] Forwarding message, going to chat rooms list")
+                    sharedViewModel.closeSlidingPaneEvent.value = Event(true)
+                }
             }
         })
 
@@ -400,6 +404,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             it.consume { chatMessage ->
                 Log.i("[Chat Room] Found message to transfer")
                 showForwardConfirmationDialog(chatMessage)
+                sharedViewModel.isPendingMessageForward.value = false
             }
         })
     }

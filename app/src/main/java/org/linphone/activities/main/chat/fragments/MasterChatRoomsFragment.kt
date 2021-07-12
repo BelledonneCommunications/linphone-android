@@ -207,8 +207,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
             sharedViewModel.messageToForwardEvent.value?.consume {
                 Log.i("[Chat] Cancelling message forward")
             }
-            listViewModel.forwardPending.value = false
-            adapter.forwardPending(false)
+            sharedViewModel.isPendingMessageForward.value = false
         }
 
         binding.setCancelSharingClickListener {
@@ -279,16 +278,11 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
                     }
                 }
             })
-            sharedViewModel.messageToForwardEvent.observe(viewLifecycleOwner, {
-                if (!it.consumed()) {
+            sharedViewModel.isPendingMessageForward.observe(viewLifecycleOwner, {
+                listViewModel.forwardPending.value = it
+                adapter.forwardPending(it)
+                if (it) {
                     Log.i("[Chat] Found chat message to transfer")
-                    // val activity = requireActivity() as MainActivity
-                    // activity.showSnackBar(R.string.chat_room_toast_choose_for_sharing)
-                    listViewModel.forwardPending.value = true
-                    adapter.forwardPending(true)
-                } else {
-                    listViewModel.forwardPending.value = false
-                    adapter.forwardPending(false)
                 }
             })
 
