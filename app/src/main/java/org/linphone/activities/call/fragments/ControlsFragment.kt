@@ -205,7 +205,7 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
                     }
                 }
             }
-        } else if (requestCode == 1 && grantResults[0] == PERMISSION_GRANTED) {
+        } else if (requestCode == 1 && grantResults.isNotEmpty() && grantResults[0] == PERMISSION_GRANTED) {
             callsViewModel.takeScreenshot()
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
