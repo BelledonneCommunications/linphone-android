@@ -52,6 +52,8 @@ class SharedMainViewModel : ViewModel() {
         MutableLiveData<Event<ChatMessage>>()
     }
 
+    val isPendingMessageForward = MutableLiveData<Boolean>()
+
     val contentToOpen = MutableLiveData<Content>()
 
     var createEncryptedChatRoom: Boolean = false
