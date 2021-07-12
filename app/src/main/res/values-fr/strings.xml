@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <!DOCTYPE resources [
-    <!ENTITY appName "Linphone">
+<!ENTITY appName "Linphone">
 ]>
-
 <resources>
     <string name="call_stats_video">Vidéo</string>
     <string name="assistant_remote_provisioning_failure">Erreur durant le téléchargement ou l\'application de la configuration distante…</string>
@@ -609,4 +607,15 @@
     <string name="chat_room_sending_reply_hint">Réponse</string>
     <string name="chat_room_sending_message_hint">Message</string>
     <string name="chat_message_replied">Réponse</string>
+    <string name="chat_message_voice_recording_hold_to_record">Gardez le bouton enfoncé pour enregistrer un message vocal</string>
+    <string name="content_description_attached_file">Fichier attaché au message</string>
+    <string name="content_description_record_audio_message">Enregistrer un message vocal</string>
+    <string name="content_description_cancel_reply">Annuler la réponse</string>
+    <string name="content_description_voice_recording">Enregistrer un message vocal</string>
+    <string name="content_description_cancel_voice_recording">Annuler l\'enregistrement du message vocal</string>
+    <string name="content_description_pause_voice_recording_playback">Mettre en pause la lecture du message vocal</string>
+    <string name="content_description_play_voice_recording">Jouer le message vocal</string>
+    <string name="chat_settings_auto_download_voice_recordings">Télécharger automatiquement les messages vocaux reçus</string>
+    <string name="content_description_replied_message">Ceci est une réponse</string>
+    <string name="content_description_stop_voice_recording">Arrêter l\'enregistrement du message vocal</string>
 </resources>
