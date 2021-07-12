@@ -67,12 +67,20 @@ class DialerViewModel : LogsUploadViewModel() {
 
             if (coreContext.core.callsNb == 0) {
                 val contentResolver = coreContext.context.contentResolver
-                if (Settings.System.getInt(contentResolver, Settings.System.DTMF_TONE_WHEN_DIALING) == 1) {
-                    coreContext.core.playDtmf(key, 1)
+                try {
+                    if (Settings.System.getInt(
+                            contentResolver,
+                            Settings.System.DTMF_TONE_WHEN_DIALING
+                        ) == 1
+                    ) {
+                        coreContext.core.playDtmf(key, 1)
 
-                    if (vibrator.hasVibrator() && corePreferences.dtmfKeypadVibration) {
-                        Compatibility.eventVibration(vibrator)
+                        if (vibrator.hasVibrator() && corePreferences.dtmfKeypadVibration) {
+                            Compatibility.eventVibration(vibrator)
+                        }
                     }
+                } catch (snfe: Settings.SettingNotFoundException) {
+                    Log.e("[Dialer] Can't play DTMF: $snfe")
                 }
             }
         }
