@@ -39,7 +39,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:clickable="true">
 
         <LinearLayout
             android:id="@+id/top_bar"
@@ -185,8 +186,6 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:background="?attr/lightToolbarBackgroundColor"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -220,8 +219,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
                     android:layout_weight="1"
                     android:background="@drawable/resizable_text_field"
                     android:imeOptions="flagNoExtractUi"
