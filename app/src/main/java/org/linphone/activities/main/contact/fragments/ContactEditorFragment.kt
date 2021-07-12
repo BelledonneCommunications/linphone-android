@@ -120,7 +120,7 @@ class ContactEditorFragment : GenericFragment<ContactEditorFragmentBinding>(), S
         grantResults: IntArray
     ) {
         if (requestCode == 0) {
-            val granted = grantResults[0] == PackageManager.PERMISSION_GRANTED
+            val granted = grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
             if (granted) {
                 Log.i("[Contact Editor] WRITE_CONTACTS permission granted")
             } else {
