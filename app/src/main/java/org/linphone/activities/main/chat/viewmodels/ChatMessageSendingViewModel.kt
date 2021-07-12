@@ -19,6 +19,7 @@
  */
 package org.linphone.activities.main.chat.viewmodels
 
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -32,10 +33,12 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.R
 import org.linphone.activities.main.chat.data.ChatMessageAttachmentData
 import org.linphone.activities.main.chat.data.ChatMessageData
 import org.linphone.core.*
 import org.linphone.core.tools.Log
+import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.PermissionHelper
@@ -380,6 +383,11 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
                     earpieceCard = device.id
                 }
             }
+        }
+        Log.i("[Chat Message Sending] Found speaker sound card [$speakerCard] and earpiece sound card [$earpieceCard]")
+
+        if (AppUtils.isMediaVolumeLow(coreContext.context)) {
+            Toast.makeText(coreContext.context, R.string.chat_message_voice_recording_playback_low_volume, Toast.LENGTH_LONG).show()
         }
 
         val localPlayer = coreContext.core.createLocalPlayer(speakerCard ?: earpieceCard, null, null)
