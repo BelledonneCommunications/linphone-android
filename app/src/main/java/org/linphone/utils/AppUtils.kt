@@ -61,14 +61,20 @@ class AppUtils {
         fun getInitials(displayName: String, limit: Int = 2): String {
             if (displayName.isEmpty()) return ""
 
-            val emoji = EmojiCompat.get()
-            val split = displayName.toUpperCase(Locale.getDefault()).split(" ")
+            val split = displayName.uppercase(Locale.getDefault()).split(" ")
             var initials = ""
             var characters = 0
 
+            val emoji = try {
+                EmojiCompat.get()
+            } catch (ise: IllegalStateException) {
+                Log.e("[App Utils] Can't get EmojiCompat: $ise")
+                null
+            }
+
             for (i in split.indices) {
                 if (split[i].isNotEmpty()) {
-                    if (emoji.hasEmojiGlyph(split[i])) {
+                    if (emoji?.hasEmojiGlyph(split[i]) == true) {
                         initials += emoji.process(split[i])
                     } else {
                         initials += split[i][0]
