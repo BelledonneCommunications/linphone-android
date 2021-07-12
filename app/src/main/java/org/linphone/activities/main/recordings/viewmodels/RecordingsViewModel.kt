@@ -53,13 +53,20 @@ class RecordingsViewModel : ViewModel() {
 
     fun deleteRecordings(list: ArrayList<RecordingData>) {
         for (recording in list) {
+            // Hide video when removing a recording being played with video.
+            if (recording.isPlaying.value == true && recording.isVideoAvailable()) {
+                isVideoVisible.value = false
+            }
+
             Log.i("[Recordings] Deleting recording ${recording.path}")
             FileUtils.deleteFile(recording.path)
         }
+
         getRecordings()
     }
 
     private fun getRecordings() {
+        recordingsList.value.orEmpty().forEach(RecordingData::destroy)
         val list = arrayListOf<RecordingData>()
 
         for (f in FileUtils.getFileStorageDir().listFiles().orEmpty()) {
