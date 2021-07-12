@@ -442,7 +442,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
     }
 
     fun transferCallTo(addressToCall: String) {
-        val currentCall = core.currentCall ?: core.calls.first()
+        val currentCall = core.currentCall ?: core.calls.firstOrNull()
         if (currentCall == null) {
             Log.e("[Context] Couldn't find a call to transfer")
         } else {
