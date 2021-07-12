@@ -40,7 +40,7 @@ abstract class AbstractPhoneFragment<T : ViewDataBinding> : GenericFragment<T>()
         grantResults: IntArray
     ) {
         if (requestCode == 0) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Log.i("[Assistant] READ_PHONE_NUMBERS permission granted")
                 updateFromDeviceInfo()
             } else {
