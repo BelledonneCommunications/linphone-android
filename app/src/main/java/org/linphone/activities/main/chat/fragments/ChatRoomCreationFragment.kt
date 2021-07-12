@@ -152,7 +152,7 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
         grantResults: IntArray
     ) {
         if (requestCode == 0) {
-            val granted = grantResults[0] == PackageManager.PERMISSION_GRANTED
+            val granted = grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
             if (granted) {
                 Log.i("[Chat Room Creation] READ_CONTACTS permission granted")
                 LinphoneApplication.coreContext.contactsManager.onReadContactsPermissionGranted()
