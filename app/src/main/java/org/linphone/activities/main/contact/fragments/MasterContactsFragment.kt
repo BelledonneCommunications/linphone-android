@@ -32,6 +32,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.activities.clearDisplayedContact
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.contact.adapters.ContactsListAdapter
 import org.linphone.activities.main.contact.viewmodels.ContactsListViewModel
@@ -147,7 +148,13 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
                 }
 
                 viewModel.showDeleteButton({
-                    listViewModel.deleteContact(adapter.currentList[viewHolder.adapterPosition].contactInternal)
+                    val deletedContact = adapter.currentList[viewHolder.adapterPosition].contactInternal
+                    listViewModel.deleteContact(deletedContact)
+                    if (!binding.slidingPane.isSlideable &&
+                        deletedContact == sharedViewModel.selectedContact.value) {
+                        Log.i("[Contacts] Currently displayed contact has been deleted, removing detail fragment")
+                        clearDisplayedContact()
+                    }
                     dialog.dismiss()
                 }, getString(R.string.dialog_delete))
 
@@ -258,11 +265,21 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
 
     override fun deleteItems(indexesOfItemToDelete: ArrayList<Int>) {
         val list = ArrayList<Contact>()
+        var closeSlidingPane = false
         for (index in indexesOfItemToDelete) {
             val contact = adapter.currentList[index].contactInternal
             list.add(contact)
+
+            if (contact == sharedViewModel.selectedContact.value) {
+                closeSlidingPane = true
+            }
         }
         listViewModel.deleteContacts(list)
+
+        if (!binding.slidingPane.isSlideable && closeSlidingPane) {
+            Log.i("[Contacts] Currently displayed contact has been deleted, removing detail fragment")
+            clearDisplayedContact()
+        }
     }
 
     override fun onRequestPermissionsResult(
