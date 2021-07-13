@@ -51,6 +51,7 @@ import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.navigateToDialer
 import org.linphone.compatibility.Compatibility
 import org.linphone.contact.ContactsUpdatedListenerStub
+import org.linphone.core.CorePreferences
 import org.linphone.core.tools.Log
 import org.linphone.databinding.MainActivityBinding
 import org.linphone.utils.AppUtils
@@ -433,7 +434,8 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                         .start()
                 }
                 MotionEvent.ACTION_UP -> {
-                    if (abs(initPosX - view.x) < 5 && abs(initPosY - view.y) < 5) {
+                    if (abs(initPosX - view.x) < CorePreferences.OVERLAY_CLICK_SENSITIVITY &&
+                        abs(initPosY - view.y) < CorePreferences.OVERLAY_CLICK_SENSITIVITY) {
                         view.performClick()
                     }
                 }
@@ -443,7 +445,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         }
 
         callOverlay.setOnClickListener {
-            coreContext.onCallStarted()
+            coreContext.onCallOverlayClick()
         }
     }
 }
