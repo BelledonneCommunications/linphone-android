@@ -199,7 +199,8 @@ class ChatMessageContentData(
         downloadLabel.value = spannable
 
         if (content.isFile || (content.isFileTransfer && chatMessage.isOutgoing)) {
-            val path = if (content.isFileEncrypted) content.plainFilePath else content.filePath ?: ""
+            Log.i("[Content] Is content encrypted ? $isFileEncrypted")
+            val path = if (isFileEncrypted) content.plainFilePath else content.filePath ?: ""
             downloadable.value = content.filePath.orEmpty().isEmpty()
 
             if (path.isNotEmpty()) {

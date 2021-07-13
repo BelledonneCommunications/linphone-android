@@ -118,6 +118,24 @@ class FileUtils {
             return returnPath
         }
 
+        private fun getFileStorageCacheDir(fileName: String): File {
+            val path = coreContext.context.cacheDir
+            Log.i("[File Utils] Cache directory is: $path")
+
+            val realFileName = if (fileName.endsWith(VFS_PLAIN_FILE_EXTENSION)) {
+                fileName.substring(0, fileName.length - VFS_PLAIN_FILE_EXTENSION.length)
+            } else fileName
+            var file = File(path, realFileName)
+
+            var prefix = 1
+            while (file.exists()) {
+                file = File(path, prefix.toString() + "_" + realFileName)
+                Log.w("[File Utils] File with that name already exists, renamed to ${file.name}")
+                prefix += 1
+            }
+            return file
+        }
+
         fun getFileStoragePath(fileName: String): File {
             val path = getFileStorageDir(isExtensionImage(fileName))
             var file = File(path, fileName)
@@ -249,6 +267,21 @@ class FileUtils {
                 Log.e("[File Utils] copyToFile exception: $e")
             }
             return false
+        }
+
+        suspend fun copyFileToCache(plainFilePath: String): String? {
+            val cacheFile = getFileStorageCacheDir(getNameFromFilePath(plainFilePath))
+            try {
+                withContext(Dispatchers.IO) {
+                    FileOutputStream(cacheFile).use { out ->
+                        copyFileTo(plainFilePath, out)
+                    }
+                }
+                return cacheFile.absolutePath
+            } catch (e: IOException) {
+                Log.e("[File Utils] copyFileToCache exception: $e")
+            }
+            return null
         }
 
         private fun createFile(file: String): File {
