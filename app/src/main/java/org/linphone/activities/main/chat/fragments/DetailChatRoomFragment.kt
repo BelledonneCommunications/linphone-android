@@ -298,7 +298,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                             else -> {
                                 if (content.isFileEncrypted) {
                                     Log.w("[Chat Message] File is encrypted and can't be opened in one of our viewers...")
-                                    showDialogForUserConsentBeforeExportingFileInThirdPartyApp(path)
+                                    showDialogForUserConsentBeforeExportingFileInThirdPartyApp(content)
                                 } else if (!FileUtils.openFileInThirdPartyApp(requireActivity(), path)) {
                                     showDialogToSuggestOpeningFileAsText()
                                 }
@@ -675,7 +675,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         dialog.show()
     }
 
-    private fun showDialogForUserConsentBeforeExportingFileInThirdPartyApp(path: String) {
+    private fun showDialogForUserConsentBeforeExportingFileInThirdPartyApp(content: Content) {
         val dialogViewModel = DialogViewModel(
             getString(R.string.chat_message_cant_open_file_in_app_dialog_message),
             getString(R.string.chat_message_cant_open_file_in_app_dialog_title)
@@ -684,8 +684,16 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
         dialogViewModel.showDeleteButton({
             dialog.dismiss()
-            if (!FileUtils.openFileInThirdPartyApp(requireActivity(), path)) {
-                showDialogToSuggestOpeningFileAsText()
+            lifecycleScope.launch {
+                val plainFilePath = content.plainFilePath
+                Log.i("[Cht Room] Making a copy of [$plainFilePath] to the cache directory before exporting it")
+                val cacheCopyPath = FileUtils.copyFileToCache(plainFilePath)
+                if (cacheCopyPath != null) {
+                    Log.i("[Cht Room] Cache copy has been made: $cacheCopyPath")
+                    if (!FileUtils.openFileInThirdPartyApp(requireActivity(), cacheCopyPath)) {
+                        showDialogToSuggestOpeningFileAsText()
+                    }
+                }
             }
         }, getString(R.string.chat_message_cant_open_file_in_app_dialog_export_button))
 
