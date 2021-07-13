@@ -584,7 +584,8 @@ class CoreContext(val context: Context, coreConfig: Config) {
                     windowManager.updateViewLayout(overlay, params)
                 }
                 MotionEvent.ACTION_UP -> {
-                    if (abs(overlayX - params.x) < 5 && abs(overlayY - params.y) < 5) {
+                    if (abs(overlayX - params.x) < CorePreferences.OVERLAY_CLICK_SENSITIVITY &&
+                        abs(overlayY - params.y) < CorePreferences.OVERLAY_CLICK_SENSITIVITY) {
                         view.performClick()
                     }
                     overlayX = params.x.toFloat()
@@ -595,12 +596,25 @@ class CoreContext(val context: Context, coreConfig: Config) {
             true
         }
         overlay.setOnClickListener {
-            Log.i("[Context] Overlay clicked, go back to call view")
-            onCallStarted()
+            onCallOverlayClick()
         }
 
         callOverlay = overlay
         windowManager.addView(overlay, params)
+    }
+
+    fun onCallOverlayClick() {
+        val call = core.currentCall ?: core.calls.firstOrNull()
+        if (call != null) {
+            Log.i("[Context] Overlay clicked, go back to call view")
+            when (call.state) {
+                Call.State.IncomingReceived, Call.State.IncomingEarlyMedia -> onIncomingReceived()
+                Call.State.OutgoingInit, Call.State.OutgoingProgress, Call.State.OutgoingRinging, Call.State.OutgoingEarlyMedia -> onOutgoingStarted()
+                else -> onCallStarted()
+            }
+        } else {
+            Log.e("[Context] Couldn't find call, why is the overlay clicked?!")
+        }
     }
 
     fun removeCallOverlay() {
