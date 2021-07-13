@@ -41,6 +41,8 @@ class CorePreferences constructor(private val context: Context) {
     /* VFS encryption */
 
     companion object {
+        const val OVERLAY_CLICK_SENSITIVITY = 10
+
         private const val encryptedSharedPreferencesFile = "encrypted.pref"
     }
 
