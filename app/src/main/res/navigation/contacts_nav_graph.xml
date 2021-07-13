@@ -9,7 +9,10 @@
         android:id="@+id/emptyContactFragment"
         android:name="org.linphone.activities.main.fragments.EmptyFragment"
         tools:layout="@layout/empty_fragment"
-        android:label="EmptyFragment"/>
+        android:label="EmptyFragment" />
+
+    <action android:id="@+id/action_global_emptyContactFragment"
+        app:destination="@id/emptyContactFragment" />
 
     <fragment
         android:id="@+id/detailContactFragment"
@@ -26,11 +29,15 @@
             app:destination="@id/chat_nav_graph.xml" />
     </fragment>
 
+    <action
+        android:id="@+id/action_global_detailContactFragment"
+        app:destination="@id/detailContactFragment" />
+
     <fragment
         android:id="@+id/contactEditorFragment"
         android:name="org.linphone.activities.main.contact.fragments.ContactEditorFragment"
         tools:layout="@layout/contact_editor_fragment"
-        android:label="ContactEditorFragment" >
+        android:label="ContactEditorFragment">
         <argument
             android:name="SipUri"
             app:argType="string"
@@ -39,10 +46,6 @@
             android:id="@+id/action_contactEditorFragment_to_detailContactFragment"
             app:destination="@id/detailContactFragment" />
     </fragment>
-
-    <action
-        android:id="@+id/action_global_detailContactFragment"
-        app:destination="@id/detailContactFragment" />
 
     <action
         android:id="@+id/action_global_contactEditorFragment"
