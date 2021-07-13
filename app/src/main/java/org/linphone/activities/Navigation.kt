@@ -309,6 +309,18 @@ internal fun MasterChatRoomsFragment.navigateToChatRoomCreation(
     }
 }
 
+internal fun MasterChatRoomsFragment.clearDisplayedChatRoom() {
+    if (findNavController().currentDestination?.id == R.id.masterChatRoomsFragment) {
+        val navHostFragment =
+            childFragmentManager.findFragmentById(R.id.chat_nav_container) as NavHostFragment
+        navHostFragment.navController.navigate(
+            R.id.action_global_emptyChatFragment,
+            null,
+            popupTo(R.id.emptyChatFragment, true)
+        )
+    }
+}
+
 internal fun DetailChatRoomFragment.navigateToContacts(sipUriToAdd: String) {
     val deepLink = "linphone-android://contact/new/$sipUriToAdd"
     findMasterNavController().navigate(Uri.parse(deepLink), getLeftToRightAnimationNavOptions())
@@ -465,6 +477,18 @@ internal fun MasterContactsFragment.navigateToContactEditor(sipUriToAdd: String?
     }
 }
 
+internal fun MasterContactsFragment.clearDisplayedContact() {
+    if (findNavController().currentDestination?.id == R.id.masterContactsFragment) {
+        val navHostFragment =
+            childFragmentManager.findFragmentById(R.id.contacts_nav_container) as NavHostFragment
+        navHostFragment.navController.navigate(
+            R.id.action_global_emptyContactFragment,
+            null,
+            popupTo(R.id.emptyContactFragment, true)
+        )
+    }
+}
+
 internal fun ContactEditorFragment.navigateToContact(contact: NativeContact) {
     val bundle = Bundle()
     bundle.putString("id", contact.nativeId)
@@ -509,6 +533,18 @@ internal fun MasterCallLogsFragment.navigateToCallHistory() {
             childFragmentManager.findFragmentById(R.id.history_nav_container) as NavHostFragment
         navHostFragment.navController.navigate(
             R.id.action_global_detailCallLogFragment,
+            null,
+            popupTo(R.id.emptyFragment, true)
+        )
+    }
+}
+
+internal fun MasterCallLogsFragment.clearDisplayedCallHistory() {
+    if (findNavController().currentDestination?.id == R.id.masterCallLogsFragment) {
+        val navHostFragment =
+            childFragmentManager.findFragmentById(R.id.history_nav_container) as NavHostFragment
+        navHostFragment.navController.navigate(
+            R.id.action_global_emptyFragment,
             null,
             popupTo(R.id.emptyFragment, true)
         )

@@ -32,6 +32,7 @@ import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.GenericActivity
+import org.linphone.activities.clearDisplayedChatRoom
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.chat.adapters.ChatRoomsListAdapter
 import org.linphone.activities.main.chat.viewmodels.ChatRoomsListViewModel
@@ -163,7 +164,13 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
                 }
 
                 viewModel.showDeleteButton({
-                    listViewModel.deleteChatRoom(adapter.currentList[viewHolder.adapterPosition].chatRoom)
+                    val deletedChatRoom = adapter.currentList[viewHolder.adapterPosition].chatRoom
+                    listViewModel.deleteChatRoom(deletedChatRoom)
+                    if (!binding.slidingPane.isSlideable &&
+                        deletedChatRoom == sharedViewModel.selectedChatRoom.value) {
+                        Log.i("[Chat] Currently displayed chat room has been deleted, removing detail fragment")
+                        clearDisplayedChatRoom()
+                    }
                     dialog.dismiss()
                 }, getString(R.string.dialog_delete))
 
@@ -296,11 +303,21 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
 
     override fun deleteItems(indexesOfItemToDelete: ArrayList<Int>) {
         val list = ArrayList<ChatRoom>()
+        var closeSlidingPane = false
         for (index in indexesOfItemToDelete) {
             val chatRoomViewModel = adapter.currentList[index]
             list.add(chatRoomViewModel.chatRoom)
+
+            if (chatRoomViewModel.chatRoom == sharedViewModel.selectedChatRoom.value) {
+                closeSlidingPane = true
+            }
         }
         listViewModel.deleteChatRooms(list)
+
+        if (!binding.slidingPane.isSlideable && closeSlidingPane) {
+            Log.i("[Chat] Currently displayed chat room has been deleted, removing detail fragment")
+            clearDisplayedChatRoom()
+        }
     }
 
     private fun scrollToTop() {

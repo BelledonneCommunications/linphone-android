@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.activities.clearDisplayedCallHistory
 import org.linphone.activities.main.fragments.MasterFragment
 import org.linphone.activities.main.history.adapters.CallLogsListAdapter
 import org.linphone.activities.main.history.data.GroupedCallLogData
@@ -148,7 +149,13 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
                 }
 
                 viewModel.showDeleteButton({
-                    listViewModel.deleteCallLogGroup(adapter.currentList[viewHolder.adapterPosition])
+                    val deletedCallGroup = adapter.currentList[viewHolder.adapterPosition]
+                    listViewModel.deleteCallLogGroup(deletedCallGroup)
+                    if (!binding.slidingPane.isSlideable &&
+                        deletedCallGroup.lastCallLog.callId == sharedViewModel.selectedCallLogGroup.value?.lastCallLog?.callId) {
+                        Log.i("[History] Currently displayed history has been deleted, removing detail fragment")
+                        clearDisplayedCallHistory()
+                    }
                     dialog.dismiss()
                 }, getString(R.string.dialog_delete))
 
@@ -238,11 +245,21 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
 
     override fun deleteItems(indexesOfItemToDelete: ArrayList<Int>) {
         val list = ArrayList<GroupedCallLogData>()
+        var closeSlidingPane = false
         for (index in indexesOfItemToDelete) {
             val callLogGroup = adapter.currentList[index]
             list.add(callLogGroup)
+
+            if (callLogGroup.lastCallLog.callId == sharedViewModel.selectedCallLogGroup.value?.lastCallLog?.callId) {
+                closeSlidingPane = true
+            }
         }
         listViewModel.deleteCallLogGroups(list)
+
+        if (!binding.slidingPane.isSlideable && closeSlidingPane) {
+            Log.i("[History] Currently displayed history has been deleted, removing detail fragment")
+            clearDisplayedCallHistory()
+        }
     }
 
     private fun scrollToTop() {
