@@ -457,7 +457,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         }
 
         callOverlay.setOnClickListener {
-            coreContext.onCallStarted()
+            coreContext.onCallOverlayClick()
         }
     }
 }

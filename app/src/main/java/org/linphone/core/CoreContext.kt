@@ -595,12 +595,25 @@ class CoreContext(val context: Context, coreConfig: Config) {
             true
         }
         overlay.setOnClickListener {
-            Log.i("[Context] Overlay clicked, go back to call view")
-            onCallStarted()
+            onCallOverlayClick()
         }
 
         callOverlay = overlay
         windowManager.addView(overlay, params)
+    }
+
+    fun onCallOverlayClick() {
+        val call = core.currentCall ?: core.calls.firstOrNull()
+        if (call != null) {
+            Log.i("[Context] Overlay clicked, go back to call view")
+            when (call.state) {
+                Call.State.IncomingReceived, Call.State.IncomingEarlyMedia -> onIncomingReceived()
+                Call.State.OutgoingInit, Call.State.OutgoingProgress, Call.State.OutgoingRinging, Call.State.OutgoingEarlyMedia -> onOutgoingStarted()
+                else -> onCallStarted()
+            }
+        } else {
+            Log.e("[Context] Couldn't find call, why is the overlay clicked?!")
+        }
     }
 
     fun removeCallOverlay() {
