@@ -29,6 +29,9 @@ import android.text.format.Formatter.formatShortFileSize
 import android.util.TypedValue
 import androidx.core.content.res.ResourcesCompat
 import androidx.emoji.text.EmojiCompat
+import androidx.media.AudioAttributesCompat
+import androidx.media.AudioFocusRequestCompat
+import androidx.media.AudioManagerCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import java.util.*
@@ -145,6 +148,38 @@ class AppUtils {
             val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
             Log.i("[Media Volume] Current value is $currentVolume, max value is $maxVolume")
             return currentVolume <= maxVolume * 0.5
+        }
+
+        fun acquireAudioFocusForVoiceRecording(context: Context): AudioFocusRequestCompat {
+            val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            val audioAttrs = AudioAttributesCompat.Builder()
+                .setUsage(AudioAttributesCompat.USAGE_MEDIA)
+                .setContentType(AudioAttributesCompat.CONTENT_TYPE_SPEECH)
+                .build()
+
+            val request =
+                AudioFocusRequestCompat.Builder(AudioManagerCompat.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE)
+                    .setAudioAttributes(audioAttrs)
+                    .setOnAudioFocusChangeListener { }
+                    .build()
+            when (AudioManagerCompat.requestAudioFocus(audioManager, request)) {
+                AudioManager.AUDIOFOCUS_REQUEST_GRANTED -> {
+                    Log.i("[Audio Focus] Voice recording audio focus request granted")
+                }
+                AudioManager.AUDIOFOCUS_REQUEST_FAILED -> {
+                    Log.w("[Audio Focus] Voice recording audio focus request failed")
+                }
+                AudioManager.AUDIOFOCUS_REQUEST_DELAYED -> {
+                    Log.w("[Audio Focus] Voice recording audio focus request delayed")
+                }
+            }
+            return request
+        }
+
+        fun releaseAudioFocusForVoiceRecording(context: Context, request: AudioFocusRequestCompat) {
+            val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            AudioManagerCompat.abandonAudioFocusRequest(audioManager, request)
+            Log.i("[Audio Focus] Voice recording audio focus request abandoned")
         }
     }
 }

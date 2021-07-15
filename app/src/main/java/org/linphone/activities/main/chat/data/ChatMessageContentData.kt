@@ -26,6 +26,7 @@ import android.text.Spanned
 import android.text.style.UnderlineSpan
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
+import androidx.media.AudioFocusRequestCompat
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlinx.coroutines.*
@@ -73,6 +74,7 @@ class ChatMessageContentData(
     val formattedDuration = MutableLiveData<String>()
     val voiceRecordPlayingPosition = MutableLiveData<Int>()
     val isVoiceRecordPlaying = MutableLiveData<Boolean>()
+    var voiceRecordPlayingAudioFocusRequest: AudioFocusRequestCompat? = null
 
     val isAlone: Boolean
         get() {
@@ -257,6 +259,11 @@ class ChatMessageContentData(
             initVoiceRecordPlayer()
         }
 
+        if (voiceRecordPlayingAudioFocusRequest == null) {
+            voiceRecordPlayingAudioFocusRequest = AppUtils.acquireAudioFocusForVoiceRecording(
+                coreContext.context
+            )
+        }
         voiceRecordingPlayer.start()
         isVoiceRecordPlaying.value = true
         tickerFlow().onEach {
@@ -269,6 +276,13 @@ class ChatMessageContentData(
         if (!isPlayerClosed()) {
             voiceRecordingPlayer.pause()
         }
+
+        val request = voiceRecordPlayingAudioFocusRequest
+        if (request != null) {
+            AppUtils.releaseAudioFocusForVoiceRecording(coreContext.context, request)
+            voiceRecordPlayingAudioFocusRequest = null
+        }
+
         isVoiceRecordPlaying.value = false
     }
 
