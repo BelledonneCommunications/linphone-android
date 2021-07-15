@@ -23,6 +23,7 @@ import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.media.AudioFocusRequestCompat
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -88,6 +89,8 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
     val recorder: Recorder
 
     val voiceRecordPlayingPosition = MutableLiveData<Int>()
+
+    var voiceRecordPlayingAudioFocusRequest: AudioFocusRequestCompat? = null
 
     private lateinit var voiceRecordingPlayer: Player
     private val playerListener = PlayerListener {
@@ -352,6 +355,12 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
             initVoiceRecordPlayer()
         }
 
+        if (voiceRecordPlayingAudioFocusRequest == null) {
+            voiceRecordPlayingAudioFocusRequest = AppUtils.acquireAudioFocusForVoiceRecording(
+                coreContext.context
+            )
+        }
+
         voiceRecordingPlayer.start()
         isPlayingVoiceRecording.value = true
 
@@ -364,6 +373,12 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         Log.i("[Chat Message Sending] Pausing voice record")
         if (!isPlayerClosed()) {
             voiceRecordingPlayer.pause()
+        }
+
+        val request = voiceRecordPlayingAudioFocusRequest
+        if (request != null) {
+            AppUtils.releaseAudioFocusForVoiceRecording(coreContext.context, request)
+            voiceRecordPlayingAudioFocusRequest = null
         }
 
         isPlayingVoiceRecording.value = false
@@ -415,6 +430,13 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
             voiceRecordPlayingPosition.value = 0
             voiceRecordingPlayer.close()
         }
+
+        val request = voiceRecordPlayingAudioFocusRequest
+        if (request != null) {
+            AppUtils.releaseAudioFocusForVoiceRecording(coreContext.context, request)
+            voiceRecordPlayingAudioFocusRequest = null
+        }
+
         isPlayingVoiceRecording.value = false
     }
 

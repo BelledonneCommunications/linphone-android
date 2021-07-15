@@ -108,7 +108,7 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
             }
         })*/
 
-        /* End of hared view model & sliding pane related */
+        /* End of shared view model & sliding pane related */
 
         _adapter = ContactsListAdapter(listSelectionViewModel, viewLifecycleOwner)
         binding.contactsList.setHasFixedSize(true)
