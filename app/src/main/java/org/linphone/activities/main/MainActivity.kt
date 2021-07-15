@@ -30,6 +30,8 @@ import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
@@ -173,6 +175,16 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         super.onPostCreate(savedInstanceState)
         registerComponentCallbacks(componentCallbacks)
         findNavController(R.id.nav_host_fragment).addOnDestinationChangedListener(this)
+
+        binding.rootCoordinatorLayout.viewTreeObserver.addOnGlobalLayoutListener {
+            val keyboardVisible = ViewCompat.getRootWindowInsets(binding.rootCoordinatorLayout)?.isVisible(WindowInsetsCompat.Type.ime()) == true
+            Log.d("[Tabs Fragment] Keyboard is ${if (keyboardVisible) "visible" else "invisible"}")
+            if (keyboardVisible) {
+                hideTabsFragment()
+            } else {
+                showTabsFragment()
+            }
+        }
 
         if (intent != null) handleIntentParams(intent)
     }
