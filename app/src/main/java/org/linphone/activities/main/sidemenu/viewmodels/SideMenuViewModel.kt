@@ -43,12 +43,6 @@ class SideMenuViewModel : ViewModel() {
 
     lateinit var accountsSettingsListener: SettingListenerStub
 
-    private var accountClickListener = object : SettingListenerStub() {
-        override fun onAccountClicked(identity: String) {
-            accountsSettingsListener.onAccountClicked(identity)
-        }
-    }
-
     private val listener: CoreListenerStub = object : CoreListenerStub() {
         override fun onAccountRegistrationStateChanged(
             core: Core,
@@ -71,18 +65,26 @@ class SideMenuViewModel : ViewModel() {
     }
 
     override fun onCleared() {
+        defaultAccountViewModel.value?.destroy()
+        accounts.value.orEmpty().forEach(AccountSettingsViewModel::destroy)
         coreContext.core.removeListener(listener)
         super.onCleared()
     }
 
     fun updateAccountsList() {
         defaultAccountFound.value = false // Do not assume a default account will still be found
+
+        accounts.value.orEmpty().forEach(AccountSettingsViewModel::destroy)
         val list = arrayListOf<AccountSettingsViewModel>()
         if (coreContext.core.accountList.isNotEmpty()) {
             val defaultAccount = coreContext.core.defaultAccount
             if (defaultAccount != null) {
                 val defaultViewModel = AccountSettingsViewModel(defaultAccount)
-                defaultViewModel.accountsSettingsListener = accountClickListener
+                defaultViewModel.accountsSettingsListener = object : SettingListenerStub() {
+                    override fun onAccountClicked(identity: String) {
+                        accountsSettingsListener.onAccountClicked(identity)
+                    }
+                }
                 defaultAccountViewModel.value = defaultViewModel
                 defaultAccountFound.value = true
             }
@@ -90,7 +92,11 @@ class SideMenuViewModel : ViewModel() {
             for (account in coreContext.core.accountList) {
                 if (account != coreContext.core.defaultAccount) {
                     val viewModel = AccountSettingsViewModel(account)
-                    viewModel.accountsSettingsListener = accountClickListener
+                    viewModel.accountsSettingsListener = object : SettingListenerStub() {
+                        override fun onAccountClicked(identity: String) {
+                            accountsSettingsListener.onAccountClicked(identity)
+                        }
+                    }
                     list.add(viewModel)
                 }
             }
