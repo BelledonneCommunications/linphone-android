@@ -20,7 +20,9 @@
 package org.linphone.activities.main
 
 import android.app.Activity
+import android.content.ComponentCallbacks2
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
@@ -28,6 +30,8 @@ import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
@@ -58,6 +62,7 @@ import org.linphone.databinding.MainActivityBinding
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
+import org.linphone.utils.GlideApp
 
 class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestinationChangedListener {
     private lateinit var binding: MainActivityBinding
@@ -83,6 +88,19 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     private var initPosX = 0f
     private var initPosY = 0f
     private var overlay: View? = null
+
+    private val componentCallbacks = object : ComponentCallbacks2 {
+        override fun onConfigurationChanged(newConfig: Configuration) { }
+
+        override fun onLowMemory() {
+            Log.w("[Main Activity] onLowMemory !")
+        }
+
+        override fun onTrimMemory(level: Int) {
+            Log.w("[Main Activity] onTrimMemory called with level $level !")
+            GlideApp.get(this@MainActivity).clearMemory()
+        }
+    }
 
     override fun onLayoutChanges(foldingFeature: FoldingFeature?) {
         sharedViewModel.layoutChangedEvent.value = Event(true)
@@ -155,13 +173,25 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
+        registerComponentCallbacks(componentCallbacks)
         findNavController(R.id.nav_host_fragment).addOnDestinationChangedListener(this)
+
+        binding.rootCoordinatorLayout.viewTreeObserver.addOnGlobalLayoutListener {
+            val keyboardVisible = ViewCompat.getRootWindowInsets(binding.rootCoordinatorLayout)?.isVisible(WindowInsetsCompat.Type.ime()) == true
+            Log.d("[Tabs Fragment] Keyboard is ${if (keyboardVisible) "visible" else "invisible"}")
+            if (keyboardVisible) {
+                hideTabsFragment()
+            } else {
+                showTabsFragment()
+            }
+        }
 
         if (intent != null) handleIntentParams(intent)
     }
 
     override fun onDestroy() {
         findNavController(R.id.nav_host_fragment).removeOnDestinationChangedListener(this)
+        unregisterComponentCallbacks(componentCallbacks)
         super.onDestroy()
     }
 

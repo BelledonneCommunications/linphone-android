@@ -25,6 +25,8 @@ import android.app.NotificationManager
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
@@ -81,6 +83,10 @@ class Api29Compatibility {
             val bubblesAllowed = notificationManager.areBubblesAllowed()
             Log.i("[Notifications Manager] Bubbles notifications are ${if (bubblesAllowed) "allowed" else "forbidden"}")
             return bubblesAllowed
+        }
+
+        fun getBitmapFromUri(context: Context, uri: Uri): Bitmap {
+            return ImageDecoder.decodeBitmap(ImageDecoder.createSource(context.contentResolver, uri))
         }
 
         suspend fun addImageToMediaStore(context: Context, content: Content): Boolean {
