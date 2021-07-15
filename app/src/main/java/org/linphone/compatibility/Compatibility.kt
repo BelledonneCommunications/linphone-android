@@ -23,6 +23,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Vibrator
 import android.view.View
 import android.view.WindowManager
@@ -71,6 +73,14 @@ class Compatibility {
                 Api21Compatibility.requestDismissKeyguard(activity)
             } else {
                 Api27Compatibility.requestDismissKeyguard(activity)
+            }
+        }
+
+        fun getBitmapFromUri(context: Context, uri: Uri): Bitmap {
+            return if (Version.sdkStrictlyBelow(Version.API29_ANDROID_10)) {
+                Api21Compatibility.getBitmapFromUri(context, uri)
+            } else {
+                Api29Compatibility.getBitmapFromUri(context, uri)
             }
         }
 
