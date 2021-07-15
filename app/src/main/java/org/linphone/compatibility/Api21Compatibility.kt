@@ -25,6 +25,7 @@ import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.content.ContentValues
 import android.content.Context
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
@@ -61,6 +62,10 @@ class Api21Compatibility {
         fun eventVibration(vibrator: Vibrator) {
             val pattern = longArrayOf(0, 100, 100)
             vibrator.vibrate(pattern, -1)
+        }
+
+        fun getBitmapFromUri(context: Context, uri: Uri): Bitmap {
+            return MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
         }
 
         suspend fun addImageToMediaStore(context: Context, content: Content): Boolean {
