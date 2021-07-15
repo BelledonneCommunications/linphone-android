@@ -20,7 +20,7 @@
 package org.linphone.contact
 
 import androidx.lifecycle.MutableLiveData
-import org.linphone.LinphoneApplication
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.activities.main.viewmodels.ErrorReportingViewModel
 import org.linphone.core.Address
 import org.linphone.core.ChatRoomSecurityLevel
@@ -50,18 +50,18 @@ open class GenericContactData(private val sipAddress: Address) : ContactDataInte
 
     init {
         securityLevel.value = ChatRoomSecurityLevel.ClearText
-        LinphoneApplication.coreContext.contactsManager.addListener(contactsUpdatedListener)
+        coreContext.contactsManager.addListener(contactsUpdatedListener)
         contactLookup()
     }
 
     open fun destroy() {
-        LinphoneApplication.coreContext.contactsManager.removeListener(contactsUpdatedListener)
+        coreContext.contactsManager.removeListener(contactsUpdatedListener)
     }
 
     private fun contactLookup() {
         displayName.value = LinphoneUtils.getDisplayName(sipAddress)
         contact.value =
-            LinphoneApplication.coreContext.contactsManager.findContactByAddress(sipAddress)
+            coreContext.contactsManager.findContactByAddress(sipAddress)
     }
 }
 
@@ -78,18 +78,18 @@ abstract class GenericContactViewModel(private val sipAddress: Address) : ErrorR
 
     init {
         securityLevel.value = ChatRoomSecurityLevel.ClearText
-        LinphoneApplication.coreContext.contactsManager.addListener(contactsUpdatedListener)
+        coreContext.contactsManager.addListener(contactsUpdatedListener)
         contactLookup()
     }
 
     override fun onCleared() {
-        LinphoneApplication.coreContext.contactsManager.removeListener(contactsUpdatedListener)
+        coreContext.contactsManager.removeListener(contactsUpdatedListener)
 
         super.onCleared()
     }
 
     private fun contactLookup() {
         displayName.value = LinphoneUtils.getDisplayName(sipAddress)
-        contact.value = LinphoneApplication.coreContext.contactsManager.findContactByAddress(sipAddress)
+        contact.value = coreContext.contactsManager.findContactByAddress(sipAddress)
     }
 }

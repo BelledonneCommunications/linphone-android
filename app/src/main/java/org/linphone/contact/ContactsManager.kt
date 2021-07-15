@@ -93,6 +93,8 @@ class ContactsManager(private val context: Context) {
 
     var latestContactFetch: String = ""
 
+    private val friendsMap: HashMap<String, Friend> = HashMap()
+
     private val contactsUpdatedListeners = ArrayList<ContactsUpdatedListener>()
 
     private var loadContactsTask: AsyncContactsLoader? = null
@@ -227,7 +229,9 @@ class ContactsManager(private val context: Context) {
 
     @Synchronized
     fun findContactByPhoneNumber(number: String): Contact? {
-        val friend: Friend? = coreContext.core.findFriendByPhoneNumber(number)
+        val cacheFriend = friendsMap[number]
+        val friend: Friend? = cacheFriend ?: coreContext.core.findFriendByPhoneNumber(number)
+        if (cacheFriend == null && friend != null) friendsMap[number] = friend
         return friend?.userData as? Contact
     }
 
@@ -240,8 +244,14 @@ class ContactsManager(private val context: Context) {
         }
         if (localContact != null) return localContact
 
+        val cleanAddress = address.clone()
+        cleanAddress.clean() // To remove gruu if any
+        val cleanStringAddress = cleanAddress.asStringUriOnly()
+
+        val cacheFriend = friendsMap[cleanStringAddress]
         val friend: Friend? = coreContext.core.findFriend(address)
         val contact: Contact? = friend?.userData as? Contact
+        if (cacheFriend == null && friend != null) friendsMap[cleanStringAddress] = friend
         if (contact != null) return contact
 
         val username = address.username
@@ -283,12 +293,14 @@ class ContactsManager(private val context: Context) {
         context.contentResolver.unregisterContentObserver(contactsObserver)
         loadContactsTask?.cancel(true)
 
+        friendsMap.clear()
         // Contact has a Friend field and Friend can have a Contact has userData
         // Friend also keeps a ref on the Core, so we have to clean them
         for (contact in contacts) {
             contact.friend = null
         }
         contacts.clear()
+
         for (contact in sipContacts) {
             contact.friend = null
         }
