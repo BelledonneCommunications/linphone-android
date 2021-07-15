@@ -151,6 +151,13 @@ class CallActivity : ProximitySensorActivity() {
         super.onPause()
     }
 
+    override fun onDestroy() {
+        coreContext.core.nativeVideoWindowId = null
+        coreContext.core.nativePreviewWindowId = null
+
+        super.onDestroy()
+    }
+
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
 
