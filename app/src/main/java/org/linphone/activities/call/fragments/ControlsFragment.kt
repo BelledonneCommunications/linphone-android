@@ -183,8 +183,12 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
 
     override fun onStart() {
         super.onStart()
-
         initNumpadLayout()
+    }
+
+    override fun onStop() {
+        numpadAnimator.end()
+        super.onStop()
     }
 
     override fun onRequestPermissionsResult(

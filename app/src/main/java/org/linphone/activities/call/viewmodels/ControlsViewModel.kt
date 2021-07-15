@@ -233,6 +233,9 @@ class ControlsViewModel : ViewModel() {
     }
 
     override fun onCleared() {
+        if (corePreferences.enableAnimations) bounceAnimator.end()
+        optionsMenuAnimator.end()
+        audioRoutesMenuAnimator.end()
         coreContext.core.removeListener(listener)
         super.onCleared()
     }
