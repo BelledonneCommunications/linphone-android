@@ -20,7 +20,9 @@
 package org.linphone.activities.main
 
 import android.app.Activity
+import android.content.ComponentCallbacks2
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
@@ -58,6 +60,7 @@ import org.linphone.databinding.MainActivityBinding
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
+import org.linphone.utils.GlideApp
 
 class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestinationChangedListener {
     private lateinit var binding: MainActivityBinding
@@ -83,6 +86,19 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     private var initPosX = 0f
     private var initPosY = 0f
     private var overlay: View? = null
+
+    private val componentCallbacks = object : ComponentCallbacks2 {
+        override fun onConfigurationChanged(newConfig: Configuration) { }
+
+        override fun onLowMemory() {
+            Log.w("[Main Activity] onLowMemory !")
+        }
+
+        override fun onTrimMemory(level: Int) {
+            Log.w("[Main Activity] onTrimMemory called with level $level !")
+            GlideApp.get(this@MainActivity).clearMemory()
+        }
+    }
 
     override fun onLayoutChanges(foldingFeature: FoldingFeature?) {
         sharedViewModel.layoutChangedEvent.value = Event(true)
@@ -155,6 +171,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
+        registerComponentCallbacks(componentCallbacks)
         findNavController(R.id.nav_host_fragment).addOnDestinationChangedListener(this)
 
         if (intent != null) handleIntentParams(intent)
@@ -162,6 +179,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
     override fun onDestroy() {
         findNavController(R.id.nav_host_fragment).removeOnDestinationChangedListener(this)
+        unregisterComponentCallbacks(componentCallbacks)
         super.onDestroy()
     }
 

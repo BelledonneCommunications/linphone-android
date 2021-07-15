@@ -120,7 +120,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
             }
         })*/
 
-        /* End of hared view model & sliding pane related */
+        /* End of shared view model & sliding pane related */
 
         _adapter = ChatRoomsListAdapter(listSelectionViewModel, viewLifecycleOwner)
         // SubmitList is done on a background thread

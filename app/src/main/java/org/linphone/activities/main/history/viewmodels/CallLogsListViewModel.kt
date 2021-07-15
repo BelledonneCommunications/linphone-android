@@ -97,6 +97,9 @@ class CallLogsListViewModel : ViewModel() {
     }
 
     private fun updateCallLogs() {
+        callLogs.value.orEmpty().forEach(GroupedCallLogData::destroy)
+        missedCallLogs.value.orEmpty().forEach(GroupedCallLogData::destroy)
+
         val list = arrayListOf<GroupedCallLogData>()
         val missedList = arrayListOf<GroupedCallLogData>()
 

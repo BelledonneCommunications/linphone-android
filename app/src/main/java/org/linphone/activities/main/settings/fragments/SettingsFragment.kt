@@ -70,7 +70,7 @@ class SettingsFragment : SecureFragment<SettingsFragmentBinding>() {
         })
         binding.slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
 
-        /* End of hared view model & sliding pane related */
+        /* End of shared view model & sliding pane related */
 
         viewModel = ViewModelProvider(this).get(SettingsViewModel::class.java)
         binding.viewModel = viewModel
