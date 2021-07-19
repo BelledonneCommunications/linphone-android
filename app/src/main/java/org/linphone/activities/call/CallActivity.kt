@@ -169,21 +169,23 @@ class CallActivity : ProximitySensorActivity() {
     }
 
     private fun updateConstraintSetDependingOnFoldingState() {
-        val feature = foldingFeature ?: return
-        val constraintLayout = binding.constraintLayout
-        val set = ConstraintSet()
-        set.clone(constraintLayout)
+        val feature = foldingFeature ?: null
+        if (feature != null) {
+            val constraintLayout = binding.constraintLayout
+            val set = ConstraintSet()
+            set.clone(constraintLayout)
 
-        if (feature.state == FoldingFeature.STATE_HALF_OPENED && viewModel.videoEnabled.value == true) {
-            set.setGuidelinePercent(R.id.hinge_top, 0.5f)
-            set.setGuidelinePercent(R.id.hinge_bottom, 0.5f)
-            viewModel.disable(true)
-        } else {
-            set.setGuidelinePercent(R.id.hinge_top, 0f)
-            set.setGuidelinePercent(R.id.hinge_bottom, 1f)
-            viewModel.disable(false)
+            if (feature.state == FoldingFeature.State.HALF_OPENED && viewModel.videoEnabled.value == true) {
+                set.setGuidelinePercent(R.id.hinge_top, 0.5f)
+                set.setGuidelinePercent(R.id.hinge_bottom, 0.5f)
+                viewModel.disable(true)
+            } else {
+                set.setGuidelinePercent(R.id.hinge_top, 0f)
+                set.setGuidelinePercent(R.id.hinge_bottom, 1f)
+                viewModel.disable(false)
+            }
+
+            set.applyTo(constraintLayout)
         }
-
-        set.applyTo(constraintLayout)
     }
 }
