@@ -200,7 +200,6 @@ class CallActivity : ProximitySensorActivity() {
             set.setGuidelinePercent(R.id.hinge_bottom, 1f)
             viewModel.disable(false)
         }
-
         set.applyTo(constraintLayout)
     }
 }
