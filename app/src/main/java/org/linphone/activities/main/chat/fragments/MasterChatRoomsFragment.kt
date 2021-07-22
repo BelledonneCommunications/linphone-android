@@ -104,21 +104,22 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
             }
         })
         binding.slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
-        /*binding.slidingPane.addPanelSlideListener(object : SlidingPaneLayout.PanelSlideListener {
+        binding.slidingPane.addPanelSlideListener(object : SlidingPaneLayout.PanelSlideListener {
             override fun onPanelSlide(panel: View, slideOffset: Float) { }
 
             override fun onPanelOpened(panel: View) {
-                if (binding.slidingPane.isSlideable) {
+                /* if (binding.slidingPane.isSlideable) {
                     (requireActivity() as MainActivity).hideTabsFragment()
-                }
+                } */
             }
 
             override fun onPanelClosed(panel: View) {
                 if (binding.slidingPane.isSlideable) {
-                    (requireActivity() as MainActivity).showTabsFragment()
+                    // (requireActivity() as MainActivity).showTabsFragment()
+                    coreContext.notificationsManager.currentlyDisplayedChatRoomAddress = null
                 }
             }
-        })*/
+        })
 
         /* End of shared view model & sliding pane related */
 
