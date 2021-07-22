@@ -106,6 +106,9 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         sharedViewModel.layoutChangedEvent.value = Event(true)
     }
 
+    private var tabsFragmentVisible1 = true
+    private var tabsFragmentVisible2 = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -179,11 +182,8 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         binding.rootCoordinatorLayout.viewTreeObserver.addOnGlobalLayoutListener {
             val keyboardVisible = ViewCompat.getRootWindowInsets(binding.rootCoordinatorLayout)?.isVisible(WindowInsetsCompat.Type.ime()) == true
             Log.d("[Tabs Fragment] Keyboard is ${if (keyboardVisible) "visible" else "invisible"}")
-            if (keyboardVisible) {
-                hideTabsFragment()
-            } else {
-                showTabsFragment()
-            }
+            tabsFragmentVisible2 = !keyboardVisible
+            updateTabsFragmentVisibility()
         }
 
         if (intent != null) handleIntentParams(intent)
@@ -205,11 +205,16 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             statusFragment.visibility = View.VISIBLE
         }
 
-        when (destination.id) {
+        tabsFragmentVisible1 = when (destination.id) {
             R.id.masterCallLogsFragment, R.id.masterContactsFragment, R.id.dialerFragment, R.id.masterChatRoomsFragment ->
-                showTabsFragment()
-            else -> hideTabsFragment()
+                true
+            else -> false
         }
+        updateTabsFragmentVisibility()
+    }
+
+    private fun updateTabsFragmentVisibility() {
+        tabsFragment.visibility = if (tabsFragmentVisible1 && tabsFragmentVisible2) View.VISIBLE else View.GONE
     }
 
     fun showTabsFragment() {
