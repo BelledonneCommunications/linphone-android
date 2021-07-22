@@ -117,7 +117,7 @@ class ShortcutsHelper(val context: Context) {
                     .setIntent(intent)
                     .build().toShortcutInfo()
             } catch (e: Exception) {
-                Log.e("[Shortcuts Helper] ShortcutInfo.Builder exception: $e")
+                Log.e("[Shortcuts Helper] createContactShortcut for contact [${contact.fullName}] exception: $e")
             }
 
             return null
@@ -151,11 +151,13 @@ class ShortcutsHelper(val context: Context) {
         }
 
         private fun createChatRoomShortcut(context: Context, chatRoom: ChatRoom): ShortcutInfo? {
+            val peerAddress = chatRoom.peerAddress.asStringUriOnly()
+            val localAddress = chatRoom.localAddress.asStringUriOnly()
+            val id = LinphoneUtils.getChatRoomId(localAddress, peerAddress)
+
             try {
                 val categories: ArraySet<String> = ArraySet()
                 categories.add(ShortcutInfo.SHORTCUT_CATEGORY_CONVERSATION)
-                val peerAddress = chatRoom.peerAddress.asStringUriOnly()
-                val localAddress = chatRoom.localAddress.asStringUriOnly()
 
                 val personsList = arrayListOf<Person>()
                 val subject: String
@@ -202,7 +204,6 @@ class ShortcutsHelper(val context: Context) {
                 intent.putExtra("RemoteSipUri", peerAddress)
                 intent.putExtra("LocalSipUri", localAddress)
 
-                val id = LinphoneUtils.getChatRoomId(localAddress, peerAddress)
                 return ShortcutInfoCompat.Builder(context, id)
                     .setShortLabel(subject)
                     .setIcon(icon)
@@ -213,7 +214,7 @@ class ShortcutsHelper(val context: Context) {
                     .setLocusId(LocusIdCompat(id))
                     .build().toShortcutInfo()
             } catch (e: Exception) {
-                Log.e("[Shortcuts Helper] ShortcutInfo.Builder exception: $e")
+                Log.e("[Shortcuts Helper] createChatRoomShortcut for id [$id] exception: $e")
             }
 
             return null
