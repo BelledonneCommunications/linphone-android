@@ -116,6 +116,7 @@ class ConferenceViewModel : ViewModel() {
     init {
         coreContext.core.addListener(listener)
 
+        Log.i("[Conference VM] DEBUG DEBUG Initialize conference with address ${conferenceAddress.value?.asStringUriOnly()}")
         isConferencePaused.value = coreContext.core.conference?.isIn != true
         isMeConferenceFocus.value = false
         conferenceParticipants.value = arrayListOf()
@@ -129,6 +130,16 @@ class ConferenceViewModel : ViewModel() {
             isMeConferenceFocus.value = conference.me.isFocus
             updateParticipantsList(conference)
             updateParticipantsDevicesList(conference)
+        } else {
+// FIXME: This is a temporary workaround due to the fact that the OutgoingCallActivity is terminated way after the call reaching the StreamsRunning state and the CallActivity starting at that point
+// If the call is put on conference by a server, then the onCallSessionStateChange callback creates the remote conference when transitioning from state Connected to StreamsRunning because the 200 OK contains a contact with a conference ID and isfocus
+           val conference = coreContext.core.currentCall?.conference
+           if (conference != null) {
+              conference.addListener(conferenceListener)
+              isMeConferenceFocus.value = conference.me.isFocus
+              updateParticipantsList(conference)
+              updateParticipantsDevicesList(conference)
+           }
         }
     }
 
