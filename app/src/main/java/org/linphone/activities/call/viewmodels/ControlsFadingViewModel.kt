@@ -80,6 +80,8 @@ class ControlsFadingViewModel : ViewModel() {
     init {
         coreContext.core.addListener(listener)
 
+        Log.i("[Controls Fading] DEBUG DEBUG init")
+
         areControlsHidden.value = false
         isVideoPreviewHidden.value = false
         isVideoPreviewResizedForPip.value = false

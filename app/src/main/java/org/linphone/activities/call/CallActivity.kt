@@ -50,6 +50,7 @@ class CallActivity : ProximitySensorActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        Log.i("[Call Activity] DEBUG DEBUG Creating ...")
         Compatibility.setShowWhenLocked(this, true)
         Compatibility.setTurnScreenOn(this, true)
 
