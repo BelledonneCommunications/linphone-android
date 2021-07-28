@@ -67,6 +67,7 @@ class ConferenceParticipantDeviceData(private val participantDevice: Participant
         }
 
         Log.i("[Conference Participant Device] Setting textureView [$textureView] for participant [${participantDevice.address.asStringUriOnly()}]")
+        Log.i("[Conference Participant Device] DEBUG DEBUG Setting textureView [$textureView] for participant [${participantDevice.address.asStringUriOnly()}] is available ${textureView.isAvailable}")
         if (textureView.isAvailable) {
             participantDevice.nativeVideoWindowId = textureView
         } else {
@@ -76,6 +77,7 @@ class ConferenceParticipantDeviceData(private val participantDevice: Participant
                     width: Int,
                     height: Int
                 ) {
+        Log.i("[Conference Participant Device] DEBUG DEBUG Setting textureView [$surface] with width $width and height $height to participant [${participantDevice.address.asStringUriOnly()}]")
                     participantDevice.nativeVideoWindowId = textureView
                 }
 
@@ -90,7 +92,9 @@ class ConferenceParticipantDeviceData(private val participantDevice: Participant
                     return true
                 }
 
-                override fun onSurfaceTextureUpdated(surface: SurfaceTexture) { }
+                override fun onSurfaceTextureUpdated(surface: SurfaceTexture) {
+        Log.i("[Conference Participant Device] DEBUG DEBUG Setting textureView [$surface] updated for participant [${participantDevice.address.asStringUriOnly()}]")
+               }
             }
         }
     }
