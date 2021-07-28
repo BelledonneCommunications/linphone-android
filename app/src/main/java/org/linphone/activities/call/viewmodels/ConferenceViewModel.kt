@@ -95,7 +95,7 @@ class ConferenceViewModel : ViewModel() {
         ) {
             Log.i("[Conference VM] Conference state changed: $state")
             isConferencePaused.value = !conference.isIn
-            isVideoConference.value = coreContext.core.conference?.currentParams?.isVideoEnabled
+            isVideoConference.value = conference.currentParams?.isVideoEnabled
 
             if (state == Conference.State.Instantiated) {
                 conference.addListener(conferenceListener)
@@ -116,17 +116,18 @@ class ConferenceViewModel : ViewModel() {
     init {
         coreContext.core.addListener(listener)
 
-        isConferencePaused.value = coreContext.core.conference?.isIn != true
+        isConferencePaused.value = false
         isMeConferenceFocus.value = false
         conferenceParticipants.value = arrayListOf()
         conferenceParticipantDevices.value = arrayListOf()
         isInConference.value = false
-        isVideoConference.value = coreContext.core.conference?.currentParams?.isVideoEnabled
 
         val conference = coreContext.core.conference
         if (conference != null) {
             conference.addListener(conferenceListener)
+            isConferencePaused.value = !conference.isIn
             isMeConferenceFocus.value = conference.me.isFocus
+            isVideoConference.value = conference.currentParams?.isVideoEnabled
             updateParticipantsList(conference)
             updateParticipantsDevicesList(conference)
         } else {
@@ -137,11 +138,14 @@ class ConferenceViewModel : ViewModel() {
            if (conference != null) {
               conference.addListener(conferenceListener)
               isMeConferenceFocus.value = conference.me.isFocus
+              conferenceAddress.value = conference.conferenceAddress
+              isConferencePaused.value = !conference.isIn
+              isVideoConference.value = conference.currentParams?.isVideoEnabled
               updateParticipantsList(conference)
               updateParticipantsDevicesList(conference)
            }
         }
-        Log.i("[Conference VM] DEBUG DEBUG Initialize conference with address ${conferenceAddress.value?.asStringUriOnly()}")
+        Log.i("[Conference VM] DEBUG DEBUG Initialize conference with address ${conferenceAddress.value?.asStringUriOnly()} is in conference ${isInConference.value}")
     }
 
     override fun onCleared() {
