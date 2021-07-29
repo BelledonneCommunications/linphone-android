@@ -362,7 +362,7 @@ class NotificationsManager(private val context: Context) {
             val builder = Person.Builder().setName(displayName)
             val userIcon =
                 if (picture != null) {
-                    IconCompat.createWithAdaptiveBitmap(picture)
+                    IconCompat.createWithBitmap(picture)
                 } else {
                     IconCompat.createWithResource(context, R.drawable.avatar)
                 }

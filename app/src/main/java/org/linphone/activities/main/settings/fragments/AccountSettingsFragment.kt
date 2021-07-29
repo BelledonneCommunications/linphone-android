@@ -22,7 +22,6 @@ package org.linphone.activities.main.settings.fragments
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.settings.viewmodels.AccountSettingsViewModel
@@ -53,11 +52,18 @@ class AccountSettingsFragment : GenericFragment<SettingsAccountFragmentBinding>(
         if (identity == null) {
             Log.e("[Account Settings] Identity is null, aborting!")
             // (activity as MainActivity).showSnackBar(R.string.error)
-            findNavController().navigateUp()
+            goBack()
             return
         }
 
-        viewModel = ViewModelProvider(this, AccountSettingsViewModelFactory(identity)).get(AccountSettingsViewModel::class.java)
+        try {
+            viewModel = ViewModelProvider(this, AccountSettingsViewModelFactory(identity)).get(
+                AccountSettingsViewModel::class.java)
+        } catch (nsee: NoSuchElementException) {
+            Log.e("[Account Settings] Failed to find Account object, aborting!")
+            goBack()
+            return
+        }
         binding.viewModel = viewModel
 
         binding.setBackClickListener { goBack() }
@@ -80,7 +86,7 @@ class AccountSettingsFragment : GenericFragment<SettingsAccountFragmentBinding>(
         viewModel.accountRemovedEvent.observe(viewLifecycleOwner, {
             it.consume {
                 sharedViewModel.accountRemoved.value = true
-                findNavController().navigateUp()
+                goBack()
             }
         })
     }

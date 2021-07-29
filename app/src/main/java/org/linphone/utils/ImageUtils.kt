@@ -39,7 +39,8 @@ class ImageUtils {
             var bm: Bitmap? = null
             if (fromPictureUri != null) {
                 bm = try {
-                    Compatibility.getBitmapFromUri(context, fromPictureUri)
+                    // We make a copy to ensure Bitmap will be Software and not Hardware, required for shortcuts
+                    Compatibility.getBitmapFromUri(context, fromPictureUri).copy(Bitmap.Config.ARGB_8888, true)
                 } catch (e: Exception) {
                     Log.e("[Image Utils] Failed to get bitmap from URI [$fromPictureUri]: $e")
                     return null

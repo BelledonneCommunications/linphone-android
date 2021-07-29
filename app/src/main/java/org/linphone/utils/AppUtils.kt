@@ -77,11 +77,17 @@ class AppUtils {
 
             for (i in split.indices) {
                 if (split[i].isNotEmpty()) {
-                    if (emoji?.hasEmojiGlyph(split[i]) == true) {
-                        initials += emoji.process(split[i])
-                    } else {
+                    try {
+                        if (emoji?.hasEmojiGlyph(split[i]) == true) {
+                            initials += emoji.process(split[i])
+                        } else {
+                            initials += split[i][0]
+                        }
+                    } catch (ise: IllegalStateException) {
+                        Log.e("[App Utils] Can't call hasEmojiGlyph: $ise")
                         initials += split[i][0]
                     }
+
                     characters += 1
                     if (characters >= limit) break
                 }
