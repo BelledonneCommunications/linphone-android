@@ -101,6 +101,7 @@ class TabsViewModel : ViewModel() {
     }
 
     override fun onCleared() {
+        if (corePreferences.enableAnimations) bounceAnimator.end()
         coreContext.core.removeListener(listener)
         super.onCleared()
     }
