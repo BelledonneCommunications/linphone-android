@@ -55,7 +55,14 @@ class AccountSettingsFragment : GenericFragment<SettingsAccountFragmentBinding>(
             return
         }
 
-        viewModel = ViewModelProvider(this, AccountSettingsViewModelFactory(identity)).get(AccountSettingsViewModel::class.java)
+        try {
+            viewModel = ViewModelProvider(this, AccountSettingsViewModelFactory(identity)).get(
+                AccountSettingsViewModel::class.java)
+        } catch (nsee: NoSuchElementException) {
+            Log.e("[Account Settings] Failed to find Account object, aborting!")
+            findNavController().navigateUp()
+            return
+        }
         binding.viewModel = viewModel
 
         binding.setBackClickListener { findNavController().popBackStack() }
