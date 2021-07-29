@@ -71,7 +71,7 @@ class NativeContact(val nativeId: String, private val lookupKey: String? = null)
             if (bm == null) IconCompat.createWithResource(
                 coreContext.context,
                 R.drawable.avatar
-            ) else IconCompat.createWithAdaptiveBitmap(bm)
+            ) else IconCompat.createWithBitmap(bm)
         if (icon != null) {
             personBuilder.setIcon(icon)
         }
