@@ -101,9 +101,6 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
         sharedViewModel.layoutChangedEvent.observe(viewLifecycleOwner, {
             it.consume {
                 sharedViewModel.canSlidingPaneBeClosed.value = binding.slidingPane.isSlideable
-                if (binding.slidingPane.isSlideable) {
-                    binding.slidingPane.closePane()
-                }
             }
         })
         binding.slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
