@@ -32,6 +32,7 @@ import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.settings.viewmodels.AdvancedSettingsViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
+import org.linphone.activities.navigateToEmptySetting
 import org.linphone.core.tools.Log
 import org.linphone.core.tools.compatibility.DeviceUtils
 import org.linphone.databinding.SettingsAdvancedFragmentBinding
@@ -134,6 +135,10 @@ class AdvancedSettingsFragment : GenericFragment<SettingsAdvancedFragmentBinding
     }
 
     override fun goBack() {
-        sharedViewModel.closeSlidingPaneEvent.value = Event(true)
+        if (sharedViewModel.canSlidingPaneBeClosed.value == true) {
+            sharedViewModel.closeSlidingPaneEvent.value = Event(true)
+        } else {
+            navigateToEmptySetting()
+        }
     }
 }

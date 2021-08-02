@@ -3,12 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/settings_nav_graph.xml"
-    app:startDestination="@id/emptyFragment">
+    app:startDestination="@id/emptySettingsFragment">
+
     <fragment
-        android:id="@+id/emptyFragment"
+        android:id="@+id/emptySettingsFragment"
         android:name="org.linphone.activities.main.fragments.EmptyFragment"
         tools:layout="@layout/empty_fragment"
-        android:label="EmptyFragment"/>
+        android:label="EmptySettingsFragment" />
+
+    <action android:id="@+id/action_global_emptySettingsFragment"
+        app:destination="@id/emptySettingsFragment" />
+
     <fragment
         android:id="@+id/accountSettingsFragment"
         android:name="org.linphone.activities.main.settings.fragments.AccountSettingsFragment"

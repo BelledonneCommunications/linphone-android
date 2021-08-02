@@ -27,6 +27,7 @@ import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.settings.viewmodels.AccountSettingsViewModel
 import org.linphone.activities.main.settings.viewmodels.AccountSettingsViewModelFactory
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
+import org.linphone.activities.navigateToEmptySetting
 import org.linphone.activities.navigateToPhoneLinking
 import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsAccountFragmentBinding
@@ -92,6 +93,10 @@ class AccountSettingsFragment : GenericFragment<SettingsAccountFragmentBinding>(
     }
 
     override fun goBack() {
-        sharedViewModel.closeSlidingPaneEvent.value = Event(true)
+        if (sharedViewModel.canSlidingPaneBeClosed.value == true) {
+            sharedViewModel.closeSlidingPaneEvent.value = Event(true)
+        } else {
+            navigateToEmptySetting()
+        }
     }
 }
