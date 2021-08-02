@@ -26,6 +26,7 @@ import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.settings.viewmodels.TunnelSettingsViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
+import org.linphone.activities.navigateToEmptySetting
 import org.linphone.databinding.SettingsTunnelFragmentBinding
 import org.linphone.utils.Event
 
@@ -52,6 +53,10 @@ class TunnelSettingsFragment : GenericFragment<SettingsTunnelFragmentBinding>() 
     }
 
     override fun goBack() {
-        sharedViewModel.closeSlidingPaneEvent.value = Event(true)
+        if (sharedViewModel.canSlidingPaneBeClosed.value == true) {
+            sharedViewModel.closeSlidingPaneEvent.value = Event(true)
+        } else {
+            navigateToEmptySetting()
+        }
     }
 }

@@ -25,10 +25,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
-import org.linphone.activities.GenericFragment
+import org.linphone.activities.*
 import org.linphone.activities.main.*
 import org.linphone.activities.main.contact.viewmodels.ContactViewModel
 import org.linphone.activities.main.contact.viewmodels.ContactViewModelFactory
@@ -69,7 +68,7 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
         if (contact == null) {
             Log.e("[Contact] Contact is null, aborting!")
             // (activity as MainActivity).showSnackBar(R.string.error)
-            findNavController().navigateUp()
+            goBack()
             return
         }
 
@@ -129,7 +128,11 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
     }
 
     override fun goBack() {
-        sharedViewModel.closeSlidingPaneEvent.value = Event(true)
+        if (sharedViewModel.canSlidingPaneBeClosed.value == true) {
+            sharedViewModel.closeSlidingPaneEvent.value = Event(true)
+        } else {
+            navigateToEmptyContact()
+        }
     }
 
     private fun confirmContactRemoval() {
@@ -143,7 +146,7 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
         dialogViewModel.showDeleteButton({
             viewModel.deleteContact()
             dialog.dismiss()
-            findNavController().navigateUp()
+            goBack()
         }, getString(R.string.dialog_delete))
 
         dialog.show()

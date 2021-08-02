@@ -33,6 +33,7 @@ import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.activities.main.settings.viewmodels.VideoSettingsViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
+import org.linphone.activities.navigateToEmptySetting
 import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsVideoFragmentBinding
 import org.linphone.utils.Event
@@ -108,6 +109,10 @@ class VideoSettingsFragment : GenericFragment<SettingsVideoFragmentBinding>() {
     }
 
     override fun goBack() {
-        sharedViewModel.closeSlidingPaneEvent.value = Event(true)
+        if (sharedViewModel.canSlidingPaneBeClosed.value == true) {
+            sharedViewModel.closeSlidingPaneEvent.value = Event(true)
+        } else {
+            navigateToEmptySetting()
+        }
     }
 }

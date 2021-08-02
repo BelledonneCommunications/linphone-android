@@ -30,6 +30,7 @@ import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.settings.viewmodels.CallSettingsViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
+import org.linphone.activities.navigateToEmptySetting
 import org.linphone.compatibility.Compatibility
 import org.linphone.databinding.SettingsCallFragmentBinding
 import org.linphone.mediastream.Version
@@ -92,6 +93,10 @@ class CallSettingsFragment : GenericFragment<SettingsCallFragmentBinding>() {
     }
 
     override fun goBack() {
-        sharedViewModel.closeSlidingPaneEvent.value = Event(true)
+        if (sharedViewModel.canSlidingPaneBeClosed.value == true) {
+            sharedViewModel.closeSlidingPaneEvent.value = Event(true)
+        } else {
+            navigateToEmptySetting()
+        }
     }
 }

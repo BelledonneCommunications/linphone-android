@@ -131,6 +131,10 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
     }
 
     override fun goBack() {
-        sharedViewModel.closeSlidingPaneEvent.value = Event(true)
+        if (sharedViewModel.canSlidingPaneBeClosed.value == true) {
+            sharedViewModel.closeSlidingPaneEvent.value = Event(true)
+        } else {
+            navigateToEmptyCallHistory()
+        }
     }
 }

@@ -33,6 +33,7 @@ import org.linphone.activities.main.chat.viewmodels.ChatRoomCreationViewModel
 import org.linphone.activities.main.fragments.SecureFragment
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.navigateToChatRoom
+import org.linphone.activities.navigateToEmptyChatRoom
 import org.linphone.activities.navigateToGroupInfo
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatRoomCreationFragmentBinding
@@ -149,7 +150,11 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
 
     override fun goBack() {
         if (!findNavController().popBackStack()) {
-            sharedViewModel.closeSlidingPaneEvent.value = Event(true)
+            if (sharedViewModel.canSlidingPaneBeClosed.value == true) {
+                sharedViewModel.closeSlidingPaneEvent.value = Event(true)
+            } else {
+                navigateToEmptyChatRoom()
+            }
         }
     }
 

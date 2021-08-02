@@ -43,8 +43,7 @@ import org.linphone.activities.main.dialer.fragments.DialerFragment
 import org.linphone.activities.main.fragments.TabsFragment
 import org.linphone.activities.main.history.fragments.DetailCallLogFragment
 import org.linphone.activities.main.history.fragments.MasterCallLogsFragment
-import org.linphone.activities.main.settings.fragments.AccountSettingsFragment
-import org.linphone.activities.main.settings.fragments.SettingsFragment
+import org.linphone.activities.main.settings.fragments.*
 import org.linphone.activities.main.sidemenu.fragments.SideMenuFragment
 import org.linphone.contact.NativeContact
 import org.linphone.core.Address
@@ -411,6 +410,14 @@ internal fun DetailChatRoomFragment.navigateToAudioFileViewer(secure: Boolean) {
     )
 }
 
+internal fun DetailChatRoomFragment.navigateToEmptyChatRoom() {
+    findNavController().navigate(
+        R.id.action_global_emptyChatFragment,
+        null,
+        popupTo()
+    )
+}
+
 internal fun ChatRoomCreationFragment.navigateToGroupInfo() {
     if (findNavController().currentDestination?.id == R.id.chatRoomCreationFragment) {
         findNavController().navigate(
@@ -426,9 +433,17 @@ internal fun ChatRoomCreationFragment.navigateToChatRoom(args: Bundle) {
         findNavController().navigate(
             R.id.action_chatRoomCreationFragment_to_detailChatRoomFragment,
             args,
-            getRightToLeftAnimationNavOptions(R.id.emptyFragment, true)
+            getRightToLeftAnimationNavOptions(R.id.emptyChatFragment, true)
         )
     }
+}
+
+internal fun ChatRoomCreationFragment.navigateToEmptyChatRoom() {
+    findNavController().navigate(
+        R.id.action_global_emptyChatFragment,
+        null,
+        popupTo()
+    )
 }
 
 internal fun GroupInfoFragment.navigateToChatRoomCreation(args: Bundle?) {
@@ -445,7 +460,7 @@ internal fun GroupInfoFragment.navigateToChatRoom(args: Bundle?) {
         findNavController().navigate(
             R.id.action_groupInfoFragment_to_detailChatRoomFragment,
             args,
-            getRightToLeftAnimationNavOptions(R.id.emptyFragment, true)
+            getRightToLeftAnimationNavOptions(R.id.emptyChatFragment, true)
         )
     }
 }
@@ -472,7 +487,7 @@ internal fun MasterContactsFragment.navigateToContactEditor(sipUriToAdd: String?
         navHostFragment.navController.navigate(
             R.id.action_global_contactEditorFragment,
             bundle,
-            popupTo()
+            popupTo(R.id.emptyContactFragment, true)
         )
     }
 }
@@ -496,6 +511,14 @@ internal fun ContactEditorFragment.navigateToContact(contact: NativeContact) {
         R.id.action_contactEditorFragment_to_detailContactFragment,
         bundle,
         popupTo(R.id.masterContactsFragment, false)
+    )
+}
+
+internal fun ContactEditorFragment.navigateToEmptyContact() {
+    findNavController().navigate(
+        R.id.action_global_emptyContactFragment,
+        null,
+        popupTo()
     )
 }
 
@@ -525,6 +548,14 @@ internal fun DetailContactFragment.navigateToContactEditor() {
     }
 }
 
+internal fun DetailContactFragment.navigateToEmptyContact() {
+    findNavController().navigate(
+        R.id.action_global_emptyContactFragment,
+        null,
+        popupTo()
+    )
+}
+
 /* History related */
 
 internal fun MasterCallLogsFragment.navigateToCallHistory() {
@@ -534,7 +565,7 @@ internal fun MasterCallLogsFragment.navigateToCallHistory() {
         navHostFragment.navController.navigate(
             R.id.action_global_detailCallLogFragment,
             null,
-            popupTo(R.id.emptyFragment, true)
+            popupTo(R.id.emptyCallHistoryFragment, true)
         )
     }
 }
@@ -546,7 +577,7 @@ internal fun MasterCallLogsFragment.clearDisplayedCallHistory() {
         navHostFragment.navController.navigate(
             R.id.action_global_emptyFragment,
             null,
-            popupTo(R.id.emptyFragment, true)
+            popupTo(R.id.emptyCallHistoryFragment, true)
         )
     }
 }
@@ -575,19 +606,33 @@ internal fun DetailCallLogFragment.navigateToFriend(friendAddress: Address) {
 }
 
 internal fun DetailCallLogFragment.navigateToChatRoom(args: Bundle?) {
-    findMasterNavController().navigate(
-        R.id.action_global_masterChatRoomsFragment,
-        args,
-        getRightBottomToLeftTopAnimationNavOptions()
-    )
+    if (findNavController().currentDestination?.id == R.id.detailCallLogFragment) {
+        findMasterNavController().navigate(
+            R.id.action_global_masterChatRoomsFragment,
+            args,
+            getRightBottomToLeftTopAnimationNavOptions()
+        )
+    }
 }
 
 internal fun DetailCallLogFragment.navigateToDialer(args: Bundle?) {
-    findMasterNavController().navigate(
-        R.id.action_global_dialerFragment,
-        args,
-        getRightToLeftAnimationNavOptions()
-    )
+    if (findNavController().currentDestination?.id == R.id.detailCallLogFragment) {
+        findMasterNavController().navigate(
+            R.id.action_global_dialerFragment,
+            args,
+            getRightToLeftAnimationNavOptions()
+        )
+    }
+}
+
+internal fun DetailCallLogFragment.navigateToEmptyCallHistory() {
+    if (findNavController().currentDestination?.id == R.id.detailCallLogFragment) {
+        findNavController().navigate(
+            R.id.action_global_emptyFragment,
+            null,
+            popupTo()
+        )
+    }
 }
 
 /* Settings related */
@@ -719,6 +764,78 @@ internal fun PhoneAccountLinkingFragment.navigateToPhoneAccountValidation(args: 
             popupTo()
         )
     }
+}
+
+internal fun AccountSettingsFragment.navigateToEmptySetting() {
+    findNavController().navigate(
+        R.id.action_global_emptySettingsFragment,
+        null,
+        popupTo()
+    )
+}
+
+internal fun AdvancedSettingsFragment.navigateToEmptySetting() {
+    findNavController().navigate(
+        R.id.action_global_emptySettingsFragment,
+        null,
+        popupTo()
+    )
+}
+
+internal fun AudioSettingsFragment.navigateToEmptySetting() {
+    findNavController().navigate(
+        R.id.action_global_emptySettingsFragment,
+        null,
+        popupTo()
+    )
+}
+
+internal fun CallSettingsFragment.navigateToEmptySetting() {
+    findNavController().navigate(
+        R.id.action_global_emptySettingsFragment,
+        null,
+        popupTo()
+    )
+}
+
+internal fun ChatSettingsFragment.navigateToEmptySetting() {
+    findNavController().navigate(
+        R.id.action_global_emptySettingsFragment,
+        null,
+        popupTo()
+    )
+}
+
+internal fun ContactsSettingsFragment.navigateToEmptySetting() {
+    findNavController().navigate(
+        R.id.action_global_emptySettingsFragment,
+        null,
+        popupTo()
+    )
+}
+
+internal fun NetworkSettingsFragment.navigateToEmptySetting() {
+    findNavController().navigate(
+        R.id.action_global_emptySettingsFragment,
+        null,
+        popupTo()
+    )
+}
+
+internal fun TunnelSettingsFragment.navigateToEmptySetting() {
+    findNavController().navigate(
+        R.id.action_global_emptySettingsFragment,
+        null,
+        popupTo()
+    )
+}
+
+internal fun VideoSettingsFragment.navigateToEmptySetting() {
+    findNavController().navigate(
+        R.id.action_global_emptySettingsFragment,
+        null,
+        popupTo()
+    )
 }
 
 /* Side menu related */

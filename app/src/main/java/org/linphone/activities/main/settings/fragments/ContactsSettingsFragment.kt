@@ -29,6 +29,7 @@ import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.settings.viewmodels.ContactsSettingsViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
+import org.linphone.activities.navigateToEmptySetting
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsContactsFragmentBinding
@@ -113,6 +114,10 @@ class ContactsSettingsFragment : GenericFragment<SettingsContactsFragmentBinding
     }
 
     override fun goBack() {
-        sharedViewModel.closeSlidingPaneEvent.value = Event(true)
+        if (sharedViewModel.canSlidingPaneBeClosed.value == true) {
+            sharedViewModel.closeSlidingPaneEvent.value = Event(true)
+        } else {
+            navigateToEmptySetting()
+        }
     }
 }
