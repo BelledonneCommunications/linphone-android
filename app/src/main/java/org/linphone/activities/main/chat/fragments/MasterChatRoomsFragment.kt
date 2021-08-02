@@ -100,8 +100,10 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
         })
         sharedViewModel.layoutChangedEvent.observe(viewLifecycleOwner, {
             it.consume {
+                val previousSlidingPaneCanBeClosed = sharedViewModel.canSlidingPaneBeClosed.value == true
                 sharedViewModel.canSlidingPaneBeClosed.value = binding.slidingPane.isSlideable
-                if (binding.slidingPane.isSlideable) {
+                if (binding.slidingPane.isSlideable && !previousSlidingPaneCanBeClosed) {
+                    Log.i("[Chat] Foldable device has been folded, close sliding pane")
                     binding.slidingPane.closePane()
                 }
             }

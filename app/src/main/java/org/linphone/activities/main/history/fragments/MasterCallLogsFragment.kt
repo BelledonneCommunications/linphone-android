@@ -91,8 +91,10 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
         })
         sharedViewModel.layoutChangedEvent.observe(viewLifecycleOwner, {
             it.consume {
+                val previousSlidingPaneCanBeClosed = sharedViewModel.canSlidingPaneBeClosed.value == true
                 sharedViewModel.canSlidingPaneBeClosed.value = binding.slidingPane.isSlideable
-                if (binding.slidingPane.isSlideable) {
+                if (binding.slidingPane.isSlideable && !previousSlidingPaneCanBeClosed) {
+                    Log.i("[History] Foldable device has been folded, close sliding pane")
                     binding.slidingPane.closePane()
                 }
             }
