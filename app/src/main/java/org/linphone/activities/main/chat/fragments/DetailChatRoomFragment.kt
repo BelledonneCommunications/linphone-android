@@ -125,7 +125,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         if (chatRoom == null) {
             Log.e("[Chat Room] Chat room is null, aborting!")
             // (activity as MainActivity).showSnackBar(R.string.error)
-            findNavController().navigateUp()
+            goBack()
             return
         }
 
@@ -476,7 +476,11 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
     override fun goBack() {
         if (!findNavController().popBackStack()) {
-            sharedViewModel.closeSlidingPaneEvent.value = Event(true)
+            if (sharedViewModel.canSlidingPaneBeClosed.value == true) {
+                sharedViewModel.closeSlidingPaneEvent.value = Event(true)
+            } else {
+                navigateToEmptyChatRoom()
+            }
         }
     }
 

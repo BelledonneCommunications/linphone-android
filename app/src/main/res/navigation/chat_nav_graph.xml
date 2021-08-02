@@ -9,7 +9,7 @@
         android:id="@+id/emptyChatFragment"
         android:name="org.linphone.activities.main.fragments.EmptyFragment"
         tools:layout="@layout/empty_fragment"
-        android:label="EmptyFragment"  />
+        android:label="EmptyChatFragment"  />
 
     <action android:id="@+id/action_global_emptyChatFragment"
         app:destination="@id/emptyChatFragment" />

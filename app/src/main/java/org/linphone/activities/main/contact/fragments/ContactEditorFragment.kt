@@ -40,9 +40,11 @@ import org.linphone.activities.main.contact.data.NumberOrAddressEditorData
 import org.linphone.activities.main.contact.viewmodels.*
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.navigateToContact
+import org.linphone.activities.navigateToEmptyContact
 import org.linphone.contact.NativeContact
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactEditorFragmentBinding
+import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.ImageUtils
 import org.linphone.utils.PermissionHelper
@@ -107,6 +109,16 @@ class ContactEditorFragment : GenericFragment<ContactEditorFragmentBinding>(), S
         }
     }
 
+    override fun goBack() {
+        if (!findNavController().popBackStack()) {
+            if (sharedViewModel.canSlidingPaneBeClosed.value == true) {
+                sharedViewModel.closeSlidingPaneEvent.value = Event(true)
+            } else {
+                navigateToEmptyContact()
+            }
+        }
+    }
+
     override fun onSyncAccountClicked(name: String?, type: String?) {
         Log.i("[Contact Editor] Using account $name / $type")
         viewModel.syncAccountName = name
@@ -126,7 +138,7 @@ class ContactEditorFragment : GenericFragment<ContactEditorFragmentBinding>(), S
             } else {
                 Log.w("[Contact Editor] WRITE_CONTACTS permission denied")
                 (requireActivity() as MainActivity).showSnackBar(R.string.contact_editor_write_permission_denied)
-                findNavController().popBackStack()
+                goBack()
             }
         }
     }
@@ -149,7 +161,7 @@ class ContactEditorFragment : GenericFragment<ContactEditorFragmentBinding>(), S
             Log.i("[Contact Editor] Displaying contact $savedContact")
             navigateToContact(savedContact)
         } else {
-            findNavController().popBackStack()
+            goBack()
         }
     }
 
