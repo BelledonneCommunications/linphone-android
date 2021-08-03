@@ -26,6 +26,7 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -89,6 +90,13 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
         sharedViewModel.layoutChangedEvent.observe(viewLifecycleOwner, {
             it.consume {
                 sharedViewModel.canSlidingPaneBeClosed.value = binding.slidingPane.isSlideable
+                if (binding.slidingPane.isSlideable) {
+                    val navHostFragment = childFragmentManager.findFragmentById(R.id.contacts_nav_container) as NavHostFragment
+                    if (navHostFragment.navController.currentDestination?.id == R.id.emptyContactFragment) {
+                        Log.i("[Contacts] Foldable device has been folded, closing side pane with empty fragment")
+                        binding.slidingPane.closePane()
+                    }
+                }
             }
         })
         binding.slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
