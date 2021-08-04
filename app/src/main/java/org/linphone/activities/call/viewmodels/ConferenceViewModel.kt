@@ -228,6 +228,11 @@ class ConferenceViewModel : ViewModel() {
             }
         }
 
+            for (device in conference.me.devices) {
+               val deviceData = ConferenceParticipantDeviceData(device)
+               devices.add(deviceData)
+            }
+
         conferenceParticipantDevices.value = devices
     }
 }
