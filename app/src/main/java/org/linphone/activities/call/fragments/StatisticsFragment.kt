@@ -40,4 +40,9 @@ class StatisticsFragment : GenericFragment<CallStatisticsFragmentBinding>() {
         viewModel = ViewModelProvider(this).get(StatisticsListViewModel::class.java)
         binding.viewModel = viewModel
     }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        onBackPressedCallback.isEnabled = false
+    }
 }
