@@ -181,6 +181,11 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        onBackPressedCallback.isEnabled = false
+    }
+
     override fun onStart() {
         super.onStart()
         initNumpadLayout()
