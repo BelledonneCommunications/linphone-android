@@ -133,6 +133,13 @@ class CorePreferences constructor(private val context: Context) {
             config.setInt("app", "dark_mode", value)
         }
 
+    /** Allow to make screenshots of encrypted chat rooms, disables fragment's secure mode */
+    var disableSecureMode: Boolean
+        get() = config.getBool("app", "disable_fragment_secure_mode", false)
+        set(value) {
+            config.setBool("app", "disable_fragment_secure_mode", value)
+        }
+
     /* Audio */
 
     /* Video */

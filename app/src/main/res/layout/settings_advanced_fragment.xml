@@ -163,6 +163,13 @@
                     linphone:checked="@={viewModel.vfs}"
                     linphone:enabled="@{!viewModel.vfs}"/>
 
+                <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/advanced_settings_disable_fragment_security_title}"
+                    linphone:subtitle="@{@string/advanced_settings_disable_fragment_security_summary}"
+                    linphone:listener="@{viewModel.disableSecureFragmentListener}"
+                    linphone:checked="@={viewModel.disableSecureFragment}"/>
+
                 <TextView
                     style="@style/settings_category_font"
                     android:text="@string/advanced_settings_android_title"
