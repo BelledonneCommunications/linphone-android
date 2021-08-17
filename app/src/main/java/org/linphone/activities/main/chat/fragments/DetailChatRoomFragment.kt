@@ -627,7 +627,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
         if (PermissionHelper.get().hasCameraPermission()) {
             // Allows to capture directly from the camera
-            val captureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            val capturePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             val tempFileName = System.currentTimeMillis().toString() + ".jpeg"
             val file = FileUtils.getFileStoragePath(tempFileName)
             chatSendingViewModel.temporaryFileUploadPath = file
@@ -636,10 +636,13 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 requireContext().getString(R.string.file_provider),
                 file
             )
-            captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, publicUri)
-            captureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            captureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-            cameraIntents.add(captureIntent)
+            capturePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, publicUri)
+            capturePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            capturePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+            cameraIntents.add(capturePictureIntent)
+
+            val captureVideoIntent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
+            cameraIntents.add(captureVideoIntent)
         }
 
         if (PermissionHelper.get().hasReadExternalStorage()) {
