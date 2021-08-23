@@ -519,7 +519,7 @@
     <string name="chat_security_event_lime_identity_key_changed">Les clés de sécurité ont changé pour %s</string>
     <string name="chat_event_ephemeral_disabled">Vous avez désactivé les messages éphémères</string>
     <string name="chat_room_group_info_subject_hint">Nommer le groupe</string>
-    <string name="chat_message_imdn_undelivered">Reçu</string>
+    <string name="chat_message_imdn_undelivered">Non reçu</string>
     <string name="chat_message_context_menu_add_to_contacts">Ajouter aux contacts</string>
     <string name="chat_message_forward_confirmation_dialog">Souhaitez-vous transférer ce message dans cette conversation \?</string>
     <string name="chat_room_ephemeral_messages_desc">Ce message disparaîtra de votre discussion et de celle des destinataires une fois lu et après la durée sélectionnée.</string>
@@ -618,4 +618,5 @@
     <string name="chat_settings_auto_download_voice_recordings">Télécharger automatiquement les messages vocaux reçus</string>
     <string name="content_description_replied_message">Ceci est une réponse</string>
     <string name="content_description_stop_voice_recording">Arrêter l\'enregistrement du message vocal</string>
+    <string name="chat_message_voice_recording_playback_low_volume">Le volume média est faible, pensez à l\'augmenter si vous n\'entendez pas le message</string>
 </resources>
