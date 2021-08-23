@@ -34,13 +34,13 @@ class CoreService : CoreService() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if (intent?.extras?.get("StartForeground") == true) {
+        if (corePreferences.keepServiceAlive) {
+            Log.i("[Service] Starting as foreground to keep app alive in background")
+            coreContext.notificationsManager.startForeground(this, false)
+        } else if (intent?.extras?.get("StartForeground") == true) {
             Log.i("[Service] Starting as foreground due to device boot or app update")
             coreContext.notificationsManager.startForeground(this, true)
             coreContext.checkIfForegroundServiceNotificationCanBeRemovedAfterDelay(5000)
-        } else if (corePreferences.keepServiceAlive) {
-            Log.i("[Service] Starting as foreground to keep app alive in background")
-            coreContext.notificationsManager.startForeground(this, false)
         }
         return super.onStartCommand(intent, flags, startId)
     }
