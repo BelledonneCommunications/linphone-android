@@ -464,7 +464,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             lifecycleScope.launch {
-                for (fileToUploadPath in ImageUtils.getFilesPathFromPickerIntent(
+                for (fileToUploadPath in FileUtils.getFilesPathFromPickerIntent(
                     data,
                     chatSendingViewModel.temporaryFileUploadPath
                 )) {
@@ -617,13 +617,11 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
     }
 
     private fun pickFile() {
-        val cameraIntents = ArrayList<Intent>()
+        val intentsList = ArrayList<Intent>()
 
-        // Handles image & video picking
-        val galleryIntent = Intent(Intent.ACTION_PICK)
-        galleryIntent.type = "*/*"
-        galleryIntent.putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("image/*", "video/*"))
-        galleryIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+        val pickerIntent = Intent(Intent.ACTION_GET_CONTENT)
+        pickerIntent.type = "*/*"
+        pickerIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
 
         if (PermissionHelper.get().hasCameraPermission()) {
             // Allows to capture directly from the camera
@@ -639,25 +637,17 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             capturePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, publicUri)
             capturePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             capturePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-            cameraIntents.add(capturePictureIntent)
+            intentsList.add(capturePictureIntent)
 
             val captureVideoIntent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
-            cameraIntents.add(captureVideoIntent)
-        }
-
-        if (PermissionHelper.get().hasReadExternalStorage()) {
-            // Finally allow any kind of file
-            val fileIntent = Intent(Intent.ACTION_GET_CONTENT)
-            fileIntent.type = "*/*"
-            fileIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-            cameraIntents.add(fileIntent)
+            intentsList.add(captureVideoIntent)
         }
 
         val chooserIntent =
-            Intent.createChooser(galleryIntent, getString(R.string.chat_message_pick_file_dialog))
+            Intent.createChooser(pickerIntent, getString(R.string.chat_message_pick_file_dialog))
         chooserIntent.putExtra(
             Intent.EXTRA_INITIAL_INTENTS,
-            cameraIntents.toArray(arrayOf<Parcelable>())
+            intentsList.toArray(arrayOf<Parcelable>())
         )
 
         startActivityForResult(chooserIntent, 0)
