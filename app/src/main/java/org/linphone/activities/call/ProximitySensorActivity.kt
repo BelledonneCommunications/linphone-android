@@ -26,6 +26,7 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
 import android.os.PowerManager
+import android.os.PowerManager.RELEASE_FLAG_WAIT_FOR_NO_PROXIMITY
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.activities.GenericActivity
 import org.linphone.core.tools.Log
@@ -104,7 +105,7 @@ abstract class ProximitySensorActivity : GenericActivity() {
         if (enable) {
             if (!proximitySensorEnabled) {
                 Log.i("[Proximity Sensor Activity] Enabling proximity sensor listener")
-                sensorManager.registerListener(proximityListener, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL)
+                sensorManager.registerListener(proximityListener, proximitySensor, SensorManager.SENSOR_DELAY_UI)
                 proximitySensorEnabled = true
             }
         } else {
@@ -112,7 +113,7 @@ abstract class ProximitySensorActivity : GenericActivity() {
                 Log.i("[Proximity Sensor Activity] Disabling proximity sensor listener")
                 sensorManager.unregisterListener(proximityListener)
                 if (proximityWakeLock.isHeld) {
-                    proximityWakeLock.release()
+                    proximityWakeLock.release(RELEASE_FLAG_WAIT_FOR_NO_PROXIMITY)
                 }
                 proximitySensorEnabled = false
             }
@@ -120,16 +121,16 @@ abstract class ProximitySensorActivity : GenericActivity() {
     }
 
     private fun isProximitySensorNearby(event: SensorEvent): Boolean {
-        var threshold = 4.001f // <= 4 cm is near
+        // var threshold = 4.001f // <= 4 cm is near
 
         val distanceInCm = event.values[0]
         val maxDistance = event.sensor.maximumRange
-        Log.d("[Proximity Sensor Activity] Proximity sensor report [$distanceInCm] , for max range [$maxDistance]")
+        Log.d("[Proximity Sensor Activity] Proximity sensor report [$distanceInCm], for max range [$maxDistance]")
 
-        if (maxDistance <= threshold) {
+        /*if (maxDistance <= threshold) {
             // Case binary 0/1 and short sensors
             threshold = maxDistance
-        }
-        return distanceInCm < threshold
+        }*/
+        return distanceInCm < maxDistance
     }
 }
