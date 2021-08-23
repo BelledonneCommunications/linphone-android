@@ -252,7 +252,10 @@ class NotificationsManager(private val context: Context) {
         if (coreService != null) {
             startForeground(coreService, useAutoStartDescription = false)
         } else {
-            Log.e("[Notifications Manager] Can't start service as foreground, no service!")
+            Log.w("[Notifications Manager] Can't start service as foreground without a service, starting it now")
+            val intent = Intent()
+            intent.setClass(coreContext.context, CoreService::class.java)
+            coreContext.context.startService(intent)
         }
     }
 
