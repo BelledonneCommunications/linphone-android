@@ -464,7 +464,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             lifecycleScope.launch {
-                for (fileToUploadPath in ImageUtils.getFilesPathFromPickerIntent(
+                for (fileToUploadPath in FileUtils.getFilesPathFromPickerIntent(
                     data,
                     chatSendingViewModel.temporaryFileUploadPath
                 )) {

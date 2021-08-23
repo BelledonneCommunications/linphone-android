@@ -46,7 +46,6 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.SideMenuFragmentBinding
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
-import org.linphone.utils.ImageUtils
 import org.linphone.utils.PermissionHelper
 
 class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
@@ -121,7 +120,7 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             lifecycleScope.launch {
-                val contactImageFilePath = ImageUtils.getFilePathFromPickerIntent(data, temporaryPicturePath)
+                val contactImageFilePath = FileUtils.getFilePathFromPickerIntent(data, temporaryPicturePath)
                 if (contactImageFilePath != null) {
                     viewModel.setPictureFromPath(contactImageFilePath)
                 }
