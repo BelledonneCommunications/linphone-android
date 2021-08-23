@@ -283,6 +283,12 @@ class CorePreferences constructor(private val context: Context) {
             config.setBool("app", "call_right_away", value)
         }
 
+    var automaticallyStartCallRecording: Boolean
+        get() = config.getBool("app", "auto_start_call_record", false)
+        set(value) {
+            config.setBool("app", "auto_start_call_record", value)
+        }
+
     var fullScreenCallUI: Boolean
         get() = config.getBool("app", "full_screen_call", true)
         set(value) {

@@ -101,6 +101,13 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
     }
     val rfc2833Dtmf = MutableLiveData<Boolean>()
 
+    val autoStartCallRecordingListener = object : SettingListenerStub() {
+        override fun onBoolValueChanged(newValue: Boolean) {
+            prefs.automaticallyStartCallRecording = newValue
+        }
+    }
+    val autoStartCallRecording = MutableLiveData<Boolean>()
+
     val autoStartListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
             prefs.callRightAway = newValue
@@ -191,6 +198,7 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
         systemWideOverlay.value = prefs.systemWideCallOverlay
         sipInfoDtmf.value = core.useInfoForDtmf
         rfc2833Dtmf.value = core.useRfc2833ForDtmf
+        autoStartCallRecording.value = prefs.automaticallyStartCallRecording
         autoStart.value = prefs.callRightAway
         autoAnswer.value = prefs.autoAnswerEnabled
         autoAnswerDelay.value = prefs.autoAnswerDelay
