@@ -129,6 +129,12 @@
 
                 <include
                     layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/call_settings_auto_start_recording_title}"
+                    linphone:listener="@{viewModel.autoStartCallRecordingListener}"
+                    linphone:checked="@={viewModel.autoStartCallRecording}"/>
+
+                <include
+                    layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/call_settings_auto_start_title}"
                     linphone:subtitle="@{@string/call_settings_auto_start_summary}"
                     linphone:listener="@{viewModel.autoStartListener}"

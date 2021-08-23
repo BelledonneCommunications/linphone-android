@@ -190,6 +190,10 @@ class CoreContext(val context: Context, coreConfig: Config) {
                     AudioRouteUtils.routeAudioToBluetooth(call)
                 }
             } else if (state == Call.State.Connected) {
+                if (corePreferences.automaticallyStartCallRecording) {
+                    Log.i("[Context] We were asked to start the call recording automatically")
+                    call.startRecording()
+                }
                 onCallStarted()
             } else if (state == Call.State.StreamsRunning) {
                 // Do not automatically route audio to bluetooth after first call

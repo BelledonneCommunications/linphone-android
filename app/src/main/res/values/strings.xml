@@ -420,6 +420,7 @@
     <string name="call_settings_ring_during_early_media_title">Ring during incoming early media</string>
     <string name="call_settings_pause_calls_lost_audio_focus_title">Pause calls when audio focus is lost</string>
     <string name="call_settings_go_to_android_notification_settings">Android notification settings</string>
+    <string name="call_settings_auto_start_recording_title">Automatically start call recording</string>
 
     <!-- Chat settings -->
     <string name="chat_settings_mark_as_read_notif_dismissal_title">Mark as read upon notification dismissal</string>
