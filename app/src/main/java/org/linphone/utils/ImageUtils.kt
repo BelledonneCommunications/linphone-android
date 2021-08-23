@@ -27,6 +27,7 @@ import android.net.Uri
 import android.provider.MediaStore
 import java.io.File
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 
 class ImageUtils {
@@ -36,22 +37,19 @@ class ImageUtils {
             fromPictureUri: Uri?
         ): Bitmap? {
             var bm: Bitmap? = null
-            val roundBm: Bitmap?
             if (fromPictureUri != null) {
                 bm = try {
-                    @Suppress("DEPRECATION")
-                    MediaStore.Images.Media.getBitmap(
-                        context.contentResolver, fromPictureUri
-                    )
+                    Compatibility.getBitmapFromUri(context, fromPictureUri)
                 } catch (e: Exception) {
+                    Log.e("[Image Utils] Failed to get bitmap from URI [$fromPictureUri]: $e")
                     return null
                 }
             }
             if (bm != null) {
-                roundBm = getRoundBitmap(bm)
+                val roundBm = getRoundBitmap(bm)
                 if (roundBm != null) {
                     bm.recycle()
-                    bm = roundBm
+                    return roundBm
                 }
             }
             return bm
