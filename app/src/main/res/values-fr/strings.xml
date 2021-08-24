@@ -619,4 +619,7 @@
     <string name="content_description_replied_message">Ceci est une réponse</string>
     <string name="content_description_stop_voice_recording">Arrêter l\'enregistrement du message vocal</string>
     <string name="chat_message_voice_recording_playback_low_volume">Le volume média est faible, pensez à l\'augmenter si vous n\'entendez pas le message</string>
+    <string name="call_settings_auto_start_recording_title">Enregistrer automatiquement les appels</string>
+    <string name="advanced_settings_disable_fragment_security_title">Désactiver le mode sécurisé de l\'interface</string>
+    <string name="advanced_settings_disable_fragment_security_summary">Autorise l\'écran à être capturé/enregistré sur les vues sensibles</string>
 </resources>
