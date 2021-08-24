@@ -122,8 +122,12 @@ class OutgoingCallActivity : ProximitySensorActivity() {
 
     override fun onStart() {
         super.onStart()
-
         initNumpadLayout()
+    }
+
+    override fun onStop() {
+        numpadAnimator.end()
+        super.onStop()
     }
 
     override fun onResume() {
@@ -205,7 +209,7 @@ class OutgoingCallActivity : ProximitySensorActivity() {
             }
         }
         // Hide the numpad here as we can't set the translationX property on include tag in layout
-        if (controlsViewModel.numpadVisibility.value == false) {
+        if (this::controlsViewModel.isInitialized && controlsViewModel.numpadVisibility.value == false) {
             findViewById<FlexboxLayout>(R.id.numpad)?.translationX = -screenWidth
         }
     }
