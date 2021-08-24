@@ -395,6 +395,7 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
     }
 
     fun destroy() {
+        accountsSettingsListener = object : SettingListenerStub() {}
         account.removeListener(listener)
     }
 
