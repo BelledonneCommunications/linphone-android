@@ -20,58 +20,29 @@
 package org.linphone.activities.call
 
 import android.content.Context
-import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
-import android.hardware.SensorManager
 import android.os.Bundle
 import android.os.PowerManager
+import android.os.PowerManager.RELEASE_FLAG_WAIT_FOR_NO_PROXIMITY
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.activities.GenericActivity
 import org.linphone.core.tools.Log
 
 abstract class ProximitySensorActivity : GenericActivity() {
-    private lateinit var sensorManager: SensorManager
-    private lateinit var proximitySensor: Sensor
     private lateinit var proximityWakeLock: PowerManager.WakeLock
-    private var proximitySensorFound = false
-    private val proximityListener: SensorEventListener = object : SensorEventListener {
-        override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) { }
-
-        override fun onSensorChanged(event: SensorEvent) {
-            if (event.timestamp == 0L || !proximitySensorEnabled) return
-            if (isProximitySensorNearby(event)) {
-                if (!proximityWakeLock.isHeld) {
-                    Log.i("[Proximity Sensor Activity] Acquiring proximity wake lock")
-                    proximityWakeLock.acquire()
-                }
-            } else {
-                if (proximityWakeLock.isHeld) {
-                    Log.i("[Proximity Sensor Activity] Releasing proximity wake lock")
-                    proximityWakeLock.release()
-                }
-            }
-        }
-    }
     private var proximitySensorEnabled = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        try {
-            sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-            val sensor: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY)
-            sensor ?: return
-            proximitySensor = sensor
-            proximityWakeLock = (getSystemService(Context.POWER_SERVICE) as PowerManager)
-                .newWakeLock(
-                    PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK,
-                    "$packageName;proximity_sensor"
-                )
-            proximitySensorFound = true
-        } catch (ise: IllegalStateException) {
-            Log.e("[Proximity Sensor Activity] Failed to get proximity sensor: $ise")
+        val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+        if (!powerManager.isWakeLockLevelSupported(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK)) {
+            Log.w("[Proximity Sensor Activity] PROXIMITY_SCREEN_OFF_WAKE_LOCK isn't supported on this device!")
         }
+
+        proximityWakeLock = powerManager.newWakeLock(
+            PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK,
+            "$packageName;proximity_sensor"
+        )
     }
 
     override fun onResume() {
@@ -96,40 +67,24 @@ abstract class ProximitySensorActivity : GenericActivity() {
     }
 
     protected fun enableProximitySensor(enable: Boolean) {
-        if (!proximitySensorFound) {
-            Log.w("[Proximity Sensor Activity] Couldn't find proximity sensor in this device, skipping")
-            return
-        }
-
         if (enable) {
             if (!proximitySensorEnabled) {
-                Log.i("[Proximity Sensor Activity] Enabling proximity sensor listener")
-                sensorManager.registerListener(proximityListener, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL)
+                Log.i("[Proximity Sensor Activity] Enabling proximity sensor turning off screen")
+                if (!proximityWakeLock.isHeld) {
+                    Log.i("[Proximity Sensor Activity] Acquiring PROXIMITY_SCREEN_OFF_WAKE_LOCK")
+                    proximityWakeLock.acquire()
+                }
                 proximitySensorEnabled = true
             }
         } else {
             if (proximitySensorEnabled) {
-                Log.i("[Proximity Sensor Activity] Disabling proximity sensor listener")
-                sensorManager.unregisterListener(proximityListener)
+                Log.i("[Proximity Sensor Activity] Disabling proximity sensor turning off screen")
                 if (proximityWakeLock.isHeld) {
-                    proximityWakeLock.release()
+                    Log.i("[Proximity Sensor Activity] Releasing PROXIMITY_SCREEN_OFF_WAKE_LOCK")
+                    proximityWakeLock.release(RELEASE_FLAG_WAIT_FOR_NO_PROXIMITY)
                 }
                 proximitySensorEnabled = false
             }
         }
-    }
-
-    private fun isProximitySensorNearby(event: SensorEvent): Boolean {
-        var threshold = 4.001f // <= 4 cm is near
-
-        val distanceInCm = event.values[0]
-        val maxDistance = event.sensor.maximumRange
-        Log.d("[Proximity Sensor Activity] Proximity sensor report [$distanceInCm] , for max range [$maxDistance]")
-
-        if (maxDistance <= threshold) {
-            // Case binary 0/1 and short sensors
-            threshold = maxDistance
-        }
-        return distanceInCm < threshold
     }
 }
