@@ -122,8 +122,12 @@ class OutgoingCallActivity : ProximitySensorActivity() {
 
     override fun onStart() {
         super.onStart()
-
         initNumpadLayout()
+    }
+
+    override fun onStop() {
+        numpadAnimator.end()
+        super.onStop()
     }
 
     override fun onResume() {
