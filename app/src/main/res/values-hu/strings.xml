@@ -619,4 +619,7 @@
     <string name="content_description_cancel_reply">Válasz visszavonása</string>
     <string name="content_description_cancel_voice_recording">Hangfelvétel visszavonása</string>
     <string name="chat_message_voice_recording_playback_low_volume">A média hangereje alacsony, lehet hogy, szeretné növelni</string>
+    <string name="call_settings_auto_start_recording_title">Hívás felvétele önműködő indítása</string>
+    <string name="advanced_settings_disable_fragment_security_title">Felhasználói felület biztonságos üzemmódjának letiltása</string>
+    <string name="advanced_settings_disable_fragment_security_summary">Képernyőfelvétel engedélyezése bizalmas nézetekben</string>
 </resources>
