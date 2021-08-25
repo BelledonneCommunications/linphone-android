@@ -90,7 +90,7 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
 
     val voiceRecordPlayingPosition = MutableLiveData<Int>()
 
-    var voiceRecordPlayingAudioFocusRequest: AudioFocusRequestCompat? = null
+    var voiceRecordAudioFocusRequest: AudioFocusRequestCompat? = null
 
     private lateinit var voiceRecordingPlayer: Player
     private val playerListener = PlayerListener {
@@ -108,7 +108,11 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         isReadOnly.value = chatRoom.hasBeenLeft()
 
         val recorderParams = coreContext.core.createRecorderParams()
-        recorderParams.fileFormat = RecorderFileFormat.Wav
+        if (corePreferences.voiceMessagesFormatMkv) {
+            recorderParams.fileFormat = RecorderFileFormat.Mkv
+        } else {
+            recorderParams.fileFormat = RecorderFileFormat.Wav
+        }
         recorder = coreContext.core.createRecorder(recorderParams)
     }
 
@@ -279,6 +283,12 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
             return
         }
 
+        if (voiceRecordAudioFocusRequest == null) {
+            voiceRecordAudioFocusRequest = AppUtils.acquireAudioFocusForVoiceRecordingOrPlayback(
+                coreContext.context
+            )
+        }
+
         when (recorder.state) {
             RecorderState.Running -> Log.w("[Chat Message Sending] Recorder is already recording")
             RecorderState.Paused -> {
@@ -286,7 +296,11 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
                 recorder.start()
             }
             RecorderState.Closed -> {
-                val tempFileName = "voice-recording-${System.currentTimeMillis()}.wav"
+                val extension = when (recorder.params.fileFormat) {
+                    RecorderFileFormat.Mkv -> "mkv"
+                    else -> "wav"
+                }
+                val tempFileName = "voice-recording-${System.currentTimeMillis()}.$extension"
                 val file = FileUtils.getFileStoragePath(tempFileName)
                 Log.w("[Chat Message Sending] Recorder is closed, starting recording in ${file.absoluteFile}")
                 recorder.open(file.absolutePath)
@@ -329,6 +343,12 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
             }
         }
 
+        val request = voiceRecordAudioFocusRequest
+        if (request != null) {
+            AppUtils.releaseAudioFocusForVoiceRecordingOrPlayback(coreContext.context, request)
+            voiceRecordAudioFocusRequest = null
+        }
+
         isPendingVoiceRecord.value = false
         isVoiceRecording.value = false
         sendMessageEnabled.value = textToSend.value?.isNotEmpty() == true || attachments.value?.isNotEmpty() == true
@@ -340,6 +360,12 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
             recorder.pause()
             recorder.close()
             voiceRecordingDuration.value = recorder.duration
+        }
+
+        val request = voiceRecordAudioFocusRequest
+        if (request != null) {
+            AppUtils.releaseAudioFocusForVoiceRecordingOrPlayback(coreContext.context, request)
+            voiceRecordAudioFocusRequest = null
         }
 
         isVoiceRecording.value = false
@@ -355,8 +381,12 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
             initVoiceRecordPlayer()
         }
 
-        if (voiceRecordPlayingAudioFocusRequest == null) {
-            voiceRecordPlayingAudioFocusRequest = AppUtils.acquireAudioFocusForVoiceRecording(
+        if (AppUtils.isMediaVolumeLow(coreContext.context)) {
+            Toast.makeText(coreContext.context, R.string.chat_message_voice_recording_playback_low_volume, Toast.LENGTH_LONG).show()
+        }
+
+        if (voiceRecordAudioFocusRequest == null) {
+            voiceRecordAudioFocusRequest = AppUtils.acquireAudioFocusForVoiceRecordingOrPlayback(
                 coreContext.context
             )
         }
@@ -375,10 +405,10 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
             voiceRecordingPlayer.pause()
         }
 
-        val request = voiceRecordPlayingAudioFocusRequest
+        val request = voiceRecordAudioFocusRequest
         if (request != null) {
-            AppUtils.releaseAudioFocusForVoiceRecording(coreContext.context, request)
-            voiceRecordPlayingAudioFocusRequest = null
+            AppUtils.releaseAudioFocusForVoiceRecordingOrPlayback(coreContext.context, request)
+            voiceRecordAudioFocusRequest = null
         }
 
         isPlayingVoiceRecording.value = false
@@ -400,10 +430,6 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
             }
         }
         Log.i("[Chat Message Sending] Found speaker sound card [$speakerCard] and earpiece sound card [$earpieceCard]")
-
-        if (AppUtils.isMediaVolumeLow(coreContext.context)) {
-            Toast.makeText(coreContext.context, R.string.chat_message_voice_recording_playback_low_volume, Toast.LENGTH_LONG).show()
-        }
 
         val localPlayer = coreContext.core.createLocalPlayer(speakerCard ?: earpieceCard, null, null)
         if (localPlayer != null) {
@@ -431,10 +457,10 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
             voiceRecordingPlayer.close()
         }
 
-        val request = voiceRecordPlayingAudioFocusRequest
+        val request = voiceRecordAudioFocusRequest
         if (request != null) {
-            AppUtils.releaseAudioFocusForVoiceRecording(coreContext.context, request)
-            voiceRecordPlayingAudioFocusRequest = null
+            AppUtils.releaseAudioFocusForVoiceRecordingOrPlayback(coreContext.context, request)
+            voiceRecordAudioFocusRequest = null
         }
 
         isPlayingVoiceRecording.value = false

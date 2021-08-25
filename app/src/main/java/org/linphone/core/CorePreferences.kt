@@ -412,6 +412,11 @@ class CorePreferences constructor(private val context: Context) {
     val preventInterfaceFromShowingUp: Boolean
         get() = config.getBool("app", "keep_app_invisible", false)
 
+    // By default we will record voice messages using MKV format and Opus audio encoding
+    // If disabled, WAV format will be used instead. Warning: files will be heavier!
+    val voiceMessagesFormatMkv: Boolean
+        get() = config.getBool("app", "record_voice_messages_in_mkv_format", true)
+
     /* Default values related */
 
     val echoCancellerCalibration: Int

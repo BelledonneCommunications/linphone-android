@@ -156,7 +156,7 @@ class AppUtils {
             return currentVolume <= maxVolume * 0.5
         }
 
-        fun acquireAudioFocusForVoiceRecording(context: Context): AudioFocusRequestCompat {
+        fun acquireAudioFocusForVoiceRecordingOrPlayback(context: Context): AudioFocusRequestCompat {
             val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
             val audioAttrs = AudioAttributesCompat.Builder()
                 .setUsage(AudioAttributesCompat.USAGE_MEDIA)
@@ -170,22 +170,25 @@ class AppUtils {
                     .build()
             when (AudioManagerCompat.requestAudioFocus(audioManager, request)) {
                 AudioManager.AUDIOFOCUS_REQUEST_GRANTED -> {
-                    Log.i("[Audio Focus] Voice recording audio focus request granted")
+                    Log.i("[Audio Focus] Voice recording/playback audio focus request granted")
                 }
                 AudioManager.AUDIOFOCUS_REQUEST_FAILED -> {
-                    Log.w("[Audio Focus] Voice recording audio focus request failed")
+                    Log.w("[Audio Focus] Voice recording/playback audio focus request failed")
                 }
                 AudioManager.AUDIOFOCUS_REQUEST_DELAYED -> {
-                    Log.w("[Audio Focus] Voice recording audio focus request delayed")
+                    Log.w("[Audio Focus] Voice recording/playback audio focus request delayed")
                 }
             }
             return request
         }
 
-        fun releaseAudioFocusForVoiceRecording(context: Context, request: AudioFocusRequestCompat) {
+        fun releaseAudioFocusForVoiceRecordingOrPlayback(
+            context: Context,
+            request: AudioFocusRequestCompat
+        ) {
             val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
             AudioManagerCompat.abandonAudioFocusRequest(audioManager, request)
-            Log.i("[Audio Focus] Voice recording audio focus request abandoned")
+            Log.i("[Audio Focus] Voice recording/playback audio focus request abandoned")
         }
     }
 }

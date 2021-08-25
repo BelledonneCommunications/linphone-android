@@ -21,9 +21,12 @@ package org.linphone.activities.main.recordings.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.media.AudioFocusRequestCompat
 import kotlin.collections.ArrayList
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.activities.main.recordings.data.RecordingData
 import org.linphone.core.tools.Log
+import org.linphone.utils.AppUtils
 import org.linphone.utils.FileUtils
 
 class RecordingsViewModel : ViewModel() {
@@ -31,12 +34,26 @@ class RecordingsViewModel : ViewModel() {
 
     val isVideoVisible = MutableLiveData<Boolean>()
 
+    private var recordingPlayingAudioFocusRequest: AudioFocusRequestCompat? = null
+
     private val recordingListener = object : RecordingData.RecordingListener {
         override fun onPlayingStarted(videoAvailable: Boolean) {
+            if (recordingPlayingAudioFocusRequest == null) {
+                recordingPlayingAudioFocusRequest = AppUtils.acquireAudioFocusForVoiceRecordingOrPlayback(
+                    coreContext.context
+                )
+            }
+
             isVideoVisible.value = videoAvailable
         }
 
         override fun onPlayingEnded() {
+            val request = recordingPlayingAudioFocusRequest
+            if (request != null) {
+                AppUtils.releaseAudioFocusForVoiceRecordingOrPlayback(coreContext.context, request)
+                recordingPlayingAudioFocusRequest = null
+            }
+
             isVideoVisible.value = false
         }
     }
@@ -48,6 +65,13 @@ class RecordingsViewModel : ViewModel() {
 
     override fun onCleared() {
         recordingsList.value.orEmpty().forEach(RecordingData::destroy)
+
+        val request = recordingPlayingAudioFocusRequest
+        if (request != null) {
+            AppUtils.releaseAudioFocusForVoiceRecordingOrPlayback(coreContext.context, request)
+            recordingPlayingAudioFocusRequest = null
+        }
+
         super.onCleared()
     }
 
