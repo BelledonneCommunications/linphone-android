@@ -123,7 +123,7 @@ class NotificationsManager(private val context: Context) {
                 Call.State.End, Call.State.Error -> dismissCallNotification(call)
                 Call.State.Released -> {
                     if (LinphoneUtils.isCallLogMissed(call.callLog)) {
-                        displayMissedCallNotification(call)
+                        displayMissedCallNotification(call.remoteAddress)
                     }
                 }
                 else -> displayCallNotification(call)
@@ -435,17 +435,17 @@ class NotificationsManager(private val context: Context) {
         }
     }
 
-    fun displayMissedCallNotification(call: Call) {
-        val missedCallCount: Int = call.core.missedCallsCount
+    private fun displayMissedCallNotification(remoteAddress: Address) {
+        val missedCallCount: Int = coreContext.core.missedCallsCount
         val body: String
         if (missedCallCount > 1) {
             body = context.getString(R.string.missed_calls_notification_body)
                 .format(missedCallCount)
             Log.i("[Notifications Manager] Updating missed calls notification count to $missedCallCount")
         } else {
-            val contact: Contact? = coreContext.contactsManager.findContactByAddress(call.remoteAddress)
+            val contact: Contact? = coreContext.contactsManager.findContactByAddress(remoteAddress)
             body = context.getString(R.string.missed_call_notification_body)
-                .format(contact?.fullName ?: LinphoneUtils.getDisplayName(call.remoteAddress))
+                .format(contact?.fullName ?: LinphoneUtils.getDisplayName(remoteAddress))
             Log.i("[Notifications Manager] Creating missed call notification")
         }
 
