@@ -184,13 +184,13 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
         binding.setMissedCallLogsToggleClickListener {
             listViewModel.missedCallLogsSelected.value = true
         }
+
+        coreContext.core.resetMissedCallsCount()
+        coreContext.notificationsManager.dismissMissedCallNotification()
     }
 
     override fun onResume() {
         super.onResume()
-
-        coreContext.core.resetMissedCallsCount()
-        coreContext.notificationsManager.dismissMissedCallNotification()
 
         val tabsViewModel = requireActivity().run {
             ViewModelProvider(this).get(TabsViewModel::class.java)
