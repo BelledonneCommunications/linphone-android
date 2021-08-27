@@ -36,6 +36,9 @@
         <variable
             name="addToContactsHidden"
             type="Boolean" />
+        <variable
+            name="replyHidden"
+            type="Boolean" />
     </data>
 
     <LinearLayout
@@ -79,6 +82,7 @@
             android:background="@drawable/menu_background"
             android:onClick="@{replyClickListener}"
             android:drawableRight="@drawable/menu_reply"
+            android:visibility="@{replyHidden ? View.GONE : View.VISIBLE}"
             style="@style/popup_item_font"
             android:text="@string/chat_message_context_menu_reply" />
 
