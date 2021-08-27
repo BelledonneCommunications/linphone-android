@@ -10,6 +10,23 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [4.5.2] - 2021-08-27
+
+### Added
+- Added a contact cache at app level
+- Glide cache cleared on low memory
+
+### Changed
+- Fixed encrypted file export when VFS is enabled
+- Fixed in-app video player size when VFS is enabled
+- Fixed background mode setting
+- Fixed proximity sensor during calls
+- Fixed missing notification for missed call when call history view is active
+- Fixed shortcuts on launcher
+- Fixed a few memory leaks
+- Fixed various crashes & other issues
+- SDK bumped to 5.0.10
+
 ## [4.5.1] - 2021-07-15
 
 ### Changed
