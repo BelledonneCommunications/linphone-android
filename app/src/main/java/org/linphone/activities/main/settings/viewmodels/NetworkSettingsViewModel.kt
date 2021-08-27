@@ -38,14 +38,6 @@ class NetworkSettingsViewModel : GenericSettingsViewModel() {
     }
     val allowIpv6 = MutableLiveData<Boolean>()
 
-    val pushNotificationsListener = object : SettingListenerStub() {
-        override fun onBoolValueChanged(newValue: Boolean) {
-            core.isPushNotificationEnabled = newValue
-        }
-    }
-    val pushNotifications = MutableLiveData<Boolean>()
-    val pushNotificationsAvailable = MutableLiveData<Boolean>()
-
     val randomPortsListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
             val port = if (newValue) -1 else 5060
@@ -69,8 +61,6 @@ class NetworkSettingsViewModel : GenericSettingsViewModel() {
     init {
         wifiOnly.value = core.wifiOnlyEnabled()
         allowIpv6.value = core.ipv6Enabled()
-        pushNotifications.value = core.isPushNotificationEnabled
-        pushNotificationsAvailable.value = core.isPushNotificationAvailable
         randomPorts.value = getTransportPort() == -1
         sipPort.value = getTransportPort()
     }

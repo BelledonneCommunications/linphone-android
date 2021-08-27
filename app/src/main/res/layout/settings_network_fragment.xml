@@ -83,13 +83,6 @@
 
                 <include
                     layout="@layout/settings_widget_switch"
-                    linphone:title="@{@string/network_settings_push_notifications_title}"
-                    linphone:listener="@{viewModel.pushNotificationsListener}"
-                    linphone:checked="@={viewModel.pushNotifications}"
-                    linphone:enabled="@{viewModel.pushNotificationsAvailable}"/>
-
-                <include
-                    layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/network_settings_random_ports_title}"
                     linphone:listener="@{viewModel.randomPortsListener}"
                     linphone:checked="@={viewModel.randomPorts}"/>
