@@ -50,7 +50,8 @@ class SideMenuViewModel : ViewModel() {
             state: RegistrationState,
             message: String
         ) {
-            if (coreContext.core.accountList.size != accounts.value?.size) {
+            // +1 is for the default account, otherwise this will trigger every time
+            if (coreContext.core.accountList.size != accounts.value.orEmpty().size + 1) {
                 // Only refresh the list if an account has been added or removed
                 updateAccountsList()
             }
@@ -73,8 +74,9 @@ class SideMenuViewModel : ViewModel() {
 
     fun updateAccountsList() {
         defaultAccountFound.value = false // Do not assume a default account will still be found
-
+        defaultAccountViewModel.value?.destroy()
         accounts.value.orEmpty().forEach(AccountSettingsViewModel::destroy)
+
         val list = arrayListOf<AccountSettingsViewModel>()
         if (coreContext.core.accountList.isNotEmpty()) {
             val defaultAccount = coreContext.core.defaultAccount
