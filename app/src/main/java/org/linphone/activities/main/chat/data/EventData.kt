@@ -45,6 +45,13 @@ class EventData(private val eventLog: EventLog) : GenericContactData(
         }
     }
 
+    val isGroupLeft: Boolean by lazy {
+        when (eventLog.type) {
+            EventLog.Type.ConferenceTerminated -> true
+            else -> false
+        }
+    }
+
     init {
         updateEventText()
     }
