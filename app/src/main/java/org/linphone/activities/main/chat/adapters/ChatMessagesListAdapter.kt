@@ -229,6 +229,10 @@ class ChatMessagesListAdapter(
                             popupView.addToContactsHidden = true
                             totalSize -= itemSize
                         }
+                        if (chatMessage.chatRoom.hasBeenLeft()) {
+                            popupView.replyHidden = true
+                            totalSize -= itemSize
+                        }
 
                         // When using WRAP_CONTENT instead of real size, fails to place the
                         // popup window above if not enough space is available below
