@@ -10,6 +10,38 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [4.6.0] - Unreleased
+
+### Added
+- Reply to chat message feature (with original message preview)
+- Voice recordings in chat feature
+- Allow video recording in chat file sharing
+
+### Changed
+- UI has been reworked around SlidingPane component to better handle tablets & foldable devices
+- Bumped dependencies
+- SDK updated to 5.1.0 release
+
+### Removed
+- Global push notification setting in Network, use the switch in each Account instead
+
+## [4.5.2] - 2021-08-27
+
+### Added
+- Added a contact cache at app level
+- Glide cache cleared on low memory
+
+### Changed
+- Fixed encrypted file export when VFS is enabled
+- Fixed in-app video player size when VFS is enabled
+- Fixed background mode setting
+- Fixed proximity sensor during calls
+- Fixed missing notification for missed call when call history view is active
+- Fixed shortcuts on launcher
+- Fixed a few memory leaks
+- Fixed various crashes & other issues
+- SDK bumped to 5.0.10
+
 ## [4.5.1] - Unreleased
 
 ### Added
