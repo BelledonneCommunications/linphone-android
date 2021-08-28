@@ -11,13 +11,13 @@ static def getPackageName() {
     return "org.linphone"
 }
 
-static def firebaseEnabled() {
-    File googleFile = new File('app/google-services.json')
+def firebaseEnabled() {
+    File googleFile = new File(projectDir.absolutePath +'/google-services.json')
     return googleFile.exists()
 }
 
 def crashlyticsEnabled() {
-    File googleFile = new File('app/google-services.json')
+    File googleFile = new File(projectDir.absolutePath +'/google-services.json')
     File linphoneLibrary = new File(LinphoneSdkBuildDir + '/libs/')
     File linphoneLibraryDebug = new File(LinphoneSdkBuildDir + '/libs-debug/')
     return googleFile.exists() && linphoneLibrary.exists() && linphoneLibraryDebug.exists()
