@@ -78,11 +78,13 @@ class TelecomConnectionService : ConnectionService() {
         return if (accountHandle != null && componentName == accountHandle.componentName) {
             Log.i("[Telecom Connection Service] Creating outgoing connection")
 
-            var callId = request.extras.getString("Call-ID")
-            val displayName = request.extras.getString("DisplayName")
+            val extras = request.extras
+            var callId = extras.getString("Call-ID")
+            val displayName = extras.getString("DisplayName")
             if (callId == null) {
                 callId = coreContext.core.currentCall?.callLog?.callId ?: ""
             }
+            Log.i("[Telecom Connection Service] Outgoing connection is for call [$callId] with display name [$displayName]")
 
             val connection = NativeCallWrapper(callId)
             connection.audioModeIsVoip = true
@@ -116,18 +118,21 @@ class TelecomConnectionService : ConnectionService() {
         return if (accountHandle != null && componentName == accountHandle.componentName) {
             Log.i("[Telecom Connection Service] Creating incoming connection")
 
-            var callId = request.extras.getString("Call-ID")
-            val displayName = request.extras.getString("DisplayName")
+            val extras = request.extras
+            val incomingExtras = extras.getBundle(TelecomManager.EXTRA_INCOMING_CALL_EXTRAS)
+            var callId = incomingExtras?.getString("Call-ID")
+            val displayName = incomingExtras?.getString("DisplayName")
             if (callId == null) {
                 callId = coreContext.core.currentCall?.callLog?.callId ?: ""
             }
+            Log.i("[Telecom Connection Service] Incoming connection is for call [$callId] with display name [$displayName]")
 
             val connection = NativeCallWrapper(callId)
             connection.audioModeIsVoip = true
             connection.setRinging()
 
             val providedHandle =
-                request.extras.getParcelable<Uri>(TelecomManager.EXTRA_INCOMING_CALL_ADDRESS)
+                incomingExtras?.getParcelable<Uri>(TelecomManager.EXTRA_INCOMING_CALL_ADDRESS)
             connection.setAddress(providedHandle, TelecomManager.PRESENTATION_ALLOWED)
             connection.setCallerDisplayName(displayName, TelecomManager.PRESENTATION_ALLOWED)
             Log.i("[Telecom Connection Service] Address is $providedHandle")

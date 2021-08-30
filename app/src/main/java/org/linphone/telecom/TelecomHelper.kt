@@ -28,12 +28,15 @@ import android.os.Bundle
 import android.telecom.PhoneAccount
 import android.telecom.PhoneAccountHandle
 import android.telecom.TelecomManager
+import android.telecom.TelecomManager.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.contact.Contact
 import org.linphone.core.Call
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
+import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.SingletonHolder
 
 class TelecomHelper private constructor(private val context: Context) {
@@ -138,42 +141,44 @@ class TelecomHelper private constructor(private val context: Context) {
     }
 
     private fun onIncomingCall(call: Call) {
-        Log.i("[Telecom Helper] Incoming call received")
+        Log.i("[Telecom Helper] Incoming call received from ${call.remoteAddress.asStringUriOnly()}")
 
         val extras = prepareBundle(call)
-        telecomManager.addNewIncomingCall(account.accountHandle, extras)
+        telecomManager.addNewIncomingCall(account.accountHandle, Bundle().apply {
+            putBundle(EXTRA_INCOMING_CALL_EXTRAS, extras)
+            putParcelable(EXTRA_PHONE_ACCOUNT_HANDLE, account.accountHandle)
+        })
     }
 
     @SuppressLint("MissingPermission")
     private fun onOutgoingCall(call: Call) {
-        Log.i("[Helper Manager] Outgoing call started")
+        Log.i("[Telecom Helper] Outgoing call started to ${call.remoteAddress.asStringUriOnly()}")
 
         val extras = prepareBundle(call)
-        telecomManager.placeCall(Uri.parse(call.remoteAddress.asStringUriOnly()), extras)
+        telecomManager.placeCall(Uri.parse(call.remoteAddress.asStringUriOnly()), Bundle().apply {
+            putBundle(EXTRA_OUTGOING_CALL_EXTRAS, extras)
+            putParcelable(EXTRA_PHONE_ACCOUNT_HANDLE, account.accountHandle)
+        })
     }
 
     private fun prepareBundle(call: Call): Bundle {
         val extras = Bundle()
         val address = call.remoteAddress
-        val bundleKey: String
 
         if (call.dir == Call.Dir.Outgoing) {
-            bundleKey = TelecomManager.EXTRA_OUTGOING_CALL_EXTRAS
             extras.putString(
-                TelecomManager.EXTRA_CALL_BACK_NUMBER,
+                EXTRA_CALL_BACK_NUMBER,
                 call.callLog.fromAddress.asStringUriOnly()
             )
         } else {
-            bundleKey = TelecomManager.EXTRA_INCOMING_CALL_EXTRAS
-            extras.putParcelable(TelecomManager.EXTRA_INCOMING_CALL_ADDRESS, Uri.parse(address.asStringUriOnly()))
+            extras.putParcelable(EXTRA_INCOMING_CALL_ADDRESS, Uri.parse(address.asStringUriOnly()))
         }
 
-        extras.putParcelable(TelecomManager.EXTRA_PHONE_ACCOUNT_HANDLE, account.accountHandle)
         extras.putString("Call-ID", call.callLog.callId)
-        extras.putString("DisplayName", call.remoteAddress.displayName)
 
-        val b = Bundle()
-        extras.putBundle(bundleKey, b)
+        val contact: Contact? = coreContext.contactsManager.findContactByAddress(call.remoteAddress)
+        val displayName = contact?.fullName ?: LinphoneUtils.getDisplayName(call.remoteAddress)
+        extras.putString("DisplayName", displayName)
 
         return extras
     }
