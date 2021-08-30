@@ -19,16 +19,17 @@
  */
 package org.linphone.telecom
 
+import android.telecom.CallAudioState
 import android.telecom.Connection
 import android.telecom.DisconnectCause
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Call
 import org.linphone.core.tools.Log
+import org.linphone.utils.AudioRouteUtils
 
 class NativeCallWrapper(var callId: String) : Connection() {
     init {
-        var capabilities = connectionCapabilities
-        capabilities = capabilities or CAPABILITY_MUTE or CAPABILITY_SUPPORT_HOLD or CAPABILITY_HOLD
+        val capabilities = connectionCapabilities or CAPABILITY_MUTE or CAPABILITY_SUPPORT_HOLD or CAPABILITY_HOLD
         connectionCapabilities = capabilities
     }
 
@@ -54,8 +55,21 @@ class NativeCallWrapper(var callId: String) : Connection() {
         setActive()
     }
 
+    override fun onCallAudioStateChanged(state: CallAudioState) {
+        Log.i("[Connection] Audio state changed: $state")
+
+        val call = getCall()
+        call?.microphoneMuted = state.isMuted
+        when (state.route) {
+            CallAudioState.ROUTE_EARPIECE -> AudioRouteUtils.routeAudioToEarpiece(call)
+            CallAudioState.ROUTE_SPEAKER -> AudioRouteUtils.routeAudioToSpeaker(call)
+            CallAudioState.ROUTE_BLUETOOTH -> AudioRouteUtils.routeAudioToBluetooth(call)
+            CallAudioState.ROUTE_WIRED_HEADSET -> AudioRouteUtils.routeAudioToHeadset(call)
+        }
+    }
+
     override fun onPlayDtmfTone(c: Char) {
-        Log.i("[Connection] Seding DTMF [$c] in telecom call with id: $callId")
+        Log.i("[Connection] Sending DTMF [$c] in telecom call with id: $callId")
         getCall()?.sendDtmf(c)
     }
 
