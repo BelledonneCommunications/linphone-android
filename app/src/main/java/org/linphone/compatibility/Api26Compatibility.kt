@@ -113,6 +113,14 @@ class Api26Compatibility {
             notificationManager.createNotificationChannel(channel)
         }
 
+        fun getChannelImportance(
+            notificationManager: NotificationManagerCompat,
+            channelId: String
+        ): Int {
+            val channel = notificationManager.getNotificationChannel(channelId)
+            return channel?.importance ?: NotificationManagerCompat.IMPORTANCE_NONE
+        }
+
         fun getOverlayType(): Int {
             return WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
         }
