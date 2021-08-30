@@ -319,13 +319,19 @@ class NotificationsManager(private val context: Context) {
     }
 
     private fun createServiceNotification(useAutoStartDescription: Boolean = false) {
+        val serviceChannel = context.getString(R.string.notification_channel_service_id)
+        if (Compatibility.getChannelImportance(notificationManager, serviceChannel) == NotificationManagerCompat.IMPORTANCE_NONE) {
+            Log.w("[Notifications Manager] Service channel is disabled!")
+            return
+        }
+
         val pendingIntent = NavDeepLinkBuilder(context)
             .setComponentName(MainActivity::class.java)
             .setGraph(R.navigation.main_nav_graph)
             .setDestination(R.id.dialerFragment)
             .createPendingIntent()
 
-        val builder = NotificationCompat.Builder(context, context.getString(R.string.notification_channel_service_id))
+        val builder = NotificationCompat.Builder(context, serviceChannel)
             .setContentTitle(context.getString(R.string.service_name))
             .setContentText(if (useAutoStartDescription) context.getString(R.string.service_auto_start_description) else context.getString(R.string.service_description))
             .setSmallIcon(R.drawable.topbar_service_notification)
@@ -484,6 +490,23 @@ class NotificationsManager(private val context: Context) {
     fun displayCallNotification(call: Call, useAsForeground: Boolean = false) {
         val notifiable = getNotifiableForCall(call)
 
+        val serviceChannel = context.getString(R.string.notification_channel_service_id)
+        val channelToUse = when (val serviceChannelImportance = Compatibility.getChannelImportance(notificationManager, serviceChannel)) {
+            NotificationManagerCompat.IMPORTANCE_NONE -> {
+                Log.w("[Notifications Manager] Service channel is disabled, using incoming call channel instead!")
+                context.getString(R.string.notification_channel_incoming_call_id)
+            }
+            NotificationManagerCompat.IMPORTANCE_LOW -> {
+                // Expected, nothing to do
+                serviceChannel
+            }
+            else -> {
+                // If user disables & enabled back service notifications channel, importance won't be low anymore but default!
+                Log.w("[Notifications Manager] Service channel importance is $serviceChannelImportance and not LOW (${NotificationManagerCompat.IMPORTANCE_LOW}) as expected!")
+                serviceChannel
+            }
+        }
+
         val contact: Contact? = coreContext.contactsManager.findContactByAddress(call.remoteAddress)
         val pictureUri = contact?.getContactThumbnailPictureUri()
         val roundPicture = ImageUtils.getRoundBitmapFromUri(context, pictureUri)
@@ -523,7 +546,7 @@ class NotificationsManager(private val context: Context) {
         val pendingIntent = PendingIntent.getActivity(context, 0, callNotificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         val builder = NotificationCompat.Builder(
-            context, context.getString(R.string.notification_channel_service_id))
+            context, channelToUse)
             .setContentTitle(contact?.fullName ?: displayName)
             .setContentText(context.getString(stringResourceId))
             .setSmallIcon(iconResourceId)
@@ -558,6 +581,8 @@ class NotificationsManager(private val context: Context) {
         if (notifiable != null) {
             cancel(notifiable.notificationId)
             callNotificationsMap.remove(address)
+        } else {
+            Log.w("[Notifications Manager] No notification found for call ${call.callLog.callId}")
         }
     }
 

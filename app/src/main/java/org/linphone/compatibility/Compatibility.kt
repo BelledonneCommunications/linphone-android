@@ -102,6 +102,16 @@ class Compatibility {
             }
         }
 
+        fun getChannelImportance(
+            notificationManager: NotificationManagerCompat,
+            channelId: String
+        ): Int {
+            if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
+                return Api26Compatibility.getChannelImportance(notificationManager, channelId)
+            }
+            return NotificationManagerCompat.IMPORTANCE_DEFAULT
+        }
+
         fun getOverlayType(): Int {
             if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
                 return Api26Compatibility.getOverlayType()
