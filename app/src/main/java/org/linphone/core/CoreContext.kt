@@ -49,6 +49,7 @@ import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 import kotlin.math.abs
 import kotlinx.coroutines.*
+import org.linphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.call.CallActivity
@@ -288,6 +289,13 @@ class CoreContext(val context: Context, coreConfig: Config) {
             loggingService.addListener(loggingServiceListener)
             Log.i("[Context] Crashlytics enabled, register logging service listener")
         }
+
+        Log.i("=========================================")
+        Log.i("==== Linphone-android information dump ====")
+        Log.i("VERSION=${BuildConfig.VERSION_NAME} / ${BuildConfig.VERSION_CODE}")
+        Log.i("PACKAGE=${BuildConfig.APPLICATION_ID}")
+        Log.i("BUILD TYPE=${BuildConfig.BUILD_TYPE}")
+        Log.i("=========================================")
 
         core = Factory.instance().createCoreWithConfig(coreConfig, context)
 
