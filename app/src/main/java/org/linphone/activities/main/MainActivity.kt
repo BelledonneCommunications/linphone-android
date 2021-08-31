@@ -180,9 +180,11 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         findNavController(R.id.nav_host_fragment).addOnDestinationChangedListener(this)
 
         binding.rootCoordinatorLayout.viewTreeObserver.addOnGlobalLayoutListener {
-            val keyboardVisible = ViewCompat.getRootWindowInsets(binding.rootCoordinatorLayout)?.isVisible(WindowInsetsCompat.Type.ime()) == true
+            val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
+            val keyboardVisible = ViewCompat.getRootWindowInsets(binding.rootCoordinatorLayout)
+                ?.isVisible(WindowInsetsCompat.Type.ime()) == true
             Log.d("[Tabs Fragment] Keyboard is ${if (keyboardVisible) "visible" else "invisible"}")
-            tabsFragmentVisible2 = !keyboardVisible
+            tabsFragmentVisible2 = !portraitOrientation || !keyboardVisible
             updateTabsFragmentVisibility()
         }
 
