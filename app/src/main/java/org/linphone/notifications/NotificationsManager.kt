@@ -194,8 +194,6 @@ class NotificationsManager(private val context: Context) {
     }
 
     init {
-        notificationManager.cancelAll()
-
         Compatibility.createNotificationChannels(context, notificationManager)
     }
 
