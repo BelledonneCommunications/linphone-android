@@ -159,7 +159,6 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
             override fun onLeftToRightSwipe(viewHolder: RecyclerView.ViewHolder) {
                 val chatRoomViewModel = adapter.currentList[viewHolder.adapterPosition]
                 chatRoomViewModel.chatRoom.markAsRead()
-                coreContext.notificationsManager.dismissChatNotification(chatRoomViewModel.chatRoom)
                 adapter.notifyItemChanged(viewHolder.adapterPosition)
             }
 
@@ -266,7 +265,6 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
             val chatRoom = coreContext.core.searchChatRoom(null, localAddress, remoteSipAddress, arrayOfNulls(0))
             if (chatRoom != null) {
                 Log.i("[Chat] Found matching chat room $chatRoom")
-                chatRoom.markAsRead()
                 adapter.selectedChatRoomEvent.value = Event(chatRoom)
             }
         } else {

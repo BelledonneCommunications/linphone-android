@@ -23,7 +23,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import java.util.*
-import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.activities.main.chat.data.EventLogData
 import org.linphone.core.*
 import org.linphone.core.tools.Log
@@ -58,11 +57,6 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
 
     private val chatRoomListener: ChatRoomListenerStub = object : ChatRoomListenerStub() {
         override fun onChatMessageReceived(chatRoom: ChatRoom, eventLog: EventLog) {
-            // Do not mark as read if DetailChatRoomFragment was opened before app was put in background
-            if (coreContext.notificationsManager.currentlyDisplayedChatRoomAddress == chatRoom.peerAddress.asStringUriOnly()) {
-                chatRoom.markAsRead()
-            }
-
             if (eventLog.type == EventLog.Type.ConferenceChatMessage) {
                 val chatMessage = eventLog.chatMessage
                 chatMessage ?: return
