@@ -449,7 +449,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             // Prevent notifications for this chat room to be displayed
             val peerAddress = viewModel.chatRoom.peerAddress.asStringUriOnly()
             coreContext.notificationsManager.currentlyDisplayedChatRoomAddress = peerAddress
-            coreContext.notificationsManager.cancelChatNotificationIdForSipUri(peerAddress)
+            viewModel.chatRoom.markAsRead()
         } else {
             Log.e("[Chat Room] Fragment resuming but viewModel lateinit property isn't initialized!")
         }

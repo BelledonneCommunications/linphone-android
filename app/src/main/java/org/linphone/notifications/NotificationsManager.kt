@@ -140,7 +140,8 @@ class NotificationsManager(private val context: Context) {
             }
 
             if (currentlyDisplayedChatRoomAddress == room.peerAddress.asStringUriOnly()) {
-                Log.i("[Notifications Manager] Chat room is currently displayed, do not notify received message")
+                Log.i("[Notifications Manager] Chat room is currently displayed, do not notify received message & mark it as read")
+                room.markAsRead()
                 return
             }
 
@@ -161,6 +162,11 @@ class NotificationsManager(private val context: Context) {
                 Compatibility.createShortcutsToChatRooms(context)
             }
             displayIncomingChatNotification(room, message)
+        }
+
+        override fun onChatRoomRead(core: Core, chatRoom: ChatRoom) {
+            Log.i("[Notifications Manager] Chat room [$chatRoom] has been marked as read, removing notification if any")
+            dismissChatNotification(chatRoom)
         }
     }
 
@@ -229,14 +235,6 @@ class NotificationsManager(private val context: Context) {
     fun cancel(id: Int) {
         Log.i("[Notifications Manager] Canceling $id")
         notificationManager.cancel(id)
-    }
-
-    fun cancelChatNotificationIdForSipUri(sipUri: String) {
-        val notifiable: Notifiable? = chatNotificationsMap[sipUri]
-        if (notifiable != null) {
-            notifiable.messages.clear()
-            cancel(notifiable.notificationId)
-        }
     }
 
     fun resetChatNotificationCounterForSipUri(sipUri: String) {

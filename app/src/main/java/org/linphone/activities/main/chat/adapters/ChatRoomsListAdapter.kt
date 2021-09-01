@@ -83,7 +83,6 @@ class ChatRoomsListAdapter(
                         selectionViewModel.onToggleSelect(adapterPosition)
                     } else {
                         selectedChatRoomEvent.value = Event(chatRoomViewModel.chatRoom)
-                        chatRoomViewModel.chatRoom.markAsRead()
                     }
                 }
 
