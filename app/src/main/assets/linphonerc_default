@@ -21,7 +21,6 @@ size=vga
 
 [app]
 tunnel=disabled
-push_notification=1
 auto_start=1
 
 [tunnel]
