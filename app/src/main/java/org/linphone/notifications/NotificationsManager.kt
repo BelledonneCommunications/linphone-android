@@ -36,6 +36,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.LocusIdCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.navigation.NavDeepLinkBuilder
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -96,7 +98,6 @@ class NotificationsManager(private val context: Context) {
     private val chatNotificationsMap: HashMap<String, Notifiable> = HashMap()
     private val callNotificationsMap: HashMap<String, Notifiable> = HashMap()
 
-    private var lastNotificationId: Int = 5
     private var currentForegroundServiceNotificationId: Int = 0
     private var serviceNotification: Notification? = null
 
@@ -349,14 +350,17 @@ class NotificationsManager(private val context: Context) {
 
     /* Call related */
 
+    private fun getNotificationIdForCall(call: Call): Int {
+        return call.callLog.startDate.toInt()
+    }
+
     private fun getNotifiableForCall(call: Call): Notifiable {
         val address = call.remoteAddress.asStringUriOnly()
         var notifiable: Notifiable? = callNotificationsMap[address]
         if (notifiable == null) {
-            notifiable = Notifiable(lastNotificationId)
+            notifiable = Notifiable(getNotificationIdForCall(call))
             notifiable.remoteAddress = call.remoteAddress.asStringUriOnly()
 
-            lastNotificationId += 1
             callNotificationsMap[address] = notifiable
         }
         return notifiable
@@ -586,6 +590,10 @@ class NotificationsManager(private val context: Context) {
 
     /* Chat related */
 
+    private fun getNotificationIdForChat(chatRoom: ChatRoom): Int {
+        return chatRoom.creationTime.toInt()
+    }
+
     private fun displayChatNotifiable(room: ChatRoom, notifiable: Notifiable) {
         val localAddress = room.localAddress.asStringUriOnly()
         val peerAddress = room.peerAddress.asStringUriOnly()
@@ -612,37 +620,15 @@ class NotificationsManager(private val context: Context) {
 
     private fun displayIncomingChatNotification(room: ChatRoom, message: ChatMessage) {
         val contact: Contact? = coreContext.contactsManager.findContactByAddress(message.fromAddress)
-        val pictureUri = contact?.getContactThumbnailPictureUri()
-        val roundPicture = ImageUtils.getRoundBitmapFromUri(context, pictureUri)
-        val displayName = contact?.fullName ?: LinphoneUtils.getDisplayName(message.fromAddress)
-
-        var text: String = message.contents.find { content -> content.isText }?.utf8Text ?: ""
-        if (text.isEmpty()) {
-            for (content in message.contents) {
-                text += content.name
-            }
-        }
 
         val notifiable = getNotifiableForRoom(room)
-        val notifiableMessage = NotifiableMessage(text, contact, displayName, message.time, senderAvatar = roundPicture, isOutgoing = message.isOutgoing)
-        notifiable.messages.add(notifiableMessage)
-
-        for (content in message.contents) {
-            if (content.isFile) {
-                val path = content.filePath
-                if (path != null) {
-                    val contentUri: Uri = FileUtils.getPublicFilePath(context, path)
-                    val filePath: String = contentUri.toString()
-                    val extension = FileUtils.getExtensionFromFileName(filePath)
-                    if (extension.isNotEmpty()) {
-                        val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-                        notifiableMessage.filePath = contentUri
-                        notifiableMessage.fileMime = mime
-                        Log.i("[Notifications Manager] Added file $contentUri with MIME $mime to notification")
-                    } else {
-                        Log.e("[Notifications Manager] Couldn't find extension for incoming message with file $path")
-                    }
-                }
+        if (notifiable.messages.isNotEmpty() || room.unreadMessagesCount == 1) {
+            val notifiableMessage = getNotifiableMessage(message, contact)
+            notifiable.messages.add(notifiableMessage)
+        } else {
+            for (chatMessage in room.getUnreadHistory()) {
+                val notifiableMessage = getNotifiableMessage(chatMessage, contact)
+                notifiable.messages.add(notifiableMessage)
             }
         }
 
@@ -660,15 +646,58 @@ class NotificationsManager(private val context: Context) {
         val address = room.peerAddress.asStringUriOnly()
         var notifiable: Notifiable? = chatNotificationsMap[address]
         if (notifiable == null) {
-            notifiable = Notifiable(lastNotificationId)
+            notifiable = Notifiable(getNotificationIdForChat(room))
             notifiable.myself = LinphoneUtils.getDisplayName(room.localAddress)
             notifiable.localIdentity = room.localAddress.asStringUriOnly()
             notifiable.remoteAddress = room.peerAddress.asStringUriOnly()
 
-            lastNotificationId += 1
             chatNotificationsMap[address] = notifiable
         }
         return notifiable
+    }
+
+    private fun getNotifiableMessage(message: ChatMessage, contact: Contact?): NotifiableMessage {
+        val pictureUri = contact?.getContactThumbnailPictureUri()
+        val roundPicture = ImageUtils.getRoundBitmapFromUri(context, pictureUri)
+        val displayName = contact?.fullName ?: LinphoneUtils.getDisplayName(message.fromAddress)
+
+        var text: String = message.contents.find { content -> content.isText }?.utf8Text ?: ""
+        if (text.isEmpty()) {
+            for (content in message.contents) {
+                text += content.name
+            }
+        }
+
+        val notifiableMessage = NotifiableMessage(
+            text,
+            contact,
+            displayName,
+            message.time,
+            senderAvatar = roundPicture,
+            isOutgoing = message.isOutgoing
+        )
+
+        for (content in message.contents) {
+            if (content.isFile) {
+                val path = content.filePath
+                if (path != null) {
+                    val contentUri: Uri = FileUtils.getPublicFilePath(context, path)
+                    val filePath: String = contentUri.toString()
+                    val extension = FileUtils.getExtensionFromFileName(filePath)
+                    if (extension.isNotEmpty()) {
+                        val mime =
+                            MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+                        notifiableMessage.filePath = contentUri
+                        notifiableMessage.fileMime = mime
+                        Log.i("[Notifications Manager] Added file $contentUri with MIME $mime to notification")
+                    } else {
+                        Log.e("[Notifications Manager] Couldn't find extension for incoming message with file $path")
+                    }
+                }
+            }
+        }
+
+        return notifiableMessage
     }
 
     private fun displayReplyMessageNotification(message: ChatMessage, notifiable: Notifiable) {
