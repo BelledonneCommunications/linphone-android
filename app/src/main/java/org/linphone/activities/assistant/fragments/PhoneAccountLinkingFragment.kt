@@ -71,30 +71,39 @@ class PhoneAccountLinkingFragment : AbstractPhoneFragment<AssistantPhoneAccountL
             CountryPickerFragment(viewModel).show(childFragmentManager, "CountryPicker")
         }
 
-        viewModel.goToSmsValidationEvent.observe(viewLifecycleOwner, {
-            it.consume {
-                val args = Bundle()
-                args.putBoolean("IsLinking", true)
-                args.putString("PhoneNumber", viewModel.accountCreator.phoneNumber)
-                navigateToPhoneAccountValidation(args)
-            }
-        })
-
-        viewModel.leaveAssistantEvent.observe(viewLifecycleOwner, {
-            it.consume {
-                if (LinphoneApplication.coreContext.core.isEchoCancellerCalibrationRequired) {
-                    navigateToEchoCancellerCalibration()
-                } else {
-                    requireActivity().finish()
+        viewModel.goToSmsValidationEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume {
+                    val args = Bundle()
+                    args.putBoolean("IsLinking", true)
+                    args.putString("PhoneNumber", viewModel.accountCreator.phoneNumber)
+                    navigateToPhoneAccountValidation(args)
                 }
             }
-        })
+        )
 
-        viewModel.onErrorEvent.observe(viewLifecycleOwner, {
-            it.consume { message ->
-                (requireActivity() as AssistantActivity).showSnackBar(message)
+        viewModel.leaveAssistantEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume {
+                    if (LinphoneApplication.coreContext.core.isEchoCancellerCalibrationRequired) {
+                        navigateToEchoCancellerCalibration()
+                    } else {
+                        requireActivity().finish()
+                    }
+                }
             }
-        })
+        )
+
+        viewModel.onErrorEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume { message ->
+                    (requireActivity() as AssistantActivity).showSnackBar(message)
+                }
+            }
+        )
 
         checkPermission()
     }

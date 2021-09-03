@@ -73,7 +73,8 @@ class ChatBubbleActivity : GenericActivity() {
             val localAddress = Factory.instance().createAddress(localSipUri)
             val remoteSipAddress = Factory.instance().createAddress(remoteSipUri)
             chatRoom = coreContext.core.searchChatRoom(
-                null, localAddress, remoteSipAddress, arrayOfNulls(
+                null, localAddress, remoteSipAddress,
+                arrayOfNulls(
                     0
                 )
             )
@@ -114,27 +115,36 @@ class ChatBubbleActivity : GenericActivity() {
         // Disable context menu on each message
         adapter.disableContextMenu()
 
-        adapter.openContentEvent.observe(this, {
-            it.consume { content ->
-                if (content.isFileEncrypted) {
-                    Toast.makeText(this, R.string.chat_bubble_cant_open_enrypted_file, Toast.LENGTH_LONG).show()
-                } else {
-                    FileUtils.openFileInThirdPartyApp(this, content.filePath.orEmpty(), true)
+        adapter.openContentEvent.observe(
+            this,
+            {
+                it.consume { content ->
+                    if (content.isFileEncrypted) {
+                        Toast.makeText(this, R.string.chat_bubble_cant_open_enrypted_file, Toast.LENGTH_LONG).show()
+                    } else {
+                        FileUtils.openFileInThirdPartyApp(this, content.filePath.orEmpty(), true)
+                    }
                 }
             }
-        })
+        )
 
         val layoutManager = LinearLayoutManager(this)
         layoutManager.stackFromEnd = true
         binding.chatMessagesList.layoutManager = layoutManager
 
-        listViewModel.events.observe(this, { events ->
-            adapter.submitList(events)
-        })
+        listViewModel.events.observe(
+            this,
+            { events ->
+                adapter.submitList(events)
+            }
+        )
 
-        chatSendingViewModel.textToSend.observe(this, {
-            chatSendingViewModel.onTextToSendChanged(it)
-        })
+        chatSendingViewModel.textToSend.observe(
+            this,
+            {
+                chatSendingViewModel.onTextToSendChanged(it)
+            }
+        )
 
         binding.setOpenAppClickListener {
             val intent = Intent(this, MainActivity::class.java)
