@@ -627,7 +627,7 @@ class NotificationsManager(private val context: Context) {
             val notifiableMessage = getNotifiableMessage(message, contact)
             notifiable.messages.add(notifiableMessage)
         } else {
-            for (chatMessage in room.getUnreadHistory()) {
+            for (chatMessage in room.unreadHistory) {
                 val notifiableMessage = getNotifiableMessage(chatMessage, contact)
                 notifiable.messages.add(notifiableMessage)
             }
