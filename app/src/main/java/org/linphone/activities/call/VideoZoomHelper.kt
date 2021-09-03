@@ -39,26 +39,29 @@ class VideoZoomHelper(context: Context, private var videoDisplayView: View) : Ge
     init {
         val gestureDetector = GestureDetector(context, this)
 
-        scaleDetector = ScaleGestureDetector(context, object :
-            ScaleGestureDetector.SimpleOnScaleGestureListener() {
-            override fun onScale(detector: ScaleGestureDetector): Boolean {
-                zoomFactor *= detector.scaleFactor
-                // Don't let the object get too small or too large.
-                // Zoom to make the video fill the screen vertically
-                val portraitZoomFactor = videoDisplayView.height.toFloat() / (3 * videoDisplayView.width / 4)
-                // Zoom to make the video fill the screen horizontally
-                val landscapeZoomFactor = videoDisplayView.width.toFloat() / (3 * videoDisplayView.height / 4)
-                zoomFactor = max(0.1f, min(zoomFactor, max(portraitZoomFactor, landscapeZoomFactor)))
+        scaleDetector = ScaleGestureDetector(
+            context,
+            object :
+                ScaleGestureDetector.SimpleOnScaleGestureListener() {
+                override fun onScale(detector: ScaleGestureDetector): Boolean {
+                    zoomFactor *= detector.scaleFactor
+                    // Don't let the object get too small or too large.
+                    // Zoom to make the video fill the screen vertically
+                    val portraitZoomFactor = videoDisplayView.height.toFloat() / (3 * videoDisplayView.width / 4)
+                    // Zoom to make the video fill the screen horizontally
+                    val landscapeZoomFactor = videoDisplayView.width.toFloat() / (3 * videoDisplayView.height / 4)
+                    zoomFactor = max(0.1f, min(zoomFactor, max(portraitZoomFactor, landscapeZoomFactor)))
 
-                val currentCall: Call? = coreContext.core.currentCall
-                if (currentCall != null) {
-                    currentCall.zoom(zoomFactor, zoomCenterX, zoomCenterY)
-                    return true
+                    val currentCall: Call? = coreContext.core.currentCall
+                    if (currentCall != null) {
+                        currentCall.zoom(zoomFactor, zoomCenterX, zoomCenterY)
+                        return true
+                    }
+
+                    return false
                 }
-
-                return false
             }
-        })
+        )
 
         videoDisplayView.setOnTouchListener { _, event ->
             val currentZoomFactor = zoomFactor

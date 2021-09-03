@@ -153,9 +153,12 @@ class ChatMessagesListAdapter(
 
                     // This is for item selection through ListTopBarFragment
                     selectionListViewModel = selectionViewModel
-                    selectionViewModel.isEditionEnabled.observe(viewLifecycleOwner, {
-                        position = adapterPosition
-                    })
+                    selectionViewModel.isEditionEnabled.observe(
+                        viewLifecycleOwner,
+                        {
+                            position = adapterPosition
+                        }
+                    )
 
                     setClickListener {
                         if (selectionViewModel.isEditionEnabled.value == true) {
@@ -213,7 +216,8 @@ class ChatMessagesListAdapter(
                         val itemSize = AppUtils.getDimension(R.dimen.chat_message_popup_item_height).toInt()
                         var totalSize = itemSize * 7
                         if (chatMessage.chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) ||
-                                chatMessage.state == ChatMessage.State.NotDelivered) { // No message id
+                            chatMessage.state == ChatMessage.State.NotDelivered
+                        ) { // No message id
                             popupView.imdnHidden = true
                             totalSize -= itemSize
                         }
@@ -236,7 +240,8 @@ class ChatMessagesListAdapter(
 
                         // When using WRAP_CONTENT instead of real size, fails to place the
                         // popup window above if not enough space is available below
-                        val popupWindow = PopupWindow(popupView.root,
+                        val popupWindow = PopupWindow(
+                            popupView.root,
                             AppUtils.getDimension(R.dimen.chat_message_popup_width).toInt(),
                             totalSize,
                             true
@@ -354,9 +359,12 @@ class ChatMessagesListAdapter(
 
                 // This is for item selection through ListTopBarFragment
                 selectionListViewModel = selectionViewModel
-                selectionViewModel.isEditionEnabled.observe(viewLifecycleOwner, {
-                    position = adapterPosition
-                })
+                selectionViewModel.isEditionEnabled.observe(
+                    viewLifecycleOwner,
+                    {
+                        position = adapterPosition
+                    }
+                )
 
                 binding.setClickListener {
                     if (selectionViewModel.isEditionEnabled.value == true) {
@@ -376,9 +384,10 @@ private class ChatMessageDiffCallback : DiffUtil.ItemCallback<EventLogData>() {
         newItem: EventLogData
     ): Boolean {
         return if (oldItem.eventLog.type == EventLog.Type.ConferenceChatMessage &&
-            newItem.eventLog.type == EventLog.Type.ConferenceChatMessage) {
+            newItem.eventLog.type == EventLog.Type.ConferenceChatMessage
+        ) {
             oldItem.eventLog.chatMessage?.time == newItem.eventLog.chatMessage?.time &&
-                    oldItem.eventLog.chatMessage?.isOutgoing == newItem.eventLog.chatMessage?.isOutgoing
+                oldItem.eventLog.chatMessage?.isOutgoing == newItem.eventLog.chatMessage?.isOutgoing
         } else oldItem.eventLog.notifyId == newItem.eventLog.notifyId
     }
 

@@ -97,9 +97,12 @@ class ImdnFragment : SecureFragment<ChatRoomImdnFragmentBinding>() {
         val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
         binding.participantsList.addItemDecoration(headerItemDecoration)
 
-        viewModel.participants.observe(viewLifecycleOwner, {
-            adapter.submitList(it)
-        })
+        viewModel.participants.observe(
+            viewLifecycleOwner,
+            {
+                adapter.submitList(it)
+            }
+        )
 
         binding.setBackClickListener {
             goBack()

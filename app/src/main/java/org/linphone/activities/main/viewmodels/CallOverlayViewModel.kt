@@ -49,8 +49,8 @@ class CallOverlayViewModel : ViewModel() {
 
     init {
         displayCallOverlay.value = corePreferences.showCallOverlay &&
-                !corePreferences.systemWideCallOverlay &&
-                coreContext.core.callsNb > 0
+            !corePreferences.systemWideCallOverlay &&
+            coreContext.core.callsNb > 0
 
         coreContext.core.addListener(listener)
     }

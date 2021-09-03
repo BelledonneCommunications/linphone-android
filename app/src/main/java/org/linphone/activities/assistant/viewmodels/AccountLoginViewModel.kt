@@ -84,12 +84,12 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
     private var proxyConfigToCheck: ProxyConfig? = null
 
     private val coreListener = object : CoreListenerStub() {
-            override fun onRegistrationStateChanged(
-                core: Core,
-                cfg: ProxyConfig,
-                state: RegistrationState,
-                message: String
-            ) {
+        override fun onRegistrationStateChanged(
+            core: Core,
+            cfg: ProxyConfig,
+            state: RegistrationState,
+            message: String
+        ) {
             if (cfg == proxyConfigToCheck) {
                 Log.i("[Assistant] [Account Login] Registration state is $state: $message")
                 if (state == RegistrationState.Ok) {

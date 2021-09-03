@@ -64,8 +64,8 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
 
     val fullScreenListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
-                prefs.fullScreenCallUI = newValue
-            }
+            prefs.fullScreenCallUI = newValue
+        }
     }
     val fullScreen = MutableLiveData<Boolean>()
 
