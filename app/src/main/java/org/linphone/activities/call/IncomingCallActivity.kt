@@ -78,19 +78,25 @@ class IncomingCallActivity : GenericActivity() {
         )[IncomingCallViewModel::class.java]
         binding.viewModel = viewModel
 
-        viewModel.callEndedEvent.observe(this, {
-            it.consume {
-                Log.i("[Incoming Call Activity] Call ended, finish activity")
-                finish()
+        viewModel.callEndedEvent.observe(
+            this,
+            {
+                it.consume {
+                    Log.i("[Incoming Call Activity] Call ended, finish activity")
+                    finish()
+                }
             }
-        })
+        )
 
-        viewModel.earlyMediaVideoEnabled.observe(this, {
-            if (it) {
-                Log.i("[Incoming Call Activity] Early media video being received, set native window id")
-                coreContext.core.nativeVideoWindowId = binding.remoteVideoSurface
+        viewModel.earlyMediaVideoEnabled.observe(
+            this,
+            {
+                if (it) {
+                    Log.i("[Incoming Call Activity] Early media video being received, set native window id")
+                    coreContext.core.nativeVideoWindowId = binding.remoteVideoSurface
+                }
             }
-        })
+        )
 
         val keyguardManager = getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
         val keyguardLocked = keyguardManager.isKeyguardLocked
@@ -169,7 +175,8 @@ class IncomingCallActivity : GenericActivity() {
     private fun findIncomingCall(): Call? {
         for (call in coreContext.core.calls) {
             if (call.state == Call.State.IncomingReceived ||
-                call.state == Call.State.IncomingEarlyMedia) {
+                call.state == Call.State.IncomingEarlyMedia
+            ) {
                 return call
             }
         }
