@@ -75,8 +75,6 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
     val encryptedChatRoom: Boolean = chatRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt())
 
-    val basicChatRoom: Boolean = chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt())
-
     var oneParticipantOneDevice: Boolean = false
 
     var addressToCall: Address? = null
@@ -304,7 +302,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
     }
 
     private fun updateParticipants() {
-        peerSipUri.value = if (oneToOneChatRoom && !basicChatRoom)
+        peerSipUri.value = if (oneToOneChatRoom && !chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt()))
             chatRoom.participants.firstOrNull()?.address?.asStringUriOnly()
                 ?: chatRoom.peerAddress.asStringUriOnly()
         else chatRoom.peerAddress.asStringUriOnly()
