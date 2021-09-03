@@ -75,7 +75,9 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
     val encryptedChatRoom: Boolean = chatRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt())
 
-    val basicChatRoom: Boolean = chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt())
+    val ephemeralChatRoom: Boolean = chatRoom.hasCapability(ChatRoomCapabilities.Ephemeral.toInt())
+
+    val meAdmin: Boolean = chatRoom.me?.isAdmin ?: false
 
     var oneParticipantOneDevice: Boolean = false
 
@@ -304,7 +306,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
     }
 
     private fun updateParticipants() {
-        peerSipUri.value = if (oneToOneChatRoom && !basicChatRoom)
+        peerSipUri.value = if (oneToOneChatRoom && !chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt()))
             chatRoom.participants.firstOrNull()?.address?.asStringUriOnly()
                 ?: chatRoom.peerAddress.asStringUriOnly()
         else chatRoom.peerAddress.asStringUriOnly()
