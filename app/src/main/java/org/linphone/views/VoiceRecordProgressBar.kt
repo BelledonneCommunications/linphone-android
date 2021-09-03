@@ -63,7 +63,8 @@ class VoiceRecordProgressBar : View {
         context.theme.obtainStyledAttributes(
             attrs,
             R.styleable.VoiceRecordProgressBar,
-            0, 0).apply {
+            0, 0
+        ).apply {
 
             try {
                 val drawable = getDrawable(R.styleable.VoiceRecordProgressBar_progressDrawable)

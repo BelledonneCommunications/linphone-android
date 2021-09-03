@@ -1,33 +1,24 @@
-apply plugin: 'com.android.application'
-
-apply plugin: 'kotlin-android'
-
-apply plugin: 'kotlin-kapt'
-
-apply plugin: "org.jlleitschuh.gradle.ktlint"
-
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'org.jlleitschuh.gradle.ktlint'
+}
 
 static def getPackageName() {
     return "org.linphone"
 }
 
-def firebaseEnabled() {
-    File googleFile = new File(projectDir.absolutePath +'/google-services.json')
-    return googleFile.exists()
-}
+def firebaseEnabled = new File(projectDir.absolutePath +'/google-services.json').exists()
 
-def crashlyticsEnabled() {
-    File googleFile = new File(projectDir.absolutePath +'/google-services.json')
-    File linphoneLibrary = new File(LinphoneSdkBuildDir + '/libs/')
-    File linphoneLibraryDebug = new File(LinphoneSdkBuildDir + '/libs-debug/')
-    return googleFile.exists() && linphoneLibrary.exists() && linphoneLibraryDebug.exists()
-}
+def crashlyticsEnabled = new File(projectDir.absolutePath +'/google-services.json').exists() && new File(LinphoneSdkBuildDir + '/libs/').exists() && new File(LinphoneSdkBuildDir + '/libs-debug/').exists()
 
-if (firebaseEnabled()) {
+
+if (firebaseEnabled) {
     apply plugin: 'com.google.gms.google-services'
 }
 
-if (crashlyticsEnabled()) {
+if (crashlyticsEnabled) {
     apply plugin: 'com.google.firebase.crashlytics'
 }
 
@@ -88,11 +79,11 @@ project.tasks['preBuild'].dependsOn 'getGitVersion'
 project.tasks['preBuild'].dependsOn 'linphoneSdkSource'
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion '30.0.3'
+    compileSdkVersion 31
+    buildToolsVersion '31.0.0'
     defaultConfig {
         minSdkVersion 23
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 4600
         versionName "${project.version}"
         applicationId getPackageName()
@@ -141,25 +132,22 @@ android {
             resValue "string", "file_provider", getPackageName() + ".fileprovider"
             resValue "string", "linphone_address_mime_type", "vnd.android.cursor.item/vnd." + getPackageName() + ".provider.sip_address"
 
-            if (!firebaseEnabled()) {
+            if (!firebaseEnabled) {
                 resValue "string", "gcm_defaultSenderId", "none"
             }
 
-            resValue "bool", "crashlytics_enabled", "false"
         }
 
         releaseWithCrashlytics {
             initWith release
 
-            if (crashlyticsEnabled()) {
-                resValue "bool", "crashlytics_enabled", "true"
+            resValue "bool", "crashlytics_enabled", crashlyticsEnabled.toString()
+            if (crashlyticsEnabled) {
 
                 firebaseCrashlytics {
                     nativeSymbolUploadEnabled true
                     unstrippedNativeLibsDir file(LinphoneSdkBuildDir + '/libs-debug/').toString()
                 }
-            } else {
-                resValue "bool", "crashlytics_enabled", "false"
             }
         }
 
@@ -173,19 +161,17 @@ android {
             resValue "string", "file_provider", getPackageName() + ".debug.fileprovider"
             resValue "string", "linphone_address_mime_type", "vnd.android.cursor.item/vnd." + getPackageName() + ".provider.sip_address"
 
-            if (!firebaseEnabled()) {
+            if (!firebaseEnabled) {
                 resValue "string", "gcm_defaultSenderId", "none"
             }
 
-            if (crashlyticsEnabled()) {
-                resValue "bool", "crashlytics_enabled", "true"
+            resValue "bool", "crashlytics_enabled", crashlyticsEnabled.toString()
+            if (crashlyticsEnabled) {
 
                 firebaseCrashlytics {
                     nativeSymbolUploadEnabled true
                     unstrippedNativeLibsDir file(LinphoneSdkBuildDir + '/libs-debug/').toString()
                 }
-            } else {
-                resValue "bool", "crashlytics_enabled", "false"
             }
         }
     }
@@ -245,7 +231,7 @@ dependencies {
     implementation "androidx.security:security-crypto-ktx:1.1.0-alpha03"
 
     implementation 'com.google.android.material:material:1.4.0'
-    implementation 'com.google.android:flexbox:2.0.0'
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
 
     implementation 'androidx.emoji:emoji:1.1.0'
     implementation 'androidx.emoji:emoji-bundled:1.1.0'
@@ -256,12 +242,12 @@ dependencies {
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
 
     implementation platform('com.google.firebase:firebase-bom:26.4.0')
-    if (crashlyticsEnabled()) {
+    if (crashlyticsEnabled) {
         implementation 'com.google.firebase:firebase-crashlytics-ndk'
     } else {
         compileOnly 'com.google.firebase:firebase-crashlytics-ndk'
     }
-    if (firebaseEnabled()) {
+    if (firebaseEnabled) {
         implementation 'com.google.firebase:firebase-messaging'
     }
 
@@ -291,7 +277,7 @@ ktlint {
 
 project.tasks['preBuild'].dependsOn 'ktlintFormat'
 
-if (crashlyticsEnabled()) {
+if (crashlyticsEnabled) {
     afterEvaluate {
         assembleDebug.finalizedBy(uploadCrashlyticsSymbolFileDebug)
         packageDebugBundle.finalizedBy(uploadCrashlyticsSymbolFileDebug)

@@ -79,41 +79,56 @@ class OutgoingCallActivity : ProximitySensorActivity() {
         controlsViewModel = ViewModelProvider(this).get(ControlsViewModel::class.java)
         binding.controlsViewModel = controlsViewModel
 
-        viewModel.callEndedEvent.observe(this, {
-            it.consume {
-                Log.i("[Outgoing Call Activity] Call ended, finish activity")
-                finish()
+        viewModel.callEndedEvent.observe(
+            this,
+            {
+                it.consume {
+                    Log.i("[Outgoing Call Activity] Call ended, finish activity")
+                    finish()
+                }
             }
-        })
+        )
 
-        viewModel.callConnectedEvent.observe(this, {
-            it.consume {
-                Log.i("[Outgoing Call Activity] Call connected, finish activity")
-                finish()
+        viewModel.callConnectedEvent.observe(
+            this,
+            {
+                it.consume {
+                    Log.i("[Outgoing Call Activity] Call connected, finish activity")
+                    finish()
+                }
             }
-        })
+        )
 
-        controlsViewModel.isSpeakerSelected.observe(this, {
-            enableProximitySensor(!it)
-        })
-
-        controlsViewModel.askPermissionEvent.observe(this, {
-            it.consume { permission ->
-                requestPermissions(arrayOf(permission), 0)
+        controlsViewModel.isSpeakerSelected.observe(
+            this,
+            {
+                enableProximitySensor(!it)
             }
-        })
+        )
 
-        controlsViewModel.toggleNumpadEvent.observe(this, {
-            it.consume { open ->
-                if (this::numpadAnimator.isInitialized) {
-                    if (open) {
-                        numpadAnimator.start()
-                    } else {
-                        numpadAnimator.reverse()
+        controlsViewModel.askPermissionEvent.observe(
+            this,
+            {
+                it.consume { permission ->
+                    requestPermissions(arrayOf(permission), 0)
+                }
+            }
+        )
+
+        controlsViewModel.toggleNumpadEvent.observe(
+            this,
+            {
+                it.consume { open ->
+                    if (this::numpadAnimator.isInitialized) {
+                        if (open) {
+                            numpadAnimator.start()
+                        } else {
+                            numpadAnimator.reverse()
+                        }
                     }
                 }
             }
-        })
+        )
 
         if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
             checkPermissions()
@@ -192,7 +207,8 @@ class OutgoingCallActivity : ProximitySensorActivity() {
         for (call in coreContext.core.calls) {
             if (call.state == Call.State.OutgoingInit ||
                 call.state == Call.State.OutgoingProgress ||
-                call.state == Call.State.OutgoingRinging) {
+                call.state == Call.State.OutgoingRinging
+            ) {
                 return call
             }
         }

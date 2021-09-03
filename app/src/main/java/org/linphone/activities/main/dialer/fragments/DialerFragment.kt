@@ -95,35 +95,44 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
         }
         arguments?.clear()
 
-        viewModel.enteredUri.observe(viewLifecycleOwner, {
-            if (it == corePreferences.debugPopupCode) {
-                displayDebugPopup()
-                viewModel.enteredUri.value = ""
-            }
-        })
-
-        viewModel.uploadFinishedEvent.observe(viewLifecycleOwner, {
-            it.consume { url ->
-                // To prevent being trigger when using the Send Logs button in About page
-                if (uploadLogsInitiatedByUs) {
-                    val clipboard =
-                        requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                    val clip = ClipData.newPlainText("Logs url", url)
-                    clipboard.setPrimaryClip(clip)
-
-                    val activity = requireActivity() as MainActivity
-                    activity.showSnackBar(R.string.logs_url_copied_to_clipboard)
-
-                    AppUtils.shareUploadedLogsUrl(activity, url)
+        viewModel.enteredUri.observe(
+            viewLifecycleOwner,
+            {
+                if (it == corePreferences.debugPopupCode) {
+                    displayDebugPopup()
+                    viewModel.enteredUri.value = ""
                 }
             }
-        })
+        )
 
-        viewModel.updateAvailableEvent.observe(viewLifecycleOwner, {
-            it.consume { url ->
-                displayNewVersionAvailableDialog(url)
+        viewModel.uploadFinishedEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume { url ->
+                    // To prevent being trigger when using the Send Logs button in About page
+                    if (uploadLogsInitiatedByUs) {
+                        val clipboard =
+                            requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                        val clip = ClipData.newPlainText("Logs url", url)
+                        clipboard.setPrimaryClip(clip)
+
+                        val activity = requireActivity() as MainActivity
+                        activity.showSnackBar(R.string.logs_url_copied_to_clipboard)
+
+                        AppUtils.shareUploadedLogsUrl(activity, url)
+                    }
+                }
             }
-        })
+        )
+
+        viewModel.updateAvailableEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume { url ->
+                    displayNewVersionAvailableDialog(url)
+                }
+            }
+        )
 
         Log.i("[Dialer] Pending call transfer mode = ${sharedViewModel.pendingCallTransfer}")
         viewModel.transferVisibility.value = sharedViewModel.pendingCallTransfer
@@ -204,11 +213,14 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
             dialog.dismiss()
         }
 
-        viewModel.showOkButton({
-            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-            startActivity(browserIntent)
-            dialog.dismiss()
-        }, getString(R.string.dialog_ok))
+        viewModel.showOkButton(
+            {
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                startActivity(browserIntent)
+                dialog.dismiss()
+            },
+            getString(R.string.dialog_ok)
+        )
 
         dialog.show()
     }

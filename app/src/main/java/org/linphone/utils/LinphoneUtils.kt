@@ -67,8 +67,8 @@ class LinphoneUtils {
         fun isLimeAvailable(): Boolean {
             val core = coreContext.core
             return core.limeX3DhAvailable() && core.limeX3DhEnabled() &&
-                    core.limeX3DhServerUrl != null &&
-                    core.defaultAccount?.params?.conferenceFactoryUri != null
+                core.limeX3DhServerUrl != null &&
+                core.defaultAccount?.params?.conferenceFactoryUri != null
         }
 
         fun isGroupChatAvailable(): Boolean {
@@ -143,10 +143,14 @@ class LinphoneUtils {
         }
 
         fun isCallLogMissed(callLog: CallLog): Boolean {
-            return (callLog.dir == Call.Dir.Incoming &&
-                (callLog.status == Call.Status.Missed ||
-                callLog.status == Call.Status.Aborted ||
-                callLog.status == Call.Status.EarlyAborted))
+            return (
+                callLog.dir == Call.Dir.Incoming &&
+                    (
+                        callLog.status == Call.Status.Missed ||
+                            callLog.status == Call.Status.Aborted ||
+                            callLog.status == Call.Status.EarlyAborted
+                        )
+                )
         }
 
         fun getChatRoomId(localAddress: String, remoteAddress: String): String {
