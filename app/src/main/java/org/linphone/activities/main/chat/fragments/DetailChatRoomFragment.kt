@@ -631,6 +631,23 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             totalSize -= itemSize
             popupView.ephemeralHidden = true
             totalSize -= itemSize
+        } else {
+            if (viewModel.oneToOneChatRoom) {
+                popupView.groupInfoHidden = true
+                totalSize -= itemSize
+            }
+
+            // If one participant one device, a click on security badge
+            // will directly start a call or show the dialog, so don't show this menu
+            if (viewModel.oneParticipantOneDevice) {
+                popupView.devicesHidden = true
+                totalSize -= itemSize
+            }
+
+            if (viewModel.ephemeralChatRoom && viewModel.meAdmin.value == false) {
+                popupView.ephemeralHidden = true
+                totalSize -= itemSize
+            }
         }
 
         // When using WRAP_CONTENT instead of real size, fails to place the

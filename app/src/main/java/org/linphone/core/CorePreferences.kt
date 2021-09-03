@@ -417,6 +417,9 @@ class CorePreferences constructor(private val context: Context) {
     val voiceMessagesFormatMkv: Boolean
         get() = config.getBool("app", "record_voice_messages_in_mkv_format", true)
 
+    val useEphemeralPerDeviceMode: Boolean
+        get() = config.getBool("app", "ephemeral_chat_messages_settings_per_device", false)
+
     /* Default values related */
 
     val echoCancellerCalibration: Int
