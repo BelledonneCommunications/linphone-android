@@ -110,7 +110,7 @@
 
             <ImageView
                 android:id="@+id/menu"
-                android:visibility="@{viewModel.basicChatRoom || chatSendingViewModel.isReadOnly ? View.GONE : View.VISIBLE}"
+                android:visibility="@{viewModel.basicChatRoom || (viewModel.oneToOneChatRoom &amp;&amp; !viewModel.encryptedChatRoom) || chatSendingViewModel.isReadOnly ? View.GONE : View.VISIBLE}"
                 android:onClick="@{menuClickListener}"
                 android:contentDescription="@string/content_description_show_chat_room_menu"
                 android:layout_width="0dp"
@@ -122,7 +122,7 @@
 
             <ImageView
                 android:onClick="@{editClickListener}"
-                android:visibility="@{viewModel.basicChatRoom || chatSendingViewModel.isReadOnly ? View.VISIBLE : View.GONE}"
+                android:visibility="@{viewModel.basicChatRoom || (viewModel.oneToOneChatRoom &amp;&amp; !viewModel.encryptedChatRoom) || chatSendingViewModel.isReadOnly ? View.VISIBLE : View.GONE}"
                 android:contentDescription="@string/content_description_enter_edition_mode"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
