@@ -265,9 +265,9 @@ class FileUtils {
                     context.contentResolver.openInputStream(uri)
                 Log.i(
                     "[File Utils] Trying to copy file from " +
-                            uri.toString() +
-                            " to local file " +
-                            localFile.absolutePath
+                        uri.toString() +
+                        " to local file " +
+                        localFile.absolutePath
                 )
                 coroutineScope {
                     val deferred = async { copyToFile(remoteFile, localFile) }
@@ -417,7 +417,8 @@ class FileUtils {
                     } catch (e: Exception) {
                         Log.e(
                             "[Chat Message] Couldn't get URI for file $file using file provider ${context.getString(
-                                R.string.file_provider)}"
+                                R.string.file_provider
+                            )}"
                         )
                         Uri.parse(path)
                     }

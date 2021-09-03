@@ -62,8 +62,8 @@ class IncomingCallViewModel(call: Call) : CallViewModel(call) {
         screenLocked.value = false
         inviteWithVideo.value = call.remoteParams?.videoEnabled() == true && coreContext.core.videoActivationPolicy.automaticallyAccept
         earlyMediaVideoEnabled.value = corePreferences.acceptEarlyMedia &&
-                call.state == Call.State.IncomingEarlyMedia &&
-                call.currentParams.videoEnabled()
+            call.state == Call.State.IncomingEarlyMedia &&
+            call.currentParams.videoEnabled()
     }
 
     override fun onCleared() {

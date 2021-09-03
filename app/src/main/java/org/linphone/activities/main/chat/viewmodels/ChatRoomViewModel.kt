@@ -47,7 +47,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
     override val displayName: MutableLiveData<String> = MutableLiveData<String>()
     override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
     override val showGroupChatAvatar: Boolean = chatRoom.hasCapability(ChatRoomCapabilities.Conference.toInt()) &&
-            !chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())
+        !chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())
 
     val subject = MutableLiveData<String>()
 
@@ -310,8 +310,8 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         else chatRoom.peerAddress.asStringUriOnly()
 
         oneParticipantOneDevice = chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) &&
-                chatRoom.me?.devices?.size == 1 &&
-                chatRoom.participants.firstOrNull()?.devices?.size == 1
+            chatRoom.me?.devices?.size == 1 &&
+            chatRoom.participants.firstOrNull()?.devices?.size == 1
 
         addressToCall = if (chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt()))
             chatRoom.peerAddress

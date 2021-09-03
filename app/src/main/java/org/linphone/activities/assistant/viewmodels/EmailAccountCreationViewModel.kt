@@ -158,13 +158,13 @@ class EmailAccountCreationViewModel(val accountCreator: AccountCreator) : ViewMo
 
     private fun isCreateButtonEnabled(): Boolean {
         return username.value.orEmpty().isNotEmpty() &&
-                email.value.orEmpty().isNotEmpty() &&
-                password.value.orEmpty().isNotEmpty() &&
-                passwordConfirmation.value.orEmpty().isNotEmpty() &&
-                password.value == passwordConfirmation.value &&
-                usernameError.value.orEmpty().isEmpty() &&
-                emailError.value.orEmpty().isEmpty() &&
-                passwordError.value.orEmpty().isEmpty() &&
-                passwordConfirmationError.value.orEmpty().isEmpty()
+            email.value.orEmpty().isNotEmpty() &&
+            password.value.orEmpty().isNotEmpty() &&
+            passwordConfirmation.value.orEmpty().isNotEmpty() &&
+            password.value == passwordConfirmation.value &&
+            usernameError.value.orEmpty().isEmpty() &&
+            emailError.value.orEmpty().isEmpty() &&
+            passwordError.value.orEmpty().isEmpty() &&
+            passwordConfirmationError.value.orEmpty().isEmpty()
     }
 }

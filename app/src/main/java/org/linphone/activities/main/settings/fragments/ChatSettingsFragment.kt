@@ -56,32 +56,40 @@ class ChatSettingsFragment : GenericFragment<SettingsChatFragmentBinding>() {
 
         binding.setBackClickListener { goBack() }
 
-        viewModel.launcherShortcutsEvent.observe(viewLifecycleOwner, {
-            it.consume { newValue ->
-                if (newValue) {
-                    Compatibility.createShortcutsToChatRooms(requireContext())
-                } else {
-                    Compatibility.removeShortcuts(requireContext())
+        viewModel.launcherShortcutsEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume { newValue ->
+                    if (newValue) {
+                        Compatibility.createShortcutsToChatRooms(requireContext())
+                    } else {
+                        Compatibility.removeShortcuts(requireContext())
+                    }
                 }
             }
-        })
+        )
 
-        viewModel.goToAndroidNotificationSettingsEvent.observe(viewLifecycleOwner, { it.consume {
-            if (Build.VERSION.SDK_INT >= Version.API26_O_80) {
-                val i = Intent()
-                i.action = Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS
-                i.putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().packageName)
-                i.putExtra(
-                    Settings.EXTRA_CHANNEL_ID,
-                    getString(R.string.notification_channel_chat_id)
-                )
-                i.addCategory(Intent.CATEGORY_DEFAULT)
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-                i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
-                startActivity(i)
+        viewModel.goToAndroidNotificationSettingsEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume {
+                    if (Build.VERSION.SDK_INT >= Version.API26_O_80) {
+                        val i = Intent()
+                        i.action = Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS
+                        i.putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().packageName)
+                        i.putExtra(
+                            Settings.EXTRA_CHANNEL_ID,
+                            getString(R.string.notification_channel_chat_id)
+                        )
+                        i.addCategory(Intent.CATEGORY_DEFAULT)
+                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+                        i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
+                        startActivity(i)
+                    }
+                }
             }
-        } })
+        )
     }
 
     override fun goBack() {

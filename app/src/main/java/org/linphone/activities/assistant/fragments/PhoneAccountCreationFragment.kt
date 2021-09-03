@@ -56,20 +56,26 @@ class PhoneAccountCreationFragment : AbstractPhoneFragment<AssistantPhoneAccount
             CountryPickerFragment(viewModel).show(childFragmentManager, "CountryPicker")
         }
 
-        viewModel.goToSmsValidationEvent.observe(viewLifecycleOwner, {
-            it.consume {
-                val args = Bundle()
-                args.putBoolean("IsCreation", true)
-                args.putString("PhoneNumber", viewModel.accountCreator.phoneNumber)
-                navigateToPhoneAccountValidation(args)
+        viewModel.goToSmsValidationEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume {
+                    val args = Bundle()
+                    args.putBoolean("IsCreation", true)
+                    args.putString("PhoneNumber", viewModel.accountCreator.phoneNumber)
+                    navigateToPhoneAccountValidation(args)
+                }
             }
-        })
+        )
 
-        viewModel.onErrorEvent.observe(viewLifecycleOwner, {
-            it.consume { message ->
-                (requireActivity() as AssistantActivity).showSnackBar(message)
+        viewModel.onErrorEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume { message ->
+                    (requireActivity() as AssistantActivity).showSnackBar(message)
+                }
             }
-        })
+        )
 
         checkPermission()
     }
