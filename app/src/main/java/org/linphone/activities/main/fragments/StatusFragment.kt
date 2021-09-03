@@ -49,13 +49,16 @@ class StatusFragment : GenericFragment<StatusFragmentBinding>() {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         }
 
-        sharedViewModel.accountRemoved.observe(viewLifecycleOwner, {
-            Log.i("[Status Fragment] An account was removed, update default account state")
-            val defaultAccount = coreContext.core.defaultAccount
-            if (defaultAccount != null) {
-                viewModel.updateDefaultAccountRegistrationStatus(defaultAccount.state)
+        sharedViewModel.accountRemoved.observe(
+            viewLifecycleOwner,
+            {
+                Log.i("[Status Fragment] An account was removed, update default account state")
+                val defaultAccount = coreContext.core.defaultAccount
+                if (defaultAccount != null) {
+                    viewModel.updateDefaultAccountRegistrationStatus(defaultAccount.state)
+                }
             }
-        })
+        )
 
         binding.setMenuClickListener {
             sharedViewModel.toggleDrawerEvent.value = Event(true)

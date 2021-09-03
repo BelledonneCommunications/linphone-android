@@ -123,15 +123,18 @@ class ControlsFadingViewModel : ViewModel() {
         timer?.cancel()
 
         timer = Timer("Hide UI controls scheduler")
-        timer?.schedule(object : TimerTask() {
-            override fun run() {
-                viewModelScope.launch {
-                    withContext(Dispatchers.Main) {
-                        val videoEnabled = coreContext.isVideoCallOrConferenceActive()
-                        areControlsHidden.postValue(videoEnabled)
+        timer?.schedule(
+            object : TimerTask() {
+                override fun run() {
+                    viewModelScope.launch {
+                        withContext(Dispatchers.Main) {
+                            val videoEnabled = coreContext.isVideoCallOrConferenceActive()
+                            areControlsHidden.postValue(videoEnabled)
+                        }
                     }
                 }
-            }
-        }, 3000)
+            },
+            3000
+        )
     }
 }

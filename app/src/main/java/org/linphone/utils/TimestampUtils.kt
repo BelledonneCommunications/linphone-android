@@ -93,8 +93,8 @@ class TimestampUtils {
             cal2: Calendar
         ): Boolean {
             return cal1[Calendar.ERA] == cal2[Calendar.ERA] &&
-                    cal1[Calendar.YEAR] == cal2[Calendar.YEAR] &&
-                    cal1[Calendar.DAY_OF_YEAR] == cal2[Calendar.DAY_OF_YEAR]
+                cal1[Calendar.YEAR] == cal2[Calendar.YEAR] &&
+                cal1[Calendar.DAY_OF_YEAR] == cal2[Calendar.DAY_OF_YEAR]
         }
 
         private fun isSameYear(
@@ -102,7 +102,7 @@ class TimestampUtils {
             cal2: Calendar
         ): Boolean {
             return cal1[Calendar.ERA] == cal2[Calendar.ERA] &&
-                    cal1[Calendar.YEAR] == cal2[Calendar.YEAR]
+                cal1[Calendar.YEAR] == cal2[Calendar.YEAR]
         }
     }
 }
