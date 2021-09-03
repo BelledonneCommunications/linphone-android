@@ -47,7 +47,7 @@ class ChatMessageContentData(
 
 ) {
     var listener: OnContentClickedListener? = null
-    
+
     val isOutgoing = chatMessage.isOutgoing
 
     val isImage = MutableLiveData<Boolean>()
@@ -214,7 +214,7 @@ class ChatMessageContentData(
                 isVoiceRecording.value = isVoiceRecord
 
                 if (isVoiceRecord) {
-                    val duration = content.fileDuration// duration is in ms
+                    val duration = content.fileDuration // duration is in ms
                     voiceRecordDuration.value = duration
                     formattedDuration.value = SimpleDateFormat("mm:ss", Locale.getDefault()).format(duration)
                     Log.i("[Voice Recording] Duration is ${voiceRecordDuration.value} ($duration)")

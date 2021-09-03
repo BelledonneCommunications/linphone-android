@@ -78,35 +78,44 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
         )[ContactViewModel::class.java]
         binding.viewModel = viewModel
 
-        viewModel.sendSmsToEvent.observe(viewLifecycleOwner, {
-            it.consume { number ->
-                sendSms(number)
-            }
-        })
-
-        viewModel.startCallToEvent.observe(viewLifecycleOwner, {
-            it.consume { address ->
-                if (coreContext.core.callsNb > 0) {
-                    Log.i("[Contact] Starting dialer with pre-filled URI ${address.asStringUriOnly()}, is transfer? ${sharedViewModel.pendingCallTransfer}")
-                    val args = Bundle()
-                    args.putString("URI", address.asStringUriOnly())
-                    args.putBoolean("Transfer", sharedViewModel.pendingCallTransfer)
-                    args.putBoolean("SkipAutoCallStart", true) // If auto start call setting is enabled, ignore it
-                    navigateToDialer(args)
-                } else {
-                    coreContext.startCall(address)
+        viewModel.sendSmsToEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume { number ->
+                    sendSms(number)
                 }
             }
-        })
+        )
 
-        viewModel.chatRoomCreatedEvent.observe(viewLifecycleOwner, {
-            it.consume { chatRoom ->
-                val args = Bundle()
-                args.putString("LocalSipUri", chatRoom.localAddress.asStringUriOnly())
-                args.putString("RemoteSipUri", chatRoom.peerAddress.asStringUriOnly())
-                navigateToChatRoom(args)
+        viewModel.startCallToEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume { address ->
+                    if (coreContext.core.callsNb > 0) {
+                        Log.i("[Contact] Starting dialer with pre-filled URI ${address.asStringUriOnly()}, is transfer? ${sharedViewModel.pendingCallTransfer}")
+                        val args = Bundle()
+                        args.putString("URI", address.asStringUriOnly())
+                        args.putBoolean("Transfer", sharedViewModel.pendingCallTransfer)
+                        args.putBoolean("SkipAutoCallStart", true) // If auto start call setting is enabled, ignore it
+                        navigateToDialer(args)
+                    } else {
+                        coreContext.startCall(address)
+                    }
+                }
             }
-        })
+        )
+
+        viewModel.chatRoomCreatedEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume { chatRoom ->
+                    val args = Bundle()
+                    args.putString("LocalSipUri", chatRoom.localAddress.asStringUriOnly())
+                    args.putString("RemoteSipUri", chatRoom.peerAddress.asStringUriOnly())
+                    navigateToChatRoom(args)
+                }
+            }
+        )
 
         binding.setBackClickListener {
             goBack()
@@ -120,11 +129,14 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
             confirmContactRemoval()
         }
 
-        viewModel.onErrorEvent.observe(viewLifecycleOwner, {
-            it.consume { messageResourceId ->
-                (activity as MainActivity).showSnackBar(messageResourceId)
+        viewModel.onErrorEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume { messageResourceId ->
+                    (activity as MainActivity).showSnackBar(messageResourceId)
+                }
             }
-        })
+        )
     }
 
     override fun goBack() {
@@ -143,11 +155,14 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
             dialog.dismiss()
         }
 
-        dialogViewModel.showDeleteButton({
-            viewModel.deleteContact()
-            dialog.dismiss()
-            goBack()
-        }, getString(R.string.dialog_delete))
+        dialogViewModel.showDeleteButton(
+            {
+                viewModel.deleteContact()
+                dialog.dismiss()
+                goBack()
+            },
+            getString(R.string.dialog_delete)
+        )
 
         dialog.show()
     }
