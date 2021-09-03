@@ -75,6 +75,10 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
     val encryptedChatRoom: Boolean = chatRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt())
 
+    val ephemeralChatRoom: Boolean = chatRoom.hasCapability(ChatRoomCapabilities.Ephemeral.toInt())
+
+    val meAdmin: Boolean = chatRoom.me?.isAdmin ?: false
+
     var oneParticipantOneDevice: Boolean = false
 
     var addressToCall: Address? = null

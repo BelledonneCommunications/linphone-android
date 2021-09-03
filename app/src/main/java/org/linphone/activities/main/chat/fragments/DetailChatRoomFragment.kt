@@ -625,6 +625,11 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             totalSize -= itemSize
             popupView.ephemeralHidden = true
             totalSize -= itemSize
+        } else {
+            if (viewModel.ephemeralChatRoom && !viewModel.meAdmin) {
+                popupView.ephemeralHidden = true
+                totalSize -= itemSize
+            }
         }
 
         // When using WRAP_CONTENT instead of real size, fails to place the
