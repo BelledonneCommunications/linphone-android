@@ -166,12 +166,15 @@ class ContactEditorViewModel(val c: Contact?) : ViewModel(), ContactDataInterfac
         }
 
         when (orientation) {
-            ExifInterface.ORIENTATION_ROTATE_90 -> image =
-                ImageUtils.rotateImage(image, 90f)
-            ExifInterface.ORIENTATION_ROTATE_180 -> image =
-                ImageUtils.rotateImage(image, 180f)
-            ExifInterface.ORIENTATION_ROTATE_270 -> image =
-                ImageUtils.rotateImage(image, 270f)
+            ExifInterface.ORIENTATION_ROTATE_90 ->
+                image =
+                    ImageUtils.rotateImage(image, 90f)
+            ExifInterface.ORIENTATION_ROTATE_180 ->
+                image =
+                    ImageUtils.rotateImage(image, 180f)
+            ExifInterface.ORIENTATION_ROTATE_270 ->
+                image =
+                    ImageUtils.rotateImage(image, 270f)
         }
 
         val stream = ByteArrayOutputStream()

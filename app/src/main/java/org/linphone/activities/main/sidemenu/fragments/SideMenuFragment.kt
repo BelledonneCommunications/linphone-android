@@ -67,10 +67,13 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         }
 
-        sharedViewModel.accountRemoved.observe(viewLifecycleOwner, {
-            Log.i("[Side Menu] Account removed, update accounts list")
-            viewModel.updateAccountsList()
-        })
+        sharedViewModel.accountRemoved.observe(
+            viewLifecycleOwner,
+            {
+                Log.i("[Side Menu] Account removed, update accounts list")
+                viewModel.updateAccountsList()
+            }
+        )
 
         viewModel.accountsSettingsListener = object : SettingListenerStub() {
             override fun onAccountClicked(identity: String) {

@@ -80,25 +80,31 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
 
         view.doOnPreDraw { sharedViewModel.canSlidingPaneBeClosed.value = binding.slidingPane.isSlideable }
 
-        sharedViewModel.closeSlidingPaneEvent.observe(viewLifecycleOwner, {
-            it.consume {
-                if (!binding.slidingPane.closePane()) {
-                    goBack()
-                }
-            }
-        })
-        sharedViewModel.layoutChangedEvent.observe(viewLifecycleOwner, {
-            it.consume {
-                sharedViewModel.canSlidingPaneBeClosed.value = binding.slidingPane.isSlideable
-                if (binding.slidingPane.isSlideable) {
-                    val navHostFragment = childFragmentManager.findFragmentById(R.id.contacts_nav_container) as NavHostFragment
-                    if (navHostFragment.navController.currentDestination?.id == R.id.emptyContactFragment) {
-                        Log.i("[Contacts] Foldable device has been folded, closing side pane with empty fragment")
-                        binding.slidingPane.closePane()
+        sharedViewModel.closeSlidingPaneEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume {
+                    if (!binding.slidingPane.closePane()) {
+                        goBack()
                     }
                 }
             }
-        })
+        )
+        sharedViewModel.layoutChangedEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume {
+                    sharedViewModel.canSlidingPaneBeClosed.value = binding.slidingPane.isSlideable
+                    if (binding.slidingPane.isSlideable) {
+                        val navHostFragment = childFragmentManager.findFragmentById(R.id.contacts_nav_container) as NavHostFragment
+                        if (navHostFragment.navController.currentDestination?.id == R.id.emptyContactFragment) {
+                            Log.i("[Contacts] Foldable device has been folded, closing side pane with empty fragment")
+                            binding.slidingPane.closePane()
+                        }
+                    }
+                }
+            }
+        )
         binding.slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
         /*binding.slidingPane.addPanelSlideListener(object : SlidingPaneLayout.PanelSlideListener {
             override fun onPanelSlide(panel: View, slideOffset: Float) { }
@@ -155,16 +161,20 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
                     dialog.dismiss()
                 }
 
-                viewModel.showDeleteButton({
-                    val deletedContact = adapter.currentList[viewHolder.adapterPosition].contactInternal
-                    listViewModel.deleteContact(deletedContact)
-                    if (!binding.slidingPane.isSlideable &&
-                        deletedContact == sharedViewModel.selectedContact.value) {
-                        Log.i("[Contacts] Currently displayed contact has been deleted, removing detail fragment")
-                        clearDisplayedContact()
-                    }
-                    dialog.dismiss()
-                }, getString(R.string.dialog_delete))
+                viewModel.showDeleteButton(
+                    {
+                        val deletedContact = adapter.currentList[viewHolder.adapterPosition].contactInternal
+                        listViewModel.deleteContact(deletedContact)
+                        if (!binding.slidingPane.isSlideable &&
+                            deletedContact == sharedViewModel.selectedContact.value
+                        ) {
+                            Log.i("[Contacts] Currently displayed contact has been deleted, removing detail fragment")
+                            clearDisplayedContact()
+                        }
+                        dialog.dismiss()
+                    },
+                    getString(R.string.dialog_delete)
+                )
 
                 dialog.show()
             }
@@ -179,35 +189,41 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
         val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
         binding.contactsList.addItemDecoration(headerItemDecoration)
 
-        adapter.selectedContactEvent.observe(viewLifecycleOwner, {
-            it.consume { contact ->
-                Log.i("[Contacts] Selected item in list changed: $contact")
-                sharedViewModel.selectedContact.value = contact
-                listViewModel.filter.value = ""
+        adapter.selectedContactEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume { contact ->
+                    Log.i("[Contacts] Selected item in list changed: $contact")
+                    sharedViewModel.selectedContact.value = contact
+                    listViewModel.filter.value = ""
 
-                binding.slidingPane.openPane()
-                if (editOnClick) {
-                    navigateToContactEditor(sipUriToAdd)
-                    editOnClick = false
-                    sipUriToAdd = null
-                } else {
-                    navigateToContact()
+                    binding.slidingPane.openPane()
+                    if (editOnClick) {
+                        navigateToContactEditor(sipUriToAdd)
+                        editOnClick = false
+                        sipUriToAdd = null
+                    } else {
+                        navigateToContact()
+                    }
                 }
             }
-        })
+        )
 
-        listViewModel.contactsList.observe(viewLifecycleOwner, {
-            val id = contactIdToDisplay
-            if (id != null) {
-                val contact = coreContext.contactsManager.findContactById(id)
-                if (contact != null) {
-                    contactIdToDisplay = null
-                    Log.i("[Contacts] Found matching contact $contact after callback")
-                    adapter.selectedContactEvent.value = Event(contact)
+        listViewModel.contactsList.observe(
+            viewLifecycleOwner,
+            {
+                val id = contactIdToDisplay
+                if (id != null) {
+                    val contact = coreContext.contactsManager.findContactById(id)
+                    if (contact != null) {
+                        contactIdToDisplay = null
+                        Log.i("[Contacts] Found matching contact $contact after callback")
+                        adapter.selectedContactEvent.value = Event(contact)
+                    }
                 }
+                adapter.submitList(it)
             }
-            adapter.submitList(it)
-        })
+        )
 
         binding.setAllContactsToggleClickListener {
             listViewModel.sipContactsSelected.value = false
@@ -216,13 +232,19 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
             listViewModel.sipContactsSelected.value = true
         }
 
-        listViewModel.sipContactsSelected.observe(viewLifecycleOwner, {
-            listViewModel.updateContactsList()
-        })
+        listViewModel.sipContactsSelected.observe(
+            viewLifecycleOwner,
+            {
+                listViewModel.updateContactsList()
+            }
+        )
 
-        listViewModel.filter.observe(viewLifecycleOwner, {
-            listViewModel.updateContactsList()
-        })
+        listViewModel.filter.observe(
+            viewLifecycleOwner,
+            {
+                listViewModel.updateContactsList()
+            }
+        )
 
         binding.setNewContactClickListener {
             // Remove any previously selected contact
