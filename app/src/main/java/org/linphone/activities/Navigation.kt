@@ -448,7 +448,8 @@ internal fun ChatRoomCreationFragment.navigateToEmptyChatRoom() {
 
 internal fun GroupInfoFragment.navigateToChatRoomCreation(args: Bundle?) {
     if (findNavController().currentDestination?.id == R.id.groupInfoFragment) {
-        findNavController().navigate(R.id.action_groupInfoFragment_to_chatRoomCreationFragment,
+        findNavController().navigate(
+            R.id.action_groupInfoFragment_to_chatRoomCreationFragment,
             args,
             getLeftToRightAnimationNavOptions(R.id.chatRoomCreationFragment, true)
         )

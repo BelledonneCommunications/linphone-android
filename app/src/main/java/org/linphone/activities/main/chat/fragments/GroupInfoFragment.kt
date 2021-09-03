@@ -74,7 +74,7 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
         adapter = GroupInfoParticipantsAdapter(
             viewLifecycleOwner,
             chatRoom?.hasCapability(ChatRoomCapabilities.Encrypted.toInt()) ?: viewModel.isEncrypted.value == true
-            )
+        )
         binding.participants.adapter = adapter
 
         val layoutManager = LinearLayoutManager(activity)
@@ -83,25 +83,37 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
         // Divider between items
         binding.participants.addItemDecoration(AppUtils.getDividerDecoration(requireContext(), layoutManager))
 
-        viewModel.participants.observe(viewLifecycleOwner, {
-            adapter.submitList(it)
-        })
-
-        viewModel.isMeAdmin.observe(viewLifecycleOwner, { isMeAdmin ->
-            adapter.showAdminControls(isMeAdmin && chatRoom != null)
-        })
-
-        viewModel.meAdminChangedEvent.observe(viewLifecycleOwner, {
-            it.consume { isMeAdmin ->
-                showMeAdminStateChanged(isMeAdmin)
+        viewModel.participants.observe(
+            viewLifecycleOwner,
+            {
+                adapter.submitList(it)
             }
-        })
+        )
 
-        adapter.participantRemovedEvent.observe(viewLifecycleOwner, {
-            it.consume { participant ->
-                viewModel.removeParticipant(participant)
+        viewModel.isMeAdmin.observe(
+            viewLifecycleOwner,
+            { isMeAdmin ->
+                adapter.showAdminControls(isMeAdmin && chatRoom != null)
             }
-        })
+        )
+
+        viewModel.meAdminChangedEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume { isMeAdmin ->
+                    showMeAdminStateChanged(isMeAdmin)
+                }
+            }
+        )
+
+        adapter.participantRemovedEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume { participant ->
+                    viewModel.removeParticipant(participant)
+                }
+            }
+        )
 
         addParticipantsFromSharedViewModel()
 
@@ -109,12 +121,15 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
             goBack()
         }
 
-        viewModel.createdChatRoomEvent.observe(viewLifecycleOwner, {
-            it.consume { chatRoom ->
-                sharedViewModel.selectedChatRoom.value = chatRoom
-                navigateToChatRoom(AppUtils.createBundleWithSharedTextAndFiles(sharedViewModel))
+        viewModel.createdChatRoomEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume { chatRoom ->
+                    sharedViewModel.selectedChatRoom.value = chatRoom
+                    navigateToChatRoom(AppUtils.createBundleWithSharedTextAndFiles(sharedViewModel))
+                }
             }
-        })
+        )
 
         binding.setNextClickListener {
             if (viewModel.chatRoom != null) {
@@ -143,10 +158,13 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
             val dialogViewModel = DialogViewModel(getString(R.string.chat_room_group_info_leave_dialog_message))
             val dialog: Dialog = DialogUtils.getDialog(requireContext(), dialogViewModel)
 
-            dialogViewModel.showDeleteButton({
-                viewModel.leaveGroup()
-                dialog.dismiss()
-            }, getString(R.string.chat_room_group_info_leave_dialog_button))
+            dialogViewModel.showDeleteButton(
+                {
+                    viewModel.leaveGroup()
+                    dialog.dismiss()
+                },
+                getString(R.string.chat_room_group_info_leave_dialog_button)
+            )
 
             dialogViewModel.showCancelButton {
                 dialog.dismiss()
@@ -155,11 +173,14 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
             dialog.show()
         }
 
-        viewModel.onErrorEvent.observe(viewLifecycleOwner, {
-            it.consume { messageResourceId ->
-                (activity as MainActivity).showSnackBar(messageResourceId)
+        viewModel.onErrorEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume { messageResourceId ->
+                    (activity as MainActivity).showSnackBar(messageResourceId)
+                }
             }
-        })
+        )
     }
 
     private fun addParticipantsFromSharedViewModel() {
@@ -175,9 +196,11 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
                 if (exists != null) {
                     list.add(exists)
                 } else {
-                    list.add(GroupInfoParticipantData(
-                        GroupChatRoomMember(address, false, hasLimeX3DHCapability = viewModel.isEncrypted.value == true)
-                    ))
+                    list.add(
+                        GroupInfoParticipantData(
+                            GroupChatRoomMember(address, false, hasLimeX3DHCapability = viewModel.isEncrypted.value == true)
+                        )
+                    )
                 }
             }
 

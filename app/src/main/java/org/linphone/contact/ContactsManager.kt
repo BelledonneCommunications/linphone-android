@@ -315,7 +315,8 @@ class ContactsManager(private val context: Context) {
         val accounts = accountManager.getAccountsByType(context.getString(R.string.sync_account_type))
         if (accounts.isEmpty()) {
             val newAccount = Account(
-                context.getString(R.string.sync_account_name), context.getString(
+                context.getString(R.string.sync_account_name),
+                context.getString(
                     R.string.sync_account_type
                 )
             )

@@ -72,9 +72,12 @@ class CallLogsListAdapter(
 
                 // This is for item selection through ListTopBarFragment
                 selectionListViewModel = selectionViewModel
-                selectionViewModel.isEditionEnabled.observe(viewLifecycleOwner, {
-                    position = adapterPosition
-                })
+                selectionViewModel.isEditionEnabled.observe(
+                    viewLifecycleOwner,
+                    {
+                        position = adapterPosition
+                    }
+                )
 
                 setClickListener {
                     if (selectionViewModel.isEditionEnabled.value == true) {

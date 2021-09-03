@@ -30,7 +30,8 @@ import org.linphone.core.DialPlan
 import org.linphone.core.tools.Log
 import org.linphone.utils.PhoneNumberUtils
 
-abstract class AbstractPhoneViewModel(val accountCreator: AccountCreator) : ViewModel(),
+abstract class AbstractPhoneViewModel(val accountCreator: AccountCreator) :
+    ViewModel(),
     CountryPickerFragment.CountryPickedListener {
 
     val prefix = MutableLiveData<String>()

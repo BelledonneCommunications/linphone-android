@@ -60,19 +60,25 @@ class AudioSettingsFragment : GenericFragment<SettingsAudioFragmentBinding>() {
 
         binding.setBackClickListener { goBack() }
 
-        viewModel.askAudioRecordPermissionForEchoCancellerCalibrationEvent.observe(viewLifecycleOwner, {
-            it.consume {
-                Log.i("[Audio Settings] Asking for RECORD_AUDIO permission for echo canceller calibration")
-                requestPermissions(arrayOf(android.Manifest.permission.RECORD_AUDIO), 1)
+        viewModel.askAudioRecordPermissionForEchoCancellerCalibrationEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume {
+                    Log.i("[Audio Settings] Asking for RECORD_AUDIO permission for echo canceller calibration")
+                    requestPermissions(arrayOf(android.Manifest.permission.RECORD_AUDIO), 1)
+                }
             }
-        })
+        )
 
-        viewModel.askAudioRecordPermissionForEchoTesterEvent.observe(viewLifecycleOwner, {
-            it.consume {
-                Log.i("[Audio Settings] Asking for RECORD_AUDIO permission for echo tester")
-                requestPermissions(arrayOf(android.Manifest.permission.RECORD_AUDIO), 2)
+        viewModel.askAudioRecordPermissionForEchoTesterEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume {
+                    Log.i("[Audio Settings] Asking for RECORD_AUDIO permission for echo tester")
+                    requestPermissions(arrayOf(android.Manifest.permission.RECORD_AUDIO), 2)
+                }
             }
-        })
+        )
 
         initAudioCodecsList()
 
@@ -107,11 +113,14 @@ class AudioSettingsFragment : GenericFragment<SettingsAudioFragmentBinding>() {
             binding.setVariable(BR.title, payload.mimeType)
             binding.setVariable(BR.subtitle, "${payload.clockRate} Hz")
             binding.setVariable(BR.checked, payload.enabled())
-            binding.setVariable(BR.listener, object : SettingListenerStub() {
-                override fun onBoolValueChanged(newValue: Boolean) {
-                    payload.enable(newValue)
+            binding.setVariable(
+                BR.listener,
+                object : SettingListenerStub() {
+                    override fun onBoolValueChanged(newValue: Boolean) {
+                        payload.enable(newValue)
+                    }
                 }
-            })
+            )
             binding.lifecycleOwner = this
             list.add(binding)
         }

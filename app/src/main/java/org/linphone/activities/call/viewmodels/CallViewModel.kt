@@ -148,15 +148,18 @@ open class CallViewModel(val call: Call) : GenericContactViewModel(call.remoteAd
         timer?.cancel()
 
         timer = Timer("Call update timeout")
-        timer?.schedule(object : TimerTask() {
-            override fun run() {
-                // Decline call update
-                viewModelScope.launch {
-                    withContext(Dispatchers.Main) {
-                        coreContext.answerCallVideoUpdateRequest(call, false)
+        timer?.schedule(
+            object : TimerTask() {
+                override fun run() {
+                    // Decline call update
+                    viewModelScope.launch {
+                        withContext(Dispatchers.Main) {
+                            coreContext.answerCallVideoUpdateRequest(call, false)
+                        }
                     }
                 }
-            }
-        }, 30000)
+            },
+            30000
+        )
     }
 }

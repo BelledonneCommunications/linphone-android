@@ -71,9 +71,9 @@ abstract class AbstractPhoneFragment<T : ViewDataBinding> : GenericFragment<T>()
             .setTitle(getString(R.string.assistant_phone_number_info_title))
             .setMessage(
                 getString(R.string.assistant_phone_number_link_info_content) + "\n" +
-                        getString(
-                            R.string.assistant_phone_number_link_info_content_already_account
-                        )
+                    getString(
+                        R.string.assistant_phone_number_link_info_content_already_account
+                    )
             )
             .setNegativeButton(getString(R.string.dialog_ok), null)
             .show()

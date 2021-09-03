@@ -211,9 +211,11 @@ class GroupInfoViewModel(val chatRoom: ChatRoom?) : ErrorReportingViewModel() {
 
         if (chatRoom != null) {
             for (participant in chatRoom.participants) {
-                list.add(GroupInfoParticipantData(
-                    GroupChatRoomMember(participant.address, participant.isAdmin, participant.securityLevel, canBeSetAdmin = true)
-                ))
+                list.add(
+                    GroupInfoParticipantData(
+                        GroupChatRoomMember(participant.address, participant.isAdmin, participant.securityLevel, canBeSetAdmin = true)
+                    )
+                )
             }
         }
 

@@ -151,8 +151,9 @@ class NotificationsManager(private val context: Context) {
             }
 
             if (message.contents.find { content ->
-                    content.isFile or content.isFileTransfer or content.isText
-                } == null) {
+                content.isFile or content.isFileTransfer or content.isText
+            } == null
+            ) {
                 Log.w("[Notifications Manager] Received message with neither text or attachment, do not notify")
                 return
             }
@@ -291,7 +292,7 @@ class NotificationsManager(private val context: Context) {
             currentForegroundServiceNotificationId = notificationId
             service?.startForeground(currentForegroundServiceNotificationId, callNotification)
         }
-   }
+    }
 
     private fun stopForegroundNotification() {
         if (service != null) {
@@ -462,7 +463,8 @@ class NotificationsManager(private val context: Context) {
             .createPendingIntent()
 
         val builder = NotificationCompat.Builder(
-            context, context.getString(R.string.notification_channel_missed_call_id))
+            context, context.getString(R.string.notification_channel_missed_call_id)
+        )
             .setContentTitle(context.getString(R.string.missed_call_notification_title))
             .setContentText(body)
             .setSmallIcon(R.drawable.topbar_missed_call_notification)
@@ -546,7 +548,8 @@ class NotificationsManager(private val context: Context) {
         val pendingIntent = PendingIntent.getActivity(context, 0, callNotificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         val builder = NotificationCompat.Builder(
-            context, channelToUse)
+            context, channelToUse
+        )
             .setContentTitle(contact?.fullName ?: displayName)
             .setContentText(context.getString(stringResourceId))
             .setSmallIcon(iconResourceId)

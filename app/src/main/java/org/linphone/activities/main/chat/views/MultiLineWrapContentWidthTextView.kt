@@ -47,9 +47,11 @@ class MultiLineWrapContentWidthTextView : AppCompatTextView {
         if (widthMode == MeasureSpec.AT_MOST) {
             val layout = layout
             if (layout != null) {
-                val maxWidth = (ceil(getMaxLineWidth(layout).toDouble()).toInt() +
+                val maxWidth = (
+                    ceil(getMaxLineWidth(layout).toDouble()).toInt() +
                         totalPaddingLeft +
-                        totalPaddingRight)
+                        totalPaddingRight
+                    )
                 wSpec = MeasureSpec.makeMeasureSpec(maxWidth, MeasureSpec.AT_MOST)
             }
         }

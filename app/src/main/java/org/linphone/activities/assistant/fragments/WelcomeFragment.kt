@@ -72,9 +72,12 @@ class WelcomeFragment : GenericFragment<AssistantWelcomeFragmentBinding>() {
             navigateToRemoteProvisioning()
         }
 
-        viewModel.termsAndPrivacyAccepted.observe(viewLifecycleOwner, {
-            if (it) corePreferences.readAndAgreeTermsAndPrivacy = true
-        })
+        viewModel.termsAndPrivacyAccepted.observe(
+            viewLifecycleOwner,
+            {
+                if (it) corePreferences.readAndAgreeTermsAndPrivacy = true
+            }
+        )
 
         setUpTermsAndPrivacyLinks()
     }

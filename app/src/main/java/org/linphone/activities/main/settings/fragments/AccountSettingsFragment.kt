@@ -59,7 +59,8 @@ class AccountSettingsFragment : GenericFragment<SettingsAccountFragmentBinding>(
 
         try {
             viewModel = ViewModelProvider(this, AccountSettingsViewModelFactory(identity)).get(
-                AccountSettingsViewModel::class.java)
+                AccountSettingsViewModel::class.java
+            )
         } catch (nsee: NoSuchElementException) {
             Log.e("[Account Settings] Failed to find Account object, aborting!")
             goBack()
@@ -69,27 +70,33 @@ class AccountSettingsFragment : GenericFragment<SettingsAccountFragmentBinding>(
 
         binding.setBackClickListener { goBack() }
 
-        viewModel.linkPhoneNumberEvent.observe(viewLifecycleOwner, {
-            it.consume {
-                val authInfo = viewModel.account.findAuthInfo()
-                if (authInfo == null) {
-                    Log.e("[Account Settings] Failed to find auth info for account ${viewModel.account}")
-                } else {
-                    val args = Bundle()
-                    args.putString("Username", authInfo.username)
-                    args.putString("Password", authInfo.password)
-                    args.putString("HA1", authInfo.ha1)
-                    navigateToPhoneLinking(args)
+        viewModel.linkPhoneNumberEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume {
+                    val authInfo = viewModel.account.findAuthInfo()
+                    if (authInfo == null) {
+                        Log.e("[Account Settings] Failed to find auth info for account ${viewModel.account}")
+                    } else {
+                        val args = Bundle()
+                        args.putString("Username", authInfo.username)
+                        args.putString("Password", authInfo.password)
+                        args.putString("HA1", authInfo.ha1)
+                        navigateToPhoneLinking(args)
+                    }
                 }
             }
-        })
+        )
 
-        viewModel.accountRemovedEvent.observe(viewLifecycleOwner, {
-            it.consume {
-                sharedViewModel.accountRemoved.value = true
-                goBack()
+        viewModel.accountRemovedEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume {
+                    sharedViewModel.accountRemoved.value = true
+                    goBack()
+                }
             }
-        })
+        )
     }
 
     override fun goBack() {

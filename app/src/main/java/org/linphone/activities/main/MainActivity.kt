@@ -121,21 +121,27 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         callOverlayViewModel = ViewModelProvider(this).get(CallOverlayViewModel::class.java)
         binding.callOverlayViewModel = callOverlayViewModel
 
-        sharedViewModel.toggleDrawerEvent.observe(this, {
-            it.consume {
-                if (binding.sideMenu.isDrawerOpen(Gravity.LEFT)) {
-                    binding.sideMenu.closeDrawer(binding.sideMenuContent, true)
-                } else {
-                    binding.sideMenu.openDrawer(binding.sideMenuContent, true)
+        sharedViewModel.toggleDrawerEvent.observe(
+            this,
+            {
+                it.consume {
+                    if (binding.sideMenu.isDrawerOpen(Gravity.LEFT)) {
+                        binding.sideMenu.closeDrawer(binding.sideMenuContent, true)
+                    } else {
+                        binding.sideMenu.openDrawer(binding.sideMenuContent, true)
+                    }
                 }
             }
-        })
+        )
 
-        coreContext.callErrorMessageResourceId.observe(this, {
-            it.consume { message ->
-                showSnackBar(message)
+        coreContext.callErrorMessageResourceId.observe(
+            this,
+            {
+                it.consume { message ->
+                    showSnackBar(message)
+                }
             }
-        })
+        )
 
         if (coreContext.core.accountList.isEmpty()) {
             if (corePreferences.firstStart) {
@@ -486,7 +492,8 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                 }
                 MotionEvent.ACTION_UP -> {
                     if (abs(initPosX - view.x) < CorePreferences.OVERLAY_CLICK_SENSITIVITY &&
-                        abs(initPosY - view.y) < CorePreferences.OVERLAY_CLICK_SENSITIVITY) {
+                        abs(initPosY - view.y) < CorePreferences.OVERLAY_CLICK_SENSITIVITY
+                    ) {
                         view.performClick()
                     }
                 }

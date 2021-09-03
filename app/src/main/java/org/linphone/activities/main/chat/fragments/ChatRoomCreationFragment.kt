@@ -90,42 +90,63 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
             viewModel.sipContactsSelected.value = true
         }
 
-        viewModel.contactsList.observe(viewLifecycleOwner, {
-            adapter.submitList(it)
-        })
-
-        viewModel.isEncrypted.observe(viewLifecycleOwner, {
-            adapter.updateSecurity(it)
-        })
-
-        viewModel.sipContactsSelected.observe(viewLifecycleOwner, {
-            viewModel.updateContactsList()
-        })
-
-        viewModel.selectedAddresses.observe(viewLifecycleOwner, {
-            adapter.updateSelectedAddresses(it)
-        })
-
-        viewModel.chatRoomCreatedEvent.observe(viewLifecycleOwner, {
-            it.consume { chatRoom ->
-                sharedViewModel.selectedChatRoom.value = chatRoom
-                navigateToChatRoom(AppUtils.createBundleWithSharedTextAndFiles(sharedViewModel))
+        viewModel.contactsList.observe(
+            viewLifecycleOwner,
+            {
+                adapter.submitList(it)
             }
-        })
+        )
 
-        viewModel.filter.observe(viewLifecycleOwner, {
-            viewModel.applyFilter()
-        })
+        viewModel.isEncrypted.observe(
+            viewLifecycleOwner,
+            {
+                adapter.updateSecurity(it)
+            }
+        )
 
-        adapter.selectedContact.observe(viewLifecycleOwner, {
-            it.consume { searchResult ->
-                if (createGroup) {
-                    viewModel.toggleSelectionForSearchResult(searchResult)
-                } else {
-                    viewModel.createOneToOneChat(searchResult)
+        viewModel.sipContactsSelected.observe(
+            viewLifecycleOwner,
+            {
+                viewModel.updateContactsList()
+            }
+        )
+
+        viewModel.selectedAddresses.observe(
+            viewLifecycleOwner,
+            {
+                adapter.updateSelectedAddresses(it)
+            }
+        )
+
+        viewModel.chatRoomCreatedEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume { chatRoom ->
+                    sharedViewModel.selectedChatRoom.value = chatRoom
+                    navigateToChatRoom(AppUtils.createBundleWithSharedTextAndFiles(sharedViewModel))
                 }
             }
-        })
+        )
+
+        viewModel.filter.observe(
+            viewLifecycleOwner,
+            {
+                viewModel.applyFilter()
+            }
+        )
+
+        adapter.selectedContact.observe(
+            viewLifecycleOwner,
+            {
+                it.consume { searchResult ->
+                    if (createGroup) {
+                        viewModel.toggleSelectionForSearchResult(searchResult)
+                    } else {
+                        viewModel.createOneToOneChat(searchResult)
+                    }
+                }
+            }
+        )
 
         addParticipantsFromSharedViewModel()
 
@@ -136,11 +157,14 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
             navigateToGroupInfo()
         }
 
-        viewModel.onErrorEvent.observe(viewLifecycleOwner, {
-            it.consume { messageResourceId ->
-                (activity as MainActivity).showSnackBar(messageResourceId)
+        viewModel.onErrorEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume { messageResourceId ->
+                    (activity as MainActivity).showSnackBar(messageResourceId)
+                }
             }
-        })
+        )
 
         if (!PermissionHelper.get().hasReadContactsPermission()) {
             Log.i("[Chat Room Creation] Asking for READ_CONTACTS permission")

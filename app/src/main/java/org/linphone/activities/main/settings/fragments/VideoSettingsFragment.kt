@@ -93,15 +93,18 @@ class VideoSettingsFragment : GenericFragment<SettingsVideoFragmentBinding>() {
             binding.setVariable(BR.text_subtitle, "")
             binding.setVariable(BR.defaultValue, payload.recvFmtp)
             binding.setVariable(BR.checked, payload.enabled())
-            binding.setVariable(BR.listener, object : SettingListenerStub() {
-                override fun onBoolValueChanged(newValue: Boolean) {
-                    payload.enable(newValue)
-                }
+            binding.setVariable(
+                BR.listener,
+                object : SettingListenerStub() {
+                    override fun onBoolValueChanged(newValue: Boolean) {
+                        payload.enable(newValue)
+                    }
 
-                override fun onTextValueChanged(newValue: String) {
-                    payload.recvFmtp = newValue
+                    override fun onTextValueChanged(newValue: String) {
+                        payload.recvFmtp = newValue
+                    }
                 }
-            })
+            )
             binding.lifecycleOwner = this
             list.add(binding)
         }

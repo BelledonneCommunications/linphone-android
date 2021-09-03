@@ -57,31 +57,39 @@ class CallSettingsFragment : GenericFragment<SettingsCallFragmentBinding>() {
 
         binding.setBackClickListener { goBack() }
 
-        viewModel.systemWideOverlayEnabledEvent.observe(viewLifecycleOwner, {
-            it.consume {
-                if (!Compatibility.canDrawOverlay(requireContext())) {
-                    val intent = Intent("android.settings.action.MANAGE_OVERLAY_PERMISSION", Uri.parse("package:${requireContext().packageName}"))
-                    startActivityForResult(intent, 0)
+        viewModel.systemWideOverlayEnabledEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume {
+                    if (!Compatibility.canDrawOverlay(requireContext())) {
+                        val intent = Intent("android.settings.action.MANAGE_OVERLAY_PERMISSION", Uri.parse("package:${requireContext().packageName}"))
+                        startActivityForResult(intent, 0)
+                    }
                 }
             }
-        })
+        )
 
-        viewModel.goToAndroidNotificationSettingsEvent.observe(viewLifecycleOwner, { it.consume {
-            if (Build.VERSION.SDK_INT >= Version.API26_O_80) {
-                val i = Intent()
-                i.action = Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS
-                i.putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().packageName)
-                i.putExtra(
-                    Settings.EXTRA_CHANNEL_ID,
-                    getString(R.string.notification_channel_service_id)
-                )
-                i.addCategory(Intent.CATEGORY_DEFAULT)
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-                i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
-                startActivity(i)
+        viewModel.goToAndroidNotificationSettingsEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume {
+                    if (Build.VERSION.SDK_INT >= Version.API26_O_80) {
+                        val i = Intent()
+                        i.action = Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS
+                        i.putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().packageName)
+                        i.putExtra(
+                            Settings.EXTRA_CHANNEL_ID,
+                            getString(R.string.notification_channel_service_id)
+                        )
+                        i.addCategory(Intent.CATEGORY_DEFAULT)
+                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+                        i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
+                        startActivity(i)
+                    }
+                }
             }
-        } })
+        )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

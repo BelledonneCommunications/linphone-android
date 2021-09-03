@@ -178,10 +178,13 @@ class CoreContext(val context: Context, coreConfig: Config) {
                     } else {
                         Log.i("[Context] Scheduling auto answering in $autoAnswerDelay milliseconds")
                         val mainThreadHandler = Handler(Looper.getMainLooper())
-                        mainThreadHandler.postDelayed({
-                            Log.w("[Context] Auto answering call")
-                            answerCall(call)
-                        }, autoAnswerDelay.toLong())
+                        mainThreadHandler.postDelayed(
+                            {
+                                Log.w("[Context] Auto answering call")
+                                answerCall(call)
+                            },
+                            autoAnswerDelay.toLong()
+                        )
                     }
                 }
             } else if (state == Call.State.OutgoingInit) {
@@ -214,7 +217,8 @@ class CoreContext(val context: Context, coreConfig: Config) {
                     // Do not turn speaker on when video is enabled if headset or bluetooth is used
                     if (!AudioRouteUtils.isHeadsetAudioRouteAvailable() && !AudioRouteUtils.isBluetoothAudioRouteCurrentlyUsed(
                             call
-                        )) {
+                        )
+                    ) {
                         Log.i("[Context] Video enabled and no wired headset not bluetooth in use, routing audio to speaker")
                         AudioRouteUtils.routeAudioToSpeaker(call)
                     }
@@ -237,8 +241,9 @@ class CoreContext(val context: Context, coreConfig: Config) {
                     }
                     callErrorMessageResourceId.value = Event(message)
                 } else if (state == Call.State.End &&
-                        call.dir == Call.Dir.Outgoing &&
-                        call.errorInfo.reason == Reason.Declined) {
+                    call.dir == Call.Dir.Outgoing &&
+                    call.errorInfo.reason == Reason.Declined
+                ) {
                     Log.i("[Context] Call has been declined")
                     val message = context.getString(R.string.call_error_declined)
                     callErrorMessageResourceId.value = Event(message)
@@ -597,7 +602,8 @@ class CoreContext(val context: Context, coreConfig: Config) {
                 }
                 MotionEvent.ACTION_UP -> {
                     if (abs(overlayX - params.x) < CorePreferences.OVERLAY_CLICK_SENSITIVITY &&
-                        abs(overlayY - params.y) < CorePreferences.OVERLAY_CLICK_SENSITIVITY) {
+                        abs(overlayY - params.y) < CorePreferences.OVERLAY_CLICK_SENSITIVITY
+                    ) {
                         view.performClick()
                     }
                     overlayX = params.x.toFloat()

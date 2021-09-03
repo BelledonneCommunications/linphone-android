@@ -106,7 +106,8 @@ class AudioRouteUtils {
         fun isBluetoothAudioRouteAvailable(): Boolean {
             for (audioDevice in coreContext.core.audioDevices) {
                 if (audioDevice.type == AudioDevice.Type.Bluetooth &&
-                        audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
+                    audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityPlay)
+                ) {
                     Log.i("[Audio Route Helper] Found bluetooth audio device [${audioDevice.deviceName}]")
                     return true
                 }
@@ -117,7 +118,8 @@ class AudioRouteUtils {
         fun isHeadsetAudioRouteAvailable(): Boolean {
             for (audioDevice in coreContext.core.audioDevices) {
                 if ((audioDevice.type == AudioDevice.Type.Headset || audioDevice.type == AudioDevice.Type.Headphones) &&
-                        audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
+                    audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityPlay)
+                ) {
                     Log.i("[Audio Route Helper] Found headset/headphones audio device [${audioDevice.deviceName}]")
                     return true
                 }

@@ -62,21 +62,27 @@ class CallActivity : ProximitySensorActivity() {
 
         sharedViewModel = ViewModelProvider(this).get(SharedCallViewModel::class.java)
 
-        sharedViewModel.toggleDrawerEvent.observe(this, {
-            it.consume {
-                if (binding.statsMenu.isDrawerOpen(Gravity.LEFT)) {
-                    binding.statsMenu.closeDrawer(binding.sideMenuContent, true)
-                } else {
-                    binding.statsMenu.openDrawer(binding.sideMenuContent, true)
+        sharedViewModel.toggleDrawerEvent.observe(
+            this,
+            {
+                it.consume {
+                    if (binding.statsMenu.isDrawerOpen(Gravity.LEFT)) {
+                        binding.statsMenu.closeDrawer(binding.sideMenuContent, true)
+                    } else {
+                        binding.statsMenu.openDrawer(binding.sideMenuContent, true)
+                    }
                 }
             }
-        })
+        )
 
-        sharedViewModel.resetHiddenInterfaceTimerInVideoCallEvent.observe(this, {
-            it.consume {
-                viewModel.showMomentarily()
+        sharedViewModel.resetHiddenInterfaceTimerInVideoCallEvent.observe(
+            this,
+            {
+                it.consume {
+                    viewModel.showMomentarily()
+                }
             }
-        })
+        )
 
         coreContext.core.nativeVideoWindowId = binding.remoteVideoSurface
         coreContext.core.nativePreviewWindowId = binding.localPreviewVideoSurface
@@ -104,9 +110,12 @@ class CallActivity : ProximitySensorActivity() {
 
         videoZoomHelper = VideoZoomHelper(this, binding.remoteVideoSurface)
 
-        viewModel.proximitySensorEnabled.observe(this, {
-            enableProximitySensor(it)
-        })
+        viewModel.proximitySensorEnabled.observe(
+            this,
+            {
+                enableProximitySensor(it)
+            }
+        )
     }
 
     override fun onResume() {
@@ -191,10 +200,10 @@ class CallActivity : ProximitySensorActivity() {
 
     private fun hideSystemUI() {
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN or
-                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-                View.SYSTEM_UI_FLAG_IMMERSIVE or
-                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+            View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+            View.SYSTEM_UI_FLAG_IMMERSIVE or
+            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+            View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+            View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
     }
 }
