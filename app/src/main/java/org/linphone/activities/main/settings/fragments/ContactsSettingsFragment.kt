@@ -57,25 +57,31 @@ class ContactsSettingsFragment : GenericFragment<SettingsContactsFragmentBinding
 
         binding.setBackClickListener { goBack() }
 
-        viewModel.launcherShortcutsEvent.observe(viewLifecycleOwner, {
-            it.consume { newValue ->
-                if (newValue) {
-                    Compatibility.createShortcutsToContacts(requireContext())
-                } else {
-                    Compatibility.removeShortcuts(requireContext())
-                    if (corePreferences.chatRoomShortcuts) {
-                        Compatibility.createShortcutsToChatRooms(requireContext())
+        viewModel.launcherShortcutsEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume { newValue ->
+                    if (newValue) {
+                        Compatibility.createShortcutsToContacts(requireContext())
+                    } else {
+                        Compatibility.removeShortcuts(requireContext())
+                        if (corePreferences.chatRoomShortcuts) {
+                            Compatibility.createShortcutsToChatRooms(requireContext())
+                        }
                     }
                 }
             }
-        })
+        )
 
-        viewModel.askWriteContactsPermissionForPresenceStorageEvent.observe(viewLifecycleOwner, {
-            it.consume {
-                Log.i("[Contacts Settings] Asking for WRITE_CONTACTS permission to be able to store presence")
-                requestPermissions(arrayOf(android.Manifest.permission.WRITE_CONTACTS), 1)
+        viewModel.askWriteContactsPermissionForPresenceStorageEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume {
+                    Log.i("[Contacts Settings] Asking for WRITE_CONTACTS permission to be able to store presence")
+                    requestPermissions(arrayOf(android.Manifest.permission.WRITE_CONTACTS), 1)
+                }
             }
-        })
+        )
 
         if (!PermissionHelper.required(requireContext()).hasReadContactsPermission()) {
             Log.i("[Contacts Settings] Asking for READ_CONTACTS permission")
