@@ -225,9 +225,8 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
                         Log.w("[Chat] Activity is pending destruction, don't start navigating now!")
                         sharedViewModel.destructionPendingChatRoom = chatRoom
                     } else {
-                        binding.slidingPane.openPane()
                         sharedViewModel.selectedChatRoom.value = chatRoom
-                        navigateToChatRoom(AppUtils.createBundleWithSharedTextAndFiles(sharedViewModel))
+                        navigateToChatRoom(AppUtils.createBundleWithSharedTextAndFiles(sharedViewModel), binding.slidingPane)
                     }
                 }
             }
@@ -253,25 +252,22 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
         }
 
         binding.setNewOneToOneChatRoomClickListener {
-            binding.slidingPane.openPane()
             sharedViewModel.chatRoomParticipants.value = arrayListOf()
-            navigateToChatRoomCreation(false)
+            navigateToChatRoomCreation(false, binding.slidingPane)
         }
 
         binding.setNewGroupChatRoomClickListener {
-            binding.slidingPane.openPane()
             sharedViewModel.selectedGroupChatRoom.value = null
             sharedViewModel.chatRoomParticipants.value = arrayListOf()
-            navigateToChatRoomCreation(true)
+            navigateToChatRoomCreation(true, binding.slidingPane)
         }
 
         val pendingDestructionChatRoom = sharedViewModel.destructionPendingChatRoom
         if (pendingDestructionChatRoom != null) {
-            binding.slidingPane.openPane()
             Log.w("[Chat] Found pending chat room from before activity was recreated")
             sharedViewModel.destructionPendingChatRoom = null
             sharedViewModel.selectedChatRoom.value = pendingDestructionChatRoom
-            navigateToChatRoom(AppUtils.createBundleWithSharedTextAndFiles(sharedViewModel))
+            navigateToChatRoom(AppUtils.createBundleWithSharedTextAndFiles(sharedViewModel), binding.slidingPane)
         }
 
         val localSipUri = arguments?.getString("LocalSipUri")
