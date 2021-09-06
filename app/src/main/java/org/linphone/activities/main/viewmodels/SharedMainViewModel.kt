@@ -39,6 +39,10 @@ class SharedMainViewModel : ViewModel() {
 
     /* Chat */
 
+    val chatRoomFragmentOpenedEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     val selectedChatRoom = MutableLiveData<ChatRoom>()
     var destructionPendingChatRoom: ChatRoom? = null
 

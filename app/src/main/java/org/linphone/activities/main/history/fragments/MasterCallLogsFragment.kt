@@ -233,8 +233,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
             {
                 it.consume { callLog ->
                     sharedViewModel.selectedCallLogGroup.value = callLog
-                    binding.slidingPane.openPane()
-                    navigateToCallHistory()
+                    navigateToCallHistory(binding.slidingPane)
                 }
             }
         )
