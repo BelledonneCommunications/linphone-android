@@ -21,6 +21,7 @@ package org.linphone.activities.main.chat.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.main.viewmodels.ErrorReportingViewModel
 import org.linphone.contact.ContactsUpdatedListenerStub
@@ -163,6 +164,10 @@ class ChatRoomCreationViewModel : ErrorReportingViewModel() {
         if (encrypted) {
             params.enableEncryption(true)
             params.backend = ChatRoomBackend.FlexisipChat
+            params.ephemeralMode = if (corePreferences.useEphemeralPerDeviceMode)
+                ChatRoomEphemeralMode.DeviceManaged
+            else
+                ChatRoomEphemeralMode.AdminManaged
             params.subject = AppUtils.getString(R.string.chat_room_dummy_subject)
         }
 
