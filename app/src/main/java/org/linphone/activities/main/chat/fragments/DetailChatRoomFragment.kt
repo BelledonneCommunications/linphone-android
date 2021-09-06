@@ -33,6 +33,7 @@ import android.view.View
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.view.menu.MenuPopupHelper
 import androidx.core.content.FileProvider
+import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -101,6 +102,11 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         }
         binding.sharedMainViewModel = sharedViewModel
+
+        view.doOnPreDraw {
+            // Notifies fragment is ready to be drawn
+            sharedViewModel.chatRoomFragmentOpenedEvent.value = Event(true)
+        }
 
         val localSipUri = arguments?.getString("LocalSipUri")
         val remoteSipUri = arguments?.getString("RemoteSipUri")

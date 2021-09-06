@@ -298,7 +298,6 @@ internal fun MasterChatRoomsFragment.navigateToChatRoom(
         args,
         computeSlidingPaneNavOptions(slidingPane, popUpToFragmentId, true)
     )
-    if (!slidingPane.isOpen) slidingPane.openPane()
 }
 
 internal fun MasterChatRoomsFragment.navigateToChatRoomCreation(
