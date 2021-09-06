@@ -197,13 +197,12 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
                     sharedViewModel.selectedContact.value = contact
                     listViewModel.filter.value = ""
 
-                    binding.slidingPane.openPane()
                     if (editOnClick) {
-                        navigateToContactEditor(sipUriToAdd)
+                        navigateToContactEditor(sipUriToAdd, binding.slidingPane)
                         editOnClick = false
                         sipUriToAdd = null
                     } else {
-                        navigateToContact()
+                        navigateToContact(binding.slidingPane)
                     }
                 }
             }
@@ -249,9 +248,7 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
         binding.setNewContactClickListener {
             // Remove any previously selected contact
             sharedViewModel.selectedContact.value = null
-
-            binding.slidingPane.openPane()
-            navigateToContactEditor(sipUriToAdd)
+            navigateToContactEditor(sipUriToAdd, binding.slidingPane)
         }
 
         val id = arguments?.getString("id")

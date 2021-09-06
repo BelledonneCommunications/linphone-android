@@ -103,71 +103,61 @@ class SettingsFragment : SecureFragment<SettingsFragmentBinding>() {
         if (identity != null) {
             Log.i("[Settings] Found identity parameter in arguments: $identity")
             arguments?.clear()
-            binding.slidingPane.openPane()
-            navigateToAccountSettings(identity)
+            navigateToAccountSettings(identity, binding.slidingPane)
         }
 
         viewModel.accountsSettingsListener = object : SettingListenerStub() {
             override fun onAccountClicked(identity: String) {
                 Log.i("[Settings] Navigation to settings for account with identity: $identity")
-                binding.slidingPane.openPane()
-                navigateToAccountSettings(identity)
+                navigateToAccountSettings(identity, binding.slidingPane)
             }
         }
 
         viewModel.tunnelSettingsListener = object : SettingListenerStub() {
             override fun onClicked() {
-                binding.slidingPane.openPane()
-                navigateToTunnelSettings()
+                navigateToTunnelSettings(binding.slidingPane)
             }
         }
 
         viewModel.audioSettingsListener = object : SettingListenerStub() {
             override fun onClicked() {
-                binding.slidingPane.openPane()
-                navigateToAudioSettings()
+                navigateToAudioSettings(binding.slidingPane)
             }
         }
 
         viewModel.videoSettingsListener = object : SettingListenerStub() {
             override fun onClicked() {
-                binding.slidingPane.openPane()
-                navigateToVideoSettings()
+                navigateToVideoSettings(binding.slidingPane)
             }
         }
 
         viewModel.callSettingsListener = object : SettingListenerStub() {
             override fun onClicked() {
-                binding.slidingPane.openPane()
-                navigateToCallSettings()
+                navigateToCallSettings(binding.slidingPane)
             }
         }
 
         viewModel.chatSettingsListener = object : SettingListenerStub() {
             override fun onClicked() {
-                binding.slidingPane.openPane()
-                navigateToChatSettings()
+                navigateToChatSettings(binding.slidingPane)
             }
         }
 
         viewModel.networkSettingsListener = object : SettingListenerStub() {
             override fun onClicked() {
-                binding.slidingPane.openPane()
-                navigateToNetworkSettings()
+                navigateToNetworkSettings(binding.slidingPane)
             }
         }
 
         viewModel.contactsSettingsListener = object : SettingListenerStub() {
             override fun onClicked() {
-                binding.slidingPane.openPane()
-                navigateToContactsSettings()
+                navigateToContactsSettings(binding.slidingPane)
             }
         }
 
         viewModel.advancedSettingsListener = object : SettingListenerStub() {
             override fun onClicked() {
-                binding.slidingPane.openPane()
-                navigateToAdvancedSettings()
+                navigateToAdvancedSettings(binding.slidingPane)
             }
         }
     }
