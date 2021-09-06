@@ -26,14 +26,11 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Parcelable
 import android.provider.MediaStore
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.MotionEvent
-import android.view.View
-import androidx.appcompat.view.menu.MenuBuilder
-import androidx.appcompat.view.menu.MenuPopupHelper
+import android.view.*
+import android.widget.PopupWindow
 import androidx.core.content.FileProvider
 import androidx.core.view.doOnPreDraw
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -62,6 +59,7 @@ import org.linphone.compatibility.Compatibility
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatRoomDetailFragmentBinding
+import org.linphone.databinding.ChatRoomMenuBindingImpl
 import org.linphone.utils.*
 import org.linphone.utils.Event
 
@@ -620,53 +618,71 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
     }
 
     private fun showPopupMenu(chatRoom: ChatRoom) {
-        val builder = MenuBuilder(requireContext())
-        val popupMenu = MenuPopupHelper(requireContext(), builder, binding.menu)
-        popupMenu.setForceShowIcon(true)
+        val popupView: ChatRoomMenuBindingImpl = DataBindingUtil.inflate(
+            LayoutInflater.from(context),
+            R.layout.chat_room_menu, null, false
+        )
 
-        MenuInflater(requireContext()).inflate(R.menu.chat_room_menu, builder)
-        if (viewModel.oneToOneChatRoom) {
-            builder.removeItem(R.id.chat_room_group_info)
+        val itemSize = AppUtils.getDimension(R.dimen.chat_room_popup_item_height).toInt()
+        var totalSize = itemSize * 4
+
+        if (!viewModel.encryptedChatRoom) {
+            popupView.devicesHidden = true
+            totalSize -= itemSize
+            popupView.ephemeralHidden = true
+            totalSize -= itemSize
+        } else {
+            if (viewModel.oneToOneChatRoom) {
+                popupView.groupInfoHidden = true
+                totalSize -= itemSize
+            }
 
             // If one participant one device, a click on security badge
             // will directly start a call or show the dialog, so don't show this menu
             if (viewModel.oneParticipantOneDevice) {
-                builder.removeItem(R.id.chat_room_participants_devices)
+                popupView.devicesHidden = true
+                totalSize -= itemSize
             }
-        }
 
-        if (!viewModel.encryptedChatRoom) {
-            builder.removeItem(R.id.chat_room_participants_devices)
-            builder.removeItem(R.id.chat_room_ephemeral_messages)
-        }
-
-        builder.setCallback(object : MenuBuilder.Callback {
-            override fun onMenuModeChange(menu: MenuBuilder) {}
-
-            override fun onMenuItemSelected(menu: MenuBuilder, item: MenuItem): Boolean {
-                return when (item.itemId) {
-                    R.id.chat_room_group_info -> {
-                        showGroupInfo(chatRoom)
-                        true
-                    }
-                    R.id.chat_room_participants_devices -> {
-                        showParticipantsDevices()
-                        true
-                    }
-                    R.id.chat_room_ephemeral_messages -> {
-                        showEphemeralMessages()
-                        true
-                    }
-                    R.id.chat_room_delete_messages -> {
-                        enterEditionMode()
-                        true
-                    }
-                    else -> false
+            if (viewModel.ephemeralChatRoom) {
+                if (chatRoom.currentParams.ephemeralMode == ChatRoomEphemeralMode.AdminManaged &&
+                    viewModel.meAdmin.value == false
+                ) {
+                    popupView.ephemeralHidden = true
+                    totalSize -= itemSize
                 }
             }
-        })
+        }
 
-        popupMenu.show()
+        // When using WRAP_CONTENT instead of real size, fails to place the
+        // popup window above if not enough space is available below
+        val popupWindow = PopupWindow(
+            popupView.root,
+            AppUtils.getDimension(R.dimen.chat_room_popup_width).toInt(),
+            totalSize,
+            true
+        )
+        // Elevation is for showing a shadow around the popup
+        popupWindow.elevation = 20f
+
+        popupView.setGroupInfoListener {
+            showGroupInfo(chatRoom)
+            popupWindow.dismiss()
+        }
+        popupView.setDevicesListener {
+            showParticipantsDevices()
+            popupWindow.dismiss()
+        }
+        popupView.setEphemeralListener {
+            showEphemeralMessages()
+            popupWindow.dismiss()
+        }
+        popupView.setEditionModeListener {
+            enterEditionMode()
+            popupWindow.dismiss()
+        }
+
+        popupWindow.showAsDropDown(binding.menu, 0, 0, Gravity.BOTTOM)
     }
 
     private fun scrollToBottom() {
