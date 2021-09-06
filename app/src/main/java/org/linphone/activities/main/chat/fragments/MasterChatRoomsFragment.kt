@@ -92,6 +92,16 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
 
         view.doOnPreDraw { sharedViewModel.canSlidingPaneBeClosed.value = binding.slidingPane.isSlideable }
 
+        // Chat room loading can take some time, so wait until it is ready before opening the pane
+        sharedViewModel.chatRoomFragmentOpenedEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume {
+                    binding.slidingPane.openPane()
+                }
+            }
+        )
+
         sharedViewModel.closeSlidingPaneEvent.observe(
             viewLifecycleOwner,
             {
