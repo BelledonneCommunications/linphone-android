@@ -75,7 +75,11 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
     val encryptedChatRoom: Boolean = chatRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt())
 
-    val basicChatRoom: Boolean = chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt())
+    val ephemeralChatRoom: Boolean = chatRoom.hasCapability(ChatRoomCapabilities.Ephemeral.toInt())
+
+    val meAdmin: MutableLiveData<Boolean> by lazy {
+        MutableLiveData<Boolean>()
+    }
 
     var oneParticipantOneDevice: Boolean = false
 
@@ -174,6 +178,10 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
             Log.i("[Chat Room] Ephemeral message deleted, updated last message displayed")
             lastMessageText.value = formatLastMessage(chatRoom.lastMessageInHistory)
         }
+
+        override fun onParticipantAdminStatusChanged(chatRoom: ChatRoom, eventLog: EventLog) {
+            meAdmin.value = chatRoom.me?.isAdmin ?: false
+        }
     }
 
     init {
@@ -187,6 +195,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
         subject.value = chatRoom.subject
         updateSecurityIcon()
+        meAdmin.value = chatRoom.me?.isAdmin ?: false
 
         contactLookup()
         updateParticipants()
@@ -204,6 +213,10 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         coreContext.contactsManager.removeListener(contactsUpdatedListener)
         chatRoom.removeListener(chatRoomListener)
         chatRoom.core.removeListener(coreListener)
+    }
+
+    fun hideMenu(): Boolean {
+        return chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt()) || (oneToOneChatRoom && !encryptedChatRoom)
     }
 
     fun contactLookup() {
@@ -304,7 +317,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
     }
 
     private fun updateParticipants() {
-        peerSipUri.value = if (oneToOneChatRoom && !basicChatRoom)
+        peerSipUri.value = if (oneToOneChatRoom && !chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt()))
             chatRoom.participants.firstOrNull()?.address?.asStringUriOnly()
                 ?: chatRoom.peerAddress.asStringUriOnly()
         else chatRoom.peerAddress.asStringUriOnly()

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="groupInfoListener"
+            type="View.OnClickListener" />
+        <variable
+            name="devicesListener"
+            type="View.OnClickListener" />
+        <variable
+            name="ephemeralListener"
+            type="View.OnClickListener" />
+        <variable
+            name="editionModeListener"
+            type="View.OnClickListener" />
+        <variable
+            name="groupInfoHidden"
+            type="Boolean" />
+        <variable
+            name="devicesHidden"
+            type="Boolean" />
+        <variable
+            name="ephemeralHidden"
+            type="Boolean" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="@dimen/chat_message_popup_width"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="?attr/backgroundColor">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chat_room_popup_item_height"
+            android:visibility="@{groupInfoHidden ? View.GONE : View.VISIBLE}"
+            android:background="@drawable/menu_background"
+            android:onClick="@{groupInfoListener}"
+            android:drawableRight="@drawable/menu_group_info_default"
+            style="@style/popup_item_font"
+            android:text="@string/chat_room_context_menu_group_info" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chat_room_popup_item_height"
+            android:visibility="@{devicesHidden ? View.GONE : View.VISIBLE}"
+            android:background="@drawable/menu_background"
+            android:onClick="@{devicesListener}"
+            android:drawableRight="@drawable/menu_security_default"
+            style="@style/popup_item_font"
+            android:text="@string/chat_room_context_menu_participants_devices" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chat_room_popup_item_height"
+            android:visibility="@{ephemeralHidden ? View.GONE : View.VISIBLE}"
+            android:background="@drawable/menu_background"
+            android:onClick="@{ephemeralListener}"
+            android:drawableRight="@drawable/chat_room_menu_ephemeral"
+            style="@style/popup_item_font"
+            android:text="@string/chat_message_context_menu_ephemeral_messages" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chat_room_popup_item_height"
+            android:background="@drawable/menu_background"
+            android:onClick="@{editionModeListener}"
+            android:drawableRight="@drawable/chat_room_menu_delete"
+            style="@style/popup_item_font"
+            android:text="@string/chat_message_context_menu_delete_messages" />
+
+    </LinearLayout>
+
+</layout>

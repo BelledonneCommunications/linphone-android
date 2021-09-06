@@ -26,7 +26,9 @@
     <dimen name="field_shape_margin">3dp</dimen>
     <dimen name="call_overlay_size">60dp</dimen>
     <dimen name="chat_message_popup_width">250dp</dimen>
+    <dimen name="chat_room_popup_width">250dp</dimen>
     <dimen name="chat_message_popup_item_height">50dp</dimen>
+    <dimen name="chat_room_popup_item_height">50dp</dimen>
     <dimen name="chat_message_round_corner_radius">6.7dp</dimen>
     <dimen name="play_pause_button_size">30dp</dimen>
     <dimen name="progress_bar_height">40dp</dimen>
