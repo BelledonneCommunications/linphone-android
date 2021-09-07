@@ -49,7 +49,7 @@ class RecordingsFragment : MasterFragment<RecordingsFragmentBinding, RecordingsL
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
         viewModel = ViewModelProvider(this).get(RecordingsViewModel::class.java)
         binding.viewModel = viewModel

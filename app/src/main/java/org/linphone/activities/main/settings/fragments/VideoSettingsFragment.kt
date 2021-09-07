@@ -48,7 +48,7 @@ class VideoSettingsFragment : GenericFragment<SettingsVideoFragmentBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
         sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
@@ -105,7 +105,7 @@ class VideoSettingsFragment : GenericFragment<SettingsVideoFragmentBinding>() {
                     }
                 }
             )
-            binding.lifecycleOwner = this
+            binding.lifecycleOwner = viewLifecycleOwner
             list.add(binding)
         }
         viewModel.videoCodecs.value = list

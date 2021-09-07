@@ -20,6 +20,7 @@
 package org.linphone.activities.main.history.fragments
 
 import android.app.Dialog
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -30,7 +31,9 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
+import com.google.android.material.transition.MaterialSharedAxis
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.clearDisplayedCallHistory
 import org.linphone.activities.main.fragments.MasterFragment
@@ -67,10 +70,22 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
         super.onDestroyView()
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (corePreferences.enableAnimations) {
+            val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
+            val axis = if (portraitOrientation) MaterialSharedAxis.X else MaterialSharedAxis.Y
+            enterTransition = MaterialSharedAxis(axis, false)
+            reenterTransition = MaterialSharedAxis(axis, false)
+            returnTransition = MaterialSharedAxis(axis, true)
+            exitTransition = MaterialSharedAxis(axis, true)
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
         listViewModel = ViewModelProvider(this).get(CallLogsListViewModel::class.java)
         binding.viewModel = listViewModel
