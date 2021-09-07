@@ -23,15 +23,12 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
-import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.settings.viewmodels.TunnelSettingsViewModel
-import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.navigateToEmptySetting
 import org.linphone.databinding.SettingsTunnelFragmentBinding
 import org.linphone.utils.Event
 
-class TunnelSettingsFragment : GenericFragment<SettingsTunnelFragmentBinding>() {
-    private lateinit var sharedViewModel: SharedMainViewModel
+class TunnelSettingsFragment : GenericSettingFragment<SettingsTunnelFragmentBinding>() {
     private lateinit var viewModel: TunnelSettingsViewModel
 
     override fun getLayoutId(): Int = R.layout.settings_tunnel_fragment
@@ -39,11 +36,7 @@ class TunnelSettingsFragment : GenericFragment<SettingsTunnelFragmentBinding>() 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = this
-
-        sharedViewModel = requireActivity().run {
-            ViewModelProvider(this).get(SharedMainViewModel::class.java)
-        }
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.sharedMainViewModel = sharedViewModel
 
         viewModel = ViewModelProvider(this).get(TunnelSettingsViewModel::class.java)
@@ -53,7 +46,7 @@ class TunnelSettingsFragment : GenericFragment<SettingsTunnelFragmentBinding>() 
     }
 
     override fun goBack() {
-        if (sharedViewModel.canSlidingPaneBeClosed.value == true) {
+        if (sharedViewModel.isSlidingPaneSlideable.value == true) {
             sharedViewModel.closeSlidingPaneEvent.value = Event(true)
         } else {
             navigateToEmptySetting()

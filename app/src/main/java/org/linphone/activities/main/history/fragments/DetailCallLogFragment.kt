@@ -47,7 +47,7 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
         sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
@@ -68,6 +68,8 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
         )[CallLogViewModel::class.java]
         binding.viewModel = viewModel
 
+        useMaterialSharedAxisXForwardAnimation = sharedViewModel.isSlidingPaneSlideable.value == false
+
         viewModel.relatedCallLogs.value = callLogGroup.callLogs
 
         binding.setBackClickListener {
@@ -78,10 +80,12 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
             val copy = viewModel.callLog.remoteAddress.clone()
             copy.clean()
             Log.i("[History] Creating contact with SIP URI: ${copy.asStringUriOnly()}")
+            sharedViewModel.updateContactsAnimationsBasedOnDestination.value = Event(R.id.masterCallLogsFragment)
             navigateToContacts(copy.asStringUriOnly())
         }
 
         binding.setContactClickListener {
+            sharedViewModel.updateContactsAnimationsBasedOnDestination.value = Event(R.id.masterCallLogsFragment)
             val contact = viewModel.contact.value as? NativeContact
             if (contact != null) {
                 Log.i("[History] Displaying contact $contact")
@@ -101,6 +105,8 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
                     val address = callLog.remoteAddress
                     if (coreContext.core.callsNb > 0) {
                         Log.i("[History] Starting dialer with pre-filled URI ${address.asStringUriOnly()}, is transfer? ${sharedViewModel.pendingCallTransfer}")
+                        sharedViewModel.updateDialerAnimationsBasedOnDestination.value = Event(R.id.masterCallLogsFragment)
+
                         val args = Bundle()
                         args.putString("URI", address.asStringUriOnly())
                         args.putBoolean("Transfer", sharedViewModel.pendingCallTransfer)
@@ -140,7 +146,7 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
     }
 
     override fun goBack() {
-        if (sharedViewModel.canSlidingPaneBeClosed.value == true) {
+        if (sharedViewModel.isSlidingPaneSlideable.value == true) {
             sharedViewModel.closeSlidingPaneEvent.value = Event(true)
         } else {
             navigateToEmptyCallHistory()

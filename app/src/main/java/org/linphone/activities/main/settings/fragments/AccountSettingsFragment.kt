@@ -23,18 +23,15 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
-import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.settings.viewmodels.AccountSettingsViewModel
 import org.linphone.activities.main.settings.viewmodels.AccountSettingsViewModelFactory
-import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.navigateToEmptySetting
 import org.linphone.activities.navigateToPhoneLinking
 import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsAccountFragmentBinding
 import org.linphone.utils.Event
 
-class AccountSettingsFragment : GenericFragment<SettingsAccountFragmentBinding>() {
-    private lateinit var sharedViewModel: SharedMainViewModel
+class AccountSettingsFragment : GenericSettingFragment<SettingsAccountFragmentBinding>() {
     private lateinit var viewModel: AccountSettingsViewModel
 
     override fun getLayoutId(): Int = R.layout.settings_account_fragment
@@ -42,11 +39,7 @@ class AccountSettingsFragment : GenericFragment<SettingsAccountFragmentBinding>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = this
-
-        sharedViewModel = requireActivity().run {
-            ViewModelProvider(this).get(SharedMainViewModel::class.java)
-        }
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.sharedMainViewModel = sharedViewModel
 
         val identity = arguments?.getString("Identity")
@@ -100,7 +93,7 @@ class AccountSettingsFragment : GenericFragment<SettingsAccountFragmentBinding>(
     }
 
     override fun goBack() {
-        if (sharedViewModel.canSlidingPaneBeClosed.value == true) {
+        if (sharedViewModel.isSlidingPaneSlideable.value == true) {
             sharedViewModel.closeSlidingPaneEvent.value = Event(true)
         } else {
             navigateToEmptySetting()

@@ -37,7 +37,7 @@ class TextViewerFragment : GenericViewerFragment<FileTextViewerFragmentBinding>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
         val content = sharedViewModel.contentToOpen.value
         if (content == null) {

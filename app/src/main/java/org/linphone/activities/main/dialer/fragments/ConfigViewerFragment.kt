@@ -38,7 +38,7 @@ class ConfigViewerFragment : SecureFragment<FileConfigViewerFragmentBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
         viewModel = ViewModelProvider(this)[ConfigFileViewModel::class.java]
         binding.viewModel = viewModel
