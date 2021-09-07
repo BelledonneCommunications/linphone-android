@@ -24,11 +24,13 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.transition.MaterialSharedAxis
 import org.linphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -56,7 +58,7 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
         viewModel = ViewModelProvider(this).get(DialerViewModel::class.java)
         binding.viewModel = viewModel
@@ -64,6 +66,26 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
         sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         }
+
+        sharedViewModel.updateDialerAnimationsBasedOnDestination.observe(
+            viewLifecycleOwner,
+            {
+                it.consume { id ->
+                    val forward = when (id) {
+                        R.id.masterChatRoomsFragment -> false
+                        else -> true
+                    }
+                    if (corePreferences.enableAnimations) {
+                        val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
+                        val axis = if (portraitOrientation) MaterialSharedAxis.X else MaterialSharedAxis.Y
+                        enterTransition = MaterialSharedAxis(axis, forward)
+                        reenterTransition = MaterialSharedAxis(axis, forward)
+                        returnTransition = MaterialSharedAxis(axis, !forward)
+                        exitTransition = MaterialSharedAxis(axis, !forward)
+                    }
+                }
+            }
+        )
 
         binding.setNewContactClickListener {
             navigateToContacts(viewModel.enteredUri.value)
