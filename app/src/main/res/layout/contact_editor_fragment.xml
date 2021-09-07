@@ -75,13 +75,13 @@
                 android:layout_marginRight="10dp">
 
                 <FrameLayout
-                    android:layout_width="100dp"
+                    android:layout_width="match_parent"
                     android:layout_height="100dp">
 
                     <org.linphone.contact.BigContactAvatarView
                         android:id="@+id/avatar"
                         android:onClick="@{avatarClickListener}"
-                        android:layout_width="100dp"
+                        android:layout_width="match_parent"
                         android:layout_height="100dp"
                         android:gravity="center"
                         tools:layout="@layout/contact_avatar_big"
@@ -90,6 +90,7 @@
                     <ImageView
                         android:layout_width="100dp"
                         android:layout_height="100dp"
+                        android:layout_gravity="center"
                         android:gravity="center"
                         android:contentDescription="@string/content_description_change_contact_picture"
                         glideAvatar="@{viewModel.tempPicturePath}"/>

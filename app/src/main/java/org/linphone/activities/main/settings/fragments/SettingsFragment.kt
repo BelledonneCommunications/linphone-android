@@ -25,6 +25,8 @@ import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
+import com.google.android.material.transition.MaterialSharedAxis
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.*
 import org.linphone.activities.main.fragments.SecureFragment
@@ -47,7 +49,15 @@ class SettingsFragment : SecureFragment<SettingsFragmentBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
+
+        useMaterialSharedAxisXForwardAnimation = false
+        if (corePreferences.enableAnimations) {
+            enterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
+            reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
+            returnTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
+            exitTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
+        }
 
         /* Shared view model & sliding pane related */
 
@@ -55,7 +65,7 @@ class SettingsFragment : SecureFragment<SettingsFragmentBinding>() {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         }
 
-        view.doOnPreDraw { sharedViewModel.canSlidingPaneBeClosed.value = binding.slidingPane.isSlideable }
+        view.doOnPreDraw { sharedViewModel.isSlidingPaneSlideable.value = binding.slidingPane.isSlideable }
 
         sharedViewModel.closeSlidingPaneEvent.observe(
             viewLifecycleOwner,
@@ -71,7 +81,7 @@ class SettingsFragment : SecureFragment<SettingsFragmentBinding>() {
             viewLifecycleOwner,
             {
                 it.consume {
-                    sharedViewModel.canSlidingPaneBeClosed.value = binding.slidingPane.isSlideable
+                    sharedViewModel.isSlidingPaneSlideable.value = binding.slidingPane.isSlideable
                     if (binding.slidingPane.isSlideable) {
                         val navHostFragment = childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
                         if (navHostFragment.navController.currentDestination?.id == R.id.emptySettingsFragment) {
