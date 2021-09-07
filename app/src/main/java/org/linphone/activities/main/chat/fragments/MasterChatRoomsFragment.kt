@@ -253,7 +253,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
                         sharedViewModel.destructionPendingChatRoom = chatRoom
                     } else {
                         sharedViewModel.selectedChatRoom.value = chatRoom
-                        navigateToChatRoom(AppUtils.createBundleWithSharedTextAndFiles(sharedViewModel), binding.slidingPane)
+                        navigateToChatRoom(AppUtils.createBundleWithSharedTextAndFiles(sharedViewModel))
                     }
                 }
             }
@@ -294,7 +294,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
             Log.w("[Chat] Found pending chat room from before activity was recreated")
             sharedViewModel.destructionPendingChatRoom = null
             sharedViewModel.selectedChatRoom.value = pendingDestructionChatRoom
-            navigateToChatRoom(AppUtils.createBundleWithSharedTextAndFiles(sharedViewModel), binding.slidingPane)
+            navigateToChatRoom(AppUtils.createBundleWithSharedTextAndFiles(sharedViewModel))
         }
 
         val localSipUri = arguments?.getString("LocalSipUri")
