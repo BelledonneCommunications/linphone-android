@@ -26,17 +26,14 @@ import android.provider.Settings
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
-import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.settings.viewmodels.ChatSettingsViewModel
-import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.navigateToEmptySetting
 import org.linphone.compatibility.Compatibility
 import org.linphone.databinding.SettingsChatFragmentBinding
 import org.linphone.mediastream.Version
 import org.linphone.utils.Event
 
-class ChatSettingsFragment : GenericFragment<SettingsChatFragmentBinding>() {
-    private lateinit var sharedViewModel: SharedMainViewModel
+class ChatSettingsFragment : GenericSettingFragment<SettingsChatFragmentBinding>() {
     private lateinit var viewModel: ChatSettingsViewModel
 
     override fun getLayoutId(): Int = R.layout.settings_chat_fragment
@@ -44,11 +41,7 @@ class ChatSettingsFragment : GenericFragment<SettingsChatFragmentBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = this
-
-        sharedViewModel = requireActivity().run {
-            ViewModelProvider(this).get(SharedMainViewModel::class.java)
-        }
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.sharedMainViewModel = sharedViewModel
 
         viewModel = ViewModelProvider(this).get(ChatSettingsViewModel::class.java)

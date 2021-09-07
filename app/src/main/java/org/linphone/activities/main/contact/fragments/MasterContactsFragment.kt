@@ -21,6 +21,7 @@ package org.linphone.activities.main.contact.fragments
 
 import android.app.Dialog
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -31,7 +32,9 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
+import com.google.android.material.transition.MaterialSharedAxis
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.clearDisplayedContact
 import org.linphone.activities.main.MainActivity
@@ -67,7 +70,7 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
         listViewModel = ViewModelProvider(this).get(ContactsListViewModel::class.java)
         binding.viewModel = listViewModel
@@ -79,6 +82,26 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
         }
 
         view.doOnPreDraw { sharedViewModel.canSlidingPaneBeClosed.value = binding.slidingPane.isSlideable }
+
+        sharedViewModel.updateContactsAnimationsBasedOnDestination.observe(
+            viewLifecycleOwner,
+            {
+                it.consume { id ->
+                    val forward = when (id) {
+                        R.id.dialerFragment, R.id.masterChatRoomsFragment -> false
+                        else -> true
+                    }
+                    if (corePreferences.enableAnimations) {
+                        val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
+                        val axis = if (portraitOrientation) MaterialSharedAxis.X else MaterialSharedAxis.Y
+                        enterTransition = MaterialSharedAxis(axis, forward)
+                        reenterTransition = MaterialSharedAxis(axis, forward)
+                        returnTransition = MaterialSharedAxis(axis, !forward)
+                        exitTransition = MaterialSharedAxis(axis, !forward)
+                    }
+                }
+            }
+        )
 
         sharedViewModel.closeSlidingPaneEvent.observe(
             viewLifecycleOwner,

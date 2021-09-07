@@ -27,17 +27,14 @@ import android.provider.Settings
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
-import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.settings.viewmodels.CallSettingsViewModel
-import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.navigateToEmptySetting
 import org.linphone.compatibility.Compatibility
 import org.linphone.databinding.SettingsCallFragmentBinding
 import org.linphone.mediastream.Version
 import org.linphone.utils.Event
 
-class CallSettingsFragment : GenericFragment<SettingsCallFragmentBinding>() {
-    private lateinit var sharedViewModel: SharedMainViewModel
+class CallSettingsFragment : GenericSettingFragment<SettingsCallFragmentBinding>() {
     private lateinit var viewModel: CallSettingsViewModel
 
     override fun getLayoutId(): Int = R.layout.settings_call_fragment
@@ -45,11 +42,7 @@ class CallSettingsFragment : GenericFragment<SettingsCallFragmentBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = this
-
-        sharedViewModel = requireActivity().run {
-            ViewModelProvider(this).get(SharedMainViewModel::class.java)
-        }
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.sharedMainViewModel = sharedViewModel
 
         viewModel = ViewModelProvider(this).get(CallSettingsViewModel::class.java)
