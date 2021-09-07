@@ -58,7 +58,7 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
         viewModel = ViewModelProvider(this).get(SideMenuViewModel::class.java)
         binding.viewModel = viewModel

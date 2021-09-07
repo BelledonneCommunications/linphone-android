@@ -47,7 +47,7 @@ class SettingsFragment : SecureFragment<SettingsFragmentBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
         /* Shared view model & sliding pane related */
 
