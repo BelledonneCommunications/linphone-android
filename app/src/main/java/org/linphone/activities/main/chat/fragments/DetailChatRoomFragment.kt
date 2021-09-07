@@ -94,12 +94,14 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
         sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         }
         binding.sharedMainViewModel = sharedViewModel
+
+        useMaterialSharedAxisXForwardAnimation = sharedViewModel.isSlidingPaneSlideable.value == false
 
         view.doOnPreDraw {
             // Notifies fragment is ready to be drawn
@@ -264,7 +266,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                     sharedViewModel.messageToForwardEvent.value = Event(chatMessage)
                     sharedViewModel.isPendingMessageForward.value = true
 
-                    if (sharedViewModel.canSlidingPaneBeClosed.value == true) {
+                    if (sharedViewModel.isSlidingPaneSlideable.value == true) {
                         Log.i("[Chat Room] Forwarding message, going to chat rooms list")
                         sharedViewModel.closeSlidingPaneEvent.value = Event(true)
                     }
@@ -299,6 +301,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             {
                 it.consume { sipUri ->
                     Log.i("[Chat Room] Going to contacts list with SIP URI to add: $sipUri")
+                    sharedViewModel.updateContactsAnimationsBasedOnDestination.value = Event(R.id.masterChatRoomsFragment)
                     navigateToContacts(sipUri)
                 }
             }
@@ -527,7 +530,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
     override fun goBack() {
         if (!findNavController().popBackStack()) {
-            if (sharedViewModel.canSlidingPaneBeClosed.value == true) {
+            if (sharedViewModel.isSlidingPaneSlideable.value == true) {
                 sharedViewModel.closeSlidingPaneEvent.value = Event(true)
             } else {
                 navigateToEmptyChatRoom()

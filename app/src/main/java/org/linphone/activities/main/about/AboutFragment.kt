@@ -24,6 +24,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.transition.MaterialSharedAxis
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.main.fragments.SecureFragment
 import org.linphone.databinding.AboutFragmentBinding
@@ -36,7 +38,15 @@ class AboutFragment : SecureFragment<AboutFragmentBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
+
+        useMaterialSharedAxisXForwardAnimation = false
+        if (corePreferences.enableAnimations) {
+            enterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
+            reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
+            returnTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
+            exitTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
+        }
 
         viewModel = ViewModelProvider(this).get(AboutViewModel::class.java)
         binding.viewModel = viewModel

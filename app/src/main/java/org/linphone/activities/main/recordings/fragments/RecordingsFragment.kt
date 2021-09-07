@@ -24,6 +24,8 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.transition.MaterialSharedAxis
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.main.fragments.MasterFragment
 import org.linphone.activities.main.recordings.adapters.RecordingsListAdapter
@@ -49,7 +51,15 @@ class RecordingsFragment : MasterFragment<RecordingsFragmentBinding, RecordingsL
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
+
+        useMaterialSharedAxisXForwardAnimation = false
+        if (corePreferences.enableAnimations) {
+            enterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
+            reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
+            returnTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
+            exitTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
+        }
 
         viewModel = ViewModelProvider(this).get(RecordingsViewModel::class.java)
         binding.viewModel = viewModel
