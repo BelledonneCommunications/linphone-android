@@ -78,8 +78,10 @@ internal fun TabsFragment.navigateToCallHistory() {
     val action = when (findNavController().currentDestination?.id) {
         R.id.masterContactsFragment -> R.id.action_masterContactsFragment_to_masterCallLogsFragment
         R.id.dialerFragment -> R.id.action_dialerFragment_to_masterCallLogsFragment
-        else -> R.id.action_masterChatRoomsFragment_to_masterCallLogsFragment
+        R.id.masterChatRoomsFragment -> R.id.action_masterChatRoomsFragment_to_masterCallLogsFragment
+        else -> 0
     }
+    if (action == 0) return
     findNavController().navigate(
         action,
         null,
@@ -91,8 +93,10 @@ internal fun TabsFragment.navigateToContacts() {
     val action = when (findNavController().currentDestination?.id) {
         R.id.masterCallLogsFragment -> R.id.action_masterCallLogsFragment_to_masterContactsFragment
         R.id.dialerFragment -> R.id.action_dialerFragment_to_masterContactsFragment
-        else -> R.id.action_masterChatRoomsFragment_to_masterContactsFragment
+        R.id.masterChatRoomsFragment -> R.id.action_masterChatRoomsFragment_to_masterContactsFragment
+        else -> 0
     }
+    if (action == 0) return
     findNavController().navigate(
         action,
         null,
@@ -104,8 +108,10 @@ internal fun TabsFragment.navigateToDialer() {
     val action = when (findNavController().currentDestination?.id) {
         R.id.masterCallLogsFragment -> R.id.action_masterCallLogsFragment_to_dialerFragment
         R.id.masterContactsFragment -> R.id.action_masterContactsFragment_to_dialerFragment
-        else -> R.id.action_masterChatRoomsFragment_to_dialerFragment
+        R.id.masterChatRoomsFragment -> R.id.action_masterChatRoomsFragment_to_dialerFragment
+        else -> 0
     }
+    if (action == 0) return
     findNavController().navigate(
         action,
         null,
@@ -117,8 +123,10 @@ internal fun TabsFragment.navigateToChatRooms() {
     val action = when (findNavController().currentDestination?.id) {
         R.id.masterCallLogsFragment -> R.id.action_masterCallLogsFragment_to_masterChatRoomsFragment
         R.id.masterContactsFragment -> R.id.action_masterContactsFragment_to_masterChatRoomsFragment
-        else -> R.id.action_dialerFragment_to_masterChatRoomsFragment
+        R.id.dialerFragment -> R.id.action_dialerFragment_to_masterChatRoomsFragment
+        else -> 0
     }
+    if (action == 0) return
     findNavController().navigate(
         action,
         null,
@@ -147,10 +155,7 @@ internal fun DialerFragment.navigateToConfigFileViewer() {
 
 /* Chat related */
 
-internal fun MasterChatRoomsFragment.navigateToChatRoom(
-    args: Bundle,
-    slidingPane: SlidingPaneLayout
-) {
+internal fun MasterChatRoomsFragment.navigateToChatRoom(args: Bundle) {
     val navHostFragment =
         childFragmentManager.findFragmentById(R.id.chat_nav_container) as NavHostFragment
     val previousBackStackEntry = navHostFragment.navController.currentBackStackEntry
