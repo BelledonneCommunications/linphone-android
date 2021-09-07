@@ -53,7 +53,7 @@
                 android:id="@+id/back"
                 android:contentDescription="@string/content_description_go_back"
                 android:onClick="@{backClickListener}"
-                android:visibility="@{sharedMainViewModel.canSlidingPaneBeClosed ? View.VISIBLE : View.GONE}"
+                android:visibility="@{sharedMainViewModel.isSlidingPaneSlideable ? View.VISIBLE : View.GONE}"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.2"

@@ -20,6 +20,7 @@
 package org.linphone.activities.main.chat.fragments
 
 import android.app.Dialog
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -30,7 +31,9 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
+import com.google.android.material.transition.MaterialSharedAxis
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.GenericActivity
 import org.linphone.activities.clearDisplayedChatRoom
@@ -75,11 +78,23 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
         super.onDestroyView()
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (corePreferences.enableAnimations) {
+            val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
+            val axis = if (portraitOrientation) MaterialSharedAxis.X else MaterialSharedAxis.Y
+            enterTransition = MaterialSharedAxis(axis, true)
+            reenterTransition = MaterialSharedAxis(axis, true)
+            returnTransition = MaterialSharedAxis(axis, false)
+            exitTransition = MaterialSharedAxis(axis, false)
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         isSecure = true
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
         listViewModel = ViewModelProvider(this).get(ChatRoomsListViewModel::class.java)
         binding.viewModel = listViewModel
@@ -90,7 +105,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         }
 
-        view.doOnPreDraw { sharedViewModel.canSlidingPaneBeClosed.value = binding.slidingPane.isSlideable }
+        view.doOnPreDraw { sharedViewModel.isSlidingPaneSlideable.value = binding.slidingPane.isSlideable }
 
         // Chat room loading can take some time, so wait until it is ready before opening the pane
         sharedViewModel.chatRoomFragmentOpenedEvent.observe(
@@ -116,7 +131,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
             viewLifecycleOwner,
             {
                 it.consume {
-                    sharedViewModel.canSlidingPaneBeClosed.value = binding.slidingPane.isSlideable
+                    sharedViewModel.isSlidingPaneSlideable.value = binding.slidingPane.isSlideable
                     if (binding.slidingPane.isSlideable) {
                         val navHostFragment = childFragmentManager.findFragmentById(R.id.chat_nav_container) as NavHostFragment
                         if (navHostFragment.navController.currentDestination?.id == R.id.emptyChatFragment) {

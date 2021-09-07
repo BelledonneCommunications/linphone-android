@@ -22,10 +22,13 @@ package org.linphone.activities.main.chat.fragments
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.transition.MaterialSharedAxis
 import org.linphone.LinphoneApplication
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.chat.adapters.ChatRoomCreationContactsAdapter
@@ -51,10 +54,20 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
         sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
+        }
+
+        if (corePreferences.enableAnimations && sharedViewModel.isSlidingPaneSlideable.value == false) {
+            enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+            reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+            returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
+            exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
+
+            postponeEnterTransition()
+            view.doOnPreDraw { startPostponedEnterTransition() }
         }
 
         val createGroup = arguments?.getBoolean("createGroup") ?: false
@@ -174,7 +187,7 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
 
     override fun goBack() {
         if (!findNavController().popBackStack()) {
-            if (sharedViewModel.canSlidingPaneBeClosed.value == true) {
+            if (sharedViewModel.isSlidingPaneSlideable.value == true) {
                 sharedViewModel.closeSlidingPaneEvent.value = Event(true)
             } else {
                 navigateToEmptyChatRoom()

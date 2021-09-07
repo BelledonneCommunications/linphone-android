@@ -114,36 +114,6 @@ fun getRightBottomToLeftTopAnimationNavOptions(
         .build()
 }
 
-fun getLeftTopToRightBottomAnimationNavOptions(
-    popUpTo: Int = -1,
-    popUpInclusive: Boolean = false,
-    singleTop: Boolean = true
-): NavOptions {
-    val builder = NavOptions.Builder()
-    builder.setPopUpTo(popUpTo, popUpInclusive).setLaunchSingleTop(singleTop)
-    if (!corePreferences.enableAnimations) return builder.build()
-    return builder
-        .setEnterAnim(R.anim.enter_left_or_top)
-        .setExitAnim(R.anim.exit_right_or_bottom)
-        .setPopEnterAnim(R.anim.enter_right_or_bottom)
-        .setPopExitAnim(R.anim.exit_left_or_top)
-        .build()
-}
-
-fun getRightBottomToLeftTopNoPopAnimationNavOptions(
-    popUpTo: Int = -1,
-    popUpInclusive: Boolean = false,
-    singleTop: Boolean = true
-): NavOptions {
-    val builder = NavOptions.Builder()
-    builder.setPopUpTo(popUpTo, popUpInclusive).setLaunchSingleTop(singleTop)
-    if (!corePreferences.enableAnimations) return builder.build()
-    return builder
-        .setEnterAnim(R.anim.enter_right_or_bottom)
-        .setExitAnim(R.anim.exit_left_or_top)
-        .build()
-}
-
 fun getLeftTopToRightBottomNoPopAnimationNavOptions(
     popUpTo: Int = -1,
     popUpInclusive: Boolean = false,
@@ -174,90 +144,62 @@ internal fun MainActivity.navigateToDialer(args: Bundle?) {
     findNavController(R.id.nav_host_fragment).navigate(
         R.id.action_global_dialerFragment,
         args,
-        getRightToLeftAnimationNavOptions(R.id.dialerFragment, true)
+        popupTo(R.id.dialerFragment, true)
     )
 }
 
 /* Tabs fragment related */
 
 internal fun TabsFragment.navigateToCallHistory() {
-    when (findNavController().currentDestination?.id) {
-        R.id.masterContactsFragment -> findNavController().navigate(
-            R.id.action_masterContactsFragment_to_masterCallLogsFragment,
-            null,
-            getLeftTopToRightBottomAnimationNavOptions()
-        )
-        R.id.dialerFragment -> findNavController().navigate(
-            R.id.action_dialerFragment_to_masterCallLogsFragment,
-            null,
-            getLeftTopToRightBottomAnimationNavOptions()
-        )
-        R.id.masterChatRoomsFragment -> findNavController().navigate(
-            R.id.action_masterChatRoomsFragment_to_masterCallLogsFragment,
-            null,
-            getLeftTopToRightBottomAnimationNavOptions()
-        )
+    val action = when (findNavController().currentDestination?.id) {
+        R.id.masterContactsFragment -> R.id.action_masterContactsFragment_to_masterCallLogsFragment
+        R.id.dialerFragment -> R.id.action_dialerFragment_to_masterCallLogsFragment
+        else -> R.id.action_masterChatRoomsFragment_to_masterCallLogsFragment
     }
+    findNavController().navigate(
+        action,
+        null,
+        popupTo(R.id.masterCallLogsFragment, true)
+    )
 }
 
 internal fun TabsFragment.navigateToContacts() {
-    when (findNavController().currentDestination?.id) {
-        R.id.masterCallLogsFragment -> findNavController().navigate(
-            R.id.action_masterCallLogsFragment_to_masterContactsFragment,
-            null,
-            getRightBottomToLeftTopAnimationNavOptions()
-        )
-        R.id.dialerFragment -> findNavController().navigate(
-            R.id.action_dialerFragment_to_masterContactsFragment,
-            null,
-            getLeftTopToRightBottomAnimationNavOptions()
-        )
-        R.id.masterChatRoomsFragment -> findNavController().navigate(
-            R.id.action_masterChatRoomsFragment_to_masterContactsFragment,
-            null,
-            getLeftTopToRightBottomAnimationNavOptions()
-        )
+    val action = when (findNavController().currentDestination?.id) {
+        R.id.masterCallLogsFragment -> R.id.action_masterCallLogsFragment_to_masterContactsFragment
+        R.id.dialerFragment -> R.id.action_dialerFragment_to_masterContactsFragment
+        else -> R.id.action_masterChatRoomsFragment_to_masterContactsFragment
     }
+    findNavController().navigate(
+        action,
+        null,
+        popupTo(R.id.masterContactsFragment, true)
+    )
 }
 
 internal fun TabsFragment.navigateToDialer() {
-    when (findNavController().currentDestination?.id) {
-        R.id.masterCallLogsFragment -> findNavController().navigate(
-            R.id.action_masterCallLogsFragment_to_dialerFragment,
-            null,
-            getRightBottomToLeftTopAnimationNavOptions()
-        )
-        R.id.masterContactsFragment -> findNavController().navigate(
-            R.id.action_masterContactsFragment_to_dialerFragment,
-            null,
-            getRightBottomToLeftTopAnimationNavOptions()
-        )
-        R.id.masterChatRoomsFragment -> findNavController().navigate(
-            R.id.action_masterChatRoomsFragment_to_dialerFragment,
-            null,
-            getLeftTopToRightBottomAnimationNavOptions()
-        )
+    val action = when (findNavController().currentDestination?.id) {
+        R.id.masterCallLogsFragment -> R.id.action_masterCallLogsFragment_to_dialerFragment
+        R.id.masterContactsFragment -> R.id.action_masterContactsFragment_to_dialerFragment
+        else -> R.id.action_masterChatRoomsFragment_to_dialerFragment
     }
+    findNavController().navigate(
+        action,
+        null,
+        popupTo(R.id.dialerFragment, true)
+    )
 }
 
 internal fun TabsFragment.navigateToChatRooms() {
-    when (findNavController().currentDestination?.id) {
-        R.id.masterCallLogsFragment -> findNavController().navigate(
-            R.id.action_masterCallLogsFragment_to_masterChatRoomsFragment,
-            null,
-            getRightBottomToLeftTopAnimationNavOptions()
-        )
-        R.id.masterContactsFragment -> findNavController().navigate(
-            R.id.action_masterContactsFragment_to_masterChatRoomsFragment,
-            null,
-            getRightBottomToLeftTopAnimationNavOptions()
-        )
-        R.id.dialerFragment -> findNavController().navigate(
-            R.id.action_dialerFragment_to_masterChatRoomsFragment,
-            null,
-            getRightBottomToLeftTopAnimationNavOptions()
-        )
+    val action = when (findNavController().currentDestination?.id) {
+        R.id.masterCallLogsFragment -> R.id.action_masterCallLogsFragment_to_masterChatRoomsFragment
+        R.id.masterContactsFragment -> R.id.action_masterContactsFragment_to_masterChatRoomsFragment
+        else -> R.id.action_dialerFragment_to_masterChatRoomsFragment
     }
+    findNavController().navigate(
+        action,
+        null,
+        popupTo(R.id.masterChatRoomsFragment, true)
+    )
 }
 
 /* Dialer related */
@@ -296,7 +238,7 @@ internal fun MasterChatRoomsFragment.navigateToChatRoom(
     navHostFragment.navController.navigate(
         R.id.action_global_detailChatRoomFragment,
         args,
-        computeSlidingPaneNavOptions(slidingPane, popUpToFragmentId, true)
+        popupTo(popUpToFragmentId, true)
     )
 }
 
@@ -316,7 +258,7 @@ internal fun MasterChatRoomsFragment.navigateToChatRoomCreation(
     navHostFragment.navController.navigate(
         R.id.action_global_chatRoomCreationFragment,
         bundle,
-        computeSlidingPaneNavOptions(slidingPane, popUpToFragmentId, true)
+        popupTo(popUpToFragmentId, true)
     )
     if (!slidingPane.isOpen) slidingPane.openPane()
 }
@@ -668,7 +610,7 @@ internal fun SettingsFragment.navigateToAccountSettings(
         navHostFragment.navController.navigate(
             R.id.action_global_accountSettingsFragment,
             bundle,
-            computeSlidingPaneNavOptions(slidingPane)
+            popupTo(R.id.accountSettingsFragment, true)
         )
         if (!slidingPane.isOpen) slidingPane.openPane()
     }
@@ -681,7 +623,7 @@ internal fun SettingsFragment.navigateToTunnelSettings(slidingPane: SlidingPaneL
         navHostFragment.navController.navigate(
             R.id.action_global_tunnelSettingsFragment,
             null,
-            computeSlidingPaneNavOptions(slidingPane)
+            popupTo(R.id.tunnelSettingsFragment, true)
         )
         if (!slidingPane.isOpen) slidingPane.openPane()
     }
@@ -694,7 +636,7 @@ internal fun SettingsFragment.navigateToAudioSettings(slidingPane: SlidingPaneLa
         navHostFragment.navController.navigate(
             R.id.action_global_audioSettingsFragment,
             null,
-            computeSlidingPaneNavOptions(slidingPane)
+            popupTo(R.id.audioSettingsFragment, true)
         )
         if (!slidingPane.isOpen) slidingPane.openPane()
     }
@@ -707,7 +649,7 @@ internal fun SettingsFragment.navigateToVideoSettings(slidingPane: SlidingPaneLa
         navHostFragment.navController.navigate(
             R.id.action_global_videoSettingsFragment,
             null,
-            computeSlidingPaneNavOptions(slidingPane)
+            popupTo(R.id.videoSettingsFragment, true)
         )
         if (!slidingPane.isOpen) slidingPane.openPane()
     }
@@ -720,7 +662,7 @@ internal fun SettingsFragment.navigateToCallSettings(slidingPane: SlidingPaneLay
         navHostFragment.navController.navigate(
             R.id.action_global_callSettingsFragment,
             null,
-            computeSlidingPaneNavOptions(slidingPane)
+            popupTo(R.id.callSettingsFragment, true)
         )
         if (!slidingPane.isOpen) slidingPane.openPane()
     }
@@ -733,7 +675,7 @@ internal fun SettingsFragment.navigateToChatSettings(slidingPane: SlidingPaneLay
         navHostFragment.navController.navigate(
             R.id.action_global_chatSettingsFragment,
             null,
-            computeSlidingPaneNavOptions(slidingPane)
+            popupTo(R.id.chatSettingsFragment, true)
         )
         if (!slidingPane.isOpen) slidingPane.openPane()
     }
@@ -746,7 +688,7 @@ internal fun SettingsFragment.navigateToNetworkSettings(slidingPane: SlidingPane
         navHostFragment.navController.navigate(
             R.id.action_global_networkSettingsFragment,
             null,
-            computeSlidingPaneNavOptions(slidingPane)
+            popupTo(R.id.networkSettingsFragment, true)
         )
         if (!slidingPane.isOpen) slidingPane.openPane()
     }
@@ -759,7 +701,7 @@ internal fun SettingsFragment.navigateToContactsSettings(slidingPane: SlidingPan
         navHostFragment.navController.navigate(
             R.id.action_global_contactsSettingsFragment,
             null,
-            computeSlidingPaneNavOptions(slidingPane)
+            popupTo(R.id.contactsSettingsFragment, true)
         )
         if (!slidingPane.isOpen) slidingPane.openPane()
     }
@@ -772,7 +714,7 @@ internal fun SettingsFragment.navigateToAdvancedSettings(slidingPane: SlidingPan
         navHostFragment.navController.navigate(
             R.id.action_global_advancedSettingsFragment,
             null,
-            computeSlidingPaneNavOptions(slidingPane)
+            popupTo(R.id.advancedSettingsFragment, true)
         )
         if (!slidingPane.isOpen) slidingPane.openPane()
     }

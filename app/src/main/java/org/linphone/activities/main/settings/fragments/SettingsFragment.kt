@@ -47,7 +47,7 @@ class SettingsFragment : SecureFragment<SettingsFragmentBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
         /* Shared view model & sliding pane related */
 
@@ -55,7 +55,7 @@ class SettingsFragment : SecureFragment<SettingsFragmentBinding>() {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         }
 
-        view.doOnPreDraw { sharedViewModel.canSlidingPaneBeClosed.value = binding.slidingPane.isSlideable }
+        view.doOnPreDraw { sharedViewModel.isSlidingPaneSlideable.value = binding.slidingPane.isSlideable }
 
         sharedViewModel.closeSlidingPaneEvent.observe(
             viewLifecycleOwner,
@@ -71,7 +71,7 @@ class SettingsFragment : SecureFragment<SettingsFragmentBinding>() {
             viewLifecycleOwner,
             {
                 it.consume {
-                    sharedViewModel.canSlidingPaneBeClosed.value = binding.slidingPane.isSlideable
+                    sharedViewModel.isSlidingPaneSlideable.value = binding.slidingPane.isSlideable
                     if (binding.slidingPane.isSlideable) {
                         val navHostFragment = childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
                         if (navHostFragment.navController.currentDestination?.id == R.id.emptySettingsFragment) {

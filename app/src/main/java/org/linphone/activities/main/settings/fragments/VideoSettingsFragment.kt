@@ -29,18 +29,15 @@ import androidx.lifecycle.ViewModelProvider
 import org.linphone.BR
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
-import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.activities.main.settings.viewmodels.VideoSettingsViewModel
-import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.navigateToEmptySetting
 import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsVideoFragmentBinding
 import org.linphone.utils.Event
 import org.linphone.utils.PermissionHelper
 
-class VideoSettingsFragment : GenericFragment<SettingsVideoFragmentBinding>() {
-    private lateinit var sharedViewModel: SharedMainViewModel
+class VideoSettingsFragment : GenericSettingFragment<SettingsVideoFragmentBinding>() {
     private lateinit var viewModel: VideoSettingsViewModel
 
     override fun getLayoutId(): Int = R.layout.settings_video_fragment
@@ -48,11 +45,7 @@ class VideoSettingsFragment : GenericFragment<SettingsVideoFragmentBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = this
-
-        sharedViewModel = requireActivity().run {
-            ViewModelProvider(this).get(SharedMainViewModel::class.java)
-        }
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.sharedMainViewModel = sharedViewModel
 
         viewModel = ViewModelProvider(this).get(VideoSettingsViewModel::class.java)
@@ -105,14 +98,14 @@ class VideoSettingsFragment : GenericFragment<SettingsVideoFragmentBinding>() {
                     }
                 }
             )
-            binding.lifecycleOwner = this
+            binding.lifecycleOwner = viewLifecycleOwner
             list.add(binding)
         }
         viewModel.videoCodecs.value = list
     }
 
     override fun goBack() {
-        if (sharedViewModel.canSlidingPaneBeClosed.value == true) {
+        if (sharedViewModel.isSlidingPaneSlideable.value == true) {
             sharedViewModel.closeSlidingPaneEvent.value = Event(true)
         } else {
             navigateToEmptySetting()
