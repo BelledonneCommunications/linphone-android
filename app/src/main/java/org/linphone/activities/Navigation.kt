@@ -147,10 +147,7 @@ internal fun DialerFragment.navigateToConfigFileViewer() {
 
 /* Chat related */
 
-internal fun MasterChatRoomsFragment.navigateToChatRoom(
-    args: Bundle,
-    slidingPane: SlidingPaneLayout
-) {
+internal fun MasterChatRoomsFragment.navigateToChatRoom(args: Bundle) {
     val navHostFragment =
         childFragmentManager.findFragmentById(R.id.chat_nav_container) as NavHostFragment
     val previousBackStackEntry = navHostFragment.navController.currentBackStackEntry
