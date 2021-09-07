@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2020 Belledonne Communications SARL.
+ * Copyright (c) 2010-2021 Belledonne Communications SARL.
  *
  * This file is part of linphone-android
  * (see https://www.linphone.org).
@@ -17,32 +17,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.activities.assistant.fragments
+package org.linphone.activities.main.settings.fragments
 
 import android.os.Bundle
 import android.view.View
-import androidx.navigation.fragment.findNavController
-import org.linphone.R
+import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.ViewModelProvider
 import org.linphone.activities.GenericFragment
-import org.linphone.databinding.AssistantTopBarFragmentBinding
+import org.linphone.activities.main.viewmodels.SharedMainViewModel
 
-class TopBarFragment : GenericFragment<AssistantTopBarFragmentBinding>() {
-    override fun getLayoutId(): Int = R.layout.assistant_top_bar_fragment
+abstract class GenericSettingFragment<T : ViewDataBinding> : GenericFragment<T>() {
+    protected lateinit var sharedViewModel: SharedMainViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        sharedViewModel = requireActivity().run {
+            ViewModelProvider(this).get(SharedMainViewModel::class.java)
+        }
+
+        useMaterialSharedAxisXForwardAnimation = sharedViewModel.isSlidingPaneSlideable.value == false
+
         super.onViewCreated(view, savedInstanceState)
-
-        binding.lifecycleOwner = viewLifecycleOwner
-        useMaterialSharedAxisXForwardAnimation = false
-
-        binding.setBackClickListener {
-            goBack()
-        }
-    }
-
-    override fun goBack() {
-        if (!findNavController().popBackStack()) {
-            requireActivity().finish()
-        }
     }
 }

@@ -36,7 +36,7 @@
             <ImageView
                 android:id="@+id/back"
                 android:onClick="@{backClickListener}"
-                android:visibility="@{sharedMainViewModel.canSlidingPaneBeClosed ? View.VISIBLE : View.GONE}"
+                android:visibility="@{sharedMainViewModel.isSlidingPaneSlideable ? View.VISIBLE : View.GONE}"
                 android:contentDescription="@string/content_description_go_back"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -85,7 +85,7 @@
 
             <org.linphone.contact.BigContactAvatarView
                 android:id="@+id/avatar"
-                android:layout_width="100dp"
+                android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:gravity="center"
                 bind:layout="@layout/contact_avatar_big"

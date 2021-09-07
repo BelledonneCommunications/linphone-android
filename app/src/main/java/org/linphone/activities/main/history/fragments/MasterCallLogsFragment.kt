@@ -20,6 +20,7 @@
 package org.linphone.activities.main.history.fragments
 
 import android.app.Dialog
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -30,7 +31,9 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
+import com.google.android.material.transition.MaterialSharedAxis
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.clearDisplayedCallHistory
 import org.linphone.activities.main.fragments.MasterFragment
@@ -67,10 +70,24 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
         super.onDestroyView()
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        useMaterialSharedAxisXForwardAnimation = false
+
+        if (corePreferences.enableAnimations) {
+            val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
+            val axis = if (portraitOrientation) MaterialSharedAxis.X else MaterialSharedAxis.Y
+            enterTransition = MaterialSharedAxis(axis, false)
+            reenterTransition = MaterialSharedAxis(axis, false)
+            returnTransition = MaterialSharedAxis(axis, true)
+            exitTransition = MaterialSharedAxis(axis, true)
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
         listViewModel = ViewModelProvider(this).get(CallLogsListViewModel::class.java)
         binding.viewModel = listViewModel
@@ -81,7 +98,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         }
 
-        view.doOnPreDraw { sharedViewModel.canSlidingPaneBeClosed.value = binding.slidingPane.isSlideable }
+        view.doOnPreDraw { sharedViewModel.isSlidingPaneSlideable.value = binding.slidingPane.isSlideable }
 
         sharedViewModel.closeSlidingPaneEvent.observe(
             viewLifecycleOwner,
@@ -97,7 +114,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
             viewLifecycleOwner,
             {
                 it.consume {
-                    sharedViewModel.canSlidingPaneBeClosed.value = binding.slidingPane.isSlideable
+                    sharedViewModel.isSlidingPaneSlideable.value = binding.slidingPane.isSlideable
                     if (binding.slidingPane.isSlideable) {
                         val navHostFragment = childFragmentManager.findFragmentById(R.id.history_nav_container) as NavHostFragment
                         if (navHostFragment.navController.currentDestination?.id == R.id.emptyCallHistoryFragment) {
@@ -245,6 +262,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
                     val remoteAddress = callLogGroup.lastCallLog.remoteAddress
                     if (coreContext.core.callsNb > 0) {
                         Log.i("[History] Starting dialer with pre-filled URI ${remoteAddress.asStringUriOnly()}, is transfer? ${sharedViewModel.pendingCallTransfer}")
+                        sharedViewModel.updateDialerAnimationsBasedOnDestination.value = Event(R.id.masterCallLogsFragment)
                         val args = Bundle()
                         args.putString("URI", remoteAddress.asStringUriOnly())
                         args.putBoolean("Transfer", sharedViewModel.pendingCallTransfer)

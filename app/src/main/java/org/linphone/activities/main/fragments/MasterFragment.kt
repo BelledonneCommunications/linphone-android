@@ -22,10 +22,8 @@ package org.linphone.activities.main.fragments
 import android.app.Dialog
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.doOnPreDraw
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
-import org.linphone.LinphoneApplication
 import org.linphone.R
 import org.linphone.activities.main.adapters.SelectionListAdapter
 import org.linphone.activities.main.viewmodels.DialogViewModel
@@ -52,11 +50,6 @@ abstract class MasterFragment<T : ViewDataBinding, U : SelectionListAdapter<*, *
     protected open val dialogConfirmationMessageBeforeRemoval: Int = R.plurals.dialog_default_delete
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        if (LinphoneApplication.corePreferences.enableAnimations) {
-            postponeEnterTransition()
-            view.doOnPreDraw { startPostponedEnterTransition() }
-        }
-
         super.onViewCreated(view, savedInstanceState)
 
         // List selection

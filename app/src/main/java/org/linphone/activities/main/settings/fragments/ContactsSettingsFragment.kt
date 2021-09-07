@@ -26,9 +26,7 @@ import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
-import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.settings.viewmodels.ContactsSettingsViewModel
-import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.navigateToEmptySetting
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
@@ -36,8 +34,7 @@ import org.linphone.databinding.SettingsContactsFragmentBinding
 import org.linphone.utils.Event
 import org.linphone.utils.PermissionHelper
 
-class ContactsSettingsFragment : GenericFragment<SettingsContactsFragmentBinding>() {
-    private lateinit var sharedViewModel: SharedMainViewModel
+class ContactsSettingsFragment : GenericSettingFragment<SettingsContactsFragmentBinding>() {
     private lateinit var viewModel: ContactsSettingsViewModel
 
     override fun getLayoutId(): Int = R.layout.settings_contacts_fragment
@@ -45,11 +42,7 @@ class ContactsSettingsFragment : GenericFragment<SettingsContactsFragmentBinding
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = this
-
-        sharedViewModel = requireActivity().run {
-            ViewModelProvider(this).get(SharedMainViewModel::class.java)
-        }
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.sharedMainViewModel = sharedViewModel
 
         viewModel = ViewModelProvider(this).get(ContactsSettingsViewModel::class.java)
@@ -120,7 +113,7 @@ class ContactsSettingsFragment : GenericFragment<SettingsContactsFragmentBinding
     }
 
     override fun goBack() {
-        if (sharedViewModel.canSlidingPaneBeClosed.value == true) {
+        if (sharedViewModel.isSlidingPaneSlideable.value == true) {
             sharedViewModel.closeSlidingPaneEvent.value = Event(true)
         } else {
             navigateToEmptySetting()

@@ -38,7 +38,7 @@ class EchoCancellerCalibrationFragment : GenericFragment<AssistantEchoCancellerC
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
         viewModel = ViewModelProvider(this).get(EchoCancellerCalibrationViewModel::class.java)
         binding.viewModel = viewModel

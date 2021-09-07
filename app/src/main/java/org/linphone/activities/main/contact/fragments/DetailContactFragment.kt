@@ -50,12 +50,14 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
         sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         }
         binding.sharedMainViewModel = sharedViewModel
+
+        useMaterialSharedAxisXForwardAnimation = sharedViewModel.isSlidingPaneSlideable.value == false
 
         val id = arguments?.getString("id")
         arguments?.clear()
@@ -93,6 +95,9 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
                 it.consume { address ->
                     if (coreContext.core.callsNb > 0) {
                         Log.i("[Contact] Starting dialer with pre-filled URI ${address.asStringUriOnly()}, is transfer? ${sharedViewModel.pendingCallTransfer}")
+                        sharedViewModel.updateContactsAnimationsBasedOnDestination.value = Event(R.id.dialerFragment)
+                        sharedViewModel.updateDialerAnimationsBasedOnDestination.value = Event(R.id.masterContactsFragment)
+
                         val args = Bundle()
                         args.putString("URI", address.asStringUriOnly())
                         args.putBoolean("Transfer", sharedViewModel.pendingCallTransfer)
@@ -109,6 +114,7 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
             viewLifecycleOwner,
             {
                 it.consume { chatRoom ->
+                    sharedViewModel.updateContactsAnimationsBasedOnDestination.value = Event(R.id.masterChatRoomsFragment)
                     val args = Bundle()
                     args.putString("LocalSipUri", chatRoom.localAddress.asStringUriOnly())
                     args.putString("RemoteSipUri", chatRoom.peerAddress.asStringUriOnly())
@@ -140,7 +146,7 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
     }
 
     override fun goBack() {
-        if (sharedViewModel.canSlidingPaneBeClosed.value == true) {
+        if (sharedViewModel.isSlidingPaneSlideable.value == true) {
             sharedViewModel.closeSlidingPaneEvent.value = Event(true)
         } else {
             navigateToEmptyContact()

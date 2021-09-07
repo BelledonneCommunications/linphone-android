@@ -51,11 +51,13 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
         sharedViewModel = requireActivity().run {
             ViewModelProvider(this).get(SharedMainViewModel::class.java)
         }
+
+        useMaterialSharedAxisXForwardAnimation = sharedViewModel.isSlidingPaneSlideable.value == false
 
         val createGroup = arguments?.getBoolean("createGroup") ?: false
 
@@ -174,7 +176,7 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
 
     override fun goBack() {
         if (!findNavController().popBackStack()) {
-            if (sharedViewModel.canSlidingPaneBeClosed.value == true) {
+            if (sharedViewModel.isSlidingPaneSlideable.value == true) {
                 sharedViewModel.closeSlidingPaneEvent.value = Event(true)
             } else {
                 navigateToEmptyChatRoom()

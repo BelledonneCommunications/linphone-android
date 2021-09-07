@@ -28,22 +28,30 @@ import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.GenericFragment
+import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.main.viewmodels.TabsViewModel
 import org.linphone.activities.navigateToCallHistory
 import org.linphone.activities.navigateToChatRooms
 import org.linphone.activities.navigateToContacts
 import org.linphone.activities.navigateToDialer
 import org.linphone.databinding.TabsFragmentBinding
+import org.linphone.utils.Event
 
 class TabsFragment : GenericFragment<TabsFragmentBinding>(), NavController.OnDestinationChangedListener {
     private lateinit var viewModel: TabsViewModel
+    private lateinit var sharedViewModel: SharedMainViewModel
 
     override fun getLayoutId(): Int = R.layout.tabs_fragment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
+        useMaterialSharedAxisXForwardAnimation = false
+
+        sharedViewModel = requireActivity().run {
+            ViewModelProvider(this).get(SharedMainViewModel::class.java)
+        }
 
         viewModel = requireActivity().run {
             ViewModelProvider(this).get(TabsViewModel::class.java)
@@ -51,18 +59,34 @@ class TabsFragment : GenericFragment<TabsFragmentBinding>(), NavController.OnDes
         binding.viewModel = viewModel
 
         binding.setHistoryClickListener {
+            when (findNavController().currentDestination?.id) {
+                R.id.masterContactsFragment -> sharedViewModel.updateContactsAnimationsBasedOnDestination.value = Event(R.id.masterCallLogsFragment)
+                R.id.dialerFragment -> sharedViewModel.updateDialerAnimationsBasedOnDestination.value = Event(R.id.masterCallLogsFragment)
+            }
             navigateToCallHistory()
         }
 
         binding.setContactsClickListener {
+            when (findNavController().currentDestination?.id) {
+                R.id.dialerFragment -> sharedViewModel.updateDialerAnimationsBasedOnDestination.value = Event(R.id.masterContactsFragment)
+            }
+            sharedViewModel.updateContactsAnimationsBasedOnDestination.value = Event(findNavController().currentDestination?.id ?: -1)
             navigateToContacts()
         }
 
         binding.setDialerClickListener {
+            when (findNavController().currentDestination?.id) {
+                R.id.masterContactsFragment -> sharedViewModel.updateContactsAnimationsBasedOnDestination.value = Event(R.id.dialerFragment)
+            }
+            sharedViewModel.updateDialerAnimationsBasedOnDestination.value = Event(findNavController().currentDestination?.id ?: -1)
             navigateToDialer()
         }
 
         binding.setChatClickListener {
+            when (findNavController().currentDestination?.id) {
+                R.id.masterContactsFragment -> sharedViewModel.updateContactsAnimationsBasedOnDestination.value = Event(R.id.masterChatRoomsFragment)
+                R.id.dialerFragment -> sharedViewModel.updateDialerAnimationsBasedOnDestination.value = Event(R.id.masterChatRoomsFragment)
+            }
             navigateToChatRooms()
         }
     }

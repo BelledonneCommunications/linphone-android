@@ -30,7 +30,7 @@ class SharedMainViewModel : ViewModel() {
     val toggleDrawerEvent = MutableLiveData<Event<Boolean>>()
 
     val layoutChangedEvent = MutableLiveData<Event<Boolean>>()
-    var canSlidingPaneBeClosed = MutableLiveData<Boolean>()
+    var isSlidingPaneSlideable = MutableLiveData<Boolean>()
     val closeSlidingPaneEvent = MutableLiveData<Event<Boolean>>()
 
     /* Call history */
@@ -70,6 +70,11 @@ class SharedMainViewModel : ViewModel() {
 
     val selectedContact = MutableLiveData<Contact>()
 
+    // For correct animations directions
+    val updateContactsAnimationsBasedOnDestination: MutableLiveData<Event<Int>> by lazy {
+        MutableLiveData<Event<Int>>()
+    }
+
     /* Accounts */
 
     val accountRemoved = MutableLiveData<Boolean>()
@@ -81,4 +86,9 @@ class SharedMainViewModel : ViewModel() {
     /* Dialer */
 
     var dialerUri: String = ""
+
+    // For correct animations directions
+    val updateDialerAnimationsBasedOnDestination: MutableLiveData<Event<Int>> by lazy {
+        MutableLiveData<Event<Int>>()
+    }
 }
