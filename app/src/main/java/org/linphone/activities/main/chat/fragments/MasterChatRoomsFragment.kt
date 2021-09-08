@@ -252,8 +252,16 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
                         Log.w("[Chat] Activity is pending destruction, don't start navigating now!")
                         sharedViewModel.destructionPendingChatRoom = chatRoom
                     } else {
-                        sharedViewModel.selectedChatRoom.value = chatRoom
-                        navigateToChatRoom(AppUtils.createBundleWithSharedTextAndFiles(sharedViewModel))
+                        if (chatRoom.peerAddress.asStringUriOnly() == coreContext.notificationsManager.currentlyDisplayedChatRoomAddress) {
+                            Log.w("[Chat] This chat room is already displayed!")
+                        } else {
+                            sharedViewModel.selectedChatRoom.value = chatRoom
+                            navigateToChatRoom(
+                                AppUtils.createBundleWithSharedTextAndFiles(
+                                    sharedViewModel
+                                )
+                            )
+                        }
                     }
                 }
             }
