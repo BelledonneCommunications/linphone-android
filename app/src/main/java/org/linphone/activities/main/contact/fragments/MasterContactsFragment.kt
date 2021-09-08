@@ -219,7 +219,6 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
                 it.consume { contact ->
                     Log.i("[Contacts] Selected item in list changed: $contact")
                     sharedViewModel.selectedContact.value = contact
-                    listViewModel.filter.value = ""
 
                     if (editOnClick) {
                         navigateToContactEditor(sipUriToAdd, binding.slidingPane)
