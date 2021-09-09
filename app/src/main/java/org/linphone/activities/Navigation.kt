@@ -352,7 +352,7 @@ internal fun GroupInfoFragment.navigateToChatRoom(args: Bundle?) {
 
 /* Contacts related */
 
-internal fun MasterContactsFragment.navigateToContact(slidingPane: SlidingPaneLayout) {
+internal fun MasterContactsFragment.navigateToContact() {
     if (findNavController().currentDestination?.id == R.id.masterContactsFragment) {
         val navHostFragment =
             childFragmentManager.findFragmentById(R.id.contacts_nav_container) as NavHostFragment
@@ -361,7 +361,6 @@ internal fun MasterContactsFragment.navigateToContact(slidingPane: SlidingPaneLa
             null,
             popupTo(R.id.emptyContactFragment, true)
         )
-        if (!slidingPane.isOpen) slidingPane.openPane()
     }
 }
 
@@ -400,7 +399,7 @@ internal fun ContactEditorFragment.navigateToContact(contact: NativeContact) {
     findNavController().navigate(
         R.id.action_contactEditorFragment_to_detailContactFragment,
         bundle,
-        popupTo(R.id.masterContactsFragment, false)
+        popupTo(R.id.contactEditorFragment, true)
     )
 }
 

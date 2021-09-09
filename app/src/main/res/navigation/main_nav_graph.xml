@@ -22,15 +22,13 @@
         <argument
             android:name="LocalSipUri"
             app:argType="string"
+            android:defaultValue="@null"
             app:nullable="true" />
         <argument
             android:name="RemoteSipUri"
             app:argType="string"
+            android:defaultValue="@null"
             app:nullable="true" />
-        <deepLink
-            android:id="@+id/chatsDeepLink"
-            app:uri="linphone-android://chat/"
-            android:autoVerify="true" />
         <deepLink
             android:id="@+id/chatRoomDeepLink"
             app:uri="linphone-android://chat-room/{LocalSipUri}/{RemoteSipUri}"
@@ -53,10 +51,6 @@
         <action
             android:id="@+id/action_masterContactsFragment_to_masterChatRoomsFragment"
             app:destination="@id/masterChatRoomsFragment" />
-        <argument
-            android:name="id"
-            app:argType="string"
-            app:nullable="true" />
         <deepLink
             android:id="@+id/contactDeepLink"
             app:uri="linphone-android://contact/view/{id}"
