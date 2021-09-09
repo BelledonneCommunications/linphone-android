@@ -397,7 +397,12 @@ class NotificationsManager(private val context: Context) {
 
         val incomingCallNotificationIntent = Intent(context, IncomingCallActivity::class.java)
         incomingCallNotificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        val pendingIntent = PendingIntent.getActivity(context, 0, incomingCallNotificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            0,
+            incomingCallNotificationIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
 
         val notificationLayoutHeadsUp = RemoteViews(context.packageName, R.layout.call_incoming_notification_heads_up)
         notificationLayoutHeadsUp.setTextViewText(R.id.caller, displayName)
@@ -545,7 +550,12 @@ class NotificationsManager(private val context: Context) {
 
         val callNotificationIntent = Intent(context, callActivity)
         callNotificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        val pendingIntent = PendingIntent.getActivity(context, 0, callNotificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            0,
+            callNotificationIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
 
         val builder = NotificationCompat.Builder(
             context, channelToUse
@@ -612,7 +622,12 @@ class NotificationsManager(private val context: Context) {
         val target = Intent(context, ChatBubbleActivity::class.java)
         target.putExtra("RemoteSipUri", peerAddress)
         target.putExtra("LocalSipUri", localAddress)
-        val bubbleIntent = PendingIntent.getActivity(context, notifiable.notificationId, target, PendingIntent.FLAG_UPDATE_CURRENT)
+        val bubbleIntent = PendingIntent.getActivity(
+            context,
+            notifiable.notificationId,
+            target,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
 
         val id = LinphoneUtils.getChatRoomId(localAddress, peerAddress)
         val notification = createMessageNotification(notifiable, pendingIntent, bubbleIntent, id)
@@ -816,7 +831,10 @@ class NotificationsManager(private val context: Context) {
         answerIntent.putExtra(INTENT_REMOTE_ADDRESS, notifiable.remoteAddress)
 
         val answerPendingIntent = PendingIntent.getBroadcast(
-            context, notifiable.notificationId, answerIntent, PendingIntent.FLAG_UPDATE_CURRENT
+            context,
+            notifiable.notificationId,
+            answerIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
         return NotificationCompat.Action.Builder(
@@ -833,7 +851,10 @@ class NotificationsManager(private val context: Context) {
         hangupIntent.putExtra(INTENT_REMOTE_ADDRESS, notifiable.remoteAddress)
 
         val hangupPendingIntent = PendingIntent.getBroadcast(
-            context, notifiable.notificationId, hangupIntent, PendingIntent.FLAG_UPDATE_CURRENT
+            context,
+            notifiable.notificationId,
+            hangupIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
         return NotificationCompat.Action.Builder(
@@ -859,7 +880,7 @@ class NotificationsManager(private val context: Context) {
             context,
             notifiable.notificationId,
             replyIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         return NotificationCompat.Action.Builder(
             R.drawable.chat_send_over,
@@ -883,7 +904,7 @@ class NotificationsManager(private val context: Context) {
             context,
             notifiable.notificationId,
             markAsReadIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
     }
 
