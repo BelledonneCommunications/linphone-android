@@ -26,6 +26,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Vibrator
+import android.telephony.TelephonyManager
 import android.view.View
 import android.view.WindowManager
 import androidx.core.app.NotificationManagerCompat
@@ -47,6 +48,14 @@ class Compatibility {
             return when (Version.sdkAboveOrEqual(Version.API25_NOUGAT_71)) {
                 true -> Api25Compatibility.getDeviceName(context)
                 else -> Api21Compatibility.getDeviceName(context)
+            }
+        }
+
+        fun createPhoneListener(telephonyManager: TelephonyManager): PhoneStateInterface {
+            return if (Version.sdkStrictlyBelow(Version.API31_ANDROID_12)) {
+                PhoneStateListener(telephonyManager)
+            } else {
+                TelephonyListener(telephonyManager)
             }
         }
 

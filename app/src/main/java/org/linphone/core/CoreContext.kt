@@ -27,7 +27,6 @@ import android.os.Handler
 import android.os.Looper
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
-import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
 import android.util.Base64
 import android.util.Pair
@@ -56,6 +55,7 @@ import org.linphone.activities.call.CallActivity
 import org.linphone.activities.call.IncomingCallActivity
 import org.linphone.activities.call.OutgoingCallActivity
 import org.linphone.compatibility.Compatibility
+import org.linphone.compatibility.PhoneStateInterface
 import org.linphone.contact.Contact
 import org.linphone.contact.ContactsManager
 import org.linphone.core.tools.Log
@@ -99,37 +99,13 @@ class CoreContext(val context: Context, coreConfig: Config) {
     }
 
     private val loggingService = Factory.instance().loggingService
-
     private val coroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
-
-    private var gsmCallActive = false
-    private val phoneStateListener = object : PhoneStateListener() {
-        override fun onCallStateChanged(state: Int, phoneNumber: String?) {
-            gsmCallActive = when (state) {
-                TelephonyManager.CALL_STATE_OFFHOOK -> {
-                    Log.i("[Context] Phone state is off hook")
-                    true
-                }
-                TelephonyManager.CALL_STATE_RINGING -> {
-                    Log.i("[Context] Phone state is ringing")
-                    true
-                }
-                TelephonyManager.CALL_STATE_IDLE -> {
-                    Log.i("[Context] Phone state is idle")
-                    false
-                }
-                else -> {
-                    Log.w("[Context] Phone state is unexpected: $state")
-                    false
-                }
-            }
-        }
-    }
 
     private var overlayX = 0f
     private var overlayY = 0f
     private var callOverlay: View? = null
     private var previousCallState = Call.State.Idle
+    private lateinit var phoneStateListener: PhoneStateInterface
 
     private val listener: CoreListenerStub = object : CoreListenerStub() {
         override fun onGlobalStateChanged(core: Core, state: GlobalState, message: String) {
@@ -159,6 +135,11 @@ class CoreContext(val context: Context, coreConfig: Config) {
         ) {
             Log.i("[Context] Call state changed [$state]")
             if (state == Call.State.IncomingReceived || state == Call.State.IncomingEarlyMedia) {
+                var gsmCallActive = false
+                if (::phoneStateListener.isInitialized) {
+                    gsmCallActive = phoneStateListener.isInCall()
+                }
+
                 if (gsmCallActive) {
                     Log.w("[Context] Refusing the call with reason busy because a GSM call is active")
                     call.decline(Reason.Busy)
@@ -324,9 +305,13 @@ class CoreContext(val context: Context, coreConfig: Config) {
 
         configureCore()
 
-        val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        Log.i("[Context] Registering phone state listener")
-        telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE)
+        try {
+            phoneStateListener =
+                Compatibility.createPhoneListener(context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager)
+        } catch (exception: SecurityException) {
+            val hasReadPhoneStatePermission = PermissionHelper.get().hasReadPhoneState()
+            Log.e("[Context] Failed to create phone state listener: $exception, READ_PHONE_STATE permission status is $hasReadPhoneStatePermission")
+        }
 
         EmojiCompat.init(BundledEmojiCompatConfig(context))
         collator.strength = Collator.NO_DECOMPOSITION
@@ -336,10 +321,9 @@ class CoreContext(val context: Context, coreConfig: Config) {
         Log.i("[Context] Stopping")
         coroutineScope.cancel()
 
-        val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        Log.i("[Context] Unregistering phone state listener")
-        telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE)
-
+        if (::phoneStateListener.isInitialized) {
+            phoneStateListener.destroy()
+        }
         notificationsManager.destroy()
         contactsManager.destroy()
 
