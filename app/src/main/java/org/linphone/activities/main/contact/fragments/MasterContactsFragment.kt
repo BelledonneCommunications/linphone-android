@@ -104,6 +104,15 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
             }
         )
 
+        sharedViewModel.contactFragmentOpenedEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume {
+                    binding.slidingPane.openPane()
+                }
+            }
+        )
+
         sharedViewModel.closeSlidingPaneEvent.observe(
             viewLifecycleOwner,
             {
@@ -225,7 +234,7 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
                         editOnClick = false
                         sipUriToAdd = null
                     } else {
-                        navigateToContact(binding.slidingPane)
+                        navigateToContact()
                     }
                 }
             }
