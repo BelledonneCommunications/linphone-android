@@ -307,7 +307,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                             "linphone-android://chat-room/$localAddress/$peerAddress"
                         } else {
                             Log.i("[Main Activity] Found chat intent extra, go to chat rooms list")
-                            "linphone-android://chat/"
+                            "linphone-android://chat-room/"
                         }
                         findNavController(R.id.nav_host_fragment).navigate(Uri.parse(deepLink))
                     }
@@ -451,7 +451,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                 Log.i("[Main Activity] Found shortcut ID: $shortcutId")
                 handleLocusOrShortcut(shortcutId)
             } else {
-                val deepLink = "linphone-android://chat/"
+                val deepLink = "linphone-android://chat-room/"
                 Log.i("[Main Activity] Starting deep link: $deepLink")
                 findNavController(R.id.nav_host_fragment).navigate(Uri.parse(deepLink))
             }
