@@ -40,7 +40,7 @@ class RichEditText : AppCompatEditText {
         fun onCommitContent(
             inputContentInfo: InputContentInfoCompat,
             flags: Int,
-            opts: Bundle,
+            opts: Bundle?,
             contentMimeTypes: Array<String>?
         ): Boolean
     }
