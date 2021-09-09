@@ -68,6 +68,10 @@ class SharedMainViewModel : ViewModel() {
 
     /* Contacts */
 
+    val contactFragmentOpenedEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     val selectedContact = MutableLiveData<Contact>()
 
     // For correct animations directions
