@@ -289,7 +289,7 @@
     <string name="content_description_show_chat_room_menu">Menu des conversations</string>
     <string name="content_description_toggle_participant_devices_list">Afficher ou masquer la liste des appareils</string>
     <string name="content_description_contact_is_not_admin">Le contact n\'est pas un admin</string>
-    <string name="content_description_contact_can_do_encryption">Ce contact ne peux être ajouté aux conversations chiffrées</string>
+    <string name="content_description_contact_can_do_encryption">Ce contact ne peut être ajouté aux conversations chiffrées</string>
     <string name="content_description_exit_edition_mode">Sortir du mode édition</string>
     <string name="content_description_numpad_9">9</string>
     <string name="video_settings_preferred_fps_title">Nombre d\'images par seconde souhaité</string>
@@ -339,7 +339,7 @@
     <string name="contacts_settings_launcher_shortcuts_title">Créer des raccourcis vers les contacts dans le lanceur d\'applications</string>
     <string name="contacts_settings_launcher_shortcuts_summary">Remplacer les raccourcis actuels vers les conversations</string>
     <string name="contacts_settings_show_new_contact_account_dialog_title">Toujours demander dans quel compte le nouveau contact doit être ajouté</string>
-    <string name="contacts_settings_show_new_contact_account_dialog_summary">Si désactivé, le contact sera enregistrement localement</string>
+    <string name="contacts_settings_show_new_contact_account_dialog_summary">Si désactivé, le contact sera enregistré localement</string>
     <string name="advanced_settings_debug_mode_title">Traces de déboggage</string>
     <string name="network_settings_push_notifications_title">Activer les notifications push</string>
     <string name="advanced_settings_background_mode_title">Mode arrière-plan</string>
@@ -425,7 +425,7 @@
     <string name="dialog_update_available">Une mise à jour est disponible</string>
     <string name="dialog_try_open_file_as_text_title">Aucune application ne correspond à ce type de fichier</string>
     <string name="dialog_try_open_file_as_text_body">Souhaitez-vous essayer de l\'ouvrir en tant que fichier texte \?</string>
-    <string name="content_description_add_sip_address_field">Ajouter un champ SIP adresse</string>
+    <string name="content_description_add_sip_address_field">Ajouter un champ adresse SIP</string>
     <string name="content_description_add_phone_number_field">Ajouter un champ numéro de téléphone</string>
     <string name="content_description_go_back">Revenir en arrière</string>
     <string name="content_description_phone_number_use">Affiche à quoi le numéro de téléphone va-t-il servir</string>
@@ -585,7 +585,7 @@
     <string name="call_settings_full_screen_title">Plein écran pendant un appel</string>
     <string name="call_settings_full_screen_summary">Cache la barre de status et de navigation</string>
     <string name="chat_room_file_not_found">Fichier non trouvé</string>
-    <string name="account_settings_apply_prefix_for_calls_title">Applique le préfixe pour les appels sortant et les messages</string>
+    <string name="account_settings_apply_prefix_for_calls_title">Applique le préfixe pour les appels sortants et les messages</string>
     <string name="settings_primary_account_title">Compte principal</string>
     <string name="settings_primary_account_display_name_title">Nom d\'affichage</string>
     <string name="settings_primary_account_username_title">Nom d\'utilisateur</string>
