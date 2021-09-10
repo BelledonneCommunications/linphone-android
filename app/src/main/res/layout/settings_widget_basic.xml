@@ -47,7 +47,7 @@
             android:text="@{title}"
             android:enabled="@{enabled ?? true}"
             android:visibility="@{title.length() > 0 ? View.VISIBLE : View.GONE}"
-            android:maxLines="1"
+            android:maxLines="2"
             android:layout_marginTop="15dp"
             android:layout_marginLeft="@dimen/settings_margin"
             android:layout_marginRight="@dimen/settings_margin"
