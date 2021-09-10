@@ -300,16 +300,15 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                     intent.hasExtra("Chat") -> {
                         if (corePreferences.disableChat) return
 
-                        val deepLink = if (intent.hasExtra("RemoteSipUri") && intent.hasExtra("LocalSipUri")) {
+                        if (intent.hasExtra("RemoteSipUri") && intent.hasExtra("LocalSipUri")) {
                             val peerAddress = intent.getStringExtra("RemoteSipUri")
                             val localAddress = intent.getStringExtra("LocalSipUri")
                             Log.i("[Main Activity] Found chat room intent extra: local SIP URI=[$localAddress], peer SIP URI=[$peerAddress]")
-                            "linphone-android://chat-room/$localAddress/$peerAddress"
+                            findNavController(R.id.nav_host_fragment).navigate(Uri.parse("linphone-android://chat-room/$localAddress/$peerAddress"))
                         } else {
                             Log.i("[Main Activity] Found chat intent extra, go to chat rooms list")
-                            "linphone-android://chat-room/"
+                            findNavController(R.id.nav_host_fragment).navigate(R.id.action_global_masterChatRoomsFragment)
                         }
-                        findNavController(R.id.nav_host_fragment).navigate(Uri.parse(deepLink))
                     }
                     intent.hasExtra("Dialer") -> {
                         Log.i("[Main Activity] Found dialer intent extra, go to dialer")
@@ -451,9 +450,8 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                 Log.i("[Main Activity] Found shortcut ID: $shortcutId")
                 handleLocusOrShortcut(shortcutId)
             } else {
-                val deepLink = "linphone-android://chat-room/"
-                Log.i("[Main Activity] Starting deep link: $deepLink")
-                findNavController(R.id.nav_host_fragment).navigate(Uri.parse(deepLink))
+                Log.i("[Main Activity] Going into chat rooms list")
+                findNavController(R.id.nav_host_fragment).navigate(R.id.action_global_masterChatRoomsFragment)
             }
         }
     }
