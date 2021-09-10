@@ -49,8 +49,7 @@ abstract class GenericActivity : AppCompatActivity() {
     val isDestructionPending: Boolean
         get() = _isDestructionPending
 
-    open fun onLayoutChanges(foldingFeature: FoldingFeature?) {
-    }
+    open fun onLayoutChanges(foldingFeature: FoldingFeature?) { }
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
