@@ -16,11 +16,19 @@ Group changes to describe their impact on the project, as follows:
 - Reply to chat message feature (with original message preview)
 - Voice recordings in chat feature
 - Allow video recording in chat file sharing
+- New video call UI on foldable device like Galaxy Z Fold
+- Setting to automatically record all calls
 
 ### Changed
 - UI has been reworked around SlidingPane component to better handle tablets & foldable devices
-- Bumped dependencies
+- Animations have been replaced to use com.google.android.material.transition ones
+- Bumped dependencies, gradle updated from 4.2.2 to 7.0.2
+- Target Android SDK version set to 31 (Android	12)
 - SDK updated to 5.1.0 release
+
+### Fixed
+- Chat notifications disappearing when app restarts
+- "Infinite backstack", now each view is stored once (at most) in the backstack
 
 ### Removed
 - Global push notification setting in Network, use the switch in each Account instead

@@ -137,6 +137,6 @@ Due to the full app rewrite we can't re-use previous translations, so we'll be v
 In order to submit a patch for inclusion in linphone's source code:
 
 1. First make sure your patch applies to latest git sources before submitting: patches made to old versions can't and won't be merged.
-2. Fill out and send us an email with the link of pullrequest and the [Contributor Agreement](http://www.belledonne-communications.com/downloads/Belledonne_communications_CA.pdf) for your patch to be included in the git tree.
+2. Fill out and send us an email with the link of pullrequest and the [Contributor Agreement](https://linphone.org/sites/default/files/bc-contributor-agreement_0.pdf) for your patch to be included in the git tree.
 
 The goal of this agreement to grant us peaceful exercise of our rights on the linphone source code, while not losing your rights on your contribution.
