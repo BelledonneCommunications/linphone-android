@@ -159,10 +159,10 @@ internal fun MasterChatRoomsFragment.navigateToChatRoom(args: Bundle) {
     val navHostFragment =
         childFragmentManager.findFragmentById(R.id.chat_nav_container) as NavHostFragment
     val previousBackStackEntry = navHostFragment.navController.currentBackStackEntry
-    val popUpToFragmentId = if (previousBackStackEntry == null || previousBackStackEntry.destination.id == R.id.emptyChatFragment) {
-        R.id.emptyChatFragment
-    } else {
-        R.id.chatRoomCreationFragment
+    val popUpToFragmentId = when (previousBackStackEntry?.destination?.id) {
+        R.id.detailChatRoomFragment -> R.id.detailChatRoomFragment
+        R.id.chatRoomCreationFragment -> R.id.chatRoomCreationFragment
+        else -> R.id.emptyChatFragment
     }
     navHostFragment.navController.navigate(
         R.id.action_global_detailChatRoomFragment,
@@ -179,10 +179,10 @@ internal fun MasterChatRoomsFragment.navigateToChatRoomCreation(
     val navHostFragment =
         childFragmentManager.findFragmentById(R.id.chat_nav_container) as NavHostFragment
     val previousBackStackEntry = navHostFragment.navController.currentBackStackEntry
-    val popUpToFragmentId = if (previousBackStackEntry == null || previousBackStackEntry.destination.id == R.id.emptyChatFragment) {
-        R.id.emptyChatFragment
-    } else {
-        R.id.detailChatRoomFragment
+    val popUpToFragmentId = when (previousBackStackEntry?.destination?.id) {
+        R.id.detailChatRoomFragment -> R.id.detailChatRoomFragment
+        R.id.chatRoomCreationFragment -> R.id.chatRoomCreationFragment
+        else -> R.id.emptyChatFragment
     }
     navHostFragment.navController.navigate(
         R.id.action_global_chatRoomCreationFragment,
@@ -317,7 +317,7 @@ internal fun ChatRoomCreationFragment.navigateToChatRoom(args: Bundle) {
         findNavController().navigate(
             R.id.action_chatRoomCreationFragment_to_detailChatRoomFragment,
             args,
-            popupTo(R.id.emptyChatFragment, true)
+            popupTo(R.id.detailChatRoomFragment, true)
         )
     }
 }
@@ -345,7 +345,7 @@ internal fun GroupInfoFragment.navigateToChatRoom(args: Bundle?) {
         findNavController().navigate(
             R.id.action_groupInfoFragment_to_detailChatRoomFragment,
             args,
-            popupTo(R.id.emptyChatFragment, true)
+            popupTo(R.id.detailChatRoomFragment, true)
         )
     }
 }
@@ -356,10 +356,16 @@ internal fun MasterContactsFragment.navigateToContact() {
     if (findNavController().currentDestination?.id == R.id.masterContactsFragment) {
         val navHostFragment =
             childFragmentManager.findFragmentById(R.id.contacts_nav_container) as NavHostFragment
+        val previousBackStackEntry = navHostFragment.navController.currentBackStackEntry
+        val popUpToFragmentId = when (previousBackStackEntry?.destination?.id) {
+            R.id.detailContactFragment -> R.id.detailContactFragment
+            R.id.contactEditorFragment -> R.id.contactEditorFragment
+            else -> R.id.emptyContactFragment
+        }
         navHostFragment.navController.navigate(
             R.id.action_global_detailContactFragment,
             null,
-            popupTo(R.id.emptyContactFragment, true)
+            popupTo(popUpToFragmentId, true)
         )
     }
 }
@@ -454,7 +460,7 @@ internal fun MasterCallLogsFragment.navigateToCallHistory(slidingPane: SlidingPa
         navHostFragment.navController.navigate(
             R.id.action_global_detailCallLogFragment,
             null,
-            popupTo(R.id.emptyCallHistoryFragment, true)
+            popupTo(R.id.detailCallLogFragment, true)
         )
         if (!slidingPane.isOpen) slidingPane.openPane()
     }
