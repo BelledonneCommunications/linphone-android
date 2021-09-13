@@ -38,7 +38,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.io.File
 import java.lang.IllegalArgumentException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -448,6 +450,22 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 chatSendingViewModel.addAttachment(path)
             }
         }
+
+        sharedViewModel.richContentUri.observe(
+            viewLifecycleOwner,
+            { uri ->
+                Log.i("[Chat] Found rich content URI: $uri")
+                lifecycleScope.launch {
+                    withContext(Dispatchers.Main) {
+                        val path = FileUtils.getFilePath(requireContext(), uri)
+                        Log.i("[Chat] Rich content URI: $uri matching path is: $path")
+                        if (path != null) {
+                            chatSendingViewModel.addAttachment(path)
+                        }
+                    }
+                }
+            }
+        )
 
         sharedViewModel.messageToForwardEvent.observe(
             viewLifecycleOwner,
