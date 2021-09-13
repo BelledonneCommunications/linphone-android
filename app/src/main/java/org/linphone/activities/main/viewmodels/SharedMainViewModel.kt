@@ -19,6 +19,7 @@
  */
 package org.linphone.activities.main.viewmodels
 
+import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.activities.main.history.data.GroupedCallLogData
@@ -65,6 +66,9 @@ class SharedMainViewModel : ViewModel() {
     val chatRoomParticipants = MutableLiveData<ArrayList<Address>>()
 
     var chatRoomSubject: String = ""
+
+    // When using keyboard to share gif or other, see RichContentReceiver & RichEditText classes
+    val richContentUri = MutableLiveData<Event<Uri>>()
 
     /* Contacts */
 
