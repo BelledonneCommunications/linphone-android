@@ -19,61 +19,49 @@
  */
 package org.linphone.activities.main.chat.views
 
+import android.app.Activity
 import android.content.Context
-import android.os.Bundle
 import android.util.AttributeSet
-import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputConnection
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.core.view.inputmethod.EditorInfoCompat
-import androidx.core.view.inputmethod.InputConnectionCompat
-import androidx.core.view.inputmethod.InputContentInfoCompat
+import androidx.core.view.ViewCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
+import org.linphone.activities.main.chat.receivers.RichContentReceiver
+import org.linphone.activities.main.viewmodels.SharedMainViewModel
+import org.linphone.core.tools.Log
+import org.linphone.utils.Event
 
 /**
  * Allows for image input inside an EditText, usefull for keyboards with gif support for example.
  */
 class RichEditText : AppCompatEditText {
-    private var mListener: RichInputListener? = null
-    private var mSupportedMimeTypes: Array<String>? = null
-
-    interface RichInputListener {
-        fun onCommitContent(
-            inputContentInfo: InputContentInfoCompat,
-            flags: Int,
-            opts: Bundle?,
-            contentMimeTypes: Array<String>?
-        ): Boolean
+    constructor(context: Context) : super(context) {
+        initReceiveContentListener()
     }
 
-    constructor(context: Context) : super(context)
-
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
+        initReceiveContentListener()
+    }
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
         context,
         attrs,
         defStyleAttr
-    )
-
-    fun setListener(listener: RichInputListener) {
-        mListener = listener
-        mSupportedMimeTypes = arrayOf("image/png", "image/gif", "image/jpeg")
+    ) {
+        initReceiveContentListener()
     }
 
-    override fun onCreateInputConnection(editorInfo: EditorInfo): InputConnection? {
-        val ic = super.onCreateInputConnection(editorInfo)
-        EditorInfoCompat.setContentMimeTypes(editorInfo, mSupportedMimeTypes)
-
-        val callback =
-            InputConnectionCompat.OnCommitContentListener { inputContentInfo, flags, opts ->
-                val listener = mListener
-                listener?.onCommitContent(
-                    inputContentInfo, flags, opts, mSupportedMimeTypes
-                ) ?: false
+    private fun initReceiveContentListener() {
+        ViewCompat.setOnReceiveContentListener(
+            this, RichContentReceiver.MIME_TYPES,
+            RichContentReceiver { uri ->
+                Log.i("[Rich Edit Text] Received URI: $uri")
+                val activity = context as Activity
+                val sharedViewModel = activity.run {
+                    ViewModelProvider(activity as ViewModelStoreOwner).get(SharedMainViewModel::class.java)
+                }
+                sharedViewModel.richContentUri.value = Event(uri)
             }
-
-        return if (ic != null) {
-            InputConnectionCompat.createWrapper(ic, editorInfo, callback)
-        } else null
+        )
     }
 }
