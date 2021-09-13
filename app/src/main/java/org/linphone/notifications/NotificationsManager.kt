@@ -105,6 +105,8 @@ class NotificationsManager(private val context: Context) {
 
     var currentlyDisplayedChatRoomAddress: String? = null
 
+    var dismissNotificationUponReadChatRoom: Boolean = true
+
     private val listener: CoreListenerStub = object : CoreListenerStub() {
         override fun onCallStateChanged(
             core: Core,
@@ -166,8 +168,12 @@ class NotificationsManager(private val context: Context) {
         }
 
         override fun onChatRoomRead(core: Core, chatRoom: ChatRoom) {
-            Log.i("[Notifications Manager] Chat room [$chatRoom] has been marked as read, removing notification if any")
-            dismissChatNotification(chatRoom)
+            if (dismissNotificationUponReadChatRoom) {
+                Log.i("[Notifications Manager] Chat room [$chatRoom] has been marked as read, removing notification if any")
+                dismissChatNotification(chatRoom)
+            } else {
+                Log.i("[Notifications Manager] Chat room [$chatRoom] has been marked as read, not removing notification, maybe because of a chat bubble?")
+            }
         }
     }
 
@@ -619,6 +625,7 @@ class NotificationsManager(private val context: Context) {
             .setArguments(args)
             .createPendingIntent()
 
+        // PendingIntents attached to bubbles must be mutable
         val target = Intent(context, ChatBubbleActivity::class.java)
         target.putExtra("RemoteSipUri", peerAddress)
         target.putExtra("LocalSipUri", localAddress)
@@ -626,7 +633,7 @@ class NotificationsManager(private val context: Context) {
             context,
             notifiable.notificationId,
             target,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
         )
 
         val id = LinphoneUtils.getChatRoomId(localAddress, peerAddress)
@@ -876,11 +883,12 @@ class NotificationsManager(private val context: Context) {
         replyIntent.putExtra(INTENT_LOCAL_IDENTITY, notifiable.localIdentity)
         replyIntent.putExtra(INTENT_REMOTE_ADDRESS, notifiable.remoteAddress)
 
+        // PendingIntents attached to actions with remote inputs must be mutable
         val replyPendingIntent = PendingIntent.getBroadcast(
             context,
             notifiable.notificationId,
             replyIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
         )
         return NotificationCompat.Action.Builder(
             R.drawable.chat_send_over,

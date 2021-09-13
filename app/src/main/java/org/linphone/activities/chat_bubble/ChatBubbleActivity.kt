@@ -86,7 +86,10 @@ class ChatBubbleActivity : GenericActivity() {
             return
         }
 
+        // Workaround for the removed notification when a chat room is marked as read
+        coreContext.notificationsManager.dismissNotificationUponReadChatRoom = false
         chatRoom.markAsRead()
+        coreContext.notificationsManager.dismissNotificationUponReadChatRoom = true
 
         viewModel = ViewModelProvider(
             this,
@@ -147,6 +150,8 @@ class ChatBubbleActivity : GenericActivity() {
         )
 
         binding.setOpenAppClickListener {
+            coreContext.notificationsManager.currentlyDisplayedChatRoomAddress = null
+
             val intent = Intent(this, MainActivity::class.java)
             intent.putExtra("RemoteSipUri", remoteSipUri)
             intent.putExtra("LocalSipUri", localSipUri)
