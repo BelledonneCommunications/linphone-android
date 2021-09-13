@@ -619,6 +619,7 @@ class NotificationsManager(private val context: Context) {
             .setArguments(args)
             .createPendingIntent()
 
+        // PendingIntents attached to bubbles must be mutable
         val target = Intent(context, ChatBubbleActivity::class.java)
         target.putExtra("RemoteSipUri", peerAddress)
         target.putExtra("LocalSipUri", localAddress)
@@ -626,7 +627,7 @@ class NotificationsManager(private val context: Context) {
             context,
             notifiable.notificationId,
             target,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
         )
 
         val id = LinphoneUtils.getChatRoomId(localAddress, peerAddress)
@@ -876,11 +877,12 @@ class NotificationsManager(private val context: Context) {
         replyIntent.putExtra(INTENT_LOCAL_IDENTITY, notifiable.localIdentity)
         replyIntent.putExtra(INTENT_REMOTE_ADDRESS, notifiable.remoteAddress)
 
+        // PendingIntents attached to actions with remote inputs must be mutable
         val replyPendingIntent = PendingIntent.getBroadcast(
             context,
             notifiable.notificationId,
             replyIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
         )
         return NotificationCompat.Action.Builder(
             R.drawable.chat_send_over,
