@@ -22,6 +22,7 @@ Group changes to describe their impact on the project, as follows:
 ### Changed
 - UI has been reworked around SlidingPane component to better handle tablets & foldable devices
 - Animations have been replaced to use com.google.android.material.transition ones
+- Using new [Unified Content API](https://developer.android.com/about/versions/12/features/unified-content-api) to share files from keyboard (or other sources)
 - Bumped dependencies, gradle updated from 4.2.2 to 7.0.2
 - Target Android SDK version set to 31 (Android	12)
 - SDK updated to 5.1.0 release
