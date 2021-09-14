@@ -37,10 +37,8 @@ import org.linphone.activities.main.dialer.NumpadDigitListener
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.*
 import org.linphone.core.tools.Log
-import org.linphone.utils.AppUtils
-import org.linphone.utils.AudioRouteUtils
+import org.linphone.utils.*
 import org.linphone.utils.Event
-import org.linphone.utils.PermissionHelper
 
 class ControlsViewModel : ViewModel() {
     val isMicrophoneMuted = MutableLiveData<Boolean>()
@@ -335,15 +333,30 @@ class ControlsViewModel : ViewModel() {
 
     fun toggleRecording(closeMenu: Boolean) {
         somethingClickedEvent.value = Event(true)
-        val currentCall = coreContext.core.currentCall
+
+        val core = coreContext.core
+        val currentCall = core.currentCall
+        val conference = core.conference
+
         if (currentCall != null) {
             if (currentCall.isRecording) {
                 currentCall.stopRecording()
             } else {
                 currentCall.startRecording()
             }
+            isRecording.value = currentCall.isRecording
+        } else if (conference != null) {
+            val path = LinphoneUtils.getRecordingFilePathForConference()
+            if (conference.isRecording) {
+                conference.stopRecording()
+            } else {
+                conference.startRecording(path)
+            }
+            isRecording.value = conference.isRecording
+        } else {
+            isRecording.value = false
         }
-        isRecording.value = currentCall?.isRecording
+
         if (closeMenu) toggleOptionsMenu()
     }
 
