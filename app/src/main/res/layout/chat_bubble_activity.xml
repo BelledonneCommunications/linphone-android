@@ -93,7 +93,7 @@
             android:background="?attr/backgroundColor"
             android:orientation="horizontal">
 
-            <org.linphone.activities.main.chat.views.RichEditText
+            <EditText
                 android:id="@+id/message"
                 android:enabled="@{!chatSendingViewModel.isReadOnly}"
                 android:text="@={chatSendingViewModel.textToSend}"
