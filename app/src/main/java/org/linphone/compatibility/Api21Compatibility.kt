@@ -32,6 +32,8 @@ import android.os.Environment
 import android.os.Vibrator
 import android.provider.MediaStore
 import android.provider.Settings
+import android.view.View
+import android.view.Window
 import android.view.WindowManager
 import org.linphone.R
 import org.linphone.core.Content
@@ -206,6 +208,20 @@ class Api21Compatibility {
 
         fun requestDismissKeyguard(activity: Activity) {
             activity.window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD)
+        }
+
+        fun hideAndroidSystemUI(hide: Boolean, window: Window) {
+            val decorView = window.decorView
+            val uiOptions = if (hide) {
+                View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+            } else {
+                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            }
+            decorView.systemUiVisibility = uiOptions
+
+            if (hide) {
+                window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
+            }
         }
     }
 }
