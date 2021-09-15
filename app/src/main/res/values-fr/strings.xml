@@ -10,21 +10,15 @@
     <string name="call_stats_codec">Codec :</string>
     <string name="audio_settings_echo_cancellation_calibration_started">La calibration de l\'annulateur d\'écho est en cours</string>
     <string name="content_description_terminate_call">Mettre fin à l\'appel</string>
-    <string name="content_description_slide_right_hangup">Faire glisser vers la droite pour raccrocher</string>
-    <string name="content_description_slide_left_answer">Faire glisser vers la gauche pour décrocher</string>
     <string name="content_description_answer_call">Décrocher</string>
     <string name="content_description_enable_mic_mute">Couper le micro</string>
     <string name="content_description_disable_mic_mute">Réactiver le micro</string>
     <string name="audio_settings_adaptive_rate_control_title">Contrôle qualité adaptatif</string>
     <string name="video_settings_tablet_preview_title">Afficher la caméra sur la vue d\'accueil</string>
-    <string name="content_description_resume_call">Reprendre l\'appel</string>
-    <string name="content_description_resume_conference">Reprendre la conférence</string>
-    <string name="content_description_go_to_chat">Afficher la liste des conversations</string>
     <string name="content_description_disable_video">Désactiver la vidéo en appel</string>
     <string name="content_description_enable_video">Activer la vidéo en appel</string>
     <string name="content_description_use_bluetooth_headset">Utiliser un casque Bluetooth comme périphérique de sortie</string>
     <string name="content_description_use_earpiece">Utiliser des écouteurs comme périphérique de sortie</string>
-    <string name="content_description_toggle_call_menu">Afficher ou masquer le menu des actions avancées</string>
     <string name="content_description_add_call">Nouvel appel</string>
     <string name="content_description_transfer_call">Transférer l\'appel</string>
     <string name="content_description_pending_file_transfer">Transfert d\'appel en attente</string>
@@ -43,7 +37,6 @@
     <string name="sync_account_name">Contacts &appName;</string>
     <string name="about_privacy_policy">Consultez notre politique de confidentialité</string>
     <string name="logs_url_copied_to_clipboard">URL des traces copiée dans le presse-papier</string>
-    <string name="error">Erreur</string>
     <string name="phone_number">Numéro de téléphone</string>
     <string name="phone_numbers">Numéros de téléphone</string>
     <string name="international_prefix">Préfixe</string>
@@ -56,7 +49,6 @@
     <string name="sip_address">Adresse SIP</string>
     <string name="video_settings_initiate_call_title">Initier les appels en vidéo</string>
     <string name="cancel">Annuler</string>
-    <string name="invalid_email">Email non valide</string>
     <string name="today">Aujourd\'hui</string>
     <string name="yesterday">Hier</string>
     <string name="transport">Transport</string>
@@ -64,8 +56,6 @@
     <string name="video_settings_initiate_call_summary">Toujours envoyer une demande d\'activation de la vidéo</string>
     <string name="transport_tcp">TCP</string>
     <string name="transport_tls">TLS</string>
-    <string name="hash_algorithm_md5">MD5</string>
-    <string name="hash_algorithm_sha256">SHA-256</string>
     <string name="app_description">Le client SIP <i>open source</i></string>
     <string name="status_connected">Connecté</string>
     <string name="status_not_connected">Non connecté</string>
@@ -133,9 +123,6 @@
     <string name="chat_message_context_menu_delete">Supprimer</string>
     <string name="video_settings_automatically_accept_summary">Toujours accepter d\'activer la vidéo</string>
     <string name="video_settings_automatically_accept_title">Accepter d\'activer la vidéo</string>
-    <string name="chat_room_toast_choose_for_sharing">Sélectionnez une conversation ou créez-en une nouvelle</string>
-    <string name="chat_room_cant_open_file_no_app_found">Impossible d\'ouvrir le fichier, aucune application disponible pour ce format.</string>
-    <string name="chat_room_creation_failed">La conversation n\'a pas pu être créée</string>
     <string name="chat_room_context_menu_group_info">Infos du groupe</string>
     <string name="chat_room_context_menu_participants_devices">Terminaux de la conversation</string>
     <string name="chat_message_context_menu_ephemeral_messages">Messages éphémères</string>
@@ -153,11 +140,9 @@
     <string name="recordings_empty_list">Aucun enregistrement disponible</string>
     <string name="call_incoming_title">Appel entrant</string>
     <string name="call_outgoing_title">Appel sortant</string>
-    <string name="call_paused_by_remote">L\'appel a été mis en pause par votre interlocuteur</string>
     <string name="call_notification_paused">Appel en pause</string>
     <string name="call_notification_outgoing">Appel sortant</string>
     <string name="call_notification_active">Appel en cours</string>
-    <string name="call_conference_title">Conférence</string>
     <string name="call_error_declined">L\'appel a été refusé</string>
     <string name="call_error_user_busy">L\'utilisateur est occupé</string>
     <string name="call_error_user_not_found">L\'utilisateur n\'a pu être trouvé</string>
@@ -199,7 +184,6 @@
     <string name="assistant_error_passwords_dont_match">Les mots de passe ne correspondent pas</string>
     <string name="assistant_error_invalid_email_address">L\'adresse email est invalide</string>
     <string name="assistant_error_username_too_long">Le nom d\'utilisateur contient trop de caractères</string>
-    <string name="assistant_error_account_not_activated">Votre compte n\'a pas encore été activé</string>
     <string name="assistant_link_phone_number_skip">Passer</string>
     <string name="assistant_link_account">Lier le compte</string>
     <string name="assistant_remote_provisioning_title">Télécharger la configuration distante</string>
@@ -226,7 +210,6 @@
     <string name="assistant_continue_even_if_credentials_invalid">Continuer</string>
     <string name="assistant_generic_account">Utiliser un compte SIP</string>
     <string name="assistant_login_desc">Veuillez saisir votre nom d\'utilisateur et votre mot de passe avec le domaine SIP</string>
-    <string name="assistant_password_hash_algorithm">Algorithme de hachage</string>
     <string name="assistant_create_account_part_email">Veuillez saisir un nom d\'utilisateur, un email et un mot de passe pour votre compte &appName;</string>
     <string name="assistant_confirm_password">Confirmation du mot de passe</string>
     <string name="assistant_use_username_instead_or_phone_number">Utiliser un nom d\'utilisateur (optionnel)</string>
@@ -272,17 +255,14 @@
     <string name="tunnel_settings_dual_hostname_url_summary">Requis par le mode double</string>
     <string name="account_settings_user_name_summary">Exemple : john, si votre compte est john@sip.example.org</string>
     <string name="account_settings_password_summary">Vous devrez re-saisir votre mot de passe si vous changez votre nom d\'utilisateur ou le domaine</string>
-    <string name="network_settings_legacy_push_notification_format_title">Utiliser les anciens paramètres de notifications push</string>
     <string name="notification_channel_service_name">Notification de service &appName;</string>
     <string name="notification_channel_chat_name">Notifications de messages entrants &appName;</string>
     <string name="account_settings_outbound_proxy_summary">Faire passer tous les appels via le serveur mandataire SIP</string>
     <string name="account_settings_avpf_rr_interval_title">Intervalle AVPF RTCP régulier</string>
     <string name="dialog_do_not_ask_again">Ne plus afficher</string>
     <string name="dialog_lime_security_message">Dans les conversations sécurisées, les messages sont chiffrés de bout en bout. Il est possible d\'augmenter le niveau de sécurité en vérifiant l\'identité des participants. Pour ce faire, appelez le contact et suivez la procédure d\'authentification.</string>
-    <string name="content_description_remove_from_conference">Retirer le participant de la conférence</string>
     <string name="content_description_toggle_recording">Activer ou désactiver l\'enregistrement d\'appel</string>
     <string name="content_description_go_back_to_call">Revenir à la vue d\'appel</string>
-    <string name="content_description_show_numpad">Afficher ou masquer le pavé numérique pour envoyer des DTMFs</string>
     <string name="content_description_use_speaker">Utiliser une enceinte comme périphérique de sortie</string>
     <string name="content_description_forwarded_message">Le message a été transféré</string>
     <string name="content_description_e2e_encryption_enabled">Le chiffrement de bout-en-bout est activé</string>
@@ -331,7 +311,6 @@
     <string name="chat_settings_go_to_android_notification_settings">Paramètres de notification Android</string>
     <string name="network_settings_wifi_only_title">Utiliser uniquement la connexion Wi-Fi</string>
     <string name="network_settings_allow_ipv6_title">Autoriser IPv6</string>
-    <string name="network_settings_legacy_push_notification_format_summary">Requis quand vous utilisez un serveur Flexisip &lt; 2.0</string>
     <string name="network_settings_random_ports_title">Utiliser des ports aléatoires</string>
     <string name="network_settings_sip_port_title">Port SIP à utiliser</string>
     <string name="contacts_settings_native_presence_title">Information de présence dans le contact natif</string>
@@ -341,7 +320,6 @@
     <string name="contacts_settings_show_new_contact_account_dialog_title">Toujours demander dans quel compte le nouveau contact doit être ajouté</string>
     <string name="contacts_settings_show_new_contact_account_dialog_summary">Si désactivé, le contact sera enregistré localement</string>
     <string name="advanced_settings_debug_mode_title">Traces de déboggage</string>
-    <string name="network_settings_push_notifications_title">Activer les notifications push</string>
     <string name="advanced_settings_background_mode_title">Mode arrière-plan</string>
     <string name="advanced_settings_background_mode_summary">Affiche une notification pour maintenir la connexion avec l\'application</string>
     <string name="advanced_settings_auto_start_title">Démarrer au lancement du téléphone</string>
@@ -430,9 +408,6 @@
     <string name="content_description_go_back">Revenir en arrière</string>
     <string name="content_description_phone_number_use">Affiche à quoi le numéro de téléphone va-t-il servir</string>
     <string name="content_description_switch_camera">Intervertir la source de capture de la vidéo</string>
-    <string name="content_description_pause_conference">Mettre la conférence en pause</string>
-    <string name="content_description_start_conference">Fusionner les appels dans une conférence</string>
-    <string name="content_description_on_pause">Votre appel a été mis en pause</string>
     <string name="content_description_pause_call">Mettre l\'appel en pause</string>
     <string name="content_description_enter_edition_mode">Editer</string>
     <string name="content_description_attach_file">Ajouter une pièce jointe</string>
@@ -452,7 +427,6 @@
     <string name="content_description_confirm_contact_edit">Sauvegarder les modifications</string>
     <string name="content_description_change_contact_picture">Modifier la photo du contact</string>
     <string name="content_description_change_own_picture">Modifier ma photo</string>
-    <string name="content_description_call_direction">Direction d\'appel</string>
     <string name="content_description_show_call_details">Aller à la vue de détails de l\'appel</string>
     <string name="content_description_select_all">Tout sélectionner</string>
     <string name="content_description_unselect_all">Tout désélectionner</string>
@@ -493,7 +467,6 @@
     <string name="content_description_call_not_secured">L\'appel n\'est pas chiffré</string>
     <string name="history_delete_one_dialog">Voulez-vous supprimer cet enregistrement \?</string>
     <string name="content_description_call_security_pending">Le chiffrement est en cours</string>
-    <string name="content_description_toggle_call_stats">Afficher ou masquer les statistiques d\'appel</string>
     <string name="content_description_chat_message_video_attachment">Vidéo en pièce jointe</string>
     <string name="no_account_configured">Aucun compte configuré</string>
     <string name="contact_send_sms_invite_text">Bonjour ! Rejoins-moi sur &appName;! Disponible gratuitement ici : %s</string>
@@ -528,13 +501,7 @@
     <string name="call_stats_upload">Bande passante d\'envoi :</string>
     <string name="call_stats_ice">Connectivité ICE :</string>
     <string name="call_stats_video_resolution_sent">Résolution vidéo envoyée :</string>
-    <string name="call_stats_display_filter">Filtre d\'affichage :</string>
     <string name="assistant_welcome_desc">Cet assistant va vous aider à configurer et utiliser votre compte SIP.</string>
-    <string name="assistant_phone_number_info_content">
-\nGrâce à votre numéro de téléphone, vos amis vous trouverons plus facilement.
-\n
-\nVous verrez dans votre carnet d\'adresses qui utilise &appName; et vos amis verront également qu\'ils peuvent vous contacter via &appName;.
-\n</string>
     <string name="assistant_phone_number_link_info_content">
 \nVos amis pourront vous joindre plus facilement si vous associez votre compte à votre numéro de téléphone.
 \n
@@ -557,7 +524,6 @@
     <string name="account_settings_transport_title">Transport</string>
     <string name="content_description_clear_field">Vider le champ texte à côté</string>
     <string name="notification_channel_missed_call_name">Notifications d\'appels manqués &appName;</string>
-    <string name="content_description_take_screenshot">Prendre une capture d\'écran de la vidéo reçue</string>
     <string name="assistant_general_terms">les conditions d\'utilisation</string>
     <string name="content_description_close_bubble">Fermer la bulle de notification</string>
     <string name="assistant_privacy_policy">la politique de confidentialité</string>
@@ -582,8 +548,6 @@
     <string name="advanced_settings_other_title">Autres paramètres</string>
     <string name="call_settings_system_wide_overlay_title">Afficher la notification flottante en dehors de l\'app</string>
     <string name="account_settings_apply_prefix_for_calls_summary">Quand un nombre est saisi, applique le préfixe</string>
-    <string name="call_settings_full_screen_title">Plein écran pendant un appel</string>
-    <string name="call_settings_full_screen_summary">Cache la barre de status et de navigation</string>
     <string name="chat_room_file_not_found">Fichier non trouvé</string>
     <string name="account_settings_apply_prefix_for_calls_title">Applique le préfixe pour les appels sortants et les messages</string>
     <string name="settings_primary_account_title">Compte principal</string>
@@ -602,14 +566,11 @@
     <string name="chat_room_choose_conversation_for_message_forward">Sélectionnez ou créez une conversation pour transférer le message</string>
     <string name="chat_room_choose_conversation_for_file_sharing">Sélectionnez ou créez une conversation pour partager le(s) fichier(s)</string>
     <string name="chat_room_choose_conversation_for_text_sharing">Sélectionnez ou créez une conversation pour partager le texte</string>
-    <string name="chat_settins_enable_ephemeral_messages_beta_title">Messages éphémères (bêta)</string>
     <string name="chat_message_context_menu_reply">Répondre</string>
     <string name="chat_room_sending_reply_hint">Réponse</string>
     <string name="chat_room_sending_message_hint">Message</string>
     <string name="chat_message_replied">Réponse</string>
     <string name="chat_message_voice_recording_hold_to_record">Gardez le bouton enfoncé pour enregistrer un message vocal</string>
-    <string name="content_description_attached_file">Fichier attaché au message</string>
-    <string name="content_description_record_audio_message">Enregistrer un message vocal</string>
     <string name="content_description_cancel_reply">Annuler la réponse</string>
     <string name="content_description_voice_recording">Enregistrer un message vocal</string>
     <string name="content_description_cancel_voice_recording">Annuler l\'enregistrement du message vocal</string>

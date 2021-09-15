@@ -46,7 +46,7 @@
             android:layout_alignParentLeft="true"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
-            android:src="@{groupChatAvatarVisibility ? @drawable/chat_group_avatar : @drawable/avatar}"/>
+            android:src="@{groupChatAvatarVisibility ? @drawable/voip_multiple_contacts_avatar : @drawable/voip_single_contact_avatar}"/>
 
         <ImageView
             android:visibility="@{generatedAvatarVisibility &amp;&amp; !groupChatAvatarVisibility ? View.VISIBLE : View.GONE}"
