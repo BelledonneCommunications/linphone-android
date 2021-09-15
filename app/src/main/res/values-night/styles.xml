@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="BaseAppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Disable animations between activities -->
         <item name="android:windowAnimationStyle">@null</item>
         <item name="android:windowBackground">@color/dark_grey_color</item>
@@ -44,5 +44,18 @@
         <item name="darkToolbarTextColor">@color/white_color</item>
 
         <item name="button_background_drawable">@drawable/button_background_dark</item>
+
+        <item name="voipBackgroundColor">@color/voip_dark_color</item>
+        <item name="voipBackgroundBWColor">@color/voip_dark_color</item>
+        <item name="voipParticipantBackgroundColor">@color/voip_dark_color2</item>
+        <item name="voipExtraButtonsBackgroundColor">@color/voip_dark_color3</item>
+        <item name="voipToolbarBackgroundColor">@color/voip_dark_color4</item>
+        <item name="voipDrawableColor">@color/white_color</item>
+        <item name="voipTextColor">@color/white_color</item>
+        <item name="voipFormBackgroundColor">@color/voip_dark_color4</item>
+        <item name="voipFormFieldBackgroundColor">@color/voip_dark_color4</item>
+        <item name="voipFormDisabledFieldBackgroundColor">@color/voip_dark_color4</item>
     </style>
+
+    <style name="AppTheme" parent="BaseAppTheme" />
 </resources>

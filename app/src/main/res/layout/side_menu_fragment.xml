@@ -20,6 +20,9 @@
             name="aboutClickListener"
             type="android.view.View.OnClickListener"/>
         <variable
+            name="conferencesClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
             name="quitClickListener"
             type="android.view.View.OnClickListener"/>
         <variable
@@ -50,7 +53,7 @@
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
                 android:padding="10dp"
-                android:src="@drawable/avatar"
+                android:src="@drawable/voip_single_contact_avatar"
                 android:contentDescription="@string/content_description_change_own_picture"
                 glideAvatarFallback="@{viewModel.defaultAccountAvatar}" />
 
@@ -210,6 +213,35 @@
 
                     <TextView
                         android:text="@string/recordings"
+                        style="@style/standard_text_font"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="16dp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?dividerColor" />
+
+                <LinearLayout
+                    android:onClick="@{conferencesClickListener}"
+                    android:visibility="@{viewModel.showScheduledConferences ? View.VISIBLE : View.GONE}"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp">
+
+                    <ImageView
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:padding="5dp"
+                        android:contentDescription="@string/conference_scheduled"
+                        android:src="@drawable/icon_video_conf_new" />
+
+                    <TextView
+                        android:text="@string/conference_scheduled"
                         style="@style/standard_text_font"
                         android:layout_width="match_parent"
                         android:layout_height="45dp"

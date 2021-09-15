@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.main.conference.viewmodels.ConferenceWaitingRoomViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/voipBackgroundColor">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/conference_controls"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/shape_remote_video_background">
+
+            <org.linphone.activities.voip.views.RoundCornersTextureView
+                android:id="@+id/local_preview_video_surface"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:alignTopRight="false"
+                app:displayMode="black_bars" />
+
+            <ImageView
+                android:onClick="@{() -> viewModel.switchCamera()}"
+                android:visibility="@{viewModel.isSwitchCameraAvailable ? View.VISIBLE : View.GONE}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:padding="10dp"
+                android:src="@drawable/icon_call_camera_switch"
+                android:contentDescription="@string/content_description_switch_camera"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:id="@+id/conference_controls"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_above="@id/buttons"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:onClick="@{() -> viewModel.cancel()}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="20dp"
+                android:paddingTop="8dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="8dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="10dp"
+                android:gravity="center"
+                android:background="@drawable/shape_rect_gray_button"
+                android:text="@string/conference_waiting_room_cancel_call"
+                style="@style/big_orange_button_font"/>
+
+            <TextView
+                android:onClick="@{() -> viewModel.start()}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="20dp"
+                android:paddingTop="8dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="8dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="20dp"
+                android:gravity="center"
+                android:background="@drawable/shape_rect_orange_button"
+                android:text="@string/conference_waiting_room_start_call"
+                style="@style/big_orange_button_bold_font"/>
+
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/buttons"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/voip_buttons_fragment_size"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp">
+
+            <ImageView
+                android:contentDescription="@{viewModel.isMicrophoneMuted ? @string/content_description_disable_mic_mute : @string/content_description_enable_mic_mute}"
+                android:onClick="@{() -> viewModel.toggleMuteMicrophone()}"
+                android:selected="@{viewModel.isMicrophoneMuted}"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/button_background_reverse"
+                android:padding="5dp"
+                android:src="@drawable/icon_toggle_mic"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="W,1:1"
+                app:layout_constraintEnd_toStartOf="@id/speaker" />
+
+            <ImageView
+                android:id="@+id/speaker"
+                android:contentDescription="@{viewModel.isSpeakerSelected ? @string/content_description_disable_speaker : @string/content_description_enable_speaker}"
+                android:onClick="@{() -> viewModel.toggleSpeaker()}"
+                android:selected="@{viewModel.isSpeakerSelected}"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:background="@drawable/button_background_reverse"
+                android:padding="5dp"
+                android:src="@drawable/icon_toggle_speaker"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="W,1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <ImageView
+                android:contentDescription="@{viewModel.isVideoEnabled ? @string/content_description_disable_video : @string/content_description_enable_video}"
+                android:enabled="@{viewModel.isVideoAvailable}"
+                android:onClick="@{() -> viewModel.toggleVideo()}"
+                android:selected="@{viewModel.isVideoEnabled}"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:background="@drawable/button_background_reverse"
+                android:padding="5dp"
+                android:src="@drawable/icon_toggle_camera"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="W,1:1"
+                app:layout_constraintStart_toEndOf="@id/speaker" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </RelativeLayout>
+
+</layout>
