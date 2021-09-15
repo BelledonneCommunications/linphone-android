@@ -32,6 +32,7 @@ class SideMenuViewModel : ViewModel() {
     val showAssistant: Boolean = corePreferences.showAssistantInSideMenu
     val showSettings: Boolean = corePreferences.showSettingsInSideMenu
     val showRecordings: Boolean = corePreferences.showRecordingsInSideMenu
+    val showScheduledConferences: Boolean = corePreferences.showScheduledConferencesInSideMenu
     val showAbout: Boolean = corePreferences.showAboutInSideMenu
     val showQuit: Boolean = corePreferences.showQuitInSideMenu
 
