@@ -97,8 +97,8 @@ fun View.setLayoutSize(dimension: Float) {
     this.layoutParams.width = dimension.toInt()
 }
 
-@BindingAdapter("android:background")
-fun LinearLayout.setBackground(resource: Int) {
+@BindingAdapter("backgroundImage")
+fun LinearLayout.setBackgroundImage(resource: Int) {
     this.setBackgroundResource(resource)
 }
 
@@ -552,4 +552,17 @@ fun VoiceRecordProgressBar.setSecProgress(progress: Int) {
 @BindingAdapter("app:secondaryProgressTint")
 fun VoiceRecordProgressBar.setSecProgressTint(color: Int) {
     setSecondaryProgressTint(color)
+}
+
+@BindingAdapter("android:layout_margin")
+fun ConstraintLayout.setMargins(margins: Float) {
+    val params = layoutParams as ConstraintLayout.LayoutParams
+    val m = margins.toInt()
+    params.setMargins(m, m, m, m)
+    layoutParams = params
+}
+
+@BindingAdapter("android:onTouch")
+fun View.setTouchListener(listener: View.OnTouchListener) {
+    setOnTouchListener(listener)
 }
