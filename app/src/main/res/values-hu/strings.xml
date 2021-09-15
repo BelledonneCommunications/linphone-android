@@ -527,7 +527,7 @@
     <string name="content_description_slide_left_answer">Csúsztatás balra a hívás fogadásához</string>
     <string name="content_description_enable_speaker">Hang átirányítása a hangszóróhoz</string>
     <string name="content_description_resume_call">Folytassa a jelenleg tartott hívást</string>
-    <string name="content_description_show_numpad">A számok megjelenítése vagy elrejtése a DTMF-ek küldéséhez</string>
+    <string name="content_description_toggle_numpad">A számok megjelenítése vagy elrejtése a DTMF-ek küldéséhez</string>
     <string name="content_description_contact_can_do_encryption">Titkosított beszélgetésekbe meghívható partner</string>
     <string name="content_description_select_all">Összes elem kijelölése a listán</string>
     <string name="content_description_numpad_2">2</string>
