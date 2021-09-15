@@ -36,6 +36,9 @@ import org.linphone.activities.main.chat.fragments.ChatRoomCreationFragment
 import org.linphone.activities.main.chat.fragments.DetailChatRoomFragment
 import org.linphone.activities.main.chat.fragments.GroupInfoFragment
 import org.linphone.activities.main.chat.fragments.MasterChatRoomsFragment
+import org.linphone.activities.main.conference.fragments.ConferenceSchedulingFragment
+import org.linphone.activities.main.conference.fragments.ConferenceSchedulingParticipantsListFragment
+import org.linphone.activities.main.conference.fragments.ConferenceSchedulingSummaryFragment
 import org.linphone.activities.main.contact.fragments.ContactEditorFragment
 import org.linphone.activities.main.contact.fragments.DetailContactFragment
 import org.linphone.activities.main.contact.fragments.MasterContactsFragment
@@ -45,6 +48,7 @@ import org.linphone.activities.main.history.fragments.DetailCallLogFragment
 import org.linphone.activities.main.history.fragments.MasterCallLogsFragment
 import org.linphone.activities.main.settings.fragments.*
 import org.linphone.activities.main.sidemenu.fragments.SideMenuFragment
+import org.linphone.activities.voip.fragments.ActiveCallOrConferenceFragment
 import org.linphone.contact.NativeContact
 import org.linphone.core.Address
 
@@ -151,6 +155,46 @@ internal fun DialerFragment.navigateToConfigFileViewer() {
         bundle,
         popupTo()
     )
+}
+
+internal fun DialerFragment.navigateToConferenceScheduling() {
+    findMasterNavController().navigate(
+        R.id.action_global_conferenceSchedulingFragment,
+        null,
+        popupTo()
+    )
+}
+
+/* Conference scheduling related */
+
+internal fun ConferenceSchedulingFragment.navigateToParticipantsList() {
+    if (findNavController().currentDestination?.id == R.id.conferenceSchedulingFragment) {
+        findNavController().navigate(
+            R.id.action_conferenceSchedulingFragment_to_conferenceSchedulingParticipantsListFragment,
+            null,
+            popupTo(R.id.conferenceSchedulingParticipantsListFragment, true)
+        )
+    }
+}
+
+internal fun ConferenceSchedulingParticipantsListFragment.navigateToSummary() {
+    if (findNavController().currentDestination?.id == R.id.conferenceSchedulingParticipantsListFragment) {
+        findNavController().navigate(
+            R.id.action_conferenceSchedulingParticipantsListFragment_to_conferenceSchedulingSummaryFragment,
+            null,
+            popupTo(R.id.conferenceSchedulingSummaryFragment, true)
+        )
+    }
+}
+
+internal fun ConferenceSchedulingSummaryFragment.goBackToDialer() {
+    if (findNavController().currentDestination?.id == R.id.conferenceSchedulingSummaryFragment) {
+        findNavController().navigate(
+            R.id.action_global_dialerFragment,
+            null,
+            popupTo(R.id.dialerFragment, true)
+        )
+    }
 }
 
 /* Chat related */
@@ -747,6 +791,48 @@ internal fun SideMenuFragment.navigateToRecordings() {
         null,
         popupTo(R.id.recordingsFragment, true)
     )
+}
+
+/* Calls related */
+
+internal fun ActiveCallOrConferenceFragment.navigateToCallsList() {
+    if (findNavController().currentDestination?.id == R.id.activeCallOrConferenceFragment) {
+        findNavController().navigate(
+            R.id.action_activeCallOrConferenceFragment_to_callsListFragment,
+            null,
+            popupTo()
+        )
+    }
+}
+
+internal fun ActiveCallOrConferenceFragment.navigateToNumpad() {
+    if (findNavController().currentDestination?.id == R.id.activeCallOrConferenceFragment) {
+        findNavController().navigate(
+            R.id.action_activeCallOrConferenceFragment_to_numpadFragment,
+            null,
+            popupTo()
+        )
+    }
+}
+
+internal fun ActiveCallOrConferenceFragment.navigateToConferenceParticipants() {
+    if (findNavController().currentDestination?.id == R.id.activeCallOrConferenceFragment) {
+        findNavController().navigate(
+            R.id.action_activeCallOrConferenceFragment_to_conferenceParticipantsFragment,
+            null,
+            popupTo()
+        )
+    }
+}
+
+internal fun ActiveCallOrConferenceFragment.navigateToChat(args: Bundle) {
+    if (findNavController().currentDestination?.id == R.id.activeCallOrConferenceFragment) {
+        findNavController().navigate(
+            R.id.action_activeCallOrConferenceFragment_to_chatFragment,
+            args,
+            popupTo()
+        )
+    }
 }
 
 /* Assistant related */
