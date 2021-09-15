@@ -8,8 +8,6 @@
     <string name="transport">传输</string>
     <string name="transport_udp">UDP 用户数据报协议</string>
     <string name="transport_tls">TLS安全传输层协议</string>
-    <string name="hash_algorithm_md5">MD5哈希散列算法</string>
-    <string name="hash_algorithm_sha256">SHA-256加密算法</string>
     <string name="status_connected">已连接</string>
     <string name="status_not_connected">未连接</string>
     <string name="status_in_progress">正在进行连接</string>
@@ -104,8 +102,6 @@
     <string name="chat_settings_go_to_android_notification_settings">安卓通知设置</string>
     <string name="network_settings_wifi_only_title">只使用WiFi</string>
     <string name="network_settings_allow_ipv6_title">允许IPv6</string>
-    <string name="network_settings_push_notifications_title">允许推送通知</string>
-    <string name="network_settings_legacy_push_notification_format_title">使用旧式推送通知参数</string>
     <string name="network_settings_sip_port_title">要使用的SIP端口</string>
     <string name="contacts_settings_friendlist_subscribe_title">订阅好友列表</string>
     <string name="contacts_settings_native_presence_title">本机联系人中的状态信息</string>
@@ -187,28 +183,18 @@
     <string name="content_description_go_back">返回</string>
     <string name="content_description_clear_field">清空旁边的文本字段</string>
     <string name="content_description_switch_camera">从前置摄像头切换到后置摄像头，反之亦然</string>
-    <string name="content_description_remove_from_conference">从会议中删除参与者</string>
-    <string name="content_description_pause_conference">暂停会议</string>
-    <string name="content_description_start_conference">将所有通话合并到一个会议中</string>
-    <string name="content_description_on_pause">您的通话已被置于保留</string>
     <string name="content_description_toggle_recording">启用或禁用通话录音</string>
     <string name="content_description_terminate_call">终止通话</string>
-    <string name="content_description_slide_right_hangup">向右滑动可终止通话</string>
-    <string name="content_description_slide_left_answer">向左滑动以接听电话</string>
     <string name="content_description_answer_call">接听来电</string>
     <string name="content_description_enable_mic_mute">使麦克风静音</string>
     <string name="content_description_enable_speaker">将音频传到扬声器</string>
     <string name="content_description_disable_speaker">将音频传到耳机</string>
     <string name="content_description_go_back_to_call">返回通话视图</string>
-    <string name="content_description_resume_call">恢复当前保留的通话</string>
-    <string name="content_description_resume_conference">恢复当前保留的会议</string>
-    <string name="content_description_go_to_chat">显示对话列表</string>
     <string name="content_description_disable_video">禁用通话视频</string>
     <string name="content_description_enable_video">启用通话视频</string>
     <string name="content_description_toggle_audio_menu">显示或隐藏音频输出菜单</string>
     <string name="content_description_use_bluetooth_headset">使用蓝牙耳机为音频输出</string>
     <string name="content_description_use_earpiece">使用耳机为音频输出</string>
-    <string name="content_description_toggle_call_menu">显示或隐藏高级操作菜单</string>
     <string name="content_description_add_call">发起新通话</string>
     <string name="content_description_transfer_call">将当前通话转接给其他人</string>
     <string name="content_description_pending_file_transfer">待传输文件</string>
@@ -242,7 +228,6 @@
     <string name="content_description_confirm_contact_edit">保存更改</string>
     <string name="content_description_change_contact_picture">更改联系人图片</string>
     <string name="content_description_change_own_picture">更改自己的图像</string>
-    <string name="content_description_call_direction">通话方向</string>
     <string name="content_description_show_call_details">前往通话记录</string>
     <string name="content_description_exit_edition_mode">退出编辑模式</string>
     <string name="content_description_select_all">选择列表中的所有项目</string>
@@ -299,13 +284,11 @@
     <string name="content_description_call_quality_4">最佳通话质量</string>
     <string name="content_description_call_not_secured">通话不安全</string>
     <string name="content_description_call_secured">安全通话</string>
-    <string name="content_description_toggle_call_stats">显示或隐藏通话统计</string>
     <string name="content_description_chat_message_video_attachment">视频附件</string>
     <string name="call_settings_vibrate_title">来电时振动</string>
     <string name="call_settings_auto_answer_delay_title">自动接听时间</string>
     <string name="chat_settings_auto_download_summary">是否自动下载接收到的聊天信息中附加的文件</string>
     <string name="chat_settings_launcher_shortcuts_title">在启动器中创建至聊天室的快捷方式</string>
-    <string name="network_settings_legacy_push_notification_format_summary">使用Flexisip &lt;2.0时需要</string>
     <string name="contacts_settings_native_presence_summary">从＆appName;联系人信息快捷方式插入Android本机通讯录</string>
     <string name="advanced_settings_logs_server_url_summary">请勿随意编辑！</string>
     <string name="account_settings_link_phone_number_title">关联您的帐户</string>
@@ -321,7 +304,6 @@
     <string name="content_description_phone_number_use">显示您的电话号码将用于什么</string>
     <string name="content_description_pause_call">暂停通话</string>
     <string name="content_description_disable_mic_mute">取消麦克风静音</string>
-    <string name="content_description_show_numpad">显示或隐藏要发送DTMF的数字</string>
     <string name="content_description_use_speaker">使用扬声器作为音频输出</string>
     <string name="content_description_ephemeral_message">信息是「阅后即焚」</string>
     <string name="content_description_e2e_encryption_disabled">端到端加密已禁用</string>
@@ -339,7 +321,6 @@
     <string name="sync_account_name">&appName; 联系人</string>
     <string name="about_privacy_policy">查看我们的隐私策略</string>
     <string name="logs_url_copied_to_clipboard">日志链接已复制到剪贴板</string>
-    <string name="error">出错</string>
     <string name="phone_number">电话号码</string>
     <string name="phone_numbers">电话号码</string>
     <string name="select_your_country">选择您的国家</string>
@@ -357,7 +338,6 @@
         <item quantity="other">%d 天</item>
     </plurals>
     <string name="share_uploaded_logs_link">共享日志链接使用…</string>
-    <string name="invalid_email">邮箱无效</string>
     <string name="today">今日</string>
     <string name="quit">退出</string>
     <string name="history_calls_list">通话</string>
@@ -426,8 +406,6 @@
     <string name="chat_message_context_menu_imdn_info">发送状态</string>
     <string name="chat_message_imdn_info">发送状态</string>
     <string name="chat_message_context_menu_add_to_contacts">添加联系人</string>
-    <string name="chat_room_cant_open_file_no_app_found">无法打开文件，没有适用于此格式的应用程序。</string>
-    <string name="chat_room_creation_failed">聊天室创建失败</string>
     <string name="chat_room_context_menu_group_info">组信息</string>
     <string name="chat_room_context_menu_participants_devices">对话中的设备</string>
     <string name="chat_message_context_menu_ephemeral_messages">「阅后即焚」信息</string>
@@ -449,11 +427,9 @@
     <string name="recordings_empty_list">无录音</string>
     <string name="call_incoming_title">来电</string>
     <string name="call_outgoing_title">去电</string>
-    <string name="call_paused_by_remote">通话已被对方暂停</string>
     <string name="call_notification_paused">暂停通话</string>
     <string name="call_notification_outgoing">去电</string>
     <string name="call_notification_active">通话中</string>
-    <string name="call_conference_title">会议</string>
     <string name="call_error_declined">通话已被拒绝</string>
     <string name="call_error_user_busy">用户忙线中</string>
     <string name="call_error_user_not_found">找不到用户</string>
@@ -487,7 +463,6 @@
     <string name="assistant_error_passwords_dont_match">密码错误</string>
     <string name="assistant_error_invalid_email_address">电子邮件地址无效</string>
     <string name="assistant_error_username_too_long">用户名过长</string>
-    <string name="assistant_error_account_not_activated">您的账户还未激活</string>
     <string name="assistant_error_invalid_credentials">账户不存在或密码不匹配</string>
     <string name="assistant_linphone_account">使用您的&appName;账户</string>
     <string name="assistant_create_account_part_1">请确认您的国家码再输入您的电话号码</string>
@@ -500,7 +475,6 @@
     <string name="assistant_continue_even_if_credentials_invalid">继续</string>
     <string name="assistant_generic_account">使用SIP账户</string>
     <string name="assistant_display_name_optional">显示名（可选）</string>
-    <string name="assistant_password_hash_algorithm">哈希算法</string>
     <string name="assistant_create_account_part_email">请为您的&appName;帐户输入用户名和密码</string>
     <string name="assistant_confirm_password">密码确认</string>
     <string name="call_stats_receiver_loss_rate">接收方丢失率:</string>
@@ -539,19 +513,12 @@
     <string name="chat_room_group_info_leave">离开群组</string>
     <string name="chat_message_forwarded">已转发</string>
     <string name="chat_message_forward_confirmation_dialog">是否要在此聊天室转发信息？</string>
-    <string name="chat_room_toast_choose_for_sharing">选择一个对话或创建一个新的对话</string>
     <string name="chat_room_ephemeral_fragment_title">短暂信息</string>
     <string name="chat_room_creation_failed_snack">群组创建失败</string>
     <plurals name="chat_room_delete_dialog">
         <item quantity="other">\@string/chat_room_delete_one_dialog</item>
     </plurals>
     <string name="call_video_update_requested_dialog">对方要求启用视讯</string>
-    <string name="call_stats_display_filter">显示筛选器：</string>
-    <string name="assistant_phone_number_info_content">
-\n益于您的电话号码，您的朋友们可以更容易的找到您。
-\n
-\n您在通讯录里可以查看谁在使用&appName;，他们也同样可以通过&appName;联系您。
-\n</string>
     <string name="assistant_phone_number_link_info_content">
 \n如果将您的帐户关联您的电话号码，您的朋友们可以更容易的找到你。
 \n
@@ -568,5 +535,4 @@
     <string name="advanced_settings_reset_debug_logs_title">重启日志</string>
     <string name="settings_primary_account_display_name_title">显示名</string>
     <string name="settings_primary_account_username_title">用户名</string>
-    <string name="chat_settins_enable_ephemeral_messages_beta_title">启用短暂消息（测试版）</string>
 </resources>
