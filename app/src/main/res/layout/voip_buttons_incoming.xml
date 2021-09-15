@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.voip.viewmodels.ControlsViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/voip_buttons_fragment_size"
+        android:layout_margin="10dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/middle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
+
+            <ImageView
+                android:onClick="@{() -> viewModel.hangUp()}"
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:background="@drawable/button_call_terminate_background"
+                android:src="@drawable/icon_call_hangup"
+                android:padding="5dp"
+                android:layout_marginEnd="5dp"
+                android:contentDescription="@string/content_description_terminate_call"
+                app:layout_constraintDimensionRatio="W,1.26:1"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/middle"/>
+
+            <ImageView
+                android:onClick="@{() -> viewModel.answer()}"
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:background="@drawable/button_call_answer_background"
+                android:src="@drawable/icon_call_answer"
+                android:padding="5dp"
+                android:layout_marginStart="5dp"
+                android:contentDescription="@string/content_description_answer_call"
+                app:layout_constraintDimensionRatio="W,1.26:1"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@id/middle"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

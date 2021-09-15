@@ -24,6 +24,10 @@ ec_calibrator_cool_tones=1
 displaytype=MSAndroidTextureDisplay
 auto_resize_preview_to_keep_ratio=1
 
+[rtp]
+#video_rtp_port=8000-10000
+video_rtp_port=-1--1
+
 [misc]
 enable_basic_to_client_group_chat_room_migration=0
 enable_simple_group_chat_message_state=0
