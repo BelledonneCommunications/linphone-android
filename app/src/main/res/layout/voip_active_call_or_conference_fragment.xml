@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <import type="com.google.android.flexbox.FlexDirection" />
+        <variable
+            name="controlsViewModel"
+            type="org.linphone.activities.voip.viewmodels.ControlsViewModel" />
+        <variable
+            name="callsViewModel"
+            type="org.linphone.activities.voip.viewmodels.CallsViewModel" />
+        <variable
+            name="conferenceViewModel"
+            type="org.linphone.activities.voip.viewmodels.ConferenceViewModel" />
+        <variable
+            name="statsViewModel"
+            type="org.linphone.activities.voip.viewmodels.StatisticsListViewModel" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinator"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/primary_buttons"
+                android:layout_margin="@{controlsViewModel.fullScreenMode ? @dimen/voip_remote_margin_full_screen : @dimen/voip_remote_margin, default=@dimen/voip_remote_margin}">
+
+                <include layout="@layout/voip_conference"
+                    android:visibility="@{conferenceViewModel.isInConference ? View.VISIBLE : View.GONE, default=gone}"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:conferenceViewModel="@{conferenceViewModel}"
+                    app:controlsViewModel="@{controlsViewModel}"/>
+
+                <include
+                    android:id="@+id/remote_layout"
+                    layout="@layout/voip_call_remote"
+                    android:visibility="@{conferenceViewModel.isInConference ? View.GONE : View.VISIBLE, default=visible}"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:viewModel="@{callsViewModel.currentCallData}"
+                    app:controlsViewModel="@{controlsViewModel}"/>
+
+                <include
+                    layout="@layout/voip_local_preview"
+                    android:visibility="@{controlsViewModel.isVideoEnabled ? View.VISIBLE : View.GONE, default=gone}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="25dp"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:controlsViewModel="@{controlsViewModel}" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <include
+                android:visibility="@{controlsViewModel.audioRoutesEnabled ? View.VISIBLE : View.GONE}"
+                layout="@layout/voip_audio_routes_buttons"
+                android:translationY="@{controlsViewModel.audioRoutesMenuTranslateY, default=@dimen/voip_audio_routes_menu_translate_y}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="12dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/primary_buttons"
+                app:controlsViewModel="@{controlsViewModel}"/>
+
+            <include
+                android:id="@+id/primary_buttons"
+                android:visibility="@{controlsViewModel.fullScreenMode ? View.GONE : View.VISIBLE}"
+                layout="@layout/voip_buttons"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/voip_buttons_fragment_size"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintWidth_max="@dimen/voip_buttons_max_width"
+                app:controlsViewModel="@{controlsViewModel}"
+                app:callsViewModel="@{callsViewModel}" />
+
+            <include layout="@layout/voip_paused_conference"
+                android:visibility="@{conferenceViewModel.isInConference &amp;&amp; conferenceViewModel.isConferencePaused ? View.VISIBLE : View.GONE, default=gone}"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="10dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/primary_buttons"
+                app:conferenceViewModel="@{conferenceViewModel}" />
+
+            <include layout="@layout/voip_remotely_paused_call"
+                android:visibility="@{callsViewModel.currentCallData.isRemotelyPaused ? View.VISIBLE : View.GONE, default=gone}"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="10dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/primary_buttons" />
+
+            <LinearLayout
+                android:onClick="@{() -> controlsViewModel.hideExtraButtons(false)}"
+                android:visibility="@{controlsViewModel.showExtras ? View.VISIBLE : View.GONE, default=gone}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/voip_translucent_popup_background" />
+
+            <include
+                layout="@layout/voip_extra_buttons"
+                android:translationY="@{controlsViewModel.extraButtonsMenuTranslateY, default=@dimen/voip_call_extra_buttons_translate_y}"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/voip_call_extra_buttons_height"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintWidth_max="@dimen/voip_extra_menu_max_width"
+                app:controlsViewModel="@{controlsViewModel}"
+                app:callsViewModel="@{callsViewModel}"
+                app:conferenceViewModel="@{conferenceViewModel}"/>
+
+            <include
+                android:visibility="@{controlsViewModel.callStatsVisible ? View.VISIBLE : View.GONE, default=gone}"
+                layout="@layout/voip_call_stats"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:statsViewModel="@{statsViewModel}"
+                app:controlsViewModel="@{controlsViewModel}"/>
+
+            <include
+                android:visibility="@{controlsViewModel.numpadVisible ? View.VISIBLE : View.GONE, default=gone}"
+                layout="@layout/voip_numpad"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:controlsViewModel="@{controlsViewModel}"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</layout>
