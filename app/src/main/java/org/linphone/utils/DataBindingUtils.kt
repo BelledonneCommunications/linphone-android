@@ -97,8 +97,8 @@ fun View.setLayoutSize(dimension: Float) {
     this.layoutParams.width = dimension.toInt()
 }
 
-@BindingAdapter("android:background")
-fun LinearLayout.setBackground(resource: Int) {
+@BindingAdapter("backgroundImage")
+fun LinearLayout.setBackgroundImage(resource: Int) {
     this.setBackgroundResource(resource)
 }
 
@@ -552,4 +552,53 @@ fun VoiceRecordProgressBar.setSecProgress(progress: Int) {
 @BindingAdapter("app:secondaryProgressTint")
 fun VoiceRecordProgressBar.setSecProgressTint(color: Int) {
     setSecondaryProgressTint(color)
+}
+
+@BindingAdapter("android:layout_margin")
+fun ConstraintLayout.setMargins(margins: Float) {
+    val params = layoutParams as ConstraintLayout.LayoutParams
+    val m = margins.toInt()
+    params.setMargins(m, m, m, m)
+    layoutParams = params
+}
+
+@BindingAdapter("android:onTouch")
+fun View.setTouchListener(listener: View.OnTouchListener) {
+    setOnTouchListener(listener)
+}
+
+@BindingAdapter("entries")
+fun Spinner.setEntries(entries: List<Any>?) {
+    if (entries != null) {
+        val arrayAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, entries)
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        adapter = arrayAdapter
+    }
+}
+
+@BindingAdapter("selectedValueAttrChanged")
+fun Spinner.setInverseBindingListener(listener: InverseBindingListener) {
+    onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+            if (tag != position) {
+                listener.onChange()
+            }
+        }
+
+        override fun onNothingSelected(parent: AdapterView<*>) {}
+    }
+}
+
+@BindingAdapter("selectedValue")
+fun Spinner.setSelectedValue(value: Any?) {
+    if (adapter != null) {
+        val position = (adapter as ArrayAdapter<Any>).getPosition(value)
+        setSelection(position, false)
+        tag = position
+    }
+}
+
+@InverseBindingAdapter(attribute = "selectedValue", event = "selectedValueAttrChanged")
+fun Spinner.getSelectedValue(): Any? {
+    return selectedItem
 }
