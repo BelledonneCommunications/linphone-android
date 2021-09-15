@@ -41,11 +41,9 @@ import kotlin.collections.HashMap
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
-import org.linphone.activities.call.CallActivity
-import org.linphone.activities.call.IncomingCallActivity
-import org.linphone.activities.call.OutgoingCallActivity
 import org.linphone.activities.chat_bubble.ChatBubbleActivity
 import org.linphone.activities.main.MainActivity
+import org.linphone.activities.voip.CallActivity
 import org.linphone.compatibility.Compatibility
 import org.linphone.contact.Contact
 import org.linphone.core.*
@@ -380,7 +378,7 @@ class NotificationsManager(private val context: Context) {
                 if (picture != null) {
                     IconCompat.createWithBitmap(picture)
                 } else {
-                    IconCompat.createWithResource(context, R.drawable.avatar)
+                    IconCompat.createWithResource(context, R.drawable.voip_single_contact_avatar)
                 }
             if (userIcon != null) builder.setIcon(userIcon)
             builder.build()
@@ -401,7 +399,7 @@ class NotificationsManager(private val context: Context) {
         val roundPicture = ImageUtils.getRoundBitmapFromUri(context, pictureUri)
         val displayName = contact?.fullName ?: LinphoneUtils.getDisplayName(call.remoteAddress)
 
-        val incomingCallNotificationIntent = Intent(context, IncomingCallActivity::class.java)
+        val incomingCallNotificationIntent = Intent(context, org.linphone.activities.voip.CallActivity::class.java)
         incomingCallNotificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         val pendingIntent = PendingIntent.getActivity(
             context,
@@ -530,12 +528,12 @@ class NotificationsManager(private val context: Context) {
         val callActivity: Class<*>
         when (call.state) {
             Call.State.Paused, Call.State.Pausing, Call.State.PausedByRemote -> {
-                callActivity = CallActivity::class.java
+                callActivity = org.linphone.activities.voip.CallActivity::class.java
                 stringResourceId = R.string.call_notification_paused
                 iconResourceId = R.drawable.topbar_call_paused_notification
             }
             Call.State.OutgoingRinging, Call.State.OutgoingProgress, Call.State.OutgoingInit, Call.State.OutgoingEarlyMedia -> {
-                callActivity = OutgoingCallActivity::class.java
+                callActivity = CallActivity::class.java
                 stringResourceId = R.string.call_notification_outgoing
                 iconResourceId = if (call.params.videoEnabled()) {
                     R.drawable.topbar_videocall_notification
@@ -544,7 +542,7 @@ class NotificationsManager(private val context: Context) {
                 }
             }
             else -> {
-                callActivity = CallActivity::class.java
+                callActivity = org.linphone.activities.voip.CallActivity::class.java
                 stringResourceId = R.string.call_notification_active
                 iconResourceId = if (call.currentParams.videoEnabled()) {
                     R.drawable.topbar_videocall_notification
@@ -789,7 +787,7 @@ class NotificationsManager(private val context: Context) {
         }
         style.isGroupConversation = notifiable.isGroup
 
-        val icon = lastPerson?.icon ?: IconCompat.createWithResource(context, R.drawable.avatar)
+        val icon = lastPerson?.icon ?: IconCompat.createWithResource(context, R.drawable.voip_single_contact_avatar)
         val bubble = NotificationCompat.BubbleMetadata.Builder(bubbleIntent, icon)
             .setDesiredHeightResId(R.dimen.chat_message_bubble_desired_height)
             .build()
