@@ -62,6 +62,14 @@
         <item name="layout_maxHeight">50dp</item>
     </style>
 
+    <style name="call_numpad_digit" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@android:color/transparent</item>
+        <item name="android:layout_width">60dp</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:padding">15dp</item>
+        <item name="android:background">@drawable/button_call_numpad_background</item>
+    </style>
+
     <!-- Assistant related -->
 
     <style name="assistant_input_field_header_font" parent="@android:style/TextAppearance.Medium">
@@ -87,6 +95,133 @@
     <style name="about_version_font" parent="@android:style/TextAppearance.Small">
         <item name="android:textColor">@color/light_grey_color</item>
         <item name="android:textSize">16sp</item>
+    </style>
+
+    <!-- Conference scheduling related -->
+
+    <style name="conference_scheduling_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/voip_dark_gray</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="conference_scheduling_participant_sip_uri_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/accentColor</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="conference_invite_title_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/dark_grey_color</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="conference_invite_subject_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/dark_grey_color</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="conference_invite_desc_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/dark_grey_color</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="conference_invite_join_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/white_color</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <!-- Call related -->
+
+    <style name="call_remote_name_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/white_color</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="call_options_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/voip_extra_button_text_color</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="calls_list_header_font" parent="@android:style/TextAppearance.Large">
+        <item name="android:textColor">@color/voip_dark_gray</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="call_list_active_name_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/white_color</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="call_list_name_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/voip_dark_gray</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="call_list_active_sip_uri_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/white_color</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="call_list_sip_uri_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/voip_dark_gray</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="call_generated_avatar_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/white_color</item>
+        <item name="android:textSize">80sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="call_context_menu_item_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/white_color</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
+    </style>
+
+    <style name="conference_paused_title_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/white_color</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="conference_paused_subtitle_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/white_color</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="call_header_title" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/white_color</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="call_header_subtitle" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/white_color</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="call_remote_recording_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/white_color</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="call_stats_title_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/white_color</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="call_stats_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/white_color</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="call_dtmf_history_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/white_color</item>
+        <item name="android:textSize">30sp</item>
     </style>
 
     <!-- Contact related -->
@@ -123,18 +258,6 @@
         <item name="android:textColor">@color/light_primary_text_color</item>
         <item name="android:textSize">15sp</item>
         <item name="android:fontFamily">sans-serif</item>
-    </style>
-
-    <!-- Call stats -->
-
-    <style name="call_stats_title_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">?attr/primaryTextColor</item>
-        <item name="android:textSize">18sp</item>
-    </style>
-
-    <style name="call_stats_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">?attr/primaryTextColor</item>
-        <item name="android:textSize">12sp</item>
     </style>
 
     <!-- Dialog related -->
@@ -224,7 +347,7 @@
 
     <style name="sip_uri_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">?attr/accentColor</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="sip_uri_small_font" parent="@android:style/TextAppearance.Medium">
@@ -282,6 +405,12 @@
     <style name="file_transfer_progress_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">?attr/secondaryTextColor</item>
         <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="big_orange_button_font" parent="@android:style/TextAppearance.Large">
+        <item name="android:textColor">@color/white_color</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">15sp</item>
     </style>
 
 </resources>

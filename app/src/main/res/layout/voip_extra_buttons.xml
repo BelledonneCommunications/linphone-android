@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="controlsViewModel"
+            type="org.linphone.activities.voip.viewmodels.ControlsViewModel" />
+        <variable
+            name="callsViewModel"
+            type="org.linphone.activities.voip.viewmodels.CallsViewModel" />
+        <variable
+            name="conferenceViewModel"
+            type="org.linphone.activities.voip.viewmodels.ConferenceViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/voip_call_extra_buttons_height"
+        android:gravity="center"
+        android:padding="10dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/shape_extra_buttons_background"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:onClick="@{() -> controlsViewModel.showNumpad()}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                app:drawableTopCompat="@drawable/icon_call_numpad"
+                android:gravity="center"
+                style="@style/call_options_font"
+                android:text="@string/call_action_numpad"/>
+
+            <TextView
+                android:onClick="@{() -> controlsViewModel.showCallStats()}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                app:drawableTopCompat="@drawable/icon_call_stats"
+                android:gravity="center"
+                style="@style/call_options_font"
+                android:text="@string/call_action_statistics"/>
+
+            <TextView
+                android:onClick="@{() -> controlsViewModel.changeDisplayMode()}"
+                android:visibility="@{conferenceViewModel.isInConference ? View.VISIBLE : View.GONE, default=gone}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                app:drawableTopCompat="@drawable/icon_conf_layout"
+                android:gravity="center"
+                style="@style/call_options_font"
+                android:text="@string/call_action_change_conf_layout"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:onClick="@{() -> controlsViewModel.goToConferenceParticipantsList()}"
+                android:visibility="@{conferenceViewModel.isInConference ? View.VISIBLE : View.GONE, default=gone}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                app:drawableTopCompat="@drawable/icon_call_participants"
+                android:gravity="center"
+                style="@style/call_options_font"
+                android:text="@string/call_action_participants_list"/>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="10dp">
+
+                <TextView
+                    android:id="@+id/chat"
+                    style="@style/call_options_font"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:onClick="@{() -> controlsViewModel.goToChat()}"
+                    android:text="@string/call_action_chat"
+                    app:drawableTopCompat="@drawable/icon_call_chat" />
+
+                <TextView
+                    style="@style/unread_count_font"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@id/chat"
+                    android:background="@drawable/unread_message_count_bg"
+                    android:gravity="center"
+                    android:text="@{String.valueOf(callsViewModel.currentCallUnreadChatMessageCount), default=1}"
+                    android:visibility="@{callsViewModel.currentCallUnreadChatMessageCount == 0 ? View.GONE : View.VISIBLE}" />
+
+                <ProgressBar
+                    android:visibility="@{controlsViewModel.chatRoomCreationInProgress ? View.VISIBLE : View.GONE, default=gone}"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="10dp">
+
+                <TextView
+                    android:id="@+id/calls"
+                    android:onClick="@{() -> controlsViewModel.goToCallsList()}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    app:drawableTopCompat="@drawable/icon_calls_list"
+                    android:gravity="center"
+                    style="@style/call_options_font"
+                    android:text="@string/call_action_calls_list"/>
+
+                <TextView
+                    style="@style/unread_count_font"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@id/calls"
+                    android:background="@drawable/unread_message_count_bg"
+                    android:gravity="center"
+                    android:text="@{String.valueOf(callsViewModel.inactiveCallsCount), default=1}"
+                    android:visibility="@{callsViewModel.inactiveCallsCount == 0 ? View.GONE : View.VISIBLE}" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</layout>

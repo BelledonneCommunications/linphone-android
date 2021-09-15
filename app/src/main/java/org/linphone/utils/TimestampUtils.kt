@@ -20,8 +20,10 @@
 package org.linphone.utils
 
 import java.text.DateFormat
+import java.text.Format
 import java.text.SimpleDateFormat
 import java.util.*
+import org.linphone.LinphoneApplication
 
 class TimestampUtils {
     companion object {
@@ -52,6 +54,42 @@ class TimestampUtils {
             cal2: Date
         ): Boolean {
             return isSameDay(cal1.time, cal2.time, false)
+        }
+
+        fun dateToString(date: Long): String {
+            val dateFormat: Format = android.text.format.DateFormat.getDateFormat(
+                LinphoneApplication.coreContext.context
+            )
+            val pattern = (dateFormat as SimpleDateFormat).toLocalizedPattern()
+
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = date
+            return SimpleDateFormat(pattern, Locale.getDefault()).format(calendar.time)
+        }
+
+        fun timeToString(hour: Int, minutes: Int): String {
+            val use24hFormat = android.text.format.DateFormat.is24HourFormat(LinphoneApplication.coreContext.context)
+            val calendar = Calendar.getInstance()
+            calendar.set(Calendar.HOUR_OF_DAY, hour)
+            calendar.set(Calendar.MINUTE, minutes)
+
+            return if (use24hFormat) {
+                SimpleDateFormat("HH'h'mm", Locale.getDefault()).format(calendar.time)
+            } else {
+                SimpleDateFormat("h:mm a", Locale.getDefault()).format(calendar.time)
+            }
+        }
+
+        fun timeToString(time: Long): String {
+            val use24hFormat = android.text.format.DateFormat.is24HourFormat(LinphoneApplication.coreContext.context)
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = time
+
+            return if (use24hFormat) {
+                SimpleDateFormat("HH'h'mm", Locale.getDefault()).format(calendar.time)
+            } else {
+                SimpleDateFormat("h:mm a", Locale.getDefault()).format(calendar.time)
+            }
         }
 
         private fun isSameYear(timestamp: Long, timestampInSecs: Boolean = true): Boolean {

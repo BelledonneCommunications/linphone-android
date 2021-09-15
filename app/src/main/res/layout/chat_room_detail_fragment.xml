@@ -285,17 +285,17 @@
             android:transcriptMode="normal" />
 
         <ImageView
-            android:src="@{viewModel.securityLevelIcon, default=@drawable/security_alert_indicator}"
-            android:visibility="@{viewModel.encryptedChatRoom ? View.VISIBLE : View.GONE}"
-            android:onClick="@{securityIconClickListener}"
-            android:contentDescription="@{viewModel.securityLevelContentDescription}"
-            android:adjustViewBounds="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/top_bar"
             android:layout_alignParentRight="true"
             android:layout_marginTop="8dp"
-            android:layout_marginRight="8dp" />
+            android:layout_marginRight="8dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@{viewModel.securityLevelContentDescription}"
+            android:onClick="@{securityIconClickListener}"
+            android:src="@{viewModel.securityLevelIcon, default=@drawable/security_alert_indicator}"
+            android:visibility="@{viewModel.encryptedChatRoom ? View.VISIBLE : View.GONE}" />
 
     </RelativeLayout>
 

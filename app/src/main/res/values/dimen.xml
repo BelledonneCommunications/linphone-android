@@ -38,4 +38,20 @@
     <dimen name="setting_subtitle_min_size">8sp</dimen>
     <dimen name="setting_subtitle_max_size">14sp</dimen>
     <dimen name="settings_granularity_step">1sp</dimen>
+    <dimen name="voip_buttons_fragment_size">50dp</dimen>
+    <dimen name="voip_remote_margin">10dp</dimen>
+    <dimen name="voip_remote_margin_full_screen">0dp</dimen>
+    <dimen name="voip_top_bar_size">60dp</dimen>
+    <dimen name="voip_call_list_size">80dp</dimen>
+    <dimen name="voip_call_context_menu_item_height">50dp</dimen>
+    <dimen name="voip_call_context_menu_width">250dp</dimen>
+    <dimen name="voip_floating_button_size">60dp</dimen>
+    <dimen name="voip_call_extra_buttons_height">200dp</dimen>
+    <dimen name="voip_call_extra_buttons_translate_y">210dp</dimen>
+    <dimen name="conference_scheduling_participant_cell_height">60dp</dimen>
+    <dimen name="voip_call_button_size">50dp</dimen>
+    <dimen name="voip_audio_routes_menu_translate_y">260dp</dimen>
+    <dimen name="voip_buttons_max_width">350dp</dimen>
+    <dimen name="voip_views_max_width">400dp</dimen>
+    <dimen name="voip_extra_menu_max_width">390dp</dimen>
 </resources>
