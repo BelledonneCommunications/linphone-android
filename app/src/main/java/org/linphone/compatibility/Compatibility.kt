@@ -28,6 +28,7 @@ import android.net.Uri
 import android.os.Vibrator
 import android.telephony.TelephonyManager
 import android.view.View
+import android.view.Window
 import android.view.WindowManager
 import androidx.core.app.NotificationManagerCompat
 import org.linphone.core.ChatRoom
@@ -138,8 +139,14 @@ class Compatibility {
         }
 
         fun enterPipMode(activity: Activity) {
-            if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
+            if (Version.sdkStrictlyBelow(Version.API31_ANDROID_12) && Version.sdkAboveOrEqual(Version.API26_O_80)) {
                 Api26Compatibility.enterPipMode(activity)
+            }
+        }
+
+        fun enableAutoEnterPiP(activity: Activity, enable: Boolean) {
+            if (Version.sdkAboveOrEqual(Version.API31_ANDROID_12)) {
+                Api31Compatibility.enableAutoEnterPiP(activity, enable)
             }
         }
 
@@ -148,6 +155,14 @@ class Compatibility {
                 Api26Compatibility.eventVibration(vibrator)
             } else {
                 Api21Compatibility.eventVibration(vibrator)
+            }
+        }
+
+        fun hideAndroidSystemUI(hide: Boolean, window: Window) {
+            if (Version.sdkAboveOrEqual(Version.API30_ANDROID_11)) {
+                Api30Compatibility.hideAndroidSystemUI(hide, window)
+            } else {
+                Api21Compatibility.hideAndroidSystemUI(hide, window)
             }
         }
 
