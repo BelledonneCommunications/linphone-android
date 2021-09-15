@@ -530,7 +530,11 @@ class NotificationsManager(private val context: Context) {
         val callActivity: Class<*>
         when (call.state) {
             Call.State.Paused, Call.State.Pausing, Call.State.PausedByRemote -> {
-                callActivity = CallActivity::class.java
+                callActivity = if (corePreferences.useNewCallUI) {
+                    org.linphone.activities.voip.CallActivity::class.java
+                } else {
+                    CallActivity::class.java
+                }
                 stringResourceId = R.string.call_notification_paused
                 iconResourceId = R.drawable.topbar_call_paused_notification
             }
@@ -544,7 +548,11 @@ class NotificationsManager(private val context: Context) {
                 }
             }
             else -> {
-                callActivity = CallActivity::class.java
+                callActivity = if (corePreferences.useNewCallUI) {
+                    org.linphone.activities.voip.CallActivity::class.java
+                } else {
+                    CallActivity::class.java
+                }
                 stringResourceId = R.string.call_notification_active
                 iconResourceId = if (call.currentParams.videoEnabled()) {
                     R.drawable.topbar_videocall_notification
