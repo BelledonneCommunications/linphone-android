@@ -289,12 +289,6 @@ class CorePreferences constructor(private val context: Context) {
             config.setBool("app", "auto_start_call_record", value)
         }
 
-    var fullScreenCallUI: Boolean
-        get() = config.getBool("app", "full_screen_call", true)
-        set(value) {
-            config.setBool("app", "full_screen_call", value)
-        }
-
     var routeAudioToBluetoothIfAvailable: Boolean
         get() = config.getBool("app", "route_audio_to_bluetooth_if_available", true)
         set(value) {
@@ -381,6 +375,9 @@ class CorePreferences constructor(private val context: Context) {
 
     private val darkModeAllowed: Boolean
         get() = config.getBool("app", "dark_mode_allowed", true)
+
+    val useNewCallUI: Boolean
+        get() = config.getBool("app", "new_call_ui", true)
 
     /* Feature related */
 

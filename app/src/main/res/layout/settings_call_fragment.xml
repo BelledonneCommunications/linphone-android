@@ -94,12 +94,6 @@
                     linphone:listener="@{viewModel.encryptionMandatoryListener}"
                     linphone:checked="@={viewModel.encryptionMandatory}"
                     linphone:enabled="@{viewModel.encryptionIndex != 0}" />
-                <include
-                    layout="@layout/settings_widget_switch"
-                    linphone:title="@{@string/call_settings_full_screen_title}"
-                    linphone:subtitle="@{@string/call_settings_full_screen_summary}"
-                    linphone:listener="@{viewModel.fullScreenListener}"
-                    linphone:checked="@={viewModel.fullScreen}"/>
 
                 <include
                     layout="@layout/settings_widget_switch"
