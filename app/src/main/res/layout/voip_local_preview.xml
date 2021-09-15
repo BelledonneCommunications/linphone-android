@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="controlsViewModel"
+            type="org.linphone.activities.voip.viewmodels.ControlsViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:onTouch="@{controlsViewModel.previewTouchListener}"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <org.linphone.mediastream.video.capture.CaptureTextureView
+            android:id="@+id/local_preview_video_surface"
+            android:layout_size="@{@dimen/video_preview_max_size}"
+            android:layout_width="200dp"
+            android:layout_height="200dp" />
+
+        <ImageView
+            android:onClick="@{() -> controlsViewModel.switchCamera()}"
+            android:visibility="@{controlsViewModel.isSwitchCameraAvailable ? View.VISIBLE : View.GONE, default=gone}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:src="@drawable/icon_call_camera_switch"
+            android:contentDescription="@string/content_description_switch_camera"
+            android:layout_alignTop="@id/local_preview_video_surface"
+            android:layout_alignRight="@id/local_preview_video_surface"/>
+
+    </RelativeLayout>
+
+</layout>
