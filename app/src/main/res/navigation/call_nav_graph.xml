@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/call_nav_graph"
+    app:startDestination="@id/currentFragment">
+
+    <fragment
+        android:id="@+id/currentFragment"
+        android:name="org.linphone.activities.voip.fragments.CurrentFragment"
+        tools:layout="@layout/voip_current_fragment"
+        android:label="CurrentFragment" />
+</navigation>
