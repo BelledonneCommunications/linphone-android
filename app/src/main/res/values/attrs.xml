@@ -29,6 +29,17 @@
         <attr name="darkToolbarTextColor" format="color"/>
 
         <attr name="button_background_drawable" format="reference" />
+
+        <attr name="voipBackgroundColor" format="color" />
+        <attr name="voipBackgroundBWColor" format="color" />
+        <attr name="voipParticipantBackgroundColor" format="color" />
+        <attr name="voipExtraButtonsBackgroundColor" format="color" />
+        <attr name="voipToolbarBackgroundColor" format="color" />
+        <attr name="voipDrawableColor" format="color" />
+        <attr name="voipTextColor" format="color" />
+        <attr name="voipFormBackgroundColor" format="color" />
+        <attr name="voipFormFieldBackgroundColor" format="color" />
+        <attr name="voipFormDisabledFieldBackgroundColor" format="color" />
     </declare-styleable>
 
     <declare-styleable name="Settings">
@@ -48,5 +59,14 @@
         <attr name="secondaryProgressTint" format="color" />
         <attr name="primaryLeftMargin" format="dimension" />
         <attr name="primaryRightMargin" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="RoundCornersTextureView">
+        <attr name="alignTopRight" format="boolean" />
+        <attr name="displayMode" format="enum">
+            <enum name="black_bars" value="0"/>
+            <enum name="occupy_all_space" value="1"/>
+            <enum name="hybrid" value="2"/>
+        </attr>
     </declare-styleable>
 </resources>
