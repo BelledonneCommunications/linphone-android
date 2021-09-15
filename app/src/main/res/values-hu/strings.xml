@@ -8,7 +8,6 @@
     <string name="logs_url_copied_to_clipboard">A naplók URL-je a vágólapra másolva</string>
     <string name="about_privacy_policy">Az adatvédelmi szabályzatunkat megtekintése</string>
     <string name="sync_account_name">&appName; névjegyek</string>
-    <string name="error">Hiba</string>
     <string name="phone_number">Telefonszám</string>
     <string name="select_your_country">Ország/régió kiválasztása</string>
     <string name="international_prefix">Nemzetközi előhívószám</string>
@@ -24,15 +23,12 @@
         <item quantity="one">%d nap</item>
         <item quantity="other">%d nap</item>
     </plurals>
-    <string name="invalid_email">Érvénytelen e-mail-cím</string>
     <string name="today">Ma</string>
     <string name="yesterday">Tegnap</string>
     <string name="transport">Forgalom</string>
     <string name="transport_udp">UDP</string>
     <string name="transport_tcp">TCP</string>
     <string name="transport_tls">TLS</string>
-    <string name="hash_algorithm_md5">MD5</string>
-    <string name="hash_algorithm_sha256">SHA-256</string>
     <string name="app_description">a <i>szabad</i> SIP-ügyfél</string>
     <string name="status_connected">Csatlakoztatva</string>
     <string name="status_not_connected">Nincs csatlakozva</string>
@@ -100,7 +96,6 @@
     <string name="chat_message_context_menu_imdn_info">Kézbesítés állapota</string>
     <string name="chat_message_context_menu_delete">Törlés</string>
     <string name="chat_room_file_not_found">Fájl nem található</string>
-    <string name="chat_room_creation_failed">A csevegőszoba létrehozása sikertelen</string>
     <string name="chat_room_context_menu_group_info">Csoport adatai</string>
     <string name="chat_message_context_menu_delete_messages">Üzenetek törlése</string>
     <string name="chat_room_ephemeral_fragment_title">Elmúló üzenetek</string>
@@ -126,11 +121,8 @@
         <item quantity="other">%s írnak…</item>
     </plurals>
     <string name="chat_message_forward_confirmation_dialog">Szeretné továbbítani az üzenetet ebben a szobában\?</string>
-    <string name="chat_room_toast_choose_for_sharing">Beszélgetés kiválasztása vagy új létrehozása</string>
-    <string name="chat_room_cant_open_file_no_app_found">Nem lehet megnyitni a fájlt, ehhez a formátumhoz nem áll rendelkezésre alkalmazás.</string>
     <string name="call_outgoing_title">Kimenő hívás</string>
     <string name="call_notification_outgoing">Kimenő hívás</string>
-    <string name="call_conference_title">Konferencia</string>
     <string name="call_error_user_busy">Felhasználó elfoglalt</string>
     <string name="call_error_network_unreachable">Hálózat elérhetetlen</string>
     <string name="call_error_io_error">A szolgáltatás nem érhető el vagy hálózati hiba történt</string>
@@ -155,14 +147,12 @@
     <string name="call_stats_jitter_buffer">Vibrálás tartalék:</string>
     <string name="call_stats_encoder_name">Kódoló:</string>
     <string name="call_stats_player_filter">Lejátszói szűrő:</string>
-    <string name="call_stats_display_filter">Megjelenítési szűrő:</string>
     <string name="call_stats_capture_filter">Rögzítési szűrő:</string>
     <string name="assistant_welcome_title">Isten hozott!</string>
     <string name="assistant_create_account">Fiók létrehozása</string>
     <string name="assistant_login_linphone">&appName;-fiók használata</string>
     <string name="assistant_login_generic">SIP-fiók használata</string>
     <string name="assistant_remote_provisioning">Távoli beállítások lekérése</string>
-    <string name="call_paused_by_remote">A hívott fél szüneteltette a hívását</string>
     <string name="assistant_phone_number_info_title">Hogyan fog a telefonszámom használódni\?</string>
     <string name="assistant_phone_number_link_info_content_already_account">Telefonszámát csak egy &appName;-fiókjával használhatja.
 \n
@@ -183,7 +173,6 @@
     <string name="assistant_confirmation_code">Visszaigazolási kód</string>
     <string name="assistant_generic_account">SIP-fiók használata</string>
     <string name="assistant_login_desc">Kérjük, adja meg felhasználónevét és jelszavát a SIP-tartományhoz</string>
-    <string name="assistant_password_hash_algorithm">Kivonatoló algoritmus</string>
     <string name="assistant_confirm_password">Jelszó megerősítése</string>
     <string name="assistant_create_account_part_email">Kérjük, adjon meg egy felhasználónevet, e-mail-címet és jelszót a(z) &appName;-fiókhoz</string>
     <string name="assistant_link_phone_number_skip">Kihagyás</string>
@@ -240,7 +229,6 @@
     <string name="call_settings_media_encryption_zrtp">ZRTP</string>
     <string name="call_settings_media_encryption_dtls">DTLS</string>
     <string name="call_settings_encryption_mandatory_title">Média titkosítása kötelező</string>
-    <string name="call_settings_full_screen_title">Teljes képernyős alkalmazás hívás közben</string>
     <string name="call_settings_overlay_title">Hívás értesítés átfedése</string>
     <string name="call_settings_system_wide_overlay_title">Átfedés megjelenítése az alkalmazáson kívül</string>
     <string name="call_settings_system_wide_overlay_summary">Megkérjük, hogy adjon átfedési engedélyt</string>
@@ -314,7 +302,6 @@
     <string name="incoming_call_notification_answer_action_label">Hívásfogadás</string>
     <string name="received_chat_notification_mark_as_read_label">Megjelölés olvasottként</string>
     <string name="missed_call_notification_title">Nem fogadott hívás</string>
-    <string name="content_description_remove_from_conference">Távolítsa el a résztvevőt a konferenciáról</string>
     <string name="zrtp_dialog_message">Erősítse meg a következő SAS-kódot a hívott felével</string>
     <string name="zrtp_dialog_ok_button_label">Elfogad</string>
     <string name="zrtp_dialog_deny_button_label">Elutasítás</string>
@@ -326,13 +313,11 @@
     <string name="dialog_accept">Elfogad</string>
     <string name="dialog_decline">Elutasítás</string>
     <string name="dialog_call">Hívás</string>
-    <string name="content_description_pause_conference">Szüneteltesse a konferenciát</string>
     <string name="content_description_pause_call">Szüneteltesse a hívást</string>
     <string name="content_description_terminate_call">Megszakítja a hívást</string>
     <string name="content_description_answer_call">Fogadja a hívást</string>
     <string name="content_description_disable_mic_mute">Mikrofonjának némításának feloldása</string>
     <string name="content_description_go_back_to_call">Menjen vissza a hívás nézethez</string>
-    <string name="content_description_go_to_chat">Beszélgetések listájának megjelenítése</string>
     <string name="content_description_contact_is_not_admin">A kapcsolattartó nem felügyelő ebben a beszélgetésben</string>
     <string name="content_description_ephemeral_chat_room">Az üzenetek elmúló ebben a beszélgetésben</string>
     <string name="content_description_ephemeral_duration_selected">Elmúló időtartam kiválasztva</string>
@@ -344,7 +329,6 @@
     <string name="content_description_toggle_audio_menu">Hangkimeneti menü megjelenítése vagy elrejtése</string>
     <string name="content_description_use_bluetooth_headset">Használja a Bluetooth-fejbeszélőt hang kimenetként</string>
     <string name="content_description_use_earpiece">Használja a fülhallgatót hang kimenetként</string>
-    <string name="content_description_toggle_call_menu">Speciális műveletek menü megjelenítése vagy elrejtése</string>
     <string name="content_description_add_call">Új hívás indítása</string>
     <string name="content_description_transfer_call">Az aktuális hívás átadása másnak</string>
     <string name="content_description_pending_file_transfer">Fájl átvitele függőben van</string>
@@ -368,7 +352,6 @@
     <string name="content_description_discard_changes">Változtatások elvetése</string>
     <string name="content_description_change_contact_picture">Névjegyfénykép módosítása</string>
     <string name="content_description_change_own_picture">Saját névjegyfénykép módosítása</string>
-    <string name="content_description_call_direction">Hívásirány</string>
     <string name="service_name">&appName; szolgáltatás</string>
     <string name="service_auto_start_description">A(z) &appName; önműködően elindult</string>
     <string name="phone_numbers">Telefonszámok</string>
@@ -409,11 +392,6 @@
     <string name="content_description_e2e_encryption_enabled">Végpontok közötti titkosítás engedélyezve</string>
     <string name="audio_settings_echo_canceller_calibration_summary">Kattintson a visszhangkioltás beállításának megkezdéséhez</string>
     <string name="audio_settings_echo_tester_summary">Kattintson a visszhang ellenőrzés indításához</string>
-    <string name="assistant_phone_number_info_content">
-\nTelefonszámának köszönhetően ismerősei könnyebben megtalálják Önt.
-\n
-\nA címjegyzékében látni fogja, hogy ki használja a(z) &appName; és az ismerősök tudni fogják, hogy elérhetik Önt a(z) &appName; is.
-\n</string>
     <string name="assistant_phone_number_link_info_content">
 \nAz ismerősei könnyebben megtalálja Önt, ha összekapcsolja fiókját a telefonszámával.
 \n
@@ -421,7 +399,6 @@
 \n</string>
     <string name="contacts_settings_friendlist_subscribe_title">Ismerőslista feliratkozása</string>
     <string name="assistant_linphone_login_desc">Kérjük, adja meg a(z) &appName;-fiókjának felhasználónevét és jelszavát</string>
-    <string name="assistant_error_account_not_activated">Fiókját még nem érvényesítettük</string>
     <string name="account_settings_prefix_title">Országának nemzetközi előhívószáma</string>
     <string name="assistant_create_account_part_1">Kérjük, erősítse meg nemzetközi előhívószámát, és adja meg telefonszámát</string>
     <string name="account_settings_password_title">Jelszó</string>
@@ -434,11 +411,9 @@
     <string name="audio_settings_playback_gain_title">Lejátszás erősítése</string>
     <string name="video_settings_automatically_accept_summary">Mindig fogadja el a videó kéréseket</string>
     <string name="call_settings_device_ringtone_title">Használja az eszköz csengőhangját</string>
-    <string name="call_settings_full_screen_summary">Elrejti az állapot és navigációs sávokat</string>
     <string name="call_settings_auto_answer_title">Hívásfogadások önműködően</string>
     <string name="call_settings_ring_during_early_media_title">Cseng a bejövő korai média közben</string>
     <string name="chat_settings_hide_empty_rooms_title">Üres csevegő szobák elrejtése</string>
-    <string name="network_settings_push_notifications_title">Leküldéses értesítések engedélyezése</string>
     <string name="tunnel_settings_dual_mode_title">Kettős mód engedélyezve</string>
     <string name="tunnel_settings_auto_mode">Önműködő</string>
     <string name="account_settings_default_title">Alapértelmezésként használja</string>
@@ -464,7 +439,6 @@
     <string name="call_settings_auto_start_summary">A hívás önműködően elindul, ha egy másik alkalmazásból indul</string>
     <string name="chat_settings_auto_download_under_size">Ha a megadott maximális méretnél könnyebb</string>
     <string name="chat_settings_launcher_shortcuts_summary">Ha engedélyezve van, a névjegyek parancsikonjai váltják fel</string>
-    <string name="network_settings_legacy_push_notification_format_summary">A Flexisip &lt; 2.0 használatakor szükséges</string>
     <string name="contacts_settings_show_new_contact_account_dialog_title">Mindig kérdezze meg, hogy melyik fiókba mentse az újonnan létrehozott névjegyet</string>
     <string name="advanced_settings_device_name_summary">A változásokat a következő indításkor alkalmazzák</string>
     <string name="advanced_settings_logs_server_url_title">Kiszolgáló feltöltés URL-jének naplói</string>
@@ -473,7 +447,6 @@
     <string name="account_settings_apply_prefix_for_calls_summary">Ha beír egy számot, alkalmazza az előhívószámot</string>
     <string name="dialog_default_delete_one">Biztosan törli ezt az elemet\?</string>
     <string name="content_description_add_sip_address_field">Egy SIP-cím mező hozzáadása</string>
-    <string name="content_description_start_conference">Egyesítse az összes hívást egy konferenciába</string>
     <string name="content_description_disable_speaker">Hang átirányítása a fülhallgatóhoz</string>
     <string name="contacts_settings_native_presence_summary">Információs parancsikonok beszúrása a &appName; névjegyből a natív Android névjegyekbe</string>
     <string name="chat_settings_auto_download_summary">Akár fájlok letöltéséhez csatolt beérkezett csevegő üzenetek önműködően vagy sem</string>
@@ -490,7 +463,6 @@
     <string name="chat_settings_file_sharing_url_summary">Ne szerkessze hacsak nem tudja, mit csinál!</string>
     <string name="chat_settings_auto_download_title">A bejövő fájlok önműködő letöltésének szabályzata</string>
     <string name="chat_settings_hide_rooms_removed_proxies_summary">Ha hiányoznak csevegőszobák, próbálja meg törölni ezt a beállítást</string>
-    <string name="network_settings_legacy_push_notification_format_title">Használjon örökölt leküldéses értesítési paramétereket</string>
     <string name="contacts_settings_native_presence_title">Jelenléti információk natív névjegyben</string>
     <string name="contacts_settings_launcher_shortcuts_title">Hozzon létre parancsikonokat a névjegyekhez az indítóban</string>
     <string name="contacts_settings_launcher_shortcuts_summary">Helyettesíti a csevegőszoba parancsikonjait ha bármilyen</string>
@@ -522,12 +494,7 @@
     <string name="content_description_phone_number_use">Mutassa meg, hogy mire fogják használni a telefonszámát</string>
     <string name="content_description_clear_field">Ürítse ki a mellette lévő szöveg mezőt</string>
     <string name="content_description_switch_camera">Váltás az elülső kameráról hátra és fordítva</string>
-    <string name="content_description_on_pause">Hívását várakoztattuk</string>
-    <string name="content_description_slide_right_hangup">Csúsztatás jobbra a hívás befejezéséhez</string>
-    <string name="content_description_slide_left_answer">Csúsztatás balra a hívás fogadásához</string>
     <string name="content_description_enable_speaker">Hang átirányítása a hangszóróhoz</string>
-    <string name="content_description_resume_call">Folytassa a jelenleg tartott hívást</string>
-    <string name="content_description_show_numpad">A számok megjelenítése vagy elrejtése a DTMF-ek küldéséhez</string>
     <string name="content_description_contact_can_do_encryption">Titkosított beszélgetésekbe meghívható partner</string>
     <string name="content_description_select_all">Összes elem kijelölése a listán</string>
     <string name="content_description_numpad_2">2</string>
@@ -560,7 +527,6 @@
     <string name="content_description_call_quality_4">Maximális hívásminőség</string>
     <string name="content_description_call_secured">A hívás biztosítva</string>
     <string name="content_description_call_security_pending">A hívásbiztonság függőben van</string>
-    <string name="content_description_toggle_call_stats">Hívás statisztikák megjelenítése vagy elrejtése</string>
     <string name="content_description_chat_message_video_attachment">Videómelléklet</string>
     <string name="content_description_close_bubble">Az értesítési buborék bezárása</string>
     <string name="content_description_open_app">A beszélgetés megnyitása az alkalmazásban a buborék helyett</string>
@@ -583,7 +549,6 @@
     <string name="notification_channel_chat_name">&amp;appName; azonnali üzenetek értesítései</string>
     <string name="dialog_try_open_file_as_text_body">Szeretné megpróbálni megnyitni egyszerű szöveges fájlként\?</string>
     <string name="content_description_toggle_recording">Engedélyezze vagy tiltsa le a hívás rögzítését</string>
-    <string name="content_description_resume_conference">Folytassa a jelenleg tartott konferenciát</string>
     <string name="content_description_linphone_user">Az ismerős egy &amp;appName; felhasználó</string>
     <string name="content_description_delete_selection">A kijelölt elemek törlése a listából</string>
     <string name="content_description_numpad_9">9</string>
@@ -591,7 +556,6 @@
     <string name="content_description_show_all_calls">Az összes hívás megjelenítése</string>
     <string name="content_description_security_level_encrypted">Titkosított</string>
     <string name="content_description_call_not_secured">A hívás nincs biztosítva</string>
-    <string name="content_description_take_screenshot">Készítsen képernyőképet a kapott videóról</string>
     <string name="call_settings_redirect_to_voice_mail_declined_calls_title">Az elutasított hívások átirányítása a hangposta URI-ra</string>
     <string name="content_description_show_call_details">Ugrás a hívás részleteire</string>
     <string name="content_description_unselect_all">A lista összes elemének kijelölése megszüntetése</string>
@@ -600,14 +564,11 @@
     <string name="chat_room_choose_conversation_for_message_forward">Beszélgetés kiválasztása vagy létrehozása az üzenet továbbításához</string>
     <string name="chat_room_choose_conversation_for_file_sharing">Beszélgetés kiválasztása vagy létrehozása a fájl(ok) megosztásához</string>
     <string name="content_description_cancel_forward">Az üzenet továbbításának visszavonása</string>
-    <string name="chat_settins_enable_ephemeral_messages_beta_title">Ideiglenes üzenetek engedélyezése (béta)</string>
     <string name="chat_room_choose_conversation_for_text_sharing">Beszélgetés kiválasztása vagy létrehozása a szöveg megosztásához</string>
     <string name="content_description_forward_message">Üzenet továbbítása ebben a beszélgetésben</string>
     <string name="chat_room_sending_reply_hint">Válasz</string>
     <string name="chat_room_sending_message_hint">Üzenet</string>
     <string name="chat_message_voice_recording_hold_to_record">Tartsa lenyomva a gombot a hangüzenet felvételéhez</string>
-    <string name="content_description_attached_file">Az üzenethez mellékelt fájl</string>
-    <string name="content_description_record_audio_message">Hangüzenet felvétele</string>
     <string name="content_description_voice_recording">Hangüzenet felvétele</string>
     <string name="content_description_stop_voice_recording">Hangfelvétel leállítása</string>
     <string name="content_description_pause_voice_recording_playback">Hangfelvétel szüneteltetése</string>
