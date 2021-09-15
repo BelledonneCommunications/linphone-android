@@ -41,11 +41,11 @@ class Api26Compatibility {
         fun enterPipMode(activity: Activity) {
             val supportsPip = activity.packageManager
                 .hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
-            Log.i("[Call] Is picture in picture supported: $supportsPip")
+            Log.i("[Call] Is PiP supported: $supportsPip")
             if (supportsPip) {
                 val params = PictureInPictureParams.Builder().build()
                 if (!activity.enterPictureInPictureMode(params)) {
-                    Log.e("[Call] Failed to enter picture in picture mode")
+                    Log.e("[Call] Failed to enter PiP mode")
                 }
             }
         }
