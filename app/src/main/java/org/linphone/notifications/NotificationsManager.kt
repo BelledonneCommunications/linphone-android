@@ -41,11 +41,9 @@ import kotlin.collections.HashMap
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
-import org.linphone.activities.call.CallActivity
-import org.linphone.activities.call.IncomingCallActivity
-import org.linphone.activities.call.OutgoingCallActivity
 import org.linphone.activities.chat_bubble.ChatBubbleActivity
 import org.linphone.activities.main.MainActivity
+import org.linphone.activities.voip.CallActivity
 import org.linphone.compatibility.Compatibility
 import org.linphone.contact.Contact
 import org.linphone.core.*
@@ -401,7 +399,7 @@ class NotificationsManager(private val context: Context) {
         val roundPicture = ImageUtils.getRoundBitmapFromUri(context, pictureUri)
         val displayName = contact?.fullName ?: LinphoneUtils.getDisplayName(call.remoteAddress)
 
-        val incomingCallNotificationIntent = Intent(context, IncomingCallActivity::class.java)
+        val incomingCallNotificationIntent = Intent(context, org.linphone.activities.voip.CallActivity::class.java)
         incomingCallNotificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         val pendingIntent = PendingIntent.getActivity(
             context,
@@ -530,12 +528,12 @@ class NotificationsManager(private val context: Context) {
         val callActivity: Class<*>
         when (call.state) {
             Call.State.Paused, Call.State.Pausing, Call.State.PausedByRemote -> {
-                callActivity = CallActivity::class.java
+                callActivity = org.linphone.activities.voip.CallActivity::class.java
                 stringResourceId = R.string.call_notification_paused
                 iconResourceId = R.drawable.topbar_call_paused_notification
             }
             Call.State.OutgoingRinging, Call.State.OutgoingProgress, Call.State.OutgoingInit, Call.State.OutgoingEarlyMedia -> {
-                callActivity = OutgoingCallActivity::class.java
+                callActivity = CallActivity::class.java
                 stringResourceId = R.string.call_notification_outgoing
                 iconResourceId = if (call.params.videoEnabled()) {
                     R.drawable.topbar_videocall_notification
@@ -544,7 +542,7 @@ class NotificationsManager(private val context: Context) {
                 }
             }
             else -> {
-                callActivity = CallActivity::class.java
+                callActivity = org.linphone.activities.voip.CallActivity::class.java
                 stringResourceId = R.string.call_notification_active
                 iconResourceId = if (call.currentParams.videoEnabled()) {
                     R.drawable.topbar_videocall_notification

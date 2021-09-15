@@ -321,7 +321,7 @@
     <string name="content_description_phone_number_use">显示您的电话号码将用于什么</string>
     <string name="content_description_pause_call">暂停通话</string>
     <string name="content_description_disable_mic_mute">取消麦克风静音</string>
-    <string name="content_description_show_numpad">显示或隐藏要发送DTMF的数字</string>
+    <string name="content_description_toggle_numpad">显示或隐藏要发送DTMF的数字</string>
     <string name="content_description_use_speaker">使用扬声器作为音频输出</string>
     <string name="content_description_ephemeral_message">信息是「阅后即焚」</string>
     <string name="content_description_e2e_encryption_disabled">端到端加密已禁用</string>
