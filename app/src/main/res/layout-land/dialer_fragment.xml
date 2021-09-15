@@ -4,7 +4,7 @@
     <data>
         <import type="android.view.View"/>
         <variable
-            name="newContactClickListener"
+            name="newConferenceClickListener"
             type="android.view.View.OnClickListener"/>
         <variable
             name="transferCallClickListener"
@@ -66,15 +66,14 @@
             android:layout_height="@dimen/main_activity_top_bar_size">
 
             <ImageView
-                android:onClick="@{newContactClickListener}"
-                android:enabled="@{viewModel.enteredUri.length() > 0}"
-                android:contentDescription="@string/content_description_add_contact"
+                android:onClick="@{newConferenceClickListener}"
+                android:contentDescription="@string/content_description_create_conference"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:background="?attr/button_background_drawable"
-                android:padding="15dp"
-                android:src="@drawable/contact_add" />
+                android:padding="5dp"
+                android:src="@drawable/voip_conference_new" />
 
             <ImageView
                 android:onClick="@{() -> viewModel.startCall()}"
