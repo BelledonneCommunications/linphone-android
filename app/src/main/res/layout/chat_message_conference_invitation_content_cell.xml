@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="data"
+            type="org.linphone.activities.main.chat.data.ChatMessageContentData" />
+        <variable
+            name="longClickListener"
+            type="android.view.View.OnLongClickListener"/>
+        <variable
+            name="joinClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="shareClickListener"
+            type="android.view.View.OnClickListener"/>
+    </data>
+
+    <LinearLayout
+        android:onLongClick="@{longClickListener}"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="250dp"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:background="@drawable/shape_conference_invite_background">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/conference_invite_title_font"
+                android:text="@string/conference_invite_title"/>
+
+            <ImageView
+                android:onClick="@{shareClickListener}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/content_description_share_ics"
+                android:src="@drawable/settings_network"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/conference_invite_subject_font"
+            android:text="@{data.conferenceSubject, default=`Lorem ipsum dolor sit amet!`}"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/conference_invite_desc_font"
+            android:text="@{data.conferenceParticipantCount, default=`3 participants`}"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:drawablePadding="5dp"
+            style="@style/conference_invite_desc_font"
+            android:text="@{data.conferenceDate, default=`Mon. October 9th, 2021`}"
+            app:drawableStartCompat="@drawable/conference_schedule_calendar_default" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:drawablePadding="5dp"
+            style="@style/conference_invite_desc_font"
+            android:text="@{data.conferenceTime, default=`5:35 PM`}"
+            app:drawableStartCompat="@drawable/conference_schedule_time_default" />
+
+        <TextView
+            android:onClick="@{joinClickListener}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_rect_green_button"
+            android:paddingLeft="20dp"
+            android:paddingTop="8dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="8dp"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center_vertical|end"
+            style="@style/conference_invite_join_font"
+            android:text="@string/conference_invite_join"/>
+
+    </LinearLayout>
+
+</layout>
