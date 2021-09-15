@@ -32,7 +32,7 @@ import java.io.File
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
-import org.linphone.activities.GenericFragment
+import org.linphone.activities.*
 import org.linphone.activities.assistant.AssistantActivity
 import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.activities.main.sidemenu.viewmodels.SideMenuViewModel
@@ -107,6 +107,11 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
         binding.setAboutClickListener {
             sharedViewModel.toggleDrawerEvent.value = Event(true)
             navigateToAbout()
+        }
+
+        binding.setConferencesClickListener {
+            sharedViewModel.toggleDrawerEvent.value = Event(true)
+            navigateToScheduledConferences()
         }
 
         binding.setQuitClickListener {
