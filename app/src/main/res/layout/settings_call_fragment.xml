@@ -105,13 +105,6 @@
 
                 <include
                     layout="@layout/settings_widget_switch"
-                    linphone:title="@{@string/call_settings_full_screen_title}"
-                    linphone:subtitle="@{@string/call_settings_full_screen_summary}"
-                    linphone:listener="@{viewModel.fullScreenListener}"
-                    linphone:checked="@={viewModel.fullScreen}"/>
-
-                <include
-                    layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/call_settings_overlay_title}"
                     linphone:listener="@{viewModel.overlayListener}"
                     linphone:checked="@={viewModel.overlay}"/>
@@ -141,6 +134,12 @@
                     linphone:title="@{@string/call_settings_auto_start_recording_title}"
                     linphone:listener="@{viewModel.autoStartCallRecordingListener}"
                     linphone:checked="@={viewModel.autoStartCallRecording}"/>
+
+                <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/call_settings_remote_recording_title}"
+                    linphone:listener="@{viewModel.remoteCallRecordingListener}"
+                    linphone:checked="@={viewModel.remoteCallRecording}"/>
 
                 <include
                     layout="@layout/settings_widget_switch"
