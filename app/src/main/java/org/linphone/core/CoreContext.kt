@@ -51,9 +51,6 @@ import kotlinx.coroutines.*
 import org.linphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
-import org.linphone.activities.call.CallActivity
-import org.linphone.activities.call.IncomingCallActivity
-import org.linphone.activities.call.OutgoingCallActivity
 import org.linphone.compatibility.Compatibility
 import org.linphone.compatibility.PhoneStateInterface
 import org.linphone.contact.Contact
@@ -731,7 +728,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
         }
 
         Log.i("[Context] Starting IncomingCallActivity")
-        val intent = Intent(context, IncomingCallActivity::class.java)
+        val intent = Intent(context, org.linphone.activities.voip.CallActivity::class.java)
         // This flag is required to start an Activity from a Service context
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
@@ -744,7 +741,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
         }
 
         Log.i("[Context] Starting OutgoingCallActivity")
-        val intent = Intent(context, OutgoingCallActivity::class.java)
+        val intent = Intent(context, org.linphone.activities.voip.CallActivity::class.java)
         // This flag is required to start an Activity from a Service context
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
@@ -757,7 +754,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
         }
 
         Log.i("[Context] Starting CallActivity")
-        val intent = Intent(context, CallActivity::class.java)
+        val intent = Intent(context, org.linphone.activities.voip.CallActivity::class.java)
         // This flag is required to start an Activity from a Service context
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
         context.startActivity(intent)
