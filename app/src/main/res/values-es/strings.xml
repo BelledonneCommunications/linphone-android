@@ -192,7 +192,7 @@
     <string name="content_description_menu_contacts">Contactos</string>
     <string name="content_description_menu_dialer">Marcador telefónico</string>
     <string name="content_description_menu_chat">Conversaciones</string>
-    <string name="content_description_dialer_erase">Eliminar el último caracter</string>
+    <string name="content_description_dialer_erase">Eliminar el último carácter</string>
     <string name="content_description_add_contact">Crear contacto</string>
     <string name="content_description_show_all_calls">Mostrar todas las llamadas</string>
     <string name="content_description_show_missed_calls">Mostrar solo llamadas perdidad</string>
@@ -220,7 +220,7 @@
     <string name="call_error_declined">Llamada ha sido declinada</string>
     <string name="content_description_disable_speaker">Dirigir el audio al auricular</string>
     <string name="call_video_update_requested_dialog">El corresponsal quisiera encender el video</string>
-    <string name="content_description_show_numpad">Mostrar u ocultar los dígitos para enviar DTMFs</string>
+    <string name="content_description_toggle_numpad">Mostrar u ocultar los dígitos para enviar DTMFs</string>
     <string name="call_stats_video_resolution_received">Resolución de video recibida:</string>
     <string name="content_description_use_bluetooth_headset">Usar auriculares bluetooth como salida de audio</string>
     <string name="call_stats_display_filter">Filtro de pantalla:</string>
@@ -594,7 +594,6 @@
     <string name="chat_message_cant_open_file_in_app_dialog_export_button">Exportar</string>
     <string name="chat_message_cant_open_file_in_app_dialog_open_as_text_button">Abrir como texto</string>
     <string name="call_error_temporarily_unavailable">Temporalmente no disponible</string>
-    <string name="call_error_generic">Erro</string>
     <string name="assistant_privacy_policy">política de privacidad</string>
     <string name="settings_primary_account_title">Cuenta principal</string>
     <string name="call_settings_full_screen_summary">Oculta las barras de status y navegación</string>

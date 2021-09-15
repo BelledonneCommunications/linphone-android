@@ -282,7 +282,7 @@
     <string name="content_description_remove_from_conference">Retirer le participant de la conférence</string>
     <string name="content_description_toggle_recording">Activer ou désactiver l\'enregistrement d\'appel</string>
     <string name="content_description_go_back_to_call">Revenir à la vue d\'appel</string>
-    <string name="content_description_show_numpad">Afficher ou masquer le pavé numérique pour envoyer des DTMFs</string>
+    <string name="content_description_toggle_numpad">Afficher ou masquer le pavé numérique pour envoyer des DTMFs</string>
     <string name="content_description_use_speaker">Utiliser une enceinte comme périphérique de sortie</string>
     <string name="content_description_forwarded_message">Le message a été transféré</string>
     <string name="content_description_e2e_encryption_enabled">Le chiffrement de bout-en-bout est activé</string>
