@@ -296,12 +296,6 @@ class CorePreferences constructor(private val context: Context) {
             config.setBool("app", "use_self_managed_telecom_manager", value)
         }
 
-    var fullScreenCallUI: Boolean
-        get() = config.getBool("app", "full_screen_call", true)
-        set(value) {
-            config.setBool("app", "full_screen_call", value)
-        }
-
     var routeAudioToBluetoothIfAvailable: Boolean
         get() = config.getBool("app", "route_audio_to_bluetooth_if_available", true)
         set(value) {
@@ -410,11 +404,6 @@ class CorePreferences constructor(private val context: Context) {
     val disableChat: Boolean
         get() = config.getBool("app", "disable_chat_feature", false)
 
-    // If enabled, this will cause the video to "freeze" on your correspondent screen
-    // as you won't send video packets anymore
-    val hideCameraPreviewInPipMode: Boolean
-        get() = config.getBool("app", "hide_camera_preview_in_pip_mode", false)
-
     // This will prevent UI from showing up, except for the launcher & the foreground service notification
     val preventInterfaceFromShowingUp: Boolean
         get() = config.getBool("app", "keep_app_invisible", false)
@@ -440,6 +429,9 @@ class CorePreferences constructor(private val context: Context) {
 
     val debugPopupCode: String
         get() = config.getString("app", "debug_popup_magic", "#1234#")!!
+
+    // If there is more participants than this value in a conference, force ActiveSpeaker layout
+    val maxConferenceParticipantsForMosaicLayout: Int = 6
 
     val conferenceServerUri: String
         get() = config.getString(
@@ -492,6 +484,9 @@ class CorePreferences constructor(private val context: Context) {
 
     val showRecordingsInSideMenu: Boolean
         get() = config.getBool("app", "side_menu_recordings", true)
+
+    val showScheduledConferencesInSideMenu: Boolean
+        get() = config.getBool("app", "side_menu_conferences", true)
 
     val showAboutInSideMenu: Boolean
         get() = config.getBool("app", "side_menu_about", true)
