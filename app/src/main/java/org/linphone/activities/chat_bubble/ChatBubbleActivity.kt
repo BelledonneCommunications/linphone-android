@@ -116,7 +116,7 @@ class ChatBubbleActivity : GenericActivity() {
         adapter.registerAdapterDataObserver(observer)
 
         // Disable context menu on each message
-        adapter.disableContextMenu()
+        adapter.disableAdvancedContextMenuOptions()
 
         adapter.openContentEvent.observe(
             this,

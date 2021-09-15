@@ -39,10 +39,7 @@ import org.linphone.activities.main.chat.data.EventData
 import org.linphone.activities.main.chat.data.EventLogData
 import org.linphone.activities.main.chat.data.OnContentClickedListener
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
-import org.linphone.core.ChatMessage
-import org.linphone.core.ChatRoomCapabilities
-import org.linphone.core.Content
-import org.linphone.core.EventLog
+import org.linphone.core.*
 import org.linphone.databinding.ChatEventListCellBinding
 import org.linphone.databinding.ChatMessageListCellBinding
 import org.linphone.databinding.ChatMessageLongPressMenuBindingImpl
@@ -85,6 +82,10 @@ class ChatMessagesListAdapter(
         MutableLiveData<Event<Content>>()
     }
 
+    val callConferenceEvent: MutableLiveData<Event<Address>> by lazy {
+        MutableLiveData<Event<Address>>()
+    }
+
     val scrollToChatMessageEvent: MutableLiveData<Event<ChatMessage>> by lazy {
         MutableLiveData<Event<ChatMessage>>()
     }
@@ -93,9 +94,13 @@ class ChatMessagesListAdapter(
         override fun onContentClicked(content: Content) {
             openContentEvent.value = Event(content)
         }
+
+        override fun onCallConference(address: Address) {
+            callConferenceEvent.value = Event(address)
+        }
     }
 
-    private var contextMenuDisabled: Boolean = false
+    private var advancedContextMenuOptionsDisabled: Boolean = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
@@ -133,8 +138,8 @@ class ChatMessagesListAdapter(
         return eventLog.eventLog.type.toInt()
     }
 
-    fun disableContextMenu() {
-        contextMenuDisabled = true
+    fun disableAdvancedContextMenuOptions() {
+        advancedContextMenuOptionsDisabled = true
     }
 
     inner class ChatMessageViewHolder(
@@ -205,8 +210,6 @@ class ChatMessagesListAdapter(
 
                     executePendingBindings()
 
-                    if (contextMenuDisabled) return
-
                     setContextMenuClickListener {
                         val popupView: ChatMessageLongPressMenuBindingImpl = DataBindingUtil.inflate(
                             LayoutInflater.from(root.context),
@@ -216,7 +219,8 @@ class ChatMessagesListAdapter(
                         val itemSize = AppUtils.getDimension(R.dimen.chat_message_popup_item_height).toInt()
                         var totalSize = itemSize * 7
                         if (chatMessage.chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) ||
-                            chatMessage.state == ChatMessage.State.NotDelivered
+                            chatMessage.state == ChatMessage.State.NotDelivered ||
+                            advancedContextMenuOptionsDisabled
                         ) { // No message id
                             popupView.imdnHidden = true
                             totalSize -= itemSize
@@ -229,12 +233,19 @@ class ChatMessagesListAdapter(
                             popupView.copyTextHidden = true
                             totalSize -= itemSize
                         }
-                        if (chatMessage.isOutgoing || chatMessageViewModel.contact.value != null) {
+                        if (chatMessage.isOutgoing ||
+                            chatMessageViewModel.contact.value != null ||
+                            advancedContextMenuOptionsDisabled
+                        ) {
                             popupView.addToContactsHidden = true
                             totalSize -= itemSize
                         }
                         if (chatMessage.chatRoom.hasBeenLeft()) {
                             popupView.replyHidden = true
+                            totalSize -= itemSize
+                        }
+                        if (advancedContextMenuOptionsDisabled) {
+                            popupView.forwardHidden = true
                             totalSize -= itemSize
                         }
 
