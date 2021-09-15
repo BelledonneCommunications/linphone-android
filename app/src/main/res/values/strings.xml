@@ -224,6 +224,36 @@
     <!-- Recordings -->
     <string name="recordings_empty_list">No recordings</string>
 
+    <!-- Conferencing -->
+    <string name="conference_schedule_title">Start a conference</string>
+    <string name="conference_schedule_later">Do you want to schedule this conference for later?</string>
+    <string name="conference_schedule_subject_title">Subject</string>
+    <string name="conference_schedule_subject_hint">Conference subject</string>
+    <string name="conference_schedule_address_title">Conference address</string>
+    <string name="conference_schedule_date">Date</string>
+    <string name="conference_schedule_time">Time</string>
+    <string name="conference_schedule_duration">Duration</string>
+    <string name="conference_schedule_timezone">Timezone</string>
+    <string name="conference_schedule_send_invite_chat">Send invite via &appName;</string>
+    <string name="conference_schedule_send_invite_email">Send invite via email</string>
+    <string name="conference_schedule_encryption">Would you like to encrypt the conference?</string>
+    <string name="conference_schedule_send_invite_chat_summary">Invite will be sent out from my &appName; account</string>
+    <string name="conference_schedule_send_invite_email_summary">Invite will be sent out by email</string>
+    <string name="conference_schedule_participants_list">Participants list</string>
+    <string name="conference_schedule_summary">Conference info</string>
+    <string name="conference_schedule_create">Create conference</string>
+    <string name="conference_schedule">Schedule conference</string>
+    <string name="conference_schedule_address_copied_to_clipboard">Conference address copied into clipboard</string>
+    <string name="conference_schedule_creation_failure">Failed to create conference!</string>
+    <string name="conference_schedule_info_not_sent_to_participant">Failed to send conference info to a participant</string>
+    <string name="conference_paused_title">You are currently out of the conference.</string>
+    <string name="conference_paused_subtitle">Click on play button to join it back.</string>
+    <string name="conference_default_title">Remote conference</string>
+    <string name="conference_local_title">Local conference</string>
+    <string name="conference_invite_title">Conference invite:</string>
+    <string name="conference_invite_join">Join</string>
+    <string name="conference_invite_participants_count">%d participants</string>
+
     <!-- Call -->
     <string name="call_incoming_title">Incoming Call</string>
     <string name="call_outgoing_title">Outgoing Call</string>
@@ -242,6 +272,19 @@
     <string name="call_error_temporarily_unavailable">Temporarily unavailable</string>
     <string name="call_error_generic">Error: %s</string>
     <string name="call_video_update_requested_dialog">Correspondent would like to turn the video on</string>
+    <string name="call_action_participants_list">Participants list</string>
+    <string name="call_action_chat">Chat</string>
+    <string name="call_action_calls_list">Calls list</string>
+    <string name="call_action_numpad">Numpad</string>
+    <string name="call_action_change_conf_layout">Change layout</string>
+    <string name="call_action_statistics">Call statistics</string>
+    <string name="call_context_action_resume">Resume call</string>
+    <string name="call_context_action_pause">Pause call</string>
+    <string name="call_context_action_transfer">Transfer call</string>
+    <string name="call_context_action_answer">Answer call</string>
+    <string name="call_context_action_hangup">Terminate call</string>
+    <string name="call_remote_recording">This call is being recorded.</string>
+    <string name="call_remotely_paused_title">Call has been paused by remote.</string>
 
     <!-- Call stats -->
     <string name="call_stats_audio">Audio</string>
@@ -730,4 +773,7 @@
     <string name="content_description_cancel_voice_recording">Cancel voice recording</string>
     <string name="content_description_pause_voice_recording_playback">Pause voice recording</string>
     <string name="content_description_play_voice_recording">Play voice recording</string>
+    <string name="content_description_call_context_menu">Open call context menu</string>
+    <string name="content_description_create_conference">Create a conference call</string>
+    <string name="content_description_copy_conference_address">Copy conference address</string>
 </resources>
