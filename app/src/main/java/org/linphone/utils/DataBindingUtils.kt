@@ -553,3 +553,16 @@ fun VoiceRecordProgressBar.setSecProgress(progress: Int) {
 fun VoiceRecordProgressBar.setSecProgressTint(color: Int) {
     setSecondaryProgressTint(color)
 }
+
+@BindingAdapter("android:layout_margin")
+fun ConstraintLayout.setMargins(margins: Float) {
+    val params = layoutParams as ConstraintLayout.LayoutParams
+    val m = margins.toInt()
+    params.setMargins(m, m, m, m)
+    layoutParams = params
+}
+
+@BindingAdapter("android:onTouch")
+fun View.setTouchListener(listener: View.OnTouchListener) {
+    setOnTouchListener(listener)
+}
