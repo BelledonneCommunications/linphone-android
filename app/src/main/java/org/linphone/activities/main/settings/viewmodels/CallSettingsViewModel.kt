@@ -85,13 +85,6 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
     }
     val api26OrHigher = MutableLiveData<Boolean>()
 
-    val fullScreenListener = object : SettingListenerStub() {
-        override fun onBoolValueChanged(newValue: Boolean) {
-            prefs.fullScreenCallUI = newValue
-        }
-    }
-    val fullScreen = MutableLiveData<Boolean>()
-
     val overlayListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
             prefs.showCallOverlay = newValue
@@ -219,7 +212,6 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
         useTelecomManager.value = prefs.useTelecomManager
         api26OrHigher.value = Version.sdkAboveOrEqual(Version.API26_O_80)
 
-        fullScreen.value = prefs.fullScreenCallUI
         overlay.value = prefs.showCallOverlay
         systemWideOverlay.value = prefs.systemWideCallOverlay
         sipInfoDtmf.value = core.useInfoForDtmf
