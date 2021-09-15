@@ -23,27 +23,22 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
-import org.linphone.core.Call
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
+import org.linphone.core.tools.Log
 
 class CallOverlayViewModel : ViewModel() {
     val displayCallOverlay = MutableLiveData<Boolean>()
 
     private val listener = object : CoreListenerStub() {
-        override fun onCallStateChanged(
-            core: Core,
-            call: Call,
-            state: Call.State,
-            message: String
-        ) {
-            if (state == Call.State.IncomingReceived || state == Call.State.OutgoingInit) {
-                createCallOverlay()
-            } else if (state == Call.State.End || state == Call.State.Error || state == Call.State.Released) {
-                if (core.callsNb == 0) {
-                    removeCallOverlay()
-                }
-            }
+        override fun onFirstCallStarted(core: Core) {
+            Log.i("[Call Overlay] First call started, creating it")
+            createCallOverlay()
+        }
+
+        override fun onLastCallEnded(core: Core) {
+            Log.i("[Call Overlay] Last call ended, removing it")
+            removeCallOverlay()
         }
     }
 

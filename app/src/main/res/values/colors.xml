@@ -15,11 +15,31 @@
     <color name="white_color">#ffffff</color>
     <color name="red_color">#ff0000</color>
     <color name="green_color">#96c11f</color>
+    <color name="dark_green_color">#7d9f21</color>
+
+    <color name="voip_gray_blue_color">#798791</color>
+    <color name="voip_light_gray">#D0D8DE</color>
+    <color name="voip_dark_gray">#4B5964</color>
+    <color name="voip_gray">#96A5B1</color>
+    <color name="voip_gray_background">#D8D8D8</color>
+    <color name="voip_call_record_background">#EBEBEB</color>
+    <color name="voip_calls_list_inactive_background">#F0F1F2</color>
+    <color name="voip_translucent_popup_background">#A64B5964</color>
+    <color name="voip_translucent_popup_alt_background">#E64B5964</color>
+    <color name="voip_numpad_background">#E4E4E4</color>
+    <color name="voip_contact_avatar_background_alt">#AFAFAF</color>
+    <color name="voip_conference_participant_paused_background">#303030</color>
+    <color name="voip_drawable_color">#A6B2BC</color>
+    <color name="voip_dark_color">#252E35</color>  <!-- Background -->
+    <color name="voip_dark_color2">#3F464B</color>  <!-- Light gray -->
+    <color name="voip_dark_color3">#475663</color> <!-- Extra buttons -->
+    <color name="voip_dark_color4">#2D3841</color> <!-- Top bars -->
+
+    <color name="form_field_gray_background">#F7F7F7</color>
 
     <color name="imdn_read_color">#3eb5c0</color>
     <color name="toolbar_color">#e1e1e1</color>
     <color name="header_background_color">#f3f3f3</color>
-    <color name="security_gray_color">#c2c2c2</color>
 
     <color name="chat_bubble_text_color">#a1a1a1</color>
     <color name="chat_bubble_incoming_color">#f3f3f3</color>
