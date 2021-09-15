@@ -13,6 +13,8 @@
 
         <attr name="backgroundColor" format="color"/>
         <attr name="backgroundColor2" format="color"/>
+        <attr name="backgroundColor3" format="color"/>
+        <attr name="backgroundColor4" format="color"/>
         <attr name="backgroundContrastColor" format="color"/>
         <attr name="dividerColor" format="color"/>
 
@@ -23,12 +25,23 @@
         <attr name="drawableTintColor3" format="color"/>
 
         <attr name="lightToolbarBackgroundColor" format="color"/>
-        <attr name="lightToolbarBackgroundDisabledColor" format="color"/>
         <attr name="lightToolbarTextColor" format="color"/>
         <attr name="darkToolbarBackgroundColor" format="color"/>
         <attr name="darkToolbarTextColor" format="color"/>
 
         <attr name="button_background_drawable" format="reference" />
+
+        <attr name="voipBackgroundColor" format="color" />
+        <attr name="voipBackgroundBWColor" format="color" />
+        <attr name="voipParticipantBackgroundColor" format="color" />
+        <attr name="voipExtraButtonsBackgroundColor" format="color" />
+        <attr name="voipToolbarBackgroundColor" format="color" />
+        <attr name="voipDrawableColor" format="color" />
+        <attr name="voipTextColor" format="color" />
+        <attr name="voipTextColor2" format="color" />
+        <attr name="voipFormBackgroundColor" format="color" />
+        <attr name="voipFormFieldBackgroundColor" format="color" />
+        <attr name="voipFormDisabledFieldBackgroundColor" format="color" />
     </declare-styleable>
 
     <declare-styleable name="Settings">
@@ -48,5 +61,24 @@
         <attr name="secondaryProgressTint" format="color" />
         <attr name="primaryLeftMargin" format="dimension" />
         <attr name="primaryRightMargin" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="RoundCornersTextureView">
+        <attr name="alignTopRight" format="boolean" />
+        <attr name="displayMode" format="enum">
+            <enum name="black_bars" value="0"/>
+            <enum name="occupy_all_space" value="1"/>
+            <enum name="hybrid" value="2"/>
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="HorizontalScrollDot">
+        <attr name="dotCount" format="integer" />
+        <attr name="itemCount" format="integer" />
+        <attr name="dotColor" format="color" />
+        <attr name="selectedDotColor" format="color" />
+        <attr name="selectedDot" format="integer" />
+        <attr name="dotRadius" format="dimension" />
+        <attr name="horizontalScrollView" format="reference" />
     </declare-styleable>
 </resources>

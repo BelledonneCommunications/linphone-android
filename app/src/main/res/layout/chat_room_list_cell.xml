@@ -114,14 +114,14 @@
 
             <TextView
                 android:id="@+id/lastMessage"
-                android:text="@{viewModel.lastMessageText}"
                 style="@style/standard_small_text_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/title"
                 android:layout_toLeftOf="@id/ephemeral"
                 android:ellipsize="end"
-                android:maxLines="2" />
+                android:maxLines="2"
+                android:text="@{viewModel.lastMessageText}" />
 
             <ImageView
                 android:visibility="@{viewModel.ephemeralEnabled ? View.VISIBLE : View.GONE, default=gone}"

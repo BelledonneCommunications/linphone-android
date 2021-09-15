@@ -52,7 +52,6 @@ class EphemeralFragment : SecureFragment<ChatRoomEphemeralFragmentBinding>() {
         val chatRoom = sharedViewModel.selectedChatRoom.value
         if (chatRoom == null) {
             Log.e("[Ephemeral] Chat room is null, aborting!")
-            // (activity as MainActivity).showSnackBar(R.string.error)
             findNavController().navigateUp()
             return
         }

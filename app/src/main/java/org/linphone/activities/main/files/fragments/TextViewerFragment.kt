@@ -42,7 +42,6 @@ class TextViewerFragment : GenericViewerFragment<FileTextViewerFragmentBinding>(
         val content = sharedViewModel.contentToOpen.value
         if (content == null) {
             Log.e("[Text Viewer] Content is null, aborting!")
-            // (activity as MainActivity).showSnackBar(R.string.error)
             findNavController().navigateUp()
             return
         }

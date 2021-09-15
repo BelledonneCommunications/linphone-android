@@ -41,11 +41,9 @@ import kotlin.collections.HashMap
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
-import org.linphone.activities.call.CallActivity
-import org.linphone.activities.call.IncomingCallActivity
-import org.linphone.activities.call.OutgoingCallActivity
 import org.linphone.activities.chat_bubble.ChatBubbleActivity
 import org.linphone.activities.main.MainActivity
+import org.linphone.activities.voip.CallActivity
 import org.linphone.compatibility.Compatibility
 import org.linphone.contact.Contact
 import org.linphone.core.*
@@ -426,7 +424,7 @@ class NotificationsManager(private val context: Context) {
                 if (picture != null) {
                     IconCompat.createWithAdaptiveBitmap(picture)
                 } else {
-                    IconCompat.createWithResource(context, R.drawable.avatar)
+                    IconCompat.createWithResource(context, R.drawable.voip_single_contact_avatar)
                 }
             if (userIcon != null) builder.setIcon(userIcon)
             builder.build()
@@ -446,7 +444,7 @@ class NotificationsManager(private val context: Context) {
             currentForegroundServiceNotificationId = 0
         }
 
-        val incomingCallNotificationIntent = Intent(context, IncomingCallActivity::class.java)
+        val incomingCallNotificationIntent = Intent(context, org.linphone.activities.voip.CallActivity::class.java)
         incomingCallNotificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         val pendingIntent = PendingIntent.getActivity(
             context,
@@ -514,18 +512,6 @@ class NotificationsManager(private val context: Context) {
     fun displayCallNotification(call: Call, useAsForeground: Boolean = false) {
         val notifiable = getNotifiableForCall(call)
 
-        val callActivity: Class<*> = when (call.state) {
-            Call.State.Paused, Call.State.Pausing, Call.State.PausedByRemote -> {
-                CallActivity::class.java
-            }
-            Call.State.OutgoingRinging, Call.State.OutgoingProgress, Call.State.OutgoingInit, Call.State.OutgoingEarlyMedia -> {
-                OutgoingCallActivity::class.java
-            }
-            else -> {
-                CallActivity::class.java
-            }
-        }
-
         val serviceChannel = context.getString(R.string.notification_channel_service_id)
         val channelToUse = when (val serviceChannelImportance = Compatibility.getChannelImportance(notificationManager, serviceChannel)) {
             NotificationManagerCompat.IMPORTANCE_NONE -> {
@@ -543,7 +529,7 @@ class NotificationsManager(private val context: Context) {
             }
         }
 
-        val callNotificationIntent = Intent(context, callActivity)
+        val callNotificationIntent = Intent(context, CallActivity::class.java)
         callNotificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         val pendingIntent = PendingIntent.getActivity(
             context,
@@ -651,8 +637,15 @@ class NotificationsManager(private val context: Context) {
         val pictureUri = contact?.getContactThumbnailPictureUri()
         val roundPicture = ImageUtils.getRoundBitmapFromUri(context, pictureUri)
         val displayName = contact?.fullName ?: LinphoneUtils.getDisplayName(message.fromAddress)
+        var text = ""
 
-        var text: String = message.contents.find { content -> content.isText }?.utf8Text ?: ""
+        val isConferenceInvite = message.contents.firstOrNull()?.isIcalendar ?: false
+        text = if (isConferenceInvite) {
+            AppUtils.getString(R.string.conference_invitation_received_notification)
+        } else {
+            message.contents.find { content -> content.isText }?.utf8Text ?: ""
+        }
+
         if (text.isEmpty()) {
             for (content in message.contents) {
                 text += content.name
@@ -781,7 +774,7 @@ class NotificationsManager(private val context: Context) {
         }
         style.isGroupConversation = notifiable.isGroup
 
-        val icon = lastPerson?.icon ?: IconCompat.createWithResource(context, R.drawable.avatar)
+        val icon = lastPerson?.icon ?: IconCompat.createWithResource(context, R.drawable.voip_single_contact_avatar)
         val bubble = NotificationCompat.BubbleMetadata.Builder(bubbleIntent, icon)
             .setDesiredHeightResId(R.dimen.chat_message_bubble_desired_height)
             .build()

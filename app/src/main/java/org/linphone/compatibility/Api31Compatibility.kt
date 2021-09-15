@@ -20,16 +20,20 @@
 package org.linphone.compatibility
 
 import android.annotation.TargetApi
+import android.app.Activity
 import android.app.Notification
 import android.app.PendingIntent
 import android.app.Person
+import android.app.PictureInPictureParams
 import android.content.Context
+import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.contact.Contact
 import org.linphone.core.Call
+import org.linphone.core.tools.Log
 import org.linphone.notifications.Notifiable
 import org.linphone.notifications.NotificationsManager
 import org.linphone.utils.ImageUtils
@@ -91,7 +95,8 @@ class Api31Compatibility {
             channel: String,
             notificationsManager: NotificationsManager
         ): Notification {
-            val contact: Contact? = coreContext.contactsManager.findContactByAddress(call.remoteAddress)
+            val contact: Contact? =
+                coreContext.contactsManager.findContactByAddress(call.remoteAddress)
             val pictureUri = contact?.getContactThumbnailPictureUri()
             val roundPicture = ImageUtils.getRoundBitmapFromUri(context, pictureUri)
             val displayName = contact?.fullName ?: LinphoneUtils.getDisplayName(call.remoteAddress)
@@ -122,7 +127,9 @@ class Api31Compatibility {
             val builder = Notification.Builder(
                 context, channel
             )
-                .setStyle(Notification.CallStyle.forOngoingCall(caller, declineIntent).setIsVideo(isVideo))
+                .setStyle(
+                    Notification.CallStyle.forOngoingCall(caller, declineIntent).setIsVideo(isVideo)
+                )
                 .setSmallIcon(iconResourceId)
                 .setAutoCancel(false)
                 .setCategory(Notification.CATEGORY_CALL)
@@ -131,13 +138,27 @@ class Api31Compatibility {
                 .setShowWhen(true)
                 .setOngoing(true)
                 .setColor(ContextCompat.getColor(context, R.color.notification_led_color))
-                .setFullScreenIntent(pendingIntent, true) // This is required for CallStyle notification
+                .setFullScreenIntent(
+                    pendingIntent,
+                    true
+                ) // This is required for CallStyle notification
 
             if (!corePreferences.preventInterfaceFromShowingUp) {
                 builder.setContentIntent(pendingIntent)
             }
 
             return builder.build()
+        }
+
+        fun enableAutoEnterPiP(activity: Activity, enable: Boolean) {
+            val supportsPip = activity.packageManager
+                .hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
+            Log.i("[Call] Is PiP supported: $supportsPip")
+            if (supportsPip) {
+                val params = PictureInPictureParams.Builder().setAutoEnterEnabled(enable).build()
+                activity.setPictureInPictureParams(params)
+                Log.i("[Call] PiP auto enter enabled params set to $enable")
+            }
         }
     }
 }

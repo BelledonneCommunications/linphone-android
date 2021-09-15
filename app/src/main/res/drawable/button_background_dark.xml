@@ -3,9 +3,9 @@
 	<item android:state_pressed="true"
 		android:drawable="@color/grey_color" />
 	<item android:state_enabled="false"
-		android:drawable="@color/dark_grey_color" />
+		android:drawable="@color/voip_dark_color" />
 	<item android:state_selected="true"
-		android:drawable="@color/dark_grey_color" />
+		android:drawable="@color/voip_dark_color" />
 	<item
-		android:drawable="@color/dark_grey_color" />
+		android:drawable="@color/voip_dark_color" />
 </selector>

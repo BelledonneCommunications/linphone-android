@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="data"
+            type="org.linphone.activities.voip.data.ConferenceParticipantData" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="5dp"
+        android:gravity="center_vertical">
+
+        <org.linphone.contact.ContactAvatarView
+            android:id="@+id/avatar"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:gravity="center"
+            app:data="@{data}"
+            tools:layout="@layout/contact_avatar"/>
+
+        <ImageView
+            android:id="@+id/delete"
+            android:onClick="@{() -> data.removeParticipantFromConference()}"
+            android:visibility="@{data.isMeAdmin ? View.VISIBLE : View.INVISIBLE}"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/content_description_remove_contact_from_chat_room"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:src="@drawable/icon_cancel_alt" />
+
+        <LinearLayout
+            android:id="@+id/adminLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@id/delete"
+            android:layout_marginStart="5dp">
+
+            <LinearLayout
+                android:id="@+id/isAdminLayout"
+                android:onClick="@{() -> data.unsetAdmin()}"
+                android:visibility="@{data.isAdmin ? View.VISIBLE : View.GONE, default=gone}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:padding="5dp"
+                    android:scaleType="centerInside"
+                    android:contentDescription="@string/content_description_contact_is_admin"
+                    android:src="@drawable/check_selected" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/chat_room_group_info_admin"
+                    android:textColor="?attr/primaryTextColor"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/isNotAdminLayout"
+                android:onClick="@{() -> data.setAdmin()}"
+                android:visibility="@{(data.isAdmin || !data.isMeAdmin) ? View.GONE : View.VISIBLE}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:padding="5dp"
+                    android:scaleType="centerInside"
+                    android:contentDescription="@string/content_description_contact_is_not_admin"
+                    android:src="@drawable/check_unselected" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/chat_room_group_info_admin"
+                    android:textColor="?attr/primarySubtextLightColor" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:layout_toStartOf="@id/adminLayout"
+            android:layout_toEndOf="@id/avatar"
+            android:orientation="vertical">
+
+            <org.linphone.views.MarqueeTextView
+                style="@style/contact_name_list_cell_font"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="@{data.contact.fullName ?? data.displayName, default=`Bilbo Baggins`}" />
+
+            <org.linphone.views.MarqueeTextView
+                android:id="@+id/sipUri"
+                style="@style/sip_uri_small_font"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:text="@{data.sipUri, default=`sip:bilbo.baggins@sip.linphone.org`}" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</layout>

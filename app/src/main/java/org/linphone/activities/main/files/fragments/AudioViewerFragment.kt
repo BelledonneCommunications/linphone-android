@@ -48,7 +48,6 @@ class AudioViewerFragment : GenericViewerFragment<FileAudioViewerFragmentBinding
         val content = sharedViewModel.contentToOpen.value
         if (content == null) {
             Log.e("[Audio Viewer] Content is null, aborting!")
-            // (activity as MainActivity).showSnackBar(R.string.error)
             findNavController().navigateUp()
             return
         }

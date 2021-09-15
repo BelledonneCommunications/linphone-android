@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="inflatedVisibility"
+            type="Integer" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="@{inflatedVisibility}"
+        android:focusable="true"
+        android:clickable="true"
+        android:background="@color/voip_translucent_popup_background">
+
+        <ImageView
+            android:id="@+id/paused_icon"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/shape_orange_circle"
+            android:contentDescription="@null"
+            android:padding="40dp"
+            android:src="@drawable/voip_conference_paused_big" />
+
+        <TextView
+            style="@style/conference_paused_title_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/paused_icon"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="@string/call_remotely_paused_title" />
+
+    </RelativeLayout>
+
+</layout>

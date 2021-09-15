@@ -8,7 +8,6 @@
     <string name="sync_account_name">&appName; contacten</string>
     <string name="about_privacy_policy">Bekijk onze privacyverklaring</string>
     <string name="logs_url_copied_to_clipboard">Logs URL gekopieerd naar klembord</string>
-    <string name="error">Fout</string>
     <string name="phone_number">Telefoonnummer</string>
     <string name="phone_numbers">Telefoonnummers</string>
     <string name="select_your_country">Selecteer uw land</string>
@@ -25,7 +24,6 @@
         <item quantity="other">%d dagen</item>
     </plurals>
     <string name="share_uploaded_logs_link">Link naar logbestand delen met…</string>
-    <string name="invalid_email">Ongeldig emailadres</string>
     <string name="today">Vandaag</string>
     <string name="yesterday">Gisteren</string>
     <string name="transport">Transport</string>
@@ -95,8 +93,6 @@
     <string name="chat_message_context_menu_copy_text">Kopieer tekst</string>
     <string name="chat_message_context_menu_add_to_contacts">Toevoegen aan contacten</string>
     <string name="chat_message_forward_confirmation_dialog">Wil u het bericht in deze chatroom doorsturen\?</string>
-    <string name="chat_room_toast_choose_for_sharing">Selecteer een conversatie of begin een nieuwe</string>
-    <string name="chat_room_cant_open_file_no_app_found">Kan bestand niet openen, geen applicatie beschikbaar voor dit formaat.</string>
     <string name="chat_room_file_not_found">Bestand niet gevonden</string>
     <string name="chat_room_ephemeral_message_one_minute">1 minuut</string>
     <string name="chat_room_ephemeral_message_one_hour">1 uur</string>
@@ -109,11 +105,9 @@
     </plurals>
     <string name="call_incoming_title">Inkomende oproep</string>
     <string name="call_outgoing_title">Uitgaande oproep</string>
-    <string name="call_paused_by_remote">Gesprek werd gepauzeerd door tegenpartij</string>
     <string name="call_notification_paused">Gepauzeerde oproep</string>
     <string name="call_notification_outgoing">Uitgaande oproep</string>
     <string name="call_notification_active">In gesprek</string>
-    <string name="call_conference_title">Conferentie</string>
     <string name="call_error_declined">Oproep werd geweigerd</string>
     <string name="call_error_user_busy">Gebruiker is bezet</string>
     <string name="call_error_user_not_found">Gebruiker niet gevonden</string>

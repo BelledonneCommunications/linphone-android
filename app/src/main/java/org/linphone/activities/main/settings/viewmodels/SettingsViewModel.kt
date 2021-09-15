@@ -37,6 +37,7 @@ class SettingsViewModel : ViewModel() {
     val showNetworkSettings: Boolean = corePreferences.showNetworkSettings
     val showContactsSettings: Boolean = corePreferences.showContactsSettings
     val showAdvancedSettings: Boolean = corePreferences.showAdvancedSettings
+    val showConferencesSettings: Boolean = corePreferences.showConferencesSettings
 
     val accounts = MutableLiveData<ArrayList<AccountSettingsViewModel>>()
 
@@ -63,6 +64,8 @@ class SettingsViewModel : ViewModel() {
     lateinit var contactsSettingsListener: SettingListenerStub
 
     lateinit var advancedSettingsListener: SettingListenerStub
+
+    lateinit var conferencesSettingsListener: SettingListenerStub
 
     val primaryAccountDisplayNameListener = object : SettingListenerStub() {
         override fun onTextValueChanged(newValue: String) {

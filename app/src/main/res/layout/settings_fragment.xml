@@ -155,6 +155,13 @@
 
                     <include
                         layout="@layout/settings_widget_basic"
+                        android:visibility="@{viewModel.showConferencesSettings ? View.VISIBLE : View.GONE}"
+                        linphone:listener="@{viewModel.conferencesSettingsListener}"
+                        linphone:title="@{@string/settings_conferences_title}"
+                        linphone:icon="@{@drawable/settings_conferences}" />
+
+                    <include
+                        layout="@layout/settings_widget_basic"
                         android:visibility="@{viewModel.showChatSettings ? View.VISIBLE : View.GONE}"
                         linphone:listener="@{viewModel.chatSettingsListener}"
                         linphone:title="@{@string/settings_chat_title}"

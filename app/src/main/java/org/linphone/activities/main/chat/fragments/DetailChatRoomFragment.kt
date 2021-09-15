@@ -161,7 +161,6 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         val chatRoom = sharedViewModel.selectedChatRoom.value
         if (chatRoom == null) {
             Log.e("[Chat Room] Chat room is null, aborting!")
-            // (activity as MainActivity).showSnackBar(R.string.error)
             goBack()
             return
         }
@@ -406,11 +405,29 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             viewLifecycleOwner
         ) {
             it.consume { content ->
-                val path = content.filePath.orEmpty()
+                var path = content.filePath.orEmpty()
 
                 if (!File(path).exists()) {
                     (requireActivity() as MainActivity).showSnackBar(R.string.chat_room_file_not_found)
                 } else {
+                    if (path.isEmpty()) {
+                        val name = content.name
+                        if (name != null && name.isNotEmpty()) {
+                            val file = FileUtils.getFileStoragePath(name)
+                            FileUtils.writeIntoFile(content.buffer, file)
+                            path = file.absolutePath
+                            content.filePath = path
+                            Log.i("[Chat Message] Content file path was empty, created file from buffer at $path")
+                        } else if (content.isIcalendar) {
+                            val name = "conference.ics"
+                            val file = FileUtils.getFileStoragePath(name)
+                            FileUtils.writeIntoFile(content.buffer, file)
+                            path = file.absolutePath
+                            content.filePath = path
+                            Log.i("[Chat Message] Content file path was empty, created conference.ics from buffer at $path")
+                        }
+                    }
+
                     Log.i("[Chat Message] Opening file: $path")
                     sharedViewModel.contentToOpen.value = content
 
@@ -467,6 +484,14 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 // If auto start call setting is enabled, ignore it
                 args.putBoolean("SkipAutoCallStart", true)
                 navigateToDialer(args)
+            }
+        }
+
+        adapter.callConferenceEvent.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume { pair ->
+                navigateToConferenceWaitingRoom(pair.first, pair.second)
             }
         }
 
@@ -542,7 +567,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                         if (voiceRecordingDuration < 1000) {
                             Log.w("[Chat Room] Voice recording button has been held for less than a second, considering miss click")
                             chatSendingViewModel.cancelVoiceRecording()
-                            (requireActivity() as MainActivity).showSnackBar(R.string.chat_message_voice_recording_hold_to_record)
+                            (activity as MainActivity).showSnackBar(R.string.chat_message_voice_recording_hold_to_record)
                         } else {
                             Log.i("[Chat Room] Voice recording button has been released, stop recording")
                             chatSendingViewModel.stopVoiceRecording()
@@ -731,7 +756,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                     val address = viewModel.onlyParticipantOnlyDeviceAddress
                     if (viewModel.oneParticipantOneDevice) {
                         if (address != null) {
-                            coreContext.startCall(address, true)
+                            coreContext.startCall(address, forceZRTP = true)
                         }
                     } else {
                         navigateToDevices()
@@ -747,7 +772,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             val address = viewModel.onlyParticipantOnlyDeviceAddress
             if (viewModel.oneParticipantOneDevice) {
                 if (address != null) {
-                    coreContext.startCall(address, true)
+                    coreContext.startCall(address, forceZRTP = true)
                 }
             } else {
                 navigateToDevices()

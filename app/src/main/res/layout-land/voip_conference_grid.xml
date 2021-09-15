@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="conferenceViewModel"
+            type="org.linphone.activities.voip.viewmodels.ConferenceViewModel" />
+        <variable
+            name="controlsViewModel"
+            type="org.linphone.activities.voip.viewmodels.ControlsViewModel" />
+        <variable
+            name="inflatedVisibility"
+            type="Integer" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="@{inflatedVisibility}">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:visibility="@{controlsViewModel.fullScreenMode || controlsViewModel.pipMode ? View.GONE : View.VISIBLE}"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/voip_call_header_height"
+                android:layout_marginBottom="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/call_header_title"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:text="@{conferenceViewModel.subject, default=@string/conference_default_title}"/>
+
+                    <Chronometer
+                        android:id="@+id/grid_conference_timer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/call_header_subtitle" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:onClick="@{() -> conferenceViewModel.toggleRecording()}"
+                    android:selected="@{conferenceViewModel.isRecording}"
+                    android:layout_height="40dp"
+                    android:layout_width="40dp"
+                    android:background="@drawable/button_call_recording_background"
+                    android:src="@drawable/icon_call_record"
+                    android:contentDescription="@string/content_description_toggle_recording"
+                    android:padding="7dp"
+                    android:layout_marginEnd="10dp"/>
+
+                <ImageView
+                    android:onClick="@{() -> conferenceViewModel.pauseConference()}"
+                    android:selected="@{conferenceViewModel.isConferenceLocallyPaused}"
+                    android:enabled="@{!conferenceViewModel.conferenceCreationPending}"
+                    android:layout_height="40dp"
+                    android:layout_width="40dp"
+                    android:background="@drawable/button_toggle_background"
+                    android:src="@drawable/icon_pause"
+                    android:contentDescription="@string/content_description_pause_call"
+                    android:padding="5dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:visibility="@{conferenceViewModel.isRemotelyRecorded ? View.VISIBLE : View.GONE, default=gone}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/shape_remote_recording_background">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/voip_remote_recording"
+                    android:contentDescription="@null"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    style="@style/call_remote_recording_font"
+                    android:layout_marginStart="10dp"
+                    android:text="@string/call_remote_recording"/>
+
+            </LinearLayout>
+
+            <com.google.android.flexbox.FlexboxLayout
+                android:onClick="@{() -> controlsViewModel.toggleFullScreen()}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:entries="@{conferenceViewModel.conferenceParticipantDevices}"
+                app:layout="@{@layout/voip_conference_participant_remote_grid}"
+                app:flexDirection="row"
+                app:flexWrap="wrap"
+                app:alignItems="stretch"
+                app:alignContent="stretch"
+                app:justifyContent="space_between"
+                app:showDivider="middle"
+                app:dividerDrawable="@{controlsViewModel.fullScreenMode ? @drawable/shape_conference_divider_fullscreen : @drawable/shape_conference_divider}"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</layout>

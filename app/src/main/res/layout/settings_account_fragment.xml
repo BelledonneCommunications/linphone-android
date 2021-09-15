@@ -238,6 +238,20 @@
                     linphone:listener="@{viewModel.escapePlusListener}"
                     linphone:checked="@={viewModel.escapePlus}"/>
 
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/account_setting_conference_factory_address}"
+                    linphone:listener="@{viewModel.conferenceFactoryUriListener}"
+                    linphone:defaultValue="@{viewModel.conferenceFactoryUri}"
+                    linphone:inputType="@{InputType.TYPE_CLASS_TEXT}"/>
+
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/account_setting_audio_video_conference_factory_address}"
+                    linphone:listener="@{viewModel.audioVideoConferenceFactoryUriListener}"
+                    linphone:defaultValue="@{viewModel.audioVideoConferenceFactoryUri}"
+                    linphone:inputType="@{InputType.TYPE_CLASS_TEXT}"/>
+
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>

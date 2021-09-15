@@ -105,13 +105,6 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
     }
     val api26OrHigher = MutableLiveData<Boolean>()
 
-    val fullScreenListener = object : SettingListenerStub() {
-        override fun onBoolValueChanged(newValue: Boolean) {
-            prefs.fullScreenCallUI = newValue
-        }
-    }
-    val fullScreen = MutableLiveData<Boolean>()
-
     val overlayListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
             prefs.showCallOverlay = newValue
@@ -150,6 +143,13 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
         }
     }
     val autoStartCallRecording = MutableLiveData<Boolean>()
+
+    val remoteCallRecordingListener = object : SettingListenerStub() {
+        override fun onBoolValueChanged(newValue: Boolean) {
+            core.isRecordAwareEnabled = newValue
+        }
+    }
+    val remoteCallRecording = MutableLiveData<Boolean>()
 
     val autoStartListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
@@ -242,12 +242,12 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
         useTelecomManager.value = prefs.useTelecomManager
         api26OrHigher.value = Version.sdkAboveOrEqual(Version.API26_O_80)
 
-        fullScreen.value = prefs.fullScreenCallUI
         overlay.value = prefs.showCallOverlay
         systemWideOverlay.value = prefs.systemWideCallOverlay
         sipInfoDtmf.value = core.useInfoForDtmf
         rfc2833Dtmf.value = core.useRfc2833ForDtmf
         autoStartCallRecording.value = prefs.automaticallyStartCallRecording
+        remoteCallRecording.value = core.isRecordAwareEnabled
         autoStart.value = prefs.callRightAway
         autoAnswer.value = prefs.autoAnswerEnabled
         autoAnswerDelay.value = prefs.autoAnswerDelay

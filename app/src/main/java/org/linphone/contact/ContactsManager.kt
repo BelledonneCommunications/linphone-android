@@ -164,6 +164,7 @@ class ContactsManager(private val context: Context) {
 
     @Synchronized
     fun updateLocalContacts() {
+        Log.i("[Contacts Manager] Updating local contact(s)")
         localAccountsContacts.clear()
 
         for (account in coreContext.core.accountList) {
@@ -171,6 +172,7 @@ class ContactsManager(private val context: Context) {
             localContact.fullName = account.params.identityAddress?.displayName ?: account.params.identityAddress?.username
             val pictureUri = corePreferences.defaultAccountAvatarPath
             if (pictureUri != null) {
+                Log.i("[Contacts Manager] Found local picture URI: $pictureUri")
                 localContact.setContactThumbnailPictureUri(Uri.fromFile(File(pictureUri)))
             }
             val address = account.params.identityAddress

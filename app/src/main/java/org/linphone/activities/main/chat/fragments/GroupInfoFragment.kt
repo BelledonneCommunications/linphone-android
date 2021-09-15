@@ -175,7 +175,7 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
             dialog.show()
         }
 
-        viewModel.onErrorEvent.observe(
+        viewModel.onMessageToNotifyEvent.observe(
             viewLifecycleOwner
         ) {
             it.consume { messageResourceId ->

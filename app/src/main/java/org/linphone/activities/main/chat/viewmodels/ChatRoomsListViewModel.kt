@@ -22,7 +22,7 @@ package org.linphone.activities.main.chat.viewmodels
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
-import org.linphone.activities.main.viewmodels.ErrorReportingViewModel
+import org.linphone.activities.main.viewmodels.MessageNotifierViewModel
 import org.linphone.compatibility.Compatibility
 import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.core.*
@@ -30,7 +30,7 @@ import org.linphone.core.tools.Log
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
-class ChatRoomsListViewModel : ErrorReportingViewModel() {
+class ChatRoomsListViewModel : MessageNotifierViewModel() {
     val chatRooms = MutableLiveData<ArrayList<ChatRoomViewModel>>()
 
     val contactsUpdatedEvent: MutableLiveData<Event<Boolean>> by lazy {
@@ -60,7 +60,7 @@ class ChatRoomsListViewModel : ErrorReportingViewModel() {
                 }
             } else if (state == ChatRoom.State.TerminationFailed) {
                 Log.e("[Chat Rooms] Group chat room removal for address ${chatRoom.peerAddress.asStringUriOnly()} has failed !")
-                onErrorEvent.value = Event(R.string.chat_room_removal_failed_snack)
+                onMessageToNotifyEvent.value = Event(R.string.chat_room_removal_failed_snack)
             }
         }
 

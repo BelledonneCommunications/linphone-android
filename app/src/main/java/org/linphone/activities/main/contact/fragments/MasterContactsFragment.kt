@@ -138,7 +138,6 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
             }
         }
         binding.slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
-
         /* End of shared view model & sliding pane related */
 
         _adapter = ContactsListAdapter(listSelectionViewModel, viewLifecycleOwner)
@@ -282,8 +281,7 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
         } else if (sipUri != null) {
             Log.i("[Contacts] Found sipUri parameter in arguments: $sipUri")
             sipUriToAdd = sipUri
-            val activity = requireActivity() as MainActivity
-            activity.showSnackBar(R.string.contact_choose_existing_or_new_to_add_number)
+            (activity as MainActivity).showSnackBar(R.string.contact_choose_existing_or_new_to_add_number)
             editOnClick = true
         } else if (addressString != null) {
             val address = Factory.instance().createAddress(addressString)

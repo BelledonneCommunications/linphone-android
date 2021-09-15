@@ -65,7 +65,7 @@ class CallLogsListAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(callLogGroup: GroupedCallLogData) {
             with(binding) {
-                val callLogViewModel = callLogGroup.lastCallLogData
+                val callLogViewModel = callLogGroup.lastCallLogViewModel
                 viewModel = callLogViewModel
 
                 lifecycleOwner = viewLifecycleOwner

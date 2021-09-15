@@ -390,6 +390,27 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
     }
     val linkPhoneNumberEvent = MutableLiveData<Event<Boolean>>()
 
+    val conferenceFactoryUriListener = object : SettingListenerStub() {
+        override fun onTextValueChanged(newValue: String) {
+            val params = account.params.clone()
+            Log.i("[Account Settings] Forcing conference factory on proxy config ${params.identityAddress?.asString()} to value: $newValue")
+            params.conferenceFactoryUri = newValue
+            account.params = params
+        }
+    }
+    val conferenceFactoryUri = MutableLiveData<String>()
+
+    val audioVideoConferenceFactoryUriListener = object : SettingListenerStub() {
+        override fun onTextValueChanged(newValue: String) {
+            val params = account.params.clone()
+            val uri = coreContext.core.interpretUrl(newValue)
+            Log.i("[Account Settings] Forcing audio/video conference factory on proxy config ${params.identityAddress?.asString()} to value: $newValue")
+            params.audioVideoConferenceFactoryAddress = uri
+            account.params = params
+        }
+    }
+    val audioVideoConferenceFactoryUri = MutableLiveData<String>()
+
     init {
         update()
         account.addListener(listener)
@@ -444,6 +465,9 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
         prefix.value = params.internationalPrefix
         dialPrefix.value = params.useInternationalPrefixForCallsAndChats
         escapePlus.value = params.isDialEscapePlusEnabled
+
+        conferenceFactoryUri.value = params.conferenceFactoryUri
+        audioVideoConferenceFactoryUri.value = params.audioVideoConferenceFactoryAddress?.asStringUriOnly()
     }
 
     private fun initTransportList() {
