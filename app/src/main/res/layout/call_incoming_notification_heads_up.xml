@@ -36,7 +36,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:adjustViewBounds="true"
-        android:src="@drawable/avatar"
+        android:src="@drawable/voip_single_contact_avatar"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginTop="5dp"

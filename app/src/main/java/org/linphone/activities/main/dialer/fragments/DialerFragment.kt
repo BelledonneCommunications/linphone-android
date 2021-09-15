@@ -43,8 +43,8 @@ import org.linphone.activities.main.dialer.viewmodels.DialerViewModel
 import org.linphone.activities.main.fragments.SecureFragment
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
+import org.linphone.activities.navigateToConferenceScheduling
 import org.linphone.activities.navigateToConfigFileViewer
-import org.linphone.activities.navigateToContacts
 import org.linphone.core.tools.Log
 import org.linphone.databinding.DialerFragmentBinding
 import org.linphone.mediastream.Version
@@ -79,7 +79,7 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
             {
                 it.consume { id ->
                     val forward = when (id) {
-                        R.id.masterChatRoomsFragment -> false
+                        R.id.masterChatRoomsFragment, R.id.conferenceSchedulingFragment -> false
                         else -> true
                     }
                     if (corePreferences.enableAnimations) {
@@ -94,10 +94,9 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
             }
         )
 
-        binding.setNewContactClickListener {
-            sharedViewModel.updateDialerAnimationsBasedOnDestination.value = Event(R.id.masterContactsFragment)
-            sharedViewModel.updateContactsAnimationsBasedOnDestination.value = Event(R.id.dialerFragment)
-            navigateToContacts(viewModel.enteredUri.value)
+        binding.setNewConferenceClickListener {
+            sharedViewModel.updateDialerAnimationsBasedOnDestination.value = Event(R.id.conferenceSchedulingFragment)
+            navigateToConferenceScheduling()
         }
 
         binding.setTransferCallClickListener {

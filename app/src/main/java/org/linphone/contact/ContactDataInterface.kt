@@ -24,6 +24,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.activities.main.viewmodels.ErrorReportingViewModel
 import org.linphone.core.Address
 import org.linphone.core.ChatRoomSecurityLevel
+import org.linphone.utils.AppUtils
 import org.linphone.utils.LinphoneUtils
 
 interface ContactDataInterface {
@@ -41,6 +42,8 @@ open class GenericContactData(private val sipAddress: Address) : ContactDataInte
     final override val contact: MutableLiveData<Contact> = MutableLiveData<Contact>()
     final override val displayName: MutableLiveData<String> = MutableLiveData<String>()
     final override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
+    val initials = MutableLiveData<String>()
+    val displayInitials = MutableLiveData<Boolean>()
 
     private val contactsUpdatedListener = object : ContactsUpdatedListenerStub() {
         override fun onContactUpdated(contact: Contact) {
@@ -60,8 +63,16 @@ open class GenericContactData(private val sipAddress: Address) : ContactDataInte
 
     private fun contactLookup() {
         displayName.value = LinphoneUtils.getDisplayName(sipAddress)
-        contact.value =
-            coreContext.contactsManager.findContactByAddress(sipAddress)
+
+        val c = coreContext.contactsManager.findContactByAddress(sipAddress)
+        contact.value = c
+
+        initials.value = if (c != null) {
+            AppUtils.getInitials(c.fullName ?: c.firstName + " " + c.lastName)
+        } else {
+            AppUtils.getInitials(displayName.value ?: "")
+        }
+        displayInitials.value = initials.value.orEmpty().isNotEmpty() && initials.value.orEmpty() != "+"
     }
 }
 
