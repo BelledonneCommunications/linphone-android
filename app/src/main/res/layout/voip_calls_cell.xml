@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="data"
+            type="org.linphone.activities.voip.data.CallData" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white_color">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/voip_call_list_size"
+            android:background="@{data.isPaused ? @color/voip_calls_list_inactive_background : @color/voip_dark_gray, default=@color/voip_dark_gray}"
+            android:orientation="horizontal"
+            android:layout_marginBottom="1dp">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp">
+
+                <org.linphone.contact.ContactAvatarView
+                    android:visibility="@{data.isInRemoteConference ? View.GONE : View.VISIBLE}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="40dp"
+                    android:gravity="center"
+                    tools:layout="@layout/contact_avatar"
+                    app:data="@{data}"/>
+
+                <ImageView
+                    android:visibility="@{data.isInRemoteConference ? View.VISIBLE : View.GONE, default=gone}"
+                    android:layout_width="45dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="40dp"
+                    android:gravity="center"
+                    android:src="@drawable/voip_multiple_contacts_avatar" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@null"
+                    android:src="@{data.isIncoming ? @drawable/voip_call_header_incoming : data.isOutgoing ? @drawable/voip_call_header_outgoing : data.isPaused ? @drawable/voip_call_header_paused : @drawable/voip_call_header_active, default=@drawable/voip_call_header_active}" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:visibility="@{data.isPaused ? View.GONE : View.VISIBLE}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:visibility="@{data.isInRemoteConference ? View.GONE : View.VISIBLE}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    style="@style/call_list_active_name_font"
+                    android:text="@{data.contact.fullName ?? data.displayName, default=`Bilbo Baggins`}"/>
+
+                <TextView
+                    android:visibility="@{data.isInRemoteConference ? View.VISIBLE : View.GONE, default=gone}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    style="@style/call_list_active_name_font"
+                    android:text="@{data.remoteConferenceSubject}"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    style="@style/call_list_active_sip_uri_font"
+                    android:text="@{data.address, default=`bilbo.baggins@sip.linphone.org`}"/>
+
+            </LinearLayout>
+            <!-- Data binding doesn't work on styles... :'( -->
+            <LinearLayout
+                android:visibility="@{data.isPaused ? View.VISIBLE : View.GONE, default=gone}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:visibility="@{data.isInRemoteConference ? View.GONE : View.VISIBLE}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    style="@style/call_list_name_font"
+                    android:text="@{data.contact.fullName ?? data.displayName, default=`Bilbo Baggins`}"/>
+
+                <TextView
+                    android:visibility="@{data.isInRemoteConference ? View.VISIBLE : View.GONE, default=gone}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    style="@style/call_list_name_font"
+                    android:text="@{data.remoteConferenceSubject}"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    style="@style/call_list_sip_uri_font"
+                    android:text="@{data.address, default=`bilbo.baggins@sip.linphone.org`}"/>
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/context_menu"
+                android:onClick="@{() -> data.showContextMenu(contextMenu)}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/voip_call_list_menu"
+                android:padding="5dp"
+                android:contentDescription="@string/content_description_call_context_menu"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</layout>
