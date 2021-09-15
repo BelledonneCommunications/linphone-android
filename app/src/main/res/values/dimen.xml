@@ -38,4 +38,5 @@
     <dimen name="setting_subtitle_min_size">8sp</dimen>
     <dimen name="setting_subtitle_max_size">14sp</dimen>
     <dimen name="settings_granularity_step">1sp</dimen>
+    <dimen name="voip_buttons_fragment_size">60dp</dimen>
 </resources>
