@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/call_nav_graph"
+    app:startDestination="@id/activeCallOrConferenceFragment">
+
+    <fragment
+        android:id="@+id/activeCallOrConferenceFragment"
+        android:name="org.linphone.activities.voip.fragments.ActiveCallOrConferenceFragment"
+        tools:layout="@layout/voip_active_call_or_conference_fragment"
+        android:label="ActiveCallOrConferenceFragment" >
+        <action
+            android:id="@+id/action_activeCallOrConferenceFragment_to_callsListFragment"
+            app:destination="@id/callsListFragment" />
+        <action
+            android:id="@+id/action_activeCallOrConferenceFragment_to_numpadFragment"
+            app:destination="@id/numpadFragment" />
+        <action
+            android:id="@+id/action_activeCallOrConferenceFragment_to_conferenceParticipantsFragment"
+            app:destination="@id/conferenceParticipantsFragment" />
+        <action
+            android:id="@+id/action_activeCallOrConferenceFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/callsListFragment"
+        android:name="org.linphone.activities.voip.fragments.CallsListFragment"
+        tools:layout="@layout/voip_calls_list_fragment"
+        android:label="CallsListFragment" />
+
+    <fragment
+        android:id="@+id/numpadFragment"
+        android:name="org.linphone.activities.voip.fragments.NumpadFragment"
+        tools:layout="@layout/voip_numpad_fragment"
+        android:label="NumpadFragment" />
+
+    <fragment
+        android:id="@+id/conferenceParticipantsFragment"
+        android:name="org.linphone.activities.voip.fragments.ConferenceParticipantsFragment"
+        tools:layout="@layout/voip_conference_participants_fragment"
+        android:label="ConferenceParticipantsFragment" />
+
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="org.linphone.activities.voip.fragments.ChatFragment"
+        tools:layout="@layout/voip_chat_fragment"
+        android:label="ChatFragment" >
+        <argument
+            android:name="LocalSipUri"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="RemoteSipUri"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
+
+</navigation>
