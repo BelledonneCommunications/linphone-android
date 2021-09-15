@@ -150,7 +150,7 @@ open class Contact : Comparable<Contact> {
         val icon =
             if (bm == null) IconCompat.createWithResource(
                 coreContext.context,
-                R.drawable.avatar
+                R.drawable.voip_single_contact_avatar
             ) else IconCompat.createWithBitmap(bm)
         if (icon != null) {
             personBuilder.setIcon(icon)

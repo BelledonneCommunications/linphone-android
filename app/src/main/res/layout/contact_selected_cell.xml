@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="data"
+            type="org.linphone.core.Address" />
+        <variable
+            name="parent"
+            type="org.linphone.contact.ContactsSelectionViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical|left"
+        android:layout_marginRight="5dp">
+
+        <ImageView
+            android:onClick="@{() -> parent.toggleSelectionForAddress(data)}"
+            android:contentDescription="@string/content_description_remove_contact_from_selection"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="3dp"
+            android:gravity="center"
+            android:src="@drawable/chat_group_delete" />
+
+        <TextView
+            android:text="@{data.displayName ?? data.username}"
+            style="@style/contact_name_list_cell_font"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="5dp"
+            android:gravity="center"
+            android:lines="1"
+            android:scrollHorizontally="true" />
+
+    </LinearLayout>
+
+</layout>
