@@ -40,6 +40,7 @@ import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.FileUtils
 import org.linphone.utils.ImageUtils
+import org.linphone.utils.TimestampUtils
 
 class ChatMessageContentData(
     private val chatMessage: ChatMessage,
@@ -57,10 +58,10 @@ class ChatMessageContentData(
     val isPdf = MutableLiveData<Boolean>()
     val isGenericFile = MutableLiveData<Boolean>()
     val isVoiceRecording = MutableLiveData<Boolean>()
+    val isConferenceSchedule = MutableLiveData<Boolean>()
 
     val fileName = MutableLiveData<String>()
     val filePath = MutableLiveData<String>()
-    val fileSize = MutableLiveData<String>()
 
     val downloadable = MutableLiveData<Boolean>()
     val downloadEnabled = MutableLiveData<Boolean>()
@@ -73,6 +74,12 @@ class ChatMessageContentData(
     val voiceRecordPlayingPosition = MutableLiveData<Int>()
     val isVoiceRecordPlaying = MutableLiveData<Boolean>()
     var voiceRecordAudioFocusRequest: AudioFocusRequestCompat? = null
+
+    val conferenceSubject = MutableLiveData<String>()
+    val conferenceDate = MutableLiveData<String>()
+    val conferenceTime = MutableLiveData<String>()
+    val conferenceDuration = MutableLiveData<String>()
+    var conferenceAddress: Address? = null
 
     val isAlone: Boolean
         get() {
@@ -193,31 +200,42 @@ class ChatMessageContentData(
         }
 
         // Display download size and underline text
-        fileSize.value = AppUtils.bytesToDisplayableSize(content.fileSize.toLong())
-        val spannable = SpannableString("${AppUtils.getString(R.string.chat_message_download_file)} (${fileSize.value})")
+        val fileSize = AppUtils.bytesToDisplayableSize(content.fileSize.toLong())
+        val spannable = SpannableString("${AppUtils.getString(R.string.chat_message_download_file)} ($fileSize)")
         spannable.setSpan(UnderlineSpan(), 0, spannable.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         downloadLabel.value = spannable
 
         if (content.isFile || (content.isFileTransfer && chatMessage.isOutgoing)) {
             Log.i("[Content] Is content encrypted ? $isFileEncrypted")
             val path = if (isFileEncrypted) content.plainFilePath else content.filePath ?: ""
-            downloadable.value = content.filePath.orEmpty().isEmpty()
+            downloadable.value = content.isFileTransfer && content.filePath.orEmpty().isEmpty()
+
+            isImage.value = false
+            isVideo.value = false
+            isAudio.value = false
+            isPdf.value = false
+
+            val isVoiceRecord = content.isVoiceRecording
+            isVoiceRecording.value = isVoiceRecord
+
+            val isConferenceIcs = content.isIcalendar
+            isConferenceSchedule.value = isConferenceIcs
 
             if (path.isNotEmpty()) {
                 Log.i("[Content] Found displayable content: $path")
-                val isVoiceRecord = content.isVoiceRecording
                 filePath.value = path
                 isImage.value = FileUtils.isExtensionImage(path)
                 isVideo.value = FileUtils.isExtensionVideo(path) && !isVoiceRecord
                 isAudio.value = FileUtils.isExtensionAudio(path) && !isVoiceRecord
                 isPdf.value = FileUtils.isExtensionPdf(path)
-                isVoiceRecording.value = isVoiceRecord
 
                 if (isVoiceRecord) {
                     val duration = content.fileDuration // duration is in ms
                     voiceRecordDuration.value = duration
                     formattedDuration.value = SimpleDateFormat("mm:ss", Locale.getDefault()).format(duration)
-                    Log.i("[Voice Recording] Duration is ${voiceRecordDuration.value} ($duration)")
+                    Log.i("[Content] Voice recording duration is ${voiceRecordDuration.value} ($duration)")
+                } else if (isConferenceIcs) {
+                    parseConferenceInvite(content)
                 }
 
                 if (isVideo.value == true) {
@@ -225,13 +243,10 @@ class ChatMessageContentData(
                         videoPreview.postValue(ImageUtils.getVideoPreview(path))
                     }
                 }
+            } else if (isConferenceIcs) {
+                parseConferenceInvite(content)
             } else {
                 Log.w("[Content] Found content with empty path...")
-                isImage.value = false
-                isVideo.value = false
-                isAudio.value = false
-                isPdf.value = false
-                isVoiceRecording.value = false
             }
         } else {
             downloadable.value = true
@@ -240,12 +255,36 @@ class ChatMessageContentData(
             isAudio.value = FileUtils.isExtensionAudio(fileName.value!!)
             isPdf.value = FileUtils.isExtensionPdf(fileName.value!!)
             isVoiceRecording.value = false
+            isConferenceSchedule.value = false
         }
 
-        isGenericFile.value = !isPdf.value!! && !isAudio.value!! && !isVideo.value!! && !isImage.value!! && !isVoiceRecording.value!!
+        isGenericFile.value = !isPdf.value!! && !isAudio.value!! && !isVideo.value!! && !isImage.value!! && !isVoiceRecording.value!! && !isConferenceSchedule.value!!
         downloadEnabled.value = !chatMessage.isFileTransferInProgress
         downloadProgressInt.value = 0
         downloadProgressString.value = "0%"
+    }
+
+    private fun parseConferenceInvite(content: Content) {
+        val conferenceInfo = Factory.instance().createConferenceInfoFromIcalendarContent(content)
+        if (conferenceInfo != null) {
+            conferenceAddress = conferenceInfo.uri
+            Log.i("[Content] Created conference info from ICS with address ${conferenceAddress?.asStringUriOnly()}")
+            conferenceSubject.value = conferenceInfo.subject
+            conferenceDate.value = TimestampUtils.dateToString(conferenceInfo.dateTime * 1000) // Linphone handles time_t (so in seconds)
+            conferenceTime.value = TimestampUtils.timeToString(conferenceInfo.dateTime * 1000) // Linphone handles time_t (so in seconds)
+            conferenceDuration.value = conferenceInfo.duration.toString() // TODO
+        } else {
+            Log.e("[Content] Failed to create conference info from ICS: ${content.utf8Text}")
+        }
+    }
+
+    fun callConferenceAddress() {
+        val address = conferenceAddress
+        if (address == null) {
+            Log.e("[Content] Can't call null conference address!")
+            return
+        }
+        coreContext.startCall(address)
     }
 
     /** Voice recording specifics */
