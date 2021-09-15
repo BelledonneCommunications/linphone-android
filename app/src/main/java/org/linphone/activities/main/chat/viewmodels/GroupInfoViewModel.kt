@@ -27,7 +27,7 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.main.chat.GroupChatRoomMember
 import org.linphone.activities.main.chat.data.GroupInfoParticipantData
-import org.linphone.activities.main.viewmodels.ErrorReportingViewModel
+import org.linphone.activities.main.viewmodels.MessageNotifierViewModel
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
@@ -41,7 +41,7 @@ class GroupInfoViewModelFactory(private val chatRoom: ChatRoom?) :
     }
 }
 
-class GroupInfoViewModel(val chatRoom: ChatRoom?) : ErrorReportingViewModel() {
+class GroupInfoViewModel(val chatRoom: ChatRoom?) : MessageNotifierViewModel() {
     val createdChatRoomEvent = MutableLiveData<Event<ChatRoom>>()
     val updatedChatRoomEvent = MutableLiveData<Event<ChatRoom>>()
 
@@ -69,7 +69,7 @@ class GroupInfoViewModel(val chatRoom: ChatRoom?) : ErrorReportingViewModel() {
             } else if (state == ChatRoom.State.CreationFailed) {
                 Log.e("[Chat Room Group Info] Group chat room creation has failed !")
                 waitForChatRoomCreation.value = false
-                onErrorEvent.value = Event(R.string.chat_room_creation_failed_snack)
+                onMessageToNotifyEvent.value = Event(R.string.chat_room_creation_failed_snack)
             }
         }
 
@@ -142,7 +142,7 @@ class GroupInfoViewModel(val chatRoom: ChatRoom?) : ErrorReportingViewModel() {
         if (chatRoom == null) {
             Log.e("[Chat Room Group Info] Couldn't create chat room!")
             waitForChatRoomCreation.value = false
-            onErrorEvent.value = Event(R.string.chat_room_creation_failed_snack)
+            onMessageToNotifyEvent.value = Event(R.string.chat_room_creation_failed_snack)
         }
     }
 

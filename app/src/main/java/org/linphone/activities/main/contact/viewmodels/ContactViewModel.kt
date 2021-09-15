@@ -29,7 +29,7 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.main.contact.data.ContactNumberOrAddressClickListener
 import org.linphone.activities.main.contact.data.ContactNumberOrAddressData
-import org.linphone.activities.main.viewmodels.ErrorReportingViewModel
+import org.linphone.activities.main.viewmodels.MessageNotifierViewModel
 import org.linphone.contact.Contact
 import org.linphone.contact.ContactDataInterface
 import org.linphone.contact.ContactsUpdatedListenerStub
@@ -48,7 +48,7 @@ class ContactViewModelFactory(private val contact: Contact) :
     }
 }
 
-class ContactViewModel(val contactInternal: Contact) : ErrorReportingViewModel(), ContactDataInterface {
+class ContactViewModel(val contactInternal: Contact) : MessageNotifierViewModel(), ContactDataInterface {
     override val contact: MutableLiveData<Contact> = MutableLiveData<Contact>()
     override val displayName: MutableLiveData<String> = MutableLiveData<String>()
     override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
@@ -91,7 +91,7 @@ class ContactViewModel(val contactInternal: Contact) : ErrorReportingViewModel()
             } else if (state == ChatRoom.State.CreationFailed) {
                 Log.e("[Contact Detail] Group chat room creation has failed !")
                 waitForChatRoomCreation.value = false
-                onErrorEvent.value = Event(R.string.chat_room_creation_failed_snack)
+                onMessageToNotifyEvent.value = Event(R.string.chat_room_creation_failed_snack)
             }
         }
     }
@@ -115,7 +115,7 @@ class ContactViewModel(val contactInternal: Contact) : ErrorReportingViewModel()
             } else {
                 waitForChatRoomCreation.value = false
                 Log.e("[Contact Detail] Couldn't create chat room with address $address")
-                onErrorEvent.value = Event(R.string.chat_room_creation_failed_snack)
+                onMessageToNotifyEvent.value = Event(R.string.chat_room_creation_failed_snack)
             }
         }
 

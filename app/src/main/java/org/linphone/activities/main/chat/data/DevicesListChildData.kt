@@ -44,6 +44,6 @@ class DevicesListChildData(private val device: ParticipantDevice) {
     }
 
     fun onClick() {
-        coreContext.startCall(device.address, true)
+        coreContext.startCall(device.address, forceZRTP = true)
     }
 }

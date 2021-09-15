@@ -49,7 +49,6 @@ class DevicesFragment : SecureFragment<ChatRoomDevicesFragmentBinding>() {
         val chatRoom = sharedViewModel.selectedChatRoom.value
         if (chatRoom == null) {
             Log.e("[Devices] Chat room is null, aborting!")
-            // (activity as MainActivity).showSnackBar(R.string.error)
             findNavController().navigateUp()
             return
         }

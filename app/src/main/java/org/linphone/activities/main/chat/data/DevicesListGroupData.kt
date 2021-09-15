@@ -68,6 +68,6 @@ class DevicesListGroupData(private val participant: Participant) : GenericContac
     }
 
     fun onClick() {
-        if (device?.address != null) coreContext.startCall(device.address, true)
+        if (device?.address != null) coreContext.startCall(device.address, forceZRTP = true)
     }
 }

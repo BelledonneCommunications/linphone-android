@@ -5,7 +5,7 @@
         <import type="android.view.View"/>
         <variable
             name="data"
-            type="org.linphone.activities.main.history.data.CallLogData" />
+            type="org.linphone.activities.main.history.viewmodels.CallLogViewModel" />
     </data>
 
     <RelativeLayout

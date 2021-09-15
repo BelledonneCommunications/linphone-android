@@ -36,15 +36,22 @@ import org.linphone.activities.main.chat.fragments.ChatRoomCreationFragment
 import org.linphone.activities.main.chat.fragments.DetailChatRoomFragment
 import org.linphone.activities.main.chat.fragments.GroupInfoFragment
 import org.linphone.activities.main.chat.fragments.MasterChatRoomsFragment
+import org.linphone.activities.main.conference.fragments.*
 import org.linphone.activities.main.contact.fragments.ContactEditorFragment
 import org.linphone.activities.main.contact.fragments.DetailContactFragment
 import org.linphone.activities.main.contact.fragments.MasterContactsFragment
 import org.linphone.activities.main.dialer.fragments.DialerFragment
 import org.linphone.activities.main.fragments.TabsFragment
 import org.linphone.activities.main.history.fragments.DetailCallLogFragment
+import org.linphone.activities.main.history.fragments.DetailConferenceCallLogFragment
 import org.linphone.activities.main.history.fragments.MasterCallLogsFragment
 import org.linphone.activities.main.settings.fragments.*
 import org.linphone.activities.main.sidemenu.fragments.SideMenuFragment
+import org.linphone.activities.voip.CallActivity
+import org.linphone.activities.voip.fragments.ActiveCallOrConferenceFragment
+import org.linphone.activities.voip.fragments.ConferenceParticipantsFragment
+import org.linphone.activities.voip.fragments.IncomingCallFragment
+import org.linphone.activities.voip.fragments.OutgoingCallFragment
 import org.linphone.contact.NativeContact
 import org.linphone.core.Address
 
@@ -170,6 +177,104 @@ internal fun DialerFragment.navigateToConfigFileViewer() {
         R.id.action_global_configViewerFragment,
         bundle,
         popupTo()
+    )
+}
+
+internal fun DialerFragment.navigateToConferenceScheduling() {
+    findMasterNavController().navigate(
+        R.id.action_global_conferenceSchedulingFragment,
+        null,
+        popupTo()
+    )
+}
+
+/* Conference scheduling related */
+
+internal fun ConferenceSchedulingFragment.navigateToParticipantsList() {
+    if (findNavController().currentDestination?.id == R.id.conferenceSchedulingFragment) {
+        findNavController().navigate(
+            R.id.action_conferenceSchedulingFragment_to_conferenceSchedulingParticipantsListFragment,
+            null,
+            popupTo(R.id.conferenceSchedulingParticipantsListFragment, true)
+        )
+    }
+}
+
+internal fun ConferenceSchedulingParticipantsListFragment.navigateToSummary() {
+    if (findNavController().currentDestination?.id == R.id.conferenceSchedulingParticipantsListFragment) {
+        findNavController().navigate(
+            R.id.action_conferenceSchedulingParticipantsListFragment_to_conferenceSchedulingSummaryFragment,
+            null,
+            popupTo(R.id.conferenceSchedulingSummaryFragment, true)
+        )
+    }
+}
+
+internal fun ConferenceSchedulingSummaryFragment.goToScheduledConferences() {
+    if (findNavController().currentDestination?.id == R.id.conferenceSchedulingSummaryFragment) {
+        findNavController().navigate(
+            R.id.action_global_scheduledConferencesFragment,
+            null,
+            popupTo(R.id.dialerFragment, false)
+        )
+    }
+}
+
+internal fun ConferenceSchedulingSummaryFragment.navigateToConferenceWaitingRoom(
+    address: String,
+    subject: String?
+) {
+    val bundle = Bundle()
+    bundle.putString("Address", address)
+    bundle.putString("Subject", subject)
+    findMasterNavController().navigate(
+        R.id.action_global_conferenceWaitingRoomFragment,
+        bundle,
+        popupTo(R.id.dialerFragment, false)
+    )
+}
+
+internal fun ConferenceWaitingRoomFragment.navigateToDialer() {
+    findNavController().navigate(
+        R.id.action_global_dialerFragment,
+        null,
+        popupTo(R.id.dialerFragment, true)
+    )
+}
+
+internal fun DetailChatRoomFragment.navigateToConferenceWaitingRoom(
+    address: String,
+    subject: String?
+) {
+    val bundle = Bundle()
+    bundle.putString("Address", address)
+    bundle.putString("Subject", subject)
+    findMasterNavController().navigate(
+        R.id.action_global_conferenceWaitingRoomFragment,
+        bundle,
+        popupTo(R.id.conferenceWaitingRoomFragment, true)
+    )
+}
+
+internal fun ScheduledConferencesFragment.navigateToConferenceWaitingRoom(
+    address: String,
+    subject: String?
+) {
+    val bundle = Bundle()
+    bundle.putString("Address", address)
+    bundle.putString("Subject", subject)
+    findMasterNavController().navigate(
+        R.id.action_global_conferenceWaitingRoomFragment,
+        bundle,
+        popupTo(R.id.conferenceWaitingRoomFragment, true)
+    )
+}
+
+internal fun ScheduledConferencesFragment.navigateToConferenceScheduling() {
+    findMasterNavController().navigate(
+        R.id.action_global_conferenceSchedulingFragment,
+        null,
+        popupTo(R.id.conferenceSchedulingFragment, true)
     )
 }
 
@@ -499,6 +604,19 @@ internal fun MasterCallLogsFragment.navigateToCallHistory(slidingPane: SlidingPa
     }
 }
 
+internal fun MasterCallLogsFragment.navigateToConferenceCallHistory(slidingPane: SlidingPaneLayout) {
+    if (findNavController().currentDestination?.id == R.id.masterCallLogsFragment) {
+        val navHostFragment =
+            childFragmentManager.findFragmentById(R.id.history_nav_container) as NavHostFragment
+        navHostFragment.navController.navigate(
+            R.id.action_global_detailConferenceCallLogFragment,
+            null,
+            popupTo(R.id.detailConferenceCallLogFragment, true)
+        )
+        if (!slidingPane.isOpen) slidingPane.openPane()
+    }
+}
+
 internal fun MasterCallLogsFragment.clearDisplayedCallHistory() {
     if (findNavController().currentDestination?.id == R.id.masterCallLogsFragment) {
         val navHostFragment =
@@ -516,6 +634,20 @@ internal fun MasterCallLogsFragment.navigateToDialer(args: Bundle?) {
         R.id.action_global_dialerFragment,
         args,
         popupTo(R.id.dialerFragment, true)
+    )
+}
+
+internal fun MasterCallLogsFragment.navigateToConferenceWaitingRoom(
+    address: String,
+    subject: String?
+) {
+    val bundle = Bundle()
+    bundle.putString("Address", address)
+    bundle.putString("Subject", subject)
+    findMasterNavController().navigate(
+        R.id.action_global_conferenceWaitingRoomFragment,
+        bundle,
+        popupTo(R.id.dialerFragment, false)
     )
 }
 
@@ -556,6 +688,16 @@ internal fun DetailCallLogFragment.navigateToDialer(args: Bundle?) {
 
 internal fun DetailCallLogFragment.navigateToEmptyCallHistory() {
     if (findNavController().currentDestination?.id == R.id.detailCallLogFragment) {
+        findNavController().navigate(
+            R.id.action_global_emptyFragment,
+            null,
+            popupTo(R.id.emptyCallHistoryFragment, true)
+        )
+    }
+}
+
+internal fun DetailConferenceCallLogFragment.navigateToEmptyCallHistory() {
+    if (findNavController().currentDestination?.id == R.id.detailConferenceCallLogFragment) {
         findNavController().navigate(
             R.id.action_global_emptyFragment,
             null,
@@ -683,6 +825,19 @@ internal fun SettingsFragment.navigateToAdvancedSettings(slidingPane: SlidingPan
     }
 }
 
+internal fun SettingsFragment.navigateToConferencesSettings(slidingPane: SlidingPaneLayout) {
+    if (findNavController().currentDestination?.id == R.id.settingsFragment) {
+        val navHostFragment =
+            childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
+        navHostFragment.navController.navigate(
+            R.id.action_global_conferencesSettingsFragment,
+            null,
+            popupTo(R.id.conferencesSettingsFragment, true)
+        )
+        if (!slidingPane.isOpen) slidingPane.openPane()
+    }
+}
+
 internal fun AccountSettingsFragment.navigateToPhoneLinking(args: Bundle?) {
     if (findNavController().currentDestination?.id == R.id.accountSettingsFragment) {
         findNavController().navigate(
@@ -731,6 +886,10 @@ internal fun ChatSettingsFragment.navigateToEmptySetting() {
     navigateToEmptySetting(findNavController())
 }
 
+internal fun ConferencesSettingsFragment.navigateToEmptySetting() {
+    navigateToEmptySetting(findNavController())
+}
+
 internal fun ContactsSettingsFragment.navigateToEmptySetting() {
     navigateToEmptySetting(findNavController())
 }
@@ -776,6 +935,110 @@ internal fun SideMenuFragment.navigateToRecordings() {
         null,
         popupTo(R.id.recordingsFragment, true)
     )
+}
+
+internal fun SideMenuFragment.navigateToScheduledConferences() {
+    findNavController().navigate(
+        R.id.action_global_scheduledConferencesFragment,
+        null,
+        popupTo(R.id.scheduledConferencesFragment, true)
+    )
+}
+
+/* Calls related */
+
+internal fun CallActivity.navigateToActiveCall() {
+    if (findNavController(R.id.nav_host_fragment).currentDestination?.id != R.id.activeCallOrConferenceFragment) {
+        findNavController(R.id.nav_host_fragment).navigate(
+            R.id.action_global_activeCallOrConferenceFragment,
+            null,
+            popupTo(R.id.activeCallOrConferenceFragment, false)
+        )
+    }
+}
+
+internal fun CallActivity.navigateToOutgoingCall() {
+    findNavController(R.id.nav_host_fragment).navigate(
+        R.id.action_global_outgoingCallFragment,
+        null,
+        popupTo(R.id.activeCallOrConferenceFragment, false)
+    )
+}
+
+internal fun CallActivity.navigateToIncomingCall(earlyMediaVideoEnabled: Boolean) {
+    val args = Bundle()
+    args.putBoolean("earlyMediaVideo", earlyMediaVideoEnabled)
+    findNavController(R.id.nav_host_fragment).navigate(
+        R.id.action_global_incomingCallFragment,
+        args,
+        popupTo(R.id.activeCallOrConferenceFragment, false)
+    )
+}
+
+internal fun OutgoingCallFragment.navigateToActiveCall() {
+    findNavController().navigate(
+        R.id.action_global_activeCallOrConferenceFragment,
+        null,
+        popupTo(R.id.activeCallOrConferenceFragment, false)
+    )
+}
+
+internal fun IncomingCallFragment.navigateToActiveCall() {
+    findNavController().navigate(
+        R.id.action_global_activeCallOrConferenceFragment,
+        null,
+        popupTo(R.id.activeCallOrConferenceFragment, false)
+    )
+}
+
+internal fun ActiveCallOrConferenceFragment.navigateToCallsList() {
+    if (findNavController().currentDestination?.id == R.id.activeCallOrConferenceFragment) {
+        findNavController().navigate(
+            R.id.action_activeCallOrConferenceFragment_to_callsListFragment,
+            null,
+            popupTo()
+        )
+    }
+}
+
+internal fun ActiveCallOrConferenceFragment.navigateToConferenceParticipants() {
+    if (findNavController().currentDestination?.id == R.id.activeCallOrConferenceFragment) {
+        findNavController().navigate(
+            R.id.action_activeCallOrConferenceFragment_to_conferenceParticipantsFragment,
+            null,
+            popupTo()
+        )
+    }
+}
+
+internal fun ActiveCallOrConferenceFragment.navigateToChat(args: Bundle) {
+    if (findNavController().currentDestination?.id == R.id.activeCallOrConferenceFragment) {
+        findNavController().navigate(
+            R.id.action_activeCallOrConferenceFragment_to_chatFragment,
+            args,
+            popupTo()
+        )
+    }
+}
+
+internal fun ActiveCallOrConferenceFragment.navigateToConferenceLayout() {
+    if (findNavController().currentDestination?.id == R.id.activeCallOrConferenceFragment) {
+        findNavController().navigate(
+            R.id.action_activeCallOrConferenceFragment_to_conferenceLayoutFragment,
+            null,
+            popupTo()
+        )
+    }
+}
+
+internal fun ConferenceParticipantsFragment.navigateToAddParticipants() {
+    if (findNavController().currentDestination?.id == R.id.conferenceParticipantsFragment) {
+        findNavController().navigate(
+            R.id.action_conferenceParticipantsFragment_to_conferenceAddParticipantsFragment,
+            null,
+            popupTo(R.id.conferenceAddParticipantsFragment, true)
+        )
+    }
 }
 
 /* Assistant related */

@@ -8,7 +8,6 @@
     <string name="about_privacy_policy">Datenschutz-Bestimmungen</string>
     <string name="logs_reset_complete">Lagdatei wurde gelöscht</string>
     <string name="logs_url_copied_to_clipboard">Logdatei-URL wurde in die Zwischenablage kopiert</string>
-    <string name="error">Fehler</string>
     <string name="phone_number">Telefonnummer</string>
     <string name="phone_numbers">Telefonnummern</string>
     <string name="select_your_country">Wähle dein Land</string>
@@ -111,7 +110,6 @@
     <string name="call_notification_paused">Anruf pausiert</string>
     <string name="call_notification_outgoing">Ausgehender Anruf</string>
     <string name="call_notification_active">Laufender Anruf</string>
-    <string name="call_conference_title">Konferenz</string>
     <string name="call_video_update_requested_dialog">Gesprächspartner möchte das Video einschalten</string>
     <string name="call_error_incompatible_media_params">Inkompatible Medienparameter</string>
     <string name="call_error_network_unreachable">Netzwerk nicht erreichbar</string>
@@ -119,7 +117,6 @@
     <string name="service_auto_start_description">&appName; wurde automatich gestartet</string>
     <string name="logs_upload_failure">Hochladen der Logdatei fehlgeschlagen!</string>
     <string name="assistant_choose_country_title">Ländername oder Vorwahl</string>
-    <string name="invalid_email">Ungültige E-Mail-Adresse</string>
     <string name="app_description">der <i>freie</i> SIP client</string>
     <string name="history_delete_one_dialog">Diesen Eintrag löschen\?</string>
     <string name="contact_send_sms_invite_text">Hallo, benutze &appName;! Du kannst es kostenlos hier %s herunterladen</string>
@@ -131,7 +128,6 @@
     <string name="chat_event_admin_unset">%s ist kein Administrator mehr</string>
     <string name="chat_room_group_info_participants">Teilnehmer</string>
     <string name="chat_room_group_info_you_are_now_admin">Du bist jetzt Administrator</string>
-    <string name="chat_room_toast_choose_for_sharing">Unterhaltung auswählen oder eine neue beginnen</string>
     <string name="chat_message_context_menu_resend">Nochmal senden</string>
     <string name="chat_message_forward_confirmation_dialog">Die Nachricht in diesen Raum weiterleiten\?</string>
     <string name="chat_message_context_menu_delete_messages">Nachrichten löschen</string>
@@ -145,7 +141,6 @@
     <string name="assistant_confirmation_code">Bestätigungscode</string>
     <string name="assistant_continue_even_if_credentials_invalid">Weiter</string>
     <string name="assistant_generic_account">SIP-Konto benutzen</string>
-    <string name="assistant_error_account_not_activated">Das Konto wurde noch nicht überprüft</string>
     <string name="assistant_error_invalid_credentials">Das Konto existiert nicht oder das Passwort ist falsch</string>
     <string name="assistant_login_with_username">Den Benutzernamen und das Passwort anstatt der Telefonnummer verwenden</string>
     <string name="assistant_linphone_login_desc">Bitte den Benutzernamen und das Passwort des &appName;-Kontos eingeben</string>
@@ -180,8 +175,6 @@
     <string name="account_settings_domain_title">Domäne</string>
     <string name="account_settings_advanced_title">Erweitert</string>
     <string name="account_settings_escape_plus_title">Ersetze + durch 00</string>
-    <string name="content_description_slide_right_hangup">Nach rechts streichen um den Anruf zu beenden</string>
-    <string name="content_description_slide_left_answer">Nach links streichen um den Anruf anzunehmen</string>
     <string name="content_description_answer_call">Anruf beantworten</string>
     <string name="content_description_enable_mic_mute">Mikrofon stummschalten</string>
     <string name="content_description_enable_speaker">Audioausgabe auf Lautsprecher</string>

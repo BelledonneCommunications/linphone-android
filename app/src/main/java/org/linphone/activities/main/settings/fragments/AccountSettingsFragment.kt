@@ -46,7 +46,6 @@ class AccountSettingsFragment : GenericSettingFragment<SettingsAccountFragmentBi
         val identity = arguments?.getString("Identity")
         if (identity == null) {
             Log.e("[Account Settings] Identity is null, aborting!")
-            // (activity as MainActivity).showSnackBar(R.string.error)
             goBack()
             return
         }

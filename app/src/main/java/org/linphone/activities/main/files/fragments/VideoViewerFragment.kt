@@ -46,7 +46,6 @@ class VideoViewerFragment : GenericViewerFragment<FileVideoViewerFragmentBinding
         val content = sharedViewModel.contentToOpen.value
         if (content == null) {
             Log.e("[Video Viewer] Content is null, aborting!")
-            // (activity as MainActivity).showSnackBar(R.string.error)
             findNavController().navigateUp()
             return
         }

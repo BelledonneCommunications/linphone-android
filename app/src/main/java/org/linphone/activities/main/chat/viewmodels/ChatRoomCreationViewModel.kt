@@ -23,42 +23,25 @@ import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
-import org.linphone.activities.main.viewmodels.ErrorReportingViewModel
-import org.linphone.contact.ContactsUpdatedListenerStub
+import org.linphone.contact.ContactsSelectionViewModel
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
-class ChatRoomCreationViewModel : ErrorReportingViewModel() {
+class ChatRoomCreationViewModel : ContactsSelectionViewModel() {
     val chatRoomCreatedEvent: MutableLiveData<Event<ChatRoom>> by lazy {
         MutableLiveData<Event<ChatRoom>>()
     }
 
     val createGroupChat = MutableLiveData<Boolean>()
 
-    val sipContactsSelected = MutableLiveData<Boolean>()
-
     val isEncrypted = MutableLiveData<Boolean>()
-
-    val contactsList = MutableLiveData<ArrayList<SearchResult>>()
 
     val waitForChatRoomCreation = MutableLiveData<Boolean>()
 
-    val selectedAddresses = MutableLiveData<ArrayList<Address>>()
-
-    val filter = MutableLiveData<String>()
-    private var previousFilter = ""
-
     val limeAvailable: Boolean = LinphoneUtils.isLimeAvailable()
-
-    private val contactsUpdatedListener = object : ContactsUpdatedListenerStub() {
-        override fun onContactsUpdated() {
-            Log.i("[Chat Room Creation] Contacts have changed")
-            updateContactsList()
-        }
-    }
 
     private val listener = object : ChatRoomListenerStub() {
         override fun onStateChanged(room: ChatRoom, state: ChatRoom.State) {
@@ -69,79 +52,23 @@ class ChatRoomCreationViewModel : ErrorReportingViewModel() {
             } else if (state == ChatRoom.State.CreationFailed) {
                 Log.e("[Chat Room Creation] Group chat room creation has failed !")
                 waitForChatRoomCreation.value = false
-                onErrorEvent.value = Event(R.string.chat_room_creation_failed_snack)
+                onMessageToNotifyEvent.value = Event(R.string.chat_room_creation_failed_snack)
             }
         }
     }
 
     init {
         createGroupChat.value = false
-        sipContactsSelected.value = coreContext.contactsManager.shouldDisplaySipContactsList()
         isEncrypted.value = false
-
-        selectedAddresses.value = arrayListOf()
-
-        coreContext.contactsManager.addListener(contactsUpdatedListener)
         waitForChatRoomCreation.value = false
     }
 
     override fun onCleared() {
-        coreContext.contactsManager.removeListener(contactsUpdatedListener)
-
         super.onCleared()
     }
 
     fun updateEncryption(encrypted: Boolean) {
         isEncrypted.value = encrypted
-    }
-
-    fun applyFilter() {
-        val filterValue = filter.value.orEmpty()
-        if (previousFilter == filterValue) return
-
-        if (previousFilter.isNotEmpty() && previousFilter.length > filterValue.length) {
-            coreContext.contactsManager.magicSearch.resetSearchCache()
-        }
-        previousFilter = filterValue
-
-        updateContactsList()
-    }
-
-    fun updateContactsList() {
-        val domain = if (sipContactsSelected.value == true) coreContext.core.defaultAccount?.params?.domain ?: "" else ""
-        val results = coreContext.contactsManager.magicSearch.getContactListFromFilter(filter.value.orEmpty(), domain)
-
-        val list = arrayListOf<SearchResult>()
-        for (result in results) {
-            list.add(result)
-        }
-        contactsList.value = list
-    }
-
-    fun toggleSelectionForSearchResult(searchResult: SearchResult) {
-        val address = searchResult.address
-        if (address != null) {
-            toggleSelectionForAddress(address)
-        }
-    }
-
-    fun toggleSelectionForAddress(address: Address) {
-        val list = arrayListOf<Address>()
-        list.addAll(selectedAddresses.value.orEmpty())
-
-        val found = list.find {
-            it.weakEqual(address)
-        }
-
-        if (found != null) {
-            list.remove(found)
-        } else {
-            val contact = coreContext.contactsManager.findContactByAddress(address)
-            if (contact != null) address.displayName = contact.fullName
-            list.add(address)
-        }
-
-        selectedAddresses.value = list
     }
 
     fun createOneToOneChat(searchResult: SearchResult) {
@@ -152,7 +79,7 @@ class ChatRoomCreationViewModel : ErrorReportingViewModel() {
         val address = searchResult.address ?: coreContext.core.interpretUrl(searchResult.phoneNumber ?: "")
         if (address == null) {
             Log.e("[Chat Room Creation] Can't get a valid address from search result $searchResult")
-            onErrorEvent.value = Event(R.string.chat_room_creation_failed_snack)
+            onMessageToNotifyEvent.value = Event(R.string.chat_room_creation_failed_snack)
             waitForChatRoomCreation.value = false
             return
         }

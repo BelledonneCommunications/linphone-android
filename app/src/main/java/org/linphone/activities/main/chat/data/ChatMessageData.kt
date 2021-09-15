@@ -177,7 +177,7 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
         val contentsList = chatMessage.contents
         for (index in contentsList.indices) {
             val content = contentsList[index]
-            if (content.isFileTransfer || content.isFile) {
+            if (content.isFileTransfer || content.isFile || content.isIcalendar) {
                 val data = ChatMessageContentData(chatMessage, index)
                 data.listener = contentListener
                 list.add(data)
@@ -194,6 +194,8 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
                             }
                         }
                     ).build(spannable)
+            } else {
+                Log.e("[Chat Message Data] Unexpected content with type: ${content.type}/${content.subtype}")
             }
         }
 

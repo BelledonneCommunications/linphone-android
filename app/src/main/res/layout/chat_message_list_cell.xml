@@ -82,7 +82,7 @@
                 android:id="@+id/background"
                 android:onClick="@{clickListener}"
                 android:onLongClick="@{contextMenuClickListener}"
-                android:background="@{data.backgroundRes, default=@drawable/chat_bubble_outgoing_full}"
+                backgroundImage="@{data.backgroundRes, default=@drawable/chat_bubble_outgoing_full}"
                 android:descendantFocusability="blocksDescendants"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

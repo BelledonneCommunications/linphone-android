@@ -20,8 +20,10 @@
 package org.linphone.utils
 
 import java.text.DateFormat
+import java.text.Format
 import java.text.SimpleDateFormat
 import java.util.*
+import org.linphone.LinphoneApplication
 
 class TimestampUtils {
     companion object {
@@ -52,6 +54,56 @@ class TimestampUtils {
             cal2: Date
         ): Boolean {
             return isSameDay(cal1.time, cal2.time, false)
+        }
+
+        fun dateToString(date: Long, timestampInSecs: Boolean = true): String {
+            val dateFormat: Format = android.text.format.DateFormat.getDateFormat(
+                LinphoneApplication.coreContext.context
+            )
+            val pattern = (dateFormat as SimpleDateFormat).toLocalizedPattern()
+
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = if (timestampInSecs) date * 1000 else date
+            return SimpleDateFormat(pattern, Locale.getDefault()).format(calendar.time)
+        }
+
+        fun timeToString(hour: Int, minutes: Int): String {
+            val use24hFormat = android.text.format.DateFormat.is24HourFormat(LinphoneApplication.coreContext.context)
+            val calendar = Calendar.getInstance()
+            calendar.set(Calendar.HOUR_OF_DAY, hour)
+            calendar.set(Calendar.MINUTE, minutes)
+
+            return if (use24hFormat) {
+                SimpleDateFormat("HH'h'mm", Locale.getDefault()).format(calendar.time)
+            } else {
+                SimpleDateFormat("h:mm a", Locale.getDefault()).format(calendar.time)
+            }
+        }
+
+        fun timeToString(time: Long, timestampInSecs: Boolean = true): String {
+            val use24hFormat = android.text.format.DateFormat.is24HourFormat(LinphoneApplication.coreContext.context)
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = if (timestampInSecs) time * 1000 else time
+
+            return if (use24hFormat) {
+                SimpleDateFormat("HH'h'mm", Locale.getDefault()).format(calendar.time)
+            } else {
+                SimpleDateFormat("h:mm a", Locale.getDefault()).format(calendar.time)
+            }
+        }
+
+        fun durationToString(hours: Int, minutes: Int): String {
+            val calendar = Calendar.getInstance()
+            calendar.set(Calendar.HOUR_OF_DAY, hours)
+            calendar.set(Calendar.MINUTE, minutes)
+            val pattern = when {
+                hours == 0 -> "mm'min'"
+                hours < 10 && minutes == 0 -> "H'h'"
+                hours < 10 && minutes > 0 -> "H'h'mm"
+                hours >= 10 && minutes == 0 -> "HH'h'"
+                else -> "HH'h'mm"
+            }
+            return SimpleDateFormat(pattern, Locale.getDefault()).format(calendar.time)
         }
 
         private fun isSameYear(timestamp: Long, timestampInSecs: Boolean = true): Boolean {
@@ -85,7 +137,7 @@ class TimestampUtils {
             }
 
             val millis = if (timestampInSecs) timestamp * 1000 else timestamp
-            return dateFormat.format(Date(millis))
+            return dateFormat.format(Date(millis)).capitalize(Locale.getDefault())
         }
 
         private fun isSameDay(

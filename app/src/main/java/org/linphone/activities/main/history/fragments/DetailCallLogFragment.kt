@@ -57,7 +57,6 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
         val callLogGroup = sharedViewModel.selectedCallLogGroup.value
         if (callLogGroup == null) {
             Log.e("[History] Call log group is null, aborting!")
-            // (activity as MainActivity).showSnackBar(R.string.error)
             findNavController().navigateUp()
             return
         }
@@ -70,7 +69,7 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
 
         useMaterialSharedAxisXForwardAnimation = sharedViewModel.isSlidingPaneSlideable.value == false
 
-        viewModel.addRelatedCallLogs(callLogGroup.callLogs)
+        viewModel.relatedCallLogs.value = callLogGroup.callLogs
 
         binding.setBackClickListener {
             goBack()
@@ -134,7 +133,7 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
             }
         }
 
-        viewModel.onErrorEvent.observe(
+        viewModel.onMessageToNotifyEvent.observe(
             viewLifecycleOwner
         ) {
             it.consume { messageResourceId ->

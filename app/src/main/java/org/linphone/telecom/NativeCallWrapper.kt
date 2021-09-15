@@ -44,7 +44,7 @@ class NativeCallWrapper(var callId: String) : Connection() {
     }
 
     override fun onStateChanged(state: Int) {
-        Log.i("[Connection] Telecom state changed [$state] for call with id: $callId")
+        Log.i("[Connection] Telecom state changed [${intStateToString(state)}] for call with id: $callId")
         super.onStateChanged(state)
     }
 
@@ -70,6 +70,11 @@ class NativeCallWrapper(var callId: String) : Connection() {
 
         val call = getCall()
         if (call != null) {
+            if (getState() != STATE_ACTIVE) {
+                Log.w("[Connection] Call state isn't STATE_ACTIVE, ignoring mute mic & audio route directive from TelecomManager")
+                return
+            }
+
             call.microphoneMuted = state.isMuted
             when (state.route) {
                 CallAudioState.ROUTE_EARPIECE -> AudioRouteUtils.routeAudioToEarpiece(call, true)
@@ -116,6 +121,20 @@ class NativeCallWrapper(var callId: String) : Connection() {
             Log.e("[Connection] No call in Core, destroy connection")
             setDisconnected(DisconnectCause(DisconnectCause.LOCAL))
             destroy()
+        }
+    }
+
+    private fun intStateToString(state: Int): String {
+        return when (state) {
+            STATE_INITIALIZING -> "STATE_INITIALIZING"
+            STATE_NEW -> "STATE_NEW"
+            STATE_RINGING -> "STATE_RINGING"
+            STATE_DIALING -> "STATE_DIALING"
+            STATE_ACTIVE -> "STATE_ACTIVE"
+            STATE_HOLDING -> "STATE_HOLDING"
+            STATE_DISCONNECTED -> "STATE_DISCONNECTED"
+            STATE_PULLING_CALL -> "STATE_PULLING_CALL"
+            else -> "STATE_UNKNOWN"
         }
     }
 }

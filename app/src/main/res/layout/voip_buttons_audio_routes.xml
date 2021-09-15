@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="controlsViewModel"
+            type="org.linphone.activities.voip.viewmodels.ControlsViewModel" />
+        <variable
+            name="inflatedVisibility"
+            type="Integer" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_audio_routes_background"
+        android:translationY="@{controlsViewModel.audioRoutesMenuTranslateY, default=@dimen/voip_audio_routes_menu_translate_y}"
+        android:visibility="@{inflatedVisibility}"
+        android:orientation="vertical">
+
+        <ImageView
+            android:selected="@{controlsViewModel.isBluetoothHeadsetSelected}"
+            android:onClick="@{() -> controlsViewModel.forceBluetoothAudioRoute()}"
+            android:contentDescription="@string/content_description_use_bluetooth_headset"
+            android:layout_width="@dimen/voip_call_button_size"
+            android:layout_height="@dimen/voip_call_button_size"
+            android:background="@drawable/button_toggle_background_reverse"
+            android:layout_margin="5dp"
+            android:src="@drawable/icon_bluetooth" />
+
+        <ImageView
+            android:selected="@{!controlsViewModel.isSpeakerSelected &amp;&amp; !controlsViewModel.isBluetoothHeadsetSelected}"
+            android:onClick="@{() -> controlsViewModel.forceEarpieceAudioRoute()}"
+            android:contentDescription="@string/content_description_use_earpiece"
+            android:layout_width="@dimen/voip_call_button_size"
+            android:layout_height="@dimen/voip_call_button_size"
+            android:background="@drawable/button_toggle_background_reverse"
+            android:layout_margin="5dp"
+            android:src="@drawable/icon_earpiece" />
+
+        <ImageView
+            android:selected="@{controlsViewModel.isSpeakerSelected}"
+            android:onClick="@{() -> controlsViewModel.forceSpeakerAudioRoute()}"
+            android:contentDescription="@string/content_description_use_speaker"
+            android:layout_width="@dimen/voip_call_button_size"
+            android:layout_height="@dimen/voip_call_button_size"
+            android:background="@drawable/button_toggle_background_reverse"
+            android:layout_margin="5dp"
+            android:src="@drawable/icon_speaker" />
+
+    </LinearLayout>
+
+</layout>

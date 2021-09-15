@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true"
+        android:drawable="@drawable/shape_toggle_pressed_background" />
+    <item android:state_selected="true"
+        android:drawable="@drawable/shape_toggle_on_background" />
+    <item android:state_enabled="false"
+        android:drawable="@drawable/shape_toggle_disabled_background" />
+    <item
+        android:drawable="@drawable/shape_toggle_off_background" />
+</selector>

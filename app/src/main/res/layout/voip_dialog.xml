@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.main.viewmodels.DialogViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:focusable="true"
+        android:clickable="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical"
+            android:background="@drawable/shape_dialog_background">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                style="@style/dialog_message_font"
+                android:text="@{viewModel.message, default=Message}"/>
+
+            <com.google.android.flexbox.FlexboxLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:gravity="center"
+                app:flexWrap="nowrap"
+                app:alignItems="center"
+                app:justifyContent="space_around">
+
+                <TextView
+                    android:onClick="@{() -> viewModel.onCancelClicked()}"
+                    android:layout_width="137dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:padding="10dp"
+                    android:gravity="center"
+                    android:background="@drawable/shape_rect_gray_button"
+                    android:visibility="@{viewModel.showCancel ? View.VISIBLE : View.GONE}"
+                    android:text="@{viewModel.cancelLabel, default=Cancel}"
+                    style="@style/big_orange_button_font"/>
+
+                <TextView
+                    android:onClick="@{() -> viewModel.onDeleteClicked()}"
+                    android:layout_width="137dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:padding="10dp"
+                    android:gravity="center"
+                    android:background="@drawable/shape_rect_orange_button"
+                    android:visibility="@{viewModel.showDelete ? View.VISIBLE : View.GONE}"
+                    android:text="@{viewModel.deleteLabel, default=Delete}"
+                    style="@style/big_orange_button_font"/>
+
+                <TextView
+                    android:onClick="@{() -> viewModel.onOkClicked()}"
+                    android:layout_width="137dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:padding="10dp"
+                    android:gravity="center"
+                    android:background="@drawable/shape_rect_green_button"
+                    android:visibility="@{viewModel.showOk ? View.VISIBLE : View.GONE}"
+                    android:text="@{viewModel.okLabel, default=OK}"
+                    style="@style/big_orange_button_font"/>
+
+            </com.google.android.flexbox.FlexboxLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</layout>

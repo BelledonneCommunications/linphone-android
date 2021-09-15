@@ -136,7 +136,7 @@ open class Contact : Comparable<Contact> {
     }
 
     open fun getContactPictureUri(): Uri? {
-        return null
+        return thumbnailUri
     }
 
     open fun getPerson(): Person {
@@ -150,7 +150,7 @@ open class Contact : Comparable<Contact> {
         val icon =
             if (bm == null) IconCompat.createWithResource(
                 coreContext.context,
-                R.drawable.avatar
+                R.drawable.voip_single_contact_avatar
             ) else IconCompat.createWithAdaptiveBitmap(bm)
         if (icon != null) {
             personBuilder.setIcon(icon)

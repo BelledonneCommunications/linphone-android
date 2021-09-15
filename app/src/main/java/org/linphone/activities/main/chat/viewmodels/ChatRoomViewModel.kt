@@ -20,6 +20,9 @@
 package org.linphone.activities.main.chat.viewmodels
 
 import android.animation.ValueAnimator
+import android.graphics.Typeface
+import android.text.SpannableStringBuilder
+import android.text.style.StyleSpan
 import android.view.animation.LinearInterpolator
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -60,7 +63,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
     val lastUpdate = MutableLiveData<String>()
 
-    val lastMessageText = MutableLiveData<String>()
+    val lastMessageText = MutableLiveData<SpannableStringBuilder>()
 
     val callInProgress = MutableLiveData<Boolean>()
 
@@ -113,7 +116,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         override fun onContactsUpdated() {
             Log.i("[Chat Room] Contacts have changed")
             contactLookup()
-            updateLastMessageToDisplay()
+            formatLastMessage(chatRoom.lastMessageInHistory)
         }
     }
 
@@ -150,11 +153,11 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
         override fun onChatMessageReceived(chatRoom: ChatRoom, eventLog: EventLog) {
             unreadMessagesCount.value = chatRoom.unreadMessagesCount
-            lastMessageText.value = formatLastMessage(eventLog.chatMessage)
+            formatLastMessage(eventLog.chatMessage)
         }
 
         override fun onChatMessageSent(chatRoom: ChatRoom, eventLog: EventLog) {
-            lastMessageText.value = formatLastMessage(eventLog.chatMessage)
+            formatLastMessage(eventLog.chatMessage)
         }
 
         override fun onParticipantAdded(chatRoom: ChatRoom, eventLog: EventLog) {
@@ -199,7 +202,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
         override fun onEphemeralMessageDeleted(chatRoom: ChatRoom, eventLog: EventLog) {
             Log.i("[Chat Room] Ephemeral message deleted, updated last message displayed")
-            updateLastMessageToDisplay()
+            formatLastMessage(chatRoom.lastMessageInHistory)
         }
 
         override fun onEphemeralEvent(chatRoom: ChatRoom, eventLog: EventLog) {
@@ -216,6 +219,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         chatRoom.addListener(chatRoomListener)
         coreContext.contactsManager.addListener(contactsUpdatedListener)
 
+        formatLastMessage(chatRoom.lastMessageInHistory)
         unreadMessagesCount.value = chatRoom.unreadMessagesCount
         lastUpdate.value = TimestampUtils.toString(chatRoom.lastUpdateTime, true)
 
@@ -226,7 +230,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
         contactLookup()
         updateParticipants()
-        updateLastMessageToDisplay()
+        formatLastMessage(chatRoom.lastMessageInHistory)
 
         callInProgress.value = chatRoom.core.callsNb > 0
         updateRemotesComposing()
@@ -277,22 +281,36 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
     }
 
     fun updateLastMessageToDisplay() {
-        lastMessageText.value = formatLastMessage(chatRoom.lastMessageInHistory)
+        formatLastMessage(chatRoom.lastMessageInHistory)
     }
 
-    private fun formatLastMessage(msg: ChatMessage?): String {
-        if (msg == null) return ""
+    private fun formatLastMessage(msg: ChatMessage?) {
+        val builder = SpannableStringBuilder()
+        if (msg == null) {
+            lastMessageText.value = builder
+            return
+        }
 
         val sender: String =
             coreContext.contactsManager.findContactByAddress(msg.fromAddress)?.fullName
                 ?: LinphoneUtils.getDisplayName(msg.fromAddress)
-        var body = ""
+        builder.append(sender)
+        builder.append(": ")
+
         for (content in msg.contents) {
-            if (content.isFile || content.isFileTransfer) body += content.name + " "
-            else if (content.isText) body += content.utf8Text + " "
+            if (content.isIcalendar) {
+                val body = AppUtils.getString(R.string.conference_invitation)
+                builder.append(body)
+                builder.setSpan(StyleSpan(Typeface.ITALIC), builder.length - body.length, builder.length, 0)
+            } else if (content.isFile || content.isFileTransfer) {
+                builder.append(content.name + " ")
+            } else if (content.isText) {
+                builder.append(content.utf8Text + " ")
+            }
         }
 
-        return "$sender: $body"
+        builder.trim()
+        lastMessageText.value = builder
     }
 
     private fun searchMatchingContact() {

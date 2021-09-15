@@ -2,7 +2,6 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/history_nav_graph.xml"
     app:startDestination="@id/emptyCallHistoryFragment">
 
     <fragment
@@ -20,8 +19,18 @@
         tools:layout="@layout/history_detail_fragment"
         android:label="DetailCallLogFragment" />
 
+    <fragment
+        android:id="@+id/detailConferenceCallLogFragment"
+        android:name="org.linphone.activities.main.history.fragments.DetailConferenceCallLogFragment"
+        tools:layout="@layout/history_conf_detail_fragment"
+        android:label="DetailConferenceCallLogFragment" />
+
     <action
         android:id="@+id/action_global_detailCallLogFragment"
         app:destination="@id/detailCallLogFragment" />
+
+    <action
+        android:id="@+id/action_global_detailConferenceCallLogFragment"
+        app:destination="@id/detailConferenceCallLogFragment" />
 
 </navigation>

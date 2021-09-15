@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/main_activity_top_bar_size"
         android:background="?attr/lightToolbarBackgroundColor"
-        android:visibility="@{viewModel.isEditionEnabled ? View.VISIBLE : View.GONE}"
+        android:visibility="@{viewModel.isEditionEnabled ? View.VISIBLE : View.GONE, default=gone}"
         android:orientation="horizontal">
 
         <ImageView

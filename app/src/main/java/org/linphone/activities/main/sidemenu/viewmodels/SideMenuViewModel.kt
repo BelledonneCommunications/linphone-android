@@ -26,12 +26,15 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.activities.main.settings.viewmodels.AccountSettingsViewModel
 import org.linphone.core.*
+import org.linphone.utils.LinphoneUtils
 
 class SideMenuViewModel : ViewModel() {
     val showAccounts: Boolean = corePreferences.showAccountsInSideMenu
     val showAssistant: Boolean = corePreferences.showAssistantInSideMenu
     val showSettings: Boolean = corePreferences.showSettingsInSideMenu
     val showRecordings: Boolean = corePreferences.showRecordingsInSideMenu
+    val showScheduledConferences: Boolean = corePreferences.showScheduledConferencesInSideMenu &&
+        LinphoneUtils.isRemoteConferencingAvailable()
     val showAbout: Boolean = corePreferences.showAboutInSideMenu
     val showQuit: Boolean = corePreferences.showQuitInSideMenu
 

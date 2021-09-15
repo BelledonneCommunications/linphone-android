@@ -139,7 +139,7 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <TextView
             android:id="@+id/leave_group"
             android:visibility="@{viewModel.canLeaveGroup ? View.VISIBLE : View.GONE}"
             android:onClick="@{leaveClickListener}"
@@ -147,29 +147,20 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="?attr/accentColor"
             android:paddingLeft="20dp"
             android:paddingTop="8dp"
             android:paddingRight="20dp"
-            android:paddingBottom="8dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/chat_room_group_info_leave"
-                android:textAllCaps="true"
-                android:textColor="@color/white_color"
-                android:textSize="15sp" />
-
-        </LinearLayout>
+            android:paddingBottom="8dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_gravity="center"
+            android:background="@drawable/shape_rect_orange_button"
+            android:text="@string/chat_room_group_info_leave"
+            style="@style/big_orange_button_font"/>
 
         <include
             layout="@layout/wait_layout"
-            bind:visibility="@{viewModel.waitForChatRoomCreation}"/>
+            bind:visibility="@{viewModel.waitForChatRoomCreation}" />
 
     </RelativeLayout>
 

@@ -71,7 +71,6 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
         val contact = sharedViewModel.selectedContact.value
         if (contact == null) {
             Log.e("[Contact] Contact is null, aborting!")
-            // (activity as MainActivity).showSnackBar(R.string.error)
             goBack()
             return
         }
@@ -140,7 +139,7 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
             confirmContactRemoval()
         }
 
-        viewModel.onErrorEvent.observe(
+        viewModel.onMessageToNotifyEvent.observe(
             viewLifecycleOwner
         ) {
             it.consume { messageResourceId ->

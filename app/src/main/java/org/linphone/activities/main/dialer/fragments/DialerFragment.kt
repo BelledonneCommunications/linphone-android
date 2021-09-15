@@ -31,6 +31,7 @@ import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.transition.MaterialSharedAxis
@@ -43,6 +44,7 @@ import org.linphone.activities.main.dialer.viewmodels.DialerViewModel
 import org.linphone.activities.main.fragments.SecureFragment
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
+import org.linphone.activities.navigateToConferenceScheduling
 import org.linphone.activities.navigateToConfigFileViewer
 import org.linphone.activities.navigateToContacts
 import org.linphone.compatibility.Compatibility
@@ -103,11 +105,17 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
             navigateToContacts(viewModel.enteredUri.value)
         }
 
+        binding.setNewConferenceClickListener {
+            sharedViewModel.updateDialerAnimationsBasedOnDestination.value = Event(R.id.conferenceSchedulingFragment)
+            navigateToConferenceScheduling()
+        }
+
         binding.setTransferCallClickListener {
             if (viewModel.transferCall()) {
                 // Transfer has been consumed, otherwise it might have been a "bis" use
                 sharedViewModel.pendingCallTransfer = false
                 viewModel.transferVisibility.value = false
+                coreContext.onCallStarted()
             }
         }
 
@@ -144,6 +152,14 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
         ) {
             it.consume { url ->
                 displayNewVersionAvailableDialog(url)
+            }
+        }
+
+        viewModel.onMessageToNotifyEvent.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume { id ->
+                Toast.makeText(requireContext(), id, Toast.LENGTH_SHORT).show()
             }
         }
 

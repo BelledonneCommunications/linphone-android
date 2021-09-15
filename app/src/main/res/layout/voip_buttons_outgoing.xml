@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="controlsViewModel"
+            type="org.linphone.activities.voip.viewmodels.ControlsViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/voip_buttons_fragment_size"
+        android:layout_margin="10dp">
+
+        <ImageView
+            android:id="@+id/hangup"
+            android:onClick="@{() -> controlsViewModel.hangUp()}"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:background="@drawable/button_call_terminate_background"
+            android:src="@drawable/icon_call_hangup"
+            android:padding="5dp"
+            android:contentDescription="@string/content_description_terminate_call"
+            app:layout_constraintDimensionRatio="W,1.26:1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/hangup"
+            app:layout_constraintEnd_toStartOf="@id/numpad">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/middle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
+
+            <ImageView
+                android:onClick="@{() -> controlsViewModel.toggleMuteMicrophone()}"
+                android:selected="@{controlsViewModel.isMicrophoneMuted}"
+                android:enabled="@{controlsViewModel.isMuteMicrophoneEnabled}"
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:background="@drawable/button_background_reverse"
+                android:src="@drawable/icon_toggle_mic"
+                android:padding="5dp"
+                android:layout_marginEnd="5dp"
+                android:contentDescription="@{controlsViewModel.isMicrophoneMuted ? @string/content_description_disable_mic_mute : @string/content_description_enable_mic_mute}"
+                app:layout_constraintDimensionRatio="W,1:1"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/middle"/>
+
+            <ImageView
+                android:onClick="@{() -> controlsViewModel.toggleSpeaker()}"
+                android:selected="@{controlsViewModel.isSpeakerSelected}"
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:background="@drawable/button_background_reverse"
+                android:src="@drawable/icon_toggle_speaker"
+                android:padding="5dp"
+                android:layout_marginStart="5dp"
+                android:contentDescription="@{controlsViewModel.isSpeakerSelected ? @string/content_description_disable_speaker : @string/content_description_enable_speaker}"
+                app:layout_constraintDimensionRatio="W,1:1"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@id/middle"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <RelativeLayout
+            android:id="@+id/numpad"
+            android:visibility="@{controlsViewModel.isOutgoingEarlyMedia ? View.VISIBLE : View.INVISIBLE, default=invisible}"
+            android:onClick="@{() -> controlsViewModel.showNumpad()}"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintDimensionRatio="W,1:1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/button_background"
+                android:padding="10dp"
+                android:src="@drawable/icon_call_numpad"
+                android:contentDescription="@string/content_description_show_numpad"/>
+
+        </RelativeLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

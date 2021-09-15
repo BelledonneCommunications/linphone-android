@@ -59,6 +59,13 @@
             app:longClickListener="@{longClickListener}"
             android:visibility="@{!data.downloadable &amp;&amp; data.voiceRecording ? View.VISIBLE : View.GONE, default=gone}" />
 
+        <include layout="@layout/chat_message_conference_invitation_content_cell"
+            app:data="@{data}"
+            app:longClickListener="@{longClickListener}"
+            app:joinClickListener="@{() -> data.callConferenceAddress()}"
+            app:shareClickListener="@{() -> data.openFile()}"
+            android:visibility="@{!data.downloadable &amp;&amp; data.conferenceSchedule ? View.VISIBLE : View.GONE, default=gone}" />
+
         <LinearLayout
             android:layout_width="@dimen/chat_message_bubble_file_size"
             android:layout_height="wrap_content"

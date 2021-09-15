@@ -48,7 +48,6 @@ abstract class GenericViewerFragment<T : ViewDataBinding> : SecureFragment<T>() 
         val content = sharedViewModel.contentToOpen.value
         if (content == null) {
             Log.e("[Generic Viewer] Content is null, aborting!")
-            // (activity as MainActivity).showSnackBar(R.string.error)
             findNavController().navigateUp()
             return
         }

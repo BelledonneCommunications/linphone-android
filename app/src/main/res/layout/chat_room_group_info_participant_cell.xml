@@ -47,29 +47,29 @@
             android:src="@drawable/chat_group_delete" />
 
         <LinearLayout
-            android:visibility="@{data.showAdminControls &amp;&amp; data.canBeSetAdmin ? View.VISIBLE : View.GONE}"
             android:id="@+id/adminLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/delete">
+            android:layout_toLeftOf="@id/delete"
+            android:visibility="@{data.showAdminControls &amp;&amp; data.canBeSetAdmin ? View.VISIBLE : View.GONE}">
 
             <LinearLayout
                 android:id="@+id/isAdminLayout"
-                android:onClick="@{() -> data.unSetAdmin()}"
-                android:visibility="@{data.admin ? View.VISIBLE : View.GONE}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="20dp">
+                android:layout_marginRight="20dp"
+                android:onClick="@{() -> data.unSetAdmin()}"
+                android:visibility="@{data.admin ? View.VISIBLE : View.GONE}">
 
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_gravity="center"
                     android:adjustViewBounds="true"
+                    android:contentDescription="@string/content_description_contact_is_admin"
                     android:paddingRight="5dp"
                     android:scaleType="centerInside"
-                    android:contentDescription="@string/content_description_contact_is_admin"
                     android:src="@drawable/check_selected" />
 
                 <TextView
@@ -84,20 +84,20 @@
 
             <LinearLayout
                 android:id="@+id/isNotAdminLayout"
-                android:onClick="@{() -> data.setAdmin()}"
-                android:visibility="@{data.admin ? View.GONE : View.VISIBLE}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="20dp">
+                android:layout_marginRight="20dp"
+                android:onClick="@{() -> data.setAdmin()}"
+                android:visibility="@{data.admin ? View.GONE : View.VISIBLE}">
 
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_gravity="center"
                     android:adjustViewBounds="true"
+                    android:contentDescription="@string/content_description_contact_is_not_admin"
                     android:paddingRight="5dp"
                     android:scaleType="centerInside"
-                    android:contentDescription="@string/content_description_contact_is_not_admin"
                     android:src="@drawable/check_unselected" />
 
                 <TextView

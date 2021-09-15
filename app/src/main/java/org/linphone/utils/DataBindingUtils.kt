@@ -28,6 +28,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Patterns
 import android.view.LayoutInflater
+import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
@@ -51,6 +52,8 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.GenericActivity
 import org.linphone.activities.main.settings.SettingListener
+import org.linphone.activities.voip.data.ConferenceParticipantDeviceData
+import org.linphone.activities.voip.views.HorizontalScrollDotsView
 import org.linphone.contact.ContactAvatarView
 import org.linphone.core.tools.Log
 import org.linphone.views.VoiceRecordProgressBar
@@ -100,8 +103,8 @@ fun View.setLayoutSize(dimension: Float) {
     this.layoutParams.width = dimension.toInt()
 }
 
-@BindingAdapter("android:background")
-fun LinearLayout.setBackground(resource: Int) {
+@BindingAdapter("backgroundImage")
+fun LinearLayout.setBackgroundImage(resource: Int) {
     this.setBackgroundResource(resource)
 }
 
@@ -326,7 +329,7 @@ fun loadAvatarWithGlideFallback(imageView: ImageView, path: String?) {
             .into(imageView)
     } else {
         Log.w("[Data Binding] [Glide] Can't load $path")
-        imageView.setImageResource(R.drawable.avatar)
+        imageView.setImageResource(R.drawable.voip_single_contact_avatar)
     }
 }
 
@@ -355,6 +358,7 @@ fun loadAvatarWithGlide(imageView: ImageView, path: Uri?) {
 @BindingAdapter("glideAvatar")
 fun loadAvatarWithGlide(imageView: ImageView, path: String?) {
     if (path != null) {
+        imageView.visibility = View.VISIBLE
         GlideApp
             .with(imageView)
             .load(path)
@@ -572,4 +576,76 @@ fun VoiceRecordProgressBar.setSecProgress(progress: Int) {
 @BindingAdapter("app:secondaryProgressTint")
 fun VoiceRecordProgressBar.setSecProgressTint(color: Int) {
     setSecondaryProgressTint(color)
+}
+
+@BindingAdapter("android:layout_margin")
+fun ConstraintLayout.setMargins(margins: Float) {
+    val params = layoutParams as ConstraintLayout.LayoutParams
+    val m = margins.toInt()
+    params.setMargins(m, m, m, m)
+    layoutParams = params
+}
+
+@BindingAdapter("android:onTouch")
+fun View.setTouchListener(listener: View.OnTouchListener) {
+    setOnTouchListener(listener)
+}
+
+@BindingAdapter("entries")
+fun Spinner.setEntries(entries: List<Any>?) {
+    if (entries != null) {
+        val arrayAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, entries)
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        adapter = arrayAdapter
+    }
+}
+
+@BindingAdapter("selectedValueAttrChanged")
+fun Spinner.setInverseBindingListener(listener: InverseBindingListener) {
+    onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+            if (tag != position) {
+                listener.onChange()
+            }
+        }
+
+        override fun onNothingSelected(parent: AdapterView<*>) {}
+    }
+}
+
+@BindingAdapter("selectedValue")
+fun Spinner.setSelectedValue(value: Any?) {
+    if (adapter != null) {
+        val position = (adapter as ArrayAdapter<Any>).getPosition(value)
+        setSelection(position, false)
+        tag = position
+    }
+}
+
+@InverseBindingAdapter(attribute = "selectedValue", event = "selectedValueAttrChanged")
+fun Spinner.getSelectedValue(): Any? {
+    return selectedItem
+}
+
+@BindingAdapter("participantTextureView")
+fun setParticipantTextureView(
+    textureView: TextureView,
+    conferenceParticipantData: ConferenceParticipantDeviceData
+) {
+    conferenceParticipantData.setTextureView(textureView)
+}
+
+@BindingAdapter("app:dotCount")
+fun HorizontalScrollDotsView.setDots(count: Int) {
+    setDotCount(count)
+}
+
+@BindingAdapter("app:itemCount")
+fun HorizontalScrollDotsView.setItems(count: Int) {
+    setItemCount(count)
+}
+
+@BindingAdapter("app:selectedDot")
+fun HorizontalScrollDotsView.setSelectedIndex(index: Int) {
+    setSelectedDot(index)
 }

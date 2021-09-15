@@ -31,7 +31,6 @@
     <string name="about_bugreport_email" translatable="false">linphone-android@belledonne-communications.com</string>
 
     <!-- Common -->
-    <string name="error">Error</string>
     <string name="phone_number">Phone number</string>
     <string name="phone_numbers">Phone numbers</string>
     <string name="select_your_country">Select your country</string>
@@ -52,7 +51,6 @@
     <string name="share_uploaded_logs_link">Share logs link using…</string>
 
     <!-- Errors -->
-    <string name="invalid_email">Invalid email</string>
 
     <!-- Date & Time -->
     <string name="today">Today</string>
@@ -63,8 +61,6 @@
     <string name="transport_udp">UDP</string>
     <string name="transport_tcp">TCP</string>
     <string name="transport_tls">TLS</string>
-    <string name="hash_algorithm_md5">MD5</string>
-    <string name="hash_algorithm_sha256">SHA-256</string>
 
     <!-- Launch screen -->
     <string name="app_description">the <i>libre</i> SIP client</string>
@@ -87,6 +83,7 @@
     <string name="history_calls_list">Calls</string>
     <string name="no_call_history">No call in your history</string>
     <string name="no_missed_call_history">No missed call in your history</string>
+    <string name="no_conference_call_history">No conference call in your history</string>
     <string name="history_delete_one_dialog">Do you want to delete this record?</string>
     <string name="history_delete_many_dialog">Do you want to delete these records?</string>
     <plurals name="history_delete_dialog" translatable="false">
@@ -133,6 +130,8 @@
         <item>@string/debug_popup_show_config_file</item>
         <item>@string/cancel</item>
     </string-array>
+    <string name="dialer_transfer_succeded">Call is being transferred</string>
+    <string name="dialer_transfer_failed">Can\'t transfer call</string>
 
     <!-- Chat -->
     <string name="no_chat_history">No conversations</string>
@@ -181,13 +180,10 @@
     <string name="chat_message_context_menu_add_to_contacts">Add to contacts</string>
     <string name="chat_message_forward_confirmation_dialog">Do you want to forward the message in this room?</string>
     <string name="chat_room_dummy_subject" translatable="false">dummy subject</string>
-    <string name="chat_room_toast_choose_for_sharing">Select a conversation or create a new one</string>
     <string name="chat_room_choose_conversation_for_message_forward">Select or create a conversation to forward the message</string>
     <string name="chat_room_choose_conversation_for_file_sharing">Select or create a conversation to share the file(s)</string>
     <string name="chat_room_choose_conversation_for_text_sharing">Select or create a conversation to share the text</string>
-    <string name="chat_room_cant_open_file_no_app_found">Can\'t open file, no application available for this format.</string>
     <string name="chat_room_file_not_found">File not found</string>
-    <string name="chat_room_creation_failed">Chat room creation failed</string>
     <string name="chat_room_context_menu_group_info">Group info</string>
     <string name="chat_room_context_menu_participants_devices">Conversation\'s devices</string>
     <string name="chat_message_context_menu_ephemeral_messages">Ephemeral messages</string>
@@ -229,18 +225,72 @@
     </plurals>
     <string name="chat_message_removal_info">Message will be deleted</string>
     <string name="chat_message_abort_removal">Abort</string>
+    <string name="chat_room_failed_to_create">Failed to create chat room</string>
 
     <!-- Recordings -->
     <string name="recordings_empty_list">No recordings</string>
 
+    <!-- Conferencing -->
+    <string name="conference">Conference</string>
+    <string name="conference_schedule_title">Start a conference</string>
+    <string name="conference_schedule_later">Do you want to schedule this conference for later?</string>
+    <string name="conference_schedule_mandatory_field">Mandatory</string>
+    <string name="conference_schedule_subject_title">Subject</string>
+    <string name="conference_schedule_subject_hint">Conference subject</string>
+    <string name="conference_schedule_address_title">Conference address</string>
+    <string name="conference_schedule_description_title">Add a description</string>
+    <string name="conference_schedule_description_hint">Description</string>
+    <string name="conference_schedule_date">Date</string>
+    <string name="conference_schedule_time">Time</string>
+    <string name="conference_schedule_duration">Duration</string>
+    <string name="conference_schedule_timezone">Timezone</string>
+    <string name="conference_schedule_send_invite_chat">Send invite via &appName;</string>
+    <string name="conference_schedule_send_invite_email">Send invite via email</string>
+    <string name="conference_schedule_encryption">Would you like to encrypt the conference?</string>
+    <string name="conference_schedule_send_invite_chat_summary">Invite will be sent out from my &appName; account</string>
+    <string name="conference_schedule_participants_list">Participants list</string>
+    <string name="conference_schedule_summary">Conference info</string>
+    <string name="conference_schedule_create">Create conference</string>
+    <string name="conference_schedule">Schedule conference</string>
+    <string name="conference_schedule_address_copied_to_clipboard">Conference address copied into clipboard</string>
+    <string name="conference_schedule_creation_failure">Failed to create conference!</string>
+    <string name="conference_schedule_info_not_sent_to_participant">Failed to send conference info to a participant</string>
+    <string name="conference_paused_title">You are currently out of the conference.</string>
+    <string name="conference_paused_subtitle">Click on play button to join it back.</string>
+    <string name="conference_default_title">Remote conference</string>
+    <string name="conference_local_title">Local conference</string>
+    <string name="conference_invite_title">Conference invite:</string>
+    <string name="conference_description_title">Description:</string>
+    <string name="conference_invite_join">Join</string>
+    <string name="conference_invite_participants_count" tools:ignore="PluralsCandidate">%d participants</string>
+    <string name="conference_display_mode_mosaic">Mosaic mode</string>
+    <string name="conference_display_mode_active_speaker">Active speaker mode</string>
+    <string name="conference_waiting_room_start_call">Start</string>
+    <string name="conference_waiting_room_cancel_call">Cancel</string>
+    <string name="conference_waiting_room_video_disabled">Video is currently disabled</string>
+    <string name="conference_scheduled">Conferences</string>
+    <string name="conference_layout_too_many_participants_for_mosaic">You can\'t change conference layout as there is too many participants</string>
+    <string name="conference_too_many_participants_for_mosaic_layout">There is too many participants for mosaic layout, switching to active speaker</string>
+    <string name="conference_participant_paused">(paused)</string>
+    <string name="conference_no_schedule">No scheduled conference yet.</string>
+    <string name="conference_schedule_organizer">Organizer:</string>
+    <string name="conference_go_to_chat">Conference\'s chat room</string>
+    <string name="conference_creation_failed">Failed to create conference</string>
+    <string name="conference_admin_set">%s is now admin</string>
+    <string name="conference_admin_unset">%s is no longer admin</string>
+    <string name="conference_schedule_info_created">Conference has been scheduled</string>
+    <string name="conference_info_confirm_removal">Do you really want to delete this conference?</string>
+    <string name="conference_info_removed">Conference info has been deleted</string>
+    <string name="conference_empty">You are currently alone in this conference</string>
+    <string name="conference_invitation_received_notification">You have been invited to a conference</string>
+    <string name="conference_invitation">Conference invitation</string>
+
     <!-- Call -->
     <string name="call_incoming_title">Incoming Call</string>
     <string name="call_outgoing_title">Outgoing Call</string>
-    <string name="call_paused_by_remote">Call has been paused by your correspondent</string>
     <string name="call_notification_paused">Paused call</string>
     <string name="call_notification_outgoing">Outgoing call</string>
     <string name="call_notification_active">Call running</string>
-    <string name="call_conference_title">Conference</string>
     <string name="call_error_declined">Call has been declined</string>
     <string name="call_error_user_busy">User is busy</string>
     <string name="call_error_user_not_found">User hasn\'t been found</string>
@@ -251,6 +301,23 @@
     <string name="call_error_temporarily_unavailable">Temporarily unavailable</string>
     <string name="call_error_generic">Error: %s</string>
     <string name="call_video_update_requested_dialog">Correspondent would like to turn the video on</string>
+    <string name="call_action_participants_list">Participants list</string>
+    <string name="call_action_chat">Chat</string>
+    <string name="call_action_calls_list">Calls list</string>
+    <string name="call_action_numpad">Numpad</string>
+    <string name="call_action_change_conf_layout">Change layout</string>
+    <string name="call_action_statistics">Call statistics</string>
+    <string name="call_action_add_call">Start new call</string>
+    <string name="call_action_transfer_call">Transfer call</string>
+    <string name="call_context_action_resume">Resume call</string>
+    <string name="call_context_action_pause">Pause call</string>
+    <string name="call_context_action_transfer">Transfer call</string>
+    <string name="call_context_action_answer">Answer call</string>
+    <string name="call_context_action_hangup">Terminate call</string>
+    <string name="call_remote_recording">This call is being recorded.</string>
+    <string name="call_remotely_paused_title">Call has been paused by remote.</string>
+    <string name="call_locally_paused_title">You have paused the call.</string>
+    <string name="call_locally_paused_subtitle">Click on play button to resume it.</string>
 
     <!-- Call stats -->
     <string name="call_stats_audio">Audio</string>
@@ -271,7 +338,6 @@
     <string name="call_stats_encoder_name">Encoder:</string>
     <string name="call_stats_decoder_name">Decoder:</string>
     <string name="call_stats_player_filter">Player filter:</string>
-    <string name="call_stats_display_filter">Display filter:</string>
     <string name="call_stats_capture_filter">Capture filter:</string>
 
     <!-- Assistant -->
@@ -283,7 +349,6 @@
     <string name="assistant_remote_provisioning">Fetch remote configuration</string>
     <string name="assistant_ec_calibration">Echo canceler calibration in progress</string>
     <string name="assistant_phone_number_info_title">What will my phone number be used for?</string>
-    <string name="assistant_phone_number_info_content">\nThanks to your phone number, your friends will find you more easily.\n\n You will see in your address book who is using &appName; and your friends will know that they can reach you on &appName; as well.\n</string>
     <string name="assistant_phone_number_link_info_content">\nYour friends will find you more easily if you link your account to your phone number\n\nYou will see in your address book who is using &appName; and your friends will know that they can reach you on &appName; as well.\n</string>
     <string name="assistant_phone_number_link_info_content_already_account">You can only use your phone number with one &appName; account.\n\nIf you had already linked your number to an other account but you prefer to use this one, simply link it now and your number will automatically be moved to this account.</string>
     <string name="assistant_general_terms_link" translatable="false">https://www.linphone.org/general-terms</string>
@@ -303,7 +368,6 @@
     <string name="assistant_error_passwords_dont_match">Passwords do not match</string>
     <string name="assistant_error_invalid_email_address">Email address is invalid</string>
     <string name="assistant_error_username_too_long">Username has too many characters</string>
-    <string name="assistant_error_account_not_activated">Your account has not been validated yet</string>
     <string name="assistant_error_invalid_credentials">Account does not exist or password does not match</string>
 
     <!-- Assistant login -->
@@ -322,7 +386,6 @@
     <string name="assistant_generic_account">Use SIP account</string>
     <string name="assistant_login_desc">Please enter your username and password with your SIP domain</string>
     <string name="assistant_display_name_optional">Display name (optional)</string>
-    <string name="assistant_password_hash_algorithm">Hash algorithm</string>
 
     <!-- Assistant create -->
     <string name="assistant_create_account_part_email">Please enter a username, email and password for your &appName; account</string>
@@ -359,6 +422,7 @@
     <string name="settings_network_title">Network</string>
     <string name="settings_contacts_title">Contacts</string>
     <string name="settings_advanced_title">Advanced</string>
+    <string name="settings_conferences_title">Conferences</string>
     <string name="settings_primary_account_title">Primary Account</string>
     <string name="settings_primary_account_display_name_title">Display Name</string>
     <string name="settings_primary_account_username_title">Username</string>
@@ -417,8 +481,6 @@
     <string name="call_settings_encryption_mandatory_title">Media encryption mandatory</string>
     <string name="call_settings_use_telecom_manager_title">Improve interactions with bluetooth devices</string>
     <string name="call_settings_use_telecom_manager_summary">Requires some extra permissions</string>
-    <string name="call_settings_full_screen_title">Full screen app while in call</string>
-    <string name="call_settings_full_screen_summary">Hides status and navigation bars</string>
     <string name="call_settings_overlay_title">Overlay call notification</string>
     <string name="call_settings_system_wide_overlay_title">Show overlay outside of app</string>
     <string name="call_settings_system_wide_overlay_summary">You will be asked to grant overlay permission</string>
@@ -438,6 +500,7 @@
     <string name="call_settings_pause_calls_lost_audio_focus_title">Pause calls when audio focus is lost</string>
     <string name="call_settings_go_to_android_notification_settings">Android notification settings</string>
     <string name="call_settings_auto_start_recording_title">Automatically start call recording</string>
+    <string name="call_settings_remote_recording_title">Get notified when call is being recorded by your correspondent</string>
 
     <!-- Chat settings -->
     <string name="chat_settings_mark_as_read_notif_dismissal_title">Mark as read upon notification dismissal</string>
@@ -462,15 +525,11 @@
     <string name="chat_settings_go_to_android_notification_settings">Android notification settings</string>
     <string name="chat_settings_use_in_app_file_viewer_title">Always open files inside this app</string>
     <string name="chat_settings_use_in_app_file_viewer_summary">You\'ll still be able to export them in third-party apps</string>
-    <string name="chat_settins_enable_ephemeral_messages_beta_title">Enable ephemeral messages (beta)</string>
     <string name="chat_settings_auto_download_voice_recordings">Auto download incoming voice recordings</string>
 
     <!-- Network settings -->
     <string name="network_settings_wifi_only_title">Use WiFi only</string>
     <string name="network_settings_allow_ipv6_title">Allow IPv6</string>
-    <string name="network_settings_push_notifications_title">Enable push notifications</string>
-    <string name="network_settings_legacy_push_notification_format_title">Use legacy push notification params</string>
-    <string name="network_settings_legacy_push_notification_format_summary">Required when using Flexisip &lt; 2.0</string>
     <string name="network_settings_random_ports_title">Use random ports</string>
     <string name="network_settings_sip_port_title">SIP port to use</string>
 
@@ -564,6 +623,11 @@
     <string name="account_settings_apply_prefix_for_calls_title">Apply prefix for outgoing calls and chat</string>
     <string name="account_settings_apply_prefix_for_calls_summary">If a number is entered, apply prefix to number</string>
     <string name="account_settings_escape_plus_title">Replace + by 00</string>
+    <string name="account_setting_conference_factory_address">Conference factory URI</string>
+    <string name="account_setting_audio_video_conference_factory_address">Audio/video conference factory URI</string>
+
+    <!-- Conferences settings -->
+    <string name="conferences_settings_layout_title">Default layout</string>
 
     <!-- Notifications -->
     <string name="notification_channel_service_id" translatable="false">linphone_notification_service_id</string>
@@ -616,32 +680,21 @@
     <string name="content_description_phone_number_use">Show what your phone number will be used for</string>
     <string name="content_description_clear_field">Empty the text field next to it</string>
     <string name="content_description_switch_camera">Switch from front camera to back and vice versa</string>
-    <string name="content_description_remove_from_conference">Remove participant from the conference</string>
-    <string name="content_description_pause_conference">Pause the conference</string>
-    <string name="content_description_start_conference">Merge all calls into one conference</string>
-    <string name="content_description_on_pause">Your call has been put on hold</string>
     <string name="content_description_pause_call">Pause the call</string>
     <string name="content_description_toggle_recording">Enable or disable the recording of the call</string>
     <string name="content_description_terminate_call">Terminate the call</string>
-    <string name="content_description_slide_right_hangup">Slide to the right to terminate the call</string>
-    <string name="content_description_slide_left_answer">Slide to the left to answer the call</string>
     <string name="content_description_answer_call">Answer the call</string>
     <string name="content_description_enable_mic_mute">Mute your microphone</string>
     <string name="content_description_disable_mic_mute">Un-mute your microphone</string>
     <string name="content_description_enable_speaker">Route audio to the speaker</string>
     <string name="content_description_disable_speaker">Route audio to the earpiece</string>
     <string name="content_description_go_back_to_call">Go back to the call view</string>
-    <string name="content_description_resume_call">Resume the call currently on hold</string>
-    <string name="content_description_resume_conference">Resume the conference currently on hold</string>
-    <string name="content_description_show_numpad">Display or hide the digits to send DTMFs</string>
-    <string name="content_description_go_to_chat">Display the conversations list</string>
     <string name="content_description_enable_video">Enable video in call</string>
     <string name="content_description_disable_video">Disable video in call</string>
     <string name="content_description_toggle_audio_menu">Show or hide audio output menu</string>
     <string name="content_description_use_bluetooth_headset">Use bluetooth headset as audio output</string>
     <string name="content_description_use_earpiece">Use earpiece as audio output</string>
     <string name="content_description_use_speaker">Use speaker as audio output</string>
-    <string name="content_description_toggle_call_menu">Show or hide advanced actions menu</string>
     <string name="content_description_add_call">Start a new call</string>
     <string name="content_description_transfer_call">Transfer current call to someone else</string>
     <string name="content_description_pending_file_transfer">Pending file transfer</string>
@@ -664,9 +717,7 @@
     <string name="content_description_show_chat_room_menu">Show chat room menu</string>
     <string name="content_description_enter_edition_mode">Enter edition mode</string>
     <string name="content_description_attach_file">Attach a file to the message</string>
-    <string name="content_description_attached_file">File attached to the message</string>
     <string name="content_description_send_message">Send message</string>
-    <string name="content_description_record_audio_message">Record audio message</string>
     <string name="content_description_toggle_participant_devices_list">Show or hide the participant devices</string>
     <string name="content_description_ephemeral_duration_selected">Ephemeral duration selected</string>
     <string name="content_description_ephemeral_duration_change">Change ephemeral duration by selected value</string>
@@ -685,7 +736,6 @@
     <string name="content_description_confirm_contact_edit">Save changes</string>
     <string name="content_description_change_contact_picture">Change contact picture</string>
     <string name="content_description_change_own_picture">Change own picture</string>
-    <string name="content_description_call_direction">Call direction</string>
     <string name="content_description_show_call_details">Go to call details</string>
     <string name="content_description_exit_edition_mode">Quit edition mode</string>
     <string name="content_description_select_all">Select all items in list</string>
@@ -731,9 +781,7 @@
     <string name="content_description_call_not_secured">Call is not secured</string>
     <string name="content_description_call_secured">Call is secured</string>
     <string name="content_description_call_security_pending">Call security is pending</string>
-    <string name="content_description_toggle_call_stats">Show or hide call statistics</string>
     <string name="content_description_chat_message_video_attachment">Video attachment</string>
-    <string name="content_description_take_screenshot">Take a screenshot of received video</string>
     <string name="content_description_close_bubble">Close notification bubble</string>
     <string name="content_description_open_app">Open conversation in app instead of bubble</string>
     <string name="content_description_export">Open file in third-party app</string>
@@ -746,4 +794,15 @@
     <string name="content_description_pause_voice_recording_playback">Pause voice recording</string>
     <string name="content_description_play_voice_recording">Play voice recording</string>
     <string name="content_descripton_scroll_to_bottom">Scroll to bottom or first unread message</string>
+    <string name="content_description_call_context_menu">Open call context menu</string>
+    <string name="content_description_create_conference">Create a conference call</string>
+    <string name="content_description_copy_conference_address">Copy conference address</string>
+    <string name="content_description_edit_conference">Edit conference</string>
+    <string name="content_description_delete_conference">Delete conference</string>
+    <string name="content_description_encrypted_conference">Conference will be encrypted</string>
+    <string name="content_description_share_ics">Export event to calendar</string>
+    <string name="content_description_hide_statistics">Hide call statistics</string>
+    <string name="content_description_show_numpad">Show numpad</string>
+    <string name="content_description_hide_numpad">Hide numpad</string>
+    <string name="content_description_go_to_chat_rooms_list">Go to conversations list</string>
 </resources>

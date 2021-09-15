@@ -40,11 +40,11 @@ import org.linphone.activities.main.chat.data.EventData
 import org.linphone.activities.main.chat.data.EventLogData
 import org.linphone.activities.main.chat.data.OnContentClickedListener
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
-import org.linphone.core.ChatMessage
-import org.linphone.core.ChatRoomCapabilities
-import org.linphone.core.Content
-import org.linphone.core.EventLog
-import org.linphone.databinding.*
+import org.linphone.core.*
+import org.linphone.databinding.ChatEventListCellBinding
+import org.linphone.databinding.ChatMessageListCellBinding
+import org.linphone.databinding.ChatMessageLongPressMenuBindingImpl
+import org.linphone.databinding.ChatUnreadMessagesListHeaderBinding
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.HeaderAdapter
@@ -90,6 +90,10 @@ class ChatMessagesListAdapter(
         MutableLiveData<Event<String>>()
     }
 
+    val callConferenceEvent: MutableLiveData<Event<Pair<String, String?>>> by lazy {
+        MutableLiveData<Event<Pair<String, String?>>>()
+    }
+
     val scrollToChatMessageEvent: MutableLiveData<Event<ChatMessage>> by lazy {
         MutableLiveData<Event<ChatMessage>>()
     }
@@ -102,9 +106,13 @@ class ChatMessagesListAdapter(
         override fun onSipAddressClicked(sipUri: String) {
             sipUriClickedEvent.value = Event(sipUri)
         }
+
+        override fun onCallConference(address: String, subject: String?) {
+            callConferenceEvent.value = Event(Pair(address, subject))
+        }
     }
 
-    private var contextMenuDisabled: Boolean = false
+    private var advancedContextMenuOptionsDisabled: Boolean = false
 
     private var unreadMessagesCount: Int = 0
     private var firstUnreadMessagePosition: Int = -1
@@ -170,8 +178,8 @@ class ChatMessagesListAdapter(
         return binding.root
     }
 
-    fun disableContextMenu() {
-        contextMenuDisabled = true
+    fun disableAdvancedContextMenuOptions() {
+        advancedContextMenuOptionsDisabled = true
     }
 
     fun setUnreadMessageCount(count: Int, forceUpdate: Boolean) {
@@ -269,8 +277,6 @@ class ChatMessagesListAdapter(
 
                     executePendingBindings()
 
-                    if (contextMenuDisabled) return
-
                     setContextMenuClickListener {
                         val popupView: ChatMessageLongPressMenuBindingImpl = DataBindingUtil.inflate(
                             LayoutInflater.from(root.context),
@@ -292,12 +298,19 @@ class ChatMessagesListAdapter(
                             popupView.copyTextHidden = true
                             totalSize -= itemSize
                         }
-                        if (chatMessage.isOutgoing || chatMessageViewModel.contact.value != null) {
+                        if (chatMessage.isOutgoing ||
+                            chatMessageViewModel.contact.value != null ||
+                            advancedContextMenuOptionsDisabled
+                        ) {
                             popupView.addToContactsHidden = true
                             totalSize -= itemSize
                         }
                         if (chatMessage.chatRoom.hasBeenLeft()) {
                             popupView.replyHidden = true
+                            totalSize -= itemSize
+                        }
+                        if (advancedContextMenuOptionsDisabled) {
+                            popupView.forwardHidden = true
                             totalSize -= itemSize
                         }
 

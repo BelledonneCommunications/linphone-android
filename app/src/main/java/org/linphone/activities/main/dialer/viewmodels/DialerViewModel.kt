@@ -47,6 +47,8 @@ class DialerViewModel : LogsUploadViewModel() {
 
     val autoInitiateVideoCalls = MutableLiveData<Boolean>()
 
+    val scheduleConferenceAvailable = MutableLiveData<Boolean>()
+
     val updateAvailableEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
     }
@@ -136,6 +138,7 @@ class DialerViewModel : LogsUploadViewModel() {
         transferVisibility.value = false
 
         showSwitchCamera.value = coreContext.showSwitchCameraButton()
+        scheduleConferenceAvailable.value = LinphoneUtils.isRemoteConferencingAvailable()
     }
 
     override fun onCleared() {
@@ -195,7 +198,13 @@ class DialerViewModel : LogsUploadViewModel() {
     fun transferCall(): Boolean {
         val addressToCall = enteredUri.value.orEmpty()
         return if (addressToCall.isNotEmpty()) {
-            coreContext.transferCallTo(addressToCall)
+            onMessageToNotifyEvent.value = Event(
+                if (coreContext.transferCallTo(addressToCall)) {
+                    org.linphone.R.string.dialer_transfer_succeded
+                } else {
+                    org.linphone.R.string.dialer_transfer_failed
+                }
+            )
             eraseAll()
             true
         } else {

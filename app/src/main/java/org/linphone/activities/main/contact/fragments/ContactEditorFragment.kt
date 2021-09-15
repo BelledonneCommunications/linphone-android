@@ -138,7 +138,7 @@ class ContactEditorFragment : GenericFragment<ContactEditorFragmentBinding>(), S
                 Log.i("[Contact Editor] WRITE_CONTACTS permission granted")
             } else {
                 Log.w("[Contact Editor] WRITE_CONTACTS permission denied")
-                (requireActivity() as MainActivity).showSnackBar(R.string.contact_editor_write_permission_denied)
+                (activity as MainActivity).showSnackBar(R.string.contact_editor_write_permission_denied)
                 goBack()
             }
         }

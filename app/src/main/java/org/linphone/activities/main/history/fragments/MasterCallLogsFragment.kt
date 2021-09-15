@@ -35,6 +35,7 @@ import com.google.android.material.transition.MaterialSharedAxis
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.activities.*
 import org.linphone.activities.clearDisplayedCallHistory
 import org.linphone.activities.main.fragments.MasterFragment
 import org.linphone.activities.main.history.adapters.CallLogsListAdapter
@@ -44,6 +45,7 @@ import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.main.viewmodels.TabsViewModel
 import org.linphone.activities.navigateToCallHistory
+import org.linphone.activities.navigateToConferenceCallHistory
 import org.linphone.activities.navigateToDialer
 import org.linphone.core.tools.Log
 import org.linphone.databinding.HistoryMasterFragmentBinding
@@ -125,7 +127,6 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
             }
         }
         binding.slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
-
         /* End of shared view model & sliding pane related */
 
         _adapter = CallLogsListAdapter(listSelectionViewModel, viewLifecycleOwner)
@@ -191,30 +192,10 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
         val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
         binding.callLogsList.addItemDecoration(headerItemDecoration)
 
-        listViewModel.callLogs.observe(
+        listViewModel.displayedCallLogs.observe(
             viewLifecycleOwner
         ) { callLogs ->
-            if (listViewModel.missedCallLogsSelected.value == false) {
-                adapter.submitList(callLogs)
-            }
-        }
-
-        listViewModel.missedCallLogs.observe(
-            viewLifecycleOwner
-        ) { callLogs ->
-            if (listViewModel.missedCallLogsSelected.value == true) {
-                adapter.submitList(callLogs)
-            }
-        }
-
-        listViewModel.missedCallLogsSelected.observe(
-            viewLifecycleOwner
-        ) {
-            if (it) {
-                adapter.submitList(listViewModel.missedCallLogs.value)
-            } else {
-                adapter.submitList(listViewModel.callLogs.value)
-            }
+            adapter.submitList(callLogs)
         }
 
         listViewModel.contactsUpdatedEvent.observe(
@@ -230,37 +211,35 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
         ) {
             it.consume { callLog ->
                 sharedViewModel.selectedCallLogGroup.value = callLog
-                navigateToCallHistory(binding.slidingPane)
+                if (callLog.lastCallLog.wasConference()) {
+                    navigateToConferenceCallHistory(binding.slidingPane)
+                } else {
+                    navigateToCallHistory(binding.slidingPane)
+                }
             }
         }
 
         adapter.startCallToEvent.observe(
-            viewLifecycleOwner
+            viewLifecycleOwner,
         ) {
             it.consume { callLogGroup ->
                 val remoteAddress = callLogGroup.lastCallLog.remoteAddress
-                if (coreContext.core.callsNb > 0) {
+                val conferenceInfo = coreContext.core.findConferenceInformationFromUri(remoteAddress)
+                if (conferenceInfo != null) {
+                    navigateToConferenceWaitingRoom(remoteAddress.asStringUriOnly(), conferenceInfo.subject)
+                } else if (coreContext.core.callsNb > 0) {
                     Log.i("[History] Starting dialer with pre-filled URI ${remoteAddress.asStringUriOnly()}, is transfer? ${sharedViewModel.pendingCallTransfer}")
-                    sharedViewModel.updateDialerAnimationsBasedOnDestination.value =
-                        Event(R.id.masterCallLogsFragment)
+                    sharedViewModel.updateDialerAnimationsBasedOnDestination.value = Event(R.id.masterCallLogsFragment)
                     val args = Bundle()
                     args.putString("URI", remoteAddress.asStringUriOnly())
                     args.putBoolean("Transfer", sharedViewModel.pendingCallTransfer)
-                    // If auto start call setting is enabled, ignore it
-                    args.putBoolean("SkipAutoCallStart", true)
+                    args.putBoolean("SkipAutoCallStart", true) // If auto start call setting is enabled, ignore it
                     navigateToDialer(args)
                 } else {
                     val localAddress = callLogGroup.lastCallLog.localAddress
                     coreContext.startCall(remoteAddress, localAddress = localAddress)
                 }
             }
-        }
-
-        binding.setAllCallLogsToggleClickListener {
-            listViewModel.missedCallLogsSelected.value = false
-        }
-        binding.setMissedCallLogsToggleClickListener {
-            listViewModel.missedCallLogsSelected.value = true
         }
 
         coreContext.core.resetMissedCallsCount()
