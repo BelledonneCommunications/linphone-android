@@ -119,18 +119,10 @@
         <activity android:name=".activities.assistant.AssistantActivity"
             android:windowSoftInputMode="adjustResize"/>
 
-        <activity android:name=".activities.call.CallActivity"
+        <activity android:name=".activities.voip.CallActivity"
             android:launchMode="singleTop"
             android:resizeableActivity="true"
             android:supportsPictureInPicture="true" />
-
-        <activity android:name=".activities.call.IncomingCallActivity"
-            android:launchMode="singleTop"
-            android:noHistory="true" />
-
-        <activity android:name=".activities.call.OutgoingCallActivity"
-            android:launchMode="singleTop"
-            android:noHistory="true" />
 
         <activity
             android:name=".activities.chat_bubble.ChatBubbleActivity"
