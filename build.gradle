@@ -13,7 +13,7 @@ buildscript {
         } // for com.github.chrisbanes:PhotoView
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.2'
+        classpath 'com.android.tools.build:gradle:7.0.3'
         classpath 'com.google.gms:google-services:4.3.10'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jlleitschuh.gradle:ktlint-gradle:10.1.0"

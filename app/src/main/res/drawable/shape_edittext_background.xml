@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <stroke android:width="0.33dp" android:color="?attr/voipFormFieldBackgroundColor" />
+    <corners android:radius="0dp" />
+    <padding android:bottom="3dp" android:left="3dp" android:right="3dp" android:top="3dp" />
+</shape>
