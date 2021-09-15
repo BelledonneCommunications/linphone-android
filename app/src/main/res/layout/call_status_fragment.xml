@@ -22,14 +22,14 @@
 
         <ImageView
             android:id="@+id/stats_button"
-            android:onClick="@{statsClickListener}"
-            android:src="@{viewModel.callQualityIcon, default=@drawable/call_quality_indicator_0}"
-            android:contentDescription="@{viewModel.callQualityContentDescription}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerInParent="true"
-            android:padding="10dp" />
+            android:contentDescription="@{viewModel.callQualityContentDescription}"
+            android:onClick="@{statsClickListener}"
+            android:padding="10dp"
+            android:src="@{viewModel.callQualityIcon, default=@drawable/call_quality_indicator_0}" />
 
         <ImageView
             android:id="@+id/status_led"
