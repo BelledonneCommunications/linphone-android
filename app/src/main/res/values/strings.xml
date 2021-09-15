@@ -242,6 +242,12 @@
     <string name="call_error_temporarily_unavailable">Temporarily unavailable</string>
     <string name="call_error_generic">Error: %s</string>
     <string name="call_video_update_requested_dialog">Correspondent would like to turn the video on</string>
+    <string name="call_action_participants_list">Participants list</string>
+    <string name="call_action_chat">Chat</string>
+    <string name="call_action_calls_list">Calls list</string>
+    <string name="call_action_numpad">Numpad</string>
+    <string name="call_action_statistics">Call statistics</string>
+    <string name="call_action_settings">Call settings</string>
 
     <!-- Call stats -->
     <string name="call_stats_audio">Audio</string>
