@@ -732,7 +732,11 @@ class CoreContext(val context: Context, coreConfig: Config) {
         }
 
         Log.i("[Context] Starting OutgoingCallActivity")
-        val intent = Intent(context, OutgoingCallActivity::class.java)
+        val intent = if (corePreferences.useNewCallUI) {
+            Intent(context, org.linphone.activities.voip.CallActivity::class.java)
+        } else {
+            Intent(context, OutgoingCallActivity::class.java)
+        }
         // This flag is required to start an Activity from a Service context
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
@@ -745,7 +749,11 @@ class CoreContext(val context: Context, coreConfig: Config) {
         }
 
         Log.i("[Context] Starting CallActivity")
-        val intent = Intent(context, CallActivity::class.java)
+        val intent = if (corePreferences.useNewCallUI) {
+            Intent(context, org.linphone.activities.voip.CallActivity::class.java)
+        } else {
+            Intent(context, CallActivity::class.java)
+        }
         // This flag is required to start an Activity from a Service context
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
         context.startActivity(intent)

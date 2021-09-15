@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="data"
+            type="org.linphone.activities.main.chat.data.ChatMessageContentData" />
+        <variable
+            name="longClickListener"
+            type="android.view.View.OnLongClickListener"/>
+        <variable
+            name="joinClickListener"
+            type="android.view.View.OnClickListener"/>
+    </data>
+
+    <LinearLayout
+        android:onLongClick="@{longClickListener}"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:background="@color/voip_light_gray">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/conference_invite_title_font"
+            android:text="@string/conference_invite_title"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/conference_invite_subject_font"
+            android:text="@{data.conferenceSubject, default=`Lorem ipsum dolor sit amet!`}"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:drawableStart="@drawable/conference_schedule_calendar_default"
+            android:drawablePadding="5dp"
+            style="@style/conference_invite_desc_font"
+            android:text="@{data.conferenceDate, default=`Mon. October 9th, 2021`}"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:drawableStart="@drawable/conference_schedule_time_default"
+            android:drawablePadding="5dp"
+            style="@style/conference_invite_desc_font"
+            android:text="@{data.conferenceTime, default=`5:35 PM`}"/>
+
+        <TextView
+            android:onClick="@{joinClickListener}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_rect_green_button"
+            android:paddingLeft="20dp"
+            android:paddingTop="8dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="8dp"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center_vertical|end"
+            style="@style/conference_invite_join_font"
+            android:text="@string/conference_invite_join"/>
+
+    </LinearLayout>
+
+</layout>
