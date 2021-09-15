@@ -70,9 +70,7 @@
                     android:layout_marginRight="10dp"
                     android:switchMinWidth="50dp"
                     android:textOff=""
-                    android:textOn=""
-                    android:thumb="@drawable/security_switch_thumb"
-                    android:track="@drawable/security_switch_track"/>
+                    android:textOn=""/>
 
                 <ImageView
                     android:onClick="@{() -> viewModel.updateEncryption(true)}"
@@ -188,7 +186,7 @@
                 android:scrollIndicators="bottom"
                 app:entries="@{viewModel.selectedAddresses}"
                 app:parent="@{viewModel}"
-                app:layout="@{@layout/chat_room_creation_selected_contact_cell}" />
+                app:layout="@{@layout/contact_selected_cell}" />
 
         </HorizontalScrollView>
 
