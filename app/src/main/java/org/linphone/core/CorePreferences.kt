@@ -382,6 +382,9 @@ class CorePreferences constructor(private val context: Context) {
     private val darkModeAllowed: Boolean
         get() = config.getBool("app", "dark_mode_allowed", true)
 
+    val useNewCallUI: Boolean
+        get() = config.getBool("app", "new_call_ui", true)
+
     /* Feature related */
 
     val showScreenshotButton: Boolean

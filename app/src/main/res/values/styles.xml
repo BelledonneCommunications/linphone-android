@@ -89,6 +89,19 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <!-- Call related -->
+
+    <style name="call_remote_name_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/white_color</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="call_generated_avatar_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/white_color</item>
+        <item name="android:textSize">80sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <!-- Contact related -->
 
     <style name="contact_organization_font" parent="@android:style/TextAppearance.Small">
