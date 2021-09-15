@@ -28,7 +28,7 @@
             android:layout_alignParentLeft="true"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
-            android:src="@drawable/avatar"/>
+            android:src="@drawable/voip_single_contact_avatar"/>
 
         <ImageView
             android:visibility="@{generatedAvatarVisibility ? View.VISIBLE : View.GONE}"
