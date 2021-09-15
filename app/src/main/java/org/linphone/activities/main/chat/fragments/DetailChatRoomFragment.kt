@@ -313,11 +313,23 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             viewLifecycleOwner,
             {
                 it.consume { content ->
-                    val path = content.filePath.orEmpty()
+                    var path = content.filePath.orEmpty()
 
-                    if (!File(path).exists()) {
+                    if ((path.isEmpty() && content.utf8Text.isNullOrEmpty()) || (path.isNotEmpty() && !File(path).exists())) {
+                        Log.e("[Chat Message] Content path is [$path], if not null or empty then file doesn't exists...")
                         (requireActivity() as MainActivity).showSnackBar(R.string.chat_room_file_not_found)
                     } else {
+                        if (path.isEmpty()) {
+                            val name = content.name
+                            if (name != null && name.isNotEmpty()) {
+                                val file = FileUtils.getFileStoragePath(name)
+                                FileUtils.writeIntoFile(content.buffer, file)
+                                path = file.absolutePath
+                                content.filePath = path
+                                Log.i("[Chat Message] Content file path was empty, created file from buffer at $path")
+                            }
+                        }
+
                         Log.i("[Chat Message] Opening file: $path")
                         sharedViewModel.contentToOpen.value = content
 
