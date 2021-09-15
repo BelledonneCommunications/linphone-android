@@ -80,7 +80,6 @@
     <string name="chat_security_event_security_level_downgraded">%s造成安全級別下降</string>
     <string name="chat_security_event_participant_max_count_exceeded">參加人數上限超過%s人</string>
     <string name="chat_event_ephemeral_disabled">您禁用了「閱後即焚」訊息</string>
-    <string name="chat_event_ephemeral_enabled">您開啟了「閱後即焚」訊息</string>
     <string name="chat_event_ephemeral_lifetime_changed">「閱後即焚」訊息到期日：%s</string>
     <string name="chat_message_download_file">下載</string>
     <string name="chat_message_pick_file_dialog">選擇源</string>
@@ -95,7 +94,6 @@
     <string name="contact_choose_existing_or_new_to_add_number">選擇聯絡人或建立新的聯絡人</string>
     <string name="contact_delete_many_dialog">您要刪除這些聯絡人嗎？
 \n它們也將會從您的設備通訊錄中刪除</string>
-    <string name="chat_security_event_man_in_the_middle_detected">檢測到中間人攻擊</string>
     <string name="chat_room_ephemeral_messages_desc">該信息已閱讀後，兩端的信息將在選定的超時時間被刪除。</string>
     <string name="call_error_declined">通話被拒</string>
     <string name="call_video_update_requested_dialog">對方要求啟用視訊</string>
@@ -471,7 +469,7 @@
     <string name="content_description_disable_speaker">將音頻傳到耳機</string>
     <string name="content_description_go_back_to_call">返回通話視圖</string>
     <string name="content_description_resume_conference">恢復當前保留的會議</string>
-    <string name="content_description_show_numpad">顯示或隱藏要發送DTMF的數字</string>
+    <string name="content_description_toggle_numpad">顯示或隱藏要發送DTMF的數字</string>
     <string name="content_description_go_to_chat">顯示對話列表</string>
     <string name="content_description_enable_video">啟用通話視頻</string>
     <string name="content_description_disable_video">禁用通話視頻</string>
