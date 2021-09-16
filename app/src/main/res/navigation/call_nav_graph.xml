@@ -9,5 +9,16 @@
         android:id="@+id/currentFragment"
         android:name="org.linphone.activities.voip.fragments.CurrentFragment"
         tools:layout="@layout/voip_current_fragment"
-        android:label="CurrentFragment" />
+        android:label="CurrentFragment" >
+        <action
+            android:id="@+id/action_currentFragment_to_callsListFragment"
+            app:destination="@id/callsListFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/callsListFragment"
+        android:name="org.linphone.activities.voip.fragments.CallsListFragment"
+        tools:layout="@layout/voip_calls_list_fragment"
+        android:label="CallsListFragment" />
+
 </navigation>
