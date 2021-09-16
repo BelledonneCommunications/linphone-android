@@ -7,7 +7,7 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="org.linphone.activities.voip.viewmodels.CallViewModel" />
+            type="org.linphone.activities.voip.data.CallData" />
         <variable
             name="controlsViewModel"
             type="org.linphone.activities.voip.viewmodels.ControlsViewModel" />

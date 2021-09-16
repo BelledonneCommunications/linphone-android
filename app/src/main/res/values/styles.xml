@@ -101,6 +101,31 @@
         <item name="android:textSize">12sp</item>
     </style>
 
+    <style name="calls_list_header_font" parent="@android:style/TextAppearance.Large">
+        <item name="android:textColor">@color/voip_dark_gray</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="call_list_active_name_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/white_color</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="call_list_name_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/voip_dark_gray</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="call_list_active_sip_uri_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/white_color</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="call_list_sip_uri_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/voip_dark_gray</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
     <style name="call_generated_avatar_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">@color/white_color</item>
         <item name="android:textSize">80sp</item>

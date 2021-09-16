@@ -17,22 +17,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.activities.voip.viewmodels
+package org.linphone.activities.voip.data
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import java.util.*
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.compatibility.Compatibility
-import org.linphone.contact.GenericContactViewModel
+import org.linphone.contact.GenericContactData
 import org.linphone.core.Call
 import org.linphone.core.CallListenerStub
-import org.linphone.core.Factory
 import org.linphone.core.tools.Log
 
-open class CallViewModel(val call: Call) : GenericContactViewModel(call.remoteAddress) {
+open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
+    val address = call.remoteAddress.asStringUriOnly()
+
     val isPaused = MutableLiveData<Boolean>()
     val canBePaused = MutableLiveData<Boolean>()
 
@@ -40,27 +36,10 @@ open class CallViewModel(val call: Call) : GenericContactViewModel(call.remoteAd
 
     private val listener = object : CallListenerStub() {
         override fun onStateChanged(call: Call, state: Call.State, message: String) {
-            if (call != this@CallViewModel.call) return
+            if (call != this@CallData.call) return
             Log.i("[Call] State changed: $state")
 
             updatePause()
-        }
-
-        override fun onSnapshotTaken(call: Call, filePath: String) {
-            Log.i("[Call] Snapshot taken, saved at $filePath")
-            val content = Factory.instance().createContent()
-            content.filePath = filePath
-            content.type = "image"
-            content.subtype = "jpeg"
-            content.name = filePath.substring(filePath.indexOf("/") + 1)
-
-            viewModelScope.launch {
-                if (Compatibility.addImageToMediaStore(coreContext.context, content)) {
-                    Log.i("[Call] Adding snapshot ${content.name} to Media Store terminated")
-                } else {
-                    Log.e("[Call] Something went wrong while copying file to Media Store...")
-                }
-            }
         }
     }
 
@@ -70,13 +49,10 @@ open class CallViewModel(val call: Call) : GenericContactViewModel(call.remoteAd
         updatePause()
     }
 
-    override fun onCleared() {
-        destroy()
-        super.onCleared()
-    }
-
-    fun destroy() {
+    override fun destroy() {
         call.removeListener(listener)
+
+        super.destroy()
     }
 
     fun togglePause() {
@@ -84,20 +60,6 @@ open class CallViewModel(val call: Call) : GenericContactViewModel(call.remoteAd
             resume()
         } else {
             pause()
-        }
-    }
-
-    private fun isCallPaused(): Boolean {
-        return when (call.state) {
-            Call.State.Paused, Call.State.Pausing -> true
-            else -> false
-        }
-    }
-
-    private fun canCallBePaused(): Boolean {
-        return !call.mediaInProgress() && when (call.state) {
-            Call.State.StreamsRunning, Call.State.PausedByRemote -> true
-            else -> false
         }
     }
 
@@ -118,16 +80,37 @@ open class CallViewModel(val call: Call) : GenericContactViewModel(call.remoteAd
         isRecording.value = call.isRecording
     }
 
+    fun isCallActive(): Boolean {
+        return when (call.state) {
+            Call.State.Connected, Call.State.StreamsRunning, Call.State.UpdatedByRemote, Call.State.Updating -> true
+            else -> false
+        }
+    }
+
+    private fun isCallPaused(): Boolean {
+        return when (call.state) {
+            Call.State.Paused, Call.State.Pausing -> true
+            else -> false
+        }
+    }
+
+    private fun canCallBePaused(): Boolean {
+        return !call.mediaInProgress() && when (call.state) {
+            Call.State.StreamsRunning, Call.State.PausedByRemote -> true
+            else -> false
+        }
+    }
+
     private fun updatePause() {
         isPaused.value = isCallPaused()
         canBePaused.value = canCallBePaused()
 
         // Check periodically until mediaInProgress is false
-        if (call.mediaInProgress()) {
+        /*if (call.mediaInProgress()) {
             viewModelScope.launch {
                 delay(1000)
                 updatePause()
             }
-        }
+        }*/
     }
 }

@@ -22,12 +22,15 @@ package org.linphone.activities.voip.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.activities.voip.data.CallData
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
 
 class CallsViewModel : ViewModel() {
-    val currentCallViewModel = MutableLiveData<CallViewModel>()
+    val currentCallData = MutableLiveData<CallData>()
+
+    val callsData = MutableLiveData<List<CallData>>()
 
     val noMoreCallEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
@@ -38,17 +41,21 @@ class CallsViewModel : ViewModel() {
             Log.i("[Calls] Call state changed: $state")
 
             val currentCall = core.currentCall
-            if (currentCall != null && currentCallViewModel.value?.call != currentCall) {
-                currentCallViewModel.value?.destroy()
-                val viewModel = CallViewModel(currentCall)
-                currentCallViewModel.value = viewModel
+            if (currentCall != null && currentCallData.value?.call != currentCall) {
+                currentCallData.value?.destroy()
+                val viewModel = CallData(currentCall)
+                currentCallData.value = viewModel
             }
 
             if (state == Call.State.End || state == Call.State.Released || state == Call.State.Error) {
+                updateCallsList()
+
                 if (core.callsNb == 0) {
-                    currentCallViewModel.value?.destroy()
+                    currentCallData.value?.destroy()
                     noMoreCallEvent.value = Event(true)
                 }
+            } else if (state == Call.State.IncomingReceived || state == Call.State.IncomingEarlyMedia || state == Call.State.OutgoingInit) {
+                updateCallsList()
             }
         }
     }
@@ -58,16 +65,35 @@ class CallsViewModel : ViewModel() {
 
         val currentCall = coreContext.core.currentCall
         if (currentCall != null) {
-            currentCallViewModel.value?.destroy()
+            currentCallData.value?.destroy()
 
-            val viewModel = CallViewModel(currentCall)
-            currentCallViewModel.value = viewModel
+            val viewModel = CallData(currentCall)
+            currentCallData.value = viewModel
         }
     }
 
     override fun onCleared() {
         coreContext.core.removeListener(listener)
 
+        currentCallData.value?.destroy()
+        callsData.value.orEmpty().forEach(CallData::destroy)
+
         super.onCleared()
+    }
+
+    private fun updateCallsList() {
+        callsData.value.orEmpty().forEach(CallData::destroy)
+        val calls = arrayListOf<CallData>()
+
+        for (call in coreContext.core.calls) {
+            val data: CallData = if (currentCallData.value?.call == call) {
+                currentCallData.value!!
+            } else {
+                CallData(call)
+            }
+            calls.add(data)
+        }
+
+        callsData.value = calls
     }
 }

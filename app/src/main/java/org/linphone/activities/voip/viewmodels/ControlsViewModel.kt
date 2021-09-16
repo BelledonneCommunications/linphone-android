@@ -27,6 +27,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.AudioRouteUtils
+import org.linphone.utils.Event
 import org.linphone.utils.PermissionHelper
 
 class ControlsViewModel : ViewModel() {
@@ -47,6 +48,10 @@ class ControlsViewModel : ViewModel() {
     val showExtras = MutableLiveData<Boolean>()
 
     val fullScreenMode = MutableLiveData<Boolean>()
+
+    val goToCallsListEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
 
     private var previewX: Float = 0f
     private var previewY: Float = 0f
@@ -171,6 +176,10 @@ class ControlsViewModel : ViewModel() {
     fun toggleFullScreen() {
         if (isVideoEnabled.value == false) return
         fullScreenMode.value = fullScreenMode.value != true
+    }
+
+    fun goToCallsList() {
+        goToCallsListEvent.value = Event(true)
     }
 
     private fun updateUI() {

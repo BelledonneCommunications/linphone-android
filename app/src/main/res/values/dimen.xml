@@ -41,4 +41,6 @@
     <dimen name="voip_buttons_fragment_size">50dp</dimen>
     <dimen name="voip_remote_margin">10dp</dimen>
     <dimen name="voip_remote_margin_full_screen">0dp</dimen>
+    <dimen name="voip_top_bar_size">60dp</dimen>
+    <dimen name="voip_call_list_size">80dp</dimen>
 </resources>
