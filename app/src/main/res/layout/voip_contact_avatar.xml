@@ -53,7 +53,6 @@
             android:layout_alignParentLeft="true"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
-            android:background="@color/voip_gray_background"
             app:glideAvatar="@{imagePath}" />
 
     </RelativeLayout>

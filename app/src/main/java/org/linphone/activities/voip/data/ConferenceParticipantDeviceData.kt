@@ -28,8 +28,6 @@ import org.linphone.core.tools.Log
 class ConferenceParticipantDeviceData(private val participantDevice: ParticipantDevice) :
     GenericContactData(participantDevice.address) {
 
-    val activeSpeaker = MutableLiveData<Boolean>()
-
     val videoEnabled = MutableLiveData<Boolean>()
 
     /*private val listener = object : ParticipantDeviceListenerStub() {

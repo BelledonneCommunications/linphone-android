@@ -21,6 +21,7 @@ package org.linphone.activities.voip.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.android.flexbox.FlexDirection
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.activities.voip.data.ConferenceParticipantData
 import org.linphone.activities.voip.data.ConferenceParticipantDeviceData
@@ -36,6 +37,8 @@ class ConferenceViewModel : ViewModel() {
 
     val conferenceParticipants = MutableLiveData<List<ConferenceParticipantData>>()
     val conferenceParticipantDevices = MutableLiveData<List<ConferenceParticipantDeviceData>>()
+
+    val flexboxLayoutDirection = MutableLiveData<Int>()
 
     val isInConference = MutableLiveData<Boolean>()
 
@@ -129,6 +132,8 @@ class ConferenceViewModel : ViewModel() {
         isInConference.value = false
         isVideoConference.value = coreContext.core.conference?.currentParams?.isVideoEnabled
 
+        flexboxLayoutDirection.value = FlexDirection.COLUMN
+
         val conference = coreContext.core.conference
         if (conference != null) {
             conference.addListener(conferenceListener)
@@ -190,6 +195,12 @@ class ConferenceViewModel : ViewModel() {
 
             val participantData = ConferenceParticipantData(conference, participant)
             participants.add(participantData)
+        }
+
+        flexboxLayoutDirection.value = if (participants.size > 4) {
+            FlexDirection.ROW
+        } else {
+            FlexDirection.COLUMN
         }
 
         conferenceParticipants.value = participants
