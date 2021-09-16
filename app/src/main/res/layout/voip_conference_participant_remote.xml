@@ -7,11 +7,11 @@
         <import type="android.view.View" />
         <variable
             name="data"
-            type="org.linphone.activities.voip.data.ConferenceParticipantDeviceData" />
+            type="org.linphone.activities.voip.data.ConferenceParticipantData" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="200dp"
+        android:layout_width="150dp"
         android:layout_height="150dp"
         app:layout_flexGrow="1"
         android:background="@drawable/shape_remote_background">
@@ -19,8 +19,7 @@
         <org.linphone.activities.voip.views.CallContactAvatarView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:maxWidth="200dp"
-            android:maxHeight="200dp"
+            android:layout_margin="40dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
