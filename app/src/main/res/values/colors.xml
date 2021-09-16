@@ -22,6 +22,8 @@
     <color name="voip_gray">#96A5B1</color>
     <color name="voip_gray_background">#D8D8D8</color>
     <color name="voip_call_record_background">#EBEBEB</color>
+    <color name="voip_calls_list_header_background">#F5F5F5</color>
+    <color name="voip_calls_list_inactive_background">#F0F1F2</color>
 
     <color name="imdn_read_color">#3eb5c0</color>
     <color name="toolbar_color">#e1e1e1</color>

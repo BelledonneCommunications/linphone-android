@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="hidePause"
+            type="Boolean" />
+        <variable
+            name="hideNotConnectedActions"
+            type="Boolean" />
+        <variable
+            name="resumeClickListener"
+            type="android.view.View.OnClickListener" />
+        <variable
+            name="pauseClickListener"
+            type="android.view.View.OnClickListener" />
+        <variable
+            name="transferClickListener"
+            type="android.view.View.OnClickListener" />
+        <variable
+            name="answerClickListener"
+            type="android.view.View.OnClickListener" />
+        <variable
+            name="hangupClickListener"
+            type="android.view.View.OnClickListener" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="@dimen/chat_message_popup_width"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="?attr/backgroundColor">
+
+        <TextView
+            android:onClick="@{resumeClickListener}"
+            android:visibility="@{hidePause ? View.VISIBLE : View.GONE}"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/voip_call_context_menu_item_height"
+            android:background="@drawable/button_call_context_menu_background"
+            style="@style/call_context_menu_item_font"
+            android:text="@string/call_context_action_resume" />
+
+        <TextView
+            android:onClick="@{pauseClickListener}"
+            android:visibility="@{hidePause || hideNotConnectedActions? View.GONE : View.VISIBLE}"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/voip_call_context_menu_item_height"
+            android:background="@drawable/button_call_context_menu_background"
+            style="@style/call_context_menu_item_font"
+            android:text="@string/call_context_action_pause" />
+
+        <TextView
+            android:onClick="@{transferClickListener}"
+            android:visibility="@{hideNotConnectedActions? View.GONE : View.VISIBLE}"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/voip_call_context_menu_item_height"
+            android:background="@drawable/button_call_context_menu_background"
+            style="@style/call_context_menu_item_font"
+            android:text="@string/call_context_action_transfer" />
+
+        <TextView
+            android:onClick="@{answerClickListener}"
+            android:visibility="@{hideNotConnectedActions? View.VISIBLE : View.GONE}"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/voip_call_context_menu_item_height"
+            android:background="@drawable/button_call_context_menu_background"
+            style="@style/call_context_menu_item_font"
+            android:text="@string/call_context_action_answer" />
+
+        <TextView
+            android:onClick="@{hangupClickListener}"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/voip_call_context_menu_item_height"
+            android:background="@drawable/button_call_context_menu_background"
+            style="@style/call_context_menu_item_font"
+            android:text="@string/call_context_action_hangup" />
+
+    </LinearLayout>
+
+</layout>

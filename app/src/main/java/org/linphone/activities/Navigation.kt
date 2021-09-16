@@ -45,6 +45,7 @@ import org.linphone.activities.main.history.fragments.DetailCallLogFragment
 import org.linphone.activities.main.history.fragments.MasterCallLogsFragment
 import org.linphone.activities.main.settings.fragments.*
 import org.linphone.activities.main.sidemenu.fragments.SideMenuFragment
+import org.linphone.activities.voip.fragments.CurrentFragment
 import org.linphone.contact.NativeContact
 import org.linphone.core.Address
 
@@ -747,6 +748,18 @@ internal fun SideMenuFragment.navigateToRecordings() {
         null,
         popupTo(R.id.recordingsFragment, true)
     )
+}
+
+/* Calls related */
+
+internal fun CurrentFragment.navigateToCallsList() {
+    if (findNavController().currentDestination?.id == R.id.currentFragment) {
+        findNavController().navigate(
+            R.id.action_currentFragment_to_callsListFragment,
+            null,
+            popupTo()
+        )
+    }
 }
 
 /* Assistant related */

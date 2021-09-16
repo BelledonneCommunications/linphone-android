@@ -248,6 +248,11 @@
     <string name="call_action_numpad">Numpad</string>
     <string name="call_action_statistics">Call statistics</string>
     <string name="call_action_settings">Call settings</string>
+    <string name="call_context_action_resume">Resume call</string>
+    <string name="call_context_action_pause">Pause call</string>
+    <string name="call_context_action_transfer">Transfer call</string>
+    <string name="call_context_action_answer">Answer call</string>
+    <string name="call_context_action_hangup">Hangup call</string>
 
     <!-- Call stats -->
     <string name="call_stats_audio">Audio</string>
@@ -734,4 +739,5 @@
     <string name="content_description_cancel_voice_recording">Cancel voice recording</string>
     <string name="content_description_pause_voice_recording_playback">Pause voice recording</string>
     <string name="content_description_play_voice_recording">Play voice recording</string>
+    <string name="content_description_call_context_menu">Open call context menu</string>
 </resources>
