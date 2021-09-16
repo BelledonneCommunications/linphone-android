@@ -26,6 +26,7 @@ import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.GenericFragment
+import org.linphone.activities.navigateToCallsList
 import org.linphone.activities.voip.viewmodels.CallsViewModel
 import org.linphone.activities.voip.viewmodels.ConferenceViewModel
 import org.linphone.activities.voip.viewmodels.ControlsViewModel
@@ -65,6 +66,16 @@ class CurrentFragment : GenericFragment<VoipCurrentFragmentBindingImpl>() {
             {
                 it.consume {
                     requireActivity().finish()
+                }
+            }
+        )
+
+        controlsViewModel.goToCallsListEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume {
+                    controlsViewModel.hideExtraButtons()
+                    navigateToCallsList()
                 }
             }
         )
