@@ -11,7 +11,7 @@
     </data>
 
     <RelativeLayout
-        android:onClick="@{() -> viewModel.hideExtraButton()}"
+        android:onClick="@{() -> viewModel.hideExtraButtons()}"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#99444444">
@@ -53,6 +53,7 @@
                     android:text="@string/call_action_chat"/>
 
                 <TextView
+                    android:onClick="@{() -> viewModel.goToCallsList()}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
