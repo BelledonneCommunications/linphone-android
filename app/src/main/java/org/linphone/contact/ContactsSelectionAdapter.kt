@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.activities.main.chat.adapters
+package org.linphone.contact
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -29,14 +29,13 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
-import org.linphone.activities.main.chat.data.ChatRoomCreationContactData
 import org.linphone.core.Address
 import org.linphone.core.FriendCapability
 import org.linphone.core.SearchResult
-import org.linphone.databinding.ChatRoomCreationContactCellBinding
+import org.linphone.databinding.ContactSelectionCellBinding
 import org.linphone.utils.Event
 
-class ChatRoomCreationContactsAdapter(
+class ContactsSelectionAdapter(
     private val viewLifecycleOwner: LifecycleOwner
 ) : ListAdapter<SearchResult, RecyclerView.ViewHolder>(SearchResultDiffCallback()) {
     val selectedContact = MutableLiveData<Event<SearchResult>>()
@@ -58,9 +57,9 @@ class ChatRoomCreationContactsAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val binding: ChatRoomCreationContactCellBinding = DataBindingUtil.inflate(
+        val binding: ContactSelectionCellBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
-            R.layout.chat_room_creation_contact_cell, parent, false
+            R.layout.contact_selection_cell, parent, false
         )
         return ViewHolder(binding)
     }
@@ -70,11 +69,11 @@ class ChatRoomCreationContactsAdapter(
     }
 
     inner class ViewHolder(
-        private val binding: ChatRoomCreationContactCellBinding
+        private val binding: ContactSelectionCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(searchResult: SearchResult) {
             with(binding) {
-                val searchResultViewModel = ChatRoomCreationContactData(searchResult)
+                val searchResultViewModel = ContactSelectionData(searchResult)
                 data = searchResultViewModel
 
                 lifecycleOwner = viewLifecycleOwner
@@ -97,7 +96,7 @@ class ChatRoomCreationContactsAdapter(
 
         private fun updateSecurity(
             searchResult: SearchResult,
-            viewModel: ChatRoomCreationContactData,
+            viewModel: ContactSelectionData,
             securityEnabled: Boolean
         ) {
             val searchAddress = searchResult.address

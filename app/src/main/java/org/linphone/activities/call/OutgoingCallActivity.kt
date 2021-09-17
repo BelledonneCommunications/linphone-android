@@ -30,6 +30,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.flexbox.FlexboxLayout
 import org.linphone.LinphoneApplication
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.call.viewmodels.CallViewModel
 import org.linphone.activities.call.viewmodels.CallViewModelFactory
@@ -221,7 +222,7 @@ class OutgoingCallActivity : ProximitySensorActivity() {
             addUpdateListener {
                 val value = it.animatedValue as Float
                 findViewById<FlexboxLayout>(R.id.numpad)?.translationX = -value
-                duration = if (LinphoneApplication.corePreferences.enableAnimations) 500 else 0
+                duration = if (corePreferences.enableAnimations) 500 else 0
             }
         }
         // Hide the numpad here as we can't set the translationX property on include tag in layout
