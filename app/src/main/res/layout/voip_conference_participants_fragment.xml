@@ -14,6 +14,9 @@
         <variable
             name="callsViewModel"
             type="org.linphone.activities.voip.viewmodels.CallsViewModel" />
+        <variable
+            name="conferenceViewModel"
+            type="org.linphone.activities.voip.viewmodels.ConferenceViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -57,9 +60,9 @@
             android:orientation="vertical"
             android:background="@color/white_color"
             app:layout_constraintTop_toBottomOf="@id/header"
-            app:layout_constraintBottom_toBottomOf="parent">
-
-        </LinearLayout>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:entries="@{conferenceViewModel.conferenceParticipants}"
+            app:layout="@{@layout/voip_conference_participant_cell}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
