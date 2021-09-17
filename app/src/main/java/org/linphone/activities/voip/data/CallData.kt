@@ -22,6 +22,7 @@ package org.linphone.activities.voip.data
 import android.view.View
 import androidx.lifecycle.MutableLiveData
 import java.util.*
+import kotlinx.coroutines.*
 import org.linphone.contact.GenericContactData
 import org.linphone.core.Call
 import org.linphone.core.CallListenerStub
@@ -46,12 +47,14 @@ open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
 
     private val listener = object : CallListenerStub() {
         override fun onStateChanged(call: Call, state: Call.State, message: String) {
-            if (call != this@CallData.call) return
+            // if (call != this@CallData.call) return
             Log.i("[Call] State changed: $state")
 
             update()
         }
     }
+
+    private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     init {
         call.addListener(listener)
@@ -61,6 +64,7 @@ open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
 
     override fun destroy() {
         call.removeListener(listener)
+        scope.cancel()
 
         super.destroy()
     }
@@ -130,11 +134,11 @@ open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
         }
 
         // Check periodically until mediaInProgress is false
-        /*if (call.mediaInProgress()) {
-            viewModelScope.launch {
+        if (call.mediaInProgress()) {
+            scope.launch {
                 delay(1000)
-                updatePause()
+                update()
             }
-        }*/
+        }
     }
 }
