@@ -22,24 +22,13 @@
         android:layout_height="match_parent"
         android:background="@color/voip_gray_blue_color">
 
-        <com.google.android.flexbox.FlexboxLayout
+        <include layout="@layout/voip_conference"
             android:visibility="@{conferenceViewModel.isInConference ? View.VISIBLE : View.GONE, default=gone}"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_margin="10dp"
+            app:conferenceViewModel="@{conferenceViewModel}"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/primary_buttons"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:entries="@{conferenceViewModel.conferenceParticipants}"
-            app:layout="@{@layout/voip_conference_participant_remote}"
-            app:flexDirection="@{conferenceViewModel.flexboxLayoutDirection}"
-            app:flexWrap="wrap"
-            app:alignItems="stretch"
-            app:alignContent="stretch"
-            app:justifyContent="space_evenly"
-            app:showDivider="middle"
-            app:dividerDrawable="@drawable/shape_conference_divider"/>
+            app:layout_constraintBottom_toTopOf="@id/primary_buttons"/>
 
         <include
             android:id="@+id/remote_layout"
@@ -90,6 +79,10 @@
             android:layout_margin="10dp"
             app:viewModel="@{controlsViewModel}"
             app:layout_constraintBottom_toBottomOf="parent" />
+
+        <include layout="@layout/voip_paused_conference"
+            android:visibility="@{conferenceViewModel.isInConference &amp;&amp; conferenceViewModel.isConferencePaused ? View.VISIBLE : View.GONE, default=gone}"
+            app:conferenceViewModel="@{conferenceViewModel}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -8,7 +8,7 @@
             type="org.linphone.core.Address" />
         <variable
             name="parent"
-            type="org.linphone.activities.main.chat.viewmodels.ChatRoomCreationViewModel" />
+            type="org.linphone.contact.ContactsSelectionViewModel" />
     </data>
 
     <LinearLayout
