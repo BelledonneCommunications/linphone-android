@@ -24,12 +24,15 @@ import org.linphone.contact.GenericContactData
 import org.linphone.core.Conference
 import org.linphone.core.Participant
 import org.linphone.core.tools.Log
+import org.linphone.utils.LinphoneUtils
 
 class ConferenceParticipantData(
     private val conference: Conference,
     val participant: Participant
 ) :
     GenericContactData(participant.address) {
+    val sipUri: String get() = LinphoneUtils.getDisplayableAddress(participant.address)
+
     private val isAdmin = MutableLiveData<Boolean>()
     val isMeAdmin = MutableLiveData<Boolean>()
 

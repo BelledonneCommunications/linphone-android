@@ -57,15 +57,6 @@ class CallsListFragment : GenericFragment<VoipCallsListFragmentBinding>() {
         }
         binding.callsViewModel = callsViewModel
 
-        callsViewModel.noMoreCallEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    requireActivity().finish()
-                }
-            }
-        )
-
         binding.setCancelClickListener {
             goBack()
         }

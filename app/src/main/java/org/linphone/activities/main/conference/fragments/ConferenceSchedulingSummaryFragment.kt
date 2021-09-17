@@ -17,42 +17,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.activities.voip.fragments
+package org.linphone.activities.main.conference.fragments
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.navGraphViewModels
 import org.linphone.R
 import org.linphone.activities.GenericFragment
-import org.linphone.activities.voip.viewmodels.CallsViewModel
-import org.linphone.databinding.VoipCallParamsFragmentBinding
+import org.linphone.activities.goBackToDialer
+import org.linphone.activities.main.conference.viewmodels.ConferenceSchedulingViewModel
+import org.linphone.databinding.ConferenceSchedulingSummaryFragmentBinding
 
-class CallParamsFragment : GenericFragment<VoipCallParamsFragmentBinding>() {
-    private lateinit var callsViewModel: CallsViewModel
+class ConferenceSchedulingSummaryFragment : GenericFragment<ConferenceSchedulingSummaryFragmentBinding>() {
+    private val viewModel: ConferenceSchedulingViewModel by navGraphViewModels(R.id.conference_scheduling_nav_graph)
 
-    override fun getLayoutId(): Int = R.layout.voip_call_params_fragment
+    override fun getLayoutId(): Int = R.layout.conference_scheduling_summary_fragment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        callsViewModel = requireActivity().run {
-            ViewModelProvider(this).get(CallsViewModel::class.java)
-        }
-        binding.callsViewModel = callsViewModel
+        binding.viewModel = viewModel
 
-        callsViewModel.noMoreCallEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    requireActivity().finish()
-                }
-            }
-        )
-
-        binding.setCancelClickListener {
+        binding.setBackClickListener {
             goBack()
         }
+
+        binding.setCreateConferenceClickListener {
+            goBackToDialer()
+            viewModel.createConference()
+        }
+
+        viewModel.computeParticipantsData()
     }
 }

@@ -69,7 +69,7 @@ class ControlsViewModel : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
-    val goToCallParamsEvent: MutableLiveData<Event<Boolean>> by lazy {
+    val goToNumpadEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
 
@@ -222,7 +222,8 @@ class ControlsViewModel : ViewModel() {
         goToChatEvent.value = Event(true)
     }
 
-    fun showNumpad() {
+    fun goToNumpad() {
+        goToNumpadEvent.value = Event(true)
     }
 
     fun goToCallsList() {
@@ -231,10 +232,6 @@ class ControlsViewModel : ViewModel() {
 
     fun showCallStats() {
         showCallStatistics.value = Event(true)
-    }
-
-    fun goToCallParams() {
-        goToCallParamsEvent.value = Event(true)
     }
 
     private fun updateUI() {

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/files_nav_graph">
+    <fragment
+        android:id="@+id/textViewerFragment"
+        android:name="org.linphone.activities.main.files.fragments.TextViewerFragment"
+        android:label="TextViewerFragment" />
+    <action
+        android:id="@+id/action_global_textViewerFragment"
+        app:destination="@id/textViewerFragment" />
+    <fragment
+        android:id="@+id/pdfViewerFragment"
+        android:name="org.linphone.activities.main.files.fragments.PdfViewerFragment"
+        android:label="PdfViewerFragment" />
+    <action
+        android:id="@+id/action_global_pdfViewerFragment"
+        app:destination="@id/pdfViewerFragment" />
+    <fragment
+        android:id="@+id/imageViewerFragment"
+        android:name="org.linphone.activities.main.files.fragments.ImageViewerFragment"
+        android:label="ImageViewerFragment" />
+    <action
+        android:id="@+id/action_global_imageViewerFragment"
+        app:destination="@id/imageViewerFragment"/>
+    <fragment
+        android:id="@+id/videoViewerFragment"
+        android:name="org.linphone.activities.main.files.fragments.VideoViewerFragment"
+        android:label="VideoViewerFragment" />
+    <action
+        android:id="@+id/action_global_videoViewerFragment"
+        app:destination="@id/videoViewerFragment"/>
+    <fragment
+        android:id="@+id/audioViewerFragment"
+        android:name="org.linphone.activities.main.files.fragments.AudioViewerFragment"
+        android:label="AudioViewerFragment" />
+    <action
+        android:id="@+id/action_global_audioViewerFragment"
+        app:destination="@id/audioViewerFragment"/>
+    <fragment
+        android:id="@+id/configViewerFragment"
+        android:name="org.linphone.activities.main.dialer.fragments.ConfigViewerFragment"
+        android:label="ConfigViewerFragment" />
+    <action
+        android:id="@+id/action_global_configViewerFragment"
+        app:destination="@id/configViewerFragment" />
+</navigation>

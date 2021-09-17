@@ -33,6 +33,8 @@ import org.linphone.R
 import org.linphone.activities.call.ProximitySensorActivity
 import org.linphone.activities.call.viewmodels.SharedCallViewModel
 import org.linphone.activities.main.MainActivity
+import org.linphone.activities.voip.viewmodels.CallsViewModel
+import org.linphone.activities.voip.viewmodels.ControlsViewModel
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 import org.linphone.databinding.VoipActivityBinding
@@ -40,6 +42,8 @@ import org.linphone.databinding.VoipActivityBinding
 class CallActivity : ProximitySensorActivity() {
     private lateinit var binding: VoipActivityBinding
     private lateinit var sharedViewModel: SharedCallViewModel
+    private lateinit var controlsViewModel: ControlsViewModel
+    private lateinit var callsViewModel: CallsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +65,20 @@ class CallActivity : ProximitySensorActivity() {
                     } else {
                         binding.statsMenu.openDrawer(binding.sideMenuContent, true)
                     }
+                }
+            }
+        )
+
+        controlsViewModel = ViewModelProvider(this).get(ControlsViewModel::class.java)
+        binding.controlsViewModel = controlsViewModel
+
+        callsViewModel = ViewModelProvider(this).get(CallsViewModel::class.java)
+
+        callsViewModel.noMoreCallEvent.observe(
+            this,
+            {
+                it.consume {
+                    finish()
                 }
             }
         )

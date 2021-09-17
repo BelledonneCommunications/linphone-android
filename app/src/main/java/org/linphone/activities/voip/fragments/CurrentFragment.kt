@@ -19,19 +19,19 @@
  */
 package org.linphone.activities.voip.fragments
 
-import android.content.Intent
 import android.os.Bundle
+import android.os.SystemClock
 import android.view.View
+import android.widget.Chronometer
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
-import org.linphone.activities.GenericFragment
+import org.linphone.activities.*
 import org.linphone.activities.call.viewmodels.SharedCallViewModel
-import org.linphone.activities.main.MainActivity
-import org.linphone.activities.navigateToCallParams
 import org.linphone.activities.navigateToCallsList
 import org.linphone.activities.navigateToConferenceParticipants
+import org.linphone.activities.navigateToNumpad
 import org.linphone.activities.voip.viewmodels.CallsViewModel
 import org.linphone.activities.voip.viewmodels.ConferenceViewModel
 import org.linphone.activities.voip.viewmodels.ControlsViewModel
@@ -72,11 +72,24 @@ class CurrentFragment : GenericFragment<VoipCurrentFragmentBindingImpl>() {
         }
         binding.conferenceViewModel = conferenceViewModel
 
-        callsViewModel.noMoreCallEvent.observe(
+        conferenceViewModel.isInConference.observe(
             viewLifecycleOwner,
             {
-                it.consume {
-                    requireActivity().finish()
+                if (it) {
+                    val timer = binding.root.findViewById<Chronometer>(R.id.conference_timer)
+                    timer.start()
+                }
+            }
+        )
+
+        callsViewModel.currentCallData.observe(
+            viewLifecycleOwner,
+            {
+                if (it != null) {
+                    val timer = binding.root.findViewById<Chronometer>(R.id.active_call_timer)
+                    timer.base =
+                        SystemClock.elapsedRealtime() - (1000 * it.call.duration) // Linphone timestamps are in seconds
+                    timer.start()
                 }
             }
         )
@@ -95,11 +108,18 @@ class CurrentFragment : GenericFragment<VoipCurrentFragmentBindingImpl>() {
             viewLifecycleOwner,
             {
                 it.consume {
-                    val intent = Intent()
-                    intent.setClass(requireContext(), MainActivity::class.java)
-                    intent.putExtra("Chat", true)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
+                    val remoteSipUri = if (conferenceViewModel.isInConference.value == true) {
+                        conferenceViewModel.conferenceAddress.value?.asStringUriOnly()
+                    } else {
+                        coreContext.core.currentCall?.remoteAddress?.asStringUriOnly()
+                    }
+
+                    val bundle = Bundle()
+                    bundle.putString("RemoteSipUri", remoteSipUri)
+                    bundle.putString("LocalSipUri", coreContext.core.defaultAccount?.params?.identityAddress?.asStringUriOnly())
+
+                    controlsViewModel.hideExtraButtons()
+                    navigateToChat(bundle)
                 }
             }
         )
@@ -124,12 +144,12 @@ class CurrentFragment : GenericFragment<VoipCurrentFragmentBindingImpl>() {
             }
         )
 
-        controlsViewModel.goToCallParamsEvent.observe(
+        controlsViewModel.goToNumpadEvent.observe(
             viewLifecycleOwner,
             {
                 it.consume {
                     controlsViewModel.hideExtraButtons()
-                    navigateToCallParams()
+                    navigateToNumpad()
                 }
             }
         )
