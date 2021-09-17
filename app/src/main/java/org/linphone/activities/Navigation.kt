@@ -154,6 +154,14 @@ internal fun DialerFragment.navigateToConfigFileViewer() {
     )
 }
 
+internal fun DialerFragment.navigateToConferenceScheduling() {
+    findMasterNavController().navigate(
+        R.id.action_global_conferenceSchedulingFragment,
+        null,
+        popupTo()
+    )
+}
+
 /* Chat related */
 
 internal fun MasterChatRoomsFragment.navigateToChatRoom(args: Bundle) {
