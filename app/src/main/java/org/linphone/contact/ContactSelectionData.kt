@@ -17,16 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.activities.main.chat.data
+package org.linphone.contact
 
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.contact.Contact
-import org.linphone.contact.ContactDataInterface
 import org.linphone.core.*
 import org.linphone.utils.LinphoneUtils
 
-class ChatRoomCreationContactData(private val searchResult: SearchResult) : ContactDataInterface {
+class ContactSelectionData(private val searchResult: SearchResult) : ContactDataInterface {
     override val contact: MutableLiveData<Contact> = MutableLiveData<Contact>()
     override val displayName: MutableLiveData<String> = MutableLiveData<String>()
     override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()

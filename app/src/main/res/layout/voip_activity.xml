@@ -5,6 +5,9 @@
 
     <data>
         <import type="android.view.View" />
+        <variable
+            name="controlsViewModel"
+            type="org.linphone.activities.voip.viewmodels.ControlsViewModel" />
     </data>
 
     <androidx.drawerlayout.widget.DrawerLayout
@@ -20,6 +23,7 @@
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/status_fragment"
+                android:visibility="@{controlsViewModel.fullScreenMode ? View.GONE : View.VISIBLE}"
                 android:name="org.linphone.activities.call.fragments.StatusFragment"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/status_fragment_size"
