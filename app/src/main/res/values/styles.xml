@@ -89,6 +89,13 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <!-- Conference scheduling related -->
+
+    <style name="conference_scheduling_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/voip_dark_gray</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
     <!-- Call related -->
 
     <style name="call_remote_name_font" parent="@android:style/TextAppearance.Medium">
@@ -334,6 +341,12 @@
     <style name="file_transfer_progress_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">?attr/secondaryTextColor</item>
         <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="big_orange_button_font" parent="@android:style/TextAppearance.Large">
+        <item name="android:textColor">@color/white_color</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">15sp</item>
     </style>
 
 </resources>
