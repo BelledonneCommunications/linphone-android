@@ -172,4 +172,32 @@
     <action
         android:id="@+id/action_global_configViewerFragment"
         app:destination="@id/configViewerFragment" />
+    <action
+        android:id="@+id/action_global_conferenceSchedulingFragment"
+        app:destination="@id/conference_scheduling_nav_graph" />
+
+    <navigation android:id="@+id/conference_scheduling_nav_graph"
+        app:startDestination="@id/conferenceSchedulingFragment">
+        <fragment
+            android:id="@+id/conferenceSchedulingSummaryFragment"
+            android:name="org.linphone.activities.main.conference.fragments.ConferenceSchedulingSummaryFragment"
+            android:label="ConferenceSchedulingSummaryFragment" />
+        <fragment
+            android:id="@+id/conferenceSchedulingFragment"
+            android:name="org.linphone.activities.main.conference.fragments.ConferenceSchedulingFragment"
+            android:label="ConferenceSchedulingFragment">
+            <action
+                android:id="@+id/action_conferenceSchedulingFragment_to_conferenceSchedulingParticipantsListFragment"
+                app:destination="@id/conferenceSchedulingParticipantsListFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/conferenceSchedulingParticipantsListFragment"
+            android:name="org.linphone.activities.main.conference.fragments.ConferenceSchedulingParticipantsListFragment"
+            android:label="ConferenceSchedulingParticipantsListFragment">
+            <action
+                android:id="@+id/action_conferenceSchedulingParticipantsListFragment_to_conferenceSchedulingSummaryFragment"
+                app:destination="@id/conferenceSchedulingSummaryFragment" />
+        </fragment>
+    </navigation>
+
 </navigation>
