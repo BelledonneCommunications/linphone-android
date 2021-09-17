@@ -17,8 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.activities.main.chat.adapters
+package org.linphone.contact
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -29,38 +30,42 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
-import org.linphone.activities.main.chat.data.ChatRoomCreationContactData
 import org.linphone.core.Address
 import org.linphone.core.FriendCapability
 import org.linphone.core.SearchResult
-import org.linphone.databinding.ChatRoomCreationContactCellBinding
+import org.linphone.databinding.ContactSelectionCellBinding
 import org.linphone.utils.Event
 
-class ChatRoomCreationContactsAdapter(
+class ContactsSelectionAdapter(
     private val viewLifecycleOwner: LifecycleOwner
 ) : ListAdapter<SearchResult, RecyclerView.ViewHolder>(SearchResultDiffCallback()) {
     val selectedContact = MutableLiveData<Event<SearchResult>>()
 
-    var groupChatEnabled: Boolean = false
-
     private var selectedAddresses = ArrayList<Address>()
 
-    private var securityEnabled: Boolean = false
+    private var requireGroupChatCapability: Boolean = false
+    private var requireLimeCapability: Boolean = false
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateSelectedAddresses(selection: ArrayList<Address>) {
         selectedAddresses = selection
         notifyDataSetChanged()
     }
 
-    fun updateSecurity(enabled: Boolean) {
-        securityEnabled = enabled
+    @SuppressLint("NotifyDataSetChanged")
+    fun setLimeCapabilityRequired(enabled: Boolean) {
+        requireLimeCapability = enabled
         notifyDataSetChanged()
     }
 
+    fun setGroupChatCapabilityRequired(enabled: Boolean) {
+        requireGroupChatCapability = enabled
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val binding: ChatRoomCreationContactCellBinding = DataBindingUtil.inflate(
+        val binding: ContactSelectionCellBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
-            R.layout.chat_room_creation_contact_cell, parent, false
+            R.layout.contact_selection_cell, parent, false
         )
         return ViewHolder(binding)
     }
@@ -70,16 +75,16 @@ class ChatRoomCreationContactsAdapter(
     }
 
     inner class ViewHolder(
-        private val binding: ChatRoomCreationContactCellBinding
+        private val binding: ContactSelectionCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(searchResult: SearchResult) {
             with(binding) {
-                val searchResultViewModel = ChatRoomCreationContactData(searchResult)
+                val searchResultViewModel = ContactSelectionData(searchResult)
                 data = searchResultViewModel
 
                 lifecycleOwner = viewLifecycleOwner
 
-                updateSecurity(searchResult, searchResultViewModel, securityEnabled)
+                updateSecurity(searchResult, searchResultViewModel, requireLimeCapability)
 
                 val selected = selectedAddresses.find { address ->
                     val searchAddress = searchResult.address
@@ -97,13 +102,13 @@ class ChatRoomCreationContactsAdapter(
 
         private fun updateSecurity(
             searchResult: SearchResult,
-            viewModel: ChatRoomCreationContactData,
+            viewModel: ContactSelectionData,
             securityEnabled: Boolean
         ) {
             val searchAddress = searchResult.address
             val isMyself = securityEnabled && searchAddress != null && coreContext.core.defaultAccount?.params?.identityAddress?.weakEqual(searchAddress) ?: false
             val limeCheck = !securityEnabled || (securityEnabled && searchResult.hasCapability(FriendCapability.LimeX3Dh))
-            val groupCheck = !groupChatEnabled || (groupChatEnabled && searchResult.hasCapability(FriendCapability.GroupChat))
+            val groupCheck = !requireGroupChatCapability || (requireGroupChatCapability && searchResult.hasCapability(FriendCapability.GroupChat))
             val disabled = if (searchResult.friend != null) !limeCheck || !groupCheck || isMyself else false // Generated entry from search filter
 
             viewModel.isDisabled.value = disabled

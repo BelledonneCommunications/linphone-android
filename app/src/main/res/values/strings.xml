@@ -224,6 +224,18 @@
     <!-- Recordings -->
     <string name="recordings_empty_list">No recordings</string>
 
+    <!-- Conferencing -->
+    <string name="conference_schedule_title">Start a conference</string>
+    <string name="conference_schedule_later">Do you want to schedule this conference for later?</string>
+    <string name="conference_schedule_subject">Conference subject</string>
+    <string name="conference_schedule_address">Conference address</string>
+    <string name="conference_schedule_send_invite_chat">Send invite via Linphone</string>
+    <string name="conference_schedule_send_invite_email">Send invite via email</string>
+    <string name="conference_schedule_participants_list">Participants list</string>
+    <string name="conference_schedule_create">Create conference</string>
+    <string name="conference_paused_title">You are currently out of the conference.</string>
+    <string name="conference_paused_subtitle">Click on play button to join it back.</string>
+
     <!-- Call -->
     <string name="call_incoming_title">Incoming Call</string>
     <string name="call_outgoing_title">Outgoing Call</string>
@@ -740,4 +752,6 @@
     <string name="content_description_pause_voice_recording_playback">Pause voice recording</string>
     <string name="content_description_play_voice_recording">Play voice recording</string>
     <string name="content_description_call_context_menu">Open call context menu</string>
+    <string name="content_description_create_conference">Create a conference call</string>
+    <string name="content_description_copy_conference_address">Copy conference address</string>
 </resources>
