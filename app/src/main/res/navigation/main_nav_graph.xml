@@ -172,4 +172,19 @@
     <action
         android:id="@+id/action_global_configViewerFragment"
         app:destination="@id/configViewerFragment" />
+    <fragment
+        android:id="@+id/conferenceSchedulingFragment"
+        android:name="org.linphone.activities.main.conference.fragments.ConferenceSchedulingFragment"
+        android:label="ConferenceSchedulingFragment" >
+        <action
+            android:id="@+id/action_conferenceSchedulingFragment_to_conferenceSchedulingParticipantsListFragment"
+            app:destination="@id/conferenceSchedulingParticipantsListFragment" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_conferenceSchedulingFragment"
+        app:destination="@id/conferenceSchedulingFragment" />
+    <fragment
+        android:id="@+id/conferenceSchedulingParticipantsListFragment"
+        android:name="org.linphone.activities.main.conference.fragments.ConferenceSchedulingParticipantsListFragment"
+        android:label="ConferenceSchedulingParticipantsListFragment" />
 </navigation>
