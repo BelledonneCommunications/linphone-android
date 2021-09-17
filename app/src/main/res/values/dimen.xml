@@ -48,4 +48,5 @@
     <dimen name="voip_top_bar_square_button_size">40dp</dimen>
     <dimen name="voip_call_extra_buttons_height">200dp</dimen>
     <dimen name="voip_call_extra_buttons_translate_y">210dp</dimen>
+    <dimen name="conference_scheduling_participant_cell_height">60dp</dimen>
 </resources>

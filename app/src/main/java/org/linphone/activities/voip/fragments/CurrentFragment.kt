@@ -21,7 +21,9 @@ package org.linphone.activities.voip.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.SystemClock
 import android.view.View
+import android.widget.Chronometer
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -71,6 +73,28 @@ class CurrentFragment : GenericFragment<VoipCurrentFragmentBindingImpl>() {
             ViewModelProvider(this).get(ConferenceViewModel::class.java)
         }
         binding.conferenceViewModel = conferenceViewModel
+
+        conferenceViewModel.isInConference.observe(
+            viewLifecycleOwner,
+            {
+                if (it) {
+                    val timer = binding.root.findViewById<Chronometer>(R.id.conference_timer)
+                    timer.start()
+                }
+            }
+        )
+
+        callsViewModel.currentCallData.observe(
+            viewLifecycleOwner,
+            {
+                if (it != null) {
+                    val timer = binding.root.findViewById<Chronometer>(R.id.active_call_timer)
+                    timer.base =
+                        SystemClock.elapsedRealtime() - (1000 * it.call.duration) // Linphone timestamps are in seconds
+                    timer.start()
+                }
+            }
+        )
 
         callsViewModel.noMoreCallEvent.observe(
             viewLifecycleOwner,
