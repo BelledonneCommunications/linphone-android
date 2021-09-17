@@ -762,6 +762,16 @@ internal fun CurrentFragment.navigateToCallsList() {
     }
 }
 
+internal fun CurrentFragment.navigateToCallParams() {
+    if (findNavController().currentDestination?.id == R.id.currentFragment) {
+        findNavController().navigate(
+            R.id.action_currentFragment_to_callParamsFragment,
+            null,
+            popupTo()
+        )
+    }
+}
+
 /* Assistant related */
 
 internal fun WelcomeFragment.navigateToEmailAccountCreation() {

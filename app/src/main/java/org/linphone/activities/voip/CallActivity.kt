@@ -22,13 +22,16 @@ package org.linphone.activities.voip
 import android.content.Intent
 import android.content.res.Resources
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.*
-import org.linphone.LinphoneApplication
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.call.ProximitySensorActivity
+import org.linphone.activities.call.viewmodels.SharedCallViewModel
 import org.linphone.activities.main.MainActivity
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
@@ -36,6 +39,7 @@ import org.linphone.databinding.VoipActivityBinding
 
 class CallActivity : ProximitySensorActivity() {
     private lateinit var binding: VoipActivityBinding
+    private lateinit var sharedViewModel: SharedCallViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +49,21 @@ class CallActivity : ProximitySensorActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.voip_activity)
         binding.lifecycleOwner = this
+
+        sharedViewModel = ViewModelProvider(this).get(SharedCallViewModel::class.java)
+
+        sharedViewModel.toggleDrawerEvent.observe(
+            this,
+            {
+                it.consume {
+                    if (binding.statsMenu.isDrawerOpen(Gravity.LEFT)) {
+                        binding.statsMenu.closeDrawer(binding.sideMenuContent, true)
+                    } else {
+                        binding.statsMenu.openDrawer(binding.sideMenuContent, true)
+                    }
+                }
+            }
+        )
     }
 
     override fun onResume() {
@@ -65,7 +84,7 @@ class CallActivity : ProximitySensorActivity() {
             coreContext.removeCallOverlay()
         }
 
-        if (LinphoneApplication.corePreferences.fullScreenCallUI) {
+        if (corePreferences.fullScreenCallUI) {
             hideSystemUI()
             window.decorView.setOnSystemUiVisibilityChangeListener { visibility ->
                 if (visibility and View.SYSTEM_UI_FLAG_FULLSCREEN == 0) {
@@ -98,7 +117,7 @@ class CallActivity : ProximitySensorActivity() {
 
     override fun getTheme(): Resources.Theme {
         val theme = super.getTheme()
-        if (LinphoneApplication.corePreferences.fullScreenCallUI) {
+        if (corePreferences.fullScreenCallUI) {
             theme.applyStyle(R.style.FullScreenTheme, true)
         }
         return theme

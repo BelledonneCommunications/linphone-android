@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_currentFragment_to_callsListFragment"
             app:destination="@id/callsListFragment" />
+        <action
+            android:id="@+id/action_currentFragment_to_callParamsFragment"
+            app:destination="@id/callParamsFragment" />
     </fragment>
 
     <fragment
@@ -20,5 +23,11 @@
         android:name="org.linphone.activities.voip.fragments.CallsListFragment"
         tools:layout="@layout/voip_calls_list_fragment"
         android:label="CallsListFragment" />
+
+    <fragment
+        android:id="@+id/callParamsFragment"
+        android:name="org.linphone.activities.voip.fragments.CallParamsFragment"
+        tools:layout="@layout/voip_call_params_fragment"
+        android:label="CallParamsFragment" />
 
 </navigation>

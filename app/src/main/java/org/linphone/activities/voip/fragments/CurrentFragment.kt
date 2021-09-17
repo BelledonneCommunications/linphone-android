@@ -26,6 +26,8 @@ import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.GenericFragment
+import org.linphone.activities.call.viewmodels.SharedCallViewModel
+import org.linphone.activities.navigateToCallParams
 import org.linphone.activities.navigateToCallsList
 import org.linphone.activities.voip.viewmodels.CallsViewModel
 import org.linphone.activities.voip.viewmodels.ConferenceViewModel
@@ -33,8 +35,10 @@ import org.linphone.activities.voip.viewmodels.ControlsViewModel
 import org.linphone.activities.voip.views.RoundCornersTextureView
 import org.linphone.databinding.VoipCurrentFragmentBindingImpl
 import org.linphone.mediastream.video.capture.CaptureTextureView
+import org.linphone.utils.Event
 
 class CurrentFragment : GenericFragment<VoipCurrentFragmentBindingImpl>() {
+    private lateinit var sharedViewModel: SharedCallViewModel
     private lateinit var controlsViewModel: ControlsViewModel
     private lateinit var callsViewModel: CallsViewModel
     private lateinit var conferenceViewModel: ConferenceViewModel
@@ -45,6 +49,10 @@ class CurrentFragment : GenericFragment<VoipCurrentFragmentBindingImpl>() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
+
+        sharedViewModel = requireActivity().run {
+            ViewModelProvider(this).get(SharedCallViewModel::class.java)
+        }
 
         controlsViewModel = requireActivity().run {
             ViewModelProvider(this).get(ControlsViewModel::class.java)
@@ -76,6 +84,26 @@ class CurrentFragment : GenericFragment<VoipCurrentFragmentBindingImpl>() {
                 it.consume {
                     controlsViewModel.hideExtraButtons()
                     navigateToCallsList()
+                }
+            }
+        )
+
+        controlsViewModel.showCallStatistics.observe(
+            viewLifecycleOwner,
+            {
+                it.consume {
+                    controlsViewModel.hideExtraButtons()
+                    sharedViewModel.toggleDrawerEvent.value = Event(true)
+                }
+            }
+        )
+
+        controlsViewModel.goToCallParamsEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume {
+                    controlsViewModel.hideExtraButtons()
+                    navigateToCallParams()
                 }
             }
         )

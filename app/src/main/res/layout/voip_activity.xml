@@ -7,30 +7,55 @@
         <import type="android.view.View" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/stats_menu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/voip_gray_blue_color">
+        android:keepScreenOn="true">
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/status_fragment"
-            android:name="org.linphone.activities.call.fragments.StatusFragment"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/status_fragment_size"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:layout="@layout/call_status_fragment" />
+            android:layout_height="match_parent"
+            android:background="@color/voip_gray_blue_color">
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/nav_host_fragment"
-            android:name="androidx.navigation.fragment.NavHostFragment"
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/status_fragment"
+                android:name="org.linphone.activities.call.fragments.StatusFragment"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/status_fragment_size"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout="@layout/call_status_fragment" />
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/nav_host_fragment"
+                android:name="androidx.navigation.fragment.NavHostFragment"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:defaultNavHost="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/status_fragment"
+                app:navGraph="@navigation/call_nav_graph"
+                tools:layout="@layout/voip_current_fragment" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Side Menu -->
+        <RelativeLayout
+            android:id="@+id/side_menu_content"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:defaultNavHost="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/status_fragment"
-            app:navGraph="@navigation/call_nav_graph"
-            tools:layout="@layout/voip_current_fragment" />
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/status_fragment_size"
+            android:layout_gravity="left">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/stats_fragment"
+                android:name="org.linphone.activities.call.fragments.StatisticsFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:layout="@layout/call_statistics_fragment" />
+
+        </RelativeLayout>
+
+    </androidx.drawerlayout.widget.DrawerLayout>
 
 </layout>

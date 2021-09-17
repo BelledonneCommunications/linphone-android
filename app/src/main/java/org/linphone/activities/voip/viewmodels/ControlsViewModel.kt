@@ -28,6 +28,7 @@ import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.AudioRouteUtils
 import org.linphone.utils.Event
+import org.linphone.utils.FileUtils
 import org.linphone.utils.PermissionHelper
 
 class ControlsViewModel : ViewModel() {
@@ -50,6 +51,14 @@ class ControlsViewModel : ViewModel() {
     val fullScreenMode = MutableLiveData<Boolean>()
 
     val goToCallsListEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
+    val showCallStatistics: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
+    val goToCallParamsEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
 
@@ -162,7 +171,9 @@ class ControlsViewModel : ViewModel() {
     }
 
     fun switchCamera() {
-        coreContext.switchCamera()
+        // coreContext.switchCamera()
+        val fileName = System.currentTimeMillis().toString() + ".jpeg"
+        coreContext.core.currentCall?.takePreviewSnapshot(FileUtils.getFileStoragePath(fileName).absolutePath)
     }
 
     fun showExtraButtons() {
@@ -180,6 +191,14 @@ class ControlsViewModel : ViewModel() {
 
     fun goToCallsList() {
         goToCallsListEvent.value = Event(true)
+    }
+
+    fun showCallStats() {
+        showCallStatistics.value = Event(true)
+    }
+
+    fun goToCallParams() {
+        goToCallParamsEvent.value = Event(true)
     }
 
     private fun updateUI() {
