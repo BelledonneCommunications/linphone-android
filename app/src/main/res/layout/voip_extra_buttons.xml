@@ -10,102 +10,94 @@
             type="org.linphone.activities.voip.viewmodels.ControlsViewModel" />
     </data>
 
-    <RelativeLayout
-        android:onClick="@{() -> viewModel.hideExtraButtons()}"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#99444444">
+        android:layout_height="@dimen/voip_call_extra_buttons_height"
+        android:gravity="center"
+        android:padding="10dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/shape_extra_buttons_background"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:padding="10dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/shape_extra_buttons_background"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                app:drawableTopCompat="@drawable/icon_call_participants"
+                android:gravity="center"
+                style="@style/call_options_font"
+                android:text="@string/call_action_participants_list"/>
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_margin="10dp"
-                    app:drawableTopCompat="@drawable/icon_call_participants"
-                    android:gravity="center"
-                    style="@style/call_options_font"
-                    android:text="@string/call_action_participants_list"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_margin="10dp"
-                    app:drawableTopCompat="@drawable/icon_call_chat"
-                    android:gravity="center"
-                    style="@style/call_options_font"
-                    android:text="@string/call_action_chat"/>
-
-                <TextView
-                    android:onClick="@{() -> viewModel.goToCallsList()}"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_margin="10dp"
-                    app:drawableTopCompat="@drawable/icon_calls_list"
-                    android:gravity="center"
-                    style="@style/call_options_font"
-                    android:text="@string/call_action_calls_list"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                app:drawableTopCompat="@drawable/icon_call_chat"
+                android:gravity="center"
+                style="@style/call_options_font"
+                android:text="@string/call_action_chat"/>
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_margin="10dp"
-                    app:drawableTopCompat="@drawable/icon_call_numpad"
-                    android:gravity="center"
-                    style="@style/call_options_font"
-                    android:text="@string/call_action_numpad"/>
-
-                <TextView
-                    android:onClick="@{() -> viewModel.showCallStats()}"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_margin="10dp"
-                    app:drawableTopCompat="@drawable/icon_call_stats"
-                    android:gravity="center"
-                    style="@style/call_options_font"
-                    android:text="@string/call_action_statistics"/>
-
-                <TextView
-                    android:onClick="@{() -> viewModel.goToCallParams()}"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_margin="10dp"
-                    app:drawableTopCompat="@drawable/icon_call_settings"
-                    android:gravity="center"
-                    style="@style/call_options_font"
-                    android:text="@string/call_action_settings" />
-
-            </LinearLayout>
+            <TextView
+                android:onClick="@{() -> viewModel.goToCallsList()}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                app:drawableTopCompat="@drawable/icon_calls_list"
+                android:gravity="center"
+                style="@style/call_options_font"
+                android:text="@string/call_action_calls_list"/>
 
         </LinearLayout>
 
-    </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                app:drawableTopCompat="@drawable/icon_call_numpad"
+                android:gravity="center"
+                style="@style/call_options_font"
+                android:text="@string/call_action_numpad"/>
+
+            <TextView
+                android:onClick="@{() -> viewModel.showCallStats()}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                app:drawableTopCompat="@drawable/icon_call_stats"
+                android:gravity="center"
+                style="@style/call_options_font"
+                android:text="@string/call_action_statistics"/>
+
+            <TextView
+                android:onClick="@{() -> viewModel.goToCallParams()}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                app:drawableTopCompat="@drawable/icon_call_settings"
+                android:gravity="center"
+                style="@style/call_options_font"
+                android:text="@string/call_action_settings" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </layout>

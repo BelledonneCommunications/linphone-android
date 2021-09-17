@@ -75,12 +75,21 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:viewModel="@{controlsViewModel}" />
 
-        <include
-            layout="@layout/voip_extra_buttons"
+        <LinearLayout
+            android:onClick="@{() -> controlsViewModel.hideExtraButtons()}"
             android:visibility="@{controlsViewModel.showExtras ? View.VISIBLE : View.GONE, default=gone}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:viewModel="@{controlsViewModel}" />
+            android:background="#99444444" />
+
+        <include
+            layout="@layout/voip_extra_buttons"
+            android:translationY="@{controlsViewModel.extraButtonsMenuTranslateY, default=@dimen/voip_call_extra_buttons_translate_y}"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/voip_call_extra_buttons_height"
+            android:layout_margin="10dp"
+            app:viewModel="@{controlsViewModel}"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

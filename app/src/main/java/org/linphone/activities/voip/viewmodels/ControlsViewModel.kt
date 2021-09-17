@@ -19,16 +19,19 @@
  */
 package org.linphone.activities.voip.viewmodels
 
+import android.animation.ValueAnimator
 import android.view.MotionEvent
 import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.R
 import org.linphone.core.*
 import org.linphone.core.tools.Log
+import org.linphone.utils.AppUtils
 import org.linphone.utils.AudioRouteUtils
 import org.linphone.utils.Event
-import org.linphone.utils.FileUtils
 import org.linphone.utils.PermissionHelper
 
 class ControlsViewModel : ViewModel() {
@@ -114,14 +117,28 @@ class ControlsViewModel : ViewModel() {
         }
     }
 
+    val extraButtonsMenuTranslateY = MutableLiveData<Float>()
+    private val extraButtonsMenuAnimator: ValueAnimator by lazy {
+        ValueAnimator.ofFloat(AppUtils.getDimension(R.dimen.voip_call_extra_buttons_translate_y), 0f).apply {
+            addUpdateListener {
+                val value = it.animatedValue as Float
+                extraButtonsMenuTranslateY.value = value
+            }
+            duration = if (corePreferences.enableAnimations) 500 else 0
+        }
+    }
+
     init {
         coreContext.core.addListener(listener)
+        extraButtonsMenuTranslateY.value = AppUtils.getDimension(R.dimen.voip_call_extra_buttons_translate_y)
 
         updateUI()
     }
 
     override fun onCleared() {
         coreContext.core.removeListener(listener)
+        extraButtonsMenuAnimator.end()
+
         super.onCleared()
     }
 
@@ -171,16 +188,16 @@ class ControlsViewModel : ViewModel() {
     }
 
     fun switchCamera() {
-        // coreContext.switchCamera()
-        val fileName = System.currentTimeMillis().toString() + ".jpeg"
-        coreContext.core.currentCall?.takePreviewSnapshot(FileUtils.getFileStoragePath(fileName).absolutePath)
+        coreContext.switchCamera()
     }
 
     fun showExtraButtons() {
+        extraButtonsMenuAnimator.start()
         showExtras.value = true
     }
 
     fun hideExtraButtons() {
+        extraButtonsMenuAnimator.reverse()
         showExtras.value = false
     }
 

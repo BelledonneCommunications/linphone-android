@@ -46,4 +46,6 @@
     <dimen name="voip_call_context_menu_item_height">50dp</dimen>
     <dimen name="voip_call_context_menu_width">250dp</dimen>
     <dimen name="voip_top_bar_square_button_size">40dp</dimen>
+    <dimen name="voip_call_extra_buttons_height">200dp</dimen>
+    <dimen name="voip_call_extra_buttons_translate_y">210dp</dimen>
 </resources>

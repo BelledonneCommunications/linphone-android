@@ -97,6 +97,11 @@ fun View.setLayoutSize(dimension: Float) {
     this.layoutParams.width = dimension.toInt()
 }
 
+@BindingAdapter("backgroundImage")
+fun LinearLayout.setBackgroundImage(resource: Int) {
+    this.setBackgroundResource(resource)
+}
+
 @Suppress("DEPRECATION")
 @BindingAdapter("style")
 fun TextView.setStyle(resource: Int) {
