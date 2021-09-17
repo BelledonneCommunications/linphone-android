@@ -58,9 +58,12 @@ class CallsViewModel : ViewModel() {
                     currentCallData.value?.destroy()
                     noMoreCallEvent.value = Event(true)
                 }
+                removeCallFromList(call)
+            } else if (state == Call.State.IncomingEarlyMedia || state == Call.State.IncomingReceived || state == Call.State.OutgoingInit) {
+                if (call != core.currentCall) {
+                    addCallToList(call)
+                }
             }
-
-            updateCallsList()
         }
     }
 
@@ -75,7 +78,7 @@ class CallsViewModel : ViewModel() {
             currentCallData.value = viewModel
         }
 
-        updateCallsList()
+        initCallList()
     }
 
     override fun onCleared() {
@@ -87,8 +90,7 @@ class CallsViewModel : ViewModel() {
         super.onCleared()
     }
 
-    private fun updateCallsList() {
-        callsData.value.orEmpty().forEach(CallData::destroy)
+    private fun initCallList() {
         val calls = arrayListOf<CallData>()
 
         for (call in coreContext.core.calls) {
@@ -100,6 +102,30 @@ class CallsViewModel : ViewModel() {
             Log.i("[Calls] Adding call ${call.callLog.callId} to calls list")
             calls.add(data)
         }
+
+        callsData.value = calls
+    }
+
+    private fun addCallToList(call: Call) {
+        Log.i("[Calls] Adding call ${call.callLog.callId} to calls list")
+
+        val calls = arrayListOf<CallData>()
+        calls.addAll(callsData.value.orEmpty())
+
+        val data = CallData(call)
+        calls.add(data)
+
+        callsData.value = calls
+    }
+
+    private fun removeCallFromList(call: Call) {
+        Log.i("[Calls] Removing call ${call.callLog.callId} from calls list")
+
+        val calls = arrayListOf<CallData>()
+        calls.addAll(callsData.value.orEmpty())
+
+        val data = calls.find { it.call == call }
+        calls.remove(data)
 
         callsData.value = calls
     }

@@ -6,8 +6,11 @@
     <data>
         <import type="android.view.View" />
         <variable
-            name="viewModel"
+            name="controlsViewModel"
             type="org.linphone.activities.voip.viewmodels.ControlsViewModel" />
+        <variable
+            name="conferenceViewModel"
+            type="org.linphone.activities.voip.viewmodels.ConferenceViewModel" />
     </data>
 
     <LinearLayout
@@ -27,7 +30,8 @@
             android:orientation="horizontal">
 
             <TextView
-                android:onClick="@{() -> viewModel.goToConferenceParticipantsList()}"
+                android:onClick="@{() -> controlsViewModel.goToConferenceParticipantsList()}"
+                android:visibility="@{conferenceViewModel.isInConference ? View.VISIBLE : View.GONE, default=gone}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -38,7 +42,7 @@
                 android:text="@string/call_action_participants_list"/>
 
             <TextView
-                android:onClick="@{() -> viewModel.goToChat()}"
+                android:onClick="@{() -> controlsViewModel.goToChat()}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -49,7 +53,7 @@
                 android:text="@string/call_action_chat"/>
 
             <TextView
-                android:onClick="@{() -> viewModel.goToCallsList()}"
+                android:onClick="@{() -> controlsViewModel.goToCallsList()}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -67,7 +71,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:onClick="@{() -> viewModel.showNumpad()}"
+                android:onClick="@{() -> controlsViewModel.showNumpad()}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -78,7 +82,7 @@
                 android:text="@string/call_action_numpad"/>
 
             <TextView
-                android:onClick="@{() -> viewModel.showCallStats()}"
+                android:onClick="@{() -> controlsViewModel.showCallStats()}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -89,7 +93,8 @@
                 android:text="@string/call_action_statistics"/>
 
             <TextView
-                android:onClick="@{() -> viewModel.goToCallParams()}"
+                android:onClick="@{() -> controlsViewModel.goToCallParams()}"
+                android:visibility="gone"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
