@@ -25,14 +25,12 @@ import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.voip.viewmodels.CallsViewModel
-import org.linphone.activities.voip.viewmodels.ConferenceViewModel
-import org.linphone.databinding.VoipConferenceParticipantsFragmentBinding
+import org.linphone.databinding.VoipNumpadFragmentBinding
 
-class ConferenceParticipantsFragment : GenericFragment<VoipConferenceParticipantsFragmentBinding>() {
+class NumpadFragment : GenericFragment<VoipNumpadFragmentBinding>() {
     private lateinit var callsViewModel: CallsViewModel
-    private lateinit var conferenceViewModel: ConferenceViewModel
 
-    override fun getLayoutId(): Int = R.layout.voip_conference_participants_fragment
+    override fun getLayoutId(): Int = R.layout.voip_numpad_fragment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -43,11 +41,6 @@ class ConferenceParticipantsFragment : GenericFragment<VoipConferenceParticipant
             ViewModelProvider(this).get(CallsViewModel::class.java)
         }
         binding.callsViewModel = callsViewModel
-
-        conferenceViewModel = requireActivity().run {
-            ViewModelProvider(this).get(ConferenceViewModel::class.java)
-        }
-        binding.conferenceViewModel = conferenceViewModel
 
         binding.setCancelClickListener {
             goBack()

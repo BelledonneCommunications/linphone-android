@@ -19,6 +19,7 @@
  */
 package org.linphone.activities.voip.viewmodels
 
+import android.Manifest
 import android.animation.ValueAnimator
 import android.view.MotionEvent
 import android.view.View
@@ -69,8 +70,12 @@ class ControlsViewModel : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
-    val goToCallParamsEvent: MutableLiveData<Event<Boolean>> by lazy {
+    val goToNumpadEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
+    }
+
+    val askPermissionEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
     }
 
     private var previewX: Float = 0f
@@ -105,9 +110,15 @@ class ControlsViewModel : ViewModel() {
             message: String
         ) {
             Log.i("[Call Controls] State changed: $state")
+
             if (state == Call.State.StreamsRunning) {
                 isVideoUpdateInProgress.value = false
             }
+
+            if (coreContext.isVideoCallOrConferenceActive() && !PermissionHelper.get().hasCameraPermission()) {
+                askPermissionEvent.value = Event(Manifest.permission.CAMERA)
+            }
+
             updateUI()
         }
 
@@ -160,6 +171,11 @@ class ControlsViewModel : ViewModel() {
     }
 
     fun toggleMuteMicrophone() {
+        if (!PermissionHelper.get().hasRecordAudioPermission()) {
+            askPermissionEvent.value = Event(Manifest.permission.RECORD_AUDIO)
+            return
+        }
+
         val micEnabled = coreContext.core.micEnabled()
         coreContext.core.enableMic(!micEnabled)
         updateMicState()
@@ -174,6 +190,11 @@ class ControlsViewModel : ViewModel() {
     }
 
     fun toggleVideo() {
+        if (!PermissionHelper.get().hasCameraPermission()) {
+            askPermissionEvent.value = Event(Manifest.permission.CAMERA)
+            return
+        }
+
         val core = coreContext.core
         val currentCall = core.currentCall
         val conference = core.conference
@@ -222,7 +243,8 @@ class ControlsViewModel : ViewModel() {
         goToChatEvent.value = Event(true)
     }
 
-    fun showNumpad() {
+    fun goToNumpad() {
+        goToNumpadEvent.value = Event(true)
     }
 
     fun goToCallsList() {
@@ -233,10 +255,6 @@ class ControlsViewModel : ViewModel() {
         showCallStatistics.value = Event(true)
     }
 
-    fun goToCallParams() {
-        goToCallParamsEvent.value = Event(true)
-    }
-
     private fun updateUI() {
         updateVideoAvailable()
         updateVideoEnabled()
@@ -244,7 +262,7 @@ class ControlsViewModel : ViewModel() {
         updateSpeakerState()
     }
 
-    private fun updateMicState() {
+    fun updateMicState() {
         isMicrophoneMuted.value = !PermissionHelper.get().hasRecordAudioPermission() || !coreContext.core.micEnabled()
         isMuteMicrophoneEnabled.value = coreContext.core.currentCall != null || coreContext.core.conference?.isIn == true
     }

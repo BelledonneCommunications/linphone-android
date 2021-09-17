@@ -32,6 +32,10 @@ class CallsViewModel : ViewModel() {
 
     val callsData = MutableLiveData<List<CallData>>()
 
+    val callUpdateEvent: MutableLiveData<Event<Call>> by lazy {
+        MutableLiveData<Event<Call>>()
+    }
+
     val noMoreCallEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -58,9 +62,28 @@ class CallsViewModel : ViewModel() {
                     currentCallData.value?.destroy()
                     noMoreCallEvent.value = Event(true)
                 }
+                removeCallFromList(call)
+            } else if (state == Call.State.IncomingEarlyMedia || state == Call.State.IncomingReceived || state == Call.State.OutgoingInit) {
+                if (call != core.currentCall) {
+                    addCallToList(call)
+                }
+            } else if (call.state == Call.State.UpdatedByRemote) {
+                // If the correspondent asks to turn on video while audio call,
+                // defer update until user has chosen whether to accept it or not
+                val remoteVideo = call.remoteParams?.videoEnabled() ?: false
+                val localVideo = call.currentParams.videoEnabled()
+                val autoAccept = call.core.videoActivationPolicy.automaticallyAccept
+                if (remoteVideo && !localVideo && !autoAccept) {
+                    if (coreContext.core.videoCaptureEnabled() || coreContext.core.videoDisplayEnabled()) {
+                        call.deferUpdate()
+                        callUpdateEvent.value = Event(call)
+                    } else {
+                        coreContext.answerCallVideoUpdateRequest(call, false)
+                    }
+                }
+            } else if (state == Call.State.StreamsRunning) {
+                callUpdateEvent.value = Event(call)
             }
-
-            updateCallsList()
         }
     }
 
@@ -75,7 +98,7 @@ class CallsViewModel : ViewModel() {
             currentCallData.value = viewModel
         }
 
-        updateCallsList()
+        initCallList()
     }
 
     override fun onCleared() {
@@ -87,8 +110,7 @@ class CallsViewModel : ViewModel() {
         super.onCleared()
     }
 
-    private fun updateCallsList() {
-        callsData.value.orEmpty().forEach(CallData::destroy)
+    private fun initCallList() {
         val calls = arrayListOf<CallData>()
 
         for (call in coreContext.core.calls) {
@@ -100,6 +122,30 @@ class CallsViewModel : ViewModel() {
             Log.i("[Calls] Adding call ${call.callLog.callId} to calls list")
             calls.add(data)
         }
+
+        callsData.value = calls
+    }
+
+    private fun addCallToList(call: Call) {
+        Log.i("[Calls] Adding call ${call.callLog.callId} to calls list")
+
+        val calls = arrayListOf<CallData>()
+        calls.addAll(callsData.value.orEmpty())
+
+        val data = CallData(call)
+        calls.add(data)
+
+        callsData.value = calls
+    }
+
+    private fun removeCallFromList(call: Call) {
+        Log.i("[Calls] Removing call ${call.callLog.callId} from calls list")
+
+        val calls = arrayListOf<CallData>()
+        calls.addAll(callsData.value.orEmpty())
+
+        val data = calls.find { it.call == call }
+        calls.remove(data)
 
         callsData.value = calls
     }

@@ -17,40 +17,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.activities.voip.fragments
+package org.linphone.activities.main.conference.fragments
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.navGraphViewModels
 import org.linphone.R
 import org.linphone.activities.GenericFragment
-import org.linphone.activities.voip.viewmodels.CallsViewModel
-import org.linphone.activities.voip.viewmodels.ConferenceViewModel
-import org.linphone.databinding.VoipConferenceParticipantsFragmentBinding
+import org.linphone.activities.main.conference.viewmodels.ConferenceSchedulingViewModel
+import org.linphone.activities.navigateToParticipantsList
+import org.linphone.databinding.ConferenceSchedulingFragmentBinding
 
-class ConferenceParticipantsFragment : GenericFragment<VoipConferenceParticipantsFragmentBinding>() {
-    private lateinit var callsViewModel: CallsViewModel
-    private lateinit var conferenceViewModel: ConferenceViewModel
+class ConferenceSchedulingFragment : GenericFragment<ConferenceSchedulingFragmentBinding>() {
+    private val viewModel: ConferenceSchedulingViewModel by navGraphViewModels(R.id.conference_scheduling_nav_graph)
 
-    override fun getLayoutId(): Int = R.layout.voip_conference_participants_fragment
+    override fun getLayoutId(): Int = R.layout.conference_scheduling_fragment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        callsViewModel = requireActivity().run {
-            ViewModelProvider(this).get(CallsViewModel::class.java)
-        }
-        binding.callsViewModel = callsViewModel
+        binding.viewModel = viewModel
 
-        conferenceViewModel = requireActivity().run {
-            ViewModelProvider(this).get(ConferenceViewModel::class.java)
-        }
-        binding.conferenceViewModel = conferenceViewModel
-
-        binding.setCancelClickListener {
+        binding.setBackClickListener {
             goBack()
+        }
+
+        binding.setNextClickListener {
+            navigateToParticipantsList()
         }
     }
 }

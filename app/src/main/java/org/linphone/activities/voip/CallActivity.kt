@@ -19,13 +19,18 @@
  */
 package org.linphone.activities.voip
 
+import android.Manifest
+import android.annotation.TargetApi
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.window.layout.FoldingFeature
 import kotlinx.coroutines.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -33,13 +38,21 @@ import org.linphone.R
 import org.linphone.activities.call.ProximitySensorActivity
 import org.linphone.activities.call.viewmodels.SharedCallViewModel
 import org.linphone.activities.main.MainActivity
+import org.linphone.activities.voip.viewmodels.CallsViewModel
+import org.linphone.activities.voip.viewmodels.ControlsViewModel
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 import org.linphone.databinding.VoipActivityBinding
+import org.linphone.mediastream.Version
+import org.linphone.utils.PermissionHelper
 
 class CallActivity : ProximitySensorActivity() {
     private lateinit var binding: VoipActivityBinding
     private lateinit var sharedViewModel: SharedCallViewModel
+    private lateinit var controlsViewModel: ControlsViewModel
+    private lateinit var callsViewModel: CallsViewModel
+
+    private var foldingFeature: FoldingFeature? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,13 +77,41 @@ class CallActivity : ProximitySensorActivity() {
                 }
             }
         )
+
+        controlsViewModel = ViewModelProvider(this).get(ControlsViewModel::class.java)
+        binding.controlsViewModel = controlsViewModel
+
+        callsViewModel = ViewModelProvider(this).get(CallsViewModel::class.java)
+
+        callsViewModel.noMoreCallEvent.observe(
+            this,
+            {
+                it.consume {
+                    finish()
+                }
+            }
+        )
+
+        controlsViewModel.askPermissionEvent.observe(
+            this,
+            {
+                it.consume { permission ->
+                    Log.i("[Call] Asking for $permission permission")
+                    requestPermissions(arrayOf(permission), 0)
+                }
+            }
+        )
+
+        if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
+            checkPermissions()
+        }
     }
 
     override fun onResume() {
         super.onResume()
 
         if (coreContext.core.callsNb == 0) {
-            Log.w("[Call Activity] Resuming but no call found...")
+            Log.w("[Call] Resuming but no call found...")
             if (isTaskRoot) {
                 // When resuming app from recent tasks make sure MainActivity will be launched if there is no call
                 val intent = Intent()
@@ -88,7 +129,7 @@ class CallActivity : ProximitySensorActivity() {
             hideSystemUI()
             window.decorView.setOnSystemUiVisibilityChangeListener { visibility ->
                 if (visibility and View.SYSTEM_UI_FLAG_FULLSCREEN == 0) {
-                    GlobalScope.launch {
+                    lifecycleScope.launch {
                         delay(2000)
                         withContext(Dispatchers.Main) {
                             hideSystemUI()
@@ -123,6 +164,53 @@ class CallActivity : ProximitySensorActivity() {
         return theme
     }
 
+    @TargetApi(Version.API23_MARSHMALLOW_60)
+    private fun checkPermissions() {
+        val permissionsRequiredList = arrayListOf<String>()
+        if (!PermissionHelper.get().hasRecordAudioPermission()) {
+            Log.i("[Call] Asking for RECORD_AUDIO permission")
+            permissionsRequiredList.add(Manifest.permission.RECORD_AUDIO)
+        }
+        if (callsViewModel.currentCallData.value?.call?.currentParams?.videoEnabled() == true &&
+            !PermissionHelper.get().hasCameraPermission()
+        ) {
+            Log.i("[Call] Asking for CAMERA permission")
+            permissionsRequiredList.add(Manifest.permission.CAMERA)
+        }
+        if (permissionsRequiredList.isNotEmpty()) {
+            val permissionsRequired = arrayOfNulls<String>(permissionsRequiredList.size)
+            permissionsRequiredList.toArray(permissionsRequired)
+            requestPermissions(permissionsRequired, 0)
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == 0) {
+            for (i in permissions.indices) {
+                when (permissions[i]) {
+                    Manifest.permission.RECORD_AUDIO -> if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                        Log.i("[Call] RECORD_AUDIO permission has been granted")
+                        controlsViewModel.updateMicState()
+                    }
+                    Manifest.permission.CAMERA -> if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                        Log.i("[Call] CAMERA permission has been granted")
+                        coreContext.core.reloadVideoDevices()
+                    }
+                }
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    override fun onLayoutChanges(foldingFeature: FoldingFeature?) {
+        this.foldingFeature = foldingFeature
+        updateConstraintSetDependingOnFoldingState()
+    }
+
     private fun hideSystemUI() {
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN or
             View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
@@ -130,5 +218,24 @@ class CallActivity : ProximitySensorActivity() {
             View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
             View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
             View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+    }
+
+    private fun updateConstraintSetDependingOnFoldingState() {
+        /*val feature = foldingFeature ?: return
+        val constraintLayout = binding.constraintLayout
+        val set = ConstraintSet()
+        set.clone(constraintLayout)
+
+        if (feature.state == FoldingFeature.State.HALF_OPENED && viewModel.videoEnabled.value == true) {
+            set.setGuidelinePercent(R.id.hinge_top, 0.5f)
+            set.setGuidelinePercent(R.id.hinge_bottom, 0.5f)
+            viewModel.disable(true)
+        } else {
+            set.setGuidelinePercent(R.id.hinge_top, 0f)
+            set.setGuidelinePercent(R.id.hinge_bottom, 1f)
+            viewModel.disable(false)
+        }
+
+        set.applyTo(constraintLayout)*/
     }
 }

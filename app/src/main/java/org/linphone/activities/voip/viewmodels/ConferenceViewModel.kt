@@ -23,10 +23,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.flexbox.FlexDirection
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
 import org.linphone.activities.voip.data.ConferenceParticipantData
 import org.linphone.activities.voip.data.ConferenceParticipantDeviceData
 import org.linphone.core.*
 import org.linphone.core.tools.Log
+import org.linphone.utils.AppUtils
 
 class ConferenceViewModel : ViewModel() {
     val isConferencePaused = MutableLiveData<Boolean>()
@@ -43,6 +45,10 @@ class ConferenceViewModel : ViewModel() {
     val isInConference = MutableLiveData<Boolean>()
 
     val isVideoConference = MutableLiveData<Boolean>()
+
+    val isRecording = MutableLiveData<Boolean>()
+
+    val subject = MutableLiveData<String>()
 
     private val conferenceListener = object : ConferenceListenerStub() {
         override fun onParticipantAdded(conference: Conference, participant: Participant) {
@@ -106,6 +112,7 @@ class ConferenceViewModel : ViewModel() {
                 updateParticipantsList(conference)
                 isMeConferenceFocus.value = conference.me.isFocus
                 conferenceAddress.value = conference.conferenceAddress
+                subject.value = conference.subject ?: AppUtils.getString(R.string.conference_default_title)
             } else if (state == Conference.State.Terminated || state == Conference.State.TerminationFailed) {
                 isInConference.value = false
                 isVideoConference.value = false
@@ -133,6 +140,8 @@ class ConferenceViewModel : ViewModel() {
         isVideoConference.value = coreContext.core.conference?.currentParams?.isVideoEnabled
 
         flexboxLayoutDirection.value = FlexDirection.COLUMN
+
+        subject.value = AppUtils.getString(R.string.conference_default_title)
 
         val conference = coreContext.core.conference
         if (conference != null) {
@@ -181,6 +190,10 @@ class ConferenceViewModel : ViewModel() {
         } else {
             Log.w("[Conference] Unable to find conference with address ${conferenceAddress.value?.asStringUriOnly()}")
         }
+    }
+
+    fun toggleRecording() {
+        // TODO
     }
 
     private fun updateParticipantsList(conference: Conference) {
