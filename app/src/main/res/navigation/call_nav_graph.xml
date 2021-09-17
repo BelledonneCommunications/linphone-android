@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_currentFragment_to_callParamsFragment"
             app:destination="@id/callParamsFragment" />
+        <action
+            android:id="@+id/action_currentFragment_to_conferenceParticipantsFragment"
+            app:destination="@id/conferenceParticipantsFragment" />
     </fragment>
 
     <fragment
@@ -29,5 +32,11 @@
         android:name="org.linphone.activities.voip.fragments.CallParamsFragment"
         tools:layout="@layout/voip_call_params_fragment"
         android:label="CallParamsFragment" />
+
+    <fragment
+        android:id="@+id/conferenceParticipantsFragment"
+        android:name="org.linphone.activities.voip.fragments.ConferenceParticipantsFragment"
+        tools:layout="@layout/voip_conference_participants_fragment"
+        android:label="ConferenceParticipantsFragment" />
 
 </navigation>

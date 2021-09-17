@@ -27,6 +27,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:onClick="@{() -> viewModel.goToConferenceParticipantsList()}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -37,6 +38,7 @@
                 android:text="@string/call_action_participants_list"/>
 
             <TextView
+                android:onClick="@{() -> viewModel.goToChat()}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -65,6 +67,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:onClick="@{() -> viewModel.showNumpad()}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

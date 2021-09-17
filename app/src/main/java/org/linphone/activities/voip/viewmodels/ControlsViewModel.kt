@@ -53,6 +53,14 @@ class ControlsViewModel : ViewModel() {
 
     val fullScreenMode = MutableLiveData<Boolean>()
 
+    val goToConferenceParticipantsListEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
+    val goToChatEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     val goToCallsListEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -204,6 +212,17 @@ class ControlsViewModel : ViewModel() {
     fun toggleFullScreen() {
         if (isVideoEnabled.value == false) return
         fullScreenMode.value = fullScreenMode.value != true
+    }
+
+    fun goToConferenceParticipantsList() {
+        goToConferenceParticipantsListEvent.value = Event(true)
+    }
+
+    fun goToChat() {
+        goToChatEvent.value = Event(true)
+    }
+
+    fun showNumpad() {
     }
 
     fun goToCallsList() {

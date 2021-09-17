@@ -19,6 +19,7 @@
  */
 package org.linphone.activities.voip.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -27,8 +28,10 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.call.viewmodels.SharedCallViewModel
+import org.linphone.activities.main.MainActivity
 import org.linphone.activities.navigateToCallParams
 import org.linphone.activities.navigateToCallsList
+import org.linphone.activities.navigateToConferenceParticipants
 import org.linphone.activities.voip.viewmodels.CallsViewModel
 import org.linphone.activities.voip.viewmodels.ConferenceViewModel
 import org.linphone.activities.voip.viewmodels.ControlsViewModel
@@ -74,6 +77,29 @@ class CurrentFragment : GenericFragment<VoipCurrentFragmentBindingImpl>() {
             {
                 it.consume {
                     requireActivity().finish()
+                }
+            }
+        )
+
+        controlsViewModel.goToConferenceParticipantsListEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume {
+                    controlsViewModel.hideExtraButtons()
+                    navigateToConferenceParticipants()
+                }
+            }
+        )
+
+        controlsViewModel.goToChatEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume {
+                    val intent = Intent()
+                    intent.setClass(requireContext(), MainActivity::class.java)
+                    intent.putExtra("Chat", true)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
                 }
             }
         )
