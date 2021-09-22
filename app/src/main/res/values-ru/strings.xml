@@ -490,7 +490,7 @@
     <string name="content_description_cancel_voice_recording">Отменить запись</string>
     <string name="content_description_pause_voice_recording_playback">Приостановить запись</string>
     <string name="content_description_play_voice_recording">Возпроизвести запись</string>
-    <string name="service_name">&amp;appName; Сервис</string>
+    <string name="service_name">&amp;appName; Service</string>
     <string name="service_auto_start_description">&amp;appName; был запущен автоматически</string>
     <string name="about_privacy_policy">Ознакомьтесь с нашей политикой конфиденциальности</string>
     <string name="select_your_country">Выберите вашу страну</string>
