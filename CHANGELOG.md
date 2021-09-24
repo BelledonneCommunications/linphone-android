@@ -16,11 +16,16 @@ Group changes to describe their impact on the project, as follows:
 - Reply to chat message feature (with original message preview)
 - Voice recordings in chat feature
 - Allow video recording in chat file sharing
+- Notify incoming/outgoing calls on bluetooth devices using self-managed connections from telecom manager API
 
 ### Changed
 - UI has been reworked around SlidingPane component to better handle tablets & foldable devices
 - Bumped dependencies
+- Target Android SDK version set to 31 (Android	12/S)
 - SDK updated to 5.1.0 release
+
+### Fixed
+- Chat notifications disappearing when app stop -> start
 
 ### Removed
 - Global push notification setting in Network, use the switch in each Account instead
