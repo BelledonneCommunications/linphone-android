@@ -61,6 +61,7 @@ import org.linphone.contact.ContactsManager
 import org.linphone.core.tools.Log
 import org.linphone.mediastream.Version
 import org.linphone.notifications.NotificationsManager
+import org.linphone.telecom.TelecomHelper
 import org.linphone.utils.*
 import org.linphone.utils.Event
 
@@ -135,15 +136,17 @@ class CoreContext(val context: Context, coreConfig: Config) {
         ) {
             Log.i("[Context] Call state changed [$state]")
             if (state == Call.State.IncomingReceived || state == Call.State.IncomingEarlyMedia) {
-                var gsmCallActive = false
-                if (::phoneStateListener.isInitialized) {
-                    gsmCallActive = phoneStateListener.isInCall()
-                }
+                if (!corePreferences.useTelecomManager) {
+                    var gsmCallActive = false
+                    if (::phoneStateListener.isInitialized) {
+                        gsmCallActive = phoneStateListener.isInCall()
+                    }
 
-                if (gsmCallActive) {
-                    Log.w("[Context] Refusing the call with reason busy because a GSM call is active")
-                    call.decline(Reason.Busy)
-                    return
+                    if (gsmCallActive) {
+                        Log.w("[Context] Refusing the call with reason busy because a GSM call is active")
+                        call.decline(Reason.Busy)
+                        return
+                    }
                 }
 
                 // Starting SDK 24 (Android 7.0) we rely on the fullscreen intent of the call incoming notification
@@ -294,6 +297,11 @@ class CoreContext(val context: Context, coreConfig: Config) {
 
         notificationsManager.onCoreReady()
 
+        if (Version.sdkAboveOrEqual(Version.API26_O_80) && corePreferences.useTelecomManager) {
+            Log.i("[Context] Creating telecom helper")
+            TelecomHelper.create(context)
+        }
+
         core.addListener(listener)
 
         if (isPush) {
@@ -326,6 +334,10 @@ class CoreContext(val context: Context, coreConfig: Config) {
         }
         notificationsManager.destroy()
         contactsManager.destroy()
+        if (TelecomHelper.exists()) {
+            Log.i("[Context] Destroying telecom helper")
+            TelecomHelper.get().destroy()
+        }
 
         core.stop()
         core.removeListener(listener)
