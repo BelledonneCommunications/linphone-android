@@ -289,6 +289,13 @@ class CorePreferences constructor(private val context: Context) {
             config.setBool("app", "auto_start_call_record", value)
         }
 
+    var useTelecomManager: Boolean
+        // Some permissions are required, so keep it to false so user has to manually enable it and give permissions
+        get() = config.getBool("app", "use_self_managed_telecom_manager", false)
+        set(value) {
+            config.setBool("app", "use_self_managed_telecom_manager", value)
+        }
+
     var fullScreenCallUI: Boolean
         get() = config.getBool("app", "full_screen_call", true)
         set(value) {

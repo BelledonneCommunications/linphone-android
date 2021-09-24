@@ -94,6 +94,15 @@
                     linphone:listener="@{viewModel.encryptionMandatoryListener}"
                     linphone:checked="@={viewModel.encryptionMandatory}"
                     linphone:enabled="@{viewModel.encryptionIndex != 0}" />
+
+                <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/call_settings_use_telecom_manager_title}"
+                    linphone:subtitle="@{@string/call_settings_use_telecom_manager_summary}"
+                    android:visibility="@{viewModel.api26OrHigher ? View.VISIBLE : View.GONE}"
+                    linphone:listener="@{viewModel.useTelecomManagerListener}"
+                    linphone:checked="@={viewModel.useTelecomManager}"/>
+
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/call_settings_full_screen_title}"
