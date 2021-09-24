@@ -622,4 +622,6 @@
     <string name="call_settings_auto_start_recording_title">Enregistrer automatiquement les appels</string>
     <string name="advanced_settings_disable_fragment_security_title">Désactiver le mode sécurisé de l\'interface</string>
     <string name="advanced_settings_disable_fragment_security_summary">Autorise l\'écran à être capturé/enregistré sur les vues sensibles</string>
+    <string name="call_settings_use_telecom_manager_title">Améliore les intéractions avec les périphériques bluetooth</string>
+    <string name="call_settings_use_telecom_manager_summary">Nécessite des permissions supplémentaires</string>
 </resources>

@@ -16,6 +16,7 @@ Group changes to describe their impact on the project, as follows:
 - Reply to chat message feature (with original message preview)
 - Voice recordings in chat feature
 - Allow video recording in chat file sharing
+- Notify incoming/outgoing calls on bluetooth devices using self-managed connections from telecom manager API
 - New video call UI on foldable device like Galaxy Z Fold
 - Setting to automatically record all calls
 
