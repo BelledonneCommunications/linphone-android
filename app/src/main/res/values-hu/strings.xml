@@ -605,4 +605,25 @@
     <string name="chat_settins_enable_ephemeral_messages_beta_title">Ideiglenes üzenetek engedélyezése (béta)</string>
     <string name="chat_room_choose_conversation_for_text_sharing">Beszélgetés kiválasztása vagy létrehozása a szöveg megosztásához</string>
     <string name="content_description_forward_message">Üzenet továbbítása ebben a beszélgetésben</string>
+    <string name="chat_room_sending_reply_hint">Válasz</string>
+    <string name="chat_room_sending_message_hint">Üzenet</string>
+    <string name="chat_message_voice_recording_hold_to_record">Tartsa lenyomva a gombot a hangüzenet felvételéhez</string>
+    <string name="content_description_attached_file">Az üzenethez mellékelt fájl</string>
+    <string name="content_description_record_audio_message">Hangüzenet felvétele</string>
+    <string name="content_description_voice_recording">Hangüzenet felvétele</string>
+    <string name="content_description_stop_voice_recording">Hangfelvétel leállítása</string>
+    <string name="content_description_pause_voice_recording_playback">Hangfelvétel szüneteltetése</string>
+    <string name="content_description_play_voice_recording">Hangfelvétel lejátszása</string>
+    <string name="chat_message_replied">Válasz</string>
+    <string name="chat_message_context_menu_reply">Válasz</string>
+    <string name="chat_settings_auto_download_voice_recordings">A bejövő hangfelvételek önműködő letöltése</string>
+    <string name="content_description_replied_message">Az üzenet válasz</string>
+    <string name="content_description_cancel_reply">Válasz visszavonása</string>
+    <string name="content_description_cancel_voice_recording">Hangfelvétel visszavonása</string>
+    <string name="chat_message_voice_recording_playback_low_volume">A média hangereje alacsony, lehet hogy, szeretné növelni</string>
+    <string name="call_settings_auto_start_recording_title">Hívás felvétele önműködő indítása</string>
+    <string name="advanced_settings_disable_fragment_security_title">Felhasználói felület biztonságos üzemmódjának letiltása</string>
+    <string name="advanced_settings_disable_fragment_security_summary">Képernyőfelvétel engedélyezése bizalmas nézetekben</string>
+    <string name="call_settings_use_telecom_manager_summary">További engedélyeket igényel</string>
+    <string name="call_settings_use_telecom_manager_title">Tevékenységek fejlesztése Bluetooth-eszközökkel</string>
 </resources>
