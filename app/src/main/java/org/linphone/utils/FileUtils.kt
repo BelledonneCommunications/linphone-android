@@ -470,5 +470,20 @@ class FileUtils {
             }
             return false
         }
+
+        fun writeIntoFile(bytes: ByteArray, file: File) {
+            val inStream = ByteArrayInputStream(bytes)
+            val outStream = FileOutputStream(file)
+
+            val buffer = ByteArray(1024)
+            var read: Int
+            while (inStream.read(buffer).also { read = it } != -1) {
+                outStream.write(buffer, 0, read)
+            }
+
+            inStream.close()
+            outStream.flush()
+            outStream.close()
+        }
     }
 }
