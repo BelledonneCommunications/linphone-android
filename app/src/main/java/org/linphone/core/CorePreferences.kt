@@ -296,12 +296,6 @@ class CorePreferences constructor(private val context: Context) {
             config.setBool("app", "use_self_managed_telecom_manager", value)
         }
 
-    var fullScreenCallUI: Boolean
-        get() = config.getBool("app", "full_screen_call", true)
-        set(value) {
-            config.setBool("app", "full_screen_call", value)
-        }
-
     var routeAudioToBluetoothIfAvailable: Boolean
         get() = config.getBool("app", "route_audio_to_bluetooth_if_available", true)
         set(value) {
@@ -409,11 +403,6 @@ class CorePreferences constructor(private val context: Context) {
     // Will disable chat feature completely
     val disableChat: Boolean
         get() = config.getBool("app", "disable_chat_feature", false)
-
-    // If enabled, this will cause the video to "freeze" on your correspondent screen
-    // as you won't send video packets anymore
-    val hideCameraPreviewInPipMode: Boolean
-        get() = config.getBool("app", "hide_camera_preview_in_pip_mode", false)
 
     // This will prevent UI from showing up, except for the launcher & the foreground service notification
     val preventInterfaceFromShowingUp: Boolean

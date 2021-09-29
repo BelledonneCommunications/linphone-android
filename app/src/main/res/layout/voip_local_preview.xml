@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="controlsViewModel"
+            type="org.linphone.activities.voip.viewmodels.ControlsViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:onTouch="@{controlsViewModel.previewTouchListener}"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <org.linphone.mediastream.video.capture.CaptureTextureView
+            android:id="@+id/local_preview_video_surface"
+            android:layout_size="@{controlsViewModel.isVideoPreviewResizedForPip ? @dimen/video_preview_pip_max_size : @dimen/video_preview_max_size}"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_max="200dp"
+            app:layout_constraintWidth_max="200dp"
+            tools:ignore="MissingConstraints" />
+
+        <ImageView
+            android:onClick="@{() -> controlsViewModel.switchCamera()}"
+            android:visibility="@{controlsViewModel.isSwitchCameraAvailable &amp;&amp; !controlsViewModel.isVideoPreviewResizedForPip ? View.VISIBLE : View.GONE, default=gone}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:src="@drawable/icon_call_camera_switch"
+            android:contentDescription="@string/content_description_switch_camera"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
