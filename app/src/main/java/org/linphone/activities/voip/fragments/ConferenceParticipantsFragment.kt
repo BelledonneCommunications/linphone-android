@@ -21,7 +21,7 @@ package org.linphone.activities.voip.fragments
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.navGraphViewModels
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.voip.viewmodels.CallsViewModel
@@ -29,8 +29,8 @@ import org.linphone.activities.voip.viewmodels.ConferenceViewModel
 import org.linphone.databinding.VoipConferenceParticipantsFragmentBinding
 
 class ConferenceParticipantsFragment : GenericFragment<VoipConferenceParticipantsFragmentBinding>() {
-    private lateinit var callsViewModel: CallsViewModel
-    private lateinit var conferenceViewModel: ConferenceViewModel
+    private val callsViewModel: CallsViewModel by navGraphViewModels(R.id.call_nav_graph)
+    private val conferenceViewModel: ConferenceViewModel by navGraphViewModels(R.id.call_nav_graph)
 
     override fun getLayoutId(): Int = R.layout.voip_conference_participants_fragment
 
@@ -39,14 +39,8 @@ class ConferenceParticipantsFragment : GenericFragment<VoipConferenceParticipant
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        callsViewModel = requireActivity().run {
-            ViewModelProvider(this).get(CallsViewModel::class.java)
-        }
         binding.callsViewModel = callsViewModel
 
-        conferenceViewModel = requireActivity().run {
-            ViewModelProvider(this).get(ConferenceViewModel::class.java)
-        }
         binding.conferenceViewModel = conferenceViewModel
 
         binding.setCancelClickListener {

@@ -26,6 +26,7 @@ import android.view.View
 import android.widget.Chronometer
 import android.widget.LinearLayout
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.navGraphViewModels
 import com.google.android.material.snackbar.Snackbar
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
@@ -49,10 +50,10 @@ import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
 
 class ActiveCallOrConferenceFragment : GenericFragment<VoipActiveCallOrConferenceFragmentBindingImpl>() {
-    private lateinit var controlsViewModel: ControlsViewModel
-    private lateinit var callsViewModel: CallsViewModel
-    private lateinit var conferenceViewModel: ConferenceViewModel
-    private lateinit var statsViewModel: StatisticsListViewModel
+    private val controlsViewModel: ControlsViewModel by navGraphViewModels(R.id.call_nav_graph)
+    private val callsViewModel: CallsViewModel by navGraphViewModels(R.id.call_nav_graph)
+    private val conferenceViewModel: ConferenceViewModel by navGraphViewModels(R.id.call_nav_graph)
+    private val statsViewModel: StatisticsListViewModel by navGraphViewModels(R.id.call_nav_graph)
 
     private var dialog: Dialog? = null
 
@@ -63,24 +64,12 @@ class ActiveCallOrConferenceFragment : GenericFragment<VoipActiveCallOrConferenc
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        controlsViewModel = requireActivity().run {
-            ViewModelProvider(this).get(ControlsViewModel::class.java)
-        }
         binding.controlsViewModel = controlsViewModel
 
-        callsViewModel = requireActivity().run {
-            ViewModelProvider(this).get(CallsViewModel::class.java)
-        }
         binding.callsViewModel = callsViewModel
 
-        conferenceViewModel = requireActivity().run {
-            ViewModelProvider(this).get(ConferenceViewModel::class.java)
-        }
         binding.conferenceViewModel = conferenceViewModel
 
-        statsViewModel = requireActivity().run {
-            ViewModelProvider(this).get(StatisticsListViewModel::class.java)
-        }
         binding.statsViewModel = statsViewModel
 
         conferenceViewModel.isInConference.observe(
@@ -88,6 +77,13 @@ class ActiveCallOrConferenceFragment : GenericFragment<VoipActiveCallOrConferenc
             {
                 if (it) {
                     val timer = binding.root.findViewById<Chronometer>(R.id.conference_timer)
+                    val conference = conferenceViewModel.conference.value
+                    if (conference != null) {
+                        timer.base =
+                            SystemClock.elapsedRealtime() - (1000 * conference.duration) // Linphone timestamps are in seconds
+                    } else {
+                        Log.e("[Call] Conference not found, timer will have no base")
+                    }
                     timer.start()
                 }
             }

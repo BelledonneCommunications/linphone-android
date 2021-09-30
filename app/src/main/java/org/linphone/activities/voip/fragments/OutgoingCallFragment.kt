@@ -23,7 +23,7 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.view.View
 import android.widget.Chronometer
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.navGraphViewModels
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.navigateToActiveCall
@@ -32,8 +32,8 @@ import org.linphone.activities.voip.viewmodels.ControlsViewModel
 import org.linphone.databinding.VoipCallOutgoingFragmentBinding
 
 class OutgoingCallFragment : GenericFragment<VoipCallOutgoingFragmentBinding>() {
-    private lateinit var controlsViewModel: ControlsViewModel
-    private lateinit var callsViewModel: CallsViewModel
+    private val controlsViewModel: ControlsViewModel by navGraphViewModels(R.id.call_nav_graph)
+    private val callsViewModel: CallsViewModel by navGraphViewModels(R.id.call_nav_graph)
 
     override fun getLayoutId(): Int = R.layout.voip_call_outgoing_fragment
 
@@ -42,14 +42,8 @@ class OutgoingCallFragment : GenericFragment<VoipCallOutgoingFragmentBinding>() 
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        controlsViewModel = requireActivity().run {
-            ViewModelProvider(this).get(ControlsViewModel::class.java)
-        }
         binding.controlsViewModel = controlsViewModel
 
-        callsViewModel = requireActivity().run {
-            ViewModelProvider(this).get(CallsViewModel::class.java)
-        }
         binding.callsViewModel = callsViewModel
 
         callsViewModel.callConnectedEvent.observe(

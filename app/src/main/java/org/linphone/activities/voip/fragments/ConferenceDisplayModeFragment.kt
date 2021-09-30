@@ -21,14 +21,16 @@ package org.linphone.activities.voip.fragments
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.navGraphViewModels
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.voip.viewmodels.ConferenceViewModel
+import org.linphone.core.ConferenceLayout
+import org.linphone.core.tools.Log
 import org.linphone.databinding.VoipConferenceDisplayModeFragmentBinding
 
 class ConferenceDisplayModeFragment : GenericFragment<VoipConferenceDisplayModeFragmentBinding>() {
-    private lateinit var conferenceViewModel: ConferenceViewModel
+    private val conferenceViewModel: ConferenceViewModel by navGraphViewModels(R.id.call_nav_graph)
 
     override fun getLayoutId(): Int = R.layout.voip_conference_display_mode_fragment
 
@@ -37,13 +39,40 @@ class ConferenceDisplayModeFragment : GenericFragment<VoipConferenceDisplayModeF
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        conferenceViewModel = requireActivity().run {
-            ViewModelProvider(this).get(ConferenceViewModel::class.java)
-        }
         binding.conferenceViewModel = conferenceViewModel
 
         binding.setCancelClickListener {
             goBack()
         }
+
+        conferenceViewModel.conferenceMosaicDisplayMode.observe(
+            viewLifecycleOwner,
+            {
+                if (it) {
+                    Log.i("[Conference] Trying to change conference layout to Grid")
+                    val conference = conferenceViewModel.conference.value
+                    if (conference != null) {
+                        conference.layout = ConferenceLayout.Grid
+                    } else {
+                        Log.e("[Conference] Conference is null in ConferenceViewModel")
+                    }
+                }
+            }
+        )
+
+        conferenceViewModel.conferenceActiveSpeakerDisplayMode.observe(
+            viewLifecycleOwner,
+            {
+                if (it) {
+                    Log.i("[Conference] Trying to change conference layout to ActiveSpeaker")
+                    val conference = conferenceViewModel.conference.value
+                    if (conference != null) {
+                        conference.layout = ConferenceLayout.ActiveSpeaker
+                    } else {
+                        Log.e("[Conference] Conference is null in ConferenceViewModel")
+                    }
+                }
+            }
+        )
     }
 }

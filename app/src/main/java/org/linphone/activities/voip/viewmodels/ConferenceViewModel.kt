@@ -54,6 +54,8 @@ class ConferenceViewModel : ViewModel() {
 
     val subject = MutableLiveData<String>()
 
+    val conference = MutableLiveData<Conference>()
+
     private val conferenceListener = object : ConferenceListenerStub() {
         override fun onParticipantAdded(conference: Conference, participant: Participant) {
             if (conference.isMe(participant.address)) {
@@ -110,10 +112,18 @@ class ConferenceViewModel : ViewModel() {
             isConferencePaused.value = !conference.isIn
             isVideoConference.value = conference.currentParams.isVideoEnabled
 
+            val layout = conference.layout
+            conferenceMosaicDisplayMode.value = layout == ConferenceLayout.Grid
+            conferenceActiveSpeakerDisplayMode.value = layout == ConferenceLayout.ActiveSpeaker
+            Log.i("[Conference] Conference current layout is: $layout")
+
             if (state == Conference.State.Instantiated) {
+                this@ConferenceViewModel.conference.value = conference
                 conference.addListener(conferenceListener)
             } else if (state == Conference.State.Created) {
                 updateParticipantsList(conference)
+                updateParticipantsDevicesList(conference)
+
                 isMeConferenceFocus.value = conference.me.isFocus
                 conferenceAddress.value = conference.conferenceAddress
                 subject.value = if (conference.subject.isNullOrEmpty()) {
@@ -255,15 +265,17 @@ class ConferenceViewModel : ViewModel() {
             val participantDevices = participant.devices
             Log.i("[Conference] Participant found: ${participant.address.asStringUriOnly()} with ${participantDevices.size} device(s)")
 
-            if (!conference.isMe(participant.address)) {
-                for (device in participantDevices) {
-                    Log.i("[Conference] Participant device found: ${device.name} (${device.address.asStringUriOnly()})")
-                    val deviceData = ConferenceParticipantDeviceData(device)
-                    devices.add(deviceData)
-                }
-            } else {
-                Log.i("[Conference] Not adding our own devices...")
+            for (device in participantDevices) {
+                Log.i("[Conference] Participant device found: ${device.name} (${device.address.asStringUriOnly()})")
+                val deviceData = ConferenceParticipantDeviceData(device, false)
+                devices.add(deviceData)
             }
+        }
+        // TODO: remove when participantDevicesWithMeList API will be available
+        for (device in conference.me.devices) {
+            Log.i("[Conference] Participant device for myself found: ${device.name} (${device.address.asStringUriOnly()})")
+            val deviceData = ConferenceParticipantDeviceData(device, true)
+            devices.add(deviceData)
         }
 
         conferenceParticipantDevices.value = devices

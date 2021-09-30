@@ -26,7 +26,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.PopupWindow
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.navGraphViewModels
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.MainActivity
@@ -37,7 +37,7 @@ import org.linphone.databinding.VoipCallsListFragmentBinding
 import org.linphone.utils.AppUtils
 
 class CallsListFragment : GenericFragment<VoipCallsListFragmentBinding>() {
-    private lateinit var callsViewModel: CallsViewModel
+    private val callsViewModel: CallsViewModel by navGraphViewModels(R.id.call_nav_graph)
 
     override fun getLayoutId(): Int = R.layout.voip_calls_list_fragment
 
@@ -52,9 +52,6 @@ class CallsListFragment : GenericFragment<VoipCallsListFragmentBinding>() {
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        callsViewModel = requireActivity().run {
-            ViewModelProvider(this).get(CallsViewModel::class.java)
-        }
         binding.callsViewModel = callsViewModel
 
         binding.setCancelClickListener {

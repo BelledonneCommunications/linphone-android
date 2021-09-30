@@ -21,7 +21,7 @@ package org.linphone.activities.voip.fragments
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.navGraphViewModels
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.GenericFragment
@@ -32,8 +32,8 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.VoipCallIncomingFragmentBinding
 
 class IncomingCallFragment : GenericFragment<VoipCallIncomingFragmentBinding>() {
-    private lateinit var controlsViewModel: ControlsViewModel
-    private lateinit var callsViewModel: CallsViewModel
+    private val controlsViewModel: ControlsViewModel by navGraphViewModels(R.id.call_nav_graph)
+    private val callsViewModel: CallsViewModel by navGraphViewModels(R.id.call_nav_graph)
 
     override fun getLayoutId(): Int = R.layout.voip_call_incoming_fragment
 
@@ -42,14 +42,8 @@ class IncomingCallFragment : GenericFragment<VoipCallIncomingFragmentBinding>() 
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        controlsViewModel = requireActivity().run {
-            ViewModelProvider(this).get(ControlsViewModel::class.java)
-        }
         binding.controlsViewModel = controlsViewModel
 
-        callsViewModel = requireActivity().run {
-            ViewModelProvider(this).get(CallsViewModel::class.java)
-        }
         binding.callsViewModel = callsViewModel
 
         callsViewModel.callConnectedEvent.observe(
