@@ -33,9 +33,6 @@ class ConferenceParticipantData(
     GenericContactData(participant.address) {
     val sipUri: String get() = LinphoneUtils.getDisplayableAddress(participant.address)
 
-    // TODO: Remove when switch to ConferenceParticipantDeviceData in voip_conference_participant_remote
-    val activeSpeaker = MutableLiveData<Boolean>()
-
     private val isAdmin = MutableLiveData<Boolean>()
     private val isMeAdmin = MutableLiveData<Boolean>()
 
@@ -43,6 +40,5 @@ class ConferenceParticipantData(
         isAdmin.value = participant.isAdmin
         isMeAdmin.value = conference.me.isAdmin
         Log.i("[Conference Participant] Participant ${participant.address.asStringUriOnly()} is ${if (participant.isAdmin) "admin" else "not admin"}")
-        Log.i("[Conference Participant] Me is ${if (conference.me.isAdmin) "admin" else "not admin"} and is ${if (conference.me.isFocus) "focus" else "not focus"}")
     }
 }
