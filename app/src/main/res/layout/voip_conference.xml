@@ -98,7 +98,7 @@
         <com.google.android.flexbox.FlexboxLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:entries="@{conferenceViewModel.conferenceParticipants}"
+            app:entries="@{conferenceViewModel.conferenceParticipantDevices}"
             app:layout="@{@layout/voip_conference_participant_remote}"
             app:flexDirection="@{conferenceViewModel.flexboxLayoutDirection}"
             app:flexWrap="wrap"

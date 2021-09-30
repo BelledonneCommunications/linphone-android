@@ -27,6 +27,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Patterns
 import android.view.LayoutInflater
+import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -48,6 +49,7 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.GenericActivity
 import org.linphone.activities.main.settings.SettingListener
+import org.linphone.activities.voip.data.ConferenceParticipantDeviceData
 import org.linphone.contact.ContactAvatarView
 import org.linphone.core.tools.Log
 import org.linphone.views.VoiceRecordProgressBar
@@ -601,4 +603,12 @@ fun Spinner.setSelectedValue(value: Any?) {
 @InverseBindingAdapter(attribute = "selectedValue", event = "selectedValueAttrChanged")
 fun Spinner.getSelectedValue(): Any? {
     return selectedItem
+}
+
+@BindingAdapter("participantTextureView")
+fun setParticipantTextureView(
+    textureView: TextureView,
+    conferenceParticipantData: ConferenceParticipantDeviceData
+) {
+    conferenceParticipantData.setTextureView(textureView)
 }
