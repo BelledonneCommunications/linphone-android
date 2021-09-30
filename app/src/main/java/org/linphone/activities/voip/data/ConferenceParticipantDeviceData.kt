@@ -19,10 +19,14 @@
  */
 package org.linphone.activities.voip.data
 
+import android.graphics.SurfaceTexture
+import android.view.TextureView
 import androidx.lifecycle.MutableLiveData
 import org.linphone.contact.GenericContactData
 import org.linphone.core.MediaDirection
 import org.linphone.core.ParticipantDevice
+import org.linphone.core.ParticipantDeviceListenerStub
+import org.linphone.core.VideoSize
 import org.linphone.core.tools.Log
 
 class ConferenceParticipantDeviceData(private val participantDevice: ParticipantDevice) :
@@ -32,19 +36,18 @@ class ConferenceParticipantDeviceData(private val participantDevice: Participant
     // TODO: Set it to true when info is available
     val activeSpeaker = MutableLiveData<Boolean>()
 
-    /*private val listener = object : ParticipantDeviceListenerStub() {
+    private val listener = object : ParticipantDeviceListenerStub() {
         override fun onCaptureVideoSizeChanged(
             participantDevice: ParticipantDevice,
             size: VideoSize
         ) {
-            // TODO
             Log.i("[Conference Participant Device] Video size changed to ${size.width}x${size.height}")
         }
-    }*/
+    }
 
     init {
         Log.i("[Conference Participant Device] Created device width Address [${participantDevice.address.asStringUriOnly()}]")
-        // participantDevice.addListener(listener)
+        participantDevice.addListener(listener)
 
         videoEnabled.value = participantDevice.videoDirection == MediaDirection.SendOnly || participantDevice.videoDirection == MediaDirection.SendRecv
     }
@@ -52,10 +55,10 @@ class ConferenceParticipantDeviceData(private val participantDevice: Participant
     override fun destroy() {
         super.destroy()
 
-        // participantDevice.removeListener(listener)
+        participantDevice.removeListener(listener)
     }
 
-    /*fun setTextureView(textureView: TextureView) {
+    fun setTextureView(textureView: TextureView) {
         if (participantDevice.videoDirection != MediaDirection.SendRecv) {
             Log.e("[Conference Participant Device] Participant [${participantDevice.address.asStringUriOnly()}] device video direction is ${participantDevice.videoDirection}, don't set TextureView!")
             return
@@ -88,5 +91,5 @@ class ConferenceParticipantDeviceData(private val participantDevice: Participant
                 override fun onSurfaceTextureUpdated(surface: SurfaceTexture) { }
             }
         }
-    }*/
+    }
 }
