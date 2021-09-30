@@ -6,8 +6,7 @@
         <import type="android.view.View" />
         <variable
             name="data"
-            type="org.linphone.activities.voip.data.ConferenceParticipantData" />
-        <!-- TODO: Switch to ConferenceParticipantDeviceData -->
+            type="org.linphone.activities.voip.data.ConferenceParticipantDeviceData" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -40,6 +39,7 @@
 
         <org.linphone.activities.voip.views.RoundCornersTextureView
             android:id="@+id/participant_video_surface"
+            participantTextureView="@{data}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintTop_toTopOf="parent"

@@ -152,8 +152,7 @@ class CallsViewModel : ViewModel() {
 
     fun mergeCallsIntoLocalConference() {
         val core = coreContext.core
-        // TODO: Allow local conference with video?
-        val currentCallVideoEnabled = /*core.currentCall?.currentParams?.videoEnabled() ?:*/ false
+        val currentCallVideoEnabled = core.currentCall?.currentParams?.videoEnabled() ?: false
 
         val params = core.createConferenceParams()
         params.isVideoEnabled = currentCallVideoEnabled
