@@ -19,51 +19,62 @@
  */
 package org.linphone.activities.voip.data
 
+import android.graphics.SurfaceTexture
+import android.view.TextureView
 import androidx.lifecycle.MutableLiveData
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.contact.GenericContactData
 import org.linphone.core.MediaDirection
 import org.linphone.core.ParticipantDevice
+import org.linphone.core.ParticipantDeviceListenerStub
+import org.linphone.core.VideoSize
 import org.linphone.core.tools.Log
 
-class ConferenceParticipantDeviceData(private val participantDevice: ParticipantDevice) :
+class ConferenceParticipantDeviceData(
+    private val participantDevice: ParticipantDevice,
+    private val isMe: Boolean
+) :
     GenericContactData(participantDevice.address) {
     val videoEnabled = MutableLiveData<Boolean>()
 
     // TODO: Set it to true when info is available
     val activeSpeaker = MutableLiveData<Boolean>()
 
-    /*private val listener = object : ParticipantDeviceListenerStub() {
+    private val listener = object : ParticipantDeviceListenerStub() {
         override fun onCaptureVideoSizeChanged(
             participantDevice: ParticipantDevice,
             size: VideoSize
         ) {
-            // TODO
             Log.i("[Conference Participant Device] Video size changed to ${size.width}x${size.height}")
         }
-    }*/
+    }
 
     init {
         Log.i("[Conference Participant Device] Created device width Address [${participantDevice.address.asStringUriOnly()}]")
-        // participantDevice.addListener(listener)
+        participantDevice.addListener(listener)
 
         videoEnabled.value = participantDevice.videoDirection == MediaDirection.SendOnly || participantDevice.videoDirection == MediaDirection.SendRecv
     }
 
     override fun destroy() {
-        super.destroy()
+        participantDevice.removeListener(listener)
 
-        // participantDevice.removeListener(listener)
+        super.destroy()
     }
 
-    /*fun setTextureView(textureView: TextureView) {
+    fun setTextureView(textureView: TextureView) {
         if (participantDevice.videoDirection != MediaDirection.SendRecv) {
             Log.e("[Conference Participant Device] Participant [${participantDevice.address.asStringUriOnly()}] device video direction is ${participantDevice.videoDirection}, don't set TextureView!")
             return
         }
 
-        Log.i("[Conference Participant Device] Setting textureView [$textureView] for participant [${participantDevice.address.asStringUriOnly()}]")
         if (textureView.isAvailable) {
-            participantDevice.nativeVideoWindowId = textureView
+            Log.i("[Conference Participant Device] Setting textureView [$textureView] for participant [${participantDevice.address.asStringUriOnly()}]")
+            if (isMe) { // TODO: remove
+                coreContext.core.nativePreviewWindowId = textureView
+            } else {
+                participantDevice.nativeVideoWindowId = textureView
+            }
         } else {
             textureView.surfaceTextureListener = object : TextureView.SurfaceTextureListener {
                 override fun onSurfaceTextureAvailable(
@@ -71,7 +82,12 @@ class ConferenceParticipantDeviceData(private val participantDevice: Participant
                     width: Int,
                     height: Int
                 ) {
-                    participantDevice.nativeVideoWindowId = textureView
+                    Log.i("[Conference Participant Device] Setting textureView [$textureView] for participant [${participantDevice.address.asStringUriOnly()}]")
+                    if (isMe) { // TODO: remove
+                        coreContext.core.nativePreviewWindowId = textureView
+                    } else {
+                        participantDevice.nativeVideoWindowId = textureView
+                    }
                 }
 
                 override fun onSurfaceTextureSizeChanged(
@@ -81,6 +97,7 @@ class ConferenceParticipantDeviceData(private val participantDevice: Participant
                 ) { }
 
                 override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
+                    Log.w("[Conference Participant Device] TextureView [$textureView] for participant [${participantDevice.address.asStringUriOnly()}] has been destroyed")
                     participantDevice.nativeVideoWindowId = null
                     return true
                 }
@@ -88,5 +105,5 @@ class ConferenceParticipantDeviceData(private val participantDevice: Participant
                 override fun onSurfaceTextureUpdated(surface: SurfaceTexture) { }
             }
         }
-    }*/
+    }
 }
