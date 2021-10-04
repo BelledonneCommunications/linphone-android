@@ -35,6 +35,17 @@ Group changes to describe their impact on the project, as follows:
 ### Removed
 - Global push notification setting in Network, use the switch in each Account instead
 
+## [4.5.3] - 2021-10-04
+
+### Added
+- Russian translation
+
+### Changed
+- SDK updated to 5.0.31
+
+### Fixed
+- AccountSettingsViewModel leak causing number of REGISTER to grow
+
 ## [4.5.2] - 2021-08-27
 
 ### Added
