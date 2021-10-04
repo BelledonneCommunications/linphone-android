@@ -29,7 +29,7 @@ if (crashlyticsEnabled()) {
 
 def gitBranch = new ByteArrayOutputStream()
 task getGitVersion() {
-    def gitVersion = "4.5.2"
+    def gitVersion = "4.5.3"
     def gitVersionStream = new ByteArrayOutputStream()
     def gitCommitsCount = new ByteArrayOutputStream()
     def gitCommitHash = new ByteArrayOutputStream()
@@ -89,7 +89,7 @@ android {
     defaultConfig {
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 4520
+        versionCode 4530
         versionName "${project.version}"
         applicationId getPackageName()
     }
