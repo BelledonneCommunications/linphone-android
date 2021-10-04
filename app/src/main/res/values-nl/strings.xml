@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <!DOCTYPE resources [
-    <!ENTITY appName "Linphone">
+<!ENTITY appName "Linphone">
 ]>
-
 <resources>
     <string name="service_auto_start_description">&appName; is automatisch gestart</string>
     <string name="service_description">Dit is vereist om oproepen te ontvangen in de achtergrond</string>
@@ -48,8 +46,8 @@
     <string name="history_delete_one_dialog">Weet u zeker dat u dit record wil verwijderen\?</string>
     <string name="history_delete_many_dialog">Weet u zeker dat u deze records wil verwijderen\?</string>
     <string name="contact_invite_friend">Uitnodigen</string>
-    <string name="no_contact">Geen contacten in uw adresboek</string>
-    <string name="no_sip_contact">Geen SIP contact in uw adresboek</string>
+    <string name="no_contact">Geen contacten in uw adresboek.</string>
+    <string name="no_sip_contact">Geen SIP contact in uw adresboek.</string>
     <string name="contact_filter_hint">Zoek een contact</string>
     <string name="contact_last_name">Achternaam</string>
     <string name="contact_first_name">Voornaam</string>
