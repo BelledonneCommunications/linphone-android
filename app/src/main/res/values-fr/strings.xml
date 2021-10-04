@@ -291,7 +291,7 @@
     <string name="content_description_show_chat_room_menu">Menu des conversations</string>
     <string name="content_description_toggle_participant_devices_list">Afficher ou masquer la liste des appareils</string>
     <string name="content_description_contact_is_not_admin">Le contact n\'est pas un admin</string>
-    <string name="content_description_contact_can_do_encryption">Ce contact ne peux être ajouté aux conversations chiffrées</string>
+    <string name="content_description_contact_can_do_encryption">Ce contact peut être ajouté aux conversations chiffrées</string>
     <string name="content_description_exit_edition_mode">Sortir du mode édition</string>
     <string name="content_description_numpad_9">9</string>
     <string name="video_settings_preferred_fps_title">Nombre d\'images par seconde souhaité</string>

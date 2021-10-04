@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="status_connected">Подключено</string>
+    <string name="no_account_configured">Не настроен аккаунт</string>
+    <string name="status_not_connected">Не подключено</string>
+    <string name="status_in_progress">Подключение</string>
+    <string name="status_error">Неудачное соединение</string>
+    <string name="about">О</string>
+    <string name="assistant">Помощник</string>
+    <string name="recordings">Записи</string>
+    <string name="settings">Установки</string>
+    <string name="quit">Выход</string>
+    <string name="history_calls_list">Звонки</string>
+</resources>
