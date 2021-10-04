@@ -28,7 +28,7 @@
     <string name="email">E-Mail-Adresse</string>
     <string name="today">Heute</string>
     <string name="yesterday">Gestern</string>
-    <string name="transport"></string>
+    <string name="transport"/>
     <string name="service_name">&appName; Dienst</string>
     <string name="status_connected">Verbunden</string>
     <string name="status_not_connected">Nicht verbunden</string>
@@ -144,4 +144,18 @@
     <string name="call_error_declined">Anruf abgelehnt</string>
     <string name="call_error_server_timeout">Zeitüberschreitung des Servers</string>
     <string name="call_error_io_error">Dienst nicht verfügbar oder Netzwerkfehler</string>
+    <string name="assistant_confirmation_code">Bestätigungscode</string>
+    <string name="assistant_continue_even_if_credentials_invalid">Weiter</string>
+    <string name="assistant_generic_account">SIP-Konto benutzen</string>
+    <string name="assistant_error_account_not_activated">Das Konto wurde noch nicht überprüft</string>
+    <string name="assistant_error_invalid_credentials">Das Konto existiert nicht oder das Passwort ist falsch</string>
+    <string name="assistant_login_with_username">Den Benutzernamen und das Passwort anstatt der Telefonnummer verwenden</string>
+    <string name="assistant_linphone_login_desc">Bitte den Benutzernamen und das Passwort des &appName;-Kontos eingeben</string>
+    <string name="assistant_linphone_account">Das &appName;-Konto verwenden</string>
+    <string name="assistant_login_forgotten_password">Passwort vergessen\?</string>
+    <string name="assistant_confirm_password">Passwort bestätigen</string>
+    <string name="assistant_finish">Konfiguration beenden</string>
+    <string name="assistant_login_desc">Bitte Benutzername und Passwort der SIP-Domäne eingeben</string>
+    <string name="assistant_display_name_optional">Angezeigter Name (optional)</string>
+    <string name="assistant_create_account_part_1">Bitte die Ländervorwahl bestätigen und die Telefonnummer eingeben</string>
 </resources>
