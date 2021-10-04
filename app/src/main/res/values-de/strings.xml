@@ -85,10 +85,8 @@
     <string name="chat_message_imdn_undelivered">Nicht zugestellt</string>
     <string name="chat_message_imdn_sent">Gesendet</string>
     <string name="chat_message_forwarded">Weitergeleitet</string>
-    <string name="chat_message_replied">Antwort</string>
     <string name="chat_message_context_menu_copy_text">Text kopieren</string>
     <string name="chat_message_context_menu_forward">Weiterleiten</string>
-    <string name="chat_message_context_menu_reply">Antworten</string>
     <string name="chat_message_context_menu_imdn_info">Zustellstatus</string>
     <string name="chat_message_context_menu_delete">Löschen</string>
     <string name="chat_message_context_menu_add_to_contacts">Zu Kontakten hinzufügen</string>
@@ -101,14 +99,10 @@
         <item quantity="one">%s schreibt…</item>
         <item quantity="other">%s schreiben…</item>
     </plurals>
-    <string name="chat_room_sending_reply_hint">Antworten</string>
-    <string name="chat_room_sending_message_hint">Nachricht</string>
-    <string name="chat_message_voice_recording_hold_to_record">Knopf halten um eine Sprachnachricht aufzunehmen</string>
     <string name="call_incoming_title">Ankommender Ruf</string>
     <string name="call_outgoing_title">Ausgehender Ruf</string>
     <string name="call_error_user_busy">Besetzt</string>
     <string name="call_error_user_not_found">Benutzer nicht gefunden</string>
-    <string name="chat_message_voice_recording_playback_low_volume">Die Medienlautstärke ist zu gering, bitte erhöhen</string>
     <string name="call_notification_paused">Anruf pausiert</string>
     <string name="call_notification_outgoing">Ausgehender Anruf</string>
     <string name="call_notification_active">Laufender Anruf</string>

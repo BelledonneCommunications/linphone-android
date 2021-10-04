@@ -90,10 +90,8 @@
     <string name="chat_message_imdn_undelivered">Не доставлено</string>
     <string name="chat_message_imdn_sent">Отправлено</string>
     <string name="chat_message_forwarded">Переслано</string>
-    <string name="chat_message_replied">Ответить</string>
     <string name="chat_message_context_menu_resend">Отправить повторно</string>
     <string name="chat_message_context_menu_forward">Вперед</string>
-    <string name="chat_message_context_menu_reply">Ответить</string>
     <string name="chat_message_context_menu_imdn_info">Статус доставки</string>
     <string name="chat_message_context_menu_delete">Удалить</string>
     <string name="chat_message_context_menu_add_to_contacts">Добавить в контакты</string>
@@ -151,9 +149,6 @@
     <string name="chat_bubble_cant_open_enrypted_file">Не удается открыть зашифрованный файл в пузыре чата</string>
     <string name="chat_message_cant_open_file_in_app_dialog_export_button">Экспорт</string>
     <string name="chat_message_cant_open_file_in_app_dialog_open_as_text_button">Открыть как текст</string>
-    <string name="chat_room_sending_reply_hint">Ответить</string>
-    <string name="chat_room_sending_message_hint">Сообщение</string>
-    <string name="chat_message_voice_recording_hold_to_record">Удерживайте кнопку для записи голосового сообщения</string>
     <string name="call_stats_ice">Соединение ICE:</string>
     <string name="call_stats_jitter_buffer">Буфер джиттера:</string>
     <string name="call_stats_decoder_name">Декодер:</string>
@@ -268,7 +263,6 @@
     <string name="call_settings_media_encryption_srtp">SRTP</string>
     <string name="call_settings_media_encryption_zrtp">ZRTP</string>
     <string name="call_settings_media_encryption_dtls">DTLS</string>
-    <string name="call_settings_auto_start_recording_title">Автоматически начинать запись разговоров</string>
     <string name="chat_settings_file_sharing_url_title">Общий сервер URL</string>
     <string name="chat_settings_file_sharing_url_summary">Не редактируйте, если не знаете, что делаете!</string>
     <string name="chat_settings_auto_download_title">Политика автоматической загрузки входящих файлов</string>
@@ -285,7 +279,6 @@
     <string name="chat_settings_go_to_android_notification_settings">Настройки уведомлений Android</string>
     <string name="chat_settings_use_in_app_file_viewer_title">Всегда открывайте файлы внутри этого приложения</string>
     <string name="chat_settings_use_in_app_file_viewer_summary">Вы по-прежнему сможете экспортировать их в сторонние приложения</string>
-    <string name="chat_settings_auto_download_voice_recordings">Автоматическая загрузка входящих голосовых записей</string>
     <string name="network_settings_wifi_only_title">Использовать только Wi-Fi</string>
     <string name="network_settings_allow_ipv6_title">Разрешить IPv6</string>
     <string name="network_settings_push_notifications_title">Включить push-уведомления</string>
@@ -318,7 +311,6 @@
     <string name="advanced_settings_reset_debug_logs_title">Сбросить журналы</string>
     <string name="advanced_settings_debug_title">Настройки отладки</string>
     <string name="advanced_settings_other_title">Другие настройки</string>
-    <string name="advanced_settings_disable_fragment_security_summary">Разрешить снимок экрана/запись в конфиденциальных представлениях</string>
     <string name="tunnel_settings_hostname_url_title">Имя хоста</string>
     <string name="tunnel_settings_port_title">Порт</string>
     <string name="tunnel_settings_dual_mode_title">Двойной режим включен</string>
@@ -416,7 +408,6 @@
     <string name="content_description_remove_pending_file_transfer">Удалить ожидающую передачу файла</string>
     <string name="content_description_downloaded_file_transfer">Прикрепленный файл</string>
     <string name="content_description_delivery_status">Статус доставки сообщения</string>
-    <string name="content_description_replied_message">Сообщение - это ответ</string>
     <string name="content_description_forward_message">Переслать сообщение в этой беседе</string>
     <string name="content_description_ephemeral_message">Сообщение эфемерное</string>
     <string name="content_description_contact_selected">Контакт выбран</string>
@@ -427,8 +418,6 @@
     <string name="content_description_start_call">Начать звонок</string>
     <string name="content_description_enter_edition_mode">Отредактировать</string>
     <string name="content_description_send_message">Отправить сообщение</string>
-    <string name="content_description_attached_file">Файл, прикрепленный к сообщению</string>
-    <string name="content_description_record_audio_message">Записать звуковое сообщение</string>
     <string name="content_description_ephemeral_duration_selected">Выбрана эфемерная продолжительность</string>
     <string name="content_description_ephemeral_duration_change">Изменить эфемерную продолжительность на выбранное значение</string>
     <string name="content_description_create_chat_room">Создать чат-комнату</string>
@@ -484,12 +473,6 @@
     <string name="content_description_open_app">Открывать беседу в приложении вместо пузыря</string>
     <string name="content_description_cancel_forward">Отменить пересылку сообщения</string>
     <string name="content_description_cancel_sharing">Отменить совместное использование</string>
-    <string name="content_description_cancel_reply">Отменить ответ</string>
-    <string name="content_description_voice_recording">Запишите голосовое сообщение</string>
-    <string name="content_description_stop_voice_recording">Остановить запись голоса</string>
-    <string name="content_description_cancel_voice_recording">Отменить запись голоса</string>
-    <string name="content_description_pause_voice_recording_playback">Приостановить запись голоса</string>
-    <string name="content_description_play_voice_recording">Воспроизвести запись голоса</string>
     <string name="service_name">&amp;appName; Service</string>
     <string name="service_auto_start_description">&amp;appName; был запущен автоматически</string>
     <string name="about_privacy_policy">Ознакомьтесь с нашей политикой конфиденциальности</string>
@@ -545,7 +528,6 @@
     <string name="chat_room_delete_many_dialog">Вы уверены, что хотите удалить эти разговоры\?</string>
     <string name="chat_message_cant_open_file_in_app_dialog_title">Кажется, мы не можем отобразить файл.</string>
     <string name="chat_message_cant_open_file_in_app_dialog_message">Вы хотите открыть его как текст или экспортировать (в незашифрованном виде) в стороннее приложение \?</string>
-    <string name="chat_message_voice_recording_playback_low_volume">Низкая громкость мультимедиа, возможно, вы захотите ее увеличить</string>
     <string name="assistant_create_account_part_2">Мы отправили вам SMS с кодом подтверждения на ваш номер телефона:</string>
     <string name="assistant_remote_provisioning_title">Удаленная конфигурация</string>
     <string name="assistant_remote_provisioning_wrong_format">Неизвестный формат URL, не удается загрузить подготовку…</string>
@@ -578,7 +560,6 @@
     <string name="advanced_settings_dark_mode_label_no">Нет</string>
     <string name="advanced_settings_device_name_summary">Изменения будут применены при следующем запуске</string>
     <string name="advanced_settings_logs_server_url_summary">Не редактируйте, если не знаете, что делаете!</string>
-    <string name="advanced_settings_disable_fragment_security_title">Отключить безопасный режим пользовательского интерфейса</string>
     <string name="tunnel_settings_dual_mode_summary">Будет использовать один сервер для загрузки, а другой - для загрузки</string>
     <string name="account_settings_user_id_summary">Введите идентификатор аутентификации, если он отличается от имени пользователя (необязательно)</string>
     <string name="account_settings_disable_title">Отключено</string>
@@ -626,6 +607,4 @@
     <string name="content_description_export">Открыть файл в стороннем приложении</string>
     <string name="call_settings_accept_early_media_title">Принимайте early media</string>
     <string name="call_settings_ring_during_early_media_title">Звонок во время входящих early media</string>
-    <string name="call_settings_use_telecom_manager_title">Улучшение взаимодействия с устройствами bluetooth</string>
-    <string name="call_settings_use_telecom_manager_summary">Требуются некоторые дополнительные разрешения</string>
 </resources>
