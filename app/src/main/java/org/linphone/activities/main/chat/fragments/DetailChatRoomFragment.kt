@@ -668,11 +668,12 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             }
 
             if (viewModel.ephemeralChatRoom) {
-                if (chatRoom.currentParams.ephemeralMode == ChatRoomEphemeralMode.AdminManaged &&
-                    viewModel.meAdmin.value == false
-                ) {
-                    popupView.ephemeralHidden = true
-                    totalSize -= itemSize
+                if (chatRoom.currentParams.ephemeralMode == ChatRoomEphemeralMode.AdminManaged) {
+                    if (chatRoom.me?.isAdmin == false) {
+                        Log.w("[Chat Room] Hiding ephemeral menu as mode is admin managed and we aren't admin")
+                        popupView.ephemeralHidden = true
+                        totalSize -= itemSize
+                    }
                 }
             }
         }
