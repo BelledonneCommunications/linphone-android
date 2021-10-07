@@ -50,7 +50,7 @@ class EphemeralViewModel(private val chatRoom: ChatRoom) : ViewModel() {
     }
 
     init {
-        Log.i("[Ephemeral Messages] Current duration is ${chatRoom.ephemeralLifetime}, ephemeral enabled? ${chatRoom.ephemeralEnabled()}")
+        Log.i("[Ephemeral Messages] Current lifetime is ${chatRoom.ephemeralLifetime}, ephemeral enabled? ${chatRoom.ephemeralEnabled()}")
         currentSelectedDuration = if (chatRoom.ephemeralEnabled()) chatRoom.ephemeralLifetime else 0
         computeEphemeralDurationValues()
     }
