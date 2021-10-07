@@ -168,6 +168,7 @@ class ChatRoomCreationViewModel : ErrorReportingViewModel() {
                 ChatRoomEphemeralMode.DeviceManaged
             else
                 ChatRoomEphemeralMode.AdminManaged
+            Log.i("[Chat Room Creation] Ephemeral mode is ${params.ephemeralMode}")
             params.ephemeralLifetime = 0 // Make sure ephemeral is disabled by default
             params.subject = AppUtils.getString(R.string.chat_room_dummy_subject)
         }

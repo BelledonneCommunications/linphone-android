@@ -124,6 +124,7 @@ class GroupInfoViewModel(val chatRoom: ChatRoom?) : ErrorReportingViewModel() {
             else
                 ChatRoomEphemeralMode.AdminManaged
         }
+        Log.i("[Chat Room Group Info] Ephemeral mode is ${params.ephemeralMode}")
         params.ephemeralLifetime = 0 // Make sure ephemeral is disabled by default
         params.subject = subject.value
 
