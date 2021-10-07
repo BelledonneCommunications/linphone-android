@@ -61,7 +61,8 @@
 
         <LinearLayout
             android:layout_width="@dimen/chat_message_bubble_file_size"
-            android:layout_height="@dimen/chat_message_bubble_file_size"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/chat_message_bubble_file_size"
             android:orientation="vertical"
             android:gravity="center"
             android:background="?attr/backgroundColor"
@@ -74,7 +75,6 @@
                 android:layout_margin="5dp"
                 android:ellipsize="middle"
                 android:singleLine="true"
-                android:padding="10dp"
                 android:gravity="center"
                 android:textAlignment="center"
                 android:drawablePadding="5dp"
@@ -87,6 +87,8 @@
                 style="@style/chat_file_attachment_font"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginBottom="5dp"
                 android:text="@{data.downloadLabel}"
                 android:onClick="@{() -> data.download()}"
                 android:visibility="@{data.downloadable ? View.VISIBLE : View.GONE}"/>
