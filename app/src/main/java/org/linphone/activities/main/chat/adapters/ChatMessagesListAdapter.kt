@@ -95,7 +95,7 @@ class ChatMessagesListAdapter(
         }
     }
 
-    private var contextMenuDisabled: Boolean = false
+    private var advancedContextMenuOptionsDisabled: Boolean = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
@@ -133,8 +133,8 @@ class ChatMessagesListAdapter(
         return eventLog.eventLog.type.toInt()
     }
 
-    fun disableContextMenu() {
-        contextMenuDisabled = true
+    fun disableAdvancedContextMenuOptions() {
+        advancedContextMenuOptionsDisabled = true
     }
 
     inner class ChatMessageViewHolder(
@@ -205,8 +205,6 @@ class ChatMessagesListAdapter(
 
                     executePendingBindings()
 
-                    if (contextMenuDisabled) return
-
                     setContextMenuClickListener {
                         val popupView: ChatMessageLongPressMenuBindingImpl = DataBindingUtil.inflate(
                             LayoutInflater.from(root.context),
@@ -216,7 +214,8 @@ class ChatMessagesListAdapter(
                         val itemSize = AppUtils.getDimension(R.dimen.chat_message_popup_item_height).toInt()
                         var totalSize = itemSize * 7
                         if (chatMessage.chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) ||
-                            chatMessage.state == ChatMessage.State.NotDelivered
+                            chatMessage.state == ChatMessage.State.NotDelivered ||
+                            advancedContextMenuOptionsDisabled
                         ) { // No message id
                             popupView.imdnHidden = true
                             totalSize -= itemSize
@@ -229,12 +228,19 @@ class ChatMessagesListAdapter(
                             popupView.copyTextHidden = true
                             totalSize -= itemSize
                         }
-                        if (chatMessage.isOutgoing || chatMessageViewModel.contact.value != null) {
+                        if (chatMessage.isOutgoing ||
+                            chatMessageViewModel.contact.value != null ||
+                            advancedContextMenuOptionsDisabled
+                        ) {
                             popupView.addToContactsHidden = true
                             totalSize -= itemSize
                         }
                         if (chatMessage.chatRoom.hasBeenLeft()) {
                             popupView.replyHidden = true
+                            totalSize -= itemSize
+                        }
+                        if (advancedContextMenuOptionsDisabled) {
+                            popupView.forwardHidden = true
                             totalSize -= itemSize
                         }
 

@@ -169,7 +169,7 @@ class ShortcutsHelper(val context: Context) {
                         personsList.add(contact.getPerson())
                     }
                     subject = contact?.fullName ?: LinphoneUtils.getDisplayName(chatRoom.peerAddress)
-                    icon = contact?.getPerson()?.icon ?: IconCompat.createWithResource(context, R.drawable.avatar)
+                    icon = contact?.getPerson()?.icon ?: IconCompat.createWithResource(context, R.drawable.voip_single_contact_avatar)
                 } else if (chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) && chatRoom.participants.isNotEmpty()) {
                     val address = chatRoom.participants.first().address
                     val contact =
@@ -178,7 +178,7 @@ class ShortcutsHelper(val context: Context) {
                         personsList.add(contact.getPerson())
                     }
                     subject = contact?.fullName ?: LinphoneUtils.getDisplayName(address)
-                    icon = contact?.getPerson()?.icon ?: IconCompat.createWithResource(context, R.drawable.avatar)
+                    icon = contact?.getPerson()?.icon ?: IconCompat.createWithResource(context, R.drawable.voip_single_contact_avatar)
                 } else {
                     for (participant in chatRoom.participants) {
                         val contact =
@@ -188,7 +188,7 @@ class ShortcutsHelper(val context: Context) {
                         }
                     }
                     subject = chatRoom.subject.orEmpty()
-                    icon = IconCompat.createWithResource(context, R.drawable.chat_group_avatar)
+                    icon = IconCompat.createWithResource(context, R.drawable.voip_multiple_contacts_avatar)
                 }
 
                 val persons = arrayOfNulls<Person>(personsList.size)
