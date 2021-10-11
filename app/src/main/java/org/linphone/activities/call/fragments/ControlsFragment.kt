@@ -111,7 +111,7 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
             viewLifecycleOwner,
             {
                 it.consume {
-                    if (!PermissionHelper.get().hasWriteExternalStorage()) {
+                    if (!PermissionHelper.get().hasWriteExternalStoragePermission()) {
                         Log.i("[Controls Fragment] Asking for WRITE_EXTERNAL_STORAGE permission")
                         requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
                     }

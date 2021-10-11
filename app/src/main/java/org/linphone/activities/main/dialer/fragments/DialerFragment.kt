@@ -19,11 +19,14 @@
  */
 package org.linphone.activities.main.dialer.fragments
 
+import android.Manifest
+import android.annotation.TargetApi
 import android.app.Dialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
@@ -44,9 +47,11 @@ import org.linphone.activities.navigateToConfigFileViewer
 import org.linphone.activities.navigateToContacts
 import org.linphone.core.tools.Log
 import org.linphone.databinding.DialerFragmentBinding
+import org.linphone.mediastream.Version
 import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
+import org.linphone.utils.PermissionHelper
 
 class DialerFragment : SecureFragment<DialerFragmentBinding>() {
     private lateinit var viewModel: DialerViewModel
@@ -164,6 +169,10 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
         viewModel.transferVisibility.value = sharedViewModel.pendingCallTransfer
 
         checkForUpdate()
+
+        if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
+            checkPermissions()
+        }
     }
 
     override fun onPause() {
@@ -183,6 +192,28 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
         uploadLogsInitiatedByUs = false
 
         viewModel.enteredUri.value = sharedViewModel.dialerUri
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == 0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.i("[Dialer] READ_PHONE_STATE permission has been granted")
+                coreContext.initPhoneStateListener()
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    @TargetApi(Version.API23_MARSHMALLOW_60)
+    private fun checkPermissions() {
+        if (!PermissionHelper.get().hasReadPhoneStatePermission()) {
+            Log.i("[Dialer] Asking for READ_PHONE_STATE permission")
+            requestPermissions(arrayOf(Manifest.permission.READ_PHONE_STATE), 0)
+        }
     }
 
     private fun displayDebugPopup() {

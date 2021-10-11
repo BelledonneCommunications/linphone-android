@@ -313,13 +313,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
 
         configureCore()
 
-        try {
-            phoneStateListener =
-                Compatibility.createPhoneListener(context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager)
-        } catch (exception: SecurityException) {
-            val hasReadPhoneStatePermission = PermissionHelper.get().hasReadPhoneState()
-            Log.e("[Context] Failed to create phone state listener: $exception, READ_PHONE_STATE permission status is $hasReadPhoneStatePermission")
-        }
+        initPhoneStateListener()
 
         EmojiCompat.init(BundledEmojiCompatConfig(context))
         collator.strength = Collator.NO_DECOMPOSITION
@@ -409,6 +403,21 @@ class CoreContext(val context: Context, coreConfig: Config) {
     }
 
     /* Call related functions */
+
+    fun initPhoneStateListener() {
+        if (PermissionHelper.get().hasReadPhoneStatePermission()) {
+            try {
+                phoneStateListener =
+                    Compatibility.createPhoneListener(context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager)
+            } catch (exception: SecurityException) {
+                val hasReadPhoneStatePermission =
+                    PermissionHelper.get().hasReadPhoneStateOrPhoneNumbersPermission()
+                Log.e("[Context] Failed to create phone state listener: $exception, READ_PHONE_STATE permission status is $hasReadPhoneStatePermission")
+            }
+        } else {
+            Log.w("[Context] Can't create phone state listener, READ_PHONE_STATE permission isn't granted")
+        }
+    }
 
     fun answerCallVideoUpdateRequest(call: Call, accept: Boolean) {
         val params = core.createCallParams(call)
@@ -655,7 +664,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
             return
         }
 
-        if (Version.sdkAboveOrEqual(Version.API29_ANDROID_10) || PermissionHelper.get().hasWriteExternalStorage()) {
+        if (Version.sdkAboveOrEqual(Version.API29_ANDROID_10) || PermissionHelper.get().hasWriteExternalStoragePermission()) {
             for (content in message.contents) {
                 if (content.isFile && content.filePath != null && content.userData == null) {
                     addContentToMediaStore(content)
@@ -676,7 +685,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
             return
         }
 
-        if (Version.sdkAboveOrEqual(Version.API29_ANDROID_10) || PermissionHelper.get().hasWriteExternalStorage()) {
+        if (Version.sdkAboveOrEqual(Version.API29_ANDROID_10) || PermissionHelper.get().hasWriteExternalStoragePermission()) {
             coroutineScope.launch {
                 when (content.type) {
                     "image" -> {

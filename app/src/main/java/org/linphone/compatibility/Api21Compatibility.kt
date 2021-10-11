@@ -69,7 +69,7 @@ class Api21Compatibility {
         }
 
         suspend fun addImageToMediaStore(context: Context, content: Content): Boolean {
-            if (!PermissionHelper.get().hasWriteExternalStorage()) {
+            if (!PermissionHelper.get().hasWriteExternalStoragePermission()) {
                 Log.e("[Media Store] Write external storage permission denied")
                 return false
             }
@@ -100,7 +100,7 @@ class Api21Compatibility {
         }
 
         suspend fun addVideoToMediaStore(context: Context, content: Content): Boolean {
-            if (!PermissionHelper.get().hasWriteExternalStorage()) {
+            if (!PermissionHelper.get().hasWriteExternalStoragePermission()) {
                 Log.e("[Media Store] Write external storage permission denied")
                 return false
             }
@@ -132,7 +132,7 @@ class Api21Compatibility {
         }
 
         suspend fun addAudioToMediaStore(context: Context, content: Content): Boolean {
-            if (!PermissionHelper.get().hasWriteExternalStorage()) {
+            if (!PermissionHelper.get().hasWriteExternalStoragePermission()) {
                 Log.e("[Media Store] Write external storage permission denied")
                 return false
             }
