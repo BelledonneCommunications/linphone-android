@@ -21,6 +21,8 @@ package org.linphone.utils
 
 import android.Manifest
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 
@@ -50,15 +52,19 @@ class PermissionHelper private constructor(private val context: Context) {
         return hasPermission(Manifest.permission.WRITE_CONTACTS)
     }
 
-    fun hasReadPhoneState(): Boolean {
+    fun hasReadPhoneStatePermission(): Boolean {
         return hasPermission(Manifest.permission.READ_PHONE_STATE)
     }
 
-    fun hasReadExternalStorage(): Boolean {
+    fun hasReadPhoneStateOrPhoneNumbersPermission(): Boolean {
+        return Compatibility.hasReadPhoneStateOrNumbersPermission(context)
+    }
+
+    fun hasReadExternalStoragePermission(): Boolean {
         return hasPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
     }
 
-    fun hasWriteExternalStorage(): Boolean {
+    fun hasWriteExternalStoragePermission(): Boolean {
         return hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     }
 
@@ -70,8 +76,9 @@ class PermissionHelper private constructor(private val context: Context) {
         return hasPermission(Manifest.permission.RECORD_AUDIO)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun hasTelecomManagerPermissions(): Boolean {
-        return hasPermission(Manifest.permission.READ_PHONE_STATE) &&
+        return hasPermission(Manifest.permission.READ_PHONE_NUMBERS) &&
             hasPermission(Manifest.permission.MANAGE_OWN_CALLS)
     }
 }

@@ -19,7 +19,9 @@
  */
 package org.linphone.compatibility
 
+import android.Manifest
 import android.annotation.TargetApi
+import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.ContentValues
@@ -45,6 +47,20 @@ import org.linphone.utils.LinphoneUtils
 @TargetApi(29)
 class Api29Compatibility {
     companion object {
+        fun hasReadPhoneStatePermission(context: Context): Boolean {
+            val granted = Compatibility.hasPermission(context, Manifest.permission.READ_PHONE_STATE)
+            if (granted) {
+                Log.d("[Permission Helper] Permission READ_PHONE_STATE is granted")
+            } else {
+                Log.w("[Permission Helper] Permission READ_PHONE_STATE is denied")
+            }
+            return granted
+        }
+
+        fun requestReadPhoneStatePermission(activity: Activity, code: Int) {
+            activity.requestPermissions(arrayOf(Manifest.permission.READ_PHONE_STATE), code)
+        }
+
         fun createMessageChannel(
             context: Context,
             notificationManager: NotificationManagerCompat
