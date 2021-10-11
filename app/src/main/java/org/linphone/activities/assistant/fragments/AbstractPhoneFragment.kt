@@ -41,10 +41,10 @@ abstract class AbstractPhoneFragment<T : ViewDataBinding> : GenericFragment<T>()
     ) {
         if (requestCode == 0) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.i("[Assistant] READ_PHONE_NUMBERS permission granted")
+                Log.i("[Assistant] READ_PHONE_STATE permission granted")
                 updateFromDeviceInfo()
             } else {
-                Log.w("[Assistant] READ_PHONE_NUMBERS permission denied")
+                Log.w("[Assistant] READ_PHONE_STATE permission denied")
             }
         }
     }
