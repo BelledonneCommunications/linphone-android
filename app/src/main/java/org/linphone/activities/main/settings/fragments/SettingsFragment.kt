@@ -67,6 +67,16 @@ class SettingsFragment : SecureFragment<SettingsFragmentBinding>() {
 
         view.doOnPreDraw { sharedViewModel.isSlidingPaneSlideable.value = binding.slidingPane.isSlideable }
 
+        // Account settings loading can take some time, so wait until it is ready before opening the pane
+        sharedViewModel.accountSettingsFragmentOpenedEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume {
+                    binding.slidingPane.openPane()
+                }
+            }
+        )
+
         sharedViewModel.closeSlidingPaneEvent.observe(
             viewLifecycleOwner,
             {
@@ -113,13 +123,13 @@ class SettingsFragment : SecureFragment<SettingsFragmentBinding>() {
         if (identity != null) {
             Log.i("[Settings] Found identity parameter in arguments: $identity")
             arguments?.clear()
-            navigateToAccountSettings(identity, binding.slidingPane)
+            navigateToAccountSettings(identity)
         }
 
         viewModel.accountsSettingsListener = object : SettingListenerStub() {
             override fun onAccountClicked(identity: String) {
                 Log.i("[Settings] Navigation to settings for account with identity: $identity")
-                navigateToAccountSettings(identity, binding.slidingPane)
+                navigateToAccountSettings(identity)
             }
         }
 

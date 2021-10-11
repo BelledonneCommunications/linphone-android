@@ -533,10 +533,7 @@ internal fun DetailCallLogFragment.navigateToEmptyCallHistory() {
 
 /* Settings related */
 
-internal fun SettingsFragment.navigateToAccountSettings(
-    identity: String,
-    slidingPane: SlidingPaneLayout
-) {
+internal fun SettingsFragment.navigateToAccountSettings(identity: String) {
     if (findNavController().currentDestination?.id == R.id.settingsFragment) {
         val bundle = bundleOf("Identity" to identity)
         val navHostFragment =
@@ -546,7 +543,6 @@ internal fun SettingsFragment.navigateToAccountSettings(
             bundle,
             popupTo(R.id.accountSettingsFragment, true)
         )
-        if (!slidingPane.isOpen) slidingPane.openPane()
     }
 }
 

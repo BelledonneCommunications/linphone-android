@@ -21,6 +21,7 @@ package org.linphone.activities.main.settings.fragments
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
 import org.linphone.activities.main.settings.viewmodels.AccountSettingsViewModel
@@ -90,6 +91,11 @@ class AccountSettingsFragment : GenericSettingFragment<SettingsAccountFragmentBi
                 }
             }
         )
+
+        view.doOnPreDraw {
+            // Notifies fragment is ready to be drawn
+            sharedViewModel.accountSettingsFragmentOpenedEvent.value = Event(true)
+        }
     }
 
     override fun goBack() {
