@@ -26,7 +26,6 @@ import org.linphone.core.MediaEncryption
 import org.linphone.mediastream.Version
 import org.linphone.telecom.TelecomHelper
 import org.linphone.utils.Event
-import org.linphone.utils.PermissionHelper
 
 class CallSettingsViewModel : GenericSettingsViewModel() {
     val deviceRingtoneListener = object : SettingListenerStub() {
@@ -65,16 +64,10 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
 
     val useTelecomManagerListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
-            if (newValue &&
-                (
-                    !PermissionHelper.get().hasTelecomManagerPermissions() ||
-                        !TelecomHelper.exists() ||
-                        !TelecomHelper.get().isAccountEnabled()
-                    )
-            ) {
+            if (newValue) {
                 enableTelecomManagerEvent.value = Event(true)
             } else {
-                if (!newValue && TelecomHelper.exists()) TelecomHelper.get().removeAccount()
+                if (TelecomHelper.exists()) TelecomHelper.get().removeAccount()
                 prefs.useTelecomManager = newValue
             }
         }

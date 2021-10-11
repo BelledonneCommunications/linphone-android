@@ -41,7 +41,7 @@ class PhoneNumberUtils {
 
         @SuppressLint("MissingPermission", "HardwareIds")
         fun getDevicePhoneNumber(context: Context): String? {
-            if (PermissionHelper.get().hasReadPhoneState()) {
+            if (PermissionHelper.get().hasReadPhoneStateOrPhoneNumbersPermission()) {
                 try {
                     val tm = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
                     return tm.line1Number

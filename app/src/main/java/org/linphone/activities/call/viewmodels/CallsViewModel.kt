@@ -124,7 +124,7 @@ class CallsViewModel : ViewModel() {
     }
 
     fun takeScreenshot() {
-        if (!PermissionHelper.get().hasWriteExternalStorage()) {
+        if (!PermissionHelper.get().hasWriteExternalStoragePermission()) {
             askWriteExternalStoragePermissionEvent.value = Event(true)
         } else {
             currentCallViewModel.value?.takeScreenshot()

@@ -44,6 +44,24 @@ class Compatibility {
             }
         }
 
+        // See https://developer.android.com/about/versions/11/privacy/permissions#phone-numbers
+        fun hasReadPhoneStateOrNumbersPermission(context: Context): Boolean {
+            return if (Version.sdkAboveOrEqual(Version.API30_ANDROID_11)) {
+                Api30Compatibility.hasReadPhoneNumbersPermission(context)
+            } else {
+                Api29Compatibility.hasReadPhoneStatePermission(context)
+            }
+        }
+
+        // See https://developer.android.com/about/versions/11/privacy/permissions#phone-numbers
+        fun requestReadPhoneStateOrNumbersPermission(activity: Activity, code: Int) {
+            if (Version.sdkAboveOrEqual(Version.API30_ANDROID_11)) {
+                Api30Compatibility.requestReadPhoneNumbersPermission(activity, code)
+            } else {
+                Api29Compatibility.requestReadPhoneStatePermission(activity, code)
+            }
+        }
+
         fun getDeviceName(context: Context): String {
             return when (Version.sdkAboveOrEqual(Version.API25_NOUGAT_71)) {
                 true -> Api25Compatibility.getDeviceName(context)
