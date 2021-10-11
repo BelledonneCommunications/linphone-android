@@ -96,11 +96,12 @@ class CallSettingsFragment : GenericSettingFragment<SettingsCallFragmentBinding>
                 it.consume {
                     if (!PermissionHelper.get().hasTelecomManagerPermissions()) {
                         val permissions = arrayOf(
-                            Manifest.permission.READ_PHONE_STATE,
+                            Manifest.permission.READ_PHONE_NUMBERS,
                             Manifest.permission.MANAGE_OWN_CALLS
                         )
                         requestPermissions(permissions, 1)
                     } else if (!TelecomHelper.exists()) {
+                        corePreferences.useTelecomManager = true
                         Log.w("[Telecom Helper] Doesn't exists yet, creating it")
                         TelecomHelper.create(requireContext())
                     }
@@ -181,6 +182,7 @@ class CallSettingsFragment : GenericSettingFragment<SettingsCallFragmentBinding>
             }
         }
 
+        corePreferences.useTelecomManager = true
         TelecomHelper.create(requireContext())
     }
 }

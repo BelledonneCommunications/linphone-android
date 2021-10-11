@@ -71,7 +71,7 @@ class PermissionHelper private constructor(private val context: Context) {
     }
 
     fun hasTelecomManagerPermissions(): Boolean {
-        return hasPermission(Manifest.permission.READ_PHONE_STATE) &&
+        return hasPermission(Manifest.permission.READ_PHONE_NUMBERS) &&
             hasPermission(Manifest.permission.MANAGE_OWN_CALLS)
     }
 }
