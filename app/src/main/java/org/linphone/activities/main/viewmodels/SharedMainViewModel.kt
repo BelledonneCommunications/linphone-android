@@ -87,6 +87,10 @@ class SharedMainViewModel : ViewModel() {
 
     val accountRemoved = MutableLiveData<Boolean>()
 
+    val accountSettingsFragmentOpenedEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     /* Call */
 
     var pendingCallTransfer: Boolean = false
