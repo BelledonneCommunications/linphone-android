@@ -51,7 +51,9 @@ class SideMenuViewModel : ViewModel() {
             message: String
         ) {
             // +1 is for the default account, otherwise this will trigger every time
-            if (coreContext.core.accountList.size != accounts.value.orEmpty().size + 1) {
+            if (accounts.value.isNullOrEmpty() ||
+                coreContext.core.accountList.size != accounts.value.orEmpty().size + 1
+            ) {
                 // Only refresh the list if an account has been added or removed
                 updateAccountsList()
             }
