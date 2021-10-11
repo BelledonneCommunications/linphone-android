@@ -24,6 +24,9 @@ import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Context
 import android.content.pm.ShortcutManager
+import android.view.Window
+import android.view.WindowInsets
+import android.view.WindowInsetsController
 import org.linphone.core.ChatRoom
 import org.linphone.core.tools.Log
 import org.linphone.utils.LinphoneUtils
@@ -53,6 +56,20 @@ class Api30Compatibility {
             val id = LinphoneUtils.getChatRoomId(localAddress, peerAddress)
             val shortcutsToRemoveList = arrayListOf(id)
             shortcutManager.removeLongLivedShortcuts(shortcutsToRemoveList)
+        }
+
+        fun hideAndroidSystemUI(hide: Boolean, window: Window) {
+            if (hide) {
+                window.setDecorFitsSystemWindows(false)
+                window.insetsController?.let {
+                    it.systemBarsBehavior =
+                        WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                    it.hide(WindowInsets.Type.systemBars())
+                }
+            } else {
+                window.setDecorFitsSystemWindows(true)
+                window.insetsController?.show(WindowInsets.Type.systemBars())
+            }
         }
     }
 }
