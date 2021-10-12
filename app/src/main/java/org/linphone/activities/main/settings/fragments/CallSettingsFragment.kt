@@ -104,6 +104,7 @@ class CallSettingsFragment : GenericSettingFragment<SettingsCallFragmentBinding>
                         corePreferences.useTelecomManager = true
                         Log.w("[Telecom Helper] Doesn't exists yet, creating it")
                         TelecomHelper.create(requireContext())
+                        updateTelecomManagerAccount()
                     }
                 }
             }
@@ -182,7 +183,7 @@ class CallSettingsFragment : GenericSettingFragment<SettingsCallFragmentBinding>
             }
         }
 
-        corePreferences.useTelecomManager = true
         TelecomHelper.create(requireContext())
+        updateTelecomManagerAccount()
     }
 }
