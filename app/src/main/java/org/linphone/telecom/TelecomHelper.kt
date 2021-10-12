@@ -94,7 +94,12 @@ class TelecomHelper private constructor(context: Context) {
                     break
                 }
             }
+            if (account == null) {
+                Log.w("[Telecom Helper] Existing phone account not found")
+            }
             return account
+        } else {
+            Log.e("[Telecom Helper] Can't search for existing phone account, missing permission(s)")
         }
         return null
     }
