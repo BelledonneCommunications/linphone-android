@@ -49,4 +49,13 @@
         <attr name="primaryLeftMargin" format="dimension" />
         <attr name="primaryRightMargin" format="dimension" />
     </declare-styleable>
+
+    <declare-styleable name="RoundCornersTextureView">
+        <attr name="alignTopRight" format="boolean" />
+        <attr name="displayMode" format="enum">
+            <enum name="black_bars" value="0"/>
+            <enum name="occupy_all_space" value="1"/>
+            <enum name="hybrid" value="2"/>
+        </attr>
+    </declare-styleable>
 </resources>
