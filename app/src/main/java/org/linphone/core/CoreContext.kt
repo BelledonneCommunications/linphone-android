@@ -74,9 +74,9 @@ class CoreContext(val context: Context, coreConfig: Config) {
     var screenHeight: Float = 0f
 
     val appVersion: String by lazy {
-        val appVersion = org.linphone.BuildConfig.VERSION_NAME
+        val appVersion = BuildConfig.VERSION_NAME
         val appBranch = context.getString(R.string.linphone_app_branch)
-        val appBuildType = org.linphone.BuildConfig.BUILD_TYPE
+        val appBuildType = BuildConfig.BUILD_TYPE
         "$appVersion ($appBranch, $appBuildType)"
     }
 
@@ -382,8 +382,8 @@ class CoreContext(val context: Context, coreConfig: Config) {
 
     private fun computeUserAgent() {
         val deviceName: String = corePreferences.deviceName
-        val appName: String = context.resources.getString(R.string.app_name)
-        val androidVersion = org.linphone.BuildConfig.VERSION_NAME
+        val appName: String = context.resources.getString(R.string.user_agent_app_name)
+        val androidVersion = BuildConfig.VERSION_NAME
         val userAgent = "$appName/$androidVersion ($deviceName) LinphoneSDK"
         val sdkVersion = context.getString(R.string.linphone_sdk_version)
         val sdkBranch = context.getString(R.string.linphone_sdk_branch)
