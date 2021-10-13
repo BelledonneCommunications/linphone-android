@@ -382,8 +382,8 @@ class CoreContext(val context: Context, coreConfig: Config) {
 
     private fun computeUserAgent() {
         val deviceName: String = corePreferences.deviceName
-        val appName: String = context.resources.getString(R.string.app_name)
-        val androidVersion = org.linphone.BuildConfig.VERSION_NAME
+        val appName: String = context.resources.getString(R.string.user_agent_app_name)
+        val androidVersion = BuildConfig.VERSION_NAME
         val userAgent = "$appName/$androidVersion ($deviceName) LinphoneSDK"
         val sdkVersion = context.getString(R.string.linphone_sdk_version)
         val sdkBranch = context.getString(R.string.linphone_sdk_branch)
