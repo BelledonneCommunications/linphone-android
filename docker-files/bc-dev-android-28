@@ -19,7 +19,7 @@ ENV ANDROID_HOME /opt/android-sdk-linux
 
 # Install common general tools
 RUN apt-get update && \
-    apt-get install -y curl nano sudo unzip vim wget openjdk-8-jdk-headless rsync ssh git && \
+    apt-get install -y curl nano sudo unzip vim wget openjdk-8-jdk-headless rsync ssh git zip && \
     apt-get clean
 
 # Get the Android tools
