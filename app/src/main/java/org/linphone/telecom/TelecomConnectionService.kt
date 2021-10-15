@@ -48,6 +48,7 @@ class TelecomConnectionService : ConnectionService() {
                         }
                     }
                 }
+                Call.State.Error -> onCallError(call)
                 Call.State.End, Call.State.Released -> onCallEnded(call)
                 Call.State.Connected -> onCallConnected(call)
             }
@@ -160,12 +161,23 @@ class TelecomConnectionService : ConnectionService() {
         }
     }
 
+    private fun onCallError(call: Call) {
+        val connection = getConnectionForCallId(call.callLog.callId)
+        connection ?: return
+
+        connections.remove(connection)
+        connection.setDisconnected(DisconnectCause(DisconnectCause.ERROR))
+        connection.destroy()
+    }
+
     private fun onCallEnded(call: Call) {
         val connection = getConnectionForCallId(call.callLog.callId)
         connection ?: return
 
         connections.remove(connection)
-        connection.setDisconnected(DisconnectCause(DisconnectCause.REJECTED))
+        val reason = call.reason
+        Log.i("[Telecom Connection Service] Call ended with reason: $reason")
+        connection.setDisconnected(DisconnectCause(DisconnectCause.LOCAL))
         connection.destroy()
     }
 

@@ -50,13 +50,17 @@ class TelecomHelper private constructor(context: Context) {
     private var account: PhoneAccount = initPhoneAccount(context)
 
     private val listener: CoreListenerStub = object : CoreListenerStub() {
-        override fun onFirstCallStarted(core: Core) {
-            val call = core.calls.firstOrNull()
-            call ?: return
+        override fun onCallStateChanged(
+            core: Core,
+            call: Call,
+            state: Call.State?,
+            message: String
+        ) {
+            Log.i("[Telecom Helper] Call state changed: ${call.state}")
 
-            if (call.dir == Call.Dir.Incoming) {
+            if (call.dir == Call.Dir.Incoming && call.state == Call.State.IncomingReceived) {
                 onIncomingCall(call)
-            } else {
+            } else if (call.dir == Call.Dir.Outgoing && call.state == Call.State.OutgoingProgress) {
                 onOutgoingCall(call)
             }
         }
@@ -70,6 +74,20 @@ class TelecomHelper private constructor(context: Context) {
     fun destroy() {
         coreContext.core.removeListener(listener)
         Log.i("[Telecom Helper] Destroyed")
+    }
+
+    fun isIncomingCallPermitted(): Boolean {
+        val incomingCallPermitted = telecomManager.isIncomingCallPermitted(account.accountHandle)
+        Log.i("[Telecom Helper] Is incoming call permitted? $incomingCallPermitted")
+        return incomingCallPermitted
+    }
+
+    @SuppressLint("MissingPermission")
+    fun isInManagedCall(): Boolean {
+        // Don't use telecomManager.isInCall as our own self-managed calls will be considered!
+        val isInManagedCall = telecomManager.isInManagedCall
+        Log.i("[Telecom Helper] Is in managed call? $isInManagedCall")
+        return isInManagedCall
     }
 
     fun isAccountEnabled(): Boolean {

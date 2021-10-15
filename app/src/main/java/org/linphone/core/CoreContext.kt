@@ -136,7 +136,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
         ) {
             Log.i("[Context] Call state changed [$state]")
             if (state == Call.State.IncomingReceived || state == Call.State.IncomingEarlyMedia) {
-                if (!corePreferences.useTelecomManager) {
+                if (!corePreferences.useTelecomManager) { // Can't use the following call with Telecom Manager API as it will "fake" GSM calls
                     var gsmCallActive = false
                     if (::phoneStateListener.isInitialized) {
                         gsmCallActive = phoneStateListener.isInCall()
@@ -146,6 +146,18 @@ class CoreContext(val context: Context, coreConfig: Config) {
                         Log.w("[Context] Refusing the call with reason busy because a GSM call is active")
                         call.decline(Reason.Busy)
                         return
+                    }
+                } else {
+                    if (TelecomHelper.exists()) {
+                        if (!TelecomHelper.get().isIncomingCallPermitted() ||
+                            TelecomHelper.get().isInManagedCall()
+                        ) {
+                            Log.w("[Context] Refusing the call with reason busy because Telecom Manager will reject the call")
+                            call.decline(Reason.Busy)
+                            return
+                        }
+                    } else {
+                        Log.e("[Context] Telecom Manager singleton wasn't created!")
                     }
                 }
 
@@ -297,12 +309,13 @@ class CoreContext(val context: Context, coreConfig: Config) {
 
         notificationsManager.onCoreReady()
 
+        core.addListener(listener)
+
+        // CoreContext listener must be added first!
         if (Version.sdkAboveOrEqual(Version.API26_O_80) && corePreferences.useTelecomManager) {
             Log.i("[Context] Creating telecom helper")
             TelecomHelper.create(context)
         }
-
-        core.addListener(listener)
 
         if (isPush) {
             Log.i("[Context] Push received, assume in background")
