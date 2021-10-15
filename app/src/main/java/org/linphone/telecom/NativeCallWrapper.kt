@@ -23,7 +23,6 @@ import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.telecom.CallAudioState
 import android.telecom.Connection
-import android.telecom.DisconnectCause
 import android.telecom.StatusHints
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
@@ -95,7 +94,6 @@ class NativeCallWrapper(var callId: String) : Connection() {
 
     override fun onReject() {
         Log.i("[Connection] Rejecting telecom call with id: $callId")
-        setDisconnected(DisconnectCause(DisconnectCause.REJECTED))
         getCall()?.terminate()
     }
 

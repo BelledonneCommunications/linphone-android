@@ -23,6 +23,7 @@ import androidx.lifecycle.MutableLiveData
 import org.linphone.R
 import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.core.MediaEncryption
+import org.linphone.core.tools.Log
 import org.linphone.mediastream.Version
 import org.linphone.telecom.TelecomHelper
 import org.linphone.utils.Event
@@ -67,7 +68,11 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
             if (newValue) {
                 enableTelecomManagerEvent.value = Event(true)
             } else {
-                if (TelecomHelper.exists()) TelecomHelper.get().removeAccount()
+                if (TelecomHelper.exists()) {
+                    Log.i("[Call Settings] Removing Telecom Manager account & destroying singleton")
+                    TelecomHelper.get().removeAccount()
+                    TelecomHelper.destroy()
+                }
                 prefs.useTelecomManager = newValue
             }
         }
