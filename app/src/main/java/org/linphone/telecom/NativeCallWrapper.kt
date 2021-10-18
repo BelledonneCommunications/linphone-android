@@ -23,6 +23,7 @@ import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.telecom.CallAudioState
 import android.telecom.Connection
+import android.telecom.DisconnectCause
 import android.telecom.StatusHints
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
@@ -49,18 +50,18 @@ class NativeCallWrapper(var callId: String) : Connection() {
 
     override fun onAnswer(videoState: Int) {
         Log.i("[Connection] Answering telecom call with id: $callId")
-        getCall()?.accept()
+        getCall()?.accept() ?: selfDestroy()
     }
 
     override fun onHold() {
         Log.i("[Connection] Pausing telecom call with id: $callId")
-        getCall()?.pause()
+        getCall()?.pause() ?: selfDestroy()
         setOnHold()
     }
 
     override fun onUnhold() {
         Log.i("[Connection] Resuming telecom call with id: $callId")
-        getCall()?.resume()
+        getCall()?.resume() ?: selfDestroy()
         setActive()
     }
 
@@ -68,36 +69,48 @@ class NativeCallWrapper(var callId: String) : Connection() {
         Log.i("[Connection] Audio state changed: $state")
 
         val call = getCall()
-        call?.microphoneMuted = state.isMuted
-        when (state.route) {
-            CallAudioState.ROUTE_EARPIECE -> AudioRouteUtils.routeAudioToEarpiece(call)
-            CallAudioState.ROUTE_SPEAKER -> AudioRouteUtils.routeAudioToSpeaker(call)
-            CallAudioState.ROUTE_BLUETOOTH -> AudioRouteUtils.routeAudioToBluetooth(call)
-            CallAudioState.ROUTE_WIRED_HEADSET -> AudioRouteUtils.routeAudioToHeadset(call)
+        if (call != null) {
+            call.microphoneMuted = state.isMuted
+            when (state.route) {
+                CallAudioState.ROUTE_EARPIECE -> AudioRouteUtils.routeAudioToEarpiece(call)
+                CallAudioState.ROUTE_SPEAKER -> AudioRouteUtils.routeAudioToSpeaker(call)
+                CallAudioState.ROUTE_BLUETOOTH -> AudioRouteUtils.routeAudioToBluetooth(call)
+                CallAudioState.ROUTE_WIRED_HEADSET -> AudioRouteUtils.routeAudioToHeadset(call)
+            }
+        } else {
+            selfDestroy()
         }
     }
 
     override fun onPlayDtmfTone(c: Char) {
         Log.i("[Connection] Sending DTMF [$c] in telecom call with id: $callId")
-        getCall()?.sendDtmf(c)
+        getCall()?.sendDtmf(c) ?: selfDestroy()
     }
 
     override fun onDisconnect() {
         Log.i("[Connection] Terminating telecom call with id: $callId")
-        getCall()?.terminate()
+        getCall()?.terminate() ?: selfDestroy()
     }
 
     override fun onAbort() {
         Log.i("[Connection] Aborting telecom call with id: $callId")
-        getCall()?.terminate()
+        getCall()?.terminate() ?: selfDestroy()
     }
 
     override fun onReject() {
         Log.i("[Connection] Rejecting telecom call with id: $callId")
-        getCall()?.terminate()
+        getCall()?.terminate() ?: selfDestroy()
     }
 
     private fun getCall(): Call? {
         return coreContext.core.getCallByCallid(callId)
+    }
+
+    private fun selfDestroy() {
+        if (coreContext.core.callsNb == 0) {
+            Log.e("[Connection] No call in Core, destroy connection")
+            setDisconnected(DisconnectCause(DisconnectCause.LOCAL))
+            destroy()
+        }
     }
 }
