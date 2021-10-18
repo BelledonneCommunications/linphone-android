@@ -73,9 +73,13 @@ class TelecomConnectionService : ConnectionService() {
         connectionManagerPhoneAccount: PhoneAccountHandle,
         request: ConnectionRequest
     ): Connection {
+        if (coreContext.core.callsNb == 0) {
+            Log.w("[Telecom Connection Service] No call in Core, aborting outgoing connection!")
+            return Connection.createCanceledConnection()
+        }
+
         val accountHandle = request.accountHandle
         val componentName = ComponentName(applicationContext, this.javaClass)
-
         return if (accountHandle != null && componentName == accountHandle.componentName) {
             Log.i("[Telecom Connection Service] Creating outgoing connection")
 
@@ -118,9 +122,13 @@ class TelecomConnectionService : ConnectionService() {
         connectionManagerPhoneAccount: PhoneAccountHandle,
         request: ConnectionRequest
     ): Connection {
+        if (coreContext.core.callsNb == 0) {
+            Log.w("[Telecom Connection Service] No call in Core, aborting incoming connection!")
+            return Connection.createCanceledConnection()
+        }
+
         val accountHandle = request.accountHandle
         val componentName = ComponentName(applicationContext, this.javaClass)
-
         return if (accountHandle != null && componentName == accountHandle.componentName) {
             Log.i("[Telecom Connection Service] Creating incoming connection")
 
