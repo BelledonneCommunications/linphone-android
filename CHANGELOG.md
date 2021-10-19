@@ -10,6 +10,14 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [4.5.4] - 2021-10-19
+
+### Changed
+- SDK updated to 5.0.38
+
+### Fixed
+- Side menu not showing the newly configured account until next start
+
 ## [4.5.3] - 2021-10-04
 
 ### Added
