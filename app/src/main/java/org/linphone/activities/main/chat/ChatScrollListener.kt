@@ -29,6 +29,8 @@ internal abstract class ChatScrollListener(private val mLayoutManager: LinearLay
     // True if we are still waiting for the last set of data to load.
     private var loading = true
 
+    var userHasScrolledUp: Boolean = false
+
     // This happens many times a second during a scroll, so be wary of the code you place here.
     // We are given a few useful parameters to help us work out if we need to load some more data,
     // but first we check if we are waiting for the previous load to finish.
@@ -54,6 +56,13 @@ internal abstract class ChatScrollListener(private val mLayoutManager: LinearLay
             previousTotalItemCount = totalItemCount
         }
 
+        userHasScrolledUp = lastVisibleItemPosition != totalItemCount - 1
+        if (userHasScrolledUp) {
+            onScrolledUp()
+        } else {
+            onScrolledToEnd()
+        }
+
         // If it isn’t currently loading, we check to see if we have breached
         // the mVisibleThreshold and need to reload more data.
         // If we do need to reload some more data, we execute onLoadMore to fetch the data.
@@ -66,6 +75,12 @@ internal abstract class ChatScrollListener(private val mLayoutManager: LinearLay
 
     // Defines the process for actually loading more data based on page
     protected abstract fun onLoadMore(totalItemsCount: Int)
+
+    // Called when user has started to scroll up, opposed to onScrolledToEnd()
+    protected abstract fun onScrolledUp()
+
+    // Called when user has scrolled and reached the end of the items
+    protected abstract fun onScrolledToEnd()
 
     companion object {
         // The minimum amount of items to have below your current scroll position

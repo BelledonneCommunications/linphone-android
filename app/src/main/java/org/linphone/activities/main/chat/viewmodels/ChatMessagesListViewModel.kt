@@ -23,6 +23,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import java.util.*
+import kotlin.math.max
 import org.linphone.activities.main.chat.data.EventLogData
 import org.linphone.core.*
 import org.linphone.core.tools.Log
@@ -212,7 +213,10 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
 
     private fun getEvents(): ArrayList<EventLogData> {
         val list = arrayListOf<EventLogData>()
-        val history = chatRoom.getHistoryEvents(MESSAGES_PER_PAGE)
+        val unreadCount = chatRoom.unreadMessagesCount
+        val loadCount = max(MESSAGES_PER_PAGE, unreadCount)
+        Log.i("[Chat Messages] $unreadCount unread messages in this chat room, loading $loadCount from history")
+        val history = chatRoom.getHistoryEvents(loadCount)
         for (eventLog in history) {
             list.add(EventLogData(eventLog))
         }

@@ -19,10 +19,13 @@
  */
 package org.linphone.activities.main.chat.viewmodels
 
+import android.animation.ValueAnimator
+import android.view.animation.LinearInterpolator
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.contact.Contact
 import org.linphone.contact.ContactDataInterface
@@ -81,11 +84,28 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         MutableLiveData<Boolean>()
     }
 
+    val isUserScrollingUp = MutableLiveData<Boolean>()
+
     var oneParticipantOneDevice: Boolean = false
 
     var addressToCall: Address? = null
 
     var onlyParticipantOnlyDeviceAddress: Address? = null
+
+    val chatUnreadCountTranslateY = MutableLiveData<Float>()
+
+    private val bounceAnimator: ValueAnimator by lazy {
+        ValueAnimator.ofFloat(AppUtils.getDimension(R.dimen.tabs_fragment_unread_count_bounce_offset), 0f).apply {
+            addUpdateListener {
+                val value = it.animatedValue as Float
+                chatUnreadCountTranslateY.value = value
+            }
+            interpolator = LinearInterpolator()
+            duration = 250
+            repeatMode = ValueAnimator.REVERSE
+            repeatCount = ValueAnimator.INFINITE
+        }
+    }
 
     private val contactsUpdatedListener = object : ContactsUpdatedListenerStub() {
         override fun onContactsUpdated() {
@@ -202,6 +222,8 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
         callInProgress.value = chatRoom.core.callsNb > 0
         updateRemotesComposing()
+
+        if (corePreferences.enableAnimations) bounceAnimator.start()
     }
 
     override fun onCleared() {
@@ -213,6 +235,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         coreContext.contactsManager.removeListener(contactsUpdatedListener)
         chatRoom.removeListener(chatRoomListener)
         chatRoom.core.removeListener(coreListener)
+        if (corePreferences.enableAnimations) bounceAnimator.end()
     }
 
     fun hideMenu(): Boolean {

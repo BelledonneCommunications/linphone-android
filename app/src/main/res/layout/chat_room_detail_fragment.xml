@@ -27,6 +27,9 @@
             name="voiceRecordingTouchListener"
             type="android.view.View.OnTouchListener" />
         <variable
+            name="scrollToBottomClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
             name="viewModel"
             type="org.linphone.activities.main.chat.viewmodels.ChatRoomViewModel" />
         <variable
@@ -296,6 +299,38 @@
             android:layout_alignParentRight="true"
             android:layout_marginTop="8dp"
             android:layout_marginRight="8dp" />
+
+        <RelativeLayout
+            android:onClick="@{scrollToBottomClickListener}"
+            android:visibility="@{viewModel.isUserScrollingUp ? View.VISIBLE : View.GONE, default=gone}"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="10dp"
+            android:layout_above="@id/footer"
+            android:layout_alignParentEnd="true">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/round_button_background"
+                android:padding="13dp"
+                android:src="@drawable/scroll_to_bottom" />
+
+            <TextView
+                style="@style/unread_count_font"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:background="@{viewModel.unreadMessagesCount == 0 ? @drawable/hidden_unread_message_count_bg : @drawable/unread_message_count_bg, default=@drawable/unread_message_count_bg}"
+                android:gravity="center"
+                android:text="@{viewModel.unreadMessagesCount == 0 ? `` : String.valueOf(viewModel.unreadMessagesCount), default=1}"
+                android:translationY="@{viewModel.chatUnreadCountTranslateY}" />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 

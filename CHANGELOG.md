@@ -22,6 +22,7 @@ Group changes to describe their impact on the project, as follows:
 
 ### Changed
 - UI has been reworked around SlidingPane component to better handle tablets & foldable devices
+- No longer scroll to bottom of chat room when new messages are received, a new button shows up to do it
 - Animations have been replaced to use com.google.android.material.transition ones
 - Using new [Unified Content API](https://developer.android.com/about/versions/12/features/unified-content-api) to share files from keyboard (or other sources)
 - Bumped dependencies, gradle updated from 4.2.2 to 7.0.2
