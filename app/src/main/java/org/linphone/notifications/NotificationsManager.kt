@@ -142,8 +142,8 @@ class NotificationsManager(private val context: Context) {
             }
 
             if (currentlyDisplayedChatRoomAddress == room.peerAddress.asStringUriOnly()) {
-                Log.i("[Notifications Manager] Chat room is currently displayed, do not notify received message & mark it as read")
-                room.markAsRead()
+                Log.i("[Notifications Manager] Chat room is currently displayed, do not notify received message")
+                // Mark as read is now done in the DetailChatRoomFragment
                 return
             }
 

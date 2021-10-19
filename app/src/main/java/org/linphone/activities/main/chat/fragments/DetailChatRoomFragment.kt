@@ -75,8 +75,15 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
             adapter.notifyItemChanged(positionStart - 1) // For grouping purposes
 
+            // Scroll to newly added messages automatically
             if (positionStart == adapter.itemCount - itemCount) {
-                scrollToBottom()
+                // But only if user hasn't initiated a scroll up in the messages history
+                if (viewModel.isUserScrollingUp.value == false) {
+                    scrollToBottom()
+                    viewModel.chatRoom.markAsRead()
+                } else {
+                    Log.w("[Chat Room] User has scrolled up manually in the messages history, don't scroll to the newly added message at the bottom & don't mark the chat room as read")
+                }
             }
         }
     }
@@ -191,9 +198,19 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         RecyclerViewSwipeUtils(ItemTouchHelper.RIGHT, swipeConfiguration, swipeListener)
             .attachToRecyclerView(binding.chatMessagesList)*/
 
-        val chatScrollListener: ChatScrollListener = object : ChatScrollListener(layoutManager) {
+        val chatScrollListener = object : ChatScrollListener(layoutManager) {
             override fun onLoadMore(totalItemsCount: Int) {
                 listViewModel.loadMoreData(totalItemsCount)
+            }
+
+            override fun onScrolledUp() {
+                viewModel.isUserScrollingUp.value = true
+            }
+
+            override fun onScrolledToEnd() {
+                viewModel.isUserScrollingUp.value = false
+                Log.i("[Chat Room] User has scrolled to the latest message, mark chat room as read")
+                viewModel.chatRoom.markAsRead()
             }
         }
         binding.chatMessagesList.addOnScrollListener(chatScrollListener)
@@ -438,6 +455,10 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 true
             }
             false
+        }
+
+        binding.setScrollToBottomClickListener {
+            smoothScrollToPosition()
         }
 
         if (textToShare?.isNotEmpty() == true) {
@@ -712,6 +733,12 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
     private fun scrollToBottom() {
         if (_adapter != null && adapter.itemCount > 0) {
             binding.chatMessagesList.scrollToPosition(adapter.itemCount - 1)
+        }
+    }
+
+    private fun smoothScrollToPosition() {
+        if (_adapter != null && adapter.itemCount > 0) {
+            binding.chatMessagesList.smoothScrollToPosition(adapter.itemCount - 1)
         }
     }
 
