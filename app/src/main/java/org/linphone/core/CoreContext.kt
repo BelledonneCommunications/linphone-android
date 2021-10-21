@@ -542,6 +542,10 @@ class CoreContext(val context: Context, coreConfig: Config) {
             }
         }
 
+        if (corePreferences.sendEarlyMedia) {
+            params.enableEarlyMediaSending(true)
+        }
+
         val call = core.inviteAddressWithParams(address, params)
         Log.i("[Context] Starting call $call")
     }
