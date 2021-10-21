@@ -245,6 +245,12 @@ class CorePreferences constructor(private val context: Context) {
 
     /* Call */
 
+    var sendEarlyMedia: Boolean
+        get() = config.getBool("sip", "outgoing_calls_early_media", false)
+        set(value) {
+            config.setBool("sip", "outgoing_calls_early_media", value)
+        }
+
     var acceptEarlyMedia: Boolean
         get() = config.getBool("sip", "incoming_calls_early_media", false)
         set(value) {
