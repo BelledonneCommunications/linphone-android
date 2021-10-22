@@ -71,6 +71,7 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
                 if (TelecomHelper.exists()) {
                     Log.i("[Call Settings] Removing Telecom Manager account & destroying singleton")
                     TelecomHelper.get().removeAccount()
+                    TelecomHelper.get().destroy()
                     TelecomHelper.destroy()
                 }
                 prefs.useTelecomManager = newValue
