@@ -200,7 +200,7 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
         grantResults: IntArray
     ) {
         if (requestCode == 0) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Log.i("[Dialer] READ_PHONE_STATE permission has been granted")
                 coreContext.initPhoneStateListener()
             }
