@@ -300,6 +300,8 @@ class CorePreferences constructor(private val context: Context) {
         get() = config.getBool("app", "use_self_managed_telecom_manager", false)
         set(value) {
             config.setBool("app", "use_self_managed_telecom_manager", value)
+            // We need to disable audio focus requests when enabling telecom manager, otherwise it creates conflicts
+            config.setBool("audio", "android_disable_audio_focus_requests", value)
         }
 
     var fullScreenCallUI: Boolean

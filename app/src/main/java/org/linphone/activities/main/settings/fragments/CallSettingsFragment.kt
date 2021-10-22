@@ -156,6 +156,7 @@ class CallSettingsFragment : GenericSettingFragment<SettingsCallFragmentBinding>
         val account = TelecomHelper.get().findExistingAccount(requireContext())
         TelecomHelper.get().updateAccount(account)
         val enabled = TelecomHelper.get().isAccountEnabled()
+        Log.i("[Call Settings] Telecom Manager is ${if (enabled) "enabled" else "disabled"}")
         viewModel.useTelecomManager.value = enabled
         corePreferences.useTelecomManager = enabled
     }
