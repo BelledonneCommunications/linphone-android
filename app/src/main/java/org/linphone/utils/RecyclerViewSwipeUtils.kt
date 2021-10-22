@@ -52,7 +52,8 @@ class RecyclerViewSwipeConfiguration {
     val iconMargin = 16f
 
     val actionTextSizeUnit = TypedValue.COMPLEX_UNIT_SP
-    val actionTextFont: Typeface = Typeface.SANS_SERIF
+    // At least CROSSCALL Action-X3 device doesn't have SANS_SERIF typeface...
+    val actionTextFont: Typeface? = Typeface.SANS_SERIF
     val actionTextSize = 14f
 
     var leftToRightAction = Action()
