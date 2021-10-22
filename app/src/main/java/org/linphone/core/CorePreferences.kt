@@ -26,6 +26,7 @@ import androidx.security.crypto.MasterKey
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.security.KeyStoreException
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
@@ -46,26 +47,38 @@ class CorePreferences constructor(private val context: Context) {
         private const val encryptedSharedPreferencesFile = "encrypted.pref"
     }
 
-    val encryptedSharedPreferences: SharedPreferences by lazy {
+    val encryptedSharedPreferences: SharedPreferences? by lazy {
         val masterKey: MasterKey = MasterKey.Builder(
             context,
             MasterKey.DEFAULT_MASTER_KEY_ALIAS
         ).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build()
-        EncryptedSharedPreferences.create(
-            context, encryptedSharedPreferencesFile, masterKey,
-            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-        )
+        try {
+            EncryptedSharedPreferences.create(
+                context, encryptedSharedPreferencesFile, masterKey,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            )
+        } catch (kse: KeyStoreException) {
+            Log.e("[VFS] Keystore exception: $kse")
+            null
+        }
     }
 
     var vfsEnabled: Boolean
-        get() = encryptedSharedPreferences.getBoolean("vfs_enabled", false)
+        get() = encryptedSharedPreferences?.getBoolean("vfs_enabled", false) ?: false
         set(value) {
-            if (!value && encryptedSharedPreferences.getBoolean("vfs_enabled", false)) {
+            val preferences = encryptedSharedPreferences
+            if (preferences == null) {
+                Log.e("[VFS] Failed to get encrypted SharedPreferences")
+                return
+            }
+
+            if (!value && preferences.getBoolean("vfs_enabled", false)) {
                 Log.w("[VFS] It is not possible to disable VFS once it has been enabled")
                 return
             }
-            encryptedSharedPreferences.edit().putBoolean("vfs_enabled", value).apply()
+
+            preferences.edit().putBoolean("vfs_enabled", value)?.apply()
             // When VFS is enabled we disable logcat output for linphone logs
             // TODO: decide if we do it
             // logcatLogsOutput = false

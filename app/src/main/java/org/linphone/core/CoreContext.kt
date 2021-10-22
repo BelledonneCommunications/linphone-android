@@ -883,11 +883,16 @@ class CoreContext(val context: Context, coreConfig: Config) {
         fun activateVFS() {
             try {
                 Log.i("[Context] Activating VFS")
+                val preferences = corePreferences.encryptedSharedPreferences
+                if (preferences == null) {
+                    Log.e("[Context] Can't get encrypted SharedPreferences, can't init VFS")
+                    return
+                }
 
-                if (corePreferences.encryptedSharedPreferences.getString(VFS_IV, null) == null) {
+                if (preferences.getString(VFS_IV, null) == null) {
                     generateSecretKey()
                     encryptToken(generateToken()).let { data ->
-                        corePreferences.encryptedSharedPreferences
+                        preferences
                             .edit()
                             .putString(VFS_IV, data.first)
                             .putString(VFS_KEY, data.second)
@@ -896,7 +901,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
                 }
                 Factory.instance().setVfsEncryption(
                     LINPHONE_VFS_ENCRYPTION_AES256GCM128_SHA256,
-                    getVfsKey(corePreferences.encryptedSharedPreferences).toByteArray().copyOfRange(0, 32),
+                    getVfsKey(preferences).toByteArray().copyOfRange(0, 32),
                     32
                 )
 
