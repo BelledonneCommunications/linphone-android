@@ -125,8 +125,16 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
             viewLifecycleOwner,
             {
                 it.consume { chatRoom ->
-                    sharedViewModel.selectedChatRoom.value = chatRoom
-                    navigateToChatRoom(AppUtils.createBundleWithSharedTextAndFiles(sharedViewModel))
+                    goToChatRoom(chatRoom, true)
+                }
+            }
+        )
+
+        viewModel.updatedChatRoomEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume { chatRoom ->
+                    goToChatRoom(chatRoom, false)
                 }
             }
         )
@@ -230,5 +238,10 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
 
         dialog.show()
         meAdminStatusChangedDialog = dialog
+    }
+
+    private fun goToChatRoom(chatRoom: ChatRoom, created: Boolean) {
+        sharedViewModel.selectedChatRoom.value = chatRoom
+        navigateToChatRoom(AppUtils.createBundleWithSharedTextAndFiles(sharedViewModel), created)
     }
 }

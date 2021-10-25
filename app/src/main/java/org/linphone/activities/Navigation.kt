@@ -340,12 +340,17 @@ internal fun GroupInfoFragment.navigateToChatRoomCreation(args: Bundle?) {
     }
 }
 
-internal fun GroupInfoFragment.navigateToChatRoom(args: Bundle?) {
+internal fun GroupInfoFragment.navigateToChatRoom(args: Bundle?, created: Boolean) {
     if (findNavController().currentDestination?.id == R.id.groupInfoFragment) {
+        val popUpToFragmentId = if (created) { // To remove all creation fragments from back stack
+            R.id.chatRoomCreationFragment
+        } else {
+            R.id.detailChatRoomFragment
+        }
         findNavController().navigate(
             R.id.action_groupInfoFragment_to_detailChatRoomFragment,
             args,
-            popupTo(R.id.detailChatRoomFragment, true)
+            popupTo(popUpToFragmentId, true)
         )
     }
 }

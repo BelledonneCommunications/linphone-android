@@ -43,6 +43,7 @@ class GroupInfoViewModelFactory(private val chatRoom: ChatRoom?) :
 
 class GroupInfoViewModel(val chatRoom: ChatRoom?) : ErrorReportingViewModel() {
     val createdChatRoomEvent = MutableLiveData<Event<ChatRoom>>()
+    val updatedChatRoomEvent = MutableLiveData<Event<ChatRoom>>()
 
     val subject = MutableLiveData<String>()
 
@@ -193,7 +194,7 @@ class GroupInfoViewModel(val chatRoom: ChatRoom?) : ErrorReportingViewModel() {
             chatRoom.addParticipants(toAdd)
 
             // Go back to chat room
-            createdChatRoomEvent.value = Event(chatRoom)
+            updatedChatRoomEvent.value = Event(chatRoom)
         }
     }
 
@@ -201,7 +202,7 @@ class GroupInfoViewModel(val chatRoom: ChatRoom?) : ErrorReportingViewModel() {
         if (chatRoom != null) {
             Log.w("[Chat Room Group Info] Leaving group")
             chatRoom.leave()
-            createdChatRoomEvent.value = Event(chatRoom)
+            updatedChatRoomEvent.value = Event(chatRoom)
         }
     }
 
