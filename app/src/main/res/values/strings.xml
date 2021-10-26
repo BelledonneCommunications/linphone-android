@@ -221,6 +221,12 @@
     <string name="chat_room_sending_message_hint">Message</string>
     <string name="chat_message_voice_recording_hold_to_record">Hold button to record voice message</string>
     <string name="chat_message_voice_recording_playback_low_volume">Your media volume is low, you may want to increase it</string>
+    <string name="chat_room_unread_message">%1$d unread message</string>
+    <string name="chat_room_unread_messages">%1$d unread messages</string>
+    <plurals name="chat_room_unread_messages_event">
+        <item quantity="one">@string/chat_room_unread_message</item>
+        <item quantity="other">@string/chat_room_unread_messages</item>
+    </plurals>
 
     <!-- Recordings -->
     <string name="recordings_empty_list">No recordings</string>

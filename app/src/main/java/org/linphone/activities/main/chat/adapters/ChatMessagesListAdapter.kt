@@ -24,6 +24,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
 import androidx.databinding.DataBindingUtil
@@ -43,16 +44,16 @@ import org.linphone.core.ChatMessage
 import org.linphone.core.ChatRoomCapabilities
 import org.linphone.core.Content
 import org.linphone.core.EventLog
-import org.linphone.databinding.ChatEventListCellBinding
-import org.linphone.databinding.ChatMessageListCellBinding
-import org.linphone.databinding.ChatMessageLongPressMenuBindingImpl
+import org.linphone.databinding.*
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
+import org.linphone.utils.HeaderAdapter
 
 class ChatMessagesListAdapter(
     selectionVM: ListTopBarViewModel,
     private val viewLifecycleOwner: LifecycleOwner
-) : SelectionListAdapter<EventLogData, RecyclerView.ViewHolder>(selectionVM, ChatMessageDiffCallback()) {
+) : SelectionListAdapter<EventLogData, RecyclerView.ViewHolder>(selectionVM, ChatMessageDiffCallback()),
+    HeaderAdapter {
     companion object {
         const val MAX_TIME_TO_GROUP_MESSAGES = 60 // 1 minute
     }
@@ -97,6 +98,9 @@ class ChatMessagesListAdapter(
 
     private var contextMenuDisabled: Boolean = false
 
+    private var unreadMessagesCount: Int = 0
+    private var firstUnreadMessagePosition: Int = -1
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             EventLog.Type.ConferenceChatMessage.toInt() -> createChatMessageViewHolder(parent)
@@ -133,8 +137,57 @@ class ChatMessagesListAdapter(
         return eventLog.eventLog.type.toInt()
     }
 
+    override fun onCurrentListChanged(
+        previousList: MutableList<EventLogData>,
+        currentList: MutableList<EventLogData>
+    ) {
+        // Need to wait for messages to be added before computing new first unread message position
+        firstUnreadMessagePosition = -1
+    }
+
+    override fun displayHeaderForPosition(position: Int): Boolean {
+        if (unreadMessagesCount > 0 && firstUnreadMessagePosition == -1) {
+            computeFirstUnreadMessagePosition()
+        }
+        return position == firstUnreadMessagePosition
+    }
+
+    override fun getHeaderViewForPosition(context: Context, position: Int): View {
+        val binding: ChatUnreadMessagesListHeaderBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(context),
+            R.layout.chat_unread_messages_list_header, null, false
+        )
+        binding.title = AppUtils.getStringWithPlural(R.plurals.chat_room_unread_messages_event, unreadMessagesCount)
+        binding.executePendingBindings()
+        return binding.root
+    }
+
     fun disableContextMenu() {
         contextMenuDisabled = true
+    }
+
+    fun setUnreadMessageCount(count: Int, forceUpdate: Boolean) {
+        // Once list has been filled once, don't show the unread message header
+        // when new messages are added to the history whilst it is visible
+        unreadMessagesCount = if (itemCount == 0 || forceUpdate) count else 0
+        firstUnreadMessagePosition = -1
+    }
+
+    private fun computeFirstUnreadMessagePosition() {
+        if (unreadMessagesCount > 0) {
+            var messageCount = 0
+            for (position in itemCount - 1 downTo 0) {
+                val eventLog = getItem(position)
+                val data = eventLog.data
+                if (data is ChatMessageData) {
+                    messageCount += 1
+                    if (messageCount == unreadMessagesCount) {
+                        firstUnreadMessagePosition = position
+                        break
+                    }
+                }
+            }
+        }
     }
 
     inner class ChatMessageViewHolder(

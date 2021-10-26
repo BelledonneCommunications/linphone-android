@@ -80,7 +80,6 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 // But only if user hasn't initiated a scroll up in the messages history
                 if (viewModel.isUserScrollingUp.value == false) {
                     scrollToBottom()
-                    viewModel.chatRoom.markAsRead()
                 } else {
                     Log.w("[Chat Room] User has scrolled up manually in the messages history, don't scroll to the newly added message at the bottom & don't mark the chat room as read")
                 }
@@ -94,7 +93,9 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
     override fun onDestroyView() {
         if (_adapter != null) {
-            adapter.unregisterAdapterDataObserver(observer)
+            try {
+                adapter.unregisterAdapterDataObserver(observer)
+            } catch (ise: IllegalStateException) {}
         }
         binding.chatMessagesList.adapter = null
         super.onDestroyView()
@@ -176,6 +177,10 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         layoutManager.stackFromEnd = true
         binding.chatMessagesList.layoutManager = layoutManager
 
+        // Displays unread messages header
+        val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
+        binding.chatMessagesList.addItemDecoration(headerItemDecoration)
+
         // Swipe action
         /*val swipeConfiguration = RecyclerViewSwipeConfiguration()
         swipeConfiguration.leftToRightAction = RecyclerViewSwipeConfiguration.Action(icon = R.drawable.menu_reply_default)
@@ -235,6 +240,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         listViewModel.events.observe(
             viewLifecycleOwner,
             { events ->
+                adapter.setUnreadMessageCount(viewModel.chatRoom.unreadMessagesCount, viewModel.isUserScrollingUp.value == true)
                 adapter.submitList(events)
             }
         )
@@ -388,7 +394,11 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                     }
                     val index = events.indexOf(eventLog)
                     try {
-                        binding.chatMessagesList.smoothScrollToPosition(index)
+                        if (corePreferences.enableAnimations) {
+                            binding.chatMessagesList.smoothScrollToPosition(index)
+                        } else {
+                            binding.chatMessagesList.scrollToPosition(index)
+                        }
                     } catch (iae: IllegalArgumentException) {
                         Log.e("[Chat Room] Can't scroll to position $index")
                     }
@@ -542,6 +552,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             // Prevent notifications for this chat room to be displayed
             val peerAddress = viewModel.chatRoom.peerAddress.asStringUriOnly()
             coreContext.notificationsManager.currentlyDisplayedChatRoomAddress = peerAddress
+            Log.i("[Chat Room] Fragment resuming, mark chat room as read")
             viewModel.chatRoom.markAsRead()
         } else {
             Log.e("[Chat Room] Fragment resuming but viewModel lateinit property isn't initialized!")
@@ -572,6 +583,11 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
     override fun goBack() {
         if (!findNavController().popBackStack()) {
             if (sharedViewModel.isSlidingPaneSlideable.value == true) {
+                if (_adapter != null) {
+                    try {
+                        adapter.unregisterAdapterDataObserver(observer)
+                    } catch (ise: IllegalStateException) {}
+                }
                 sharedViewModel.closeSlidingPaneEvent.value = Event(true)
             } else {
                 navigateToEmptyChatRoom()
@@ -738,7 +754,11 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
     private fun smoothScrollToPosition() {
         if (_adapter != null && adapter.itemCount > 0) {
-            binding.chatMessagesList.smoothScrollToPosition(adapter.itemCount - 1)
+            if (corePreferences.enableAnimations) {
+                binding.chatMessagesList.smoothScrollToPosition(adapter.itemCount - 1)
+            } else {
+                binding.chatMessagesList.scrollToPosition(adapter.itemCount - 1)
+            }
         }
     }
 
