@@ -67,7 +67,11 @@ internal abstract class ChatScrollListener(private val mLayoutManager: LinearLay
         // the mVisibleThreshold and need to reload more data.
         // If we do need to reload some more data, we execute onLoadMore to fetch the data.
         // threshold should reflect how many total columns there are too
-        if (!loading && firstVisibleItemPosition < mVisibleThreshold && firstVisibleItemPosition > 0 && lastVisibleItemPosition < totalItemCount - mVisibleThreshold) {
+        if (!loading &&
+            firstVisibleItemPosition < mVisibleThreshold &&
+            firstVisibleItemPosition >= 0 &&
+            lastVisibleItemPosition < totalItemCount - mVisibleThreshold
+        ) {
             onLoadMore(totalItemCount)
             loading = true
         }
