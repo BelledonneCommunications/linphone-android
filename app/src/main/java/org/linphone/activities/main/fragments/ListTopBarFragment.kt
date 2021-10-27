@@ -57,5 +57,7 @@ class ListTopBarFragment : GenericFragment<ListEditTopBarFragmentBinding>() {
         binding.setDeleteClickListener {
             viewModel.deleteSelectionEvent.value = Event(true)
         }
+
+        onBackPressedCallback.isEnabled = false
     }
 }

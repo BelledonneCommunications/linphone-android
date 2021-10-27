@@ -24,7 +24,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.addCallback
 import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -56,10 +55,14 @@ abstract class GenericFragment<T : ViewDataBinding> : Fragment() {
         return _binding!!.root
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onResume() {
+        super.onResume()
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
+    }
 
-        requireActivity().onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+    override fun onPause() {
+        onBackPressedCallback.remove()
+        super.onPause()
     }
 
     override fun onStart() {
@@ -90,7 +93,7 @@ abstract class GenericFragment<T : ViewDataBinding> : Fragment() {
                 }
             }
         } catch (ise: IllegalStateException) {
-            Log.e("[Generic Fragment] Can't go back: $ise")
+            Log.e("[Generic Fragment] [$this] Can't go back: $ise")
             onBackPressedCallback.isEnabled = false
             requireActivity().onBackPressed()
         }
