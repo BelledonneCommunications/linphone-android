@@ -162,8 +162,12 @@ class LinphoneUtils {
                 )
         }
 
-        fun getChatRoomId(localAddress: String, remoteAddress: String): String {
-            return "$localAddress~$remoteAddress"
+        fun getChatRoomId(localAddress: Address, remoteAddress: Address): String {
+            val localSipUri = localAddress.clone()
+            localSipUri.clean()
+            val remoteSipUri = remoteAddress.clone()
+            remoteSipUri.clean()
+            return "${localSipUri.asStringUriOnly()}~${remoteSipUri.asStringUriOnly()}"
         }
     }
 }

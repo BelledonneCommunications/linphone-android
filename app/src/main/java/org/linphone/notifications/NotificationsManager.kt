@@ -636,7 +636,7 @@ class NotificationsManager(private val context: Context) {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
         )
 
-        val id = LinphoneUtils.getChatRoomId(localAddress, peerAddress)
+        val id = LinphoneUtils.getChatRoomId(room.localAddress, room.peerAddress)
         val notification = createMessageNotification(notifiable, pendingIntent, bubbleIntent, id)
         notify(notifiable.notificationId, notification)
     }

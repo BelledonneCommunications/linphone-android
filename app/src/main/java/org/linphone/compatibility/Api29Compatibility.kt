@@ -86,9 +86,7 @@ class Api29Compatibility {
         fun setLocusIdInContentCaptureSession(root: View, chatRoom: ChatRoom) {
             val session: ContentCaptureSession? = root.contentCaptureSession
             if (session != null) {
-                val localAddress = chatRoom.localAddress.asStringUriOnly()
-                val peerAddress = chatRoom.peerAddress.asStringUriOnly()
-                val id = LinphoneUtils.getChatRoomId(localAddress, peerAddress)
+                val id = LinphoneUtils.getChatRoomId(chatRoom.localAddress, chatRoom.peerAddress)
                 session.contentCaptureContext = ContentCaptureContext.forLocusId(id)
             }
         }

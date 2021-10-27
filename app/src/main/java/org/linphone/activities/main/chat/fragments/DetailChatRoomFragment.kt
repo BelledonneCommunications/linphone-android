@@ -318,6 +318,8 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                     if (sharedViewModel.isSlidingPaneSlideable.value == true) {
                         Log.i("[Chat Room] Forwarding message, going to chat rooms list")
                         sharedViewModel.closeSlidingPaneEvent.value = Event(true)
+                    } else {
+                        navigateToEmptyChatRoom()
                     }
                 }
             }
