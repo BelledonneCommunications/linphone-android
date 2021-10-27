@@ -27,6 +27,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.provider.MediaStore
 import android.view.*
+import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.PopupWindow
 import androidx.core.content.FileProvider
 import androidx.core.view.doOnPreDraw
@@ -75,13 +76,18 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
             adapter.notifyItemChanged(positionStart - 1) // For grouping purposes
 
-            // Scroll to newly added messages automatically
-            if (positionStart == adapter.itemCount - itemCount) {
-                // But only if user hasn't initiated a scroll up in the messages history
-                if (viewModel.isUserScrollingUp.value == false) {
-                    scrollToBottom()
-                } else {
-                    Log.w("[Chat Room] User has scrolled up manually in the messages history, don't scroll to the newly added message at the bottom & don't mark the chat room as read")
+            if (positionStart == 0 && adapter.itemCount == itemCount) {
+                // First time we fill the list with messages
+                Log.i("[Chat Room] History first $itemCount messages loaded")
+            } else {
+                // Scroll to newly added messages automatically
+                if (positionStart == adapter.itemCount - itemCount) {
+                    // But only if user hasn't initiated a scroll up in the messages history
+                    if (viewModel.isUserScrollingUp.value == false) {
+                        scrollToFirstUnreadMessageOrBottom(false)
+                    } else {
+                        Log.w("[Chat Room] User has scrolled up manually in the messages history, don't scroll to the newly added message at the bottom & don't mark the chat room as read")
+                    }
                 }
             }
         }
@@ -170,8 +176,8 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         _adapter = ChatMessagesListAdapter(listSelectionViewModel, viewLifecycleOwner)
         // SubmitList is done on a background thread
         // We need this adapter data observer to know when to scroll
-        binding.chatMessagesList.adapter = adapter
         adapter.registerAdapterDataObserver(observer)
+        binding.chatMessagesList.adapter = adapter
 
         val layoutManager = LinearLayoutManager(activity)
         layoutManager.stackFromEnd = true
@@ -180,6 +186,21 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         // Displays unread messages header
         val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
         binding.chatMessagesList.addItemDecoration(headerItemDecoration)
+
+        // Wait for items to be displayed before scrolling for the first time
+        binding.chatMessagesList
+            .viewTreeObserver
+            .addOnGlobalLayoutListener(
+                object : OnGlobalLayoutListener {
+                    override fun onGlobalLayout() {
+                        binding.chatMessagesList
+                            .viewTreeObserver
+                            .removeOnGlobalLayoutListener(this)
+                        Log.i("[Chat Room] Messages have been displayed, scrolling to first unread message if any")
+                        scrollToFirstUnreadMessageOrBottom(false)
+                    }
+                }
+            )
 
         // Swipe action
         /*val swipeConfiguration = RecyclerViewSwipeConfiguration()
@@ -205,6 +226,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
         val chatScrollListener = object : ChatScrollListener(layoutManager) {
             override fun onLoadMore(totalItemsCount: Int) {
+                Log.i("[Chat Room] User has scrolled up far enough, load more items from history (currently there are $totalItemsCount messages displayed)")
                 listViewModel.loadMoreData(totalItemsCount)
             }
 
@@ -214,8 +236,10 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
             override fun onScrolledToEnd() {
                 viewModel.isUserScrollingUp.value = false
-                Log.i("[Chat Room] User has scrolled to the latest message, mark chat room as read")
-                viewModel.chatRoom.markAsRead()
+                if (viewModel.unreadMessagesCount.value != 0) {
+                    Log.i("[Chat Room] User has scrolled to the latest message, mark chat room as read")
+                    viewModel.chatRoom.markAsRead()
+                }
             }
         }
         binding.chatMessagesList.addOnScrollListener(chatScrollListener)
@@ -468,7 +492,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         }
 
         binding.setScrollToBottomClickListener {
-            smoothScrollToPosition()
+            scrollToFirstUnreadMessageOrBottom(true)
         }
 
         if (textToShare?.isNotEmpty() == true) {
@@ -746,18 +770,21 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         popupWindow.showAsDropDown(binding.menu, 0, 0, Gravity.BOTTOM)
     }
 
-    private fun scrollToBottom() {
+    private fun scrollToFirstUnreadMessageOrBottom(smooth: Boolean) {
         if (_adapter != null && adapter.itemCount > 0) {
-            binding.chatMessagesList.scrollToPosition(adapter.itemCount - 1)
-        }
-    }
-
-    private fun smoothScrollToPosition() {
-        if (_adapter != null && adapter.itemCount > 0) {
-            if (corePreferences.enableAnimations) {
-                binding.chatMessagesList.smoothScrollToPosition(adapter.itemCount - 1)
+            // Scroll to first unread message if any
+            val firstUnreadMessagePosition = adapter.getFirstUnreadMessagePosition()
+            val indexToScrollTo = if (firstUnreadMessagePosition != -1) {
+                firstUnreadMessagePosition
             } else {
-                binding.chatMessagesList.scrollToPosition(adapter.itemCount - 1)
+                adapter.itemCount - 1
+            }
+
+            Log.i("[Chat Room] Scrolling to position $indexToScrollTo, first unread message is at $firstUnreadMessagePosition")
+            if (smooth && corePreferences.enableAnimations) {
+                binding.chatMessagesList.smoothScrollToPosition(indexToScrollTo)
+            } else {
+                binding.chatMessagesList.scrollToPosition(indexToScrollTo)
             }
         }
     }

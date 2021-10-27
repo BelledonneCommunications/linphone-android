@@ -214,12 +214,31 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
     private fun getEvents(): ArrayList<EventLogData> {
         val list = arrayListOf<EventLogData>()
         val unreadCount = chatRoom.unreadMessagesCount
-        val loadCount = max(MESSAGES_PER_PAGE, unreadCount)
+        var loadCount = max(MESSAGES_PER_PAGE, unreadCount)
         Log.i("[Chat Messages] $unreadCount unread messages in this chat room, loading $loadCount from history")
+
         val history = chatRoom.getHistoryEvents(loadCount)
+        var messageCount = 0
         for (eventLog in history) {
             list.add(EventLogData(eventLog))
+            if (eventLog.type == EventLog.Type.ConferenceChatMessage) {
+                messageCount += 1
+            }
         }
+
+        // Load enough events to have at least all unread messages
+        while (unreadCount > 0 && messageCount < unreadCount) {
+            Log.w("[Chat Messages] There is only $messageCount messages in the last $loadCount events, loading $MESSAGES_PER_PAGE more")
+            val moreHistory = chatRoom.getHistoryRangeEvents(loadCount, loadCount + MESSAGES_PER_PAGE)
+            loadCount += MESSAGES_PER_PAGE
+            for (eventLog in moreHistory) {
+                list.add(EventLogData(eventLog))
+                if (eventLog.type == EventLog.Type.ConferenceChatMessage) {
+                    messageCount += 1
+                }
+            }
+        }
+
         return list
     }
 
