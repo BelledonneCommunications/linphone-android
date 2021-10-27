@@ -624,4 +624,10 @@
     <string name="advanced_settings_disable_fragment_security_summary">Képernyőfelvétel engedélyezése bizalmas nézetekben</string>
     <string name="call_settings_use_telecom_manager_summary">További engedélyeket igényel</string>
     <string name="call_settings_use_telecom_manager_title">Tevékenységek fejlesztése Bluetooth-eszközökkel</string>
+    <plurals name="chat_room_unread_messages_event">
+        <item quantity="one">\@string/chat_room_unread_message</item>
+        <item quantity="other">\@string/chat_room_unread_messages</item>
+    </plurals>
+    <string name="chat_room_unread_message">%1$d olvasatlan üzenet</string>
+    <string name="chat_room_unread_messages">%1$d olvasatlan üzenet</string>
 </resources>
