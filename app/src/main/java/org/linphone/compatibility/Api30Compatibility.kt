@@ -46,11 +46,8 @@ class Api30Compatibility {
         }
 
         fun removeChatRoomShortcut(context: Context, chatRoom: ChatRoom) {
-            val peerAddress = chatRoom.peerAddress.asStringUriOnly()
-            val localAddress = chatRoom.localAddress.asStringUriOnly()
-
             val shortcutManager = context.getSystemService(ShortcutManager::class.java)
-            val id = LinphoneUtils.getChatRoomId(localAddress, peerAddress)
+            val id = LinphoneUtils.getChatRoomId(chatRoom.localAddress, chatRoom.peerAddress)
             val shortcutsToRemoveList = arrayListOf(id)
             shortcutManager.removeLongLivedShortcuts(shortcutsToRemoveList)
         }

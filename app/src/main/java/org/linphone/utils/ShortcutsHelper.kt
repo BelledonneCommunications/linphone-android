@@ -151,9 +151,9 @@ class ShortcutsHelper(val context: Context) {
         }
 
         private fun createChatRoomShortcut(context: Context, chatRoom: ChatRoom): ShortcutInfo? {
-            val peerAddress = chatRoom.peerAddress.asStringUriOnly()
             val localAddress = chatRoom.localAddress.asStringUriOnly()
-            val id = LinphoneUtils.getChatRoomId(localAddress, peerAddress)
+            val peerAddress = chatRoom.peerAddress.asStringUriOnly()
+            val id = LinphoneUtils.getChatRoomId(chatRoom.localAddress, chatRoom.peerAddress)
 
             try {
                 val categories: ArraySet<String> = ArraySet()

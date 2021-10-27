@@ -454,6 +454,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             findNavController(R.id.nav_host_fragment).navigate(Uri.parse(deepLink))
         } else {
             Log.e("[Main Activity] Failed to parse shortcut/locus id: $id")
+            findNavController(R.id.nav_host_fragment).navigate(R.id.action_global_masterChatRoomsFragment)
         }
     }
 

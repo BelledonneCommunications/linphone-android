@@ -148,11 +148,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
         binding.slidingPane.addPanelSlideListener(object : SlidingPaneLayout.PanelSlideListener {
             override fun onPanelSlide(panel: View, slideOffset: Float) { }
 
-            override fun onPanelOpened(panel: View) {
-                /* if (binding.slidingPane.isSlideable) {
-                    (requireActivity() as MainActivity).hideTabsFragment()
-                } */
-            }
+            override fun onPanelOpened(panel: View) { }
 
             override fun onPanelClosed(panel: View) {
                 if (binding.slidingPane.isSlideable) {
@@ -326,6 +322,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
                         // val activity = requireActivity() as MainActivity
                         // activity.showSnackBar(R.string.chat_room_toast_choose_for_sharing)
                         listViewModel.textSharingPending.value = true
+                        clearDisplayedChatRoom()
                     } else {
                         if (sharedViewModel.filesToShare.value.isNullOrEmpty()) {
                             listViewModel.textSharingPending.value = false
@@ -341,6 +338,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
                         // val activity = requireActivity() as MainActivity
                         // activity.showSnackBar(R.string.chat_room_toast_choose_for_sharing)
                         listViewModel.fileSharingPending.value = true
+                        clearDisplayedChatRoom()
                     } else {
                         if (sharedViewModel.textToShare.value.isNullOrEmpty()) {
                             listViewModel.fileSharingPending.value = false
