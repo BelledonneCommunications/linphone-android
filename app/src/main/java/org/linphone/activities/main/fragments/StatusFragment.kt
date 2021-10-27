@@ -68,5 +68,7 @@ class StatusFragment : GenericFragment<StatusFragmentBinding>() {
         binding.setRefreshClickListener {
             viewModel.refreshRegister()
         }
+
+        onBackPressedCallback.isEnabled = false
     }
 }

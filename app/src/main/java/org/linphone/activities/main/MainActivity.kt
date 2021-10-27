@@ -182,6 +182,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
+
         registerComponentCallbacks(componentCallbacks)
         findNavController(R.id.nav_host_fragment).addOnDestinationChangedListener(this)
 
@@ -223,18 +224,6 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
     private fun updateTabsFragmentVisibility() {
         tabsFragment.visibility = if (tabsFragmentVisible1 && tabsFragmentVisible2) View.VISIBLE else View.GONE
-    }
-
-    fun showTabsFragment() {
-        tabsFragment.visibility = View.VISIBLE
-    }
-
-    fun hideTabsFragment() {
-        tabsFragment.visibility = View.GONE
-    }
-
-    fun hideStatusFragment() {
-        statusFragment.visibility = View.GONE
     }
 
     private fun View.hideKeyboard() {

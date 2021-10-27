@@ -113,6 +113,8 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
             requireActivity().finishAndRemoveTask()
             coreContext.stop()
         }
+
+        onBackPressedCallback.isEnabled = false
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

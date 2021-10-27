@@ -16,13 +16,14 @@ Group changes to describe their impact on the project, as follows:
 - Reply to chat message feature (with original message preview)
 - Voice recordings in chat feature
 - Allow video recording in chat file sharing
+- Unread messages indicator in chat conversation that separates read & unread messages
 - Notify incoming/outgoing calls on bluetooth devices using self-managed connections from telecom manager API
 - New video call UI on foldable device like Galaxy Z Fold
 - Setting to automatically record all calls
 
 ### Changed
 - UI has been reworked around SlidingPane component to better handle tablets & foldable devices
-- No longer scroll to bottom of chat room when new messages are received, a new button shows up to do it
+- No longer scroll to bottom of chat room when new messages are received, a new button shows up to do it and it displays conversation's unread messages count
 - Animations have been replaced to use com.google.android.material.transition ones
 - Using new [Unified Content API](https://developer.android.com/about/versions/12/features/unified-content-api) to share files from keyboard (or other sources)
 - Bumped dependencies, gradle updated from 4.2.2 to 7.0.2
@@ -31,7 +32,8 @@ Group changes to describe their impact on the project, as follows:
 
 ### Fixed
 - Chat notifications disappearing when app restarts
-- "Infinite backstack", now each view is stored once (at most) in the backstack
+- "Infinite backstack", now each view is stored (at most) once in the backstack
+- Going back to the dialer when pressing back in a chat room after clicking on a chat message notification
 
 ### Removed
 - Global push notification setting in Network, use the switch in each Account instead

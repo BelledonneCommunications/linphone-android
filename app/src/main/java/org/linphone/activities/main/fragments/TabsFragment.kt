@@ -89,6 +89,8 @@ class TabsFragment : GenericFragment<TabsFragmentBinding>(), NavController.OnDes
             }
             navigateToChatRooms()
         }
+
+        onBackPressedCallback.isEnabled = false
     }
 
     override fun onStart() {
