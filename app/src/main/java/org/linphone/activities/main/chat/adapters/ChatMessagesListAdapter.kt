@@ -173,6 +173,10 @@ class ChatMessagesListAdapter(
         firstUnreadMessagePosition = -1
     }
 
+    fun getFirstUnreadMessagePosition(): Int {
+        return firstUnreadMessagePosition
+    }
+
     private fun computeFirstUnreadMessagePosition() {
         if (unreadMessagesCount > 0) {
             var messageCount = 0
