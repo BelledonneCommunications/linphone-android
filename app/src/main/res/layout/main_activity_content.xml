@@ -1,45 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentBottom="true">
 
-    <RelativeLayout
+    <!-- For proper snack bar placement -->
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinator"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true">
+        android:layout_above="@id/tabs_fragment">
 
-        <!-- For proper snack bar placement -->
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:id="@+id/coordinator"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/tabs_fragment">
+            android:layout_height="match_parent">
 
-            <RelativeLayout
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/nav_host_fragment"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:name="androidx.navigation.fragment.NavHostFragment"
+                app:defaultNavHost="true"
+                app:navGraph="@navigation/main_nav_graph"
+                tools:layout="@layout/dialer_fragment" />
 
-                <androidx.fragment.app.FragmentContainerView
-                    android:id="@+id/nav_host_fragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:name="androidx.navigation.fragment.NavHostFragment"
-                    app:defaultNavHost="true"
-                    app:navGraph="@navigation/main_nav_graph"
-                    tools:layout="@layout/dialer_fragment" />
+        </RelativeLayout>
 
-            </RelativeLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/tabs_fragment"
+        android:name="org.linphone.activities.main.fragments.TabsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/main_activity_tabs_fragment_size"
+        android:layout_alignParentBottom="true"
+        tools:layout="@layout/tabs_fragment"/>
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/tabs_fragment"
-            android:name="org.linphone.activities.main.fragments.TabsFragment"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/main_activity_tabs_fragment_size"
-            android:layout_alignParentBottom="true"
-            tools:layout="@layout/tabs_fragment"/>
-
-    </RelativeLayout>
-
-</layout>
+</RelativeLayout>

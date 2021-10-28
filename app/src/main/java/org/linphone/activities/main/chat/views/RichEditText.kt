@@ -58,7 +58,7 @@ class RichEditText : AppCompatEditText {
                 Log.i("[Rich Edit Text] Received URI: $uri")
                 val activity = context as Activity
                 val sharedViewModel = activity.run {
-                    ViewModelProvider(activity as ViewModelStoreOwner).get(SharedMainViewModel::class.java)
+                    ViewModelProvider(activity as ViewModelStoreOwner)[SharedMainViewModel::class.java]
                 }
                 sharedViewModel.richContentUri.value = Event(uri)
             }

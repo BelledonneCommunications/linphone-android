@@ -50,7 +50,7 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
         binding.lifecycleOwner = viewLifecycleOwner
 
         sharedViewModel = requireActivity().run {
-            ViewModelProvider(this).get(SharedMainViewModel::class.java)
+            ViewModelProvider(this)[SharedMainViewModel::class.java]
         }
         binding.sharedMainViewModel = sharedViewModel
 

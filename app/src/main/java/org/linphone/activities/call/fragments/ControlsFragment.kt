@@ -69,21 +69,21 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
         useMaterialSharedAxisXForwardAnimation = false
 
         sharedViewModel = requireActivity().run {
-            ViewModelProvider(this).get(SharedCallViewModel::class.java)
+            ViewModelProvider(this)[SharedCallViewModel::class.java]
         }
 
         callsViewModel = requireActivity().run {
-            ViewModelProvider(this).get(CallsViewModel::class.java)
+            ViewModelProvider(this)[CallsViewModel::class.java]
         }
         binding.viewModel = callsViewModel
 
         controlsViewModel = requireActivity().run {
-            ViewModelProvider(this).get(ControlsViewModel::class.java)
+            ViewModelProvider(this)[ControlsViewModel::class.java]
         }
         binding.controlsViewModel = controlsViewModel
 
         conferenceViewModel = requireActivity().run {
-            ViewModelProvider(this).get(ConferenceViewModel::class.java)
+            ViewModelProvider(this)[ConferenceViewModel::class.java]
         }
         binding.conferenceViewModel = conferenceViewModel
 

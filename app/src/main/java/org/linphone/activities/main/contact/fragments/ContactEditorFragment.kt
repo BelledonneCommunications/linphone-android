@@ -61,7 +61,7 @@ class ContactEditorFragment : GenericFragment<ContactEditorFragmentBinding>(), S
         binding.lifecycleOwner = viewLifecycleOwner
 
         sharedViewModel = requireActivity().run {
-            ViewModelProvider(this).get(SharedMainViewModel::class.java)
+            ViewModelProvider(this)[SharedMainViewModel::class.java]
         }
 
         viewModel = ViewModelProvider(

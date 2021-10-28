@@ -50,7 +50,7 @@ class ImdnFragment : SecureFragment<ChatRoomImdnFragmentBinding>() {
         binding.lifecycleOwner = viewLifecycleOwner
 
         sharedViewModel = requireActivity().run {
-            ViewModelProvider(this).get(SharedMainViewModel::class.java)
+            ViewModelProvider(this)[SharedMainViewModel::class.java]
         }
 
         val chatRoom = sharedViewModel.selectedChatRoom.value

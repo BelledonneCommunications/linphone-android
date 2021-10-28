@@ -48,7 +48,7 @@ class AudioSettingsFragment : GenericSettingFragment<SettingsAudioFragmentBindin
         binding.lifecycleOwner = viewLifecycleOwner
         binding.sharedMainViewModel = sharedViewModel
 
-        viewModel = ViewModelProvider(this).get(AudioSettingsViewModel::class.java)
+        viewModel = ViewModelProvider(this)[AudioSettingsViewModel::class.java]
         binding.viewModel = viewModel
 
         binding.setBackClickListener { goBack() }

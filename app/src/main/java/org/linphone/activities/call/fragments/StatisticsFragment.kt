@@ -38,7 +38,7 @@ class StatisticsFragment : GenericFragment<CallStatisticsFragmentBinding>() {
         binding.lifecycleOwner = viewLifecycleOwner
         useMaterialSharedAxisXForwardAnimation = false
 
-        viewModel = ViewModelProvider(this).get(StatisticsListViewModel::class.java)
+        viewModel = ViewModelProvider(this)[StatisticsListViewModel::class.java]
         binding.viewModel = viewModel
     }
 

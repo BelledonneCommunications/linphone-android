@@ -76,7 +76,7 @@ class OutgoingCallActivity : ProximitySensorActivity() {
         )[CallViewModel::class.java]
         binding.viewModel = viewModel
 
-        controlsViewModel = ViewModelProvider(this).get(ControlsViewModel::class.java)
+        controlsViewModel = ViewModelProvider(this)[ControlsViewModel::class.java]
         binding.controlsViewModel = controlsViewModel
 
         viewModel.callEndedEvent.observe(

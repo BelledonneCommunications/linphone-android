@@ -36,7 +36,7 @@ class PhoneAccountCreationViewModelFactory(private val accountCreator: AccountCr
     ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return PhoneAccountCreationViewModel(accountCreator) as T
     }
 }

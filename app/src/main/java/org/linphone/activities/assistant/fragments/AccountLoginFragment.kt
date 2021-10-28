@@ -49,10 +49,10 @@ class AccountLoginFragment : AbstractPhoneFragment<AssistantAccountLoginFragment
         binding.lifecycleOwner = viewLifecycleOwner
 
         sharedViewModel = requireActivity().run {
-            ViewModelProvider(this).get(SharedAssistantViewModel::class.java)
+            ViewModelProvider(this)[SharedAssistantViewModel::class.java]
         }
 
-        viewModel = ViewModelProvider(this, AccountLoginViewModelFactory(sharedViewModel.getAccountCreator())).get(AccountLoginViewModel::class.java)
+        viewModel = ViewModelProvider(this, AccountLoginViewModelFactory(sharedViewModel.getAccountCreator()))[AccountLoginViewModel::class.java]
         binding.viewModel = viewModel
 
         if (resources.getBoolean(R.bool.isTablet)) {

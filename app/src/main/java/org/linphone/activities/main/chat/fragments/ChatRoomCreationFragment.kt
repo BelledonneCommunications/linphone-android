@@ -54,14 +54,14 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
         binding.lifecycleOwner = viewLifecycleOwner
 
         sharedViewModel = requireActivity().run {
-            ViewModelProvider(this).get(SharedMainViewModel::class.java)
+            ViewModelProvider(this)[SharedMainViewModel::class.java]
         }
 
         useMaterialSharedAxisXForwardAnimation = sharedViewModel.isSlidingPaneSlideable.value == false
 
         val createGroup = arguments?.getBoolean("createGroup") ?: false
 
-        viewModel = ViewModelProvider(this).get(ChatRoomCreationViewModel::class.java)
+        viewModel = ViewModelProvider(this)[ChatRoomCreationViewModel::class.java]
         viewModel.createGroupChat.value = createGroup
 
         viewModel.isEncrypted.value = sharedViewModel.createEncryptedChatRoom

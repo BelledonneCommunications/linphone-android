@@ -44,10 +44,10 @@ class RemoteProvisioningFragment : GenericFragment<AssistantRemoteProvisioningFr
         binding.lifecycleOwner = viewLifecycleOwner
 
         sharedViewModel = requireActivity().run {
-            ViewModelProvider(this).get(SharedAssistantViewModel::class.java)
+            ViewModelProvider(this)[SharedAssistantViewModel::class.java]
         }
 
-        viewModel = ViewModelProvider(this).get(RemoteProvisioningViewModel::class.java)
+        viewModel = ViewModelProvider(this)[RemoteProvisioningViewModel::class.java]
         binding.viewModel = viewModel
 
         binding.setQrCodeClickListener {

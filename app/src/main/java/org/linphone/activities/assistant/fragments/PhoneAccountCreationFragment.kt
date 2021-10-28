@@ -42,10 +42,10 @@ class PhoneAccountCreationFragment : AbstractPhoneFragment<AssistantPhoneAccount
         binding.lifecycleOwner = viewLifecycleOwner
 
         sharedViewModel = requireActivity().run {
-            ViewModelProvider(this).get(SharedAssistantViewModel::class.java)
+            ViewModelProvider(this)[SharedAssistantViewModel::class.java]
         }
 
-        viewModel = ViewModelProvider(this, PhoneAccountCreationViewModelFactory(sharedViewModel.getAccountCreator())).get(PhoneAccountCreationViewModel::class.java)
+        viewModel = ViewModelProvider(this, PhoneAccountCreationViewModelFactory(sharedViewModel.getAccountCreator()))[PhoneAccountCreationViewModel::class.java]
         binding.viewModel = viewModel
 
         binding.setInfoClickListener {

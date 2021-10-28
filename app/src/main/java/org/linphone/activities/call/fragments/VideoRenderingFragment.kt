@@ -49,16 +49,16 @@ class VideoRenderingFragment : GenericFragment<CallVideoFragmentBinding>() {
         binding.lifecycleOwner = this
 
         controlsFadingViewModel = requireActivity().run {
-            ViewModelProvider(this).get(ControlsFadingViewModel::class.java)
+            ViewModelProvider(this)[ControlsFadingViewModel::class.java]
         }
         binding.controlsFadingViewModel = controlsFadingViewModel
 
         callsViewModel = requireActivity().run {
-            ViewModelProvider(this).get(CallsViewModel::class.java)
+            ViewModelProvider(this)[CallsViewModel::class.java]
         }
 
         conferenceViewModel = requireActivity().run {
-            ViewModelProvider(this).get(ConferenceViewModel::class.java)
+            ViewModelProvider(this)[ConferenceViewModel::class.java]
         }
         binding.conferenceViewModel = conferenceViewModel
 

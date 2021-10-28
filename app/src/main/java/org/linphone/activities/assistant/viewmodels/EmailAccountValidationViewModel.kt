@@ -32,7 +32,7 @@ class EmailAccountValidationViewModelFactory(private val accountCreator: Account
     ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return EmailAccountValidationViewModel(accountCreator) as T
     }
 }

@@ -20,32 +20,33 @@
 package org.linphone.activities.assistant
 
 import android.os.Bundle
-import androidx.databinding.DataBindingUtil
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import org.linphone.R
 import org.linphone.activities.GenericActivity
 import org.linphone.activities.SnackBarActivity
 import org.linphone.activities.assistant.viewmodels.SharedAssistantViewModel
-import org.linphone.databinding.AssistantActivityBinding
 
 class AssistantActivity : GenericActivity(), SnackBarActivity {
-    private lateinit var binding: AssistantActivityBinding
     private lateinit var sharedViewModel: SharedAssistantViewModel
+    private lateinit var coordinator: CoordinatorLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = DataBindingUtil.setContentView(this, R.layout.assistant_activity)
+        setContentView(R.layout.assistant_activity)
 
-        sharedViewModel = ViewModelProvider(this).get(SharedAssistantViewModel::class.java)
+        sharedViewModel = ViewModelProvider(this)[SharedAssistantViewModel::class.java]
+
+        coordinator = findViewById(R.id.coordinator)
     }
 
     override fun showSnackBar(resourceId: Int) {
-        Snackbar.make(binding.coordinator, resourceId, Snackbar.LENGTH_LONG).show()
+        Snackbar.make(coordinator, resourceId, Snackbar.LENGTH_LONG).show()
     }
 
     override fun showSnackBar(message: String) {
-        Snackbar.make(binding.coordinator, message, Snackbar.LENGTH_LONG).show()
+        Snackbar.make(coordinator, message, Snackbar.LENGTH_LONG).show()
     }
 }

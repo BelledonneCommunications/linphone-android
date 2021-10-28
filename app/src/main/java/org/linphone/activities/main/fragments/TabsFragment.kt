@@ -50,11 +50,11 @@ class TabsFragment : GenericFragment<TabsFragmentBinding>(), NavController.OnDes
         useMaterialSharedAxisXForwardAnimation = false
 
         sharedViewModel = requireActivity().run {
-            ViewModelProvider(this).get(SharedMainViewModel::class.java)
+            ViewModelProvider(this)[SharedMainViewModel::class.java]
         }
 
         viewModel = requireActivity().run {
-            ViewModelProvider(this).get(TabsViewModel::class.java)
+            ViewModelProvider(this)[TabsViewModel::class.java]
         }
         binding.viewModel = viewModel
 

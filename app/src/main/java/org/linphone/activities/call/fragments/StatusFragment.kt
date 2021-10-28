@@ -48,11 +48,11 @@ class StatusFragment : GenericFragment<CallStatusFragmentBinding>() {
         binding.lifecycleOwner = viewLifecycleOwner
         useMaterialSharedAxisXForwardAnimation = false
 
-        viewModel = ViewModelProvider(this).get(StatusViewModel::class.java)
+        viewModel = ViewModelProvider(this)[StatusViewModel::class.java]
         binding.viewModel = viewModel
 
         sharedViewModel = requireActivity().run {
-            ViewModelProvider(this).get(SharedCallViewModel::class.java)
+            ViewModelProvider(this)[SharedCallViewModel::class.java]
         }
 
         binding.setStatsClickListener {

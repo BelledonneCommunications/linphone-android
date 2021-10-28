@@ -66,11 +66,11 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        viewModel = ViewModelProvider(this).get(DialerViewModel::class.java)
+        viewModel = ViewModelProvider(this)[DialerViewModel::class.java]
         binding.viewModel = viewModel
 
         sharedViewModel = requireActivity().run {
-            ViewModelProvider(this).get(SharedMainViewModel::class.java)
+            ViewModelProvider(this)[SharedMainViewModel::class.java]
         }
 
         useMaterialSharedAxisXForwardAnimation = false

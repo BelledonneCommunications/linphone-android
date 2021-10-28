@@ -38,7 +38,7 @@ class AboutFragment : SecureFragment<AboutFragmentBinding>() {
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        viewModel = ViewModelProvider(this).get(AboutViewModel::class.java)
+        viewModel = ViewModelProvider(this)[AboutViewModel::class.java]
         binding.viewModel = viewModel
 
         binding.setBackClickListener { goBack() }

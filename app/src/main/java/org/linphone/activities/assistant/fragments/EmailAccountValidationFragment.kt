@@ -42,10 +42,10 @@ class EmailAccountValidationFragment : GenericFragment<AssistantEmailAccountVali
         binding.lifecycleOwner = viewLifecycleOwner
 
         sharedViewModel = requireActivity().run {
-            ViewModelProvider(this).get(SharedAssistantViewModel::class.java)
+            ViewModelProvider(this)[SharedAssistantViewModel::class.java]
         }
 
-        viewModel = ViewModelProvider(this, EmailAccountValidationViewModelFactory(sharedViewModel.getAccountCreator())).get(EmailAccountValidationViewModel::class.java)
+        viewModel = ViewModelProvider(this, EmailAccountValidationViewModelFactory(sharedViewModel.getAccountCreator()))[EmailAccountValidationViewModel::class.java]
         binding.viewModel = viewModel
 
         viewModel.leaveAssistantEvent.observe(
