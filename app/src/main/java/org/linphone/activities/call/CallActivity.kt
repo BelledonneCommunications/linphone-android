@@ -55,10 +55,10 @@ class CallActivity : ProximitySensorActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.call_activity)
         binding.lifecycleOwner = this
 
-        viewModel = ViewModelProvider(this).get(ControlsFadingViewModel::class.java)
+        viewModel = ViewModelProvider(this)[ControlsFadingViewModel::class.java]
         binding.controlsFadingViewModel = viewModel
 
-        sharedViewModel = ViewModelProvider(this).get(SharedCallViewModel::class.java)
+        sharedViewModel = ViewModelProvider(this)[SharedCallViewModel::class.java]
 
         sharedViewModel.toggleDrawerEvent.observe(
             this,

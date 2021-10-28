@@ -44,7 +44,7 @@ class ChatSettingsFragment : GenericSettingFragment<SettingsChatFragmentBinding>
         binding.lifecycleOwner = viewLifecycleOwner
         binding.sharedMainViewModel = sharedViewModel
 
-        viewModel = ViewModelProvider(this).get(ChatSettingsViewModel::class.java)
+        viewModel = ViewModelProvider(this)[ChatSettingsViewModel::class.java]
         binding.viewModel = viewModel
 
         binding.setBackClickListener { goBack() }

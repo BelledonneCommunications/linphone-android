@@ -49,7 +49,7 @@ class WelcomeFragment : GenericFragment<AssistantWelcomeFragmentBinding>() {
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        viewModel = ViewModelProvider(this).get(WelcomeViewModel::class.java)
+        viewModel = ViewModelProvider(this)[WelcomeViewModel::class.java]
         binding.viewModel = viewModel
 
         binding.setCreateAccountClickListener {

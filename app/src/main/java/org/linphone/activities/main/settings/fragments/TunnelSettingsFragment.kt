@@ -39,7 +39,7 @@ class TunnelSettingsFragment : GenericSettingFragment<SettingsTunnelFragmentBind
         binding.lifecycleOwner = viewLifecycleOwner
         binding.sharedMainViewModel = sharedViewModel
 
-        viewModel = ViewModelProvider(this).get(TunnelSettingsViewModel::class.java)
+        viewModel = ViewModelProvider(this)[TunnelSettingsViewModel::class.java]
         binding.viewModel = viewModel
 
         binding.setBackClickListener { goBack() }

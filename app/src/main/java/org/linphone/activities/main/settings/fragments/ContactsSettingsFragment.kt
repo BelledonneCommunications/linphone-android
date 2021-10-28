@@ -45,7 +45,7 @@ class ContactsSettingsFragment : GenericSettingFragment<SettingsContactsFragment
         binding.lifecycleOwner = viewLifecycleOwner
         binding.sharedMainViewModel = sharedViewModel
 
-        viewModel = ViewModelProvider(this).get(ContactsSettingsViewModel::class.java)
+        viewModel = ViewModelProvider(this)[ContactsSettingsViewModel::class.java]
         binding.viewModel = viewModel
 
         binding.setBackClickListener { goBack() }

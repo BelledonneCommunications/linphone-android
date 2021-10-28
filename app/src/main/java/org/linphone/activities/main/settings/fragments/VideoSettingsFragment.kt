@@ -48,7 +48,7 @@ class VideoSettingsFragment : GenericSettingFragment<SettingsVideoFragmentBindin
         binding.lifecycleOwner = viewLifecycleOwner
         binding.sharedMainViewModel = sharedViewModel
 
-        viewModel = ViewModelProvider(this).get(VideoSettingsViewModel::class.java)
+        viewModel = ViewModelProvider(this)[VideoSettingsViewModel::class.java]
         binding.viewModel = viewModel
 
         binding.setBackClickListener { goBack() }

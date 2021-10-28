@@ -89,13 +89,13 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        listViewModel = ViewModelProvider(this).get(CallLogsListViewModel::class.java)
+        listViewModel = ViewModelProvider(this)[CallLogsListViewModel::class.java]
         binding.viewModel = listViewModel
 
         /* Shared view model & sliding pane related */
 
         sharedViewModel = requireActivity().run {
-            ViewModelProvider(this).get(SharedMainViewModel::class.java)
+            ViewModelProvider(this)[SharedMainViewModel::class.java]
         }
 
         view.doOnPreDraw { sharedViewModel.isSlidingPaneSlideable.value = binding.slidingPane.isSlideable }
@@ -291,7 +291,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
         super.onResume()
 
         val tabsViewModel = requireActivity().run {
-            ViewModelProvider(this).get(TabsViewModel::class.java)
+            ViewModelProvider(this)[TabsViewModel::class.java]
         }
         tabsViewModel.updateMissedCallCount()
     }

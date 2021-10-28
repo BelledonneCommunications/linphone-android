@@ -51,7 +51,7 @@ class RecordingsFragment : MasterFragment<RecordingsFragmentBinding, RecordingsL
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        viewModel = ViewModelProvider(this).get(RecordingsViewModel::class.java)
+        viewModel = ViewModelProvider(this)[RecordingsViewModel::class.java]
         binding.viewModel = viewModel
 
         _adapter = RecordingsListAdapter(listSelectionViewModel, viewLifecycleOwner)

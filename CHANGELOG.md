@@ -38,6 +38,11 @@ Group changes to describe their impact on the project, as follows:
 ### Removed
 - Global push notification setting in Network, use the switch in each Account instead
 
+## [4.5.5] - 2021-10-28
+
+### Changed
+- SDK updated to 5.0.45
+
 ## [4.5.4] - 2021-10-19
 
 ### Changed

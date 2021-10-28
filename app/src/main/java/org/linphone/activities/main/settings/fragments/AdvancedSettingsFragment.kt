@@ -49,7 +49,7 @@ class AdvancedSettingsFragment : GenericSettingFragment<SettingsAdvancedFragment
         binding.lifecycleOwner = viewLifecycleOwner
         binding.sharedMainViewModel = sharedViewModel
 
-        viewModel = ViewModelProvider(this).get(AdvancedSettingsViewModel::class.java)
+        viewModel = ViewModelProvider(this)[AdvancedSettingsViewModel::class.java]
         binding.viewModel = viewModel
 
         binding.setBackClickListener { goBack() }

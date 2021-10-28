@@ -43,11 +43,11 @@ class PhoneAccountLinkingFragment : AbstractPhoneFragment<AssistantPhoneAccountL
         binding.lifecycleOwner = viewLifecycleOwner
 
         sharedViewModel = requireActivity().run {
-            ViewModelProvider(this).get(SharedAssistantViewModel::class.java)
+            ViewModelProvider(this)[SharedAssistantViewModel::class.java]
         }
 
         val accountCreator = sharedViewModel.getAccountCreator()
-        viewModel = ViewModelProvider(this, PhoneAccountLinkingViewModelFactory(accountCreator)).get(PhoneAccountLinkingViewModel::class.java)
+        viewModel = ViewModelProvider(this, PhoneAccountLinkingViewModelFactory(accountCreator))[PhoneAccountLinkingViewModel::class.java]
         binding.viewModel = viewModel
 
         val username = arguments?.getString("Username")

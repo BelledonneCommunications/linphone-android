@@ -53,7 +53,7 @@ abstract class MasterFragment<T : ViewDataBinding, U : SelectionListAdapter<*, *
         super.onViewCreated(view, savedInstanceState)
 
         // List selection
-        listSelectionViewModel = ViewModelProvider(this).get(ListTopBarViewModel::class.java)
+        listSelectionViewModel = ViewModelProvider(this)[ListTopBarViewModel::class.java]
 
         listSelectionViewModel.isEditionEnabled.observe(
             viewLifecycleOwner,

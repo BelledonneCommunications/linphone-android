@@ -36,7 +36,7 @@ abstract class GenericViewerFragment<T : ViewDataBinding> : SecureFragment<T>() 
         super.onViewCreated(view, savedInstanceState)
 
         sharedViewModel = requireActivity().run {
-            ViewModelProvider(this).get(SharedMainViewModel::class.java)
+            ViewModelProvider(this)[SharedMainViewModel::class.java]
         }
 
         isSecure = arguments?.getBoolean("Secure") ?: false

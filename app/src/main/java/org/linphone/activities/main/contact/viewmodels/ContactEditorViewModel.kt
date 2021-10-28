@@ -40,7 +40,7 @@ class ContactEditorViewModelFactory(private val contact: Contact?) :
     ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return ContactEditorViewModel(contact) as T
     }
 }

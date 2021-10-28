@@ -62,7 +62,7 @@ class SettingsFragment : SecureFragment<SettingsFragmentBinding>() {
         /* Shared view model & sliding pane related */
 
         sharedViewModel = requireActivity().run {
-            ViewModelProvider(this).get(SharedMainViewModel::class.java)
+            ViewModelProvider(this)[SharedMainViewModel::class.java]
         }
 
         view.doOnPreDraw { sharedViewModel.isSlidingPaneSlideable.value = binding.slidingPane.isSlideable }
@@ -106,7 +106,7 @@ class SettingsFragment : SecureFragment<SettingsFragmentBinding>() {
 
         /* End of shared view model & sliding pane related */
 
-        viewModel = ViewModelProvider(this).get(SettingsViewModel::class.java)
+        viewModel = ViewModelProvider(this)[SettingsViewModel::class.java]
         binding.viewModel = viewModel
 
         binding.setBackClickListener { goBack() }

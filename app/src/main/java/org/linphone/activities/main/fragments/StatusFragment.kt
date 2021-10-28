@@ -43,11 +43,11 @@ class StatusFragment : GenericFragment<StatusFragmentBinding>() {
         binding.lifecycleOwner = viewLifecycleOwner
         useMaterialSharedAxisXForwardAnimation = false
 
-        viewModel = ViewModelProvider(this).get(StatusViewModel::class.java)
+        viewModel = ViewModelProvider(this)[StatusViewModel::class.java]
         binding.viewModel = viewModel
 
         sharedViewModel = requireActivity().run {
-            ViewModelProvider(this).get(SharedMainViewModel::class.java)
+            ViewModelProvider(this)[SharedMainViewModel::class.java]
         }
 
         sharedViewModel.accountRemoved.observe(

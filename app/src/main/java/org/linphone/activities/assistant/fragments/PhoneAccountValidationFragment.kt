@@ -47,10 +47,10 @@ class PhoneAccountValidationFragment : GenericFragment<AssistantPhoneAccountVali
         binding.lifecycleOwner = viewLifecycleOwner
 
         sharedViewModel = requireActivity().run {
-            ViewModelProvider(this).get(SharedAssistantViewModel::class.java)
+            ViewModelProvider(this)[SharedAssistantViewModel::class.java]
         }
 
-        viewModel = ViewModelProvider(this, PhoneAccountValidationViewModelFactory(sharedViewModel.getAccountCreator())).get(PhoneAccountValidationViewModel::class.java)
+        viewModel = ViewModelProvider(this, PhoneAccountValidationViewModelFactory(sharedViewModel.getAccountCreator()))[PhoneAccountValidationViewModel::class.java]
         binding.viewModel = viewModel
 
         viewModel.phoneNumber.value = arguments?.getString("PhoneNumber")

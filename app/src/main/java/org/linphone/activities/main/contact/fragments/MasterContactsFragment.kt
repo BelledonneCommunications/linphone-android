@@ -72,13 +72,13 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        listViewModel = ViewModelProvider(this).get(ContactsListViewModel::class.java)
+        listViewModel = ViewModelProvider(this)[ContactsListViewModel::class.java]
         binding.viewModel = listViewModel
 
         /* Shared view model & sliding pane related */
 
         sharedViewModel = requireActivity().run {
-            ViewModelProvider(this).get(SharedMainViewModel::class.java)
+            ViewModelProvider(this)[SharedMainViewModel::class.java]
         }
 
         view.doOnPreDraw { sharedViewModel.isSlidingPaneSlideable.value = binding.slidingPane.isSlideable }

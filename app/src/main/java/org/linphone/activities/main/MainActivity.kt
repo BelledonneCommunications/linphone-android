@@ -115,10 +115,10 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         binding = DataBindingUtil.setContentView(this, R.layout.main_activity)
         binding.lifecycleOwner = this
 
-        sharedViewModel = ViewModelProvider(this).get(SharedMainViewModel::class.java)
+        sharedViewModel = ViewModelProvider(this)[SharedMainViewModel::class.java]
         binding.viewModel = sharedViewModel
 
-        callOverlayViewModel = ViewModelProvider(this).get(CallOverlayViewModel::class.java)
+        callOverlayViewModel = ViewModelProvider(this)[CallOverlayViewModel::class.java]
         binding.callOverlayViewModel = callOverlayViewModel
 
         sharedViewModel.toggleDrawerEvent.observe(

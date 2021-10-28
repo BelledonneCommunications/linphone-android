@@ -36,7 +36,7 @@ class AccountSettingsViewModelFactory(private val identity: String) :
     ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         for (account in coreContext.core.accountList) {
             if (account.params.identityAddress?.asStringUriOnly() == identity) {
                 return AccountSettingsViewModel(account) as T

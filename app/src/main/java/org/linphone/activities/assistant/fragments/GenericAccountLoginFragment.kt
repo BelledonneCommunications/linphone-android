@@ -47,10 +47,10 @@ class GenericAccountLoginFragment : GenericFragment<AssistantGenericAccountLogin
         binding.lifecycleOwner = viewLifecycleOwner
 
         sharedViewModel = requireActivity().run {
-            ViewModelProvider(this).get(SharedAssistantViewModel::class.java)
+            ViewModelProvider(this)[SharedAssistantViewModel::class.java]
         }
 
-        viewModel = ViewModelProvider(this, GenericLoginViewModelFactory(sharedViewModel.getAccountCreator(true))).get(GenericLoginViewModel::class.java)
+        viewModel = ViewModelProvider(this, GenericLoginViewModelFactory(sharedViewModel.getAccountCreator(true)))[GenericLoginViewModel::class.java]
         binding.viewModel = viewModel
 
         viewModel.leaveAssistantEvent.observe(

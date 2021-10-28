@@ -52,9 +52,7 @@ class AccountSettingsFragment : GenericSettingFragment<SettingsAccountFragmentBi
         }
 
         try {
-            viewModel = ViewModelProvider(this, AccountSettingsViewModelFactory(identity)).get(
-                AccountSettingsViewModel::class.java
-            )
+            viewModel = ViewModelProvider(this, AccountSettingsViewModelFactory(identity))[AccountSettingsViewModel::class.java]
         } catch (nsee: NoSuchElementException) {
             Log.e("[Account Settings] Failed to find Account object, aborting!")
             goBack()

@@ -31,7 +31,7 @@ abstract class GenericSettingFragment<T : ViewDataBinding> : GenericFragment<T>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         sharedViewModel = requireActivity().run {
-            ViewModelProvider(this).get(SharedMainViewModel::class.java)
+            ViewModelProvider(this)[SharedMainViewModel::class.java]
         }
 
         useMaterialSharedAxisXForwardAnimation = sharedViewModel.isSlidingPaneSlideable.value == false

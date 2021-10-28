@@ -38,7 +38,7 @@ class CallLogViewModelFactory(private val callLog: CallLog) :
     ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return CallLogViewModel(callLog) as T
     }
 }

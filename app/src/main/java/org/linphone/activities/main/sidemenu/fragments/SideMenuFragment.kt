@@ -59,11 +59,11 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        viewModel = ViewModelProvider(this).get(SideMenuViewModel::class.java)
+        viewModel = ViewModelProvider(this)[SideMenuViewModel::class.java]
         binding.viewModel = viewModel
 
         sharedViewModel = requireActivity().run {
-            ViewModelProvider(this).get(SharedMainViewModel::class.java)
+            ViewModelProvider(this)[SharedMainViewModel::class.java]
         }
 
         sharedViewModel.accountRemoved.observe(

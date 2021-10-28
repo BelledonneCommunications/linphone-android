@@ -40,7 +40,7 @@ class EchoCancellerCalibrationFragment : GenericFragment<AssistantEchoCancellerC
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        viewModel = ViewModelProvider(this).get(EchoCancellerCalibrationViewModel::class.java)
+        viewModel = ViewModelProvider(this)[EchoCancellerCalibrationViewModel::class.java]
         binding.viewModel = viewModel
 
         viewModel.echoCalibrationTerminated.observe(

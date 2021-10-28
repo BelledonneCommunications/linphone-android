@@ -51,7 +51,7 @@ class CallSettingsFragment : GenericSettingFragment<SettingsCallFragmentBinding>
         binding.lifecycleOwner = viewLifecycleOwner
         binding.sharedMainViewModel = sharedViewModel
 
-        viewModel = ViewModelProvider(this).get(CallSettingsViewModel::class.java)
+        viewModel = ViewModelProvider(this)[CallSettingsViewModel::class.java]
         binding.viewModel = viewModel
 
         binding.setBackClickListener { goBack() }
