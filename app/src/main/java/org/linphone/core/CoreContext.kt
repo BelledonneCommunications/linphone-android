@@ -299,7 +299,6 @@ class CoreContext(val context: Context, coreConfig: Config) {
         Log.i("=========================================")
 
         core = Factory.instance().createCoreWithConfig(coreConfig, context)
-
         stopped = false
         Log.i("[Context] Ready")
     }
@@ -419,7 +418,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
     /* Call related functions */
 
     fun initPhoneStateListener() {
-        if (PermissionHelper.get().hasReadPhoneStatePermission()) {
+        if (PermissionHelper.required(context).hasReadPhoneStatePermission()) {
             try {
                 phoneStateListener =
                     Compatibility.createPhoneListener(context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager)
