@@ -26,7 +26,11 @@ import org.linphone.core.tools.Log
 
 class AudioRouteUtils {
     companion object {
-        private fun routeAudioTo(types: List<AudioDevice.Type>, call: Call? = null) {
+        private fun routeAudioTo(
+            types: List<AudioDevice.Type>,
+            call: Call? = null,
+            output: Boolean = true
+        ) {
             val listSize = types.size
             val stringBuilder = StringBuilder()
             var index = 0
@@ -45,15 +49,21 @@ class AudioRouteUtils {
             }
             val currentCall = call ?: coreContext.core.currentCall ?: coreContext.core.calls[0]
             val conference = coreContext.core.conference
+            val capability = if (output)
+                AudioDevice.Capabilities.CapabilityPlay
+            else
+                AudioDevice.Capabilities.CapabilityRecord
 
             for (audioDevice in coreContext.core.audioDevices) {
-                if (types.contains(audioDevice.type) && audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
+                if (types.contains(audioDevice.type) && audioDevice.hasCapability(capability)) {
                     if (conference != null && conference.isIn) {
-                        Log.i("[Audio Route Helper] Found [${audioDevice.type}] audio device [${audioDevice.deviceName}], routing conference audio to it")
-                        conference.outputAudioDevice = audioDevice
+                        Log.i("[Audio Route Helper] Found [${audioDevice.type}] ${if (output) "playback" else "recorder"} audio device [${audioDevice.deviceName}], routing conference audio to it")
+                        if (output) conference.outputAudioDevice = audioDevice
+                        else conference.inputAudioDevice = audioDevice
                     } else {
-                        Log.i("[Audio Route Helper] Found [${audioDevice.type}] audio device [${audioDevice.deviceName}], routing call audio to it")
-                        currentCall.outputAudioDevice = audioDevice
+                        Log.i("[Audio Route Helper] Found [${audioDevice.type}] ${if (output) "playback" else "recorder"} audio device [${audioDevice.deviceName}], routing call audio to it")
+                        if (output) currentCall.outputAudioDevice = audioDevice
+                        else currentCall.inputAudioDevice = audioDevice
                     }
                     return
                 }
@@ -71,10 +81,18 @@ class AudioRouteUtils {
 
         fun routeAudioToBluetooth(call: Call? = null) {
             routeAudioTo(arrayListOf(AudioDevice.Type.Bluetooth), call)
+            if (isBluetoothAudioRecorderAvailable()) {
+                Log.i("[Audio Route Helper] Bluetooth device is able to record audio, also change input audio device")
+                routeAudioTo(arrayListOf(AudioDevice.Type.Bluetooth), call, false)
+            }
         }
 
         fun routeAudioToHeadset(call: Call? = null) {
             routeAudioTo(arrayListOf(AudioDevice.Type.Headphones, AudioDevice.Type.Headset), call)
+            if (isHeadsetAudioRecorderAvailable()) {
+                Log.i("[Audio Route Helper] Headphones/headset device is able to record audio, also change input audio device")
+                routeAudioTo((arrayListOf(AudioDevice.Type.Headphones, AudioDevice.Type.Headset)), call, false)
+            }
         }
 
         fun isSpeakerAudioRouteCurrentlyUsed(call: Call? = null): Boolean {
@@ -115,12 +133,36 @@ class AudioRouteUtils {
             return false
         }
 
+        private fun isBluetoothAudioRecorderAvailable(): Boolean {
+            for (audioDevice in coreContext.core.audioDevices) {
+                if (audioDevice.type == AudioDevice.Type.Bluetooth &&
+                    audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityRecord)
+                ) {
+                    Log.i("[Audio Route Helper] Found bluetooth audio recorder [${audioDevice.deviceName}]")
+                    return true
+                }
+            }
+            return false
+        }
+
         fun isHeadsetAudioRouteAvailable(): Boolean {
             for (audioDevice in coreContext.core.audioDevices) {
                 if ((audioDevice.type == AudioDevice.Type.Headset || audioDevice.type == AudioDevice.Type.Headphones) &&
                     audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityPlay)
                 ) {
                     Log.i("[Audio Route Helper] Found headset/headphones audio device [${audioDevice.deviceName}]")
+                    return true
+                }
+            }
+            return false
+        }
+
+        private fun isHeadsetAudioRecorderAvailable(): Boolean {
+            for (audioDevice in coreContext.core.audioDevices) {
+                if ((audioDevice.type == AudioDevice.Type.Headset || audioDevice.type == AudioDevice.Type.Headphones) &&
+                    audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityRecord)
+                ) {
+                    Log.i("[Audio Route Helper] Found headset/headphones audio recorder [${audioDevice.deviceName}]")
                     return true
                 }
             }
