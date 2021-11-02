@@ -98,8 +98,7 @@ class TelecomHelper private constructor(context: Context) {
 
     @SuppressLint("MissingPermission")
     fun findExistingAccount(context: Context): PhoneAccount? {
-        if (!PermissionHelper.exists()) PermissionHelper.create(context)
-        if (PermissionHelper.get().hasReadPhoneStateOrPhoneNumbersPermission()) {
+        if (PermissionHelper.required(context).hasReadPhoneStateOrPhoneNumbersPermission()) {
             var account: PhoneAccount? = null
             val phoneAccountHandleList: List<PhoneAccountHandle> =
                 telecomManager.selfManagedPhoneAccounts
