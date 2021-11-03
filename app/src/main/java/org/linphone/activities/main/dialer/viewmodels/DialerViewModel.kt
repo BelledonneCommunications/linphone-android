@@ -208,13 +208,15 @@ class DialerViewModel : LogsUploadViewModel() {
         }
     }
 
-    fun transferCall() {
+    fun transferCall(): Boolean {
         val addressToCall = enteredUri.value.orEmpty()
-        if (addressToCall.isNotEmpty()) {
+        return if (addressToCall.isNotEmpty()) {
             coreContext.transferCallTo(addressToCall)
             eraseAll()
+            true
         } else {
             setLastOutgoingCallAddress()
+            false
         }
     }
 
