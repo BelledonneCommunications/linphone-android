@@ -49,6 +49,8 @@ class TelecomHelper private constructor(context: Context) {
 
     private var account: PhoneAccount = initPhoneAccount(context)
 
+    val connections = arrayListOf<NativeCallWrapper>()
+
     private val listener: CoreListenerStub = object : CoreListenerStub() {
         override fun onCallStateChanged(
             core: Core,
@@ -134,6 +136,12 @@ class TelecomHelper private constructor(context: Context) {
             telecomManager.unregisterPhoneAccount(account.accountHandle)
         } else {
             Log.w("[Telecom Helper] Account wasn't enabled, skipping...")
+        }
+    }
+
+    fun findConnectionForCallId(callId: String): NativeCallWrapper? {
+        return connections.find { connection ->
+            connection.callId == callId
         }
     }
 

@@ -33,6 +33,7 @@ import androidx.core.app.NotificationManagerCompat
 import org.linphone.core.ChatRoom
 import org.linphone.core.Content
 import org.linphone.mediastream.Version
+import org.linphone.telecom.NativeCallWrapper
 
 @Suppress("DEPRECATION")
 class Compatibility {
@@ -166,6 +167,12 @@ class Compatibility {
                 Api26Compatibility.eventVibration(vibrator)
             } else {
                 Api21Compatibility.eventVibration(vibrator)
+            }
+        }
+
+        fun changeAudioRouteForTelecomManager(connection: NativeCallWrapper, route: Int) {
+            if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
+                Api26Compatibility.changeAudioRouteForTelecomManager(connection, route)
             }
         }
 

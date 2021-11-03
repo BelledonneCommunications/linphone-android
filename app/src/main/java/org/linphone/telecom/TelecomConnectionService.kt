@@ -30,8 +30,6 @@ import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
 
 class TelecomConnectionService : ConnectionService() {
-    private val connections = arrayListOf<NativeCallWrapper>()
-
     private val listener: CoreListenerStub = object : CoreListenerStub() {
         override fun onCallStateChanged(
             core: Core,
@@ -42,7 +40,7 @@ class TelecomConnectionService : ConnectionService() {
             Log.i("[Telecom Connection Service] call [${call.callLog.callId}] state changed: $state")
             when (call.state) {
                 Call.State.OutgoingProgress -> {
-                    for (connection in connections) {
+                    for (connection in TelecomHelper.get().connections) {
                         if (connection.callId.isEmpty()) {
                             connection.callId = core.currentCall?.callLog?.callId ?: ""
                         }
@@ -105,7 +103,7 @@ class TelecomConnectionService : ConnectionService() {
             connection.setCallerDisplayName(displayName, TelecomManager.PRESENTATION_ALLOWED)
             Log.i("[Telecom Connection Service] Address is $providedHandle")
 
-            connections.add(connection)
+            TelecomHelper.get().connections.add(connection)
             connection
         } else {
             Log.e("[Telecom Connection Service] Error: $accountHandle $componentName")
@@ -150,7 +148,7 @@ class TelecomConnectionService : ConnectionService() {
             connection.setCallerDisplayName(displayName, TelecomManager.PRESENTATION_ALLOWED)
             Log.i("[Telecom Connection Service] Address is $providedHandle")
 
-            connections.add(connection)
+            TelecomHelper.get().connections.add(connection)
             connection
         } else {
             Log.e("[Telecom Connection Service] Error: $accountHandle $componentName")
@@ -163,26 +161,20 @@ class TelecomConnectionService : ConnectionService() {
         }
     }
 
-    private fun getConnectionForCallId(callId: String): NativeCallWrapper? {
-        return connections.find { connection ->
-            connection.callId == callId
-        }
-    }
-
     private fun onCallError(call: Call) {
-        val connection = getConnectionForCallId(call.callLog.callId)
+        val connection = TelecomHelper.get().findConnectionForCallId(call.callLog.callId)
         connection ?: return
 
-        connections.remove(connection)
+        TelecomHelper.get().connections.remove(connection)
         connection.setDisconnected(DisconnectCause(DisconnectCause.ERROR))
         connection.destroy()
     }
 
     private fun onCallEnded(call: Call) {
-        val connection = getConnectionForCallId(call.callLog.callId)
+        val connection = TelecomHelper.get().findConnectionForCallId(call.callLog.callId)
         connection ?: return
 
-        connections.remove(connection)
+        TelecomHelper.get().connections.remove(connection)
         val reason = call.reason
         Log.i("[Telecom Connection Service] Call ended with reason: $reason")
         connection.setDisconnected(DisconnectCause(DisconnectCause.LOCAL))
@@ -190,7 +182,7 @@ class TelecomConnectionService : ConnectionService() {
     }
 
     private fun onCallConnected(call: Call) {
-        val connection = getConnectionForCallId(call.callLog.callId)
+        val connection = TelecomHelper.get().findConnectionForCallId(call.callLog.callId)
         connection ?: return
 
         if (connection.state != Connection.STATE_HOLDING) {

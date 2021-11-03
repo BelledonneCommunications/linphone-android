@@ -34,6 +34,7 @@ import android.view.WindowManager
 import androidx.core.app.NotificationManagerCompat
 import org.linphone.R
 import org.linphone.core.tools.Log
+import org.linphone.telecom.NativeCallWrapper
 
 @TargetApi(26)
 class Api26Compatibility {
@@ -132,6 +133,10 @@ class Api26Compatibility {
                 .setUsage(AudioAttributes.USAGE_NOTIFICATION_EVENT)
                 .build()
             vibrator.vibrate(effect, audioAttrs)
+        }
+
+        fun changeAudioRouteForTelecomManager(connection: NativeCallWrapper, route: Int) {
+            connection.setAudioRoute(route)
         }
     }
 }
