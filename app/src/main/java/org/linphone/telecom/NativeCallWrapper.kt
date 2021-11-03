@@ -72,10 +72,10 @@ class NativeCallWrapper(var callId: String) : Connection() {
         if (call != null) {
             call.microphoneMuted = state.isMuted
             when (state.route) {
-                CallAudioState.ROUTE_EARPIECE -> AudioRouteUtils.routeAudioToEarpiece(call)
-                CallAudioState.ROUTE_SPEAKER -> AudioRouteUtils.routeAudioToSpeaker(call)
-                CallAudioState.ROUTE_BLUETOOTH -> AudioRouteUtils.routeAudioToBluetooth(call)
-                CallAudioState.ROUTE_WIRED_HEADSET -> AudioRouteUtils.routeAudioToHeadset(call)
+                CallAudioState.ROUTE_EARPIECE -> AudioRouteUtils.routeAudioToEarpiece(call, true)
+                CallAudioState.ROUTE_SPEAKER -> AudioRouteUtils.routeAudioToSpeaker(call, true)
+                CallAudioState.ROUTE_BLUETOOTH -> AudioRouteUtils.routeAudioToBluetooth(call, true)
+                CallAudioState.ROUTE_WIRED_HEADSET -> AudioRouteUtils.routeAudioToHeadset(call, true)
             }
         } else {
             selfDestroy()
