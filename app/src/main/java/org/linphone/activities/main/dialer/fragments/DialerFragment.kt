@@ -101,10 +101,11 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
         }
 
         binding.setTransferCallClickListener {
-            viewModel.transferCall()
-            // Transfer has been consumed
-            sharedViewModel.pendingCallTransfer = false
-            viewModel.transferVisibility.value = false
+            if (viewModel.transferCall()) {
+                // Transfer has been consumed, otherwise it might have been a "bis" use
+                sharedViewModel.pendingCallTransfer = false
+                viewModel.transferVisibility.value = false
+            }
         }
 
         if (arguments?.containsKey("Transfer") == true) {
