@@ -56,4 +56,8 @@ abstract class GenericViewerFragment<T : ViewDataBinding> : SecureFragment<T>() 
         (childFragmentManager.findFragmentById(R.id.top_bar_fragment) as? TopBarFragment)
             ?.setContent(content)
     }
+
+    override fun goBack() {
+        findNavController().popBackStack()
+    }
 }
