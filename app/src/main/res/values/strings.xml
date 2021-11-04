@@ -223,7 +223,7 @@
     <string name="chat_message_voice_recording_playback_low_volume">Your media volume is low, you may want to increase it</string>
     <string name="chat_room_unread_message">%1$d unread message</string>
     <string name="chat_room_unread_messages">%1$d unread messages</string>
-    <plurals name="chat_room_unread_messages_event">
+    <plurals name="chat_room_unread_messages_event" translatable="false">
         <item quantity="one">@string/chat_room_unread_message</item>
         <item quantity="other">@string/chat_room_unread_messages</item>
     </plurals>
