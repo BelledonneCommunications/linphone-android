@@ -35,7 +35,7 @@ class ChatSettingsViewModel : GenericSettingsViewModel() {
 
     val fileSharingUrlListener = object : SettingListenerStub() {
         override fun onTextValueChanged(newValue: String) {
-            core.logCollectionUploadServerUrl = newValue
+            core.fileTransferServer = newValue
         }
     }
     val fileSharingUrl = MutableLiveData<String>()
