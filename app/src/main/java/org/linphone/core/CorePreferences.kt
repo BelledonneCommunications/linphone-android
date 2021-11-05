@@ -424,6 +424,9 @@ class CorePreferences constructor(private val context: Context) {
     val fetchContactsFromDefaultDirectory: Boolean
         get() = config.getBool("app", "fetch_contacts_from_default_directory", true)
 
+    val preferNormalizedPhoneNumbersFromAddressBook: Boolean
+        get() = config.getBool("app", "prefer_normalized_phone_numbers_from_address_book", true)
+
     val hideStaticImageCamera: Boolean
         get() = config.getBool("app", "hide_static_image_camera", true)
 
