@@ -118,7 +118,13 @@ class NativeContact(val nativeId: String, private val lookupKey: String? = null)
                     label
                 ).toString()
 
-                val number = data4 ?: data1
+                // data4 = ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER
+                // data1 = ContactsContract.CommonDataKinds.Phone.NUMBER
+                val number = if (corePreferences.preferNormalizedPhoneNumbersFromAddressBook) {
+                    data4 ?: data1
+                } else {
+                    data1 ?: data4
+                }
                 if (number != null && number.isNotEmpty()) {
                     Log.d("[Native Contact] Found phone number $data1 ($data4), type label is $typeLabel")
                     if (!rawPhoneNumbers.contains(number)) {
