@@ -25,6 +25,7 @@ import org.linphone.R
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
+import org.linphone.utils.PhoneNumberUtils
 
 class AccountLoginViewModelFactory(private val accountCreator: AccountCreator) :
     ViewModelProvider.NewInstanceFactory() {
@@ -219,6 +220,18 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
         }
 
         proxyConfig.isPushNotificationAllowed = true
+
+        if (proxyConfig.dialPrefix.isNullOrEmpty()) {
+            val dialPlan = PhoneNumberUtils.getDialPlanForCurrentCountry(coreContext.context)
+            if (dialPlan != null) {
+                Log.i("[Assistant] [Account Login] Found dial plan country ${dialPlan.country} with international prefix ${dialPlan.countryCallingCode}")
+                proxyConfig.edit()
+                proxyConfig.dialPrefix = dialPlan.countryCallingCode
+                proxyConfig.done()
+            } else {
+                Log.w("[Assistant] [Account Login] Failed to find dial plan")
+            }
+        }
 
         Log.i("[Assistant] [Account Login] Proxy config created")
         return true

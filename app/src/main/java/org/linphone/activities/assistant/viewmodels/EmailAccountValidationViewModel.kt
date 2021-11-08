@@ -22,11 +22,13 @@ package org.linphone.activities.assistant.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import org.linphone.LinphoneApplication
 import org.linphone.core.AccountCreator
 import org.linphone.core.AccountCreatorListenerStub
 import org.linphone.core.ProxyConfig
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
+import org.linphone.utils.PhoneNumberUtils
 
 class EmailAccountValidationViewModelFactory(private val accountCreator: AccountCreator) :
     ViewModelProvider.NewInstanceFactory() {
@@ -105,6 +107,18 @@ class EmailAccountValidationViewModel(val accountCreator: AccountCreator) : View
         }
 
         proxyConfig.isPushNotificationAllowed = true
+
+        if (proxyConfig.dialPrefix.isNullOrEmpty()) {
+            val dialPlan = PhoneNumberUtils.getDialPlanForCurrentCountry(LinphoneApplication.coreContext.context)
+            if (dialPlan != null) {
+                Log.i("[Assistant] [Account Validation] Found dial plan country ${dialPlan.country} with international prefix ${dialPlan.countryCallingCode}")
+                proxyConfig.edit()
+                proxyConfig.dialPrefix = dialPlan.countryCallingCode
+                proxyConfig.done()
+            } else {
+                Log.w("[Assistant] [Account Validation] Failed to find dial plan")
+            }
+        }
 
         Log.i("[Assistant] [Account Validation] Proxy config created")
         return true
