@@ -424,8 +424,10 @@ class CorePreferences constructor(private val context: Context) {
     val fetchContactsFromDefaultDirectory: Boolean
         get() = config.getBool("app", "fetch_contacts_from_default_directory", true)
 
+    // From Android Contact APIs we can also retrieve the internationalized phone number
+    // By default we display the same value as the native address book app
     val preferNormalizedPhoneNumbersFromAddressBook: Boolean
-        get() = config.getBool("app", "prefer_normalized_phone_numbers_from_address_book", true)
+        get() = config.getBool("app", "prefer_normalized_phone_numbers_from_address_book", false)
 
     val hideStaticImageCamera: Boolean
         get() = config.getBool("app", "hide_static_image_camera", true)
