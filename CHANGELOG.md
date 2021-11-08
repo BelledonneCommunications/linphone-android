@@ -10,6 +10,11 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [4.5.6] - 2021-11-08
+
+### Changed
+- SDK updated to 5.0.49
+
 ## [4.5.5] - 2021-10-28
 
 ### Changed
