@@ -4,4 +4,6 @@
     android:accountType="@string/sync_account_type"
     android:contentAuthority="com.android.contacts"
     android:supportsUploading="false"
-    android:userVisible="true" />
+    android:userVisible="true"
+    android:allowParallelSyncs="false"
+    android:isAlwaysSyncable="false" />
