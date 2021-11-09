@@ -114,6 +114,7 @@ open class CallViewModel(val call: Call) : GenericContactViewModel(call.remoteAd
         call.addListener(listener)
 
         isPaused.value = call.state == Call.State.Paused
+        isOutgoingEarlyMedia.value = call.state == Call.State.OutgoingEarlyMedia
     }
 
     override fun onCleared() {
