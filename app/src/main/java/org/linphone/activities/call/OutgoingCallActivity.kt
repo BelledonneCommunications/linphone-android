@@ -207,7 +207,8 @@ class OutgoingCallActivity : ProximitySensorActivity() {
         for (call in coreContext.core.calls) {
             if (call.state == Call.State.OutgoingInit ||
                 call.state == Call.State.OutgoingProgress ||
-                call.state == Call.State.OutgoingRinging
+                call.state == Call.State.OutgoingRinging ||
+                call.state == Call.State.OutgoingEarlyMedia
             ) {
                 return call
             }
