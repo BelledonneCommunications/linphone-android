@@ -7,6 +7,9 @@
         <variable
             name="viewModel"
             type="org.linphone.activities.main.chat.viewmodels.ChatMessageSendingViewModel" />
+        <variable
+            name="inflatedVisibility"
+            type="Integer" />
     </data>
 
     <RelativeLayout
@@ -14,7 +17,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
-        android:paddingBottom="10dp">
+        android:paddingBottom="10dp"
+        android:visibility="@{inflatedVisibility}">
 
         <ImageView
             android:id="@+id/cancel_recording"

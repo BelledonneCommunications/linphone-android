@@ -27,6 +27,9 @@
             name="voiceRecordingTouchListener"
             type="android.view.View.OnTouchListener" />
         <variable
+            name="cancelReplyToClickListener"
+            type="android.view.View.OnClickListener" />
+        <variable
             name="scrollToBottomClickListener"
             type="android.view.View.OnClickListener"/>
         <variable
@@ -152,16 +155,24 @@
             android:background="?attr/lightToolbarBackgroundColor"
             android:orientation="vertical">
 
-            <include
+            <ViewStub
+                android:id="@+id/stubbed_message_to_reply_to"
                 android:visibility="@{chatSendingViewModel.isPendingAnswer ? View.VISIBLE : View.GONE, default=gone}"
+                app:inflatedVisibility="@{chatSendingViewModel.isPendingAnswer ? View.VISIBLE : View.GONE}"
                 app:data="@{chatSendingViewModel.pendingChatMessageToReplyTo}"
-                app:cancelClickListener="@{() -> chatSendingViewModel.cancelReply()}"
-                layout="@layout/chat_message_reply" />
+                android:layout="@layout/chat_message_reply"
+                app:cancelClickListener="@{cancelReplyToClickListener}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
-            <include
+            <ViewStub
+                android:id="@+id/stubbed_voice_recording"
                 android:visibility="@{chatSendingViewModel.isPendingVoiceRecord ? View.VISIBLE : View.GONE, default=gone}"
+                app:inflatedVisibility="@{chatSendingViewModel.isPendingVoiceRecord ? View.VISIBLE : View.GONE}"
                 app:viewModel="@{chatSendingViewModel}"
-                layout="@layout/chat_message_voice_recording" />
+                android:layout="@layout/chat_message_voice_recording"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
             <View
                 android:visibility="@{chatSendingViewModel.isPendingVoiceRecord &amp;&amp; chatSendingViewModel.attachments.size() > 0 ? View.VISIBLE : View.GONE, default=gone}"

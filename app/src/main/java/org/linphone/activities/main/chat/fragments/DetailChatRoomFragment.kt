@@ -32,6 +32,7 @@ import android.widget.PopupWindow
 import androidx.core.content.FileProvider
 import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -493,6 +494,10 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             false
         }
 
+        binding.setCancelReplyToClickListener {
+            chatSendingViewModel.cancelReply()
+        }
+
         binding.setScrollToBottomClickListener {
             scrollToFirstUnreadMessageOrBottom(true)
         }
@@ -536,6 +541,18 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 }
             }
         )
+
+        binding.stubbedMessageToReplyTo.setOnInflateListener { _, inflated ->
+            Log.i("[Chat Room] Replying to message layout inflated")
+            val binding = DataBindingUtil.bind<ViewDataBinding>(inflated)
+            binding?.lifecycleOwner = viewLifecycleOwner
+        }
+
+        binding.stubbedVoiceRecording.setOnInflateListener { _, inflated ->
+            Log.i("[Chat Room] Voice recording layout inflated")
+            val binding = DataBindingUtil.bind<ViewDataBinding>(inflated)
+            binding?.lifecycleOwner = viewLifecycleOwner
+        }
     }
 
     override fun deleteItems(indexesOfItemToDelete: ArrayList<Int>) {
