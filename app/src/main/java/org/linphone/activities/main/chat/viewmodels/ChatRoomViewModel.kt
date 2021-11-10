@@ -74,6 +74,8 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
     val peerSipUri = MutableLiveData<String>()
 
+    val ephemeralEnabled = MutableLiveData<Boolean>()
+
     val oneToOneChatRoom: Boolean = chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())
 
     val encryptedChatRoom: Boolean = chatRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt())
@@ -199,6 +201,10 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
             lastMessageText.value = formatLastMessage(chatRoom.lastMessageInHistory)
         }
 
+        override fun onEphemeralEvent(chatRoom: ChatRoom, eventLog: EventLog) {
+            ephemeralEnabled.value = chatRoom.ephemeralEnabled()
+        }
+
         override fun onParticipantAdminStatusChanged(chatRoom: ChatRoom, eventLog: EventLog) {
             meAdmin.value = chatRoom.me?.isAdmin ?: false
         }
@@ -216,6 +222,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         subject.value = chatRoom.subject
         updateSecurityIcon()
         meAdmin.value = chatRoom.me?.isAdmin ?: false
+        ephemeralEnabled.value = chatRoom.ephemeralEnabled()
 
         contactLookup()
         updateParticipants()
