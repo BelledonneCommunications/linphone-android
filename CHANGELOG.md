@@ -36,8 +36,14 @@ Group changes to describe their impact on the project, as follows:
 - Going back to the dialer when pressing back in a chat room after clicking on a chat message notification
 
 ### Removed
+- Launcher Activity has been replaced by [Splash Screen API](https://developer.android.com/reference/kotlin/androidx/core/splashscreen/SplashScreen)
 - Dialer will no longer make DTMF sound when pressing digits
 - Global push notification setting in Network, use the switch in each Account instead
+
+## [4.5.6] - 2021-11-08
+
+### Changed
+- SDK updated to 5.0.49
 
 ## [4.5.5] - 2021-10-28
 
