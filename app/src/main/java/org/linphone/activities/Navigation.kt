@@ -317,7 +317,7 @@ internal fun ChatRoomCreationFragment.navigateToChatRoom(args: Bundle) {
         findNavController().navigate(
             R.id.action_chatRoomCreationFragment_to_detailChatRoomFragment,
             args,
-            popupTo(R.id.detailChatRoomFragment, true)
+            popupTo(R.id.chatRoomCreationFragment, true)
         )
     }
 }
