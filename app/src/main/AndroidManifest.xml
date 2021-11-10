@@ -39,28 +39,23 @@
         android:label="${appLabel}"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:extractNativeLibs="${extractNativeLibs}"
-        android:theme="@style/AppTheme"
+        android:theme="@style/AppSplashScreenTheme"
         android:allowNativeHeapPointerTagging="false">
-
-        <activity
-            android:name=".activities.launcher.LauncherActivity"
-            android:exported="true"
-            android:noHistory="true"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            <meta-data
-                android:name="android.app.shortcuts"
-                android:resource="@xml/shortcuts" />
-        </activity>
 
         <activity android:name=".activities.main.MainActivity"
             android:exported="true"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize">
             <nav-graph android:value="@navigation/main_nav_graph" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW_LOCUS" />
