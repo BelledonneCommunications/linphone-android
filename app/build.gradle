@@ -202,7 +202,7 @@ repositories {
 
     maven {
         name "linphone.org maven repository"
-        url "https://linphone.org/maven_repository"
+        url "https://download.linphone.org/maven_repository"
         content {
             includeGroup "org.linphone"
         }
