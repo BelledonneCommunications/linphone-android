@@ -204,7 +204,8 @@
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/call_settings_pause_calls_lost_audio_focus_title}"
                     linphone:listener="@{viewModel.pauseCallsWhenAudioFocusIsLostListener}"
-                    linphone:checked="@={viewModel.pauseCallsWhenAudioFocusIsLost}"/>
+                    linphone:checked="@={viewModel.pauseCallsWhenAudioFocusIsLost}"
+                    linphone:enabled="@{!viewModel.useTelecomManager}"/>
 
                 <include
                     layout="@layout/settings_widget_basic"

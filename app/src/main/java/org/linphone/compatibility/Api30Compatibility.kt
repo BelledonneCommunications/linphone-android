@@ -45,6 +45,16 @@ class Api30Compatibility {
             activity.requestPermissions(arrayOf(Manifest.permission.READ_PHONE_NUMBERS), code)
         }
 
+        fun requestTelecomManagerPermission(activity: Activity, code: Int) {
+            activity.requestPermissions(
+                arrayOf(
+                    Manifest.permission.READ_PHONE_NUMBERS,
+                    Manifest.permission.MANAGE_OWN_CALLS
+                ),
+                code
+            )
+        }
+
         fun removeChatRoomShortcut(context: Context, chatRoom: ChatRoom) {
             val shortcutManager = context.getSystemService(ShortcutManager::class.java)
             val id = LinphoneUtils.getChatRoomId(chatRoom.localAddress, chatRoom.peerAddress)

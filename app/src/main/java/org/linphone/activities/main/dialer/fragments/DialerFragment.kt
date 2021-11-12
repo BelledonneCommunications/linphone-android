@@ -45,9 +45,11 @@ import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.navigateToConfigFileViewer
 import org.linphone.activities.navigateToContacts
+import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 import org.linphone.databinding.DialerFragmentBinding
 import org.linphone.mediastream.Version
+import org.linphone.telecom.TelecomHelper
 import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
@@ -108,25 +110,6 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
             }
         }
 
-        if (arguments?.containsKey("Transfer") == true) {
-            sharedViewModel.pendingCallTransfer = arguments?.getBoolean("Transfer") ?: false
-            Log.i("[Dialer] Is pending call transfer: ${sharedViewModel.pendingCallTransfer}")
-        }
-
-        if (arguments?.containsKey("URI") == true) {
-            val address = arguments?.getString("URI") ?: ""
-            Log.i("[Dialer] Found URI to call: $address")
-            val skipAutoCall = arguments?.getBoolean("SkipAutoCallStart") ?: false
-
-            if (corePreferences.callRightAway && !skipAutoCall) {
-                Log.i("[Dialer] Call right away setting is enabled, start the call to $address")
-                viewModel.directCall(address)
-            } else {
-                sharedViewModel.dialerUri = address
-            }
-        }
-        arguments?.clear()
-
         viewModel.enteredUri.observe(
             viewLifecycleOwner,
             {
@@ -165,6 +148,30 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
                 }
             }
         )
+
+        if (corePreferences.firstStart) {
+            Log.w("[Dialer] First start detected, wait for assistant to be finished to check for update & request permissions")
+            return
+        }
+
+        if (arguments?.containsKey("Transfer") == true) {
+            sharedViewModel.pendingCallTransfer = arguments?.getBoolean("Transfer") ?: false
+            Log.i("[Dialer] Is pending call transfer: ${sharedViewModel.pendingCallTransfer}")
+        }
+
+        if (arguments?.containsKey("URI") == true) {
+            val address = arguments?.getString("URI") ?: ""
+            Log.i("[Dialer] Found URI to call: $address")
+            val skipAutoCall = arguments?.getBoolean("SkipAutoCallStart") ?: false
+
+            if (corePreferences.callRightAway && !skipAutoCall) {
+                Log.i("[Dialer] Call right away setting is enabled, start the call to $address")
+                viewModel.directCall(address)
+            } else {
+                sharedViewModel.dialerUri = address
+            }
+        }
+        arguments?.clear()
 
         Log.i("[Dialer] Pending call transfer mode = ${sharedViewModel.pendingCallTransfer}")
         viewModel.transferVisibility.value = sharedViewModel.pendingCallTransfer
@@ -205,16 +212,70 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
                 Log.i("[Dialer] READ_PHONE_STATE permission has been granted")
                 coreContext.initPhoneStateListener()
             }
+            checkTelecomManagerPermissions()
+        } else if (requestCode == 1) {
+            var allGranted = true
+            for (result in grantResults) {
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    allGranted = false
+                }
+            }
+            if (allGranted) {
+                Log.i("[Dialer] Telecom Manager permission have been granted")
+                enableTelecomManager()
+            } else {
+                Log.w("[Dialer] Telecom Manager permission have been denied (at least one of them)")
+            }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     @TargetApi(Version.API23_MARSHMALLOW_60)
     private fun checkPermissions() {
+        checkReadPhoneStatePermission()
+        if (Version.sdkAboveOrEqual(Version.API26_O_80) && PermissionHelper.get().hasReadPhoneStatePermission()) {
+            // Don't check the following the previous permission is being asked
+            checkTelecomManagerPermissions()
+        }
+    }
+
+    @TargetApi(Version.API23_MARSHMALLOW_60)
+    private fun checkReadPhoneStatePermission() {
         if (!PermissionHelper.get().hasReadPhoneStatePermission()) {
             Log.i("[Dialer] Asking for READ_PHONE_STATE permission")
             requestPermissions(arrayOf(Manifest.permission.READ_PHONE_STATE), 0)
         }
+    }
+
+    @TargetApi(Version.API26_O_80)
+    private fun checkTelecomManagerPermissions() {
+        if (!corePreferences.useTelecomManager) {
+            Log.i("[Dialer] Telecom Manager feature is disabled")
+            if (corePreferences.manuallyDisabledTelecomManager) {
+                Log.w("[Dialer] User has manually disabled Telecom Manager feature")
+            } else {
+                if (PermissionHelper.get().hasTelecomManagerPermissions()) {
+                    enableTelecomManager()
+                } else {
+                    Log.i("[Dialer] Asking for Telecom Manager permissions")
+                    Compatibility.requestTelecomManagerPermission(requireActivity(), 1)
+                }
+            }
+        } else {
+            Log.i("[Dialer] Telecom Manager feature is already enabled")
+        }
+    }
+
+    @TargetApi(Version.API26_O_80)
+    private fun enableTelecomManager() {
+        Log.i("[Dialer] Telecom Manager permissions granted")
+        if (!TelecomHelper.exists()) {
+            Log.i("[Dialer] Creating Telecom Helper")
+            TelecomHelper.create(requireContext())
+        } else {
+            Log.e("[Dialer] Telecom Manager was already created ?!")
+        }
+        corePreferences.useTelecomManager = true
     }
 
     private fun displayDebugPopup() {

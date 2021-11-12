@@ -17,7 +17,7 @@ Group changes to describe their impact on the project, as follows:
 - Voice recordings in chat feature
 - Allow video recording in chat file sharing
 - Unread messages indicator in chat conversation that separates read & unread messages
-- Notify incoming/outgoing calls on bluetooth devices using self-managed connections from telecom manager API
+- Notify incoming/outgoing calls on bluetooth devices using self-managed connections from telecom manager API (disables SDK audio focus)
 - New video call UI on foldable device like Galaxy Z Fold
 - Setting to automatically record all calls
 

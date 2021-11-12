@@ -317,6 +317,13 @@ class CorePreferences constructor(private val context: Context) {
             config.setBool("audio", "android_disable_audio_focus_requests", value)
         }
 
+    // We will try to auto enable Telecom Manager feature, but in case user disables it don't try again
+    var manuallyDisabledTelecomManager: Boolean
+        get() = config.getBool("app", "user_disabled_self_managed_telecom_manager", false)
+        set(value) {
+            config.setBool("app", "user_disabled_self_managed_telecom_manager", value)
+        }
+
     var fullScreenCallUI: Boolean
         get() = config.getBool("app", "full_screen_call", true)
         set(value) {

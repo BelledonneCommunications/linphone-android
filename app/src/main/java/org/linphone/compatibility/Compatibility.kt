@@ -62,6 +62,14 @@ class Compatibility {
                 Api29Compatibility.requestReadPhoneStatePermission(activity, code)
             }
         }
+        // See https://developer.android.com/about/versions/11/privacy/permissions#phone-numbers
+        fun requestTelecomManagerPermission(activity: Activity, code: Int) {
+            if (Version.sdkAboveOrEqual(Version.API30_ANDROID_11)) {
+                Api30Compatibility.requestTelecomManagerPermission(activity, code)
+            } else {
+                Api26Compatibility.requestTelecomManagerPermission(activity, code)
+            }
+        }
 
         fun getDeviceName(context: Context): String {
             return when (Version.sdkAboveOrEqual(Version.API25_NOUGAT_71)) {
