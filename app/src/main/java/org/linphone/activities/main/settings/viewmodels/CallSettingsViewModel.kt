@@ -73,6 +73,9 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
                     TelecomHelper.get().removeAccount()
                     TelecomHelper.get().destroy()
                     TelecomHelper.destroy()
+
+                    Log.w("[Call Settings] Disabling Telecom Manager auto-enable")
+                    prefs.manuallyDisabledTelecomManager = true
                 }
                 prefs.useTelecomManager = newValue
             }

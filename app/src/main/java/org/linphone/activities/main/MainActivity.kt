@@ -148,7 +148,6 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
         if (coreContext.core.accountList.isEmpty()) {
             if (corePreferences.firstStart) {
-                corePreferences.firstStart = false
                 startActivity(Intent(this, AssistantActivity::class.java))
             }
         }

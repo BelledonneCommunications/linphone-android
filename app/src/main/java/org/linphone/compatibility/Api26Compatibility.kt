@@ -19,6 +19,7 @@
  */
 package org.linphone.compatibility
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Activity
@@ -137,6 +138,16 @@ class Api26Compatibility {
 
         fun changeAudioRouteForTelecomManager(connection: NativeCallWrapper, route: Int) {
             connection.setAudioRoute(route)
+        }
+
+        fun requestTelecomManagerPermission(activity: Activity, code: Int) {
+            activity.requestPermissions(
+                arrayOf(
+                    Manifest.permission.READ_PHONE_STATE,
+                    Manifest.permission.MANAGE_OWN_CALLS
+                ),
+                code
+            )
         }
     }
 }

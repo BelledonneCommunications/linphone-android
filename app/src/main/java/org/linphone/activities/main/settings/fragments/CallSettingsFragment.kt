@@ -19,7 +19,6 @@
  */
 package org.linphone.activities.main.settings.fragments
 
-import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -95,11 +94,7 @@ class CallSettingsFragment : GenericSettingFragment<SettingsCallFragmentBinding>
             {
                 it.consume {
                     if (!PermissionHelper.get().hasTelecomManagerPermissions()) {
-                        val permissions = arrayOf(
-                            Manifest.permission.READ_PHONE_NUMBERS,
-                            Manifest.permission.MANAGE_OWN_CALLS
-                        )
-                        requestPermissions(permissions, 1)
+                        Compatibility.requestTelecomManagerPermission(requireActivity(), 1)
                     } else if (!TelecomHelper.exists()) {
                         corePreferences.useTelecomManager = true
                         Log.w("[Telecom Helper] Doesn't exists yet, creating it")
