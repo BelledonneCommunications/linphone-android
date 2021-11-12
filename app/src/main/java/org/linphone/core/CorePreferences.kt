@@ -480,7 +480,7 @@ class CorePreferences constructor(private val context: Context) {
         get() = config.getString(
             "misc",
             "version_check_url_root",
-            "https://linphone.org/releases/android/RELEASE"
+            "https://download.linphone.org/releases/android/RELEASE"
         )
 
     val checkUpdateAvailableInterval: Int
