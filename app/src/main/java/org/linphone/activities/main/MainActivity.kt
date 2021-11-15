@@ -49,8 +49,7 @@ import kotlinx.coroutines.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
-import org.linphone.activities.GenericActivity
-import org.linphone.activities.SnackBarActivity
+import org.linphone.activities.*
 import org.linphone.activities.assistant.AssistantActivity
 import org.linphone.activities.main.viewmodels.CallOverlayViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
@@ -255,9 +254,8 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                     if (uri != null) {
                         val contactId = coreContext.contactsManager.getAndroidContactIdFromUri(uri)
                         if (contactId != null) {
-                            val deepLink = "linphone-android://contact/view/$contactId"
-                            Log.i("[Main Activity] Found contact URI parameter in intent: $uri, starting deep link: $deepLink")
-                            findNavController(R.id.nav_host_fragment).navigate(Uri.parse(deepLink))
+                            Log.i("[Main Activity] Found contact URI parameter in intent: $uri")
+                            navigateToContact(contactId)
                         }
                     }
                 } else {
@@ -284,9 +282,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                 when {
                     intent.hasExtra("ContactId") -> {
                         val id = intent.getStringExtra("ContactId")
-                        val deepLink = "linphone-android://contact/view/$id"
-                        Log.i("[Main Activity] Found contact id parameter in intent: $id, starting deep link: $deepLink")
-                        findNavController(R.id.nav_host_fragment).navigate(Uri.parse(deepLink))
+                        navigateToContact(id)
                     }
                     intent.hasExtra("Chat") -> {
                         if (corePreferences.disableChat) return
@@ -429,12 +425,10 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                     addressToIM = addressToIM.substring("mmsto:".length)
             }
 
-            val peerAddress = coreContext.core.interpretUrl(addressToIM)?.asStringUriOnly()
             val localAddress =
                 coreContext.core.defaultAccount?.params?.identityAddress?.asStringUriOnly()
-            val deepLink = "linphone-android://chat-room/$localAddress/$peerAddress"
-            Log.i("[Main Activity] Starting deep link: $deepLink")
-            findNavController(R.id.nav_host_fragment).navigate(Uri.parse(deepLink))
+            val peerAddress = coreContext.core.interpretUrl(addressToIM)?.asStringUriOnly()
+            navigateToChatRoom(localAddress, peerAddress)
         } else {
             val shortcutId = intent.getStringExtra("android.intent.extra.shortcut.ID") // Intent.EXTRA_SHORTCUT_ID
             if (shortcutId != null) {
@@ -442,7 +436,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                 handleLocusOrShortcut(shortcutId)
             } else {
                 Log.i("[Main Activity] Going into chat rooms list")
-                findNavController(R.id.nav_host_fragment).navigate(R.id.action_global_masterChatRoomsFragment)
+                navigateToChatRooms()
             }
         }
     }
@@ -452,11 +446,10 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         if (split.size == 2) {
             val localAddress = split[0]
             val peerAddress = split[1]
-            val deepLink = "linphone-android://chat-room/$localAddress/$peerAddress"
-            findNavController(R.id.nav_host_fragment).navigate(Uri.parse(deepLink))
+            navigateToChatRoom(localAddress, peerAddress)
         } else {
             Log.e("[Main Activity] Failed to parse shortcut/locus id: $id")
-            findNavController(R.id.nav_host_fragment).navigate(R.id.action_global_masterChatRoomsFragment)
+            navigateToChatRooms()
         }
     }
 
