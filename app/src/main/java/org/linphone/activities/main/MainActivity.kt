@@ -282,6 +282,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                 when {
                     intent.hasExtra("ContactId") -> {
                         val id = intent.getStringExtra("ContactId")
+                        Log.i("[Main Activity] Found contact ID in extras: $id")
                         navigateToContact(id)
                     }
                     intent.hasExtra("Chat") -> {
@@ -291,10 +292,10 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                             val peerAddress = intent.getStringExtra("RemoteSipUri")
                             val localAddress = intent.getStringExtra("LocalSipUri")
                             Log.i("[Main Activity] Found chat room intent extra: local SIP URI=[$localAddress], peer SIP URI=[$peerAddress]")
-                            findNavController(R.id.nav_host_fragment).navigate(Uri.parse("linphone-android://chat-room/$localAddress/$peerAddress"))
+                            navigateToChatRoom(localAddress, peerAddress)
                         } else {
                             Log.i("[Main Activity] Found chat intent extra, go to chat rooms list")
-                            findNavController(R.id.nav_host_fragment).navigate(R.id.action_global_masterChatRoomsFragment)
+                            navigateToChatRooms()
                         }
                     }
                     intent.hasExtra("Dialer") -> {
@@ -428,6 +429,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             val localAddress =
                 coreContext.core.defaultAccount?.params?.identityAddress?.asStringUriOnly()
             val peerAddress = coreContext.core.interpretUrl(addressToIM)?.asStringUriOnly()
+            Log.i("[Main Activity] Navigating to chat room with local [$localAddress] and peer [$peerAddress] addresses")
             navigateToChatRoom(localAddress, peerAddress)
         } else {
             val shortcutId = intent.getStringExtra("android.intent.extra.shortcut.ID") // Intent.EXTRA_SHORTCUT_ID
@@ -446,9 +448,10 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         if (split.size == 2) {
             val localAddress = split[0]
             val peerAddress = split[1]
+            Log.i("[Main Activity] Navigating to chat room with local [$localAddress] and peer [$peerAddress] addresses, computed from shortcut/locus id")
             navigateToChatRoom(localAddress, peerAddress)
         } else {
-            Log.e("[Main Activity] Failed to parse shortcut/locus id: $id")
+            Log.e("[Main Activity] Failed to parse shortcut/locus id: $id, going to chat rooms list")
             navigateToChatRooms()
         }
     }
