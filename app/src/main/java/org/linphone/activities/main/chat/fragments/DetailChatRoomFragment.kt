@@ -120,11 +120,6 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
         useMaterialSharedAxisXForwardAnimation = sharedViewModel.isSlidingPaneSlideable.value == false
 
-        view.doOnPreDraw {
-            // Notifies fragment is ready to be drawn
-            sharedViewModel.chatRoomFragmentOpenedEvent.value = Event(true)
-        }
-
         val localSipUri = arguments?.getString("LocalSipUri")
         val remoteSipUri = arguments?.getString("RemoteSipUri")
 
@@ -151,6 +146,11 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             // (activity as MainActivity).showSnackBar(R.string.error)
             goBack()
             return
+        }
+
+        view.doOnPreDraw {
+            // Notifies fragment is ready to be drawn
+            sharedViewModel.chatRoomFragmentOpenedEvent.value = Event(true)
         }
 
         Compatibility.setLocusIdInContentCaptureSession(binding.root, chatRoom)
