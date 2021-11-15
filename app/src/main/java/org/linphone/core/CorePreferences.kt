@@ -325,7 +325,7 @@ class CorePreferences constructor(private val context: Context) {
         }
 
     var fullScreenCallUI: Boolean
-        get() = config.getBool("app", "full_screen_call", true)
+        get() = config.getBool("app", "full_screen_call", false)
         set(value) {
             config.setBool("app", "full_screen_call", value)
         }
