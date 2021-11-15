@@ -47,7 +47,6 @@ import org.linphone.activities.main.settings.fragments.*
 import org.linphone.activities.main.sidemenu.fragments.SideMenuFragment
 import org.linphone.contact.NativeContact
 import org.linphone.core.Address
-import org.linphone.core.tools.Log
 
 internal fun Fragment.findMasterNavController(): NavController {
     return parentFragment?.parentFragment?.findNavController() ?: findNavController()
@@ -83,7 +82,6 @@ internal fun MainActivity.navigateToChatRooms(args: Bundle? = null) {
 
 internal fun MainActivity.navigateToChatRoom(localAddress: String?, peerAddress: String?) {
     val deepLink = "linphone-android://chat-room/$localAddress/$peerAddress"
-    Log.i("[Main Activity] Starting deep link: $deepLink")
     findNavController(R.id.nav_host_fragment).navigate(
         Uri.parse(deepLink),
         popupTo(R.id.masterChatRoomsFragment, true)
@@ -92,7 +90,6 @@ internal fun MainActivity.navigateToChatRoom(localAddress: String?, peerAddress:
 
 internal fun MainActivity.navigateToContact(contactId: String?) {
     val deepLink = "linphone-android://contact/view/$contactId"
-    Log.i("[Main Activity] Starting deep link: $deepLink")
     findNavController(R.id.nav_host_fragment).navigate(
         Uri.parse(deepLink),
         popupTo(R.id.masterContactsFragment, true)
