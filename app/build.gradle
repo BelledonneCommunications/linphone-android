@@ -143,8 +143,8 @@ android {
             initWith release
 
             resValue "bool", "crashlytics_enabled", crashlyticsEnabled.toString()
-            if (crashlyticsEnabled) {
 
+            if (crashlyticsEnabled) {
                 firebaseCrashlytics {
                     nativeSymbolUploadEnabled true
                     unstrippedNativeLibsDir file(LinphoneSdkBuildDir + '/libs-debug/').toString()
@@ -161,14 +161,13 @@ android {
             resValue "string", "sync_account_type", getPackageName() + ".sync"
             resValue "string", "file_provider", getPackageName() + ".debug.fileprovider"
             resValue "string", "linphone_address_mime_type", "vnd.android.cursor.item/vnd." + getPackageName() + ".provider.sip_address"
+            resValue "bool", "crashlytics_enabled", crashlyticsEnabled.toString()
 
             if (!firebaseEnabled) {
                 resValue "string", "gcm_defaultSenderId", "none"
             }
 
-            resValue "bool", "crashlytics_enabled", crashlyticsEnabled.toString()
             if (crashlyticsEnabled) {
-
                 firebaseCrashlytics {
                     nativeSymbolUploadEnabled true
                     unstrippedNativeLibsDir file(LinphoneSdkBuildDir + '/libs-debug/').toString()
@@ -211,8 +210,6 @@ repositories {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-
     implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'androidx.media:media:1.4.3'
     implementation 'androidx.fragment:fragment-ktx:1.4.0-rc01'
