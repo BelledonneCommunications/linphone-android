@@ -80,7 +80,7 @@
             android:layout_below="@id/top_bar"
             android:gravity="center"
             android:orientation="vertical"
-            android:paddingTop="20dp"
+            android:paddingTop="10dp"
             android:paddingBottom="5dp">
 
             <org.linphone.contact.BigContactAvatarView
@@ -88,6 +88,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:gravity="center"
+                android:layout_marginTop="10dp"
                 bind:layout="@layout/contact_avatar_big"
                 app:viewModel="@{viewModel}"/>
 

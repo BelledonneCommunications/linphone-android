@@ -113,7 +113,7 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
                 it.consume {
                     if (!PermissionHelper.get().hasWriteExternalStoragePermission()) {
                         Log.i("[Controls Fragment] Asking for WRITE_EXTERNAL_STORAGE permission")
-                        requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
+                        requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 2)
                     }
                 }
             }
@@ -179,12 +179,22 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
             }
         )
 
-        controlsViewModel.askPermissionEvent.observe(
+        controlsViewModel.askAudioRecordPermissionEvent.observe(
             viewLifecycleOwner,
             {
                 it.consume { permission ->
                     Log.i("[Controls Fragment] Asking for $permission permission")
                     requestPermissions(arrayOf(permission), 0)
+                }
+            }
+        )
+
+        controlsViewModel.askCameraPermissionEvent.observe(
+            viewLifecycleOwner,
+            {
+                it.consume { permission ->
+                    Log.i("[Controls Fragment] Asking for $permission permission")
+                    requestPermissions(arrayOf(permission), 1)
                 }
             }
         )
@@ -251,7 +261,13 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
                     }
                 }
             }
-        } else if (requestCode == 1 && grantResults.isNotEmpty() && grantResults[0] == PERMISSION_GRANTED) {
+        } else if (requestCode == 1) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PERMISSION_GRANTED) {
+                Log.i("[Controls Fragment] CAMERA permission has been granted")
+                coreContext.core.reloadVideoDevices()
+                controlsViewModel.toggleVideo()
+            }
+        } else if (requestCode == 2 && grantResults.isNotEmpty() && grantResults[0] == PERMISSION_GRANTED) {
             callsViewModel.takeScreenshot()
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
