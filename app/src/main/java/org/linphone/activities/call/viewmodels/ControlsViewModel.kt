@@ -87,7 +87,11 @@ class ControlsViewModel : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
-    val askPermissionEvent: MutableLiveData<Event<String>> by lazy {
+    val askAudioRecordPermissionEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
+    val askCameraPermissionEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
     }
 
@@ -176,7 +180,7 @@ class ControlsViewModel : ViewModel() {
             }
 
             if (coreContext.isVideoCallOrConferenceActive() && !PermissionHelper.get().hasCameraPermission()) {
-                askPermissionEvent.value = Event(Manifest.permission.CAMERA)
+                askCameraPermissionEvent.value = Event(Manifest.permission.CAMERA)
             }
 
             updateUI()
@@ -244,7 +248,7 @@ class ControlsViewModel : ViewModel() {
 
     fun toggleMuteMicrophone() {
         if (!PermissionHelper.get().hasRecordAudioPermission()) {
-            askPermissionEvent.value = Event(Manifest.permission.RECORD_AUDIO)
+            askAudioRecordPermissionEvent.value = Event(Manifest.permission.RECORD_AUDIO)
             return
         }
 
@@ -279,7 +283,7 @@ class ControlsViewModel : ViewModel() {
 
     fun toggleVideo() {
         if (!PermissionHelper.get().hasCameraPermission()) {
-            askPermissionEvent.value = Event(Manifest.permission.CAMERA)
+            askCameraPermissionEvent.value = Event(Manifest.permission.CAMERA)
             return
         }
 

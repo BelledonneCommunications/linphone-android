@@ -106,7 +106,16 @@ class OutgoingCallActivity : ProximitySensorActivity() {
             }
         )
 
-        controlsViewModel.askPermissionEvent.observe(
+        controlsViewModel.askAudioRecordPermissionEvent.observe(
+            this,
+            {
+                it.consume { permission ->
+                    requestPermissions(arrayOf(permission), 0)
+                }
+            }
+        )
+
+        controlsViewModel.askCameraPermissionEvent.observe(
             this,
             {
                 it.consume { permission ->
