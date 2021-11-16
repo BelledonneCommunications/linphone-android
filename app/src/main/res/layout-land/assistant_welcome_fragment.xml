@@ -89,6 +89,7 @@
 
                     <TextView
                         android:id="@+id/account_creation"
+                        android:enabled="@{viewModel.termsAndPrivacyAccepted}"
                         android:visibility="@{viewModel.showCreateAccount ? View.VISIBLE : View.GONE}"
                         android:onClick="@{createAccountClickListener}"
                         style="@style/button_font"
@@ -105,6 +106,7 @@
 
                     <TextView
                         android:id="@+id/account_connection"
+                        android:enabled="@{viewModel.termsAndPrivacyAccepted}"
                         android:visibility="@{viewModel.showLinphoneLogin ? View.VISIBLE : View.GONE}"
                         android:onClick="@{accountLoginClickListener}"
                         style="@style/button_font"
@@ -121,6 +123,7 @@
 
                     <TextView
                         android:id="@+id/generic_connection"
+                        android:enabled="@{viewModel.termsAndPrivacyAccepted}"
                         android:visibility="@{viewModel.showGenericLogin ? View.VISIBLE : View.GONE}"
                         android:onClick="@{genericAccountLoginClickListener}"
                         style="@style/button_font"
@@ -137,6 +140,7 @@
 
                     <TextView
                         android:id="@+id/remote_configuration"
+                        android:enabled="@{viewModel.termsAndPrivacyAccepted}"
                         android:visibility="@{viewModel.showRemoteProvisioning ? View.VISIBLE : View.GONE}"
                         android:onClick="@{remoteProvisioningClickListener}"
                         style="@style/button_font"
