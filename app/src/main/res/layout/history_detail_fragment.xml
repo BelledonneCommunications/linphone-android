@@ -74,119 +74,119 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/top_bar"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingTop="10dp"
-            android:paddingBottom="5dp">
-
-            <org.linphone.contact.BigContactAvatarView
-                android:id="@+id/avatar"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:gravity="center"
-                android:layout_marginTop="10dp"
-                bind:layout="@layout/contact_avatar_big"
-                app:viewModel="@{viewModel}"/>
-
-            <TextView
-                android:text="@{viewModel.contact.fullName ?? viewModel.displayName}"
-                style="@style/big_contact_name_font"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal" />
-
-            <org.linphone.views.MarqueeTextView
-                android:text="@{viewModel.peerSipUri}"
-                style="@style/sip_uri_font"
-                android:singleLine="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+            android:layout_height="match_parent"
+            android:layout_below="@id/top_bar">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:paddingTop="10dp"
+                android:paddingBottom="5dp">
 
-                <ImageView
-                    android:onClick="@{() -> viewModel.startCall()}"
-                    android:contentDescription="@string/content_description_start_call"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/round_orange_button_background"
-                    android:src="@drawable/call_start_default" />
+                <org.linphone.contact.BigContactAvatarView
+                    android:id="@+id/avatar"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:gravity="center"
+                    android:layout_marginTop="10dp"
+                    bind:layout="@layout/contact_avatar_big"
+                    app:viewModel="@{viewModel}"/>
 
-                <ImageView
-                    android:onClick="@{() -> viewModel.startChat(false)}"
-                    android:visibility="@{viewModel.chatAllowed ? View.VISIBLE : View.GONE}"
-                    android:contentDescription="@string/content_description_start_chat"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/round_orange_button_background"
-                    android:src="@drawable/chat_start_default" />
+                <TextView
+                    android:text="@{viewModel.contact.fullName ?? viewModel.displayName}"
+                    style="@style/big_contact_name_font"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal" />
 
-                <RelativeLayout
-                    android:onClick="@{() -> viewModel.startChat(true)}"
-                    android:visibility="@{viewModel.chatAllowed &amp;&amp; viewModel.secureChatAllowed ? View.VISIBLE : View.GONE}"
-                    android:layout_width="65dp"
-                    android:layout_height="60dp"
-                    android:layout_margin="10dp">
+                <org.linphone.views.MarqueeTextView
+                    android:text="@{viewModel.peerSipUri}"
+                    style="@style/sip_uri_font"
+                    android:singleLine="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
                     <ImageView
+                        android:onClick="@{() -> viewModel.startCall()}"
+                        android:contentDescription="@string/content_description_start_call"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:contentDescription="@string/content_description_start_encrypted_chat"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/round_orange_button_background"
+                        android:src="@drawable/call_start_default" />
+
+                    <ImageView
+                        android:onClick="@{() -> viewModel.startChat(false)}"
+                        android:visibility="@{viewModel.chatAllowed ? View.VISIBLE : View.GONE}"
+                        android:contentDescription="@string/content_description_start_chat"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_margin="10dp"
                         android:background="@drawable/round_orange_button_background"
                         android:src="@drawable/chat_start_default" />
 
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentRight="true"
-                        android:contentDescription="@string/content_description_start_encrypted_chat"
-                        android:src="@drawable/security_toggle_icon_green" />
+                    <RelativeLayout
+                        android:onClick="@{() -> viewModel.startChat(true)}"
+                        android:visibility="@{viewModel.chatAllowed &amp;&amp; viewModel.secureChatAllowed ? View.VISIBLE : View.GONE}"
+                        android:layout_width="65dp"
+                        android:layout_height="60dp"
+                        android:layout_margin="10dp">
 
-                </RelativeLayout>
+                        <ImageView
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:contentDescription="@string/content_description_start_encrypted_chat"
+                            android:background="@drawable/round_orange_button_background"
+                            android:src="@drawable/chat_start_default" />
 
-            </LinearLayout>
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentRight="true"
+                            android:contentDescription="@string/content_description_start_encrypted_chat"
+                            android:src="@drawable/security_toggle_icon_green" />
 
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="1dp"
-                android:background="?attr/dividerColor" />
+                    </RelativeLayout>
 
-            <TextView
-                style="@style/assistant_input_field_header_font"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="5dp"
-                android:text="@string/history_calls_list"
-                android:textAllCaps="true" />
+                </LinearLayout>
 
-            <androidx.core.widget.NestedScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:background="?attr/dividerColor" />
+
+                <TextView
+                    style="@style/assistant_input_field_header_font"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/history_calls_list"
+                    android:textAllCaps="true" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    app:entries="@{viewModel.callsHistory}"
+                    app:entries="@{viewModel.relatedCallLogs}"
                     app:layout="@{@layout/history_detail_cell}"/>
 
-            </androidx.core.widget.NestedScrollView>
+            </LinearLayout>
 
-        </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
 
         <include
             layout="@layout/wait_layout"
