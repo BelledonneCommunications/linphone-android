@@ -86,11 +86,11 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
 
     val isPlayingVoiceRecording = MutableLiveData<Boolean>()
 
-    val recorder: Recorder
-
     val voiceRecordPlayingPosition = MutableLiveData<Int>()
 
-    var voiceRecordAudioFocusRequest: AudioFocusRequestCompat? = null
+    private val recorder: Recorder
+
+    private var voiceRecordAudioFocusRequest: AudioFocusRequestCompat? = null
 
     private lateinit var voiceRecordingPlayer: Player
     private val playerListener = PlayerListener {

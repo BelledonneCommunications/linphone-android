@@ -328,6 +328,7 @@
                 android:layout_alignParentBottom="true"
                 android:background="@drawable/round_button_background"
                 android:padding="13dp"
+                android:contentDescription="@string/content_descripton_scroll_to_bottom"
                 android:src="@drawable/scroll_to_bottom" />
 
             <TextView

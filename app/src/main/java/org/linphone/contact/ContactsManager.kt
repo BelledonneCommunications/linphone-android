@@ -79,12 +79,6 @@ class ContactsManager(private val context: Context) {
         @Synchronized
         private set
 
-    var localAccountsContacts = ArrayList<Contact>()
-        @Synchronized
-        get
-        @Synchronized
-        private set
-
     val magicSearch: MagicSearch by lazy {
         val magicSearch = coreContext.core.createMagicSearch()
         magicSearch.limitedSearch = false
@@ -92,6 +86,12 @@ class ContactsManager(private val context: Context) {
     }
 
     var latestContactFetch: String = ""
+
+    private var localAccountsContacts = ArrayList<Contact>()
+        @Synchronized
+        get
+        @Synchronized
+        private set
 
     private val friendsMap: HashMap<String, Friend> = HashMap()
 

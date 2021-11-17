@@ -114,8 +114,8 @@ class StatusFragment : GenericFragment<CallStatusFragmentBinding>() {
 
         val viewModel = DialogViewModel(getString(R.string.zrtp_dialog_message), getString(R.string.zrtp_dialog_title))
         viewModel.showZrtp = true
-        viewModel.zrtpReadSas = toRead.toUpperCase(Locale.getDefault())
-        viewModel.zrtpListenSas = toListen.toUpperCase(Locale.getDefault())
+        viewModel.zrtpReadSas = toRead.uppercase(Locale.getDefault())
+        viewModel.zrtpListenSas = toListen.uppercase(Locale.getDefault())
         viewModel.showIcon = true
         viewModel.iconResource = R.drawable.security_2_indicator
 

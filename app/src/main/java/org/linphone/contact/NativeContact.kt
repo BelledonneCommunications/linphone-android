@@ -86,97 +86,104 @@ class NativeContact(val nativeId: String, private val lookupKey: String? = null)
 
     @Synchronized
     override fun syncValuesFromAndroidCursor(cursor: Cursor) {
-        val displayName: String? =
-            cursor.getString(cursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME_PRIMARY))
+        try {
+            val displayName: String? =
+                cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Data.DISPLAY_NAME_PRIMARY))
 
-        val mime: String? = cursor.getString(cursor.getColumnIndex(ContactsContract.Data.MIMETYPE))
-        val data1: String? = cursor.getString(cursor.getColumnIndex("data1"))
-        val data2: String? = cursor.getString(cursor.getColumnIndex("data2"))
-        val data3: String? = cursor.getString(cursor.getColumnIndex("data3"))
-        val data4: String? = cursor.getString(cursor.getColumnIndex("data4"))
+            val mime: String? =
+                cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Data.MIMETYPE))
+            val data1: String? = cursor.getString(cursor.getColumnIndexOrThrow("data1"))
+            val data2: String? = cursor.getString(cursor.getColumnIndexOrThrow("data2"))
+            val data3: String? = cursor.getString(cursor.getColumnIndexOrThrow("data3"))
+            val data4: String? = cursor.getString(cursor.getColumnIndexOrThrow("data4"))
 
-        if (fullName == null || fullName != displayName) {
-            Log.d("[Native Contact] Setting display name $displayName")
-            fullName = displayName
-        }
+            if (fullName == null || fullName != displayName) {
+                Log.d("[Native Contact] Setting display name $displayName")
+                fullName = displayName
+            }
 
-        val linphoneMime = AppUtils.getString(R.string.linphone_address_mime_type)
-        when (mime) {
-            ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE -> {
-                if (data1 == null && data4 == null) {
-                    Log.d("[Native Contact] Phone number data is empty")
-                    return
-                }
+            val linphoneMime = AppUtils.getString(R.string.linphone_address_mime_type)
+            when (mime) {
+                ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE -> {
+                    if (data1 == null && data4 == null) {
+                        Log.d("[Native Contact] Phone number data is empty")
+                        return
+                    }
 
-                val labelColumnIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.LABEL)
-                val label: String? = cursor.getString(labelColumnIndex)
-                val typeColumnIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE)
-                val type: Int = cursor.getInt(typeColumnIndex)
-                val typeLabel = ContactsContract.CommonDataKinds.Phone.getTypeLabel(
-                    coreContext.context.resources,
-                    type,
-                    label
-                ).toString()
+                    val labelColumnIndex =
+                        cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.LABEL)
+                    val label: String? = cursor.getString(labelColumnIndex)
+                    val typeColumnIndex =
+                        cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.TYPE)
+                    val type: Int = cursor.getInt(typeColumnIndex)
+                    val typeLabel = ContactsContract.CommonDataKinds.Phone.getTypeLabel(
+                        coreContext.context.resources,
+                        type,
+                        label
+                    ).toString()
 
-                // data4 = ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER
-                // data1 = ContactsContract.CommonDataKinds.Phone.NUMBER
-                val number = if (corePreferences.preferNormalizedPhoneNumbersFromAddressBook) {
-                    data4 ?: data1
-                } else {
-                    data1 ?: data4
-                }
-                if (number != null && number.isNotEmpty()) {
-                    Log.d("[Native Contact] Found phone number $data1 ($data4), type label is $typeLabel")
-                    if (!rawPhoneNumbers.contains(number)) {
-                        phoneNumbers.add(PhoneNumber(number, typeLabel))
-                        rawPhoneNumbers.add(number)
+                    // data4 = ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER
+                    // data1 = ContactsContract.CommonDataKinds.Phone.NUMBER
+                    val number = if (corePreferences.preferNormalizedPhoneNumbersFromAddressBook) {
+                        data4 ?: data1
+                    } else {
+                        data1 ?: data4
+                    }
+                    if (number != null && number.isNotEmpty()) {
+                        Log.d("[Native Contact] Found phone number $data1 ($data4), type label is $typeLabel")
+                        if (!rawPhoneNumbers.contains(number)) {
+                            phoneNumbers.add(PhoneNumber(number, typeLabel))
+                            rawPhoneNumbers.add(number)
+                        }
                     }
                 }
+                linphoneMime, ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE -> {
+                    if (data1 == null) {
+                        Log.d("[Native Contact] SIP address is null")
+                        return
+                    }
+
+                    Log.d("[Native Contact] Found SIP address $data1")
+                    if (rawPhoneNumbers.contains(data1)) {
+                        Log.d("[Native Contact] SIP address value already exists in phone numbers list, skipping")
+                        return
+                    }
+
+                    val address: Address? = coreContext.core.interpretUrl(data1)
+                    if (address == null) {
+                        Log.e("[Native Contact] Couldn't parse address $data1 !")
+                        return
+                    }
+
+                    val stringAddress = address.asStringUriOnly()
+                    Log.d("[Native Contact] Found SIP address $stringAddress")
+                    if (!rawSipAddresses.contains(data1)) {
+                        sipAddresses.add(address)
+                        rawSipAddresses.add(data1)
+                    }
+                }
+                ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE -> {
+                    if (data1 == null) {
+                        Log.d("[Native Contact] Organization is null")
+                        return
+                    }
+
+                    Log.d("[Native Contact] Found organization $data1")
+                    organization = data1
+                }
+                ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE -> {
+                    if (data2 == null && data3 == null) {
+                        Log.d("[Native Contact] First name and last name are both null")
+                        return
+                    }
+
+                    Log.d("[Native Contact] Found first name $data2 and last name $data3")
+                    firstName = data2
+                    lastName = data3
+                }
             }
-            linphoneMime, ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE -> {
-                if (data1 == null) {
-                    Log.d("[Native Contact] SIP address is null")
-                    return
-                }
-
-                Log.d("[Native Contact] Found SIP address $data1")
-                if (rawPhoneNumbers.contains(data1)) {
-                    Log.d("[Native Contact] SIP address value already exists in phone numbers list, skipping")
-                    return
-                }
-
-                val address: Address? = coreContext.core.interpretUrl(data1)
-                if (address == null) {
-                    Log.e("[Native Contact] Couldn't parse address $data1 !")
-                    return
-                }
-
-                val stringAddress = address.asStringUriOnly()
-                Log.d("[Native Contact] Found SIP address $stringAddress")
-                if (!rawSipAddresses.contains(data1)) {
-                    sipAddresses.add(address)
-                    rawSipAddresses.add(data1)
-                }
-            }
-            ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE -> {
-                if (data1 == null) {
-                    Log.d("[Native Contact] Organization is null")
-                    return
-                }
-
-                Log.d("[Native Contact] Found organization $data1")
-                organization = data1
-            }
-            ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE -> {
-                if (data2 == null && data3 == null) {
-                    Log.d("[Native Contact] First name and last name are both null")
-                    return
-                }
-
-                Log.d("[Native Contact] Found first name $data2 and last name $data3")
-                firstName = data2
-                lastName = data3
-            }
+        } catch (iae: IllegalArgumentException) {
+            Log.e("[Native Contact] Exception: $iae")
         }
     }
 

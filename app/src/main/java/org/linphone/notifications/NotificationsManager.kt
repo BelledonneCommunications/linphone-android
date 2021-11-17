@@ -633,7 +633,7 @@ class NotificationsManager(private val context: Context) {
             context,
             notifiable.notificationId,
             target,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            Compatibility.getUpdateCurrentPendingIntentFlag()
         )
 
         val id = LinphoneUtils.getChatRoomId(room.localAddress, room.peerAddress)
@@ -888,7 +888,7 @@ class NotificationsManager(private val context: Context) {
             context,
             notifiable.notificationId,
             replyIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            Compatibility.getUpdateCurrentPendingIntentFlag()
         )
         return NotificationCompat.Action.Builder(
             R.drawable.chat_send_over,

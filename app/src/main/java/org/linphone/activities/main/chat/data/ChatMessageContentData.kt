@@ -60,7 +60,6 @@ class ChatMessageContentData(
 
     val fileName = MutableLiveData<String>()
     val filePath = MutableLiveData<String>()
-    val fileSize = MutableLiveData<String>()
 
     val downloadable = MutableLiveData<Boolean>()
     val downloadEnabled = MutableLiveData<Boolean>()
@@ -72,7 +71,6 @@ class ChatMessageContentData(
     val formattedDuration = MutableLiveData<String>()
     val voiceRecordPlayingPosition = MutableLiveData<Int>()
     val isVoiceRecordPlaying = MutableLiveData<Boolean>()
-    var voiceRecordAudioFocusRequest: AudioFocusRequestCompat? = null
 
     val isAlone: Boolean
         get() {
@@ -86,7 +84,9 @@ class ChatMessageContentData(
             return count == 1
         }
 
-    var isFileEncrypted: Boolean = false
+    private var isFileEncrypted: Boolean = false
+
+    private var voiceRecordAudioFocusRequest: AudioFocusRequestCompat? = null
 
     private lateinit var voiceRecordingPlayer: Player
     private val playerListener = PlayerListener {
@@ -193,8 +193,8 @@ class ChatMessageContentData(
         }
 
         // Display download size and underline text
-        fileSize.value = AppUtils.bytesToDisplayableSize(content.fileSize.toLong())
-        val spannable = SpannableString("${AppUtils.getString(R.string.chat_message_download_file)} (${fileSize.value})")
+        val fileSize = AppUtils.bytesToDisplayableSize(content.fileSize.toLong())
+        val spannable = SpannableString("${AppUtils.getString(R.string.chat_message_download_file)} ($fileSize)")
         spannable.setSpan(UnderlineSpan(), 0, spannable.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         downloadLabel.value = spannable
 

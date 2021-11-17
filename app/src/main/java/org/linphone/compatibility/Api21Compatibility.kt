@@ -22,6 +22,7 @@ package org.linphone.compatibility
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Activity
+import android.app.PendingIntent
 import android.bluetooth.BluetoothAdapter
 import android.content.ContentValues
 import android.content.Context
@@ -206,6 +207,10 @@ class Api21Compatibility {
 
         fun requestDismissKeyguard(activity: Activity) {
             activity.window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD)
+        }
+
+        fun getUpdateCurrentPendingIntentFlag(): Int {
+            return PendingIntent.FLAG_UPDATE_CURRENT
         }
     }
 }

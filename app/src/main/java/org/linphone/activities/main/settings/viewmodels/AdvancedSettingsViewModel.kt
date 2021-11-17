@@ -32,8 +32,8 @@ import org.linphone.mediastream.Version
 import org.linphone.utils.Event
 
 class AdvancedSettingsViewModel : LogsUploadViewModel() {
-    protected val prefs = corePreferences
-    protected val core = coreContext.core
+    private val prefs = corePreferences
+    private val core = coreContext.core
 
     val debugModeListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {

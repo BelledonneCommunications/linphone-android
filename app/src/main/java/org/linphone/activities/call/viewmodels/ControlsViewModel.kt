@@ -342,23 +342,27 @@ class ControlsViewModel : ViewModel() {
         val currentCall = core.currentCall
         val conference = core.conference
 
-        if (currentCall != null) {
-            if (currentCall.isRecording) {
-                currentCall.stopRecording()
-            } else {
-                currentCall.startRecording()
+        when {
+            currentCall != null -> {
+                if (currentCall.isRecording) {
+                    currentCall.stopRecording()
+                } else {
+                    currentCall.startRecording()
+                }
+                isRecording.value = currentCall.isRecording
             }
-            isRecording.value = currentCall.isRecording
-        } else if (conference != null) {
-            val path = LinphoneUtils.getRecordingFilePathForConference()
-            if (conference.isRecording) {
-                conference.stopRecording()
-            } else {
-                conference.startRecording(path)
+            conference != null -> {
+                val path = LinphoneUtils.getRecordingFilePathForConference()
+                if (conference.isRecording) {
+                    conference.stopRecording()
+                } else {
+                    conference.startRecording(path)
+                }
+                isRecording.value = conference.isRecording
             }
-            isRecording.value = conference.isRecording
-        } else {
-            isRecording.value = false
+            else -> {
+                isRecording.value = false
+            }
         }
 
         if (closeMenu) toggleOptionsMenu()
