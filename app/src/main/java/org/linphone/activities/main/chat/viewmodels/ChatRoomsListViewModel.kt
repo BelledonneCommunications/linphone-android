@@ -170,12 +170,10 @@ class ChatRoomsListViewModel : ErrorReportingViewModel() {
     }
 
     private fun findChatRoomIndex(chatRoom: ChatRoom): Int {
-        var index = 0
-        for (chatRoomViewModel in chatRooms.value.orEmpty()) {
+        for ((index, chatRoomViewModel) in chatRooms.value.orEmpty().withIndex()) {
             if (chatRoomViewModel.chatRoom == chatRoom) {
                 return index
             }
-            index++
         }
         return -1
     }

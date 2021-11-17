@@ -70,31 +70,31 @@ class FileUtils {
         }
 
         fun isPlainTextFile(path: String): Boolean {
-            val extension = getExtensionFromFileName(path).toLowerCase(Locale.getDefault())
+            val extension = getExtensionFromFileName(path).lowercase(Locale.getDefault())
             val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
             return type?.startsWith("text/plain") ?: false
         }
 
         fun isExtensionPdf(path: String): Boolean {
-            val extension = getExtensionFromFileName(path).toLowerCase(Locale.getDefault())
+            val extension = getExtensionFromFileName(path).lowercase(Locale.getDefault())
             val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
             return type?.startsWith("application/pdf") ?: false
         }
 
         fun isExtensionImage(path: String): Boolean {
-            val extension = getExtensionFromFileName(path).toLowerCase(Locale.getDefault())
+            val extension = getExtensionFromFileName(path).lowercase(Locale.getDefault())
             val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
             return type?.startsWith("image/") ?: false
         }
 
         fun isExtensionVideo(path: String): Boolean {
-            val extension = getExtensionFromFileName(path).toLowerCase(Locale.getDefault())
+            val extension = getExtensionFromFileName(path).lowercase(Locale.getDefault())
             val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
             return type?.startsWith("video/") ?: false
         }
 
         fun isExtensionAudio(path: String): Boolean {
-            val extension = getExtensionFromFileName(path).toLowerCase(Locale.getDefault())
+            val extension = getExtensionFromFileName(path).lowercase(Locale.getDefault())
             val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
             return type?.startsWith("audio/") ?: false
         }

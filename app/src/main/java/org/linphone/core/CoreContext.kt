@@ -87,7 +87,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
         "$sdkVersion ($sdkBranch, $sdkBuildType)"
     }
 
-    val collator = Collator.getInstance()
+    val collator: Collator = Collator.getInstance()
     val contactsManager: ContactsManager by lazy {
         ContactsManager(context)
     }

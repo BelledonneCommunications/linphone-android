@@ -165,7 +165,7 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
         val list = arrayListOf<ChatMessageContentData>()
 
         val contentsList = chatMessage.contents
-        for (index in 0 until contentsList.size) {
+        for (index in contentsList.indices) {
             val content = contentsList[index]
             if (content.isFileTransfer || content.isFile) {
                 val data = ChatMessageContentData(chatMessage, index)

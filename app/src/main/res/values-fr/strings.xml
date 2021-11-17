@@ -481,7 +481,7 @@
     <string name="content_description_show_all_calls">Tous les appels</string>
     <string name="content_description_incoming_call">Appel entrant</string>
     <string name="content_description_outgoing_call">Appel sortant</string>
-    <string name="content_description_create_one_to_one_chat_room">Créer une conversation 1-1</string>
+    <string name="content_description_create_one_to_one_chat_room">Créer une conversation 1–1</string>
     <string name="content_description_create_group_chat_room">Créer une conversation de groupe</string>
     <string name="content_description_security_level_unsafe">Non sécurisé</string>
     <string name="content_description_security_level_safe">Sécurisé</string>
@@ -626,4 +626,5 @@
     <string name="call_settings_use_telecom_manager_summary">Nécessite des permissions supplémentaires</string>
     <string name="chat_room_unread_messages">%1$d messages non lus</string>
     <string name="chat_room_unread_message">%1$d message non lu</string>
+    <string name="content_descripton_scroll_to_bottom">Aller au dernier message reçu ou au premier message non lu</string>
 </resources>

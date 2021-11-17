@@ -252,5 +252,12 @@ class Compatibility {
             }
             return Api21Compatibility.addAudioToMediaStore(context, content)
         }
+
+        fun getUpdateCurrentPendingIntentFlag(): Int {
+            if (Version.sdkAboveOrEqual(Version.API31_ANDROID_12)) {
+                return Api31Compatibility.getUpdateCurrentPendingIntentFlag()
+            }
+            return Api21Compatibility.getUpdateCurrentPendingIntentFlag()
+        }
     }
 }

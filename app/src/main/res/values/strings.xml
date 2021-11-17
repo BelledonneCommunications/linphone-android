@@ -737,4 +737,5 @@
     <string name="content_description_cancel_voice_recording">Cancel voice recording</string>
     <string name="content_description_pause_voice_recording_playback">Pause voice recording</string>
     <string name="content_description_play_voice_recording">Play voice recording</string>
+    <string name="content_descripton_scroll_to_bottom">Scroll to bottom or first unread message</string>
 </resources>

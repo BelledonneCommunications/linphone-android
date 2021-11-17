@@ -90,11 +90,11 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
     var oneParticipantOneDevice: Boolean = false
 
-    var addressToCall: Address? = null
-
     var onlyParticipantOnlyDeviceAddress: Address? = null
 
     val chatUnreadCountTranslateY = MutableLiveData<Float>()
+
+    private var addressToCall: Address? = null
 
     private val bounceAnimator: ValueAnimator by lazy {
         ValueAnimator.ofFloat(AppUtils.getDimension(R.dimen.tabs_fragment_unread_count_bounce_offset), 0f).apply {

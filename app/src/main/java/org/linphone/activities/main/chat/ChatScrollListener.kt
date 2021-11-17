@@ -29,7 +29,7 @@ internal abstract class ChatScrollListener(private val mLayoutManager: LinearLay
     // True if we are still waiting for the last set of data to load.
     private var loading = true
 
-    var userHasScrolledUp: Boolean = false
+    private var userHasScrolledUp: Boolean = false
 
     // This happens many times a second during a scroll, so be wary of the code you place here.
     // We are given a few useful parameters to help us work out if we need to load some more data,
