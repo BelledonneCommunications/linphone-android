@@ -33,6 +33,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.doOnAttach
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
@@ -154,7 +155,10 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         tabsFragment = findViewById(R.id.tabs_fragment)
         statusFragment = findViewById(R.id.status_fragment)
 
-        initOverlay()
+        binding.root.doOnAttach {
+            Log.i("[Main Activity] Report UI has been fully drawn (TTFD)")
+            reportFullyDrawn()
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -195,6 +199,8 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             tabsFragmentVisible2 = !portraitOrientation || !keyboardVisible
             updateTabsFragmentVisibility()
         }
+
+        initOverlay()
 
         if (intent != null) handleIntentParams(intent)
     }
