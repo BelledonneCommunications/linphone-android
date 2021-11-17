@@ -627,4 +627,6 @@
     <string name="chat_room_unread_messages">%1$d messages non lus</string>
     <string name="chat_room_unread_message">%1$d message non lu</string>
     <string name="content_descripton_scroll_to_bottom">Aller au dernier message reçu ou au premier message non lu</string>
+    <string name="audio_settings_prefer_bluetooth_devices_title">Acheminer l\'audio vers l\'appareil bluetooth, s\'il existe</string>
+    <string name="audio_settings_prefer_bluetooth_devices_summary">Il aura la priorité sur le périphérique de sortie par défaut</string>
 </resources>
