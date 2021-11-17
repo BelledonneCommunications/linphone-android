@@ -110,6 +110,13 @@ class AudioSettingsViewModel : GenericSettingsViewModel() {
     val outputAudioDeviceLabels = MutableLiveData<ArrayList<String>>()
     private val outputAudioDeviceValues = MutableLiveData<ArrayList<AudioDevice>>()
 
+    val preferBluetoothDevicesListener = object : SettingListenerStub() {
+        override fun onBoolValueChanged(newValue: Boolean) {
+            prefs.routeAudioToBluetoothIfAvailable = newValue
+        }
+    }
+    val preferBluetoothDevices = MutableLiveData<Boolean>()
+
     val codecBitrateListener = object : SettingListenerStub() {
         override fun onListValueChanged(position: Int) {
             for (payloadType in core.audioPayloadTypes) {
@@ -154,6 +161,7 @@ class AudioSettingsViewModel : GenericSettingsViewModel() {
             prefs.getString(R.string.audio_settings_echo_canceller_calibration_summary)
         }
         echoTesterStatus.value = prefs.getString(R.string.audio_settings_echo_tester_summary)
+        preferBluetoothDevices.value = prefs.routeAudioToBluetoothIfAvailable
         initInputAudioDevicesList()
         initOutputAudioDevicesList()
         initCodecBitrateList()

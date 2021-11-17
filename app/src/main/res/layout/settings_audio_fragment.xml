@@ -111,6 +111,12 @@
                     linphone:labels="@{viewModel.outputAudioDeviceLabels}"/>
 
                 <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/audio_settings_prefer_bluetooth_devices_title}"
+                    linphone:listener="@{viewModel.preferBluetoothDevicesListener}"
+                    linphone:checked="@={viewModel.preferBluetoothDevices}"/>
+
+                <include
                     layout="@layout/settings_widget_list"
                     linphone:title="@{@string/audio_settings_codec_bitrate_title}"
                     linphone:listener="@{viewModel.codecBitrateListener}"
