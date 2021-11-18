@@ -108,6 +108,16 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         super.onDestroyView()
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        val chatRoom = sharedViewModel.selectedChatRoom.value
+        if (chatRoom != null) {
+            outState.putString("LocalSipUri", chatRoom.localAddress.asStringUriOnly())
+            outState.putString("RemoteSipUri", chatRoom.peerAddress.asStringUriOnly())
+            Log.i("[Chat Room] Saving current chat room local & remote addresses in save instance state")
+        }
+        super.onSaveInstanceState(outState)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -120,15 +130,18 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
         useMaterialSharedAxisXForwardAnimation = sharedViewModel.isSlidingPaneSlideable.value == false
 
-        val localSipUri = arguments?.getString("LocalSipUri")
-        val remoteSipUri = arguments?.getString("RemoteSipUri")
+        val localSipUri = arguments?.getString("LocalSipUri") ?: savedInstanceState?.getString("LocalSipUri")
+        val remoteSipUri = arguments?.getString("RemoteSipUri") ?: savedInstanceState?.getString("RemoteSipUri")
 
         val textToShare = arguments?.getString("TextToShare")
         val filesToShare = arguments?.getStringArrayList("FilesToShare")
 
+        if (remoteSipUri != null && arguments?.getString("RemoteSipUri") == null) {
+            Log.w("[Chat Room] Chat room will be restored from saved instance state")
+        }
         arguments?.clear()
         if (localSipUri != null && remoteSipUri != null) {
-            Log.i("[Chat Room] Found local [$localSipUri] & remote [$remoteSipUri] addresses in arguments")
+            Log.i("[Chat Room] Found local [$localSipUri] & remote [$remoteSipUri] addresses in arguments or saved instance state")
 
             val localAddress = Factory.instance().createAddress(localSipUri)
             val remoteSipAddress = Factory.instance().createAddress(remoteSipUri)
