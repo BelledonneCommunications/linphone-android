@@ -626,4 +626,7 @@
     <string name="call_settings_use_telecom_manager_title">Tevékenységek fejlesztése Bluetooth-eszközökkel</string>
     <string name="chat_room_unread_message">%1$d olvasatlan üzenet</string>
     <string name="chat_room_unread_messages">%1$d olvasatlan üzenet</string>
+    <string name="audio_settings_prefer_bluetooth_devices_summary">Ennek elsőbbsége lesz az alapértelmezett kimeneti eszközzel szemben</string>
+    <string name="content_descripton_scroll_to_bottom">Görgetés legalulra vagy az első olvasatlan üzenetre</string>
+    <string name="audio_settings_prefer_bluetooth_devices_title">Hang átirányítása a Bluetooth-eszközre (ha van ilyen)</string>
 </resources>
