@@ -103,9 +103,8 @@ internal fun TabsFragment.navigateToCallHistory() {
         R.id.masterContactsFragment -> R.id.action_masterContactsFragment_to_masterCallLogsFragment
         R.id.dialerFragment -> R.id.action_dialerFragment_to_masterCallLogsFragment
         R.id.masterChatRoomsFragment -> R.id.action_masterChatRoomsFragment_to_masterCallLogsFragment
-        else -> 0
+        else -> R.id.action_global_masterCallLogsFragment
     }
-    if (action == 0) return
     findNavController().navigate(
         action,
         null,
@@ -118,9 +117,8 @@ internal fun TabsFragment.navigateToContacts() {
         R.id.masterCallLogsFragment -> R.id.action_masterCallLogsFragment_to_masterContactsFragment
         R.id.dialerFragment -> R.id.action_dialerFragment_to_masterContactsFragment
         R.id.masterChatRoomsFragment -> R.id.action_masterChatRoomsFragment_to_masterContactsFragment
-        else -> 0
+        else -> R.id.action_global_masterContactsFragment
     }
-    if (action == 0) return
     findNavController().navigate(
         action,
         null,
@@ -133,9 +131,8 @@ internal fun TabsFragment.navigateToDialer() {
         R.id.masterCallLogsFragment -> R.id.action_masterCallLogsFragment_to_dialerFragment
         R.id.masterContactsFragment -> R.id.action_masterContactsFragment_to_dialerFragment
         R.id.masterChatRoomsFragment -> R.id.action_masterChatRoomsFragment_to_dialerFragment
-        else -> 0
+        else -> R.id.action_global_dialerFragment
     }
-    if (action == 0) return
     findNavController().navigate(
         action,
         null,
@@ -148,9 +145,8 @@ internal fun TabsFragment.navigateToChatRooms() {
         R.id.masterCallLogsFragment -> R.id.action_masterCallLogsFragment_to_masterChatRoomsFragment
         R.id.masterContactsFragment -> R.id.action_masterContactsFragment_to_masterChatRoomsFragment
         R.id.dialerFragment -> R.id.action_dialerFragment_to_masterChatRoomsFragment
-        else -> 0
+        else -> R.id.action_global_masterChatRoomsFragment
     }
-    if (action == 0) return
     findNavController().navigate(
         action,
         null,
