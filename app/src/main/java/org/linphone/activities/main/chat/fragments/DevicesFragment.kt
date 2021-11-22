@@ -66,4 +66,10 @@ class DevicesFragment : SecureFragment<ChatRoomDevicesFragmentBinding>() {
             goBack()
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+
+        listViewModel.updateParticipants()
+    }
 }
