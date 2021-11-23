@@ -29,8 +29,10 @@ import org.linphone.activities.assistant.viewmodels.PhoneAccountCreationViewMode
 import org.linphone.activities.assistant.viewmodels.SharedAssistantViewModel
 import org.linphone.activities.navigateToPhoneAccountValidation
 import org.linphone.databinding.AssistantPhoneAccountCreationFragmentBinding
+import org.linphone.mediastream.Version
 
-class PhoneAccountCreationFragment : AbstractPhoneFragment<AssistantPhoneAccountCreationFragmentBinding>() {
+class PhoneAccountCreationFragment :
+    AbstractPhoneFragment<AssistantPhoneAccountCreationFragmentBinding>() {
     private lateinit var sharedViewModel: SharedAssistantViewModel
     override lateinit var viewModel: PhoneAccountCreationViewModel
 
@@ -45,7 +47,10 @@ class PhoneAccountCreationFragment : AbstractPhoneFragment<AssistantPhoneAccount
             ViewModelProvider(this)[SharedAssistantViewModel::class.java]
         }
 
-        viewModel = ViewModelProvider(this, PhoneAccountCreationViewModelFactory(sharedViewModel.getAccountCreator()))[PhoneAccountCreationViewModel::class.java]
+        viewModel = ViewModelProvider(
+            this,
+            PhoneAccountCreationViewModelFactory(sharedViewModel.getAccountCreator())
+        )[PhoneAccountCreationViewModel::class.java]
         binding.viewModel = viewModel
 
         binding.setInfoClickListener {
@@ -77,6 +82,8 @@ class PhoneAccountCreationFragment : AbstractPhoneFragment<AssistantPhoneAccount
             }
         )
 
-        checkPermission()
+        if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
+            checkPermissions()
+        }
     }
 }

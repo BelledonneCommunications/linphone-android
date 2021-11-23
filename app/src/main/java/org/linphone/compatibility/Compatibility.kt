@@ -30,6 +30,7 @@ import android.telephony.TelephonyManager
 import android.view.View
 import android.view.WindowManager
 import androidx.core.app.NotificationManagerCompat
+import androidx.fragment.app.Fragment
 import org.linphone.core.ChatRoom
 import org.linphone.core.Content
 import org.linphone.mediastream.Version
@@ -55,13 +56,14 @@ class Compatibility {
         }
 
         // See https://developer.android.com/about/versions/11/privacy/permissions#phone-numbers
-        fun requestReadPhoneStateOrNumbersPermission(activity: Activity, code: Int) {
+        fun requestReadPhoneStateOrNumbersPermission(fragment: Fragment, code: Int) {
             if (Version.sdkAboveOrEqual(Version.API30_ANDROID_11)) {
-                Api30Compatibility.requestReadPhoneNumbersPermission(activity, code)
+                Api30Compatibility.requestReadPhoneNumbersPermission(fragment, code)
             } else {
-                Api29Compatibility.requestReadPhoneStatePermission(activity, code)
+                Api23Compatibility.requestReadPhoneStatePermission(fragment, code)
             }
         }
+
         // See https://developer.android.com/about/versions/11/privacy/permissions#phone-numbers
         fun requestTelecomManagerPermission(activity: Activity, code: Int) {
             if (Version.sdkAboveOrEqual(Version.API30_ANDROID_11)) {

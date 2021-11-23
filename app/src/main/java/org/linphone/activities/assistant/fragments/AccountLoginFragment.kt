@@ -35,6 +35,7 @@ import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.navigateToEchoCancellerCalibration
 import org.linphone.activities.navigateToPhoneAccountValidation
 import org.linphone.databinding.AssistantAccountLoginFragmentBinding
+import org.linphone.mediastream.Version
 import org.linphone.utils.DialogUtils
 
 class AccountLoginFragment : AbstractPhoneFragment<AssistantAccountLoginFragmentBinding>() {
@@ -52,7 +53,10 @@ class AccountLoginFragment : AbstractPhoneFragment<AssistantAccountLoginFragment
             ViewModelProvider(this)[SharedAssistantViewModel::class.java]
         }
 
-        viewModel = ViewModelProvider(this, AccountLoginViewModelFactory(sharedViewModel.getAccountCreator()))[AccountLoginViewModel::class.java]
+        viewModel = ViewModelProvider(
+            this,
+            AccountLoginViewModelFactory(sharedViewModel.getAccountCreator())
+        )[AccountLoginViewModel::class.java]
         binding.viewModel = viewModel
 
         if (resources.getBoolean(R.bool.isTablet)) {
@@ -105,7 +109,8 @@ class AccountLoginFragment : AbstractPhoneFragment<AssistantAccountLoginFragment
             viewLifecycleOwner,
             {
                 it.consume {
-                    val dialogViewModel = DialogViewModel(getString(R.string.assistant_error_invalid_credentials))
+                    val dialogViewModel =
+                        DialogViewModel(getString(R.string.assistant_error_invalid_credentials))
                     val dialog: Dialog = DialogUtils.getDialog(requireContext(), dialogViewModel)
 
                     dialogViewModel.showCancelButton {
@@ -135,6 +140,8 @@ class AccountLoginFragment : AbstractPhoneFragment<AssistantAccountLoginFragment
             }
         )
 
-        checkPermission()
+        if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
+            checkPermissions()
+        }
     }
 }

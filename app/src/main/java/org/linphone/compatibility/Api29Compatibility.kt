@@ -21,7 +21,6 @@ package org.linphone.compatibility
 
 import android.Manifest
 import android.annotation.TargetApi
-import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.ContentValues
@@ -55,10 +54,6 @@ class Api29Compatibility {
                 Log.w("[Permission Helper] Permission READ_PHONE_STATE is denied")
             }
             return granted
-        }
-
-        fun requestReadPhoneStatePermission(activity: Activity, code: Int) {
-            activity.requestPermissions(arrayOf(Manifest.permission.READ_PHONE_STATE), code)
         }
 
         fun createMessageChannel(
