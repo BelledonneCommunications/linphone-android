@@ -24,6 +24,7 @@ import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Context
 import android.content.pm.ShortcutManager
+import androidx.fragment.app.Fragment
 import org.linphone.core.ChatRoom
 import org.linphone.core.tools.Log
 import org.linphone.utils.LinphoneUtils
@@ -41,8 +42,8 @@ class Api30Compatibility {
             return granted
         }
 
-        fun requestReadPhoneNumbersPermission(activity: Activity, code: Int) {
-            activity.requestPermissions(arrayOf(Manifest.permission.READ_PHONE_NUMBERS), code)
+        fun requestReadPhoneNumbersPermission(fragment: Fragment, code: Int) {
+            fragment.requestPermissions(arrayOf(Manifest.permission.READ_PHONE_NUMBERS), code)
         }
 
         fun requestTelecomManagerPermission(activity: Activity, code: Int) {

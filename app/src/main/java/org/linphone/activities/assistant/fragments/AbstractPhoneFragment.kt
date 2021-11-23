@@ -20,6 +20,7 @@
 
 package org.linphone.activities.assistant.fragments
 
+import android.annotation.TargetApi
 import android.content.pm.PackageManager
 import androidx.databinding.ViewDataBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -28,10 +29,15 @@ import org.linphone.activities.GenericFragment
 import org.linphone.activities.assistant.viewmodels.AbstractPhoneViewModel
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
+import org.linphone.mediastream.Version
 import org.linphone.utils.PermissionHelper
 import org.linphone.utils.PhoneNumberUtils
 
 abstract class AbstractPhoneFragment<T : ViewDataBinding> : GenericFragment<T>() {
+    companion object {
+        const val READ_PHONE_STATE_PERMISSION_REQUEST_CODE = 0
+    }
+
     abstract val viewModel: AbstractPhoneViewModel
 
     override fun onRequestPermissionsResult(
@@ -39,7 +45,7 @@ abstract class AbstractPhoneFragment<T : ViewDataBinding> : GenericFragment<T>()
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        if (requestCode == 0) {
+        if (requestCode == READ_PHONE_STATE_PERMISSION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Log.i("[Assistant] READ_PHONE_STATE/READ_PHONE_NUMBERS permission granted")
                 updateFromDeviceInfo()
@@ -49,11 +55,12 @@ abstract class AbstractPhoneFragment<T : ViewDataBinding> : GenericFragment<T>()
         }
     }
 
-    protected fun checkPermission() {
+    @TargetApi(Version.API23_MARSHMALLOW_60)
+    protected fun checkPermissions() {
         if (!resources.getBoolean(R.bool.isTablet)) {
             if (!PermissionHelper.get().hasReadPhoneStateOrPhoneNumbersPermission()) {
                 Log.i("[Assistant] Asking for READ_PHONE_STATE/READ_PHONE_NUMBERS permission")
-                Compatibility.requestReadPhoneStateOrNumbersPermission(requireActivity(), 0)
+                Compatibility.requestReadPhoneStateOrNumbersPermission(this, READ_PHONE_STATE_PERMISSION_REQUEST_CODE)
             } else {
                 updateFromDeviceInfo()
             }
