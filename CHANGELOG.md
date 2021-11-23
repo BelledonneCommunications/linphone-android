@@ -28,16 +28,19 @@ Group changes to describe their impact on the project, as follows:
 - Using new [Unified Content API](https://developer.android.com/about/versions/12/features/unified-content-api) to share files from keyboard (or other sources)
 - Bumped dependencies, gradle updated from 4.2.2 to 7.0.2
 - Target Android SDK version set to 31 (Android	12)
+- Splashscreen is using new APIs
 - SDK updated to 5.1.0 release
 
 ### Fixed
 - Chat notifications disappearing when app restarts
 - "Infinite backstack", now each view is stored (at most) once in the backstack
 - Going back to the dialer when pressing back in a chat room after clicking on a chat message notification
+- Missing international prefix / phone number in assistant after granting permission
 
 ### Removed
 - Launcher Activity has been replaced by [Splash Screen API](https://developer.android.com/reference/kotlin/androidx/core/splashscreen/SplashScreen)
 - Dialer will no longer make DTMF sound when pressing digits
+- Launcher activity
 - Global push notification setting in Network, use the switch in each Account instead
 
 ## [4.5.6] - 2021-11-08
