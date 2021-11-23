@@ -5,6 +5,11 @@ plugins {
     id 'org.jlleitschuh.gradle.ktlint'
 }
 
+def appVersionName = "4.6.0"
+// Uncomment for release
+// def appVersionCode = 40600 // 4.06.00
+def appVersionCode = 40590 // 4.05.90
+
 static def getPackageName() {
     return "org.linphone"
 }
@@ -24,7 +29,7 @@ if (crashlyticsEnabled) {
 
 def gitBranch = new ByteArrayOutputStream()
 task getGitVersion() {
-    def gitVersion = "4.6.0"
+    def gitVersion = appVersionName
     def gitVersionStream = new ByteArrayOutputStream()
     def gitCommitsCount = new ByteArrayOutputStream()
     def gitCommitHash = new ByteArrayOutputStream()
@@ -52,9 +57,9 @@ task getGitVersion() {
         } else {
             gitVersion = gitVersionStream.toString().trim() + "." + gitCommitsCount.toString().trim() + "+" + gitCommitHash.toString().trim()
         }
-        println("Git version: " + gitVersion)
+        println("Git version: " + gitVersion + " (" + appVersionCode + ")")
     } catch (ignored) {
-        println("Git not found")
+        println("Git not found, using " + gitVersion + " (" + appVersionCode + ")")
     }
     project.version = gitVersion
 }
@@ -84,7 +89,7 @@ android {
     defaultConfig {
         minSdkVersion 23
         targetSdkVersion 31
-        versionCode 4600
+        versionCode appVersionCode
         versionName "${project.version}"
         applicationId getPackageName()
     }
