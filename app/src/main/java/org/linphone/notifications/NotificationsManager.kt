@@ -20,6 +20,7 @@
 package org.linphone.notifications
 
 import android.app.Notification
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -90,6 +91,10 @@ class NotificationsManager(private val context: Context) {
 
         private const val SERVICE_NOTIF_ID = 1
         private const val MISSED_CALLS_NOTIF_ID = 2
+
+        private const val CHAT_TAG = "Chat"
+        private const val CALL_TAG = "Call"
+        private const val MISSED_CALL_TAG = "Missed call"
     }
 
     private val notificationManager: NotificationManagerCompat by lazy {
@@ -209,6 +214,14 @@ class NotificationsManager(private val context: Context) {
 
     init {
         Compatibility.createNotificationChannels(context, notificationManager)
+
+        val manager = context.getSystemService(NotificationManager::class.java) as NotificationManager
+        for (notification in manager.activeNotifications) {
+            if (notification.tag == CALL_TAG) {
+                Log.w("[Notifications Manager] Found existing call notification [${notification.id}], cancelling it")
+                manager.cancel(notification.id)
+            }
+        }
     }
 
     fun onCoreReady() {
@@ -234,9 +247,9 @@ class NotificationsManager(private val context: Context) {
         coreContext.core.removeListener(listener)
     }
 
-    private fun notify(id: Int, notification: Notification) {
-        Log.i("[Notifications Manager] Notifying $id")
-        notificationManager.notify(id, notification)
+    private fun notify(id: Int, notification: Notification, tag: String) {
+        Log.i("[Notifications Manager] Notifying [$id] with tag [$tag]")
+        notificationManager.notify(tag, id, notification)
     }
 
     fun cancel(id: Int) {
@@ -445,7 +458,7 @@ class NotificationsManager(private val context: Context) {
         val notification = builder.build()
 
         Log.i("[Notifications Manager] Notifying incoming call notification")
-        notify(notifiable.notificationId, notification)
+        notify(notifiable.notificationId, notification, CALL_TAG)
 
         if (useAsForeground) {
             Log.i("[Notifications Manager] Notifying incoming call notification for foreground service")
@@ -493,7 +506,7 @@ class NotificationsManager(private val context: Context) {
 
         val notification = builder.build()
 
-        notify(MISSED_CALLS_NOTIF_ID, notification)
+        notify(MISSED_CALLS_NOTIF_ID, notification, MISSED_CALL_TAG)
     }
 
     fun dismissMissedCallNotification() {
@@ -587,7 +600,7 @@ class NotificationsManager(private val context: Context) {
 
         val notification = builder.build()
 
-        notify(notifiable.notificationId, notification)
+        notify(notifiable.notificationId, notification, CALL_TAG)
 
         if (useAsForeground) {
             startForeground(notifiable.notificationId, notification)
@@ -638,7 +651,7 @@ class NotificationsManager(private val context: Context) {
 
         val id = LinphoneUtils.getChatRoomId(room.localAddress, room.peerAddress)
         val notification = createMessageNotification(notifiable, pendingIntent, bubbleIntent, id)
-        notify(notifiable.notificationId, notification)
+        notify(notifiable.notificationId, notification, CHAT_TAG)
     }
 
     private fun displayIncomingChatNotification(room: ChatRoom, message: ChatMessage) {
