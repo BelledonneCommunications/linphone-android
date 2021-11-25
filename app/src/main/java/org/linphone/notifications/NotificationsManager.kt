@@ -93,7 +93,7 @@ class NotificationsManager(private val context: Context) {
         private const val SERVICE_NOTIF_ID = 1
         private const val MISSED_CALLS_NOTIF_ID = 2
 
-        private const val CHAT_TAG = "Chat"
+        const val CHAT_TAG = "Chat"
         private const val CALL_TAG = "Call"
         private const val MISSED_CALL_TAG = "Missed call"
     }
@@ -762,20 +762,23 @@ class NotificationsManager(private val context: Context) {
         displayChatNotifiable(message.chatRoom, notifiable)
     }
 
-    fun dismissChatNotification(room: ChatRoom) {
+    fun dismissChatNotification(room: ChatRoom): Boolean {
         val address = room.peerAddress.asStringUriOnly()
         val notifiable: Notifiable? = chatNotificationsMap[address]
         if (notifiable != null) {
             Log.i("[Notifications Manager] Dismissing notification for chat room $room with id ${notifiable.notificationId}")
             notifiable.messages.clear()
             cancel(notifiable.notificationId, CHAT_TAG)
+            return true
         } else {
             val previousNotificationId = previousChatNotifications.find { id -> id == room.creationTime.toInt() }
             if (previousNotificationId != null) {
                 Log.i("[Notifications Manager] Found previous notification with same ID [$previousNotificationId], canceling it")
                 cancel(previousNotificationId, CHAT_TAG)
+                return true
             }
         }
+        return false
     }
 
     fun disableDismissNotificationUponReadForChatRoom(chatRoom: ChatRoom) {
