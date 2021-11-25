@@ -64,6 +64,7 @@ private class Notifiable(val notificationId: Int) {
     var localIdentity: String? = null
     var myself: String? = null
     var remoteAddress: String? = null
+    var dismissNotificationUponReadChatRoom: Boolean = true
 }
 
 private class NotifiableMessage(
@@ -102,6 +103,7 @@ class NotificationsManager(private val context: Context) {
     }
     private val chatNotificationsMap: HashMap<String, Notifiable> = HashMap()
     private val callNotificationsMap: HashMap<String, Notifiable> = HashMap()
+    private val previousChatNotifications: ArrayList<Int> = arrayListOf()
 
     private var currentForegroundServiceNotificationId: Int = 0
     private var serviceNotification: Notification? = null
@@ -109,8 +111,6 @@ class NotificationsManager(private val context: Context) {
     var service: CoreService? = null
 
     var currentlyDisplayedChatRoomAddress: String? = null
-
-    var dismissNotificationUponReadChatRoom: Boolean = true
 
     private val listener: CoreListenerStub = object : CoreListenerStub() {
         override fun onCallStateChanged(
@@ -173,11 +173,18 @@ class NotificationsManager(private val context: Context) {
         }
 
         override fun onChatRoomRead(core: Core, chatRoom: ChatRoom) {
-            if (dismissNotificationUponReadChatRoom) {
-                Log.i("[Notifications Manager] Chat room [$chatRoom] has been marked as read, removing notification if any")
-                dismissChatNotification(chatRoom)
+            val address = chatRoom.peerAddress.asStringUriOnly()
+            val notifiable = chatNotificationsMap[address]
+            if (notifiable != null) {
+                if (notifiable.dismissNotificationUponReadChatRoom) {
+                    Log.i("[Notifications Manager] Chat room [$chatRoom] has been marked as read, removing notification if any")
+                    dismissChatNotification(chatRoom)
+                } else {
+                    Log.i("[Notifications Manager] Chat room [$chatRoom] has been marked as read, not removing notification, maybe because of a chat bubble?")
+                }
             } else {
-                Log.i("[Notifications Manager] Chat room [$chatRoom] has been marked as read, not removing notification, maybe because of a chat bubble?")
+                Log.i("[Notifications Manager] Chat room [$chatRoom] has been marked as read but no notifiable found, removing notification if any")
+                dismissChatNotification(chatRoom)
             }
         }
     }
@@ -203,11 +210,11 @@ class NotificationsManager(private val context: Context) {
                     displayReplyMessageNotification(message, notifiable)
                 } else {
                     Log.e("[Notifications Manager] Couldn't find notification for chat room $address")
-                    cancel(id)
+                    cancel(id, CHAT_TAG)
                 }
             } else if (state == ChatMessage.State.NotDelivered) {
                 Log.e("[Notifications Manager] Reply wasn't delivered")
-                cancel(id)
+                cancel(id, CHAT_TAG)
             }
         }
     }
@@ -219,7 +226,10 @@ class NotificationsManager(private val context: Context) {
         for (notification in manager.activeNotifications) {
             if (notification.tag == CALL_TAG) {
                 Log.w("[Notifications Manager] Found existing call notification [${notification.id}], cancelling it")
-                manager.cancel(notification.id)
+                manager.cancel(CALL_TAG, notification.id)
+            } else if (notification.tag == CHAT_TAG) {
+                Log.i("[Notifications Manager] Found existing chat notification [${notification.id}]")
+                previousChatNotifications.add(notification.id)
             }
         }
     }
@@ -240,7 +250,7 @@ class NotificationsManager(private val context: Context) {
         }
 
         for (notifiable in callNotificationsMap.values) {
-            notificationManager.cancel(notifiable.notificationId)
+            notificationManager.cancel(CALL_TAG, notifiable.notificationId)
         }
 
         stopForegroundNotification()
@@ -252,9 +262,9 @@ class NotificationsManager(private val context: Context) {
         notificationManager.notify(tag, id, notification)
     }
 
-    fun cancel(id: Int) {
-        Log.i("[Notifications Manager] Canceling $id")
-        notificationManager.cancel(id)
+    fun cancel(id: Int, tag: String) {
+        Log.i("[Notifications Manager] Canceling [$id] with tag [$tag]")
+        notificationManager.cancel(tag, id)
     }
 
     fun resetChatNotificationCounterForSipUri(sipUri: String) {
@@ -510,7 +520,7 @@ class NotificationsManager(private val context: Context) {
     }
 
     fun dismissMissedCallNotification() {
-        cancel(MISSED_CALLS_NOTIF_ID)
+        cancel(MISSED_CALLS_NOTIF_ID, MISSED_CALL_TAG)
     }
 
     fun displayCallNotification(call: Call, useAsForeground: Boolean = false) {
@@ -611,7 +621,7 @@ class NotificationsManager(private val context: Context) {
         val address = call.remoteAddress.asStringUriOnly()
         val notifiable: Notifiable? = callNotificationsMap[address]
         if (notifiable != null) {
-            cancel(notifiable.notificationId)
+            cancel(notifiable.notificationId, CALL_TAG)
             callNotificationsMap.remove(address)
         } else {
             Log.w("[Notifications Manager] No notification found for call ${call.callLog.callId}")
@@ -758,7 +768,23 @@ class NotificationsManager(private val context: Context) {
         if (notifiable != null) {
             Log.i("[Notifications Manager] Dismissing notification for chat room $room with id ${notifiable.notificationId}")
             notifiable.messages.clear()
-            cancel(notifiable.notificationId)
+            cancel(notifiable.notificationId, CHAT_TAG)
+        } else {
+            val previousNotificationId = previousChatNotifications.find { id -> id == room.creationTime.toInt() }
+            if (previousNotificationId != null) {
+                Log.i("[Notifications Manager] Found previous notification with same ID [$previousNotificationId], canceling it")
+                cancel(previousNotificationId, CHAT_TAG)
+            }
+        }
+    }
+
+    fun disableDismissNotificationUponReadForChatRoom(chatRoom: ChatRoom) {
+        val address = chatRoom.peerAddress.asStringUriOnly()
+        val notifiable: Notifiable? = chatNotificationsMap[address]
+        if (notifiable != null) {
+            Log.i("[Notifications Manager] Prevent notification with id [${notifiable.notificationId}] from being dismissed when chat room will be marked as read")
+            notifiable.dismissNotificationUponReadChatRoom = false
+            chatNotificationsMap[address] = notifiable
         }
     }
 
