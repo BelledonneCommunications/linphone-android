@@ -87,9 +87,8 @@ class ChatBubbleActivity : GenericActivity() {
         }
 
         // Workaround for the removed notification when a chat room is marked as read
-        coreContext.notificationsManager.dismissNotificationUponReadChatRoom = false
+        coreContext.notificationsManager.disableDismissNotificationUponReadForChatRoom(chatRoom)
         chatRoom.markAsRead()
-        coreContext.notificationsManager.dismissNotificationUponReadChatRoom = true
 
         viewModel = ViewModelProvider(
             this,
