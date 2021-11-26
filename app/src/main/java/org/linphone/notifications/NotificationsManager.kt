@@ -94,7 +94,6 @@ class NotificationsManager(private val context: Context) {
         private const val MISSED_CALLS_NOTIF_ID = 2
 
         const val CHAT_TAG = "Chat"
-        private const val CALL_TAG = "Call"
         private const val MISSED_CALL_TAG = "Missed call"
     }
 
@@ -224,9 +223,9 @@ class NotificationsManager(private val context: Context) {
 
         val manager = context.getSystemService(NotificationManager::class.java) as NotificationManager
         for (notification in manager.activeNotifications) {
-            if (notification.tag == CALL_TAG) {
-                Log.w("[Notifications Manager] Found existing call notification [${notification.id}], cancelling it")
-                manager.cancel(CALL_TAG, notification.id)
+            if (notification.tag.isNullOrEmpty()) { // We use null tag for call notifications otherwise it will create duplicates when used with Service.startForeground()...
+                Log.w("[Notifications Manager] Found existing call? notification [${notification.id}], cancelling it")
+                manager.cancel(notification.tag, notification.id)
             } else if (notification.tag == CHAT_TAG) {
                 Log.i("[Notifications Manager] Found existing chat notification [${notification.id}]")
                 previousChatNotifications.add(notification.id)
@@ -250,19 +249,19 @@ class NotificationsManager(private val context: Context) {
         }
 
         for (notifiable in callNotificationsMap.values) {
-            notificationManager.cancel(CALL_TAG, notifiable.notificationId)
+            notificationManager.cancel(notifiable.notificationId)
         }
 
         stopForegroundNotification()
         coreContext.core.removeListener(listener)
     }
 
-    private fun notify(id: Int, notification: Notification, tag: String) {
+    private fun notify(id: Int, notification: Notification, tag: String? = null) {
         Log.i("[Notifications Manager] Notifying [$id] with tag [$tag]")
         notificationManager.notify(tag, id, notification)
     }
 
-    fun cancel(id: Int, tag: String) {
+    fun cancel(id: Int, tag: String? = null) {
         Log.i("[Notifications Manager] Canceling [$id] with tag [$tag]")
         notificationManager.cancel(tag, id)
     }
@@ -290,34 +289,38 @@ class NotificationsManager(private val context: Context) {
         service = coreService
         when {
             currentForegroundServiceNotificationId != 0 -> {
-                Log.e("[Notifications Manager] There is already a foreground service notification")
+                Log.e("[Notifications Manager] There is already a foreground service notification [$currentForegroundServiceNotificationId]")
             }
             coreContext.core.callsNb > 0 -> {
                 // When this method will be called, we won't have any notification yet
                 val call = coreContext.core.currentCall ?: coreContext.core.calls[0]
                 when (call.state) {
                     Call.State.IncomingReceived, Call.State.IncomingEarlyMedia -> {
+                        Log.i("[Notifications Manager] Creating incoming call notification to be used as foreground service")
                         displayIncomingCallNotification(call, true)
                     }
-                    else -> displayCallNotification(call, true)
+                    else -> {
+                        Log.i("[Notifications Manager] Creating call notification to be used as foreground service")
+                        displayCallNotification(call, true)
+                    }
                 }
             }
         }
     }
 
     fun startForeground(coreService: CoreService, useAutoStartDescription: Boolean = true) {
-        Log.i("[Notifications Manager] Starting service as foreground")
         if (serviceNotification == null) {
             createServiceNotification(useAutoStartDescription)
         }
         currentForegroundServiceNotificationId = SERVICE_NOTIF_ID
+        Log.i("[Notifications Manager] Starting service as foreground [$currentForegroundServiceNotificationId]")
         coreService.startForeground(currentForegroundServiceNotificationId, serviceNotification)
         service = coreService
     }
 
     private fun startForeground(notificationId: Int, callNotification: Notification) {
         if (currentForegroundServiceNotificationId == 0 && service != null) {
-            Log.i("[Notifications Manager] Starting service as foreground using call notification")
+            Log.i("[Notifications Manager] Starting service as foreground using call notification [$notificationId]")
             currentForegroundServiceNotificationId = notificationId
             service?.startForeground(currentForegroundServiceNotificationId, callNotification)
         }
@@ -325,7 +328,7 @@ class NotificationsManager(private val context: Context) {
 
     private fun stopForegroundNotification() {
         if (service != null) {
-            Log.i("[Notifications Manager] Stopping service as foreground")
+            Log.i("[Notifications Manager] Stopping service as foreground [$currentForegroundServiceNotificationId]")
             service?.stopForeground(true)
             currentForegroundServiceNotificationId = 0
         }
@@ -333,14 +336,14 @@ class NotificationsManager(private val context: Context) {
 
     fun stopForegroundNotificationIfPossible() {
         if (service != null && currentForegroundServiceNotificationId == SERVICE_NOTIF_ID && !corePreferences.keepServiceAlive) {
-            Log.i("[Notifications Manager] Stopping auto-started service notification")
+            Log.i("[Notifications Manager] Stopping auto-started service notification [$currentForegroundServiceNotificationId]")
             stopForegroundNotification()
         }
     }
 
     fun stopCallForeground() {
         if (service != null && currentForegroundServiceNotificationId != SERVICE_NOTIF_ID && !corePreferences.keepServiceAlive) {
-            Log.i("[Notifications Manager] Stopping call notification used as foreground service")
+            Log.i("[Notifications Manager] Stopping call notification [$currentForegroundServiceNotificationId] used as foreground service")
             stopForegroundNotification()
         }
     }
@@ -415,7 +418,7 @@ class NotificationsManager(private val context: Context) {
         val notifiable = getNotifiableForCall(call)
 
         if (notifiable.notificationId == currentForegroundServiceNotificationId) {
-            Log.w("[Notifications Manager] Incoming call notification already displayed by foreground service, skipping")
+            Log.w("[Notifications Manager] Incoming call notification already displayed by foreground service [${notifiable.notificationId}], skipping")
             return
         }
 
@@ -466,12 +469,11 @@ class NotificationsManager(private val context: Context) {
         }
 
         val notification = builder.build()
-
-        Log.i("[Notifications Manager] Notifying incoming call notification")
-        notify(notifiable.notificationId, notification, CALL_TAG)
+        Log.i("[Notifications Manager] Notifying incoming call notification [${notifiable.notificationId}]")
+        notify(notifiable.notificationId, notification)
 
         if (useAsForeground) {
-            Log.i("[Notifications Manager] Notifying incoming call notification for foreground service")
+            Log.i("[Notifications Manager] Notifying incoming call notification for foreground service [${notifiable.notificationId}]")
             startForeground(notifiable.notificationId, notification)
         }
     }
@@ -609,10 +611,11 @@ class NotificationsManager(private val context: Context) {
         }
 
         val notification = builder.build()
-
-        notify(notifiable.notificationId, notification, CALL_TAG)
+        Log.i("[Notifications Manager] Notifying call notification [${notifiable.notificationId}]")
+        notify(notifiable.notificationId, notification)
 
         if (useAsForeground) {
+            Log.i("[Notifications Manager] Notifying call notification for foreground service [${notifiable.notificationId}]")
             startForeground(notifiable.notificationId, notification)
         }
     }
@@ -621,7 +624,7 @@ class NotificationsManager(private val context: Context) {
         val address = call.remoteAddress.asStringUriOnly()
         val notifiable: Notifiable? = callNotificationsMap[address]
         if (notifiable != null) {
-            cancel(notifiable.notificationId, CALL_TAG)
+            cancel(notifiable.notificationId)
             callNotificationsMap.remove(address)
         } else {
             Log.w("[Notifications Manager] No notification found for call ${call.callLog.callId}")
