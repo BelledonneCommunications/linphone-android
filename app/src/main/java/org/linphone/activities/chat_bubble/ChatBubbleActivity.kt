@@ -37,6 +37,8 @@ import org.linphone.activities.main.chat.adapters.ChatMessagesListAdapter
 import org.linphone.activities.main.chat.viewmodels.*
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
 import org.linphone.core.ChatRoom
+import org.linphone.core.ChatRoomListenerStub
+import org.linphone.core.EventLog
 import org.linphone.core.Factory
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatBubbleActivityBinding
@@ -55,6 +57,12 @@ class ChatBubbleActivity : GenericActivity() {
                 adapter.notifyItemChanged(positionStart - 1) // For grouping purposes
                 scrollToBottom()
             }
+        }
+    }
+
+    private val listener = object : ChatRoomListenerStub() {
+        override fun onChatMessageReceived(chatRoom: ChatRoom, eventLog: EventLog) {
+            chatRoom.markAsRead()
         }
     }
 
@@ -172,6 +180,8 @@ class ChatBubbleActivity : GenericActivity() {
     override fun onResume() {
         super.onResume()
 
+        viewModel.chatRoom.addListener(listener)
+
         val peerAddress = viewModel.chatRoom.peerAddress.asStringUriOnly()
         coreContext.notificationsManager.currentlyDisplayedChatRoomAddress = peerAddress
         coreContext.notificationsManager.resetChatNotificationCounterForSipUri(peerAddress)
@@ -184,6 +194,8 @@ class ChatBubbleActivity : GenericActivity() {
     }
 
     override fun onPause() {
+        viewModel.chatRoom.removeListener(listener)
+
         coreContext.notificationsManager.currentlyDisplayedChatRoomAddress = null
 
         super.onPause()
