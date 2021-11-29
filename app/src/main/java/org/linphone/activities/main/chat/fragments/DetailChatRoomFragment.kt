@@ -53,6 +53,7 @@ import org.linphone.activities.main.chat.adapters.ChatMessagesListAdapter
 import org.linphone.activities.main.chat.data.ChatMessageData
 import org.linphone.activities.main.chat.data.EventLogData
 import org.linphone.activities.main.chat.viewmodels.*
+import org.linphone.activities.main.chat.views.RichEditTextSendListener
 import org.linphone.activities.main.fragments.MasterFragment
 import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
@@ -510,6 +511,13 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             }
             false
         }
+
+        binding.message.setControlEnterListener(object : RichEditTextSendListener {
+            override fun onControlEnterPressedAndReleased() {
+                Log.i("[Chat Room] Detected left control + enter key presses, sending message")
+                chatSendingViewModel.sendMessage()
+            }
+        })
 
         binding.setCancelReplyToClickListener {
             chatSendingViewModel.cancelReply()
