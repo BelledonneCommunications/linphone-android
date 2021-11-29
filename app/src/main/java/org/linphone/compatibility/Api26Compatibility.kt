@@ -32,6 +32,7 @@ import android.media.AudioAttributes
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.view.WindowManager
+import android.view.inputmethod.EditorInfo
 import androidx.core.app.NotificationManagerCompat
 import org.linphone.R
 import org.linphone.core.tools.Log
@@ -148,6 +149,10 @@ class Api26Compatibility {
                 ),
                 code
             )
+        }
+
+        fun getImeFlagsForSecureChatRoom(): Int {
+            return EditorInfo.IME_FLAG_NO_EXTRACT_UI or EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING
         }
     }
 }

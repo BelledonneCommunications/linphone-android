@@ -18,6 +18,7 @@ Group changes to describe their impact on the project, as follows:
 - Allow video recording in chat file sharing
 - Unread messages indicator in chat conversation that separates read & unread messages
 - Notify incoming/outgoing calls on bluetooth devices using self-managed connections from telecom manager API (disables SDK audio focus)
+- Ask Android to not process what user types in an encrypted chat room to improve privacy, see [IME_FLAG_NO_PERSONALIZED_LEARNING](https://developer.android.com/reference/android/view/inputmethod/EditorInfo#IME_FLAG_NO_PERSONALIZED_LEARNING)
 - New video call UI on foldable device like Galaxy Z Fold
 - Setting to automatically record all calls
 
