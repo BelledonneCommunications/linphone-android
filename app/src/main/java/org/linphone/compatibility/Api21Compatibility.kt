@@ -34,6 +34,7 @@ import android.os.Vibrator
 import android.provider.MediaStore
 import android.provider.Settings
 import android.view.WindowManager
+import android.view.inputmethod.EditorInfo
 import org.linphone.R
 import org.linphone.core.Content
 import org.linphone.core.tools.Log
@@ -45,6 +46,7 @@ import org.linphone.utils.PermissionHelper
 @TargetApi(21)
 class Api21Compatibility {
     companion object {
+        @SuppressLint("MissingPermission")
         fun getDeviceName(context: Context): String {
             var name = BluetoothAdapter.getDefaultAdapter().name
             if (name == null) {
@@ -211,6 +213,10 @@ class Api21Compatibility {
 
         fun getUpdateCurrentPendingIntentFlag(): Int {
             return PendingIntent.FLAG_UPDATE_CURRENT
+        }
+
+        fun getImeFlagsForSecureChatRoom(): Int {
+            return EditorInfo.IME_FLAG_NO_EXTRACT_UI
         }
     }
 }

@@ -261,5 +261,12 @@ class Compatibility {
             }
             return Api21Compatibility.getUpdateCurrentPendingIntentFlag()
         }
+
+        fun getImeFlagsForSecureChatRoom(): Int {
+            if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
+                return Api26Compatibility.getImeFlagsForSecureChatRoom()
+            }
+            return Api21Compatibility.getImeFlagsForSecureChatRoom()
+        }
     }
 }

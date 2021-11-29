@@ -19,6 +19,7 @@
  */
 package org.linphone.activities.main.chat.viewmodels
 
+import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -37,6 +38,7 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.main.chat.data.ChatMessageAttachmentData
 import org.linphone.activities.main.chat.data.ChatMessageData
+import org.linphone.compatibility.Compatibility
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
@@ -87,6 +89,13 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
     val isPlayingVoiceRecording = MutableLiveData<Boolean>()
 
     val voiceRecordPlayingPosition = MutableLiveData<Int>()
+
+    val imeFlags: Int = if (chatRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt())) {
+        // IME_FLAG_NO_PERSONALIZED_LEARNING is only available on Android 8 and newer
+        Compatibility.getImeFlagsForSecureChatRoom()
+    } else {
+        EditorInfo.IME_FLAG_NO_EXTRACT_UI
+    }
 
     private val recorder: Recorder
 
