@@ -22,6 +22,7 @@ package org.linphone.activities.main.chat.views
 import android.app.Activity
 import android.content.Context
 import android.util.AttributeSet
+import android.view.KeyEvent
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.ViewModelProvider
@@ -35,6 +36,10 @@ import org.linphone.utils.Event
  * Allows for image input inside an EditText, usefull for keyboards with gif support for example.
  */
 class RichEditText : AppCompatEditText {
+    private var controlPressed = false
+
+    private var sendListener: RichEditTextSendListener? = null
+
     constructor(context: Context) : super(context) {
         initReceiveContentListener()
     }
@@ -51,6 +56,10 @@ class RichEditText : AppCompatEditText {
         initReceiveContentListener()
     }
 
+    fun setControlEnterListener(listener: RichEditTextSendListener) {
+        sendListener = listener
+    }
+
     private fun initReceiveContentListener() {
         ViewCompat.setOnReceiveContentListener(
             this, RichContentReceiver.MIME_TYPES,
@@ -63,5 +72,25 @@ class RichEditText : AppCompatEditText {
                 sharedViewModel.richContentUri.value = Event(uri)
             }
         )
+
+        setOnKeyListener { _, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_CTRL_LEFT) {
+                if (event.action == KeyEvent.ACTION_DOWN) {
+                    controlPressed = true
+                } else if (event.action == KeyEvent.ACTION_UP) {
+                    controlPressed = false
+                }
+                false
+            } else if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP && controlPressed) {
+                sendListener?.onControlEnterPressedAndReleased()
+                true
+            } else {
+                false
+            }
+        }
     }
+}
+
+interface RichEditTextSendListener {
+    fun onControlEnterPressedAndReleased()
 }

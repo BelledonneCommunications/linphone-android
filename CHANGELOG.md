@@ -21,6 +21,7 @@ Group changes to describe their impact on the project, as follows:
 - Ask Android to not process what user types in an encrypted chat room to improve privacy, see [IME_FLAG_NO_PERSONALIZED_LEARNING](https://developer.android.com/reference/android/view/inputmethod/EditorInfo#IME_FLAG_NO_PERSONALIZED_LEARNING)
 - New video call UI on foldable device like Galaxy Z Fold
 - Setting to automatically record all calls
+- When using a physical keyboard, use left control + enter keys to send message
 
 ### Changed
 - UI has been reworked around SlidingPane component to better handle tablets & foldable devices
