@@ -109,11 +109,15 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        val chatRoom = sharedViewModel.selectedChatRoom.value
-        if (chatRoom != null) {
-            outState.putString("LocalSipUri", chatRoom.localAddress.asStringUriOnly())
-            outState.putString("RemoteSipUri", chatRoom.peerAddress.asStringUriOnly())
-            Log.i("[Chat Room] Saving current chat room local & remote addresses in save instance state")
+        if (::sharedViewModel.isInitialized) {
+            val chatRoom = sharedViewModel.selectedChatRoom.value
+            if (chatRoom != null) {
+                outState.putString("LocalSipUri", chatRoom.localAddress.asStringUriOnly())
+                outState.putString("RemoteSipUri", chatRoom.peerAddress.asStringUriOnly())
+                Log.i("[Chat Room] Saving current chat room local & remote addresses in save instance state")
+            }
+        } else {
+            Log.w("[Chat Room] Can't save instance state, sharedViewModel hasn't been initialized yet")
         }
         super.onSaveInstanceState(outState)
     }
