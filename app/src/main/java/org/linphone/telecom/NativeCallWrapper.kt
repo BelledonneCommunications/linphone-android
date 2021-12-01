@@ -102,6 +102,11 @@ class NativeCallWrapper(var callId: String) : Connection() {
         getCall()?.terminate() ?: selfDestroy()
     }
 
+    override fun onSilence() {
+        Log.i("[Connection] Call with id: $callId asked to be silenced")
+        coreContext.core.stopRinging()
+    }
+
     private fun getCall(): Call? {
         return coreContext.core.getCallByCallid(callId)
     }

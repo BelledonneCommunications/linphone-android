@@ -208,7 +208,7 @@ class TelecomHelper private constructor(context: Context) {
         if (call.dir == Call.Dir.Outgoing) {
             extras.putString(
                 EXTRA_CALL_BACK_NUMBER,
-                call.callLog.fromAddress.asStringUriOnly()
+                call.remoteAddress.asStringUriOnly()
             )
         } else {
             extras.putParcelable(EXTRA_INCOMING_CALL_ADDRESS, Uri.parse(address.asStringUriOnly()))
