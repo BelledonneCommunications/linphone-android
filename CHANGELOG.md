@@ -91,16 +91,11 @@ Group changes to describe their impact on the project, as follows:
 - Fixed various crashes & other issues
 - SDK bumped to 5.0.10
 
-## [4.5.1] - Unreleased
-
-### Added
-- Reply to chat message feature
-- Voice recordings messages
+## [4.5.1] - 2021-07-15
 
 ### Changed
-- Navigation was reworked using SlidingPane widget, reducing code & improving UI on foldables
-
-### Removed
+- Bugs & crashes have been fixed
+- SDK bumped to 5.0.1
 
 ## [4.5.0] - 2021-07-08
 
