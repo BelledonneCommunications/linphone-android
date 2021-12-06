@@ -136,29 +136,9 @@ class CoreContext(val context: Context, coreConfig: Config) {
         ) {
             Log.i("[Context] Call state changed [$state]")
             if (state == Call.State.IncomingReceived || state == Call.State.IncomingEarlyMedia) {
-                if (!corePreferences.useTelecomManager) { // Can't use the following call with Telecom Manager API as it will "fake" GSM calls
-                    var gsmCallActive = false
-                    if (::phoneStateListener.isInitialized) {
-                        gsmCallActive = phoneStateListener.isInCall()
-                    }
-
-                    if (gsmCallActive) {
-                        Log.w("[Context] Refusing the call with reason busy because a GSM call is active")
-                        call.decline(Reason.Busy)
-                        return
-                    }
-                } else {
-                    if (TelecomHelper.exists()) {
-                        if (!TelecomHelper.get().isIncomingCallPermitted() ||
-                            TelecomHelper.get().isInManagedCall()
-                        ) {
-                            Log.w("[Context] Refusing the call with reason busy because Telecom Manager will reject the call")
-                            call.decline(Reason.Busy)
-                            return
-                        }
-                    } else {
-                        Log.e("[Context] Telecom Manager singleton wasn't created!")
-                    }
+                if (declineCallDueToGsmActiveCall()) {
+                    call.decline(Reason.Busy)
+                    return
                 }
 
                 // Starting SDK 24 (Android 7.0) we rely on the fullscreen intent of the call incoming notification
@@ -435,6 +415,32 @@ class CoreContext(val context: Context, coreConfig: Config) {
         } else {
             Log.w("[Context] Can't create phone state listener, READ_PHONE_STATE permission isn't granted")
         }
+    }
+
+    fun declineCallDueToGsmActiveCall(): Boolean {
+        if (!corePreferences.useTelecomManager) { // Can't use the following call with Telecom Manager API as it will "fake" GSM calls
+            var gsmCallActive = false
+            if (::phoneStateListener.isInitialized) {
+                gsmCallActive = phoneStateListener.isInCall()
+            }
+
+            if (gsmCallActive) {
+                Log.w("[Context] Refusing the call with reason busy because a GSM call is active")
+                return true
+            }
+        } else {
+            if (TelecomHelper.exists()) {
+                if (!TelecomHelper.get().isIncomingCallPermitted() ||
+                    TelecomHelper.get().isInManagedCall()
+                ) {
+                    Log.w("[Context] Refusing the call with reason busy because Telecom Manager will reject the call")
+                    return true
+                }
+            } else {
+                Log.e("[Context] Telecom Manager singleton wasn't created!")
+            }
+        }
+        return false
     }
 
     fun answerCallVideoUpdateRequest(call: Call, accept: Boolean) {
