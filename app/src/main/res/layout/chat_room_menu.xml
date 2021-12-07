@@ -38,7 +38,7 @@
             android:visibility="@{groupInfoHidden ? View.GONE : View.VISIBLE}"
             android:background="@drawable/menu_background"
             android:onClick="@{groupInfoListener}"
-            android:drawableRight="@drawable/menu_group_info_default"
+            android:drawableRight="@drawable/chat_room_menu_group_info"
             style="@style/popup_item_font"
             android:text="@string/chat_room_context_menu_group_info" />
 
@@ -48,7 +48,7 @@
             android:visibility="@{devicesHidden ? View.GONE : View.VISIBLE}"
             android:background="@drawable/menu_background"
             android:onClick="@{devicesListener}"
-            android:drawableRight="@drawable/menu_security_default"
+            android:drawableRight="@drawable/chat_room_menu_security"
             style="@style/popup_item_font"
             android:text="@string/chat_room_context_menu_participants_devices" />
 
