@@ -65,7 +65,15 @@ class Compatibility {
         }
 
         // See https://developer.android.com/about/versions/11/privacy/permissions#phone-numbers
-        fun requestTelecomManagerPermission(activity: Activity, code: Int) {
+        fun hasTelecomManagerPermissions(context: Context): Boolean {
+            return if (Version.sdkAboveOrEqual(Version.API30_ANDROID_11)) {
+                Api30Compatibility.hasTelecomManagerPermission(context)
+            } else {
+                Api26Compatibility.hasTelecomManagerPermission(context)
+            }
+        }
+
+        fun requestTelecomManagerPermissions(activity: Activity, code: Int) {
             if (Version.sdkAboveOrEqual(Version.API30_ANDROID_11)) {
                 Api30Compatibility.requestTelecomManagerPermission(activity, code)
             } else {

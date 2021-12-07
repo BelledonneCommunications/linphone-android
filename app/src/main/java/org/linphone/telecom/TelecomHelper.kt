@@ -30,6 +30,7 @@ import android.telecom.PhoneAccount
 import android.telecom.PhoneAccountHandle
 import android.telecom.TelecomManager
 import android.telecom.TelecomManager.*
+import java.lang.Exception
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.contact.Contact
@@ -159,9 +160,16 @@ class TelecomHelper private constructor(context: Context) {
             ComponentName(context, TelecomConnectionService::class.java),
             context.packageName
         )
-        val identity = coreContext.core.defaultAccount?.params?.identityAddress?.asStringUriOnly() ?: ""
+        // Take care that identity may be parsed, otherwise Android OS may crash during startup
+        // and user will have to do a factory reset...
+        val identity = coreContext.core.defaultAccount?.params?.identityAddress?.asStringUriOnly()
+            ?: coreContext.core.createPrimaryContactParsed()?.asStringUriOnly()
+            ?: "sip:linphone.android@sip.linphone.org"
+
+        val address = Uri.parse(identity)
+            ?: throw Exception("[Telecom Helper] Identity address for phone account is null!")
         val account = PhoneAccount.builder(accountHandle, context.getString(R.string.app_name))
-            .setAddress(Uri.parse(identity))
+            .setAddress(address)
             .setIcon(Icon.createWithResource(context, R.drawable.linphone_logo_tinted))
             .setCapabilities(PhoneAccount.CAPABILITY_SELF_MANAGED)
             .setHighlightColor(context.getColor(R.color.primary_color))

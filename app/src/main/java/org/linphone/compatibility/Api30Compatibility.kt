@@ -50,10 +50,17 @@ class Api30Compatibility {
             activity.requestPermissions(
                 arrayOf(
                     Manifest.permission.READ_PHONE_NUMBERS,
+                    Manifest.permission.READ_PHONE_STATE,
                     Manifest.permission.MANAGE_OWN_CALLS
                 ),
                 code
             )
+        }
+
+        fun hasTelecomManagerPermission(context: Context): Boolean {
+            return Compatibility.hasPermission(context, Manifest.permission.READ_PHONE_NUMBERS) &&
+                Compatibility.hasPermission(context, Manifest.permission.READ_PHONE_STATE) &&
+                Compatibility.hasPermission(context, Manifest.permission.MANAGE_OWN_CALLS)
         }
 
         fun removeChatRoomShortcut(context: Context, chatRoom: ChatRoom) {
