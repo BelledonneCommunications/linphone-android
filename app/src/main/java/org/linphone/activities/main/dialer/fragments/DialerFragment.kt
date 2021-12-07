@@ -254,11 +254,11 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
             if (corePreferences.manuallyDisabledTelecomManager) {
                 Log.w("[Dialer] User has manually disabled Telecom Manager feature")
             } else {
-                if (PermissionHelper.get().hasTelecomManagerPermissions()) {
+                if (Compatibility.hasTelecomManagerPermissions(requireContext())) {
                     enableTelecomManager()
                 } else {
                     Log.i("[Dialer] Asking for Telecom Manager permissions")
-                    Compatibility.requestTelecomManagerPermission(requireActivity(), 1)
+                    Compatibility.requestTelecomManagerPermissions(requireActivity(), 1)
                 }
             }
         } else {

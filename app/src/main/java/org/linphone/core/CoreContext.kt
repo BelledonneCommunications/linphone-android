@@ -312,9 +312,14 @@ class CoreContext(val context: Context, coreConfig: Config) {
 
         // CoreContext listener must be added first!
         if (Version.sdkAboveOrEqual(Version.API26_O_80) && corePreferences.useTelecomManager) {
-            Log.i("[Context] Creating TelecomHelper, disabling audio focus requests in AudioHelper")
-            core.config.setBool("audio", "android_disable_audio_focus_requests", true)
-            TelecomHelper.create(context)
+            if (Compatibility.hasTelecomManagerPermissions(context)) {
+                Log.i("[Context] Creating Telecom Helper, disabling audio focus requests in AudioHelper")
+                core.config.setBool("audio", "android_disable_audio_focus_requests", true)
+                TelecomHelper.create(context)
+            } else {
+                Log.w("[Context] Can't create Telecom Helper, permissions have been revoked")
+                corePreferences.useTelecomManager = false
+            }
         }
 
         if (isPush) {

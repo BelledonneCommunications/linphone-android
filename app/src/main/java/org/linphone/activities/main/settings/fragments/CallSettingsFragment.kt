@@ -37,7 +37,6 @@ import org.linphone.databinding.SettingsCallFragmentBinding
 import org.linphone.mediastream.Version
 import org.linphone.telecom.TelecomHelper
 import org.linphone.utils.Event
-import org.linphone.utils.PermissionHelper
 
 class CallSettingsFragment : GenericSettingFragment<SettingsCallFragmentBinding>() {
     private lateinit var viewModel: CallSettingsViewModel
@@ -93,8 +92,8 @@ class CallSettingsFragment : GenericSettingFragment<SettingsCallFragmentBinding>
             viewLifecycleOwner,
             {
                 it.consume {
-                    if (!PermissionHelper.get().hasTelecomManagerPermissions()) {
-                        Compatibility.requestTelecomManagerPermission(requireActivity(), 1)
+                    if (!Compatibility.hasTelecomManagerPermissions(requireContext())) {
+                        Compatibility.requestTelecomManagerPermissions(requireActivity(), 1)
                     } else if (!TelecomHelper.exists()) {
                         corePreferences.useTelecomManager = true
                         Log.w("[Telecom Helper] Doesn't exists yet, creating it")
