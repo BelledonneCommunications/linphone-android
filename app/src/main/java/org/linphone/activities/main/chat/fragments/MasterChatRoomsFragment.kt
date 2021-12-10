@@ -249,7 +249,14 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
                         sharedViewModel.destructionPendingChatRoom = chatRoom
                     } else {
                         if (chatRoom.peerAddress.asStringUriOnly() == coreContext.notificationsManager.currentlyDisplayedChatRoomAddress) {
-                            Log.w("[Chat] This chat room is already displayed!")
+                            if (!binding.slidingPane.isOpen) {
+                                Log.w("[Chat] Chat room is displayed but sliding pane is closed...")
+                                if (!binding.slidingPane.openPane()) {
+                                    Log.e("[Chat] Tried to open pane to workaround already displayed chat room issue, failed!")
+                                }
+                            } else {
+                                Log.w("[Chat] This chat room is already displayed!")
+                            }
                         } else {
                             sharedViewModel.selectedChatRoom.value = chatRoom
                             navigateToChatRoom(
