@@ -55,7 +55,7 @@ import org.linphone.utils.FileUtils
 import org.linphone.utils.ImageUtils
 import org.linphone.utils.LinphoneUtils
 
-private class Notifiable(val notificationId: Int) {
+class Notifiable(val notificationId: Int) {
     val messages: ArrayList<NotifiableMessage> = arrayListOf()
 
     var isGroup: Boolean = false
@@ -66,7 +66,7 @@ private class Notifiable(val notificationId: Int) {
     var dismissNotificationUponReadChatRoom: Boolean = true
 }
 
-private class NotifiableMessage(
+class NotifiableMessage(
     var message: String,
     val contact: Contact?,
     val sender: String,
@@ -433,17 +433,7 @@ class NotificationsManager(private val context: Context) {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val builder = Compatibility.createIncomingCallNotificationBuilder(context, call, this)
-        builder
-            .setFullScreenIntent(pendingIntent, true)
-            .addAction(getCallDeclineAction(notifiable))
-            .addAction(getCallAnswerAction(notifiable))
-
-        if (!corePreferences.preventInterfaceFromShowingUp) {
-            builder.setContentIntent(pendingIntent)
-        }
-
-        val notification = builder.build()
+        val notification = Compatibility.createIncomingCallNotification(context, call, notifiable, pendingIntent, this)
         Log.i("[Notifications Manager] Notifying incoming call notification [${notifiable.notificationId}]")
         notify(notifiable.notificationId, notification)
 
@@ -851,43 +841,47 @@ class NotificationsManager(private val context: Context) {
 
     /* Notifications actions */
 
-    private fun getCallAnswerAction(notifiable: Notifiable): NotificationCompat.Action {
+    fun getCallAnswerPendingIntent(notifiable: Notifiable): PendingIntent {
         val answerIntent = Intent(context, NotificationBroadcastReceiver::class.java)
         answerIntent.action = INTENT_ANSWER_CALL_NOTIF_ACTION
         answerIntent.putExtra(INTENT_NOTIF_ID, notifiable.notificationId)
         answerIntent.putExtra(INTENT_REMOTE_ADDRESS, notifiable.remoteAddress)
 
-        val answerPendingIntent = PendingIntent.getBroadcast(
+        return PendingIntent.getBroadcast(
             context,
             notifiable.notificationId,
             answerIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
+    }
 
+    fun getCallAnswerAction(notifiable: Notifiable): NotificationCompat.Action {
         return NotificationCompat.Action.Builder(
             R.drawable.call_audio_start,
             context.getString(R.string.incoming_call_notification_answer_action_label),
-            answerPendingIntent
+            getCallAnswerPendingIntent(notifiable)
         ).build()
     }
 
-    private fun getCallDeclineAction(notifiable: Notifiable): NotificationCompat.Action {
+    fun getCallDeclinePendingIntent(notifiable: Notifiable): PendingIntent {
         val hangupIntent = Intent(context, NotificationBroadcastReceiver::class.java)
         hangupIntent.action = INTENT_HANGUP_CALL_NOTIF_ACTION
         hangupIntent.putExtra(INTENT_NOTIF_ID, notifiable.notificationId)
         hangupIntent.putExtra(INTENT_REMOTE_ADDRESS, notifiable.remoteAddress)
 
-        val hangupPendingIntent = PendingIntent.getBroadcast(
+        return PendingIntent.getBroadcast(
             context,
             notifiable.notificationId,
             hangupIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
+    }
 
+    fun getCallDeclineAction(notifiable: Notifiable): NotificationCompat.Action {
         return NotificationCompat.Action.Builder(
             R.drawable.call_hangup,
             context.getString(R.string.incoming_call_notification_hangup_action_label),
-            hangupPendingIntent
+            getCallDeclinePendingIntent(notifiable)
         ).build()
     }
 
