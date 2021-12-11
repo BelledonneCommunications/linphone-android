@@ -184,6 +184,69 @@ class Api26Compatibility {
             return builder.build()
         }
 
+        fun createCallNotification(
+            context: Context,
+            call: Call,
+            notifiable: Notifiable,
+            pendingIntent: PendingIntent,
+            channel: String,
+            notificationsManager: NotificationsManager
+        ): Notification {
+            val contact: Contact? = coreContext.contactsManager.findContactByAddress(call.remoteAddress)
+            val pictureUri = contact?.getContactThumbnailPictureUri()
+            val roundPicture = ImageUtils.getRoundBitmapFromUri(context, pictureUri)
+            val displayName = contact?.fullName ?: LinphoneUtils.getDisplayName(call.remoteAddress)
+
+            val stringResourceId: Int
+            val iconResourceId: Int
+            when (call.state) {
+                Call.State.Paused, Call.State.Pausing, Call.State.PausedByRemote -> {
+                    stringResourceId = R.string.call_notification_paused
+                    iconResourceId = R.drawable.topbar_call_paused_notification
+                }
+                Call.State.OutgoingRinging, Call.State.OutgoingProgress, Call.State.OutgoingInit, Call.State.OutgoingEarlyMedia -> {
+                    stringResourceId = R.string.call_notification_outgoing
+                    iconResourceId = if (call.params.videoEnabled()) {
+                        R.drawable.topbar_videocall_notification
+                    } else {
+                        R.drawable.topbar_call_notification
+                    }
+                }
+                else -> {
+                    stringResourceId = R.string.call_notification_active
+                    iconResourceId = if (call.currentParams.videoEnabled()) {
+                        R.drawable.topbar_videocall_notification
+                    } else {
+                        R.drawable.topbar_call_notification
+                    }
+                }
+            }
+
+            val builder = NotificationCompat.Builder(
+                context, channel
+            )
+                .setContentTitle(contact?.fullName ?: displayName)
+                .setContentText(context.getString(stringResourceId))
+                .setSmallIcon(iconResourceId)
+                .setLargeIcon(roundPicture)
+                .addPerson(notificationsManager.getPerson(contact, displayName, roundPicture))
+                .setAutoCancel(false)
+                .setCategory(NotificationCompat.CATEGORY_CALL)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setWhen(System.currentTimeMillis())
+                .setShowWhen(true)
+                .setOngoing(true)
+                .setColor(ContextCompat.getColor(context, R.color.notification_led_color))
+                .addAction(notificationsManager.getCallDeclineAction(notifiable))
+
+            if (!corePreferences.preventInterfaceFromShowingUp) {
+                builder.setContentIntent(pendingIntent)
+            }
+
+            return builder.build()
+        }
+
         @SuppressLint("MissingPermission")
         fun eventVibration(vibrator: Vibrator) {
             val effect = VibrationEffect.createWaveform(longArrayOf(0L, 100L, 100L), intArrayOf(0, VibrationEffect.DEFAULT_AMPLITUDE, 0), -1)
