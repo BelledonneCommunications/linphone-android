@@ -28,7 +28,6 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.webkit.MimeTypeMap
-import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.Person
@@ -397,7 +396,7 @@ class NotificationsManager(private val context: Context) {
         return notifiable
     }
 
-    private fun getPerson(contact: Contact?, displayName: String, picture: Bitmap?): Person {
+    fun getPerson(contact: Contact?, displayName: String, picture: Bitmap?): Person {
         return if (contact != null) {
             contact.getPerson()
         } else {
@@ -419,18 +418,11 @@ class NotificationsManager(private val context: Context) {
             return
         }
 
-        val address = LinphoneUtils.getDisplayableAddress(call.remoteAddress)
         val notifiable = getNotifiableForCall(call)
-
         if (notifiable.notificationId == currentForegroundServiceNotificationId) {
             Log.w("[Notifications Manager] Incoming call notification already displayed by foreground service [${notifiable.notificationId}], skipping")
             return
         }
-
-        val contact: Contact? = coreContext.contactsManager.findContactByAddress(call.remoteAddress)
-        val pictureUri = contact?.getContactThumbnailPictureUri()
-        val roundPicture = ImageUtils.getRoundBitmapFromUri(context, pictureUri)
-        val displayName = contact?.fullName ?: LinphoneUtils.getDisplayName(call.remoteAddress)
 
         val incomingCallNotificationIntent = Intent(context, IncomingCallActivity::class.java)
         incomingCallNotificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -441,33 +433,11 @@ class NotificationsManager(private val context: Context) {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val notificationLayoutHeadsUp = RemoteViews(context.packageName, R.layout.call_incoming_notification_heads_up)
-        notificationLayoutHeadsUp.setTextViewText(R.id.caller, displayName)
-        notificationLayoutHeadsUp.setTextViewText(R.id.sip_uri, address)
-        notificationLayoutHeadsUp.setTextViewText(R.id.incoming_call_info, context.getString(R.string.incoming_call_notification_title))
-
-        if (roundPicture != null) {
-            notificationLayoutHeadsUp.setImageViewBitmap(R.id.caller_picture, roundPicture)
-        }
-
-        val builder = NotificationCompat.Builder(context, context.getString(R.string.notification_channel_incoming_call_id))
-            .setStyle(NotificationCompat.DecoratedCustomViewStyle())
-            .addPerson(getPerson(contact, displayName, roundPicture))
-            .setSmallIcon(R.drawable.topbar_call_notification)
-            .setContentTitle(displayName)
-            .setContentText(context.getString(R.string.incoming_call_notification_title))
-            .setCategory(NotificationCompat.CATEGORY_CALL)
-            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setWhen(System.currentTimeMillis())
-            .setAutoCancel(false)
-            .setShowWhen(true)
-            .setOngoing(true)
-            .setColor(ContextCompat.getColor(context, R.color.primary_color))
+        val builder = Compatibility.createIncomingCallNotificationBuilder(context, call, this)
+        builder
             .setFullScreenIntent(pendingIntent, true)
             .addAction(getCallDeclineAction(notifiable))
             .addAction(getCallAnswerAction(notifiable))
-            .setCustomHeadsUpContentView(notificationLayoutHeadsUp)
 
         if (!corePreferences.preventInterfaceFromShowingUp) {
             builder.setContentIntent(pendingIntent)

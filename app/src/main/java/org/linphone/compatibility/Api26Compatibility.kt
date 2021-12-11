@@ -22,10 +22,7 @@ package org.linphone.compatibility
 import android.Manifest
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
-import android.app.Activity
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PictureInPictureParams
+import android.app.*
 import android.content.Context
 import android.content.pm.PackageManager
 import android.media.AudioAttributes
@@ -33,10 +30,19 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
+import android.widget.RemoteViews
+import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
+import org.linphone.LinphoneApplication
 import org.linphone.R
+import org.linphone.contact.Contact
+import org.linphone.core.Call
 import org.linphone.core.tools.Log
+import org.linphone.notifications.NotificationsManager
 import org.linphone.telecom.NativeCallWrapper
+import org.linphone.utils.ImageUtils
+import org.linphone.utils.LinphoneUtils
 
 @TargetApi(26)
 class Api26Compatibility {
@@ -126,6 +132,43 @@ class Api26Compatibility {
 
         fun getOverlayType(): Int {
             return WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+        }
+
+        fun createIncomingCallNotificationBuilder(
+            context: Context,
+            call: Call,
+            notificationsManager: NotificationsManager
+        ): NotificationCompat.Builder {
+            val contact: Contact? = LinphoneApplication.coreContext.contactsManager.findContactByAddress(call.remoteAddress)
+            val pictureUri = contact?.getContactThumbnailPictureUri()
+            val roundPicture = ImageUtils.getRoundBitmapFromUri(context, pictureUri)
+            val displayName = contact?.fullName ?: LinphoneUtils.getDisplayName(call.remoteAddress)
+            val address = LinphoneUtils.getDisplayableAddress(call.remoteAddress)
+
+            val notificationLayoutHeadsUp = RemoteViews(context.packageName, R.layout.call_incoming_notification_heads_up)
+            notificationLayoutHeadsUp.setTextViewText(R.id.caller, displayName)
+            notificationLayoutHeadsUp.setTextViewText(R.id.sip_uri, address)
+            notificationLayoutHeadsUp.setTextViewText(R.id.incoming_call_info, context.getString(R.string.incoming_call_notification_title))
+
+            if (roundPicture != null) {
+                notificationLayoutHeadsUp.setImageViewBitmap(R.id.caller_picture, roundPicture)
+            }
+
+            return NotificationCompat.Builder(context, context.getString(R.string.notification_channel_incoming_call_id))
+                .setStyle(NotificationCompat.DecoratedCustomViewStyle())
+                .addPerson(notificationsManager.getPerson(contact, displayName, roundPicture))
+                .setSmallIcon(R.drawable.topbar_call_notification)
+                .setContentTitle(displayName)
+                .setContentText(context.getString(R.string.incoming_call_notification_title))
+                .setCategory(NotificationCompat.CATEGORY_CALL)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setWhen(System.currentTimeMillis())
+                .setAutoCancel(false)
+                .setShowWhen(true)
+                .setOngoing(true)
+                .setColor(ContextCompat.getColor(context, R.color.primary_color))
+                .setCustomHeadsUpContentView(notificationLayoutHeadsUp)
         }
 
         @SuppressLint("MissingPermission")

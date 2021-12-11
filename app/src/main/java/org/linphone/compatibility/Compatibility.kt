@@ -25,15 +25,20 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.os.Vibrator
 import android.telephony.TelephonyManager
 import android.view.View
 import android.view.WindowManager
+import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
+import java.util.*
+import org.linphone.core.Call
 import org.linphone.core.ChatRoom
 import org.linphone.core.Content
 import org.linphone.mediastream.Version
+import org.linphone.notifications.NotificationsManager
 import org.linphone.telecom.NativeCallWrapper
 
 @Suppress("DEPRECATION")
@@ -163,6 +168,17 @@ class Compatibility {
                 return Api26Compatibility.getOverlayType()
             }
             return WindowManager.LayoutParams.TYPE_PHONE
+        }
+
+        fun createIncomingCallNotificationBuilder(
+            context: Context,
+            call: Call,
+            notificationsManager: NotificationsManager
+        ): NotificationCompat.Builder {
+            if (Build.MANUFACTURER.lowercase(Locale.getDefault()) == "xiaomi") {
+                return XiaomiCompatibility.createIncomingCallNotificationBuilder(context, call, notificationsManager)
+            }
+            return Api26Compatibility.createIncomingCallNotificationBuilder(context, call, notificationsManager)
         }
 
         /* Call */
