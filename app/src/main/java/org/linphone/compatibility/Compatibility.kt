@@ -20,6 +20,8 @@
 package org.linphone.compatibility
 
 import android.app.Activity
+import android.app.Notification
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -30,7 +32,6 @@ import android.os.Vibrator
 import android.telephony.TelephonyManager
 import android.view.View
 import android.view.WindowManager
-import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import java.util.*
@@ -38,6 +39,7 @@ import org.linphone.core.Call
 import org.linphone.core.ChatRoom
 import org.linphone.core.Content
 import org.linphone.mediastream.Version
+import org.linphone.notifications.Notifiable
 import org.linphone.notifications.NotificationsManager
 import org.linphone.telecom.NativeCallWrapper
 
@@ -170,15 +172,19 @@ class Compatibility {
             return WindowManager.LayoutParams.TYPE_PHONE
         }
 
-        fun createIncomingCallNotificationBuilder(
+        fun createIncomingCallNotification(
             context: Context,
             call: Call,
+            notifiable: Notifiable,
+            pendingIntent: PendingIntent,
             notificationsManager: NotificationsManager
-        ): NotificationCompat.Builder {
-            if (Build.MANUFACTURER.lowercase(Locale.getDefault()) == "xiaomi") {
-                return XiaomiCompatibility.createIncomingCallNotificationBuilder(context, call, notificationsManager)
+        ): Notification {
+            if (Version.sdkAboveOrEqual(Version.API31_ANDROID_12)) {
+                return Api31Compatibility.createIncomingCallNotification(context, call, notifiable, pendingIntent, notificationsManager)
+            } else if (Build.MANUFACTURER.lowercase(Locale.getDefault()) == "xiaomi") {
+                return XiaomiCompatibility.createIncomingCallNotification(context, call, notifiable, pendingIntent, notificationsManager)
             }
-            return Api26Compatibility.createIncomingCallNotificationBuilder(context, call, notificationsManager)
+            return Api26Compatibility.createIncomingCallNotification(context, call, notifiable, pendingIntent, notificationsManager)
         }
 
         /* Call */

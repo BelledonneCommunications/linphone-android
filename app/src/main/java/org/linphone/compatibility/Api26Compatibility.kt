@@ -34,11 +34,13 @@ import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
-import org.linphone.LinphoneApplication
+import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.contact.Contact
 import org.linphone.core.Call
 import org.linphone.core.tools.Log
+import org.linphone.notifications.Notifiable
 import org.linphone.notifications.NotificationsManager
 import org.linphone.telecom.NativeCallWrapper
 import org.linphone.utils.ImageUtils
@@ -134,12 +136,14 @@ class Api26Compatibility {
             return WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
         }
 
-        fun createIncomingCallNotificationBuilder(
+        fun createIncomingCallNotification(
             context: Context,
             call: Call,
+            notifiable: Notifiable,
+            pendingIntent: PendingIntent,
             notificationsManager: NotificationsManager
-        ): NotificationCompat.Builder {
-            val contact: Contact? = LinphoneApplication.coreContext.contactsManager.findContactByAddress(call.remoteAddress)
+        ): Notification {
+            val contact: Contact? = coreContext.contactsManager.findContactByAddress(call.remoteAddress)
             val pictureUri = contact?.getContactThumbnailPictureUri()
             val roundPicture = ImageUtils.getRoundBitmapFromUri(context, pictureUri)
             val displayName = contact?.fullName ?: LinphoneUtils.getDisplayName(call.remoteAddress)
@@ -154,7 +158,7 @@ class Api26Compatibility {
                 notificationLayoutHeadsUp.setImageViewBitmap(R.id.caller_picture, roundPicture)
             }
 
-            return NotificationCompat.Builder(context, context.getString(R.string.notification_channel_incoming_call_id))
+            val builder = NotificationCompat.Builder(context, context.getString(R.string.notification_channel_incoming_call_id))
                 .setStyle(NotificationCompat.DecoratedCustomViewStyle())
                 .addPerson(notificationsManager.getPerson(contact, displayName, roundPicture))
                 .setSmallIcon(R.drawable.topbar_call_notification)
@@ -168,7 +172,16 @@ class Api26Compatibility {
                 .setShowWhen(true)
                 .setOngoing(true)
                 .setColor(ContextCompat.getColor(context, R.color.primary_color))
+                .setFullScreenIntent(pendingIntent, true)
+                .addAction(notificationsManager.getCallDeclineAction(notifiable))
+                .addAction(notificationsManager.getCallAnswerAction(notifiable))
                 .setCustomHeadsUpContentView(notificationLayoutHeadsUp)
+
+            if (!corePreferences.preventInterfaceFromShowingUp) {
+                builder.setContentIntent(pendingIntent)
+            }
+
+            return builder.build()
         }
 
         @SuppressLint("MissingPermission")

@@ -25,10 +25,12 @@ import android.content.Context
 import android.graphics.BitmapFactory
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import org.linphone.LinphoneApplication
+import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.contact.Contact
 import org.linphone.core.Call
+import org.linphone.notifications.Notifiable
 import org.linphone.notifications.NotificationsManager
 import org.linphone.utils.ImageUtils
 import org.linphone.utils.LinphoneUtils
@@ -36,18 +38,20 @@ import org.linphone.utils.LinphoneUtils
 @TargetApi(26)
 class XiaomiCompatibility {
     companion object {
-        fun createIncomingCallNotificationBuilder(
+        fun createIncomingCallNotification(
             context: Context,
             call: Call,
+            notifiable: Notifiable,
+            pendingIntent: PendingIntent,
             notificationsManager: NotificationsManager
-        ): NotificationCompat.Builder {
-            val contact: Contact? = LinphoneApplication.coreContext.contactsManager.findContactByAddress(call.remoteAddress)
+        ): Notification {
+            val contact: Contact? = coreContext.contactsManager.findContactByAddress(call.remoteAddress)
             val pictureUri = contact?.getContactThumbnailPictureUri()
             val roundPicture = ImageUtils.getRoundBitmapFromUri(context, pictureUri)
             val displayName = contact?.fullName ?: LinphoneUtils.getDisplayName(call.remoteAddress)
             val address = LinphoneUtils.getDisplayableAddress(call.remoteAddress)
 
-            return NotificationCompat.Builder(context, context.getString(R.string.notification_channel_incoming_call_id))
+            val builder = NotificationCompat.Builder(context, context.getString(R.string.notification_channel_incoming_call_id))
                 .addPerson(notificationsManager.getPerson(contact, displayName, roundPicture))
                 .setSmallIcon(R.drawable.topbar_call_notification)
                 .setLargeIcon(roundPicture ?: BitmapFactory.decodeResource(context.resources, R.drawable.avatar))
@@ -62,6 +66,15 @@ class XiaomiCompatibility {
                 .setShowWhen(true)
                 .setOngoing(true)
                 .setColor(ContextCompat.getColor(context, R.color.primary_color))
+                .setFullScreenIntent(pendingIntent, true)
+                .addAction(notificationsManager.getCallDeclineAction(notifiable))
+                .addAction(notificationsManager.getCallAnswerAction(notifiable))
+
+            if (!corePreferences.preventInterfaceFromShowingUp) {
+                builder.setContentIntent(pendingIntent)
+            }
+
+            return builder.build()
         }
     }
 }
