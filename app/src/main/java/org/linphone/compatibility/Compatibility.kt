@@ -187,6 +187,20 @@ class Compatibility {
             return Api26Compatibility.createIncomingCallNotification(context, call, notifiable, pendingIntent, notificationsManager)
         }
 
+        fun createCallNotification(
+            context: Context,
+            call: Call,
+            notifiable: Notifiable,
+            pendingIntent: PendingIntent,
+            channel: String,
+            notificationsManager: NotificationsManager
+        ): Notification {
+            if (Version.sdkAboveOrEqual(Version.API31_ANDROID_12)) {
+                return Api31Compatibility.createCallNotification(context, call, notifiable, pendingIntent, channel, notificationsManager)
+            }
+            return Api26Compatibility.createCallNotification(context, call, notifiable, pendingIntent, channel, notificationsManager)
+        }
+
         /* Call */
 
         fun canDrawOverlay(context: Context): Boolean {

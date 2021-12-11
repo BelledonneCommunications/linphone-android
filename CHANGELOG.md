@@ -22,6 +22,7 @@ Group changes to describe their impact on the project, as follows:
 - New video call UI on foldable device like Galaxy Z Fold
 - Setting to automatically record all calls
 - When using a physical keyboard, use left control + enter keys to send message
+- Using CallStyle notifications for calls for devices running Android 12 or newer
 
 ### Changed
 - UI has been reworked around SlidingPane component to better handle tablets & foldable devices
@@ -38,6 +39,7 @@ Group changes to describe their impact on the project, as follows:
 - "Infinite backstack", now each view is stored (at most) once in the backstack
 - Going back to the dialer when pressing back in a chat room after clicking on a chat message notification
 - Missing international prefix / phone number in assistant after granting permission
+- Display issue for incoming call notification preventing to use answer/hangup actions on some Xiaomi devices (like Redmi Note 9S)
 
 ### Removed
 - Launcher Activity has been replaced by [Splash Screen API](https://developer.android.com/reference/kotlin/androidx/core/splashscreen/SplashScreen)
