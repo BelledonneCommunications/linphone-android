@@ -76,7 +76,6 @@ class ChatMessageContentData(
         get() {
             var count = 0
             for (content in chatMessage.contents) {
-                val content = getContent()
                 if (content.isFileTransfer || content.isFile) {
                     count += 1
                 }
