@@ -297,8 +297,15 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
     val stunServerListener = object : SettingListenerStub() {
         override fun onTextValueChanged(newValue: String) {
             val params = account.params.clone()
-            params.natPolicy?.stunServer = newValue
-            if (newValue.isEmpty()) ice.value = false
+            if (params.natPolicy == null) {
+                Log.w("[Account Settings] No NAT Policy object in account params yet")
+                val natPolicy = core.createNatPolicy()
+                natPolicy.stunServer = newValue
+                params.natPolicy = natPolicy
+            } else {
+                params.natPolicy?.stunServer = newValue
+                if (newValue.isEmpty()) ice.value = false
+            }
             stunServer.value = newValue
             account.params = params
         }
