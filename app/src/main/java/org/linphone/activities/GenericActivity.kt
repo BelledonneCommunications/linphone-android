@@ -31,7 +31,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.ActivityNavigator
 import androidx.window.layout.FoldingFeature
-import androidx.window.layout.WindowInfoRepository.Companion.windowInfoRepository
+import androidx.window.layout.WindowInfoTracker
 import androidx.window.layout.WindowLayoutInfo
 import java.util.*
 import kotlinx.coroutines.Dispatchers
@@ -58,9 +58,12 @@ abstract class GenericActivity : AppCompatActivity() {
         ensureCoreExists(applicationContext)
 
         lifecycleScope.launch(Dispatchers.Main) {
-            windowInfoRepository().windowLayoutInfo.collect { newLayoutInfo ->
-                updateCurrentLayout(newLayoutInfo)
-            }
+            WindowInfoTracker
+                .getOrCreate(this@GenericActivity)
+                .windowLayoutInfo(this@GenericActivity)
+                .collect { newLayoutInfo ->
+                    updateCurrentLayout(newLayoutInfo)
+                }
         }
 
         requestedOrientation = if (corePreferences.forcePortrait) {
