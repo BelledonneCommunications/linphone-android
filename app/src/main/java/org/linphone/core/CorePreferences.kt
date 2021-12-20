@@ -460,6 +460,11 @@ class CorePreferences constructor(private val context: Context) {
     val useEphemeralPerDeviceMode: Boolean
         get() = config.getBool("app", "ephemeral_chat_messages_settings_per_device", true)
 
+    // If enabled user will see all ringtones bundled in our SDK
+    // and will be able to choose which one to use if not using it's device's default
+    val showAllRingtones: Boolean
+        get() = config.getBool("app", "show_all_available_ringtones", false)
+
     /* Default values related */
 
     val echoCancellerCalibration: Int
@@ -578,8 +583,11 @@ class CorePreferences constructor(private val context: Context) {
     val defaultValuesPath: String
         get() = context.filesDir.absolutePath + "/assistant_default_values"
 
-    val ringtonePath: String
-        get() = context.filesDir.absolutePath + "/share/sounds/linphone/rings/notes_of_the_optimistic.mkv"
+    val ringtonesPath: String
+        get() = context.filesDir.absolutePath + "/share/sounds/linphone/rings/"
+
+    val defaultRingtonePath: String
+        get() = ringtonesPath + "notes_of_the_optimistic.mkv"
 
     val userCertificatesPath: String
         get() = context.filesDir.absolutePath + "/user-certs"
