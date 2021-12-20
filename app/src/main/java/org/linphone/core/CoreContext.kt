@@ -295,7 +295,8 @@ class CoreContext(val context: Context, coreConfig: Config) {
             if (Compatibility.hasTelecomManagerPermissions(context)) {
                 Log.i("[Context] Creating Telecom Helper, disabling audio focus requests in AudioHelper")
                 core.config.setBool("audio", "android_disable_audio_focus_requests", true)
-                TelecomHelper.create(context)
+                val telecomHelper = TelecomHelper.required(context)
+                Log.i("[Context] Telecom Helper created, account is ${if (telecomHelper.isAccountEnabled()) "enabled" else "disabled"}")
             } else {
                 Log.w("[Context] Can't create Telecom Helper, permissions have been revoked")
                 corePreferences.useTelecomManager = false
