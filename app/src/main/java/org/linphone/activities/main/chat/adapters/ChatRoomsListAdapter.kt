@@ -116,6 +116,6 @@ private class ChatRoomDiffCallback : DiffUtil.ItemCallback<ChatRoomViewModel>() 
         oldItem: ChatRoomViewModel,
         newItem: ChatRoomViewModel
     ): Boolean {
-        return newItem.unreadMessagesCount.value == 0
+        return false // To force redraw when contacts are updated
     }
 }
