@@ -139,21 +139,6 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
             }
         )
         binding.slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
-        /*binding.slidingPane.addPanelSlideListener(object : SlidingPaneLayout.PanelSlideListener {
-            override fun onPanelSlide(panel: View, slideOffset: Float) { }
-
-            override fun onPanelOpened(panel: View) {
-                if (binding.slidingPane.isSlideable) {
-                    (requireActivity() as MainActivity).hideTabsFragment()
-                }
-            }
-
-            override fun onPanelClosed(panel: View) {
-                if (binding.slidingPane.isSlideable) {
-                    (requireActivity() as MainActivity).showTabsFragment()
-                }
-            }
-        })*/
 
         /* End of shared view model & sliding pane related */
 
