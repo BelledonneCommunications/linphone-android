@@ -124,7 +124,7 @@ class NotificationsManager(private val context: Context) {
                 return
             }
 
-            when (state) {
+            when (call.state) {
                 Call.State.IncomingEarlyMedia, Call.State.IncomingReceived -> displayIncomingCallNotification(call)
                 Call.State.End, Call.State.Error -> dismissCallNotification(call)
                 Call.State.Released -> {

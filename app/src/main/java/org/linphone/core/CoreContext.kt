@@ -286,8 +286,6 @@ class CoreContext(val context: Context, coreConfig: Config) {
     fun start(isPush: Boolean = false) {
         Log.i("[Context] Starting")
 
-        notificationsManager.onCoreReady()
-
         core.addListener(listener)
 
         // CoreContext listener must be added first!
@@ -308,14 +306,18 @@ class CoreContext(val context: Context, coreConfig: Config) {
             core.enterBackground()
         }
 
-        core.start()
-
         configureCore()
+
+        core.start()
 
         initPhoneStateListener()
 
+        notificationsManager.onCoreReady()
+
         EmojiCompat.init(BundledEmojiCompatConfig(context))
         collator.strength = Collator.NO_DECOMPOSITION
+
+        Log.i("[Context] Started")
     }
 
     fun stop() {
