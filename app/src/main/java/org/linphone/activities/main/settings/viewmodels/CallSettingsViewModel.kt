@@ -20,21 +20,39 @@
 package org.linphone.activities.main.settings.viewmodels
 
 import androidx.lifecycle.MutableLiveData
+import java.io.File
+import java.util.*
+import kotlin.collections.ArrayList
 import org.linphone.R
 import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.core.MediaEncryption
 import org.linphone.core.tools.Log
 import org.linphone.mediastream.Version
 import org.linphone.telecom.TelecomHelper
+import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
 class CallSettingsViewModel : GenericSettingsViewModel() {
     val deviceRingtoneListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
-            core.ring = if (newValue) null else prefs.ringtonePath
+            core.ring = if (newValue) null else prefs.defaultRingtonePath
         }
     }
     val deviceRingtone = MutableLiveData<Boolean>()
+
+    val ringtoneListener = object : SettingListenerStub() {
+        override fun onListValueChanged(position: Int) {
+            if (position == 0) {
+                core.ring = null
+            } else {
+                core.ring = ringtoneValues[position]
+            }
+        }
+    }
+    val ringtoneIndex = MutableLiveData<Int>()
+    val ringtoneLabels = MutableLiveData<ArrayList<String>>()
+    private val ringtoneValues = arrayListOf<String>()
+    val showRingtonesList = MutableLiveData<Boolean>()
 
     val vibrateOnIncomingCallListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
@@ -212,7 +230,10 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
     val goToAndroidNotificationSettingsEvent = MutableLiveData<Event<Boolean>>()
 
     init {
+        initRingtonesList()
         deviceRingtone.value = core.ring == null
+        showRingtonesList.value = prefs.showAllRingtones
+
         vibrateOnIncomingCall.value = core.isVibrationOnIncomingCallEnabled
 
         initEncryptionList()
@@ -236,6 +257,28 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
         acceptEarlyMedia.value = prefs.acceptEarlyMedia
         ringDuringEarlyMedia.value = core.ringDuringIncomingEarlyMedia
         pauseCallsWhenAudioFocusIsLost.value = prefs.pauseCallsWhenAudioFocusIsLost
+    }
+
+    private fun initRingtonesList() {
+        val labels = arrayListOf<String>()
+        labels.add(AppUtils.getString(R.string.call_settings_device_ringtone_title))
+        ringtoneValues.add("")
+
+        val directory = File(prefs.ringtonesPath)
+        val files = directory.listFiles()
+        for (ringtone in files.orEmpty()) {
+            if (ringtone.absolutePath.endsWith(".mkv")) {
+                val name = ringtone.name
+                    .substringBefore(".")
+                    .replace("_", " ")
+                    .capitalize(Locale.getDefault())
+                labels.add(name)
+                ringtoneValues.add(ringtone.absolutePath)
+            }
+        }
+
+        ringtoneLabels.value = labels
+        ringtoneIndex.value = if (core.ring == null) 0 else ringtoneValues.indexOf(core.ring)
     }
 
     private fun initEncryptionList() {

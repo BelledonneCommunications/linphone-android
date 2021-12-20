@@ -402,6 +402,7 @@
 
     <!-- Call settings -->
     <string name="call_settings_device_ringtone_title">Use device ringtone</string>
+    <string name="call_settings_ringtones_title">Ringtone</string>
     <string name="call_settings_vibrate_title">Vibrate while incoming call is ringing</string>
     <string name="call_settings_encryption_title">Media encryption</string>
     <string name="call_settings_media_encryption_none">None</string>
