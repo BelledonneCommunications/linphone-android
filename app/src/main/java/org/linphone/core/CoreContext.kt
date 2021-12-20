@@ -330,6 +330,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
         if (TelecomHelper.exists()) {
             Log.i("[Context] Destroying telecom helper")
             TelecomHelper.get().destroy()
+            TelecomHelper.destroy()
         }
 
         core.stop()
