@@ -19,16 +19,6 @@ buildscript {
     }
 }
 
-allprojects {
-    repositories {
-        mavenCentral()
-        google()
-        maven {
-            url "https://www.jitpack.io"
-        } // for com.github.chrisbanes:PhotoView
-    }
-}
-
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
