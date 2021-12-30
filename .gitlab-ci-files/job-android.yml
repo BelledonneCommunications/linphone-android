@@ -7,6 +7,7 @@ job-android:
   before_script:
     - if ! [ -z ${SCP_PRIVATE_KEY+x} ]; then eval $(ssh-agent -s); fi
     - if ! [ -z ${SCP_PRIVATE_KEY+x} ]; then echo "$SCP_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null; fi
+    - echo "$ANDROID_SETTINGS_GRADLE" > settings.gradle
 
   script:
     - sdkmanager
