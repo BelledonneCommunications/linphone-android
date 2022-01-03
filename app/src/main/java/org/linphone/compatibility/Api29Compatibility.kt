@@ -99,7 +99,9 @@ class Api29Compatibility {
         }
 
         suspend fun addImageToMediaStore(context: Context, content: Content): Boolean {
-            val filePath = content.filePath
+            val plainFilePath = content.plainFilePath.orEmpty()
+            val isVfsEncrypted = plainFilePath.isNotEmpty()
+            val filePath = if (isVfsEncrypted) plainFilePath else content.filePath
             if (filePath == null) {
                 Log.e("[Media Store] Content doesn't have a file path!")
                 return false
@@ -119,6 +121,11 @@ class Api29Compatibility {
             }
             val collection = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
             val mediaStoreFilePath = addContentValuesToCollection(context, filePath, collection, values, MediaStore.Images.Media.IS_PENDING)
+
+            if (isVfsEncrypted) {
+                Log.w("[Media Store] Content was encrypted, delete plain version: $plainFilePath")
+                FileUtils.deleteFile(plainFilePath)
+            }
             if (mediaStoreFilePath.isNotEmpty()) {
                 content.userData = mediaStoreFilePath
                 return true
@@ -127,7 +134,9 @@ class Api29Compatibility {
         }
 
         suspend fun addVideoToMediaStore(context: Context, content: Content): Boolean {
-            val filePath = content.filePath
+            val plainFilePath = content.plainFilePath.orEmpty()
+            val isVfsEncrypted = plainFilePath.isNotEmpty()
+            val filePath = if (isVfsEncrypted) plainFilePath else content.filePath
             if (filePath == null) {
                 Log.e("[Media Store] Content doesn't have a file path!")
                 return false
@@ -148,6 +157,11 @@ class Api29Compatibility {
             }
             val collection = MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
             val mediaStoreFilePath = addContentValuesToCollection(context, filePath, collection, values, MediaStore.Video.Media.IS_PENDING)
+
+            if (isVfsEncrypted) {
+                Log.w("[Media Store] Content was encrypted, delete plain version: $plainFilePath")
+                FileUtils.deleteFile(plainFilePath)
+            }
             if (mediaStoreFilePath.isNotEmpty()) {
                 content.userData = mediaStoreFilePath
                 return true
@@ -156,7 +170,9 @@ class Api29Compatibility {
         }
 
         suspend fun addAudioToMediaStore(context: Context, content: Content): Boolean {
-            val filePath = content.filePath
+            val plainFilePath = content.plainFilePath.orEmpty()
+            val isVfsEncrypted = plainFilePath.isNotEmpty()
+            val filePath = if (isVfsEncrypted) plainFilePath else content.filePath
             if (filePath == null) {
                 Log.e("[Media Store] Content doesn't have a file path!")
                 return false
@@ -178,6 +194,11 @@ class Api29Compatibility {
             val collection = MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
 
             val mediaStoreFilePath = addContentValuesToCollection(context, filePath, collection, values, MediaStore.Audio.Media.IS_PENDING)
+
+            if (isVfsEncrypted) {
+                Log.w("[Media Store] Content was encrypted, delete plain version: $plainFilePath")
+                FileUtils.deleteFile(plainFilePath)
+            }
             if (mediaStoreFilePath.isNotEmpty()) {
                 content.userData = mediaStoreFilePath
                 return true

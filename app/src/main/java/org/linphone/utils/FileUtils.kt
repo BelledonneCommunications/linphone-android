@@ -470,5 +470,27 @@ class FileUtils {
             }
             return false
         }
+
+        fun openMediaStoreFile(
+            activity: Activity,
+            contentFilePath: String,
+            newTask: Boolean = false
+        ): Boolean {
+            val intent = Intent(Intent.ACTION_VIEW)
+            val contentUri: Uri = Uri.parse(contentFilePath)
+            intent.data = contentUri
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            if (newTask) {
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+
+            try {
+                activity.startActivity(intent)
+                return true
+            } catch (anfe: ActivityNotFoundException) {
+                Log.e("[File Viewer] Can't open media store export in third party app: $anfe")
+            }
+            return false
+        }
     }
 }
