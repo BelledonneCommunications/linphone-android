@@ -99,6 +99,27 @@ class FileUtils {
             return type?.startsWith("audio/") ?: false
         }
 
+        fun clearExistingPlainFiles() {
+            for (file in coreContext.context.filesDir.listFiles().orEmpty()) {
+                if (file.path.endsWith(VFS_PLAIN_FILE_EXTENSION)) {
+                    Log.w("[File Utils] Found forgotten plain file: ${file.path}, deleting it")
+                    deleteFile(file.path)
+                }
+            }
+            for (file in coreContext.context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)?.listFiles().orEmpty()) {
+                if (file.path.endsWith(VFS_PLAIN_FILE_EXTENSION)) {
+                    Log.w("[File Utils] Found forgotten plain file: ${file.path}, deleting it")
+                    deleteFile(file.path)
+                }
+            }
+            for (file in coreContext.context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)?.listFiles().orEmpty()) {
+                if (file.path.endsWith(VFS_PLAIN_FILE_EXTENSION)) {
+                    Log.w("[File Utils] Found forgotten plain file: ${file.path}, deleting it")
+                    deleteFile(file.path)
+                }
+            }
+        }
+
         fun getFileStorageDir(isPicture: Boolean = false): File {
             var path: File? = null
             if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
