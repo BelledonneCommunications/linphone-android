@@ -255,7 +255,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
             override fun onScrolledToEnd() {
                 viewModel.isUserScrollingUp.value = false
-                if (viewModel.unreadMessagesCount.value != 0) {
+                if (viewModel.unreadMessagesCount.value != 0 && coreContext.notificationsManager.currentlyDisplayedChatRoomAddress != null) {
                     Log.i("[Chat Room] User has scrolled to the latest message, mark chat room as read")
                     viewModel.chatRoom.markAsRead()
                 }
@@ -649,6 +649,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
     }
 
     override fun goBack() {
+        coreContext.notificationsManager.currentlyDisplayedChatRoomAddress = null
         if (!findNavController().popBackStack()) {
             if (sharedViewModel.isSlidingPaneSlideable.value == true) {
                 if (_adapter != null) {
