@@ -317,6 +317,10 @@ class CoreContext(val context: Context, coreConfig: Config) {
         EmojiCompat.init(BundledEmojiCompatConfig(context))
         collator.strength = Collator.NO_DECOMPOSITION
 
+        if (corePreferences.vfsEnabled) {
+            FileUtils.clearExistingPlainFiles()
+        }
+
         Log.i("[Context] Started")
     }
 
