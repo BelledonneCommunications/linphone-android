@@ -44,7 +44,6 @@ import org.linphone.utils.ImageUtils
 class ChatMessageContentData(
     private val chatMessage: ChatMessage,
     private val contentIndex: Int,
-
 ) {
     var listener: OnContentClickedListener? = null
 
@@ -144,13 +143,7 @@ class ChatMessageContentData(
     fun destroy() {
         scope.cancel()
 
-        val path = filePath.value.orEmpty()
-        if (path.isNotEmpty() && isFileEncrypted) {
-            Log.i("[Content] Deleting file used for preview: $path")
-            FileUtils.deleteFile(path)
-            filePath.value = ""
-        }
-
+        deletePlainFilePath()
         chatMessage.removeListener(chatMessageListener)
 
         if (this::voiceRecordingPlayer.isInitialized) {
@@ -180,9 +173,22 @@ class ChatMessageContentData(
         listener?.onContentClicked(getContent())
     }
 
+    private fun deletePlainFilePath() {
+        val path = filePath.value.orEmpty()
+        if (path.isNotEmpty() && isFileEncrypted) {
+            Log.i("[Content] Deleting file used for preview: $path")
+            FileUtils.deleteFile(path)
+            filePath.value = ""
+        }
+    }
+
     private fun updateContent() {
+        Log.i("[Content] Updating content")
+        deletePlainFilePath()
+
         val content = getContent()
         isFileEncrypted = content.isFileEncrypted
+        Log.i("[Content] Is content encrypted ? $isFileEncrypted")
 
         filePath.value = ""
         fileName.value = if (content.name.isNullOrEmpty() && !content.filePath.isNullOrEmpty()) {
@@ -198,7 +204,7 @@ class ChatMessageContentData(
         downloadLabel.value = spannable
 
         if (content.isFile || (content.isFileTransfer && chatMessage.isOutgoing)) {
-            Log.i("[Content] Is content encrypted ? $isFileEncrypted")
+            Log.i("[Content] Content is encrypted, requesting plain file path")
             val path = if (isFileEncrypted) content.plainFilePath else content.filePath ?: ""
             downloadable.value = content.filePath.orEmpty().isEmpty()
 
@@ -320,8 +326,7 @@ class ChatMessageContentData(
         }
         voiceRecordingPlayer.addListener(playerListener)
 
-        val content = getContent()
-        val path = if (content.isFileEncrypted) content.plainFilePath else content.filePath ?: ""
+        val path = filePath.value
         voiceRecordingPlayer.open(path.orEmpty())
         voiceRecordDuration.value = voiceRecordingPlayer.duration
         formattedDuration.value = SimpleDateFormat("mm:ss", Locale.getDefault()).format(voiceRecordingPlayer.duration) // is already in milliseconds

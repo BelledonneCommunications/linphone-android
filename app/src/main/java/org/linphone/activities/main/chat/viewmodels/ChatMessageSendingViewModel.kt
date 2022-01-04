@@ -127,6 +127,7 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
 
     override fun onCleared() {
         attachments.value.orEmpty().forEach(ChatMessageAttachmentData::destroy)
+        pendingChatMessageToReplyTo.value?.destroy()
 
         if (recorder.state != RecorderState.Closed) {
             recorder.close()

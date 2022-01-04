@@ -101,6 +101,7 @@ class Api29Compatibility {
         suspend fun addImageToMediaStore(context: Context, content: Content): Boolean {
             val plainFilePath = content.plainFilePath.orEmpty()
             val isVfsEncrypted = plainFilePath.isNotEmpty()
+            Log.w("[Media Store] Content is encrypted, requesting plain file path")
             val filePath = if (isVfsEncrypted) plainFilePath else content.filePath
             if (filePath == null) {
                 Log.e("[Media Store] Content doesn't have a file path!")
@@ -136,6 +137,7 @@ class Api29Compatibility {
         suspend fun addVideoToMediaStore(context: Context, content: Content): Boolean {
             val plainFilePath = content.plainFilePath.orEmpty()
             val isVfsEncrypted = plainFilePath.isNotEmpty()
+            Log.w("[Media Store] Content is encrypted, requesting plain file path")
             val filePath = if (isVfsEncrypted) plainFilePath else content.filePath
             if (filePath == null) {
                 Log.e("[Media Store] Content doesn't have a file path!")
@@ -172,6 +174,7 @@ class Api29Compatibility {
         suspend fun addAudioToMediaStore(context: Context, content: Content): Boolean {
             val plainFilePath = content.plainFilePath.orEmpty()
             val isVfsEncrypted = plainFilePath.isNotEmpty()
+            Log.w("[Media Store] Content is encrypted, requesting plain file path")
             val filePath = if (isVfsEncrypted) plainFilePath else content.filePath
             if (filePath == null) {
                 Log.e("[Media Store] Content doesn't have a file path!")
