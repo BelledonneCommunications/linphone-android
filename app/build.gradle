@@ -8,7 +8,7 @@ plugins {
 def appVersionName = "4.6.0"
 // Uncomment for release
 // def appVersionCode = 40600 // 4.06.00
-def appVersionCode = 40591 // 4.05.91
+def appVersionCode = 40592 // 4.05.92
 
 static def getPackageName() {
     return "org.linphone"
