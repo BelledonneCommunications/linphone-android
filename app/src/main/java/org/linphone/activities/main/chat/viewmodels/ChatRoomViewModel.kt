@@ -113,6 +113,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         override fun onContactsUpdated() {
             Log.i("[Chat Room] Contacts have changed")
             contactLookup()
+            lastMessageText.value = formatLastMessage(chatRoom.lastMessageInHistory)
         }
     }
 
@@ -215,7 +216,6 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         chatRoom.addListener(chatRoomListener)
         coreContext.contactsManager.addListener(contactsUpdatedListener)
 
-        lastMessageText.value = formatLastMessage(chatRoom.lastMessageInHistory)
         unreadMessagesCount.value = chatRoom.unreadMessagesCount
         lastUpdate.value = TimestampUtils.toString(chatRoom.lastUpdateTime, true)
 
@@ -226,6 +226,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
         contactLookup()
         updateParticipants()
+        lastMessageText.value = formatLastMessage(chatRoom.lastMessageInHistory)
 
         callInProgress.value = chatRoom.core.callsNb > 0
         updateRemotesComposing()
