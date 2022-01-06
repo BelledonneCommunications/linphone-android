@@ -33,7 +33,7 @@ class ContactsSettingsViewModel : GenericSettingsViewModel() {
 
     val friendListSubscribeListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
-            core.enableFriendListSubscription(newValue)
+            core.isFriendListSubscriptionEnabled = newValue
         }
     }
     val friendListSubscribe = MutableLiveData<Boolean>()

@@ -160,7 +160,7 @@ class DialerViewModel : LogsUploadViewModel() {
     fun updateShowVideoPreview() {
         val videoPreview = corePreferences.videoPreview
         showPreview.value = videoPreview
-        coreContext.core.enableVideoPreview(videoPreview)
+        coreContext.core.isVideoPreviewEnabled = videoPreview
     }
 
     fun eraseLastChar() {

@@ -253,8 +253,8 @@ class ControlsViewModel : ViewModel() {
         }
 
         somethingClickedEvent.value = Event(true)
-        val micEnabled = coreContext.core.micEnabled()
-        coreContext.core.enableMic(!micEnabled)
+        val micEnabled = coreContext.core.isMicEnabled
+        coreContext.core.isMicEnabled = !micEnabled
         updateMuteMicState()
     }
 
@@ -304,7 +304,7 @@ class ControlsViewModel : ViewModel() {
 
             isVideoUpdateInProgress.value = true
             val params = core.createCallParams(currentCall)
-            params?.enableVideo(!currentCall.currentParams.videoEnabled())
+            params?.isVideoEnabled = !currentCall.currentParams.isVideoEnabled
             currentCall.update(params)
         }
     }
@@ -386,7 +386,7 @@ class ControlsViewModel : ViewModel() {
         somethingClickedEvent.value = Event(true)
 
         val core = coreContext.core
-        val currentCallVideoEnabled = core.currentCall?.currentParams?.videoEnabled() ?: false
+        val currentCallVideoEnabled = core.currentCall?.currentParams?.isVideoEnabled ?: false
 
         val params = core.createConferenceParams()
         params.isVideoEnabled = currentCallVideoEnabled
@@ -419,7 +419,7 @@ class ControlsViewModel : ViewModel() {
     }
 
     fun updateMuteMicState() {
-        isMicrophoneMuted.value = !PermissionHelper.get().hasRecordAudioPermission() || !coreContext.core.micEnabled()
+        isMicrophoneMuted.value = !PermissionHelper.get().hasRecordAudioPermission() || !coreContext.core.isMicEnabled
         isMuteMicrophoneEnabled.value = coreContext.core.currentCall != null || coreContext.core.conference?.isIn == true
     }
 
@@ -465,7 +465,7 @@ class ControlsViewModel : ViewModel() {
     private fun updateVideoAvailable() {
         val core = coreContext.core
         val currentCall = core.currentCall
-        isVideoAvailable.value = (core.videoCaptureEnabled() || core.videoPreviewEnabled()) &&
+        isVideoAvailable.value = (core.isVideoCaptureEnabled || core.isVideoPreviewEnabled) &&
             (
                 (currentCall != null && !currentCall.mediaInProgress()) ||
                     core.conference?.isIn == true

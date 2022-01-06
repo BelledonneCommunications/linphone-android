@@ -192,7 +192,7 @@ class NativeContact(val nativeId: String, private val lookupKey: String? = null)
         var created = false
         if (friend == null) {
             val friend = coreContext.core.createFriend()
-            friend.enableSubscribes(false)
+            friend.isSubscribesEnabled = false
             friend.incSubscribePolicy = SubscribePolicy.SPDeny
             friend.refKey = nativeId
             friend.userData = this

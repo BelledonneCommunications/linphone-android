@@ -96,7 +96,7 @@ class Api31Compatibility {
             val roundPicture = ImageUtils.getRoundBitmapFromUri(context, pictureUri)
             val displayName = contact?.fullName ?: LinphoneUtils.getDisplayName(call.remoteAddress)
 
-            val isVideo = call.currentParams.videoEnabled()
+            val isVideo = call.currentParams.isVideoEnabled
             val iconResourceId: Int = when (call.state) {
                 Call.State.Paused, Call.State.Pausing, Call.State.PausedByRemote -> {
                     R.drawable.topbar_call_paused_notification

@@ -61,7 +61,7 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
         }
 
         val chatRoom: ChatRoom? = sharedViewModel.selectedGroupChatRoom.value
-        isSecure = chatRoom?.currentParams?.encryptionEnabled() ?: false
+        isSecure = chatRoom?.currentParams?.isEncryptionEnabled ?: false
 
         viewModel = ViewModelProvider(
             this,

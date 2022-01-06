@@ -203,7 +203,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         }
 
         override fun onEphemeralEvent(chatRoom: ChatRoom, eventLog: EventLog) {
-            ephemeralEnabled.value = chatRoom.ephemeralEnabled()
+            ephemeralEnabled.value = chatRoom.isEphemeralEnabled
         }
 
         override fun onParticipantAdminStatusChanged(chatRoom: ChatRoom, eventLog: EventLog) {
@@ -222,7 +222,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         subject.value = chatRoom.subject
         updateSecurityIcon()
         meAdmin.value = chatRoom.me?.isAdmin ?: false
-        ephemeralEnabled.value = chatRoom.ephemeralEnabled()
+        ephemeralEnabled.value = chatRoom.isEphemeralEnabled
 
         contactLookup()
         updateParticipants()
