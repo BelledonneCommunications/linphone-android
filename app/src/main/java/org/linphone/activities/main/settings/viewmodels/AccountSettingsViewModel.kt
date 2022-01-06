@@ -315,7 +315,7 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
     val iceListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
             val params = account.params.clone()
-            params.natPolicy?.enableIce(newValue)
+            params.natPolicy?.isIceEnabled = newValue
             account.params = params
         }
     }
@@ -437,7 +437,7 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
         proxy.value = params.serverAddress?.asStringUriOnly()
         outboundProxy.value = params.isOutboundProxyEnabled
         stunServer.value = params.natPolicy?.stunServer
-        ice.value = params.natPolicy?.iceEnabled()
+        ice.value = params.natPolicy?.isIceEnabled
         avpf.value = params.avpfMode == AVPFMode.Enabled
         avpfRrInterval.value = params.avpfRrInterval
         expires.value = params.expires

@@ -76,14 +76,14 @@ class QrCodeFragment : GenericFragment<AssistantQrCodeFragmentBinding>() {
         super.onResume()
 
         coreContext.core.nativePreviewWindowId = binding.qrCodeCaptureTexture
-        coreContext.core.enableQrcodeVideoPreview(true)
-        coreContext.core.enableVideoPreview(true)
+        coreContext.core.isQrcodeVideoPreviewEnabled = true
+        coreContext.core.isVideoPreviewEnabled = true
     }
 
     override fun onPause() {
         coreContext.core.nativePreviewWindowId = null
-        coreContext.core.enableQrcodeVideoPreview(false)
-        coreContext.core.enableVideoPreview(false)
+        coreContext.core.isQrcodeVideoPreviewEnabled = false
+        coreContext.core.isVideoPreviewEnabled = false
 
         super.onPause()
     }

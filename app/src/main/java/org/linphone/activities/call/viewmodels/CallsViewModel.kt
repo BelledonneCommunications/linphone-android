@@ -75,11 +75,11 @@ class CallsViewModel : ViewModel() {
             } else if (call.state == Call.State.UpdatedByRemote) {
                 // If the correspondent asks to turn on video while audio call,
                 // defer update until user has chosen whether to accept it or not
-                val remoteVideo = call.remoteParams?.videoEnabled() ?: false
-                val localVideo = call.currentParams.videoEnabled()
+                val remoteVideo = call.remoteParams?.isVideoEnabled ?: false
+                val localVideo = call.currentParams.isVideoEnabled
                 val autoAccept = call.core.videoActivationPolicy.automaticallyAccept
                 if (remoteVideo && !localVideo && !autoAccept) {
-                    if (coreContext.core.videoCaptureEnabled() || coreContext.core.videoDisplayEnabled()) {
+                    if (coreContext.core.isVideoCaptureEnabled || coreContext.core.isVideoDisplayEnabled) {
                         call.deferUpdate()
                         callUpdateEvent.value = Event(call)
                     } else {

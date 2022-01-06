@@ -139,7 +139,7 @@ open class CallViewModel(val call: Call) : GenericContactViewModel(call.remoteAd
     }
 
     fun takeScreenshot() {
-        if (call.currentParams.videoEnabled()) {
+        if (call.currentParams.isVideoEnabled) {
             val fileName = System.currentTimeMillis().toString() + ".jpeg"
             call.takeVideoSnapshot(FileUtils.getFileStoragePath(fileName).absolutePath)
         }

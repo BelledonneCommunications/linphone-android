@@ -31,8 +31,8 @@ import org.linphone.core.tools.Log
 class VideoSettingsViewModel : GenericSettingsViewModel() {
     val enableVideoListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
-            core.enableVideoCapture(newValue)
-            core.enableVideoDisplay(newValue)
+            core.isVideoCaptureEnabled = newValue
+            core.isVideoDisplayEnabled = newValue
             if (!newValue) {
                 tabletPreview.value = false
                 initiateCall.value = false
@@ -115,7 +115,7 @@ class VideoSettingsViewModel : GenericSettingsViewModel() {
     val videoCodecs = MutableLiveData<ArrayList<ViewDataBinding>>()
 
     init {
-        enableVideo.value = core.videoEnabled() && core.videoSupported()
+        enableVideo.value = core.isVideoEnabled && core.videoSupported()
         tabletPreview.value = prefs.videoPreview
         isTablet.value = coreContext.context.resources.getBoolean(R.bool.isTablet)
         initiateCall.value = core.videoActivationPolicy.automaticallyInitiate

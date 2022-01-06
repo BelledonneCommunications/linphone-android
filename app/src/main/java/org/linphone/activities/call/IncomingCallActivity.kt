@@ -139,7 +139,7 @@ class IncomingCallActivity : GenericActivity() {
             permissionsRequiredList.add(Manifest.permission.RECORD_AUDIO)
         }
 
-        if (viewModel.call.currentParams.videoEnabled() && !PermissionHelper.get().hasCameraPermission()) {
+        if (viewModel.call.currentParams.isVideoEnabled && !PermissionHelper.get().hasCameraPermission()) {
             Log.i("[Incoming Call Activity] Asking for CAMERA permission")
             permissionsRequiredList.add(Manifest.permission.CAMERA)
         }

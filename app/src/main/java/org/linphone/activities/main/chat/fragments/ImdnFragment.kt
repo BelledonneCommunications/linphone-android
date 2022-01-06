@@ -61,7 +61,7 @@ class ImdnFragment : SecureFragment<ChatRoomImdnFragmentBinding>() {
             return
         }
 
-        isSecure = chatRoom.currentParams.encryptionEnabled()
+        isSecure = chatRoom.currentParams.isEncryptionEnabled
 
         if (arguments != null) {
             val messageId = arguments?.getString("MessageId")

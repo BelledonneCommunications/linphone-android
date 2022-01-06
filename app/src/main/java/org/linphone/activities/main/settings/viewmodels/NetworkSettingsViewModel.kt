@@ -26,14 +26,14 @@ import org.linphone.activities.main.settings.SettingListenerStub
 class NetworkSettingsViewModel : GenericSettingsViewModel() {
     val wifiOnlyListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
-            core.enableWifiOnly(newValue)
+            core.isWifiOnlyEnabled = newValue
         }
     }
     val wifiOnly = MutableLiveData<Boolean>()
 
     val allowIpv6Listener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
-            core.enableIpv6(newValue)
+            core.isIpv6Enabled = newValue
         }
     }
     val allowIpv6 = MutableLiveData<Boolean>()
@@ -59,8 +59,8 @@ class NetworkSettingsViewModel : GenericSettingsViewModel() {
     val sipPort = MutableLiveData<Int>()
 
     init {
-        wifiOnly.value = core.wifiOnlyEnabled()
-        allowIpv6.value = core.ipv6Enabled()
+        wifiOnly.value = core.isWifiOnlyEnabled
+        allowIpv6.value = core.isIpv6Enabled
         randomPorts.value = getTransportPort() == -1
         sipPort.value = getTransportPort()
     }

@@ -41,7 +41,7 @@ class AudioSettingsViewModel : GenericSettingsViewModel() {
 
     val echoCancellationListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
-            core.enableEchoCancellation(newValue)
+            core.isEchoCancellationEnabled = newValue
         }
     }
     val echoCancellation = MutableLiveData<Boolean>()
@@ -81,7 +81,7 @@ class AudioSettingsViewModel : GenericSettingsViewModel() {
 
     val adaptiveRateControlListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
-            core.enableAdaptiveRateControl(newValue)
+            core.isAdaptiveRateControlEnabled = newValue
         }
     }
     val adaptiveRateControl = MutableLiveData<Boolean>()
@@ -153,9 +153,9 @@ class AudioSettingsViewModel : GenericSettingsViewModel() {
     val audioCodecs = MutableLiveData<ArrayList<ViewDataBinding>>()
 
     init {
-        echoCancellation.value = core.echoCancellationEnabled()
-        adaptiveRateControl.value = core.adaptiveRateControlEnabled()
-        echoCalibration.value = if (core.echoCancellationEnabled()) {
+        echoCancellation.value = core.isEchoCancellationEnabled
+        adaptiveRateControl.value = core.isAdaptiveRateControlEnabled
+        echoCalibration.value = if (core.isEchoCancellationEnabled) {
             prefs.getString(R.string.audio_settings_echo_cancellation_calibration_value).format(prefs.echoCancellerCalibration)
         } else {
             prefs.getString(R.string.audio_settings_echo_canceller_calibration_summary)

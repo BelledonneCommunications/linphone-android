@@ -126,8 +126,8 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
                     if (call.state == Call.State.StreamsRunning) {
                         dialog?.dismiss()
                     } else if (call.state == Call.State.UpdatedByRemote) {
-                        if (coreContext.core.videoCaptureEnabled() || coreContext.core.videoDisplayEnabled()) {
-                            if (call.currentParams.videoEnabled() != call.remoteParams?.videoEnabled()) {
+                        if (coreContext.core.isVideoCaptureEnabled || coreContext.core.isVideoDisplayEnabled) {
+                            if (call.currentParams.isVideoEnabled != call.remoteParams?.isVideoEnabled) {
                                 showCallVideoUpdateDialog(call)
                             }
                         } else {

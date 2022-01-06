@@ -206,7 +206,7 @@ class Api26Compatibility {
                 }
                 Call.State.OutgoingRinging, Call.State.OutgoingProgress, Call.State.OutgoingInit, Call.State.OutgoingEarlyMedia -> {
                     stringResourceId = R.string.call_notification_outgoing
-                    iconResourceId = if (call.params.videoEnabled()) {
+                    iconResourceId = if (call.params.isVideoEnabled) {
                         R.drawable.topbar_videocall_notification
                     } else {
                         R.drawable.topbar_call_notification
@@ -214,7 +214,7 @@ class Api26Compatibility {
                 }
                 else -> {
                     stringResourceId = R.string.call_notification_active
-                    iconResourceId = if (call.currentParams.videoEnabled()) {
+                    iconResourceId = if (call.currentParams.isVideoEnabled) {
                         R.drawable.topbar_videocall_notification
                     } else {
                         R.drawable.topbar_call_notification
