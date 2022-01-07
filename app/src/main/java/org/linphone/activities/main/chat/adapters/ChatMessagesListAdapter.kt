@@ -272,9 +272,8 @@ class ChatMessagesListAdapter(
 
                         val itemSize = AppUtils.getDimension(R.dimen.chat_message_popup_item_height).toInt()
                         var totalSize = itemSize * 7
-                        if (chatMessage.chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) ||
-                            chatMessage.state == ChatMessage.State.NotDelivered
-                        ) { // No message id
+                        if (chatMessage.chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
+                            // No message id
                             popupView.imdnHidden = true
                             totalSize -= itemSize
                         }
