@@ -29,6 +29,7 @@ import android.provider.MediaStore
 import android.view.*
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.PopupWindow
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
@@ -226,32 +227,48 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 }
             )
 
-        if (corePreferences.allowSwipeActionOnChatMessage) {
-            // Swipe action
-            val swipeConfiguration = RecyclerViewSwipeConfiguration()
-            swipeConfiguration.leftToRightAction = RecyclerViewSwipeConfiguration.Action(
-                icon = R.drawable.menu_reply,
-                preventFor = ChatMessagesListAdapter.EventViewHolder::class.java
-            )
-            val swipeListener = object : RecyclerViewSwipeListener {
-                override fun onLeftToRightSwipe(viewHolder: RecyclerView.ViewHolder) {
-                    adapter.notifyItemChanged(viewHolder.bindingAdapterPosition)
+        // Swipe action
+        val swipeConfiguration = RecyclerViewSwipeConfiguration()
+        // Reply action can only be done on a ChatMessageEventLog
+        swipeConfiguration.leftToRightAction = RecyclerViewSwipeConfiguration.Action(
+            text = requireContext().getString(R.string.chat_message_context_menu_reply),
+            backgroundColor = ContextCompat.getColor(requireContext(), R.color.light_grey_color),
+            preventFor = ChatMessagesListAdapter.EventViewHolder::class.java
+        )
+        // Delete action can be done on any EventLog
+        swipeConfiguration.rightToLeftAction = RecyclerViewSwipeConfiguration.Action(
+            text = requireContext().getString(R.string.chat_message_context_menu_delete),
+            backgroundColor = ContextCompat.getColor(requireContext(), R.color.red_color)
+        )
+        val swipeListener = object : RecyclerViewSwipeListener {
+            override fun onLeftToRightSwipe(viewHolder: RecyclerView.ViewHolder) {
+                adapter.notifyItemChanged(viewHolder.bindingAdapterPosition)
 
-                    val chatMessageEventLog = adapter.currentList[viewHolder.bindingAdapterPosition]
-                    val chatMessage = chatMessageEventLog.eventLog.chatMessage
-                    if (chatMessage != null) {
-                        chatSendingViewModel.pendingChatMessageToReplyTo.value?.destroy()
-                        chatSendingViewModel.pendingChatMessageToReplyTo.value =
-                            ChatMessageData(chatMessage)
-                        chatSendingViewModel.isPendingAnswer.value = true
-                    }
+                val chatMessageEventLog = adapter.currentList[viewHolder.bindingAdapterPosition]
+                val chatMessage = chatMessageEventLog.eventLog.chatMessage
+                if (chatMessage != null) {
+                    chatSendingViewModel.pendingChatMessageToReplyTo.value?.destroy()
+                    chatSendingViewModel.pendingChatMessageToReplyTo.value =
+                        ChatMessageData(chatMessage)
+                    chatSendingViewModel.isPendingAnswer.value = true
                 }
-
-                override fun onRightToLeftSwipe(viewHolder: RecyclerView.ViewHolder) {}
             }
-            RecyclerViewSwipeUtils(ItemTouchHelper.RIGHT, swipeConfiguration, swipeListener)
-                .attachToRecyclerView(binding.chatMessagesList)
+
+            override fun onRightToLeftSwipe(viewHolder: RecyclerView.ViewHolder) {
+                val position = viewHolder.bindingAdapterPosition
+                val eventLog = adapter.currentList[position]
+                val chatMessage = eventLog.eventLog.chatMessage
+                if (chatMessage != null) {
+                    Log.i("[Chat Room] Deleting message $chatMessage at position $position")
+                    listViewModel.deleteMessage(chatMessage)
+                } else {
+                    Log.i("[Chat Room] Deleting event $eventLog at position $position")
+                    listViewModel.deleteEventLogs(arrayListOf(eventLog))
+                }
+            }
         }
+        RecyclerViewSwipeUtils(ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT, swipeConfiguration, swipeListener)
+            .attachToRecyclerView(binding.chatMessagesList)
 
         val chatScrollListener = object : ChatScrollListener(layoutManager) {
             override fun onLoadMore(totalItemsCount: Int) {

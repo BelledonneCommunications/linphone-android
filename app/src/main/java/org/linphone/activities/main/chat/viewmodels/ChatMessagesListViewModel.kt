@@ -158,27 +158,21 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
     }
 
     fun deleteMessage(chatMessage: ChatMessage) {
-        val position: Int = chatMessage.userData as Int
         LinphoneUtils.deleteFilesAttachedToChatMessage(chatMessage)
         chatRoom.deleteMessage(chatMessage)
 
-        val list = arrayListOf<EventLogData>()
-        list.addAll(events.value.orEmpty())
-        list.removeAt(position)
-        events.value = list
+        events.value.orEmpty().forEach(EventLogData::destroy)
+        events.value = getEvents()
     }
 
     fun deleteEventLogs(listToDelete: ArrayList<EventLogData>) {
-        val list = arrayListOf<EventLogData>()
-        list.addAll(events.value.orEmpty())
-
         for (eventLog in listToDelete) {
             LinphoneUtils.deleteFilesAttachedToEventLog(eventLog.eventLog)
             eventLog.eventLog.deleteFromDatabase()
-            list.remove(eventLog)
         }
 
-        events.value = list
+        events.value.orEmpty().forEach(EventLogData::destroy)
+        events.value = getEvents()
     }
 
     fun loadMoreData(totalItemsCount: Int) {
@@ -248,6 +242,8 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
             LinphoneUtils.deleteFilesAttachedToChatMessage(chatMessage)
             chatRoom.deleteMessage(chatMessage)
         }
+
+        events.value.orEmpty().forEach(EventLogData::destroy)
         events.value = getEvents()
     }
 }

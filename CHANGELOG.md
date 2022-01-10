@@ -14,6 +14,7 @@ Group changes to describe their impact on the project, as follows:
 
 ### Added
 - Reply to chat message feature (with original message preview)
+- Swipe action on chat messages to reply / delete
 - Voice recordings in chat feature
 - Allow video recording in chat file sharing
 - Unread messages indicator in chat conversation that separates read & unread messages

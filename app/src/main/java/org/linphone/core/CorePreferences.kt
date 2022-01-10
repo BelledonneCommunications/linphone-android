@@ -465,9 +465,6 @@ class CorePreferences constructor(private val context: Context) {
     val showAllRingtones: Boolean
         get() = config.getBool("app", "show_all_available_ringtones", false)
 
-    val allowSwipeActionOnChatMessage: Boolean
-        get() = config.getBool("app", "swipe_action_on_chat_messages", false)
-
     /* Default values related */
 
     val echoCancellerCalibration: Int

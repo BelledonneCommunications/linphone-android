@@ -282,12 +282,12 @@
             android:layout_height="match_parent"
             android:layout_above="@id/footer"
             android:layout_below="@+id/top_bar"
-            android:paddingBottom="20dp"
-            android:clipToPadding="false"
             android:cacheColorHint="@color/transparent_color"
             android:choiceMode="multipleChoice"
+            android:clipToPadding="false"
             android:divider="@android:color/transparent"
             android:listSelector="@color/transparent_color"
+            android:paddingBottom="20dp"
             android:transcriptMode="normal" />
 
         <TextView
