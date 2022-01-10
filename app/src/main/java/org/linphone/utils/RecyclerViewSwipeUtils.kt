@@ -84,26 +84,38 @@ private class RecyclerViewSwipeUtilsCallback(
             background.draw(canvas)
         }
 
-        val iconHorizontalMargin: Int = TypedValue.applyDimension(
+        val horizontalMargin: Int = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
             configuration.iconMargin,
             recyclerView.context.resources.displayMetrics
         ).toInt()
-        var iconSize = 0
+        var iconWidth = 0
 
-        if (configuration.leftToRightAction.icon != 0 && dX > iconHorizontalMargin) {
+        if (configuration.leftToRightAction.icon != 0) {
             val icon =
-                ContextCompat.getDrawable(recyclerView.context, configuration.leftToRightAction.icon)
-            if (icon != null) {
-                iconSize = icon.intrinsicHeight
-                val halfIcon = iconSize / 2
+                ContextCompat.getDrawable(
+                    recyclerView.context,
+                    configuration.leftToRightAction.icon
+                )
+            iconWidth = icon?.intrinsicWidth ?: 0
+            if (icon != null && dX > iconWidth) {
+                val halfIcon = icon.intrinsicHeight / 2
                 val top =
                     viewHolder.itemView.top + ((viewHolder.itemView.bottom - viewHolder.itemView.top) / 2 - halfIcon)
 
+                // Icon won't move past the swipe threshold, thus indicating to the user
+                // it has reached the required distance for swipe action to be done
+                val threshold = getSwipeThreshold(viewHolder) * viewHolder.itemView.right
+                val left = if (dX < threshold) {
+                    viewHolder.itemView.left + dX.toInt() - iconWidth
+                } else {
+                    viewHolder.itemView.left + threshold.toInt() - iconWidth
+                }
+
                 icon.setBounds(
-                    viewHolder.itemView.left + iconHorizontalMargin,
+                    left,
                     top,
-                    viewHolder.itemView.left + iconHorizontalMargin + icon.intrinsicWidth,
+                    left + iconWidth,
                     top + icon.intrinsicHeight
                 )
 
@@ -116,7 +128,7 @@ private class RecyclerViewSwipeUtilsCallback(
             }
         }
 
-        if (configuration.leftToRightAction.text.isNotEmpty() && dX > iconHorizontalMargin + iconSize) {
+        if (configuration.leftToRightAction.text.isNotEmpty() && dX > horizontalMargin + iconWidth) {
             val textPaint = TextPaint()
             textPaint.isAntiAlias = true
             textPaint.textSize = TypedValue.applyDimension(
@@ -127,9 +139,9 @@ private class RecyclerViewSwipeUtilsCallback(
             textPaint.color = configuration.leftToRightAction.textColor
             textPaint.typeface = configuration.actionTextFont
 
-            val margin = if (iconSize > 0) iconHorizontalMargin / 2 else 0
+            val margin = if (iconWidth > 0) horizontalMargin / 2 else 0
             val textX =
-                (viewHolder.itemView.left + iconHorizontalMargin + iconSize + margin).toFloat()
+                (viewHolder.itemView.left + horizontalMargin + iconWidth + margin).toFloat()
             val textY =
                 (viewHolder.itemView.top + (viewHolder.itemView.bottom - viewHolder.itemView.top) / 2.0 + textPaint.textSize / 2).toFloat()
             canvas.drawText(
@@ -158,30 +170,44 @@ private class RecyclerViewSwipeUtilsCallback(
             background.draw(canvas)
         }
 
-        val iconHorizontalMargin: Int = TypedValue.applyDimension(
+        val horizontalMargin: Int = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
             configuration.iconMargin,
             recyclerView.context.resources.displayMetrics
         ).toInt()
-        var iconSize = 0
+        var iconWidth = 0
         var imageLeftBorder = viewHolder.itemView.right
 
-        if (configuration.rightToLeftAction.icon != 0 && dX < -iconHorizontalMargin) {
+        if (configuration.rightToLeftAction.icon != 0) {
             val icon =
-                ContextCompat.getDrawable(recyclerView.context, configuration.rightToLeftAction.icon)
-            if (icon != null) {
-                iconSize = icon.intrinsicHeight
-                val halfIcon = iconSize / 2
+                ContextCompat.getDrawable(
+                    recyclerView.context,
+                    configuration.rightToLeftAction.icon
+                )
+            iconWidth = icon?.intrinsicWidth ?: 0
+            if (icon != null && dX < viewHolder.itemView.right - iconWidth) {
+                val halfIcon = icon.intrinsicHeight / 2
                 val top =
                     viewHolder.itemView.top + ((viewHolder.itemView.bottom - viewHolder.itemView.top) / 2 - halfIcon)
-                imageLeftBorder =
-                    viewHolder.itemView.right - iconHorizontalMargin - halfIcon * 2
+
+                // Icon won't move past the swipe threshold, thus indicating to the user
+                // it has reached the required distance for swipe action to be done
+                val threshold = -(getSwipeThreshold(viewHolder) * viewHolder.itemView.right)
+                val right = if (dX > threshold) {
+                    viewHolder.itemView.right + dX.toInt()
+                } else {
+                    viewHolder.itemView.right + threshold.toInt()
+                }
+                imageLeftBorder = right - icon.intrinsicWidth
+
                 icon.setBounds(
                     imageLeftBorder,
                     top,
-                    viewHolder.itemView.right - iconHorizontalMargin,
+                    right,
                     top + icon.intrinsicHeight
                 )
+
+                @Suppress("DEPRECATION")
                 if (configuration.rightToLeftAction.iconTint != 0) icon.setColorFilter(
                     configuration.rightToLeftAction.iconTint,
                     PorterDuff.Mode.SRC_IN
@@ -189,7 +215,8 @@ private class RecyclerViewSwipeUtilsCallback(
                 icon.draw(canvas)
             }
         }
-        if (configuration.rightToLeftAction.text.isNotEmpty() && dX < -iconHorizontalMargin - iconSize) {
+
+        if (configuration.rightToLeftAction.text.isNotEmpty() && dX < -horizontalMargin - iconWidth) {
             val textPaint = TextPaint()
             textPaint.isAntiAlias = true
             textPaint.textSize = TypedValue.applyDimension(
@@ -201,7 +228,7 @@ private class RecyclerViewSwipeUtilsCallback(
             textPaint.typeface = configuration.actionTextFont
 
             val margin =
-                if (imageLeftBorder == viewHolder.itemView.right) iconHorizontalMargin else iconHorizontalMargin / 2
+                if (imageLeftBorder == viewHolder.itemView.right) horizontalMargin else horizontalMargin / 2
             val textX =
                 imageLeftBorder - textPaint.measureText(configuration.rightToLeftAction.text) - margin
             val textY =
@@ -239,6 +266,8 @@ private class RecyclerViewSwipeUtilsCallback(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder
     ): Int {
+        // Prevent swipe actions for a specific ViewHolder class if needed
+        // Used to allow swipe actions on chat messages but not events
         var dirFlags = direction
         if (direction and ItemTouchHelper.RIGHT != 0) {
             val classToPrevent = configuration.leftToRightAction.preventFor
@@ -276,6 +305,10 @@ private class RecyclerViewSwipeUtilsCallback(
         } else if (direction == ItemTouchHelper.RIGHT) {
             listener.onLeftToRightSwipe(viewHolder)
         }
+    }
+
+    override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float {
+        return .33f // A third of the screen is required to validate swipe move (default is .5f)
     }
 
     override fun onChildDraw(

@@ -37,27 +37,27 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:layout_toLeftOf="@id/select"
-            android:gravity="center"
             android:background="@{data.security || data.groupLeft ? @drawable/event_decoration_red : @drawable/event_decoration_gray, default=@drawable/event_decoration_gray}"
+            android:gravity="center"
             android:orientation="horizontal">
 
             <!-- Ugly hack to prevent last character to be missing half of it, don't know why yet -->
             <TextView
-                android:text="@{data.text + ' '}"
-                android:textSize="13sp"
-                android:fontFamily="sans-serif"
-                android:lineSpacingExtra="0sp"
-                android:textStyle="italic"
-                android:textColor="@{data.security || data.groupLeft ? @color/red_color : @color/light_grey_color}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingRight="5dp"
+                android:background="?attr/backgroundColor"
+                android:fontFamily="sans-serif"
+                android:lineSpacingExtra="0sp"
                 android:paddingLeft="5dp"
-                android:background="?attr/backgroundColor" />
+                android:paddingRight="5dp"
+                android:text="@{data.text + ' '}"
+                android:textColor="@{data.security || data.groupLeft ? @color/red_color : @color/light_grey_color}"
+                android:textSize="13sp"
+                android:textStyle="italic" />
 
         </LinearLayout>
 
