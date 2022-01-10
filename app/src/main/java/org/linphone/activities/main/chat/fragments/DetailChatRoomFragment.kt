@@ -36,6 +36,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.io.File
@@ -225,27 +226,32 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 }
             )
 
-        // Swipe action
-        /*val swipeConfiguration = RecyclerViewSwipeConfiguration()
-        swipeConfiguration.leftToRightAction = RecyclerViewSwipeConfiguration.Action(icon = R.drawable.menu_reply_default)
-        val swipeListener = object : RecyclerViewSwipeListener {
-            override fun onLeftToRightSwipe(viewHolder: RecyclerView.ViewHolder) {
-                adapter.notifyItemChanged(viewHolder.adapterPosition)
+        if (corePreferences.allowSwipeActionOnChatMessage) {
+            // Swipe action
+            val swipeConfiguration = RecyclerViewSwipeConfiguration()
+            swipeConfiguration.leftToRightAction = RecyclerViewSwipeConfiguration.Action(
+                icon = R.drawable.menu_reply,
+                preventFor = ChatMessagesListAdapter.EventViewHolder::class.java
+            )
+            val swipeListener = object : RecyclerViewSwipeListener {
+                override fun onLeftToRightSwipe(viewHolder: RecyclerView.ViewHolder) {
+                    adapter.notifyItemChanged(viewHolder.bindingAdapterPosition)
 
-                val chatMessageEventLog = adapter.currentList[viewHolder.adapterPosition]
-                val chatMessage = chatMessageEventLog.chatMessage
-                if (chatMessage != null) {
-                    chatSendingViewModel.pendingChatMessageToReplyTo.value?.destroy()
-                    chatSendingViewModel.pendingChatMessageToReplyTo.value =
-                        ChatMessageData(chatMessage)
-                    chatSendingViewModel.isPendingAnswer.value = true
+                    val chatMessageEventLog = adapter.currentList[viewHolder.bindingAdapterPosition]
+                    val chatMessage = chatMessageEventLog.eventLog.chatMessage
+                    if (chatMessage != null) {
+                        chatSendingViewModel.pendingChatMessageToReplyTo.value?.destroy()
+                        chatSendingViewModel.pendingChatMessageToReplyTo.value =
+                            ChatMessageData(chatMessage)
+                        chatSendingViewModel.isPendingAnswer.value = true
+                    }
                 }
-            }
 
-            override fun onRightToLeftSwipe(viewHolder: RecyclerView.ViewHolder) {}
+                override fun onRightToLeftSwipe(viewHolder: RecyclerView.ViewHolder) {}
+            }
+            RecyclerViewSwipeUtils(ItemTouchHelper.RIGHT, swipeConfiguration, swipeListener)
+                .attachToRecyclerView(binding.chatMessagesList)
         }
-        RecyclerViewSwipeUtils(ItemTouchHelper.RIGHT, swipeConfiguration, swipeListener)
-            .attachToRecyclerView(binding.chatMessagesList)*/
 
         val chatScrollListener = object : ChatScrollListener(layoutManager) {
             override fun onLoadMore(totalItemsCount: Int) {

@@ -46,7 +46,8 @@ class RecyclerViewSwipeConfiguration {
         val textColor: Int = Color.WHITE,
         val backgroundColor: Int = 0,
         val icon: Int = 0,
-        val iconTint: Int = 0
+        val iconTint: Int = 0,
+        val preventFor: Class<*>? = null
     )
 
     val iconMargin = 16f
@@ -61,7 +62,7 @@ class RecyclerViewSwipeConfiguration {
 }
 
 private class RecyclerViewSwipeUtilsCallback(
-    direction: Int,
+    val direction: Int,
     val configuration: RecyclerViewSwipeConfiguration,
     val listener: RecyclerViewSwipeListener
 ) : ItemTouchHelper.SimpleCallback(0, direction) {
@@ -232,6 +233,30 @@ private class RecyclerViewSwipeUtilsCallback(
         } catch (e: Exception) {
             Log.e("[RecyclerView Swipe Utils] $e")
         }
+    }
+
+    override fun getSwipeDirs(
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder
+    ): Int {
+        var dirFlags = direction
+        if (direction and ItemTouchHelper.RIGHT != 0) {
+            val classToPrevent = configuration.leftToRightAction.preventFor
+            if (classToPrevent != null) {
+                if (classToPrevent.isInstance(viewHolder)) {
+                    dirFlags = dirFlags and ItemTouchHelper.RIGHT.inv()
+                }
+            }
+        }
+        if (direction or ItemTouchHelper.LEFT != 0) {
+            val classToPrevent = configuration.rightToLeftAction.preventFor
+            if (classToPrevent != null) {
+                if (classToPrevent.isInstance(viewHolder)) {
+                    dirFlags = dirFlags and ItemTouchHelper.LEFT.inv()
+                }
+            }
+        }
+        return dirFlags
     }
 
     override fun onMove(
