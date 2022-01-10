@@ -174,9 +174,9 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
         )
         val swipeListener = object : RecyclerViewSwipeListener {
             override fun onLeftToRightSwipe(viewHolder: RecyclerView.ViewHolder) {
-                val chatRoomViewModel = adapter.currentList[viewHolder.adapterPosition]
+                val chatRoomViewModel = adapter.currentList[viewHolder.bindingAdapterPosition]
                 chatRoomViewModel.chatRoom.markAsRead()
-                adapter.notifyItemChanged(viewHolder.adapterPosition)
+                adapter.notifyItemChanged(viewHolder.bindingAdapterPosition)
             }
 
             override fun onRightToLeftSwipe(viewHolder: RecyclerView.ViewHolder) {
@@ -184,13 +184,13 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
                 val dialog: Dialog = DialogUtils.getDialog(requireContext(), viewModel)
 
                 viewModel.showCancelButton {
-                    adapter.notifyItemChanged(viewHolder.adapterPosition)
+                    adapter.notifyItemChanged(viewHolder.bindingAdapterPosition)
                     dialog.dismiss()
                 }
 
                 viewModel.showDeleteButton(
                     {
-                        val deletedChatRoom = adapter.currentList[viewHolder.adapterPosition].chatRoom
+                        val deletedChatRoom = adapter.currentList[viewHolder.bindingAdapterPosition].chatRoom
                         listViewModel.deleteChatRoom(deletedChatRoom)
                         if (!binding.slidingPane.isSlideable &&
                             deletedChatRoom == sharedViewModel.selectedChatRoom.value

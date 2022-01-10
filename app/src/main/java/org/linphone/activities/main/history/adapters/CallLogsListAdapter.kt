@@ -75,13 +75,13 @@ class CallLogsListAdapter(
                 selectionViewModel.isEditionEnabled.observe(
                     viewLifecycleOwner,
                     {
-                        position = adapterPosition
+                        position = bindingAdapterPosition
                     }
                 )
 
                 setClickListener {
                     if (selectionViewModel.isEditionEnabled.value == true) {
-                        selectionViewModel.onToggleSelect(adapterPosition)
+                        selectionViewModel.onToggleSelect(bindingAdapterPosition)
                     } else {
                         startCallToEvent.value = Event(callLogGroup)
                     }

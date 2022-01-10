@@ -36,7 +36,7 @@ class RecyclerViewHeaderDecoration(private val context: Context, private val ada
         parent: RecyclerView,
         state: RecyclerView.State
     ) {
-        val position = (view.layoutParams as RecyclerView.LayoutParams).viewAdapterPosition
+        val position = (view.layoutParams as RecyclerView.LayoutParams).bindingAdapterPosition
 
         if (position != RecyclerView.NO_POSITION && adapter.displayHeaderForPosition(position)) {
             val headerView: View = adapter.getHeaderViewForPosition(view.context, position)

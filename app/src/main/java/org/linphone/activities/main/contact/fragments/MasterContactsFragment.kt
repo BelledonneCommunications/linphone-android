@@ -175,13 +175,13 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
                 val dialog: Dialog = DialogUtils.getDialog(requireContext(), viewModel)
 
                 viewModel.showCancelButton {
-                    adapter.notifyItemChanged(viewHolder.adapterPosition)
+                    adapter.notifyItemChanged(viewHolder.bindingAdapterPosition)
                     dialog.dismiss()
                 }
 
                 viewModel.showDeleteButton(
                     {
-                        val deletedContact = adapter.currentList[viewHolder.adapterPosition].contactInternal
+                        val deletedContact = adapter.currentList[viewHolder.bindingAdapterPosition].contactInternal
                         listViewModel.deleteContact(deletedContact)
                         if (!binding.slidingPane.isSlideable &&
                             deletedContact == sharedViewModel.selectedContact.value

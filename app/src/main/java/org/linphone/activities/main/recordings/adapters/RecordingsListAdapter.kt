@@ -69,12 +69,12 @@ class RecordingsListAdapter(
                 lifecycleOwner = viewLifecycleOwner
 
                 // This is for item selection through ListTopBarFragment
-                position = adapterPosition
+                position = bindingAdapterPosition
                 selectionListViewModel = selectionViewModel
 
                 setClickListener {
                     if (selectionViewModel.isEditionEnabled.value == true) {
-                        selectionViewModel.onToggleSelect(adapterPosition)
+                        selectionViewModel.onToggleSelect(bindingAdapterPosition)
                     }
                 }
 

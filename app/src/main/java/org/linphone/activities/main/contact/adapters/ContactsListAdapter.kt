@@ -73,13 +73,13 @@ class ContactsListAdapter(
                 selectionViewModel.isEditionEnabled.observe(
                     viewLifecycleOwner,
                     {
-                        position = adapterPosition
+                        position = bindingAdapterPosition
                     }
                 )
 
                 setClickListener {
                     if (selectionViewModel.isEditionEnabled.value == true) {
-                        selectionViewModel.onToggleSelect(adapterPosition)
+                        selectionViewModel.onToggleSelect(bindingAdapterPosition)
                     } else {
                         selectedContactEvent.value = Event(contactViewModel.contactInternal)
                     }

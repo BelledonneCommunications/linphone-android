@@ -160,13 +160,13 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
                 val dialog: Dialog = DialogUtils.getDialog(requireContext(), viewModel)
 
                 viewModel.showCancelButton {
-                    adapter.notifyItemChanged(viewHolder.adapterPosition)
+                    adapter.notifyItemChanged(viewHolder.bindingAdapterPosition)
                     dialog.dismiss()
                 }
 
                 viewModel.showDeleteButton(
                     {
-                        val deletedCallGroup = adapter.currentList[viewHolder.adapterPosition]
+                        val deletedCallGroup = adapter.currentList[viewHolder.bindingAdapterPosition]
                         listViewModel.deleteCallLogGroup(deletedCallGroup)
                         if (!binding.slidingPane.isSlideable &&
                             deletedCallGroup.lastCallLog.callId == sharedViewModel.selectedCallLogGroup.value?.lastCallLog?.callId
