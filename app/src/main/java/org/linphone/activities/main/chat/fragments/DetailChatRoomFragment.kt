@@ -212,11 +212,15 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             .addOnGlobalLayoutListener(
                 object : OnGlobalLayoutListener {
                     override fun onGlobalLayout() {
-                        binding.chatMessagesList
-                            .viewTreeObserver
-                            .removeOnGlobalLayoutListener(this)
-                        Log.i("[Chat Room] Messages have been displayed, scrolling to first unread message if any")
-                        scrollToFirstUnreadMessageOrBottom(false)
+                        if (isBindingAvailable()) {
+                            binding.chatMessagesList
+                                .viewTreeObserver
+                                .removeOnGlobalLayoutListener(this)
+                            Log.i("[Chat Room] Messages have been displayed, scrolling to first unread message if any")
+                            scrollToFirstUnreadMessageOrBottom(false)
+                        } else {
+                            Log.e("[Chat Room] Binding not available in onGlobalLayout callback!")
+                        }
                     }
                 }
             )
