@@ -75,7 +75,7 @@ class ChatRoomsListAdapter(
                 selectionViewModel.isEditionEnabled.observe(
                     viewLifecycleOwner,
                     {
-                        position = adapterPosition
+                        position = bindingAdapterPosition
                     }
                 )
 
@@ -83,7 +83,7 @@ class ChatRoomsListAdapter(
 
                 setClickListener {
                     if (selectionViewModel.isEditionEnabled.value == true) {
-                        selectionViewModel.onToggleSelect(adapterPosition)
+                        selectionViewModel.onToggleSelect(bindingAdapterPosition)
                     } else {
                         selectedChatRoomEvent.value = Event(chatRoomViewModel.chatRoom)
                     }

@@ -213,13 +213,13 @@ class ChatMessagesListAdapter(
                     selectionViewModel.isEditionEnabled.observe(
                         viewLifecycleOwner,
                         {
-                            position = adapterPosition
+                            position = bindingAdapterPosition
                         }
                     )
 
                     setClickListener {
                         if (selectionViewModel.isEditionEnabled.value == true) {
-                            selectionViewModel.onToggleSelect(adapterPosition)
+                            selectionViewModel.onToggleSelect(bindingAdapterPosition)
                         }
                     }
 
@@ -234,8 +234,8 @@ class ChatMessagesListAdapter(
                     var hasPrevious = false
                     var hasNext = false
 
-                    if (adapterPosition > 0) {
-                        val previousItem = getItem(adapterPosition - 1)
+                    if (bindingAdapterPosition > 0) {
+                        val previousItem = getItem(bindingAdapterPosition - 1)
                         if (previousItem.eventLog.type == EventLog.Type.ConferenceChatMessage) {
                             val previousMessage = previousItem.eventLog.chatMessage
                             if (previousMessage != null && previousMessage.fromAddress.weakEqual(chatMessage.fromAddress)) {
@@ -246,8 +246,8 @@ class ChatMessagesListAdapter(
                         }
                     }
 
-                    if (adapterPosition >= 0 && adapterPosition < itemCount - 1) {
-                        val nextItem = getItem(adapterPosition + 1)
+                    if (bindingAdapterPosition >= 0 && bindingAdapterPosition < itemCount - 1) {
+                        val nextItem = getItem(bindingAdapterPosition + 1)
                         if (nextItem.eventLog.type == EventLog.Type.ConferenceChatMessage) {
                             val nextMessage = nextItem.eventLog.chatMessage
                             if (nextMessage != null && nextMessage.fromAddress.weakEqual(chatMessage.fromAddress)) {
@@ -346,7 +346,7 @@ class ChatMessagesListAdapter(
         private fun resendMessage() {
             val chatMessage = binding.data?.chatMessage
             if (chatMessage != null) {
-                chatMessage.userData = adapterPosition
+                chatMessage.userData = bindingAdapterPosition
                 resendMessageEvent.value = Event(chatMessage)
             }
         }
@@ -388,7 +388,7 @@ class ChatMessagesListAdapter(
         private fun deleteMessage() {
             val chatMessage = binding.data?.chatMessage
             if (chatMessage != null) {
-                chatMessage.userData = adapterPosition
+                chatMessage.userData = bindingAdapterPosition
                 deleteMessageEvent.value = Event(chatMessage)
             }
         }
@@ -418,13 +418,13 @@ class ChatMessagesListAdapter(
                 selectionViewModel.isEditionEnabled.observe(
                     viewLifecycleOwner,
                     {
-                        position = adapterPosition
+                        position = bindingAdapterPosition
                     }
                 )
 
                 binding.setClickListener {
                     if (selectionViewModel.isEditionEnabled.value == true) {
-                        selectionViewModel.onToggleSelect(adapterPosition)
+                        selectionViewModel.onToggleSelect(bindingAdapterPosition)
                     }
                 }
 
