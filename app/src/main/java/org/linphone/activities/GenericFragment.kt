@@ -42,6 +42,10 @@ abstract class GenericFragment<T : ViewDataBinding> : Fragment() {
     protected val binding get() = _binding!!
     protected var useMaterialSharedAxisXForwardAnimation = true
 
+    protected fun isBindingAvailable(): Boolean {
+        return _binding != null
+    }
+
     protected val onBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
             lifecycleScope.launch {
