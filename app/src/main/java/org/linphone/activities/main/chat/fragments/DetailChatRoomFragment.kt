@@ -42,9 +42,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.io.File
 import java.lang.IllegalArgumentException
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -256,15 +254,10 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
             override fun onRightToLeftSwipe(viewHolder: RecyclerView.ViewHolder) {
                 val position = viewHolder.bindingAdapterPosition
+                // adapter.notifyItemRemoved(viewHolder.bindingAdapterPosition)
+
                 val eventLog = adapter.currentList[position]
-                val chatMessage = eventLog.eventLog.chatMessage
-                if (chatMessage != null) {
-                    Log.i("[Chat Room] Deleting message $chatMessage at position $position")
-                    listViewModel.deleteMessage(chatMessage)
-                } else {
-                    Log.i("[Chat Room] Deleting event $eventLog at position $position")
-                    listViewModel.deleteEventLogs(arrayListOf(eventLog))
-                }
+                addDeleteMessageTaskToQueue(eventLog, position)
             }
         }
         RecyclerViewSwipeUtils(ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT, swipeConfiguration, swipeListener)
@@ -840,6 +833,34 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         }
 
         popupWindow.showAsDropDown(binding.menu, 0, 0, Gravity.BOTTOM)
+    }
+
+    private fun addDeleteMessageTaskToQueue(eventLog: EventLogData, position: Int) {
+        val task = lifecycleScope.launch {
+            delay(2800) // Duration of Snackbar.LENGTH_LONG
+            withContext(Dispatchers.Main) {
+                if (isActive) {
+                    Log.i("[Chat Room] Message/event deletion task is still active, proceed")
+                    val chatMessage = eventLog.eventLog.chatMessage
+                    if (chatMessage != null) {
+                        Log.i("[Chat Room] Deleting message $chatMessage at position $position")
+                        listViewModel.deleteMessage(chatMessage)
+                    } else {
+                        Log.i("[Chat Room] Deleting event $eventLog at position $position")
+                        listViewModel.deleteEventLogs(arrayListOf(eventLog))
+                    }
+                }
+            }
+        }
+
+        (requireActivity() as MainActivity).showSnackBar(
+            R.string.chat_message_removal_info,
+            R.string.chat_message_abort_removal
+        ) {
+            Log.i("[Chat Room] Canceled message/event deletion task: $task for message/event at position $position")
+            adapter.notifyItemRangeChanged(position, adapter.itemCount - position)
+            task.cancel()
+        }
     }
 
     private fun scrollToFirstUnreadMessageOrBottom(smooth: Boolean) {

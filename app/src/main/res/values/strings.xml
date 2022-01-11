@@ -227,6 +227,8 @@
         <item quantity="one">@string/chat_room_unread_message</item>
         <item quantity="other">@string/chat_room_unread_messages</item>
     </plurals>
+    <string name="chat_message_removal_info">Message will be deleted</string>
+    <string name="chat_message_abort_removal">Abort</string>
 
     <!-- Recordings -->
     <string name="recordings_empty_list">No recordings</string>
