@@ -21,5 +21,6 @@ package org.linphone.activities
 
 interface SnackBarActivity {
     fun showSnackBar(resourceId: Int)
+    fun showSnackBar(resourceId: Int, action: Int, listener: () -> Unit)
     fun showSnackBar(message: String)
 }

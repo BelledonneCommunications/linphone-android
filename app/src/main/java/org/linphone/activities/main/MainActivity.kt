@@ -181,6 +181,16 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         Snackbar.make(findViewById(R.id.coordinator), resourceId, Snackbar.LENGTH_LONG).show()
     }
 
+    override fun showSnackBar(resourceId: Int, action: Int, listener: () -> Unit) {
+        Snackbar
+            .make(findViewById(R.id.coordinator), resourceId, Snackbar.LENGTH_LONG)
+            .setAction(action) {
+                Log.i("[Snack Bar] Action listener triggered")
+                listener()
+            }
+            .show()
+    }
+
     override fun showSnackBar(message: String) {
         Snackbar.make(findViewById(R.id.coordinator), message, Snackbar.LENGTH_LONG).show()
     }

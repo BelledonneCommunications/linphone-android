@@ -630,4 +630,6 @@
     <string name="audio_settings_prefer_bluetooth_devices_title">Acheminer l\'audio vers l\'appareil bluetooth, s\'il existe</string>
     <string name="audio_settings_prefer_bluetooth_devices_summary">Il aura la priorité sur le périphérique de sortie par défaut</string>
     <string name="call_settings_ringtones_title">Sonnerie</string>
+    <string name="chat_message_removal_info">Le message va être supprimé</string>
+    <string name="chat_message_abort_removal">Annuler</string>
 </resources>
