@@ -451,12 +451,18 @@ private class ChatMessageDiffCallback : DiffUtil.ItemCallback<EventLogData>() {
         oldItem: EventLogData,
         newItem: EventLogData
     ): Boolean {
-        return if (newItem.eventLog.type == EventLog.Type.ConferenceChatMessage) {
+        return if (oldItem.eventLog.type == EventLog.Type.ConferenceChatMessage &&
+            newItem.eventLog.type == EventLog.Type.ConferenceChatMessage
+        ) {
             val oldData = (oldItem.data as ChatMessageData)
             val newData = (newItem.data as ChatMessageData)
+
             val previous = oldData.hasPreviousMessage == newData.hasPreviousMessage
             val next = oldData.hasNextMessage == newData.hasNextMessage
             newItem.eventLog.chatMessage?.state == ChatMessage.State.Displayed && previous && next
-        } else true
+        } else {
+            oldItem.eventLog.type != EventLog.Type.ConferenceChatMessage &&
+                newItem.eventLog.type != EventLog.Type.ConferenceChatMessage
+        }
     }
 }

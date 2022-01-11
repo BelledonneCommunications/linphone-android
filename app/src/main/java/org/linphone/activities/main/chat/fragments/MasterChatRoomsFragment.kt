@@ -98,7 +98,9 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
         isSecure = true
         binding.lifecycleOwner = viewLifecycleOwner
 
-        listViewModel = ViewModelProvider(this)[ChatRoomsListViewModel::class.java]
+        listViewModel = requireActivity().run {
+            ViewModelProvider(this)[ChatRoomsListViewModel::class.java]
+        }
         binding.viewModel = listViewModel
 
         /* Shared view model & sliding pane related */

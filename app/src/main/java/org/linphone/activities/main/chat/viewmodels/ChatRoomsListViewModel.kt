@@ -142,9 +142,7 @@ class ChatRoomsListViewModel : ErrorReportingViewModel() {
     }
 
     private fun updateChatRooms() {
-        for (chatRoomViewModel in chatRooms.value.orEmpty()) {
-            chatRoomViewModel.destroy()
-        }
+        chatRooms.value.orEmpty().forEach(ChatRoomViewModel::destroy)
 
         val list = arrayListOf<ChatRoomViewModel>()
         for (chatRoom in coreContext.core.chatRooms) {
