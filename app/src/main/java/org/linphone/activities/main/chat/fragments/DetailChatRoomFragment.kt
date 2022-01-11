@@ -175,10 +175,20 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
         isSecure = chatRoom.currentParams.isEncryptionEnabled
 
-        viewModel = ViewModelProvider(
+        val chatRoomsListViewModel: ChatRoomsListViewModel = requireActivity().run {
+            ViewModelProvider(this)[ChatRoomsListViewModel::class.java]
+        }
+        val chatRoomViewModel = chatRoomsListViewModel.chatRooms.value.orEmpty().find {
+            it.chatRoom == chatRoom
+        }
+        if (chatRoomViewModel == null) {
+            Log.w("[Chat Room] Couldn't find existing view model, will create a new one!")
+        }
+        viewModel = chatRoomViewModel ?: ViewModelProvider(
             this,
             ChatRoomViewModelFactory(chatRoom)
         )[ChatRoomViewModel::class.java]
+
         binding.viewModel = viewModel
 
         chatSendingViewModel = ViewModelProvider(
@@ -331,6 +341,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             {
                 it.consume { chatMessage ->
                     listViewModel.deleteMessage(chatMessage)
+                    viewModel.updateLastMessageToDisplay()
                 }
             }
         )
@@ -607,6 +618,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             list.add(eventLog)
         }
         listViewModel.deleteEventLogs(list)
+        viewModel.updateLastMessageToDisplay()
     }
 
     override fun onRequestPermissionsResult(
@@ -849,6 +861,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                         Log.i("[Chat Room] Deleting event $eventLog at position $position")
                         listViewModel.deleteEventLogs(arrayListOf(eventLog))
                     }
+                    viewModel.updateLastMessageToDisplay()
                 }
             }
         }

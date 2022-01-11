@@ -276,7 +276,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         }
     }
 
-    private fun updateLastMessageToDisplay() {
+    fun updateLastMessageToDisplay() {
         lastMessageText.value = formatLastMessage(chatRoom.lastMessageInHistory)
     }
 
