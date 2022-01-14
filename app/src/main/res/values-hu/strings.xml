@@ -629,4 +629,7 @@
     <string name="audio_settings_prefer_bluetooth_devices_summary">Ennek elsőbbsége lesz az alapértelmezett kimeneti eszközzel szemben</string>
     <string name="content_descripton_scroll_to_bottom">Görgetés legalulra vagy az első olvasatlan üzenetre</string>
     <string name="audio_settings_prefer_bluetooth_devices_title">Hang átirányítása a Bluetooth-eszközre (ha van ilyen)</string>
+    <string name="call_settings_ringtones_title">Csengőhang</string>
+    <string name="chat_message_abort_removal">Megszakítás</string>
+    <string name="chat_message_removal_info">Üzenet törlésre kerül</string>
 </resources>
