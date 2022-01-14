@@ -556,6 +556,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
         binding.setScrollToBottomClickListener {
             scrollToFirstUnreadMessageOrBottom(true)
+            viewModel.isUserScrollingUp.value = false
         }
 
         if (textToShare?.isNotEmpty() == true) {
