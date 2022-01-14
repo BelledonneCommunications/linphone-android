@@ -235,7 +235,7 @@
 
     <style name="sip_uri_small_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">?attr/accentColor</item>
-        <item name="android:textSize">13sp</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
     <style name="toolbar_small_title_font" parent="@android:style/TextAppearance.Medium">
