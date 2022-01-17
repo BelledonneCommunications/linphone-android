@@ -180,7 +180,7 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
                 data.listener = contentListener
                 list.add(data)
             } else if (content.isText) {
-                val spannable = Spannable.Factory.getInstance().newSpannable(content.utf8Text)
+                val spannable = Spannable.Factory.getInstance().newSpannable(content.utf8Text?.trim())
                 LinkifyCompat.addLinks(spannable, Linkify.WEB_URLS)
                 text.value = spannable
             }
