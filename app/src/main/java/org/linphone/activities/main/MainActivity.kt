@@ -226,7 +226,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         destination: NavDestination,
         arguments: Bundle?
     ) {
-        currentFocus?.hideKeyboard()
+        hideKeyboard()
         if (statusFragment.visibility == View.GONE) {
             statusFragment.visibility = View.VISIBLE
         }
@@ -239,11 +239,15 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         updateTabsFragmentVisibility()
     }
 
+    fun hideKeyboard() {
+        currentFocus?.hideKeyboard()
+    }
+
     private fun updateTabsFragmentVisibility() {
         tabsFragment.visibility = if (tabsFragmentVisible1 && tabsFragmentVisible2) View.VISIBLE else View.GONE
     }
 
-    private fun View.hideKeyboard() {
+    fun View.hideKeyboard() {
         val imm = context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(windowToken, 0)
     }
