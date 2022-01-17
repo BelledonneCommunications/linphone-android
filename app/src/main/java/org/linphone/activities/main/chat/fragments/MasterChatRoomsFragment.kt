@@ -125,6 +125,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
             viewLifecycleOwner,
             {
                 it.consume {
+                    (requireActivity() as MainActivity).hideKeyboard()
                     if (!binding.slidingPane.closePane()) {
                         goBack()
                     }
