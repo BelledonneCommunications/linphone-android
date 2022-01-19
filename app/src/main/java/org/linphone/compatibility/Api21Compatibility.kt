@@ -48,7 +48,8 @@ class Api21Compatibility {
     companion object {
         @SuppressLint("MissingPermission")
         fun getDeviceName(context: Context): String {
-            var name = BluetoothAdapter.getDefaultAdapter().name
+            val adapter = BluetoothAdapter.getDefaultAdapter()
+            var name = adapter?.name
             if (name == null) {
                 name = Settings.Secure.getString(
                     context.contentResolver,
