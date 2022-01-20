@@ -605,4 +605,23 @@
     <string name="chat_settings_use_in_app_file_viewer_summary">Aún podrá exportarlos en aplicaciones de terceros</string>
     <string name="about_weblate_translation">Ayúdanos a traducir &appName;</string>
     <string name="assistant_generic_account_warning_continue_button_text">Comprendo</string>
+    <string name="chat_message_removal_info">El mensaje será eliminado</string>
+    <string name="chat_message_abort_removal">Cancelar</string>
+    <string name="audio_settings_prefer_bluetooth_devices_title">Dirigir el audio al dispositivo bluetooth si existe</string>
+    <string name="content_description_replied_message">El mensaje es una respuesta</string>
+    <string name="content_description_attached_file">Archivo adjunto al mensaje</string>
+    <string name="content_description_cancel_reply">Cancelar la respuesta</string>
+    <string name="chat_message_replied">Respuesta</string>
+    <string name="chat_message_context_menu_reply">Responder</string>
+    <string name="chat_room_sending_reply_hint">Respuesta</string>
+    <string name="chat_room_sending_message_hint">Mensaje</string>
+    <string name="chat_message_voice_recording_hold_to_record">Mantenga pulsado el botón para grabar un mensaje de voz</string>
+    <string name="chat_message_voice_recording_playback_low_volume">El volumen de los medios de comunicación es bajo, es posible que desee aumentarlo</string>
+    <string name="chat_room_unread_message">%1$d mensaje no leído</string>
+    <string name="chat_room_unread_messages">%1$d mensajes no leídos</string>
+    <string name="call_settings_ringtones_title">Tono de llamada</string>
+    <string name="call_settings_use_telecom_manager_summary">Requiere permisos adicionales</string>
+    <string name="content_descripton_scroll_to_bottom">Desplazarse al final o al primer mensaje no leído</string>
+    <string name="audio_settings_prefer_bluetooth_devices_summary">Tendrá prioridad sobre el dispositivo de salida por defecto</string>
+    <string name="call_settings_use_telecom_manager_title">Mejorar las interacciones con los dispositivos bluetooth</string>
 </resources>
