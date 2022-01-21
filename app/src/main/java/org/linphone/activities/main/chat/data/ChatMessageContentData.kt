@@ -188,7 +188,7 @@ class ChatMessageContentData(
 
         val content = getContent()
         isFileEncrypted = content.isFileEncrypted
-        Log.i("[Content] Is content encrypted ? $isFileEncrypted")
+        Log.i("[Content] Is ${if (content.isFile) "file" else "file transfer"} content encrypted ? $isFileEncrypted")
 
         filePath.value = ""
         fileName.value = if (content.name.isNullOrEmpty() && !content.filePath.isNullOrEmpty()) {
@@ -204,8 +204,12 @@ class ChatMessageContentData(
         downloadLabel.value = spannable
 
         if (content.isFile || (content.isFileTransfer && chatMessage.isOutgoing)) {
-            Log.i("[Content] Content is encrypted, requesting plain file path")
-            val path = if (isFileEncrypted) content.plainFilePath else content.filePath ?: ""
+            val path = if (isFileEncrypted) {
+                Log.i("[Content] Content is encrypted, requesting plain file path")
+                content.plainFilePath
+            } else {
+                content.filePath ?: ""
+            }
             downloadable.value = content.filePath.orEmpty().isEmpty()
 
             if (path.isNotEmpty()) {
@@ -231,7 +235,7 @@ class ChatMessageContentData(
                     }
                 }
             } else {
-                Log.w("[Content] Found content with empty path...")
+                Log.w("[Content] Found ${if (content.isFile) "file" else "file transfer"} content with empty path...")
                 isImage.value = false
                 isVideo.value = false
                 isAudio.value = false
