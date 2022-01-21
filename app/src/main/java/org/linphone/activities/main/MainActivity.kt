@@ -157,7 +157,11 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
         binding.root.doOnAttach {
             Log.i("[Main Activity] Report UI has been fully drawn (TTFD)")
-            reportFullyDrawn()
+            try {
+                reportFullyDrawn()
+            } catch (se: SecurityException) {
+                Log.e("[Main Activity] Security exception when doing reportFullyDrawn(): $se")
+            }
         }
     }
 
