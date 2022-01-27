@@ -250,6 +250,7 @@ class NotificationsManager(private val context: Context) {
 
         if (currentForegroundServiceNotificationId > 0) {
             notificationManager.cancel(currentForegroundServiceNotificationId)
+            currentForegroundServiceNotificationId = 0
         }
 
         for (notifiable in callNotificationsMap.values) {
@@ -300,8 +301,7 @@ class NotificationsManager(private val context: Context) {
                 val call = coreContext.core.currentCall ?: coreContext.core.calls[0]
                 when (call.state) {
                     Call.State.IncomingReceived, Call.State.IncomingEarlyMedia -> {
-                        Log.i("[Notifications Manager] Creating incoming call notification to be used as foreground service")
-                        displayIncomingCallNotification(call, true)
+                        Log.i("[Notifications Manager] Waiting for call to be in state Connected before creating service notification")
                     }
                     else -> {
                         Log.i("[Notifications Manager] Creating call notification to be used as foreground service")
@@ -425,8 +425,9 @@ class NotificationsManager(private val context: Context) {
 
         val notifiable = getNotifiableForCall(call)
         if (notifiable.notificationId == currentForegroundServiceNotificationId) {
-            Log.w("[Notifications Manager] Incoming call notification already displayed by foreground service [${notifiable.notificationId}], skipping")
-            return
+            Log.e("[Notifications Manager] There is already a Service foreground notification for an incoming call, cancelling it")
+            cancel(notifiable.notificationId)
+            currentForegroundServiceNotificationId = 0
         }
 
         val incomingCallNotificationIntent = Intent(context, IncomingCallActivity::class.java)
@@ -539,7 +540,7 @@ class NotificationsManager(private val context: Context) {
         Log.i("[Notifications Manager] Notifying call notification [${notifiable.notificationId}]")
         notify(notifiable.notificationId, notification)
 
-        if (useAsForeground) {
+        if (useAsForeground || (service != null && currentForegroundServiceNotificationId == 0)) {
             Log.i("[Notifications Manager] Notifying call notification for foreground service [${notifiable.notificationId}]")
             startForeground(notifiable.notificationId, notification)
         }
