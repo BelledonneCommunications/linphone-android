@@ -67,6 +67,8 @@ class CoreService : CoreService() {
             } else {
                 Log.w("[Service] Task removed but Core in not in background, skipping")
             }
+        } else {
+            Log.i("[Service] Task removed but we were asked to keep the service alive, so doing nothing")
         }
 
         super.onTaskRemoved(rootIntent)

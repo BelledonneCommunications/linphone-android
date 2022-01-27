@@ -248,16 +248,18 @@ class NotificationsManager(private val context: Context) {
         // causing the notification to be missed by the user...
         Log.i("[Notifications Manager] Getting destroyed, clearing foreground Service & call notifications")
 
-        if (currentForegroundServiceNotificationId > 0) {
-            notificationManager.cancel(currentForegroundServiceNotificationId)
-            currentForegroundServiceNotificationId = 0
+        if (currentForegroundServiceNotificationId > 0 && !corePreferences.keepServiceAlive) {
+            Log.i("[Notifications Manager] Clearing foreground Service")
+            stopForegroundNotification()
         }
 
-        for (notifiable in callNotificationsMap.values) {
-            notificationManager.cancel(notifiable.notificationId)
+        if (callNotificationsMap.size > 0) {
+            Log.i("[Notifications Manager] Clearing call notifications")
+            for (notifiable in callNotificationsMap.values) {
+                notificationManager.cancel(notifiable.notificationId)
+            }
         }
 
-        stopForegroundNotification()
         coreContext.core.removeListener(listener)
     }
 
@@ -286,7 +288,13 @@ class NotificationsManager(private val context: Context) {
             Log.w("[Notifications Manager] Can't start service as foreground without a service, starting it now")
             val intent = Intent()
             intent.setClass(coreContext.context, CoreService::class.java)
-            coreContext.context.startService(intent)
+            try {
+                Compatibility.startForegroundService(coreContext.context, intent)
+            } catch (ise: IllegalStateException) {
+                Log.e("[Notifications Manager] Failed to start Service: $ise")
+            } catch (se: SecurityException) {
+                Log.e("[Notifications Manager] Failed to start Service: $se")
+            }
         }
     }
 
@@ -294,7 +302,11 @@ class NotificationsManager(private val context: Context) {
         service = coreService
         when {
             currentForegroundServiceNotificationId != 0 -> {
-                Log.e("[Notifications Manager] There is already a foreground service notification [$currentForegroundServiceNotificationId]")
+                if (currentForegroundServiceNotificationId != SERVICE_NOTIF_ID) {
+                    Log.e("[Notifications Manager] There is already a foreground service notification [$currentForegroundServiceNotificationId]")
+                } else {
+                    Log.i("[Notifications Manager] There is already a foreground service notification, no need to use the call notification to keep Service alive")
+                }
             }
             coreContext.core.callsNb > 0 -> {
                 // When this method will be called, we won't have any notification yet

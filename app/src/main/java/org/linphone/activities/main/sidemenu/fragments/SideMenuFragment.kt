@@ -31,6 +31,7 @@ import androidx.lifecycle.lifecycleScope
 import java.io.File
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.assistant.AssistantActivity
@@ -67,12 +68,11 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
         }
 
         sharedViewModel.accountRemoved.observe(
-            viewLifecycleOwner,
-            {
-                Log.i("[Side Menu] Account removed, update accounts list")
-                viewModel.updateAccountsList()
-            }
-        )
+            viewLifecycleOwner
+        ) {
+            Log.i("[Side Menu] Account removed, update accounts list")
+            viewModel.updateAccountsList()
+        }
 
         viewModel.accountsSettingsListener = object : SettingListenerStub() {
             override fun onAccountClicked(identity: String) {
@@ -110,8 +110,15 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
         }
 
         binding.setQuitClickListener {
+            Log.i("[Side Menu] Quitting app")
             requireActivity().finishAndRemoveTask()
-            coreContext.stop()
+
+            if (!corePreferences.keepServiceAlive) {
+                Log.i("[Side Menu] Stopping Core")
+                coreContext.stop()
+            } else {
+                Log.w("[Side Menu] Keep Service alive setting enabled, don't destroy the Core")
+            }
         }
 
         onBackPressedCallback.isEnabled = false

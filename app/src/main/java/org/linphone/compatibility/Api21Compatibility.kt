@@ -26,6 +26,7 @@ import android.app.PendingIntent
 import android.bluetooth.BluetoothAdapter
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
@@ -239,6 +240,10 @@ class Api21Compatibility {
 
         fun getImeFlagsForSecureChatRoom(): Int {
             return EditorInfo.IME_FLAG_NO_EXTRACT_UI
+        }
+
+        fun startForegroundService(context: Context, intent: Intent) {
+            context.startService(intent)
         }
     }
 }

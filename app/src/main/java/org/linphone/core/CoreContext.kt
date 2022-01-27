@@ -321,6 +321,11 @@ class CoreContext(val context: Context, coreConfig: Config) {
             FileUtils.clearExistingPlainFiles()
         }
 
+        if (corePreferences.keepServiceAlive) {
+            Log.i("[Context] Background mode setting is enabled, starting Service")
+            notificationsManager.startForeground()
+        }
+
         Log.i("[Context] Started")
     }
 

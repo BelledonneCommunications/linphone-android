@@ -24,6 +24,7 @@ import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.*
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.AudioAttributes
 import android.os.VibrationEffect
@@ -277,6 +278,10 @@ class Api26Compatibility {
 
         fun getImeFlagsForSecureChatRoom(): Int {
             return EditorInfo.IME_FLAG_NO_EXTRACT_UI or EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING
+        }
+
+        fun startForegroundService(context: Context, intent: Intent) {
+            context.startForegroundService(intent)
         }
     }
 }
