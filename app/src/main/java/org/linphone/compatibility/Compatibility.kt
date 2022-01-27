@@ -201,6 +201,14 @@ class Compatibility {
             return Api26Compatibility.createCallNotification(context, call, notifiable, pendingIntent, channel, notificationsManager)
         }
 
+        fun startForegroundService(context: Context, intent: Intent) {
+            if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
+                Api26Compatibility.startForegroundService(context, intent)
+            } else {
+                Api21Compatibility.startForegroundService(context, intent)
+            }
+        }
+
         /* Call */
 
         fun canDrawOverlay(context: Context): Boolean {
