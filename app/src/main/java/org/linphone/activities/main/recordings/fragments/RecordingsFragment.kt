@@ -69,11 +69,10 @@ class RecordingsFragment : MasterFragment<RecordingsFragmentBinding, RecordingsL
         binding.recordingsList.addItemDecoration(headerItemDecoration)
 
         viewModel.recordingsList.observe(
-            viewLifecycleOwner,
-            { recordings ->
-                adapter.submitList(recordings)
-            }
-        )
+            viewLifecycleOwner
+        ) { recordings ->
+            adapter.submitList(recordings)
+        }
 
         binding.setBackClickListener { goBack() }
 

@@ -69,39 +69,37 @@ class SettingsFragment : SecureFragment<SettingsFragmentBinding>() {
 
         // Account settings loading can take some time, so wait until it is ready before opening the pane
         sharedViewModel.accountSettingsFragmentOpenedEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    binding.slidingPane.openPane()
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                binding.slidingPane.openPane()
             }
-        )
+        }
 
         sharedViewModel.closeSlidingPaneEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    if (!binding.slidingPane.closePane()) {
-                        goBack()
-                    }
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                if (!binding.slidingPane.closePane()) {
+                    goBack()
                 }
             }
-        )
+        }
         sharedViewModel.layoutChangedEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    sharedViewModel.isSlidingPaneSlideable.value = binding.slidingPane.isSlideable
-                    if (binding.slidingPane.isSlideable) {
-                        val navHostFragment = childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
-                        if (navHostFragment.navController.currentDestination?.id == R.id.emptySettingsFragment) {
-                            Log.i("[Settings] Foldable device has been folded, closing side pane with empty fragment")
-                            binding.slidingPane.closePane()
-                        }
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                sharedViewModel.isSlidingPaneSlideable.value = binding.slidingPane.isSlideable
+                if (binding.slidingPane.isSlideable) {
+                    val navHostFragment =
+                        childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
+                    if (navHostFragment.navController.currentDestination?.id == R.id.emptySettingsFragment) {
+                        Log.i("[Settings] Foldable device has been folded, closing side pane with empty fragment")
+                        binding.slidingPane.closePane()
                     }
                 }
             }
-        )
+        }
         binding.slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
 
         /* End of shared view model & sliding pane related */
@@ -112,12 +110,11 @@ class SettingsFragment : SecureFragment<SettingsFragmentBinding>() {
         binding.setBackClickListener { goBack() }
 
         sharedViewModel.accountRemoved.observe(
-            viewLifecycleOwner,
-            {
-                Log.i("[Settings] Account removed, update accounts list")
-                viewModel.updateAccountsList()
-            }
-        )
+            viewLifecycleOwner
+        ) {
+            Log.i("[Settings] Account removed, update accounts list")
+            viewModel.updateAccountsList()
+        }
 
         val identity = arguments?.getString("Identity")
         if (identity != null) {

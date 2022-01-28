@@ -77,24 +77,25 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
 
         useMaterialSharedAxisXForwardAnimation = false
         sharedViewModel.updateDialerAnimationsBasedOnDestination.observe(
-            viewLifecycleOwner,
-            {
-                it.consume { id ->
-                    val forward = when (id) {
-                        R.id.masterChatRoomsFragment -> false
-                        else -> true
-                    }
-                    if (corePreferences.enableAnimations) {
-                        val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
-                        val axis = if (portraitOrientation) MaterialSharedAxis.X else MaterialSharedAxis.Y
-                        enterTransition = MaterialSharedAxis(axis, forward)
-                        reenterTransition = MaterialSharedAxis(axis, forward)
-                        returnTransition = MaterialSharedAxis(axis, !forward)
-                        exitTransition = MaterialSharedAxis(axis, !forward)
-                    }
+            viewLifecycleOwner
+        ) {
+            it.consume { id ->
+                val forward = when (id) {
+                    R.id.masterChatRoomsFragment -> false
+                    else -> true
+                }
+                if (corePreferences.enableAnimations) {
+                    val portraitOrientation =
+                        resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
+                    val axis =
+                        if (portraitOrientation) MaterialSharedAxis.X else MaterialSharedAxis.Y
+                    enterTransition = MaterialSharedAxis(axis, forward)
+                    reenterTransition = MaterialSharedAxis(axis, forward)
+                    returnTransition = MaterialSharedAxis(axis, !forward)
+                    exitTransition = MaterialSharedAxis(axis, !forward)
                 }
             }
-        )
+        }
 
         binding.setNewContactClickListener {
             sharedViewModel.updateDialerAnimationsBasedOnDestination.value = Event(R.id.masterContactsFragment)
@@ -111,43 +112,40 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
         }
 
         viewModel.enteredUri.observe(
-            viewLifecycleOwner,
-            {
-                if (it == corePreferences.debugPopupCode) {
-                    displayDebugPopup()
-                    viewModel.enteredUri.value = ""
-                }
+            viewLifecycleOwner
+        ) {
+            if (it == corePreferences.debugPopupCode) {
+                displayDebugPopup()
+                viewModel.enteredUri.value = ""
             }
-        )
+        }
 
         viewModel.uploadFinishedEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume { url ->
-                    // To prevent being trigger when using the Send Logs button in About page
-                    if (uploadLogsInitiatedByUs) {
-                        val clipboard =
-                            requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                        val clip = ClipData.newPlainText("Logs url", url)
-                        clipboard.setPrimaryClip(clip)
+            viewLifecycleOwner
+        ) {
+            it.consume { url ->
+                // To prevent being trigger when using the Send Logs button in About page
+                if (uploadLogsInitiatedByUs) {
+                    val clipboard =
+                        requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                    val clip = ClipData.newPlainText("Logs url", url)
+                    clipboard.setPrimaryClip(clip)
 
-                        val activity = requireActivity() as MainActivity
-                        activity.showSnackBar(R.string.logs_url_copied_to_clipboard)
+                    val activity = requireActivity() as MainActivity
+                    activity.showSnackBar(R.string.logs_url_copied_to_clipboard)
 
-                        AppUtils.shareUploadedLogsUrl(activity, url)
-                    }
+                    AppUtils.shareUploadedLogsUrl(activity, url)
                 }
             }
-        )
+        }
 
         viewModel.updateAvailableEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume { url ->
-                    displayNewVersionAvailableDialog(url)
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume { url ->
+                displayNewVersionAvailableDialog(url)
             }
-        )
+        }
 
         if (corePreferences.firstStart) {
             Log.w("[Dialer] First start detected, wait for assistant to be finished to check for update & request permissions")

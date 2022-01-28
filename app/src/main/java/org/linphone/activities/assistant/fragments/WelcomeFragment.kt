@@ -73,11 +73,10 @@ class WelcomeFragment : GenericFragment<AssistantWelcomeFragmentBinding>() {
         }
 
         viewModel.termsAndPrivacyAccepted.observe(
-            viewLifecycleOwner,
-            {
-                if (it) corePreferences.readAndAgreeTermsAndPrivacy = true
-            }
-        )
+            viewLifecycleOwner
+        ) {
+            if (it) corePreferences.readAndAgreeTermsAndPrivacy = true
+        }
 
         setUpTermsAndPrivacyLinks()
     }

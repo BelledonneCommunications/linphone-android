@@ -122,35 +122,36 @@ class ChatBubbleActivity : GenericActivity() {
         adapter.disableContextMenu()
 
         adapter.openContentEvent.observe(
-            this,
-            {
-                it.consume { content ->
-                    if (content.isFileEncrypted) {
-                        Toast.makeText(this, R.string.chat_bubble_cant_open_enrypted_file, Toast.LENGTH_LONG).show()
-                    } else {
-                        FileUtils.openFileInThirdPartyApp(this, content.filePath.orEmpty(), true)
-                    }
+            this
+        ) {
+            it.consume { content ->
+                if (content.isFileEncrypted) {
+                    Toast.makeText(
+                        this,
+                        R.string.chat_bubble_cant_open_enrypted_file,
+                        Toast.LENGTH_LONG
+                    ).show()
+                } else {
+                    FileUtils.openFileInThirdPartyApp(this, content.filePath.orEmpty(), true)
                 }
             }
-        )
+        }
 
         val layoutManager = LinearLayoutManager(this)
         layoutManager.stackFromEnd = true
         binding.chatMessagesList.layoutManager = layoutManager
 
         listViewModel.events.observe(
-            this,
-            { events ->
-                adapter.submitList(events)
-            }
-        )
+            this
+        ) { events ->
+            adapter.submitList(events)
+        }
 
         chatSendingViewModel.textToSend.observe(
-            this,
-            {
-                chatSendingViewModel.onTextToSendChanged(it)
-            }
-        )
+            this
+        ) {
+            chatSendingViewModel.onTextToSendChanged(it)
+        }
 
         binding.setOpenAppClickListener {
             coreContext.notificationsManager.currentlyDisplayedChatRoomAddress = null

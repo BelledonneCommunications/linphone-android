@@ -54,24 +54,22 @@ class AudioSettingsFragment : GenericSettingFragment<SettingsAudioFragmentBindin
         binding.setBackClickListener { goBack() }
 
         viewModel.askAudioRecordPermissionForEchoCancellerCalibrationEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    Log.i("[Audio Settings] Asking for RECORD_AUDIO permission for echo canceller calibration")
-                    requestPermissions(arrayOf(android.Manifest.permission.RECORD_AUDIO), 1)
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                Log.i("[Audio Settings] Asking for RECORD_AUDIO permission for echo canceller calibration")
+                requestPermissions(arrayOf(android.Manifest.permission.RECORD_AUDIO), 1)
             }
-        )
+        }
 
         viewModel.askAudioRecordPermissionForEchoTesterEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    Log.i("[Audio Settings] Asking for RECORD_AUDIO permission for echo tester")
-                    requestPermissions(arrayOf(android.Manifest.permission.RECORD_AUDIO), 2)
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                Log.i("[Audio Settings] Asking for RECORD_AUDIO permission for echo tester")
+                requestPermissions(arrayOf(android.Manifest.permission.RECORD_AUDIO), 2)
             }
-        )
+        }
 
         initAudioCodecsList()
 

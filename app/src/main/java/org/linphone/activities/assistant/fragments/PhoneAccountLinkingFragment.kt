@@ -73,38 +73,35 @@ class PhoneAccountLinkingFragment : AbstractPhoneFragment<AssistantPhoneAccountL
         }
 
         viewModel.goToSmsValidationEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    val args = Bundle()
-                    args.putBoolean("IsLinking", true)
-                    args.putString("PhoneNumber", viewModel.accountCreator.phoneNumber)
-                    navigateToPhoneAccountValidation(args)
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                val args = Bundle()
+                args.putBoolean("IsLinking", true)
+                args.putString("PhoneNumber", viewModel.accountCreator.phoneNumber)
+                navigateToPhoneAccountValidation(args)
             }
-        )
+        }
 
         viewModel.leaveAssistantEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    if (LinphoneApplication.coreContext.core.isEchoCancellerCalibrationRequired) {
-                        navigateToEchoCancellerCalibration()
-                    } else {
-                        requireActivity().finish()
-                    }
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                if (LinphoneApplication.coreContext.core.isEchoCancellerCalibrationRequired) {
+                    navigateToEchoCancellerCalibration()
+                } else {
+                    requireActivity().finish()
                 }
             }
-        )
+        }
 
         viewModel.onErrorEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume { message ->
-                    (requireActivity() as AssistantActivity).showSnackBar(message)
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume { message ->
+                (requireActivity() as AssistantActivity).showSnackBar(message)
             }
-        )
+        }
 
         if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
             checkPermissions()

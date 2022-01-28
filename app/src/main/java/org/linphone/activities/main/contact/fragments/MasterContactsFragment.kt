@@ -85,59 +85,58 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
 
         useMaterialSharedAxisXForwardAnimation = false
         sharedViewModel.updateContactsAnimationsBasedOnDestination.observe(
-            viewLifecycleOwner,
-            {
-                it.consume { id ->
-                    val forward = when (id) {
-                        R.id.dialerFragment, R.id.masterChatRoomsFragment -> false
-                        else -> true
-                    }
-                    if (corePreferences.enableAnimations) {
-                        val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
-                        val axis = if (portraitOrientation) MaterialSharedAxis.X else MaterialSharedAxis.Y
-                        enterTransition = MaterialSharedAxis(axis, forward)
-                        reenterTransition = MaterialSharedAxis(axis, forward)
-                        returnTransition = MaterialSharedAxis(axis, !forward)
-                        exitTransition = MaterialSharedAxis(axis, !forward)
-                    }
+            viewLifecycleOwner
+        ) {
+            it.consume { id ->
+                val forward = when (id) {
+                    R.id.dialerFragment, R.id.masterChatRoomsFragment -> false
+                    else -> true
+                }
+                if (corePreferences.enableAnimations) {
+                    val portraitOrientation =
+                        resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
+                    val axis =
+                        if (portraitOrientation) MaterialSharedAxis.X else MaterialSharedAxis.Y
+                    enterTransition = MaterialSharedAxis(axis, forward)
+                    reenterTransition = MaterialSharedAxis(axis, forward)
+                    returnTransition = MaterialSharedAxis(axis, !forward)
+                    exitTransition = MaterialSharedAxis(axis, !forward)
                 }
             }
-        )
+        }
 
         sharedViewModel.contactFragmentOpenedEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    binding.slidingPane.openPane()
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                binding.slidingPane.openPane()
             }
-        )
+        }
 
         sharedViewModel.closeSlidingPaneEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    if (!binding.slidingPane.closePane()) {
-                        goBack()
-                    }
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                if (!binding.slidingPane.closePane()) {
+                    goBack()
                 }
             }
-        )
+        }
         sharedViewModel.layoutChangedEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    sharedViewModel.isSlidingPaneSlideable.value = binding.slidingPane.isSlideable
-                    if (binding.slidingPane.isSlideable) {
-                        val navHostFragment = childFragmentManager.findFragmentById(R.id.contacts_nav_container) as NavHostFragment
-                        if (navHostFragment.navController.currentDestination?.id == R.id.emptyContactFragment) {
-                            Log.i("[Contacts] Foldable device has been folded, closing side pane with empty fragment")
-                            binding.slidingPane.closePane()
-                        }
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                sharedViewModel.isSlidingPaneSlideable.value = binding.slidingPane.isSlideable
+                if (binding.slidingPane.isSlideable) {
+                    val navHostFragment =
+                        childFragmentManager.findFragmentById(R.id.contacts_nav_container) as NavHostFragment
+                    if (navHostFragment.navController.currentDestination?.id == R.id.emptyContactFragment) {
+                        Log.i("[Contacts] Foldable device has been folded, closing side pane with empty fragment")
+                        binding.slidingPane.closePane()
                     }
                 }
             }
-        )
+        }
         binding.slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
 
         /* End of shared view model & sliding pane related */
@@ -208,38 +207,36 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
         binding.contactsList.addItemDecoration(headerItemDecoration)
 
         adapter.selectedContactEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume { contact ->
-                    Log.i("[Contacts] Selected item in list changed: $contact")
-                    sharedViewModel.selectedContact.value = contact
+            viewLifecycleOwner
+        ) {
+            it.consume { contact ->
+                Log.i("[Contacts] Selected item in list changed: $contact")
+                sharedViewModel.selectedContact.value = contact
 
-                    if (editOnClick) {
-                        navigateToContactEditor(sipUriToAdd, binding.slidingPane)
-                        editOnClick = false
-                        sipUriToAdd = null
-                    } else {
-                        navigateToContact()
-                    }
+                if (editOnClick) {
+                    navigateToContactEditor(sipUriToAdd, binding.slidingPane)
+                    editOnClick = false
+                    sipUriToAdd = null
+                } else {
+                    navigateToContact()
                 }
             }
-        )
+        }
 
         listViewModel.contactsList.observe(
-            viewLifecycleOwner,
-            {
-                val id = contactIdToDisplay
-                if (id != null) {
-                    val contact = coreContext.contactsManager.findContactById(id)
-                    if (contact != null) {
-                        contactIdToDisplay = null
-                        Log.i("[Contacts] Found matching contact $contact after callback")
-                        adapter.selectedContactEvent.value = Event(contact)
-                    }
+            viewLifecycleOwner
+        ) {
+            val id = contactIdToDisplay
+            if (id != null) {
+                val contact = coreContext.contactsManager.findContactById(id)
+                if (contact != null) {
+                    contactIdToDisplay = null
+                    Log.i("[Contacts] Found matching contact $contact after callback")
+                    adapter.selectedContactEvent.value = Event(contact)
                 }
-                adapter.submitList(it)
             }
-        )
+            adapter.submitList(it)
+        }
 
         binding.setAllContactsToggleClickListener {
             listViewModel.sipContactsSelected.value = false
@@ -249,18 +246,16 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
         }
 
         listViewModel.sipContactsSelected.observe(
-            viewLifecycleOwner,
-            {
-                listViewModel.updateContactsList()
-            }
-        )
+            viewLifecycleOwner
+        ) {
+            listViewModel.updateContactsList()
+        }
 
         listViewModel.filter.observe(
-            viewLifecycleOwner,
-            {
-                listViewModel.updateContactsList()
-            }
-        )
+            viewLifecycleOwner
+        ) {
+            listViewModel.updateContactsList()
+        }
 
         binding.setNewContactClickListener {
             // Remove any previously selected contact

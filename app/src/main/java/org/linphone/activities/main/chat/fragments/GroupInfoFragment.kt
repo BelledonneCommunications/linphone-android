@@ -84,36 +84,32 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
         binding.participants.addItemDecoration(AppUtils.getDividerDecoration(requireContext(), layoutManager))
 
         viewModel.participants.observe(
-            viewLifecycleOwner,
-            {
-                adapter.submitList(it)
-            }
-        )
+            viewLifecycleOwner
+        ) {
+            adapter.submitList(it)
+        }
 
         viewModel.isMeAdmin.observe(
-            viewLifecycleOwner,
-            { isMeAdmin ->
-                adapter.showAdminControls(isMeAdmin && chatRoom != null)
-            }
-        )
+            viewLifecycleOwner
+        ) { isMeAdmin ->
+            adapter.showAdminControls(isMeAdmin && chatRoom != null)
+        }
 
         viewModel.meAdminChangedEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume { isMeAdmin ->
-                    showMeAdminStateChanged(isMeAdmin)
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume { isMeAdmin ->
+                showMeAdminStateChanged(isMeAdmin)
             }
-        )
+        }
 
         adapter.participantRemovedEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume { participant ->
-                    viewModel.removeParticipant(participant)
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume { participant ->
+                viewModel.removeParticipant(participant)
             }
-        )
+        }
 
         addParticipantsFromSharedViewModel()
 
@@ -122,22 +118,20 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
         }
 
         viewModel.createdChatRoomEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume { chatRoom ->
-                    goToChatRoom(chatRoom, true)
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume { chatRoom ->
+                goToChatRoom(chatRoom, true)
             }
-        )
+        }
 
         viewModel.updatedChatRoomEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume { chatRoom ->
-                    goToChatRoom(chatRoom, false)
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume { chatRoom ->
+                goToChatRoom(chatRoom, false)
             }
-        )
+        }
 
         binding.setNextClickListener {
             if (viewModel.chatRoom != null) {
@@ -182,13 +176,12 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
         }
 
         viewModel.onErrorEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume { messageResourceId ->
-                    (activity as MainActivity).showSnackBar(messageResourceId)
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume { messageResourceId ->
+                (activity as MainActivity).showSnackBar(messageResourceId)
             }
-        )
+        }
     }
 
     private fun addParticipantsFromSharedViewModel() {

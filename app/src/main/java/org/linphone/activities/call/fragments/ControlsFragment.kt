@@ -88,140 +88,129 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
         binding.conferenceViewModel = conferenceViewModel
 
         callsViewModel.currentCallViewModel.observe(
-            viewLifecycleOwner,
-            {
-                if (it != null) {
-                    binding.activeCallTimer.base =
-                        SystemClock.elapsedRealtime() - (1000 * it.call.duration) // Linphone timestamps are in seconds
-                    binding.activeCallTimer.start()
-                }
+            viewLifecycleOwner
+        ) {
+            if (it != null) {
+                binding.activeCallTimer.base =
+                    SystemClock.elapsedRealtime() - (1000 * it.call.duration) // Linphone timestamps are in seconds
+                binding.activeCallTimer.start()
             }
-        )
+        }
 
         callsViewModel.noMoreCallEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    requireActivity().finish()
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                requireActivity().finish()
             }
-        )
+        }
 
         callsViewModel.askWriteExternalStoragePermissionEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    if (!PermissionHelper.get().hasWriteExternalStoragePermission()) {
-                        Log.i("[Controls Fragment] Asking for WRITE_EXTERNAL_STORAGE permission")
-                        requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 2)
-                    }
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                if (!PermissionHelper.get().hasWriteExternalStoragePermission()) {
+                    Log.i("[Controls Fragment] Asking for WRITE_EXTERNAL_STORAGE permission")
+                    requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 2)
                 }
             }
-        )
+        }
 
         callsViewModel.callUpdateEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume { call ->
-                    if (call.state == Call.State.StreamsRunning) {
-                        dialog?.dismiss()
-                    } else if (call.state == Call.State.UpdatedByRemote) {
-                        if (coreContext.core.isVideoCaptureEnabled || coreContext.core.isVideoDisplayEnabled) {
-                            if (call.currentParams.isVideoEnabled != call.remoteParams?.isVideoEnabled) {
-                                showCallVideoUpdateDialog(call)
-                            }
-                        } else {
-                            Log.w("[Controls Fragment] Video display & capture are disabled, don't show video dialog")
+            viewLifecycleOwner
+        ) {
+            it.consume { call ->
+                if (call.state == Call.State.StreamsRunning) {
+                    dialog?.dismiss()
+                } else if (call.state == Call.State.UpdatedByRemote) {
+                    if (coreContext.core.isVideoCaptureEnabled || coreContext.core.isVideoDisplayEnabled) {
+                        if (call.currentParams.isVideoEnabled != call.remoteParams?.isVideoEnabled) {
+                            showCallVideoUpdateDialog(call)
                         }
+                    } else {
+                        Log.w("[Controls Fragment] Video display & capture are disabled, don't show video dialog")
                     }
                 }
             }
-        )
+        }
 
         controlsViewModel.chatClickedEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    val intent = Intent()
-                    intent.setClass(requireContext(), MainActivity::class.java)
-                    intent.putExtra("Chat", true)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                val intent = Intent()
+                intent.setClass(requireContext(), MainActivity::class.java)
+                intent.putExtra("Chat", true)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
             }
-        )
+        }
 
         controlsViewModel.addCallClickedEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    val intent = Intent()
-                    intent.setClass(requireContext(), MainActivity::class.java)
-                    intent.putExtra("Dialer", true)
-                    intent.putExtra("Transfer", false)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                val intent = Intent()
+                intent.setClass(requireContext(), MainActivity::class.java)
+                intent.putExtra("Dialer", true)
+                intent.putExtra("Transfer", false)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
             }
-        )
+        }
 
         controlsViewModel.transferCallClickedEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    val intent = Intent()
-                    intent.setClass(requireContext(), MainActivity::class.java)
-                    intent.putExtra("Dialer", true)
-                    intent.putExtra("Transfer", true)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                val intent = Intent()
+                intent.setClass(requireContext(), MainActivity::class.java)
+                intent.putExtra("Dialer", true)
+                intent.putExtra("Transfer", true)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
             }
-        )
+        }
 
         controlsViewModel.askAudioRecordPermissionEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume { permission ->
-                    Log.i("[Controls Fragment] Asking for $permission permission")
-                    requestPermissions(arrayOf(permission), 0)
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume { permission ->
+                Log.i("[Controls Fragment] Asking for $permission permission")
+                requestPermissions(arrayOf(permission), 0)
             }
-        )
+        }
 
         controlsViewModel.askCameraPermissionEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume { permission ->
-                    Log.i("[Controls Fragment] Asking for $permission permission")
-                    requestPermissions(arrayOf(permission), 1)
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume { permission ->
+                Log.i("[Controls Fragment] Asking for $permission permission")
+                requestPermissions(arrayOf(permission), 1)
             }
-        )
+        }
 
         controlsViewModel.toggleNumpadEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume { open ->
-                    if (this::numpadAnimator.isInitialized) {
-                        if (open) {
-                            numpadAnimator.start()
-                        } else {
-                            numpadAnimator.reverse()
-                        }
+            viewLifecycleOwner
+        ) {
+            it.consume { open ->
+                if (this::numpadAnimator.isInitialized) {
+                    if (open) {
+                        numpadAnimator.start()
+                    } else {
+                        numpadAnimator.reverse()
                     }
                 }
             }
-        )
+        }
 
         controlsViewModel.somethingClickedEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    sharedViewModel.resetHiddenInterfaceTimerInVideoCallEvent.value = Event(true)
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                sharedViewModel.resetHiddenInterfaceTimerInVideoCallEvent.value = Event(true)
             }
-        )
+        }
 
         if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
             checkPermissions()

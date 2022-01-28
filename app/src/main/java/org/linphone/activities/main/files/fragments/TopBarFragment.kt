@@ -139,7 +139,7 @@ class TopBarFragment : GenericFragment<FileViewerTopBarFragmentBinding>() {
                     Log.w("[File Viewer] Media store file path is empty, media store export failed?")
 
                     val filePath = content.plainFilePath.orEmpty()
-                    plainFilePath = if (filePath.isEmpty()) content.filePath.orEmpty() else filePath
+                    plainFilePath = filePath.ifEmpty { content.filePath.orEmpty() }
                     Log.i("[File Viewer] Plain file path is: $plainFilePath")
                     if (plainFilePath.isNotEmpty()) {
                         if (!FileUtils.openFileInThirdPartyApp(requireActivity(), plainFilePath)) {

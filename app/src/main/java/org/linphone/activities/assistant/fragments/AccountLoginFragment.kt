@@ -79,66 +79,62 @@ class AccountLoginFragment : AbstractPhoneFragment<AssistantAccountLoginFragment
         }
 
         viewModel.goToSmsValidationEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    val args = Bundle()
-                    args.putBoolean("IsLogin", true)
-                    args.putString("PhoneNumber", viewModel.accountCreator.phoneNumber)
-                    navigateToPhoneAccountValidation(args)
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                val args = Bundle()
+                args.putBoolean("IsLogin", true)
+                args.putString("PhoneNumber", viewModel.accountCreator.phoneNumber)
+                navigateToPhoneAccountValidation(args)
             }
-        )
+        }
 
         viewModel.leaveAssistantEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    coreContext.contactsManager.updateLocalContacts()
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                coreContext.contactsManager.updateLocalContacts()
 
-                    if (coreContext.core.isEchoCancellerCalibrationRequired) {
-                        navigateToEchoCancellerCalibration()
-                    } else {
-                        requireActivity().finish()
-                    }
+                if (coreContext.core.isEchoCancellerCalibrationRequired) {
+                    navigateToEchoCancellerCalibration()
+                } else {
+                    requireActivity().finish()
                 }
             }
-        )
+        }
 
         viewModel.invalidCredentialsEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    val dialogViewModel =
-                        DialogViewModel(getString(R.string.assistant_error_invalid_credentials))
-                    val dialog: Dialog = DialogUtils.getDialog(requireContext(), dialogViewModel)
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                val dialogViewModel =
+                    DialogViewModel(getString(R.string.assistant_error_invalid_credentials))
+                val dialog: Dialog = DialogUtils.getDialog(requireContext(), dialogViewModel)
 
-                    dialogViewModel.showCancelButton {
-                        viewModel.removeInvalidProxyConfig()
-                        dialog.dismiss()
-                    }
-
-                    dialogViewModel.showDeleteButton(
-                        {
-                            viewModel.continueEvenIfInvalidCredentials()
-                            dialog.dismiss()
-                        },
-                        getString(R.string.assistant_continue_even_if_credentials_invalid)
-                    )
-
-                    dialog.show()
+                dialogViewModel.showCancelButton {
+                    viewModel.removeInvalidProxyConfig()
+                    dialog.dismiss()
                 }
+
+                dialogViewModel.showDeleteButton(
+                    {
+                        viewModel.continueEvenIfInvalidCredentials()
+                        dialog.dismiss()
+                    },
+                    getString(R.string.assistant_continue_even_if_credentials_invalid)
+                )
+
+                dialog.show()
             }
-        )
+        }
 
         viewModel.onErrorEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume { message ->
-                    (requireActivity() as AssistantActivity).showSnackBar(message)
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume { message ->
+                (requireActivity() as AssistantActivity).showSnackBar(message)
             }
-        )
+        }
 
         if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
             checkPermissions()
