@@ -80,64 +80,58 @@ class OutgoingCallActivity : ProximitySensorActivity() {
         binding.controlsViewModel = controlsViewModel
 
         viewModel.callEndedEvent.observe(
-            this,
-            {
-                it.consume {
-                    Log.i("[Outgoing Call Activity] Call ended, finish activity")
-                    finish()
-                }
+            this
+        ) {
+            it.consume {
+                Log.i("[Outgoing Call Activity] Call ended, finish activity")
+                finish()
             }
-        )
+        }
 
         viewModel.callConnectedEvent.observe(
-            this,
-            {
-                it.consume {
-                    Log.i("[Outgoing Call Activity] Call connected, finish activity")
-                    finish()
-                }
+            this
+        ) {
+            it.consume {
+                Log.i("[Outgoing Call Activity] Call connected, finish activity")
+                finish()
             }
-        )
+        }
 
         controlsViewModel.isSpeakerSelected.observe(
-            this,
-            {
-                enableProximitySensor(!it)
-            }
-        )
+            this
+        ) {
+            enableProximitySensor(!it)
+        }
 
         controlsViewModel.askAudioRecordPermissionEvent.observe(
-            this,
-            {
-                it.consume { permission ->
-                    requestPermissions(arrayOf(permission), 0)
-                }
+            this
+        ) {
+            it.consume { permission ->
+                requestPermissions(arrayOf(permission), 0)
             }
-        )
+        }
 
         controlsViewModel.askCameraPermissionEvent.observe(
-            this,
-            {
-                it.consume { permission ->
-                    requestPermissions(arrayOf(permission), 0)
-                }
+            this
+        ) {
+            it.consume { permission ->
+                requestPermissions(arrayOf(permission), 0)
             }
-        )
+        }
 
         controlsViewModel.toggleNumpadEvent.observe(
-            this,
-            {
-                it.consume { open ->
-                    if (this::numpadAnimator.isInitialized) {
-                        if (open) {
-                            numpadAnimator.start()
-                        } else {
-                            numpadAnimator.reverse()
-                        }
+            this
+        ) {
+            it.consume { open ->
+                if (this::numpadAnimator.isInitialized) {
+                    if (open) {
+                        numpadAnimator.start()
+                    } else {
+                        numpadAnimator.reverse()
                     }
                 }
             }
-        )
+        }
 
         if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
             checkPermissions()

@@ -56,56 +56,55 @@ abstract class MasterFragment<T : ViewDataBinding, U : SelectionListAdapter<*, *
         listSelectionViewModel = ViewModelProvider(this)[ListTopBarViewModel::class.java]
 
         listSelectionViewModel.isEditionEnabled.observe(
-            viewLifecycleOwner,
-            {
-                if (!it) listSelectionViewModel.onUnSelectAll()
-            }
-        )
+            viewLifecycleOwner
+        ) {
+            if (!it) listSelectionViewModel.onUnSelectAll()
+        }
 
         listSelectionViewModel.selectAllEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    listSelectionViewModel.onSelectAll(getItemCount() - 1)
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                listSelectionViewModel.onSelectAll(getItemCount() - 1)
             }
-        )
+        }
 
         listSelectionViewModel.unSelectAllEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    listSelectionViewModel.onUnSelectAll()
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                listSelectionViewModel.onUnSelectAll()
             }
-        )
+        }
 
         listSelectionViewModel.deleteSelectionEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    val confirmationDialog = AppUtils.getStringWithPlural(dialogConfirmationMessageBeforeRemoval, listSelectionViewModel.selectedItems.value.orEmpty().size)
-                    val viewModel = DialogViewModel(confirmationDialog)
-                    val dialog: Dialog = DialogUtils.getDialog(requireContext(), viewModel)
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                val confirmationDialog = AppUtils.getStringWithPlural(
+                    dialogConfirmationMessageBeforeRemoval,
+                    listSelectionViewModel.selectedItems.value.orEmpty().size
+                )
+                val viewModel = DialogViewModel(confirmationDialog)
+                val dialog: Dialog = DialogUtils.getDialog(requireContext(), viewModel)
 
-                    viewModel.showCancelButton {
+                viewModel.showCancelButton {
+                    dialog.dismiss()
+                    listSelectionViewModel.isEditionEnabled.value = false
+                }
+
+                viewModel.showDeleteButton(
+                    {
+                        delete()
                         dialog.dismiss()
                         listSelectionViewModel.isEditionEnabled.value = false
-                    }
+                    },
+                    getString(R.string.dialog_delete)
+                )
 
-                    viewModel.showDeleteButton(
-                        {
-                            delete()
-                            dialog.dismiss()
-                            listSelectionViewModel.isEditionEnabled.value = false
-                        },
-                        getString(R.string.dialog_delete)
-                    )
-
-                    dialog.show()
-                }
+                dialog.show()
             }
-        )
+        }
     }
 
     private fun delete() {

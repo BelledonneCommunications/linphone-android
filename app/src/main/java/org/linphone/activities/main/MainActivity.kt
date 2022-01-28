@@ -125,26 +125,24 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         binding.callOverlayViewModel = callOverlayViewModel
 
         sharedViewModel.toggleDrawerEvent.observe(
-            this,
-            {
-                it.consume {
-                    if (binding.sideMenu.isDrawerOpen(Gravity.LEFT)) {
-                        binding.sideMenu.closeDrawer(binding.sideMenuContent, true)
-                    } else {
-                        binding.sideMenu.openDrawer(binding.sideMenuContent, true)
-                    }
+            this
+        ) {
+            it.consume {
+                if (binding.sideMenu.isDrawerOpen(Gravity.LEFT)) {
+                    binding.sideMenu.closeDrawer(binding.sideMenuContent, true)
+                } else {
+                    binding.sideMenu.openDrawer(binding.sideMenuContent, true)
                 }
             }
-        )
+        }
 
         coreContext.callErrorMessageResourceId.observe(
-            this,
-            {
-                it.consume { message ->
-                    showSnackBar(message)
-                }
+            this
+        ) {
+            it.consume { message ->
+                showSnackBar(message)
             }
-        )
+        }
 
         if (coreContext.core.accountList.isEmpty()) {
             if (corePreferences.firstStart) {
@@ -251,7 +249,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         tabsFragment.visibility = if (tabsFragmentVisible1 && tabsFragmentVisible2) View.VISIBLE else View.GONE
     }
 
-    fun View.hideKeyboard() {
+    private fun View.hideKeyboard() {
         val imm = context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(windowToken, 0)
     }

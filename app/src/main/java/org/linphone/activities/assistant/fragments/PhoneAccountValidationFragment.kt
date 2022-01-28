@@ -59,37 +59,38 @@ class PhoneAccountValidationFragment : GenericFragment<AssistantPhoneAccountVali
         viewModel.isLinking.value = arguments?.getBoolean("IsLinking", false)
 
         viewModel.leaveAssistantEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    when {
-                        viewModel.isLogin.value == true || viewModel.isCreation.value == true -> {
-                            coreContext.contactsManager.updateLocalContacts()
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                when {
+                    viewModel.isLogin.value == true || viewModel.isCreation.value == true -> {
+                        coreContext.contactsManager.updateLocalContacts()
 
-                            if (coreContext.core.isEchoCancellerCalibrationRequired) {
-                                navigateToEchoCancellerCalibration()
-                            } else {
-                                requireActivity().finish()
-                            }
+                        if (coreContext.core.isEchoCancellerCalibrationRequired) {
+                            navigateToEchoCancellerCalibration()
+                        } else {
+                            requireActivity().finish()
                         }
-                        viewModel.isLinking.value == true -> {
-                            val args = Bundle()
-                            args.putString("Identity", "sip:${viewModel.accountCreator.username}@${viewModel.accountCreator.domain}")
-                            navigateToAccountSettings(args)
-                        }
+                    }
+                    viewModel.isLinking.value == true -> {
+                        val args = Bundle()
+                        args.putString(
+                            "Identity",
+                            "sip:${viewModel.accountCreator.username}@${viewModel.accountCreator.domain}"
+                        )
+                        navigateToAccountSettings(args)
                     }
                 }
             }
-        )
+        }
 
         viewModel.onErrorEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume { message ->
-                    (requireActivity() as AssistantActivity).showSnackBar(message)
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume { message ->
+                (requireActivity() as AssistantActivity).showSnackBar(message)
             }
-        )
+        }
 
         val clipboard = requireContext().getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
         clipboard.addPrimaryClipChangedListener {

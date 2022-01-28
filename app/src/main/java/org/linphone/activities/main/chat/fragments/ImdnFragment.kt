@@ -98,11 +98,10 @@ class ImdnFragment : SecureFragment<ChatRoomImdnFragmentBinding>() {
         binding.participantsList.addItemDecoration(headerItemDecoration)
 
         viewModel.participants.observe(
-            viewLifecycleOwner,
-            {
-                adapter.submitList(it)
-            }
-        )
+            viewLifecycleOwner
+        ) {
+            adapter.submitList(it)
+        }
 
         binding.setBackClickListener {
             goBack()

@@ -56,14 +56,13 @@ class QrCodeFragment : GenericFragment<AssistantQrCodeFragmentBinding>() {
         binding.viewModel = viewModel
 
         viewModel.qrCodeFoundEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume { url ->
-                    sharedViewModel.remoteProvisioningUrl.value = url
-                    findNavController().navigateUp()
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume { url ->
+                sharedViewModel.remoteProvisioningUrl.value = url
+                findNavController().navigateUp()
             }
-        )
+        }
         viewModel.setBackCamera()
 
         if (!PermissionHelper.required(requireContext()).hasCameraPermission()) {

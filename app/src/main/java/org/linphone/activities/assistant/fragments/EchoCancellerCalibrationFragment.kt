@@ -48,13 +48,12 @@ class EchoCancellerCalibrationFragment : GenericFragment<AssistantEchoCancellerC
         binding.viewModel = viewModel
 
         viewModel.echoCalibrationTerminated.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    requireActivity().finish()
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                requireActivity().finish()
             }
-        )
+        }
 
         if (!PermissionHelper.required(requireContext()).hasRecordAudioPermission()) {
             Log.i("[Echo Canceller Calibration] Asking for RECORD_AUDIO permission")

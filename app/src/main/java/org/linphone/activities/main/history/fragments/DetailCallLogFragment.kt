@@ -99,50 +99,48 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
         }
 
         viewModel.startCallEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume { callLog ->
-                    val address = callLog.remoteAddress
-                    if (coreContext.core.callsNb > 0) {
-                        Log.i("[History] Starting dialer with pre-filled URI ${address.asStringUriOnly()}, is transfer? ${sharedViewModel.pendingCallTransfer}")
-                        sharedViewModel.updateDialerAnimationsBasedOnDestination.value = Event(R.id.masterCallLogsFragment)
+            viewLifecycleOwner
+        ) {
+            it.consume { callLog ->
+                val address = callLog.remoteAddress
+                if (coreContext.core.callsNb > 0) {
+                    Log.i("[History] Starting dialer with pre-filled URI ${address.asStringUriOnly()}, is transfer? ${sharedViewModel.pendingCallTransfer}")
+                    sharedViewModel.updateDialerAnimationsBasedOnDestination.value =
+                        Event(R.id.masterCallLogsFragment)
 
-                        val args = Bundle()
-                        args.putString("URI", address.asStringUriOnly())
-                        args.putBoolean("Transfer", sharedViewModel.pendingCallTransfer)
-                        args.putBoolean(
-                            "SkipAutoCallStart",
-                            true
-                        ) // If auto start call setting is enabled, ignore it
-                        navigateToDialer(args)
-                    } else {
-                        val localAddress = callLog.localAddress
-                        coreContext.startCall(address, localAddress = localAddress)
-                    }
+                    val args = Bundle()
+                    args.putString("URI", address.asStringUriOnly())
+                    args.putBoolean("Transfer", sharedViewModel.pendingCallTransfer)
+                    args.putBoolean(
+                        "SkipAutoCallStart",
+                        true
+                    ) // If auto start call setting is enabled, ignore it
+                    navigateToDialer(args)
+                } else {
+                    val localAddress = callLog.localAddress
+                    coreContext.startCall(address, localAddress = localAddress)
                 }
             }
-        )
+        }
 
         viewModel.chatRoomCreatedEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume { chatRoom ->
-                    val args = Bundle()
-                    args.putString("LocalSipUri", chatRoom.localAddress.asStringUriOnly())
-                    args.putString("RemoteSipUri", chatRoom.peerAddress.asStringUriOnly())
-                    navigateToChatRoom(args)
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume { chatRoom ->
+                val args = Bundle()
+                args.putString("LocalSipUri", chatRoom.localAddress.asStringUriOnly())
+                args.putString("RemoteSipUri", chatRoom.peerAddress.asStringUriOnly())
+                navigateToChatRoom(args)
             }
-        )
+        }
 
         viewModel.onErrorEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume { messageResourceId ->
-                    (activity as MainActivity).showSnackBar(messageResourceId)
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume { messageResourceId ->
+                (activity as MainActivity).showSnackBar(messageResourceId)
             }
-        )
+        }
     }
 
     override fun goBack() {

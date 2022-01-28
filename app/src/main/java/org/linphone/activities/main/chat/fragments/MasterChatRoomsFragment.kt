@@ -113,40 +113,38 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
 
         // Chat room loading can take some time, so wait until it is ready before opening the pane
         sharedViewModel.chatRoomFragmentOpenedEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    binding.slidingPane.openPane()
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                binding.slidingPane.openPane()
             }
-        )
+        }
 
         sharedViewModel.closeSlidingPaneEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    (requireActivity() as MainActivity).hideKeyboard()
-                    if (!binding.slidingPane.closePane()) {
-                        goBack()
-                    }
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                (requireActivity() as MainActivity).hideKeyboard()
+                if (!binding.slidingPane.closePane()) {
+                    goBack()
                 }
             }
-        )
+        }
         sharedViewModel.layoutChangedEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    sharedViewModel.isSlidingPaneSlideable.value = binding.slidingPane.isSlideable
-                    if (binding.slidingPane.isSlideable) {
-                        val navHostFragment = childFragmentManager.findFragmentById(R.id.chat_nav_container) as NavHostFragment
-                        if (navHostFragment.navController.currentDestination?.id == R.id.emptyChatFragment) {
-                            Log.i("[Chat] Foldable device has been folded, closing side pane with empty fragment")
-                            binding.slidingPane.closePane()
-                        }
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                sharedViewModel.isSlidingPaneSlideable.value = binding.slidingPane.isSlideable
+                if (binding.slidingPane.isSlideable) {
+                    val navHostFragment =
+                        childFragmentManager.findFragmentById(R.id.chat_nav_container) as NavHostFragment
+                    if (navHostFragment.navController.currentDestination?.id == R.id.emptyChatFragment) {
+                        Log.i("[Chat] Foldable device has been folded, closing side pane with empty fragment")
+                        binding.slidingPane.closePane()
                     }
                 }
             }
-        )
+        }
         binding.slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
 
         /* End of shared view model & sliding pane related */
@@ -216,50 +214,47 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
         binding.chatList.addItemDecoration(AppUtils.getDividerDecoration(requireContext(), layoutManager))
 
         listViewModel.chatRooms.observe(
-            viewLifecycleOwner,
-            { chatRooms ->
-                adapter.submitList(chatRooms)
-            }
-        )
+            viewLifecycleOwner
+        ) { chatRooms ->
+            adapter.submitList(chatRooms)
+        }
 
         listViewModel.contactsUpdatedEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    adapter.notifyDataSetChanged()
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                adapter.notifyDataSetChanged()
             }
-        )
+        }
 
         adapter.selectedChatRoomEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume { chatRoom ->
-                    if ((requireActivity() as GenericActivity).isDestructionPending) {
-                        Log.w("[Chat] Activity is pending destruction, don't start navigating now!")
-                        sharedViewModel.destructionPendingChatRoom = chatRoom
-                    } else {
-                        if (chatRoom.peerAddress.asStringUriOnly() == coreContext.notificationsManager.currentlyDisplayedChatRoomAddress) {
-                            if (!binding.slidingPane.isOpen) {
-                                Log.w("[Chat] Chat room is displayed but sliding pane is closed...")
-                                if (!binding.slidingPane.openPane()) {
-                                    Log.e("[Chat] Tried to open pane to workaround already displayed chat room issue, failed!")
-                                }
-                            } else {
-                                Log.w("[Chat] This chat room is already displayed!")
+            viewLifecycleOwner
+        ) {
+            it.consume { chatRoom ->
+                if ((requireActivity() as GenericActivity).isDestructionPending) {
+                    Log.w("[Chat] Activity is pending destruction, don't start navigating now!")
+                    sharedViewModel.destructionPendingChatRoom = chatRoom
+                } else {
+                    if (chatRoom.peerAddress.asStringUriOnly() == coreContext.notificationsManager.currentlyDisplayedChatRoomAddress) {
+                        if (!binding.slidingPane.isOpen) {
+                            Log.w("[Chat] Chat room is displayed but sliding pane is closed...")
+                            if (!binding.slidingPane.openPane()) {
+                                Log.e("[Chat] Tried to open pane to workaround already displayed chat room issue, failed!")
                             }
                         } else {
-                            sharedViewModel.selectedChatRoom.value = chatRoom
-                            navigateToChatRoom(
-                                AppUtils.createBundleWithSharedTextAndFiles(
-                                    sharedViewModel
-                                )
-                            )
+                            Log.w("[Chat] This chat room is already displayed!")
                         }
+                    } else {
+                        sharedViewModel.selectedChatRoom.value = chatRoom
+                        navigateToChatRoom(
+                            AppUtils.createBundleWithSharedTextAndFiles(
+                                sharedViewModel
+                            )
+                        )
                     }
                 }
             }
-        )
+        }
 
         binding.setEditClickListener {
             listSelectionViewModel.isEditionEnabled.value = true
@@ -313,56 +308,52 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
             }
         } else {
             sharedViewModel.textToShare.observe(
-                viewLifecycleOwner,
-                {
-                    if (it.isNotEmpty()) {
-                        Log.i("[Chat] Found text to share")
-                        // val activity = requireActivity() as MainActivity
-                        // activity.showSnackBar(R.string.chat_room_toast_choose_for_sharing)
-                        listViewModel.textSharingPending.value = true
-                        clearDisplayedChatRoom()
-                    } else {
-                        if (sharedViewModel.filesToShare.value.isNullOrEmpty()) {
-                            listViewModel.textSharingPending.value = false
-                        }
+                viewLifecycleOwner
+            ) {
+                if (it.isNotEmpty()) {
+                    Log.i("[Chat] Found text to share")
+                    // val activity = requireActivity() as MainActivity
+                    // activity.showSnackBar(R.string.chat_room_toast_choose_for_sharing)
+                    listViewModel.textSharingPending.value = true
+                    clearDisplayedChatRoom()
+                } else {
+                    if (sharedViewModel.filesToShare.value.isNullOrEmpty()) {
+                        listViewModel.textSharingPending.value = false
                     }
                 }
-            )
+            }
             sharedViewModel.filesToShare.observe(
-                viewLifecycleOwner,
-                {
-                    if (it.isNotEmpty()) {
-                        Log.i("[Chat] Found ${it.size} files to share")
-                        // val activity = requireActivity() as MainActivity
-                        // activity.showSnackBar(R.string.chat_room_toast_choose_for_sharing)
-                        listViewModel.fileSharingPending.value = true
-                        clearDisplayedChatRoom()
-                    } else {
-                        if (sharedViewModel.textToShare.value.isNullOrEmpty()) {
-                            listViewModel.fileSharingPending.value = false
-                        }
+                viewLifecycleOwner
+            ) {
+                if (it.isNotEmpty()) {
+                    Log.i("[Chat] Found ${it.size} files to share")
+                    // val activity = requireActivity() as MainActivity
+                    // activity.showSnackBar(R.string.chat_room_toast_choose_for_sharing)
+                    listViewModel.fileSharingPending.value = true
+                    clearDisplayedChatRoom()
+                } else {
+                    if (sharedViewModel.textToShare.value.isNullOrEmpty()) {
+                        listViewModel.fileSharingPending.value = false
                     }
                 }
-            )
+            }
             sharedViewModel.isPendingMessageForward.observe(
-                viewLifecycleOwner,
-                {
-                    listViewModel.forwardPending.value = it
-                    adapter.forwardPending(it)
-                    if (it) {
-                        Log.i("[Chat] Found chat message to transfer")
-                    }
+                viewLifecycleOwner
+            ) {
+                listViewModel.forwardPending.value = it
+                adapter.forwardPending(it)
+                if (it) {
+                    Log.i("[Chat] Found chat message to transfer")
                 }
-            )
+            }
 
             listViewModel.onErrorEvent.observe(
-                viewLifecycleOwner,
-                {
-                    it.consume { messageResourceId ->
-                        (activity as MainActivity).showSnackBar(messageResourceId)
-                    }
+                viewLifecycleOwner
+            ) {
+                it.consume { messageResourceId ->
+                    (activity as MainActivity).showSnackBar(messageResourceId)
                 }
-            )
+            }
         }
     }
 
