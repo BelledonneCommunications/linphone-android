@@ -603,4 +603,6 @@
     <string name="call_settings_pause_calls_lost_audio_focus_title">Pausar llamadas cuando se pierde el enfoque del audio</string>
     <string name="chat_settings_use_in_app_file_viewer_title">Siempre abra archivos dentro de esta aplicación</string>
     <string name="chat_settings_use_in_app_file_viewer_summary">Aún podrá exportarlos en aplicaciones de terceros</string>
+    <string name="about_weblate_translation">Ayúdanos a traducir &appName;</string>
+    <string name="assistant_generic_account_warning_continue_button_text">Comprendo</string>
 </resources>

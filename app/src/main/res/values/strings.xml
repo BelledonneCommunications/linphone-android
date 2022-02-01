@@ -22,7 +22,7 @@
     <string name="about_privacy_policy">Visit our privacy policy</string>
     <string name="about_text" translatable="false">GNU General Public License v3.0\n © 2010–2022 Belledonne Communications</string>
     <string name="about_weblate_link" translatable="false">https://weblate.linphone.org/projects/linphone/</string>
-    <string name="about_weblate_translation">Help us translate Linphone</string>
+    <string name="about_weblate_translation">Help us translate &appName;</string>
 
     <!-- Logs -->
     <string name="logs_upload_failure">Failed to upload logs!</string>
