@@ -633,4 +633,6 @@
     <string name="chat_message_removal_info">Le message va être supprimé</string>
     <string name="chat_message_abort_removal">Annuler</string>
     <string name="about_weblate_translation">Contribuer aux traductions</string>
+    <string name="assistant_generic_account_warning">Certaines fonctionnalités avancées comme les messages de groupe ou les messages éphémères nécessitent un compte &appName;.\n\nElles seront masquées dans l\'application si vous configurez un compte SIP tiers.\n\nSi vous souhaitez les activer pour un projet professionnel, contactez-nous.</string>
+    <string name="assistant_generic_account_warning_continue_button_text">J\'ai compris</string>
 </resources>
