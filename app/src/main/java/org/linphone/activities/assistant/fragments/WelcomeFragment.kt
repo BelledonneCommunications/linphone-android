@@ -35,7 +35,6 @@ import org.linphone.activities.*
 import org.linphone.activities.assistant.viewmodels.WelcomeViewModel
 import org.linphone.activities.navigateToAccountLogin
 import org.linphone.activities.navigateToEmailAccountCreation
-import org.linphone.activities.navigateToGenericLogin
 import org.linphone.activities.navigateToRemoteProvisioning
 import org.linphone.databinding.AssistantWelcomeFragmentBinding
 
@@ -65,7 +64,7 @@ class WelcomeFragment : GenericFragment<AssistantWelcomeFragmentBinding>() {
         }
 
         binding.setGenericAccountLoginClickListener {
-            navigateToGenericLogin()
+            navigateToGenericLoginWarning()
         }
 
         binding.setRemoteProvisioningClickListener {
