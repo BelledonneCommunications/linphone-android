@@ -13,6 +13,9 @@
             name="licenseClickListener"
             type="android.view.View.OnClickListener"/>
         <variable
+            name="weblateClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
             name="viewModel"
             type="org.linphone.activities.main.about.AboutViewModel" />
     </data>
@@ -167,8 +170,20 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:paddingTop="10dp"
-                        android:paddingBottom="20dp"
+                        android:paddingBottom="10dp"
                         android:text="@string/about_text" />
+
+                    <TextView
+                        android:onClick="@{weblateClickListener}"
+                        android:textColor="?attr/accentColor"
+                        android:textSize="16sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="20dp"
+                        android:text="@string/about_weblate_translation" />
 
                     <View
                         android:layout_width="match_parent"

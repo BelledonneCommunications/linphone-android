@@ -58,5 +58,13 @@ class AboutFragment : SecureFragment<AboutFragmentBinding>() {
             )
             startActivity(browserIntent)
         }
+
+        binding.setWeblateClickListener {
+            val browserIntent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse(getString(R.string.about_weblate_link))
+            )
+            startActivity(browserIntent)
+        }
     }
 }

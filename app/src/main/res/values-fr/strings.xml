@@ -41,7 +41,7 @@
     <string name="content_description_remove_contact_from_selection">Retirer le contact</string>
     <string name="service_auto_start_description">&appName; a démarré automatiquement</string>
     <string name="sync_account_name">Contacts &appName;</string>
-    <string name="about_privacy_policy">Consultez notre politique de confidentialité</string>
+    <string name="about_privacy_policy">Consulter notre politique de confidentialité</string>
     <string name="logs_url_copied_to_clipboard">URL des traces copiée dans le presse-papier</string>
     <string name="error">Erreur</string>
     <string name="phone_number">Numéro de téléphone</string>
@@ -632,4 +632,5 @@
     <string name="call_settings_ringtones_title">Sonnerie</string>
     <string name="chat_message_removal_info">Le message va être supprimé</string>
     <string name="chat_message_abort_removal">Annuler</string>
+    <string name="about_weblate_translation">Contribuer aux traductions</string>
 </resources>
