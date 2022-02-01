@@ -632,4 +632,11 @@
     <string name="call_settings_ringtones_title">Csengőhang</string>
     <string name="chat_message_abort_removal">Megszakítás</string>
     <string name="chat_message_removal_info">Üzenet törlésre kerül</string>
+    <string name="about_weblate_translation">Segítsen nekünk a Linphone fordításában</string>
+    <string name="assistant_generic_account_warning_continue_button_text">Megértettem</string>
+    <string name="assistant_generic_account_warning">Egyes szolgáltatásokhoz egy &amp;appName; fiók kellene, például csoportos üzeneteket vagy elmúló üzeneteket.
+\n
+\nEzek a szolgáltatások el vannak rejtve, ha külső SIP-fiókkal regisztrál.
+\n
+\nHa engedélyezni szeretné egy kereskedelmi projektben, vegye fel velünk a kapcsolatot.</string>
 </resources>
