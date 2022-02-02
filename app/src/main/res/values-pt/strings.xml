@@ -388,12 +388,11 @@
 \n
 \nVocê verá em seu livro de endereços que está usando &appName; e seus amigos saberão que eles podem alcançá-lo em &appName; bem.
 \n</string>
-    <string name="assistant_phone_number_link_info_content">
+    <string name="assistant_phone_number_link_info_content">"
 \nSeus amigos irão encontrá-lo mais facilmente se você ligar sua conta ao seu número de telefone
 \n
-\n
-\nVocê verá em seu livro de endereços que está usando &appName; e seus amigos saberão que eles podem alcançá-lo em &appName; bem.
-\n</string>
+\nVocê verá em seu livro de endereços que está usando &amp;appName; e seus amigos saberão que eles podem alcançá-lo em &amp;appName; bem.
+\n"</string>
     <string name="assistant_error_invalid_email_address">O endereço de e-mail é inválido</string>
     <string name="assistant_error_invalid_credentials">A conta não existe ou a senha não corresponde</string>
     <string name="assistant_login_with_username">Use seu nome de usuário e senha em vez de seu número de telefone</string>
