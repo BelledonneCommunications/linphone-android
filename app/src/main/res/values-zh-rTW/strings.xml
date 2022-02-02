@@ -56,8 +56,7 @@
     <string name="contact_first_name">名字</string>
     <string name="contact_organization">機構</string>
     <string name="contact_editor_write_permission_denied">寫入聯絡人權限被拒，無法編輯聯絡人</string>
-    <string name="contact_delete_one_dialog">您要刪除這個聯絡人嗎？
-\n它也將會從您的設備通訊錄中刪除</string>
+    <string name="contact_delete_one_dialog">您要刪除這個聯絡人嗎？\n它也將會從您的設備通訊錄中刪除</string>
     <string name="contact_new_choose_sync_account">選擇保存聯絡人的位置</string>
     <string name="contact_local_sync_account">本地存儲</string>
     <string name="dialer_address_bar_hint">輸入電話號碼或地址</string>
@@ -93,8 +92,7 @@
     <string name="no_call_history">通話紀錄中沒有通話</string>
     <string name="no_sip_contact">通訊錄中沒有SIP聯絡人。</string>
     <string name="contact_choose_existing_or_new_to_add_number">選擇聯絡人或建立新的聯絡人</string>
-    <string name="contact_delete_many_dialog">您要刪除這些聯絡人嗎？
-\n它們也將會從您的設備通訊錄中刪除</string>
+    <string name="contact_delete_many_dialog">您要刪除這些聯絡人嗎？\n它們也將會從您的設備通訊錄中刪除</string>
     <string name="chat_security_event_man_in_the_middle_detected">檢測到中間人攻擊</string>
     <string name="chat_room_ephemeral_messages_desc">該信息已閱讀後，兩端的信息將在選定的超時時間被刪除。</string>
     <string name="call_error_declined">通話被拒</string>
@@ -180,11 +178,7 @@
     <string name="assistant_remote_provisioning">獲取遠程配置</string>
     <string name="assistant_ec_calibration">正在進行回音消除校正</string>
     <string name="assistant_phone_number_info_title">我的電話號碼將用於？</string>
-    <string name="assistant_phone_number_link_info_content">"
-\n如果將您的帳戶鏈接您的電話號碼，您的朋友們可以更容易的找到你。
-\n
-\n您在通訊錄裡可以查看誰在使用＆appName ;，他們也同樣可以通過＆appName;聯繫您。
-\n"</string>
+    <string name="assistant_phone_number_link_info_content">"\n如果將您的帳戶鏈接您的電話號碼，您的朋友們可以更容易的找到你。\n\n您在通訊錄裡可以查看誰在使用＆appName ;，他們也同樣可以通過＆appName;聯繫您。\n"</string>
     <string name="assistant_error_phone_number_invalid_characters">只能輸入數字</string>
     <string name="assistant_error_username_already_exists">用戶名已被使用</string>
     <string name="assistant_error_phone_number_already_exists">已有帳戶鏈接這個號碼</string>
@@ -208,8 +202,7 @@
     <string name="assistant_validate_account_1">您的帳戶已經創建。請檢查郵件以驗證您的帳戶：</string>
     <string name="assistant_validate_account_2">一旦完成，請返回並點擊此處。</string>
     <string name="assistant_use_username_instead_or_phone_number">使用一個用戶名（可選）</string>
-    <string name="assistant_create_account_part_3">請輸入4位數字碼以完成驗證：
-\n</string>
+    <string name="assistant_create_account_part_3">請輸入4位數字碼以完成驗證：\n</string>
     <string name="assistant_link_phone_number">您將用您的電話號碼關聯以下用戶名：</string>
     <string name="assistant_link_phone_number_skip">跳過</string>
     <string name="assistant_link_account">鏈接帳戶</string>
@@ -218,14 +211,8 @@
     <string name="assistant_remote_provisioning_url">URL網址</string>
     <string name="assistant_remote_provisioning_wrong_format">不明的URL網址格式，無法下載配置資源…</string>
     <string name="assistant_welcome_desc">助手將會幫助您配置和使用您的SIP帳戶。</string>
-    <string name="assistant_phone_number_info_content">
-\n益於您的電話號碼，您的朋友們將更容易找到您。
-\n
-\n您在通訊錄裡可以查看誰在使用&appName;，他們也同樣可以通過&appName;聯繫您。
-\n</string>
-    <string name="assistant_phone_number_link_info_content_already_account">您的電話號碼只能鏈接一個＆appName;賬戶。
-\n
-\n如果您已經把您的號碼鏈接了其他帳戶，但是您更想使用這個。只需鏈接您現在的賬戶，你的號碼就會自動轉移到這個賬戶。</string>
+    <string name="assistant_phone_number_info_content">\n益於您的電話號碼，您的朋友們將更容易找到您。\n\n您在通訊錄裡可以查看誰在使用&appName;，他們也同樣可以通過&appName;聯繫您。\n</string>
+    <string name="assistant_phone_number_link_info_content_already_account">您的電話號碼只能鏈接一個＆appName;賬戶。\n\n如果您已經把您的號碼鏈接了其他帳戶，但是您更想使用這個。只需鏈接您現在的賬戶，你的號碼就會自動轉移到這個賬戶。</string>
     <string name="assistant_error_account_not_activated">您的帳戶尚未經驗證</string>
     <string name="assistant_error_invalid_credentials">帳戶不存在或密碼不匹配</string>
     <string name="assistant_continue_even_if_credentials_invalid">繼續</string>

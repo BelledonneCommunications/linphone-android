@@ -76,8 +76,7 @@
     <string name="chat_event_admin_unset">%s már nem felügyelő</string>
     <string name="no_chat_history">Nincs beszélgetési előzmény</string>
     <string name="contact_choose_existing_or_new_to_add_number">Névjegy kiválasztása vagy új névjegy létrehozása</string>
-    <string name="contact_delete_one_dialog">Törli ezt a névjegyet\?
-\nEltávolítja az eszköz címjegyzékéből is</string>
+    <string name="contact_delete_one_dialog">Törli ezt a névjegyet\?\nEltávolítja az eszköz címjegyzékéből is</string>
     <string name="contact_new_choose_sync_account">Válassza ki, hová mentse a névjegyet</string>
     <string name="chat_event_device_removed">%s eszköz eltávolítva</string>
     <string name="chat_security_event_lime_identity_key_changed">A LIME-azonosító kulcs megváltozott %s számára</string>
@@ -164,9 +163,7 @@
     <string name="assistant_remote_provisioning">Távoli beállítások lekérése</string>
     <string name="call_paused_by_remote">A hívott fél szüneteltette a hívását</string>
     <string name="assistant_phone_number_info_title">Hogyan fog a telefonszámom használódni\?</string>
-    <string name="assistant_phone_number_link_info_content_already_account">Telefonszámát csak egy &appName;-fiókjával használhatja.
-\n
-\nHa már összekapcsolta telefonszámát egy másik fiókkal, de inkább ezt használja, egyszerűen kapcsolja össze most, és a telefonszám önműködően átkerül erre a fiókra.</string>
+    <string name="assistant_phone_number_link_info_content_already_account">Telefonszámát csak egy &appName;-fiókjával használhatja.\n\nHa már összekapcsolta telefonszámát egy másik fiókkal, de inkább ezt használja, egyszerűen kapcsolja össze most, és a telefonszám önműködően átkerül erre a fiókra.</string>
     <string name="assistant_error_username_already_exists">Ez a felhasználónév már foglalt</string>
     <string name="assistant_linphone_account">Használja a(z) &appName;-fiókját</string>
     <string name="assistant_read_and_agree_terms">Elfogadom a Belledonne Communications %1$s és %2$s</string>
@@ -398,8 +395,7 @@
     <string name="assistant_general_terms">felhasználási feltételeit</string>
     <string name="assistant_privacy_policy">adatvédelmi irányelveit</string>
     <string name="contact_editor_write_permission_denied">A névjegy írásának engedélye megtagadva, a névjegy nem szerkeszthető</string>
-    <string name="contact_delete_many_dialog">Biztosan törli ezeket a névjegyeket\?
-\nEzeket a rendszer eltávolítja az eszköz címjegyzékéből is</string>
+    <string name="contact_delete_many_dialog">Biztosan törli ezeket a névjegyeket\?\nEzeket a rendszer eltávolítja az eszköz címjegyzékéből is</string>
     <string name="dialog_lime_security_message">Az azonnali üzenetek végpontok közötti titkosításra kerülnek a biztonságos beszélgetések során. Lehetőség van a résztvevők hitelesítésével frissíteni a beszélgetés biztonsági szintjét. Ehhez hívja a partneret, és kövesse a hitelesítési folyamatot.</string>
     <string name="chat_event_ephemeral_lifetime_changed">Elmúló üzenetek lejárati dátuma: %s</string>
     <string name="chat_room_ephemeral_messages_desc">Ez az üzenet mindkét félnél törlődik, miután elolvasta és a kiválasztott időt túllépte.</string>
@@ -409,16 +405,8 @@
     <string name="content_description_e2e_encryption_enabled">Végpontok közötti titkosítás engedélyezve</string>
     <string name="audio_settings_echo_canceller_calibration_summary">Kattintson a visszhangkioltás beállításának megkezdéséhez</string>
     <string name="audio_settings_echo_tester_summary">Kattintson a visszhang ellenőrzés indításához</string>
-    <string name="assistant_phone_number_info_content">
-\nTelefonszámának köszönhetően ismerősei könnyebben megtalálják Önt.
-\n
-\nA címjegyzékében látni fogja, hogy ki használja a(z) &appName; és az ismerősök tudni fogják, hogy elérhetik Önt a(z) &appName; is.
-\n</string>
-    <string name="assistant_phone_number_link_info_content">
-\nAz ismerősei könnyebben megtalálja Önt, ha összekapcsolja fiókját a telefonszámával.
-\n
-\nA címjegyzékében látni fogja, hogy ki használja a(z) &appName; és az ismerősök tudni fogják, hogy elérhetik Önt a(z) &appName; is.
-\n</string>
+    <string name="assistant_phone_number_info_content">\nTelefonszámának köszönhetően ismerősei könnyebben megtalálják Önt.\n\nA címjegyzékében látni fogja, hogy ki használja a(z) &appName; és az ismerősök tudni fogják, hogy elérhetik Önt a(z) &appName; is.\n</string>
+    <string name="assistant_phone_number_link_info_content">\nAz ismerősei könnyebben megtalálja Önt, ha összekapcsolja fiókját a telefonszámával.\n\nA címjegyzékében látni fogja, hogy ki használja a(z) &appName; és az ismerősök tudni fogják, hogy elérhetik Önt a(z) &appName; is.\n</string>
     <string name="contacts_settings_friendlist_subscribe_title">Ismerőslista feliratkozása</string>
     <string name="assistant_linphone_login_desc">Kérjük, adja meg a(z) &appName;-fiókjának felhasználónevét és jelszavát</string>
     <string name="assistant_error_account_not_activated">Fiókját még nem érvényesítettük</string>
@@ -458,8 +446,7 @@
     <string name="content_description_call_quality_2">Közepes hívásminőség</string>
     <string name="content_description_export">Nyissa meg a fájlt külső alkalmazásokban</string>
     <string name="assistant_validate_account_1">Fiókja létrejött. Kérjük, ellenőrizze e-mailjeit fiókja érvényesítéséhez:</string>
-    <string name="assistant_create_account_part_3">A telefonszám hitelesítésének befejezéséhez kérjük, hogy adja meg a négyjegyű kódot lent:
-\n</string>
+    <string name="assistant_create_account_part_3">A telefonszám hitelesítésének befejezéséhez kérjük, hogy adja meg a négyjegyű kódot lent:\n</string>
     <string name="video_settings_tablet_preview_title">A kamera előnézetének megjelenítése a tárcsázón</string>
     <string name="call_settings_auto_start_summary">A hívás önműködően elindul, ha egy másik alkalmazásból indul</string>
     <string name="chat_settings_auto_download_under_size">Ha a megadott maximális méretnél könnyebb</string>
@@ -580,11 +567,11 @@
     <string name="tunnel_settings_dual_mode_summary">Egy kiszolgálót fog használni a feltöltéshez és egy másikat a letöltéshez</string>
     <string name="account_settings_push_notification_summary">Meghatalmazás-konfiguráció nem törli a regisztrációt</string>
     <string name="account_settings_apply_prefix_for_calls_title">Nemzetközi előhívószám alkalmazása a kimenő hívásokhoz és csevegéshez</string>
-    <string name="notification_channel_chat_name">&amp;appName; azonnali üzenetek értesítései</string>
+    <string name="notification_channel_chat_name">&appName; azonnali üzenetek értesítései</string>
     <string name="dialog_try_open_file_as_text_body">Szeretné megpróbálni megnyitni egyszerű szöveges fájlként\?</string>
     <string name="content_description_toggle_recording">Engedélyezze vagy tiltsa le a hívás rögzítését</string>
     <string name="content_description_resume_conference">Folytassa a jelenleg tartott konferenciát</string>
-    <string name="content_description_linphone_user">Az ismerős egy &amp;appName; felhasználó</string>
+    <string name="content_description_linphone_user">Az ismerős egy &appName; felhasználó</string>
     <string name="content_description_delete_selection">A kijelölt elemek törlése a listából</string>
     <string name="content_description_numpad_9">9</string>
     <string name="content_description_menu_history">Híváselőzmények</string>
@@ -624,19 +611,17 @@
     <string name="advanced_settings_disable_fragment_security_summary">Képernyőfelvétel engedélyezése bizalmas nézetekben</string>
     <string name="call_settings_use_telecom_manager_summary">További engedélyeket igényel</string>
     <string name="call_settings_use_telecom_manager_title">Tevékenységek fejlesztése Bluetooth-eszközökkel</string>
-    <string name="chat_room_unread_message">%1$d olvasatlan üzenet</string>
-    <string name="chat_room_unread_messages">%1$d olvasatlan üzenet</string>
+    <plurals name="chat_room_unread_messages_event">
+        <item quantity="one">%1$d olvasatlan üzenet</item>
+        <item quantity="other">%1$d olvasatlan üzenet</item>
+    </plurals>
     <string name="audio_settings_prefer_bluetooth_devices_summary">Ennek elsőbbsége lesz az alapértelmezett kimeneti eszközzel szemben</string>
     <string name="content_descripton_scroll_to_bottom">Görgetés legalulra vagy az első olvasatlan üzenetre</string>
     <string name="audio_settings_prefer_bluetooth_devices_title">Hang átirányítása a Bluetooth-eszközre (ha van ilyen)</string>
     <string name="call_settings_ringtones_title">Csengőhang</string>
     <string name="chat_message_abort_removal">Megszakítás</string>
     <string name="chat_message_removal_info">Üzenet törlésre kerül</string>
-    <string name="about_weblate_translation">Segítsen nekünk a Linphone fordításában</string>
+    <string name="about_weblate_translation">Segítsen nekünk a &appName; fordításában</string>
     <string name="assistant_generic_account_warning_continue_button_text">Megértettem</string>
-    <string name="assistant_generic_account_warning">Egyes szolgáltatásokhoz egy &amp;appName; fiók kellene, például csoportos üzeneteket vagy elmúló üzeneteket.
-\n
-\nEzek a szolgáltatások el vannak rejtve, ha külső SIP-fiókkal regisztrál.
-\n
-\nHa engedélyezni szeretné egy kereskedelmi projektben, vegye fel velünk a kapcsolatot.</string>
+    <string name="assistant_generic_account_warning">Egyes szolgáltatásokhoz egy &appName; fiók kellene, például csoportos üzeneteket vagy elmúló üzeneteket.\n\nEzek a szolgáltatások el vannak rejtve, ha külső SIP-fiókkal regisztrál.\n\nHa engedélyezni szeretné egy kereskedelmi projektben, vegye fel velünk a kapcsolatot.</string>
 </resources>
