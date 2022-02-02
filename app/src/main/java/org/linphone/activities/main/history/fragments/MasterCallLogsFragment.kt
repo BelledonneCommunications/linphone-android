@@ -246,10 +246,8 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
                     val args = Bundle()
                     args.putString("URI", remoteAddress.asStringUriOnly())
                     args.putBoolean("Transfer", sharedViewModel.pendingCallTransfer)
-                    args.putBoolean(
-                        "SkipAutoCallStart",
-                        true
-                    ) // If auto start call setting is enabled, ignore it
+                    // If auto start call setting is enabled, ignore it
+                    args.putBoolean("SkipAutoCallStart", true)
                     navigateToDialer(args)
                 } else {
                     val localAddress = callLogGroup.lastCallLog.localAddress

@@ -86,6 +86,10 @@ class ChatMessagesListAdapter(
         MutableLiveData<Event<Content>>()
     }
 
+    val sipUriClickedEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
     val scrollToChatMessageEvent: MutableLiveData<Event<ChatMessage>> by lazy {
         MutableLiveData<Event<ChatMessage>>()
     }
@@ -93,6 +97,10 @@ class ChatMessagesListAdapter(
     private val contentClickedListener = object : OnContentClickedListener {
         override fun onContentClicked(content: Content) {
             openContentEvent.value = Event(content)
+        }
+
+        override fun onSipAddressClicked(sipUri: String) {
+            sipUriClickedEvent.value = Event(sipUri)
         }
     }
 

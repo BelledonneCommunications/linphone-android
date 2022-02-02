@@ -354,4 +354,6 @@ class ChatMessageContentData(
 
 interface OnContentClickedListener {
     fun onContentClicked(content: Content)
+
+    fun onSipAddressClicked(sipUri: String)
 }
