@@ -54,8 +54,7 @@
     <string name="contact_first_name">Primeiro nome</string>
     <string name="contact_organization">Organização</string>
     <string name="contact_editor_write_permission_denied">Escreva a permissão de Contatos negada, não pode editar contato</string>
-    <string name="contact_delete_many_dialog">Tem certeza de que deseja excluir esses contatos\?
-\nEles também serão removidos do seu livro de endereços do dispositivo</string>
+    <string name="contact_delete_many_dialog">Tem certeza de que deseja excluir esses contatos\?\nEles também serão removidos do seu livro de endereços do dispositivo</string>
     <string name="contact_new_choose_sync_account">Escolha onde salvar o contato</string>
     <string name="contact_local_sync_account">Armazenar localmente</string>
     <string name="dialer_address_bar_hint">Digite um número ou um endereço</string>
@@ -134,8 +133,10 @@
     <string name="chat_room_sending_reply_hint">Responde</string>
     <string name="chat_room_sending_message_hint">Mensagem</string>
     <string name="chat_message_voice_recording_playback_low_volume">Seu volume de mídia é baixo, você pode querer aumentá-lo</string>
-    <string name="chat_room_unread_message">%1$d mensagem não lida</string>
-    <string name="chat_room_unread_messages">%1$d mensagem não lidas</string>
+    <plurals name="chat_room_unread_messages_event">
+        <item quantity="one">%1$d mensagem não lida</item>
+        <item quantity="other">%1$d mensagem não lidas</item>
+    </plurals>
     <string name="chat_message_removal_info">A mensagem será excluída</string>
     <string name="chat_message_abort_removal">Abortar</string>
     <string name="recordings_empty_list">Sem gravações</string>
@@ -176,9 +177,7 @@
     <string name="assistant_login_generic">Usar conta SIP</string>
     <string name="assistant_ec_calibration">Calibração do cancelador de eco em progresso</string>
     <string name="assistant_phone_number_info_title">Para que será utilizado o meu número de telefone\?</string>
-    <string name="assistant_phone_number_link_info_content_already_account">Você só pode usar seu número de telefone com um &appName; conta.
-\n
-\nSe você já tiver ligado seu número a uma outra conta, mas você preferir usar esta, basta ligar agora e seu número será automaticamente movido para esta conta.</string>
+    <string name="assistant_phone_number_link_info_content_already_account">Você só pode usar seu número de telefone com um &appName; conta.\n\nSe você já tiver ligado seu número a uma outra conta, mas você preferir usar esta, basta ligar agora e seu número será automaticamente movido para esta conta.</string>
     <string name="assistant_general_terms">termos de uso</string>
     <string name="assistant_privacy_policy">política de privacidade</string>
     <string name="assistant_read_and_agree_terms">Eu aceito Belledonne Communications\' %1$s e %2$s</string>
@@ -360,8 +359,7 @@
     <string name="contact_invite_friend">Convidar</string>
     <string name="no_sip_contact">Nenhum contato SIP no seu livro de endereços.</string>
     <string name="contact_choose_existing_or_new_to_add_number">Selecione um contato ou crie um novo</string>
-    <string name="contact_delete_one_dialog">Você quer excluir este contato\?
-\nEle também será removido do seu livro de endereços do dispositivo</string>
+    <string name="contact_delete_one_dialog">Você quer excluir este contato\?\nEle também será removido do seu livro de endereços do dispositivo</string>
     <string name="chat_event_conference_destroyed">Você deixou o grupo</string>
     <string name="chat_security_event_lime_identity_key_changed">Chave de identidade LIME alterada para %s</string>
     <string name="chat_event_ephemeral_enabled">Você ativou mensagens efêmeras: %s</string>
@@ -383,24 +381,16 @@
     <string name="call_stats_video_resolution_sent">Resolução de vídeo enviada:</string>
     <string name="call_stats_display_filter">Filtro de exibição:</string>
     <string name="assistant_remote_provisioning">Buscar configuração remota</string>
-    <string name="assistant_phone_number_info_content">
-\nGraças ao seu número de telefone, seus amigos vão encontrá-lo mais facilmente.
-\n
-\nVocê verá em seu livro de endereços que está usando &appName; e seus amigos saberão que eles podem alcançá-lo em &appName; bem.
-\n</string>
-    <string name="assistant_phone_number_link_info_content">"
-\nSeus amigos irão encontrá-lo mais facilmente se você ligar sua conta ao seu número de telefone
-\n
-\nVocê verá em seu livro de endereços que está usando &amp;appName; e seus amigos saberão que eles podem alcançá-lo em &amp;appName; bem.
-\n"</string>
+    <string name="assistant_phone_number_info_content">\nGraças ao seu número de telefone, seus amigos vão encontrá-lo mais facilmente.\n\nVocê verá em seu livro de endereços que está usando &appName; e seus amigos saberão que eles podem alcançá-lo em &appName; bem.\n</string>
+    <string name="assistant_phone_number_link_info_content">\nSeus amigos irão encontrá-lo mais facilmente se você ligar sua conta ao seu número de telefone\n\nVocê verá em seu livro de endereços que está usando &appName; e seus amigos saberão que eles podem alcançá-lo em &appName;
+        bem.\n</string>
     <string name="assistant_error_invalid_email_address">O endereço de e-mail é inválido</string>
     <string name="assistant_error_invalid_credentials">A conta não existe ou a senha não corresponde</string>
     <string name="assistant_login_with_username">Use seu nome de usuário e senha em vez de seu número de telefone</string>
     <string name="assistant_create_account_part_email">Por favor, digite um nome de usuário, e-mail e senha para o seu &appName; conta</string>
     <string name="assistant_confirm_password">Confirmação de senha</string>
     <string name="assistant_validate_account_1">Sua conta está criada. Por favor, verifique seus e-mails para validar sua conta:</string>
-    <string name="assistant_create_account_part_3">Para concluir a verificação do número de telefone, digite o código de 4 dígitos abaixo:
-\n</string>
+    <string name="assistant_create_account_part_3">Para concluir a verificação do número de telefone, digite o código de 4 dígitos abaixo:\n</string>
     <string name="assistant_remote_provisioning_failure">Falhado para baixar ou aplicar perfil de provisionamento remoto…</string>
     <string name="audio_settings_echo_canceller_calibration_title">Calibração de canceladores de eco</string>
     <string name="audio_settings_echo_cancellation_calibration_started">A calibração do cancelador de eco começou</string>
@@ -431,18 +421,7 @@
     <string name="tunnel_settings_mode_title">Modo</string>
     <string name="account_settings_user_name_summary">Exemplo: joao se sua conta for joao@sip.example.org</string>
     <string name="account_settings_user_id_summary">Digite ID de autenticação se diferente do nome de usuário (opcional)</string>
-    <string name="account_settings_password_title">Senha</string>
-    <string name="account_settings_password_summary">Você deve redigitar sua senha se editar seu nome de usuário e/ou o domínio</string>
-    <string name="about_weblate_translation">Ajude-nos a traduzir Linphone</string>
-    <string name="assistant_generic_account_warning">Alguns recursos exigem um &appName; conta, como mensagens de grupo ou mensagens efêmeras.
-\n
-\nEsses recursos estão ocultos quando você se registra com uma conta SIP de terceiros.
-\n
-\nPara habilitar em um projeto comercial, entre em contato conosco.</string>
-    <string name="account_settings_domain_summary">Exemplo: sip.example.org se sua conta é joao@sip.example.org</string>
-    <string name="account_settings_outbound_proxy_summary">Encaminhe todas as chamadas através do proxy SIP acima</string>
-    <string name="account_settings_apply_prefix_for_calls_summary">Se um número for inserido, aplique o prefixo ao número</string>
-    <string name="notification_channel_service_name">&appName; notificação de serviço</string>
+
     <string name="notification_channel_incoming_call_name">&appName; notificações de chamadas recebidas</string>
     <string name="zrtp_dialog_message">Confirme o seguinte código SAS com o seu correspondente</string>
     <string name="dialog_lime_security_message">As mensagens instantâneas são criptografadas de ponta a ponta em conversas seguras. É possível atualizar o nível de segurança de uma conversa autenticando os participantes. Para isso, ligue para o contato e siga o processo de autenticação.</string>
@@ -451,6 +430,14 @@
     <string name="content_description_pause_call">Pausar a chamada</string>
     <string name="content_description_toggle_recording">Habilitar ou desabilitar a gravação da chamada</string>
     <string name="content_description_disable_speaker">Rotear áudio para o fone de ouvido</string>
+    <string name="account_settings_password_title">Senha</string>
+    <string name="account_settings_password_summary">Você deve redigitar sua senha se editar seu nome de usuário e/ou o domínio</string>
+    <string name="about_weblate_translation">Ajude-nos a traduzir Linphone</string>
+    <string name="assistant_generic_account_warning">Alguns recursos exigem um &appName; conta, como mensagens de grupo ou mensagens efêmeras.\n\nEsses recursos estão ocultos quando você se registra com uma conta SIP de terceiros.\n\nPara habilitar em um projeto comercial, entre em contato conosco.</string>
+    <string name="account_settings_domain_summary">Exemplo: sip.example.org se sua conta é joao@sip.example.org</string>
+    <string name="account_settings_outbound_proxy_summary">Encaminhe todas as chamadas através do proxy SIP acima</string>
+    <string name="account_settings_apply_prefix_for_calls_summary">Se um número for inserido, aplique o prefixo ao número</string>
+    <string name="notification_channel_service_name">&appName; notificação de serviço</string>
     <string name="content_description_show_numpad">Mostrar ou ocultar os dígitos para enviar DTMFs</string>
     <string name="content_description_use_earpiece">Use o fone de ouvido como saída de áudio</string>
     <string name="content_description_pending_file_transfer">Transferência de ficheiros pendente</string>
@@ -548,7 +535,7 @@
     <string name="content_description_forwarded_message">A mensagem foi reencaminhada</string>
     <string name="content_description_replied_message">A mensagem é uma resposta</string>
     <string name="content_description_ephemeral_message">A mensagem é efémera</string>
-    <string name="content_description_linphone_user">O contacto é um &amp;appName; utilizador</string>
+    <string name="content_description_linphone_user">O contacto é um &appName; utilizador</string>
     <string name="content_description_contact_selected">O contacto é seleccionado</string>
     <string name="content_description_e2e_encryption_disabled">Encriptação de ponta a ponta desactivada</string>
     <string name="content_description_show_all_contacts">Mostrar uma lista de todos os contactos</string>

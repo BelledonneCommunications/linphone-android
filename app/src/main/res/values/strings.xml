@@ -4,7 +4,7 @@
     <!ENTITY appName "Linphone">
 ]>
 
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name" translatable="false">&appName;</string>
     <string name="app_name_debug" translatable="false">&appName; (debug)</string>
     <string name="user_agent_app_name" translatable="false">&appName;Android</string>
@@ -223,11 +223,9 @@
     <string name="chat_room_sending_message_hint">Message</string>
     <string name="chat_message_voice_recording_hold_to_record">Hold button to record voice message</string>
     <string name="chat_message_voice_recording_playback_low_volume">Your media volume is low, you may want to increase it</string>
-    <string name="chat_room_unread_message">%1$d unread message</string>
-    <string name="chat_room_unread_messages">%1$d unread messages</string>
-    <plurals name="chat_room_unread_messages_event" translatable="false">
-        <item quantity="one">@string/chat_room_unread_message</item>
-        <item quantity="other">@string/chat_room_unread_messages</item>
+    <plurals name="chat_room_unread_messages_event">
+        <item quantity="one">%1$d unread message</item>
+        <item quantity="other">%1$d unread messages</item>
     </plurals>
     <string name="chat_message_removal_info">Message will be deleted</string>
     <string name="chat_message_abort_removal">Abort</string>
