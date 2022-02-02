@@ -633,4 +633,17 @@
     <string name="content_description_cancel_voice_recording">取消录音</string>
     <string name="content_description_pause_voice_recording_playback">暂停录音</string>
     <string name="content_description_play_voice_recording">播放录音</string>
+    <string name="about_weblate_translation">帮助我们翻译 Linphone</string>
+    <string name="assistant_generic_account_warning">某些功能需要 1&appName; 帐户，例如群组消息或临时消息。
+\n
+\n当您注册第三方 SIP 帐户时，这些功能会被隐藏。
+\n
+\n要在商业项目中启用它，请联系我们。</string>
+    <string name="audio_settings_prefer_bluetooth_devices_title">将音频转到蓝牙设备（如果有）</string>
+    <string name="audio_settings_prefer_bluetooth_devices_summary">它将优先于默认输出设备</string>
+    <string name="content_descripton_scroll_to_bottom">滚动到底部或第一条未读消息</string>
+    <string name="call_settings_ringtones_title">铃声</string>
+    <string name="chat_message_removal_info">消息将被删除</string>
+    <string name="chat_message_abort_removal">中止</string>
+    <string name="assistant_generic_account_warning_continue_button_text">我明白</string>
 </resources>
