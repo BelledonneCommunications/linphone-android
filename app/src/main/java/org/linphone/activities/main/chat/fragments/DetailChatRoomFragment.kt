@@ -457,6 +457,19 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             }
         }
 
+        adapter.sipUriClickedEvent.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume { sipUri ->
+                val args = Bundle()
+                args.putString("URI", sipUri)
+                args.putBoolean("Transfer", false)
+                // If auto start call setting is enabled, ignore it
+                args.putBoolean("SkipAutoCallStart", true)
+                navigateToDialer(args)
+            }
+        }
+
         adapter.scrollToChatMessageEvent.observe(
             viewLifecycleOwner
         ) {

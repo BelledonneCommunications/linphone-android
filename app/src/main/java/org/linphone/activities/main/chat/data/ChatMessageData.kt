@@ -24,12 +24,14 @@ import android.text.Spannable
 import android.text.util.Linkify
 import androidx.core.text.util.LinkifyCompat
 import androidx.lifecycle.MutableLiveData
+import java.util.regex.Pattern
 import org.linphone.R
 import org.linphone.contact.GenericContactData
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatMessageListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
+import org.linphone.utils.PatternClickableSpan
 import org.linphone.utils.TimestampUtils
 
 class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMessage.fromAddress) {
@@ -182,7 +184,16 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
             } else if (content.isText) {
                 val spannable = Spannable.Factory.getInstance().newSpannable(content.utf8Text?.trim())
                 LinkifyCompat.addLinks(spannable, Linkify.WEB_URLS)
-                text.value = spannable
+                text.value = PatternClickableSpan()
+                    .add(
+                        Pattern.compile("(sips?):([^@]+)(?:@([^ ]+))?"),
+                        object : PatternClickableSpan.SpannableClickedListener {
+                            override fun onSpanClicked(text: String) {
+                                Log.i("[Chat Message Data] Clicked on SIP URI: $text")
+                                contentListener?.onSipAddressClicked(text)
+                            }
+                        }
+                    ).build(spannable)
             }
         }
 

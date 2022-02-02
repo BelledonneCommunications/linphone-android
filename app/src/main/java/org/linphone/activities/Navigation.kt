@@ -322,6 +322,14 @@ internal fun DetailChatRoomFragment.navigateToEmptyChatRoom() {
     )
 }
 
+internal fun DetailChatRoomFragment.navigateToDialer(args: Bundle?) {
+    findMasterNavController().navigate(
+        R.id.action_global_dialerFragment,
+        args,
+        popupTo(R.id.dialerFragment, true)
+    )
+}
+
 internal fun ChatRoomCreationFragment.navigateToGroupInfo() {
     if (findNavController().currentDestination?.id == R.id.chatRoomCreationFragment) {
         findNavController().navigate(
