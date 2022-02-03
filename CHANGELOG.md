@@ -53,6 +53,7 @@ Group changes to describe their impact on the project, as follows:
 - Dialer will no longer make DTMF sound when pressing digits
 - Launcher activity
 - Global push notification setting in Network, use the switch in each Account instead
+- No longer need to monitor device rotation and give information to the Core, it does it by itself
 
 ## [4.5.6] - 2021-11-08
 
