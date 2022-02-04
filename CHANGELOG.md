@@ -43,6 +43,7 @@ Group changes to describe their impact on the project, as follows:
 ### Fixed
 - Chat notifications disappearing when app restarts
 - "Infinite backstack", now each view is stored (at most) once in the backstack
+- Voice messages / call recordings will be played on headset/headphones instead of speaker, if possible
 - Going back to the dialer when pressing back in a chat room after clicking on a chat message notification
 - Missing international prefix / phone number in assistant after granting permission
 - Display issue for incoming call notification preventing to use answer/hangup actions on some Xiaomi devices (like Redmi Note 9S)
