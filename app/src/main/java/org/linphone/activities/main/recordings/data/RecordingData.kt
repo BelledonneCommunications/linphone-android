@@ -164,8 +164,9 @@ class RecordingData(val path: String, private val recordingListener: RecordingLi
     }
 
     private fun initPlayer() {
-        // Use speaker sound card to play recordings, otherwise use earpiece
+        // In case no headphones/headset is connected, use speaker sound card to play recordings, otherwise use earpiece
         // If none are available, default one will be used
+        var headphonesCard: String? = null
         var speakerCard: String? = null
         var earpieceCard: String? = null
         for (device in coreContext.core.audioDevices) {
@@ -174,11 +175,14 @@ class RecordingData(val path: String, private val recordingListener: RecordingLi
                     speakerCard = device.id
                 } else if (device.type == AudioDevice.Type.Earpiece) {
                     earpieceCard = device.id
+                } else if (device.type == AudioDevice.Type.Headphones || device.type == AudioDevice.Type.Headset) {
+                    headphonesCard = device.id
                 }
             }
         }
+        Log.i("[Recording VM] Found headset/headphones sound card [$headphonesCard], speaker sound card [$speakerCard] and earpiece sound card [$earpieceCard]")
 
-        val localPlayer = coreContext.core.createLocalPlayer(speakerCard ?: earpieceCard, null, null)
+        val localPlayer = coreContext.core.createLocalPlayer(headphonesCard ?: speakerCard ?: earpieceCard, null, null)
         if (localPlayer != null) player = localPlayer
         else Log.e("[Recording VM] Couldn't create local player!")
         player.addListener(listener)
