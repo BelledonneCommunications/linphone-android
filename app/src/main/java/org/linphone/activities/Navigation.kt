@@ -318,7 +318,7 @@ internal fun DetailChatRoomFragment.navigateToEmptyChatRoom() {
     findNavController().navigate(
         R.id.action_global_emptyChatFragment,
         null,
-        popupTo(R.id.emptyChatFragment, true)
+        popupTo(R.id.detailChatRoomFragment, true)
     )
 }
 
@@ -354,7 +354,7 @@ internal fun ChatRoomCreationFragment.navigateToEmptyChatRoom() {
     findNavController().navigate(
         R.id.action_global_emptyChatFragment,
         null,
-        popupTo(R.id.emptyChatFragment, true)
+        popupTo(R.id.chatRoomCreationFragment, true)
     )
 }
 

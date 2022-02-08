@@ -126,7 +126,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/call"
                     android:padding="12dp"
-                    android:src="@drawable/call_audio_start" />
+                    android:src="@{viewModel.autoInitiateVideoCalls ? @drawable/call_video_start : @drawable/call_audio_start, default=@drawable/call_audio_start}" />
 
                 <ImageView
                     android:onClick="@{() -> viewModel.startCall()}"
