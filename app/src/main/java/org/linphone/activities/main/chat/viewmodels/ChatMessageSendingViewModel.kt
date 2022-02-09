@@ -107,9 +107,19 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         stopVoiceRecordPlayer()
     }
 
+    private val chatRoomListener: ChatRoomListenerStub = object : ChatRoomListenerStub() {
+        override fun onStateChanged(chatRoom: ChatRoom, state: ChatRoom.State) {
+            if (state == ChatRoom.State.Created || state == ChatRoom.State.Terminated) {
+                isReadOnly.value = chatRoom.hasBeenLeft()
+            }
+        }
+    }
+
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     init {
+        chatRoom.addListener(chatRoomListener)
+
         attachments.value = arrayListOf()
 
         attachFileEnabled.value = true
@@ -138,6 +148,7 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
             voiceRecordingPlayer.removeListener(playerListener)
         }
 
+        chatRoom.removeListener(chatRoomListener)
         scope.cancel()
         super.onCleared()
     }
