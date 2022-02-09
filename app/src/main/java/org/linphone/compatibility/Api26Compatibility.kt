@@ -257,8 +257,14 @@ class Api26Compatibility {
             vibrator.vibrate(effect, audioAttrs)
         }
 
-        fun changeAudioRouteForTelecomManager(connection: NativeCallWrapper, route: Int) {
+        fun changeAudioRouteForTelecomManager(connection: NativeCallWrapper, route: Int): Boolean {
+            Log.i("[Telecom Helper] Changing audio route [$route] on connection ${connection.callId}")
+            if (connection.callAudioState.route == route) {
+                Log.w("[Telecom Helper] Connection is already using this route")
+                return false
+            }
             connection.setAudioRoute(route)
+            return true
         }
 
         fun requestTelecomManagerPermission(activity: Activity, code: Int) {
