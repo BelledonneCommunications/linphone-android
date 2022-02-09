@@ -59,7 +59,6 @@ class RecordingsViewModel : ViewModel() {
     }
 
     init {
-        getRecordings()
         isVideoVisible.value = false
     }
 
@@ -86,10 +85,10 @@ class RecordingsViewModel : ViewModel() {
             FileUtils.deleteFile(recording.path)
         }
 
-        getRecordings()
+        udpdateRecordingsList()
     }
 
-    private fun getRecordings() {
+    fun udpdateRecordingsList() {
         recordingsList.value.orEmpty().forEach(RecordingData::destroy)
         val list = arrayListOf<RecordingData>()
 
