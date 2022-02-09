@@ -153,6 +153,14 @@ class ChatRoomsListViewModel : ErrorReportingViewModel() {
     }
 
     private fun addChatRoom(chatRoom: ChatRoom) {
+        val exists = chatRooms.value.orEmpty().find {
+            it.chatRoom.localAddress.weakEqual(chatRoom.localAddress) && it.chatRoom.peerAddress.weakEqual(chatRoom.peerAddress)
+        }
+        if (exists != null) {
+            Log.w("[Chat Rooms] Do not add chat room to list, it's already here")
+            return
+        }
+
         val list = arrayListOf<ChatRoomViewModel>()
         val viewModel = ChatRoomViewModel(chatRoom)
         list.add(viewModel)
