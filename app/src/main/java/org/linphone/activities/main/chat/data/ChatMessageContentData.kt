@@ -44,7 +44,6 @@ import org.linphone.utils.ImageUtils
 class ChatMessageContentData(
     private val chatMessage: ChatMessage,
     private val contentIndex: Int,
-
 ) {
     var listener: OnContentClickedListener? = null
 
@@ -60,7 +59,6 @@ class ChatMessageContentData(
 
     val fileName = MutableLiveData<String>()
     val filePath = MutableLiveData<String>()
-    val fileSize = MutableLiveData<String>()
 
     val downloadable = MutableLiveData<Boolean>()
     val downloadEnabled = MutableLiveData<Boolean>()
@@ -72,13 +70,11 @@ class ChatMessageContentData(
     val formattedDuration = MutableLiveData<String>()
     val voiceRecordPlayingPosition = MutableLiveData<Int>()
     val isVoiceRecordPlaying = MutableLiveData<Boolean>()
-    var voiceRecordAudioFocusRequest: AudioFocusRequestCompat? = null
 
     val isAlone: Boolean
         get() {
             var count = 0
             for (content in chatMessage.contents) {
-                val content = getContent()
                 if (content.isFileTransfer || content.isFile) {
                     count += 1
                 }
@@ -86,7 +82,9 @@ class ChatMessageContentData(
             return count == 1
         }
 
-    var isFileEncrypted: Boolean = false
+    private var isFileEncrypted: Boolean = false
+
+    private var voiceRecordAudioFocusRequest: AudioFocusRequestCompat? = null
 
     private lateinit var voiceRecordingPlayer: Player
     private val playerListener = PlayerListener {
@@ -145,13 +143,7 @@ class ChatMessageContentData(
     fun destroy() {
         scope.cancel()
 
-        val path = filePath.value.orEmpty()
-        if (path.isNotEmpty() && isFileEncrypted) {
-            Log.i("[Content] Deleting file used for preview: $path")
-            FileUtils.deleteFile(path)
-            filePath.value = ""
-        }
-
+        deletePlainFilePath()
         chatMessage.removeListener(chatMessageListener)
 
         if (this::voiceRecordingPlayer.isInitialized) {
@@ -181,9 +173,22 @@ class ChatMessageContentData(
         listener?.onContentClicked(getContent())
     }
 
+    private fun deletePlainFilePath() {
+        val path = filePath.value.orEmpty()
+        if (path.isNotEmpty() && isFileEncrypted) {
+            Log.i("[Content] Deleting file used for preview: $path")
+            FileUtils.deleteFile(path)
+            filePath.value = ""
+        }
+    }
+
     private fun updateContent() {
+        Log.i("[Content] Updating content")
+        deletePlainFilePath()
+
         val content = getContent()
         isFileEncrypted = content.isFileEncrypted
+        Log.i("[Content] Is ${if (content.isFile) "file" else "file transfer"} content encrypted ? $isFileEncrypted")
 
         filePath.value = ""
         fileName.value = if (content.name.isNullOrEmpty() && !content.filePath.isNullOrEmpty()) {
@@ -193,14 +198,18 @@ class ChatMessageContentData(
         }
 
         // Display download size and underline text
-        fileSize.value = AppUtils.bytesToDisplayableSize(content.fileSize.toLong())
-        val spannable = SpannableString("${AppUtils.getString(R.string.chat_message_download_file)} (${fileSize.value})")
+        val fileSize = AppUtils.bytesToDisplayableSize(content.fileSize.toLong())
+        val spannable = SpannableString("${AppUtils.getString(R.string.chat_message_download_file)} ($fileSize)")
         spannable.setSpan(UnderlineSpan(), 0, spannable.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         downloadLabel.value = spannable
 
         if (content.isFile || (content.isFileTransfer && chatMessage.isOutgoing)) {
-            Log.i("[Content] Is content encrypted ? $isFileEncrypted")
-            val path = if (isFileEncrypted) content.plainFilePath else content.filePath ?: ""
+            val path = if (isFileEncrypted) {
+                Log.i("[Content] Content is encrypted, requesting plain file path")
+                content.plainFilePath
+            } else {
+                content.filePath ?: ""
+            }
             downloadable.value = content.filePath.orEmpty().isEmpty()
 
             if (path.isNotEmpty()) {
@@ -226,7 +235,7 @@ class ChatMessageContentData(
                     }
                 }
             } else {
-                Log.w("[Content] Found content with empty path...")
+                Log.w("[Content] Found ${if (content.isFile) "file" else "file transfer"} content with empty path...")
                 isImage.value = false
                 isVideo.value = false
                 isAudio.value = false
@@ -297,8 +306,9 @@ class ChatMessageContentData(
 
     private fun initVoiceRecordPlayer() {
         Log.i("[Voice Recording] Creating player for voice record")
-        // Use speaker sound card to play recordings, otherwise use earpiece
+        // In case no headphones/headset is connected, use speaker sound card to play recordings, otherwise use earpiece
         // If none are available, default one will be used
+        var headphonesCard: String? = null
         var speakerCard: String? = null
         var earpieceCard: String? = null
         for (device in coreContext.core.audioDevices) {
@@ -307,12 +317,14 @@ class ChatMessageContentData(
                     speakerCard = device.id
                 } else if (device.type == AudioDevice.Type.Earpiece) {
                     earpieceCard = device.id
+                } else if (device.type == AudioDevice.Type.Headphones || device.type == AudioDevice.Type.Headset) {
+                    headphonesCard = device.id
                 }
             }
         }
-        Log.i("[Voice Recording] Found speaker sound card [$speakerCard] and earpiece sound card [$earpieceCard]")
+        Log.i("[Voice Recording] Found headset/headphones sound card [$headphonesCard], speaker sound card [$speakerCard] and earpiece sound card [$earpieceCard]")
 
-        val localPlayer = coreContext.core.createLocalPlayer(speakerCard ?: earpieceCard, null, null)
+        val localPlayer = coreContext.core.createLocalPlayer(headphonesCard ?: speakerCard ?: earpieceCard, null, null)
         if (localPlayer != null) {
             voiceRecordingPlayer = localPlayer
         } else {
@@ -321,8 +333,7 @@ class ChatMessageContentData(
         }
         voiceRecordingPlayer.addListener(playerListener)
 
-        val content = getContent()
-        val path = if (content.isFileEncrypted) content.plainFilePath else content.filePath ?: ""
+        val path = filePath.value
         voiceRecordingPlayer.open(path.orEmpty())
         voiceRecordDuration.value = voiceRecordingPlayer.duration
         formattedDuration.value = SimpleDateFormat("mm:ss", Locale.getDefault()).format(voiceRecordingPlayer.duration) // is already in milliseconds
@@ -346,4 +357,6 @@ class ChatMessageContentData(
 
 interface OnContentClickedListener {
     fun onContentClicked(content: Content)
+
+    fun onSipAddressClicked(sipUri: String)
 }

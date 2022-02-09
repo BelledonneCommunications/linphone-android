@@ -21,7 +21,6 @@ package org.linphone.activities.main.dialer.viewmodels
 
 import android.content.Context
 import android.os.Vibrator
-import android.provider.Settings
 import android.text.Editable
 import android.widget.EditText
 import androidx.lifecycle.MutableLiveData
@@ -69,23 +68,8 @@ class DialerViewModel : LogsUploadViewModel() {
             }
             enteredUri.value = sb.toString()
 
-            if (coreContext.core.callsNb == 0) {
-                val contentResolver = coreContext.context.contentResolver
-                try {
-                    if (Settings.System.getInt(
-                            contentResolver,
-                            Settings.System.DTMF_TONE_WHEN_DIALING
-                        ) == 1
-                    ) {
-                        coreContext.core.playDtmf(key, 1)
-
-                        if (vibrator.hasVibrator() && corePreferences.dtmfKeypadVibration) {
-                            Compatibility.eventVibration(vibrator)
-                        }
-                    }
-                } catch (snfe: Settings.SettingNotFoundException) {
-                    Log.e("[Dialer] Can't play DTMF: $snfe")
-                }
+            if (vibrator.hasVibrator() && corePreferences.dtmfKeypadVibration) {
+                Compatibility.eventVibration(vibrator)
             }
         }
 
@@ -176,7 +160,7 @@ class DialerViewModel : LogsUploadViewModel() {
     fun updateShowVideoPreview() {
         val videoPreview = corePreferences.videoPreview
         showPreview.value = videoPreview
-        coreContext.core.enableVideoPreview(videoPreview)
+        coreContext.core.isVideoPreviewEnabled = videoPreview
     }
 
     fun eraseLastChar() {

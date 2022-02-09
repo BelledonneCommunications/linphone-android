@@ -34,7 +34,8 @@ class Api25Compatibility {
                 context.contentResolver, Settings.Global.DEVICE_NAME
             )
             if (name == null) {
-                name = BluetoothAdapter.getDefaultAdapter().name
+                val adapter = BluetoothAdapter.getDefaultAdapter()
+                name = adapter?.name
             }
             if (name == null) {
                 name = Settings.Secure.getString(

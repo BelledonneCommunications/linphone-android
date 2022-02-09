@@ -41,7 +41,7 @@
     <string name="content_description_remove_contact_from_selection">Retirer le contact</string>
     <string name="service_auto_start_description">&appName; a démarré automatiquement</string>
     <string name="sync_account_name">Contacts &appName;</string>
-    <string name="about_privacy_policy">Consultez notre politique de confidentialité</string>
+    <string name="about_privacy_policy">Consulter notre politique de confidentialité</string>
     <string name="logs_url_copied_to_clipboard">URL des traces copiée dans le presse-papier</string>
     <string name="error">Erreur</string>
     <string name="phone_number">Numéro de téléphone</string>
@@ -88,8 +88,7 @@
     <string name="contact_first_name">Prénom</string>
     <string name="contact_organization">Société</string>
     <string name="contact_editor_write_permission_denied">Impossible d\'éditer les contacts car la permission a été refusée.</string>
-    <string name="contact_delete_many_dialog">Voulez-vous supprimer ces contacts \?
-\nIls seront aussi retirés du carnet d\'adresses du téléphone.</string>
+    <string name="contact_delete_many_dialog">Voulez-vous supprimer ces contacts \?\nIls seront aussi retirés du carnet d\'adresses du téléphone.</string>
     <string name="contact_new_choose_sync_account">Choisissez où enregistrer le contact</string>
     <string name="contact_local_sync_account">Enregistrer localement</string>
     <string name="chat_event_participant_removed">%s a quitté le groupe</string>
@@ -189,9 +188,7 @@
     <string name="assistant_remote_provisioning">Télécharger la configuration distante</string>
     <string name="assistant_ec_calibration">Calibration de l\'annulateur d\'écho en cours</string>
     <string name="assistant_phone_number_info_title">Comment mon numéro de téléphone sera-t-il utilisé \?</string>
-    <string name="assistant_phone_number_link_info_content_already_account">Vous ne pouvez associer votre numéro qu\'à un seul compte &appName;.
-\n
-\nSi vous avez déjà associé votre numéro à un autre compte mais préférez utiliser ce compte-ci, suivez la procédure d\'association et votre numéro sera automatiquement transféré à ce compte.</string>
+    <string name="assistant_phone_number_link_info_content_already_account">Vous ne pouvez associer votre numéro qu\'à un seul compte &appName;.\n\nSi vous avez déjà associé votre numéro à un autre compte mais préférez utiliser ce compte-ci, suivez la procédure d\'association et votre numéro sera automatiquement transféré à ce compte.</string>
     <string name="assistant_error_phone_number_invalid_characters">Entrez uniquement des chiffres</string>
     <string name="assistant_error_username_already_exists">Ce nom d\'utilisateur est déjà utilisé</string>
     <string name="assistant_error_phone_number_already_exists">Ce nom d\'utilisateur est déjà pris</string>
@@ -481,7 +478,7 @@
     <string name="content_description_show_all_calls">Tous les appels</string>
     <string name="content_description_incoming_call">Appel entrant</string>
     <string name="content_description_outgoing_call">Appel sortant</string>
-    <string name="content_description_create_one_to_one_chat_room">Créer une conversation 1-1</string>
+    <string name="content_description_create_one_to_one_chat_room">Créer une conversation 1–1</string>
     <string name="content_description_create_group_chat_room">Créer une conversation de groupe</string>
     <string name="content_description_security_level_unsafe">Non sécurisé</string>
     <string name="content_description_security_level_safe">Sécurisé</string>
@@ -512,8 +509,7 @@
         <item quantity="one">%d jour</item>
         <item quantity="other">%d jours</item>
     </plurals>
-    <string name="contact_delete_one_dialog">Voulez-vous supprimer ce contact \?
-\nIl sera aussi retiré du carnet d\'adresses du téléphone.</string>
+    <string name="contact_delete_one_dialog">Voulez-vous supprimer ce contact \?\nIl sera aussi retiré du carnet d\'adresses du téléphone.</string>
     <string name="dialer_address_bar_hint">Entrez un numéro ou une adresse</string>
     <string name="chat_remote_is_composing">Votre correspondant est en train de taper…</string>
     <string name="chat_security_event_lime_identity_key_changed">Les clés de sécurité ont changé pour %s</string>
@@ -530,22 +526,13 @@
     <string name="call_stats_video_resolution_sent">Résolution vidéo envoyée :</string>
     <string name="call_stats_display_filter">Filtre d\'affichage :</string>
     <string name="assistant_welcome_desc">Cet assistant va vous aider à configurer et utiliser votre compte SIP.</string>
-    <string name="assistant_phone_number_info_content">
-\nGrâce à votre numéro de téléphone, vos amis vous trouverons plus facilement.
-\n
-\nVous verrez dans votre carnet d\'adresses qui utilise &appName; et vos amis verront également qu\'ils peuvent vous contacter via &appName;.
-\n</string>
-    <string name="assistant_phone_number_link_info_content">
-\nVos amis pourront vous joindre plus facilement si vous associez votre compte à votre numéro de téléphone.
-\n
-\nVous verrez dans votre carnet d\'adresses les contacts qui utilisent &appName; et vos amis sauront qu\'ils peuvent vous contacter.
-\n</string>
+    <string name="assistant_phone_number_info_content">\nGrâce à votre numéro de téléphone, vos amis vous trouverons plus facilement.\n\nVous verrez dans votre carnet d\'adresses qui utilise &appName; et vos amis verront également qu\'ils peuvent vous contacter via &appName;.\n</string>
+    <string name="assistant_phone_number_link_info_content">\nVos amis pourront vous joindre plus facilement si vous associez votre compte à votre numéro de téléphone.\n\nVous verrez dans votre carnet d\'adresses les contacts qui utilisent &appName; et vos amis sauront qu\'ils peuvent vous contacter.\n</string>
     <string name="assistant_error_invalid_credentials">Le compte n\'existe pas ou les mots de passe ne correspondent pas</string>
     <string name="assistant_linphone_login_desc">Veuillez saisir le nom d\'utilisateur et mot de passe de votre compte &appName;</string>
     <string name="assistant_display_name_optional">Nom d\'affichage (optionnel)</string>
     <string name="assistant_validate_account_2">Pour valider votre compte, veuillez suivre les instructions reçues par email et cliquer sur le bouton.</string>
-    <string name="assistant_create_account_part_3">Pour valider votre numéro veuillez enter le code à 4 chiffres ci-dessous :
-\n</string>
+    <string name="assistant_create_account_part_3">Pour valider votre numéro veuillez enter le code à 4 chiffres ci-dessous :\n</string>
     <string name="content_description_disable_speaker">Envoyer le son vers les écouteurs</string>
     <string name="content_description_toggle_audio_menu">Afficher ou masquer le menu de sélection du périphérique audio</string>
     <string name="chat_message_notification_hidden_content">&lt;Censuré&gt;</string>
@@ -624,6 +611,17 @@
     <string name="advanced_settings_disable_fragment_security_summary">Autorise l\'écran à être capturé/enregistré sur les vues sensibles</string>
     <string name="call_settings_use_telecom_manager_title">Améliore les intéractions avec les périphériques bluetooth</string>
     <string name="call_settings_use_telecom_manager_summary">Nécessite des permissions supplémentaires</string>
-    <string name="chat_room_unread_messages">%1$d messages non lus</string>
-    <string name="chat_room_unread_message">%1$d message non lu</string>
+    <plurals name="chat_room_unread_messages_event">
+        <item quantity="one">%1$d message non lu</item>
+        <item quantity="other">%1$d messages non lus</item>
+    </plurals>
+    <string name="content_descripton_scroll_to_bottom">Aller au dernier message reçu ou au premier message non lu</string>
+    <string name="audio_settings_prefer_bluetooth_devices_title">Acheminer l\'audio vers l\'appareil bluetooth, s\'il existe</string>
+    <string name="audio_settings_prefer_bluetooth_devices_summary">Il aura la priorité sur le périphérique de sortie par défaut</string>
+    <string name="call_settings_ringtones_title">Sonnerie</string>
+    <string name="chat_message_removal_info">Le message va être supprimé</string>
+    <string name="chat_message_abort_removal">Annuler</string>
+    <string name="about_weblate_translation">Contribuer aux traductions</string>
+    <string name="assistant_generic_account_warning">Certaines fonctionnalités avancées comme les messages de groupe ou les messages éphémères nécessitent un compte &appName;.\n\nElles seront masquées dans l\'application si vous configurez un compte SIP tiers.\n\nSi vous souhaitez les activer pour un projet professionnel, contactez-nous.</string>
+    <string name="assistant_generic_account_warning_continue_button_text">J\'ai compris</string>
 </resources>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="understoodClickListener"
+            type="android.view.View.OnClickListener"/>
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/top_bar_fragment"
+            android:name="org.linphone.activities.assistant.fragments.TopBarFragment"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/main_activity_top_bar_size"
+            android:layout_alignParentTop="true"
+            tools:layout="@layout/assistant_top_bar_fragment" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/top_bar_fragment"
+            android:orientation="vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:gravity="center_horizontal">
+            
+            <TextView
+                android:id="@+id/warning_text"
+                style="@style/standard_small_text_font"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:layout_marginTop="20dp"
+                android:text="@string/assistant_generic_account_warning"/>
+
+            <TextView
+                android:textColor="?attr/accentColor"
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:autoLink="web"
+                android:gravity="center"
+                android:paddingTop="20dp"
+                android:textColorLink="@color/primary_color"
+                android:text="@string/assistant_generic_account_warning_contact_link" />
+
+            <Button
+                android:onClick="@{understoodClickListener}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="@string/assistant_generic_account_warning_continue_button_text" />
+            
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</layout>

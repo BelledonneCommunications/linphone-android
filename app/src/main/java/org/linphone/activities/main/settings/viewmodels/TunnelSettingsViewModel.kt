@@ -52,7 +52,7 @@ class TunnelSettingsViewModel : GenericSettingsViewModel() {
     val useDualModeListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
             val tunnel = core.tunnel
-            tunnel?.enableDualMode(newValue)
+            tunnel?.isDualModeEnabled = newValue
         }
     }
     val useDualMode = MutableLiveData<Boolean>()
@@ -96,7 +96,7 @@ class TunnelSettingsViewModel : GenericSettingsViewModel() {
 
         hostnameUrl.value = config.host
         port.value = config.port
-        useDualMode.value = tunnel?.dualModeEnabled()
+        useDualMode.value = tunnel?.isDualModeEnabled
         hostnameUrl2.value = config.host2
         port2.value = config.port2
 

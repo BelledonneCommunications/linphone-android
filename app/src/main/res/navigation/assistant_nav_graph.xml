@@ -20,8 +20,8 @@
             android:id="@+id/action_welcomeFragment_to_phoneAccountCreationFragment"
             app:destination="@id/phoneAccountCreationFragment" />
         <action
-            android:id="@+id/action_welcomeFragment_to_genericAccountLoginFragment"
-            app:destination="@id/genericAccountLoginFragment" />
+            android:id="@+id/action_welcomeFragment_to_genericAccountWarningFragment"
+            app:destination="@id/genericAccountWarningFragment" />
         <action
             android:id="@+id/action_welcomeFragment_to_remoteProvisioningFragment"
             app:destination="@id/remoteProvisioningFragment" />
@@ -37,6 +37,15 @@
         <action
             android:id="@+id/action_accountLoginFragment_to_phoneAccountValidationFragment"
             app:destination="@id/phoneAccountValidationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/genericAccountWarningFragment"
+        android:name="org.linphone.activities.assistant.fragments.GenericAccountWarningFragment"
+        tools:layout="@layout/assistant_generic_account_warning_fragment"
+        android:label="GenericAccountWarningFragment" >
+        <action
+            android:id="@+id/action_genericAccountWarningFragment_to_genericAccountLoginFragment"
+            app:destination="@id/genericAccountLoginFragment" />
     </fragment>
     <fragment
         android:id="@+id/genericAccountLoginFragment"

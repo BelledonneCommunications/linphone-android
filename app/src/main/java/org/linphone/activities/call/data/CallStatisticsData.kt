@@ -36,7 +36,7 @@ class CallStatisticsData(val call: Call) : GenericContactData(call.remoteAddress
     private val listener = object : CoreListenerStub() {
         override fun onCallStatsUpdated(core: Core, call: Call, stats: CallStats) {
             if (call == this@CallStatisticsData.call) {
-                isVideoEnabled.value = call.currentParams.videoEnabled()
+                isVideoEnabled.value = call.currentParams.isVideoEnabled
                 updateCallStats(stats)
             }
         }
@@ -50,7 +50,7 @@ class CallStatisticsData(val call: Call) : GenericContactData(call.remoteAddress
 
         initCallStats()
 
-        val videoEnabled = call.currentParams.videoEnabled()
+        val videoEnabled = call.currentParams.isVideoEnabled
         isVideoEnabled.value = videoEnabled
 
         isExpanded.value = coreContext.core.currentCall == call

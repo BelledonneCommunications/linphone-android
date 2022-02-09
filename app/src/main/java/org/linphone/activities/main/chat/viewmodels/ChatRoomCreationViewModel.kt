@@ -160,9 +160,9 @@ class ChatRoomCreationViewModel : ErrorReportingViewModel() {
         val encrypted = isEncrypted.value == true
         val params: ChatRoomParams = coreContext.core.createDefaultChatRoomParams()
         params.backend = ChatRoomBackend.Basic
-        params.enableGroup(false)
+        params.isGroupEnabled = false
         if (encrypted) {
-            params.enableEncryption(true)
+            params.isEncryptionEnabled = true
             params.backend = ChatRoomBackend.FlexisipChat
             params.ephemeralMode = if (corePreferences.useEphemeralPerDeviceMode)
                 ChatRoomEphemeralMode.DeviceManaged

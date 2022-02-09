@@ -1,11 +1,17 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
+    <style name="AppSplashScreenTheme" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/dark_grey_color</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/vector_linphone_logo</item>
+        <item name="postSplashScreenTheme">@style/AppTheme</item>
+    </style>
+
     <!-- Base application theme. -->
 
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Disable animations between activities -->
         <item name="android:windowAnimationStyle">@null</item>
-        <item name="android:windowBackground">@drawable/launch_screen</item>
+        <item name="android:windowBackground">@color/transparent_color</item>
 
         <!-- Android theme override -->
         <item name="colorAccent">@color/primary_color</item>
@@ -229,7 +235,7 @@
 
     <style name="sip_uri_small_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">?attr/accentColor</item>
-        <item name="android:textSize">13sp</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
     <style name="toolbar_small_title_font" parent="@android:style/TextAppearance.Medium">

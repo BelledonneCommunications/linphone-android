@@ -142,9 +142,7 @@ class ChatRoomsListViewModel : ErrorReportingViewModel() {
     }
 
     private fun updateChatRooms() {
-        for (chatRoomViewModel in chatRooms.value.orEmpty()) {
-            chatRoomViewModel.destroy()
-        }
+        chatRooms.value.orEmpty().forEach(ChatRoomViewModel::destroy)
 
         val list = arrayListOf<ChatRoomViewModel>()
         for (chatRoom in coreContext.core.chatRooms) {
@@ -155,6 +153,14 @@ class ChatRoomsListViewModel : ErrorReportingViewModel() {
     }
 
     private fun addChatRoom(chatRoom: ChatRoom) {
+        val exists = chatRooms.value.orEmpty().find {
+            it.chatRoom.localAddress.weakEqual(chatRoom.localAddress) && it.chatRoom.peerAddress.weakEqual(chatRoom.peerAddress)
+        }
+        if (exists != null) {
+            Log.w("[Chat Rooms] Do not add chat room to list, it's already here")
+            return
+        }
+
         val list = arrayListOf<ChatRoomViewModel>()
         val viewModel = ChatRoomViewModel(chatRoom)
         list.add(viewModel)
@@ -170,12 +176,10 @@ class ChatRoomsListViewModel : ErrorReportingViewModel() {
     }
 
     private fun findChatRoomIndex(chatRoom: ChatRoom): Int {
-        var index = 0
-        for (chatRoomViewModel in chatRooms.value.orEmpty()) {
+        for ((index, chatRoomViewModel) in chatRooms.value.orEmpty().withIndex()) {
             if (chatRoomViewModel.chatRoom == chatRoom) {
                 return index
             }
-            index++
         }
         return -1
     }

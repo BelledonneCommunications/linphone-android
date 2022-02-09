@@ -97,7 +97,9 @@ Also check you have built the SDK for the right CPU architecture using the `-DLI
 
 - Push notification might not work when app has been started by Android Studio consecutively to an install. Remove the app from the recent activity view and start it again using the launcher icon to resolve this.
 
-## Troubleshouting
+## Troubleshooting
+
+### Behavior issue
 
 When submitting an issue on our [Github repository](https://github.com/BelledonneCommunications/linphone-android), please follow the template and attach the matching library logs:
 
@@ -105,7 +107,32 @@ When submitting an issue on our [Github repository](https://github.com/Belledonn
 
 2. Then restart the app, reproduce the issue and upload the logs using the `Send logs` button on the About page.
 
-3. Finally paste the link to the uploaded logs (link is already in the clipboard after a sucessful upload).
+3. Finally paste the link to the uploaded logs (link is already in the clipboard after a successful upload).
+
+### Native crash
+
+First of all, to be able to get a symbolized stack trace, you need the debug version of our libraries.
+
+If you haven't built the SDK locally (see [building a local SDK](#BuildingalocalSDK)), here's how to get them:
+
+1. Go to our [maven repository](https://download.linphone.org/maven_repository/org/linphone/linphone-sdk-android-debug/), in the linphone-android-debug directory.
+
+2. Download the AAR file with **the exact same version** as the AAR that was used to generate the crash's stacktrace.
+
+3. Extract the AAR somewhere on your computer (it's a simple ZIP file even it's doesn't have the extension). Libraries are stored inside the ```jni``` folder (a directory for each architectured built, usually ```arm64-v8a, armeabi-v7a, x86_64 and x86```).
+
+4. To get consistent with locally built SDK, rename the ```jni``` directory into ```libs-debug```.
+
+Now you need the ```ndk-stack``` tool and possibly ```adb logcat```.
+
+If your computer isn't used for Android development, you can download those tools from [Google website](https://developer.android.com/studio#downloads), in the ```Command line tools only``` section.
+
+Once you have the debug libraries and the proper tools installed, you can use the ```ndk-stack``` tool to symbolize your stacktrace. Note that you also need to know the architecture (armv7, arm64, x86, etc...) of the libraries that were used.
+
+Here's how to get the stacktrace and the right architecture from a device plugged to your computer:
+```
+adb logcat -d | ndk-stack -sym ./libs-debug/`adb shell getprop ro.product.cpu.abi | tr -d '\r'` 
+```
 
 ## Create an APK with a different package name
 
@@ -137,6 +164,6 @@ Due to the full app rewrite we can't re-use previous translations, so we'll be v
 In order to submit a patch for inclusion in linphone's source code:
 
 1. First make sure your patch applies to latest git sources before submitting: patches made to old versions can't and won't be merged.
-2. Fill out and send us an email with the link of pullrequest and the [Contributor Agreement](https://linphone.org/sites/default/files/bc-contributor-agreement_0.pdf) for your patch to be included in the git tree.
+2. Fill out and send us an email with the link of pull-request and the [Contributor Agreement](https://linphone.org/sites/default/files/bc-contributor-agreement_0.pdf) for your patch to be included in the git tree.
 
 The goal of this agreement to grant us peaceful exercise of our rights on the linphone source code, while not losing your rights on your contribution.

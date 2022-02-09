@@ -19,7 +19,7 @@
             type="Integer"/>
         <variable
             name="viewModel"
-            type="org.linphone.activities.main.history.viewmodels.CallLogViewModel" />
+            type="org.linphone.activities.main.history.data.CallLogData" />
         <variable
             name="selectionListViewModel"
             type="org.linphone.activities.main.viewmodels.ListTopBarViewModel" />

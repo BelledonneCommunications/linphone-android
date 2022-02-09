@@ -205,7 +205,17 @@ class VoiceRecordProgressBar : View {
         }
     }
 
-    fun setProgressDrawable(drawable: Drawable) {
+    fun setSecondaryProgressTint(color: Int) {
+        val drawable = progressDrawable
+        if (drawable != null) {
+            if (drawable is LayerDrawable) {
+                val secondaryProgressDrawable = drawable.findDrawableByLayerId(android.R.id.secondaryProgress)
+                secondaryProgressDrawable?.setTint(color)
+            }
+        }
+    }
+
+    private fun setProgressDrawable(drawable: Drawable) {
         val needUpdate: Boolean = if (progressDrawable != null && drawable !== progressDrawable) {
             progressDrawable?.callback = null
             true
@@ -230,16 +240,6 @@ class VoiceRecordProgressBar : View {
 
             refreshProgress(android.R.id.progress, progress)
             refreshProgress(android.R.id.secondaryProgress, secondaryProgress)
-        }
-    }
-
-    fun setSecondaryProgressTint(color: Int) {
-        val drawable = progressDrawable
-        if (drawable != null) {
-            if (drawable is LayerDrawable) {
-                val secondaryProgressDrawable = drawable.findDrawableByLayerId(android.R.id.secondaryProgress)
-                secondaryProgressDrawable?.setTint(color)
-            }
         }
     }
 

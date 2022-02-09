@@ -27,6 +27,9 @@
             name="voiceRecordingTouchListener"
             type="android.view.View.OnTouchListener" />
         <variable
+            name="cancelReplyToClickListener"
+            type="android.view.View.OnClickListener" />
+        <variable
             name="scrollToBottomClickListener"
             type="android.view.View.OnClickListener"/>
         <variable
@@ -152,16 +155,24 @@
             android:background="?attr/lightToolbarBackgroundColor"
             android:orientation="vertical">
 
-            <include
+            <ViewStub
+                android:id="@+id/stubbed_message_to_reply_to"
                 android:visibility="@{chatSendingViewModel.isPendingAnswer ? View.VISIBLE : View.GONE, default=gone}"
+                app:inflatedVisibility="@{chatSendingViewModel.isPendingAnswer ? View.VISIBLE : View.GONE}"
                 app:data="@{chatSendingViewModel.pendingChatMessageToReplyTo}"
-                app:cancelClickListener="@{() -> chatSendingViewModel.cancelReply()}"
-                layout="@layout/chat_message_reply" />
+                android:layout="@layout/chat_message_reply"
+                app:cancelClickListener="@{cancelReplyToClickListener}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
-            <include
+            <ViewStub
+                android:id="@+id/stubbed_voice_recording"
                 android:visibility="@{chatSendingViewModel.isPendingVoiceRecord ? View.VISIBLE : View.GONE, default=gone}"
+                app:inflatedVisibility="@{chatSendingViewModel.isPendingVoiceRecord ? View.VISIBLE : View.GONE}"
                 app:viewModel="@{chatSendingViewModel}"
-                layout="@layout/chat_message_voice_recording" />
+                android:layout="@layout/chat_message_voice_recording"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
             <View
                 android:visibility="@{chatSendingViewModel.isPendingVoiceRecord &amp;&amp; chatSendingViewModel.attachments.size() > 0 ? View.VISIBLE : View.GONE, default=gone}"
@@ -218,6 +229,7 @@
                     android:id="@+id/message"
                     android:text="@={chatSendingViewModel.textToSend}"
                     android:hint="@{chatSendingViewModel.isPendingAnswer ? @string/chat_room_sending_reply_hint : @string/chat_room_sending_message_hint}"
+                    android:imeOptions="@{chatSendingViewModel.imeFlags}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -225,7 +237,6 @@
                     android:layout_marginBottom="10dp"
                     android:layout_weight="1"
                     android:background="@drawable/resizable_text_field"
-                    android:imeOptions="flagNoExtractUi"
                     android:inputType="textShortMessage|textMultiLine|textAutoComplete|textAutoCorrect|textCapSentences"
                     android:maxLines="6"
                     android:padding="5dp"
@@ -247,7 +258,7 @@
                         android:src="@drawable/chat_send_message" />
 
                     <ImageView
-                        android:visibility="@{viewModel.chatRoom.ephemeralEnabled() ? View.VISIBLE : View.GONE, default=gone}"
+                        android:visibility="@{viewModel.chatRoom.isEphemeralEnabled() ? View.VISIBLE : View.GONE, default=gone}"
                         android:enabled="@{chatSendingViewModel.sendMessageEnabled}"
                         android:contentDescription="@string/content_description_ephemeral_message"
                         android:clickable="false"
@@ -265,27 +276,30 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/remote_composing"
-            android:text="@{viewModel.composingList, default=@string/chat_remote_is_composing}"
-            android:visibility="@{viewModel.remoteIsComposing ? View.VISIBLE : chatSendingViewModel.isReadOnly ? View.GONE : View.INVISIBLE}"
-            android:layout_marginLeft="5dp"
-            style="@style/standard_small_text_font"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/footer" />
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/chat_messages_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/remote_composing"
+            android:layout_above="@id/footer"
             android:layout_below="@+id/top_bar"
             android:cacheColorHint="@color/transparent_color"
             android:choiceMode="multipleChoice"
+            android:clipToPadding="false"
             android:divider="@android:color/transparent"
             android:listSelector="@color/transparent_color"
+            android:paddingBottom="20dp"
             android:transcriptMode="normal" />
+
+        <TextView
+            android:id="@+id/remote_composing"
+            style="@style/standard_small_text_font"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/footer"
+            android:paddingLeft="5dp"
+            android:background="?attr/backgroundColor"
+            android:text="@{viewModel.composingList, default=@string/chat_remote_is_composing}"
+            android:visibility="@{viewModel.remoteIsComposing ? View.VISIBLE : View.GONE}" />
 
         <ImageView
             android:src="@{viewModel.securityLevelIcon, default=@drawable/security_alert_indicator}"
@@ -317,6 +331,7 @@
                 android:layout_alignParentBottom="true"
                 android:background="@drawable/round_button_background"
                 android:padding="13dp"
+                android:contentDescription="@string/content_descripton_scroll_to_bottom"
                 android:src="@drawable/scroll_to_bottom" />
 
             <TextView

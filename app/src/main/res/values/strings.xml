@@ -4,7 +4,7 @@
     <!ENTITY appName "Linphone">
 ]>
 
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name" translatable="false">&appName;</string>
     <string name="app_name_debug" translatable="false">&appName; (debug)</string>
     <string name="user_agent_app_name" translatable="false">&appName;Android</string>
@@ -20,7 +20,9 @@
     <string name="about_version" translatable="false">&appName; Android %s</string>
     <string name="about_liblinphone_sdk_version" translatable="false">&appName; SDK %s</string>
     <string name="about_privacy_policy">Visit our privacy policy</string>
-    <string name="about_text" translatable="false">GNU General Public License v3.0\n © 2010–2021 Belledonne Communications</string>
+    <string name="about_text" translatable="false">GNU General Public License v3.0\n © 2010–2022 Belledonne Communications</string>
+    <string name="about_weblate_link" translatable="false">https://weblate.linphone.org/projects/linphone/</string>
+    <string name="about_weblate_translation">Help us translate &appName;</string>
 
     <!-- Logs -->
     <string name="logs_upload_failure">Failed to upload logs!</string>
@@ -221,12 +223,12 @@
     <string name="chat_room_sending_message_hint">Message</string>
     <string name="chat_message_voice_recording_hold_to_record">Hold button to record voice message</string>
     <string name="chat_message_voice_recording_playback_low_volume">Your media volume is low, you may want to increase it</string>
-    <string name="chat_room_unread_message">%1$d unread message</string>
-    <string name="chat_room_unread_messages">%1$d unread messages</string>
     <plurals name="chat_room_unread_messages_event">
-        <item quantity="one">@string/chat_room_unread_message</item>
-        <item quantity="other">@string/chat_room_unread_messages</item>
+        <item quantity="one">%1$d unread message</item>
+        <item quantity="other">%1$d unread messages</item>
     </plurals>
+    <string name="chat_message_removal_info">Message will be deleted</string>
+    <string name="chat_message_abort_removal">Abort</string>
 
     <!-- Recordings -->
     <string name="recordings_empty_list">No recordings</string>
@@ -289,6 +291,9 @@
     <string name="assistant_general_terms">terms of use</string>
     <string name="assistant_privacy_policy">privacy policy</string>
     <string name="assistant_read_and_agree_terms">I accept Belledonne Communications\' %1$s and %2$s</string>
+    <string name="assistant_generic_account_warning">Some features require a &appName; account, such as group messaging or ephemeral messaging.\n\nThese features are hidden when you register with a third party SIP account.\n\nTo enable it in a commercial project, please contact us.</string>
+    <string name="assistant_generic_account_warning_contact_link" translatable="false">https://www.linphone.org/contact</string>
+    <string name="assistant_generic_account_warning_continue_button_text">I understand</string>
 
     <!-- Assistant errors -->
     <string name="assistant_error_phone_number_invalid_characters">Only digits are expected here</string>
@@ -376,6 +381,8 @@
     <string name="audio_settings_input_device_summary">Changes will take effect starting next call</string>
     <string name="audio_settings_output_device_title">Default output audio device</string>
     <string name="audio_settings_output_device_summary">Changes will take effect starting next call</string>
+    <string name="audio_settings_prefer_bluetooth_devices_title">Route audio to the bluetooth device if any</string>
+    <string name="audio_settings_prefer_bluetooth_devices_summary">It will have priority over the default output device</string>
     <string name="audio_settings_codec_bitrate_title">Codec bitrate limit</string>
     <string name="audio_settings_microphone_gain_title">Microphone gain</string>
     <string name="audio_settings_microphone_gain_summary">(in decibels)</string>
@@ -400,6 +407,7 @@
 
     <!-- Call settings -->
     <string name="call_settings_device_ringtone_title">Use device ringtone</string>
+    <string name="call_settings_ringtones_title">Ringtone</string>
     <string name="call_settings_vibrate_title">Vibrate while incoming call is ringing</string>
     <string name="call_settings_encryption_title">Media encryption</string>
     <string name="call_settings_media_encryption_none">None</string>
@@ -737,4 +745,5 @@
     <string name="content_description_cancel_voice_recording">Cancel voice recording</string>
     <string name="content_description_pause_voice_recording_playback">Pause voice recording</string>
     <string name="content_description_play_voice_recording">Play voice recording</string>
+    <string name="content_descripton_scroll_to_bottom">Scroll to bottom or first unread message</string>
 </resources>

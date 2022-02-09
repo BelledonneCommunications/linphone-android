@@ -16,7 +16,7 @@
             android:id="@+id/top_bar_fragment"
             android:name="org.linphone.activities.assistant.fragments.TopBarFragment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/main_activity_top_bar_size"
             android:layout_alignParentTop="true"
             tools:layout="@layout/assistant_top_bar_fragment" />
 

@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <!DOCTYPE resources [
-    <!ENTITY appName "Linphone">
+<!ENTITY appName "Linphone">
 ]>
-
 <resources>
     <string name="transport">传输</string>
     <string name="transport_udp">UDP 用户数据报协议</string>
@@ -375,10 +373,8 @@
     <string name="contact_organization">机构</string>
     <string name="contact_choose_existing_or_new_to_add_number">选择一个联系人或创建一个新联系人</string>
     <string name="contact_editor_write_permission_denied">写入联系人权限被拒绝，无法编辑联系人</string>
-    <string name="contact_delete_one_dialog">您要删除这个联系人吗？
-\n它也将会从您的设备通讯录中删除</string>
-    <string name="contact_delete_many_dialog">您确定要删除这些联系人吗？
-\n他们将会从您的设备通讯录中删除</string>
+    <string name="contact_delete_one_dialog">您要删除这个联系人吗？\n它也将会从您的设备通讯录中删除</string>
+    <string name="contact_delete_many_dialog">您确定要删除这些联系人吗？\n他们将会从您的设备通讯录中删除</string>
     <plurals name="history_delete_dialog">
         <item quantity="other">\@string/history_delete_one_dialog</item>
     </plurals>
@@ -477,9 +473,7 @@
     <string name="assistant_welcome_title">欢迎</string>
     <string name="assistant_create_account">创建帐户</string>
     <string name="assistant_ec_calibration">正在进行回音消除校正</string>
-    <string name="assistant_phone_number_link_info_content_already_account">您的电话号码只能关联一个&appName;账户。
-\n
-\n如果您已经把您的号码关联了其他账户，但是您更想使用这个。只需关联您现在的账户，你的号码就会自动转移到这个账户。</string>
+    <string name="assistant_phone_number_link_info_content_already_account">您的电话号码只能关联一个&appName;账户。\n\n如果您已经把您的号码关联了其他账户，但是您更想使用这个。只需关联您现在的账户，你的号码就会自动转移到这个账户。</string>
     <string name="assistant_error_phone_number_invalid_characters">只能输入数字</string>
     <string name="assistant_error_username_already_exists">用户名已被使用</string>
     <string name="assistant_error_phone_number_already_exists">已有账户关联这个电话号码</string>
@@ -515,8 +509,7 @@
     <string name="assistant_validate_account_2">一旦完成，请返回并点击此处。</string>
     <string name="assistant_use_username_instead_or_phone_number">使用一个用户名(可选)</string>
     <string name="assistant_create_account_part_2">我们已向您的手机发送了验证码短信：</string>
-    <string name="assistant_create_account_part_3">请输入4位数字码以完成验证：
-\n</string>
+    <string name="assistant_create_account_part_3">请输入4位数字码以完成验证：\n</string>
     <string name="assistant_link_phone_number">您将用您的电话号码关联以下用户名：</string>
     <string name="assistant_link_phone_number_skip">跳过</string>
     <string name="assistant_link_account">关联账户</string>
@@ -547,16 +540,8 @@
     </plurals>
     <string name="call_video_update_requested_dialog">对方要求启用视讯</string>
     <string name="call_stats_display_filter">显示筛选器：</string>
-    <string name="assistant_phone_number_info_content">
-\n益于您的电话号码，您的朋友们可以更容易的找到您。
-\n
-\n您在通讯录里可以查看谁在使用&appName;，他们也同样可以通过&appName;联系您。
-\n</string>
-    <string name="assistant_phone_number_link_info_content">
-\n如果将您的帐户关联您的电话号码，您的朋友们可以更容易的找到你。
-\n
-\n您在通讯录里可以查看谁在使用&appName;，他们也同样可以通过&appName;联系您。
-\n</string>
+    <string name="assistant_phone_number_info_content">\n益于您的电话号码，您的朋友们可以更容易的找到您。\n\n您在通讯录里可以查看谁在使用&appName;，他们也同样可以通过&appName;联系您。\n</string>
+    <string name="assistant_phone_number_link_info_content">\n如果将您的帐户关联您的电话号码，您的朋友们可以更容易的找到你。\n\n您在通讯录里可以查看谁在使用&appName;，他们也同样可以通过&appName;联系您。\n</string>
     <string name="assistant_login_desc">请输入您的用户名与密码和您的SIP域名</string>
     <string name="assistant_validate_account_1">您的帐户已经创建。请检查邮件以驗證您的帐户：</string>
     <string name="call_stats_video_resolution_received">接收视频分辨率：</string>
@@ -569,4 +554,81 @@
     <string name="settings_primary_account_display_name_title">显示名</string>
     <string name="settings_primary_account_username_title">用户名</string>
     <string name="chat_settins_enable_ephemeral_messages_beta_title">启用短暂消息（测试版）</string>
+    <string name="logs_upload_failure">上传日志失败</string>
+    <string name="debug_popup_show_config_file">查看配置文件</string>
+    <string name="chat_message_context_menu_reply">回复</string>
+    <string name="chat_room_choose_conversation_for_message_forward">选择或创建对话以转发消息</string>
+    <string name="chat_message_cant_open_file_in_app_dialog_title">似乎我们无法显示该文件。</string>
+    <string name="chat_message_cant_open_file_in_app_dialog_message">您想以文本形式打开它还是将其（未加密）导出到第三方应用程序（如果有）？</string>
+    <string name="call_error_server_timeout">服务器超时</string>
+    <string name="settings_primary_account_title">主账户</string>
+    <string name="call_settings_use_telecom_manager_title">改善与蓝牙设备的交互</string>
+    <string name="call_settings_redirect_to_voice_mail_declined_calls_title">将拒绝的呼叫重定向到语音邮件 URI</string>
+    <string name="chat_settings_use_in_app_file_viewer_title">始终在此应用内打开文件</string>
+    <string name="chat_settings_use_in_app_file_viewer_summary">您仍然可以在第三方应用程序中导出它们</string>
+    <string name="advanced_settings_vfs_title">加密一切</string>
+    <string name="advanced_settings_disable_fragment_security_summary">允许对敏感视图进行屏幕捕获/录制</string>
+    <string name="account_settings_transport_dtls">DTLS</string>
+    <string name="account_settings_apply_prefix_for_calls_summary">如果输入了数字，则将前缀应用于数字</string>
+    <string name="content_description_replied_message">留言即回复</string>
+    <string name="content_description_record_audio_message">录制音频信息</string>
+    <string name="content_description_take_screenshot">截取收到的视频截图</string>
+    <string name="content_description_open_app">在应用程序中打开对话而不是气泡</string>
+    <string name="logs_reset_complete">日志已清除</string>
+    <string name="chat_message_replied">回复</string>
+    <string name="chat_room_choose_conversation_for_file_sharing">选择或创建对话以共享文件</string>
+    <string name="chat_room_file_not_found">文件未找到</string>
+    <string name="chat_message_no_app_found_to_handle_file_mime_type">没有可用于此类文件的应用</string>
+    <string name="chat_bubble_cant_open_enrypted_file">无法在聊天气泡中打开加密文件</string>
+    <string name="chat_room_choose_conversation_for_text_sharing">选择或创建对话以共享文本</string>
+    <string name="chat_message_cant_open_file_in_app_dialog_export_button">导出</string>
+    <string name="chat_message_cant_open_file_in_app_dialog_open_as_text_button">作为文本打开</string>
+    <string name="chat_room_sending_reply_hint">回复</string>
+    <string name="chat_room_sending_message_hint">信息</string>
+    <string name="chat_message_voice_recording_hold_to_record">按住按钮录制语音信息</string>
+    <string name="chat_message_voice_recording_playback_low_volume">您的媒体音量很低，您可能需要提高音量</string>
+    <plurals name="chat_room_unread_messages_event">
+        <item quantity="one">%1$d 未读消息</item>
+        <item quantity="other">%1$d 未读消息</item>
+    </plurals>
+    <string name="call_error_temporarily_unavailable">暂时不可用</string>
+    <string name="call_error_generic">错误：%s</string>
+    <string name="assistant_general_terms">使用条款</string>
+    <string name="assistant_privacy_policy">隐私政策</string>
+    <string name="assistant_read_and_agree_terms">我接受 Belledonne Communications 的 %1$s 和 %2$s</string>
+    <string name="call_settings_use_telecom_manager_summary">需要一些额外的权限</string>
+    <string name="call_settings_full_screen_title">通话时全屏应用</string>
+    <string name="call_settings_full_screen_summary">隐藏状态栏和导航栏</string>
+    <string name="call_settings_system_wide_overlay_title">在应用程序外显示叠加层</string>
+    <string name="call_settings_pause_calls_lost_audio_focus_title">音频焦点丢失时暂停通话</string>
+    <string name="call_settings_auto_start_recording_title">自动开始通话录音</string>
+    <string name="call_settings_ring_during_early_media_title">在传入的早期媒体流期间响铃</string>
+    <string name="chat_settings_auto_download_voice_recordings">自动下载传入的录音</string>
+    <string name="advanced_settings_vfs_summary">一旦启用就无法禁用！</string>
+    <string name="advanced_settings_debug_title">调试设置</string>
+    <string name="advanced_settings_other_title">其他设置</string>
+    <string name="advanced_settings_disable_fragment_security_title">禁用 UI 的安全模式</string>
+    <string name="notification_channel_missed_call_name">&appName; 未接来电通知</string>
+    <string name="account_settings_apply_prefix_for_calls_title">应用前缀于拨出的电话和聊天</string>
+    <string name="content_description_forward_message">在此对话中转发消息</string>
+    <string name="content_description_attached_file">附加到消息的文件</string>
+    <string name="content_description_close_bubble">关闭通知气泡</string>
+    <string name="content_description_export">在第三方应用程序中打开文件</string>
+    <string name="content_description_cancel_forward">取消消息转发</string>
+    <string name="content_description_cancel_sharing">取消分享</string>
+    <string name="content_description_cancel_reply">取消回复</string>
+    <string name="content_description_voice_recording">录制语音留言</string>
+    <string name="content_description_stop_voice_recording">停止录音</string>
+    <string name="content_description_cancel_voice_recording">取消录音</string>
+    <string name="content_description_pause_voice_recording_playback">暂停录音</string>
+    <string name="content_description_play_voice_recording">播放录音</string>
+    <string name="about_weblate_translation">帮助我们翻译 &appName;</string>
+    <string name="assistant_generic_account_warning">某些功能需要 1&appName; 帐户，例如群组消息或临时消息。\n\n当您注册第三方 SIP 帐户时，这些功能会被隐藏。\n\n要在商业项目中启用它，请联系我们。</string>
+    <string name="audio_settings_prefer_bluetooth_devices_title">将音频转到蓝牙设备（如果有）</string>
+    <string name="audio_settings_prefer_bluetooth_devices_summary">它将优先于默认输出设备</string>
+    <string name="content_descripton_scroll_to_bottom">滚动到底部或第一条未读消息</string>
+    <string name="call_settings_ringtones_title">铃声</string>
+    <string name="chat_message_removal_info">消息将被删除</string>
+    <string name="chat_message_abort_removal">中止</string>
+    <string name="assistant_generic_account_warning_continue_button_text">我明白</string>
 </resources>

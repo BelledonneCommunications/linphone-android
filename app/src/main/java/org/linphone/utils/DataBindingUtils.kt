@@ -19,6 +19,7 @@
  */
 package org.linphone.utils
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
@@ -29,6 +30,8 @@ import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -184,6 +187,23 @@ fun editTextSetting(view: EditText, lambda: () -> Unit) {
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     })
+}
+
+@BindingAdapter("onSettingImeDone")
+fun editTextImeDone(view: EditText, lambda: () -> Unit) {
+    view.setOnEditorActionListener { _, actionId, _ ->
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
+            lambda()
+
+            view.clearFocus()
+
+            val imm = view.context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+
+            return@setOnEditorActionListener true
+        }
+        false
+    }
 }
 
 @BindingAdapter("onFocusChangeVisibilityOf")

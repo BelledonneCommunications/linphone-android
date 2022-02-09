@@ -124,7 +124,7 @@
                 android:maxLines="2" />
 
             <ImageView
-                android:visibility="@{viewModel.chatRoom.ephemeralEnabled() ? View.VISIBLE : View.GONE, default=gone}"
+                android:visibility="@{viewModel.ephemeralEnabled ? View.VISIBLE : View.GONE, default=gone}"
                 android:id="@+id/ephemeral"
                 android:contentDescription="@string/content_description_ephemeral_chat_room"
                 android:layout_width="20dp"

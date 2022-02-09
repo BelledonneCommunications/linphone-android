@@ -64,6 +64,9 @@
             app:uri="linphone-android://contact/new/{sipUri}"
             android:autoVerify="true" />
     </fragment>
+    <action
+        android:id="@+id/action_global_masterContactsFragment"
+        app:destination="@id/masterContactsFragment" />
     <fragment
         android:id="@+id/masterCallLogsFragment"
         android:name="org.linphone.activities.main.history.fragments.MasterCallLogsFragment"
@@ -79,6 +82,9 @@
             android:id="@+id/action_masterCallLogsFragment_to_masterChatRoomsFragment"
             app:destination="@id/masterChatRoomsFragment" />
     </fragment>
+    <action
+        android:id="@+id/action_global_masterCallLogsFragment"
+        app:destination="@id/masterCallLogsFragment"/>
     <fragment
         android:id="@+id/dialerFragment"
         android:name="org.linphone.activities.main.dialer.fragments.DialerFragment"

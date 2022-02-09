@@ -317,8 +317,15 @@ class CorePreferences constructor(private val context: Context) {
             config.setBool("audio", "android_disable_audio_focus_requests", value)
         }
 
+    // We will try to auto enable Telecom Manager feature, but in case user disables it don't try again
+    var manuallyDisabledTelecomManager: Boolean
+        get() = config.getBool("app", "user_disabled_self_managed_telecom_manager", false)
+        set(value) {
+            config.setBool("app", "user_disabled_self_managed_telecom_manager", value)
+        }
+
     var fullScreenCallUI: Boolean
-        get() = config.getBool("app", "full_screen_call", true)
+        get() = config.getBool("app", "full_screen_call", false)
         set(value) {
             config.setBool("app", "full_screen_call", value)
         }
@@ -424,6 +431,11 @@ class CorePreferences constructor(private val context: Context) {
     val fetchContactsFromDefaultDirectory: Boolean
         get() = config.getBool("app", "fetch_contacts_from_default_directory", true)
 
+    // From Android Contact APIs we can also retrieve the internationalized phone number
+    // By default we display the same value as the native address book app
+    val preferNormalizedPhoneNumbersFromAddressBook: Boolean
+        get() = config.getBool("app", "prefer_normalized_phone_numbers_from_address_book", false)
+
     val hideStaticImageCamera: Boolean
         get() = config.getBool("app", "hide_static_image_camera", true)
 
@@ -447,6 +459,11 @@ class CorePreferences constructor(private val context: Context) {
 
     val useEphemeralPerDeviceMode: Boolean
         get() = config.getBool("app", "ephemeral_chat_messages_settings_per_device", true)
+
+    // If enabled user will see all ringtones bundled in our SDK
+    // and will be able to choose which one to use if not using it's device's default
+    val showAllRingtones: Boolean
+        get() = config.getBool("app", "show_all_available_ringtones", false)
 
     /* Default values related */
 
@@ -566,8 +583,11 @@ class CorePreferences constructor(private val context: Context) {
     val defaultValuesPath: String
         get() = context.filesDir.absolutePath + "/assistant_default_values"
 
-    val ringtonePath: String
-        get() = context.filesDir.absolutePath + "/share/sounds/linphone/rings/notes_of_the_optimistic.mkv"
+    val ringtonesPath: String
+        get() = context.filesDir.absolutePath + "/share/sounds/linphone/rings/"
+
+    val defaultRingtonePath: String
+        get() = ringtonesPath + "notes_of_the_optimistic.mkv"
 
     val userCertificatesPath: String
         get() = context.filesDir.absolutePath + "/user-certs"

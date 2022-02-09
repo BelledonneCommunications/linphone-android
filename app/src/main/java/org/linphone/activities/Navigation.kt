@@ -72,6 +72,30 @@ internal fun MainActivity.navigateToDialer(args: Bundle?) {
     )
 }
 
+internal fun MainActivity.navigateToChatRooms(args: Bundle? = null) {
+    findNavController(R.id.nav_host_fragment).navigate(
+        R.id.action_global_masterChatRoomsFragment,
+        args,
+        popupTo(R.id.masterChatRoomsFragment, true)
+    )
+}
+
+internal fun MainActivity.navigateToChatRoom(localAddress: String?, peerAddress: String?) {
+    val deepLink = "linphone-android://chat-room/$localAddress/$peerAddress"
+    findNavController(R.id.nav_host_fragment).navigate(
+        Uri.parse(deepLink),
+        popupTo(R.id.masterChatRoomsFragment, true)
+    )
+}
+
+internal fun MainActivity.navigateToContact(contactId: String?) {
+    val deepLink = "linphone-android://contact/view/$contactId"
+    findNavController(R.id.nav_host_fragment).navigate(
+        Uri.parse(deepLink),
+        popupTo(R.id.masterContactsFragment, true)
+    )
+}
+
 /* Tabs fragment related */
 
 internal fun TabsFragment.navigateToCallHistory() {
@@ -79,9 +103,8 @@ internal fun TabsFragment.navigateToCallHistory() {
         R.id.masterContactsFragment -> R.id.action_masterContactsFragment_to_masterCallLogsFragment
         R.id.dialerFragment -> R.id.action_dialerFragment_to_masterCallLogsFragment
         R.id.masterChatRoomsFragment -> R.id.action_masterChatRoomsFragment_to_masterCallLogsFragment
-        else -> 0
+        else -> R.id.action_global_masterCallLogsFragment
     }
-    if (action == 0) return
     findNavController().navigate(
         action,
         null,
@@ -94,9 +117,8 @@ internal fun TabsFragment.navigateToContacts() {
         R.id.masterCallLogsFragment -> R.id.action_masterCallLogsFragment_to_masterContactsFragment
         R.id.dialerFragment -> R.id.action_dialerFragment_to_masterContactsFragment
         R.id.masterChatRoomsFragment -> R.id.action_masterChatRoomsFragment_to_masterContactsFragment
-        else -> 0
+        else -> R.id.action_global_masterContactsFragment
     }
-    if (action == 0) return
     findNavController().navigate(
         action,
         null,
@@ -109,9 +131,8 @@ internal fun TabsFragment.navigateToDialer() {
         R.id.masterCallLogsFragment -> R.id.action_masterCallLogsFragment_to_dialerFragment
         R.id.masterContactsFragment -> R.id.action_masterContactsFragment_to_dialerFragment
         R.id.masterChatRoomsFragment -> R.id.action_masterChatRoomsFragment_to_dialerFragment
-        else -> 0
+        else -> R.id.action_global_dialerFragment
     }
-    if (action == 0) return
     findNavController().navigate(
         action,
         null,
@@ -124,9 +145,8 @@ internal fun TabsFragment.navigateToChatRooms() {
         R.id.masterCallLogsFragment -> R.id.action_masterCallLogsFragment_to_masterChatRoomsFragment
         R.id.masterContactsFragment -> R.id.action_masterContactsFragment_to_masterChatRoomsFragment
         R.id.dialerFragment -> R.id.action_dialerFragment_to_masterChatRoomsFragment
-        else -> 0
+        else -> R.id.action_global_masterChatRoomsFragment
     }
-    if (action == 0) return
     findNavController().navigate(
         action,
         null,
@@ -298,7 +318,15 @@ internal fun DetailChatRoomFragment.navigateToEmptyChatRoom() {
     findNavController().navigate(
         R.id.action_global_emptyChatFragment,
         null,
-        popupTo(R.id.emptyChatFragment, true)
+        popupTo(R.id.detailChatRoomFragment, true)
+    )
+}
+
+internal fun DetailChatRoomFragment.navigateToDialer(args: Bundle?) {
+    findMasterNavController().navigate(
+        R.id.action_global_dialerFragment,
+        args,
+        popupTo(R.id.dialerFragment, true)
     )
 }
 
@@ -317,7 +345,7 @@ internal fun ChatRoomCreationFragment.navigateToChatRoom(args: Bundle) {
         findNavController().navigate(
             R.id.action_chatRoomCreationFragment_to_detailChatRoomFragment,
             args,
-            popupTo(R.id.detailChatRoomFragment, true)
+            popupTo(R.id.chatRoomCreationFragment, true)
         )
     }
 }
@@ -326,7 +354,7 @@ internal fun ChatRoomCreationFragment.navigateToEmptyChatRoom() {
     findNavController().navigate(
         R.id.action_global_emptyChatFragment,
         null,
-        popupTo(R.id.emptyChatFragment, true)
+        popupTo(R.id.chatRoomCreationFragment, true)
     )
 }
 
@@ -782,10 +810,10 @@ internal fun WelcomeFragment.navigateToAccountLogin() {
     }
 }
 
-internal fun WelcomeFragment.navigateToGenericLogin() {
+internal fun WelcomeFragment.navigateToGenericLoginWarning() {
     if (findNavController().currentDestination?.id == R.id.welcomeFragment) {
         findNavController().navigate(
-            R.id.action_welcomeFragment_to_genericAccountLoginFragment,
+            R.id.action_welcomeFragment_to_genericAccountWarningFragment,
             null,
             popupTo()
         )
@@ -818,6 +846,16 @@ internal fun AccountLoginFragment.navigateToPhoneAccountValidation(args: Bundle?
             R.id.action_accountLoginFragment_to_phoneAccountValidationFragment,
             args,
             popupTo()
+        )
+    }
+}
+
+internal fun GenericAccountWarningFragment.navigateToGenericLogin() {
+    if (findNavController().currentDestination?.id == R.id.genericAccountWarningFragment) {
+        findNavController().navigate(
+            R.id.action_genericAccountWarningFragment_to_genericAccountLoginFragment,
+            null,
+            popupTo(R.id.welcomeFragment, popUpInclusive = false)
         )
     }
 }

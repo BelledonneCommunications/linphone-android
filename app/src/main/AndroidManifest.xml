@@ -42,25 +42,21 @@
         android:theme="@style/AppTheme"
         android:allowNativeHeapPointerTagging="false">
 
-        <activity
-            android:name=".activities.launcher.LauncherActivity"
+        <activity android:name=".activities.main.MainActivity"
             android:exported="true"
-            android:noHistory="true"
-            android:theme="@style/AppTheme">
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/AppSplashScreenTheme">
+            <nav-graph android:value="@navigation/main_nav_graph" />
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <meta-data
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
-        </activity>
-
-        <activity android:name=".activities.main.MainActivity"
-            android:exported="true"
-            android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustResize">
-            <nav-graph android:value="@navigation/main_nav_graph" />
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW_LOCUS" />

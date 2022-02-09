@@ -129,10 +129,10 @@ class AsyncContactsLoader(private val context: Context) :
 
                     try {
                         val id: String =
-                            cursor.getString(cursor.getColumnIndex(ContactsContract.Data.CONTACT_ID))
+                            cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Data.CONTACT_ID))
                         val starred =
-                            cursor.getInt(cursor.getColumnIndex(ContactsContract.Contacts.STARRED)) == 1
-                        val lookupKey = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY))
+                            cursor.getInt(cursor.getColumnIndexOrThrow(ContactsContract.Contacts.STARRED)) == 1
+                        val lookupKey = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Contacts.LOOKUP_KEY))
                         var contact: Contact? = androidContactsCache[id]
                         if (contact == null) {
                             Log.d(
@@ -147,6 +147,10 @@ class AsyncContactsLoader(private val context: Context) :
                     } catch (ise: IllegalStateException) {
                         Log.e(
                             "[Contacts Loader] Couldn't get values from cursor, exception: $ise"
+                        )
+                    } catch (iae: IllegalArgumentException) {
+                        Log.e(
+                            "[Contacts Loader] Couldn't get values from cursor, exception: $iae"
                         )
                     }
                 }

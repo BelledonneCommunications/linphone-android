@@ -22,17 +22,16 @@ package org.linphone.activities.main.history.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import java.text.SimpleDateFormat
-import java.util.*
 import kotlin.collections.ArrayList
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.activities.main.history.data.CallLogData
 import org.linphone.contact.GenericContactViewModel
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
-import org.linphone.utils.TimestampUtils
 
 class CallLogViewModelFactory(private val callLog: CallLog) :
     ViewModelProvider.NewInstanceFactory() {
@@ -46,53 +45,6 @@ class CallLogViewModelFactory(private val callLog: CallLog) :
 class CallLogViewModel(val callLog: CallLog) : GenericContactViewModel(callLog.remoteAddress) {
     val peerSipUri: String by lazy {
         LinphoneUtils.getDisplayableAddress(callLog.remoteAddress)
-    }
-
-    val statusIconResource: Int by lazy {
-        if (callLog.dir == Call.Dir.Incoming) {
-            if (callLog.status == Call.Status.Missed) {
-                R.drawable.call_status_missed
-            } else {
-                R.drawable.call_status_incoming
-            }
-        } else {
-            R.drawable.call_status_outgoing
-        }
-    }
-
-    val iconContentDescription: Int by lazy {
-        if (callLog.dir == Call.Dir.Incoming) {
-            if (callLog.status == Call.Status.Missed) {
-                R.string.content_description_missed_call
-            } else {
-                R.string.content_description_incoming_call
-            }
-        } else {
-            R.string.content_description_outgoing_call
-        }
-    }
-
-    val directionIconResource: Int by lazy {
-        if (callLog.dir == Call.Dir.Incoming) {
-            if (callLog.status == Call.Status.Missed) {
-                R.drawable.call_missed
-            } else {
-                R.drawable.call_incoming
-            }
-        } else {
-            R.drawable.call_outgoing
-        }
-    }
-
-    val duration: String by lazy {
-        val dateFormat = SimpleDateFormat(if (callLog.duration >= 3600) "HH:mm:ss" else "mm:ss", Locale.getDefault())
-        val cal = Calendar.getInstance()
-        cal[0, 0, 0, 0, 0] = callLog.duration
-        dateFormat.format(cal.time)
-    }
-
-    val date: String by lazy {
-        TimestampUtils.toString(callLog.startDate, shortDate = false, hideYear = false)
     }
 
     val startCallEvent: MutableLiveData<Event<CallLog>> by lazy {
@@ -109,7 +61,16 @@ class CallLogViewModel(val callLog: CallLog) : GenericContactViewModel(callLog.r
 
     val secureChatAllowed = contact.value?.friend?.getPresenceModelForUriOrTel(peerSipUri)?.hasCapability(FriendCapability.LimeX3Dh) ?: false
 
-    val relatedCallLogs = MutableLiveData<ArrayList<CallLog>>()
+    val relatedCallLogs = MutableLiveData<ArrayList<CallLogData>>()
+
+    private val listener = object : CoreListenerStub() {
+        override fun onCallLogUpdated(core: Core, log: CallLog) {
+            if (callLog.remoteAddress.weakEqual(log.remoteAddress) && callLog.localAddress.weakEqual(log.localAddress)) {
+                Log.i("[History Detail] New call log for ${callLog.remoteAddress.asStringUriOnly()} with local address ${callLog.localAddress.asStringUriOnly()}")
+                addRelatedCallLogs(arrayListOf(log))
+            }
+        }
+    }
 
     private val chatRoomListener = object : ChatRoomListenerStub() {
         override fun onStateChanged(chatRoom: ChatRoom, state: ChatRoom.State) {
@@ -126,14 +87,19 @@ class CallLogViewModel(val callLog: CallLog) : GenericContactViewModel(callLog.r
 
     init {
         waitForChatRoomCreation.value = false
+
+        coreContext.core.addListener(listener)
     }
 
     override fun onCleared() {
+        coreContext.core.removeListener(listener)
         destroy()
+
         super.onCleared()
     }
 
     fun destroy() {
+        relatedCallLogs.value.orEmpty().forEach(CallLogData::destroy)
     }
 
     fun startCall() {
@@ -157,11 +123,15 @@ class CallLogViewModel(val callLog: CallLog) : GenericContactViewModel(callLog.r
         }
     }
 
-    fun getCallsHistory(): ArrayList<CallLogViewModel> {
-        val callsHistory = ArrayList<CallLogViewModel>()
-        for (callLog in relatedCallLogs.value.orEmpty()) {
-            callsHistory.add(CallLogViewModel(callLog))
+    fun addRelatedCallLogs(logs: ArrayList<CallLog>) {
+        val callsHistory = ArrayList<CallLogData>()
+
+        // We assume new logs are more recent than the ones we already have, so we add them first
+        for (log in logs) {
+            callsHistory.add(CallLogData(log))
         }
-        return callsHistory
+        callsHistory.addAll(relatedCallLogs.value.orEmpty())
+
+        relatedCallLogs.value = callsHistory
     }
 }

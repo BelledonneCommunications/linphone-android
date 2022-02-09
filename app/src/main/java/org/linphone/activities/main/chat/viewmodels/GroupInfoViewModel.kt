@@ -117,8 +117,8 @@ class GroupInfoViewModel(val chatRoom: ChatRoom?) : ErrorReportingViewModel() {
     fun createChatRoom() {
         waitForChatRoomCreation.value = true
         val params: ChatRoomParams = coreContext.core.createDefaultChatRoomParams()
-        params.enableEncryption(isEncrypted.value == true)
-        params.enableGroup(true)
+        params.isEncryptionEnabled = isEncrypted.value == true
+        params.isGroupEnabled = true
         if (isEncrypted.value == true) {
             params.ephemeralMode = if (corePreferences.useEphemeralPerDeviceMode)
                 ChatRoomEphemeralMode.DeviceManaged

@@ -50,21 +50,19 @@ class EmailAccountCreationFragment : GenericFragment<AssistantEmailAccountCreati
         binding.viewModel = viewModel
 
         viewModel.goToEmailValidationEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    navigateToEmailAccountValidation()
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                navigateToEmailAccountValidation()
             }
-        )
+        }
 
         viewModel.onErrorEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume { message ->
-                    (requireActivity() as AssistantActivity).showSnackBar(message)
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume { message ->
+                (requireActivity() as AssistantActivity).showSnackBar(message)
             }
-        )
+        }
     }
 }

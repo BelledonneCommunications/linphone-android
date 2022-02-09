@@ -114,6 +114,7 @@ open class CallViewModel(val call: Call) : GenericContactViewModel(call.remoteAd
         call.addListener(listener)
 
         isPaused.value = call.state == Call.State.Paused
+        isOutgoingEarlyMedia.value = call.state == Call.State.OutgoingEarlyMedia
     }
 
     override fun onCleared() {
@@ -138,7 +139,7 @@ open class CallViewModel(val call: Call) : GenericContactViewModel(call.remoteAd
     }
 
     fun takeScreenshot() {
-        if (call.currentParams.videoEnabled()) {
+        if (call.currentParams.isVideoEnabled) {
             val fileName = System.currentTimeMillis().toString() + ".jpeg"
             call.takeVideoSnapshot(FileUtils.getFileStoragePath(fileName).absolutePath)
         }

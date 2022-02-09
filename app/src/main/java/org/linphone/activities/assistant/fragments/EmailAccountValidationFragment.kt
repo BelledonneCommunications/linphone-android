@@ -49,27 +49,25 @@ class EmailAccountValidationFragment : GenericFragment<AssistantEmailAccountVali
         binding.viewModel = viewModel
 
         viewModel.leaveAssistantEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    coreContext.contactsManager.updateLocalContacts()
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                coreContext.contactsManager.updateLocalContacts()
 
-                    val args = Bundle()
-                    args.putBoolean("AllowSkip", true)
-                    args.putString("Username", viewModel.accountCreator.username)
-                    args.putString("Password", viewModel.accountCreator.password)
-                    navigateToAccountLinking(args)
-                }
+                val args = Bundle()
+                args.putBoolean("AllowSkip", true)
+                args.putString("Username", viewModel.accountCreator.username)
+                args.putString("Password", viewModel.accountCreator.password)
+                navigateToAccountLinking(args)
             }
-        )
+        }
 
         viewModel.onErrorEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume { message ->
-                    (requireActivity() as AssistantActivity).showSnackBar(message)
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume { message ->
+                (requireActivity() as AssistantActivity).showSnackBar(message)
             }
-        )
+        }
     }
 }

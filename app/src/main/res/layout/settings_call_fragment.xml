@@ -72,8 +72,17 @@
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/call_settings_device_ringtone_title}"
+                    android:visibility="@{viewModel.showRingtonesList ? View.GONE : View.VISIBLE}"
                     linphone:listener="@{viewModel.deviceRingtoneListener}"
                     linphone:checked="@={viewModel.deviceRingtone}"/>
+
+                <include
+                    layout="@layout/settings_widget_list"
+                    android:visibility="@{viewModel.showRingtonesList ? View.VISIBLE : View.GONE, default=gone}"
+                    linphone:title="@{@string/call_settings_ringtones_title}"
+                    linphone:listener="@{viewModel.ringtoneListener}"
+                    linphone:selectedIndex="@{viewModel.ringtoneIndex}"
+                    linphone:labels="@{viewModel.ringtoneLabels}"/>
 
                 <include
                     layout="@layout/settings_widget_switch"
@@ -204,7 +213,8 @@
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/call_settings_pause_calls_lost_audio_focus_title}"
                     linphone:listener="@{viewModel.pauseCallsWhenAudioFocusIsLostListener}"
-                    linphone:checked="@={viewModel.pauseCallsWhenAudioFocusIsLost}"/>
+                    linphone:checked="@={viewModel.pauseCallsWhenAudioFocusIsLost}"
+                    linphone:enabled="@{!viewModel.useTelecomManager}"/>
 
                 <include
                     layout="@layout/settings_widget_basic"

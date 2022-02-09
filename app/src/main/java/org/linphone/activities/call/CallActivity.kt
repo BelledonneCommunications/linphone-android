@@ -61,40 +61,36 @@ class CallActivity : ProximitySensorActivity() {
         sharedViewModel = ViewModelProvider(this)[SharedCallViewModel::class.java]
 
         sharedViewModel.toggleDrawerEvent.observe(
-            this,
-            {
-                it.consume {
-                    if (binding.statsMenu.isDrawerOpen(Gravity.LEFT)) {
-                        binding.statsMenu.closeDrawer(binding.sideMenuContent, true)
-                    } else {
-                        binding.statsMenu.openDrawer(binding.sideMenuContent, true)
-                    }
+            this
+        ) {
+            it.consume {
+                if (binding.statsMenu.isDrawerOpen(Gravity.LEFT)) {
+                    binding.statsMenu.closeDrawer(binding.sideMenuContent, true)
+                } else {
+                    binding.statsMenu.openDrawer(binding.sideMenuContent, true)
                 }
             }
-        )
+        }
 
         sharedViewModel.resetHiddenInterfaceTimerInVideoCallEvent.observe(
-            this,
-            {
-                it.consume {
-                    viewModel.showMomentarily()
-                }
+            this
+        ) {
+            it.consume {
+                viewModel.showMomentarily()
             }
-        )
+        }
 
         viewModel.proximitySensorEnabled.observe(
-            this,
-            {
-                enableProximitySensor(it)
-            }
-        )
+            this
+        ) {
+            enableProximitySensor(it)
+        }
 
         viewModel.videoEnabled.observe(
-            this,
-            {
-                updateConstraintSetDependingOnFoldingState()
-            }
-        )
+            this
+        ) {
+            updateConstraintSetDependingOnFoldingState()
+        }
     }
 
     override fun onLayoutChanges(foldingFeature: FoldingFeature?) {

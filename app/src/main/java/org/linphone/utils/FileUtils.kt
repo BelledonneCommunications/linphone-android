@@ -70,33 +70,54 @@ class FileUtils {
         }
 
         fun isPlainTextFile(path: String): Boolean {
-            val extension = getExtensionFromFileName(path).toLowerCase(Locale.getDefault())
+            val extension = getExtensionFromFileName(path).lowercase(Locale.getDefault())
             val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
             return type?.startsWith("text/plain") ?: false
         }
 
         fun isExtensionPdf(path: String): Boolean {
-            val extension = getExtensionFromFileName(path).toLowerCase(Locale.getDefault())
+            val extension = getExtensionFromFileName(path).lowercase(Locale.getDefault())
             val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
             return type?.startsWith("application/pdf") ?: false
         }
 
         fun isExtensionImage(path: String): Boolean {
-            val extension = getExtensionFromFileName(path).toLowerCase(Locale.getDefault())
+            val extension = getExtensionFromFileName(path).lowercase(Locale.getDefault())
             val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
             return type?.startsWith("image/") ?: false
         }
 
         fun isExtensionVideo(path: String): Boolean {
-            val extension = getExtensionFromFileName(path).toLowerCase(Locale.getDefault())
+            val extension = getExtensionFromFileName(path).lowercase(Locale.getDefault())
             val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
             return type?.startsWith("video/") ?: false
         }
 
         fun isExtensionAudio(path: String): Boolean {
-            val extension = getExtensionFromFileName(path).toLowerCase(Locale.getDefault())
+            val extension = getExtensionFromFileName(path).lowercase(Locale.getDefault())
             val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
             return type?.startsWith("audio/") ?: false
+        }
+
+        fun clearExistingPlainFiles() {
+            for (file in coreContext.context.filesDir.listFiles().orEmpty()) {
+                if (file.path.endsWith(VFS_PLAIN_FILE_EXTENSION)) {
+                    Log.w("[File Utils] Found forgotten plain file: ${file.path}, deleting it")
+                    deleteFile(file.path)
+                }
+            }
+            for (file in coreContext.context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)?.listFiles().orEmpty()) {
+                if (file.path.endsWith(VFS_PLAIN_FILE_EXTENSION)) {
+                    Log.w("[File Utils] Found forgotten plain file: ${file.path}, deleting it")
+                    deleteFile(file.path)
+                }
+            }
+            for (file in coreContext.context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)?.listFiles().orEmpty()) {
+                if (file.path.endsWith(VFS_PLAIN_FILE_EXTENSION)) {
+                    Log.w("[File Utils] Found forgotten plain file: ${file.path}, deleting it")
+                    deleteFile(file.path)
+                }
+            }
         }
 
         fun getFileStorageDir(isPicture: Boolean = false): File {
@@ -467,6 +488,28 @@ class FileUtils {
                 return true
             } catch (anfe: ActivityNotFoundException) {
                 Log.e("[File Viewer] Can't open file in third party app: $anfe")
+            }
+            return false
+        }
+
+        fun openMediaStoreFile(
+            activity: Activity,
+            contentFilePath: String,
+            newTask: Boolean = false
+        ): Boolean {
+            val intent = Intent(Intent.ACTION_VIEW)
+            val contentUri: Uri = Uri.parse(contentFilePath)
+            intent.data = contentUri
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            if (newTask) {
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+
+            try {
+                activity.startActivity(intent)
+                return true
+            } catch (anfe: ActivityNotFoundException) {
+                Log.e("[File Viewer] Can't open media store export in third party app: $anfe")
             }
             return false
         }

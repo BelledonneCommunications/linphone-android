@@ -19,6 +19,7 @@
  */
 package org.linphone.notifications
 
+import android.app.NotificationManager
 import android.app.RemoteInput
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -33,13 +34,13 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
         val notificationId = intent.getIntExtra(NotificationsManager.INTENT_NOTIF_ID, 0)
 
         if (intent.action == NotificationsManager.INTENT_REPLY_NOTIF_ACTION || intent.action == NotificationsManager.INTENT_MARK_AS_READ_ACTION) {
-            handleChatIntent(intent, notificationId)
+            handleChatIntent(context, intent, notificationId)
         } else if (intent.action == NotificationsManager.INTENT_ANSWER_CALL_NOTIF_ACTION || intent.action == NotificationsManager.INTENT_HANGUP_CALL_NOTIF_ACTION) {
             handleCallIntent(intent)
         }
     }
 
-    private fun handleChatIntent(intent: Intent, notificationId: Int) {
+    private fun handleChatIntent(context: Context, intent: Intent, notificationId: Int) {
         val remoteSipAddress = intent.getStringExtra(NotificationsManager.INTENT_REMOTE_ADDRESS)
         if (remoteSipAddress == null) {
             Log.e("[Notification Broadcast Receiver] Remote SIP address is null for notification id $notificationId")
@@ -84,7 +85,11 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
             msg.send()
             Log.i("[Notification Broadcast Receiver] Reply sent for notif id $notificationId")
         } else {
-            coreContext.notificationsManager.dismissChatNotification(room)
+            if (!coreContext.notificationsManager.dismissChatNotification(room)) {
+                Log.w("[Notification Broadcast Receiver] Notifications Manager failed to cancel notification")
+                val notificationManager = context.getSystemService(NotificationManager::class.java)
+                notificationManager.cancel(NotificationsManager.CHAT_TAG, notificationId)
+            }
         }
     }
 
@@ -107,7 +112,13 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
         if (intent.action == NotificationsManager.INTENT_ANSWER_CALL_NOTIF_ACTION) {
             coreContext.answerCall(call)
         } else {
-            if (call.state == Call.State.IncomingReceived || call.state == Call.State.IncomingEarlyMedia) coreContext.declineCall(call) else coreContext.terminateCall(call)
+            if (call.state == Call.State.IncomingReceived ||
+                call.state == Call.State.IncomingEarlyMedia
+            ) {
+                coreContext.declineCall(call)
+            } else {
+                coreContext.terminateCall(call)
+            }
         }
     }
 

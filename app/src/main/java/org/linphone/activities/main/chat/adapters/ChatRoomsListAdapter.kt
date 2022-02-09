@@ -73,17 +73,16 @@ class ChatRoomsListAdapter(
                 // This is for item selection through ListTopBarFragment
                 selectionListViewModel = selectionViewModel
                 selectionViewModel.isEditionEnabled.observe(
-                    viewLifecycleOwner,
-                    {
-                        position = adapterPosition
-                    }
-                )
+                    viewLifecycleOwner
+                ) {
+                    position = bindingAdapterPosition
+                }
 
                 forwardPending = isForwardPending
 
                 setClickListener {
                     if (selectionViewModel.isEditionEnabled.value == true) {
-                        selectionViewModel.onToggleSelect(adapterPosition)
+                        selectionViewModel.onToggleSelect(bindingAdapterPosition)
                     } else {
                         selectedChatRoomEvent.value = Event(chatRoomViewModel.chatRoom)
                     }
@@ -116,6 +115,6 @@ private class ChatRoomDiffCallback : DiffUtil.ItemCallback<ChatRoomViewModel>() 
         oldItem: ChatRoomViewModel,
         newItem: ChatRoomViewModel
     ): Boolean {
-        return newItem.unreadMessagesCount.value == 0
+        return false // To force redraw when contacts are updated
     }
 }

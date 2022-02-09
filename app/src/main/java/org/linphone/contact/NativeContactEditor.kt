@@ -96,8 +96,12 @@ class NativeContactEditor(val contact: NativeContact) {
         if (cursor?.moveToFirst() == true) {
             do {
                 if (rawId == null) {
-                    rawId = cursor.getString(cursor.getColumnIndex(RawContacts._ID))
-                    Log.i("[Native Contact Editor] Found raw id $rawId for native contact with id ${contact.nativeId}")
+                    try {
+                        rawId = cursor.getString(cursor.getColumnIndexOrThrow(RawContacts._ID))
+                        Log.i("[Native Contact Editor] Found raw id $rawId for native contact with id ${contact.nativeId}")
+                    } catch (iae: IllegalArgumentException) {
+                        Log.e("[Native Contact Editor] Exception: $iae")
+                    }
                 }
             } while (cursor.moveToNext() && rawId == null)
         }
@@ -258,11 +262,16 @@ class NativeContactEditor(val contact: NativeContact) {
             )
             if (cursor?.moveToFirst() == true) {
                 do {
-                    val accountType =
-                        cursor.getString(cursor.getColumnIndex(RawContacts.ACCOUNT_TYPE))
-                    if (accountType == AppUtils.getString(R.string.sync_account_type) && syncAccountRawId == null) {
-                        syncAccountRawId = cursor.getString(cursor.getColumnIndex(RawContacts._ID))
-                        Log.d("[Native Contact Editor] Found linphone raw id $syncAccountRawId for native contact with id ${contact.nativeId}")
+                    try {
+                        val accountType =
+                            cursor.getString(cursor.getColumnIndexOrThrow(RawContacts.ACCOUNT_TYPE))
+                        if (accountType == AppUtils.getString(R.string.sync_account_type) && syncAccountRawId == null) {
+                            syncAccountRawId =
+                                cursor.getString(cursor.getColumnIndexOrThrow(RawContacts._ID))
+                            Log.d("[Native Contact Editor] Found linphone raw id $syncAccountRawId for native contact with id ${contact.nativeId}")
+                        }
+                    } catch (iae: IllegalArgumentException) {
+                        Log.e("[Native Contact Editor] Exception: $iae")
                     }
                 } while (cursor.moveToNext() && syncAccountRawId == null)
             }
@@ -461,7 +470,11 @@ class NativeContactEditor(val contact: NativeContact) {
         val count = cursor?.count ?: 0
         val data1 = if (count > 0) {
             if (cursor?.moveToFirst() == true) {
-                cursor.getString(cursor.getColumnIndex("data1"))
+                try {
+                    cursor.getString(cursor.getColumnIndexOrThrow("data1"))
+                } catch (iae: IllegalArgumentException) {
+                    Log.e("[Native Contact Editor] Exception: $iae")
+                }
             } else null
         } else null
         cursor?.close()
