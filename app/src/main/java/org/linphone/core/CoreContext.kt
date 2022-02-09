@@ -87,7 +87,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
         "$sdkVersion ($sdkBranch, $sdkBuildType)"
     }
 
-    val collator = Collator.getInstance()
+    val collator: Collator = Collator.getInstance()
     val contactsManager: ContactsManager by lazy {
         ContactsManager(context)
     }
@@ -136,29 +136,9 @@ class CoreContext(val context: Context, coreConfig: Config) {
         ) {
             Log.i("[Context] Call state changed [$state]")
             if (state == Call.State.IncomingReceived || state == Call.State.IncomingEarlyMedia) {
-                if (!corePreferences.useTelecomManager) { // Can't use the following call with Telecom Manager API as it will "fake" GSM calls
-                    var gsmCallActive = false
-                    if (::phoneStateListener.isInitialized) {
-                        gsmCallActive = phoneStateListener.isInCall()
-                    }
-
-                    if (gsmCallActive) {
-                        Log.w("[Context] Refusing the call with reason busy because a GSM call is active")
-                        call.decline(Reason.Busy)
-                        return
-                    }
-                } else {
-                    if (TelecomHelper.exists()) {
-                        if (!TelecomHelper.get().isIncomingCallPermitted() ||
-                            TelecomHelper.get().isInManagedCall()
-                        ) {
-                            Log.w("[Context] Refusing the call with reason busy because Telecom Manager will reject the call")
-                            call.decline(Reason.Busy)
-                            return
-                        }
-                    } else {
-                        Log.e("[Context] Telecom Manager singleton wasn't created!")
-                    }
+                if (declineCallDueToGsmActiveCall()) {
+                    call.decline(Reason.Busy)
+                    return
                 }
 
                 // Starting SDK 24 (Android 7.0) we rely on the fullscreen intent of the call incoming notification
@@ -209,7 +189,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
                     }
                 }
 
-                if (corePreferences.routeAudioToSpeakerWhenVideoIsEnabled && call.currentParams.videoEnabled()) {
+                if (corePreferences.routeAudioToSpeakerWhenVideoIsEnabled && call.currentParams.isVideoEnabled) {
                     // Do not turn speaker on when video is enabled if headset or bluetooth is used
                     if (!AudioRouteUtils.isHeadsetAudioRouteAvailable() && !AudioRouteUtils.isBluetoothAudioRouteCurrentlyUsed(
                             call
@@ -306,15 +286,19 @@ class CoreContext(val context: Context, coreConfig: Config) {
     fun start(isPush: Boolean = false) {
         Log.i("[Context] Starting")
 
-        notificationsManager.onCoreReady()
-
         core.addListener(listener)
 
         // CoreContext listener must be added first!
         if (Version.sdkAboveOrEqual(Version.API26_O_80) && corePreferences.useTelecomManager) {
-            Log.i("[Context] Creating TelecomHelper, disabling audio focus requests in AudioHelper")
-            core.config.setBool("audio", "android_disable_audio_focus_requests", true)
-            TelecomHelper.create(context)
+            if (Compatibility.hasTelecomManagerPermissions(context)) {
+                Log.i("[Context] Creating Telecom Helper, disabling audio focus requests in AudioHelper")
+                core.config.setBool("audio", "android_disable_audio_focus_requests", true)
+                val telecomHelper = TelecomHelper.required(context)
+                Log.i("[Context] Telecom Helper created, account is ${if (telecomHelper.isAccountEnabled()) "enabled" else "disabled"}")
+            } else {
+                Log.w("[Context] Can't create Telecom Helper, permissions have been revoked")
+                corePreferences.useTelecomManager = false
+            }
         }
 
         if (isPush) {
@@ -322,14 +306,27 @@ class CoreContext(val context: Context, coreConfig: Config) {
             core.enterBackground()
         }
 
-        core.start()
-
         configureCore()
+
+        core.start()
 
         initPhoneStateListener()
 
+        notificationsManager.onCoreReady()
+
         EmojiCompat.init(BundledEmojiCompatConfig(context))
         collator.strength = Collator.NO_DECOMPOSITION
+
+        if (corePreferences.vfsEnabled) {
+            FileUtils.clearExistingPlainFiles()
+        }
+
+        if (corePreferences.keepServiceAlive) {
+            Log.i("[Context] Background mode setting is enabled, starting Service")
+            notificationsManager.startForeground()
+        }
+
+        Log.i("[Context] Started")
     }
 
     fun stop() {
@@ -344,6 +341,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
         if (TelecomHelper.exists()) {
             Log.i("[Context] Destroying telecom helper")
             TelecomHelper.get().destroy()
+            TelecomHelper.destroy()
         }
 
         core.stop()
@@ -387,6 +385,12 @@ class CoreContext(val context: Context, coreConfig: Config) {
                         core.limeX3DhServerUrl = url
                     }
                 }
+
+                // Ensure we allow CPIM messages in basic chat rooms
+                val newParams = account.params.clone()
+                newParams.isCpimInBasicChatRoomEnabled = true
+                account.params = newParams
+                Log.i("[Context] CPIM allowed in basic chat rooms for account ${newParams.identityAddress?.asStringUriOnly()}")
             }
         }
 
@@ -432,15 +436,41 @@ class CoreContext(val context: Context, coreConfig: Config) {
         }
     }
 
+    fun declineCallDueToGsmActiveCall(): Boolean {
+        if (!corePreferences.useTelecomManager) { // Can't use the following call with Telecom Manager API as it will "fake" GSM calls
+            var gsmCallActive = false
+            if (::phoneStateListener.isInitialized) {
+                gsmCallActive = phoneStateListener.isInCall()
+            }
+
+            if (gsmCallActive) {
+                Log.w("[Context] Refusing the call with reason busy because a GSM call is active")
+                return true
+            }
+        } else {
+            if (TelecomHelper.exists()) {
+                if (!TelecomHelper.get().isIncomingCallPermitted() ||
+                    TelecomHelper.get().isInManagedCall()
+                ) {
+                    Log.w("[Context] Refusing the call with reason busy because Telecom Manager will reject the call")
+                    return true
+                }
+            } else {
+                Log.e("[Context] Telecom Manager singleton wasn't created!")
+            }
+        }
+        return false
+    }
+
     fun answerCallVideoUpdateRequest(call: Call, accept: Boolean) {
         val params = core.createCallParams(call)
 
         if (accept) {
-            params?.enableVideo(true)
-            core.enableVideoCapture(true)
-            core.enableVideoDisplay(true)
+            params?.isVideoEnabled = true
+            core.isVideoCaptureEnabled = true
+            core.isVideoDisplayEnabled = true
         } else {
-            params?.enableVideo(false)
+            params?.isVideoEnabled = false
         }
 
         call.acceptUpdate(params)
@@ -452,7 +482,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
         params?.recordFile = LinphoneUtils.getRecordingFilePathForAddress(call.remoteAddress)
         if (LinphoneUtils.checkIfNetworkHasLowBandwidth(context)) {
             Log.w("[Context] Enabling low bandwidth mode!")
-            params?.enableLowBandwidth(true)
+            params?.isLowBandwidthEnabled = true
         }
         call.acceptWithParams(params)
     }
@@ -529,7 +559,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
         }
         if (LinphoneUtils.checkIfNetworkHasLowBandwidth(context)) {
             Log.w("[Context] Enabling low bandwidth mode!")
-            params.enableLowBandwidth(true)
+            params.isLowBandwidthEnabled = true
         }
         params.recordFile = LinphoneUtils.getRecordingFilePathForAddress(address)
 
@@ -543,7 +573,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
         }
 
         if (corePreferences.sendEarlyMedia) {
-            params.enableEarlyMediaSending(true)
+            params.isEarlyMediaSendingEnabled = true
         }
 
         val call = core.inviteAddressWithParams(address, params)
@@ -582,7 +612,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
         return if (conference != null && conference.isIn) {
             conference.currentParams.isVideoEnabled
         } else {
-            core.currentCall?.currentParams?.videoEnabled() ?: false
+            core.currentCall?.currentParams?.isVideoEnabled ?: false
         }
     }
 

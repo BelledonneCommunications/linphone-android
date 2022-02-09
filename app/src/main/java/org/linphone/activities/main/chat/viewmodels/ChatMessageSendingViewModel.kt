@@ -19,6 +19,7 @@
  */
 package org.linphone.activities.main.chat.viewmodels
 
+import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -37,6 +38,7 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.main.chat.data.ChatMessageAttachmentData
 import org.linphone.activities.main.chat.data.ChatMessageData
+import org.linphone.compatibility.Compatibility
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
@@ -86,11 +88,18 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
 
     val isPlayingVoiceRecording = MutableLiveData<Boolean>()
 
-    val recorder: Recorder
-
     val voiceRecordPlayingPosition = MutableLiveData<Int>()
 
-    var voiceRecordAudioFocusRequest: AudioFocusRequestCompat? = null
+    val imeFlags: Int = if (chatRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt())) {
+        // IME_FLAG_NO_PERSONALIZED_LEARNING is only available on Android 8 and newer
+        Compatibility.getImeFlagsForSecureChatRoom()
+    } else {
+        EditorInfo.IME_FLAG_NO_EXTRACT_UI
+    }
+
+    private val recorder: Recorder
+
+    private var voiceRecordAudioFocusRequest: AudioFocusRequestCompat? = null
 
     private lateinit var voiceRecordingPlayer: Player
     private val playerListener = PlayerListener {
@@ -98,9 +107,19 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         stopVoiceRecordPlayer()
     }
 
+    private val chatRoomListener: ChatRoomListenerStub = object : ChatRoomListenerStub() {
+        override fun onStateChanged(chatRoom: ChatRoom, state: ChatRoom.State) {
+            if (state == ChatRoom.State.Created || state == ChatRoom.State.Terminated) {
+                isReadOnly.value = chatRoom.hasBeenLeft()
+            }
+        }
+    }
+
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     init {
+        chatRoom.addListener(chatRoomListener)
+
         attachments.value = arrayListOf()
 
         attachFileEnabled.value = true
@@ -118,6 +137,7 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
 
     override fun onCleared() {
         attachments.value.orEmpty().forEach(ChatMessageAttachmentData::destroy)
+        pendingChatMessageToReplyTo.value?.destroy()
 
         if (recorder.state != RecorderState.Closed) {
             recorder.close()
@@ -128,6 +148,7 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
             voiceRecordingPlayer.removeListener(playerListener)
         }
 
+        chatRoom.removeListener(chatRoomListener)
         scope.cancel()
         super.onCleared()
     }
@@ -418,8 +439,9 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
 
     private fun initVoiceRecordPlayer() {
         Log.i("[Chat Message Sending] Creating player for voice record")
-        // Use speaker sound card to play recordings, otherwise use earpiece
+        // In case no headphones/headset is connected, use speaker sound card to play recordings, otherwise use earpiece
         // If none are available, default one will be used
+        var headphonesCard: String? = null
         var speakerCard: String? = null
         var earpieceCard: String? = null
         for (device in coreContext.core.audioDevices) {
@@ -428,12 +450,14 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
                     speakerCard = device.id
                 } else if (device.type == AudioDevice.Type.Earpiece) {
                     earpieceCard = device.id
+                } else if (device.type == AudioDevice.Type.Headphones || device.type == AudioDevice.Type.Headset) {
+                    headphonesCard = device.id
                 }
             }
         }
-        Log.i("[Chat Message Sending] Found speaker sound card [$speakerCard] and earpiece sound card [$earpieceCard]")
+        Log.i("[Chat Message Sending] Found headset/headphones sound card [$headphonesCard], speaker sound card [$speakerCard] and earpiece sound card [$earpieceCard]")
 
-        val localPlayer = coreContext.core.createLocalPlayer(speakerCard ?: earpieceCard, null, null)
+        val localPlayer = coreContext.core.createLocalPlayer(headphonesCard ?: speakerCard ?: earpieceCard, null, null)
         if (localPlayer != null) {
             voiceRecordingPlayer = localPlayer
         } else {

@@ -4,7 +4,7 @@
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Disable animations between activities -->
         <item name="android:windowAnimationStyle">@null</item>
-        <item name="android:windowBackground">@color/dark_grey_color</item>
+        <item name="android:windowBackground">@color/transparent_color</item>
 
         <!-- Android theme override -->
         <item name="colorAccent">@color/primary_color</item>

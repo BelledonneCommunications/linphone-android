@@ -30,6 +30,7 @@ import org.linphone.activities.navigateToEchoCancellerCalibration
 import org.linphone.activities.navigateToPhoneAccountValidation
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantPhoneAccountLinkingFragmentBinding
+import org.linphone.mediastream.Version
 
 class PhoneAccountLinkingFragment : AbstractPhoneFragment<AssistantPhoneAccountLinkingFragmentBinding>() {
     private lateinit var sharedViewModel: SharedAssistantViewModel
@@ -72,39 +73,38 @@ class PhoneAccountLinkingFragment : AbstractPhoneFragment<AssistantPhoneAccountL
         }
 
         viewModel.goToSmsValidationEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    val args = Bundle()
-                    args.putBoolean("IsLinking", true)
-                    args.putString("PhoneNumber", viewModel.accountCreator.phoneNumber)
-                    navigateToPhoneAccountValidation(args)
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                val args = Bundle()
+                args.putBoolean("IsLinking", true)
+                args.putString("PhoneNumber", viewModel.accountCreator.phoneNumber)
+                navigateToPhoneAccountValidation(args)
             }
-        )
+        }
 
         viewModel.leaveAssistantEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    if (LinphoneApplication.coreContext.core.isEchoCancellerCalibrationRequired) {
-                        navigateToEchoCancellerCalibration()
-                    } else {
-                        requireActivity().finish()
-                    }
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                if (LinphoneApplication.coreContext.core.isEchoCancellerCalibrationRequired) {
+                    navigateToEchoCancellerCalibration()
+                } else {
+                    requireActivity().finish()
                 }
             }
-        )
+        }
 
         viewModel.onErrorEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume { message ->
-                    (requireActivity() as AssistantActivity).showSnackBar(message)
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume { message ->
+                (requireActivity() as AssistantActivity).showSnackBar(message)
             }
-        )
+        }
 
-        checkPermission()
+        if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
+            checkPermissions()
+        }
     }
 }

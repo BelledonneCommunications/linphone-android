@@ -86,6 +86,10 @@ class ChatMessagesListAdapter(
         MutableLiveData<Event<Content>>()
     }
 
+    val sipUriClickedEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
     val scrollToChatMessageEvent: MutableLiveData<Event<ChatMessage>> by lazy {
         MutableLiveData<Event<ChatMessage>>()
     }
@@ -93,6 +97,10 @@ class ChatMessagesListAdapter(
     private val contentClickedListener = object : OnContentClickedListener {
         override fun onContentClicked(content: Content) {
             openContentEvent.value = Event(content)
+        }
+
+        override fun onSipAddressClicked(sipUri: String) {
+            sipUriClickedEvent.value = Event(sipUri)
         }
     }
 
@@ -211,15 +219,14 @@ class ChatMessagesListAdapter(
                     // This is for item selection through ListTopBarFragment
                     selectionListViewModel = selectionViewModel
                     selectionViewModel.isEditionEnabled.observe(
-                        viewLifecycleOwner,
-                        {
-                            position = adapterPosition
-                        }
-                    )
+                        viewLifecycleOwner
+                    ) {
+                        position = bindingAdapterPosition
+                    }
 
                     setClickListener {
                         if (selectionViewModel.isEditionEnabled.value == true) {
-                            selectionViewModel.onToggleSelect(adapterPosition)
+                            selectionViewModel.onToggleSelect(bindingAdapterPosition)
                         }
                     }
 
@@ -234,8 +241,8 @@ class ChatMessagesListAdapter(
                     var hasPrevious = false
                     var hasNext = false
 
-                    if (adapterPosition > 0) {
-                        val previousItem = getItem(adapterPosition - 1)
+                    if (bindingAdapterPosition > 0) {
+                        val previousItem = getItem(bindingAdapterPosition - 1)
                         if (previousItem.eventLog.type == EventLog.Type.ConferenceChatMessage) {
                             val previousMessage = previousItem.eventLog.chatMessage
                             if (previousMessage != null && previousMessage.fromAddress.weakEqual(chatMessage.fromAddress)) {
@@ -246,8 +253,8 @@ class ChatMessagesListAdapter(
                         }
                     }
 
-                    if (adapterPosition >= 0 && adapterPosition < itemCount - 1) {
-                        val nextItem = getItem(adapterPosition + 1)
+                    if (bindingAdapterPosition >= 0 && bindingAdapterPosition < itemCount - 1) {
+                        val nextItem = getItem(bindingAdapterPosition + 1)
                         if (nextItem.eventLog.type == EventLog.Type.ConferenceChatMessage) {
                             val nextMessage = nextItem.eventLog.chatMessage
                             if (nextMessage != null && nextMessage.fromAddress.weakEqual(chatMessage.fromAddress)) {
@@ -272,9 +279,8 @@ class ChatMessagesListAdapter(
 
                         val itemSize = AppUtils.getDimension(R.dimen.chat_message_popup_item_height).toInt()
                         var totalSize = itemSize * 7
-                        if (chatMessage.chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) ||
-                            chatMessage.state == ChatMessage.State.NotDelivered
-                        ) { // No message id
+                        if (chatMessage.chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
+                            // No message id
                             popupView.imdnHidden = true
                             totalSize -= itemSize
                         }
@@ -347,7 +353,7 @@ class ChatMessagesListAdapter(
         private fun resendMessage() {
             val chatMessage = binding.data?.chatMessage
             if (chatMessage != null) {
-                chatMessage.userData = adapterPosition
+                chatMessage.userData = bindingAdapterPosition
                 resendMessageEvent.value = Event(chatMessage)
             }
         }
@@ -389,7 +395,7 @@ class ChatMessagesListAdapter(
         private fun deleteMessage() {
             val chatMessage = binding.data?.chatMessage
             if (chatMessage != null) {
-                chatMessage.userData = adapterPosition
+                chatMessage.userData = bindingAdapterPosition
                 deleteMessageEvent.value = Event(chatMessage)
             }
         }
@@ -417,15 +423,14 @@ class ChatMessagesListAdapter(
                 // This is for item selection through ListTopBarFragment
                 selectionListViewModel = selectionViewModel
                 selectionViewModel.isEditionEnabled.observe(
-                    viewLifecycleOwner,
-                    {
-                        position = adapterPosition
-                    }
-                )
+                    viewLifecycleOwner
+                ) {
+                    position = bindingAdapterPosition
+                }
 
                 binding.setClickListener {
                     if (selectionViewModel.isEditionEnabled.value == true) {
-                        selectionViewModel.onToggleSelect(adapterPosition)
+                        selectionViewModel.onToggleSelect(bindingAdapterPosition)
                     }
                 }
 
@@ -452,8 +457,18 @@ private class ChatMessageDiffCallback : DiffUtil.ItemCallback<EventLogData>() {
         oldItem: EventLogData,
         newItem: EventLogData
     ): Boolean {
-        return if (newItem.eventLog.type == EventLog.Type.ConferenceChatMessage) {
-            newItem.eventLog.chatMessage?.state == ChatMessage.State.Displayed
-        } else true
+        return if (oldItem.eventLog.type == EventLog.Type.ConferenceChatMessage &&
+            newItem.eventLog.type == EventLog.Type.ConferenceChatMessage
+        ) {
+            val oldData = (oldItem.data as ChatMessageData)
+            val newData = (newItem.data as ChatMessageData)
+
+            val previous = oldData.hasPreviousMessage == newData.hasPreviousMessage
+            val next = oldData.hasNextMessage == newData.hasNextMessage
+            newItem.eventLog.chatMessage?.state == ChatMessage.State.Displayed && previous && next
+        } else {
+            oldItem.eventLog.type != EventLog.Type.ConferenceChatMessage &&
+                newItem.eventLog.type != EventLog.Type.ConferenceChatMessage
+        }
     }
 }

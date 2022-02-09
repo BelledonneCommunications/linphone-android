@@ -59,16 +59,16 @@ class DevicesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
 
     init {
         chatRoom.addListener(listener)
-        updateParticipants()
     }
 
     override fun onCleared() {
         participants.value.orEmpty().forEach(DevicesListGroupData::destroy)
         chatRoom.removeListener(listener)
+
         super.onCleared()
     }
 
-    private fun updateParticipants() {
+    fun updateParticipants() {
         participants.value.orEmpty().forEach(DevicesListGroupData::destroy)
 
         val list = arrayListOf<DevicesListGroupData>()

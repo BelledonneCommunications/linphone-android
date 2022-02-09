@@ -54,10 +54,8 @@
     <string name="contact_organization">Organisatie</string>
     <string name="contact_choose_existing_or_new_to_add_number">Selecteer een contactpersoon of maak een nieuwe aan</string>
     <string name="contact_editor_write_permission_denied">Machtiging schrijven contacten geweigerd, kan deze contactpersoon niet editeren</string>
-    <string name="contact_delete_one_dialog">Wil u deze contactpersoon verwijderen\?
-\nDeze wordt ook verwijderd uit het adresboek van uw toestel</string>
-    <string name="contact_delete_many_dialog">Weet u zeker dat u deze contactpersonen wil verwijderen\?
-\nDeze worden ook verwijderd uit het adresboek van uw toestel</string>
+    <string name="contact_delete_one_dialog">Wil u deze contactpersoon verwijderen\?\nDeze wordt ook verwijderd uit het adresboek van uw toestel</string>
+    <string name="contact_delete_many_dialog">Weet u zeker dat u deze contactpersonen wil verwijderen\?\nDeze worden ook verwijderd uit het adresboek van uw toestel</string>
     <string name="contact_new_choose_sync_account">Selecteer waar de contactpersoon moet worden opgeslagen</string>
     <string name="contact_local_sync_account">Lokaal opslaan</string>
     <string name="dialer_address_bar_hint">Vul een nummer of adres in</string>

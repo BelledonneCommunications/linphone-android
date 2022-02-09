@@ -21,13 +21,21 @@ package org.linphone.activities.main.files.fragments
 
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.SnackBarActivity
+import org.linphone.compatibility.Compatibility
 import org.linphone.core.Content
 import org.linphone.core.tools.Log
 import org.linphone.databinding.FileViewerTopBarFragmentBinding
+import org.linphone.mediastream.Version
 import org.linphone.utils.FileUtils
+import org.linphone.utils.PermissionHelper
 
 class TopBarFragment : GenericFragment<FileViewerTopBarFragmentBinding>() {
     private var content: Content? = null
@@ -46,20 +54,9 @@ class TopBarFragment : GenericFragment<FileViewerTopBarFragmentBinding>() {
         }
 
         binding.setExportClickListener {
-            if (content != null) {
-                val filePath = content?.plainFilePath.orEmpty()
-                plainFilePath = if (filePath.isEmpty()) content?.filePath.orEmpty() else filePath
-                Log.i("[File Viewer] Plain file path is: $plainFilePath")
-                if (plainFilePath.isNotEmpty()) {
-                    if (!FileUtils.openFileInThirdPartyApp(requireActivity(), plainFilePath)) {
-                        (requireActivity() as SnackBarActivity).showSnackBar(R.string.chat_message_no_app_found_to_handle_file_mime_type)
-                        if (plainFilePath != content?.filePath.orEmpty()) {
-                            Log.i("[File Viewer] No app to open plain file path: $plainFilePath, destroying it")
-                            FileUtils.deleteFile(plainFilePath)
-                        }
-                        plainFilePath = ""
-                    }
-                }
+            val contentToExport = content
+            if (contentToExport != null) {
+                exportContent(contentToExport)
             } else {
                 Log.e("[File Viewer] No Content set!")
             }
@@ -88,5 +85,78 @@ class TopBarFragment : GenericFragment<FileViewerTopBarFragmentBinding>() {
         Log.i("[File Viewer] Content file path is: ${c.filePath}")
         content = c
         binding.fileName.text = c.name
+    }
+
+    private fun exportContent(content: Content) {
+        lifecycleScope.launch {
+            var mediaStoreFilePath = ""
+            if (Version.sdkAboveOrEqual(Version.API29_ANDROID_10) || PermissionHelper.get().hasWriteExternalStoragePermission()) {
+                Log.i("[File Viewer] Exporting image through Media Store API")
+                when (content.type) {
+                    "image" -> {
+                        val export = lifecycleScope.async {
+                            Compatibility.addImageToMediaStore(requireContext(), content)
+                        }
+                        if (export.await()) {
+                            Log.i("[File Viewer] Adding image ${content.name} to Media Store terminated: ${content.userData}")
+                            mediaStoreFilePath = content.userData.toString()
+                        } else {
+                            Log.e("[File Viewer] Something went wrong while copying file to Media Store...")
+                        }
+                    }
+                    "video" -> {
+                        val export = lifecycleScope.async {
+                            Compatibility.addVideoToMediaStore(requireContext(), content)
+                        }
+                        if (export.await()) {
+                            Log.i("[File Viewer] Adding video ${content.name} to Media Store terminated: ${content.userData}")
+                            mediaStoreFilePath = content.userData.toString()
+                        } else {
+                            Log.e("[File Viewer] Something went wrong while copying file to Media Store...")
+                        }
+                    }
+                    "audio" -> {
+                        val export = lifecycleScope.async {
+                            Compatibility.addAudioToMediaStore(requireContext(), content)
+                        }
+                        if (export.await()) {
+                            Log.i("[File Viewer] Adding audio ${content.name} to Media Store terminated: ${content.userData}")
+                            mediaStoreFilePath = content.userData.toString()
+                        } else {
+                            Log.e("[File Viewer] Something went wrong while copying file to Media Store...")
+                        }
+                    }
+                    else -> {
+                        Log.w("[File Viewer] File ${content.name} isn't either an image, an audio file or a video, can't add it to the Media Store")
+                    }
+                }
+            } else {
+                Log.w("[File Viewer] Can't export image through Media Store API (requires Android 10 or WRITE_EXTERNAL permission, using fallback method...")
+            }
+
+            withContext(Dispatchers.Main) {
+                if (mediaStoreFilePath.isEmpty()) {
+                    Log.w("[File Viewer] Media store file path is empty, media store export failed?")
+
+                    val filePath = content.plainFilePath.orEmpty()
+                    plainFilePath = filePath.ifEmpty { content.filePath.orEmpty() }
+                    Log.i("[File Viewer] Plain file path is: $plainFilePath")
+                    if (plainFilePath.isNotEmpty()) {
+                        if (!FileUtils.openFileInThirdPartyApp(requireActivity(), plainFilePath)) {
+                            (requireActivity() as SnackBarActivity).showSnackBar(R.string.chat_message_no_app_found_to_handle_file_mime_type)
+                            if (plainFilePath != content.filePath.orEmpty()) {
+                                Log.i("[File Viewer] No app to open plain file path: $plainFilePath, destroying it")
+                                FileUtils.deleteFile(plainFilePath)
+                            }
+                            plainFilePath = ""
+                        }
+                    }
+                } else {
+                    plainFilePath = ""
+                    Log.i("[File Viewer] Media store file path is: $mediaStoreFilePath")
+                    FileUtils.openMediaStoreFile(requireActivity(), mediaStoreFilePath)
+                }
+            }
+        }
     }
 }

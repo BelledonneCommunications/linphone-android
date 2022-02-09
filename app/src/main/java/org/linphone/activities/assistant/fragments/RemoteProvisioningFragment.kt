@@ -55,22 +55,21 @@ class RemoteProvisioningFragment : GenericFragment<AssistantRemoteProvisioningFr
         }
 
         viewModel.fetchSuccessfulEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume { success ->
-                    if (success) {
-                        if (coreContext.core.isEchoCancellerCalibrationRequired) {
-                            navigateToEchoCancellerCalibration()
-                        } else {
-                            requireActivity().finish()
-                        }
+            viewLifecycleOwner
+        ) {
+            it.consume { success ->
+                if (success) {
+                    if (coreContext.core.isEchoCancellerCalibrationRequired) {
+                        navigateToEchoCancellerCalibration()
                     } else {
-                        val activity = requireActivity() as AssistantActivity
-                        activity.showSnackBar(R.string.assistant_remote_provisioning_failure)
+                        requireActivity().finish()
                     }
+                } else {
+                    val activity = requireActivity() as AssistantActivity
+                    activity.showSnackBar(R.string.assistant_remote_provisioning_failure)
                 }
             }
-        )
+        }
 
         viewModel.urlToFetch.value = sharedViewModel.remoteProvisioningUrl.value ?: coreContext.core.provisioningUri
     }

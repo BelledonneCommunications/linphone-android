@@ -20,19 +20,27 @@
 package org.linphone.compatibility
 
 import android.app.Activity
+import android.app.Notification
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.os.Vibrator
 import android.telephony.TelephonyManager
 import android.view.View
 import android.view.WindowManager
 import androidx.core.app.NotificationManagerCompat
+import androidx.fragment.app.Fragment
+import java.util.*
+import org.linphone.core.Call
 import org.linphone.core.ChatRoom
 import org.linphone.core.Content
 import org.linphone.mediastream.Version
+import org.linphone.notifications.Notifiable
+import org.linphone.notifications.NotificationsManager
 import org.linphone.telecom.NativeCallWrapper
 
 @Suppress("DEPRECATION")
@@ -55,11 +63,28 @@ class Compatibility {
         }
 
         // See https://developer.android.com/about/versions/11/privacy/permissions#phone-numbers
-        fun requestReadPhoneStateOrNumbersPermission(activity: Activity, code: Int) {
+        fun requestReadPhoneStateOrNumbersPermission(fragment: Fragment, code: Int) {
             if (Version.sdkAboveOrEqual(Version.API30_ANDROID_11)) {
-                Api30Compatibility.requestReadPhoneNumbersPermission(activity, code)
+                Api30Compatibility.requestReadPhoneNumbersPermission(fragment, code)
             } else {
-                Api29Compatibility.requestReadPhoneStatePermission(activity, code)
+                Api23Compatibility.requestReadPhoneStatePermission(fragment, code)
+            }
+        }
+
+        // See https://developer.android.com/about/versions/11/privacy/permissions#phone-numbers
+        fun hasTelecomManagerPermissions(context: Context): Boolean {
+            return if (Version.sdkAboveOrEqual(Version.API30_ANDROID_11)) {
+                Api30Compatibility.hasTelecomManagerPermission(context)
+            } else {
+                Api26Compatibility.hasTelecomManagerPermission(context)
+            }
+        }
+
+        fun requestTelecomManagerPermissions(activity: Activity, code: Int) {
+            if (Version.sdkAboveOrEqual(Version.API30_ANDROID_11)) {
+                Api30Compatibility.requestTelecomManagerPermission(activity, code)
+            } else {
+                Api26Compatibility.requestTelecomManagerPermission(activity, code)
             }
         }
 
@@ -147,6 +172,43 @@ class Compatibility {
             return WindowManager.LayoutParams.TYPE_PHONE
         }
 
+        fun createIncomingCallNotification(
+            context: Context,
+            call: Call,
+            notifiable: Notifiable,
+            pendingIntent: PendingIntent,
+            notificationsManager: NotificationsManager
+        ): Notification {
+            if (Version.sdkAboveOrEqual(Version.API31_ANDROID_12)) {
+                return Api31Compatibility.createIncomingCallNotification(context, call, notifiable, pendingIntent, notificationsManager)
+            } else if (Build.MANUFACTURER.lowercase(Locale.getDefault()) == "xiaomi") {
+                return XiaomiCompatibility.createIncomingCallNotification(context, call, notifiable, pendingIntent, notificationsManager)
+            }
+            return Api26Compatibility.createIncomingCallNotification(context, call, notifiable, pendingIntent, notificationsManager)
+        }
+
+        fun createCallNotification(
+            context: Context,
+            call: Call,
+            notifiable: Notifiable,
+            pendingIntent: PendingIntent,
+            channel: String,
+            notificationsManager: NotificationsManager
+        ): Notification {
+            if (Version.sdkAboveOrEqual(Version.API31_ANDROID_12)) {
+                return Api31Compatibility.createCallNotification(context, call, notifiable, pendingIntent, channel, notificationsManager)
+            }
+            return Api26Compatibility.createCallNotification(context, call, notifiable, pendingIntent, channel, notificationsManager)
+        }
+
+        fun startForegroundService(context: Context, intent: Intent) {
+            if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
+                Api26Compatibility.startForegroundService(context, intent)
+            } else {
+                Api21Compatibility.startForegroundService(context, intent)
+            }
+        }
+
         /* Call */
 
         fun canDrawOverlay(context: Context): Boolean {
@@ -170,10 +232,11 @@ class Compatibility {
             }
         }
 
-        fun changeAudioRouteForTelecomManager(connection: NativeCallWrapper, route: Int) {
+        fun changeAudioRouteForTelecomManager(connection: NativeCallWrapper, route: Int): Boolean {
             if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
-                Api26Compatibility.changeAudioRouteForTelecomManager(connection, route)
+                return Api26Compatibility.changeAudioRouteForTelecomManager(connection, route)
             }
+            return false
         }
 
         /* Contacts */
@@ -243,6 +306,20 @@ class Compatibility {
                 return Api29Compatibility.addAudioToMediaStore(context, content)
             }
             return Api21Compatibility.addAudioToMediaStore(context, content)
+        }
+
+        fun getUpdateCurrentPendingIntentFlag(): Int {
+            if (Version.sdkAboveOrEqual(Version.API31_ANDROID_12)) {
+                return Api31Compatibility.getUpdateCurrentPendingIntentFlag()
+            }
+            return Api21Compatibility.getUpdateCurrentPendingIntentFlag()
+        }
+
+        fun getImeFlagsForSecureChatRoom(): Int {
+            if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
+                return Api26Compatibility.getImeFlagsForSecureChatRoom()
+            }
+            return Api21Compatibility.getImeFlagsForSecureChatRoom()
         }
     }
 }

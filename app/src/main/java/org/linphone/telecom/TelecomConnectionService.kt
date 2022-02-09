@@ -42,6 +42,7 @@ class TelecomConnectionService : ConnectionService() {
                 Call.State.OutgoingProgress -> {
                     for (connection in TelecomHelper.get().connections) {
                         if (connection.callId.isEmpty()) {
+                            Log.i("[Telecom Connection Service] Updating connection with call ID: ${call.callLog.callId}")
                             connection.callId = core.currentCall?.callLog?.callId ?: ""
                         }
                     }
@@ -49,6 +50,18 @@ class TelecomConnectionService : ConnectionService() {
                 Call.State.Error -> onCallError(call)
                 Call.State.End, Call.State.Released -> onCallEnded(call)
                 Call.State.Connected -> onCallConnected(call)
+            }
+        }
+
+        override fun onLastCallEnded(core: Core) {
+            val connectionsCount = TelecomHelper.get().connections.size
+            if (connectionsCount > 0) {
+                Log.w("[Telecom Connection Service] Last call ended, there is $connectionsCount connections still alive")
+                for (connection in TelecomHelper.get().connections) {
+                    Log.w("[Telecom Connection Service] Destroying zombie connection ${connection.callId}")
+                    connection.setDisconnected(DisconnectCause(DisconnectCause.OTHER))
+                    connection.destroy()
+                }
             }
         }
     }
@@ -162,8 +175,12 @@ class TelecomConnectionService : ConnectionService() {
     }
 
     private fun onCallError(call: Call) {
-        val connection = TelecomHelper.get().findConnectionForCallId(call.callLog.callId)
-        connection ?: return
+        val callId = call.callLog.callId
+        val connection = TelecomHelper.get().findConnectionForCallId(callId)
+        if (connection == null) {
+            Log.e("[Telecom Connection Service] Failed to find connection for call id: $callId")
+            return
+        }
 
         TelecomHelper.get().connections.remove(connection)
         connection.setDisconnected(DisconnectCause(DisconnectCause.ERROR))
@@ -171,19 +188,27 @@ class TelecomConnectionService : ConnectionService() {
     }
 
     private fun onCallEnded(call: Call) {
-        val connection = TelecomHelper.get().findConnectionForCallId(call.callLog.callId)
-        connection ?: return
+        val callId = call.callLog.callId
+        val connection = TelecomHelper.get().findConnectionForCallId(callId)
+        if (connection == null) {
+            Log.e("[Telecom Connection Service] Failed to find connection for call id: $callId")
+            return
+        }
 
         TelecomHelper.get().connections.remove(connection)
         val reason = call.reason
-        Log.i("[Telecom Connection Service] Call ended with reason: $reason")
+        Log.i("[Telecom Connection Service] Call [$callId] ended with reason: $reason, destroying connection")
         connection.setDisconnected(DisconnectCause(DisconnectCause.LOCAL))
         connection.destroy()
     }
 
     private fun onCallConnected(call: Call) {
-        val connection = TelecomHelper.get().findConnectionForCallId(call.callLog.callId)
-        connection ?: return
+        val callId = call.callLog.callId
+        val connection = TelecomHelper.get().findConnectionForCallId(callId)
+        if (connection == null) {
+            Log.e("[Telecom Connection Service] Failed to find connection for call id: $callId")
+            return
+        }
 
         if (connection.state != Connection.STATE_HOLDING) {
             connection.setActive()

@@ -112,7 +112,11 @@ class AudioRouteUtils {
                     Log.i("[Audio Route Helper] Telecom Helper & matching connection found, dispatching audio route change through it")
                     // We will be called here again by NativeCallWrapper.onCallAudioStateChanged()
                     // but this time with skipTelecom = true
-                    Compatibility.changeAudioRouteForTelecomManager(connection, route)
+                    if (!Compatibility.changeAudioRouteForTelecomManager(connection, route)) {
+                        Log.w("[Audio Route Helper] Connection is already using this route internally, make the change!")
+                        applyAudioRouteChange(callToUse, types)
+                        changeCaptureDeviceToMatchAudioRoute(callToUse, types)
+                    }
                 } else {
                     Log.w("[Audio Route Helper] Telecom Helper found but no matching connection!")
                     applyAudioRouteChange(callToUse, types)

@@ -25,13 +25,12 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.Display
-import android.view.Surface
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.ActivityNavigator
 import androidx.window.layout.FoldingFeature
-import androidx.window.layout.WindowInfoRepository.Companion.windowInfoRepository
+import androidx.window.layout.WindowInfoTracker
 import androidx.window.layout.WindowLayoutInfo
 import java.util.*
 import kotlinx.coroutines.Dispatchers
@@ -58,9 +57,12 @@ abstract class GenericActivity : AppCompatActivity() {
         ensureCoreExists(applicationContext)
 
         lifecycleScope.launch(Dispatchers.Main) {
-            windowInfoRepository().windowLayoutInfo.collect { newLayoutInfo ->
-                updateCurrentLayout(newLayoutInfo)
-            }
+            WindowInfoTracker
+                .getOrCreate(this@GenericActivity)
+                .windowLayoutInfo(this@GenericActivity)
+                .collect { newLayoutInfo ->
+                    updateCurrentLayout(newLayoutInfo)
+                }
         }
 
         requestedOrientation = if (corePreferences.forcePortrait) {
@@ -96,18 +98,6 @@ abstract class GenericActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-
-        var degrees = 270
-        val orientation = windowManager.defaultDisplay.rotation
-        when (orientation) {
-            Surface.ROTATION_0 -> degrees = 0
-            Surface.ROTATION_90 -> degrees = 270
-            Surface.ROTATION_180 -> degrees = 180
-            Surface.ROTATION_270 -> degrees = 90
-        }
-        Log.i("[Generic Activity] Device orientation is $degrees (raw value is $orientation)")
-        val rotation = (360 - degrees) % 360
-        coreContext.core.deviceRotation = rotation
 
         // Remove service notification if it has been started by device boot
         coreContext.notificationsManager.stopForegroundNotificationIfPossible()

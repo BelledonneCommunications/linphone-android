@@ -33,7 +33,7 @@ class TelephonyListener(private val telephonyManager: TelephonyManager) : PhoneS
 
     private fun runOnUiThreadExecutor(): Executor {
         val handler = Handler(Looper.getMainLooper())
-        return Executor() {
+        return Executor {
             handler.post(it)
         }
     }

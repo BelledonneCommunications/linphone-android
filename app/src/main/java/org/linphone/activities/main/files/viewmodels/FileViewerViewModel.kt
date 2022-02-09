@@ -29,7 +29,12 @@ open class FileViewerViewModel(val content: Content) : ViewModel() {
     private val deleteAfterUse: Boolean = content.isFileEncrypted
 
     init {
-        filePath = if (deleteAfterUse) content.plainFilePath else content.filePath.orEmpty()
+        filePath = if (deleteAfterUse) {
+            Log.i("[File Viewer] Content is encrypted, requesting plain file path")
+            content.plainFilePath
+        } else {
+            content.filePath.orEmpty()
+        }
     }
 
     override fun onCleared() {

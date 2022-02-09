@@ -74,6 +74,8 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
     val peerSipUri = MutableLiveData<String>()
 
+    val ephemeralEnabled = MutableLiveData<Boolean>()
+
     val oneToOneChatRoom: Boolean = chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())
 
     val encryptedChatRoom: Boolean = chatRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt())
@@ -88,11 +90,11 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
     var oneParticipantOneDevice: Boolean = false
 
-    var addressToCall: Address? = null
-
     var onlyParticipantOnlyDeviceAddress: Address? = null
 
     val chatUnreadCountTranslateY = MutableLiveData<Float>()
+
+    private var addressToCall: Address? = null
 
     private val bounceAnimator: ValueAnimator by lazy {
         ValueAnimator.ofFloat(AppUtils.getDimension(R.dimen.tabs_fragment_unread_count_bounce_offset), 0f).apply {
@@ -111,6 +113,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         override fun onContactsUpdated() {
             Log.i("[Chat Room] Contacts have changed")
             contactLookup()
+            updateLastMessageToDisplay()
         }
     }
 
@@ -196,7 +199,11 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
         override fun onEphemeralMessageDeleted(chatRoom: ChatRoom, eventLog: EventLog) {
             Log.i("[Chat Room] Ephemeral message deleted, updated last message displayed")
-            lastMessageText.value = formatLastMessage(chatRoom.lastMessageInHistory)
+            updateLastMessageToDisplay()
+        }
+
+        override fun onEphemeralEvent(chatRoom: ChatRoom, eventLog: EventLog) {
+            ephemeralEnabled.value = chatRoom.isEphemeralEnabled
         }
 
         override fun onParticipantAdminStatusChanged(chatRoom: ChatRoom, eventLog: EventLog) {
@@ -209,16 +216,17 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         chatRoom.addListener(chatRoomListener)
         coreContext.contactsManager.addListener(contactsUpdatedListener)
 
-        lastMessageText.value = formatLastMessage(chatRoom.lastMessageInHistory)
         unreadMessagesCount.value = chatRoom.unreadMessagesCount
         lastUpdate.value = TimestampUtils.toString(chatRoom.lastUpdateTime, true)
 
         subject.value = chatRoom.subject
         updateSecurityIcon()
         meAdmin.value = chatRoom.me?.isAdmin ?: false
+        ephemeralEnabled.value = chatRoom.isEphemeralEnabled
 
         contactLookup()
         updateParticipants()
+        updateLastMessageToDisplay()
 
         callInProgress.value = chatRoom.core.callsNb > 0
         updateRemotesComposing()
@@ -266,6 +274,10 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         if (address != null) {
             coreContext.startCall(address)
         }
+    }
+
+    fun updateLastMessageToDisplay() {
+        lastMessageText.value = formatLastMessage(chatRoom.lastMessageInHistory)
     }
 
     private fun formatLastMessage(msg: ChatMessage?): String {

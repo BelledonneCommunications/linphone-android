@@ -28,6 +28,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.IBinder
+import org.linphone.core.tools.Log
 
 // Below classes are required to be able to create our DummySyncService...
 internal class DummyAuthenticator(context: Context) : AbstractAccountAuthenticator(context) {
@@ -88,6 +89,7 @@ class DummyAuthenticationService : Service() {
 
     override fun onCreate() {
         authenticator = DummyAuthenticator(this)
+        Log.i("[Dummy Auth Service] Authenticator created")
     }
 
     override fun onBind(intent: Intent): IBinder {

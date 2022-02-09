@@ -34,6 +34,10 @@ import org.linphone.databinding.AssistantQrCodeFragmentBinding
 import org.linphone.utils.PermissionHelper
 
 class QrCodeFragment : GenericFragment<AssistantQrCodeFragmentBinding>() {
+    companion object {
+        const val CAMERA_PERMISSION_REQUEST_CODE = 0
+    }
+
     private lateinit var sharedViewModel: SharedAssistantViewModel
     private lateinit var viewModel: QrCodeViewModel
 
@@ -52,19 +56,18 @@ class QrCodeFragment : GenericFragment<AssistantQrCodeFragmentBinding>() {
         binding.viewModel = viewModel
 
         viewModel.qrCodeFoundEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume { url ->
-                    sharedViewModel.remoteProvisioningUrl.value = url
-                    findNavController().navigateUp()
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume { url ->
+                sharedViewModel.remoteProvisioningUrl.value = url
+                findNavController().navigateUp()
             }
-        )
+        }
         viewModel.setBackCamera()
 
         if (!PermissionHelper.required(requireContext()).hasCameraPermission()) {
             Log.i("[QR Code] Asking for CAMERA permission")
-            requestPermissions(arrayOf(android.Manifest.permission.CAMERA), 0)
+            requestPermissions(arrayOf(android.Manifest.permission.CAMERA), CAMERA_PERMISSION_REQUEST_CODE)
         }
     }
 
@@ -72,14 +75,14 @@ class QrCodeFragment : GenericFragment<AssistantQrCodeFragmentBinding>() {
         super.onResume()
 
         coreContext.core.nativePreviewWindowId = binding.qrCodeCaptureTexture
-        coreContext.core.enableQrcodeVideoPreview(true)
-        coreContext.core.enableVideoPreview(true)
+        coreContext.core.isQrcodeVideoPreviewEnabled = true
+        coreContext.core.isVideoPreviewEnabled = true
     }
 
     override fun onPause() {
         coreContext.core.nativePreviewWindowId = null
-        coreContext.core.enableQrcodeVideoPreview(false)
-        coreContext.core.enableVideoPreview(false)
+        coreContext.core.isQrcodeVideoPreviewEnabled = false
+        coreContext.core.isVideoPreviewEnabled = false
 
         super.onPause()
     }
@@ -89,14 +92,17 @@ class QrCodeFragment : GenericFragment<AssistantQrCodeFragmentBinding>() {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        val granted = grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
-        if (granted) {
-            Log.i("[QR Code] CAMERA permission granted")
-            coreContext.core.reloadVideoDevices()
-            viewModel.setBackCamera()
-        } else {
-            Log.w("[QR Code] CAMERA permission denied")
-            findNavController().navigateUp()
+        if (requestCode == CAMERA_PERMISSION_REQUEST_CODE) {
+            val granted =
+                grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
+            if (granted) {
+                Log.i("[QR Code] CAMERA permission granted")
+                coreContext.core.reloadVideoDevices()
+                viewModel.setBackCamera()
+            } else {
+                Log.w("[QR Code] CAMERA permission denied")
+                findNavController().navigateUp()
+            }
         }
     }
 }

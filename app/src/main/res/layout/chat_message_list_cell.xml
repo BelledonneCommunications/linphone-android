@@ -166,7 +166,7 @@
                     android:layout_gravity="@{data.chatMessage.outgoing ? Gravity.RIGHT : Gravity.LEFT}"
                     app:data="@{data.replyData}"
                     app:clickListener="@{replyClickListener}"
-                    android:visibility="@{data.chatMessage.reply ? View.VISIBLE : View.GONE, default=gone}" />
+                    android:visibility="@{data.replyData != null ? View.VISIBLE : View.GONE, default=gone}" />
 
                 <com.google.android.flexbox.FlexboxLayout
                     android:layout_width="wrap_content"
@@ -187,7 +187,6 @@
                     android:onLongClick="@{contextMenuClickListener}"
                     android:text="@{data.text}"
                     android:visibility="@{data.text.length > 0 ? View.VISIBLE : View.GONE}"
-                    android:autoLink="web"
                     android:layout_gravity="@{data.chatMessage.outgoing ? Gravity.RIGHT : Gravity.LEFT}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

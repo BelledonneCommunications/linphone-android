@@ -23,6 +23,7 @@ import android.os.Bundle
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.GenericActivity
 import org.linphone.activities.SnackBarActivity
@@ -40,10 +41,21 @@ class AssistantActivity : GenericActivity(), SnackBarActivity {
         sharedViewModel = ViewModelProvider(this)[SharedAssistantViewModel::class.java]
 
         coordinator = findViewById(R.id.coordinator)
+
+        corePreferences.firstStart = false
     }
 
     override fun showSnackBar(resourceId: Int) {
         Snackbar.make(coordinator, resourceId, Snackbar.LENGTH_LONG).show()
+    }
+
+    override fun showSnackBar(resourceId: Int, action: Int, listener: () -> Unit) {
+        Snackbar
+            .make(findViewById(R.id.coordinator), resourceId, Snackbar.LENGTH_LONG)
+            .setAction(action) {
+                listener()
+            }
+            .show()
     }
 
     override fun showSnackBar(message: String) {

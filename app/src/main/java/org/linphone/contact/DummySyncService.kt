@@ -24,6 +24,7 @@ import android.app.Service
 import android.content.*
 import android.os.Bundle
 import android.os.IBinder
+import org.linphone.core.tools.Log
 
 // Below classes are required to be able to use our own contact MIME type entry...
 class DummySyncAdapter(context: Context, autoInit: Boolean) : AbstractThreadedSyncAdapter(context, autoInit) {
@@ -44,8 +45,10 @@ class DummySyncService : Service() {
 
     override fun onCreate() {
         synchronized(syncAdapterLock) {
+            Log.i("[Dummy Sync Adapter] Sync Service created")
             if (syncAdapter == null) {
                 syncAdapter = DummySyncAdapter(applicationContext, true)
+                Log.i("[Dummy Sync Adapter] Sync Adapter created")
             }
         }
     }

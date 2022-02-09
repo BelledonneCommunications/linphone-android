@@ -63,10 +63,8 @@
     <string name="contact_organization">Organización</string>
     <string name="contact_choose_existing_or_new_to_add_number">Selecciona un contacto o crea uno nuevo</string>
     <string name="contact_editor_write_permission_denied">Permiso de escritura de contactos denegado, no se puede editar el contacto</string>
-    <string name="contact_delete_one_dialog">Quieres eliminar este contacto\?
-\nTambién se eliminará de la libreta de direcciones de su dispositivo</string>
-    <string name="contact_delete_many_dialog">Estás seguro de que deseas eliminar estos contactos\?
-\nTambién se eliminarán de la libreta de direcciones de su dispositivo</string>
+    <string name="contact_delete_one_dialog">Quieres eliminar este contacto\?\nTambién se eliminará de la libreta de direcciones de su dispositivo</string>
+    <string name="contact_delete_many_dialog">Estás seguro de que deseas eliminar estos contactos\?\nTambién se eliminarán de la libreta de direcciones de su dispositivo</string>
     <string name="contact_new_choose_sync_account">Elige dónde guardar tu contacto</string>
     <string name="contact_local_sync_account">Almacenar localmente</string>
     <string name="dialer_address_bar_hint">Ingrese un número o una dirección</string>
@@ -192,7 +190,7 @@
     <string name="content_description_menu_contacts">Contactos</string>
     <string name="content_description_menu_dialer">Marcador telefónico</string>
     <string name="content_description_menu_chat">Conversaciones</string>
-    <string name="content_description_dialer_erase">Eliminar el último caracter</string>
+    <string name="content_description_dialer_erase">Eliminar el último carácter</string>
     <string name="content_description_add_contact">Crear contacto</string>
     <string name="content_description_show_all_calls">Mostrar todas las llamadas</string>
     <string name="content_description_show_missed_calls">Mostrar solo llamadas perdidad</string>
@@ -229,16 +227,10 @@
     <string name="content_description_contact_selected">Contacto es seleccionado</string>
     <string name="content_description_show_sip_contacts">Mostrat una lsita de todos los contactos SIP</string>
     <string name="content_description_attach_file">Adjunte un archivo al mensaje</string>
-    <string name="assistant_phone_number_info_content">
-\nGracias a tu número de teléfono, tus amigos te encontrarán más fácilmente.
-\n
-\n Verás en tu libreta de direcciones quién está usando &appName; y tus amigos sabrán que pueden contactarte en &appName; también.
-\n</string>
+    <string name="assistant_phone_number_info_content">\nGracias a tu número de teléfono, tus amigos te encontrarán más fácilmente.\n\n Verás en tu libreta de direcciones quién está usando &appName; y tus amigos sabrán que pueden contactarte en &appName; también.\n</string>
     <string name="content_description_ephemeral_duration_change">Cambiar la duración efímera por el valor seleccionado</string>
     <string name="content_description_contact_is_admin">El contacto es un administrador en esta conversación</string>
-    <string name="assistant_phone_number_link_info_content_already_account">Sólo puedes usar tu número de teléfono con una cuenta de &appName;.
-\n
-\nSi ya habías vinculado tu número a otra cuenta pero prefieres usar esta, simplemente vincúlala ahora y tu número se moverá automáticamente a esta cuenta.</string>
+    <string name="assistant_phone_number_link_info_content_already_account">Sólo puedes usar tu número de teléfono con una cuenta de &appName;.\n\nSi ya habías vinculado tu número a otra cuenta pero prefieres usar esta, simplemente vincúlala ahora y tu número se moverá automáticamente a esta cuenta.</string>
     <string name="content_description_contact_can_do_encryption">El contacto puede ser invitado en conversaciones cifradas</string>
     <string name="assistant_error_username_already_exists">Nombre de usuario ya utilizado</string>
     <string name="assistant_error_phone_number_already_exists">Ya hay una cuenta que utiliza este número</string>
@@ -374,11 +366,7 @@
     <string name="assistant_remote_provisioning">Buscar la configuración remota</string>
     <string name="assistant_ec_calibration">Calibración del cancelador de eco en curso</string>
     <string name="assistant_phone_number_info_title">Para qué se usará mi número de teléfono\?</string>
-    <string name="assistant_phone_number_link_info_content">
-\nGracias a tu número de teléfono, tus amigos te encontrarán más fácilmente.
-\n
-\n Verás en tu libreta de direcciones quién está usando &appName; y tus amigos sabrán que pueden contactarte en &appName; también.
-\n</string>
+    <string name="assistant_phone_number_link_info_content">\nGracias a tu número de teléfono, tus amigos te encontrarán más fácilmente.\n\n Verás en tu libreta de direcciones quién está usando &appName; y tus amigos sabrán que pueden contactarte en &appName; también.\n</string>
     <string name="assistant_error_phone_number_invalid_characters">Solo digítos</string>
     <string name="assistant_error_username_invalid_characters">Caracteres inválidos encontrados</string>
     <string name="assistant_error_passwords_dont_match">Las contraseñas no coinciden</string>
@@ -401,8 +389,7 @@
     <string name="assistant_validate_account_1">Su cuenta está creada. Por favor, comprueba tus correos para validar tu cuenta:</string>
     <string name="assistant_validate_account_2">Una vez hecho, vuelve aquí y pulsa el botón.</string>
     <string name="assistant_use_username_instead_or_phone_number">Usar un nombre de usuario (opcional)</string>
-    <string name="assistant_create_account_part_3">Para completar la verificación de su número de teléfono, por favor, introduzca el código de 4 dígitos a continuación:
-\n</string>
+    <string name="assistant_create_account_part_3">Para completar la verificación de su número de teléfono, por favor, introduzca el código de 4 dígitos a continuación:\n</string>
     <string name="assistant_link_phone_number_skip">Saltar</string>
     <string name="assistant_link_account">Ligar cuenta</string>
     <string name="assistant_remote_provisioning_title">Buscar la configuración remota</string>
@@ -603,4 +590,27 @@
     <string name="call_settings_pause_calls_lost_audio_focus_title">Pausar llamadas cuando se pierde el enfoque del audio</string>
     <string name="chat_settings_use_in_app_file_viewer_title">Siempre abra archivos dentro de esta aplicación</string>
     <string name="chat_settings_use_in_app_file_viewer_summary">Aún podrá exportarlos en aplicaciones de terceros</string>
+    <string name="about_weblate_translation">Ayúdanos a traducir &appName;</string>
+    <string name="assistant_generic_account_warning_continue_button_text">Comprendo</string>
+    <string name="chat_message_removal_info">El mensaje será eliminado</string>
+    <string name="chat_message_abort_removal">Cancelar</string>
+    <string name="audio_settings_prefer_bluetooth_devices_title">Dirigir el audio al dispositivo bluetooth si existe</string>
+    <string name="content_description_replied_message">El mensaje es una respuesta</string>
+    <string name="content_description_attached_file">Archivo adjunto al mensaje</string>
+    <string name="content_description_cancel_reply">Cancelar la respuesta</string>
+    <string name="chat_message_replied">Respuesta</string>
+    <string name="chat_message_context_menu_reply">Responder</string>
+    <string name="chat_room_sending_reply_hint">Respuesta</string>
+    <string name="chat_room_sending_message_hint">Mensaje</string>
+    <string name="chat_message_voice_recording_hold_to_record">Mantenga pulsado el botón para grabar un mensaje de voz</string>
+    <string name="chat_message_voice_recording_playback_low_volume">El volumen de los medios de comunicación es bajo, es posible que desee aumentarlo</string>
+    <plurals name="chat_room_unread_messages_event">
+        <item quantity="one">%1$d mensaje no leído</item>
+        <item quantity="other">%1$d mensajes no leídos</item>
+    </plurals>
+    <string name="call_settings_ringtones_title">Tono de llamada</string>
+    <string name="call_settings_use_telecom_manager_summary">Requiere permisos adicionales</string>
+    <string name="content_descripton_scroll_to_bottom">Desplazarse al final o al primer mensaje no leído</string>
+    <string name="audio_settings_prefer_bluetooth_devices_summary">Tendrá prioridad sobre el dispositivo de salida por defecto</string>
+    <string name="call_settings_use_telecom_manager_title">Mejorar las interacciones con los dispositivos bluetooth</string>
 </resources>

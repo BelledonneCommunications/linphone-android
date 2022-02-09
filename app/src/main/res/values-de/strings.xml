@@ -52,8 +52,7 @@
     <string name="contact_first_name">Vorname</string>
     <string name="contact_organization">Firma</string>
     <string name="contact_choose_existing_or_new_to_add_number">Wähle einen Kontakt oder lege einen neuen an</string>
-    <string name="contact_delete_many_dialog">Soll dieser Kontakt wirklich gelöscht werden\?
-\nEr wird auch aus dem Adressbuch des Gerätes gelöscht</string>
+    <string name="contact_delete_many_dialog">Soll dieser Kontakt wirklich gelöscht werden\?\nEr wird auch aus dem Adressbuch des Gerätes gelöscht</string>
     <string name="contact_new_choose_sync_account">Wo soll der Kontakt gespeichert werden</string>
     <string name="dialer_address_bar_hint">Telefonnummer oder Adresse eingeben</string>
     <string name="debug_popup_enable_logs">Log starten</string>
@@ -125,8 +124,7 @@
     <string name="history_delete_one_dialog">Diesen Eintrag löschen\?</string>
     <string name="contact_send_sms_invite_text">Hallo, benutze &appName;! Du kannst es kostenlos hier %s herunterladen</string>
     <string name="contact_editor_write_permission_denied">Kein Schreibzugriff auf Kontakte, Kontakt kann nicht geändert werden</string>
-    <string name="contact_delete_one_dialog">Soll dieser Kontakt gelöscht werden\?
-\nEr wird auch aus dem Adressbuch des Gerätes gelöscht</string>
+    <string name="contact_delete_one_dialog">Soll dieser Kontakt gelöscht werden\?\nEr wird auch aus dem Adressbuch des Gerätes gelöscht</string>
     <string name="contact_local_sync_account">Lokal speichern</string>
     <string name="debug_popup_show_config_file">Konfigurationsdatei ansehen</string>
     <string name="chat_event_conference_created">Du bist der Gruppe beigetreten</string>

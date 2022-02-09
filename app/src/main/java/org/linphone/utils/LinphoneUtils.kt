@@ -66,7 +66,7 @@ class LinphoneUtils {
 
         fun isLimeAvailable(): Boolean {
             val core = coreContext.core
-            return core.limeX3DhAvailable() && core.limeX3DhEnabled() &&
+            return core.limeX3DhAvailable() && core.isLimeX3DhEnabled &&
                 core.limeX3DhServerUrl != null &&
                 core.defaultAccount?.params?.conferenceFactoryUri != null
         }
@@ -81,11 +81,11 @@ class LinphoneUtils {
             val defaultAccount = core.defaultAccount
 
             val params = core.createDefaultChatRoomParams()
-            params.enableGroup(false)
+            params.isGroupEnabled = false
             params.backend = ChatRoomBackend.Basic
             if (isSecured) {
                 params.subject = AppUtils.getString(R.string.chat_room_dummy_subject)
-                params.enableEncryption(true)
+                params.isEncryptionEnabled = true
                 params.backend = ChatRoomBackend.FlexisipChat
             }
 

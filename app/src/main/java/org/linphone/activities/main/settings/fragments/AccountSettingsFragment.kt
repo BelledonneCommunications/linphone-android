@@ -63,32 +63,30 @@ class AccountSettingsFragment : GenericSettingFragment<SettingsAccountFragmentBi
         binding.setBackClickListener { goBack() }
 
         viewModel.linkPhoneNumberEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    val authInfo = viewModel.account.findAuthInfo()
-                    if (authInfo == null) {
-                        Log.e("[Account Settings] Failed to find auth info for account ${viewModel.account}")
-                    } else {
-                        val args = Bundle()
-                        args.putString("Username", authInfo.username)
-                        args.putString("Password", authInfo.password)
-                        args.putString("HA1", authInfo.ha1)
-                        navigateToPhoneLinking(args)
-                    }
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                val authInfo = viewModel.account.findAuthInfo()
+                if (authInfo == null) {
+                    Log.e("[Account Settings] Failed to find auth info for account ${viewModel.account}")
+                } else {
+                    val args = Bundle()
+                    args.putString("Username", authInfo.username)
+                    args.putString("Password", authInfo.password)
+                    args.putString("HA1", authInfo.ha1)
+                    navigateToPhoneLinking(args)
                 }
             }
-        )
+        }
 
         viewModel.accountRemovedEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume {
-                    sharedViewModel.accountRemoved.value = true
-                    goBack()
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                sharedViewModel.accountRemoved.value = true
+                goBack()
             }
-        )
+        }
 
         view.doOnPreDraw {
             // Notifies fragment is ready to be drawn

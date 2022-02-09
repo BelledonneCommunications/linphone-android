@@ -57,7 +57,7 @@ open class StatusViewModel : ViewModel() {
             body: Content
         ) {
             if (body.type == "application" && body.subtype == "simple-message-summary" && body.size > 0) {
-                val data = body.utf8Text?.toLowerCase(Locale.getDefault())
+                val data = body.utf8Text?.lowercase(Locale.getDefault())
                 val voiceMail = data?.split("voice-message: ")
                 if (voiceMail?.size ?: 0 >= 2) {
                     val toParse = voiceMail!![1].split("/", limit = 0)

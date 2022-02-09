@@ -5,6 +5,9 @@ plugins {
     id 'org.jlleitschuh.gradle.ktlint'
 }
 
+def appVersionName = "4.6.0"
+def appVersionCode = 40600 // 4.06.00
+
 static def getPackageName() {
     return "org.linphone"
 }
@@ -24,7 +27,7 @@ if (crashlyticsEnabled) {
 
 def gitBranch = new ByteArrayOutputStream()
 task getGitVersion() {
-    def gitVersion = "4.7.0"
+    def gitVersion = appVersionName
     def gitVersionStream = new ByteArrayOutputStream()
     def gitCommitsCount = new ByteArrayOutputStream()
     def gitCommitHash = new ByteArrayOutputStream()
@@ -52,9 +55,9 @@ task getGitVersion() {
         } else {
             gitVersion = gitVersionStream.toString().trim() + "." + gitCommitsCount.toString().trim() + "+" + gitCommitHash.toString().trim()
         }
-        println("Git version: " + gitVersion)
+        println("Git version: " + gitVersion + " (" + appVersionCode + ")")
     } catch (ignored) {
-        println("Git not found")
+        println("Git not found, using " + gitVersion + " (" + appVersionCode + ")")
     }
     project.version = gitVersion
 }
@@ -84,7 +87,7 @@ android {
     defaultConfig {
         minSdkVersion 23
         targetSdkVersion 31
-        versionCode 4700
+        versionCode appVersionCode
         versionName "${project.version}"
         applicationId getPackageName()
     }
@@ -95,7 +98,7 @@ android {
         }
 
         // See https://developer.android.com/studio/releases/gradle-plugin#3-6-0-behavior for why extractNativeLibs is set to true in debug flavor
-        if (variant.buildType.name == "release" || variant.buildType.name == "releaseAppBundle") {
+        if (variant.buildType.name == "release" || variant.buildType.name == "releaseWithCrashlytics") {
             variant.getMergedFlavor().manifestPlaceholders = [linphone_address_mime_type: "vnd.android.cursor.item/vnd." + getPackageName() + ".provider.sip_address",
                                                             linphone_file_provider: getPackageName() + ".fileprovider",
                                                             appLabel: "@string/app_name",
@@ -143,8 +146,8 @@ android {
             initWith release
 
             resValue "bool", "crashlytics_enabled", crashlyticsEnabled.toString()
-            if (crashlyticsEnabled) {
 
+            if (crashlyticsEnabled) {
                 firebaseCrashlytics {
                     nativeSymbolUploadEnabled true
                     unstrippedNativeLibsDir file(LinphoneSdkBuildDir + '/libs-debug/').toString()
@@ -161,14 +164,13 @@ android {
             resValue "string", "sync_account_type", getPackageName() + ".sync"
             resValue "string", "file_provider", getPackageName() + ".debug.fileprovider"
             resValue "string", "linphone_address_mime_type", "vnd.android.cursor.item/vnd." + getPackageName() + ".provider.sip_address"
+            resValue "bool", "crashlytics_enabled", crashlyticsEnabled.toString()
 
             if (!firebaseEnabled) {
                 resValue "string", "gcm_defaultSenderId", "none"
             }
 
-            resValue "bool", "crashlytics_enabled", crashlyticsEnabled.toString()
             if (crashlyticsEnabled) {
-
                 firebaseCrashlytics {
                     nativeSymbolUploadEnabled true
                     unstrippedNativeLibsDir file(LinphoneSdkBuildDir + '/libs-debug/').toString()
@@ -191,47 +193,28 @@ android {
     }
 }
 
-repositories {
-    maven {
-        name "local linphone-sdk maven repository"
-        url file(LinphoneSdkBuildDir + '/maven_repository/')
-        content {
-            includeGroup "org.linphone"
-        }
-    }
-
-    maven {
-        name "linphone.org maven repository"
-        url "https://download.linphone.org/maven_repository"
-        content {
-            includeGroup "org.linphone"
-        }
-    }
-}
-
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-
-    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'androidx.media:media:1.4.3'
-    implementation 'androidx.fragment:fragment-ktx:1.4.0-beta01'
+    implementation 'androidx.fragment:fragment-ktx:1.4.1'
     implementation 'androidx.core:core-ktx:1.7.0'
 
-    def nav_version = "2.4.0-beta01"
+    def nav_version = "2.4.0"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
-    implementation "androidx.slidingpanelayout:slidingpanelayout:1.2.0-beta01"
-    implementation "androidx.window:window:1.0.0-beta03"
+    implementation "androidx.slidingpanelayout:slidingpanelayout:1.2.0"
+    implementation "androidx.window:window:1.0.0"
 
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation "androidx.security:security-crypto-ktx:1.1.0-alpha03"
+    implementation 'androidx.core:core-splashscreen:1.0.0-beta01'
 
-    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'com.google.android.material:material:1.5.0'
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
 
     implementation 'androidx.emoji:emoji:1.1.0'

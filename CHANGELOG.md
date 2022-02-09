@@ -10,33 +10,58 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
-## [4.6.0] - Unreleased
+## [4.7.0] - Unreleased
+
+## [4.6.0] - 2022-02-09
 
 ### Added
 - Reply to chat message feature (with original message preview)
+- Swipe action on chat messages to reply / delete
 - Voice recordings in chat feature
 - Allow video recording in chat file sharing
 - Unread messages indicator in chat conversation that separates read & unread messages
-- Notify incoming/outgoing calls on bluetooth devices using self-managed connections from telecom manager API
+- Notify incoming/outgoing calls on bluetooth devices using self-managed connections from telecom manager API (disables SDK audio focus)
+- Ask Android to not process what user types in an encrypted chat room to improve privacy, see [IME_FLAG_NO_PERSONALIZED_LEARNING](https://developer.android.com/reference/android/view/inputmethod/EditorInfo#IME_FLAG_NO_PERSONALIZED_LEARNING)
+- SIP URIs in chat messages are clickable to easily initiate a call
 - New video call UI on foldable device like Galaxy Z Fold
 - Setting to automatically record all calls
+- When using a physical keyboard, use left control + enter keys to send message
+- Using CallStyle notifications for calls for devices running Android 12 or newer
+- New fragment explaining generic SIP account limitations contrary to sip.linphone.org SIP accounts
+- Link to Weblate added in about page
 
 ### Changed
 - UI has been reworked around SlidingPane component to better handle tablets & foldable devices
 - No longer scroll to bottom of chat room when new messages are received, a new button shows up to do it and it displays conversation's unread messages count
 - Animations have been replaced to use com.google.android.material.transition ones
 - Using new [Unified Content API](https://developer.android.com/about/versions/12/features/unified-content-api) to share files from keyboard (or other sources)
+- Received messages are now trimmed
 - Bumped dependencies, gradle updated from 4.2.2 to 7.0.2
 - Target Android SDK version set to 31 (Android	12)
+- Splashscreen is using new APIs
 - SDK updated to 5.1.0 release
+- Updated translations
 
 ### Fixed
 - Chat notifications disappearing when app restarts
 - "Infinite backstack", now each view is stored (at most) once in the backstack
+- Voice messages / call recordings will be played on headset/headphones instead of speaker, if possible
 - Going back to the dialer when pressing back in a chat room after clicking on a chat message notification
+- Missing international prefix / phone number in assistant after granting permission
+- Display issue for incoming call notification preventing to use answer/hangup actions on some Xiaomi devices (like Redmi Note 9S)
+- Missing foreground service notification for background mode
 
 ### Removed
+- Launcher Activity has been replaced by [Splash Screen API](https://developer.android.com/reference/kotlin/androidx/core/splashscreen/SplashScreen)
+- Dialer will no longer make DTMF sound when pressing digits
+- Launcher activity
 - Global push notification setting in Network, use the switch in each Account instead
+- No longer need to monitor device rotation and give information to the Core, it does it by itself
+
+## [4.5.6] - 2021-11-08
+
+### Changed
+- SDK updated to 5.0.49
 
 ## [4.5.5] - 2021-10-28
 
@@ -79,16 +104,11 @@ Group changes to describe their impact on the project, as follows:
 - Fixed various crashes & other issues
 - SDK bumped to 5.0.10
 
-## [4.5.1] - Unreleased
-
-### Added
-- Reply to chat message feature
-- Voice recordings messages
+## [4.5.1] - 2021-07-15
 
 ### Changed
-- Navigation was reworked using SlidingPane widget, reducing code & improving UI on foldables
-
-### Removed
+- Bugs & crashes have been fixed
+- SDK bumped to 5.0.1
 
 ## [4.5.0] - 2021-07-08
 

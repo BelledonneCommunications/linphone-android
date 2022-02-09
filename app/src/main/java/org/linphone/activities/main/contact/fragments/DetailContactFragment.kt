@@ -83,47 +83,50 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
         binding.viewModel = viewModel
 
         viewModel.sendSmsToEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume { number ->
-                    sendSms(number)
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume { number ->
+                sendSms(number)
             }
-        )
+        }
 
         viewModel.startCallToEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume { address ->
-                    if (coreContext.core.callsNb > 0) {
-                        Log.i("[Contact] Starting dialer with pre-filled URI ${address.asStringUriOnly()}, is transfer? ${sharedViewModel.pendingCallTransfer}")
-                        sharedViewModel.updateContactsAnimationsBasedOnDestination.value = Event(R.id.dialerFragment)
-                        sharedViewModel.updateDialerAnimationsBasedOnDestination.value = Event(R.id.masterContactsFragment)
+            viewLifecycleOwner
+        ) {
+            it.consume { address ->
+                if (coreContext.core.callsNb > 0) {
+                    Log.i("[Contact] Starting dialer with pre-filled URI ${address.asStringUriOnly()}, is transfer? ${sharedViewModel.pendingCallTransfer}")
+                    sharedViewModel.updateContactsAnimationsBasedOnDestination.value =
+                        Event(R.id.dialerFragment)
+                    sharedViewModel.updateDialerAnimationsBasedOnDestination.value =
+                        Event(R.id.masterContactsFragment)
 
-                        val args = Bundle()
-                        args.putString("URI", address.asStringUriOnly())
-                        args.putBoolean("Transfer", sharedViewModel.pendingCallTransfer)
-                        args.putBoolean("SkipAutoCallStart", true) // If auto start call setting is enabled, ignore it
-                        navigateToDialer(args)
-                    } else {
-                        coreContext.startCall(address)
-                    }
+                    val args = Bundle()
+                    args.putString("URI", address.asStringUriOnly())
+                    args.putBoolean("Transfer", sharedViewModel.pendingCallTransfer)
+                    args.putBoolean(
+                        "SkipAutoCallStart",
+                        true
+                    ) // If auto start call setting is enabled, ignore it
+                    navigateToDialer(args)
+                } else {
+                    coreContext.startCall(address)
                 }
             }
-        )
+        }
 
         viewModel.chatRoomCreatedEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume { chatRoom ->
-                    sharedViewModel.updateContactsAnimationsBasedOnDestination.value = Event(R.id.masterChatRoomsFragment)
-                    val args = Bundle()
-                    args.putString("LocalSipUri", chatRoom.localAddress.asStringUriOnly())
-                    args.putString("RemoteSipUri", chatRoom.peerAddress.asStringUriOnly())
-                    navigateToChatRoom(args)
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume { chatRoom ->
+                sharedViewModel.updateContactsAnimationsBasedOnDestination.value =
+                    Event(R.id.masterChatRoomsFragment)
+                val args = Bundle()
+                args.putString("LocalSipUri", chatRoom.localAddress.asStringUriOnly())
+                args.putString("RemoteSipUri", chatRoom.peerAddress.asStringUriOnly())
+                navigateToChatRoom(args)
             }
-        )
+        }
 
         binding.setBackClickListener {
             goBack()
@@ -138,13 +141,12 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
         }
 
         viewModel.onErrorEvent.observe(
-            viewLifecycleOwner,
-            {
-                it.consume { messageResourceId ->
-                    (activity as MainActivity).showSnackBar(messageResourceId)
-                }
+            viewLifecycleOwner
+        ) {
+            it.consume { messageResourceId ->
+                (activity as MainActivity).showSnackBar(messageResourceId)
             }
-        )
+        }
 
         view.doOnPreDraw {
             // Notifies fragment is ready to be drawn

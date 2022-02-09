@@ -54,7 +54,7 @@ class DevicesFragment : SecureFragment<ChatRoomDevicesFragmentBinding>() {
             return
         }
 
-        isSecure = chatRoom.currentParams.encryptionEnabled()
+        isSecure = chatRoom.currentParams.isEncryptionEnabled
 
         listViewModel = ViewModelProvider(
             this,
@@ -65,5 +65,11 @@ class DevicesFragment : SecureFragment<ChatRoomDevicesFragmentBinding>() {
         binding.setBackClickListener {
             goBack()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        listViewModel.updateParticipants()
     }
 }

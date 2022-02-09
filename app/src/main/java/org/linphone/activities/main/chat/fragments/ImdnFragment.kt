@@ -61,7 +61,7 @@ class ImdnFragment : SecureFragment<ChatRoomImdnFragmentBinding>() {
             return
         }
 
-        isSecure = chatRoom.currentParams.encryptionEnabled()
+        isSecure = chatRoom.currentParams.isEncryptionEnabled
 
         if (arguments != null) {
             val messageId = arguments?.getString("MessageId")
@@ -98,11 +98,10 @@ class ImdnFragment : SecureFragment<ChatRoomImdnFragmentBinding>() {
         binding.participantsList.addItemDecoration(headerItemDecoration)
 
         viewModel.participants.observe(
-            viewLifecycleOwner,
-            {
-                adapter.submitList(it)
-            }
-        )
+            viewLifecycleOwner
+        ) {
+            adapter.submitList(it)
+        }
 
         binding.setBackClickListener {
             goBack()

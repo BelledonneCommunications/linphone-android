@@ -28,8 +28,12 @@ import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.transition.MaterialSharedAxis
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.tools.Log
 
@@ -38,9 +42,17 @@ abstract class GenericFragment<T : ViewDataBinding> : Fragment() {
     protected val binding get() = _binding!!
     protected var useMaterialSharedAxisXForwardAnimation = true
 
+    protected fun isBindingAvailable(): Boolean {
+        return _binding != null
+    }
+
     protected val onBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
-            goBack()
+            lifecycleScope.launch {
+                withContext(Dispatchers.Main) {
+                    goBack()
+                }
+            }
         }
     }
 
