@@ -232,10 +232,11 @@ class Compatibility {
             }
         }
 
-        fun changeAudioRouteForTelecomManager(connection: NativeCallWrapper, route: Int) {
+        fun changeAudioRouteForTelecomManager(connection: NativeCallWrapper, route: Int): Boolean {
             if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
-                Api26Compatibility.changeAudioRouteForTelecomManager(connection, route)
+                return Api26Compatibility.changeAudioRouteForTelecomManager(connection, route)
             }
+            return false
         }
 
         /* Contacts */
