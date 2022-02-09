@@ -29,6 +29,7 @@ import org.linphone.activities.main.fragments.MasterFragment
 import org.linphone.activities.main.recordings.adapters.RecordingsListAdapter
 import org.linphone.activities.main.recordings.data.RecordingData
 import org.linphone.activities.main.recordings.viewmodels.RecordingsViewModel
+import org.linphone.core.tools.Log
 import org.linphone.databinding.RecordingsFragmentBinding
 import org.linphone.utils.AppUtils
 import org.linphone.utils.RecyclerViewHeaderDecoration
@@ -109,5 +110,14 @@ class RecordingsFragment : MasterFragment<RecordingsFragmentBinding, RecordingsL
             list.add(recording)
         }
         viewModel.deleteRecordings(list)
+    }
+
+    override fun onResume() {
+        if (this::viewModel.isInitialized) {
+            viewModel.udpdateRecordingsList()
+        } else {
+            Log.e("[Recordings] Fragment resuming but viewModel lateinit property isn't initialized!")
+        }
+        super.onResume()
     }
 }
