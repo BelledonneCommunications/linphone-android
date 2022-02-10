@@ -327,6 +327,10 @@ class NotificationsManager(private val context: Context) {
     fun startForeground(coreService: CoreService, useAutoStartDescription: Boolean = true) {
         if (serviceNotification == null) {
             createServiceNotification(useAutoStartDescription)
+            if (serviceNotification == null) {
+                Log.e("[Notifications Manager] Failed to create service notification, aborting foreground service!")
+                return
+            }
         }
         currentForegroundServiceNotificationId = SERVICE_NOTIF_ID
         Log.i("[Notifications Manager] Starting service as foreground [$currentForegroundServiceNotificationId]")
