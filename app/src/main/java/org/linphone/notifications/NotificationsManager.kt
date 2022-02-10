@@ -342,7 +342,7 @@ class NotificationsManager(private val context: Context) {
         }
     }
 
-    private fun stopForegroundNotification() {
+    fun stopForegroundNotification() {
         if (service != null) {
             Log.i("[Notifications Manager] Stopping service as foreground [$currentForegroundServiceNotificationId]")
             service?.stopForeground(true)
