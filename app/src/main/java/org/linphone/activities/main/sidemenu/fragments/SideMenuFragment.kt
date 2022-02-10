@@ -31,7 +31,6 @@ import androidx.lifecycle.lifecycleScope
 import java.io.File
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.assistant.AssistantActivity
@@ -113,12 +112,9 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
             Log.i("[Side Menu] Quitting app")
             requireActivity().finishAndRemoveTask()
 
-            if (!corePreferences.keepServiceAlive) {
-                Log.i("[Side Menu] Stopping Core")
-                coreContext.stop()
-            } else {
-                Log.w("[Side Menu] Keep Service alive setting enabled, don't destroy the Core")
-            }
+            Log.i("[Side Menu] Stopping Core Context")
+            coreContext.notificationsManager.stopForegroundNotification()
+            coreContext.stop()
         }
 
         onBackPressedCallback.isEnabled = false
