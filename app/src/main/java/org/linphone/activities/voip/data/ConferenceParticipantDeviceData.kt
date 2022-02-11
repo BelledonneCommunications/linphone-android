@@ -39,6 +39,8 @@ class ConferenceParticipantDeviceData(
 
     val activeSpeaker = MutableLiveData<Boolean>()
 
+    val micMuted = MutableLiveData<Boolean>()
+
     val isInConference = MutableLiveData<Boolean>()
 
     private var textureView: TextureView? = null
@@ -95,6 +97,7 @@ class ConferenceParticipantDeviceData(
 
         activeSpeaker.value = false
         videoEnabled.value = participantDevice.getStreamAvailability(StreamType.Video)
+        micMuted.value = false // TODO
         isInConference.value = participantDevice.isInConference
 
         val videoCapability = participantDevice.getStreamCapability(StreamType.Video)

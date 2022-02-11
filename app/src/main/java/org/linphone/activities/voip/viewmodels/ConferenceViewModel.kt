@@ -45,6 +45,7 @@ class ConferenceViewModel : ViewModel() {
     val conferenceParticipantDevices = MutableLiveData<List<ConferenceParticipantDeviceData>>()
     val conferenceMosaicDisplayMode = MutableLiveData<Boolean>()
     val conferenceActiveSpeakerDisplayMode = MutableLiveData<Boolean>()
+    val conferenceAudioOnlyDisplayMode = MutableLiveData<Boolean>()
 
     val isRecording = MutableLiveData<Boolean>()
     val isRemotelyRecorded = MutableLiveData<Boolean>()
@@ -182,6 +183,7 @@ class ConferenceViewModel : ViewModel() {
         conferenceParticipantDevices.value = arrayListOf()
         conferenceMosaicDisplayMode.value = false
         conferenceActiveSpeakerDisplayMode.value = false
+        conferenceAudioOnlyDisplayMode.value = false
 
         subject.value = AppUtils.getString(R.string.conference_default_title)
 
