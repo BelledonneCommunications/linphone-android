@@ -307,6 +307,16 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             }
         }
 
+        chatSendingViewModel.messageSentEvent.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                Log.i("[Chat Room] Message sent")
+                // Reset this to ensure sent message will be visible
+                viewModel.isUserScrollingUp.value = false
+            }
+        }
+
         listViewModel.events.observe(
             viewLifecycleOwner
         ) { events ->
