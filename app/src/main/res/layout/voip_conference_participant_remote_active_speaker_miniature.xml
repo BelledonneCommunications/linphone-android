@@ -69,7 +69,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:padding="10dp"
+            android:padding="5dp"
             android:src="@drawable/icon_call_camera_switch"
             android:contentDescription="@string/content_description_switch_camera"
             app:layout_constraintTop_toTopOf="@id/participant_video_surface"
@@ -109,6 +109,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/participant_name"/>-->
+
+        <ImageView
+            android:layout_width="@dimen/voip_conference_participant_mic_muted_icon_size"
+            android:layout_height="@dimen/voip_conference_participant_mic_muted_icon_size"
+            android:visibility="@{data.micMuted ? View.VISIBLE : View.GONE, default=gone}"
+            android:padding="5dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/shape_button_disabled_background"
+            android:src="@drawable/icon_mic_muted"
+            android:contentDescription="@string/content_description_conference_participant_mic_muted"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

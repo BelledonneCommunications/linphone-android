@@ -104,6 +104,7 @@
         </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:onClick="@{() -> controlsViewModel.toggleFullScreen()}"
             android:background="@drawable/shape_remote_background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -124,7 +125,6 @@
 
             <org.linphone.activities.voip.views.RoundCornersTextureView
                 android:id="@+id/conference_active_speaker_remote_video"
-                android:onClick="@{() -> controlsViewModel.toggleFullScreen()}"
                 android:visibility="@{!conferenceViewModel.isConferenceLocallyPaused &amp;&amp; conferenceViewModel.speakingParticipant.videoEnabled ? View.VISIBLE : View.GONE}"
                 android:layout_width="0dp"
                 android:layout_height="0dp"

@@ -265,6 +265,7 @@
     <string name="conference_invite_participants_count" tools:ignore="PluralsCandidate">%d participants</string>
     <string name="conference_display_mode_mosaic">Mosaic mode</string>
     <string name="conference_display_mode_active_speaker">Active speaker mode</string>
+    <string name="conference_display_mode_audio_only">Audio only mode</string>
     <string name="conference_waiting_room_start_call">Start</string>
     <string name="conference_waiting_room_cancel_call">Cancel</string>
     <string name="conference_waiting_room_video_disabled">Video is currently disabled</string>
@@ -805,4 +806,5 @@
     <string name="content_description_show_numpad">Show numpad</string>
     <string name="content_description_hide_numpad">Hide numpad</string>
     <string name="content_description_go_to_chat_rooms_list">Go to conversations list</string>
+    <string name="content_description_conference_participant_mic_muted">Participant has it\'s microphone muted</string>
 </resources>

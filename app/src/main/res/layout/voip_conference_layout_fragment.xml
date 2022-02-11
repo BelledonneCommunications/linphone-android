@@ -92,6 +92,22 @@
                     android:layout_height="1dp"
                     android:background="?attr/dividerColor" />
 
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/conference_display_mode_audio_only"
+                    android:checked="@={conferenceViewModel.conferenceAudioOnlyDisplayMode}"
+                    android:drawableEnd="@drawable/icon_conference_layout_audio_only"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/dividerColor" />
+
             </RadioGroup>
 
         </androidx.core.widget.NestedScrollView>
