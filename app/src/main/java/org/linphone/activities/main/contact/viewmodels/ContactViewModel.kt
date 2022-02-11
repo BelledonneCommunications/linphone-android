@@ -74,6 +74,8 @@ class ContactViewModel(val contactInternal: Contact) : MessageNotifierViewModel(
 
     val waitForChatRoomCreation = MutableLiveData<Boolean>()
 
+    val isNativeContact = MutableLiveData<Boolean>()
+
     private val contactsUpdatedListener = object : ContactsUpdatedListenerStub() {
         override fun onContactUpdated(contact: Contact) {
             if (contact is NativeContact && contactInternal is NativeContact && contact.nativeId == contactInternal.nativeId) {
@@ -127,6 +129,7 @@ class ContactViewModel(val contactInternal: Contact) : MessageNotifierViewModel(
     init {
         contact.value = contactInternal
         displayName.value = contactInternal.fullName ?: contactInternal.firstName + " " + contactInternal.lastName
+        isNativeContact.value = contactInternal is NativeContact
 
         updateNumbersAndAddresses(contactInternal)
         coreContext.contactsManager.addListener(contactsUpdatedListener)
@@ -172,7 +175,7 @@ class ContactViewModel(val contactInternal: Contact) : MessageNotifierViewModel(
         }
     }
 
-    private fun updateNumbersAndAddresses(contact: Contact) {
+    fun updateNumbersAndAddresses(contact: Contact) {
         val list = arrayListOf<ContactNumberOrAddressData>()
         for (address in contact.sipAddresses) {
             val value = address.asStringUriOnly()

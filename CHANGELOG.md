@@ -10,10 +10,18 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
-
 ## [4.7.0] - Unreleased
 
-## [4.6.2] - Unreleased
+### Added
+-
+
+### Changed
+-
+
+### Fixed
+-
+
+## [4.6.2] - 2022-03-01
 
 ### Added
 - Request BLUETOOTH_CONNECT permission on Android 12+ devices, if not we won't be notified when a BT device is being connected/disconnected while app is alive.
@@ -23,13 +31,15 @@ Group changes to describe their impact on the project, as follows:
 - Prevent screen to turn off while recording a voice message
 
 ### Changed
-- Contacts lists now show LDAP contacts if any, as well as "generated" contacts from SIP addresses you have interacted with
+- Contacts lists now show LDAP contacts if any
 
 ### Fixed
 - Negative gain in audio settings is allowed again
 - STUN server URL setting not enabling it for non sip.linphone.org accounts
 - Contacts list header case comparison
 - Stop voice recording playback when sending chat message
+- Call activity not finishing when hanging up sometimes
+- Auto start setting disabled not working if background mode setting was enabled
 
 ## [4.6.1] - 2022-02-14
 

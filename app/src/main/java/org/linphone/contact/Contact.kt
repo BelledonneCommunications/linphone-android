@@ -29,8 +29,10 @@ import org.linphone.R
 import org.linphone.core.Address
 import org.linphone.core.Friend
 import org.linphone.core.PresenceBasicStatus
+import org.linphone.core.SearchResult
 import org.linphone.core.tools.Log
 import org.linphone.utils.ImageUtils
+import org.linphone.utils.LinphoneUtils
 
 data class PhoneNumber(val value: String, val typeLabel: String) : Comparable<PhoneNumber> {
     override fun compareTo(other: PhoneNumber): Int {
@@ -38,7 +40,7 @@ data class PhoneNumber(val value: String, val typeLabel: String) : Comparable<Ph
     }
 }
 
-open class Contact : Comparable<Contact> {
+open class Contact() : Comparable<Contact> {
     var fullName: String? = null
     var firstName: String? = null
     var lastName: String? = null
@@ -54,6 +56,31 @@ open class Contact : Comparable<Contact> {
     var friend: Friend? = null
 
     private var thumbnailUri: Uri? = null
+
+    constructor(searchResult: SearchResult) : this() {
+        friend = searchResult.friend
+        addAddressAndPhoneNumberFromSearchResult(searchResult)
+    }
+
+    fun addAddressAndPhoneNumberFromSearchResult(searchResult: SearchResult) {
+        val address = searchResult.address
+        if (address != null) {
+            if (fullName == null) {
+                fullName = friend?.name ?: LinphoneUtils.getDisplayName(address)
+            }
+
+            sipAddresses.add(address)
+        }
+
+        val phoneNumber = searchResult.phoneNumber
+        if (phoneNumber != null) {
+            if (address == null && fullName == null) {
+                fullName = friend?.name ?: phoneNumber.orEmpty()
+            }
+
+            phoneNumbers.add(PhoneNumber(phoneNumber, ""))
+        }
+    }
 
     override fun compareTo(other: Contact): Int {
         val fn = fullName ?: ""

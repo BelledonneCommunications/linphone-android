@@ -111,6 +111,8 @@
     </plurals>
     <string name="contact_new_choose_sync_account">Choose where to save the contact</string>
     <string name="contact_local_sync_account">Store locally</string>
+    <string name="contact_cant_be_deleted">This contact can\'t be deleted</string>
+    <string name="contacts_ldap_query_more_results_available">More results are available, refine your search</string>
 
     <!-- Dialer -->
     <string name="dialer_address_bar_hint">Enter a number or an address</string>
@@ -543,6 +545,40 @@
     <string name="contacts_settings_launcher_shortcuts_summary">Will replace chat room shortcuts if any</string>
     <string name="contacts_settings_show_new_contact_account_dialog_title">Always ask in which account save newly created contact</string>
     <string name="contacts_settings_show_new_contact_account_dialog_summary">If disabled contact will be stored locally</string>
+    <string name="contacts_settings_create_new_ldap_config_title">New LDAP configuration</string>
+
+    <!-- LDAP Contacts settings -->
+    <string name="contacts_settings_ldap_title">LDAP</string>
+    <string name="contacts_settings_ldap_enable_title">Enable</string>
+    <string name="contacts_settings_ldap_delete_title">Delete</string>
+    <string name="contacts_settings_ldap_connection_title">Connection</string>
+    <string name="contacts_settings_ldap_server_title">Server URL</string>
+    <string name="contacts_settings_ldap_bind_dn_title">Bind DN</string>
+    <string name="contacts_settings_ldap_password_title">Password</string>
+    <string name="contacts_settings_ldap_auth_method_title">Authentication method</string>
+    <string name="contacts_settings_ldap_auth_method_anonymous">Anonymous</string>
+    <string name="contacts_settings_ldap_auth_method_simple">Simple</string>
+    <string name="contacts_settings_ldap_tls_title">Use TLS</string>
+    <string name="contacts_settings_ldap_cert_check_title">Check certificates</string>
+    <string name="contacts_settings_ldap_cert_check_auto">Auto</string>
+    <string name="contacts_settings_ldap_cert_check_disabled">Disabled</string>
+    <string name="contacts_settings_ldap_cert_check_enabled">Enabled</string>
+    <string name="contacts_settings_ldap_search_title">Search</string>
+    <string name="contacts_settings_ldap_search_base_title">Search base</string>
+    <string name="contacts_settings_ldap_search_base_subtitle">Must not be empty!</string>
+    <string name="contacts_settings_ldap_search_filter_title">Filter</string>
+    <string name="contacts_settings_ldap_search_max_results_title">Max results</string>
+    <string name="contacts_settings_ldap_search_timeout_title">Timeout</string>
+    <string name="contacts_settings_ldap_search_timeout_subtitle">In seconds</string>
+    <string name="contacts_settings_ldap_request_delay_title">Delay between two requests</string>
+    <string name="contacts_settings_ldap_request_delay_subtitle">In milliseconds</string>
+    <string name="contacts_settings_ldap_minimum_characters_title">Minimum characters to start query</string>
+    <string name="contacts_settings_ldap_parsing_title">Parsing</string>
+    <string name="contacts_settings_ldap_name_attribute_title">Name attributes</string>
+    <string name="contacts_settings_ldap_sip_attribute_title">SIP attributes</string>
+    <string name="contacts_settings_ldap_sip_domain_title">Domain</string>
+    <string name="contacts_settings_ldap_misc_title">Misc</string>
+    <string name="contacts_settings_ldap_debug_title">Debug</string>
 
     <!-- Advanced settings -->
     <string name="advanced_settings_debug_mode_title">Debug logs</string>
