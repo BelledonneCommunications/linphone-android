@@ -26,8 +26,10 @@ import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.activities.main.settings.viewmodels.ContactsSettingsViewModel
 import org.linphone.activities.navigateToEmptySetting
+import org.linphone.activities.navigateToLdapSettings
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsContactsFragmentBinding
@@ -74,6 +76,22 @@ class ContactsSettingsFragment : GenericSettingFragment<SettingsContactsFragment
             }
         }
 
+        viewModel.ldapNewSettingsListener = object : SettingListenerStub() {
+            override fun onClicked() {
+                Log.i("[Contacts Settings] Clicked on new LDAP config")
+                navigateToLdapSettings(-1)
+            }
+        }
+
+        viewModel.ldapSettingsClickedEvent.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume { index ->
+                Log.i("[Contacts Settings] Clicked on LDAP config with index: $index")
+                navigateToLdapSettings(index)
+            }
+        }
+
         if (!PermissionHelper.required(requireContext()).hasReadContactsPermission()) {
             Log.i("[Contacts Settings] Asking for READ_CONTACTS permission")
             requestPermissions(arrayOf(android.Manifest.permission.READ_CONTACTS), 0)
@@ -116,5 +134,10 @@ class ContactsSettingsFragment : GenericSettingFragment<SettingsContactsFragment
         } else {
             navigateToEmptySetting()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.updateLdapConfigurationsList()
     }
 }

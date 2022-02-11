@@ -50,7 +50,11 @@
         android:id="@+id/contactsSettingsFragment"
         android:name="org.linphone.activities.main.settings.fragments.ContactsSettingsFragment"
         tools:layout="@layout/settings_contacts_fragment"
-        android:label="ContactsSettingsFragment" />
+        android:label="ContactsSettingsFragment" >
+        <action
+            android:id="@+id/action_contactsSettingsFragment_to_ldapSettingsFragment"
+            app:destination="@id/ldapSettingsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/networkSettingsFragment"
         android:name="org.linphone.activities.main.settings.fragments.NetworkSettingsFragment"
@@ -134,4 +138,9 @@
             android:name="IsLinking"
             app:argType="boolean" />
     </fragment>
+    <fragment
+        android:id="@+id/ldapSettingsFragment"
+        android:name="org.linphone.activities.main.settings.fragments.LdapSettingsFragment"
+        tools:layout="@layout/settings_ldap_fragment"
+        android:label="LdapSettingsFragment" />
 </navigation>
