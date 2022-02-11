@@ -259,10 +259,16 @@ class Api26Compatibility {
 
         fun changeAudioRouteForTelecomManager(connection: NativeCallWrapper, route: Int): Boolean {
             Log.i("[Telecom Helper] Changing audio route [$route] on connection ${connection.callId}")
-            if (connection.callAudioState.route == route) {
+
+            val audioState = connection.callAudioState
+            if (audioState != null && audioState.route == route) {
                 Log.w("[Telecom Helper] Connection is already using this route")
                 return false
+            } else if (audioState == null) {
+                Log.w("[Telecom Helper] Failed to retrieve connection's call audio state!")
+                return false
             }
+
             connection.setAudioRoute(route)
             return true
         }
