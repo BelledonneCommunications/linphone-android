@@ -76,6 +76,10 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         MutableLiveData<Event<Boolean>>()
     }
 
+    val messageSentEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     val voiceRecordingProgressBarMax = 10000
 
     val isPendingVoiceRecord = MutableLiveData<Boolean>()
@@ -261,6 +265,8 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         attachments.value.orEmpty().forEach(ChatMessageAttachmentData::destroy)
         attachments.value = arrayListOf()
         textToSend.value = ""
+
+        messageSentEvent.value = Event(true)
     }
 
     fun transferMessage(chatMessage: ChatMessage) {
