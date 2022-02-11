@@ -23,61 +23,125 @@ import android.content.ContentProviderOperation
 import android.provider.ContactsContract
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import java.util.*
+import kotlinx.coroutines.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.contact.Contact
 import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.contact.NativeContact
+import org.linphone.core.*
 import org.linphone.core.tools.Log
+import org.linphone.utils.Event
 
 class ContactsListViewModel : ViewModel() {
     val sipContactsSelected = MutableLiveData<Boolean>()
 
     val contactsList = MutableLiveData<ArrayList<ContactViewModel>>()
 
+    val fetchInProgress = MutableLiveData<Boolean>()
+    private var searchResultsPending: Boolean = false
+    private var fastFetchJob: Job? = null
+
     val filter = MutableLiveData<String>()
+    private var previousFilter = "NotSet"
+
+    val moreResultsAvailableEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
 
     private val contactsUpdatedListener = object : ContactsUpdatedListenerStub() {
         override fun onContactsUpdated() {
             Log.i("[Contacts] Contacts have changed")
-            updateContactsList()
+            updateContactsList(true)
+        }
+    }
+
+    private val magicSearchListener = object : MagicSearchListenerStub() {
+        override fun onSearchResultsReceived(magicSearch: MagicSearch) {
+            searchResultsPending = false
+            processMagicSearchResults(magicSearch.lastSearch)
+            fetchInProgress.value = false
+        }
+
+        override fun onLdapHaveMoreResults(magicSearch: MagicSearch, ldap: Ldap) {
+            moreResultsAvailableEvent.value = Event(true)
         }
     }
 
     init {
         sipContactsSelected.value = coreContext.contactsManager.shouldDisplaySipContactsList()
+        fetchInProgress.value = false
 
         coreContext.contactsManager.addListener(contactsUpdatedListener)
+        coreContext.contactsManager.magicSearch.addListener(magicSearchListener)
     }
 
     override fun onCleared() {
         contactsList.value.orEmpty().forEach(ContactViewModel::destroy)
+        coreContext.contactsManager.magicSearch.removeListener(magicSearchListener)
         coreContext.contactsManager.removeListener(contactsUpdatedListener)
 
         super.onCleared()
     }
 
-    private fun getSelectedContactsList(): ArrayList<ContactViewModel> {
-        val list = arrayListOf<ContactViewModel>()
-        val source =
-            if (sipContactsSelected.value == true) coreContext.contactsManager.sipContacts
-            else coreContext.contactsManager.contacts
-        for (contact in source) {
-            list.add(ContactViewModel(contact))
+    fun updateContactsList(clearCache: Boolean) {
+        val filterValue = filter.value.orEmpty()
+        contactsList.value.orEmpty().forEach(ContactViewModel::destroy)
+
+        if (clearCache || (
+            previousFilter.isNotEmpty() && (
+                previousFilter.length > filterValue.length ||
+                    (previousFilter.length == filterValue.length && previousFilter != filterValue)
+                )
+            )
+        ) {
+            coreContext.contactsManager.magicSearch.resetSearchCache()
         }
-        return list
+        previousFilter = filterValue
+
+        val domain = if (sipContactsSelected.value == true) coreContext.core.defaultAccount?.params?.domain ?: "" else ""
+        val filter = MagicSearchSource.Friends.toInt() or MagicSearchSource.LdapServers.toInt()
+        searchResultsPending = true
+        fastFetchJob?.cancel()
+        coreContext.contactsManager.magicSearch.getContactsAsync(filterValue, domain, filter)
+
+        fastFetchJob = viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                delay(200)
+                withContext(Dispatchers.Main) {
+                    if (searchResultsPending) {
+                        fetchInProgress.value = true
+                    }
+                }
+            }
+        }
     }
 
-    fun updateContactsList() {
-        val list: ArrayList<ContactViewModel>
-
-        val filterValue = filter.value.orEmpty()
-        list = if (filterValue.isNotEmpty()) {
-            getSelectedContactsList().filter { contact ->
-                contact.name.contains(filterValue, true)
-            } as ArrayList<ContactViewModel>
-        } else {
-            getSelectedContactsList()
+    private fun processMagicSearchResults(results: Array<SearchResult>) {
+        val list = arrayListOf<ContactViewModel>()
+        for (result in results) {
+            val contact = searchMatchingContact(result) ?: Contact(searchResult = result)
+            if (contact is NativeContact) {
+                val found = list.find { contactViewModel ->
+                    contactViewModel.contactInternal is NativeContact && contactViewModel.contactInternal.nativeId == contact.nativeId
+                }
+                if (found != null) {
+                    Log.d("[Contacts] Found a search result that matches a native contact [$contact] we already have, skipping")
+                    continue
+                }
+            } else {
+                val found = list.find { contactViewModel ->
+                    contactViewModel.displayName.value == contact.fullName
+                }
+                if (found != null) {
+                    Log.i("[Contacts] Found a search result that matches a contact [$contact] we already have, updating it with the new information")
+                    found.contactInternal.addAddressAndPhoneNumberFromSearchResult(result)
+                    found.updateNumbersAndAddresses(found.contactInternal)
+                    continue
+                }
+            }
+            list.add(ContactViewModel(contact))
         }
 
         contactsList.postValue(list)
@@ -145,5 +209,20 @@ class ContactsListViewModel : ViewModel() {
                 Log.e("[Contacts] $e")
             }
         }
+    }
+
+    private fun searchMatchingContact(searchResult: SearchResult): Contact? {
+        val address = searchResult.address
+
+        if (address != null) {
+            val contact = coreContext.contactsManager.findContactByAddress(address, ignoreLocalContact = true)
+            if (contact != null) return contact
+        }
+
+        if (searchResult.phoneNumber != null) {
+            return coreContext.contactsManager.findContactByPhoneNumber(searchResult.phoneNumber.orEmpty())
+        }
+
+        return null
     }
 }

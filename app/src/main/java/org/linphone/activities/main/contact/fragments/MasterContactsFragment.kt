@@ -36,6 +36,7 @@ import com.google.android.material.transition.MaterialSharedAxis
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.activities.SnackBarActivity
 import org.linphone.activities.clearDisplayedContact
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.contact.adapters.ContactsListAdapter
@@ -172,6 +173,14 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
                 val viewModel = DialogViewModel(getString(R.string.contact_delete_one_dialog))
                 val dialog: Dialog = DialogUtils.getDialog(requireContext(), viewModel)
 
+                val contactViewModel = adapter.currentList[viewHolder.bindingAdapterPosition]
+                if (contactViewModel.isNativeContact.value == false) {
+                    adapter.notifyItemChanged(viewHolder.bindingAdapterPosition)
+                    val activity = requireActivity() as MainActivity
+                    activity.showSnackBar(R.string.contact_cant_be_deleted)
+                    return
+                }
+
                 viewModel.showCancelButton {
                     adapter.notifyItemChanged(viewHolder.bindingAdapterPosition)
                     dialog.dismiss()
@@ -211,6 +220,7 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
             it.consume { contact ->
                 Log.i("[Contacts] Selected item in list changed: $contact")
                 sharedViewModel.selectedContact.value = contact
+                (requireActivity() as MainActivity).hideKeyboard()
 
                 if (editOnClick) {
                     navigateToContactEditor(sipUriToAdd, binding.slidingPane)
@@ -237,6 +247,14 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
             adapter.submitList(it)
         }
 
+        listViewModel.moreResultsAvailableEvent.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                (requireActivity() as SnackBarActivity).showSnackBar(R.string.contacts_ldap_query_more_results_available)
+            }
+        }
+
         binding.setAllContactsToggleClickListener {
             listViewModel.sipContactsSelected.value = false
         }
@@ -247,13 +265,13 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
         listViewModel.sipContactsSelected.observe(
             viewLifecycleOwner
         ) {
-            listViewModel.updateContactsList()
+            listViewModel.updateContactsList(true)
         }
 
         listViewModel.filter.observe(
             viewLifecycleOwner
         ) {
-            listViewModel.updateContactsList()
+            listViewModel.updateContactsList(false)
         }
 
         binding.setNewContactClickListener {

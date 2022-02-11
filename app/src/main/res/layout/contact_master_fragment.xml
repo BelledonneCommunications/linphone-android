@@ -175,6 +175,10 @@
                     android:text="@string/no_contact"
                     android:visibility="@{!viewModel.sipContactsSelected &amp;&amp; viewModel.contactsList.empty ? View.VISIBLE : View.GONE}" />
 
+                <include
+                    layout="@layout/wait_layout"
+                    app:visibility="@{viewModel.fetchInProgress}"/>
+
             </RelativeLayout>
 
             <View

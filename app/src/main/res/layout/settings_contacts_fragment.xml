@@ -107,6 +107,35 @@
                     linphone:checked="@={viewModel.launcherShortcuts}"
                     linphone:enabled="@{viewModel.readContactsPermissionGranted}"/>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{viewModel.ldapAvailable ? View.VISIBLE : View.GONE}"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/settings_category_font"
+                        android:text="@string/contacts_settings_ldap_title"
+                        android:paddingTop="15dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        linphone:entries="@{viewModel.ldapConfigurations}"
+                        linphone:layout="@{@layout/settings_ldap_cell}"/>
+
+                    <include
+                        layout="@layout/settings_widget_basic"
+                        linphone:listener="@{viewModel.ldapNewSettingsListener}"
+                        linphone:title="@{@string/contacts_settings_create_new_ldap_config_title}" />
+
+                </LinearLayout>
+
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>

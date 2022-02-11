@@ -866,6 +866,17 @@ internal fun navigateToEmptySetting(navController: NavController) {
     )
 }
 
+internal fun ContactsSettingsFragment.navigateToLdapSettings(configIndex: Int) {
+    if (findNavController().currentDestination?.id == R.id.contactsSettingsFragment) {
+        val bundle = bundleOf("LdapConfigIndex" to configIndex)
+        findNavController().navigate(
+            R.id.action_contactsSettingsFragment_to_ldapSettingsFragment,
+            bundle,
+            popupTo()
+        )
+    }
+}
+
 internal fun AccountSettingsFragment.navigateToEmptySetting() {
     navigateToEmptySetting(findNavController())
 }
