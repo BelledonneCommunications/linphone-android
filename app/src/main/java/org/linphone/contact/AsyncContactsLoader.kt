@@ -109,14 +109,20 @@ class AsyncContactsLoader(private val context: Context) :
                 Log.i("[Contacts Loader] Only fetching contacts in default directory")
                 selection = ContactsContract.Data.IN_DEFAULT_DIRECTORY + " == 1"
             }
-            val cursor: Cursor? = context.contentResolver
-                .query(
-                    ContactsContract.Data.CONTENT_URI,
-                    projection,
-                    selection,
-                    null,
-                    null
-                )
+
+            val cursor: Cursor? = try {
+                context.contentResolver
+                    .query(
+                        ContactsContract.Data.CONTENT_URI,
+                        projection,
+                        selection,
+                        null,
+                        null
+                    )
+            } catch (e: Exception) {
+                Log.e("[Contacts Loader] Failed to get contacts cursor: $e")
+                null
+            }
 
             if (cursor != null) {
                 Log.i("[Contacts Loader] Found ${cursor.count} entries in cursor")
