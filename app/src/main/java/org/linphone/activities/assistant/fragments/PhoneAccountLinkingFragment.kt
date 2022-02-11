@@ -24,7 +24,7 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
-import org.linphone.activities.assistant.AssistantActivity
+import org.linphone.activities.SnackBarActivity
 import org.linphone.activities.assistant.viewmodels.*
 import org.linphone.activities.navigateToEchoCancellerCalibration
 import org.linphone.activities.navigateToPhoneAccountValidation
@@ -99,7 +99,7 @@ class PhoneAccountLinkingFragment : AbstractPhoneFragment<AssistantPhoneAccountL
             viewLifecycleOwner
         ) {
             it.consume { message ->
-                (requireActivity() as AssistantActivity).showSnackBar(message)
+                (requireActivity() as SnackBarActivity).showSnackBar(message)
             }
         }
 
