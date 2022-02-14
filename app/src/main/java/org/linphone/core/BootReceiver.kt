@@ -22,8 +22,11 @@ package org.linphone.core
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.R
+import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 
 class BootReceiver : BroadcastReceiver() {
@@ -32,18 +35,27 @@ class BootReceiver : BroadcastReceiver() {
             val autoStart = corePreferences.autoStart
             Log.i("[Boot Receiver] Device is starting, autoStart is $autoStart")
             if (autoStart) {
-                val serviceIntent = Intent(Intent.ACTION_MAIN).setClass(context, CoreService::class.java)
-                serviceIntent.putExtra("StartForeground", true)
-                ContextCompat.startForegroundService(context, serviceIntent)
+                startService(context)
             }
         } else if (intent.action.equals(Intent.ACTION_MY_PACKAGE_REPLACED, ignoreCase = true)) {
             val autoStart = corePreferences.autoStart
             Log.i("[Boot Receiver] App has been updated, autoStart is $autoStart")
             if (autoStart) {
-                val serviceIntent = Intent(Intent.ACTION_MAIN).setClass(context, CoreService::class.java)
-                serviceIntent.putExtra("StartForeground", true)
-                ContextCompat.startForegroundService(context, serviceIntent)
+                startService(context)
             }
         }
+    }
+
+    private fun startService(context: Context) {
+        val serviceChannel = context.getString(R.string.notification_channel_service_id)
+        val notificationManager = NotificationManagerCompat.from(context)
+        if (Compatibility.getChannelImportance(notificationManager, serviceChannel) == NotificationManagerCompat.IMPORTANCE_NONE) {
+            Log.w("[Boot Receiver] Service channel is disabled!")
+            return
+        }
+
+        val serviceIntent = Intent(Intent.ACTION_MAIN).setClass(context, CoreService::class.java)
+        serviceIntent.putExtra("StartForeground", true)
+        ContextCompat.startForegroundService(context, serviceIntent)
     }
 }

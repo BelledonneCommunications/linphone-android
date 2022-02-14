@@ -281,6 +281,12 @@ class NotificationsManager(private val context: Context) {
     /* Service related */
 
     fun startForeground() {
+        val serviceChannel = context.getString(R.string.notification_channel_service_id)
+        if (Compatibility.getChannelImportance(notificationManager, serviceChannel) == NotificationManagerCompat.IMPORTANCE_NONE) {
+            Log.w("[Notifications Manager] Service channel is disabled!")
+            return
+        }
+
         val coreService = service
         if (coreService != null) {
             startForeground(coreService, useAutoStartDescription = false)
