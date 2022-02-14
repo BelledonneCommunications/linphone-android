@@ -12,6 +12,15 @@ Group changes to describe their impact on the project, as follows:
 
 ## [4.7.0] - Unreleased
 
+## [4.6.1] - 2022-02-14
+
+### Fixed
+- Quit button not working when background mode was enabled
+- Crash when background mode was enabled and service notification channel was disabled
+- Crashes while changing audio route
+- Crash while fetching contacts
+- Crash when rotating the device (SDK fix)
+
 ## [4.6.0] - 2022-02-09
 
 ### Added
