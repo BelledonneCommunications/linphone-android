@@ -374,8 +374,8 @@ class ControlsViewModel : ViewModel() {
         goToCallsListEvent.value = Event(true)
     }
 
-    fun showCallStats() {
-        hideExtraButtons(false)
+    fun showCallStats(skipAnimation: Boolean = false) {
+        hideExtraButtons(skipAnimation)
         callStatsVisible.value = true
     }
 

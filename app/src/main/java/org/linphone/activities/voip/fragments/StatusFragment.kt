@@ -70,7 +70,7 @@ class StatusFragment : GenericFragment<VoipStatusFragmentBinding>() {
             viewLifecycleOwner
         ) {
             it.consume {
-                controlsViewModel.showCallStats()
+                controlsViewModel.showCallStats(skipAnimation = true)
             }
         }
     }
