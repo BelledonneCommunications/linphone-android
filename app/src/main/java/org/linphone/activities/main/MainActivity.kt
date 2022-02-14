@@ -329,6 +329,11 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                 }
             }
         }
+
+        // Prevent this intent to be processed again
+        intent.action = null
+        intent.data = null
+        intent.extras?.clear()
     }
 
     private fun handleTelOrSipUri(uri: Uri) {
