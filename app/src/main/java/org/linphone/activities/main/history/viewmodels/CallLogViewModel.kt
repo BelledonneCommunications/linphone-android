@@ -46,7 +46,7 @@ class CallLogViewModelFactory(private val callLog: CallLog) :
     }
 }
 
-class CallLogViewModel(val callLog: CallLog) : GenericContactViewModel(callLog.remoteAddress) {
+class CallLogViewModel(val callLog: CallLog, private val isRelated: Boolean = false) : GenericContactViewModel(callLog.remoteAddress) {
     val peerSipUri: String by lazy {
         LinphoneUtils.getDisplayableAddress(callLog.remoteAddress)
     }
@@ -112,16 +112,13 @@ class CallLogViewModel(val callLog: CallLog) : GenericContactViewModel(callLog.r
 
     val secureChatAllowed = contact.value?.friend?.getPresenceModelForUriOrTel(peerSipUri)?.hasCapability(FriendCapability.LimeX3Dh) ?: false
 
-    val relatedCallLogs = MutableLiveData<ArrayList<CallLog>>()
+    val relatedCallLogs = MutableLiveData<ArrayList<CallLogViewModel>>()
 
     private val listener = object : CoreListenerStub() {
         override fun onCallLogUpdated(core: Core, log: CallLog) {
             if (callLog.remoteAddress.weakEqual(log.remoteAddress) && callLog.localAddress.weakEqual(log.localAddress)) {
                 Log.i("[History Detail] New call log for ${callLog.remoteAddress.asStringUriOnly()} with local address ${callLog.localAddress.asStringUriOnly()}")
-                val list = arrayListOf<CallLog>()
-                list.add(callLog)
-                list.addAll(relatedCallLogs.value.orEmpty())
-                relatedCallLogs.value = list
+                addRelatedCallLogs(arrayListOf(log))
             }
         }
     }
@@ -152,21 +149,28 @@ class CallLogViewModel(val callLog: CallLog) : GenericContactViewModel(callLog.r
     init {
         waitForChatRoomCreation.value = false
 
-        coreContext.core.addListener(listener)
+        if (!isRelated) {
+            coreContext.core.addListener(listener)
 
-        val conferenceInfo = callLog.conferenceInfo
-        if (conferenceInfo != null) {
-            conferenceTime.value = TimestampUtils.timeToString(conferenceInfo.dateTime)
-            conferenceDate.value = if (TimestampUtils.isToday(conferenceInfo.dateTime)) {
-                AppUtils.getString(R.string.today)
-            } else {
-                TimestampUtils.toString(conferenceInfo.dateTime, onlyDate = true, shortDate = false, hideYear = false)
+            val conferenceInfo = callLog.conferenceInfo
+            if (conferenceInfo != null) {
+                conferenceTime.value = TimestampUtils.timeToString(conferenceInfo.dateTime)
+                conferenceDate.value = if (TimestampUtils.isToday(conferenceInfo.dateTime)) {
+                    AppUtils.getString(R.string.today)
+                } else {
+                    TimestampUtils.toString(
+                        conferenceInfo.dateTime,
+                        onlyDate = true,
+                        shortDate = false,
+                        hideYear = false
+                    )
+                }
+                val list = arrayListOf<ConferenceSchedulingParticipantData>()
+                for (participant in conferenceInfo.participants) {
+                    list.add(ConferenceSchedulingParticipantData(participant, false))
+                }
+                conferenceParticipantsData.value = list
             }
-            val list = arrayListOf<ConferenceSchedulingParticipantData>()
-            for (participant in conferenceInfo.participants) {
-                list.add(ConferenceSchedulingParticipantData(participant, false))
-            }
-            conferenceParticipantsData.value = list
         }
     }
 
@@ -176,8 +180,13 @@ class CallLogViewModel(val callLog: CallLog) : GenericContactViewModel(callLog.r
     }
 
     fun destroy() {
-        coreContext.core.removeListener(listener)
-        conferenceParticipantsData.value.orEmpty().forEach(ConferenceSchedulingParticipantData::destroy)
+        if (!isRelated) {
+            coreContext.core.removeListener(listener)
+
+            relatedCallLogs.value.orEmpty().forEach(CallLogViewModel::destroy)
+            conferenceParticipantsData.value.orEmpty()
+                .forEach(ConferenceSchedulingParticipantData::destroy)
+        }
     }
 
     fun startCall() {
@@ -199,5 +208,17 @@ class CallLogViewModel(val callLog: CallLog) : GenericContactViewModel(callLog.r
             Log.e("[History Detail] Couldn't create chat room with address ${callLog.remoteAddress}")
             onMessageToNotifyEvent.value = Event(R.string.chat_room_creation_failed_snack)
         }
+    }
+
+    fun addRelatedCallLogs(callLogs: ArrayList<CallLog>) {
+        val list = arrayListOf<CallLogViewModel>()
+
+        // We assume new logs are more recent than the ones we already have, so we add them first
+        for (callLog in callLogs) {
+            list.add(CallLogViewModel(callLog, true))
+        }
+        list.addAll(relatedCallLogs.value.orEmpty())
+
+        relatedCallLogs.value = list
     }
 }

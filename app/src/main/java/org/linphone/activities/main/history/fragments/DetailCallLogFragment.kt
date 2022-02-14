@@ -69,7 +69,7 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
 
         useMaterialSharedAxisXForwardAnimation = sharedViewModel.isSlidingPaneSlideable.value == false
 
-        viewModel.relatedCallLogs.value = callLogGroup.callLogs
+        viewModel.addRelatedCallLogs(callLogGroup.callLogs)
 
         binding.setBackClickListener {
             goBack()
