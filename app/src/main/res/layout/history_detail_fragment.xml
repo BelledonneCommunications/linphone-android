@@ -190,7 +190,7 @@
 
         <include
             layout="@layout/wait_layout"
-            bind:visibility="@{viewModel.waitForChatRoomCreation}"/>
+            bind:visibility="@{viewModel.waitForChatRoomCreation}" />
 
     </RelativeLayout>
 
