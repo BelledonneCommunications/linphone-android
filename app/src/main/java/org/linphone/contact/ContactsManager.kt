@@ -236,13 +236,15 @@ class ContactsManager(private val context: Context) {
     }
 
     @Synchronized
-    fun findContactByAddress(address: Address): Contact? {
-        val localContact = localAccountsContacts.find { localContact ->
-            localContact.sipAddresses.find { localAddress ->
-                address.weakEqual(localAddress)
-            } != null
+    fun findContactByAddress(address: Address, ignoreLocalContact: Boolean = false): Contact? {
+        if (!ignoreLocalContact) {
+            val localContact = localAccountsContacts.find { localContact ->
+                localContact.sipAddresses.find { localAddress ->
+                    address.weakEqual(localAddress)
+                } != null
+            }
+            if (localContact != null) return localContact
         }
-        if (localContact != null) return localContact
 
         val cleanAddress = address.clone()
         cleanAddress.clean() // To remove gruu if any

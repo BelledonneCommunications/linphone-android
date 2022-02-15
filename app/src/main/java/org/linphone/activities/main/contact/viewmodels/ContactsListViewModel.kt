@@ -28,6 +28,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.contact.Contact
 import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.contact.NativeContact
+import org.linphone.core.SearchResult
 import org.linphone.core.tools.Log
 
 class ContactsListViewModel : ViewModel() {
@@ -36,6 +37,7 @@ class ContactsListViewModel : ViewModel() {
     val contactsList = MutableLiveData<ArrayList<ContactViewModel>>()
 
     val filter = MutableLiveData<String>()
+    private var previousFilter = "NotSet"
 
     private val contactsUpdatedListener = object : ContactsUpdatedListenerStub() {
         override fun onContactsUpdated() {
@@ -57,27 +59,41 @@ class ContactsListViewModel : ViewModel() {
         super.onCleared()
     }
 
-    private fun getSelectedContactsList(): ArrayList<ContactViewModel> {
-        val list = arrayListOf<ContactViewModel>()
-        val source =
-            if (sipContactsSelected.value == true) coreContext.contactsManager.sipContacts
-            else coreContext.contactsManager.contacts
-        for (contact in source) {
-            list.add(ContactViewModel(contact))
-        }
-        return list
-    }
-
     fun updateContactsList() {
-        val list: ArrayList<ContactViewModel>
-
         val filterValue = filter.value.orEmpty()
-        list = if (filterValue.isNotEmpty()) {
-            getSelectedContactsList().filter { contact ->
-                contact.name.contains(filterValue, true)
-            } as ArrayList<ContactViewModel>
-        } else {
-            getSelectedContactsList()
+        contactsList.value.orEmpty().forEach(ContactViewModel::destroy)
+
+        if (previousFilter.isNotEmpty() && previousFilter.length > filterValue.length) {
+            coreContext.contactsManager.magicSearch.resetSearchCache()
+        }
+        previousFilter = filterValue
+
+        val domain = if (sipContactsSelected.value == true) coreContext.core.defaultAccount?.params?.domain ?: "" else ""
+        val results = coreContext.contactsManager.magicSearch.getContactListFromFilter(filterValue, domain)
+
+        val list = arrayListOf<ContactViewModel>()
+        for (result in results) {
+            val contact = searchMatchingContact(result) ?: Contact(searchResult = result)
+            if (contact is NativeContact) {
+                val found = list.find { contactViewModel ->
+                    contactViewModel.contactInternal is NativeContact && contactViewModel.contactInternal.nativeId == contact.nativeId
+                }
+                if (found != null) {
+                    Log.d("[Contacts] Found a search result that matches a native contact [$contact] we already have, skipping")
+                    continue
+                }
+            } else {
+                val found = list.find { contactViewModel ->
+                    contactViewModel.displayName.value == contact.fullName
+                }
+                if (found != null) {
+                    Log.i("[Contacts] Found a search result that matches a contact [$contact] we already have, updating it with the new information")
+                    found.contactInternal.addAddressAndPhoneNumberFromSearchResult(result)
+                    found.updateNumbersAndAddresses(found.contactInternal)
+                    continue
+                }
+            }
+            list.add(ContactViewModel(contact))
         }
 
         contactsList.postValue(list)
@@ -145,5 +161,20 @@ class ContactsListViewModel : ViewModel() {
                 Log.e("[Contacts] $e")
             }
         }
+    }
+
+    private fun searchMatchingContact(searchResult: SearchResult): Contact? {
+        val address = searchResult.address
+
+        if (address != null) {
+            val contact = coreContext.contactsManager.findContactByAddress(address, ignoreLocalContact = true)
+            if (contact != null) return contact
+        }
+
+        if (searchResult.phoneNumber != null) {
+            return coreContext.contactsManager.findContactByPhoneNumber(searchResult.phoneNumber.orEmpty())
+        }
+
+        return null
     }
 }

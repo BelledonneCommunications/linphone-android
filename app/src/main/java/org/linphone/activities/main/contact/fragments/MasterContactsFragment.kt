@@ -173,6 +173,14 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
                 val viewModel = DialogViewModel(getString(R.string.contact_delete_one_dialog))
                 val dialog: Dialog = DialogUtils.getDialog(requireContext(), viewModel)
 
+                val contactViewModel = adapter.currentList[viewHolder.bindingAdapterPosition]
+                if (contactViewModel.isNativeContact.value == false) {
+                    adapter.notifyItemChanged(viewHolder.bindingAdapterPosition)
+                    val activity = requireActivity() as MainActivity
+                    activity.showSnackBar(R.string.contact_cant_be_deleted)
+                    return
+                }
+
                 viewModel.showCancelButton {
                     adapter.notifyItemChanged(viewHolder.bindingAdapterPosition)
                     dialog.dismiss()
@@ -212,6 +220,7 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
             it.consume { contact ->
                 Log.i("[Contacts] Selected item in list changed: $contact")
                 sharedViewModel.selectedContact.value = contact
+                (requireActivity() as MainActivity).hideKeyboard()
 
                 if (editOnClick) {
                     navigateToContactEditor(sipUriToAdd, binding.slidingPane)

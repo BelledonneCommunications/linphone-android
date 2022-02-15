@@ -652,4 +652,5 @@
     <string name="contacts_settings_ldap_sip_domain_title">Domaine</string>
     <string name="contacts_settings_ldap_misc_title">Divers</string>
     <string name="contacts_settings_ldap_debug_title">Débogage</string>
+    <string name="contact_cant_be_deleted">Ce contact ne peut être supprimé</string>
 </resources>

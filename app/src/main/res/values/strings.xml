@@ -114,6 +114,7 @@
     </plurals>
     <string name="contact_new_choose_sync_account">Choose where to save the contact</string>
     <string name="contact_local_sync_account">Store locally</string>
+    <string name="contact_cant_be_deleted">This contact can\'t be deleted</string>
 
     <!-- Dialer -->
     <string name="dialer_address_bar_hint">Enter a number or an address</string>

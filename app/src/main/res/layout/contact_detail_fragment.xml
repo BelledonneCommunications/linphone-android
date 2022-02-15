@@ -52,6 +52,7 @@
 
             <ImageView
                 android:onClick="@{editClickListener}"
+                android:visibility="@{viewModel.isNativeContact ? View.VISIBLE : View.INVISIBLE}"
                 android:contentDescription="@string/content_description_edit_contact"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -62,6 +63,7 @@
 
             <ImageView
                 android:onClick="@{deleteClickListener}"
+                android:visibility="@{viewModel.isNativeContact ? View.VISIBLE : View.INVISIBLE}"
                 android:contentDescription="@string/content_description_delete_contact"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"

@@ -10,7 +10,13 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
-## [4.7.0] - Unreleased
+## [4.6.2] - Unreleased
+
+### Added
+- LDAP settings if SDK is built with OpenLDAP (requires 5.1.1 or higher linphone-sdk), will add contacts if any
+
+### Changed
+- Contacts lists now show LDAP contacts if any, as well as "generated" contacts from SIP addresses you have interacted with
 
 ## [4.6.1] - 2022-02-14
 
