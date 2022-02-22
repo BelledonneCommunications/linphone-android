@@ -121,7 +121,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:textColor="?attr/secondaryTextColor"
                 style="@style/file_transfer_progress_font"
                 android:text="@{data.downloadProgressString, default=`50%`}"/>
 

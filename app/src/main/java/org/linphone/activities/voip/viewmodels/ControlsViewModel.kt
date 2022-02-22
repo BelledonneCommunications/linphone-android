@@ -54,6 +54,8 @@ class ControlsViewModel : ViewModel() {
 
     val isVideoEnabled = MutableLiveData<Boolean>()
 
+    val isVideoSendReceive = MutableLiveData<Boolean>()
+
     val isVideoUpdateInProgress = MutableLiveData<Boolean>()
 
     val isSwitchCameraAvailable = MutableLiveData<Boolean>()
@@ -316,7 +318,20 @@ class ControlsViewModel : ViewModel() {
 
             isVideoUpdateInProgress.value = true
             val params = core.createCallParams(currentCall)
-            params?.isVideoEnabled = !currentCall.currentParams.isVideoEnabled
+            if (currentCall.conference != null) {
+                if (params?.isVideoEnabled == false) {
+                    params.isVideoEnabled = true
+                    params.videoDirection = MediaDirection.SendRecv
+                } else {
+                    if (params?.videoDirection == MediaDirection.SendRecv) {
+                        params.videoDirection = MediaDirection.RecvOnly
+                    } else {
+                        params?.videoDirection = MediaDirection.SendRecv
+                    }
+                }
+            } else {
+                params?.isVideoEnabled = !currentCall.currentParams.isVideoEnabled
+            }
             currentCall.update(params)
         }
     }
@@ -446,8 +461,14 @@ class ControlsViewModel : ViewModel() {
                 }
             }
         }
+
         isVideoEnabled.value = enabled
         isSwitchCameraAvailable.value = enabled && coreContext.showSwitchCameraButton()
+        if (coreContext.core.currentCall?.conference != null) {
+            isVideoSendReceive.value = coreContext.core.currentCall?.currentParams?.videoDirection == MediaDirection.SendRecv
+        } else {
+            isVideoSendReceive.value = true
+        }
     }
 
     private fun shouldProximitySensorBeEnabled(): Boolean {

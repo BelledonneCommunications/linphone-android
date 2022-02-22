@@ -96,7 +96,8 @@ class ConferenceWaitingRoomViewModel : ViewModel() {
         updateMicState()
 
         isVideoAvailable.value = core.isVideoCaptureEnabled || core.isVideoPreviewEnabled
-        callParams.isVideoEnabled = core.videoActivationPolicy.automaticallyInitiate
+        callParams.isVideoEnabled = isVideoAvailable.value == true
+        callParams.videoDirection = if (core.videoActivationPolicy.automaticallyInitiate) MediaDirection.SendRecv else MediaDirection.RecvOnly
         Log.i("[Conference Waiting Room] Video will be ${if (callParams.isVideoEnabled) "enabled" else "disabled"}")
         updateVideoState()
 
@@ -192,14 +193,14 @@ class ConferenceWaitingRoomViewModel : ViewModel() {
             askPermissionEvent.value = Event(Manifest.permission.CAMERA)
             return
         }
-        callParams.isVideoEnabled = !callParams.isVideoEnabled
+        callParams.videoDirection = if (callParams.videoDirection == MediaDirection.SendRecv) MediaDirection.RecvOnly else MediaDirection.SendRecv
         Log.i("[Conference Waiting Room] Video will be ${if (callParams.isVideoEnabled) "enabled" else "disabled"}")
         updateVideoState()
     }
 
     fun enableVideo() {
         Log.i("[Conference Waiting Room] Video will be enabled")
-        callParams.isVideoEnabled = true
+        callParams.videoDirection = MediaDirection.SendRecv
         updateVideoState()
     }
 
@@ -247,7 +248,7 @@ class ConferenceWaitingRoomViewModel : ViewModel() {
     }
 
     private fun updateVideoState() {
-        isVideoEnabled.value = callParams.isVideoEnabled
+        isVideoEnabled.value = callParams.videoDirection == MediaDirection.SendRecv
         isSwitchCameraAvailable.value = callParams.isVideoEnabled && coreContext.showSwitchCameraButton()
         coreContext.core.isVideoPreviewEnabled = callParams.isVideoEnabled
     }
