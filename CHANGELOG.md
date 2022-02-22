@@ -12,6 +12,9 @@ Group changes to describe their impact on the project, as follows:
 
 ## [4.7.0] - Unreleased
 
+### Fixed
+- Negative gain in audio settings is allowed again
+
 ## [4.6.1] - 2022-02-14
 
 ### Fixed
