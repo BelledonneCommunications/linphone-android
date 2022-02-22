@@ -129,7 +129,7 @@
                     linphone:subtitle="@{@string/audio_settings_microphone_gain_summary}"
                     linphone:listener="@{viewModel.microphoneGainListener}"
                     linphone:defaultValue="@{viewModel.microphoneGain.toString()}"
-                    linphone:inputType="@{InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL}"/>
+                    linphone:inputType="@{InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED |  InputType.TYPE_NUMBER_FLAG_DECIMAL}"/>
 
                 <include
                     layout="@layout/settings_widget_text"
@@ -137,7 +137,7 @@
                     linphone:subtitle="@{@string/audio_settings_playback_gain_summary}"
                     linphone:listener="@{viewModel.playbackGainListener}"
                     linphone:defaultValue="@{viewModel.playbackGain.toString()}"
-                    linphone:inputType="@{InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL}"/>
+                    linphone:inputType="@{InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_NUMBER_FLAG_DECIMAL}"/>
 
                 <TextView
                     style="@style/settings_category_font"
