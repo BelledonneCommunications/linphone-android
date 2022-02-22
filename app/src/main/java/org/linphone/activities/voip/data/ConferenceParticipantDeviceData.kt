@@ -21,6 +21,7 @@ package org.linphone.activities.voip.data
 
 import android.graphics.SurfaceTexture
 import android.view.TextureView
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.contact.GenericContactData
@@ -35,7 +36,11 @@ class ConferenceParticipantDeviceData(
     val isMe: Boolean
 ) :
     GenericContactData(participantDevice.address) {
-    val videoEnabled = MutableLiveData<Boolean>()
+    val videoEnabled: MediatorLiveData<Boolean> = MediatorLiveData()
+
+    val videoAvailable = MutableLiveData<Boolean>()
+
+    val videoSendReceive = MutableLiveData<Boolean>()
 
     val activeSpeaker = MutableLiveData<Boolean>()
 
@@ -73,6 +78,7 @@ class ConferenceParticipantDeviceData(
         ) {
             if (streamType == StreamType.Video) {
                 Log.i("[Conference Participant Device] Participant [${participantDevice.address.asStringUriOnly()}] video capability changed to $direction")
+                videoSendReceive.value = direction == MediaDirection.SendRecv
             }
         }
 
@@ -83,7 +89,7 @@ class ConferenceParticipantDeviceData(
         ) {
             if (streamType == StreamType.Video) {
                 Log.i("[Conference Participant Device] Participant [${participantDevice.address.asStringUriOnly()}] video availability changed to ${if (available) "available" else "unavailable"}")
-                videoEnabled.value = available
+                videoAvailable.value = available
                 if (available) {
                     updateWindowId(textureView)
                 }
@@ -96,12 +102,21 @@ class ConferenceParticipantDeviceData(
         participantDevice.addListener(listener)
 
         activeSpeaker.value = false
-        videoEnabled.value = participantDevice.getStreamAvailability(StreamType.Video)
+        videoAvailable.value = participantDevice.getStreamAvailability(StreamType.Video)
+        val videoCapability = participantDevice.getStreamCapability(StreamType.Video)
+        videoSendReceive.value = videoCapability == MediaDirection.SendRecv
         micMuted.value = false // TODO
         isInConference.value = participantDevice.isInConference
 
-        val videoCapability = participantDevice.getStreamCapability(StreamType.Video)
-        Log.i("[Conference Participant Device] Participant [${participantDevice.address.asStringUriOnly()}], is in conf? ${isInConference.value}, is video enabled? ${videoEnabled.value} ($videoCapability)")
+        videoEnabled.value = isVideoAvailableAndSendReceive()
+        videoEnabled.addSource(videoAvailable) {
+            videoEnabled.value = isVideoAvailableAndSendReceive()
+        }
+        videoEnabled.addSource(videoSendReceive) {
+            videoEnabled.value = isVideoAvailableAndSendReceive()
+        }
+
+        Log.i("[Conference Participant Device] Participant [${participantDevice.address.asStringUriOnly()}], is in conf? ${isInConference.value}, is video available? ${videoAvailable.value} ($videoCapability)")
     }
 
     override fun destroy() {
@@ -160,5 +175,9 @@ class ConferenceParticipantDeviceData(
         } else {
             participantDevice.nativeVideoWindowId = windowId
         }
+    }
+
+    private fun isVideoAvailableAndSendReceive(): Boolean {
+        return videoAvailable.value == true && videoSendReceive.value == true
     }
 }
