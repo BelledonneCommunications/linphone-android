@@ -18,6 +18,9 @@ Group changes to describe their impact on the project, as follows:
 ### Changed
 - Contacts lists now show LDAP contacts if any, as well as "generated" contacts from SIP addresses you have interacted with
 
+### Fixed
+- Negative gain in audio settings is allowed again
+
 ## [4.6.1] - 2022-02-14
 
 ### Fixed
