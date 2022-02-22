@@ -105,7 +105,7 @@ class ContactsListAdapter(
         val previousPosition = position - 1
         return if (previousPosition >= 0) {
             val previousItemFirstLetter = getItem(previousPosition).name.first().toString()
-            previousItemFirstLetter != firstLetter
+            !firstLetter.equals(previousItemFirstLetter, ignoreCase = true)
         } else true
     }
 

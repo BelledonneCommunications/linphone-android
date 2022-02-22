@@ -20,6 +20,7 @@ Group changes to describe their impact on the project, as follows:
 
 ### Fixed
 - Negative gain in audio settings is allowed again
+- Contacts list header case comparison
 
 ## [4.6.1] - 2022-02-14
 
