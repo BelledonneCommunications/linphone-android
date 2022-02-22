@@ -28,6 +28,8 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.contact.Contact
 import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.contact.NativeContact
+import org.linphone.core.MagicSearch
+import org.linphone.core.MagicSearchListenerStub
 import org.linphone.core.SearchResult
 import org.linphone.core.tools.Log
 
@@ -35,6 +37,8 @@ class ContactsListViewModel : ViewModel() {
     val sipContactsSelected = MutableLiveData<Boolean>()
 
     val contactsList = MutableLiveData<ArrayList<ContactViewModel>>()
+
+    val fetchInProgress = MutableLiveData<Boolean>()
 
     val filter = MutableLiveData<String>()
     private var previousFilter = "NotSet"
@@ -46,14 +50,24 @@ class ContactsListViewModel : ViewModel() {
         }
     }
 
+    private val magicSearchListener = object : MagicSearchListenerStub() {
+        override fun onSearchResultsReceived(magicSearch: MagicSearch) {
+            processMagicSearchResults(magicSearch.lastSearch)
+            fetchInProgress.value = false
+        }
+    }
+
     init {
         sipContactsSelected.value = coreContext.contactsManager.shouldDisplaySipContactsList()
+        fetchInProgress.value = false
 
         coreContext.contactsManager.addListener(contactsUpdatedListener)
+        coreContext.contactsManager.magicSearch.addListener(magicSearchListener)
     }
 
     override fun onCleared() {
         contactsList.value.orEmpty().forEach(ContactViewModel::destroy)
+        coreContext.contactsManager.magicSearch.removeListener(magicSearchListener)
         coreContext.contactsManager.removeListener(contactsUpdatedListener)
 
         super.onCleared()
@@ -69,8 +83,11 @@ class ContactsListViewModel : ViewModel() {
         previousFilter = filterValue
 
         val domain = if (sipContactsSelected.value == true) coreContext.core.defaultAccount?.params?.domain ?: "" else ""
-        val results = coreContext.contactsManager.magicSearch.getContactListFromFilter(filterValue, domain)
+        fetchInProgress.value = true
+        coreContext.contactsManager.magicSearch.getContactListFromFilterAsync(filterValue, domain)
+    }
 
+    private fun processMagicSearchResults(results: Array<SearchResult>) {
         val list = arrayListOf<ContactViewModel>()
         for (result in results) {
             val contact = searchMatchingContact(result) ?: Contact(searchResult = result)
