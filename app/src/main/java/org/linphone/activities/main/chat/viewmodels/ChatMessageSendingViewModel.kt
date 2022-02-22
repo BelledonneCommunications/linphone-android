@@ -201,6 +201,10 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
     }
 
     fun sendMessage() {
+        if (!isPlayerClosed()) {
+            stopVoiceRecordPlayer()
+        }
+
         val pendingMessageToReplyTo = pendingChatMessageToReplyTo.value
         val message: ChatMessage = if (isPendingAnswer.value == true && pendingMessageToReplyTo != null)
             chatRoom.createReplyMessage(pendingMessageToReplyTo.chatMessage)
@@ -381,6 +385,10 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         isPendingVoiceRecord.value = false
         isVoiceRecording.value = false
         sendMessageEnabled.value = textToSend.value?.isNotEmpty() == true || attachments.value?.isNotEmpty() == true
+
+        if (!isPlayerClosed()) {
+            stopVoiceRecordPlayer()
+        }
     }
 
     fun stopVoiceRecording() {
