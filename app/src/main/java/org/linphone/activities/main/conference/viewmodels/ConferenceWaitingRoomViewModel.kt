@@ -133,6 +133,10 @@ class ConferenceWaitingRoomViewModel : ViewModel() {
     }
 
     fun start() {
+        // Hide menus
+        audioRoutesSelected.value = false
+        layoutMenuSelected.value = false
+
         joinInProgress.value = true
         joinConferenceEvent.value = Event(callParams)
     }

@@ -115,6 +115,14 @@ class ActiveCallOrConferenceFragment : GenericFragment<VoipActiveCallOrConferenc
             }
         }
 
+        conferenceViewModel.conferenceAudioOnlyDisplayMode.observe(
+            viewLifecycleOwner
+        ) {
+            if (it) {
+                startTimer(R.id.audio_only_conference_timer)
+            }
+        }
+
         conferenceViewModel.conferenceParticipantDevices.observe(
             viewLifecycleOwner
         ) {
@@ -237,6 +245,13 @@ class ActiveCallOrConferenceFragment : GenericFragment<VoipActiveCallOrConferenc
             val binding = DataBindingUtil.bind<ViewDataBinding>(inflated)
             binding?.lifecycleOwner = viewLifecycleOwner
             startTimer(R.id.grid_conference_timer)
+        }
+
+        binding.stubbedConferenceAudioOnlyLayout.setOnInflateListener { _, inflated ->
+            Log.i("[Call] Audio only conference layout inflated")
+            val binding = DataBindingUtil.bind<ViewDataBinding>(inflated)
+            binding?.lifecycleOwner = viewLifecycleOwner
+            startTimer(R.id.audio_only_conference_timer)
         }
 
         binding.stubbedAudioRoutes.setOnInflateListener { _, inflated ->
