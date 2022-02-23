@@ -59,6 +59,16 @@
                     app:conferenceViewModel="@{conferenceViewModel}"
                     app:controlsViewModel="@{controlsViewModel}"/>
 
+                <ViewStub
+                    android:id="@+id/stubbed_conference_audio_only_layout"
+                    android:layout="@layout/voip_conference_audio_only"
+                    android:visibility="@{conferenceViewModel.conferenceAudioOnlyDisplayMode &amp;&amp; conferenceViewModel.conferenceExists &amp;&amp; !callsViewModel.currentCallData.isActiveAndNotInConference ? View.VISIBLE : View.GONE, default=gone}"
+                    app:inflatedVisibility="@{conferenceViewModel.conferenceAudioOnlyDisplayMode &amp;&amp; conferenceViewModel.conferenceExists &amp;&amp; !callsViewModel.currentCallData.isActiveAndNotInConference ? View.VISIBLE : View.GONE}"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:conferenceViewModel="@{conferenceViewModel}"
+                    app:controlsViewModel="@{controlsViewModel}"/>
+
                 <include
                     android:id="@+id/remote_layout"
                     layout="@layout/voip_call"

@@ -64,7 +64,7 @@ class ConferenceViewModel : ViewModel() {
             updateParticipantsList(conference)
 
             val count = conferenceParticipants.value.orEmpty().size
-            if (count > maxParticipantsForMosaicLayout) {
+            if (count > maxParticipantsForMosaicLayout && conferenceMosaicDisplayMode.value == true) {
                 Log.w("[Conference] More than $maxParticipantsForMosaicLayout participants ($count), forcing active speaker layout")
                 conferenceMosaicDisplayMode.value = false
                 conferenceActiveSpeakerDisplayMode.value = true
@@ -292,8 +292,9 @@ class ConferenceViewModel : ViewModel() {
 
     private fun updateConferenceLayout(conference: Conference) {
         val layout = conference.layout
-        conferenceMosaicDisplayMode.value = layout == ConferenceLayout.Grid || layout == ConferenceLayout.Legacy
+        conferenceMosaicDisplayMode.value = layout == ConferenceLayout.Grid
         conferenceActiveSpeakerDisplayMode.value = layout == ConferenceLayout.ActiveSpeaker
+        conferenceAudioOnlyDisplayMode.value = layout == ConferenceLayout.Legacy // TODO: FIXME: Use AudioOnly layout
         Log.i("[Conference] Conference current layout is: $layout")
     }
 

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="conferenceViewModel"
+            type="org.linphone.activities.voip.viewmodels.ConferenceViewModel" />
+        <variable
+            name="controlsViewModel"
+            type="org.linphone.activities.voip.viewmodels.ControlsViewModel" />
+        <variable
+            name="inflatedVisibility"
+            type="Integer" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="@{inflatedVisibility}">
+
+        <LinearLayout
+            android:id="@+id/header"
+            android:visibility="@{controlsViewModel.fullScreenMode || controlsViewModel.pipMode ? View.GONE : View.VISIBLE}"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/voip_call_header_height"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentTop="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/call_header_title"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="@{conferenceViewModel.subject, default=@string/conference_default_title}"/>
+
+                <Chronometer
+                    android:id="@+id/audio_only_conference_timer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/call_header_subtitle" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:onClick="@{() -> conferenceViewModel.toggleRecording()}"
+                android:selected="@{conferenceViewModel.isRecording}"
+                android:layout_height="40dp"
+                android:layout_width="40dp"
+                android:background="@drawable/button_call_recording_background"
+                android:src="@drawable/icon_call_record"
+                android:contentDescription="@string/content_description_toggle_recording"
+                android:padding="7dp"
+                android:layout_marginEnd="10dp"/>
+
+            <ImageView
+                android:onClick="@{() -> conferenceViewModel.pauseConference()}"
+                android:selected="@{conferenceViewModel.isConferenceLocallyPaused}"
+                android:enabled="@{!conferenceViewModel.conferenceCreationPending}"
+                android:layout_height="40dp"
+                android:layout_width="40dp"
+                android:background="@drawable/button_toggle_background"
+                android:src="@drawable/icon_pause"
+                android:contentDescription="@string/content_description_pause_call"
+                android:padding="5dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/remote_recording"
+            android:visibility="@{conferenceViewModel.isRemotelyRecorded ? View.VISIBLE : View.GONE, default=gone}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/header"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/shape_remote_recording_background">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/voip_remote_recording"
+                android:contentDescription="@null"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                style="@style/call_remote_recording_font"
+                android:layout_marginStart="10dp"
+                android:text="@string/call_remote_recording"/>
+
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:background="@drawable/shape_remote_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/remote_recording"
+            android:layout_above="@id/miniatures">
+
+            <include
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_margin="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHeight_max="200dp"
+                app:data="@{conferenceViewModel.speakingParticipant}"
+                layout="@layout/voip_contact_avatar"/>
+
+            <TextView
+                android:text="@{conferenceViewModel.speakingParticipant.contact.fullName ?? conferenceViewModel.speakingParticipant.displayName}"
+                style="@style/call_remote_name_font"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </RelativeLayout>
+
+</layout>

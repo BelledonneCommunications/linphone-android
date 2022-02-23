@@ -74,6 +74,20 @@ class ConferenceLayoutFragment : GenericFragment<VoipConferenceLayoutFragmentBin
             }
         }
 
+        conferenceViewModel.conferenceAudioOnlyDisplayMode.observe(
+            viewLifecycleOwner
+        ) {
+            if (it) {
+                Log.i("[Conference] Trying to change conference layout to AudioOnly")
+                val conference = conferenceViewModel.conference.value
+                if (conference != null) {
+                    conference.layout = ConferenceLayout.Legacy // TODO: FIXME: Use AudioOnly
+                } else {
+                    Log.e("[Conference] Conference is null in ConferenceViewModel")
+                }
+            }
+        }
+
         conferenceViewModel.conferenceParticipantDevices.observe(
             viewLifecycleOwner
         ) {
