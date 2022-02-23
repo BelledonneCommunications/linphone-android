@@ -299,6 +299,17 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             chatSendingViewModel.onTextToSendChanged(it)
         }
 
+        chatSendingViewModel.isVoiceRecording.observe(
+            viewLifecycleOwner
+        ) { voiceRecording ->
+            // Keep screen on while recording voice message
+            if (voiceRecording) {
+                requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            } else {
+                requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            }
+        }
+
         chatSendingViewModel.requestRecordAudioPermissionEvent.observe(
             viewLifecycleOwner
         ) {
