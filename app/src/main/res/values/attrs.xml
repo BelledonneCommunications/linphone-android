@@ -37,6 +37,9 @@
         <attr name="voipExtraButtonsBackgroundColor" format="color" />
         <attr name="voipToolbarBackgroundColor" format="color" />
         <attr name="voipDrawableColor" format="color" />
+        <attr name="voipDrawableColor2" format="color" />
+        <attr name="voipDrawablePressedColor" format="color" />
+        <attr name="voipDrawableDisabledColor" format="color" />
         <attr name="voipTextColor" format="color" />
         <attr name="voipTextColor2" format="color" />
         <attr name="voipFormBackgroundColor" format="color" />

@@ -58,6 +58,9 @@
         <item name="voipExtraButtonsBackgroundColor">@color/voip_gray</item>
         <item name="voipToolbarBackgroundColor">@color/toolbar_color</item>
         <item name="voipDrawableColor">@color/voip_dark_gray</item>
+        <item name="voipDrawableColor2">@color/white_color</item>
+        <item name="voipDrawablePressedColor">@color/voip_dark_gray</item>
+        <item name="voipDrawableDisabledColor">@color/light_grey_color</item>
         <item name="voipTextColor">@color/voip_dark_gray</item>
         <item name="voipTextColor2">@color/voip_dark_gray</item>
         <item name="voipFormBackgroundColor">@color/form_field_gray_background</item>

@@ -136,7 +136,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginTop="20dp"
-                app:drawableTopCompat="@drawable/icon_conf_layout"
+                android:drawableTop="@{conferenceViewModel.conferenceActiveSpeakerDisplayMode ? @drawable/icon_conference_layout_active_speaker : conferenceViewModel.conferenceAudioOnlyDisplayMode ? @drawable/icon_conference_layout_audio_only : @drawable/icon_conference_layout_grid, default=@drawable/icon_conference_layout_grid}"
                 android:gravity="center"
                 style="@style/call_options_font"
                 android:text="@string/call_action_change_conf_layout"/>
