@@ -42,6 +42,12 @@ class ConferenceWaitingRoomViewModel : ViewModel() {
 
     val isBluetoothHeadsetSelected = MutableLiveData<Boolean>()
 
+    val layoutMenuSelected = MutableLiveData<Boolean>()
+
+    val isActiveSpeakerLayoutSelected = MutableLiveData<Boolean>()
+
+    val isAudioOnlyLayoutSelected = MutableLiveData<Boolean>()
+
     val isVideoAvailable = MutableLiveData<Boolean>()
 
     val isVideoEnabled = MutableLiveData<Boolean>()
@@ -94,6 +100,11 @@ class ConferenceWaitingRoomViewModel : ViewModel() {
         callParams.isMicEnabled = PermissionHelper.get().hasRecordAudioPermission()
         Log.i("[Conference Waiting Room] Microphone will be ${if (callParams.isMicEnabled) "enabled" else "muted"}")
         updateMicState()
+
+        layoutMenuSelected.value = false
+        isActiveSpeakerLayoutSelected.value = false
+        isAudioOnlyLayoutSelected.value = false
+        updateLayout()
 
         isVideoAvailable.value = core.isVideoCaptureEnabled || core.isVideoPreviewEnabled
         callParams.isVideoEnabled = isVideoAvailable.value == true
@@ -188,6 +199,31 @@ class ConferenceWaitingRoomViewModel : ViewModel() {
         updateAudioRouteState()
     }
 
+    fun toggleLayoutMenu() {
+        layoutMenuSelected.value = layoutMenuSelected.value != true
+    }
+
+    fun setMosaicLayout() {
+        Log.i("[Conference Waiting Room] Set default layout to Mosaic")
+        coreContext.core.defaultConferenceLayout = ConferenceLayout.Grid
+        updateLayout()
+        layoutMenuSelected.value = false
+    }
+
+    fun setActiveSpeakerLayout() {
+        Log.i("[Conference Waiting Room] Set default layout to ActiveSpeaker")
+        coreContext.core.defaultConferenceLayout = ConferenceLayout.ActiveSpeaker
+        updateLayout()
+        layoutMenuSelected.value = false
+    }
+
+    fun setAudioOnlyLayout() {
+        Log.i("[Conference Waiting Room] Set default layout to AudioOnly")
+        coreContext.core.defaultConferenceLayout = ConferenceLayout.Legacy // TODO: FIXME: Replace Legacy by AudioOnly
+        updateLayout()
+        layoutMenuSelected.value = false
+    }
+
     fun toggleVideo() {
         if (!PermissionHelper.get().hasCameraPermission()) {
             askPermissionEvent.value = Event(Manifest.permission.CAMERA)
@@ -245,6 +281,12 @@ class ConferenceWaitingRoomViewModel : ViewModel() {
         val outputDeviceType = callParams.outputAudioDevice?.type
         isSpeakerSelected.value = outputDeviceType == AudioDevice.Type.Speaker
         isBluetoothHeadsetSelected.value = outputDeviceType == AudioDevice.Type.Bluetooth
+    }
+
+    private fun updateLayout() {
+        val layout = coreContext.core.defaultConferenceLayout
+        isActiveSpeakerLayoutSelected.value = layout == ConferenceLayout.ActiveSpeaker
+        isAudioOnlyLayoutSelected.value = layout == ConferenceLayout.Legacy // TODO: FIXME: Replace Legacy by AudioOnly
     }
 
     private fun updateVideoState() {

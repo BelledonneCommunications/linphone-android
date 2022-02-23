@@ -807,4 +807,5 @@
     <string name="content_description_hide_numpad">Hide numpad</string>
     <string name="content_description_go_to_chat_rooms_list">Go to conversations list</string>
     <string name="content_description_conference_participant_mic_muted">Participant has it\'s microphone muted</string>
+    <string name="content_description_toggle_layout_menu">Show or hide conference layout menu</string>
 </resources>
