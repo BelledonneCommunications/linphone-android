@@ -20,16 +20,16 @@
 package org.linphone.compatibility
 
 import android.annotation.TargetApi
-import android.app.Notification
-import android.app.PendingIntent
-import android.app.Person
+import android.app.*
 import android.content.Context
+import android.content.Intent
 import androidx.core.content.ContextCompat
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.contact.Contact
 import org.linphone.core.Call
+import org.linphone.core.tools.Log
 import org.linphone.notifications.Notifiable
 import org.linphone.notifications.NotificationsManager
 import org.linphone.utils.ImageUtils
@@ -138,6 +138,22 @@ class Api31Compatibility {
             }
 
             return builder.build()
+        }
+
+        fun startForegroundService(context: Context, intent: Intent) {
+            try {
+                Compatibility.startForegroundService(context, intent)
+            } catch (fssnae: ForegroundServiceStartNotAllowedException) {
+                Log.e("[Api31 Compatibility] Can't start service as foreground! $fssnae")
+            }
+        }
+
+        fun startForegroundService(service: Service, notifId: Int, notif: Notification?) {
+            try {
+                service.startForeground(notifId, notif)
+            } catch (fssnae: ForegroundServiceStartNotAllowedException) {
+                Log.e("[Api31 Compatibility] Can't start service as foreground! $fssnae")
+            }
         }
     }
 }

@@ -21,8 +21,7 @@ package org.linphone.compatibility
 
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
-import android.app.Activity
-import android.app.PendingIntent
+import android.app.*
 import android.bluetooth.BluetoothAdapter
 import android.content.ContentValues
 import android.content.Context
@@ -244,6 +243,10 @@ class Api21Compatibility {
 
         fun startForegroundService(context: Context, intent: Intent) {
             context.startService(intent)
+        }
+
+        fun startForegroundService(service: Service, notifId: Int, notif: Notification?) {
+            service.startForeground(notifId, notif)
         }
     }
 }

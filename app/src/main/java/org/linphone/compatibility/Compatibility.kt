@@ -22,6 +22,7 @@ package org.linphone.compatibility
 import android.app.Activity
 import android.app.Notification
 import android.app.PendingIntent
+import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -202,10 +203,20 @@ class Compatibility {
         }
 
         fun startForegroundService(context: Context, intent: Intent) {
-            if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
+            if (Version.sdkAboveOrEqual(Version.API31_ANDROID_12)) {
+                Api31Compatibility.startForegroundService(context, intent)
+            } else if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
                 Api26Compatibility.startForegroundService(context, intent)
             } else {
                 Api21Compatibility.startForegroundService(context, intent)
+            }
+        }
+
+        fun startForegroundService(service: Service, notifId: Int, notif: Notification?) {
+            if (Version.sdkAboveOrEqual(Version.API31_ANDROID_12)) {
+                Api31Compatibility.startForegroundService(service, notifId, notif)
+            } else {
+                Api21Compatibility.startForegroundService(service, notifId, notif)
             }
         }
 

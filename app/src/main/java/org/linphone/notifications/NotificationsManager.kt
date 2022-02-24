@@ -340,7 +340,7 @@ class NotificationsManager(private val context: Context) {
         }
         currentForegroundServiceNotificationId = SERVICE_NOTIF_ID
         Log.i("[Notifications Manager] Starting service as foreground [$currentForegroundServiceNotificationId]")
-        coreService.startForeground(currentForegroundServiceNotificationId, serviceNotification)
+        Compatibility.startForegroundService(coreService, currentForegroundServiceNotificationId, serviceNotification)
         service = coreService
     }
 
