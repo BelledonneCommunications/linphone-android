@@ -176,7 +176,7 @@ class TelecomConnectionService : ConnectionService() {
 
     private fun onCallError(call: Call) {
         val callId = call.callLog.callId
-        val connection = TelecomHelper.get().findConnectionForCallId(callId)
+        val connection = TelecomHelper.get().findConnectionForCallId(callId.orEmpty())
         if (connection == null) {
             Log.e("[Telecom Connection Service] Failed to find connection for call id: $callId")
             return
@@ -189,7 +189,7 @@ class TelecomConnectionService : ConnectionService() {
 
     private fun onCallEnded(call: Call) {
         val callId = call.callLog.callId
-        val connection = TelecomHelper.get().findConnectionForCallId(callId)
+        val connection = TelecomHelper.get().findConnectionForCallId(callId.orEmpty())
         if (connection == null) {
             Log.e("[Telecom Connection Service] Failed to find connection for call id: $callId")
             return
@@ -204,7 +204,7 @@ class TelecomConnectionService : ConnectionService() {
 
     private fun onCallConnected(call: Call) {
         val callId = call.callLog.callId
-        val connection = TelecomHelper.get().findConnectionForCallId(callId)
+        val connection = TelecomHelper.get().findConnectionForCallId(callId.orEmpty())
         if (connection == null) {
             Log.e("[Telecom Connection Service] Failed to find connection for call id: $callId")
             return
