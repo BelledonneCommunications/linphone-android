@@ -14,6 +14,8 @@ Group changes to describe their impact on the project, as follows:
 
 ### Added
 - LDAP settings if SDK is built with OpenLDAP (requires 5.1.1 or higher linphone-sdk), will add contacts if any
+- SIP addresses & phone numbers can be selected in history & contact details view
+- Prevent screen to turn off while recording a voice message
 
 ### Changed
 - Contacts lists now show LDAP contacts if any, as well as "generated" contacts from SIP addresses you have interacted with
@@ -21,6 +23,7 @@ Group changes to describe their impact on the project, as follows:
 ### Fixed
 - Negative gain in audio settings is allowed again
 - Contacts list header case comparison
+- Stop voice recording playback when sending chat message
 
 ## [4.6.1] - 2022-02-14
 

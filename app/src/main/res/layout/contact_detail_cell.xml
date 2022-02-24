@@ -70,6 +70,7 @@
             android:fadingEdge="horizontal"
             android:gravity="center"
             android:marqueeRepeatLimit="marquee_forever"
+            android:textIsSelectable="true"
             android:scrollHorizontally="true"
             android:singleLine="true" />
 
