@@ -22,6 +22,7 @@ Group changes to describe their impact on the project, as follows:
 
 ### Fixed
 - Negative gain in audio settings is allowed again
+- STUN server URL setting not enabling it for non sip.linphone.org accounts
 - Contacts list header case comparison
 - Stop voice recording playback when sending chat message
 

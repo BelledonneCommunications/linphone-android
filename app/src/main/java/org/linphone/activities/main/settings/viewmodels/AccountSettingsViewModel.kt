@@ -301,11 +301,13 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
                 Log.w("[Account Settings] No NAT Policy object in account params yet")
                 val natPolicy = core.createNatPolicy()
                 natPolicy.stunServer = newValue
+                natPolicy.isStunEnabled = newValue.isNotEmpty()
                 params.natPolicy = natPolicy
             } else {
                 params.natPolicy?.stunServer = newValue
-                if (newValue.isEmpty()) ice.value = false
+                params.natPolicy?.isStunEnabled = newValue.isNotEmpty()
             }
+            if (newValue.isEmpty()) ice.value = false
             stunServer.value = newValue
             account.params = params
         }
