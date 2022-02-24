@@ -18,6 +18,7 @@ Group changes to describe their impact on the project, as follows:
 ### Added
 - LDAP settings if SDK is built with OpenLDAP (requires 5.1.1 or higher linphone-sdk), will add contacts if any
 - SIP addresses & phone numbers can be selected in history & contact details view
+- Text can be selected in file viewer & config viewer
 - Prevent screen to turn off while recording a voice message
 
 ### Changed

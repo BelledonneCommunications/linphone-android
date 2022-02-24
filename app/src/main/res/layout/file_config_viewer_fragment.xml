@@ -64,7 +64,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:singleLine="false"
-                android:text="@{viewModel.text}"/>
+                android:textIsSelectable="true"
+                android:text="@{viewModel.text}" />
 
         </ScrollView>
 
