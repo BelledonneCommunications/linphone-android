@@ -50,19 +50,23 @@ class NativeContactEditor(val contact: NativeContact) {
                 val uri = result.uri
                 Log.i("[Native Contact Editor] Contact creation result is $uri")
                 if (uri != null) {
-                    val cursor = contentResolver.query(
-                        uri,
-                        arrayOf(RawContacts.CONTACT_ID),
-                        null,
-                        null,
-                        null
-                    )
-                    if (cursor != null) {
-                        cursor.moveToNext()
-                        val contactId: Long = cursor.getLong(0)
-                        Log.i("[Native Contact Editor] New contact id is $contactId")
-                        cursor.close()
-                        return contactId
+                    try {
+                        val cursor = contentResolver.query(
+                            uri,
+                            arrayOf(RawContacts.CONTACT_ID),
+                            null,
+                            null,
+                            null
+                        )
+                        if (cursor != null) {
+                            cursor.moveToNext()
+                            val contactId: Long = cursor.getLong(0)
+                            Log.i("[Native Contact Editor] New contact id is $contactId")
+                            cursor.close()
+                            return contactId
+                        }
+                    } catch (e: Exception) {
+                        Log.e("[Native Contact Editor] Failed to get cursor: $e")
                     }
                 }
             }
