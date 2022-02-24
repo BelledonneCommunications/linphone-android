@@ -20,12 +20,9 @@
 package org.linphone.compatibility
 
 import android.annotation.TargetApi
-import android.app.Activity
-import android.app.Notification
-import android.app.PendingIntent
-import android.app.Person
-import android.app.PictureInPictureParams
+import android.app.*
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -148,6 +145,22 @@ class Api31Compatibility {
             }
 
             return builder.build()
+        }
+
+        fun startForegroundService(context: Context, intent: Intent) {
+            try {
+                Compatibility.startForegroundService(context, intent)
+            } catch (fssnae: ForegroundServiceStartNotAllowedException) {
+                Log.e("[Api31 Compatibility] Can't start service as foreground! $fssnae")
+            }
+        }
+
+        fun startForegroundService(service: Service, notifId: Int, notif: Notification?) {
+            try {
+                service.startForeground(notifId, notif)
+            } catch (fssnae: ForegroundServiceStartNotAllowedException) {
+                Log.e("[Api31 Compatibility] Can't start service as foreground! $fssnae")
+            }
         }
 
         fun enableAutoEnterPiP(activity: Activity, enable: Boolean) {
