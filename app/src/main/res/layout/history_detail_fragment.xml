@@ -105,6 +105,7 @@
 
                 <org.linphone.views.MarqueeTextView
                     android:text="@{viewModel.peerSipUri}"
+                    android:textIsSelectable="true"
                     style="@style/sip_uri_font"
                     android:singleLine="true"
                     android:layout_width="wrap_content"
