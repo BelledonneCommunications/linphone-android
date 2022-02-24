@@ -99,17 +99,23 @@ android {
             outputFileName = "linphone-android-${variant.buildType.name}-${project.version}.apk"
         }
 
+        var enableFirebaseService = "false"
+        if (firebaseEnabled) {
+            enableFirebaseService = "true"
+        }
         // See https://developer.android.com/studio/releases/gradle-plugin#3-6-0-behavior for why extractNativeLibs is set to true in debug flavor
         if (variant.buildType.name == "release" || variant.buildType.name == "releaseWithCrashlytics") {
             variant.getMergedFlavor().manifestPlaceholders = [linphone_address_mime_type: "vnd.android.cursor.item/vnd." + getPackageName() + ".provider.sip_address",
-                                                            linphone_file_provider: getPackageName() + ".fileprovider",
-                                                            appLabel: "@string/app_name",
-                                                            extractNativeLibs: "false"]
+                                                              linphone_file_provider: getPackageName() + ".fileprovider",
+                                                              appLabel: "@string/app_name",
+                                                              firebaseServiceEnabled: enableFirebaseService,
+                                                              extractNativeLibs: "false"]
         } else {
             variant.getMergedFlavor().manifestPlaceholders = [linphone_address_mime_type: "vnd.android.cursor.item/vnd." + getPackageName() + ".provider.sip_address",
-                                                            linphone_file_provider: getPackageName() + ".debug.fileprovider",
-                                                            appLabel: "@string/app_name_debug",
-                                                            extractNativeLibs: "true"]
+                                                              linphone_file_provider: getPackageName() + ".debug.fileprovider",
+                                                              appLabel: "@string/app_name_debug",
+                                                              firebaseServiceEnabled: enableFirebaseService,
+                                                              extractNativeLibs: "true"]
         }
     }
 
