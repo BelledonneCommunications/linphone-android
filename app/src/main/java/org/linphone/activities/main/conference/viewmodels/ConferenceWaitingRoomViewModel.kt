@@ -106,7 +106,7 @@ class ConferenceWaitingRoomViewModel : ViewModel() {
         isAudioOnlyLayoutSelected.value = false
         updateLayout()
 
-        isVideoAvailable.value = core.isVideoCaptureEnabled || core.isVideoPreviewEnabled
+        isVideoAvailable.value = isAudioOnlyLayoutSelected.value == false && (core.isVideoCaptureEnabled || core.isVideoPreviewEnabled)
         callParams.isVideoEnabled = isVideoAvailable.value == true
         callParams.videoDirection = if (core.videoActivationPolicy.automaticallyInitiate) MediaDirection.SendRecv else MediaDirection.RecvOnly
         Log.i("[Conference Waiting Room] Video will be ${if (callParams.isVideoEnabled) "enabled" else "disabled"}")
@@ -233,6 +233,7 @@ class ConferenceWaitingRoomViewModel : ViewModel() {
             askPermissionEvent.value = Event(Manifest.permission.CAMERA)
             return
         }
+        callParams.isVideoEnabled = isVideoAvailable.value == true
         callParams.videoDirection = if (callParams.videoDirection == MediaDirection.SendRecv) MediaDirection.RecvOnly else MediaDirection.SendRecv
         Log.i("[Conference Waiting Room] Video will be ${if (callParams.isVideoEnabled) "enabled" else "disabled"}")
         updateVideoState()
@@ -240,6 +241,7 @@ class ConferenceWaitingRoomViewModel : ViewModel() {
 
     fun enableVideo() {
         Log.i("[Conference Waiting Room] Video will be enabled")
+        callParams.isVideoEnabled = isVideoAvailable.value == true
         callParams.videoDirection = MediaDirection.SendRecv
         updateVideoState()
     }
@@ -288,13 +290,19 @@ class ConferenceWaitingRoomViewModel : ViewModel() {
     }
 
     private fun updateLayout() {
-        val layout = coreContext.core.defaultConferenceLayout
+        val core = coreContext.core
+        val layout = core.defaultConferenceLayout
         isActiveSpeakerLayoutSelected.value = layout == ConferenceLayout.ActiveSpeaker
         isAudioOnlyLayoutSelected.value = layout == ConferenceLayout.Legacy // TODO: FIXME: Replace Legacy by AudioOnly
+
+        isVideoAvailable.value = isAudioOnlyLayoutSelected.value == false && (core.isVideoCaptureEnabled || core.isVideoPreviewEnabled)
+        callParams.isVideoEnabled = isVideoAvailable.value == true && isAudioOnlyLayoutSelected.value == false
+        if (isAudioOnlyLayoutSelected.value == true) callParams.videoDirection = MediaDirection.RecvOnly
+        updateVideoState()
     }
 
     private fun updateVideoState() {
-        isVideoEnabled.value = callParams.videoDirection == MediaDirection.SendRecv
+        isVideoEnabled.value = callParams.isVideoEnabled && callParams.videoDirection == MediaDirection.SendRecv
         isSwitchCameraAvailable.value = callParams.isVideoEnabled && coreContext.showSwitchCameraButton()
         coreContext.core.isVideoPreviewEnabled = callParams.isVideoEnabled
     }
