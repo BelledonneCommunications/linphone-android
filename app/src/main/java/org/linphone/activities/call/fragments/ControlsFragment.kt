@@ -24,7 +24,6 @@ import android.animation.ValueAnimator
 import android.annotation.TargetApi
 import android.app.Dialog
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
 import android.os.SystemClock

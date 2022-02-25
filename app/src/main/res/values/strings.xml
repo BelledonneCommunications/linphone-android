@@ -509,6 +509,8 @@
     <string name="contacts_settings_ldap_search_max_results_title">Max results</string>
     <string name="contacts_settings_ldap_search_timeout_title">Timeout</string>
     <string name="contacts_settings_ldap_search_timeout_subtitle">In seconds</string>
+    <string name="contacts_settings_ldap_request_delay_title">Delay between two requests</string>
+    <string name="contacts_settings_ldap_request_delay_subtitle">In milliseconds</string>
     <string name="contacts_settings_ldap_parsing_title">Parsing</string>
     <string name="contacts_settings_ldap_name_attribute_title">Name attributes</string>
     <string name="contacts_settings_ldap_sip_attribute_title">SIP attributes</string>

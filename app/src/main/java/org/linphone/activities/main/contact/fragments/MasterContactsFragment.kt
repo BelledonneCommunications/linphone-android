@@ -257,13 +257,13 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
         listViewModel.sipContactsSelected.observe(
             viewLifecycleOwner
         ) {
-            listViewModel.updateContactsList()
+            listViewModel.updateContactsList(true)
         }
 
         listViewModel.filter.observe(
             viewLifecycleOwner
         ) {
-            listViewModel.updateContactsList()
+            listViewModel.updateContactsList(false)
         }
 
         binding.setNewContactClickListener {

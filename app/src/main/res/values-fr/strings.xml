@@ -624,6 +624,7 @@
     <string name="about_weblate_translation">Contribuer aux traductions</string>
     <string name="assistant_generic_account_warning">Certaines fonctionnalités avancées comme les messages de groupe ou les messages éphémères nécessitent un compte &appName;.\n\nElles seront masquées dans l\'application si vous configurez un compte SIP tiers.\n\nSi vous souhaitez les activer pour un projet professionnel, contactez-nous.</string>
     <string name="assistant_generic_account_warning_continue_button_text">J\'ai compris</string>
+    <string name="contacts_settings_create_new_ldap_config_title">Nouvelle configuration LDAP</string>
     <string name="contacts_settings_ldap_title">LDAP</string>
     <string name="contacts_settings_ldap_enable_title">Activer</string>
     <string name="contacts_settings_ldap_delete_title">Supprimer</string>
@@ -646,6 +647,8 @@
     <string name="contacts_settings_ldap_search_max_results_title">Résultats maximum</string>
     <string name="contacts_settings_ldap_search_timeout_title">Durée max</string>
     <string name="contacts_settings_ldap_search_timeout_subtitle">En secondes</string>
+    <string name="contacts_settings_ldap_request_delay_title">Délai entre 2 requêtes</string>
+    <string name="contacts_settings_ldap_request_delay_subtitle">En millisecondes</string>
     <string name="contacts_settings_ldap_parsing_title">Analyse</string>
     <string name="contacts_settings_ldap_name_attribute_title">Attributs de nom</string>
     <string name="contacts_settings_ldap_sip_attribute_title">Attributs SIP</string>

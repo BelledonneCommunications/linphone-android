@@ -178,6 +178,20 @@ class LdapSettingsViewModel(private val ldap: Ldap, val index: String) : Generic
     }
     val ldapSearchTimeout = MutableLiveData<Int>()
 
+    val ldapRequestDelayListener = object : SettingListenerStub() {
+        override fun onTextValueChanged(newValue: String) {
+            try {
+                val intValue = newValue.toInt()
+                val params = ldap.params.clone()
+                params.delay = intValue
+                ldap.params = params
+            } catch (nfe: NumberFormatException) {
+                Log.e("[LDAP Settings] Failed to set request delay ($newValue): $nfe")
+            }
+        }
+    }
+    val ldapRequestDelay = MutableLiveData<Int>()
+
     val ldapNameAttributeListener = object : SettingListenerStub() {
         override fun onTextValueChanged(newValue: String) {
             val params = ldap.params.clone()
@@ -226,6 +240,7 @@ class LdapSettingsViewModel(private val ldap: Ldap, val index: String) : Generic
         ldapSearchFilter.value = params.filter
         ldapSearchMaxResults.value = params.maxResults
         ldapSearchTimeout.value = params.timeout
+        ldapRequestDelay.value = params.delay
         ldapNameAttribute.value = params.nameAttribute
         ldapSipAttribute.value = params.sipAttribute
         ldapSipDomain.value = params.sipDomain

@@ -169,6 +169,14 @@
                     linphone:defaultValue="@{viewModel.ldapSearchTimeout.toString()}"
                     linphone:inputType="@{InputType.TYPE_CLASS_NUMBER}"/>
 
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/contacts_settings_ldap_request_delay_title}"
+                    linphone:subtitle="@{@string/contacts_settings_ldap_request_delay_subtitle}"
+                    linphone:listener="@{viewModel.ldapRequestDelayListener}"
+                    linphone:defaultValue="@{viewModel.ldapRequestDelay.toString()}"
+                    linphone:inputType="@{InputType.TYPE_CLASS_NUMBER}"/>
+
                 <TextView
                     style="@style/settings_category_font"
                     android:text="@string/contacts_settings_ldap_parsing_title"
