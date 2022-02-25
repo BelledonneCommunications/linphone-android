@@ -26,8 +26,6 @@ import androidx.navigation.navGraphViewModels
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.voip.viewmodels.ConferenceViewModel
-import org.linphone.core.ConferenceLayout
-import org.linphone.core.tools.Log
 import org.linphone.databinding.VoipConferenceLayoutFragmentBinding
 
 class ConferenceLayoutFragment : GenericFragment<VoipConferenceLayoutFragmentBinding>() {
@@ -44,48 +42,6 @@ class ConferenceLayoutFragment : GenericFragment<VoipConferenceLayoutFragmentBin
 
         binding.setCancelClickListener {
             goBack()
-        }
-
-        conferenceViewModel.conferenceMosaicDisplayMode.observe(
-            viewLifecycleOwner
-        ) {
-            if (it) {
-                Log.i("[Conference] Trying to change conference layout to Grid")
-                val conference = conferenceViewModel.conference.value
-                if (conference != null) {
-                    conference.layout = ConferenceLayout.Grid
-                } else {
-                    Log.e("[Conference] Conference is null in ConferenceViewModel")
-                }
-            }
-        }
-
-        conferenceViewModel.conferenceActiveSpeakerDisplayMode.observe(
-            viewLifecycleOwner
-        ) {
-            if (it) {
-                Log.i("[Conference] Trying to change conference layout to ActiveSpeaker")
-                val conference = conferenceViewModel.conference.value
-                if (conference != null) {
-                    conference.layout = ConferenceLayout.ActiveSpeaker
-                } else {
-                    Log.e("[Conference] Conference is null in ConferenceViewModel")
-                }
-            }
-        }
-
-        conferenceViewModel.conferenceAudioOnlyDisplayMode.observe(
-            viewLifecycleOwner
-        ) {
-            if (it) {
-                Log.i("[Conference] Trying to change conference layout to AudioOnly")
-                val conference = conferenceViewModel.conference.value
-                if (conference != null) {
-                    conference.layout = ConferenceLayout.Legacy // TODO: FIXME: Use AudioOnly
-                } else {
-                    Log.e("[Conference] Conference is null in ConferenceViewModel")
-                }
-            }
         }
 
         conferenceViewModel.conferenceParticipantDevices.observe(

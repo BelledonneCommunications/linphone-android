@@ -290,11 +290,26 @@ class ConferenceViewModel : ViewModel() {
         }
     }
 
+    fun changeLayout(layout: ConferenceLayout) {
+        Log.i("[Conference] Trying to change conference layout to $layout")
+        val conference = conference.value
+        if (conference != null) {
+            conference.layout = layout
+            updateConferenceLayout(conference)
+        } else {
+            Log.e("[Conference] Conference is null in ConferenceViewModel")
+        }
+    }
+
     private fun updateConferenceLayout(conference: Conference) {
         val layout = conference.layout
         conferenceMosaicDisplayMode.value = layout == ConferenceLayout.Grid
         conferenceActiveSpeakerDisplayMode.value = layout == ConferenceLayout.ActiveSpeaker
         conferenceAudioOnlyDisplayMode.value = layout == ConferenceLayout.Legacy // TODO: FIXME: Use AudioOnly layout
+
+        val list = sortDevicesDataList(conferenceParticipantDevices.value.orEmpty())
+        conferenceParticipantDevices.value = list
+
         Log.i("[Conference] Conference current layout is: $layout")
     }
 
@@ -372,11 +387,13 @@ class ConferenceViewModel : ViewModel() {
         val deviceData = ConferenceParticipantDeviceData(device, false)
         devices.add(deviceData)
 
+        val sortedDevices = sortDevicesDataList(devices)
+
         if (speakingParticipant.value == null) {
             speakingParticipant.value = deviceData
         }
 
-        conferenceParticipantDevices.value = devices
+        conferenceParticipantDevices.value = sortedDevices
     }
 
     private fun removeParticipantDevice(device: ParticipantDevice) {
@@ -394,5 +411,29 @@ class ConferenceViewModel : ViewModel() {
         }
 
         conferenceParticipantDevices.value = devices
+    }
+
+    private fun sortDevicesDataList(devices: List<ConferenceParticipantDeviceData>): ArrayList<ConferenceParticipantDeviceData> {
+        val sortedList = arrayListOf<ConferenceParticipantDeviceData>()
+        sortedList.addAll(devices)
+
+        val meDeviceData = sortedList.find {
+            it.isMe
+        }
+        if (meDeviceData != null) {
+            val index = sortedList.indexOf(meDeviceData)
+            val expectedIndex = if (conferenceActiveSpeakerDisplayMode.value == true) {
+                0
+            } else {
+                sortedList.size - 1
+            }
+            if (index != expectedIndex) {
+                Log.i("[Conference] Me device data is at index $index, moving it to index $expectedIndex")
+                sortedList.removeAt(index)
+                sortedList.add(expectedIndex, meDeviceData)
+            }
+        }
+
+        return sortedList
     }
 }
