@@ -142,7 +142,7 @@ class Api31Compatibility {
 
         fun startForegroundService(context: Context, intent: Intent) {
             try {
-                Compatibility.startForegroundService(context, intent)
+                context.startForegroundService(intent)
             } catch (fssnae: ForegroundServiceStartNotAllowedException) {
                 Log.e("[Api31 Compatibility] Can't start service as foreground! $fssnae")
             }
