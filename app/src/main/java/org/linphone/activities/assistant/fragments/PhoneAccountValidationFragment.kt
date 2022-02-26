@@ -27,7 +27,7 @@ import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.GenericFragment
-import org.linphone.activities.assistant.AssistantActivity
+import org.linphone.activities.SnackBarActivity
 import org.linphone.activities.assistant.viewmodels.PhoneAccountValidationViewModel
 import org.linphone.activities.assistant.viewmodels.PhoneAccountValidationViewModelFactory
 import org.linphone.activities.assistant.viewmodels.SharedAssistantViewModel
@@ -88,7 +88,7 @@ class PhoneAccountValidationFragment : GenericFragment<AssistantPhoneAccountVali
             viewLifecycleOwner
         ) {
             it.consume { message ->
-                (requireActivity() as AssistantActivity).showSnackBar(message)
+                (requireActivity() as SnackBarActivity).showSnackBar(message)
             }
         }
 
