@@ -119,7 +119,7 @@ class ConferenceWaitingRoomViewModel : ViewModel() {
         } else {
             setEarpieceAudioRoute()
         }
-        updateAudioRouteState()
+        onAudioDevicesListUpdated()
     }
 
     override fun onCleared() {

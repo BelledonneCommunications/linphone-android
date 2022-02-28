@@ -73,4 +73,8 @@ class PermissionHelper private constructor(private val context: Context) {
     fun hasRecordAudioPermission(): Boolean {
         return hasPermission(Manifest.permission.RECORD_AUDIO)
     }
+
+    fun hasBluetoothConnectPermission(): Boolean {
+        return Compatibility.hasBluetoothConnectPermission(context)
+    }
 }

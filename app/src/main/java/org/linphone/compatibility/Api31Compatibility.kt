@@ -19,6 +19,7 @@
  */
 package org.linphone.compatibility
 
+import android.Manifest
 import android.annotation.TargetApi
 import android.app.*
 import android.content.Context
@@ -172,6 +173,10 @@ class Api31Compatibility {
                 activity.setPictureInPictureParams(params)
                 Log.i("[Call] PiP auto enter enabled params set to $enable")
             }
+        }
+
+        fun hasBluetoothConnectPermission(context: Context): Boolean {
+            return Compatibility.hasPermission(context, Manifest.permission.BLUETOOTH_CONNECT)
         }
     }
 }

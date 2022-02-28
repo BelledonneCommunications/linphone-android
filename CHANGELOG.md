@@ -16,6 +16,7 @@ Group changes to describe their impact on the project, as follows:
 ## [4.6.2] - Unreleased
 
 ### Added
+- Request BLUETOOTH_CONNECT permission on Android 12+ devices, if not we won't be notified when a BT device is being connected/disconnected while app is alive.
 - LDAP settings if SDK is built with OpenLDAP (requires 5.1.1 or higher linphone-sdk), will add contacts if any
 - SIP addresses & phone numbers can be selected in history & contact details view
 - Text can be selected in file viewer & config viewer
