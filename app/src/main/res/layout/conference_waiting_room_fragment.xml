@@ -224,37 +224,38 @@
                 app:layout_constraintDimensionRatio="W,1:1"
                 app:layout_constraintEnd_toStartOf="@id/speaker" />
 
-            <ImageView
+            <RelativeLayout
                 android:id="@+id/speaker"
-                android:contentDescription="@{viewModel.isSpeakerSelected ? @string/content_description_disable_speaker : @string/content_description_enable_speaker}"
-                android:onClick="@{() -> viewModel.toggleSpeaker()}"
-                android:selected="@{viewModel.isSpeakerSelected}"
-                android:visibility="@{viewModel.audioRoutesEnabled ? View.GONE : View.VISIBLE}"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginStart="5dp"
-                android:background="@drawable/button_background_reverse"
-                android:padding="5dp"
-                android:src="@drawable/icon_toggle_speaker"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="W,1:1"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent">
 
-            <ImageView
-                android:onClick="@{() -> viewModel.toggleAudioRoutesMenu()}"
-                android:selected="@{viewModel.audioRoutesSelected}"
-                android:visibility="@{viewModel.audioRoutesEnabled ? View.VISIBLE : View.GONE, default=gone}"
-                android:layout_height="match_parent"
-                android:layout_width="0dp"
-                android:background="@drawable/button_toggle_background_reverse"
-                android:src="@drawable/icon_audio_routes"
-                android:padding="5dp"
-                android:contentDescription="@string/content_description_toggle_audio_menu"
-                app:layout_constraintDimensionRatio="W,1:1"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/button_background_reverse"
+                    android:contentDescription="@{viewModel.isSpeakerSelected ? @string/content_description_disable_speaker : @string/content_description_enable_speaker}"
+                    android:onClick="@{() -> viewModel.toggleSpeaker()}"
+                    android:padding="5dp"
+                    android:selected="@{viewModel.isSpeakerSelected}"
+                    android:src="@drawable/icon_toggle_speaker"
+                    android:visibility="@{viewModel.audioRoutesEnabled ? View.GONE : View.VISIBLE}" />
+
+                <ImageView
+                    android:onClick="@{() -> viewModel.toggleAudioRoutesMenu()}"
+                    android:selected="@{viewModel.audioRoutesSelected}"
+                    android:visibility="@{viewModel.audioRoutesEnabled ? View.VISIBLE : View.GONE, default=gone}"
+                    android:layout_height="match_parent"
+                    android:layout_width="wrap_content"
+                    android:background="@drawable/button_toggle_background_reverse"
+                    android:src="@drawable/icon_audio_routes"
+                    android:padding="5dp"
+                    android:contentDescription="@string/content_description_toggle_audio_menu"/>
+
+            </RelativeLayout>
 
             <ImageView
                 android:contentDescription="@{viewModel.isVideoEnabled ? @string/content_description_disable_video : @string/content_description_enable_video}"
