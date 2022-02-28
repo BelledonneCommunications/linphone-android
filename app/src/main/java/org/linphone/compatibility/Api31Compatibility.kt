@@ -19,6 +19,7 @@
  */
 package org.linphone.compatibility
 
+import android.Manifest
 import android.annotation.TargetApi
 import android.app.*
 import android.content.Context
@@ -154,6 +155,10 @@ class Api31Compatibility {
             } catch (fssnae: ForegroundServiceStartNotAllowedException) {
                 Log.e("[Api31 Compatibility] Can't start service as foreground! $fssnae")
             }
+        }
+
+        fun hasBluetoothConnectPermission(context: Context): Boolean {
+            return Compatibility.hasPermission(context, Manifest.permission.BLUETOOTH_CONNECT)
         }
     }
 }

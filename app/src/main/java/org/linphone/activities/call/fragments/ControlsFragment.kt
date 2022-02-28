@@ -24,6 +24,7 @@ import android.animation.ValueAnimator
 import android.annotation.TargetApi
 import android.app.Dialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
 import android.os.SystemClock
@@ -40,6 +41,7 @@ import org.linphone.activities.call.viewmodels.ControlsViewModel
 import org.linphone.activities.call.viewmodels.SharedCallViewModel
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.viewmodels.DialogViewModel
+import org.linphone.compatibility.Compatibility
 import org.linphone.core.Call
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallControlsFragmentBinding
@@ -248,6 +250,9 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
                         Log.i("[Controls Fragment] CAMERA permission has been granted")
                         coreContext.core.reloadVideoDevices()
                     }
+                    Compatibility.BLUETOOTH_CONNECT -> if (grantResults[i] == PERMISSION_GRANTED) {
+                        Log.i("[Incoming Call Activity] BLUETOOTH_CONNECT permission has been granted")
+                    }
                 }
             }
         } else if (requestCode == 1) {
@@ -274,6 +279,11 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
         if (coreContext.isVideoCallOrConferenceActive() && !PermissionHelper.get().hasCameraPermission()) {
             Log.i("[Controls Fragment] Asking for CAMERA permission")
             permissionsRequiredList.add(Manifest.permission.CAMERA)
+        }
+
+        if (Version.sdkAboveOrEqual(Version.API31_ANDROID_12) && !PermissionHelper.get().hasBluetoothConnectPermission()) {
+            Log.i("[Controls Fragment] Asking for BLUETOOTH_CONNECT permission")
+            permissionsRequiredList.add(Compatibility.BLUETOOTH_CONNECT)
         }
 
         if (permissionsRequiredList.isNotEmpty()) {

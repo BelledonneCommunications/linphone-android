@@ -47,6 +47,8 @@ import org.linphone.telecom.NativeCallWrapper
 @Suppress("DEPRECATION")
 class Compatibility {
     companion object {
+        const val BLUETOOTH_CONNECT = "android.permission.BLUETOOTH_CONNECT"
+
         fun hasPermission(context: Context, permission: String): Boolean {
             return when (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
                 true -> Api23Compatibility.hasPermission(context, permission)
@@ -70,6 +72,13 @@ class Compatibility {
             } else {
                 Api23Compatibility.requestReadPhoneStatePermission(fragment, code)
             }
+        }
+
+        fun hasBluetoothConnectPermission(context: Context): Boolean {
+            if (Version.sdkAboveOrEqual(Version.API31_ANDROID_12)) {
+                return Api31Compatibility.hasBluetoothConnectPermission(context)
+            }
+            return true
         }
 
         // See https://developer.android.com/about/versions/11/privacy/permissions#phone-numbers
