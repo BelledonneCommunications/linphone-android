@@ -134,13 +134,15 @@ class ActiveCallOrConferenceFragment : GenericFragment<VoipActiveCallOrConferenc
         conferenceViewModel.conference.observe(
             viewLifecycleOwner
         ) { conference ->
-            if (corePreferences.enableFullScreenWhenJoiningVideoConference) {
-                if (conference != null && conference.currentParams.isVideoEnabled) {
-                    if (conference.me.devices.find { it.getStreamAvailability(StreamType.Video) } != null) {
-                        Log.i("[Call] Conference is video & our device has video enabled, enabling full screen mode")
-                        controlsViewModel.fullScreenMode.value = true
-                    }
-                }
+            if (conference != null) switchToFullScreenIfPossible(conference)
+        }
+
+        conferenceViewModel.conferenceCreationPending.observe(
+            viewLifecycleOwner
+        ) { creationPending ->
+            if (!creationPending) {
+                val conference = conferenceViewModel.conference.value
+                if (conference != null) switchToFullScreenIfPossible(conference)
             }
         }
 
@@ -319,6 +321,25 @@ class ActiveCallOrConferenceFragment : GenericFragment<VoipActiveCallOrConferenc
         )
 
         dialog?.show()
+    }
+
+    private fun switchToFullScreenIfPossible(conference: Conference) {
+        if (corePreferences.enableFullScreenWhenJoiningVideoConference) {
+            if (conference.currentParams.isVideoEnabled) {
+                when {
+                    conference.me.devices.isEmpty() -> {
+                        Log.w("[Call] Conference has video enabled but either our device hasn't joined yet")
+                    }
+                    conference.me.devices.find { it.getStreamAvailability(StreamType.Video) } != null -> {
+                        Log.i("[Call] Conference has video enabled & our device has video enabled, enabling full screen mode")
+                        controlsViewModel.fullScreenMode.value = true
+                    }
+                    else -> {
+                        Log.w("[Call] Conference has video enabled but our device video is disabled")
+                    }
+                }
+            }
+        }
     }
 
     private fun goToChat() {
