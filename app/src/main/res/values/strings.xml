@@ -115,6 +115,7 @@
     <string name="contact_new_choose_sync_account">Choose where to save the contact</string>
     <string name="contact_local_sync_account">Store locally</string>
     <string name="contact_cant_be_deleted">This contact can\'t be deleted</string>
+    <string name="contacts_ldap_query_more_results_available">More results are available, refine your search</string>
 
     <!-- Dialer -->
     <string name="dialer_address_bar_hint">Enter a number or an address</string>
@@ -511,6 +512,7 @@
     <string name="contacts_settings_ldap_search_timeout_subtitle">In seconds</string>
     <string name="contacts_settings_ldap_request_delay_title">Delay between two requests</string>
     <string name="contacts_settings_ldap_request_delay_subtitle">In milliseconds</string>
+    <string name="contacts_settings_ldap_minimum_characters_title">Minimum characters to start query</string>
     <string name="contacts_settings_ldap_parsing_title">Parsing</string>
     <string name="contacts_settings_ldap_name_attribute_title">Name attributes</string>
     <string name="contacts_settings_ldap_sip_attribute_title">SIP attributes</string>

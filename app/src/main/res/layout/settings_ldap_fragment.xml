@@ -177,6 +177,13 @@
                     linphone:defaultValue="@{viewModel.ldapRequestDelay.toString()}"
                     linphone:inputType="@{InputType.TYPE_CLASS_NUMBER}"/>
 
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/contacts_settings_ldap_minimum_characters_title}"
+                    linphone:listener="@{viewModel.ldapMinimumCharactersListener}"
+                    linphone:defaultValue="@{viewModel.ldapMinimumCharacters.toString()}"
+                    linphone:inputType="@{InputType.TYPE_CLASS_NUMBER}"/>
+
                 <TextView
                     style="@style/settings_category_font"
                     android:text="@string/contacts_settings_ldap_parsing_title"

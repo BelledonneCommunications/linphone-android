@@ -36,6 +36,7 @@ import com.google.android.material.transition.MaterialSharedAxis
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.activities.SnackBarActivity
 import org.linphone.activities.clearDisplayedContact
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.contact.adapters.ContactsListAdapter
@@ -245,6 +246,14 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
                 }
             }
             adapter.submitList(it)
+        }
+
+        listViewModel.moreResultsAvailableEvent.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                (requireActivity() as SnackBarActivity).showSnackBar(R.string.contacts_ldap_query_more_results_available)
+            }
         }
 
         binding.setAllContactsToggleClickListener {

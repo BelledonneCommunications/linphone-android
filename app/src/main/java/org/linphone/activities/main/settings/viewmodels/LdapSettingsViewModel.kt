@@ -192,6 +192,20 @@ class LdapSettingsViewModel(private val ldap: Ldap, val index: String) : Generic
     }
     val ldapRequestDelay = MutableLiveData<Int>()
 
+    val ldapMinimumCharactersListener = object : SettingListenerStub() {
+        override fun onTextValueChanged(newValue: String) {
+            try {
+                val intValue = newValue.toInt()
+                val params = ldap.params.clone()
+                params.minChars = intValue
+                ldap.params = params
+            } catch (nfe: NumberFormatException) {
+                Log.e("[LDAP Settings] Failed to set minimum characters ($newValue): $nfe")
+            }
+        }
+    }
+    val ldapMinimumCharacters = MutableLiveData<Int>()
+
     val ldapNameAttributeListener = object : SettingListenerStub() {
         override fun onTextValueChanged(newValue: String) {
             val params = ldap.params.clone()
@@ -241,6 +255,7 @@ class LdapSettingsViewModel(private val ldap: Ldap, val index: String) : Generic
         ldapSearchMaxResults.value = params.maxResults
         ldapSearchTimeout.value = params.timeout
         ldapRequestDelay.value = params.delay
+        ldapMinimumCharacters.value = params.minChars
         ldapNameAttribute.value = params.nameAttribute
         ldapSipAttribute.value = params.sipAttribute
         ldapSipDomain.value = params.sipDomain

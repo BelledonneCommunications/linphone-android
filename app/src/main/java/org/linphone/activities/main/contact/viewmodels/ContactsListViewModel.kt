@@ -28,11 +28,9 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.contact.Contact
 import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.contact.NativeContact
-import org.linphone.core.MagicSearch
-import org.linphone.core.MagicSearchListenerStub
-import org.linphone.core.MagicSearchSource
-import org.linphone.core.SearchResult
+import org.linphone.core.*
 import org.linphone.core.tools.Log
+import org.linphone.utils.Event
 
 class ContactsListViewModel : ViewModel() {
     val sipContactsSelected = MutableLiveData<Boolean>()
@@ -43,6 +41,10 @@ class ContactsListViewModel : ViewModel() {
 
     val filter = MutableLiveData<String>()
     private var previousFilter = "NotSet"
+
+    val moreResultsAvailableEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
 
     private val contactsUpdatedListener = object : ContactsUpdatedListenerStub() {
         override fun onContactsUpdated() {
@@ -55,6 +57,10 @@ class ContactsListViewModel : ViewModel() {
         override fun onSearchResultsReceived(magicSearch: MagicSearch) {
             processMagicSearchResults(magicSearch.lastSearch)
             fetchInProgress.value = false
+        }
+
+        override fun onLdapHaveMoreResults(magicSearch: MagicSearch, ldap: Ldap) {
+            moreResultsAvailableEvent.value = Event(true)
         }
     }
 
