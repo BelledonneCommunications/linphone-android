@@ -293,14 +293,20 @@ class ControlsViewModel : ViewModel() {
         } else {
             AudioRouteUtils.routeAudioToEarpiece()
         }
+        updateSpeakerState()
+        updateBluetoothHeadsetState()
     }
 
     fun forceSpeakerAudioRoute() {
         AudioRouteUtils.routeAudioToSpeaker()
+        updateSpeakerState()
+        updateBluetoothHeadsetState()
     }
 
     fun forceBluetoothAudioRoute() {
         AudioRouteUtils.routeAudioToBluetooth()
+        updateSpeakerState()
+        updateBluetoothHeadsetState()
     }
 
     fun toggleVideo() {
