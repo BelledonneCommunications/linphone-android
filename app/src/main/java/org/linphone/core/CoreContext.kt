@@ -603,11 +603,11 @@ class CoreContext(val context: Context, coreConfig: Config) {
         params.recordFile = LinphoneUtils.getRecordingFilePathForAddress(address)
 
         if (localAddress != null) {
-            params.proxyConfig = core.proxyConfigList.find { proxyConfig ->
-                proxyConfig.identityAddress?.weakEqual(localAddress) ?: false
+            params.account = core.accountList.find { account ->
+                account.params.identityAddress?.weakEqual(localAddress) ?: false
             }
-            if (params.proxyConfig != null) {
-                Log.i("[Context] Using proxy config matching address ${localAddress.asStringUriOnly()} as From")
+            if (params.account != null) {
+                Log.i("[Context] Using account matching address ${localAddress.asStringUriOnly()} as From")
             }
         }
 
