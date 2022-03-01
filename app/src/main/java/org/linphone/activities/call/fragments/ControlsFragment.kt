@@ -102,6 +102,7 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
             viewLifecycleOwner
         ) {
             it.consume {
+                Log.i("[Controls Fragment] No more call, finishing activity")
                 requireActivity().finish()
             }
         }

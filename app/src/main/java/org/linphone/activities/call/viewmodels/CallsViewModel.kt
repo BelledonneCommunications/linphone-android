@@ -49,6 +49,11 @@ class CallsViewModel : ViewModel() {
     }
 
     private val listener = object : CoreListenerStub() {
+        override fun onLastCallEnded(core: Core) {
+            Log.i("[Calls VM] Last call ended")
+            noMoreCallEvent.value = Event(true)
+        }
+
         override fun onCallStateChanged(core: Core, call: Call, state: Call.State, message: String) {
             Log.i("[Calls VM] Call state changed: $state")
             callPausedByRemote.value = (state == Call.State.PausedByRemote) and (call.conference == null)
@@ -63,9 +68,9 @@ class CallsViewModel : ViewModel() {
             }
 
             if (state == Call.State.End || state == Call.State.Released || state == Call.State.Error) {
-                if (core.callsNb == 0) {
-                    noMoreCallEvent.value = Event(true)
-                } else {
+                val callsNb = core.callsNb
+                Log.i("[Calls VM] Calls NB = $callsNb")
+                if (callsNb > 0) {
                     removeCallFromPausedListIfPresent(call)
                 }
             } else if (state == Call.State.Paused) {
