@@ -23,7 +23,9 @@ import android.content.ContentProviderOperation
 import android.provider.ContactsContract
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import java.util.*
+import kotlinx.coroutines.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.contact.Contact
 import org.linphone.contact.ContactsUpdatedListenerStub
@@ -38,6 +40,8 @@ class ContactsListViewModel : ViewModel() {
     val contactsList = MutableLiveData<ArrayList<ContactViewModel>>()
 
     val fetchInProgress = MutableLiveData<Boolean>()
+    private var searchResultsPending: Boolean = false
+    private var fastFetchJob: Job? = null
 
     val filter = MutableLiveData<String>()
     private var previousFilter = "NotSet"
@@ -55,6 +59,7 @@ class ContactsListViewModel : ViewModel() {
 
     private val magicSearchListener = object : MagicSearchListenerStub() {
         override fun onSearchResultsReceived(magicSearch: MagicSearch) {
+            searchResultsPending = false
             processMagicSearchResults(magicSearch.lastSearch)
             fetchInProgress.value = false
         }
@@ -95,11 +100,22 @@ class ContactsListViewModel : ViewModel() {
         }
         previousFilter = filterValue
 
-        fetchInProgress.value = true
-
         val domain = if (sipContactsSelected.value == true) coreContext.core.defaultAccount?.params?.domain ?: "" else ""
         val filter = MagicSearchSource.Friends.toInt() or MagicSearchSource.LdapServers.toInt()
+        searchResultsPending = true
+        fastFetchJob?.cancel()
         coreContext.contactsManager.magicSearch.getContactsAsync(filterValue, domain, filter)
+
+        fastFetchJob = viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                delay(200)
+                withContext(Dispatchers.Main) {
+                    if (searchResultsPending) {
+                        fetchInProgress.value = true
+                    }
+                }
+            }
+        }
     }
 
     private fun processMagicSearchResults(results: Array<SearchResult>) {
