@@ -61,10 +61,14 @@ class TelecomHelper private constructor(context: Context) {
         ) {
             Log.i("[Telecom Helper] Call state changed: ${call.state}")
 
-            if (call.dir == Call.Dir.Incoming && call.state == Call.State.IncomingReceived) {
-                onIncomingCall(call)
-            } else if (call.dir == Call.Dir.Outgoing && call.state == Call.State.OutgoingProgress) {
-                onOutgoingCall(call)
+            try {
+                if (call.dir == Call.Dir.Incoming && call.state == Call.State.IncomingReceived) {
+                    onIncomingCall(call)
+                } else if (call.dir == Call.Dir.Outgoing && call.state == Call.State.OutgoingProgress) {
+                    onOutgoingCall(call)
+                }
+            } catch (se: SecurityException) {
+                Log.e("[Telecom Helper] Exception while trying to place call: $se")
             }
         }
     }
