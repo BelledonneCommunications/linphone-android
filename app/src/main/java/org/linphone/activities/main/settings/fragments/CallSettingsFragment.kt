@@ -98,8 +98,12 @@ class CallSettingsFragment : GenericSettingFragment<SettingsCallFragmentBinding>
                 } else if (!TelecomHelper.exists()) {
                     corePreferences.useTelecomManager = true
                     Log.w("[Telecom Helper] Doesn't exists yet, creating it")
-                    TelecomHelper.create(requireContext())
-                    updateTelecomManagerAccount()
+                    if (requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_CONNECTION_SERVICE)) {
+                        TelecomHelper.create(requireContext())
+                        updateTelecomManagerAccount()
+                    } else {
+                        Log.e("[Telecom Helper] Telecom Helper can't be created, device doesn't support connection service")
+                    }
                 }
             }
         }
@@ -134,7 +138,11 @@ class CallSettingsFragment : GenericSettingFragment<SettingsCallFragmentBinding>
         } else if (requestCode == 1) {
             if (!TelecomHelper.exists()) {
                 Log.w("[Telecom Helper] Doesn't exists yet, creating it")
-                TelecomHelper.create(requireContext())
+                if (requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_CONNECTION_SERVICE)) {
+                    TelecomHelper.create(requireContext())
+                } else {
+                    Log.e("[Telecom Helper] Telecom Helper can't be created, device doesn't support connection service")
+                }
             }
             updateTelecomManagerAccount()
         }
@@ -177,7 +185,11 @@ class CallSettingsFragment : GenericSettingFragment<SettingsCallFragmentBinding>
             }
         }
 
-        TelecomHelper.create(requireContext())
-        updateTelecomManagerAccount()
+        if (requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_CONNECTION_SERVICE)) {
+            TelecomHelper.create(requireContext())
+            updateTelecomManagerAccount()
+        } else {
+            Log.e("[Telecom Helper] Telecom Helper can't be created, device doesn't support connection service")
+        }
     }
 }
