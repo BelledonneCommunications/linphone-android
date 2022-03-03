@@ -27,6 +27,7 @@ import androidx.lifecycle.viewModelScope
 import java.util.*
 import kotlinx.coroutines.*
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.contact.Contact
 import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.contact.NativeContact
@@ -106,9 +107,10 @@ class ContactsListViewModel : ViewModel() {
         fastFetchJob?.cancel()
         coreContext.contactsManager.magicSearch.getContactsAsync(filterValue, domain, filter)
 
+        val spinnerDelay = corePreferences.delayBeforeShowingContactsSearchSpinner.toLong()
         fastFetchJob = viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                delay(200)
+                delay(spinnerDelay)
                 withContext(Dispatchers.Main) {
                     if (searchResultsPending) {
                         fetchInProgress.value = true
