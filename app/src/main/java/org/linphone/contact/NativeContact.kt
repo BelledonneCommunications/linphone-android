@@ -223,7 +223,9 @@ class NativeContact(val nativeId: String, private val lookupKey: String? = null)
             for (number in rawPhoneNumbers) friend.addPhoneNumber(number)
 
             friend.done()
-            if (created) coreContext.core.defaultFriendList?.addFriend(friend)
+            if (created) {
+                coreContext.core.defaultFriendList?.addFriend(friend)
+            }
         }
     }
 

@@ -79,9 +79,6 @@ class AsyncContactsLoader(private val context: Context) :
                         nativeIds.add(contact.nativeId)
                     } else {
                         data.contacts.add(contact)
-                        if (contact.sipAddresses.isNotEmpty()) {
-                            data.sipContacts.add(contact)
-                        }
                     }
                 } else {
                     if (friend.refKey != null) {
@@ -95,9 +92,6 @@ class AsyncContactsLoader(private val context: Context) :
                         contact.syncValuesFromFriend()
                         friend.userData = contact
                         data.contacts.add(contact)
-                        if (contact.sipAddresses.isNotEmpty()) {
-                            data.sipContacts.add(contact)
-                        }
                     }
                 }
             }
@@ -209,11 +203,6 @@ class AsyncContactsLoader(private val context: Context) :
                 }
             }
 
-            if (!corePreferences.hideContactsWithoutPresence) {
-                if (contact.sipAddresses.isNotEmpty() && !data.sipContacts.contains(contact)) {
-                    data.sipContacts.add(contact)
-                }
-            }
             data.contacts.add(contact)
         }
         androidContactsCache.clear()
@@ -226,19 +215,13 @@ class AsyncContactsLoader(private val context: Context) :
 
     override fun onPostExecute(data: AsyncContactsData) {
         if (isCancelled) return
-        Log.i("[Contacts Loader] ${data.contacts.size} contacts found in which ${data.sipContacts.size} are SIP")
+        Log.i("[Contacts Loader] ${data.contacts.size} contacts")
 
         for (contact in data.contacts) {
             if (contact is NativeContact) {
                 contact.createOrUpdateFriendFromNativeContact()
-
-                if (contact.friend?.presenceModel?.basicStatus == PresenceBasicStatus.Open && !data.sipContacts.contains(contact)) {
-                    Log.i("[Contacts Loader] Friend $contact has presence information, adding it to SIP list")
-                    data.sipContacts.add(contact)
-                }
             }
         }
-        data.sipContacts.sort()
 
         // Now that contact fetching is asynchronous, this is required to ensure
         // presence subscription event will be sent with all friends
@@ -266,13 +249,12 @@ class AsyncContactsLoader(private val context: Context) :
             }
         }
 
-        coreContext.contactsManager.updateContacts(data.contacts, data.sipContacts)
+        coreContext.contactsManager.updateContacts(data.contacts)
 
         Log.i("[Contacts Loader] Synchronization finished")
     }
 
     class AsyncContactsData {
         val contacts = arrayListOf<Contact>()
-        val sipContacts = arrayListOf<Contact>()
     }
 }
