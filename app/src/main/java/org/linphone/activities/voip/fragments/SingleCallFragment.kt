@@ -30,7 +30,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.navigation.navGraphViewModels
 import androidx.window.layout.FoldingFeature
-import com.google.android.material.snackbar.Snackbar
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.*

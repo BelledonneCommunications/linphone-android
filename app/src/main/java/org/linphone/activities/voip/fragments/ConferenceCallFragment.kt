@@ -20,7 +20,6 @@
 package org.linphone.activities.voip.fragments
 
 import android.annotation.SuppressLint
-import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.SystemClock
