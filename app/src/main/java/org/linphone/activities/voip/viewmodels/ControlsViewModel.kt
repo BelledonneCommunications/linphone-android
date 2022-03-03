@@ -27,6 +27,7 @@ import android.view.animation.LinearInterpolator
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.window.layout.FoldingFeature
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -90,7 +91,7 @@ class ControlsViewModel : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
-    val goToConferenceLayoutSettings: MutableLiveData<Event<Boolean>> by lazy {
+    val goToConferenceLayoutSettingsEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
 
@@ -98,8 +99,12 @@ class ControlsViewModel : ViewModel() {
         MutableLiveData<Event<String>>()
     }
 
-    val goToDialer: MutableLiveData<Event<Boolean>> by lazy {
+    val goToDialerEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
+    }
+
+    val foldingStateChangedEvent: MutableLiveData<Event<FoldingFeature.State>> by lazy {
+        MutableLiveData<Event<FoldingFeature.State>>()
     }
 
     private val nonEarpieceOutputAudioDevice = MutableLiveData<Boolean>()
@@ -405,15 +410,15 @@ class ControlsViewModel : ViewModel() {
     }
 
     fun goToConferenceLayout() {
-        goToConferenceLayoutSettings.value = Event(true)
+        goToConferenceLayoutSettingsEvent.value = Event(true)
     }
 
     fun goToDialerForCallTransfer() {
-        goToDialer.value = Event(true)
+        goToDialerEvent.value = Event(true)
     }
 
     fun goToDialerForNewCall() {
-        goToDialer.value = Event(false)
+        goToDialerEvent.value = Event(false)
     }
 
     private fun updateUI() {

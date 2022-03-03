@@ -33,7 +33,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/status_fragment"
             app:navGraph="@navigation/call_nav_graph"
-            tools:layout="@layout/voip_active_call_or_conference_fragment" />
+            tools:layout="@layout/voip_single_call_fragment" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

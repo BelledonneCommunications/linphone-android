@@ -97,7 +97,7 @@
 
             <ImageView
                 android:onClick="@{() -> data.switchCamera()}"
-                android:visibility="@{data.videoEnabled &amp;&amp; data.isSwitchCameraAvailable() ? View.VISIBLE : View.GONE, default=gone}"
+                android:visibility="@{data.videoEnabled &amp;&amp; data.isSwitchCameraAvailable() &amp;&amp; data.isInConference ? View.VISIBLE : View.GONE, default=gone}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
