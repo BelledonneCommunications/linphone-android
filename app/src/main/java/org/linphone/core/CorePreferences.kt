@@ -431,6 +431,9 @@ class CorePreferences constructor(private val context: Context) {
     val fetchContactsFromDefaultDirectory: Boolean
         get() = config.getBool("app", "fetch_contacts_from_default_directory", true)
 
+    val delayBeforeShowingContactsSearchSpinner: Int
+        get() = config.getInt("app", "delay_before_showing_contacts_search_spinner", 200)
+
     // From Android Contact APIs we can also retrieve the internationalized phone number
     // By default we display the same value as the native address book app
     val preferNormalizedPhoneNumbersFromAddressBook: Boolean
