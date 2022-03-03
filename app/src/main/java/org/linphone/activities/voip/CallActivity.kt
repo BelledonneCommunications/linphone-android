@@ -29,27 +29,28 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.window.layout.FoldingFeature
-import org.linphone.LinphoneApplication
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
-import org.linphone.activities.ProximitySensorActivity
+import org.linphone.activities.*
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.navigateToActiveCall
-import org.linphone.activities.navigateToIncomingCall
-import org.linphone.activities.navigateToOutgoingCall
 import org.linphone.activities.voip.viewmodels.CallsViewModel
+import org.linphone.activities.voip.viewmodels.ConferenceViewModel
 import org.linphone.activities.voip.viewmodels.ControlsViewModel
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.Call
 import org.linphone.core.tools.Log
 import org.linphone.databinding.VoipActivityBinding
 import org.linphone.mediastream.Version
+import org.linphone.utils.Event
 import org.linphone.utils.PermissionHelper
 
 class CallActivity : ProximitySensorActivity() {
     private lateinit var binding: VoipActivityBinding
     private lateinit var controlsViewModel: ControlsViewModel
     private lateinit var callsViewModel: CallsViewModel
+    private lateinit var conferenceViewModel: ConferenceViewModel
 
     private var foldingFeature: FoldingFeature? = null
 
@@ -76,6 +77,8 @@ class CallActivity : ProximitySensorActivity() {
         binding.controlsViewModel = controlsViewModel
 
         callsViewModel = ViewModelProvider(navControllerStoreOwner)[CallsViewModel::class.java]
+
+        conferenceViewModel = ViewModelProvider(navControllerStoreOwner)[ConferenceViewModel::class.java]
 
         callsViewModel.noMoreCallEvent.observe(
             this
@@ -110,6 +113,39 @@ class CallActivity : ProximitySensorActivity() {
             this
         ) { enabled ->
             Compatibility.enableAutoEnterPiP(this, enabled)
+        }
+
+        callsViewModel.currentCallData.observe(
+            this
+        ) { callData ->
+            if (callData.call.conference == null) {
+                Log.i("[Call] Current call isn't linked to a conference, changing fragment")
+                navigateToActiveCall()
+            } else {
+                Log.i("[Call] Current call is linked to a conference, changing fragment")
+                navigateToConferenceCall()
+            }
+        }
+
+        conferenceViewModel.conferenceExists.observe(
+            this
+        ) { exists ->
+            if (exists) {
+                Log.i("[Call] Found active conference, changing fragment")
+                navigateToConferenceCall()
+            } else {
+                Log.i("[Call] Conference no longer exists, changing fragment")
+                navigateToActiveCall()
+            }
+        }
+
+        conferenceViewModel.isConferenceLocallyPaused.observe(
+            this
+        ) { paused ->
+            if (!paused) {
+                Log.i("[Call] Entered conference, make sure conference fragment is active")
+                navigateToConferenceCall()
+            }
         }
 
         if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
@@ -151,28 +187,22 @@ class CallActivity : ProximitySensorActivity() {
             } else {
                 finish()
             }
-        } else {
-            coreContext.removeCallOverlay()
+            return
+        }
+        coreContext.removeCallOverlay()
 
-            val currentCall = coreContext.core.currentCall
-            if (currentCall == null) {
-                Log.e("[Call] No current call found, assume active call")
-                navigateToActiveCall()
-                return
+        val currentCall = coreContext.core.currentCall
+        when (currentCall?.state) {
+            Call.State.OutgoingInit, Call.State.OutgoingEarlyMedia, Call.State.OutgoingProgress, Call.State.OutgoingRinging -> {
+                navigateToOutgoingCall()
             }
-
-            when (currentCall.state) {
-                Call.State.OutgoingInit, Call.State.OutgoingEarlyMedia, Call.State.OutgoingProgress, Call.State.OutgoingRinging -> {
-                    navigateToOutgoingCall()
-                }
-                Call.State.IncomingReceived, Call.State.IncomingEarlyMedia -> {
-                    val earlyMediaVideoEnabled = LinphoneApplication.corePreferences.acceptEarlyMedia &&
-                        currentCall.state == Call.State.IncomingEarlyMedia &&
-                        currentCall.currentParams.isVideoEnabled
-                    navigateToIncomingCall(earlyMediaVideoEnabled)
-                }
-                else -> navigateToActiveCall()
+            Call.State.IncomingReceived, Call.State.IncomingEarlyMedia -> {
+                val earlyMediaVideoEnabled = corePreferences.acceptEarlyMedia &&
+                    currentCall.state == Call.State.IncomingEarlyMedia &&
+                    currentCall.currentParams.isVideoEnabled
+                navigateToIncomingCall(earlyMediaVideoEnabled)
             }
+            else -> {}
         }
     }
 
@@ -251,21 +281,7 @@ class CallActivity : ProximitySensorActivity() {
     }
 
     private fun updateConstraintSetDependingOnFoldingState() {
-        /*val feature = foldingFeature ?: return
-        val constraintLayout = binding.constraintLayout
-        val set = ConstraintSet()
-        set.clone(constraintLayout)
-
-        if (feature.state == FoldingFeature.State.HALF_OPENED && viewModel.videoEnabled.value == true) {
-            set.setGuidelinePercent(R.id.hinge_top, 0.5f)
-            set.setGuidelinePercent(R.id.hinge_bottom, 0.5f)
-            viewModel.disable(true)
-        } else {
-            set.setGuidelinePercent(R.id.hinge_top, 0f)
-            set.setGuidelinePercent(R.id.hinge_bottom, 1f)
-            viewModel.disable(false)
-        }
-
-        set.applyTo(constraintLayout)*/
+        val feature = foldingFeature ?: return
+        controlsViewModel.foldingStateChangedEvent.value = Event(feature.state)
     }
 }

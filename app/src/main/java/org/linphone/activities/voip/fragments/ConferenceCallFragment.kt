@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2021 Belledonne Communications SARL.
+ * Copyright (c) 2010-2022 Belledonne Communications SARL.
  *
  * This file is part of linphone-android
  * (see https://www.linphone.org).
@@ -31,36 +31,33 @@ import android.widget.RelativeLayout
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.navigation.navGraphViewModels
+import androidx.window.layout.FoldingFeature
 import com.google.android.material.snackbar.Snackbar
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
-import org.linphone.activities.*
+import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.MainActivity
-import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.navigateToCallsList
+import org.linphone.activities.navigateToConferenceLayout
 import org.linphone.activities.navigateToConferenceParticipants
 import org.linphone.activities.voip.viewmodels.CallsViewModel
 import org.linphone.activities.voip.viewmodels.ConferenceViewModel
 import org.linphone.activities.voip.viewmodels.ControlsViewModel
 import org.linphone.activities.voip.viewmodels.StatisticsListViewModel
 import org.linphone.activities.voip.views.RoundCornersTextureView
-import org.linphone.core.*
+import org.linphone.core.Conference
+import org.linphone.core.StreamType
 import org.linphone.core.tools.Log
-import org.linphone.databinding.VoipActiveCallOrConferenceFragmentBindingImpl
-import org.linphone.mediastream.video.capture.CaptureTextureView
-import org.linphone.utils.AppUtils
-import org.linphone.utils.DialogUtils
+import org.linphone.databinding.VoipConferenceCallFragmentBinding
 
-class ActiveCallOrConferenceFragment : GenericFragment<VoipActiveCallOrConferenceFragmentBindingImpl>() {
+class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding>() {
     private val controlsViewModel: ControlsViewModel by navGraphViewModels(R.id.call_nav_graph)
     private val callsViewModel: CallsViewModel by navGraphViewModels(R.id.call_nav_graph)
     private val conferenceViewModel: ConferenceViewModel by navGraphViewModels(R.id.call_nav_graph)
     private val statsViewModel: StatisticsListViewModel by navGraphViewModels(R.id.call_nav_graph)
 
-    private var dialog: Dialog? = null
-
-    override fun getLayoutId(): Int = R.layout.voip_active_call_or_conference_fragment
+    override fun getLayoutId(): Int = R.layout.voip_conference_call_fragment
 
     override fun onStart() {
         useMaterialSharedAxisXForwardAnimation = false
@@ -146,17 +143,6 @@ class ActiveCallOrConferenceFragment : GenericFragment<VoipActiveCallOrConferenc
             }
         }
 
-        callsViewModel.currentCallData.observe(
-            viewLifecycleOwner
-        ) {
-            if (it != null) {
-                val timer = binding.root.findViewById<Chronometer>(R.id.active_call_timer)
-                timer.base =
-                    SystemClock.elapsedRealtime() - (1000 * it.call.duration) // Linphone timestamps are in seconds
-                timer.start()
-            }
-        }
-
         controlsViewModel.goToConferenceParticipantsListEvent.observe(
             viewLifecycleOwner
         ) {
@@ -181,7 +167,7 @@ class ActiveCallOrConferenceFragment : GenericFragment<VoipActiveCallOrConferenc
             }
         }
 
-        controlsViewModel.goToConferenceLayoutSettings.observe(
+        controlsViewModel.goToConferenceLayoutSettingsEvent.observe(
             viewLifecycleOwner
         ) {
             it.consume {
@@ -189,24 +175,18 @@ class ActiveCallOrConferenceFragment : GenericFragment<VoipActiveCallOrConferenc
             }
         }
 
+        controlsViewModel.foldingStateChangedEvent.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume { state ->
+                updateHingeRelatedConstraints(state)
+            }
+        }
+
         callsViewModel.callUpdateEvent.observe(
             viewLifecycleOwner
         ) {
             it.consume { call ->
-                if (call.state == Call.State.StreamsRunning) {
-                    dialog?.dismiss()
-                } else if (call.state == Call.State.UpdatedByRemote) {
-                    if (coreContext.core.isVideoEnabled) {
-                        val remoteVideo = call.remoteParams?.isVideoEnabled ?: false
-                        val localVideo = call.currentParams.isVideoEnabled
-                        if (remoteVideo && !localVideo) {
-                            showCallVideoUpdateDialog(call)
-                        }
-                    } else {
-                        Log.w("[Call] Video display & capture are disabled, don't show video dialog")
-                    }
-                }
-
                 val conference = call.conference
                 if (conference != null && conferenceViewModel.conference.value == null) {
                     Log.i("[Call] Found conference attached to call and no conference in dedicated view model, init & configure it")
@@ -216,7 +196,7 @@ class ActiveCallOrConferenceFragment : GenericFragment<VoipActiveCallOrConferenc
             }
         }
 
-        controlsViewModel.goToDialer.observe(
+        controlsViewModel.goToDialerEvent.observe(
             viewLifecycleOwner
         ) {
             it.consume { isCallTransfer ->
@@ -228,12 +208,6 @@ class ActiveCallOrConferenceFragment : GenericFragment<VoipActiveCallOrConferenc
                 startActivity(intent)
             }
         }
-
-        val remoteLayout = binding.root.findViewById<LinearLayout>(R.id.remote_layout)
-        val remoteVideoView = remoteLayout.findViewById<RoundCornersTextureView>(R.id.remote_video_surface)
-        coreContext.core.nativeVideoWindowId = remoteVideoView
-        val localVideoView = remoteLayout.findViewById<CaptureTextureView>(R.id.local_preview_video_surface)
-        coreContext.core.nativePreviewWindowId = localVideoView
 
         binding.stubbedConferenceActiveSpeakerLayout.setOnInflateListener { _, inflated ->
             Log.i("[Call] Active speaker conference layout inflated")
@@ -271,16 +245,6 @@ class ActiveCallOrConferenceFragment : GenericFragment<VoipActiveCallOrConferenc
             binding?.lifecycleOwner = viewLifecycleOwner
         }
 
-        binding.stubbedPausedCall.setOnInflateListener { _, inflated ->
-            val binding = DataBindingUtil.bind<ViewDataBinding>(inflated)
-            binding?.lifecycleOwner = viewLifecycleOwner
-        }
-
-        binding.stubbedRemotelyPausedCall.setOnInflateListener { _, inflated ->
-            val binding = DataBindingUtil.bind<ViewDataBinding>(inflated)
-            binding?.lifecycleOwner = viewLifecycleOwner
-        }
-
         binding.stubbedPausedConference.setOnInflateListener { _, inflated ->
             val binding = DataBindingUtil.bind<ViewDataBinding>(inflated)
             binding?.lifecycleOwner = viewLifecycleOwner
@@ -291,36 +255,6 @@ class ActiveCallOrConferenceFragment : GenericFragment<VoipActiveCallOrConferenc
         super.onPause()
 
         controlsViewModel.hideExtraButtons(true)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        coreContext.core.nativeVideoWindowId = null
-        coreContext.core.nativePreviewWindowId = null
-    }
-
-    private fun showCallVideoUpdateDialog(call: Call) {
-        val viewModel = DialogViewModel(AppUtils.getString(R.string.call_video_update_requested_dialog))
-        dialog = DialogUtils.getVoipDialog(requireContext(), viewModel)
-
-        viewModel.showCancelButton(
-            {
-                coreContext.answerCallVideoUpdateRequest(call, false)
-                dialog?.dismiss()
-            },
-            getString(R.string.dialog_decline)
-        )
-
-        viewModel.showOkButton(
-            {
-                coreContext.answerCallVideoUpdateRequest(call, true)
-                dialog?.dismiss()
-            },
-            getString(R.string.dialog_accept)
-        )
-
-        dialog?.show()
     }
 
     private fun switchToFullScreenIfPossible(conference: Conference) {
@@ -370,5 +304,21 @@ class ActiveCallOrConferenceFragment : GenericFragment<VoipActiveCallOrConferenc
         }
 
         timer.start()
+    }
+
+    private fun updateHingeRelatedConstraints(state: FoldingFeature.State) {
+        /*val constraintLayout = binding.constraintLayout
+        val set = ConstraintSet()
+        set.clone(constraintLayout)
+
+        if (state == FoldingFeature.State.HALF_OPENED) {
+            set.setGuidelinePercent(R.id.hinge_top, 0.5f)
+            set.setGuidelinePercent(R.id.hinge_bottom, 0.5f)
+        } else {
+            set.setGuidelinePercent(R.id.hinge_top, 0f)
+            set.setGuidelinePercent(R.id.hinge_bottom, 1f)
+        }
+
+        set.applyTo(constraintLayout)*/
     }
 }

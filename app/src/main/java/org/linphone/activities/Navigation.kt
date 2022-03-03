@@ -48,10 +48,7 @@ import org.linphone.activities.main.history.fragments.MasterCallLogsFragment
 import org.linphone.activities.main.settings.fragments.*
 import org.linphone.activities.main.sidemenu.fragments.SideMenuFragment
 import org.linphone.activities.voip.CallActivity
-import org.linphone.activities.voip.fragments.ActiveCallOrConferenceFragment
-import org.linphone.activities.voip.fragments.ConferenceParticipantsFragment
-import org.linphone.activities.voip.fragments.IncomingCallFragment
-import org.linphone.activities.voip.fragments.OutgoingCallFragment
+import org.linphone.activities.voip.fragments.*
 import org.linphone.contact.NativeContact
 import org.linphone.core.Address
 
@@ -959,11 +956,21 @@ internal fun SideMenuFragment.navigateToScheduledConferences() {
 /* Calls related */
 
 internal fun CallActivity.navigateToActiveCall() {
-    if (findNavController(R.id.nav_host_fragment).currentDestination?.id != R.id.activeCallOrConferenceFragment) {
+    if (findNavController(R.id.nav_host_fragment).currentDestination?.id != R.id.singleCallFragment) {
         findNavController(R.id.nav_host_fragment).navigate(
-            R.id.action_global_activeCallOrConferenceFragment,
+            R.id.action_global_singleCallFragment,
             null,
-            popupTo(R.id.activeCallOrConferenceFragment, false)
+            popupTo(R.id.conferenceCallFragment, true)
+        )
+    }
+}
+
+internal fun CallActivity.navigateToConferenceCall() {
+    if (findNavController(R.id.nav_host_fragment).currentDestination?.id != R.id.conferenceCallFragment) {
+        findNavController(R.id.nav_host_fragment).navigate(
+            R.id.action_global_conferenceCallFragment,
+            null,
+            popupTo(R.id.singleCallFragment, true)
         )
     }
 }
@@ -972,7 +979,7 @@ internal fun CallActivity.navigateToOutgoingCall() {
     findNavController(R.id.nav_host_fragment).navigate(
         R.id.action_global_outgoingCallFragment,
         null,
-        popupTo(R.id.activeCallOrConferenceFragment, false)
+        popupTo(R.id.singleCallFragment, false)
     )
 }
 
@@ -982,60 +989,80 @@ internal fun CallActivity.navigateToIncomingCall(earlyMediaVideoEnabled: Boolean
     findNavController(R.id.nav_host_fragment).navigate(
         R.id.action_global_incomingCallFragment,
         args,
-        popupTo(R.id.activeCallOrConferenceFragment, false)
+        popupTo(R.id.singleCallFragment, false)
     )
 }
 
 internal fun OutgoingCallFragment.navigateToActiveCall() {
     findNavController().navigate(
-        R.id.action_global_activeCallOrConferenceFragment,
+        R.id.action_global_singleCallFragment,
         null,
-        popupTo(R.id.activeCallOrConferenceFragment, false)
+        popupTo(R.id.singleCallFragment, false)
     )
 }
 
 internal fun IncomingCallFragment.navigateToActiveCall() {
     findNavController().navigate(
-        R.id.action_global_activeCallOrConferenceFragment,
+        R.id.action_global_singleCallFragment,
         null,
-        popupTo(R.id.activeCallOrConferenceFragment, false)
+        popupTo(R.id.singleCallFragment, false)
     )
 }
 
-internal fun ActiveCallOrConferenceFragment.navigateToCallsList() {
-    if (findNavController().currentDestination?.id == R.id.activeCallOrConferenceFragment) {
+internal fun SingleCallFragment.navigateToCallsList() {
+    if (findNavController().currentDestination?.id == R.id.singleCallFragment) {
         findNavController().navigate(
-            R.id.action_activeCallOrConferenceFragment_to_callsListFragment,
+            R.id.action_singleCallFragment_to_callsListFragment,
             null,
             popupTo()
         )
     }
 }
 
-internal fun ActiveCallOrConferenceFragment.navigateToConferenceParticipants() {
-    if (findNavController().currentDestination?.id == R.id.activeCallOrConferenceFragment) {
+internal fun SingleCallFragment.navigateToConferenceParticipants() {
+    if (findNavController().currentDestination?.id == R.id.singleCallFragment) {
         findNavController().navigate(
-            R.id.action_activeCallOrConferenceFragment_to_conferenceParticipantsFragment,
+            R.id.action_singleCallFragment_to_conferenceParticipantsFragment,
             null,
             popupTo()
         )
     }
 }
 
-internal fun ActiveCallOrConferenceFragment.navigateToChat(args: Bundle) {
-    if (findNavController().currentDestination?.id == R.id.activeCallOrConferenceFragment) {
+internal fun SingleCallFragment.navigateToConferenceLayout() {
+    if (findNavController().currentDestination?.id == R.id.singleCallFragment) {
         findNavController().navigate(
-            R.id.action_activeCallOrConferenceFragment_to_chatFragment,
-            args,
+            R.id.action_singleCallFragment_to_conferenceLayoutFragment,
+            null,
             popupTo()
         )
     }
 }
 
-internal fun ActiveCallOrConferenceFragment.navigateToConferenceLayout() {
-    if (findNavController().currentDestination?.id == R.id.activeCallOrConferenceFragment) {
+internal fun ConferenceCallFragment.navigateToCallsList() {
+    if (findNavController().currentDestination?.id == R.id.conferenceCallFragment) {
         findNavController().navigate(
-            R.id.action_activeCallOrConferenceFragment_to_conferenceLayoutFragment,
+            R.id.action_conferenceCallFragment_to_callsListFragment,
+            null,
+            popupTo()
+        )
+    }
+}
+
+internal fun ConferenceCallFragment.navigateToConferenceParticipants() {
+    if (findNavController().currentDestination?.id == R.id.conferenceCallFragment) {
+        findNavController().navigate(
+            R.id.action_conferenceCallFragment_to_conferenceParticipantsFragment,
+            null,
+            popupTo()
+        )
+    }
+}
+
+internal fun ConferenceCallFragment.navigateToConferenceLayout() {
+    if (findNavController().currentDestination?.id == R.id.conferenceCallFragment) {
+        findNavController().navigate(
+            R.id.action_conferenceCallFragment_to_conferenceLayoutFragment,
             null,
             popupTo()
         )

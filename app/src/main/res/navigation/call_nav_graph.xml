@@ -3,29 +3,52 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/call_nav_graph"
-    app:startDestination="@id/activeCallOrConferenceFragment">
+    app:startDestination="@id/singleCallFragment">
 
     <fragment
-        android:id="@+id/activeCallOrConferenceFragment"
-        android:name="org.linphone.activities.voip.fragments.ActiveCallOrConferenceFragment"
-        tools:layout="@layout/voip_active_call_or_conference_fragment"
-        android:label="ActiveCallOrConferenceFragment" >
+        android:id="@+id/singleCallFragment"
+        android:name="org.linphone.activities.voip.fragments.SingleCallFragment"
+        tools:layout="@layout/voip_single_call_fragment"
+        android:label="SingleCallFragment" >
         <action
-            android:id="@+id/action_activeCallOrConferenceFragment_to_callsListFragment"
+            android:id="@+id/action_singleCallFragment_to_callsListFragment"
             app:destination="@id/callsListFragment" />
         <action
-            android:id="@+id/action_activeCallOrConferenceFragment_to_conferenceParticipantsFragment"
+            android:id="@+id/action_singleCallFragment_to_conferenceParticipantsFragment"
             app:destination="@id/conferenceParticipantsFragment" />
         <action
-            android:id="@+id/action_activeCallOrConferenceFragment_to_chatFragment"
+            android:id="@+id/action_singleCallFragment_to_chatFragment"
             app:destination="@id/chatFragment" />
         <action
-            android:id="@+id/action_activeCallOrConferenceFragment_to_conferenceLayoutFragment"
+            android:id="@+id/action_singleCallFragment_to_conferenceLayoutFragment"
             app:destination="@id/conferenceLayoutFragment" />
     </fragment>
 
-    <action android:id="@+id/action_global_activeCallOrConferenceFragment"
-        app:destination="@id/activeCallOrConferenceFragment"/>
+    <action android:id="@+id/action_global_singleCallFragment"
+        app:destination="@id/singleCallFragment"/>
+
+    <fragment
+        android:id="@+id/conferenceCallFragment"
+        android:name="org.linphone.activities.voip.fragments.ConferenceCallFragment"
+        tools:layout="@layout/voip_conference_call_fragment"
+        android:label="ConferenceCallFragment" >
+        <action
+            android:id="@+id/action_conferenceCallFragment_to_callsListFragment"
+            app:destination="@id/callsListFragment" />
+        <action
+            android:id="@+id/action_conferenceCallFragment_to_conferenceParticipantsFragment"
+            app:destination="@id/conferenceParticipantsFragment" />
+        <action
+            android:id="@+id/action_conferenceCallFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+        <action
+            android:id="@+id/action_conferenceCallFragment_to_conferenceLayoutFragment"
+            app:destination="@id/conferenceLayoutFragment" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_conferenceCallFragment"
+        app:destination="@id/conferenceCallFragment"/>
 
     <fragment
         android:id="@+id/callsListFragment"
