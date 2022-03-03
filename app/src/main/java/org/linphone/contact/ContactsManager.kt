@@ -73,11 +73,6 @@ class ContactsManager(private val context: Context) {
         get
         @Synchronized
         private set
-    var sipContacts = ArrayList<Contact>()
-        @Synchronized
-        get
-        @Synchronized
-        private set
 
     val magicSearch: MagicSearch by lazy {
         val magicSearch = coreContext.core.createMagicSearch()
@@ -93,7 +88,7 @@ class ContactsManager(private val context: Context) {
         @Synchronized
         private set
 
-    private val friendsMap: HashMap<String, Friend> = HashMap()
+    private val friendsMap: HashMap<String, Contact> = HashMap()
 
     private val contactsUpdatedListeners = ArrayList<ContactsUpdatedListener>()
 
@@ -103,18 +98,10 @@ class ContactsManager(private val context: Context) {
         @Synchronized
         override fun onPresenceReceived(list: FriendList, friends: Array<Friend>) {
             Log.i("[Contacts Manager] Presence received")
-            var sipContactsListUpdated = false
             for (friend in friends) {
-                if (refreshContactOnPresenceReceived(friend)) {
-                    sipContactsListUpdated = true
-                }
+                refreshContactOnPresenceReceived(friend)
             }
-
-            if (sipContactsListUpdated) {
-                sipContacts.sort()
-                Log.i("[Contacts Manager] Notifying observers that list has changed")
-                notifyListeners()
-            }
+            notifyListeners()
         }
     }
 
@@ -185,12 +172,9 @@ class ContactsManager(private val context: Context) {
     }
 
     @Synchronized
-    fun updateContacts(all: ArrayList<Contact>, sip: ArrayList<Contact>) {
+    fun updateContacts(all: ArrayList<Contact>) {
         contacts.clear()
-        sipContacts.clear()
-
         contacts.addAll(all)
-        sipContacts.addAll(sip)
 
         updateLocalContacts()
 
@@ -231,10 +215,13 @@ class ContactsManager(private val context: Context) {
 
     @Synchronized
     fun findContactByPhoneNumber(number: String): Contact? {
-        val cacheFriend = friendsMap[number]
-        val friend: Friend? = cacheFriend ?: coreContext.core.findFriendByPhoneNumber(number)
-        if (cacheFriend == null && friend != null) friendsMap[number] = friend
-        return friend?.userData as? Contact
+        val contact = friendsMap[number]
+        if (contact != null) return contact
+
+        val friend = coreContext.core.findFriendByPhoneNumber(number)
+        val udContact = friend?.userData as? Contact
+        if (udContact != null) friendsMap[number] = udContact
+        return udContact
     }
 
     @Synchronized
@@ -277,21 +264,16 @@ class ContactsManager(private val context: Context) {
         cleanAddress.clean() // To remove gruu if any
         val cleanStringAddress = cleanAddress.asStringUriOnly()
 
-        val cacheFriend = friendsMap[cleanStringAddress]
-        if (cacheFriend != null) {
-            val contact: Contact? = cacheFriend.userData as? Contact
-            if (contact != null) {
-                Log.i("[Contacts Manager] Found contact $contact from friend in cache: $cacheFriend")
-                return contact
-            }
+        val cacheContact = friendsMap[cleanStringAddress]
+        if (cacheContact != null) {
+            return cacheContact
         }
 
         val friends = coreContext.core.findFriends(address)
         for (friend in friends) {
             val contact: Contact? = friend?.userData as? Contact
             if (contact != null) {
-                Log.i("[Contacts Manager] Found contact $contact from friend in Core: $friend")
-                friendsMap[cleanStringAddress] = friend
+                friendsMap[cleanStringAddress] = contact
                 return contact
             }
         }
@@ -342,11 +324,6 @@ class ContactsManager(private val context: Context) {
             contact.friend = null
         }
         contacts.clear()
-
-        for (contact in sipContacts) {
-            contact.friend = null
-        }
-        sipContacts.clear()
 
         val core = coreContext.core
         for (list in core.friendsLists) list.removeListener(friendListListener)
@@ -405,8 +382,8 @@ class ContactsManager(private val context: Context) {
     }
 
     @Synchronized
-    private fun refreshContactOnPresenceReceived(friend: Friend): Boolean {
-        if (friend.userData == null) return false
+    private fun refreshContactOnPresenceReceived(friend: Friend) {
+        if (friend.userData == null) return
 
         val contact: Contact = friend.userData as Contact
         Log.d("[Contacts Manager] Received presence information for contact $contact")
@@ -420,13 +397,6 @@ class ContactsManager(private val context: Context) {
         } else {
             notifyListeners(contact)
         }
-
-        if (!sipContacts.contains(contact)) {
-            sipContacts.add(contact)
-            return true
-        }
-
-        return false
     }
 
     @Synchronized
