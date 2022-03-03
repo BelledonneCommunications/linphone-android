@@ -119,6 +119,7 @@ class ContactsListViewModel : ViewModel() {
     }
 
     private fun processMagicSearchResults(results: Array<SearchResult>) {
+        Log.i("[Contacts] Processing ${results.size} results")
         val list = arrayListOf<ContactViewModel>()
         for (result in results) {
             val contact = searchMatchingContact(result) ?: Contact(searchResult = result)
@@ -212,8 +213,16 @@ class ContactsListViewModel : ViewModel() {
     }
 
     private fun searchMatchingContact(searchResult: SearchResult): Contact? {
-        val address = searchResult.address
+        val friend = searchResult.friend
+        if (friend != null) {
+            val contact: Contact? = friend.userData as? Contact
+            if (contact != null) return contact
 
+            val friendContact = coreContext.contactsManager.findContactByFriend(friend)
+            if (friendContact != null) return friendContact
+        }
+
+        val address = searchResult.address
         if (address != null) {
             val contact = coreContext.contactsManager.findContactByAddress(address, ignoreLocalContact = true)
             if (contact != null) return contact
