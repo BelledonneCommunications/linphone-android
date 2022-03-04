@@ -68,7 +68,6 @@ class ConferenceParticipantDeviceData(
         override fun onConferenceLeft(participantDevice: ParticipantDevice) {
             Log.i("[Conference Participant Device] Participant [${participantDevice.address.asStringUriOnly()}] has left the conference")
             isInConference.value = false
-            updateWindowId(null)
         }
 
         override fun onStreamCapabilityChanged(
