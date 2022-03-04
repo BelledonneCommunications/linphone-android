@@ -88,7 +88,6 @@ class ContactsListViewModel : ViewModel() {
 
     fun updateContactsList(clearCache: Boolean) {
         val filterValue = filter.value.orEmpty()
-        contactsList.value.orEmpty().forEach(ContactViewModel::destroy)
 
         if (clearCache || (
             previousFilter.isNotEmpty() && (
@@ -122,6 +121,8 @@ class ContactsListViewModel : ViewModel() {
 
     private fun processMagicSearchResults(results: Array<SearchResult>) {
         Log.i("[Contacts] Processing ${results.size} results")
+        contactsList.value.orEmpty().forEach(ContactViewModel::destroy)
+
         val list = arrayListOf<ContactViewModel>()
         for (result in results) {
             val contact = searchMatchingContact(result) ?: Contact(searchResult = result)
@@ -230,8 +231,9 @@ class ContactsListViewModel : ViewModel() {
             if (contact != null) return contact
         }
 
-        if (searchResult.phoneNumber != null) {
-            return coreContext.contactsManager.findContactByPhoneNumber(searchResult.phoneNumber.orEmpty())
+        val phoneNumber = searchResult.phoneNumber
+        if (phoneNumber != null) {
+            return coreContext.contactsManager.findContactByPhoneNumber(phoneNumber)
         }
 
         return null
