@@ -61,14 +61,14 @@ class IncomingCallActivity : GenericActivity() {
         if (incomingCall == null) {
             Log.e("[Incoming Call Activity] Couldn't find call in state Incoming")
             if (isTaskRoot) {
+                Log.i("[Incoming Call Activity] Task is root, starting MainActivity")
                 // When resuming app from recent tasks make sure MainActivity will be launched if there is no call
                 val intent = Intent()
                 intent.setClass(this, MainActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(intent)
-            } else {
-                finish()
             }
+            finish()
             return
         }
 
@@ -118,14 +118,14 @@ class IncomingCallActivity : GenericActivity() {
         if (incomingCall == null) {
             Log.e("[Incoming Call Activity] Couldn't find call in state Incoming")
             if (isTaskRoot) {
+                Log.i("[Incoming Call Activity] Task is root, starting MainActivity")
                 // When resuming app from recent tasks make sure MainActivity will be launched if there is no call
                 val intent = Intent()
                 intent.setClass(this, MainActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(intent)
-            } else {
-                finish()
             }
+            finish()
         }
     }
 

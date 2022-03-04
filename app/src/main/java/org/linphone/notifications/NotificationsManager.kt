@@ -458,7 +458,7 @@ class NotificationsManager(private val context: Context) {
             context,
             0,
             incomingCallNotificationIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
         val notification = Compatibility.createIncomingCallNotification(context, call, notifiable, pendingIntent, this)
