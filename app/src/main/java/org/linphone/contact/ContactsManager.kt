@@ -238,14 +238,22 @@ class ContactsManager(private val context: Context) {
     @Synchronized
     fun findContactByFriend(friend: Friend): Contact? {
         val address = friend.address
+        var potentialContact: Contact? = null
         if (address != null) {
             val friends = coreContext.core.findFriends(address)
             for (f in friends) {
                 if (f.name == friend.name) {
                     val contact: Contact? = f.userData as? Contact
                     if (contact != null) return contact
+                } else {
+                    val contact: Contact? = f.userData as? Contact
+                    if (contact != null) potentialContact = contact
                 }
             }
+        }
+
+        if (potentialContact != null) {
+            return potentialContact
         }
 
         for (list in coreContext.core.friendsLists) {
