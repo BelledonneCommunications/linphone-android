@@ -25,7 +25,6 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.view.View
 import android.widget.Chronometer
-import android.widget.LinearLayout
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.navigation.navGraphViewModels
@@ -39,11 +38,9 @@ import org.linphone.activities.voip.viewmodels.CallsViewModel
 import org.linphone.activities.voip.viewmodels.ConferenceViewModel
 import org.linphone.activities.voip.viewmodels.ControlsViewModel
 import org.linphone.activities.voip.viewmodels.StatisticsListViewModel
-import org.linphone.activities.voip.views.RoundCornersTextureView
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.databinding.VoipSingleCallFragmentBinding
-import org.linphone.mediastream.video.capture.CaptureTextureView
 import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
 
@@ -121,12 +118,10 @@ class SingleCallFragment : GenericFragment<VoipSingleCallFragmentBinding>() {
             }
         }
 
-        controlsViewModel.foldingStateChangedEvent.observe(
+        controlsViewModel.foldingState.observe(
             viewLifecycleOwner
-        ) {
-            it.consume { state ->
-                updateHingeRelatedConstraints(state)
-            }
+        ) { state ->
+            updateHingeRelatedConstraints(state)
         }
 
         callsViewModel.callUpdateEvent.observe(
@@ -143,7 +138,7 @@ class SingleCallFragment : GenericFragment<VoipSingleCallFragmentBinding>() {
                             showCallVideoUpdateDialog(call)
                         }
                     } else {
-                        Log.w("[Call] Video display & capture are disabled, don't show video dialog")
+                        Log.w("[Single Call] Video display & capture are disabled, don't show video dialog")
                     }
                 }
             }
@@ -162,11 +157,8 @@ class SingleCallFragment : GenericFragment<VoipSingleCallFragmentBinding>() {
             }
         }
 
-        val remoteLayout = binding.root.findViewById<LinearLayout>(R.id.remote_layout)
-        val remoteVideoView = remoteLayout.findViewById<RoundCornersTextureView>(R.id.remote_video_surface)
-        coreContext.core.nativeVideoWindowId = remoteVideoView
-        val localVideoView = remoteLayout.findViewById<CaptureTextureView>(R.id.local_preview_video_surface)
-        coreContext.core.nativePreviewWindowId = localVideoView
+        coreContext.core.nativeVideoWindowId = binding.remoteVideoSurface
+        coreContext.core.nativePreviewWindowId = binding.localPreviewVideoSurface
 
         binding.stubbedAudioRoutes.setOnInflateListener { _, inflated ->
             val binding = DataBindingUtil.bind<ViewDataBinding>(inflated)
@@ -232,6 +224,7 @@ class SingleCallFragment : GenericFragment<VoipSingleCallFragmentBinding>() {
     }
 
     private fun updateHingeRelatedConstraints(state: FoldingFeature.State) {
+        Log.i("[Single Call] Updating constraint layout hinges")
         /*val constraintLayout = binding.constraintLayout
         val set = ConstraintSet()
         set.clone(constraintLayout)
