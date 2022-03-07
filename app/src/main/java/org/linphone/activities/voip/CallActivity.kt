@@ -43,7 +43,6 @@ import org.linphone.core.Call
 import org.linphone.core.tools.Log
 import org.linphone.databinding.VoipActivityBinding
 import org.linphone.mediastream.Version
-import org.linphone.utils.Event
 import org.linphone.utils.PermissionHelper
 
 class CallActivity : ProximitySensorActivity() {
@@ -92,7 +91,7 @@ class CallActivity : ProximitySensorActivity() {
             this
         ) {
             it.consume { permission ->
-                Log.i("[Call] Asking for $permission permission")
+                Log.i("[Call Activity] Asking for $permission permission")
                 requestPermissions(arrayOf(permission), 0)
             }
         }
@@ -119,10 +118,10 @@ class CallActivity : ProximitySensorActivity() {
             this
         ) { callData ->
             if (callData.call.conference == null) {
-                Log.i("[Call] Current call isn't linked to a conference, changing fragment")
+                Log.i("[Call Activity] Current call isn't linked to a conference, changing fragment")
                 navigateToActiveCall()
             } else {
-                Log.i("[Call] Current call is linked to a conference, changing fragment")
+                Log.i("[Call Activity] Current call is linked to a conference, changing fragment")
                 navigateToConferenceCall()
             }
         }
@@ -131,10 +130,10 @@ class CallActivity : ProximitySensorActivity() {
             this
         ) { exists ->
             if (exists) {
-                Log.i("[Call] Found active conference, changing fragment")
+                Log.i("[Call Activity] Found active conference, changing fragment")
                 navigateToConferenceCall()
             } else {
-                Log.i("[Call] Conference no longer exists, changing fragment")
+                Log.i("[Call Activity] Conference no longer exists, changing fragment")
                 navigateToActiveCall()
             }
         }
@@ -143,7 +142,7 @@ class CallActivity : ProximitySensorActivity() {
             this
         ) { paused ->
             if (!paused) {
-                Log.i("[Call] Entered conference, make sure conference fragment is active")
+                Log.i("[Call Activity] Entered conference, make sure conference fragment is active")
                 navigateToConferenceCall()
             }
         }
@@ -157,7 +156,7 @@ class CallActivity : ProximitySensorActivity() {
         super.onUserLeaveHint()
 
         if (coreContext.core.currentCall?.currentParams?.isVideoEnabled == true) {
-            Log.i("[Call] Entering PiP mode")
+            Log.i("[Call Activity] Entering PiP mode")
             Compatibility.enterPipMode(this)
         }
     }
@@ -166,7 +165,7 @@ class CallActivity : ProximitySensorActivity() {
         isInPictureInPictureMode: Boolean,
         newConfig: Configuration
     ) {
-        Log.i("[Call] Activity is in PiP mode? $isInPictureInPictureMode")
+        Log.i("[Call Activity] Is in PiP mode? $isInPictureInPictureMode")
         if (::controlsViewModel.isInitialized) {
             // To hide UI except for TextureViews
             controlsViewModel.pipMode.value = isInPictureInPictureMode
@@ -177,7 +176,7 @@ class CallActivity : ProximitySensorActivity() {
         super.onResume()
 
         if (coreContext.core.callsNb == 0) {
-            Log.w("[Call] Resuming but no call found...")
+            Log.w("[Call Activity] Resuming but no call found...")
             if (isTaskRoot) {
                 // When resuming app from recent tasks make sure MainActivity will be launched if there is no call
                 val intent = Intent()
@@ -227,19 +226,19 @@ class CallActivity : ProximitySensorActivity() {
         val permissionsRequiredList = arrayListOf<String>()
 
         if (!PermissionHelper.get().hasRecordAudioPermission()) {
-            Log.i("[Call] Asking for RECORD_AUDIO permission")
+            Log.i("[Call Activity] Asking for RECORD_AUDIO permission")
             permissionsRequiredList.add(Manifest.permission.RECORD_AUDIO)
         }
 
         if (callsViewModel.currentCallData.value?.call?.currentParams?.isVideoEnabled == true &&
             !PermissionHelper.get().hasCameraPermission()
         ) {
-            Log.i("[Call] Asking for CAMERA permission")
+            Log.i("[Call Activity] Asking for CAMERA permission")
             permissionsRequiredList.add(Manifest.permission.CAMERA)
         }
 
         if (Version.sdkAboveOrEqual(Version.API31_ANDROID_12) && !PermissionHelper.get().hasBluetoothConnectPermission()) {
-            Log.i("[Call] Asking for BLUETOOTH_CONNECT permission")
+            Log.i("[Call Activity] Asking for BLUETOOTH_CONNECT permission")
             permissionsRequiredList.add(Compatibility.BLUETOOTH_CONNECT)
         }
 
@@ -259,15 +258,15 @@ class CallActivity : ProximitySensorActivity() {
             for (i in permissions.indices) {
                 when (permissions[i]) {
                     Manifest.permission.RECORD_AUDIO -> if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                        Log.i("[Call] RECORD_AUDIO permission has been granted")
+                        Log.i("[Call Activity] RECORD_AUDIO permission has been granted")
                         controlsViewModel.updateMicState()
                     }
                     Manifest.permission.CAMERA -> if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                        Log.i("[Call] CAMERA permission has been granted")
+                        Log.i("[Call Activity] CAMERA permission has been granted")
                         coreContext.core.reloadVideoDevices()
                     }
                     Compatibility.BLUETOOTH_CONNECT -> if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                        Log.i("[Call] BLUETOOTH_CONNECT permission has been granted")
+                        Log.i("[Call Activity] BLUETOOTH_CONNECT permission has been granted")
                     }
                 }
             }
@@ -282,6 +281,7 @@ class CallActivity : ProximitySensorActivity() {
 
     private fun updateConstraintSetDependingOnFoldingState() {
         val feature = foldingFeature ?: return
-        controlsViewModel.foldingStateChangedEvent.value = Event(feature.state)
+        Log.i("[Call Activity] Folding feature state changed: $feature.state")
+        controlsViewModel.foldingState.value = feature.state
     }
 }

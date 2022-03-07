@@ -25,7 +25,6 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.view.View
 import android.widget.Chronometer
-import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -95,18 +94,15 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
                 startTimer(R.id.active_speaker_conference_timer)
 
                 if (conferenceViewModel.conferenceExists.value == true) {
-                    Log.i("[Call] Local participant is in conference and current layout is active speaker, updating Core's native window id")
+                    Log.i("[Conference Call] Local participant is in conference and current layout is active speaker, updating Core's native window id")
                     val layout =
                         binding.root.findViewById<RelativeLayout>(R.id.conference_active_speaker_layout)
                     val window =
                         layout?.findViewById<RoundCornersTextureView>(R.id.conference_active_speaker_remote_video)
                     coreContext.core.nativeVideoWindowId = window
                 } else {
-                    Log.i("[Call] Either not in conference or current layout isn't active speaker, updating Core's native window id")
-                    val layout = binding.root.findViewById<LinearLayout>(R.id.remote_layout)
-                    val window =
-                        layout?.findViewById<RoundCornersTextureView>(R.id.remote_video_surface)
-                    coreContext.core.nativeVideoWindowId = window
+                    Log.i("[Conference Call] Either not in conference or current layout isn't active speaker, updating Core's native window id")
+                    coreContext.core.nativeVideoWindowId = null
                 }
             }
         }
@@ -174,12 +170,10 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
             }
         }
 
-        controlsViewModel.foldingStateChangedEvent.observe(
+        controlsViewModel.foldingState.observe(
             viewLifecycleOwner
-        ) {
-            it.consume { state ->
-                updateHingeRelatedConstraints(state)
-            }
+        ) { state ->
+            updateHingeRelatedConstraints(state)
         }
 
         callsViewModel.callUpdateEvent.observe(
@@ -188,7 +182,7 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
             it.consume { call ->
                 val conference = call.conference
                 if (conference != null && conferenceViewModel.conference.value == null) {
-                    Log.i("[Call] Found conference attached to call and no conference in dedicated view model, init & configure it")
+                    Log.i("[Conference Call] Found conference attached to call and no conference in dedicated view model, init & configure it")
                     conferenceViewModel.initConference(conference)
                     conferenceViewModel.configureConference(conference)
                 }
@@ -209,21 +203,21 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
         }
 
         binding.stubbedConferenceActiveSpeakerLayout.setOnInflateListener { _, inflated ->
-            Log.i("[Call] Active speaker conference layout inflated")
+            Log.i("[Conference Call] Active speaker conference layout inflated")
             val binding = DataBindingUtil.bind<ViewDataBinding>(inflated)
             binding?.lifecycleOwner = viewLifecycleOwner
             startTimer(R.id.active_speaker_conference_timer)
         }
 
         binding.stubbedConferenceGridLayout.setOnInflateListener { _, inflated ->
-            Log.i("[Call] Mosaic conference layout inflated")
+            Log.i("[Conference Call] Mosaic conference layout inflated")
             val binding = DataBindingUtil.bind<ViewDataBinding>(inflated)
             binding?.lifecycleOwner = viewLifecycleOwner
             startTimer(R.id.grid_conference_timer)
         }
 
         binding.stubbedConferenceAudioOnlyLayout.setOnInflateListener { _, inflated ->
-            Log.i("[Call] Audio only conference layout inflated")
+            Log.i("[Conference Call] Audio only conference layout inflated")
             val binding = DataBindingUtil.bind<ViewDataBinding>(inflated)
             binding?.lifecycleOwner = viewLifecycleOwner
             startTimer(R.id.audio_only_conference_timer)
@@ -261,14 +255,14 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
             if (conference.currentParams.isVideoEnabled) {
                 when {
                     conference.me.devices.isEmpty() -> {
-                        Log.w("[Call] Conference has video enabled but either our device hasn't joined yet")
+                        Log.w("[Conference Call] Conference has video enabled but either our device hasn't joined yet")
                     }
                     conference.me.devices.find { it.getStreamAvailability(StreamType.Video) } != null -> {
-                        Log.i("[Call] Conference has video enabled & our device has video enabled, enabling full screen mode")
+                        Log.i("[Conference Call] Conference has video enabled & our device has video enabled, enabling full screen mode")
                         controlsViewModel.fullScreenMode.value = true
                     }
                     else -> {
-                        Log.w("[Call] Conference has video enabled but our device video is disabled")
+                        Log.w("[Conference Call] Conference has video enabled but our device video is disabled")
                     }
                 }
             }
@@ -290,7 +284,7 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
     private fun startTimer(timerId: Int) {
         val timer: Chronometer? = binding.root.findViewById(timerId)
         if (timer == null) {
-            Log.w("[Call] Timer not found, maybe view wasn't inflated yet?")
+            Log.w("[Conference Call] Timer not found, maybe view wasn't inflated yet?")
             return
         }
 
@@ -299,13 +293,14 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
             val duration = 1000 * conference.duration // Linphone timestamps are in seconds
             timer.base = SystemClock.elapsedRealtime() - duration
         } else {
-            Log.e("[Call] Conference not found, timer will have no base")
+            Log.e("[Conference Call] Conference not found, timer will have no base")
         }
 
         timer.start()
     }
 
     private fun updateHingeRelatedConstraints(state: FoldingFeature.State) {
+        Log.i("[Conference Call] Updating constraint layout hinges")
         /*val constraintLayout = binding.constraintLayout
         val set = ConstraintSet()
         set.clone(constraintLayout)
