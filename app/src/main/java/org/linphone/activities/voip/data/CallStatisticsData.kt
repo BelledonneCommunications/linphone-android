@@ -20,7 +20,6 @@
 package org.linphone.activities.voip.data
 
 import androidx.lifecycle.MutableLiveData
-import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.contact.GenericContactData
 import org.linphone.core.*
 
@@ -31,18 +30,17 @@ class CallStatisticsData(val call: Call) : GenericContactData(call.remoteAddress
 
     val isVideoEnabled = MutableLiveData<Boolean>()
 
-    private val listener = object : CoreListenerStub() {
-        override fun onCallStatsUpdated(core: Core, call: Call, stats: CallStats) {
-            if (call == this@CallStatisticsData.call) {
-                isVideoEnabled.value = call.currentParams.isVideoEnabled
-                updateCallStats(stats)
-            }
+    private var enabled = false
+
+    private val listener = object : CallListenerStub() {
+        override fun onStatsUpdated(call: Call, stats: CallStats) {
+            isVideoEnabled.value = call.currentParams.isVideoEnabled
+            updateCallStats(stats)
         }
     }
 
     init {
-        coreContext.core.addListener(listener)
-
+        enabled = false
         audioStats.value = arrayListOf()
         videoStats.value = arrayListOf()
 
@@ -52,8 +50,18 @@ class CallStatisticsData(val call: Call) : GenericContactData(call.remoteAddress
         isVideoEnabled.value = videoEnabled
     }
 
+    fun enable() {
+        enabled = true
+        call.addListener(listener)
+    }
+
+    fun disable() {
+        enabled = false
+        call.removeListener(listener)
+    }
+
     override fun destroy() {
-        coreContext.core.removeListener(listener)
+        if (enabled) disable()
         super.destroy()
     }
 
