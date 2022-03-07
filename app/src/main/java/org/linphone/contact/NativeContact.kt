@@ -25,6 +25,7 @@ import android.database.Cursor
 import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.ContactsContract
+import android.util.Patterns
 import androidx.core.app.Person
 import androidx.core.graphics.drawable.IconCompat
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -124,11 +125,15 @@ class NativeContact(val nativeId: String, private val lookupKey: String? = null)
 
                     // data4 = ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER
                     // data1 = ContactsContract.CommonDataKinds.Phone.NUMBER
-                    val number = if (corePreferences.preferNormalizedPhoneNumbersFromAddressBook) {
+                    val number = if (corePreferences.preferNormalizedPhoneNumbersFromAddressBook ||
+                        data1.isNullOrEmpty() ||
+                        !Patterns.PHONE.matcher(data1).matches()
+                    ) {
                         data4 ?: data1
                     } else {
-                        data1 ?: data4
+                        data1
                     }
+
                     if (number != null && number.isNotEmpty()) {
                         Log.d("[Native Contact] Found phone number $data1 ($data4), type label is $typeLabel")
                         if (!rawPhoneNumbers.contains(number)) {
