@@ -38,6 +38,7 @@ import org.linphone.activities.navigateToActiveCall
 import org.linphone.activities.voip.viewmodels.CallsViewModel
 import org.linphone.activities.voip.viewmodels.ConferenceViewModel
 import org.linphone.activities.voip.viewmodels.ControlsViewModel
+import org.linphone.activities.voip.viewmodels.StatisticsListViewModel
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.Call
 import org.linphone.core.tools.Log
@@ -50,6 +51,7 @@ class CallActivity : ProximitySensorActivity() {
     private lateinit var controlsViewModel: ControlsViewModel
     private lateinit var callsViewModel: CallsViewModel
     private lateinit var conferenceViewModel: ConferenceViewModel
+    private lateinit var statsViewModel: StatisticsListViewModel
 
     private var foldingFeature: FoldingFeature? = null
 
@@ -78,6 +80,8 @@ class CallActivity : ProximitySensorActivity() {
         callsViewModel = ViewModelProvider(navControllerStoreOwner)[CallsViewModel::class.java]
 
         conferenceViewModel = ViewModelProvider(navControllerStoreOwner)[ConferenceViewModel::class.java]
+
+        statsViewModel = ViewModelProvider(navControllerStoreOwner)[StatisticsListViewModel::class.java]
 
         callsViewModel.noMoreCallEvent.observe(
             this
@@ -112,6 +116,12 @@ class CallActivity : ProximitySensorActivity() {
             this
         ) { enabled ->
             Compatibility.enableAutoEnterPiP(this, enabled)
+        }
+
+        controlsViewModel.callStatsVisible.observe(
+            this
+        ) { visible ->
+            if (visible) statsViewModel.enable() else statsViewModel.disable()
         }
 
         callsViewModel.currentCallData.observe(
