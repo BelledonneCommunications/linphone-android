@@ -121,7 +121,7 @@
             android:windowSoftInputMode="adjustResize"/>
 
         <activity android:name=".activities.voip.CallActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:supportsPictureInPicture="true" />
 
