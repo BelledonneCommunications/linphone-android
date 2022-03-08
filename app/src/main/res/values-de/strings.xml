@@ -2,7 +2,7 @@
 <!DOCTYPE resources [
 <!ENTITY appName "Linphone">
 ]>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="service_description">Dies ist erforderlich um Anrufe im Hintergrund anzunehmen</string>
     <string name="sync_account_name">&appName; Kontakte</string>
     <string name="about_privacy_policy">Datenschutz-Bestimmungen</string>
@@ -226,4 +226,55 @@
     <string name="content_description_add_contact">Kontakt anlegen</string>
     <string name="content_description_create_one_to_one_chat_room">Eins-zu-eins-Unterhaltung beginnen</string>
     <string name="content_description_call_quality_1">Niedrige Gesprächsqualität</string>
+    <string name="contacts_settings_ldap_search_timeout_subtitle">In Sekunden</string>
+    <string name="content_description_remove_from_conference">Teilnehmer aus der Konferenz entfernen</string>
+    <string name="audio_settings_playback_gain_summary">(in Dezibel)</string>
+    <string name="dialog_cancel">Abbrechen</string>
+    <string name="dialog_delete">Löschen</string>
+    <string name="dialog_accept">Annehmen</string>
+    <string name="content_description_pause_conference">Konferenz pausieren</string>
+    <string name="call_settings_media_encryption_none">Keine</string>
+    <string name="chat_settings_auto_download_never">Nie</string>
+    <string name="incoming_call_notification_title">Eingehender Anruf</string>
+    <string name="incoming_call_notification_hangup_action_label">Auflegen</string>
+    <string name="incoming_call_notification_answer_action_label">Annehmen</string>
+    <string name="received_chat_notification_reply_label">Antworten</string>
+    <string name="zrtp_dialog_ok_button_label">Annehmen</string>
+    <string name="dialog_call">Anruf</string>
+    <string name="dialog_decline">Ablehnen</string>
+    <string name="call_settings_auto_answer_delay_summary">in Millisekunden</string>
+    <plurals name="chat_room_unread_messages_event">
+        <item quantity="one">%1$d ungelesene Nachricht</item>
+        <item quantity="other">%1$d ungelesene Nachrichten</item>
+    </plurals>
+    <string name="contacts_settings_ldap_sip_domain_title">Domäne</string>
+    <string name="advanced_settings_dark_mode_label_yes">Ja</string>
+    <string name="advanced_settings_dark_mode_label_no">Nein</string>
+    <string name="advanced_settings_animations_title">Animationen</string>
+    <string name="chat_room_file_not_found">Datei nicht gefunden</string>
+    <string name="chat_room_cant_open_file_no_app_found">Datei kann nicht geöffnet werden, keine Applikation für dieses Format gefunden.</string>
+    <string name="chat_room_ephemeral_message_disabled">Deaktiviert</string>
+    <string name="assistant_welcome_title">Willkommen</string>
+    <string name="assistant_error_passwords_dont_match">Passwörter stimmen nicht überein</string>
+    <string name="assistant_error_invalid_email_address">Ungültige E-Mail Adresse</string>
+    <string name="audio_settings_echo_cancellation_calibration_no_echo">Kein Echo erkannt</string>
+    <string name="audio_settings_echo_tester_title">Echo testen</string>
+    <string name="about_weblate_translation">Hilf uns &appName; zu übersetzen</string>
+    <string name="contacts_settings_ldap_password_title">Passwort</string>
+    <string name="contacts_settings_ldap_delete_title">Löschen</string>
+    <string name="contacts_settings_ldap_connection_title">Verbindung</string>
+    <string name="contacts_settings_ldap_auth_method_anonymous">Anonym</string>
+    <string name="chat_settings_auto_download_always">Immer</string>
+    <string name="call_settings_incoming_timeout_summary">in Sekunden</string>
+    <string name="chat_settings_auto_download_max_size_summary">in Bytes</string>
+    <string name="contacts_settings_ldap_auth_method_title">Authentifizierungsmethode</string>
+    <string name="contacts_settings_ldap_search_base_subtitle">Darf nicht leer sein!</string>
+    <string name="received_chat_notification_mark_as_read_label">Als gelesen markieren</string>
+    <string name="missed_call_notification_title">Verpasster Anruf</string>
+    <string name="missed_call_notification_body">Verpasster Anruf von %s</string>
+    <string name="missed_calls_notification_body" tools:ignore="PluralsCandidate">%d verpasste Anrufe</string>
+    <string name="zrtp_dialog_deny_button_label">Ablehnen</string>
+    <string name="content_description_pause_call">Anruf pausieren</string>
+    <string name="content_description_terminate_call">Anruf beenden</string>
+    <string name="content_description_chat_message_video_attachment">Videoanhang</string>
 </resources>
