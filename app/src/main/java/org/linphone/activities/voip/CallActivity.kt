@@ -86,8 +86,11 @@ class CallActivity : ProximitySensorActivity() {
         callsViewModel.noMoreCallEvent.observe(
             this
         ) {
-            it.consume {
-                finish()
+            it.consume { noMoreCall ->
+                if (noMoreCall) {
+                    Log.i("[Call Activity] No more call event fired, finishing activity")
+                    finish()
+                }
             }
         }
 
