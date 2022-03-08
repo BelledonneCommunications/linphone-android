@@ -173,6 +173,12 @@ class ContactsManager(private val context: Context) {
 
     @Synchronized
     fun updateContacts(all: ArrayList<Contact>) {
+        friendsMap.clear()
+        // Contact has a Friend field and Friend can have a Contact has userData
+        // Friend also keeps a ref on the Core, so we have to clean them
+        for (contact in contacts) {
+            contact.friend = null
+        }
         contacts.clear()
         contacts.addAll(all)
 

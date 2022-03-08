@@ -979,7 +979,7 @@ internal fun CallActivity.navigateToOutgoingCall() {
     findNavController(R.id.nav_host_fragment).navigate(
         R.id.action_global_outgoingCallFragment,
         null,
-        popupTo(R.id.singleCallFragment, true)
+        popupTo(R.id.outgoingCallFragment, true)
     )
 }
 
@@ -989,7 +989,7 @@ internal fun CallActivity.navigateToIncomingCall(earlyMediaVideoEnabled: Boolean
     findNavController(R.id.nav_host_fragment).navigate(
         R.id.action_global_incomingCallFragment,
         args,
-        popupTo(R.id.singleCallFragment, true)
+        popupTo(R.id.incomingCallFragment, true)
     )
 }
 
@@ -997,7 +997,7 @@ internal fun OutgoingCallFragment.navigateToActiveCall() {
     findNavController().navigate(
         R.id.action_global_singleCallFragment,
         null,
-        popupTo(R.id.outgoingCallFragment, true)
+        popupTo(R.id.singleCallFragment, true)
     )
 }
 
@@ -1005,7 +1005,7 @@ internal fun IncomingCallFragment.navigateToActiveCall() {
     findNavController().navigate(
         R.id.action_global_singleCallFragment,
         null,
-        popupTo(R.id.incomingCallFragment, true)
+        popupTo(R.id.singleCallFragment, true)
     )
 }
 
