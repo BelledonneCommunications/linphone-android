@@ -276,7 +276,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
         Log.i("[Context] Ready")
     }
 
-    fun start(isPush: Boolean = false) {
+    fun start() {
         Log.i("[Context] Starting")
 
         core.addListener(listener)
@@ -292,11 +292,6 @@ class CoreContext(val context: Context, coreConfig: Config) {
                 Log.w("[Context] Can't create Telecom Helper, permissions have been revoked")
                 corePreferences.useTelecomManager = false
             }
-        }
-
-        if (isPush) {
-            Log.i("[Context] Push received, assume in background")
-            core.enterBackground()
         }
 
         configureCore()
