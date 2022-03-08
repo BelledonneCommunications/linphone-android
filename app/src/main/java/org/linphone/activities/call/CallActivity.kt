@@ -109,9 +109,8 @@ class CallActivity : ProximitySensorActivity() {
                 intent.setClass(this, MainActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(intent)
-            } else {
-                finish()
             }
+            finish()
         } else {
             coreContext.removeCallOverlay()
         }

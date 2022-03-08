@@ -49,10 +49,10 @@ class IncomingCallActivity : GenericActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Compatibility.setShowWhenLocked(this, true)
-        Compatibility.setTurnScreenOn(this, true)
         // Leaks on API 27+: https://stackoverflow.com/questions/60477120/keyguardmanager-memory-leak
         Compatibility.requestDismissKeyguard(this)
+        Compatibility.setShowWhenLocked(this, true)
+        Compatibility.setTurnScreenOn(this, true)
 
         binding = DataBindingUtil.setContentView(this, R.layout.call_incoming_activity)
         binding.lifecycleOwner = this

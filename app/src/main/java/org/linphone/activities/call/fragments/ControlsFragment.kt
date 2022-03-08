@@ -101,9 +101,11 @@ class ControlsFragment : GenericFragment<CallControlsFragmentBinding>() {
         callsViewModel.noMoreCallEvent.observe(
             viewLifecycleOwner
         ) {
-            it.consume {
-                Log.i("[Controls Fragment] No more call, finishing activity")
-                requireActivity().finish()
+            it.consume { noMoreCall ->
+                if (noMoreCall) {
+                    Log.i("[Controls Fragment] No more call, finishing activity")
+                    requireActivity().finish()
+                }
             }
         }
 

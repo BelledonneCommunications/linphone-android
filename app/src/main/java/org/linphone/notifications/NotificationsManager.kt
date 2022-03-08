@@ -445,6 +445,17 @@ class NotificationsManager(private val context: Context) {
             return
         }
 
+        try {
+            val showLockScreenNotification = android.provider.Settings.Secure.getInt(
+                context.contentResolver,
+                "lock_screen_show_notifications",
+                0
+            )
+            Log.i("[Notifications Manager] Are notifications allowed on lock screen? ${showLockScreenNotification != 0} ($showLockScreenNotification)")
+        } catch (e: Exception) {
+            Log.e("[Notifications Manager] Failed to get android.provider.Settings.Secure.getInt(lock_screen_show_notifications): $e")
+        }
+
         val notifiable = getNotifiableForCall(call)
         if (notifiable.notificationId == currentForegroundServiceNotificationId) {
             Log.e("[Notifications Manager] There is already a Service foreground notification for an incoming call, cancelling it")
@@ -453,7 +464,7 @@ class NotificationsManager(private val context: Context) {
         }
 
         val incomingCallNotificationIntent = Intent(context, IncomingCallActivity::class.java)
-        incomingCallNotificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        incomingCallNotificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NO_USER_ACTION)
         val pendingIntent = PendingIntent.getActivity(
             context,
             0,
