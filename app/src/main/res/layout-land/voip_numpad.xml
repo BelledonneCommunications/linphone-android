@@ -24,9 +24,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="80dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="70dp"
             android:background="@drawable/shape_call_popup_background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -53,9 +51,9 @@
             android:gravity="center_horizontal"
             android:maxLines="1"
             android:text="@{controlsViewModel.dtmfHistory, default=`0123456`}"
-            app:layout_constraintEnd_toEndOf="@id/background"
+            app:layout_constraintEnd_toStartOf="@id/hide_numpad"
             app:layout_constraintStart_toStartOf="@id/background"
-            app:layout_constraintTop_toBottomOf="@id/hide_numpad" />
+            app:layout_constraintTop_toTopOf="@id/background" />
 
         <ImageView
             android:id="@+id/dtmf_1"
