@@ -18,49 +18,52 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/voip_translucent_popup_background"
         android:clickable="true"
-        android:visibility="@{inflatedVisibility}"
-        android:background="@color/voip_translucent_popup_background">
+        android:visibility="@{inflatedVisibility}">
 
-        <RelativeLayout
+        <View
+            android:id="@+id/background"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginTop="80dp"
-            android:layout_marginBottom="70dp"
             android:layout_marginStart="10dp"
+            android:layout_marginTop="80dp"
             android:layout_marginEnd="10dp"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginBottom="70dp"
+            android:background="@drawable/shape_call_popup_background"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintWidth_max="@dimen/voip_views_max_width"
-            android:background="@drawable/shape_call_popup_background">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintWidth_max="@dimen/voip_views_max_width" />
 
-            <ImageView
-                android:id="@+id/hide_stats"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_margin="10dp"
-                android:onClick="@{() -> controlsViewModel.hideCallStats()}"
-                android:src="@drawable/icon_cancel_alt"
-                android:contentDescription="@string/content_description_hide_statistics"/>
+        <ImageView
+            android:id="@+id/hide_stats"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:contentDescription="@string/content_description_hide_statistics"
+            android:onClick="@{() -> controlsViewModel.hideCallStats()}"
+            android:src="@drawable/icon_cancel_alt"
+            app:layout_constraintEnd_toEndOf="@id/background"
+            app:layout_constraintTop_toTopOf="@id/background" />
 
-            <androidx.core.widget.NestedScrollView
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_below="@id/hide_stats"
+            app:layout_constraintEnd_toEndOf="@id/background"
+            app:layout_constraintStart_toStartOf="@id/background"
+            app:layout_constraintTop_toBottomOf="@id/hide_stats"
+            app:layout_constraintBottom_toBottomOf="@id/background"
+            android:layout_marginBottom="10dp">
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/hide_stats"
-                android:layout_marginBottom="10dp">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:entries="@{statsViewModel.callStatsList}"
+                app:layout="@{@layout/voip_call_stats_cell}" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:entries="@{statsViewModel.callStatsList}"
-                    app:layout="@{@layout/voip_call_stats_cell}" />
-
-            </androidx.core.widget.NestedScrollView>
-
-        </RelativeLayout>
+        </androidx.core.widget.NestedScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

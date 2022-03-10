@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View" />
@@ -15,165 +16,175 @@
             type="org.linphone.activities.voip.viewmodels.ConferenceViewModel" />
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/voip_call_extra_buttons_height"
-        android:gravity="center"
-        android:layout_marginEnd="15dp"
         android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
         android:background="@drawable/shape_extra_buttons_background"
-        android:orientation="vertical">
+        android:gravity="center">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/numpad"
+            style="@style/call_options_font"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:gravity="center"
+            android:onClick="@{() -> controlsViewModel.showNumpad()}"
+            android:text="@string/call_action_numpad"
+            app:drawableTopCompat="@drawable/icon_call_numpad"
+            app:layout_constraintBottom_toBottomOf="@id/chat"
+            app:layout_constraintEnd_toStartOf="@id/call_stats"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/chat"/>
 
-            <TextView
-                android:onClick="@{() -> controlsViewModel.showNumpad()}"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:drawableTopCompat="@drawable/icon_call_numpad"
-                android:gravity="center"
-                style="@style/call_options_font"
-                android:text="@string/call_action_numpad"/>
-
-            <TextView
-                android:onClick="@{() -> controlsViewModel.showCallStats(false)}"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:drawableTopCompat="@drawable/icon_call_stats"
-                android:gravity="center"
-                style="@style/call_options_font"
-                android:text="@string/call_action_statistics"/>
-
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-                <TextView
-                    android:id="@+id/chat"
-                    style="@style/call_options_font"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:gravity="center"
-                    android:onClick="@{() -> controlsViewModel.goToChat()}"
-                    android:text="@string/call_action_chat"
-                    app:drawableTopCompat="@drawable/icon_call_chat" />
-
-                <TextView
-                    style="@style/unread_count_font"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_toEndOf="@id/chat"
-                    android:background="@drawable/unread_message_count_bg"
-                    android:gravity="center"
-                    android:translationY="@{controlsViewModel.bouncyCounterTranslateY}"
-                    android:text="@{String.valueOf(callsViewModel.currentCallUnreadChatMessageCount), default=1}"
-                    android:visibility="@{callsViewModel.currentCallUnreadChatMessageCount == 0 ? View.GONE : View.VISIBLE}" />
-
-                <ProgressBar
-                    android:visibility="@{controlsViewModel.chatRoomCreationInProgress ? View.VISIBLE : View.GONE, default=gone}"
-                    style="?android:attr/progressBarStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
-            </RelativeLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/call_stats"
+            style="@style/call_options_font"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:gravity="center"
+            android:onClick="@{() -> controlsViewModel.showCallStats(false)}"
+            android:text="@string/call_action_statistics"
+            app:drawableTopCompat="@drawable/icon_call_stats"
+            app:layout_constraintBottom_toBottomOf="@id/chat"
+            app:layout_constraintEnd_toStartOf="@id/chat"
+            app:layout_constraintStart_toEndOf="@id/numpad"
+            app:layout_constraintTop_toTopOf="@id/chat" />
 
-            <TextView
-                android:onClick="@{() -> controlsViewModel.goToDialerForCallTransfer()}"
-                android:visibility="@{conferenceViewModel.conferenceExists ? View.GONE : View.VISIBLE}"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginTop="20dp"
-                app:drawableTopCompat="@drawable/icon_call_forward"
-                android:gravity="center"
-                style="@style/call_options_font"
-                android:text="@string/call_action_transfer_call"/>
+        <TextView
+            android:id="@+id/chat"
+            style="@style/call_options_font"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:onClick="@{() -> controlsViewModel.goToChat()}"
+            android:text="@string/call_action_chat"
+            app:drawableTopCompat="@drawable/icon_call_chat"
+            app:layout_constraintBottom_toTopOf="@id/calls"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/call_stats"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="spread" />
 
-            <TextView
-                android:onClick="@{() -> controlsViewModel.goToConferenceParticipantsList()}"
-                android:visibility="@{conferenceViewModel.conferenceExists ? View.VISIBLE : View.GONE, default=gone}"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginTop="20dp"
-                app:drawableTopCompat="@drawable/icon_call_participants"
-                android:gravity="center"
-                style="@style/call_options_font"
-                android:text="@string/call_action_participants_list"/>
+        <TextView
+            style="@style/unread_count_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="60dp"
+            android:background="@drawable/unread_message_count_bg"
+            android:gravity="center"
+            android:text="@{String.valueOf(callsViewModel.currentCallUnreadChatMessageCount), default=1}"
+            android:translationY="@{controlsViewModel.bouncyCounterTranslateY}"
+            android:visibility="@{callsViewModel.currentCallUnreadChatMessageCount == 0 ? View.GONE : View.VISIBLE}"
+            app:layout_constraintEnd_toEndOf="@id/chat"
+            app:layout_constraintStart_toStartOf="@id/chat"
+            app:layout_constraintTop_toTopOf="@id/chat" />
 
-            <TextView
-                android:onClick="@{() -> controlsViewModel.goToDialerForNewCall()}"
-                android:visibility="@{conferenceViewModel.conferenceExists ? View.GONE : View.VISIBLE}"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginTop="20dp"
-                app:drawableTopCompat="@drawable/icon_call_add"
-                android:gravity="center"
-                style="@style/call_options_font"
-                android:text="@string/call_action_add_call"/>
+        <ProgressBar
+            style="?android:attr/progressBarStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="@{controlsViewModel.chatRoomCreationInProgress ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintBottom_toBottomOf="@id/chat"
+            app:layout_constraintEnd_toEndOf="@id/chat"
+            app:layout_constraintStart_toStartOf="@id/chat"
+            app:layout_constraintTop_toTopOf="@id/chat"/>
 
-            <TextView
-                android:onClick="@{() -> controlsViewModel.goToConferenceLayout()}"
-                android:visibility="@{conferenceViewModel.conferenceExists ? View.VISIBLE : View.GONE, default=gone}"
-                android:enabled="@{conferenceViewModel.isVideoConference}"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginTop="20dp"
-                android:drawableTop="@{conferenceViewModel.conferenceActiveSpeakerDisplayMode ? @drawable/icon_conference_layout_active_speaker : conferenceViewModel.conferenceAudioOnlyDisplayMode ? @drawable/icon_conference_layout_audio_only : @drawable/icon_conference_layout_grid, default=@drawable/icon_conference_layout_grid}"
-                android:gravity="center"
-                style="@style/call_options_font"
-                android:text="@string/call_action_change_conf_layout"/>
+        <TextView
+            android:id="@+id/transfer_call"
+            style="@style/call_options_font"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:onClick="@{() -> controlsViewModel.goToDialerForCallTransfer()}"
+            android:text="@string/call_action_transfer_call"
+            android:visibility="@{conferenceViewModel.conferenceExists ? View.GONE : View.VISIBLE, default=gone}"
+            app:drawableTopCompat="@drawable/icon_call_forward"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/conference_participants"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/numpad"/>
 
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginTop="20dp">
+        <TextView
+            android:id="@+id/conference_participants"
+            style="@style/call_options_font"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:onClick="@{() -> controlsViewModel.goToConferenceParticipantsList()}"
+            android:text="@string/call_action_participants_list"
+            android:visibility="@{conferenceViewModel.conferenceExists ? View.VISIBLE : View.GONE}"
+            app:drawableTopCompat="@drawable/icon_call_participants"
+            app:layout_constraintBottom_toBottomOf="@id/calls"
+            app:layout_constraintEnd_toStartOf="@id/add_call"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toEndOf="@id/transfer_call"
+            app:layout_constraintTop_toTopOf="@id/calls"/>
 
-                <TextView
-                    android:id="@+id/calls"
-                    style="@style/call_options_font"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:gravity="center"
-                    android:onClick="@{() -> controlsViewModel.goToCallsList()}"
-                    android:text="@string/call_action_calls_list"
-                    app:drawableTopCompat="@drawable/icon_calls_list" />
+        <TextView
+            android:id="@+id/add_call"
+            style="@style/call_options_font"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:onClick="@{() -> controlsViewModel.goToDialerForNewCall()}"
+            android:text="@string/call_action_add_call"
+            android:visibility="@{conferenceViewModel.conferenceExists ? View.GONE : View.VISIBLE, default=gone}"
+            app:drawableTopCompat="@drawable/icon_call_add"
+            app:layout_constraintBottom_toBottomOf="@id/calls"
+            app:layout_constraintEnd_toStartOf="@id/conference_layout"
+            app:layout_constraintStart_toEndOf="@id/conference_participants"
+            app:layout_constraintTop_toTopOf="@id/calls"/>
 
-                <TextView
-                    style="@style/unread_count_font"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_toEndOf="@id/calls"
-                    android:background="@drawable/unread_message_count_bg"
-                    android:gravity="center"
-                    android:translationY="@{controlsViewModel.bouncyCounterTranslateY}"
-                    android:text="@{String.valueOf(callsViewModel.inactiveCallsCount), default=1}"
-                    android:visibility="@{callsViewModel.inactiveCallsCount == 0 ? View.GONE : View.VISIBLE}" />
+        <TextView
+            android:id="@+id/conference_layout"
+            style="@style/call_options_font"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:drawableTop="@{conferenceViewModel.conferenceActiveSpeakerDisplayMode ? @drawable/icon_conference_layout_active_speaker : conferenceViewModel.conferenceAudioOnlyDisplayMode ? @drawable/icon_conference_layout_audio_only : @drawable/icon_conference_layout_grid, default=@drawable/icon_conference_layout_grid}"
+            android:enabled="@{conferenceViewModel.isVideoConference}"
+            android:gravity="center"
+            android:onClick="@{() -> controlsViewModel.goToConferenceLayout()}"
+            android:text="@string/call_action_change_conf_layout"
+            android:visibility="@{conferenceViewModel.conferenceExists ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/calls"
+            app:layout_constraintEnd_toStartOf="@id/calls"
+            app:layout_constraintStart_toEndOf="@id/add_call"
+            app:layout_constraintTop_toTopOf="@id/calls"
+            tools:ignore="UseCompatTextViewDrawableXml" />
 
-            </RelativeLayout>
+        <TextView
+            android:id="@+id/calls"
+            style="@style/call_options_font"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:onClick="@{() -> controlsViewModel.goToCallsList()}"
+            android:text="@string/call_action_calls_list"
+            app:drawableTopCompat="@drawable/icon_calls_list"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/conference_layout"
+            app:layout_constraintTop_toBottomOf="@id/chat" />
 
-        </LinearLayout>
+        <TextView
+            style="@style/unread_count_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="60dp"
+            android:background="@drawable/unread_message_count_bg"
+            android:gravity="center"
+            android:text="@{String.valueOf(callsViewModel.inactiveCallsCount), default=1}"
+            android:translationY="@{controlsViewModel.bouncyCounterTranslateY}"
+            android:visibility="@{callsViewModel.inactiveCallsCount == 0 ? View.GONE : View.VISIBLE}"
+            app:layout_constraintEnd_toEndOf="@id/calls"
+            app:layout_constraintStart_toStartOf="@id/calls"
+            app:layout_constraintTop_toTopOf="@id/calls" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

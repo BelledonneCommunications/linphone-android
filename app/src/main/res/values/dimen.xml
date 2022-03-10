@@ -57,4 +57,6 @@
     <dimen name="voip_call_header_height">60dp</dimen>
     <dimen name="voip_conference_active_speaker_miniature_avatar_size">50dp</dimen>
     <dimen name="voip_conference_participant_mic_muted_icon_size">30dp</dimen>
+    <dimen name="voip_dialog_button_max_width">137dp</dimen>
+    <dimen name="voip_contact_avatar_max_height">200dp</dimen>
 </resources>
