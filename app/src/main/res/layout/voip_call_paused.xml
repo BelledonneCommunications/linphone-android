@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <import type="android.view.View" />
@@ -11,47 +12,54 @@
             type="Integer" />
     </data>
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="@{inflatedVisibility}"
-        android:focusable="true"
+        android:background="@color/voip_translucent_popup_background"
         android:clickable="true"
-        android:background="@color/voip_translucent_popup_background">
+        android:focusable="true"
+        android:visibility="@{inflatedVisibility}">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/resume_call"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:background="@drawable/shape_orange_circle"
+            android:contentDescription="@null"
+            android:onClick="@{() -> data.resume()}"
+            android:padding="40dp"
+            android:src="@drawable/voip_conference_play_big"
+            app:layout_constraintBottom_toTopOf="@id/paused_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/paused_title"
+            style="@style/conference_paused_title_font"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_marginTop="20dp"
             android:gravity="center"
-            android:orientation="vertical">
+            android:text="@string/call_locally_paused_title"
+            app:layout_constraintBottom_toTopOf="@id/paused_subtitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/resume_call" />
 
-            <ImageView
-                android:onClick="@{() -> data.resume()}"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:padding="40dp"
-                android:background="@drawable/shape_orange_circle"
-                android:src="@drawable/voip_conference_play_big"
-                android:contentDescription="@null"/>
+        <TextView
+            android:id="@+id/paused_subtitle"
+            style="@style/conference_paused_subtitle_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/call_locally_paused_subtitle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/paused_title" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:gravity="center"
-                style="@style/conference_paused_title_font"
-                android:text="@string/call_locally_paused_title"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                style="@style/conference_paused_subtitle_font"
-                android:text="@string/call_locally_paused_subtitle"/>
-
-        </LinearLayout>
-
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

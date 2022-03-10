@@ -15,7 +15,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:maxHeight="200dp">
+        android:maxHeight="@dimen/voip_contact_avatar_max_height">
 
         <ImageView
             android:layout_width="match_parent"
