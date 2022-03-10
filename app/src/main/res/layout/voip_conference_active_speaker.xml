@@ -18,7 +18,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="@{inflatedVisibility}">
+        android:visibility="@{inflatedVisibility}"
+        android:layout_margin="@{controlsViewModel.fullScreenMode || controlsViewModel.pipMode ? @dimen/voip_remote_margin_full_screen : @dimen/voip_remote_margin, default=@dimen/voip_remote_margin}">
 
         <LinearLayout
             android:id="@+id/header"

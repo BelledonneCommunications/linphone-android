@@ -58,6 +58,7 @@
             android:layout_height="@dimen/voip_conference_active_speaker_miniature_avatar_size"
             android:src="@drawable/icon_pause"
             android:background="@drawable/shape_button_background"
+            android:contentDescription="@string/content_description_participant_is_paused"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
