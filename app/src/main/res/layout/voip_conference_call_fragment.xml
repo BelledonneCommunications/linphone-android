@@ -31,45 +31,42 @@
             android:layout_height="match_parent"
             android:background="@{controlsViewModel.fullScreenMode ? @color/black_color : @color/transparent_color}">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <ViewStub
+                android:id="@+id/stubbed_conference_active_speaker_layout"
+                android:inflatedId="@+id/conference_active_speaker_layout"
+                android:layout="@layout/voip_conference_active_speaker"
+                android:visibility="@{conferenceViewModel.conferenceActiveSpeakerDisplayMode ? View.VISIBLE : View.GONE, default=gone}"
+                app:inflatedVisibility="@{conferenceViewModel.conferenceActiveSpeakerDisplayMode ? View.VISIBLE : View.GONE}"
                 android:layout_width="match_parent"
+                app:conferenceViewModel="@{conferenceViewModel}"
+                app:controlsViewModel="@{controlsViewModel}"
                 android:layout_height="0dp"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/primary_buttons"
-                android:layout_margin="@{controlsViewModel.fullScreenMode || controlsViewModel.pipMode ? @dimen/voip_remote_margin_full_screen : @dimen/voip_remote_margin, default=@dimen/voip_remote_margin}">
+                app:layout_constraintBottom_toTopOf="@id/primary_buttons" />
 
-                <ViewStub
-                    android:id="@+id/stubbed_conference_active_speaker_layout"
-                    android:inflatedId="@+id/conference_active_speaker_layout"
-                    android:layout="@layout/voip_conference_active_speaker"
-                    android:visibility="@{conferenceViewModel.conferenceActiveSpeakerDisplayMode ? View.VISIBLE : View.GONE, default=gone}"
-                    app:inflatedVisibility="@{conferenceViewModel.conferenceActiveSpeakerDisplayMode ? View.VISIBLE : View.GONE}"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:conferenceViewModel="@{conferenceViewModel}"
-                    app:controlsViewModel="@{controlsViewModel}"/>
+            <ViewStub
+                android:id="@+id/stubbed_conference_grid_layout"
+                android:layout="@layout/voip_conference_grid"
+                android:visibility="@{conferenceViewModel.conferenceMosaicDisplayMode ? View.VISIBLE : View.GONE, default=gone}"
+                app:inflatedVisibility="@{conferenceViewModel.conferenceMosaicDisplayMode ? View.VISIBLE : View.GONE}"
+                android:layout_width="match_parent"
+                app:conferenceViewModel="@{conferenceViewModel}"
+                app:controlsViewModel="@{controlsViewModel}"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/primary_buttons" />
 
-                <ViewStub
-                    android:id="@+id/stubbed_conference_grid_layout"
-                    android:layout="@layout/voip_conference_grid"
-                    android:visibility="@{conferenceViewModel.conferenceMosaicDisplayMode ? View.VISIBLE : View.GONE, default=gone}"
-                    app:inflatedVisibility="@{conferenceViewModel.conferenceMosaicDisplayMode ? View.VISIBLE : View.GONE}"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:conferenceViewModel="@{conferenceViewModel}"
-                    app:controlsViewModel="@{controlsViewModel}"/>
-
-                <ViewStub
-                    android:id="@+id/stubbed_conference_audio_only_layout"
-                    android:layout="@layout/voip_conference_audio_only"
-                    android:visibility="@{conferenceViewModel.conferenceAudioOnlyDisplayMode ? View.VISIBLE : View.GONE, default=gone}"
-                    app:inflatedVisibility="@{conferenceViewModel.conferenceAudioOnlyDisplayMode ? View.VISIBLE : View.GONE}"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:conferenceViewModel="@{conferenceViewModel}"
-                    app:controlsViewModel="@{controlsViewModel}"/>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <ViewStub
+                android:id="@+id/stubbed_conference_audio_only_layout"
+                android:layout="@layout/voip_conference_audio_only"
+                android:visibility="@{conferenceViewModel.conferenceAudioOnlyDisplayMode ? View.VISIBLE : View.GONE, default=gone}"
+                app:inflatedVisibility="@{conferenceViewModel.conferenceAudioOnlyDisplayMode ? View.VISIBLE : View.GONE}"
+                android:layout_width="match_parent"
+                app:conferenceViewModel="@{conferenceViewModel}"
+                app:controlsViewModel="@{controlsViewModel}"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/primary_buttons" />
 
             <ViewStub
                 android:id="@+id/stubbed_audio_routes"
