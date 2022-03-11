@@ -1,12 +1,17 @@
 
-[![pipeline status](https://gitlab.linphone.org/BC/public/linphone-android/badges/master/pipeline.svg)](https://gitlab.linphone.org/BC/public/linphone-android/commits/master)
-
+[![pipeline status](https://gitlab.linphone.org/BC/public/linphone-android/badges/master/pipeline.svg)](https://gitlab.linphone.org/BC/public/linphone-android/commits/master) [![weblate status](https://weblate.linphone.org/widgets/linphone/-/linphone-android/svg-badge.svg)](https://weblate.linphone.org/engage/linphone/?utm_source=widget)
 
 Linphone is an open source softphone for voice and video over IP calling and instant messaging.
 
 It is fully SIP-based, for all calling, presence and IM features.
 
 General description is available from [linphone web site](https://www.linphone.org/technical-corner/linphone).
+
+### How to get it
+
+[<img src="metadata/google-play-badge.png" height="60" alt="Get it on Google Play">](https://play.google.com/store/apps/details?id=org.linphone)[<img src="metadata/f-droid-badge.png" height="60" alt="Get it on F-Droid">](https://f-droid.org/en/packages/org.linphone/)
+
+You can also download APKs signed with our key from [our website](https://download.linphone.org/releases/android/?C=M;O=D).
 
 ### License
 
@@ -29,7 +34,7 @@ Linphone is dual licensed, and is available either :
 # What's new
 
 App has been totally rewritten in Kotlin using modern components such as Navigation, Data Binding, View Models, coroutines, etc...  
-Check the [CHANGELOG](./CHANGELOG.md) file for a more detailled list.  
+Check the [CHANGELOG](./CHANGELOG.md) file for a more detailed list.
 The first linphone-android release that will be based on this will be 4.5.0, using 5.0.0 SDK.
 
 We're also taking a fresh start regarding translations so less languages will be available for a while.  
@@ -105,7 +110,7 @@ When submitting an issue on our [Github repository](https://github.com/Belledonn
 
 1. To enable them, go to Settings -> Advanced and toggle `Debug Mode`. If they are already enabled, clear them first using the `Reset logs` button on the About page.
 
-2. Then restart the app, reproduce the issue and upload the logs using the `Send logs` button on the About page.
+2. Then restart the app, reproduce the issue and upload the logs using the `Send logs` button on the advanced settings page.
 
 3. Finally paste the link to the uploaded logs (link is already in the clipboard after a successful upload).
 
