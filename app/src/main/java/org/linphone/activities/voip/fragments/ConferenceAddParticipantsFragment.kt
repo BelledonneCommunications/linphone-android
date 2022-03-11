@@ -86,7 +86,7 @@ class ConferenceAddParticipantsFragment : GenericFragment<VoipConferenceParticip
         viewModel.sipContactsSelected.observe(
             viewLifecycleOwner
         ) {
-            viewModel.updateContactsList()
+            viewModel.applyFilter()
         }
 
         viewModel.selectedAddresses.observe(
