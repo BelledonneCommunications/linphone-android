@@ -20,11 +20,14 @@
 package org.linphone.contact
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.*
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.activities.main.viewmodels.MessageNotifierViewModel
-import org.linphone.core.Address
-import org.linphone.core.SearchResult
+import org.linphone.core.*
 import org.linphone.core.tools.Log
+import org.linphone.utils.Event
 
 open class ContactsSelectionViewModel : MessageNotifierViewModel() {
     val contactsList = MutableLiveData<ArrayList<SearchResult>>()
@@ -34,12 +37,32 @@ open class ContactsSelectionViewModel : MessageNotifierViewModel() {
     val selectedAddresses = MutableLiveData<ArrayList<Address>>()
 
     val filter = MutableLiveData<String>()
-    private var previousFilter = ""
+    private var previousFilter = "NotSet"
+
+    val fetchInProgress = MutableLiveData<Boolean>()
+    private var searchResultsPending: Boolean = false
+    private var fastFetchJob: Job? = null
+
+    val moreResultsAvailableEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
 
     private val contactsUpdatedListener = object : ContactsUpdatedListenerStub() {
         override fun onContactsUpdated() {
             Log.i("[Contacts Selection] Contacts have changed")
-            updateContactsList()
+            applyFilter()
+        }
+    }
+
+    private val magicSearchListener = object : MagicSearchListenerStub() {
+        override fun onSearchResultsReceived(magicSearch: MagicSearch) {
+            searchResultsPending = false
+            processMagicSearchResults(magicSearch.lastSearch)
+            fetchInProgress.value = false
+        }
+
+        override fun onLdapHaveMoreResults(magicSearch: MagicSearch, ldap: Ldap) {
+            moreResultsAvailableEvent.value = Event(true)
         }
     }
 
@@ -49,9 +72,11 @@ open class ContactsSelectionViewModel : MessageNotifierViewModel() {
         selectedAddresses.value = arrayListOf()
 
         coreContext.contactsManager.addListener(contactsUpdatedListener)
+        coreContext.contactsManager.magicSearch.addListener(magicSearchListener)
     }
 
     override fun onCleared() {
+        coreContext.contactsManager.magicSearch.removeListener(magicSearchListener)
         coreContext.contactsManager.removeListener(contactsUpdatedListener)
 
         super.onCleared()
@@ -59,25 +84,32 @@ open class ContactsSelectionViewModel : MessageNotifierViewModel() {
 
     fun applyFilter() {
         val filterValue = filter.value.orEmpty()
-        if (previousFilter == filterValue) return
 
-        if (previousFilter.isNotEmpty() && previousFilter.length > filterValue.length) {
+        if (previousFilter.isNotEmpty() && (
+            previousFilter.length > filterValue.length ||
+                (previousFilter.length == filterValue.length && previousFilter != filterValue)
+            )
+        ) {
             coreContext.contactsManager.magicSearch.resetSearchCache()
         }
         previousFilter = filterValue
 
-        updateContactsList()
-    }
-
-    fun updateContactsList() {
         val domain = if (sipContactsSelected.value == true) coreContext.core.defaultAccount?.params?.domain ?: "" else ""
-        val results = coreContext.contactsManager.magicSearch.getContactListFromFilter(filter.value.orEmpty(), domain)
+        searchResultsPending = true
+        fastFetchJob?.cancel()
+        coreContext.contactsManager.magicSearch.getContactsAsync(filter.value.orEmpty(), domain, MagicSearchSource.All.toInt())
 
-        val list = arrayListOf<SearchResult>()
-        for (result in results) {
-            list.add(result)
+        val spinnerDelay = corePreferences.delayBeforeShowingContactsSearchSpinner.toLong()
+        fastFetchJob = viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                delay(spinnerDelay)
+                withContext(Dispatchers.Main) {
+                    if (searchResultsPending) {
+                        fetchInProgress.value = true
+                    }
+                }
+            }
         }
-        contactsList.value = list
     }
 
     fun toggleSelectionForSearchResult(searchResult: SearchResult) {
@@ -109,5 +141,14 @@ open class ContactsSelectionViewModel : MessageNotifierViewModel() {
         }
 
         selectedAddresses.value = list
+    }
+
+    private fun processMagicSearchResults(results: Array<SearchResult>) {
+        Log.i("[Contacts Selection] Processing ${results.size} results")
+        val list = arrayListOf<SearchResult>()
+        for (result in results) {
+            list.add(result)
+        }
+        contactsList.postValue(list)
     }
 }

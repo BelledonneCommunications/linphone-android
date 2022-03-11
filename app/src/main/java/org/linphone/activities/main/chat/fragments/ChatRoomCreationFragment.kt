@@ -107,7 +107,7 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
         viewModel.sipContactsSelected.observe(
             viewLifecycleOwner
         ) {
-            viewModel.updateContactsList()
+            viewModel.applyFilter()
         }
 
         viewModel.selectedAddresses.observe(
