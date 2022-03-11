@@ -1,0 +1,1 @@
+An open source instant messaging and voice/video over IP (VoIP) phone that makes it possible to communicate freely with people over the internet via voice, video and text messaging through the SIP protocol.

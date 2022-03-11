@@ -1,0 +1,14 @@
+Linphone is an open source app offering free audio/video calls and text messaging. With Linphone, you can be reachable at any time, even if the app is closed, with a WiFi or 3G/4G internet connection.
+
+Linphone key features:
+* high definition audio and video calls
+* audio conference calls with various participants
+* pictures and file sharing
+* Linphone accounts reachable at any time, even if the app is closed (thanks to push notifications)
+* secure communication (encryption options)
+* compliant with a large number of SIP-compatible VoIP service providers allowing to reach everyone that has a "classic" phone line.
+
+Linphone is available on the main mobile and desktop operating systems and offers various specific features for advanced users (codecs, transport standard, encryption options, DTMF...). For more information, see Linphone project website: www.linphone.org
+
+Note for developers and professionals:
+Linphone can be rebranded and customized to meet specific needs. Contact Belledonne Communications www.belledonne-communications.com for any specific development query.
