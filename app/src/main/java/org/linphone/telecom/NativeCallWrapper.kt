@@ -70,8 +70,8 @@ class NativeCallWrapper(var callId: String) : Connection() {
 
         val call = getCall()
         if (call != null) {
-            if (getState() != STATE_ACTIVE) {
-                Log.w("[Connection] Call state isn't STATE_ACTIVE, ignoring mute mic & audio route directive from TelecomManager")
+            if (getState() != STATE_ACTIVE && getState() != STATE_DIALING) {
+                Log.w("[Connection] Call state isn't STATE_ACTIVE or STATE_DIALING, ignoring mute mic & audio route directive from TelecomManager")
                 return
             }
 
