@@ -79,6 +79,9 @@ open class Contact() : Comparable<Contact> {
                 fullName = friend?.name ?: phoneNumber.orEmpty()
             }
 
+            if (address != null && address.username == phoneNumber) {
+                sipAddresses.remove(address)
+            }
             phoneNumbers.add(PhoneNumber(phoneNumber, ""))
         }
     }
