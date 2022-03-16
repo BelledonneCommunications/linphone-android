@@ -598,11 +598,14 @@ class CoreContext(val context: Context, coreConfig: Config) {
         params.recordFile = LinphoneUtils.getRecordingFilePathForAddress(address)
 
         if (localAddress != null) {
-            params.account = core.accountList.find { account ->
+            val account = core.accountList.find { account ->
                 account.params.identityAddress?.weakEqual(localAddress) ?: false
             }
-            if (params.account != null) {
+            if (account != null) {
+                params.account = account
                 Log.i("[Context] Using account matching address ${localAddress.asStringUriOnly()} as From")
+            } else {
+                Log.e("[Context] Failed to find account matching address ${localAddress.asStringUriOnly()}")
             }
         }
 

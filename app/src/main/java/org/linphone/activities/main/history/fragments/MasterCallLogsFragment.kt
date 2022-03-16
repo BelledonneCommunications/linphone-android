@@ -225,19 +225,24 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
             it.consume { callLogGroup ->
                 val remoteAddress = callLogGroup.lastCallLog.remoteAddress
                 val conferenceInfo = coreContext.core.findConferenceInformationFromUri(remoteAddress)
-                if (conferenceInfo != null) {
-                    navigateToConferenceWaitingRoom(remoteAddress.asStringUriOnly(), conferenceInfo.subject)
-                } else if (coreContext.core.callsNb > 0) {
-                    Log.i("[History] Starting dialer with pre-filled URI ${remoteAddress.asStringUriOnly()}, is transfer? ${sharedViewModel.pendingCallTransfer}")
-                    sharedViewModel.updateDialerAnimationsBasedOnDestination.value = Event(R.id.masterCallLogsFragment)
-                    val args = Bundle()
-                    args.putString("URI", remoteAddress.asStringUriOnly())
-                    args.putBoolean("Transfer", sharedViewModel.pendingCallTransfer)
-                    args.putBoolean("SkipAutoCallStart", true) // If auto start call setting is enabled, ignore it
-                    navigateToDialer(args)
-                } else {
-                    val localAddress = callLogGroup.lastCallLog.localAddress
-                    coreContext.startCall(remoteAddress, localAddress = localAddress)
+                when {
+                    conferenceInfo != null -> {
+                        navigateToConferenceWaitingRoom(remoteAddress.asStringUriOnly(), conferenceInfo.subject)
+                    }
+                    coreContext.core.callsNb > 0 -> {
+                        Log.i("[History] Starting dialer with pre-filled URI ${remoteAddress.asStringUriOnly()}, is transfer? ${sharedViewModel.pendingCallTransfer}")
+                        sharedViewModel.updateDialerAnimationsBasedOnDestination.value = Event(R.id.masterCallLogsFragment)
+                        val args = Bundle()
+                        args.putString("URI", remoteAddress.asStringUriOnly())
+                        args.putBoolean("Transfer", sharedViewModel.pendingCallTransfer)
+                        args.putBoolean("SkipAutoCallStart", true) // If auto start call setting is enabled, ignore it
+                        navigateToDialer(args)
+                    }
+                    else -> {
+                        val localAddress = callLogGroup.lastCallLog.localAddress
+                        Log.i("[History] Starting call to ${remoteAddress.asStringUriOnly()} with local address ${localAddress.asStringUriOnly()}")
+                        coreContext.startCall(remoteAddress, localAddress = localAddress)
+                    }
                 }
             }
         }
