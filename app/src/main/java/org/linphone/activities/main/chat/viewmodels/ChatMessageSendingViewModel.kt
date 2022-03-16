@@ -114,7 +114,7 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
     private val chatRoomListener: ChatRoomListenerStub = object : ChatRoomListenerStub() {
         override fun onStateChanged(chatRoom: ChatRoom, state: ChatRoom.State) {
             if (state == ChatRoom.State.Created || state == ChatRoom.State.Terminated) {
-                isReadOnly.value = chatRoom.hasBeenLeft()
+                isReadOnly.value = chatRoom.isReadOnly()
             }
         }
     }
@@ -128,7 +128,7 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
 
         attachFileEnabled.value = true
         sendMessageEnabled.value = false
-        isReadOnly.value = chatRoom.hasBeenLeft()
+        isReadOnly.value = chatRoom.isReadOnly()
 
         val recorderParams = coreContext.core.createRecorderParams()
         if (corePreferences.voiceMessagesFormatMkv) {

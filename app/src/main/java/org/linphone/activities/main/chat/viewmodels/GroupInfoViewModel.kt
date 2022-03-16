@@ -97,8 +97,8 @@ class GroupInfoViewModel(val chatRoom: ChatRoom?) : ErrorReportingViewModel() {
 
     init {
         subject.value = chatRoom?.subject
-        isMeAdmin.value = chatRoom == null || (chatRoom.me?.isAdmin == true && !chatRoom.hasBeenLeft())
-        canLeaveGroup.value = chatRoom != null && !chatRoom.hasBeenLeft()
+        isMeAdmin.value = chatRoom == null || (chatRoom.me?.isAdmin == true && !chatRoom.isReadOnly())
+        canLeaveGroup.value = chatRoom != null && !chatRoom.isReadOnly()
         isEncrypted.value = chatRoom?.hasCapability(ChatRoomCapabilities.Encrypted.toInt())
 
         if (chatRoom != null) updateParticipants()
