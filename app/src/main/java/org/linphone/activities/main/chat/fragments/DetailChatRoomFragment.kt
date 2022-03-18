@@ -539,6 +539,14 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             }
         }
 
+        adapter.errorEvent.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume { message ->
+                (requireActivity() as MainActivity).showSnackBar(message)
+            }
+        }
+
         binding.setBackClickListener {
             goBack()
         }

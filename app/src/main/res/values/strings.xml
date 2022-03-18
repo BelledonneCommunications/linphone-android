@@ -228,6 +228,7 @@
     <string name="chat_message_removal_info">Message will be deleted</string>
     <string name="chat_message_abort_removal">Abort</string>
     <string name="chat_room_failed_to_create">Failed to create chat room</string>
+    <string name="chat_message_download_already_in_progress">Please wait for first download to finish before starting a new one</string>
 
     <!-- Recordings -->
     <string name="recordings_empty_list">No recordings</string>

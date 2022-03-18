@@ -169,6 +169,12 @@ class ChatMessageContentData(
     }
 
     fun download() {
+        if (chatMessage.isFileTransferInProgress) {
+            Log.w("[Content] Another FileTransfer content for this message is currently being downloaded, can't start another one for now")
+            listener?.onError(R.string.chat_message_download_already_in_progress)
+            return
+        }
+
         val content = getContent()
         val filePath = content.filePath
         if (content.isFileTransfer && (filePath == null || filePath.isEmpty())) {
@@ -179,7 +185,9 @@ class ChatMessageContentData(
                 downloadEnabled.value = false
 
                 Log.i("[Content] Started downloading $contentName into ${content.filePath}")
-                chatMessage.downloadContent(content)
+                if (!chatMessage.downloadContent(content)) {
+                    Log.e("[Content] Failed to start content download!")
+                }
             }
         }
     }
@@ -451,4 +459,6 @@ interface OnContentClickedListener {
     fun onSipAddressClicked(sipUri: String)
 
     fun onCallConference(address: String, subject: String?)
+
+    fun onError(messageId: Int)
 }
