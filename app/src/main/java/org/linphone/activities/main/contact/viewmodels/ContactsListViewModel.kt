@@ -34,7 +34,6 @@ import org.linphone.contact.NativeContact
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
-import org.linphone.utils.LinphoneUtils
 
 class ContactsListViewModel : ViewModel() {
     val sipContactsSelected = MutableLiveData<Boolean>()
@@ -230,15 +229,15 @@ class ContactsListViewModel : ViewModel() {
 
         val address = searchResult.address
         if (address != null) {
-            if (displayName == "") displayName = LinphoneUtils.getDisplayName(address)
+            if (displayName.isEmpty()) displayName = address.displayName ?: ""
             val contact = coreContext.contactsManager.findContactByAddress(address, ignoreLocalContact = true)
-            if (contact != null) return contact
+            if (contact != null && (displayName.isEmpty() || contact.fullName == displayName)) return contact
         }
 
         val phoneNumber = searchResult.phoneNumber
-        if (phoneNumber != null) {
+        if (phoneNumber != null && address?.username != phoneNumber) {
             val contact = coreContext.contactsManager.findContactByPhoneNumber(phoneNumber)
-            if (contact != null && contact.fullName != displayName) return contact
+            if (contact != null && (displayName.isEmpty() || contact.fullName == displayName)) return contact
         }
 
         return null
