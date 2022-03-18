@@ -98,6 +98,10 @@ class ChatMessagesListAdapter(
         MutableLiveData<Event<ChatMessage>>()
     }
 
+    val errorEvent: MutableLiveData<Event<Int>> by lazy {
+        MutableLiveData<Event<Int>>()
+    }
+
     private val contentClickedListener = object : OnContentClickedListener {
         override fun onContentClicked(content: Content) {
             openContentEvent.value = Event(content)
@@ -109,6 +113,10 @@ class ChatMessagesListAdapter(
 
         override fun onCallConference(address: String, subject: String?) {
             callConferenceEvent.value = Event(Pair(address, subject))
+        }
+
+        override fun onError(messageId: Int) {
+            errorEvent.value = Event(messageId)
         }
     }
 
