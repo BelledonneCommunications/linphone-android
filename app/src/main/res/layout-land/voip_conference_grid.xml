@@ -106,19 +106,15 @@
 
             </LinearLayout>
 
-            <com.google.android.flexbox.FlexboxLayout
+            <org.linphone.activities.voip.views.GridBoxLayout
+                android:layout_margin="5dp"
                 android:onClick="@{() -> controlsViewModel.toggleFullScreen()}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:entries="@{conferenceViewModel.conferenceParticipantDevices}"
                 app:layout="@{@layout/voip_conference_participant_remote_grid}"
-                app:flexDirection="row"
-                app:flexWrap="wrap"
-                app:alignItems="stretch"
-                app:alignContent="stretch"
-                app:justifyContent="space_between"
-                app:showDivider="middle"
-                app:dividerDrawable="@{controlsViewModel.fullScreenMode ? @drawable/shape_conference_divider_fullscreen : @drawable/shape_conference_divider}"/>
+                centerContent="@{true}"
+                />
 
         </LinearLayout>
 

@@ -10,19 +10,18 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        app:layout_flexGrow="1">
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="5dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:background="@{!data.isInConference ? @drawable/shape_remote_paused_background : data.videoEnabled ? @drawable/shape_remote_video_background : @drawable/shape_remote_background, default=@drawable/shape_remote_background}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintWidth_max="@dimen/voip_views_max_width"
             app:layout_constraintDimensionRatio="1:1">
 
             <include
