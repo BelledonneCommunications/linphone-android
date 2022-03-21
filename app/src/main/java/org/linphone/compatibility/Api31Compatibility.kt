@@ -63,10 +63,16 @@ class Api31Compatibility {
                 .setKey(person.key)
                 .setImportant(person.isImportant)
                 .build()
+
             val declineIntent = notificationsManager.getCallDeclinePendingIntent(notifiable)
             val answerIntent = notificationsManager.getCallAnswerPendingIntent(notifiable)
+
+            val isVideoEnabledInRemoteParams = call.remoteParams?.isVideoEnabled ?: false
+            val isVideoAutomaticallyAccepted = call.core.videoActivationPolicy.automaticallyAccept
+            val isVideo = isVideoEnabledInRemoteParams && isVideoAutomaticallyAccepted
+
             val builder = Notification.Builder(context, context.getString(R.string.notification_channel_incoming_call_id))
-                .setStyle(Notification.CallStyle.forIncomingCall(caller, declineIntent, answerIntent))
+                .setStyle(Notification.CallStyle.forIncomingCall(caller, declineIntent, answerIntent).setIsVideo(isVideo))
                 .setSmallIcon(R.drawable.topbar_call_notification)
                 .setCategory(Notification.CATEGORY_CALL)
                 .setVisibility(Notification.VISIBILITY_PUBLIC)
