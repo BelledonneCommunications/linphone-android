@@ -189,9 +189,12 @@ class Compatibility {
             pendingIntent: PendingIntent,
             notificationsManager: NotificationsManager
         ): Notification {
-            if (Version.sdkAboveOrEqual(Version.API31_ANDROID_12)) {
+            val manufacturer = Build.MANUFACTURER.lowercase(Locale.getDefault())
+            // Samsung One UI 4.0 (API 31) doesn't (currently) display CallStyle notifications well
+            // Tested on Samsung S10 and Z Fold 2
+            if (Version.sdkAboveOrEqual(Version.API31_ANDROID_12) && manufacturer != "samsung") {
                 return Api31Compatibility.createIncomingCallNotification(context, call, notifiable, pendingIntent, notificationsManager)
-            } else if (Build.MANUFACTURER.lowercase(Locale.getDefault()) == "xiaomi") {
+            } else if (manufacturer == "xiaomi") { // Xiaomi devices don't handle CustomHeadsUpContentView correctly
                 return XiaomiCompatibility.createIncomingCallNotification(context, call, notifiable, pendingIntent, notificationsManager)
             }
             return Api26Compatibility.createIncomingCallNotification(context, call, notifiable, pendingIntent, notificationsManager)
@@ -205,7 +208,10 @@ class Compatibility {
             channel: String,
             notificationsManager: NotificationsManager
         ): Notification {
-            if (Version.sdkAboveOrEqual(Version.API31_ANDROID_12)) {
+            val manufacturer = Build.MANUFACTURER.lowercase(Locale.getDefault())
+            // Samsung One UI 4.0 (API 31) doesn't (currently) display CallStyle notifications well
+            // Tested on Samsung S10 and Z Fold 2
+            if (Version.sdkAboveOrEqual(Version.API31_ANDROID_12) && manufacturer != "samsung") {
                 return Api31Compatibility.createCallNotification(context, call, notifiable, pendingIntent, channel, notificationsManager)
             }
             return Api26Compatibility.createCallNotification(context, call, notifiable, pendingIntent, channel, notificationsManager)
