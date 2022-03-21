@@ -192,7 +192,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
         val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
         binding.callLogsList.addItemDecoration(headerItemDecoration)
 
-        listViewModel.displayedCallLogs.observe(
+        listViewModel.callLogs.observe(
             viewLifecycleOwner
         ) { callLogs ->
             adapter.submitList(callLogs)

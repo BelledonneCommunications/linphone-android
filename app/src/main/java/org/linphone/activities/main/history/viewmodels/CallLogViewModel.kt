@@ -20,8 +20,6 @@
 package org.linphone.activities.main.history.viewmodels
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -36,15 +34,6 @@ import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.TimestampUtils
-
-class CallLogViewModelFactory(private val callLog: CallLog) :
-    ViewModelProvider.NewInstanceFactory() {
-
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return CallLogViewModel(callLog) as T
-    }
-}
 
 class CallLogViewModel(val callLog: CallLog, private val isRelated: Boolean = false) : GenericContactViewModel(callLog.remoteAddress) {
     val peerSipUri: String by lazy {
@@ -150,8 +139,6 @@ class CallLogViewModel(val callLog: CallLog, private val isRelated: Boolean = fa
         waitForChatRoomCreation.value = false
 
         if (!isRelated) {
-            coreContext.core.addListener(listener)
-
             val conferenceInfo = callLog.conferenceInfo
             if (conferenceInfo != null) {
                 conferenceTime.value = TimestampUtils.timeToString(conferenceInfo.dateTime)
@@ -181,8 +168,6 @@ class CallLogViewModel(val callLog: CallLog, private val isRelated: Boolean = fa
 
     fun destroy() {
         if (!isRelated) {
-            coreContext.core.removeListener(listener)
-
             relatedCallLogs.value.orEmpty().forEach(CallLogViewModel::destroy)
             conferenceParticipantsData.value.orEmpty()
                 .forEach(ConferenceSchedulingParticipantData::destroy)
@@ -220,5 +205,13 @@ class CallLogViewModel(val callLog: CallLog, private val isRelated: Boolean = fa
         list.addAll(relatedCallLogs.value.orEmpty())
 
         relatedCallLogs.value = list
+    }
+
+    fun enableListener(enable: Boolean) {
+        if (enable) {
+            coreContext.core.addListener(listener)
+        } else {
+            coreContext.core.removeListener(listener)
+        }
     }
 }

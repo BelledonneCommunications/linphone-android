@@ -27,7 +27,6 @@ import org.linphone.R
 import org.linphone.activities.*
 import org.linphone.activities.main.*
 import org.linphone.activities.main.history.viewmodels.CallLogViewModel
-import org.linphone.activities.main.history.viewmodels.CallLogViewModelFactory
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.tools.Log
 import org.linphone.databinding.HistoryConfDetailFragmentBinding
@@ -56,15 +55,11 @@ class DetailConferenceCallLogFragment : GenericFragment<HistoryConfDetailFragmen
             return
         }
 
-        viewModel = ViewModelProvider(
-            this,
-            CallLogViewModelFactory(callLogGroup.lastCallLog)
-        )[CallLogViewModel::class.java]
+        viewModel = callLogGroup.lastCallLogViewModel
         binding.viewModel = viewModel
+        viewModel.addRelatedCallLogs(callLogGroup.callLogs)
 
         useMaterialSharedAxisXForwardAnimation = sharedViewModel.isSlidingPaneSlideable.value == false
-
-        viewModel.addRelatedCallLogs(callLogGroup.callLogs)
 
         binding.setBackClickListener {
             goBack()

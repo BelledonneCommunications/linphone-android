@@ -114,7 +114,7 @@
 
                 <ImageView
                     android:onClick="@{editClickListener}"
-                    android:enabled="@{!viewModel.displayedCallLogs.empty}"
+                    android:enabled="@{!viewModel.callLogs.empty}"
                     android:contentDescription="@string/content_description_enter_edition_mode"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -145,7 +145,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="@string/no_call_history"
-                android:visibility="@{viewModel.displayedCallLogs.empty &amp;&amp; viewModel.filter == CallLogsFilter.ALL ? View.VISIBLE : View.GONE}" />
+                android:visibility="@{viewModel.callLogs.empty &amp;&amp; viewModel.filter == CallLogsFilter.ALL ? View.VISIBLE : View.GONE}" />
 
             <TextView
                 style="@style/empty_list_font"
@@ -153,7 +153,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="@string/no_missed_call_history"
-                android:visibility="@{viewModel.displayedCallLogs.empty &amp;&amp; viewModel.filter == CallLogsFilter.MISSED ? View.VISIBLE : View.GONE}" />
+                android:visibility="@{viewModel.callLogs.empty &amp;&amp; viewModel.filter == CallLogsFilter.MISSED ? View.VISIBLE : View.GONE}" />
 
             <TextView
                 style="@style/empty_list_font"
@@ -161,7 +161,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="@string/no_conference_call_history"
-                android:visibility="@{viewModel.displayedCallLogs.empty &amp;&amp; viewModel.filter == CallLogsFilter.CONFERENCE ? View.VISIBLE : View.GONE}" />
+                android:visibility="@{viewModel.callLogs.empty &amp;&amp; viewModel.filter == CallLogsFilter.CONFERENCE ? View.VISIBLE : View.GONE}" />
 
             <View
                 android:layout_width="1dp"
