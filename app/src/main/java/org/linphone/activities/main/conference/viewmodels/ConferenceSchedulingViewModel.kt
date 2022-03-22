@@ -109,6 +109,10 @@ class ConferenceSchedulingViewModel : ContactsSelectionViewModel() {
                     conferenceCreationInProgress.value = false
                     conferenceCreationCompletedEvent.value = Event(Pair(conferenceAddress.asStringUriOnly(), conferenceScheduler.info?.subject))
                 }
+            } else if (state == ConferenceSchedulerState.Error) {
+                Log.e("[Conference Creation] Failed to create conference!")
+                conferenceCreationInProgress.value = false
+                onMessageToNotifyEvent.value = Event(R.string.conference_creation_failed)
             }
         }
 
