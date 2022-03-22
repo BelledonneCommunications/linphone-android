@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="conferenceViewModel"
+            type="org.linphone.activities.voip.viewmodels.ConferenceViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="remote_name,active_conference_timer,toggle_conference_recording,toggle_pause_conference" />
+
+        <TextView
+            android:id="@+id/remote_name"
+            style="@style/call_header_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{conferenceViewModel.subject, default=@string/conference_default_title}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Chronometer
+            android:id="@+id/active_conference_timer"
+            style="@style/call_header_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/remote_name" />
+
+        <ImageView
+            android:id="@+id/toggle_pause_conference"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/button_toggle_background"
+            android:contentDescription="@string/content_description_pause_call"
+            android:enabled="@{!conferenceViewModel.conferenceCreationPending}"
+            android:onClick="@{() -> conferenceViewModel.pauseConference()}"
+            android:padding="5dp"
+            android:selected="@{conferenceViewModel.isConferenceLocallyPaused}"
+            android:src="@drawable/icon_pause"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/toggle_conference_recording"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/button_call_recording_background"
+            android:contentDescription="@string/content_description_toggle_recording"
+            android:onClick="@{() -> conferenceViewModel.toggleRecording()}"
+            android:padding="7dp"
+            android:selected="@{conferenceViewModel.isRecording}"
+            android:src="@drawable/icon_call_record"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/toggle_pause_conference"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
