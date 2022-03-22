@@ -83,7 +83,7 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
             viewLifecycleOwner
         ) {
             if (it) {
-                startTimer(R.id.grid_conference_timer)
+                startTimer(R.id.active_conference_timer)
             }
         }
 
@@ -91,7 +91,7 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
             viewLifecycleOwner
         ) {
             if (it) {
-                startTimer(R.id.active_speaker_conference_timer)
+                startTimer(R.id.active_conference_timer)
 
                 if (conferenceViewModel.conferenceExists.value == true) {
                     Log.i("[Conference Call] Local participant is in conference and current layout is active speaker, updating Core's native window id")
@@ -111,7 +111,7 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
             viewLifecycleOwner
         ) {
             if (it) {
-                startTimer(R.id.audio_only_conference_timer)
+                startTimer(R.id.active_conference_timer)
             }
         }
 
@@ -206,21 +206,21 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
             Log.i("[Conference Call] Active speaker conference layout inflated")
             val binding = DataBindingUtil.bind<ViewDataBinding>(inflated)
             binding?.lifecycleOwner = viewLifecycleOwner
-            startTimer(R.id.active_speaker_conference_timer)
+            startTimer(R.id.active_conference_timer)
         }
 
         binding.stubbedConferenceGridLayout.setOnInflateListener { _, inflated ->
             Log.i("[Conference Call] Mosaic conference layout inflated")
             val binding = DataBindingUtil.bind<ViewDataBinding>(inflated)
             binding?.lifecycleOwner = viewLifecycleOwner
-            startTimer(R.id.grid_conference_timer)
+            startTimer(R.id.active_conference_timer)
         }
 
         binding.stubbedConferenceAudioOnlyLayout.setOnInflateListener { _, inflated ->
             Log.i("[Conference Call] Audio only conference layout inflated")
             val binding = DataBindingUtil.bind<ViewDataBinding>(inflated)
             binding?.lifecycleOwner = viewLifecycleOwner
-            startTimer(R.id.audio_only_conference_timer)
+            startTimer(R.id.active_conference_timer)
         }
 
         binding.stubbedAudioRoutes.setOnInflateListener { _, inflated ->
