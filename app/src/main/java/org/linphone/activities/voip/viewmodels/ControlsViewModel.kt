@@ -21,8 +21,6 @@ package org.linphone.activities.voip.viewmodels
 
 import android.Manifest
 import android.animation.ValueAnimator
-import android.view.MotionEvent
-import android.view.View
 import android.view.animation.LinearInterpolator
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -106,30 +104,6 @@ class ControlsViewModel : ViewModel() {
     val foldingState = MutableLiveData<FoldingFeature.State>()
 
     private val nonEarpieceOutputAudioDevice = MutableLiveData<Boolean>()
-
-    private var previewX: Float = 0f
-    private var previewY: Float = 0f
-    val previewTouchListener = View.OnTouchListener { view, event ->
-        when (event.action) {
-            MotionEvent.ACTION_DOWN -> {
-                previewX = view.x - event.rawX
-                previewY = view.y - event.rawY
-                true
-            }
-            MotionEvent.ACTION_MOVE -> {
-                view.animate()
-                    .x(event.rawX + previewX)
-                    .y(event.rawY + previewY)
-                    .setDuration(0)
-                    .start()
-                true
-            }
-            else -> {
-                view.performClick()
-                false
-            }
-        }
-    }
 
     private val listener: CoreListenerStub = object : CoreListenerStub() {
         override fun onCallStateChanged(
