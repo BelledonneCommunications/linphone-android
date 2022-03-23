@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="org.linphone.activities.voip.viewmodels.ControlsViewModel" />
@@ -27,7 +29,7 @@
             app:layout_constraintDimensionRatio="W,1.26:1"
             app:layout_constraintEnd_toStartOf="@id/answer"
             app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
         <ImageView
             android:id="@+id/answer"
