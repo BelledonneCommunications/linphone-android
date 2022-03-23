@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <import type="android.view.View" />
+
         <variable
             name="controlsViewModel"
             type="org.linphone.activities.voip.viewmodels.ControlsViewModel" />
@@ -24,7 +26,7 @@
             android:src="@drawable/icon_call_hangup"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="W,1.26:1"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
         <ImageView
             android:id="@+id/microphone"
@@ -42,7 +44,7 @@
             app:layout_constraintDimensionRatio="W,1:1"
             app:layout_constraintEnd_toStartOf="@id/speaker"
             app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="@id/hangup"/>
+            app:layout_constraintStart_toStartOf="@id/hangup" />
 
         <ImageView
             android:id="@+id/speaker"
@@ -58,7 +60,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="W,1:1"
             app:layout_constraintEnd_toEndOf="@id/numpad"
-            app:layout_constraintStart_toEndOf="@id/microphone"/>
+            app:layout_constraintStart_toEndOf="@id/microphone" />
 
         <ImageView
             android:id="@+id/numpad"
@@ -72,7 +74,7 @@
             android:visibility="@{controlsViewModel.isOutgoingEarlyMedia ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="W,1:1"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

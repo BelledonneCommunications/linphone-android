@@ -3,10 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <import type="android.view.View" />
+
         <variable
             name="callsViewModel"
             type="org.linphone.activities.voip.viewmodels.CallsViewModel" />
+
         <variable
             name="controlsViewModel"
             type="org.linphone.activities.voip.viewmodels.ControlsViewModel" />
@@ -103,7 +106,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintWidth_max="350dp" />
+            app:layout_constraintWidth_max="@dimen/voip_buttons_max_width" />
 
         <ViewStub
             android:id="@+id/stub_numpad"
