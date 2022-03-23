@@ -10,6 +10,10 @@
         <import type="com.google.android.flexbox.FlexDirection" />
 
         <variable
+            name="previewTouchListener"
+            type="android.view.View.OnTouchListener" />
+
+        <variable
             name="controlsViewModel"
             type="org.linphone.activities.voip.viewmodels.ControlsViewModel" />
 
@@ -166,39 +170,39 @@
                 app:layout_constraintEnd_toEndOf="@id/background"
                 app:layout_constraintTop_toTopOf="@id/background" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/video_preview_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="25dp"
-                android:onTouch="@{controlsViewModel.previewTouchListener}"
                 android:visibility="@{controlsViewModel.isVideoEnabled &amp;&amp; !callsViewModel.currentCallData.isRemotelyPaused ? View.VISIBLE : View.GONE}"
+                app:constraint_referenced_ids="local_preview_video_surface,switch_camera" />
+
+            <org.linphone.activities.voip.views.RoundCornersTextureView
+                android:id="@+id/local_preview_video_surface"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_size="@{controlsViewModel.pipMode ? @dimen/video_preview_pip_max_size : @dimen/video_preview_max_size}"
+                android:onTouch="@{previewTouchListener}"
+                app:alignTopRight="true"
+                app:displayMode="black_bars"
                 app:layout_constraintBottom_toTopOf="@id/primary_buttons"
-                app:layout_constraintEnd_toEndOf="@id/background">
+                app:layout_constraintEnd_toEndOf="@id/background"
+                app:layout_constraintHeight_max="200dp"
+                app:layout_constraintWidth_max="200dp"
+                bind:ignore="MissingConstraints" />
 
-                <org.linphone.activities.voip.views.RoundCornersTextureView
-                    android:id="@+id/local_preview_video_surface"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_size="@{controlsViewModel.pipMode ? @dimen/video_preview_pip_max_size : @dimen/video_preview_max_size}"
-                    app:alignTopRight="true"
-                    app:displayMode="black_bars"
-                    app:layout_constraintHeight_max="200dp"
-                    app:layout_constraintWidth_max="200dp"
-                    bind:ignore="MissingConstraints" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:contentDescription="@string/content_description_switch_camera"
-                    android:onClick="@{() -> controlsViewModel.switchCamera()}"
-                    android:padding="10dp"
-                    android:src="@drawable/icon_call_camera_switch"
-                    android:visibility="@{controlsViewModel.isSwitchCameraAvailable &amp;&amp; !controlsViewModel.pipMode ? View.VISIBLE : View.GONE, default=gone}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <ImageView
+                android:id="@+id/switch_camera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:contentDescription="@string/content_description_switch_camera"
+                android:onClick="@{() -> controlsViewModel.switchCamera()}"
+                android:padding="10dp"
+                android:src="@drawable/icon_call_camera_switch"
+                android:visibility="@{controlsViewModel.isSwitchCameraAvailable &amp;&amp; !controlsViewModel.pipMode ? View.VISIBLE : View.GONE, default=gone}"
+                app:layout_constraintEnd_toEndOf="@id/local_preview_video_surface"
+                app:layout_constraintTop_toTopOf="@id/local_preview_video_surface" />
 
             <ViewStub
                 android:id="@+id/stubbed_audio_routes"

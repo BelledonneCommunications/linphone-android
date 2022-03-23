@@ -23,6 +23,7 @@ import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.SystemClock
+import android.view.MotionEvent
 import android.view.View
 import android.widget.Chronometer
 import androidx.databinding.DataBindingUtil
@@ -52,6 +53,39 @@ class SingleCallFragment : GenericFragment<VoipSingleCallFragmentBinding>() {
 
     private var dialog: Dialog? = null
 
+    private var previewX: Float = 0f
+    private var previewY: Float = 0f
+    private var switchX: Float = 0f
+    private var switchY: Float = 0f
+    private val previewTouchListener = View.OnTouchListener { view, event ->
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                previewX = view.x - event.rawX
+                previewY = view.y - event.rawY
+                switchX = binding.switchCamera.x - event.rawX
+                switchY = binding.switchCamera.y - event.rawY
+                true
+            }
+            MotionEvent.ACTION_MOVE -> {
+                view.animate()
+                    .x(event.rawX + previewX)
+                    .y(event.rawY + previewY)
+                    .setDuration(0)
+                    .start()
+                binding.switchCamera.animate()
+                    .x(event.rawX + switchX)
+                    .y(event.rawY + switchY)
+                    .setDuration(0)
+                    .start()
+                true
+            }
+            else -> {
+                view.performClick()
+                false
+            }
+        }
+    }
+
     override fun getLayoutId(): Int = R.layout.voip_single_call_fragment
 
     override fun onStart() {
@@ -66,6 +100,8 @@ class SingleCallFragment : GenericFragment<VoipSingleCallFragmentBinding>() {
         controlsViewModel.hideCallStats() // In case it was toggled on during incoming/outgoing fragment was visible
 
         binding.lifecycleOwner = viewLifecycleOwner
+
+        binding.previewTouchListener = previewTouchListener
 
         binding.controlsViewModel = controlsViewModel
 
