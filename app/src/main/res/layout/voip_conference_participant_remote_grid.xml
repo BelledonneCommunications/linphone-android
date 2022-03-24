@@ -14,12 +14,17 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@{!data.isInConference ? @drawable/shape_remote_paused_background : data.videoEnabled ? @drawable/shape_remote_video_background : @drawable/shape_remote_background, default=@drawable/shape_remote_background}"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintDimensionRatio="1:1">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="5dp"
+            android:background="@{!data.isInConference ? @drawable/shape_remote_paused_background : data.videoEnabled ? @drawable/shape_remote_video_background : @drawable/shape_remote_background, default=@drawable/shape_remote_background}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <include
             layout="@layout/voip_contact_avatar"
@@ -39,6 +44,7 @@
             participantTextureView="@{data}"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_margin="5dp"
             android:visibility="@{data.videoEnabled &amp;&amp; data.isInConference ? View.VISIBLE : View.GONE}"
             app:alignTopRight="false"
             app:displayMode="hybrid"
@@ -62,6 +68,7 @@
         <ImageView
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_margin="5dp"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
             android:src="@drawable/shape_conference_active_speaker_border"
@@ -95,7 +102,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_margin="10dp"
             android:contentDescription="@string/content_description_switch_camera"
             android:onClick="@{() -> data.switchCamera()}"
             android:padding="5dp"
@@ -107,7 +114,7 @@
         <ImageView
             android:layout_width="@dimen/voip_conference_participant_mic_muted_icon_size"
             android:layout_height="@dimen/voip_conference_participant_mic_muted_icon_size"
-            android:layout_margin="5dp"
+            android:layout_margin="10dp"
             android:background="@drawable/shape_button_disabled_background"
             android:contentDescription="@string/content_description_conference_participant_mic_muted"
             android:padding="5dp"
