@@ -116,7 +116,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         override fun onContactsUpdated() {
             Log.i("[Chat Room] Contacts have changed")
             contactLookup()
-            formatLastMessage(chatRoom.lastMessageInHistory)
+            updateLastMessageToDisplay()
         }
     }
 
@@ -202,7 +202,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
         override fun onEphemeralMessageDeleted(chatRoom: ChatRoom, eventLog: EventLog) {
             Log.i("[Chat Room] Ephemeral message deleted, updated last message displayed")
-            formatLastMessage(chatRoom.lastMessageInHistory)
+            updateLastMessageToDisplay()
         }
 
         override fun onEphemeralEvent(chatRoom: ChatRoom, eventLog: EventLog) {
@@ -219,9 +219,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         chatRoom.addListener(chatRoomListener)
         coreContext.contactsManager.addListener(contactsUpdatedListener)
 
-        formatLastMessage(chatRoom.lastMessageInHistory)
         unreadMessagesCount.value = chatRoom.unreadMessagesCount
-        lastUpdate.value = TimestampUtils.toString(chatRoom.lastUpdateTime, true)
 
         subject.value = chatRoom.subject
         updateSecurityIcon()
@@ -230,7 +228,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
         contactLookup()
         updateParticipants()
-        formatLastMessage(chatRoom.lastMessageInHistory)
+        updateLastMessageToDisplay()
 
         callInProgress.value = chatRoom.core.callsNb > 0
         updateRemotesComposing()
@@ -311,6 +309,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
         builder.trim()
         lastMessageText.value = builder
+        lastUpdate.value = TimestampUtils.toString(chatRoom.lastUpdateTime, true)
     }
 
     private fun searchMatchingContact() {
