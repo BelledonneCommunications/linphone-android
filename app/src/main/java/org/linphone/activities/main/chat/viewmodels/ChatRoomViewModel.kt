@@ -151,10 +151,12 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         override fun onChatMessageReceived(chatRoom: ChatRoom, eventLog: EventLog) {
             unreadMessagesCount.value = chatRoom.unreadMessagesCount
             lastMessageText.value = formatLastMessage(eventLog.chatMessage)
+            lastUpdate.value = TimestampUtils.toString(chatRoom.lastUpdateTime, true)
         }
 
         override fun onChatMessageSent(chatRoom: ChatRoom, eventLog: EventLog) {
             lastMessageText.value = formatLastMessage(eventLog.chatMessage)
+            lastUpdate.value = TimestampUtils.toString(chatRoom.lastUpdateTime, true)
         }
 
         override fun onParticipantAdded(chatRoom: ChatRoom, eventLog: EventLog) {
@@ -217,7 +219,6 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         coreContext.contactsManager.addListener(contactsUpdatedListener)
 
         unreadMessagesCount.value = chatRoom.unreadMessagesCount
-        lastUpdate.value = TimestampUtils.toString(chatRoom.lastUpdateTime, true)
 
         subject.value = chatRoom.subject
         updateSecurityIcon()
@@ -278,6 +279,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
     fun updateLastMessageToDisplay() {
         lastMessageText.value = formatLastMessage(chatRoom.lastMessageInHistory)
+        lastUpdate.value = TimestampUtils.toString(chatRoom.lastUpdateTime, true)
     }
 
     private fun formatLastMessage(msg: ChatMessage?): String {
