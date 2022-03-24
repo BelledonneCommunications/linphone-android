@@ -41,12 +41,16 @@ class GridBoxLayout : GridLayout {
     )
 
     var centerContent: Boolean = false
+    var previousChildCount = 0
 
     @SuppressLint("DrawAllocation")
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        val availableSize = Pair(right - left, bottom - top)
-        if (childCount == 0)
+        if (childCount == 0 || (!changed && previousChildCount == childCount)) {
+            super.onLayout(changed, left, top, right, bottom)
             return
+        }
+        val availableSize = Pair(right - left, bottom - top)
+        previousChildCount = childCount
         children.forEach { it.layoutParams = LayoutParams() }
         var cellSize = 0
         for (index in 1..childCount) {
@@ -60,11 +64,13 @@ class GridBoxLayout : GridLayout {
                 cellSize = candidateSize
             }
         }
-        super.onLayout(true, left, top, right, bottom) // Required in this position
+        super.onLayout(changed, left, top, right, bottom)
         children.forEach { child ->
             child.layoutParams.width = cellSize
             child.layoutParams.height = cellSize
-            child.requestLayout()
+            child.post {
+                child.requestLayout()
+            }
         }
         if (centerContent) {
             setPadding((availableSize.first - (columnCount * cellSize)) / 2, (availableSize.second - (rowCount * cellSize)) / 2, (availableSize.first - (columnCount * cellSize)) / 2, (availableSize.second - (rowCount * cellSize)) / 2)
