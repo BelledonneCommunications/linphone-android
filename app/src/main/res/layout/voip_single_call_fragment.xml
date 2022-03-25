@@ -124,8 +124,8 @@
                 style="@style/call_remote_name_font"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginBottom="10dp"
                 android:text="@{callsViewModel.currentCallData.contact.fullName ?? callsViewModel.currentCallData.displayName}"
                 app:layout_constraintBottom_toBottomOf="@id/background"
                 app:layout_constraintStart_toStartOf="@id/background" />
@@ -144,7 +144,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_margin="20dp"
+                android:layout_margin="10dp"
                 android:background="@drawable/button_call_recording_background"
                 android:contentDescription="@string/content_description_toggle_recording"
                 android:onClick="@{() -> callsViewModel.currentCallData.toggleRecording()}"
@@ -158,7 +158,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_margin="20dp"
+                android:layout_margin="10dp"
                 android:background="@drawable/button_toggle_background"
                 android:contentDescription="@string/content_description_pause_call"
                 android:enabled="@{callsViewModel.currentCallData.isPaused || callsViewModel.currentCallData.canBePaused}"

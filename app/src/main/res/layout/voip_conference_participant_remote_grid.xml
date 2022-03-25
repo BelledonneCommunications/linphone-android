@@ -83,8 +83,8 @@
             style="@style/call_remote_name_font"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginBottom="15dp"
             android:text="@{data.contact.fullName ?? data.displayName}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -112,8 +112,8 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:layout_width="@dimen/voip_conference_participant_mic_muted_icon_size"
-            android:layout_height="@dimen/voip_conference_participant_mic_muted_icon_size"
+            android:layout_width="@dimen/voip_conference_participant_mic_muted_icon_size_grid"
+            android:layout_height="@dimen/voip_conference_participant_mic_muted_icon_size_grid"
             android:layout_margin="10dp"
             android:background="@drawable/shape_button_disabled_background"
             android:contentDescription="@string/content_description_conference_participant_mic_muted"
