@@ -435,8 +435,11 @@ class ControlsViewModel : ViewModel() {
     }
 
     private fun updateVideoEnabled() {
-        val enabled = coreContext.core.currentCall?.currentParams?.isVideoEnabled ?: false
-        if (enabled && isVideoEnabled.value == false) {
+        val currentCall = coreContext.core.currentCall
+        val enabled = currentCall?.currentParams?.isVideoEnabled ?: false
+        // Prevent speaker to turn on each time a participant joins a video conference
+        val isConference = currentCall?.conference != null
+        if (enabled && !isConference && isVideoEnabled.value == false) {
             Log.i("[Call Controls] Video is being turned on")
             if (corePreferences.routeAudioToSpeakerWhenVideoIsEnabled) {
                 // Do not turn speaker on when video is enabled if headset or bluetooth is used
