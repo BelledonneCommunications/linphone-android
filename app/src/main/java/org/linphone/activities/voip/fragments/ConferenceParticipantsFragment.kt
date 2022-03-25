@@ -23,15 +23,14 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.navigation.navGraphViewModels
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.GenericFragment
-import org.linphone.activities.voip.viewmodels.CallsViewModel
 import org.linphone.activities.voip.viewmodels.ConferenceViewModel
 import org.linphone.core.tools.Log
 import org.linphone.databinding.VoipConferenceParticipantsFragmentBinding
 
 class ConferenceParticipantsFragment : GenericFragment<VoipConferenceParticipantsFragmentBinding>() {
-    private val callsViewModel: CallsViewModel by navGraphViewModels(R.id.call_nav_graph)
     private val conferenceViewModel: ConferenceViewModel by navGraphViewModels(R.id.call_nav_graph)
 
     override fun getLayoutId(): Int = R.layout.voip_conference_participants_fragment
@@ -40,8 +39,6 @@ class ConferenceParticipantsFragment : GenericFragment<VoipConferenceParticipant
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
-
-        binding.callsViewModel = callsViewModel
 
         binding.conferenceViewModel = conferenceViewModel
 
@@ -76,5 +73,11 @@ class ConferenceParticipantsFragment : GenericFragment<VoipConferenceParticipant
         binding.setEditClickListener {
             // TODO: go to conferences view outside of call activity in edition mode
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        coreContext.core.nativePreviewWindowId = binding.localPreviewVideoSurface
     }
 }

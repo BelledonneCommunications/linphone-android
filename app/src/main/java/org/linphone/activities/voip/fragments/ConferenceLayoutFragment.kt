@@ -23,6 +23,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
 import androidx.navigation.navGraphViewModels
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.voip.viewmodels.ConferenceViewModel
@@ -64,6 +65,8 @@ class ConferenceLayoutFragment : GenericFragment<VoipConferenceLayoutFragmentBin
         if (conferenceViewModel.conferenceParticipantDevices.value.orEmpty().size > conferenceViewModel.maxParticipantsForMosaicLayout) {
             showTooManyParticipantsForMosaicLayoutDialog()
         }
+
+        coreContext.core.nativePreviewWindowId = binding.localPreviewVideoSurface
     }
 
     private fun showTooManyParticipantsForMosaicLayoutDialog() {
