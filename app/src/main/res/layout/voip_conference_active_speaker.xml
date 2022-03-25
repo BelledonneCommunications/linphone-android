@@ -110,7 +110,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            app:dotColor="@color/voip_gray_background"
+            app:dotColor="@color/voip_gray_dots"
             app:dotRadius="5dp"
             app:horizontalScrollView="@id/miniatures"
             app:itemCount="@{conferenceViewModel.conferenceParticipantDevices.size()}"

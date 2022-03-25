@@ -86,7 +86,7 @@ class HorizontalScrollDotsView : View {
 
                 count = getInt(R.styleable.HorizontalScrollDot_dotCount, 1)
 
-                val color = getColor(R.styleable.HorizontalScrollDot_dotColor, context.resources.getColor(R.color.voip_gray_background))
+                val color = getColor(R.styleable.HorizontalScrollDot_dotColor, context.resources.getColor(R.color.voip_gray_dots))
                 dotPaint.color = color
                 val selectedColor = getColor(R.styleable.HorizontalScrollDot_selectedDotColor, context.resources.getColor(R.color.voip_dark_gray))
                 selectedDotPaint.color = selectedColor
