@@ -59,6 +59,11 @@ class ConferenceParticipantDeviceData(
             activeSpeaker.value = isSpeaking
         }
 
+        override fun onIsMuted(participantDevice: ParticipantDevice, isMuted: Boolean) {
+            Log.i("[Conference Participant Device] Participant [${participantDevice.address.asStringUriOnly()}] is ${if (isMuted) "muted" else "not muted"}")
+            micMuted.value = isMuted
+        }
+
         override fun onConferenceJoined(participantDevice: ParticipantDevice) {
             Log.i("[Conference Participant Device] Participant [${participantDevice.address.asStringUriOnly()}] has joined the conference")
             isInConference.value = true
@@ -101,10 +106,10 @@ class ConferenceParticipantDeviceData(
         participantDevice.addListener(listener)
 
         activeSpeaker.value = false
+        micMuted.value = participantDevice.isMuted
         videoAvailable.value = participantDevice.getStreamAvailability(StreamType.Video)
         val videoCapability = participantDevice.getStreamCapability(StreamType.Video)
         videoSendReceive.value = videoCapability == MediaDirection.SendRecv
-        micMuted.value = false // TODO
         isInConference.value = participantDevice.isInConference
 
         videoEnabled.value = isVideoAvailableAndSendReceive()
