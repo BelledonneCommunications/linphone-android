@@ -25,7 +25,8 @@ import org.linphone.utils.LinphoneUtils
 
 class ConferenceSchedulingParticipantData(
     private val sipAddress: Address,
-    val showLimeBadge: Boolean
+    val showLimeBadge: Boolean = false,
+    val showDivider: Boolean = true
 ) :
     GenericContactData(sipAddress) {
     val sipUri: String get() = LinphoneUtils.getDisplayableAddress(sipAddress)

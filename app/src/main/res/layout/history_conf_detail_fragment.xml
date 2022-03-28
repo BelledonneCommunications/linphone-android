@@ -3,19 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
+
         <variable
             name="backClickListener"
-            type="android.view.View.OnClickListener"/>
+            type="android.view.View.OnClickListener" />
+
         <variable
             name="newContactClickListener"
-            type="android.view.View.OnClickListener"/>
+            type="android.view.View.OnClickListener" />
+
         <variable
             name="contactClickListener"
-            type="android.view.View.OnClickListener"/>
+            type="android.view.View.OnClickListener" />
+
         <variable
             name="viewModel"
             type="org.linphone.activities.main.history.viewmodels.CallLogViewModel" />
+
         <variable
             name="sharedMainViewModel"
             type="org.linphone.activities.main.viewmodels.SharedMainViewModel" />
@@ -35,23 +41,23 @@
 
             <ImageView
                 android:id="@+id/back"
-                android:onClick="@{backClickListener}"
-                android:visibility="@{sharedMainViewModel.isSlidingPaneSlideable ? View.VISIBLE : View.GONE}"
-                android:contentDescription="@string/content_description_go_back"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.2"
+                android:contentDescription="@string/content_description_go_back"
+                android:onClick="@{backClickListener}"
                 android:padding="18dp"
-                android:src="@drawable/back" />
+                android:src="@drawable/back"
+                android:visibility="@{sharedMainViewModel.isSlidingPaneSlideable ? View.VISIBLE : View.GONE}" />
 
             <TextView
+                style="@style/calls_list_header_font"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
                 android:layout_weight="0.8"
                 android:gravity="center_vertical"
-                android:layout_marginLeft="5dp"
-                style="@style/calls_list_header_font"
-                android:text="@{viewModel.conferenceSubject, default=`Conference subject`}"/>
+                android:text="@{viewModel.conferenceSubject, default=`Conference subject`}" />
 
         </LinearLayout>
 
@@ -66,30 +72,30 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp">
+                android:layout_marginEnd="10dp"
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_margin="5dp"
+                    android:layout_weight="1"
                     android:orientation="vertical">
 
                     <TextView
+                        style="@style/conference_scheduling_font"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/conference_scheduling_font"
-                        android:text="@string/conference_schedule_date"/>
+                        android:text="@string/conference_schedule_date" />
 
                     <TextView
+                        style="@style/conference_scheduling_font"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="10dp"
                         android:layout_marginTop="5dp"
-                        style="@style/conference_scheduling_font"
                         android:background="?attr/voipFormDisabledFieldBackgroundColor"
+                        android:padding="10dp"
                         android:text="@{viewModel.conferenceDate}" />
 
                 </LinearLayout>
@@ -97,23 +103,23 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_margin="5dp"
+                    android:layout_weight="1"
                     android:orientation="vertical">
 
                     <TextView
+                        style="@style/conference_scheduling_font"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/conference_scheduling_font"
-                        android:text="@string/conference_schedule_time"/>
+                        android:text="@string/conference_schedule_time" />
 
                     <TextView
+                        style="@style/conference_scheduling_font"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="10dp"
                         android:layout_marginTop="5dp"
-                        style="@style/conference_scheduling_font"
                         android:background="?attr/voipFormDisabledFieldBackgroundColor"
+                        android:padding="10dp"
                         android:text="@{viewModel.conferenceTime}" />
 
                 </LinearLayout>
@@ -127,12 +133,31 @@
                 android:background="?attr/voipFormBackgroundColor">
 
                 <TextView
+                    style="@style/calls_list_header_font"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="5dp"
                     android:layout_marginLeft="20dp"
+                    android:padding="5dp"
+                    android:text="@string/conference_organizer" />
+
+            </LinearLayout>
+
+            <include
+                layout="@layout/conference_scheduling_participant_cell"
+                app:data="@{viewModel.organizerParticipantData}" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/voipFormBackgroundColor">
+
+                <TextView
                     style="@style/calls_list_header_font"
-                    android:text="@string/conference_schedule_participants_list"/>
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:padding="5dp"
+                    android:text="@string/conference_schedule_participants_list" />
 
             </LinearLayout>
 
@@ -151,19 +176,19 @@
             </androidx.core.widget.NestedScrollView>
 
             <TextView
-                android:visibility="gone"
+                style="@style/big_orange_button_font"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/shape_rect_orange_button"
                 android:paddingLeft="20dp"
                 android:paddingTop="8dp"
                 android:paddingRight="20dp"
                 android:paddingBottom="8dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_gravity="center"
-                android:background="@drawable/shape_rect_orange_button"
                 android:text="@string/conference_go_to_chat"
-                style="@style/big_orange_button_font"/>
+                android:visibility="gone" />
 
         </LinearLayout>
 
