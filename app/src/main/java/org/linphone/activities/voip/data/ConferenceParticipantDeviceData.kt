@@ -107,6 +107,7 @@ class ConferenceParticipantDeviceData(
 
         activeSpeaker.value = false
         micMuted.value = participantDevice.isMuted
+
         videoAvailable.value = participantDevice.getStreamAvailability(StreamType.Video)
         val videoCapability = participantDevice.getStreamCapability(StreamType.Video)
         videoSendReceive.value = videoCapability == MediaDirection.SendRecv
@@ -120,7 +121,7 @@ class ConferenceParticipantDeviceData(
             videoEnabled.value = isVideoAvailableAndSendReceive()
         }
 
-        Log.i("[Conference Participant Device] Participant [${participantDevice.address.asStringUriOnly()}], is in conf? ${isInConference.value}, is video available? ${videoAvailable.value} ($videoCapability)")
+        Log.i("[Conference Participant Device] Participant [${participantDevice.address.asStringUriOnly()}], is in conf? ${isInConference.value}, is video available? ${videoAvailable.value} ($videoCapability), is mic muted? ${micMuted.value}")
     }
 
     override fun destroy() {

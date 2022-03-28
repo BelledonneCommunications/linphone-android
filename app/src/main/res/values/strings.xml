@@ -252,6 +252,7 @@
     <string name="conference_schedule_encryption">Would you like to encrypt the conference?</string>
     <string name="conference_schedule_send_invite_chat_summary">Invite will be sent out from my &appName; account</string>
     <string name="conference_schedule_participants_list">Participants list</string>
+    <string name="conference_organizer">Organizer</string>
     <string name="conference_schedule_summary">Conference info</string>
     <string name="conference_schedule_create">Create conference</string>
     <string name="conference_schedule">Schedule conference</string>
