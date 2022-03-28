@@ -95,7 +95,7 @@
                 android:visibility="@{data.expanded ? View.GONE : View.VISIBLE}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
@@ -125,6 +125,7 @@
                 android:visibility="@{data.expanded ? View.VISIBLE : View.GONE, default=gone}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp">
 
@@ -255,7 +256,7 @@
 
                     <ImageView
                         android:onClick="@{editConferenceClickListener}"
-                        android:visibility="gone"
+                        android:visibility="@{data.canEdit ? View.VISIBLE : View.GONE, default=gone}"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_gravity="center"

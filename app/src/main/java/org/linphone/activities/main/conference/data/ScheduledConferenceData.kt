@@ -37,6 +37,7 @@ class ScheduledConferenceData(val conferenceInfo: ConferenceInfo) {
     val date = MutableLiveData<String>()
     val duration = MutableLiveData<String>()
     val organizer = MutableLiveData<String>()
+    val canEdit = MutableLiveData<Boolean>()
     val participantsShort = MutableLiveData<String>()
     val participantsExpanded = MutableLiveData<String>()
     val showDuration = MutableLiveData<Boolean>()
@@ -59,12 +60,19 @@ class ScheduledConferenceData(val conferenceInfo: ConferenceInfo) {
 
         val organizerAddress = conferenceInfo.organizer
         if (organizerAddress != null) {
+            val localAccount = coreContext.core.accountList.find { account ->
+                val address = account.params.identityAddress
+                address != null && organizerAddress.weakEqual(address)
+            }
+            canEdit.value = localAccount != null
+
             val contact = coreContext.contactsManager.findContactByAddress(organizerAddress)
             organizer.value = if (contact != null)
                 contact.fullName
             else
                 LinphoneUtils.getDisplayName(conferenceInfo.organizer)
         } else {
+            canEdit.value = false
             Log.e("[Scheduled Conference] No organizer SIP URI found for: ${conferenceInfo.uri?.asStringUriOnly()}")
         }
 

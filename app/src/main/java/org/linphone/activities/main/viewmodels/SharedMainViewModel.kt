@@ -95,6 +95,12 @@ class SharedMainViewModel : ViewModel() {
 
     var pendingCallTransfer: Boolean = false
 
+    /* Conference */
+
+    val conferenceInfoToEdit: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
     /* Dialer */
 
     var dialerUri: String = ""
