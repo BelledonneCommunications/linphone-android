@@ -50,6 +50,10 @@ class ScheduledConferencesAdapter(
         MutableLiveData<Event<Pair<String, String?>>>()
     }
 
+    val editConferenceEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
     val deleteConferenceInfoEvent: MutableLiveData<Event<ScheduledConferenceData>> by lazy {
         MutableLiveData<Event<ScheduledConferenceData>>()
     }
@@ -114,6 +118,13 @@ class ScheduledConferencesAdapter(
                     val address = conferenceData.conferenceInfo.uri
                     if (address != null) {
                         joinConferenceEvent.value = Event(Pair(address.asStringUriOnly(), conferenceData.conferenceInfo.subject))
+                    }
+                }
+
+                setEditConferenceClickListener {
+                    val address = conferenceData.conferenceInfo.uri
+                    if (address != null) {
+                        editConferenceEvent.value = Event(address.asStringUriOnly())
                     }
                 }
 

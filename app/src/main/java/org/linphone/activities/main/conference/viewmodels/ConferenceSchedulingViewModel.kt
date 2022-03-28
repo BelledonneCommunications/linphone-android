@@ -69,19 +69,8 @@ class ConferenceSchedulingViewModel : ContactsSelectionViewModel() {
     var hour: Int = 0
     var minutes: Int = 0
 
+    private var confInfo: ConferenceInfo? = null
     private val conferenceScheduler = coreContext.core.createConferenceScheduler()
-
-    private val chatRoomListener = object : ChatRoomListenerStub() {
-        override fun onStateChanged(room: ChatRoom, state: ChatRoom.State) {
-            if (state == ChatRoom.State.Created) {
-                Log.i("[Conference Creation] Chat room created")
-                room.removeListener(this)
-            } else if (state == ChatRoom.State.CreationFailed) {
-                Log.e("[Conference Creation] Group chat room creation has failed !")
-                room.removeListener(this)
-            }
-        }
-    }
 
     private val listener = object : ConferenceSchedulerListenerStub() {
         override fun onStateChanged(
@@ -179,6 +168,30 @@ class ConferenceSchedulingViewModel : ContactsSelectionViewModel() {
         super.onCleared()
     }
 
+    fun populateFromConferenceInfo(conferenceInfo: ConferenceInfo) {
+        confInfo = conferenceInfo
+        address.value = conferenceInfo.uri
+        subject.value = conferenceInfo.subject
+        description.value = conferenceInfo.description
+
+        val dateTime = conferenceInfo.dateTime
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = dateTime * 1000
+        setDate(calendar.timeInMillis)
+        setTime(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE))
+
+        val conferenceDuration = conferenceInfo.duration
+        duration.value = durationList.find { it.value == conferenceDuration }
+        scheduleForLater.value = conferenceDuration > 0
+
+        val participantsList = arrayListOf<Address>()
+        for (participant in conferenceInfo.participants) {
+            participantsList.add(participant)
+        }
+        selectedAddresses.value = participantsList
+        computeParticipantsData()
+    }
+
     fun toggleSchedule() {
         scheduleForLater.value = scheduleForLater.value == false
     }
@@ -221,23 +234,10 @@ class ConferenceSchedulingViewModel : ContactsSelectionViewModel() {
         val core = coreContext.core
         val participants = arrayOfNulls<Address>(selectedAddresses.value.orEmpty().size)
         selectedAddresses.value?.toArray(participants)
-        val localAddress = core.defaultAccount?.params?.identityAddress
+        val localAccount = core.defaultAccount
+        val localAddress = localAccount?.params?.identityAddress
 
-        // TODO: Temporary workaround for chat room, to be removed once we can get matching chat room from conference
-        /*val chatRoomParams = core.createDefaultChatRoomParams()
-        chatRoomParams.backend = ChatRoomBackend.FlexisipChat
-        chatRoomParams.enableGroup(true)
-        chatRoomParams.subject = subject.value
-        val chatRoom = core.createChatRoom(chatRoomParams, localAddress, participants)
-        if (chatRoom == null) {
-            Log.e("[Conference Creation] Failed to create a chat room with same subject & participants as for conference")
-        } else {
-            Log.i("[Conference Creation] Creating chat room with same subject [${subject.value}] & participants as for conference")
-            chatRoom.addListener(chatRoomListener)
-        }*/
-        // END OF TODO
-
-        val conferenceInfo = Factory.instance().createConferenceInfo()
+        val conferenceInfo = confInfo ?: Factory.instance().createConferenceInfo()
         conferenceInfo.organizer = localAddress
         conferenceInfo.subject = subject.value
         conferenceInfo.description = description.value
@@ -248,7 +248,10 @@ class ConferenceSchedulingViewModel : ContactsSelectionViewModel() {
             val duration = duration.value?.value ?: 0
             conferenceInfo.duration = duration
         }
-        conferenceScheduler.info = conferenceInfo // Will trigger the conference creation automatically
+        confInfo = conferenceInfo
+        conferenceScheduler.account = localAccount
+        // Will trigger the conference creation/update automatically
+        conferenceScheduler.info = conferenceInfo
     }
 
     private fun computeTimeZonesList(): List<TimeZoneData> {

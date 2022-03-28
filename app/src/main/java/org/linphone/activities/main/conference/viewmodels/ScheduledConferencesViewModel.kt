@@ -38,6 +38,7 @@ class ScheduledConferencesViewModel : ViewModel() {
             conferencesList.addAll(conferences.value.orEmpty())
             val data = ScheduledConferenceData(conferenceInfo)
             conferencesList.add(data)
+            conferencesList.sortBy { it.conferenceInfo.dateTime }
             conferences.value = conferencesList
         }
     }
