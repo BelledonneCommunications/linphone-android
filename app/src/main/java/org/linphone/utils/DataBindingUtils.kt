@@ -19,6 +19,7 @@
  */
 package org.linphone.utils
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
@@ -84,16 +85,6 @@ fun ImageView.setContentDescription(resource: Int) {
 @BindingAdapter("android:textStyle")
 fun TextView.setTypeface(typeface: Int) {
     this.setTypeface(null, typeface)
-}
-
-@BindingAdapter("android:layout_height")
-fun View.setLayoutHeight(dimension: Float) {
-    this.layoutParams.height = dimension.toInt()
-}
-
-@BindingAdapter("android:maxHeight")
-fun ImageView.setImageMaxHeight(dimension: Float) {
-    this.maxHeight = dimension.toInt()
 }
 
 @BindingAdapter("android:layout_size")
@@ -429,6 +420,7 @@ fun addPrefixEditTextValidation(editText: EditText, enabled: Boolean) {
 
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
+        @SuppressLint("SetTextI18n")
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             if (s == null || s.isEmpty() || !s.startsWith("+")) {
                 editText.setText("+$s")
@@ -558,7 +550,7 @@ fun setEditTextErrorListener(editText: EditText, attrChange: InverseBindingListe
     })
 }
 
-@BindingAdapter("app:max")
+@BindingAdapter("max")
 fun VoiceRecordProgressBar.setProgressMax(max: Int) {
     setMax(max)
 }
@@ -573,7 +565,7 @@ fun VoiceRecordProgressBar.setSecProgress(progress: Int) {
     setSecondaryProgress(progress)
 }
 
-@BindingAdapter("app:secondaryProgressTint")
+@BindingAdapter("secondaryProgressTint")
 fun VoiceRecordProgressBar.setSecProgressTint(color: Int) {
     setSecondaryProgressTint(color)
 }
@@ -635,17 +627,12 @@ fun setParticipantTextureView(
     conferenceParticipantData.setTextureView(textureView)
 }
 
-@BindingAdapter("app:dotCount")
-fun HorizontalScrollDotsView.setDots(count: Int) {
-    setDotCount(count)
-}
-
-@BindingAdapter("app:itemCount")
+@BindingAdapter("itemCount")
 fun HorizontalScrollDotsView.setItems(count: Int) {
     setItemCount(count)
 }
 
-@BindingAdapter("app:selectedDot")
+@BindingAdapter("selectedDot")
 fun HorizontalScrollDotsView.setSelectedIndex(index: Int) {
     setSelectedDot(index)
 }
