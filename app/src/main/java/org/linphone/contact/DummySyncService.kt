@@ -47,7 +47,7 @@ class DummySyncService : Service() {
         synchronized(syncAdapterLock) {
             Log.i("[Dummy Sync Adapter] Sync Service created")
             if (syncAdapter == null) {
-                syncAdapter = DummySyncAdapter(applicationContext, true)
+                syncAdapter = DummySyncAdapter(applicationContext, false)
                 Log.i("[Dummy Sync Adapter] Sync Adapter created")
             }
         }

@@ -20,6 +20,7 @@ Group changes to describe their impact on the project, as follows:
 ### Fixed
 - Catching exceptions in new ContactsLoader reported on PlayStore
 - Missing phone numbers in contacts when label contains a space character (5.1.24 SDK fix) 
+- Prevent app from starting by itself due to DummySyncService
 - Hide chat rooms settings not working properly
 
 ## [4.6.5] - 2022-04-11
