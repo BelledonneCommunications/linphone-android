@@ -139,7 +139,7 @@
                     <RelativeLayout
                         android:onClick="@{() -> viewModel.startChat(true)}"
                         android:visibility="@{viewModel.chatAllowed &amp;&amp; viewModel.secureChatAllowed ? View.VISIBLE : View.GONE}"
-                        android:layout_width="65dp"
+                        android:layout_width="70dp"
                         android:layout_height="60dp"
                         android:layout_margin="10dp">
 
@@ -148,13 +148,14 @@
                             android:layout_height="60dp"
                             android:layout_alignParentLeft="true"
                             android:layout_centerVertical="true"
-                            android:contentDescription="@string/content_description_start_encrypted_chat"
                             android:background="@drawable/round_orange_button_background"
+                            android:contentDescription="@string/content_description_start_encrypted_chat"
                             android:src="@drawable/chat_start_default" />
 
                         <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
+                            android:layout_width="21dp"
+                            android:layout_height="21dp"
+                            android:layout_marginTop="4dp"
                             android:layout_alignParentTop="true"
                             android:layout_alignParentRight="true"
                             android:contentDescription="@string/content_description_start_encrypted_chat"
