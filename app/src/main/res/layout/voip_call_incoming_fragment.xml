@@ -94,7 +94,7 @@
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="1"
-            android:text="@{callsViewModel.currentCallData.address, default=`sip:bilbo.baggins@sip.linphone.org`}"
+            android:text="@{callsViewModel.currentCallData.displayableAddress, default=`sip:bilbo.baggins@sip.linphone.org`}"
             app:layout_constraintBottom_toTopOf="@id/buttons"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

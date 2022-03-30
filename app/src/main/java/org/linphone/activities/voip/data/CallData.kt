@@ -35,7 +35,7 @@ open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
         fun onShowContextMenu(anchor: View, callData: CallData)
     }
 
-    val address = call.remoteAddress.asStringUriOnly()
+    val displayableAddress = MutableLiveData<String>()
 
     val isPaused = MutableLiveData<Boolean>()
     val isRemotelyPaused = MutableLiveData<Boolean>()
@@ -89,6 +89,10 @@ open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
     init {
         call.addListener(listener)
         isRemotelyRecorded.value = call.remoteParams?.isRecording
+
+        val clone = call.remoteAddress.clone()
+        clone.clean() // To remove GRUU if any
+        displayableAddress.value = clone.asStringUriOnly()
 
         update()
         // initChatRoom()

@@ -84,7 +84,7 @@
                     android:maxLines="1"
                     android:ellipsize="end"
                     style="@style/call_list_active_sip_uri_font"
-                    android:text="@{data.address, default=`bilbo.baggins@sip.linphone.org`}"/>
+                    android:text="@{data.displayableAddress, default=`bilbo.baggins@sip.linphone.org`}"/>
 
             </LinearLayout>
             <!-- Data binding doesn't work on styles... :'( -->
@@ -120,7 +120,7 @@
                     android:maxLines="1"
                     android:ellipsize="end"
                     style="@style/call_list_sip_uri_font"
-                    android:text="@{data.address, default=`bilbo.baggins@sip.linphone.org`}"/>
+                    android:text="@{data.displayableAddress, default=`bilbo.baggins@sip.linphone.org`}"/>
 
             </LinearLayout>
 
