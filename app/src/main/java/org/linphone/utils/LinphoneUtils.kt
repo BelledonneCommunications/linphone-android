@@ -175,5 +175,12 @@ class LinphoneUtils {
             remoteSipUri.clean()
             return "${localSipUri.asStringUriOnly()}~${remoteSipUri.asStringUriOnly()}"
         }
+
+        fun trimPhoneNumber(phoneNumber: String): String {
+            return phoneNumber.replace(" ", "")
+                .replace("-", "")
+                .replace("(", "")
+                .replace(")", "")
+        }
     }
 }

@@ -36,6 +36,7 @@ import org.linphone.core.SubscribePolicy
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.ImageUtils
+import org.linphone.utils.LinphoneUtils
 
 class NativeContact(val nativeId: String, private val lookupKey: String? = null) : Contact() {
     override fun compareTo(other: Contact): Int {
@@ -136,7 +137,9 @@ class NativeContact(val nativeId: String, private val lookupKey: String? = null)
 
                     if (number != null && number.isNotEmpty()) {
                         Log.d("[Native Contact] Found phone number $data1 ($data4), type label is $typeLabel")
-                        if (!rawPhoneNumbers.contains(number)) {
+                        val trimmedNumber = LinphoneUtils.trimPhoneNumber(number)
+                        val found = rawPhoneNumbers.find { LinphoneUtils.trimPhoneNumber(it) == trimmedNumber }
+                        if (found == null) {
                             phoneNumbers.add(PhoneNumber(number, typeLabel))
                             rawPhoneNumbers.add(number)
                         }
