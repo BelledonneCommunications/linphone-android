@@ -46,16 +46,16 @@
             android:layout_alignParentLeft="true"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
-            android:src="@{groupChatAvatarVisibility ? @drawable/voip_multiple_contacts_avatar : @drawable/voip_single_contact_avatar}"/>
+            android:src="@drawable/generated_avatar_bg" />
 
         <ImageView
-            android:visibility="@{generatedAvatarVisibility &amp;&amp; !groupChatAvatarVisibility ? View.VISIBLE : View.GONE}"
+            android:visibility="@{groupChatAvatarVisibility || !generatedAvatarVisibility ? View.VISIBLE : View.GONE}"
             android:layout_width="@dimen/contact_avatar_size"
             android:layout_height="@dimen/contact_avatar_size"
             android:layout_alignParentLeft="true"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
-            android:src="@drawable/generated_avatar_bg" />
+            android:src="@{groupChatAvatarVisibility ? @drawable/icon_multiple_contacts_avatar : @drawable/icon_single_contact_avatar}"/>
 
         <TextView
             android:text="@{initials}"
