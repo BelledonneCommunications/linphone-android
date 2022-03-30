@@ -23,7 +23,6 @@
             android:layout_alignParentStart="true"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
-            android:background="@drawable/generated_avatar_bg"
             android:src="@{isConferenceCall ? @drawable/icon_multiple_contacts_avatar : @drawable/icon_single_contact_avatar}"/>
 
         <ImageView
