@@ -103,9 +103,8 @@
                 android:layout_width="@dimen/voip_floating_button_size"
                 android:layout_height="@dimen/voip_floating_button_size"
                 android:layout_margin="10dp"
-                android:padding="10dp"
                 android:background="@drawable/button_round_background"
-                android:src="@drawable/options_start_conference_default"
+                android:src="@drawable/icon_merge_calls_local_conference"
                 android:contentDescription="@string/cancel"/>
 
         </LinearLayout>
