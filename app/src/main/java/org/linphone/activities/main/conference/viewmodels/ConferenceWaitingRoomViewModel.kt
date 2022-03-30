@@ -97,7 +97,7 @@ class ConferenceWaitingRoomViewModel : ViewModel() {
         val core = coreContext.core
         core.addListener(listener)
 
-        callParams.isMicEnabled = PermissionHelper.get().hasRecordAudioPermission()
+        callParams.isMicEnabled = PermissionHelper.get().hasRecordAudioPermission() && coreContext.core.isMicEnabled
         Log.i("[Conference Waiting Room] Microphone will be ${if (callParams.isMicEnabled) "enabled" else "muted"}")
         updateMicState()
 
