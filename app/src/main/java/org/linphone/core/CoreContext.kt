@@ -131,6 +131,10 @@ class CoreContext(val context: Context, coreConfig: Config) {
         override fun onLastCallEnded(core: Core) {
             Log.i("[Context] Last call ended")
             removeCallOverlay()
+            if (!core.isMicEnabled) {
+                Log.w("[Context] Mic was muted in Core, enabling it back for next call")
+                core.isMicEnabled = true
+            }
         }
 
         override fun onCallStateChanged(
