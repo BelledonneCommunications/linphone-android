@@ -19,7 +19,8 @@
             android:layout_alignParentStart="true"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
-            android:src="@drawable/voip_single_contact_avatar"/>
+            android:background="@drawable/generated_avatar_bg"
+            android:src="@drawable/icon_single_contact_avatar"/>
 
         <ImageView
             android:visibility="@{data.displayInitials ? View.VISIBLE : View.GONE}"
