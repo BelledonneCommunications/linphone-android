@@ -39,10 +39,11 @@
                 <ImageView
                     android:visibility="@{data.isInRemoteConference ? View.VISIBLE : View.GONE, default=gone}"
                     android:layout_width="45dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="45dp"
                     android:layout_marginLeft="40dp"
-                    android:gravity="center"
-                    android:src="@drawable/voip_multiple_contacts_avatar" />
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/generated_avatar_bg"
+                    android:src="@drawable/icon_multiple_contacts_avatar" />
 
                 <ImageView
                     android:layout_width="wrap_content"
