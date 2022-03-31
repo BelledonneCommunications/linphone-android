@@ -430,7 +430,7 @@ class NotificationsManager(private val context: Context) {
                 if (picture != null) {
                     IconCompat.createWithAdaptiveBitmap(picture)
                 } else {
-                    IconCompat.createWithResource(context, R.drawable.voip_single_contact_avatar)
+                    IconCompat.createWithResource(context, R.drawable.voip_single_contact_avatar_alt)
                 }
             if (userIcon != null) builder.setIcon(userIcon)
             builder.build()
@@ -791,7 +791,7 @@ class NotificationsManager(private val context: Context) {
         }
         style.isGroupConversation = notifiable.isGroup
 
-        val icon = lastPerson?.icon ?: IconCompat.createWithResource(context, R.drawable.voip_single_contact_avatar)
+        val icon = lastPerson?.icon ?: IconCompat.createWithResource(context, R.drawable.voip_single_contact_avatar_alt)
         val bubble = NotificationCompat.BubbleMetadata.Builder(bubbleIntent, icon)
             .setDesiredHeightResId(R.dimen.chat_message_bubble_desired_height)
             .build()

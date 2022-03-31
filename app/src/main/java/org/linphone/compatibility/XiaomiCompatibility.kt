@@ -54,7 +54,7 @@ class XiaomiCompatibility {
             val builder = NotificationCompat.Builder(context, context.getString(R.string.notification_channel_incoming_call_id))
                 .addPerson(notificationsManager.getPerson(contact, displayName, roundPicture))
                 .setSmallIcon(R.drawable.topbar_call_notification)
-                .setLargeIcon(roundPicture ?: BitmapFactory.decodeResource(context.resources, R.drawable.voip_single_contact_avatar))
+                .setLargeIcon(roundPicture ?: BitmapFactory.decodeResource(context.resources, R.drawable.voip_single_contact_avatar_alt))
                 .setContentTitle(displayName)
                 .setContentText(address)
                 .setSubText(context.getString(R.string.incoming_call_notification_title))

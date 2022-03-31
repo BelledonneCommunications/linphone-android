@@ -310,23 +310,9 @@ fun setImageViewScaleType(imageView: ImageView, scaleType: ImageView.ScaleType) 
     imageView.scaleType = scaleType
 }
 
-@BindingAdapter("glideAvatarFallback")
-fun loadAvatarWithGlideFallback(imageView: ImageView, path: String?) {
-    if (path != null && path.isNotEmpty() && FileUtils.isExtensionImage(path)) {
-        GlideApp.with(imageView)
-            .load(path)
-            .signature(ObjectKey(coreContext.contactsManager.latestContactFetch))
-            .apply(RequestOptions.circleCropTransform())
-            .into(imageView)
-    } else {
-        Log.w("[Data Binding] [Glide] Can't load $path")
-        imageView.setImageResource(R.drawable.voip_single_contact_avatar)
-    }
-}
-
 @BindingAdapter("glidePath")
-fun loadImageWithGlide(imageView: ImageView, path: String) {
-    if (path.isNotEmpty() && FileUtils.isExtensionImage(path)) {
+fun loadImageWithGlide(imageView: ImageView, path: String?) {
+    if (path != null && path.isNotEmpty() && FileUtils.isExtensionImage(path)) {
         if (corePreferences.vfsEnabled && path.endsWith(FileUtils.VFS_PLAIN_FILE_EXTENSION)) {
             GlideApp.with(imageView)
                 .load(path)

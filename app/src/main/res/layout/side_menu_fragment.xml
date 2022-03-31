@@ -52,19 +52,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
-                android:padding="10dp"
-                android:src="@drawable/voip_single_contact_avatar"
+                android:layout_margin="10dp"
+                android:background="@drawable/generated_avatar_bg"
+                android:src="@drawable/icon_single_contact_avatar"
                 android:contentDescription="@string/content_description_change_own_picture"
-                glideAvatarFallback="@{viewModel.defaultAccountAvatar}" />
+                glidePath="@{viewModel.defaultAccountAvatar}" />
 
             <ImageView
-                android:visibility="@{viewModel.defaultAccountFound ? View.VISIBLE : View.GONE}"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
                 android:adjustViewBounds="true"
-                android:padding="10dp"
                 android:contentDescription="@null"
-                android:src="@drawable/avatar_border" />
+                android:src="@drawable/avatar_border"
+                android:visibility="@{viewModel.defaultAccountFound ? View.VISIBLE : View.GONE}" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
