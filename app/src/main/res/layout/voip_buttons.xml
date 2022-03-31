@@ -3,13 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <import type="android.view.View" />
+
+        <import type="org.linphone.activities.voip.ConferenceDisplayMode" />
+
         <variable
             name="controlsViewModel"
             type="org.linphone.activities.voip.viewmodels.ControlsViewModel" />
+
         <variable
             name="callsViewModel"
             type="org.linphone.activities.voip.viewmodels.CallsViewModel" />
+
+        <variable
+            name="conferenceViewModel"
+            type="org.linphone.activities.voip.viewmodels.ConferenceViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -86,7 +95,7 @@
             android:layout_marginStart="5dp"
             android:background="@drawable/button_background_reverse"
             android:contentDescription="@{controlsViewModel.isVideoEnabled &amp;&amp; controlsViewModel.isVideoSendReceive ? @string/content_description_disable_video : @string/content_description_enable_video}"
-            android:enabled="@{controlsViewModel.isVideoAvailable &amp;&amp; !controlsViewModel.isVideoUpdateInProgress}"
+            android:enabled="@{controlsViewModel.isVideoAvailable &amp;&amp; !controlsViewModel.isVideoUpdateInProgress &amp;&amp; conferenceViewModel.conferenceDisplayMode != ConferenceDisplayMode.AUDIO_ONLY}}"
             android:onClick="@{() -> controlsViewModel.toggleVideo()}"
             android:padding="5dp"
             android:selected="@{controlsViewModel.isVideoEnabled &amp;&amp; controlsViewModel.isVideoSendReceive}"
@@ -128,7 +137,7 @@
             android:translationY="@{controlsViewModel.bouncyCounterTranslateY}"
             android:visibility="@{callsViewModel.chatAndCallsCount == 0 ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toEndOf="@id/more"
-            app:layout_constraintTop_toTopOf="@id/more"/>
+            app:layout_constraintTop_toTopOf="@id/more" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

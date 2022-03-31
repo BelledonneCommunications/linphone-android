@@ -6,7 +6,7 @@
 
         <import type="android.view.View" />
 
-        <import type="org.linphone.core.ConferenceLayout" />
+        <import type="org.linphone.activities.voip.ConferenceDisplayMode" />
 
         <variable
             name="cancelClickListener"
@@ -71,11 +71,11 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="20dp"
                     android:layout_marginBottom="10dp"
-                    android:checked="@{conferenceViewModel.conferenceMosaicDisplayMode}"
+                    android:checked="@{conferenceViewModel.conferenceDisplayMode == ConferenceDisplayMode.GRID}"
                     android:drawableEnd="@drawable/icon_conference_layout_grid"
                     android:drawableTint="?attr/voipDrawableColor"
                     android:enabled="@{conferenceViewModel.conferenceParticipantDevices.size() > conferenceViewModel.maxParticipantsForMosaicLayout ? false : true}"
-                    android:onClickListener="@{() -> conferenceViewModel.changeLayout(ConferenceLayout.Grid)}"
+                    android:onClickListener="@{() -> conferenceViewModel.changeLayout(ConferenceDisplayMode.GRID)}"
                     android:text="@string/conference_display_mode_mosaic" />
 
                 <View
@@ -90,11 +90,11 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="20dp"
                     android:layout_marginBottom="10dp"
-                    android:checked="@{conferenceViewModel.conferenceActiveSpeakerDisplayMode}"
+                    android:checked="@{conferenceViewModel.conferenceDisplayMode == ConferenceDisplayMode.ACTIVE_SPEAKER}"
                     android:drawableEnd="@drawable/icon_conference_layout_active_speaker"
                     android:drawableTint="?attr/voipDrawableColor"
                     android:enabled="@{conferenceViewModel.conferenceParticipantDevices.size() > conferenceViewModel.maxParticipantsForMosaicLayout ? false : true}"
-                    android:onClickListener="@{() -> conferenceViewModel.changeLayout(ConferenceLayout.ActiveSpeaker)}"
+                    android:onClickListener="@{() -> conferenceViewModel.changeLayout(ConferenceDisplayMode.ACTIVE_SPEAKER)}"
                     android:text="@string/conference_display_mode_active_speaker" />
 
                 <View
@@ -102,7 +102,6 @@
                     android:layout_height="1dp"
                     android:background="?attr/dividerColor" />
 
-                <!-- TODO: FIXME: Use AudioOnly layout -->
                 <RadioButton
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -110,10 +109,10 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="20dp"
                     android:layout_marginBottom="10dp"
-                    android:checked="@{conferenceViewModel.conferenceAudioOnlyDisplayMode}"
+                    android:checked="@{conferenceViewModel.conferenceDisplayMode == ConferenceDisplayMode.AUDIO_ONLY}"
                     android:drawableEnd="@drawable/icon_conference_layout_audio_only"
                     android:drawableTint="?attr/voipDrawableColor"
-                    android:onClickListener="@{() -> conferenceViewModel.changeLayout(ConferenceLayout.Legacy)}"
+                    android:onClickListener="@{() -> conferenceViewModel.changeLayout(ConferenceDisplayMode.AUDIO_ONLY)}"
                     android:text="@string/conference_display_mode_audio_only" />
 
                 <View

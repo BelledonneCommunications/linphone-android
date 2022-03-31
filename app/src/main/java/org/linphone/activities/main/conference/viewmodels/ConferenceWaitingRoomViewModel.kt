@@ -23,6 +23,7 @@ import android.Manifest
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.activities.voip.ConferenceDisplayMode
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.AudioRouteUtils
@@ -44,9 +45,7 @@ class ConferenceWaitingRoomViewModel : ViewModel() {
 
     val layoutMenuSelected = MutableLiveData<Boolean>()
 
-    val isActiveSpeakerLayoutSelected = MutableLiveData<Boolean>()
-
-    val isAudioOnlyLayoutSelected = MutableLiveData<Boolean>()
+    val selectedLayout = MutableLiveData<ConferenceDisplayMode>()
 
     val isVideoAvailable = MutableLiveData<Boolean>()
 
@@ -101,20 +100,17 @@ class ConferenceWaitingRoomViewModel : ViewModel() {
         Log.i("[Conference Waiting Room] Microphone will be ${if (callParams.isMicEnabled) "enabled" else "muted"}")
         updateMicState()
 
-        layoutMenuSelected.value = false
-        isActiveSpeakerLayoutSelected.value = false
-        isAudioOnlyLayoutSelected.value = false
-        updateLayout()
-
-        isVideoAvailable.value = isAudioOnlyLayoutSelected.value == false && (core.isVideoCaptureEnabled || core.isVideoPreviewEnabled)
-        callParams.isVideoEnabled = isVideoAvailable.value == true
+        callParams.isVideoEnabled = isVideoAvailableInCore()
         callParams.videoDirection = if (core.videoActivationPolicy.automaticallyInitiate) MediaDirection.SendRecv else MediaDirection.RecvOnly
         Log.i("[Conference Waiting Room] Video will be ${if (callParams.isVideoEnabled) "enabled" else "disabled"}")
         updateVideoState()
 
+        layoutMenuSelected.value = false
+        updateLayout()
+
         if (AudioRouteUtils.isBluetoothAudioRouteAvailable()) {
             setBluetoothAudioRoute()
-        } else if (isVideoAvailable.value == true && isVideoEnabled.value == true) {
+        } else if (isVideoAvailableInCore() && isVideoEnabled.value == true) {
             setSpeakerAudioRoute()
         } else {
             setEarpieceAudioRoute()
@@ -209,22 +205,31 @@ class ConferenceWaitingRoomViewModel : ViewModel() {
 
     fun setMosaicLayout() {
         Log.i("[Conference Waiting Room] Set default layout to Mosaic")
-        coreContext.core.defaultConferenceLayout = ConferenceLayout.Grid
+
+        callParams.conferenceVideoLayout = ConferenceLayout.Grid
+        callParams.isVideoEnabled = isVideoAvailableInCore()
+
         updateLayout()
+        updateVideoState()
         layoutMenuSelected.value = false
     }
 
     fun setActiveSpeakerLayout() {
         Log.i("[Conference Waiting Room] Set default layout to ActiveSpeaker")
-        coreContext.core.defaultConferenceLayout = ConferenceLayout.ActiveSpeaker
+
+        callParams.conferenceVideoLayout = ConferenceLayout.ActiveSpeaker
+        callParams.isVideoEnabled = isVideoAvailableInCore()
+
         updateLayout()
+        updateVideoState()
         layoutMenuSelected.value = false
     }
 
     fun setAudioOnlyLayout() {
-        Log.i("[Conference Waiting Room] Set default layout to AudioOnly")
-        coreContext.core.defaultConferenceLayout = ConferenceLayout.Legacy // TODO: FIXME: Replace Legacy by AudioOnly
+        Log.i("[Conference Waiting Room] Set default layout to AudioOnly, disabling video in call")
+        callParams.isVideoEnabled = false
         updateLayout()
+        updateVideoState()
         layoutMenuSelected.value = false
     }
 
@@ -233,7 +238,7 @@ class ConferenceWaitingRoomViewModel : ViewModel() {
             askPermissionEvent.value = Event(Manifest.permission.CAMERA)
             return
         }
-        callParams.isVideoEnabled = isVideoAvailable.value == true
+        callParams.isVideoEnabled = isVideoAvailableInCore()
         callParams.videoDirection = if (callParams.videoDirection == MediaDirection.SendRecv) MediaDirection.RecvOnly else MediaDirection.SendRecv
         Log.i("[Conference Waiting Room] Video will be ${if (callParams.isVideoEnabled) "enabled" else "disabled"}")
         updateVideoState()
@@ -241,7 +246,7 @@ class ConferenceWaitingRoomViewModel : ViewModel() {
 
     fun enableVideo() {
         Log.i("[Conference Waiting Room] Video will be enabled")
-        callParams.isVideoEnabled = isVideoAvailable.value == true
+        callParams.isVideoEnabled = isVideoAvailableInCore()
         callParams.videoDirection = MediaDirection.SendRecv
         updateVideoState()
     }
@@ -290,20 +295,25 @@ class ConferenceWaitingRoomViewModel : ViewModel() {
     }
 
     private fun updateLayout() {
-        val core = coreContext.core
-        val layout = core.defaultConferenceLayout
-        isActiveSpeakerLayoutSelected.value = layout == ConferenceLayout.ActiveSpeaker
-        isAudioOnlyLayoutSelected.value = layout == ConferenceLayout.Legacy // TODO: FIXME: Replace Legacy by AudioOnly
-
-        isVideoAvailable.value = isAudioOnlyLayoutSelected.value == false && (core.isVideoCaptureEnabled || core.isVideoPreviewEnabled)
-        callParams.isVideoEnabled = isVideoAvailable.value == true && isAudioOnlyLayoutSelected.value == false
-        if (isAudioOnlyLayoutSelected.value == true) callParams.videoDirection = MediaDirection.RecvOnly
-        updateVideoState()
+        if (!callParams.isVideoEnabled) {
+            selectedLayout.value = ConferenceDisplayMode.AUDIO_ONLY
+        } else {
+            selectedLayout.value = when (callParams.conferenceVideoLayout) {
+                ConferenceLayout.Grid -> ConferenceDisplayMode.GRID
+                else -> ConferenceDisplayMode.ACTIVE_SPEAKER
+            }
+        }
     }
 
     private fun updateVideoState() {
+        isVideoAvailable.value = callParams.isVideoEnabled
         isVideoEnabled.value = callParams.isVideoEnabled && callParams.videoDirection == MediaDirection.SendRecv
         isSwitchCameraAvailable.value = callParams.isVideoEnabled && coreContext.showSwitchCameraButton()
         coreContext.core.isVideoPreviewEnabled = callParams.isVideoEnabled
+    }
+
+    private fun isVideoAvailableInCore(): Boolean {
+        val core = coreContext.core
+        return core.isVideoCaptureEnabled || core.isVideoPreviewEnabled
     }
 }
