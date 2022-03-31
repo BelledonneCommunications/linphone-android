@@ -33,7 +33,6 @@ import org.linphone.compatibility.Compatibility
 import org.linphone.core.Content
 import org.linphone.core.tools.Log
 import org.linphone.databinding.FileViewerTopBarFragmentBinding
-import org.linphone.mediastream.Version
 import org.linphone.utils.FileUtils
 import org.linphone.utils.PermissionHelper
 
@@ -90,7 +89,7 @@ class TopBarFragment : GenericFragment<FileViewerTopBarFragmentBinding>() {
     private fun exportContent(content: Content) {
         lifecycleScope.launch {
             var mediaStoreFilePath = ""
-            if (Version.sdkAboveOrEqual(Version.API29_ANDROID_10) || PermissionHelper.get().hasWriteExternalStoragePermission()) {
+            if (PermissionHelper.get().hasWriteExternalStoragePermission()) {
                 Log.i("[File Viewer] Exporting image through Media Store API")
                 when (content.type) {
                     "image" -> {

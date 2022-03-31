@@ -29,6 +29,8 @@ import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
+import org.linphone.utils.FileUtils
+import org.linphone.utils.PermissionHelper
 
 class CallsViewModel : ViewModel() {
     val currentCallData = MutableLiveData<CallData>()
@@ -40,6 +42,10 @@ class CallsViewModel : ViewModel() {
     val currentCallUnreadChatMessageCount = MutableLiveData<Int>()
 
     val chatAndCallsCount = MediatorLiveData<Int>()
+
+    val askWriteExternalStoragePermissionEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
 
     val callConnectedEvent: MutableLiveData<Event<Call>> by lazy {
         MutableLiveData<Event<Call>>()
@@ -156,6 +162,20 @@ class CallsViewModel : ViewModel() {
         params.subject = AppUtils.getString(R.string.conference_local_title)
         val conference = core.createConferenceWithParams(params)
         conference?.addParticipants(core.calls)
+    }
+
+    fun takeSnapshot() {
+        if (!PermissionHelper.get().hasWriteExternalStoragePermission()) {
+            askWriteExternalStoragePermissionEvent.value = Event(true)
+        } else {
+            if (currentCallData.value?.call?.currentParams?.isVideoEnabled == true) {
+                val fileName = System.currentTimeMillis().toString() + ".jpeg"
+                Log.i("[Calls] Snapshot will be save under $fileName")
+                currentCallData.value?.call?.takeVideoSnapshot(FileUtils.getFileStoragePath(fileName).absolutePath)
+            } else {
+                Log.e("[Calls] Current call doesn't have video, can't take snapshot")
+            }
+        }
     }
 
     private fun initCallList() {

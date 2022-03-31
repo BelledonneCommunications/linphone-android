@@ -27,7 +27,6 @@ import kotlin.math.max
 import org.linphone.activities.main.chat.data.EventLogData
 import org.linphone.core.*
 import org.linphone.core.tools.Log
-import org.linphone.mediastream.Version
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.PermissionHelper
@@ -71,7 +70,7 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
                     return
                 }
 
-                if (Version.sdkStrictlyBelow(Version.API29_ANDROID_10) && !PermissionHelper.get().hasWriteExternalStoragePermission()) {
+                if (!PermissionHelper.get().hasWriteExternalStoragePermission()) {
                     for (content in chatMessage.contents) {
                         if (content.isFileTransfer) {
                             Log.i("[Chat Messages] Android < 10 detected and WRITE_EXTERNAL_STORAGE permission isn't granted yet")
