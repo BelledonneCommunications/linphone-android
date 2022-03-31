@@ -478,7 +478,8 @@ class CorePreferences constructor(private val context: Context) {
         get() = config.getString("app", "debug_popup_magic", "#1234#")!!
 
     // If there is more participants than this value in a conference, force ActiveSpeaker layout
-    val maxConferenceParticipantsForMosaicLayout: Int = 6
+    val maxConferenceParticipantsForMosaicLayout: Int
+        get() = config.getInt("app", "conference_mosaic_layout_max_participants", 6)
 
     val conferenceServerUri: String
         get() = config.getString(
@@ -505,7 +506,7 @@ class CorePreferences constructor(private val context: Context) {
         get() = config.getString(
             "misc",
             "version_check_url_root",
-            "https://download.linphone.org/releases/android/RELEASE"
+            "https://linphone.org/releases/android/RELEASE"
         )
 
     val checkUpdateAvailableInterval: Int
