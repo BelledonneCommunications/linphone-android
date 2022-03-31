@@ -26,6 +26,7 @@ import androidx.navigation.navGraphViewModels
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.GenericFragment
+import org.linphone.activities.voip.ConferenceDisplayMode
 import org.linphone.activities.voip.viewmodels.ConferenceViewModel
 import org.linphone.databinding.VoipConferenceLayoutFragmentBinding
 
@@ -50,6 +51,16 @@ class ConferenceLayoutFragment : GenericFragment<VoipConferenceLayoutFragmentBin
         ) {
             if (it.size > conferenceViewModel.maxParticipantsForMosaicLayout) {
                 showTooManyParticipantsForMosaicLayoutDialog()
+            }
+        }
+
+        conferenceViewModel.conferenceDisplayMode.observe(
+            viewLifecycleOwner
+        ) {
+            binding.localPreviewVideoSurface.visibility = if (it == ConferenceDisplayMode.AUDIO_ONLY) {
+                View.GONE
+            } else {
+                View.VISIBLE
             }
         }
 

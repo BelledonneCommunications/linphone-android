@@ -73,6 +73,7 @@ class CallsViewModel : ViewModel() {
         }
 
         override fun onLastCallEnded(core: Core) {
+            Log.i("[Calls] Last call ended")
             currentCallData.value?.destroy()
             noMoreCallEvent.value = Event(true)
         }

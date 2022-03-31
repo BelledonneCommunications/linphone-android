@@ -353,9 +353,6 @@ class CoreContext(val context: Context, coreConfig: Config) {
             core.isVibrationOnIncomingCallEnabled = true
             core.config.setBool("app", "incoming_call_vibration", false)
         }
-        if (core.defaultConferenceLayout == ConferenceLayout.Legacy) {
-            core.defaultConferenceLayout = ConferenceLayout.ActiveSpeaker
-        }
 
         initUserCertificates()
 

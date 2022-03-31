@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="data"
+            type="org.linphone.activities.voip.data.ConferenceParticipantDeviceData" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/voip_conference_audio_only_participant_cell_height">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/shape_audio_only_remote_background"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <include
+            android:id="@+id/participant_avatar"
+            layout="@layout/voip_contact_avatar"
+            android:layout_width="@dimen/voip_conference_audio_only_participant_avatar_size"
+            android:layout_height="@dimen/voip_conference_audio_only_participant_avatar_size"
+            android:layout_marginStart="10dp"
+            app:data="@{data}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHeight_max="200dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/participant_name"
+            style="@style/call_remote_name_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@{data.contact.fullName ?? data.displayName, default=`Merry Brandybuck`}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/participant_avatar"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            style="@style/call_remote_name_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="@string/conference_participant_paused"
+            android:visibility="@{data.isInConference ? View.GONE : View.VISIBLE, default=gone}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/participant_name"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="5dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@null"
+            android:src="@drawable/shape_conference_audio_only_border"
+            android:visibility="@{data.activeSpeaker ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:layout_width="@dimen/voip_conference_participant_mic_muted_icon_size_grid"
+            android:layout_height="@dimen/voip_conference_participant_mic_muted_icon_size_grid"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/shape_button_disabled_background"
+            android:contentDescription="@string/content_description_conference_participant_mic_muted"
+            android:padding="5dp"
+            android:src="@drawable/icon_mic_muted"
+            android:visibility="@{data.micMuted ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

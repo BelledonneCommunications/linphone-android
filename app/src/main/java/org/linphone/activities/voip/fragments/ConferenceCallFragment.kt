@@ -39,6 +39,7 @@ import org.linphone.activities.main.MainActivity
 import org.linphone.activities.navigateToCallsList
 import org.linphone.activities.navigateToConferenceLayout
 import org.linphone.activities.navigateToConferenceParticipants
+import org.linphone.activities.voip.ConferenceDisplayMode
 import org.linphone.activities.voip.viewmodels.CallsViewModel
 import org.linphone.activities.voip.viewmodels.ConferenceViewModel
 import org.linphone.activities.voip.viewmodels.ControlsViewModel
@@ -79,20 +80,11 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
 
         binding.statsViewModel = statsViewModel
 
-        conferenceViewModel.conferenceMosaicDisplayMode.observe(
+        conferenceViewModel.conferenceDisplayMode.observe(
             viewLifecycleOwner
-        ) {
-            if (it) {
-                startTimer(R.id.active_conference_timer)
-            }
-        }
-
-        conferenceViewModel.conferenceActiveSpeakerDisplayMode.observe(
-            viewLifecycleOwner
-        ) {
-            if (it) {
-                startTimer(R.id.active_conference_timer)
-
+        ) { displayMode ->
+            startTimer(R.id.active_conference_timer)
+            if (displayMode == ConferenceDisplayMode.ACTIVE_SPEAKER) {
                 if (conferenceViewModel.conferenceExists.value == true) {
                     Log.i("[Conference Call] Local participant is in conference and current layout is active speaker, updating Core's native window id")
                     val layout =
@@ -104,14 +96,6 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
                     Log.i("[Conference Call] Either not in conference or current layout isn't active speaker, updating Core's native window id")
                     coreContext.core.nativeVideoWindowId = null
                 }
-            }
-        }
-
-        conferenceViewModel.conferenceAudioOnlyDisplayMode.observe(
-            viewLifecycleOwner
-        ) {
-            if (it) {
-                startTimer(R.id.active_conference_timer)
             }
         }
 
@@ -135,6 +119,20 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
             if (!creationPending) {
                 val conference = conferenceViewModel.conference.value
                 if (conference != null) switchToFullScreenIfPossible(conference)
+            }
+        }
+
+        conferenceViewModel.conferenceDisplayMode.observe(
+            viewLifecycleOwner
+        ) { layout ->
+            when (layout) {
+                ConferenceDisplayMode.AUDIO_ONLY -> {
+                    controlsViewModel.fullScreenMode.value = false
+                }
+                else -> {
+                    val conference = conferenceViewModel.conference.value
+                    if (conference != null) switchToFullScreenIfPossible(conference)
+                }
             }
         }
 

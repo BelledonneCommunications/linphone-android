@@ -24,6 +24,7 @@ import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.activities.voip.ConferenceDisplayMode
 import org.linphone.activities.voip.data.ConferenceParticipantData
 import org.linphone.activities.voip.data.ConferenceParticipantDeviceData
 import org.linphone.core.*
@@ -43,9 +44,7 @@ class ConferenceViewModel : ViewModel() {
     val conferenceCreationPending = MutableLiveData<Boolean>()
     val conferenceParticipants = MutableLiveData<List<ConferenceParticipantData>>()
     val conferenceParticipantDevices = MutableLiveData<List<ConferenceParticipantDeviceData>>()
-    val conferenceMosaicDisplayMode = MutableLiveData<Boolean>()
-    val conferenceActiveSpeakerDisplayMode = MutableLiveData<Boolean>()
-    val conferenceAudioOnlyDisplayMode = MutableLiveData<Boolean>()
+    val conferenceDisplayMode = MutableLiveData<ConferenceDisplayMode>()
 
     val isRecording = MutableLiveData<Boolean>()
     val isRemotelyRecorded = MutableLiveData<Boolean>()
@@ -64,10 +63,9 @@ class ConferenceViewModel : ViewModel() {
             updateParticipantsList(conference)
 
             val count = conferenceParticipants.value.orEmpty().size
-            if (count > maxParticipantsForMosaicLayout && conferenceMosaicDisplayMode.value == true) {
+            if (count > maxParticipantsForMosaicLayout && conferenceDisplayMode.value == ConferenceDisplayMode.GRID) {
                 Log.w("[Conference] More than $maxParticipantsForMosaicLayout participants ($count), forcing active speaker layout")
-                conferenceMosaicDisplayMode.value = false
-                conferenceActiveSpeakerDisplayMode.value = true
+                conferenceDisplayMode.value = ConferenceDisplayMode.ACTIVE_SPEAKER
             }
         }
 
@@ -181,9 +179,6 @@ class ConferenceViewModel : ViewModel() {
 
         conferenceParticipants.value = arrayListOf()
         conferenceParticipantDevices.value = arrayListOf()
-        conferenceMosaicDisplayMode.value = false
-        conferenceActiveSpeakerDisplayMode.value = false
-        conferenceAudioOnlyDisplayMode.value = false
 
         subject.value = AppUtils.getString(R.string.conference_default_title)
 
@@ -290,27 +285,57 @@ class ConferenceViewModel : ViewModel() {
         }
     }
 
-    fun changeLayout(layout: ConferenceLayout) {
+    fun changeLayout(layout: ConferenceDisplayMode) {
         Log.i("[Conference] Trying to change conference layout to $layout")
         val conference = conference.value
         if (conference != null) {
-            conference.layout = layout
-            updateConferenceLayout(conference)
+            val call = conference.call
+            if (call != null) {
+                val params = call.core.createCallParams(call)
+                if (params == null) {
+                    Log.e("[Conference] Failed to create call params from conference call!")
+                    return
+                }
+
+                params.isVideoEnabled = layout != ConferenceDisplayMode.AUDIO_ONLY
+                params.conferenceVideoLayout = when (layout) {
+                    ConferenceDisplayMode.GRID -> ConferenceLayout.Grid
+                    else -> ConferenceLayout.ActiveSpeaker
+                }
+                call.update(params)
+
+                conferenceDisplayMode.value = layout
+                val list = sortDevicesDataList(conferenceParticipantDevices.value.orEmpty())
+                conferenceParticipantDevices.value = list
+            } else {
+                Log.e("[Conference] Failed to get call from conference!")
+            }
         } else {
             Log.e("[Conference] Conference is null in ConferenceViewModel")
         }
     }
 
     private fun updateConferenceLayout(conference: Conference) {
-        val layout = conference.layout
-        conferenceMosaicDisplayMode.value = layout == ConferenceLayout.Grid
-        conferenceActiveSpeakerDisplayMode.value = layout == ConferenceLayout.ActiveSpeaker
-        conferenceAudioOnlyDisplayMode.value = layout == ConferenceLayout.Legacy // TODO: FIXME: Use AudioOnly layout
+        val call = conference.call
+        if (call == null) {
+            Log.e("[Conference] Conference call is null!")
+            return
+        }
+
+        val params = call.params
+        conferenceDisplayMode.value = if (!params.isVideoEnabled) {
+            ConferenceDisplayMode.AUDIO_ONLY
+        } else {
+            when (params.conferenceVideoLayout) {
+                ConferenceLayout.Grid -> ConferenceDisplayMode.GRID
+                else -> ConferenceDisplayMode.ACTIVE_SPEAKER
+            }
+        }
 
         val list = sortDevicesDataList(conferenceParticipantDevices.value.orEmpty())
         conferenceParticipantDevices.value = list
 
-        Log.i("[Conference] Conference current layout is: $layout")
+        Log.i("[Conference] Conference current layout is: ${conferenceDisplayMode.value}")
     }
 
     private fun terminateConference(conference: Conference) {
@@ -422,7 +447,7 @@ class ConferenceViewModel : ViewModel() {
         }
         if (meDeviceData != null) {
             val index = sortedList.indexOf(meDeviceData)
-            val expectedIndex = if (conferenceActiveSpeakerDisplayMode.value == true) {
+            val expectedIndex = if (conferenceDisplayMode.value == ConferenceDisplayMode.ACTIVE_SPEAKER) {
                 0
             } else {
                 sortedList.size - 1

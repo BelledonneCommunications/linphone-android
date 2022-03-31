@@ -113,7 +113,6 @@ open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
         displayableAddress.value = clone.asStringUriOnly()
 
         update()
-        // initChatRoom()
 
         val conferenceInfo = coreContext.core.findConferenceInformationFromUri(call.remoteAddress)
         if (conferenceInfo != null) {
@@ -165,6 +164,10 @@ open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
 
     fun showContextMenu(anchor: View) {
         contextMenuClickListener?.onShowContextMenu(anchor, this)
+    }
+
+    fun isActiveAndNotInConference(): Boolean {
+        return isPaused.value == false && isRemotelyPaused.value == false && isInRemoteConference.value == false
     }
 
     private fun isCallPaused(): Boolean {
