@@ -142,6 +142,7 @@
                 app:layout_constraintTop_toTopOf="@id/background" />
 
             <ImageView
+                android:id="@+id/record_call"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_margin="10dp"
@@ -154,6 +155,18 @@
                 android:visibility="@{controlsViewModel.fullScreenMode || controlsViewModel.pipMode ? View.GONE : View.VISIBLE}"
                 app:layout_constraintStart_toStartOf="@id/background"
                 app:layout_constraintTop_toTopOf="@id/background" />
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/button_call_recording_background"
+                android:contentDescription="@string/content_description_take_screenshot"
+                android:onClick="@{() -> callsViewModel.takeSnapshot()}"
+                android:src="@drawable/icon_call_screenshot"
+                android:visibility="@{!controlsViewModel.showTakeSnaptshotButton || controlsViewModel.fullScreenMode || controlsViewModel.pipMode ? View.GONE : View.VISIBLE}"
+                app:layout_constraintStart_toStartOf="@id/background"
+                app:layout_constraintTop_toBottomOf="@id/record_call" />
 
             <ImageView
                 android:layout_width="40dp"

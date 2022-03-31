@@ -23,6 +23,7 @@ import android.Manifest
 import android.content.Context
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
+import org.linphone.mediastream.Version
 
 /**
  * Helper methods to check whether a permission has been granted and log the result
@@ -63,6 +64,7 @@ class PermissionHelper private constructor(private val context: Context) {
     }
 
     fun hasWriteExternalStoragePermission(): Boolean {
+        if (Version.sdkAboveOrEqual(Version.API29_ANDROID_10)) return true
         return hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     }
 

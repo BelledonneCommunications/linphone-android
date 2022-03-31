@@ -25,6 +25,7 @@ import java.util.*
 import kotlinx.coroutines.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.compatibility.Compatibility
 import org.linphone.contact.GenericContactData
 import org.linphone.core.*
 import org.linphone.core.tools.Log
@@ -81,6 +82,23 @@ open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
         override fun onRemoteRecording(call: Call, recording: Boolean) {
             Log.i("[Call] Remote recording changed: $recording")
             isRemotelyRecorded.value = recording
+        }
+
+        override fun onSnapshotTaken(call: Call, filePath: String) {
+            Log.i("[Call] Snapshot taken: $filePath")
+            val content = Factory.instance().createContent()
+            content.filePath = filePath
+            content.type = "image"
+            content.subtype = "jpeg"
+            content.name = filePath.substring(filePath.indexOf("/") + 1)
+
+            scope.launch {
+                if (Compatibility.addImageToMediaStore(coreContext.context, content)) {
+                    Log.i("[Call] Adding snapshot ${content.name} to Media Store terminated")
+                } else {
+                    Log.e("[Call] Something went wrong while copying file to Media Store...")
+                }
+            }
         }
     }
 
@@ -147,69 +165,6 @@ open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
 
     fun showContextMenu(anchor: View) {
         contextMenuClickListener?.onShowContextMenu(anchor, this)
-    }
-
-    private fun initChatRoom() {
-        val core = coreContext.core
-        val localSipUri = core.defaultAccount?.params?.identityAddress?.asStringUriOnly()
-        val remoteSipUri = call.remoteAddress.asStringUriOnly()
-        val conference = call.conference
-
-        if (localSipUri != null) {
-            val localAddress = Factory.instance().createAddress(localSipUri)
-            val remoteSipAddress = Factory.instance().createAddress(remoteSipUri)
-            chatRoom = core.searchChatRoom(null, localAddress, remoteSipAddress, arrayOfNulls(0))
-
-            if (chatRoom == null) {
-                Log.w("[Call] Failed to find existing chat room for local address [$localSipUri] and remote address [$remoteSipUri]")
-                var chatRoomParams: ChatRoomParams? = null
-                if (conference != null) {
-                    val params = core.createDefaultChatRoomParams()
-                    params.subject = conference.subject
-                    params.backend = ChatRoomBackend.FlexisipChat
-                    params.isGroupEnabled = true
-                    chatRoomParams = params
-                }
-
-                chatRoom = core.searchChatRoom(
-                    chatRoomParams,
-                    localAddress,
-                    null,
-                    arrayOf(remoteSipAddress)
-                )
-            }
-
-            if (chatRoom == null) {
-                val chatRoomParams = core.createDefaultChatRoomParams()
-
-                if (conference != null) {
-                    Log.w("[Call] Failed to find existing chat room with same subject & participants, creating it")
-                    chatRoomParams.backend = ChatRoomBackend.FlexisipChat
-                    chatRoomParams.isGroupEnabled = true
-                    chatRoomParams.subject = conference.subject
-
-                    val participants = arrayOfNulls<Address>(conference.participantCount)
-                    val addresses = arrayListOf<Address>()
-                    for (participant in conference.participantList) {
-                        addresses.add(participant.address)
-                    }
-                    addresses.toArray(participants)
-
-                    Log.i("[Call] Creating chat room with same subject [${chatRoomParams.subject}] & participants as for conference")
-                    chatRoom = core.createChatRoom(chatRoomParams, localAddress, participants)
-                } else {
-                    Log.w("[Call] Failed to find existing chat room with same participants, creating it")
-                    // TODO: configure chat room params
-                    chatRoom = core.createChatRoom(chatRoomParams, localAddress, arrayOf(remoteSipAddress))
-                }
-            }
-
-            if (chatRoom == null) {
-                Log.e("[Call] Failed to create a chat room for local address [$localSipUri] and remote address [$remoteSipUri]!")
-            }
-        } else {
-            Log.e("[Call] Failed to get either local [$localSipUri] or remote [$remoteSipUri] SIP address!")
-        }
     }
 
     private fun isCallPaused(): Boolean {
@@ -297,9 +252,5 @@ open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
             30000
         )
         Log.i("[Call] Starting 30 seconds timer to automatically decline video request")
-    }
-
-    fun isActiveAndNotInConference(): Boolean {
-        return isPaused.value == false && isRemotelyPaused.value == false && isInRemoteConference.value == false
     }
 }

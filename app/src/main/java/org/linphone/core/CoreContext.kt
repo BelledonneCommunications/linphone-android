@@ -743,7 +743,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
             return
         }
 
-        if (Version.sdkAboveOrEqual(Version.API29_ANDROID_10) || PermissionHelper.get().hasWriteExternalStoragePermission()) {
+        if (PermissionHelper.get().hasWriteExternalStoragePermission()) {
             for (content in message.contents) {
                 if (content.isFile && content.filePath != null && content.userData == null) {
                     addContentToMediaStore(content)
@@ -764,7 +764,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
             return
         }
 
-        if (Version.sdkAboveOrEqual(Version.API29_ANDROID_10) || PermissionHelper.get().hasWriteExternalStoragePermission()) {
+        if (PermissionHelper.get().hasWriteExternalStoragePermission()) {
             coroutineScope.launch {
                 when (content.type) {
                     "image" -> {
