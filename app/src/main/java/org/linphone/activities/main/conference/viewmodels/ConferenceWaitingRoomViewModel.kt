@@ -21,16 +21,18 @@ package org.linphone.activities.main.conference.viewmodels
 
 import android.Manifest
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
+import org.linphone.activities.main.viewmodels.MessageNotifierViewModel
 import org.linphone.activities.voip.ConferenceDisplayMode
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.AudioRouteUtils
 import org.linphone.utils.Event
+import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.PermissionHelper
 
-class ConferenceWaitingRoomViewModel : ViewModel() {
+class ConferenceWaitingRoomViewModel : MessageNotifierViewModel() {
     val subject = MutableLiveData<String>()
 
     val isMicrophoneMuted = MutableLiveData<Boolean>()
@@ -52,6 +54,8 @@ class ConferenceWaitingRoomViewModel : ViewModel() {
     val isVideoEnabled = MutableLiveData<Boolean>()
 
     val isSwitchCameraAvailable = MutableLiveData<Boolean>()
+
+    val isLowBandwidth = MutableLiveData<Boolean>()
 
     val joinInProgress = MutableLiveData<Boolean>()
 
@@ -104,6 +108,18 @@ class ConferenceWaitingRoomViewModel : ViewModel() {
         callParams.videoDirection = if (core.videoActivationPolicy.automaticallyInitiate) MediaDirection.SendRecv else MediaDirection.RecvOnly
         Log.i("[Conference Waiting Room] Video will be ${if (callParams.isVideoEnabled) "enabled" else "disabled"}")
         updateVideoState()
+
+        isLowBandwidth.value = false
+        if (LinphoneUtils.checkIfNetworkHasLowBandwidth(coreContext.context)) {
+            Log.w("[Conference Waiting Room] Enabling low bandwidth mode, forcing audio only layout!")
+            callParams.isLowBandwidthEnabled = true
+            callParams.isVideoEnabled = false
+            callParams.videoDirection = MediaDirection.Inactive
+            isLowBandwidth.value = true
+
+            updateVideoState()
+            onMessageToNotifyEvent.value = Event(R.string.conference_low_bandwidth)
+        }
 
         layoutMenuSelected.value = false
         updateLayout()
