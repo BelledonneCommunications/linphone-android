@@ -28,6 +28,7 @@ import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.GenericFragment
+import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.conference.viewmodels.ConferenceWaitingRoomViewModel
 import org.linphone.activities.navigateToDialer
 import org.linphone.compatibility.Compatibility
@@ -107,6 +108,14 @@ class ConferenceWaitingRoomFragment : GenericFragment<ConferenceWaitingRoomFragm
         ) {
             it.consume {
                 goBack()
+            }
+        }
+
+        viewModel.onMessageToNotifyEvent.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume { message ->
+                (activity as MainActivity).showSnackBar(message)
             }
         }
 

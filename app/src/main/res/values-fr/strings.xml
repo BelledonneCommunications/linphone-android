@@ -717,4 +717,6 @@
     <string name="conference_display_mode_audio_only">Mode audio uniquement</string>
     <string name="conference_too_many_participants_for_mosaic_layout">Il y a trop de participants pour la disposition en mosaïque, passage à l\'intervenant actif</string>
     <string name="conference_participant_paused">(en pause)</string>
+    <string name="content_description_take_screenshot">Prendre une capture de la vidéo reçue</string>
+    <string name="conference_low_bandwidth">Faible bande passante détectée, vidéo désactivée</string>
 </resources>
