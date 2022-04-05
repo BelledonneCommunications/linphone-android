@@ -56,7 +56,7 @@ class ConferenceParticipantsFragment : GenericFragment<VoipConferenceParticipant
         ) {
             it.consume { participantData ->
                 val participantName =
-                    participantData.contact.value?.fullName ?: participantData.displayName.value
+                    participantData.contact.value?.name ?: participantData.displayName.value
                 val message = if (participantData.participant.isAdmin) {
                     getString(R.string.conference_admin_set).format(participantName)
                 } else {

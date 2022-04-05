@@ -70,7 +70,7 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
 
         val contact = sharedViewModel.selectedContact.value
         if (contact == null) {
-            Log.e("[Contact] Contact is null, aborting!")
+            Log.e("[Contact] Friend is null, aborting!")
             goBack()
             return
         }
@@ -146,10 +146,27 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
                 (activity as MainActivity).showSnackBar(messageResourceId)
             }
         }
+        viewModel.updateNumbersAndAddresses()
 
         view.doOnPreDraw {
             // Notifies fragment is ready to be drawn
             sharedViewModel.contactFragmentOpenedEvent.value = Event(true)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (this::viewModel.isInitialized) {
+            viewModel.registerContactListener()
+            coreContext.contactsManager.contactIdToWatchFor = viewModel.contact.value?.refKey ?: ""
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        coreContext.contactsManager.contactIdToWatchFor = ""
+        if (this::viewModel.isInitialized) {
+            viewModel.unregisterContactListener()
         }
     }
 

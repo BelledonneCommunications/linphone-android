@@ -19,16 +19,18 @@
  */
 package org.linphone.contact
 
+import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.activities.main.viewmodels.MessageNotifierViewModel
 import org.linphone.core.Address
 import org.linphone.core.ChatRoomSecurityLevel
+import org.linphone.core.Friend
 import org.linphone.utils.AppUtils
 import org.linphone.utils.LinphoneUtils
 
 interface ContactDataInterface {
-    val contact: MutableLiveData<Contact>
+    val contact: MutableLiveData<Friend>
 
     val displayName: MutableLiveData<String>
 
@@ -39,14 +41,21 @@ interface ContactDataInterface {
 }
 
 open class GenericContactData(private val sipAddress: Address) : ContactDataInterface {
-    final override val contact: MutableLiveData<Contact> = MutableLiveData<Contact>()
+    final override val contact: MutableLiveData<Friend> = MutableLiveData<Friend>()
     final override val displayName: MutableLiveData<String> = MutableLiveData<String>()
     final override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
+
     val initials = MutableLiveData<String>()
     val displayInitials = MutableLiveData<Boolean>()
 
+    val thumbnailUri: Uri?
+        get() = contact.value?.getThumbnailUri()
+
+    val pictureUri: Uri?
+        get() = contact.value?.getPictureUri()
+
     private val contactsUpdatedListener = object : ContactsUpdatedListenerStub() {
-        override fun onContactUpdated(contact: Contact) {
+        override fun onContactUpdated(friend: Friend) {
             contactLookup()
         }
     }
@@ -68,7 +77,7 @@ open class GenericContactData(private val sipAddress: Address) : ContactDataInte
         contact.value = c
 
         initials.value = if (c != null) {
-            AppUtils.getInitials(c.fullName ?: c.firstName + " " + c.lastName)
+            AppUtils.getInitials(c.name ?: "")
         } else {
             AppUtils.getInitials(displayName.value ?: "")
         }
@@ -77,12 +86,18 @@ open class GenericContactData(private val sipAddress: Address) : ContactDataInte
 }
 
 abstract class GenericContactViewModel(private val sipAddress: Address) : MessageNotifierViewModel(), ContactDataInterface {
-    final override val contact: MutableLiveData<Contact> = MutableLiveData<Contact>()
+    final override val contact: MutableLiveData<Friend> = MutableLiveData<Friend>()
     final override val displayName: MutableLiveData<String> = MutableLiveData<String>()
     final override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
 
+    val thumbnailUri: Uri?
+        get() = contact.value?.getThumbnailUri()
+
+    val pictureUri: Uri?
+        get() = contact.value?.getPictureUri()
+
     private val contactsUpdatedListener = object : ContactsUpdatedListenerStub() {
-        override fun onContactUpdated(contact: Contact) {
+        override fun onContactUpdated(friend: Friend) {
             contactLookup()
         }
     }

@@ -46,7 +46,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="top|left"
                     android:lines="1"
-                    android:text="@{data.contact.fullName ?? data.displayName}" />
+                    android:text="@{data.contact.name ?? data.displayName}" />
 
                 <TextView
                     style="@style/conference_scheduling_participant_sip_uri_font"

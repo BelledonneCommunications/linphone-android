@@ -111,8 +111,7 @@ class ConferenceSchedulingParticipantsListFragment : GenericFragment<ConferenceS
             val granted = grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
             if (granted) {
                 Log.i("[Conference Creation] READ_CONTACTS permission granted")
-                coreContext.contactsManager.onReadContactsPermissionGranted()
-                coreContext.contactsManager.fetchContactsAsync()
+                coreContext.fetchContacts()
             } else {
                 Log.w("[Conference Creation] READ_CONTACTS permission denied")
             }

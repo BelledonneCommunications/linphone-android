@@ -23,57 +23,39 @@ import android.accounts.Account
 import android.accounts.AccountManager
 import android.accounts.AuthenticatorDescription
 import android.content.ContentResolver
+import android.content.ContentUris
 import android.content.Context
-import android.database.ContentObserver
+import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
-import android.os.AsyncTask
-import android.os.AsyncTask.THREAD_POOL_EXECUTOR
 import android.provider.ContactsContract
 import android.util.Patterns
-import java.io.File
+import androidx.core.app.Person
+import androidx.core.graphics.drawable.IconCompat
+import androidx.lifecycle.MutableLiveData
+import java.lang.NumberFormatException
 import kotlinx.coroutines.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.*
 import org.linphone.core.tools.Log
+import org.linphone.utils.ImageUtils
 import org.linphone.utils.PermissionHelper
 
 interface ContactsUpdatedListener {
     fun onContactsUpdated()
 
-    fun onContactUpdated(contact: Contact)
+    fun onContactUpdated(friend: Friend)
 }
 
 open class ContactsUpdatedListenerStub : ContactsUpdatedListener {
     override fun onContactsUpdated() {}
 
-    override fun onContactUpdated(contact: Contact) {}
+    override fun onContactUpdated(friend: Friend) {}
 }
 
 class ContactsManager(private val context: Context) {
-    private val contactsObserver: ContentObserver by lazy {
-        object : ContentObserver(coreContext.handler) {
-            @Synchronized
-            override fun onChange(selfChange: Boolean) {
-                onChange(selfChange, null)
-            }
-
-            @Synchronized
-            override fun onChange(selfChange: Boolean, uri: Uri?) {
-                Log.i("[Contacts Observer] At least one contact has changed")
-                fetchContactsAsync()
-            }
-        }
-    }
-
-    var contacts = ArrayList<Contact>()
-        @Synchronized
-        get
-        @Synchronized
-        private set
-
     val magicSearch: MagicSearch by lazy {
         val magicSearch = coreContext.core.createMagicSearch()
         magicSearch.limitedSearch = false
@@ -82,17 +64,13 @@ class ContactsManager(private val context: Context) {
 
     var latestContactFetch: String = ""
 
-    private var localAccountsContacts = ArrayList<Contact>()
-        @Synchronized
-        get
-        @Synchronized
-        private set
+    val fetchInProgress = MutableLiveData<Boolean>()
 
-    private val friendsMap: HashMap<String, Contact> = HashMap()
+    var contactIdToWatchFor: String = ""
+
+    private val localFriends = arrayListOf<Friend>()
 
     private val contactsUpdatedListeners = ArrayList<ContactsUpdatedListener>()
-
-    private var loadContactsTask: AsyncContactsLoader? = null
 
     private val friendListListener: FriendListListenerStub = object : FriendListListenerStub() {
         @Synchronized
@@ -106,10 +84,6 @@ class ContactsManager(private val context: Context) {
     }
 
     init {
-        if (PermissionHelper.required(context).hasReadContactsPermission()) {
-            onReadContactsPermissionGranted()
-        }
-
         initSyncAccount()
 
         val core = coreContext.core
@@ -119,73 +93,40 @@ class ContactsManager(private val context: Context) {
         Log.i("[Contacts Manager] Created")
     }
 
-    fun onReadContactsPermissionGranted() {
-        Log.i("[Contacts Manager] Register contacts observer")
-        context.contentResolver.registerContentObserver(
-            ContactsContract.Contacts.CONTENT_URI,
-            true,
-            contactsObserver
-        )
-    }
-
     fun shouldDisplaySipContactsList(): Boolean {
         return coreContext.core.defaultAccount?.params?.identityAddress?.domain == corePreferences.defaultDomain
     }
 
-    @Synchronized
-    fun fetchContactsAsync() {
+    fun fetchFinished() {
+        Log.i("[Contacts Manager] Contacts loader have finished")
         latestContactFetch = System.currentTimeMillis().toString()
-
-        if (loadContactsTask != null) {
-            Log.w("[Contacts Manager] Cancelling existing async task")
-            loadContactsTask?.cancel(true)
-        }
-        loadContactsTask = AsyncContactsLoader(context)
-        loadContactsTask?.executeOnExecutor(THREAD_POOL_EXECUTOR)
-    }
-
-    @Synchronized
-    fun addContact(contact: Contact) {
-        contacts.add(contact)
+        updateLocalContacts()
+        fetchInProgress.value = false
+        notifyListeners()
     }
 
     @Synchronized
     fun updateLocalContacts() {
         Log.i("[Contacts Manager] Updating local contact(s)")
-        localAccountsContacts.clear()
+        localFriends.clear()
 
         for (account in coreContext.core.accountList) {
-            val localContact = Contact()
-            localContact.fullName = account.params.identityAddress?.displayName ?: account.params.identityAddress?.username
+            val friend = coreContext.core.createFriend()
+            friend.name = account.params.identityAddress?.displayName ?: account.params.identityAddress?.username
+
+            val address = account.params.identityAddress ?: continue
+            friend.address = address
+
             val pictureUri = corePreferences.defaultAccountAvatarPath
             if (pictureUri != null) {
-                Log.i("[Contacts Manager] Found local picture URI: $pictureUri")
-                localContact.setContactThumbnailPictureUri(Uri.fromFile(File(pictureUri)))
+                val parsedUri = if (pictureUri.startsWith("/")) "file:$pictureUri" else pictureUri
+                Log.i("[Contacts Manager] Found local picture URI: $parsedUri")
+                friend.photo = parsedUri
             }
-            val address = account.params.identityAddress
-            if (address != null) {
-                localContact.sipAddresses.add(address)
-                localContact.rawSipAddresses.add(address.asStringUriOnly())
-            }
-            localAccountsContacts.add(localContact)
+
+            Log.i("[Contacts Manager] Local contact created for account [${address.asString()}] and picture [${friend.photo}]")
+            localFriends.add(friend)
         }
-    }
-
-    @Synchronized
-    fun updateContacts(all: ArrayList<Contact>) {
-        friendsMap.clear()
-        // Contact has a Friend field and Friend can have a Contact has userData
-        // Friend also keeps a ref on the Core, so we have to clean them
-        for (contact in contacts) {
-            contact.friend = null
-        }
-        contacts.clear()
-        contacts.addAll(all)
-
-        updateLocalContacts()
-
-        Log.i("[Contacts Manager] Async fetching finished, notifying observers")
-        notifyListeners()
     }
 
     @Synchronized
@@ -202,101 +143,28 @@ class ContactsManager(private val context: Context) {
     }
 
     @Synchronized
-    fun findContactById(id: String): Contact? {
-        var found: Contact? = null
-        if (contacts.isNotEmpty()) {
-            found = contacts.find { contact ->
-                contact is NativeContact && contact.nativeId == id
-            }
-        }
-
-        if (found == null) {
-            Log.i("[Contacts Manager] Contact with id $id not found yet")
-        } else {
-            Log.d("[Contacts Manager] Found contact with id [$id]: ${found.fullName}")
-        }
-
-        return found
+    fun findContactById(id: String): Friend? {
+        return coreContext.core.defaultFriendList?.findFriendByRefKey(id)
     }
 
     @Synchronized
-    fun findContactByPhoneNumber(number: String): Contact? {
-        val contact = friendsMap[number]
-        if (contact != null) return contact
-
-        val friend = coreContext.core.findFriendByPhoneNumber(number)
-        val udContact = friend?.userData as? Contact
-        if (udContact != null) friendsMap[number] = udContact
-        return udContact
+    fun findContactByPhoneNumber(number: String): Friend? {
+        return coreContext.core.findFriendByPhoneNumber(number)
     }
 
     @Synchronized
-    fun findContactByFriend(friend: Friend): Contact? {
-        val refKey = friend.refKey
-        if (refKey != null) {
-            val contact = findContactById(refKey)
-            if (contact != null) return contact
-        }
-
-        val address = friend.address
-        var potentialContact: Contact? = null
-        if (address != null) {
-            val friends = coreContext.core.findFriends(address)
-            for (f in friends) {
-                if (f.name == friend.name) {
-                    val contact: Contact? = f.userData as? Contact
-                    if (contact != null) return contact
-                } else {
-                    val contact: Contact? = f.userData as? Contact
-                    if (contact != null) potentialContact = contact
-                }
+    fun findContactByAddress(address: Address): Friend? {
+        for (friend in localFriends) {
+            val found = friend.addresses.find {
+                it.weakEqual(address)
+            }
+            if (found != null) {
+                return friend
             }
         }
 
-        if (potentialContact != null) {
-            return potentialContact
-        }
-
-        for (list in coreContext.core.friendsLists) {
-            for (f in list.friends) {
-                if (f.name == friend.name) {
-                    val contact: Contact? = f.userData as? Contact
-                    if (contact != null) return contact
-                }
-            }
-        }
-
-        return null
-    }
-
-    @Synchronized
-    fun findContactByAddress(address: Address, ignoreLocalContact: Boolean = false): Contact? {
-        if (!ignoreLocalContact) {
-            val localContact = localAccountsContacts.find { localContact ->
-                localContact.sipAddresses.find { localAddress ->
-                    address.weakEqual(localAddress)
-                } != null
-            }
-            if (localContact != null) return localContact
-        }
-
-        val cleanAddress = address.clone()
-        cleanAddress.clean() // To remove gruu if any
-        val cleanStringAddress = cleanAddress.asStringUriOnly()
-
-        val cacheContact = friendsMap[cleanStringAddress]
-        if (cacheContact != null) {
-            return cacheContact
-        }
-
-        val friends = coreContext.core.findFriends(address)
-        for (friend in friends) {
-            val contact: Contact? = friend?.userData as? Contact
-            if (contact != null) {
-                friendsMap[cleanStringAddress] = contact
-                return contact
-            }
-        }
+        val friend = coreContext.core.findFriend(address)
+        if (friend != null) return friend
 
         val username = address.username
         if (username != null && Patterns.PHONE.matcher(username).matches()) {
@@ -325,26 +193,15 @@ class ContactsManager(private val context: Context) {
     }
 
     @Synchronized
-    fun notifyListeners(contact: Contact) {
+    fun notifyListeners(friend: Friend) {
         val list = contactsUpdatedListeners.toMutableList()
         for (listener in list) {
-            listener.onContactUpdated(contact)
+            listener.onContactUpdated(friend)
         }
     }
 
     @Synchronized
     fun destroy() {
-        context.contentResolver.unregisterContentObserver(contactsObserver)
-        loadContactsTask?.cancel(true)
-
-        friendsMap.clear()
-        // Contact has a Friend field and Friend can have a Contact has userData
-        // Friend also keeps a ref on the Core, so we have to clean them
-        for (contact in contacts) {
-            contact.friend = null
-        }
-        contacts.clear()
-
         val core = coreContext.core
         for (list in core.friendsLists) list.removeListener(friendListListener)
     }
@@ -403,20 +260,13 @@ class ContactsManager(private val context: Context) {
 
     @Synchronized
     private fun refreshContactOnPresenceReceived(friend: Friend) {
-        if (friend.userData == null) return
-
-        val contact: Contact = friend.userData as Contact
-        Log.d("[Contacts Manager] Received presence information for contact $contact")
+        Log.d("[Contacts Manager] Received presence information for contact $friend")
         if (corePreferences.storePresenceInNativeContact && PermissionHelper.get().hasWriteContactsPermission()) {
-            if (contact is NativeContact) {
-                storePresenceInNativeContact(contact)
+            if (friend.refKey != null) {
+                storePresenceInNativeContact(friend)
             }
         }
-        if (loadContactsTask?.status == AsyncTask.Status.RUNNING) {
-            Log.w("[Contacts Manager] Async contacts loader running, skip onContactUpdated listener notify")
-        } else {
-            notifyListeners(contact)
-        }
+        notifyListeners(friend)
     }
 
     @Synchronized
@@ -424,33 +274,28 @@ class ContactsManager(private val context: Context) {
         if (corePreferences.storePresenceInNativeContact && PermissionHelper.get().hasWriteContactsPermission()) {
             for (list in coreContext.core.friendsLists) {
                 for (friend in list.friends) {
-                    if (friend.userData == null) continue
-                    val contact: Contact = friend.userData as Contact
-                    if (contact is NativeContact) {
-                        storePresenceInNativeContact(contact)
-                        if (loadContactsTask?.status == AsyncTask.Status.RUNNING) {
-                            Log.w("[Contacts Manager] Async contacts loader running, skip onContactUpdated listener notify")
-                        } else {
-                            notifyListeners(contact)
-                        }
+                    val id = friend.refKey
+                    if (id != null) {
+                        storePresenceInNativeContact(friend)
+                        notifyListeners(friend)
                     }
                 }
             }
         }
     }
 
-    private fun storePresenceInNativeContact(contact: NativeContact) {
-        for (phoneNumber in contact.rawPhoneNumbers) {
-            val sipAddress = contact.getContactForPhoneNumberOrAddress(phoneNumber)
+    private fun storePresenceInNativeContact(friend: Friend) {
+        for (phoneNumber in friend.phoneNumbersWithLabel) {
+            val sipAddress = friend.getContactForPhoneNumberOrAddress(phoneNumber.phoneNumber)
             if (sipAddress != null) {
-                Log.d("[Contacts Manager] Found presence information to store in native contact $contact under Linphone sync account")
-                val contactEditor = NativeContactEditor(contact)
+                Log.d("[Contacts Manager] Found presence information to store in native contact $friend under Linphone sync account")
+                val contactEditor = NativeContactEditor(friend)
                 val coroutineScope = CoroutineScope(Dispatchers.Main)
                 coroutineScope.launch {
                     val deferred = async {
                         withContext(Dispatchers.IO) {
                             contactEditor.setPresenceInformation(
-                                phoneNumber,
+                                phoneNumber.phoneNumber,
                                 sipAddress
                             ).commit()
                         }
@@ -460,4 +305,98 @@ class ContactsManager(private val context: Context) {
             }
         }
     }
+
+    fun createFriendFromSearchResult(searchResult: SearchResult): Friend {
+        val searchResultFriend = searchResult.friend
+        if (searchResultFriend != null) return searchResultFriend
+
+        val friend = coreContext.core.createFriend()
+
+        val address = searchResult.address
+        if (address != null) {
+            friend.address = address
+        }
+
+        val number = searchResult.phoneNumber
+        if (number != null) {
+            friend.addPhoneNumber(number)
+
+            if (address != null && address.username == number) {
+                friend.removeAddress(address)
+            }
+        }
+
+        return friend
+    }
+}
+
+fun Friend.getContactForPhoneNumberOrAddress(value: String): String? {
+    val presenceModel = getPresenceModelForUriOrTel(value)
+    if (presenceModel != null && presenceModel.basicStatus == PresenceBasicStatus.Open) return presenceModel.contact
+    return null
+}
+
+fun Friend.hasPresence(): Boolean {
+    for (address in addresses) {
+        val presenceModel = getPresenceModelForUriOrTel(address.asStringUriOnly())
+        if (presenceModel != null && presenceModel.basicStatus == PresenceBasicStatus.Open) return true
+    }
+    for (number in phoneNumbersWithLabel) {
+        val presenceModel = getPresenceModelForUriOrTel(number.phoneNumber)
+        if (presenceModel != null && presenceModel.basicStatus == PresenceBasicStatus.Open) return true
+    }
+    return false
+}
+
+fun Friend.getPictureUri(): Uri? {
+    val refKey = refKey
+    if (refKey != null) {
+        try {
+            val nativeId = refKey.toLong()
+            return Uri.withAppendedPath(
+                ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, nativeId),
+                ContactsContract.Contacts.Photo.DISPLAY_PHOTO
+            )
+        } catch (nfe: NumberFormatException) {}
+    }
+
+    val photoUri = photo ?: return null
+    return Uri.parse(photoUri)
+}
+
+fun Friend.getThumbnailUri(): Uri? {
+    val refKey = refKey
+    if (refKey != null) {
+        try {
+            val nativeId = refKey.toLong()
+            return Uri.withAppendedPath(
+                ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, nativeId),
+                ContactsContract.Contacts.Photo.CONTENT_DIRECTORY
+            )
+        } catch (nfe: NumberFormatException) {}
+    }
+
+    val photoUri = photo ?: return null
+    return Uri.parse(photoUri)
+}
+
+fun Friend.getPerson(): Person {
+    val personBuilder = Person.Builder().setName(name)
+
+    val bm: Bitmap? =
+        ImageUtils.getRoundBitmapFromUri(
+            coreContext.context,
+            getPictureUri()
+        )
+    val icon =
+        if (bm == null) IconCompat.createWithResource(
+            coreContext.context,
+            R.drawable.voip_single_contact_avatar_alt
+        ) else IconCompat.createWithAdaptiveBitmap(bm)
+    if (icon != null) {
+        personBuilder.setIcon(icon)
+    }
+
+    personBuilder.setImportant(starred)
+    return personBuilder.build()
 }

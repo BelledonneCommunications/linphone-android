@@ -235,7 +235,7 @@
 
             <TextView
                 android:id="@+id/time"
-                android:text="@{data.chatMessage.outgoing ? data.time : data.time + ` - ` + (data.contact.fullName ?? data.displayName)}"
+                android:text="@{data.chatMessage.outgoing ? data.time : data.time + ` - ` + (data.contact.name ?? data.displayName)}"
                 android:visibility="@{data.hideTime ? View.GONE : View.VISIBLE}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

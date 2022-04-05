@@ -133,7 +133,7 @@ open class ContactsSelectionViewModel : MessageNotifierViewModel() {
             val contact = coreContext.contactsManager.findContactByAddress(address)
             if (contact != null) {
                 val clone = address.clone()
-                clone.displayName = contact.fullName
+                clone.displayName = contact.name
                 list.add(clone)
             } else {
                 list.add(address)

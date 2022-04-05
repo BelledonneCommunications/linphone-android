@@ -46,8 +46,8 @@ import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.navigateToContact
 import org.linphone.activities.navigateToContactEditor
-import org.linphone.contact.Contact
 import org.linphone.core.Factory
+import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactMasterFragmentBinding
 import org.linphone.utils.*
@@ -188,13 +188,15 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
 
                 viewModel.showDeleteButton(
                     {
-                        val deletedContact = adapter.currentList[viewHolder.bindingAdapterPosition].contactInternal
-                        listViewModel.deleteContact(deletedContact)
-                        if (!binding.slidingPane.isSlideable &&
-                            deletedContact == sharedViewModel.selectedContact.value
-                        ) {
-                            Log.i("[Contacts] Currently displayed contact has been deleted, removing detail fragment")
-                            clearDisplayedContact()
+                        val deletedContact = adapter.currentList[viewHolder.bindingAdapterPosition].contact.value
+                        if (deletedContact != null) {
+                            listViewModel.deleteContact(deletedContact)
+                            if (!binding.slidingPane.isSlideable &&
+                                deletedContact == sharedViewModel.selectedContact.value
+                            ) {
+                                Log.i("[Contacts] Currently displayed contact has been deleted, removing detail fragment")
+                                clearDisplayedContact()
+                            }
                         }
                         dialog.dismiss()
                     },
@@ -218,7 +220,7 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
             viewLifecycleOwner
         ) {
             it.consume { contact ->
-                Log.i("[Contacts] Selected item in list changed: $contact")
+                Log.d("[Contacts] Selected item in list changed: $contact")
                 sharedViewModel.selectedContact.value = contact
                 (requireActivity() as MainActivity).hideKeyboard()
 
@@ -230,6 +232,12 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
                     navigateToContact()
                 }
             }
+        }
+
+        coreContext.contactsManager.fetchInProgress.observe(
+            viewLifecycleOwner
+        ) {
+            listViewModel.fetchInProgress.value = it
         }
 
         listViewModel.contactsList.observe(
@@ -320,11 +328,13 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
     }
 
     override fun deleteItems(indexesOfItemToDelete: ArrayList<Int>) {
-        val list = ArrayList<Contact>()
+        val list = ArrayList<Friend>()
         var closeSlidingPane = false
         for (index in indexesOfItemToDelete) {
-            val contact = adapter.currentList[index].contactInternal
-            list.add(contact)
+            val contact = adapter.currentList[index].contact.value
+            if (contact != null) {
+                list.add(contact)
+            }
 
             if (contact == sharedViewModel.selectedContact.value) {
                 closeSlidingPane = true
@@ -347,8 +357,7 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
             val granted = grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
             if (granted) {
                 Log.i("[Contacts] READ_CONTACTS permission granted")
-                coreContext.contactsManager.onReadContactsPermissionGranted()
-                coreContext.contactsManager.fetchContactsAsync()
+                coreContext.fetchContacts()
             } else {
                 Log.w("[Contacts] READ_CONTACTS permission denied")
             }

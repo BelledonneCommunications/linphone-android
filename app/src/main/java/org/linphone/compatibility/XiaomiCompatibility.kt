@@ -28,7 +28,7 @@ import androidx.core.content.ContextCompat
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
-import org.linphone.contact.Contact
+import org.linphone.contact.getThumbnailUri
 import org.linphone.core.Call
 import org.linphone.notifications.Notifiable
 import org.linphone.notifications.NotificationsManager
@@ -45,10 +45,9 @@ class XiaomiCompatibility {
             pendingIntent: PendingIntent,
             notificationsManager: NotificationsManager
         ): Notification {
-            val contact: Contact? = coreContext.contactsManager.findContactByAddress(call.remoteAddress)
-            val pictureUri = contact?.getContactThumbnailPictureUri()
-            val roundPicture = ImageUtils.getRoundBitmapFromUri(context, pictureUri)
-            val displayName = contact?.fullName ?: LinphoneUtils.getDisplayName(call.remoteAddress)
+            val contact = coreContext.contactsManager.findContactByAddress(call.remoteAddress)
+            val roundPicture = ImageUtils.getRoundBitmapFromUri(context, contact?.getThumbnailUri())
+            val displayName = contact?.name ?: LinphoneUtils.getDisplayName(call.remoteAddress)
             val address = LinphoneUtils.getDisplayableAddress(call.remoteAddress)
 
             val builder = NotificationCompat.Builder(context, context.getString(R.string.notification_channel_incoming_call_id))

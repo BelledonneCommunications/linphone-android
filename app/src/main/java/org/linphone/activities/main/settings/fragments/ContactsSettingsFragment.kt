@@ -109,8 +109,7 @@ class ContactsSettingsFragment : GenericSettingFragment<SettingsContactsFragment
                 if (granted) {
                     Log.i("[Contacts Settings] READ_CONTACTS permission granted")
                     viewModel.readContactsPermissionGranted.value = true
-                    coreContext.contactsManager.onReadContactsPermissionGranted()
-                    coreContext.contactsManager.fetchContactsAsync()
+                    coreContext.fetchContacts()
                 } else {
                     Log.w("[Contacts Settings] READ_CONTACTS permission denied")
                 }

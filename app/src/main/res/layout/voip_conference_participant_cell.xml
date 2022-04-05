@@ -117,7 +117,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:text="@{data.contact.fullName ?? data.displayName, default=`Bilbo Baggins`}" />
+                android:text="@{data.contact.name ?? data.displayName, default=`Bilbo Baggins`}" />
 
             <org.linphone.views.MarqueeTextView
                 android:id="@+id/sipUri"

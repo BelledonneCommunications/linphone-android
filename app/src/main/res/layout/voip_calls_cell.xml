@@ -68,7 +68,7 @@
                     android:maxLines="1"
                     android:ellipsize="end"
                     style="@style/call_list_active_name_font"
-                    android:text="@{data.contact.fullName ?? data.displayName, default=`Bilbo Baggins`}"/>
+                    android:text="@{data.contact.name ?? data.displayName, default=`Bilbo Baggins`}"/>
 
                 <TextView
                     android:visibility="@{data.isInRemoteConference ? View.VISIBLE : View.GONE, default=gone}"
@@ -104,7 +104,7 @@
                     android:maxLines="1"
                     android:ellipsize="end"
                     style="@style/call_list_name_font"
-                    android:text="@{data.contact.fullName ?? data.displayName, default=`Bilbo Baggins`}"/>
+                    android:text="@{data.contact.name ?? data.displayName, default=`Bilbo Baggins`}"/>
 
                 <TextView
                     android:visibility="@{data.isInRemoteConference ? View.VISIBLE : View.GONE, default=gone}"

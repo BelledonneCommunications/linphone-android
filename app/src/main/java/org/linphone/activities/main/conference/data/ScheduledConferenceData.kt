@@ -68,7 +68,7 @@ class ScheduledConferenceData(val conferenceInfo: ConferenceInfo) {
 
             val contact = coreContext.contactsManager.findContactByAddress(organizerAddress)
             organizer.value = if (contact != null)
-                contact.fullName
+                contact.name
             else
                 LinphoneUtils.getDisplayName(conferenceInfo.organizer)
         } else {
@@ -96,7 +96,7 @@ class ScheduledConferenceData(val conferenceInfo: ConferenceInfo) {
 
         for (participant in conferenceInfo.participants) {
             val contact = coreContext.contactsManager.findContactByAddress(participant)
-            val name = if (contact != null) contact.fullName else LinphoneUtils.getDisplayName(participant)
+            val name = if (contact != null) contact.name else LinphoneUtils.getDisplayName(participant)
             val address = participant.asStringUriOnly()
             participantsListShort += "$name, "
             participantsListExpanded += "$name ($address)\n"

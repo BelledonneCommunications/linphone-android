@@ -11,6 +11,9 @@
             name="initials"
             type="String" />
         <variable
+            name="thumbnailPath"
+            type="android.net.Uri" />
+        <variable
             name="imagePath"
             type="android.net.Uri" />
         <variable
@@ -51,6 +54,15 @@
             android:gravity="center"
             android:singleLine="true"
             android:ellipsize="none" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:adjustViewBounds="true"
+            android:contentDescription="@null"
+            android:background="?attr/backgroundColor"
+            app:glideAvatar="@{thumbnailPath}" />
 
         <ImageView
             android:layout_width="match_parent"

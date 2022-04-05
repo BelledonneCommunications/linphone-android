@@ -32,7 +32,6 @@ import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.navigateToContact
 import org.linphone.activities.navigateToContacts
 import org.linphone.activities.navigateToFriend
-import org.linphone.contact.NativeContact
 import org.linphone.core.tools.Log
 import org.linphone.databinding.HistoryDetailFragmentBinding
 import org.linphone.utils.Event
@@ -80,10 +79,10 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
 
         binding.setContactClickListener {
             sharedViewModel.updateContactsAnimationsBasedOnDestination.value = Event(R.id.masterCallLogsFragment)
-            val contact = viewModel.contact.value as? NativeContact
-            if (contact != null) {
-                Log.i("[History] Displaying contact $contact")
-                navigateToContact(contact)
+            val contactId = viewModel.contact.value?.refKey
+            if (contactId != null) {
+                Log.i("[History] Displaying contact $contactId")
+                navigateToContact(contactId)
             } else {
                 val copy = viewModel.callLog.remoteAddress.clone()
                 copy.clean()

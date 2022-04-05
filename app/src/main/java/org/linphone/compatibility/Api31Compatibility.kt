@@ -29,7 +29,7 @@ import androidx.core.content.ContextCompat
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
-import org.linphone.contact.Contact
+import org.linphone.contact.getThumbnailUri
 import org.linphone.core.Call
 import org.linphone.core.tools.Log
 import org.linphone.notifications.Notifiable
@@ -51,10 +51,9 @@ class Api31Compatibility {
             pendingIntent: PendingIntent,
             notificationsManager: NotificationsManager
         ): Notification {
-            val contact: Contact? = coreContext.contactsManager.findContactByAddress(call.remoteAddress)
-            val pictureUri = contact?.getContactThumbnailPictureUri()
-            val roundPicture = ImageUtils.getRoundBitmapFromUri(context, pictureUri)
-            val displayName = contact?.fullName ?: LinphoneUtils.getDisplayName(call.remoteAddress)
+            val contact = coreContext.contactsManager.findContactByAddress(call.remoteAddress)
+            val roundPicture = ImageUtils.getRoundBitmapFromUri(context, contact?.getThumbnailUri())
+            val displayName = contact?.name ?: LinphoneUtils.getDisplayName(call.remoteAddress)
 
             val person = notificationsManager.getPerson(contact, displayName, roundPicture)
             val caller = Person.Builder()
@@ -99,11 +98,10 @@ class Api31Compatibility {
             channel: String,
             notificationsManager: NotificationsManager
         ): Notification {
-            val contact: Contact? =
+            val contact =
                 coreContext.contactsManager.findContactByAddress(call.remoteAddress)
-            val pictureUri = contact?.getContactThumbnailPictureUri()
-            val roundPicture = ImageUtils.getRoundBitmapFromUri(context, pictureUri)
-            val displayName = contact?.fullName ?: LinphoneUtils.getDisplayName(call.remoteAddress)
+            val roundPicture = ImageUtils.getRoundBitmapFromUri(context, contact?.getThumbnailUri())
+            val displayName = contact?.name ?: LinphoneUtils.getDisplayName(call.remoteAddress)
 
             val isVideo = call.currentParams.isVideoEnabled
             val iconResourceId: Int = when (call.state) {
