@@ -61,7 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/chat_message_reply_sender_font"
-                android:text="@{data.contact.fullName ?? data.displayName, default=Tintin}"/>
+                android:text="@{data.contact.name ?? data.displayName, default=Tintin}"/>
 
             <TextView
                 android:visibility="@{data.text.length() == 0 ? View.GONE : View.VISIBLE}"

@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
-                android:text="@{(callsViewModel.currentCallData.contact.fullName ?? callsViewModel.currentCallData.displayName) + ` - `, default=`John Doe - `}"
+                android:text="@{(callsViewModel.currentCallData.contact.name ?? callsViewModel.currentCallData.displayName) + ` - `, default=`John Doe - `}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -126,7 +126,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginBottom="10dp"
-                android:text="@{callsViewModel.currentCallData.contact.fullName ?? callsViewModel.currentCallData.displayName}"
+                android:text="@{callsViewModel.currentCallData.contact.name ?? callsViewModel.currentCallData.displayName}"
                 app:layout_constraintBottom_toBottomOf="@id/background"
                 app:layout_constraintStart_toStartOf="@id/background" />
 

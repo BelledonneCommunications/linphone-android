@@ -176,7 +176,11 @@ class LinphoneUtils {
             return "${localSipUri.asStringUriOnly()}~${remoteSipUri.asStringUriOnly()}"
         }
 
-        fun trimPhoneNumber(phoneNumber: String): String {
+        fun arePhoneNumberWeakEqual(number1: String, number2: String): Boolean {
+            return trimPhoneNumber(number1) == trimPhoneNumber(number2)
+        }
+
+        private fun trimPhoneNumber(phoneNumber: String): String {
             return phoneNumber.replace(" ", "")
                 .replace("-", "")
                 .replace("(", "")

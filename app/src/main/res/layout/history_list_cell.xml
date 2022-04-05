@@ -113,7 +113,7 @@
                 android:layout_toRightOf="@id/icon"
                 android:gravity="center_vertical"
                 android:singleLine="true"
-                android:text="@{(viewModel.isConferenceCallLog ? viewModel.conferenceSubject : viewModel.contact.fullName ?? viewModel.displayName) + (groupCount > 1 ? ` (` + groupCount + `)` : ``), default=`Frodo Baggins (6)`}" />
+                android:text="@{(viewModel.isConferenceCallLog ? viewModel.conferenceSubject : viewModel.contact.name ?? viewModel.displayName) + (groupCount > 1 ? ` (` + groupCount + `)` : ``), default=`Frodo Baggins (6)`}" />
 
         </RelativeLayout>
 

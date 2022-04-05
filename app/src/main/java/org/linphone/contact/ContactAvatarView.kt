@@ -52,9 +52,9 @@ class ContactAvatarView : LinearLayout {
     }
 
     fun setData(data: ContactDataInterface) {
-        val contact: Contact? = data.contact.value
+        val contact = data.contact.value
         val initials = if (contact != null) {
-            AppUtils.getInitials(contact.fullName ?: contact.firstName + " " + contact.lastName)
+            AppUtils.getInitials(contact.name ?: "")
         } else {
             AppUtils.getInitials(data.displayName.value ?: "")
         }
@@ -63,7 +63,7 @@ class ContactAvatarView : LinearLayout {
         binding.generatedAvatarVisibility = initials.isNotEmpty() && initials != "+"
         binding.groupChatAvatarVisibility = data.showGroupChatAvatar
 
-        binding.imagePath = contact?.getContactThumbnailPictureUri()
+        binding.imagePath = contact?.getThumbnailUri()
         binding.borderVisibility = corePreferences.showBorderOnContactAvatar
 
         binding.securityIcon = when (data.securityLevel.value) {

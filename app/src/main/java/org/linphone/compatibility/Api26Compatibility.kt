@@ -38,8 +38,9 @@ import androidx.core.content.ContextCompat
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
-import org.linphone.contact.Contact
+import org.linphone.contact.getThumbnailUri
 import org.linphone.core.Call
+import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.notifications.Notifiable
 import org.linphone.notifications.NotificationsManager
@@ -144,10 +145,9 @@ class Api26Compatibility {
             pendingIntent: PendingIntent,
             notificationsManager: NotificationsManager
         ): Notification {
-            val contact: Contact? = coreContext.contactsManager.findContactByAddress(call.remoteAddress)
-            val pictureUri = contact?.getContactThumbnailPictureUri()
-            val roundPicture = ImageUtils.getRoundBitmapFromUri(context, pictureUri)
-            val displayName = contact?.fullName ?: LinphoneUtils.getDisplayName(call.remoteAddress)
+            val contact: Friend? = coreContext.contactsManager.findContactByAddress(call.remoteAddress)
+            val roundPicture = ImageUtils.getRoundBitmapFromUri(context, contact?.getThumbnailUri())
+            val displayName = contact?.name ?: LinphoneUtils.getDisplayName(call.remoteAddress)
             val address = LinphoneUtils.getDisplayableAddress(call.remoteAddress)
 
             val notificationLayoutHeadsUp = RemoteViews(context.packageName, R.layout.call_incoming_notification_heads_up)
@@ -193,10 +193,9 @@ class Api26Compatibility {
             channel: String,
             notificationsManager: NotificationsManager
         ): Notification {
-            val contact: Contact? = coreContext.contactsManager.findContactByAddress(call.remoteAddress)
-            val pictureUri = contact?.getContactThumbnailPictureUri()
-            val roundPicture = ImageUtils.getRoundBitmapFromUri(context, pictureUri)
-            val displayName = contact?.fullName ?: LinphoneUtils.getDisplayName(call.remoteAddress)
+            val contact: Friend? = coreContext.contactsManager.findContactByAddress(call.remoteAddress)
+            val roundPicture = ImageUtils.getRoundBitmapFromUri(context, contact?.getThumbnailUri())
+            val displayName = contact?.name ?: LinphoneUtils.getDisplayName(call.remoteAddress)
 
             val stringResourceId: Int
             val iconResourceId: Int
@@ -226,7 +225,7 @@ class Api26Compatibility {
             val builder = NotificationCompat.Builder(
                 context, channel
             )
-                .setContentTitle(contact?.fullName ?: displayName)
+                .setContentTitle(contact?.name ?: displayName)
                 .setContentText(context.getString(stringResourceId))
                 .setSmallIcon(iconResourceId)
                 .setLargeIcon(roundPicture)

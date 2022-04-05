@@ -25,7 +25,7 @@ import org.linphone.core.*
 import org.linphone.utils.LinphoneUtils
 
 class ContactSelectionData(private val searchResult: SearchResult) : ContactDataInterface {
-    override val contact: MutableLiveData<Contact> = MutableLiveData<Contact>()
+    override val contact: MutableLiveData<Friend> = MutableLiveData<Friend>()
     override val displayName: MutableLiveData<String> = MutableLiveData<String>()
     override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
 

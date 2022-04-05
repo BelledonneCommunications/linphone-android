@@ -74,7 +74,7 @@
             <TextView
                 android:id="@+id/title"
                 style="@style/contact_name_list_cell_font"
-                android:text="@{viewModel.oneToOneChatRoom ? (viewModel.contact.fullName ?? viewModel.displayName) : viewModel.subject}"
+                android:text="@{viewModel.oneToOneChatRoom ? (viewModel.contact.name ?? viewModel.displayName) : viewModel.subject}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="30dp"

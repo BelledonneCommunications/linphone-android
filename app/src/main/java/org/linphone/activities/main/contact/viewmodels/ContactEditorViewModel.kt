@@ -32,21 +32,22 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.activities.main.contact.data.NumberOrAddressEditorData
 import org.linphone.contact.*
 import org.linphone.core.ChatRoomSecurityLevel
+import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.utils.ImageUtils
 import org.linphone.utils.PermissionHelper
 
-class ContactEditorViewModelFactory(private val contact: Contact?) :
+class ContactEditorViewModelFactory(private val friend: Friend?) :
     ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return ContactEditorViewModel(contact) as T
+        return ContactEditorViewModel(friend) as T
     }
 }
 
-class ContactEditorViewModel(val c: Contact?) : ViewModel(), ContactDataInterface {
-    override val contact: MutableLiveData<Contact> = MutableLiveData<Contact>()
+class ContactEditorViewModel(val c: Friend?) : ViewModel(), ContactDataInterface {
+    override val contact: MutableLiveData<Friend> = MutableLiveData<Friend>()
     override val displayName: MutableLiveData<String> = MutableLiveData<String>()
     override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
 
@@ -71,30 +72,37 @@ class ContactEditorViewModel(val c: Contact?) : ViewModel(), ContactDataInterfac
     init {
         if (c != null) {
             contact.value = c!!
-            displayName.value = c.fullName ?: c.firstName + " " + c.lastName
+            displayName.value = c.name ?: ""
         } else {
             displayName.value = ""
         }
-        firstName.value = c?.firstName ?: ""
-        lastName.value = c?.lastName ?: ""
-        organization.value = c?.organization ?: ""
+        firstName.value = c?.vcard?.givenName ?: ""
+        lastName.value = c?.vcard?.familyName ?: ""
+        organization.value = c?.vcard?.organization ?: ""
 
         updateNumbersAndAddresses()
     }
 
-    fun save(): Contact {
+    fun save(): Friend {
         var contact = c
         var created = false
+
         if (contact == null) {
             created = true
-            contact = if (PermissionHelper.get().hasWriteContactsPermission()) {
-                NativeContact(NativeContactEditor.createAndroidContact(syncAccountName, syncAccountType).toString())
+            val nativeId = if (PermissionHelper.get().hasWriteContactsPermission()) {
+                Log.i("[Contact Editor] Creating native contact")
+                NativeContactEditor.createAndroidContact(syncAccountName, syncAccountType)
+                    .toString()
             } else {
-                Contact()
+                Log.e("[Contact Editor] Can't native contact, permission denied")
+                null
             }
+            contact = coreContext.core.createFriend()
+            contact.refKey = nativeId
         }
 
-        if (contact is NativeContact) {
+        if (contact.refKey != null) {
+            Log.i("[Contact Editor] Committing changes in native contact id ${contact.refKey}")
             NativeContactEditor(contact)
                 .setFirstAndLastNames(firstName.value.orEmpty(), lastName.value.orEmpty())
                 .setOrganization(organization.value.orEmpty())
@@ -102,45 +110,44 @@ class ContactEditorViewModel(val c: Contact?) : ViewModel(), ContactDataInterfac
                 .setSipAddresses(addresses.value.orEmpty())
                 .setPicture(picture)
                 .commit()
-        } else {
-            val friend = contact.friend ?: coreContext.core.createFriend()
-            friend.edit()
-            friend.name = "${firstName.value.orEmpty()} ${lastName.value.orEmpty()}"
+        }
 
-            for (address in friend.addresses) {
-                friend.removeAddress(address)
-            }
-            for (address in addresses.value.orEmpty()) {
-                val parsed = coreContext.core.interpretUrl(address.newValue.value.orEmpty())
-                if (parsed != null) friend.addAddress(parsed)
-            }
+        if (!created) contact.edit()
 
-            for (phone in friend.phoneNumbers) {
-                friend.removePhoneNumber(phone)
-            }
-            for (phone in numbers.value.orEmpty()) {
-                val phoneNumber = phone.newValue.value
-                if (phoneNumber?.isNotEmpty() == true) {
-                    friend.addPhoneNumber(phoneNumber)
-                }
-            }
+        contact.name = "${firstName.value.orEmpty()} ${lastName.value.orEmpty()}"
+        contact.organization = organization.value
 
-            val vCard = friend.vcard
-            if (vCard != null) {
-                vCard.organization = organization.value
-                vCard.familyName = lastName.value
-                vCard.givenName = firstName.value
-            }
-            friend.done()
+        for (address in contact.addresses) {
+            contact.removeAddress(address)
+        }
+        for (address in addresses.value.orEmpty()) {
+            val sipAddress = address.newValue.value.orEmpty()
+            if (sipAddress.isEmpty()) continue
 
-            if (contact.friend == null) {
-                contact.friend = friend
-                coreContext.core.defaultFriendList?.addLocalFriend(friend)
-            }
+            val parsed = coreContext.core.interpretUrl(sipAddress)
+            if (parsed != null) contact.addAddress(parsed)
+        }
+
+        for (phone in contact.phoneNumbers) {
+            contact.removePhoneNumber(phone)
+        }
+        for (phone in numbers.value.orEmpty()) {
+            val phoneNumber = phone.newValue.value.orEmpty()
+            if (phoneNumber.isEmpty()) continue
+
+            contact.addPhoneNumber(phoneNumber)
+        }
+
+        val vCard = contact.vcard
+        if (vCard != null) {
+            vCard.familyName = lastName.value
+            vCard.givenName = firstName.value
         }
 
         if (created) {
-            coreContext.contactsManager.addContact(contact)
+            coreContext.core.defaultFriendList?.addLocalFriend(contact)
+        } else {
+            contact.done()
         }
         return contact
     }
@@ -201,8 +208,8 @@ class ContactEditorViewModel(val c: Contact?) : ViewModel(), ContactDataInterfac
 
     private fun updateNumbersAndAddresses() {
         val phoneNumbers = arrayListOf<NumberOrAddressEditorData>()
-        for (number in c?.rawPhoneNumbers.orEmpty()) {
-            phoneNumbers.add(NumberOrAddressEditorData(number, false))
+        for (number in c?.phoneNumbersWithLabel.orEmpty()) {
+            phoneNumbers.add(NumberOrAddressEditorData(number.phoneNumber, false))
         }
         if (phoneNumbers.isEmpty()) {
             phoneNumbers.add(NumberOrAddressEditorData("", false))
@@ -210,8 +217,8 @@ class ContactEditorViewModel(val c: Contact?) : ViewModel(), ContactDataInterfac
         numbers.value = phoneNumbers
 
         val sipAddresses = arrayListOf<NumberOrAddressEditorData>()
-        for (address in c?.rawSipAddresses.orEmpty()) {
-            sipAddresses.add(NumberOrAddressEditorData(address, true))
+        for (address in c?.addresses.orEmpty()) {
+            sipAddresses.add(NumberOrAddressEditorData(address.asStringUriOnly(), true))
         }
         if (sipAddresses.isEmpty()) {
             sipAddresses.add(NumberOrAddressEditorData("", true))

@@ -33,7 +33,6 @@ import android.telecom.TelecomManager.*
 import java.lang.Exception
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
-import org.linphone.contact.Contact
 import org.linphone.core.Call
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
@@ -228,8 +227,8 @@ class TelecomHelper private constructor(context: Context) {
 
         extras.putString("Call-ID", call.callLog.callId)
 
-        val contact: Contact? = coreContext.contactsManager.findContactByAddress(call.remoteAddress)
-        val displayName = contact?.fullName ?: LinphoneUtils.getDisplayName(call.remoteAddress)
+        val contact = coreContext.contactsManager.findContactByAddress(call.remoteAddress)
+        val displayName = contact?.name ?: LinphoneUtils.getDisplayName(call.remoteAddress)
         extras.putString("DisplayName", displayName)
 
         return extras

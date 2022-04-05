@@ -63,7 +63,7 @@
 
             <ImageView
                 android:onClick="@{contactClickListener}"
-                android:visibility="@{viewModel.contact == null ? View.GONE : View.VISIBLE}"
+                android:visibility="@{viewModel.contact == null || viewModel.contact.refKey == null ? View.GONE : View.VISIBLE}"
                 android:contentDescription="@string/content_description_go_to_contact"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -97,7 +97,7 @@
                     app:viewModel="@{viewModel}"/>
 
                 <TextView
-                    android:text="@{viewModel.contact.fullName ?? viewModel.displayName}"
+                    android:text="@{viewModel.contact.name ?? viewModel.displayName}"
                     style="@style/big_contact_name_font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

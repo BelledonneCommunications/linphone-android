@@ -25,7 +25,7 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.voip.viewmodels.ConferenceParticipantsViewModel
@@ -123,8 +123,7 @@ class ConferenceAddParticipantsFragment : GenericFragment<VoipConferenceParticip
             val granted = grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
             if (granted) {
                 Log.i("[Conference Add Participants] READ_CONTACTS permission granted")
-                coreContext.contactsManager.onReadContactsPermissionGranted()
-                coreContext.contactsManager.fetchContactsAsync()
+                LinphoneApplication.coreContext.fetchContacts()
             } else {
                 Log.w("[Conference Add Participants] READ_CONTACTS permission denied")
             }

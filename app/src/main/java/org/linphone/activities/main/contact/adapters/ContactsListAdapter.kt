@@ -32,7 +32,7 @@ import org.linphone.R
 import org.linphone.activities.main.adapters.SelectionListAdapter
 import org.linphone.activities.main.contact.viewmodels.ContactViewModel
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
-import org.linphone.contact.Contact
+import org.linphone.core.Friend
 import org.linphone.databinding.ContactListCellBinding
 import org.linphone.databinding.GenericListHeaderBinding
 import org.linphone.utils.AppUtils
@@ -43,8 +43,8 @@ class ContactsListAdapter(
     selectionVM: ListTopBarViewModel,
     private val viewLifecycleOwner: LifecycleOwner
 ) : SelectionListAdapter<ContactViewModel, RecyclerView.ViewHolder>(selectionVM, ContactDiffCallback()), HeaderAdapter {
-    val selectedContactEvent: MutableLiveData<Event<Contact>> by lazy {
-        MutableLiveData<Event<Contact>>()
+    val selectedContactEvent: MutableLiveData<Event<Friend>> by lazy {
+        MutableLiveData<Event<Friend>>()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -80,7 +80,9 @@ class ContactsListAdapter(
                     if (selectionViewModel.isEditionEnabled.value == true) {
                         selectionViewModel.onToggleSelect(bindingAdapterPosition)
                     } else {
-                        selectedContactEvent.value = Event(contactViewModel.contactInternal)
+                        val friend = contactViewModel.contact.value
+                        // TODO FIXME !!!
+                        if (friend != null) selectedContactEvent.value = Event(friend)
                     }
                 }
 
@@ -101,17 +103,17 @@ class ContactsListAdapter(
     override fun displayHeaderForPosition(position: Int): Boolean {
         if (position >= itemCount) return false
         val contact = getItem(position)
-        val firstLetter = contact.name.first().toString()
+        val firstLetter = contact.fullName.firstOrNull().toString()
         val previousPosition = position - 1
         return if (previousPosition >= 0) {
-            val previousItemFirstLetter = getItem(previousPosition).name.first().toString()
+            val previousItemFirstLetter = getItem(previousPosition).fullName.firstOrNull().toString()
             !firstLetter.equals(previousItemFirstLetter, ignoreCase = true)
         } else true
     }
 
     override fun getHeaderViewForPosition(context: Context, position: Int): View {
         val contact = getItem(position)
-        val firstLetter = AppUtils.getInitials(contact.name, 1)
+        val firstLetter = AppUtils.getInitials(contact.fullName, 1)
         val binding: GenericListHeaderBinding = DataBindingUtil.inflate(
             LayoutInflater.from(context),
             R.layout.generic_list_header, null, false
@@ -127,7 +129,7 @@ private class ContactDiffCallback : DiffUtil.ItemCallback<ContactViewModel>() {
         oldItem: ContactViewModel,
         newItem: ContactViewModel
     ): Boolean {
-        return oldItem.contactInternal.compareTo(newItem.contactInternal) == 0
+        return oldItem.fullName.compareTo(newItem.fullName) == 0
     }
 
     override fun areContentsTheSame(

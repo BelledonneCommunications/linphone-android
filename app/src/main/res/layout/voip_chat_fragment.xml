@@ -41,7 +41,7 @@
                 android:orientation="vertical">
 
                 <org.linphone.views.MarqueeTextView
-                    android:text="@{viewModel.oneToOneChatRoom ? (viewModel.contact.fullName ?? viewModel.displayName) : viewModel.subject}"
+                    android:text="@{viewModel.oneToOneChatRoom ? (viewModel.contact.name ?? viewModel.displayName) : viewModel.subject}"
                     style="@style/toolbar_small_title_font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

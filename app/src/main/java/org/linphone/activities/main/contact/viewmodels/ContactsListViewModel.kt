@@ -25,15 +25,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import java.util.*
+import kotlin.collections.HashMap
 import kotlinx.coroutines.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
-import org.linphone.contact.Contact
 import org.linphone.contact.ContactsUpdatedListenerStub
-import org.linphone.contact.NativeContact
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
+import org.linphone.utils.LinphoneUtils
 
 class ContactsListViewModel : ViewModel() {
     val sipContactsSelected = MutableLiveData<Boolean>()
@@ -60,9 +60,11 @@ class ContactsListViewModel : ViewModel() {
 
     private val magicSearchListener = object : MagicSearchListenerStub() {
         override fun onSearchResultsReceived(magicSearch: MagicSearch) {
+            Log.i("[Contacts Loader] Magic search contacts available")
             searchResultsPending = false
             processMagicSearchResults(magicSearch.lastSearch)
-            fetchInProgress.value = false
+            // Use coreContext.contactsManager.fetchInProgress instead of false in case contacts are still being loaded
+            fetchInProgress.value = coreContext.contactsManager.fetchInProgress.value
         }
 
         override fun onLdapHaveMoreResults(magicSearch: MagicSearch, ldap: Ldap) {
@@ -72,7 +74,6 @@ class ContactsListViewModel : ViewModel() {
 
     init {
         sipContactsSelected.value = coreContext.contactsManager.shouldDisplaySipContactsList()
-        fetchInProgress.value = false
 
         coreContext.contactsManager.addListener(contactsUpdatedListener)
         coreContext.contactsManager.magicSearch.addListener(magicSearchListener)
@@ -104,74 +105,81 @@ class ContactsListViewModel : ViewModel() {
         val filter = MagicSearchSource.Friends.toInt() or MagicSearchSource.LdapServers.toInt()
         searchResultsPending = true
         fastFetchJob?.cancel()
+        Log.i("[Contacts Loader] Asking Magic search for contacts matching filter [$filterValue], domain [$domain] and in sources [$filter]")
         coreContext.contactsManager.magicSearch.getContactsAsync(filterValue, domain, filter)
 
         val spinnerDelay = corePreferences.delayBeforeShowingContactsSearchSpinner.toLong()
         fastFetchJob = viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 delay(spinnerDelay)
-                withContext(Dispatchers.Main) {
-                    if (searchResultsPending) {
-                        fetchInProgress.value = true
-                    }
+            }
+            withContext(Dispatchers.Main) {
+                if (searchResultsPending) {
+                    fetchInProgress.value = true
                 }
             }
         }
     }
 
     private fun processMagicSearchResults(results: Array<SearchResult>) {
-        Log.i("[Contacts] Processing ${results.size} results")
+        Log.i("[Contacts Loader] Processing ${results.size} results")
         contactsList.value.orEmpty().forEach(ContactViewModel::destroy)
 
-        val list = arrayListOf<ContactViewModel>()
-        for (result in results) {
-            val contact = searchMatchingContact(result) ?: Contact(searchResult = result)
-            if (contact is NativeContact) {
-                val found = list.find { contactViewModel ->
-                    contactViewModel.contactInternal is NativeContact && contactViewModel.contactInternal.nativeId == contact.nativeId
-                }
-                if (found != null) {
-                    Log.d("[Contacts] Found a search result that matches a native contact [$contact] we already have, skipping")
-                    continue
-                }
-            } else {
-                val found = list.find { contactViewModel ->
-                    contactViewModel.displayName.value == contact.fullName
-                }
-                if (found != null) {
-                    Log.i("[Contacts] Found a search result that matches a contact [$contact] we already have, updating it with the new information")
-                    found.contactInternal.addAddressAndPhoneNumberFromSearchResult(result)
-                    found.updateNumbersAndAddresses(found.contactInternal)
-                    continue
-                }
-            }
-            list.add(ContactViewModel(contact))
-        }
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val list = arrayListOf<ContactViewModel>()
+                val viewModels = HashMap<String, ContactViewModel>()
 
-        contactsList.postValue(list)
+                for (result in results) {
+                    val friend = result.friend
+                    val name = friend?.name ?: LinphoneUtils.getDisplayName(result.address)
+                    val found = viewModels[name]
+                    if (found != null && friend != null) {
+                        continue
+                    }
+
+                    val viewModel = if (friend != null) {
+                        ContactViewModel(friend, true)
+                    } else {
+                        val fakeFriend = coreContext.contactsManager.createFriendFromSearchResult(result)
+                        ContactViewModel(fakeFriend, true)
+                    }
+
+                    list.add(viewModel)
+                    if (found == null) {
+                        viewModels[name] = viewModel
+                    }
+                }
+
+                contactsList.postValue(list)
+                viewModels.clear()
+            }
+
+            withContext(Dispatchers.Main) {
+                Log.i("[Contacts Loader] Processed ${results.size} results")
+            }
+        }
     }
 
-    fun deleteContact(contact: Contact?) {
-        contact ?: return
+    fun deleteContact(friend: Friend) {
+        friend.remove() // TODO: FIXME: friend is const here!
+
+        val id = friend.refKey
+        if (id == null) {
+            Log.w("[Contacts] Friend has no refkey, can't delete it from native address book")
+            return
+        }
 
         val select = ContactsContract.Data.CONTACT_ID + " = ?"
         val ops = ArrayList<ContentProviderOperation>()
 
-        if (contact is NativeContact) {
-            val nativeContact: NativeContact = contact
-            Log.i("[Contacts] Adding Android contact id ${nativeContact.nativeId} to batch removal")
-            val args = arrayOf(nativeContact.nativeId)
-            ops.add(
-                ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI)
-                    .withSelection(select, args)
-                    .build()
-            )
-        }
-
-        if (contact.friend != null) {
-            Log.i("[Contacts] Removing friend")
-            contact.friend?.remove()
-        }
+        Log.i("[Contacts] Adding Android contact id $id to batch removal")
+        val args = arrayOf(id)
+        ops.add(
+            ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI)
+                .withSelection(select, args)
+                .build()
+        )
 
         if (ops.isNotEmpty()) {
             try {
@@ -183,26 +191,22 @@ class ContactsListViewModel : ViewModel() {
         }
     }
 
-    fun deleteContacts(list: ArrayList<Contact>) {
+    fun deleteContacts(list: ArrayList<Friend>) {
         val select = ContactsContract.Data.CONTACT_ID + " = ?"
         val ops = ArrayList<ContentProviderOperation>()
 
-        for (contact in list) {
-            if (contact is NativeContact) {
-                val nativeContact: NativeContact = contact
-                Log.i("[Contacts] Adding Android contact id ${nativeContact.nativeId} to batch removal")
-                val args = arrayOf(nativeContact.nativeId)
+        for (friend in list) {
+            val id = friend.refKey
+            if (id != null) {
+                Log.i("[Contacts] Adding Android contact id $id to batch removal")
+                val args = arrayOf(id)
                 ops.add(
                     ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI)
                         .withSelection(select, args)
                         .build()
                 )
             }
-
-            if (contact.friend != null) {
-                Log.i("[Contacts] Removing friend")
-                contact.friend?.remove()
-            }
+            friend.remove()
         }
 
         if (ops.isNotEmpty()) {
@@ -213,33 +217,5 @@ class ContactsListViewModel : ViewModel() {
                 Log.e("[Contacts] $e")
             }
         }
-    }
-
-    private fun searchMatchingContact(searchResult: SearchResult): Contact? {
-        val friend = searchResult.friend
-        var displayName = ""
-        if (friend != null) {
-            displayName = friend.name ?: ""
-            val contact: Contact? = friend.userData as? Contact
-            if (contact != null) return contact
-
-            val friendContact = coreContext.contactsManager.findContactByFriend(friend)
-            if (friendContact != null) return friendContact
-        }
-
-        val address = searchResult.address
-        if (address != null) {
-            if (displayName.isEmpty()) displayName = address.displayName ?: ""
-            val contact = coreContext.contactsManager.findContactByAddress(address, ignoreLocalContact = true)
-            if (contact != null && (displayName.isEmpty() || contact.fullName == displayName)) return contact
-        }
-
-        val phoneNumber = searchResult.phoneNumber
-        if (phoneNumber != null && address?.username != phoneNumber) {
-            val contact = coreContext.contactsManager.findContactByPhoneNumber(phoneNumber)
-            if (contact != null && (displayName.isEmpty() || contact.fullName == displayName)) return contact
-        }
-
-        return null
     }
 }

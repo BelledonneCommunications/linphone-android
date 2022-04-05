@@ -30,7 +30,6 @@ import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
-import org.linphone.contact.Contact
 import org.linphone.contact.ContactDataInterface
 import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.core.*
@@ -49,7 +48,7 @@ class ChatRoomViewModelFactory(private val chatRoom: ChatRoom) :
 }
 
 class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterface {
-    override val contact: MutableLiveData<Contact> = MutableLiveData<Contact>()
+    override val contact: MutableLiveData<Friend> = MutableLiveData<Friend>()
     override val displayName: MutableLiveData<String> = MutableLiveData<String>()
     override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
     override val showGroupChatAvatar: Boolean = chatRoom.hasCapability(ChatRoomCapabilities.Conference.toInt()) &&
@@ -290,7 +289,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         }
 
         val sender: String =
-            coreContext.contactsManager.findContactByAddress(msg.fromAddress)?.fullName
+            coreContext.contactsManager.findContactByAddress(msg.fromAddress)?.name
                 ?: LinphoneUtils.getDisplayName(msg.fromAddress)
         builder.append(sender)
         builder.append(": ")
@@ -332,9 +331,8 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         var participantsList = ""
         var index = 0
         for (participant in chatRoom.participants) {
-            val contact: Contact? =
-                coreContext.contactsManager.findContactByAddress(participant.address)
-            participantsList += contact?.fullName ?: LinphoneUtils.getDisplayName(participant.address)
+            val contact = coreContext.contactsManager.findContactByAddress(participant.address)
+            participantsList += contact?.name ?: LinphoneUtils.getDisplayName(participant.address)
             index++
             if (index != chatRoom.nbParticipants) participantsList += ", "
         }
@@ -361,9 +359,9 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
         var composing = ""
         for (address in chatRoom.composingAddresses) {
-            val contact: Contact? = coreContext.contactsManager.findContactByAddress(address)
+            val contact = coreContext.contactsManager.findContactByAddress(address)
             composing += if (composing.isNotEmpty()) ", " else ""
-            composing += contact?.fullName ?: LinphoneUtils.getDisplayName(address)
+            composing += contact?.name ?: LinphoneUtils.getDisplayName(address)
         }
         composingList.value = AppUtils.getStringWithPlural(R.plurals.chat_room_remote_composing, chatRoom.composingAddresses.size, composing)
     }

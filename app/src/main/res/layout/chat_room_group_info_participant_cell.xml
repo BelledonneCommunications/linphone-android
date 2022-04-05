@@ -121,7 +121,7 @@
             android:orientation="vertical">
 
             <org.linphone.views.MarqueeTextView
-                android:text="@{data.contact.fullName ?? data.displayName}"
+                android:text="@{data.contact.name ?? data.displayName}"
                 style="@style/contact_name_list_cell_font"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
