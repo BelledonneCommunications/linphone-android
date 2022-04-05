@@ -33,11 +33,11 @@ import androidx.core.graphics.drawable.IconCompat
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.main.MainActivity
-import org.linphone.contact.Contact
-import org.linphone.contact.NativeContact
+import org.linphone.contact.getPerson
 import org.linphone.core.Address
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomCapabilities
+import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.mediastream.Version
 
@@ -78,10 +78,10 @@ class ShortcutsHelper(val context: Context) {
                     val stringAddress = address.asStringUriOnly()
                     if (!processedAddresses.contains(stringAddress)) {
                         processedAddresses.add(stringAddress)
-                        val contact: Contact? =
+                        val contact: Friend? =
                             coreContext.contactsManager.findContactByAddress(address)
 
-                        if (contact != null && contact is NativeContact) {
+                        if (contact != null && contact.refKey != null) {
                             val shortcut: ShortcutInfo? = createContactShortcut(context, contact)
                             if (shortcut != null) {
                                 Log.i("[Shortcut Helper] Creating launcher shortcut for ${shortcut.shortLabel}")
@@ -97,27 +97,28 @@ class ShortcutsHelper(val context: Context) {
             shortcutManager.dynamicShortcuts = shortcuts
         }
 
-        private fun createContactShortcut(context: Context, contact: NativeContact): ShortcutInfo? {
+        private fun createContactShortcut(context: Context, contact: Friend): ShortcutInfo? {
             try {
                 val categories: ArraySet<String> = ArraySet()
                 categories.add(ShortcutInfo.SHORTCUT_CATEGORY_CONVERSATION)
 
                 val person = contact.getPerson()
                 val icon = person.icon
+                val id = contact.refKey ?: return null
 
                 val intent = Intent(Intent.ACTION_MAIN)
                 intent.setClass(context, MainActivity::class.java)
-                intent.putExtra("ContactId", contact.nativeId)
+                intent.putExtra("ContactId", id)
 
-                return ShortcutInfoCompat.Builder(context, contact.nativeId)
-                    .setShortLabel(contact.fullName ?: "${contact.firstName} ${contact.lastName}")
+                return ShortcutInfoCompat.Builder(context, id)
+                    .setShortLabel(contact.name ?: "")
                     .setIcon(icon)
                     .setPerson(person)
                     .setCategories(categories)
                     .setIntent(intent)
                     .build().toShortcutInfo()
             } catch (e: Exception) {
-                Log.e("[Shortcuts Helper] createContactShortcut for contact [${contact.fullName}] exception: $e")
+                Log.e("[Shortcuts Helper] createContactShortcut for contact [${contact.name}] exception: $e")
             }
 
             return null
@@ -168,7 +169,7 @@ class ShortcutsHelper(val context: Context) {
                     if (contact != null) {
                         personsList.add(contact.getPerson())
                     }
-                    subject = contact?.fullName ?: LinphoneUtils.getDisplayName(chatRoom.peerAddress)
+                    subject = contact?.name ?: LinphoneUtils.getDisplayName(chatRoom.peerAddress)
                     icon = contact?.getPerson()?.icon ?: IconCompat.createWithResource(context, R.drawable.avatar)
                 } else if (chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) && chatRoom.participants.isNotEmpty()) {
                     val address = chatRoom.participants.first().address
@@ -177,7 +178,7 @@ class ShortcutsHelper(val context: Context) {
                     if (contact != null) {
                         personsList.add(contact.getPerson())
                     }
-                    subject = contact?.fullName ?: LinphoneUtils.getDisplayName(address)
+                    subject = contact?.name ?: LinphoneUtils.getDisplayName(address)
                     icon = contact?.getPerson()?.icon ?: IconCompat.createWithResource(context, R.drawable.avatar)
                 } else {
                     for (participant in chatRoom.participants) {

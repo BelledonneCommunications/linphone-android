@@ -25,7 +25,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import androidx.databinding.DataBindingUtil
-import org.linphone.LinphoneApplication
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.databinding.ContactAvatarBigBinding
 import org.linphone.utils.AppUtils
@@ -58,16 +58,17 @@ class BigContactAvatarView : LinearLayout {
         }
         binding.root.visibility = View.VISIBLE
 
-        val contact: Contact? = viewModel.contact.value
+        val contact = viewModel.contact.value
         val initials = if (contact != null) {
-            AppUtils.getInitials(contact.fullName ?: contact.firstName + " " + contact.lastName)
+            AppUtils.getInitials(contact.name ?: "")
         } else {
             AppUtils.getInitials(viewModel.displayName.value ?: "")
         }
 
         binding.initials = initials
         binding.generatedAvatarVisibility = initials.isNotEmpty() && initials != "+"
-        binding.imagePath = contact?.getContactPictureUri()
-        binding.borderVisibility = LinphoneApplication.corePreferences.showBorderOnBigContactAvatar
+        binding.imagePath = contact?.getPictureUri()
+        binding.thumbnailPath = contact?.getThumbnailUri()
+        binding.borderVisibility = corePreferences.showBorderOnBigContactAvatar
     }
 }

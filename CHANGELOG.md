@@ -10,6 +10,22 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [4.6.4] - Unreleased
+
+### Added
+- Set video information in CallStyle incoming call notification
+
+### Changed
+- Massive rework of how native contacts from address book are handled to improve performances
+- Only display phone number from LDAP search result if it matches SIP address' username
+
+### Fixed
+- Do not use CallStyle notification on Samsung devices, they are currently displayed badly
+- Fixed microphone muted when starting a new call if microphone was muted at the end of the previous one
+- Added LDAP contact display name to SIP address
+- Prevent read-only 1-1 chat room
+- Fixed chat room last updated time not updated sometimes
+
 ## [4.6.3] - 2022-03-08
 
 ### Added

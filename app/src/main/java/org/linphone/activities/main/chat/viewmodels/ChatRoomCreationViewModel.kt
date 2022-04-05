@@ -137,7 +137,7 @@ class ChatRoomCreationViewModel : ErrorReportingViewModel() {
             list.remove(found)
         } else {
             val contact = coreContext.contactsManager.findContactByAddress(address)
-            if (contact != null) address.displayName = contact.fullName
+            if (contact != null) address.displayName = contact.name
             list.add(address)
         }
 

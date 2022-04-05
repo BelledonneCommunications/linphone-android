@@ -24,10 +24,12 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.activities.main.viewmodels.ErrorReportingViewModel
 import org.linphone.core.Address
 import org.linphone.core.ChatRoomSecurityLevel
+import org.linphone.core.Friend
+import org.linphone.utils.AppUtils
 import org.linphone.utils.LinphoneUtils
 
 interface ContactDataInterface {
-    val contact: MutableLiveData<Contact>
+    val contact: MutableLiveData<Friend>
 
     val displayName: MutableLiveData<String>
 
@@ -38,12 +40,14 @@ interface ContactDataInterface {
 }
 
 open class GenericContactData(private val sipAddress: Address) : ContactDataInterface {
-    final override val contact: MutableLiveData<Contact> = MutableLiveData<Contact>()
+    final override val contact: MutableLiveData<Friend> = MutableLiveData<Friend>()
     final override val displayName: MutableLiveData<String> = MutableLiveData<String>()
     final override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
 
+    val initials = MutableLiveData<String>()
+
     private val contactsUpdatedListener = object : ContactsUpdatedListenerStub() {
-        override fun onContactUpdated(contact: Contact) {
+        override fun onContactUpdated(friend: Friend) {
             contactLookup()
         }
     }
@@ -60,18 +64,25 @@ open class GenericContactData(private val sipAddress: Address) : ContactDataInte
 
     private fun contactLookup() {
         displayName.value = LinphoneUtils.getDisplayName(sipAddress)
-        contact.value =
-            coreContext.contactsManager.findContactByAddress(sipAddress)
+
+        val c = coreContext.contactsManager.findContactByAddress(sipAddress)
+        contact.value = c
+
+        initials.value = if (c != null) {
+            AppUtils.getInitials(c.name ?: "")
+        } else {
+            AppUtils.getInitials(displayName.value ?: "")
+        }
     }
 }
 
 abstract class GenericContactViewModel(private val sipAddress: Address) : ErrorReportingViewModel(), ContactDataInterface {
-    final override val contact: MutableLiveData<Contact> = MutableLiveData<Contact>()
+    final override val contact: MutableLiveData<Friend> = MutableLiveData<Friend>()
     final override val displayName: MutableLiveData<String> = MutableLiveData<String>()
     final override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
 
     private val contactsUpdatedListener = object : ContactsUpdatedListenerStub() {
-        override fun onContactUpdated(contact: Contact) {
+        override fun onContactUpdated(friend: Friend) {
             contactLookup()
         }
     }

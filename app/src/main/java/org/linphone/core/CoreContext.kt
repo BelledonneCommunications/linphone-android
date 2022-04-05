@@ -33,7 +33,8 @@ import android.util.Pair
 import android.view.*
 import androidx.emoji.bundled.BundledEmojiCompatConfig
 import androidx.emoji.text.EmojiCompat
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.*
+import androidx.loader.app.LoaderManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import java.io.File
 import java.math.BigInteger
@@ -56,8 +57,9 @@ import org.linphone.activities.call.IncomingCallActivity
 import org.linphone.activities.call.OutgoingCallActivity
 import org.linphone.compatibility.Compatibility
 import org.linphone.compatibility.PhoneStateInterface
-import org.linphone.contact.Contact
+import org.linphone.contact.ContactLoader
 import org.linphone.contact.ContactsManager
+import org.linphone.contact.getContactForPhoneNumberOrAddress
 import org.linphone.core.tools.Log
 import org.linphone.mediastream.Version
 import org.linphone.notifications.NotificationsManager
@@ -65,7 +67,21 @@ import org.linphone.telecom.TelecomHelper
 import org.linphone.utils.*
 import org.linphone.utils.Event
 
-class CoreContext(val context: Context, coreConfig: Config) {
+class CoreContext(val context: Context, coreConfig: Config) : LifecycleOwner, ViewModelStoreOwner {
+    private val _lifecycleRegistry = LifecycleRegistry(this)
+    override fun getLifecycle(): Lifecycle {
+        return _lifecycleRegistry
+    }
+
+    private val _viewModelStore = ViewModelStore()
+    override fun getViewModelStore(): ViewModelStore {
+        return _viewModelStore
+    }
+
+    private val contactLoader = ContactLoader()
+
+    private val collator: Collator = Collator.getInstance()
+
     var stopped = false
     val core: Core
     val handler: Handler = Handler(Looper.getMainLooper())
@@ -87,10 +103,10 @@ class CoreContext(val context: Context, coreConfig: Config) {
         "$sdkVersion ($sdkBranch, $sdkBuildType)"
     }
 
-    val collator: Collator = Collator.getInstance()
     val contactsManager: ContactsManager by lazy {
         ContactsManager(context)
     }
+
     val notificationsManager: NotificationsManager by lazy {
         NotificationsManager(context)
     }
@@ -112,7 +128,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
         override fun onGlobalStateChanged(core: Core, state: GlobalState, message: String) {
             Log.i("[Context] Global state changed [$state]")
             if (state == GlobalState.On) {
-                contactsManager.fetchContactsAsync()
+                fetchContacts()
             }
         }
 
@@ -162,8 +178,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
                         answerCall(call)
                     } else {
                         Log.i("[Context] Scheduling auto answering in $autoAnswerDelay milliseconds")
-                        val mainThreadHandler = Handler(Looper.getMainLooper())
-                        mainThreadHandler.postDelayed(
+                        handler.postDelayed(
                             {
                                 Log.w("[Context] Auto answering call")
                                 answerCall(call)
@@ -285,6 +300,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
 
         core = Factory.instance().createCoreWithConfig(coreConfig, context)
         stopped = false
+        _lifecycleRegistry.currentState = Lifecycle.State.INITIALIZED
         Log.i("[Context] Ready")
     }
 
@@ -313,7 +329,9 @@ class CoreContext(val context: Context, coreConfig: Config) {
 
         configureCore()
 
+        _lifecycleRegistry.currentState = Lifecycle.State.CREATED
         core.start()
+        _lifecycleRegistry.currentState = Lifecycle.State.STARTED
 
         initPhoneStateListener()
 
@@ -331,6 +349,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
             notificationsManager.startForeground()
         }
 
+        _lifecycleRegistry.currentState = Lifecycle.State.RESUMED
         Log.i("[Context] Started")
     }
 
@@ -353,6 +372,8 @@ class CoreContext(val context: Context, coreConfig: Config) {
         core.removeListener(listener)
         stopped = true
         loggingService.removeListener(loggingServiceListener)
+
+        _lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
     }
 
     private fun configureCore() {
@@ -422,6 +443,13 @@ class CoreContext(val context: Context, coreConfig: Config) {
             }
         }
         core.userCertificatesPath = userCertsPath
+    }
+
+    fun fetchContacts() {
+        if (PermissionHelper.required(context).hasReadContactsPermission()) {
+            Log.i("[Context] Init contacts loader")
+            LoaderManager.getInstance(this@CoreContext).initLoader(0, null, contactLoader)
+        }
     }
 
     /* Call related functions */
@@ -527,7 +555,7 @@ class CoreContext(val context: Context, coreConfig: Config) {
     fun startCall(to: String) {
         var stringAddress = to
         if (android.util.Patterns.PHONE.matcher(to).matches()) {
-            val contact: Contact? = contactsManager.findContactByPhoneNumber(to)
+            val contact = contactsManager.findContactByPhoneNumber(to)
             val alias = contact?.getContactForPhoneNumberOrAddress(to)
             if (alias != null) {
                 Log.i("[Context] Found matching alias $alias for phone number $to, using it")

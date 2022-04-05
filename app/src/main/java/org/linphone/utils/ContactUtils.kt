@@ -42,13 +42,13 @@ class ContactUtils {
                 return null
             }
 
-            val vcard = contact.friend?.vcard?.asVcard4String()
+            val vcard = contact.vcard?.asVcard4String()
             if (vcard == null) {
                 Log.e("[Contact Utils] Failed to get vCard from contact $contactID")
                 return null
             }
 
-            val contactName = contact.fullName?.replace(" ", "_") ?: contactID
+            val contactName = contact.name?.replace(" ", "_") ?: contactID
             val vcardPath = FileUtils.getFileStoragePath("$contactName.vcf")
             val inputStream = ByteArrayInputStream(vcard.toByteArray())
             try {

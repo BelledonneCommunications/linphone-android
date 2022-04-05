@@ -28,7 +28,7 @@
             tools:layout="@layout/contact_avatar" />
 
         <org.linphone.views.MarqueeTextView
-            android:text="@{viewModel.contact.fullName ?? viewModel.displayName}"
+            android:text="@{viewModel.contact.name ?? viewModel.displayName}"
             android:textColor="?attr/secondaryTextColor"
             android:textSize="21sp"
             android:layout_width="0dip"

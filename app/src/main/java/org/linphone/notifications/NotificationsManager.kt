@@ -47,7 +47,8 @@ import org.linphone.activities.call.OutgoingCallActivity
 import org.linphone.activities.chat_bubble.ChatBubbleActivity
 import org.linphone.activities.main.MainActivity
 import org.linphone.compatibility.Compatibility
-import org.linphone.contact.Contact
+import org.linphone.contact.getPerson
+import org.linphone.contact.getThumbnailUri
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
@@ -67,7 +68,7 @@ class Notifiable(val notificationId: Int) {
 
 class NotifiableMessage(
     var message: String,
-    val contact: Contact?,
+    val friend: Friend?,
     val sender: String,
     val time: Long,
     val senderAvatar: Bitmap? = null,
@@ -423,9 +424,9 @@ class NotificationsManager(private val context: Context) {
         return notifiable
     }
 
-    fun getPerson(contact: Contact?, displayName: String, picture: Bitmap?): Person {
-        return if (contact != null) {
-            contact.getPerson()
+    fun getPerson(friend: Friend?, displayName: String, picture: Bitmap?): Person {
+        return if (friend != null) {
+            friend.getPerson()
         } else {
             val builder = Person.Builder().setName(displayName)
             val userIcon =
@@ -490,9 +491,9 @@ class NotificationsManager(private val context: Context) {
                 .format(missedCallCount)
             Log.i("[Notifications Manager] Updating missed calls notification count to $missedCallCount")
         } else {
-            val contact: Contact? = coreContext.contactsManager.findContactByAddress(remoteAddress)
+            val friend: Friend? = coreContext.contactsManager.findContactByAddress(remoteAddress)
             body = context.getString(R.string.missed_call_notification_body)
-                .format(contact?.fullName ?: LinphoneUtils.getDisplayName(remoteAddress))
+                .format(friend?.name ?: LinphoneUtils.getDisplayName(remoteAddress))
             Log.i("[Notifications Manager] Creating missed call notification")
         }
 
@@ -627,15 +628,15 @@ class NotificationsManager(private val context: Context) {
     }
 
     private fun displayIncomingChatNotification(room: ChatRoom, message: ChatMessage) {
-        val contact: Contact? = coreContext.contactsManager.findContactByAddress(message.fromAddress)
+        val friend = coreContext.contactsManager.findContactByAddress(message.fromAddress)
 
         val notifiable = getNotifiableForRoom(room)
         if (notifiable.messages.isNotEmpty() || room.unreadMessagesCount == 1) {
-            val notifiableMessage = getNotifiableMessage(message, contact)
+            val notifiableMessage = getNotifiableMessage(message, friend)
             notifiable.messages.add(notifiableMessage)
         } else {
             for (chatMessage in room.unreadHistory) {
-                val notifiableMessage = getNotifiableMessage(chatMessage, contact)
+                val notifiableMessage = getNotifiableMessage(chatMessage, friend)
                 notifiable.messages.add(notifiableMessage)
             }
         }
@@ -664,10 +665,9 @@ class NotificationsManager(private val context: Context) {
         return notifiable
     }
 
-    private fun getNotifiableMessage(message: ChatMessage, contact: Contact?): NotifiableMessage {
-        val pictureUri = contact?.getContactThumbnailPictureUri()
-        val roundPicture = ImageUtils.getRoundBitmapFromUri(context, pictureUri)
-        val displayName = contact?.fullName ?: LinphoneUtils.getDisplayName(message.fromAddress)
+    private fun getNotifiableMessage(message: ChatMessage, friend: Friend?): NotifiableMessage {
+        val roundPicture = ImageUtils.getRoundBitmapFromUri(context, friend?.getThumbnailUri())
+        val displayName = friend?.name ?: LinphoneUtils.getDisplayName(message.fromAddress)
 
         var text: String = message.contents.find { content -> content.isText }?.utf8Text ?: ""
         if (text.isEmpty()) {
@@ -678,7 +678,7 @@ class NotificationsManager(private val context: Context) {
 
         val notifiableMessage = NotifiableMessage(
             text,
-            contact,
+            friend,
             displayName,
             message.time,
             senderAvatar = roundPicture,
@@ -772,8 +772,8 @@ class NotificationsManager(private val context: Context) {
 
         var lastPerson: Person? = null
         for (message in notifiable.messages) {
-            val contact = message.contact
-            val person = getPerson(contact, message.sender, message.senderAvatar)
+            val friend = message.friend
+            val person = getPerson(friend, message.sender, message.senderAvatar)
 
             // We don't want to see our own avatar
             if (!message.isOutgoing) {

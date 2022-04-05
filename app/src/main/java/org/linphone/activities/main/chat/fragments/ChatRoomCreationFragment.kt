@@ -25,7 +25,7 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import org.linphone.LinphoneApplication
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.chat.adapters.ChatRoomCreationContactsAdapter
@@ -166,16 +166,6 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
         }
     }
 
-    override fun goBack() {
-        if (!findNavController().popBackStack()) {
-            if (sharedViewModel.isSlidingPaneSlideable.value == true) {
-                sharedViewModel.closeSlidingPaneEvent.value = Event(true)
-            } else {
-                navigateToEmptyChatRoom()
-            }
-        }
-    }
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -185,10 +175,19 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
             val granted = grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
             if (granted) {
                 Log.i("[Chat Room Creation] READ_CONTACTS permission granted")
-                LinphoneApplication.coreContext.contactsManager.onReadContactsPermissionGranted()
-                LinphoneApplication.coreContext.contactsManager.fetchContactsAsync()
+                coreContext.fetchContacts()
             } else {
                 Log.w("[Chat Room Creation] READ_CONTACTS permission denied")
+            }
+        }
+    }
+
+    override fun goBack() {
+        if (!findNavController().popBackStack()) {
+            if (sharedViewModel.isSlidingPaneSlideable.value == true) {
+                sharedViewModel.closeSlidingPaneEvent.value = Event(true)
+            } else {
+                navigateToEmptyChatRoom()
             }
         }
     }

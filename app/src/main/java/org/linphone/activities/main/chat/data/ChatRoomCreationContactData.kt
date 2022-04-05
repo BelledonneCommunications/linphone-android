@@ -21,13 +21,12 @@ package org.linphone.activities.main.chat.data
 
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.contact.Contact
 import org.linphone.contact.ContactDataInterface
 import org.linphone.core.*
 import org.linphone.utils.LinphoneUtils
 
 class ChatRoomCreationContactData(private val searchResult: SearchResult) : ContactDataInterface {
-    override val contact: MutableLiveData<Contact> = MutableLiveData<Contact>()
+    override val contact: MutableLiveData<Friend> = MutableLiveData<Friend>()
     override val displayName: MutableLiveData<String> = MutableLiveData<String>()
     override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
 

@@ -30,31 +30,29 @@ import org.linphone.R
 import org.linphone.activities.main.contact.data.ContactNumberOrAddressClickListener
 import org.linphone.activities.main.contact.data.ContactNumberOrAddressData
 import org.linphone.activities.main.viewmodels.ErrorReportingViewModel
-import org.linphone.contact.Contact
 import org.linphone.contact.ContactDataInterface
 import org.linphone.contact.ContactsUpdatedListenerStub
-import org.linphone.contact.NativeContact
+import org.linphone.contact.hasPresence
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
-class ContactViewModelFactory(private val contact: Contact) :
+class ContactViewModelFactory(private val friend: Friend) :
     ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return ContactViewModel(contact) as T
+        return ContactViewModel(friend) as T
     }
 }
 
-class ContactViewModel(val contactInternal: Contact) : ErrorReportingViewModel(), ContactDataInterface {
-    override val contact: MutableLiveData<Contact> = MutableLiveData<Contact>()
+class ContactViewModel(friend: Friend, async: Boolean = false) : ErrorReportingViewModel(), ContactDataInterface {
+    override val contact: MutableLiveData<Friend> = MutableLiveData<Friend>()
     override val displayName: MutableLiveData<String> = MutableLiveData<String>()
     override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
 
-    val name: String
-        get() = displayName.value ?: ""
+    var fullName = ""
 
     val displayOrganization = corePreferences.displayOrganization
 
@@ -76,24 +74,29 @@ class ContactViewModel(val contactInternal: Contact) : ErrorReportingViewModel()
 
     val isNativeContact = MutableLiveData<Boolean>()
 
-    private val contactsUpdatedListener = object : ContactsUpdatedListenerStub() {
-        override fun onContactUpdated(contact: Contact) {
-            if (contact is NativeContact && contactInternal is NativeContact && contact.nativeId == contactInternal.nativeId) {
-                Log.d("[Contact] $contact has changed")
-                updateNumbersAndAddresses(contact)
-            }
-        }
-    }
-
     private val chatRoomListener = object : ChatRoomListenerStub() {
         override fun onStateChanged(chatRoom: ChatRoom, state: ChatRoom.State) {
             if (state == ChatRoom.State.Created) {
+                chatRoom.removeListener(this)
                 waitForChatRoomCreation.value = false
                 chatRoomCreatedEvent.value = Event(chatRoom)
             } else if (state == ChatRoom.State.CreationFailed) {
                 Log.e("[Contact Detail] Group chat room creation has failed !")
+                chatRoom.removeListener(this)
                 waitForChatRoomCreation.value = false
                 onErrorEvent.value = Event(R.string.chat_room_creation_failed_snack)
+            }
+        }
+    }
+
+    private val contactsListener = object : ContactsUpdatedListenerStub() {
+        override fun onContactUpdated(friend: Friend) {
+            if (friend.refKey == contact.value?.refKey) {
+                Log.i("[Contact Detail] Friend has been updated!")
+                contact.value = friend
+                displayName.value = friend.name
+                isNativeContact.value = friend.refKey != null
+                updateNumbersAndAddresses()
             }
         }
     }
@@ -127,13 +130,17 @@ class ContactViewModel(val contactInternal: Contact) : ErrorReportingViewModel()
     }
 
     init {
-        contact.value = contactInternal
-        displayName.value = contactInternal.fullName ?: contactInternal.firstName + " " + contactInternal.lastName
-        isNativeContact.value = contactInternal is NativeContact
+        fullName = friend.name ?: ""
 
-        updateNumbersAndAddresses(contactInternal)
-        coreContext.contactsManager.addListener(contactsUpdatedListener)
-        waitForChatRoomCreation.value = false
+        if (async) {
+            contact.postValue(friend)
+            displayName.postValue(friend.name)
+            isNativeContact.postValue(friend.refKey != null)
+        } else {
+            contact.value = friend
+            displayName.value = friend.name
+            isNativeContact.value = friend.refKey != null
+        }
     }
 
     override fun onCleared() {
@@ -142,17 +149,24 @@ class ContactViewModel(val contactInternal: Contact) : ErrorReportingViewModel()
     }
 
     fun destroy() {
-        coreContext.contactsManager.removeListener(contactsUpdatedListener)
+    }
+
+    fun registerContactListener() {
+        coreContext.contactsManager.addListener(contactsListener)
+    }
+
+    fun unregisterContactListener() {
+        coreContext.contactsManager.removeListener(contactsListener)
     }
 
     fun deleteContact() {
         val select = ContactsContract.Data.CONTACT_ID + " = ?"
         val ops = java.util.ArrayList<ContentProviderOperation>()
 
-        if (contactInternal is NativeContact) {
-            val nativeContact: NativeContact = contactInternal
-            Log.i("[Contact] Setting Android contact id ${nativeContact.nativeId} to batch removal")
-            val args = arrayOf(nativeContact.nativeId)
+        val id = contact.value?.refKey
+        if (id != null) {
+            Log.i("[Contact] Setting Android contact id $id to batch removal")
+            val args = arrayOf(id)
             ops.add(
                 ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI)
                     .withSelection(select, args)
@@ -160,10 +174,7 @@ class ContactViewModel(val contactInternal: Contact) : ErrorReportingViewModel()
             )
         }
 
-        if (contactInternal.friend != null) {
-            Log.i("[Contact] Removing friend")
-            contactInternal.friend?.remove()
-        }
+        contact.value?.remove()
 
         if (ops.isNotEmpty()) {
             try {
@@ -175,30 +186,37 @@ class ContactViewModel(val contactInternal: Contact) : ErrorReportingViewModel()
         }
     }
 
-    fun updateNumbersAndAddresses(contact: Contact) {
+    fun updateNumbersAndAddresses() {
         val list = arrayListOf<ContactNumberOrAddressData>()
-        for (address in contact.sipAddresses) {
+        val friend = contact.value ?: return
+
+        for (address in friend.addresses) {
             val value = address.asStringUriOnly()
-            val presenceModel = contact.friend?.getPresenceModelForUriOrTel(value)
+            val presenceModel = friend.getPresenceModelForUriOrTel(value)
             val hasPresence = presenceModel?.basicStatus == PresenceBasicStatus.Open
             val isMe = coreContext.core.defaultAccount?.params?.identityAddress?.weakEqual(address) ?: false
-            val secureChatAllowed = !isMe && contact.friend?.getPresenceModelForUriOrTel(value)?.hasCapability(FriendCapability.LimeX3Dh) ?: false
+            val secureChatAllowed = !isMe && friend.getPresenceModelForUriOrTel(value)?.hasCapability(FriendCapability.LimeX3Dh) ?: false
             val displayValue = if (coreContext.core.defaultAccount?.params?.domain == address.domain) (address.username ?: value) else value
             val noa = ContactNumberOrAddressData(address, hasPresence, displayValue, showSecureChat = secureChatAllowed, listener = listener)
             list.add(noa)
         }
-        for (phoneNumber in contact.phoneNumbers) {
-            val number = phoneNumber.value
-            val presenceModel = contact.friend?.getPresenceModelForUriOrTel(number)
+
+        for (phoneNumber in friend.phoneNumbersWithLabel) {
+            val number = phoneNumber.phoneNumber
+            val presenceModel = friend.getPresenceModelForUriOrTel(number)
             val hasPresence = presenceModel != null && presenceModel.basicStatus == PresenceBasicStatus.Open
             val contactAddress = presenceModel?.contact ?: number
             val address = coreContext.core.interpretUrl(contactAddress)
-            address?.displayName = name
+            address?.displayName = displayName.value.orEmpty()
             val isMe = if (address != null) coreContext.core.defaultAccount?.params?.identityAddress?.weakEqual(address) ?: false else false
-            val secureChatAllowed = !isMe && contact.friend?.getPresenceModelForUriOrTel(number)?.hasCapability(FriendCapability.LimeX3Dh) ?: false
-            val noa = ContactNumberOrAddressData(address, hasPresence, number, isSip = false, showSecureChat = secureChatAllowed, typeLabel = phoneNumber.typeLabel, listener = listener)
+            val secureChatAllowed = !isMe && friend.getPresenceModelForUriOrTel(number)?.hasCapability(FriendCapability.LimeX3Dh) ?: false
+            val noa = ContactNumberOrAddressData(address, hasPresence, number, isSip = false, showSecureChat = secureChatAllowed, typeLabel = phoneNumber.label ?: "", listener = listener)
             list.add(noa)
         }
-        numbersAndAddresses.value = list
+        numbersAndAddresses.postValue(list)
+    }
+
+    fun hasPresence(): Boolean {
+        return contact.value?.hasPresence() ?: false
     }
 }

@@ -41,7 +41,6 @@ import org.linphone.activities.main.contact.viewmodels.*
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.navigateToContact
 import org.linphone.activities.navigateToEmptyContact
-import org.linphone.contact.NativeContact
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactEditorFragmentBinding
 import org.linphone.utils.Event
@@ -157,10 +156,10 @@ class ContactEditorFragment : GenericFragment<ContactEditorFragmentBinding>(), S
 
     private fun saveContact() {
         val savedContact = viewModel.save()
-        if (savedContact is NativeContact) {
-            savedContact.syncValuesFromAndroidContact(requireContext())
+        val id = savedContact.refKey
+        if (id != null) {
             Log.i("[Contact Editor] Displaying contact $savedContact")
-            navigateToContact(savedContact)
+            navigateToContact(id)
         } else {
             goBack()
         }

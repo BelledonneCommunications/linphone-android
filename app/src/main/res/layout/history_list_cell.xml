@@ -98,7 +98,7 @@
 
             <org.linphone.views.MarqueeTextView
                 android:id="@+id/sip_uri"
-                android:text="@{(viewModel.contact.fullName ?? viewModel.displayName) + (groupCount > 1 ? ` (` + groupCount + `)` : ``)}"
+                android:text="@{(viewModel.contact.name ?? viewModel.displayName) + (groupCount > 1 ? ` (` + groupCount + `)` : ``)}"
                 style="@style/contact_name_list_cell_font"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

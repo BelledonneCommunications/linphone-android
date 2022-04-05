@@ -45,7 +45,6 @@ import org.linphone.activities.main.history.fragments.DetailCallLogFragment
 import org.linphone.activities.main.history.fragments.MasterCallLogsFragment
 import org.linphone.activities.main.settings.fragments.*
 import org.linphone.activities.main.sidemenu.fragments.SideMenuFragment
-import org.linphone.contact.NativeContact
 import org.linphone.core.Address
 
 internal fun Fragment.findMasterNavController(): NavController {
@@ -432,9 +431,9 @@ internal fun MasterContactsFragment.clearDisplayedContact() {
     }
 }
 
-internal fun ContactEditorFragment.navigateToContact(contact: NativeContact) {
+internal fun ContactEditorFragment.navigateToContact(id: String) {
     val bundle = Bundle()
-    bundle.putString("id", contact.nativeId)
+    bundle.putString("id", id)
     findNavController().navigate(
         R.id.action_contactEditorFragment_to_detailContactFragment,
         bundle,
@@ -524,8 +523,8 @@ internal fun DetailCallLogFragment.navigateToContacts(sipUriToAdd: String) {
     findMasterNavController().navigate(Uri.parse(deepLink))
 }
 
-internal fun DetailCallLogFragment.navigateToContact(contact: NativeContact) {
-    val deepLink = "linphone-android://contact/view/${contact.nativeId}"
+internal fun DetailCallLogFragment.navigateToContact(id: String) {
+    val deepLink = "linphone-android://contact/view/$id"
     findMasterNavController().navigate(Uri.parse(deepLink))
 }
 

@@ -40,7 +40,8 @@ class LinphoneUtils {
     companion object {
         private const val RECORDING_DATE_PATTERN = "dd-MM-yyyy-HH-mm-ss"
 
-        fun getDisplayName(address: Address): String {
+        fun getDisplayName(address: Address?): String {
+            if (address == null) return "[null]"
             if (address.displayName == null) {
                 val account = coreContext.core.accountList.find { account ->
                     account.params.identityAddress?.asStringUriOnly() == address.asStringUriOnly()
@@ -168,6 +169,17 @@ class LinphoneUtils {
             val remoteSipUri = remoteAddress.clone()
             remoteSipUri.clean()
             return "${localSipUri.asStringUriOnly()}~${remoteSipUri.asStringUriOnly()}"
+        }
+
+        fun arePhoneNumberWeakEqual(number1: String, number2: String): Boolean {
+            return trimPhoneNumber(number1) == trimPhoneNumber(number2)
+        }
+
+        private fun trimPhoneNumber(phoneNumber: String): String {
+            return phoneNumber.replace(" ", "")
+                .replace("-", "")
+                .replace("(", "")
+                .replace(")", "")
         }
     }
 }
