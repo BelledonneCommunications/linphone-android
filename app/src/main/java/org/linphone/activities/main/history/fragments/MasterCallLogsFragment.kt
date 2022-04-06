@@ -224,8 +224,9 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
         ) {
             it.consume { callLogGroup ->
                 // To remove the GRUU if any
-                val remoteAddress = callLogGroup.lastCallLog.remoteAddress.clone()
-                remoteAddress.clean()
+                val remoteAddress = callLogGroup.lastCallLog.remoteAddress
+                val cleanAddress = remoteAddress.clone()
+                cleanAddress.clean()
 
                 val conferenceInfo = coreContext.core.findConferenceInformationFromUri(remoteAddress)
                 when {
@@ -233,18 +234,18 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
                         navigateToConferenceWaitingRoom(remoteAddress.asStringUriOnly(), conferenceInfo.subject)
                     }
                     coreContext.core.callsNb > 0 -> {
-                        Log.i("[History] Starting dialer with pre-filled URI ${remoteAddress.asStringUriOnly()}, is transfer? ${sharedViewModel.pendingCallTransfer}")
+                        Log.i("[History] Starting dialer with pre-filled URI ${cleanAddress.asStringUriOnly()}, is transfer? ${sharedViewModel.pendingCallTransfer}")
                         sharedViewModel.updateDialerAnimationsBasedOnDestination.value = Event(R.id.masterCallLogsFragment)
                         val args = Bundle()
-                        args.putString("URI", remoteAddress.asStringUriOnly())
+                        args.putString("URI", cleanAddress.asStringUriOnly())
                         args.putBoolean("Transfer", sharedViewModel.pendingCallTransfer)
                         args.putBoolean("SkipAutoCallStart", true) // If auto start call setting is enabled, ignore it
                         navigateToDialer(args)
                     }
                     else -> {
                         val localAddress = callLogGroup.lastCallLog.localAddress
-                        Log.i("[History] Starting call to ${remoteAddress.asStringUriOnly()} with local address ${localAddress.asStringUriOnly()}")
-                        coreContext.startCall(remoteAddress, localAddress = localAddress)
+                        Log.i("[History] Starting call to ${cleanAddress.asStringUriOnly()} with local address ${localAddress.asStringUriOnly()}")
+                        coreContext.startCall(cleanAddress, localAddress = localAddress)
                     }
                 }
             }
