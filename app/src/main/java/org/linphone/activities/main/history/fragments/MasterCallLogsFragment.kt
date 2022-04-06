@@ -223,7 +223,10 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
             viewLifecycleOwner,
         ) {
             it.consume { callLogGroup ->
-                val remoteAddress = callLogGroup.lastCallLog.remoteAddress
+                // To remove the GRUU if any
+                val remoteAddress = callLogGroup.lastCallLog.remoteAddress.clone()
+                remoteAddress.clean()
+
                 val conferenceInfo = coreContext.core.findConferenceInformationFromUri(remoteAddress)
                 when {
                     conferenceInfo != null -> {
