@@ -95,7 +95,10 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
             viewLifecycleOwner
         ) {
             it.consume { callLog ->
-                val address = callLog.remoteAddress
+                // To remove the GRUU if any
+                val address = callLog.remoteAddress.clone()
+                address.clean()
+
                 if (coreContext.core.callsNb > 0) {
                     Log.i("[History] Starting dialer with pre-filled URI ${address.asStringUriOnly()}, is transfer? ${sharedViewModel.pendingCallTransfer}")
                     sharedViewModel.updateDialerAnimationsBasedOnDestination.value =
@@ -111,6 +114,7 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
                     navigateToDialer(args)
                 } else {
                     val localAddress = callLog.localAddress
+                    Log.i("[History] Starting call to ${address.asStringUriOnly()} with local address ${localAddress.asStringUriOnly()}")
                     coreContext.startCall(address, localAddress = localAddress)
                 }
             }
