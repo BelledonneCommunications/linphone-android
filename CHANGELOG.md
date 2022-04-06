@@ -21,6 +21,36 @@ Group changes to describe their impact on the project, as follows:
 ### Fixed
 -
 
+## [4.6.4] - 2022-04-06
+
+### Added
+- Set video information in CallStyle incoming call notification
+
+### Changed
+- Massive rework of how native contacts from address book are handled to improve performances
+- Only display phone number from LDAP search result if it matches SIP address' username
+
+### Fixed
+- Do not use CallStyle notification on Samsung devices, they are currently displayed badly
+- Fixed microphone muted when starting a new call if microphone was muted at the end of the previous one
+- Added LDAP contact display name to SIP address
+- Prevent read-only 1-1 chat room
+- Fixed chat room last updated time not updated sometimes
+
+## [4.6.3] - 2022-03-08
+
+### Added
+- Improvements in contacts matching
+
+### Changed
+- "Operation in progress" spinner hidden when contacts display/filter takes less than 200ms
+
+### Fixed
+- Contacts order when multiple address book contacts share the same number / SIP address
+- Wrongly formatted phone numbers not displayed anymore
+- Incoming call activity not displayed on LineageOS sometimes
+- Various crashes related to Telecom Manager exceptions not being caught
+
 ## [4.6.2] - 2022-03-01
 
 ### Added
