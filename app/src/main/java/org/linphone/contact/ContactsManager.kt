@@ -155,10 +155,7 @@ class ContactsManager(private val context: Context) {
     @Synchronized
     fun findContactByAddress(address: Address): Friend? {
         for (friend in localFriends) {
-            val found = friend.addresses.find {
-                it.weakEqual(address)
-            }
-            if (found != null) {
+            if (friend.address?.weakEqual(address) == true) {
                 return friend
             }
         }
