@@ -684,10 +684,10 @@
     <string name="conference_schedule_time">Heure</string>
     <string name="conference_schedule_duration">Durée</string>
     <string name="conference_schedule_timezone">Fuseau horaire</string>
-    <string name="conference_schedule_send_invite_chat">Envoyer l\'invitation par &amp;appName;</string>
+    <string name="conference_schedule_send_invite_chat">Envoyer l\'invitation par &appName;</string>
     <string name="conference_schedule_send_invite_email">Envoyer l\'invitation par courriel</string>
     <string name="conference_schedule_encryption">Voulez-vous chiffrer la conférence \?</string>
-    <string name="conference_schedule_send_invite_chat_summary">L\'invitation va être envoyée depuis mon compte &amp;appName;</string>
+    <string name="conference_schedule_send_invite_chat_summary">L\'invitation va être envoyée depuis mon compte &appName;</string>
     <string name="conference_schedule_participants_list">Liste des participants</string>
     <string name="conference_schedule_create">Créer la conférence</string>
     <string name="conference_schedule">Planifier une conférence</string>

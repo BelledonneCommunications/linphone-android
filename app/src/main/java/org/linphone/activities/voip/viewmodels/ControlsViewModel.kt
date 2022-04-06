@@ -53,7 +53,7 @@ class ControlsViewModel : ViewModel() {
 
     val isVideoEnabled = MutableLiveData<Boolean>()
 
-    val isVideoSendReceive = MutableLiveData<Boolean>()
+    val isSendingVideo = MutableLiveData<Boolean>()
 
     val isVideoUpdateInProgress = MutableLiveData<Boolean>()
 
@@ -312,7 +312,7 @@ class ControlsViewModel : ViewModel() {
                     params.isVideoEnabled = true
                     params.videoDirection = MediaDirection.SendRecv
                 } else {
-                    if (params?.videoDirection == MediaDirection.SendRecv) {
+                    if (params?.videoDirection == MediaDirection.SendRecv || params?.videoDirection == MediaDirection.SendOnly) {
                         params.videoDirection = MediaDirection.RecvOnly
                     } else {
                         params?.videoDirection = MediaDirection.SendRecv
@@ -457,10 +457,11 @@ class ControlsViewModel : ViewModel() {
         isVideoEnabled.value = enabled
         showTakeSnaptshotButton.value = enabled && corePreferences.showScreenshotButton
         isSwitchCameraAvailable.value = enabled && coreContext.showSwitchCameraButton()
-        if (coreContext.core.currentCall?.conference != null) {
-            isVideoSendReceive.value = coreContext.core.currentCall?.currentParams?.videoDirection == MediaDirection.SendRecv
+        isSendingVideo.value = if (coreContext.core.currentCall?.conference != null) {
+            val videoDirection = coreContext.core.currentCall?.currentParams?.videoDirection
+            videoDirection == MediaDirection.SendRecv || videoDirection == MediaDirection.SendOnly
         } else {
-            isVideoSendReceive.value = true
+            true
         }
     }
 
