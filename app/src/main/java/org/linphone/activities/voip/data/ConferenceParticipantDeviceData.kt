@@ -40,7 +40,7 @@ class ConferenceParticipantDeviceData(
 
     val videoAvailable = MutableLiveData<Boolean>()
 
-    val videoSendReceive = MutableLiveData<Boolean>()
+    val isSendingVideo = MutableLiveData<Boolean>()
 
     val activeSpeaker = MutableLiveData<Boolean>()
 
@@ -82,7 +82,7 @@ class ConferenceParticipantDeviceData(
         ) {
             if (streamType == StreamType.Video) {
                 Log.i("[Conference Participant Device] Participant [${participantDevice.address.asStringUriOnly()}] video capability changed to $direction")
-                videoSendReceive.value = direction == MediaDirection.SendRecv
+                isSendingVideo.value = direction == MediaDirection.SendRecv || direction == MediaDirection.SendOnly
             }
         }
 
@@ -110,14 +110,14 @@ class ConferenceParticipantDeviceData(
 
         videoAvailable.value = participantDevice.getStreamAvailability(StreamType.Video)
         val videoCapability = participantDevice.getStreamCapability(StreamType.Video)
-        videoSendReceive.value = videoCapability == MediaDirection.SendRecv
+        isSendingVideo.value = videoCapability == MediaDirection.SendRecv || videoCapability == MediaDirection.SendOnly
         isInConference.value = participantDevice.isInConference
 
         videoEnabled.value = isVideoAvailableAndSendReceive()
         videoEnabled.addSource(videoAvailable) {
             videoEnabled.value = isVideoAvailableAndSendReceive()
         }
-        videoEnabled.addSource(videoSendReceive) {
+        videoEnabled.addSource(isSendingVideo) {
             videoEnabled.value = isVideoAvailableAndSendReceive()
         }
 
@@ -183,6 +183,6 @@ class ConferenceParticipantDeviceData(
     }
 
     private fun isVideoAvailableAndSendReceive(): Boolean {
-        return videoAvailable.value == true && videoSendReceive.value == true
+        return videoAvailable.value == true && isSendingVideo.value == true
     }
 }
