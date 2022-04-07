@@ -191,6 +191,9 @@ class ContactViewModel(friend: Friend, async: Boolean = false) : ErrorReportingV
         val friend = contact.value ?: return
 
         for (address in friend.addresses) {
+            val username = address.username
+            if (username in friend.phoneNumbers) continue
+
             val value = address.asStringUriOnly()
             val presenceModel = friend.getPresenceModelForUriOrTel(value)
             val hasPresence = presenceModel?.basicStatus == PresenceBasicStatus.Open
