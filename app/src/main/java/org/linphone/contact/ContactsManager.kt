@@ -68,6 +68,9 @@ class ContactsManager(private val context: Context) {
 
     var contactIdToWatchFor: String = ""
 
+    val contactAvatar: IconCompat
+    val groupAvatar: IconCompat
+
     private val localFriends = arrayListOf<Friend>()
 
     private val contactsUpdatedListeners = ArrayList<ContactsUpdatedListener>()
@@ -79,12 +82,17 @@ class ContactsManager(private val context: Context) {
             for (friend in friends) {
                 refreshContactOnPresenceReceived(friend)
             }
+            Log.i("[Contacts Manager] Contacts refreshed due to presence received")
             notifyListeners()
+            Log.i("[Contacts Manager] Presence notified to all listeners")
         }
     }
 
     init {
         initSyncAccount()
+
+        contactAvatar = IconCompat.createWithResource(context, R.drawable.voip_single_contact_avatar_alt)
+        groupAvatar = IconCompat.createWithResource(context, R.drawable.voip_multiple_contacts_avatar_alt)
 
         val core = coreContext.core
         for (list in core.friendsLists) {
@@ -260,6 +268,7 @@ class ContactsManager(private val context: Context) {
         Log.d("[Contacts Manager] Received presence information for contact $friend")
         if (corePreferences.storePresenceInNativeContact && PermissionHelper.get().hasWriteContactsPermission()) {
             if (friend.refKey != null) {
+                Log.i("[Contacts Manager] Storing presence in native contact ${friend.refKey}")
                 storePresenceInNativeContact(friend)
             }
         }
@@ -383,17 +392,17 @@ fun Friend.getPerson(): Person {
     val bm: Bitmap? =
         ImageUtils.getRoundBitmapFromUri(
             coreContext.context,
-            getPictureUri()
+            getThumbnailUri()
         )
     val icon =
-        if (bm == null) IconCompat.createWithResource(
-            coreContext.context,
-            R.drawable.voip_single_contact_avatar_alt
-        ) else IconCompat.createWithAdaptiveBitmap(bm)
+        if (bm == null) {
+            coreContext.contactsManager.contactAvatar
+        } else IconCompat.createWithAdaptiveBitmap(bm)
     if (icon != null) {
         personBuilder.setIcon(icon)
     }
 
+    personBuilder.setUri(nativeUri)
     personBuilder.setImportant(starred)
     return personBuilder.build()
 }

@@ -25,7 +25,6 @@ import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.drawable.Icon
 import androidx.core.content.ContextCompat
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -118,7 +117,7 @@ class Api31Compatibility {
             } else {
                 Person.Builder()
                     .setName(conferenceInfo.subject)
-                    .setIcon(Icon.createWithResource(context, R.drawable.voip_multiple_contacts_avatar_alt))
+                    .setIcon(coreContext.contactsManager.groupAvatar.toIcon(context))
                     .setImportant(false)
                     .build()
             }
