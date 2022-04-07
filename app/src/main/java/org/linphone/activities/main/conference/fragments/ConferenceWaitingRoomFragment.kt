@@ -128,6 +128,7 @@ class ConferenceWaitingRoomFragment : GenericFragment<ConferenceWaitingRoomFragm
         super.onResume()
 
         coreContext.core.nativePreviewWindowId = binding.localPreviewVideoSurface
+        coreContext.core.isVideoPreviewEnabled = viewModel.isVideoEnabled.value == true
     }
 
     override fun onPause() {
