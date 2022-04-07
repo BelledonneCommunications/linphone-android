@@ -26,6 +26,8 @@ import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.media.AudioAttributes
 import android.os.VibrationEffect
 import android.os.Vibrator
@@ -34,7 +36,9 @@ import android.view.inputmethod.EditorInfo
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.app.Person
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.IconCompat
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -193,12 +197,29 @@ class Api26Compatibility {
             channel: String,
             notificationsManager: NotificationsManager
         ): Notification {
-            val contact: Friend? = coreContext.contactsManager.findContactByAddress(call.remoteAddress)
-            val roundPicture = ImageUtils.getRoundBitmapFromUri(context, contact?.getThumbnailUri())
-            val displayName = contact?.name ?: LinphoneUtils.getDisplayName(call.remoteAddress)
-
             val stringResourceId: Int
             val iconResourceId: Int
+            val roundPicture: Bitmap?
+            val title: String
+            val person: Person
+
+            val conferenceInfo = coreContext.core.findConferenceInformationFromUri(call.remoteAddress)
+            if (conferenceInfo == null) {
+                val contact: Friend? =
+                    coreContext.contactsManager.findContactByAddress(call.remoteAddress)
+                roundPicture = ImageUtils.getRoundBitmapFromUri(context, contact?.getThumbnailUri())
+                val displayName = contact?.name ?: LinphoneUtils.getDisplayName(call.remoteAddress)
+                title = contact?.name ?: displayName
+                person = notificationsManager.getPerson(contact, displayName, roundPicture)
+            } else {
+                title = conferenceInfo.subject ?: context.getString(R.string.conference)
+                roundPicture = BitmapFactory.decodeResource(context.resources, R.drawable.voip_multiple_contacts_avatar_alt)
+                person = Person.Builder()
+                    .setName(title)
+                    .setIcon(IconCompat.createWithBitmap(roundPicture))
+                    .build()
+            }
+
             when (call.state) {
                 Call.State.Paused, Call.State.Pausing, Call.State.PausedByRemote -> {
                     stringResourceId = R.string.call_notification_paused
@@ -225,11 +246,11 @@ class Api26Compatibility {
             val builder = NotificationCompat.Builder(
                 context, channel
             )
-                .setContentTitle(contact?.name ?: displayName)
+                .setContentTitle(title)
                 .setContentText(context.getString(stringResourceId))
                 .setSmallIcon(iconResourceId)
                 .setLargeIcon(roundPicture)
-                .addPerson(notificationsManager.getPerson(contact, displayName, roundPicture))
+                .addPerson(person)
                 .setAutoCancel(false)
                 .setCategory(NotificationCompat.CATEGORY_CALL)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)

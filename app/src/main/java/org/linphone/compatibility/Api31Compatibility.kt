@@ -25,6 +25,7 @@ import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.drawable.Icon
 import androidx.core.content.ContextCompat
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -98,11 +99,29 @@ class Api31Compatibility {
             channel: String,
             notificationsManager: NotificationsManager
         ): Notification {
-            val contact =
-                coreContext.contactsManager.findContactByAddress(call.remoteAddress)
-            val roundPicture = ImageUtils.getRoundBitmapFromUri(context, contact?.getThumbnailUri())
-            val displayName = contact?.name ?: LinphoneUtils.getDisplayName(call.remoteAddress)
+            val conferenceInfo = coreContext.core.findConferenceInformationFromUri(call.remoteAddress)
+            val caller = if (conferenceInfo == null) {
+                val contact =
+                    coreContext.contactsManager.findContactByAddress(call.remoteAddress)
+                val roundPicture =
+                    ImageUtils.getRoundBitmapFromUri(context, contact?.getThumbnailUri())
+                val displayName = contact?.name ?: LinphoneUtils.getDisplayName(call.remoteAddress)
 
+                val person = notificationsManager.getPerson(contact, displayName, roundPicture)
+                Person.Builder()
+                    .setName(person.name)
+                    .setIcon(person.icon?.toIcon(context))
+                    .setUri(person.uri)
+                    .setKey(person.key)
+                    .setImportant(person.isImportant)
+                    .build()
+            } else {
+                Person.Builder()
+                    .setName(conferenceInfo.subject)
+                    .setIcon(Icon.createWithResource(context, R.drawable.voip_multiple_contacts_avatar_alt))
+                    .setImportant(false)
+                    .build()
+            }
             val isVideo = call.currentParams.isVideoEnabled
             val iconResourceId: Int = when (call.state) {
                 Call.State.Paused, Call.State.Pausing, Call.State.PausedByRemote -> {
@@ -116,16 +135,8 @@ class Api31Compatibility {
                     }
                 }
             }
-
-            val person = notificationsManager.getPerson(contact, displayName, roundPicture)
-            val caller = Person.Builder()
-                .setName(person.name)
-                .setIcon(person.icon?.toIcon(context))
-                .setUri(person.uri)
-                .setKey(person.key)
-                .setImportant(person.isImportant)
-                .build()
             val declineIntent = notificationsManager.getCallDeclinePendingIntent(notifiable)
+
             val builder = Notification.Builder(
                 context, channel
             )
