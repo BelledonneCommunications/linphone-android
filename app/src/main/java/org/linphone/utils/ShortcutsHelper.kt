@@ -30,8 +30,8 @@ import androidx.core.app.Person
 import androidx.core.content.LocusIdCompat
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.graphics.drawable.IconCompat
+import kotlin.math.min
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.R
 import org.linphone.activities.main.MainActivity
 import org.linphone.contact.getPerson
 import org.linphone.core.Address
@@ -132,7 +132,8 @@ class ShortcutsHelper(val context: Context) {
                 return
             }
 
-            val maxShortcuts = shortcutManager.maxShortcutCountPerActivity
+            Log.i("[Shortcut Helper] Creating launcher shortcuts for chat rooms")
+            val maxShortcuts = min(shortcutManager.maxShortcutCountPerActivity, 5)
             var count = 0
             for (room in coreContext.core.chatRooms) {
                 // Android can usually only have around 4-5 shortcuts at a time
@@ -143,12 +144,13 @@ class ShortcutsHelper(val context: Context) {
 
                 val shortcut: ShortcutInfo? = createChatRoomShortcut(context, room)
                 if (shortcut != null) {
-                    Log.i("[Shortcut Helper] Creating launcher shortcut for ${shortcut.shortLabel}")
+                    Log.i("[Shortcut Helper] Created launcher shortcut for ${shortcut.shortLabel}")
                     shortcuts.add(shortcut)
                     count += 1
                 }
             }
             shortcutManager.dynamicShortcuts = shortcuts
+            Log.i("[Shortcut Helper] Created $count launcher shortcuts")
         }
 
         private fun createChatRoomShortcut(context: Context, chatRoom: ChatRoom): ShortcutInfo? {
@@ -166,20 +168,24 @@ class ShortcutsHelper(val context: Context) {
                 if (chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt())) {
                     val contact =
                         coreContext.contactsManager.findContactByAddress(chatRoom.peerAddress)
-                    if (contact != null) {
-                        personsList.add(contact.getPerson())
+                    val person = contact?.getPerson()
+                    if (person != null) {
+                        personsList.add(person)
                     }
+
+                    icon = person?.icon ?: coreContext.contactsManager.contactAvatar
                     subject = contact?.name ?: LinphoneUtils.getDisplayName(chatRoom.peerAddress)
-                    icon = contact?.getPerson()?.icon ?: IconCompat.createWithResource(context, R.drawable.voip_single_contact_avatar_alt)
                 } else if (chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) && chatRoom.participants.isNotEmpty()) {
                     val address = chatRoom.participants.first().address
                     val contact =
                         coreContext.contactsManager.findContactByAddress(address)
-                    if (contact != null) {
-                        personsList.add(contact.getPerson())
+                    val person = contact?.getPerson()
+                    if (person != null) {
+                        personsList.add(person)
                     }
+
                     subject = contact?.name ?: LinphoneUtils.getDisplayName(address)
-                    icon = contact?.getPerson()?.icon ?: IconCompat.createWithResource(context, R.drawable.voip_single_contact_avatar_alt)
+                    icon = person?.icon ?: coreContext.contactsManager.contactAvatar
                 } else {
                     for (participant in chatRoom.participants) {
                         val contact =
@@ -189,7 +195,7 @@ class ShortcutsHelper(val context: Context) {
                         }
                     }
                     subject = chatRoom.subject.orEmpty()
-                    icon = IconCompat.createWithResource(context, R.drawable.voip_multiple_contacts_avatar_alt)
+                    icon = coreContext.contactsManager.groupAvatar
                 }
 
                 val persons = arrayOfNulls<Person>(personsList.size)
