@@ -13,13 +13,15 @@ Group changes to describe their impact on the project, as follows:
 ## [4.7.0] - Unreleased
 
 ### Added
--
+- Conference creation with scheduling, video, different layouts, showing who is speaking and who is muted, etc...
 
 ### Changed
--
+- In-call views have been re-designed
+- Improved how call logs are handled to improve performances
 
 ### Fixed
--
+- Multiple file download attempt from the same chat bubble at the same time needed app restart to properly download each file
+- Generated avatars in dark mode
 
 ## [4.6.4] - 2022-04-06
 
