@@ -275,7 +275,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
-                        android:background="?attr/voipFormBackgroundColor">
+                        android:background="?attr/voipFormDisabledFieldBackgroundColor">
 
                         <TextView
                             android:layout_width="match_parent"
@@ -317,7 +317,7 @@
 
         <include
             layout="@layout/wait_layout"
-            bind:visibility="@{viewModel.conferenceCreationInProgress}" />
+            bind:visibility="@{viewModel.conferenceCreationInProgress, default=gone}" />
 
     </RelativeLayout>
 

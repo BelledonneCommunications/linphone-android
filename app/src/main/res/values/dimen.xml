@@ -63,4 +63,5 @@
     <dimen name="voip_numpad_button_max_size">60dp</dimen>
     <dimen name="voip_conference_audio_only_participant_cell_height">60dp</dimen>
     <dimen name="voip_conference_audio_only_participant_avatar_size">40dp</dimen>
+    <dimen name="conference_schedule_form_field_border_thickness">1dp</dimen>
 </resources>

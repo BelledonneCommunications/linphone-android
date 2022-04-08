@@ -9,7 +9,7 @@
                         android:endColor="?attr/voipFormBackgroundColor"
                         android:startColor="?attr/voipFormBackgroundColor"
                         android:type="linear" />
-                    <stroke android:width="0.33dp" android:color="?attr/voipFormFieldBackgroundColor" />
+                    <stroke android:width="@dimen/conference_schedule_form_field_border_thickness" android:color="?attr/voipFormFieldBackgroundColor" />
                     <corners android:radius="0dp" />
                     <padding android:bottom="3dp" android:left="3dp" android:right="3dp" android:top="3dp" />
                 </shape>
