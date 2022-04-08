@@ -202,7 +202,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
             viewLifecycleOwner
         ) {
             it.consume {
-                adapter.notifyDataSetChanged()
+                adapter.notifyItemRangeChanged(0, adapter.itemCount)
             }
         }
 

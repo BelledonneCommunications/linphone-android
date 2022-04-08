@@ -19,6 +19,7 @@
  */
 package org.linphone.compatibility
 
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
@@ -29,6 +30,7 @@ import org.linphone.utils.ShortcutsHelper
 @TargetApi(25)
 class Api25Compatibility {
     companion object {
+        @SuppressLint("MissingPermission")
         fun getDeviceName(context: Context): String {
             var name = Settings.Global.getString(
                 context.contentResolver, Settings.Global.DEVICE_NAME

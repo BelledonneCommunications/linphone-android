@@ -58,7 +58,7 @@ class ChatRoomsListAdapter(
 
     fun forwardPending(pending: Boolean) {
         isForwardPending = pending
-        notifyDataSetChanged()
+        notifyItemRangeChanged(0, itemCount)
     }
 
     inner class ViewHolder(

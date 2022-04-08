@@ -57,7 +57,7 @@ class GroupInfoParticipantsAdapter(
 
     fun showAdminControls(show: Boolean) {
         showAdmin = show
-        notifyDataSetChanged()
+        notifyItemRangeChanged(0, itemCount)
     }
 
     inner class ViewHolder(
