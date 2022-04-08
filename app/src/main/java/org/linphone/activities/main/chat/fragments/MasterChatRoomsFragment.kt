@@ -223,7 +223,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
             viewLifecycleOwner
         ) {
             it.consume {
-                adapter.notifyDataSetChanged()
+                adapter.notifyItemRangeChanged(0, adapter.itemCount)
             }
         }
 

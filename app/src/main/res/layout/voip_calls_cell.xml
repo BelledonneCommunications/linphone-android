@@ -42,6 +42,7 @@
                     android:layout_height="45dp"
                     android:layout_marginLeft="40dp"
                     android:layout_centerVertical="true"
+                    android:contentDescription="@null"
                     android:background="@drawable/generated_avatar_bg"
                     android:src="@drawable/icon_multiple_contacts_avatar" />
 

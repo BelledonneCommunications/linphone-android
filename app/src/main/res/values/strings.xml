@@ -849,4 +849,6 @@
     <string name="content_description_conference_participant_mic_muted">Participant has it\'s microphone muted</string>
     <string name="content_description_toggle_layout_menu">Show or hide conference layout menu</string>
     <string name="content_description_participant_is_paused">Participant has momentarily left the conference</string>
+    <string name="content_description_toggle_conference_info_details">Toggle conference information details visibility</string>
+    <string name="content_description_conference_participants">Conference participants</string>
 </resources>

@@ -470,7 +470,7 @@
     <string name="assistant_validate_account_1">Votre compte a été créé. Nous vous avons envoyé un email de confirmation à l\'adresse :</string>
     <plurals name="chat_room_remote_composing">
         <item quantity="one">%s écrit…</item>
-        <item quantity="other">%s écrivent…</item>
+        <item quantity="many">%s écrivent…</item>
     </plurals>
     <string name="chat_event_participant_added">%s a rejoint le groupe</string>
     <string name="contact_choose_existing_or_new_to_add_number">Sélectionnez un contact ou créez-en un</string>
@@ -480,7 +480,7 @@
     <string name="sip_addresses">Adresses SIP</string>
     <plurals name="days">
         <item quantity="one">%d jour</item>
-        <item quantity="other">%d jours</item>
+        <item quantity="many">%d jours</item>
     </plurals>
     <string name="contact_delete_one_dialog">Voulez-vous supprimer ce contact \?\nIl sera aussi retiré du carnet d\'adresses du téléphone.</string>
     <string name="dialer_address_bar_hint">Entrez un numéro ou une adresse</string>
@@ -578,7 +578,7 @@
     <string name="call_settings_use_telecom_manager_summary">Nécessite des permissions supplémentaires</string>
     <plurals name="chat_room_unread_messages_event">
         <item quantity="one">%1$d message non lu</item>
-        <item quantity="other">%1$d messages non lus</item>
+        <item quantity="many">%1$d messages non lus</item>
     </plurals>
     <string name="content_descripton_scroll_to_bottom">Aller au dernier message reçu ou au premier message non lu</string>
     <string name="audio_settings_prefer_bluetooth_devices_title">Acheminer l\'audio vers l\'appareil bluetooth, s\'il existe</string>
@@ -719,4 +719,6 @@
     <string name="conference_participant_paused">(en pause)</string>
     <string name="content_description_take_screenshot">Prendre une capture de la vidéo reçue</string>
     <string name="conference_low_bandwidth">Faible bande passante détectée, vidéo désactivée</string>
+    <string name="content_description_toggle_conference_info_details">Afficher/cacher les détails de la conférence</string>
+    <string name="content_description_conference_participants">Participants de la conférence</string>
 </resources>
