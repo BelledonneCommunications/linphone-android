@@ -57,8 +57,8 @@
         <item name="voipDrawableDisabledColor">@color/voip_dark_color4</item>
         <item name="voipTextColor">@color/white_color</item>
         <item name="voipTextColor2">@color/voip_text_dark_color</item>
-        <item name="voipFormBackgroundColor">@color/voip_dark_color4</item>
-        <item name="voipFormFieldBackgroundColor">@color/voip_dark_color4</item>
+        <item name="voipFormBackgroundColor">@color/voip_dark_color</item>
+        <item name="voipFormFieldBackgroundColor">@color/voip_dark_color5</item>
         <item name="voipFormDisabledFieldBackgroundColor">@color/voip_dark_color4</item>
     </style>
 
