@@ -25,7 +25,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import java.util.*
-import kotlin.collections.HashMap
 import kotlinx.coroutines.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -33,7 +32,6 @@ import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
-import org.linphone.utils.LinphoneUtils
 
 class ContactsListViewModel : ViewModel() {
     val sipContactsSelected = MutableLiveData<Boolean>()
@@ -60,7 +58,7 @@ class ContactsListViewModel : ViewModel() {
 
     private val magicSearchListener = object : MagicSearchListenerStub() {
         override fun onSearchResultsReceived(magicSearch: MagicSearch) {
-            Log.i("[Contacts Loader] Magic search contacts available")
+            Log.i("[Contacts] Magic search contacts available")
             searchResultsPending = false
             processMagicSearchResults(magicSearch.lastSearch)
             // Use coreContext.contactsManager.fetchInProgress instead of false in case contacts are still being loaded
@@ -103,10 +101,11 @@ class ContactsListViewModel : ViewModel() {
 
         val domain = if (sipContactsSelected.value == true) coreContext.core.defaultAccount?.params?.domain ?: "" else ""
         val filter = MagicSearchSource.Friends.toInt() or MagicSearchSource.LdapServers.toInt()
+        val aggregation = MagicSearchAggregation.Friend
         searchResultsPending = true
         fastFetchJob?.cancel()
-        Log.i("[Contacts Loader] Asking Magic search for contacts matching filter [$filterValue], domain [$domain] and in sources [$filter]")
-        coreContext.contactsManager.magicSearch.getContactsAsync(filterValue, domain, filter)
+        Log.i("[Contacts] Asking Magic search for contacts matching filter [$filterValue], domain [$domain] and in sources [$filter]")
+        coreContext.contactsManager.magicSearch.getContactsListAsync(filterValue, domain, filter, aggregation)
 
         val spinnerDelay = corePreferences.delayBeforeShowingContactsSearchSpinner.toLong()
         fastFetchJob = viewModelScope.launch {
@@ -122,41 +121,32 @@ class ContactsListViewModel : ViewModel() {
     }
 
     private fun processMagicSearchResults(results: Array<SearchResult>) {
-        Log.i("[Contacts Loader] Processing ${results.size} results")
+        Log.i("[Contacts] Processing ${results.size} results")
         contactsList.value.orEmpty().forEach(ContactViewModel::destroy)
 
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val list = arrayListOf<ContactViewModel>()
-                val viewModels = HashMap<String, ContactViewModel>()
 
                 for (result in results) {
                     val friend = result.friend
-                    val name = friend?.name ?: LinphoneUtils.getDisplayName(result.address)
-                    val found = viewModels[name]
-                    if (found != null && friend != null) {
-                        continue
-                    }
 
                     val viewModel = if (friend != null) {
                         ContactViewModel(friend, true)
                     } else {
+                        Log.w("[Contacts] SearchResult [$result] has no Friend!")
                         val fakeFriend = coreContext.contactsManager.createFriendFromSearchResult(result)
                         ContactViewModel(fakeFriend, true)
                     }
 
                     list.add(viewModel)
-                    if (found == null) {
-                        viewModels[name] = viewModel
-                    }
                 }
 
                 contactsList.postValue(list)
-                viewModels.clear()
             }
 
             withContext(Dispatchers.Main) {
-                Log.i("[Contacts Loader] Processed ${results.size} results")
+                Log.i("[Contacts] Processed ${results.size} results")
             }
         }
     }
