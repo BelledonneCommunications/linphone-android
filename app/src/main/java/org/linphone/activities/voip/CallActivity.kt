@@ -286,6 +286,7 @@ class CallActivity : ProximitySensorActivity() {
                     Manifest.permission.CAMERA -> if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                         Log.i("[Call Activity] CAMERA permission has been granted")
                         coreContext.core.reloadVideoDevices()
+                        controlsViewModel.toggleVideo()
                     }
                     Compatibility.BLUETOOTH_CONNECT -> if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                         Log.i("[Call Activity] BLUETOOTH_CONNECT permission has been granted")
