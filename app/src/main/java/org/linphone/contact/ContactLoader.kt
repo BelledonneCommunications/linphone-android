@@ -56,8 +56,6 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
         )
     }
 
-    private val friends = HashMap<String, Friend>()
-
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
         Log.i("[Contacts Loader] Loader created")
         coreContext.contactsManager.fetchInProgress.value = true
@@ -74,11 +72,12 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
     override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor) {
         Log.i("[Contacts Loader] Load finished, found ${cursor.count} entries in cursor")
 
-        friends.clear()
         val core = coreContext.core
         val linphoneMime = loader.context.getString(R.string.linphone_address_mime_type)
 
         coreContext.lifecycleScope.launch {
+            val friends = HashMap<String, Friend>()
+
             withContext(Dispatchers.IO) {
                 while (!cursor.isClosed && cursor.moveToNext()) {
                     try {
@@ -191,13 +190,15 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                     }
 
                     if (fl != core.defaultFriendList) core.addFriendList(fl)
-                    for (friend in friends.values) {
+
+                    val friendsList = friends.values
+                    for (friend in friendsList) {
                         fl.addLocalFriend(friend)
                     }
+
                     fl.updateSubscriptions()
 
                     Log.i("[Contacts Loader] Friends added & subscription updated")
-                    friends.clear()
                     coreContext.contactsManager.fetchFinished()
                 }
             }
