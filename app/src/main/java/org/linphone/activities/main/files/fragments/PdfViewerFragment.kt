@@ -56,6 +56,5 @@ class PdfViewerFragment : GenericViewerFragment<FilePdfViewerFragmentBinding>() 
 
         adapter = PdfPagesListAdapter(viewModel)
         binding.pdfViewPager.adapter = adapter
-        //adapter.notifyDataSetChanged()
     }
 }

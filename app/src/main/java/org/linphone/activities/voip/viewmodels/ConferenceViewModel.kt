@@ -49,13 +49,21 @@ class ConferenceViewModel : ViewModel() {
     val isRecording = MutableLiveData<Boolean>()
     val isRemotelyRecorded = MutableLiveData<Boolean>()
 
+    val maxParticipantsForMosaicLayout = corePreferences.maxConferenceParticipantsForMosaicLayout
+
+    val speakingParticipant = MutableLiveData<ConferenceParticipantDeviceData>()
+
     val participantAdminStatusChangedEvent: MutableLiveData<Event<ConferenceParticipantData>> by lazy {
         MutableLiveData<Event<ConferenceParticipantData>>()
     }
 
-    val maxParticipantsForMosaicLayout = corePreferences.maxConferenceParticipantsForMosaicLayout
+    val firstToJoinEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
 
-    val speakingParticipant = MutableLiveData<ConferenceParticipantDeviceData>()
+    val allParticipantsLeftEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
 
     private val conferenceListener = object : ConferenceListenerStub() {
         override fun onParticipantAdded(conference: Conference, participant: Participant) {
@@ -72,6 +80,10 @@ class ConferenceViewModel : ViewModel() {
         override fun onParticipantRemoved(conference: Conference, participant: Participant) {
             Log.i("[Conference] Participant removed: ${participant.address.asStringUriOnly()}")
             updateParticipantsList(conference)
+
+            if (conferenceParticipants.value.orEmpty().isEmpty()) {
+                allParticipantsLeftEvent.value = Event(true)
+            }
         }
 
         override fun onParticipantDeviceAdded(
@@ -246,6 +258,10 @@ class ConferenceViewModel : ViewModel() {
         isRecording.value = conference.isRecording
 
         updateConferenceLayout(conference)
+
+        if (conferenceParticipants.value.orEmpty().isEmpty()) {
+            firstToJoinEvent.value = Event(true)
+        }
     }
 
     fun configureConference(conference: Conference) {

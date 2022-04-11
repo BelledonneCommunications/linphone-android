@@ -290,6 +290,8 @@
     <string name="conference_invitation_received_notification">You have been invited to a conference</string>
     <string name="conference_invitation">Conference invitation</string>
     <string name="conference_low_bandwidth">Low bandwidth detected, disabling video</string>
+    <string name="conference_first_to_join">You\'re the first to join the conference</string>
+    <string name="conference_last_user">All other participants have left the conference</string>
 
     <!-- Call -->
     <string name="call_incoming_title">Incoming Call</string>
