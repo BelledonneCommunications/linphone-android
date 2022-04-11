@@ -1,12 +1,17 @@
 
-[![pipeline status](https://gitlab.linphone.org/BC/public/linphone-android/badges/master/pipeline.svg)](https://gitlab.linphone.org/BC/public/linphone-android/commits/master)
-
+[![pipeline status](https://gitlab.linphone.org/BC/public/linphone-android/badges/release/4.6/pipeline.svg)](https://gitlab.linphone.org/BC/public/linphone-android/commits/release/4.6) [![weblate status](https://weblate.linphone.org/widgets/linphone/-/linphone-android-release-4-6/svg-badge.svg)](https://weblate.linphone.org/engage/linphone/?utm_source=widget)
 
 Linphone is an open source softphone for voice and video over IP calling and instant messaging.
 
 It is fully SIP-based, for all calling, presence and IM features.
 
 General description is available from [linphone web site](https://www.linphone.org/technical-corner/linphone).
+
+### How to get it
+
+[<img src="metadata/google-play-badge.png" height="60" alt="Get it on Google Play">](https://play.google.com/store/apps/details?id=org.linphone)[<img src="metadata/f-droid-badge.png" height="60" alt="Get it on F-Droid">](https://f-droid.org/en/packages/org.linphone/)
+
+You can also download APKs signed with our key from [our website](https://download.linphone.org/releases/android/?C=M;O=D).
 
 ### License
 

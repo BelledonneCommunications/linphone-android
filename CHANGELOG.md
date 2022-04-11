@@ -10,6 +10,15 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [4.6.5] - 2022-04-11
+
+### Changed
+- Only display phone number if it matches SIP address username
+- Using new MagicSearch API to improve contacts list performances
+
+### Fixed
+- Prevent concurrent exception while loading native address book contacts
+
 ## [4.6.4] - 2022-04-06
 
 ### Added

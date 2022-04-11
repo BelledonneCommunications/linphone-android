@@ -5,8 +5,8 @@ plugins {
     id 'org.jlleitschuh.gradle.ktlint'
 }
 
-def appVersionName = "4.6.4"
-def appVersionCode = 40604 // 4.06.04
+def appVersionName = "4.6.5"
+def appVersionCode = 40605 // 4.06.05
 
 static def getPackageName() {
     return "org.linphone"
