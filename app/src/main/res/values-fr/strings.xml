@@ -721,4 +721,6 @@
     <string name="conference_low_bandwidth">Faible bande passante détectée, vidéo désactivée</string>
     <string name="content_description_toggle_conference_info_details">Afficher/cacher les détails de la conférence</string>
     <string name="content_description_conference_participants">Participants de la conférence</string>
+    <string name="conference_first_to_join">Vous êtes le premier à avoir rejoint la conférence</string>
+    <string name="conference_last_user">Tous les autres participants ont quitté la conférence</string>
 </resources>
