@@ -32,7 +32,7 @@
         tools:context=".MainActivity">
 
     <RelativeLayout
-        android:layout_width="280dp"
+        android:layout_width="@dimen/master_fragment_width"
         android:layout_height="match_parent"
         android:layout_gravity="start">
 
