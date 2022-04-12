@@ -21,6 +21,7 @@ package org.linphone.contact
 
 import android.content.ContentUris
 import android.database.Cursor
+import android.database.StaleDataException
 import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
@@ -31,6 +32,7 @@ import androidx.loader.content.CursorLoader
 import androidx.loader.content.Loader
 import java.lang.Exception
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -79,127 +81,137 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
             val friends = HashMap<String, Friend>()
 
             withContext(Dispatchers.IO) {
-                while (!cursor.isClosed && cursor.moveToNext()) {
-                    try {
-                        val id: String =
-                            cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Data.CONTACT_ID))
-                        val displayName: String? =
-                            cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Data.DISPLAY_NAME_PRIMARY))
-                        val mime: String? =
-                            cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Data.MIMETYPE))
-                        val data1: String? = cursor.getString(cursor.getColumnIndexOrThrow("data1"))
-                        val data2: String? = cursor.getString(cursor.getColumnIndexOrThrow("data2"))
-                        val data3: String? = cursor.getString(cursor.getColumnIndexOrThrow("data3"))
-                        val data4: String? = cursor.getString(cursor.getColumnIndexOrThrow("data4"))
-                        val starred =
-                            cursor.getInt(cursor.getColumnIndexOrThrow(ContactsContract.Contacts.STARRED)) == 1
-                        val lookupKey =
-                            cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Contacts.LOOKUP_KEY))
+                try {
+                    while (!cursor.isClosed && cursor.moveToNext()) {
+                        try {
+                            val id: String =
+                                cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Data.CONTACT_ID))
+                            val displayName: String? =
+                                cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Data.DISPLAY_NAME_PRIMARY))
+                            val mime: String? =
+                                cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Data.MIMETYPE))
+                            val data1: String? =
+                                cursor.getString(cursor.getColumnIndexOrThrow("data1"))
+                            val data2: String? =
+                                cursor.getString(cursor.getColumnIndexOrThrow("data2"))
+                            val data3: String? =
+                                cursor.getString(cursor.getColumnIndexOrThrow("data3"))
+                            val data4: String? =
+                                cursor.getString(cursor.getColumnIndexOrThrow("data4"))
+                            val starred =
+                                cursor.getInt(cursor.getColumnIndexOrThrow(ContactsContract.Contacts.STARRED)) == 1
+                            val lookupKey =
+                                cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Contacts.LOOKUP_KEY))
 
-                        val friend = friends[id] ?: core.createFriend()
-                        friend.refKey = id
-                        if (friend.name.isNullOrEmpty()) {
-                            friend.name = displayName
-                            friend.photo = Uri.withAppendedPath(
-                                ContentUris.withAppendedId(
-                                    ContactsContract.Contacts.CONTENT_URI,
-                                    id.toLong()
-                                ),
-                                ContactsContract.Contacts.Photo.CONTENT_DIRECTORY
-                            ).toString()
-                            friend.starred = starred
-                            friend.nativeUri =
-                                "${ContactsContract.Contacts.CONTENT_LOOKUP_URI}/$lookupKey"
-                        }
-
-                        when (mime) {
-                            ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE -> {
-                                val typeLabel = ContactsContract.CommonDataKinds.Phone.getTypeLabel(
-                                    loader.context.resources,
-                                    data2?.toInt() ?: 0,
-                                    data3
+                            val friend = friends[id] ?: core.createFriend()
+                            friend.refKey = id
+                            if (friend.name.isNullOrEmpty()) {
+                                friend.name = displayName
+                                friend.photo = Uri.withAppendedPath(
+                                    ContentUris.withAppendedId(
+                                        ContactsContract.Contacts.CONTENT_URI,
+                                        id.toLong()
+                                    ),
+                                    ContactsContract.Contacts.Photo.CONTENT_DIRECTORY
                                 ).toString()
+                                friend.starred = starred
+                                friend.nativeUri =
+                                    "${ContactsContract.Contacts.CONTENT_LOOKUP_URI}/$lookupKey"
+                            }
 
-                                val number =
-                                    if (corePreferences.preferNormalizedPhoneNumbersFromAddressBook ||
-                                        data1.isNullOrEmpty() ||
-                                        !Patterns.PHONE.matcher(data1).matches()
-                                    ) {
-                                        data4 ?: data1
-                                    } else {
-                                        data1
-                                    }
-                                if (number != null) {
-                                    var duplicate = false
-                                    for (pn in friend.phoneNumbersWithLabel) {
-                                        if (pn.label == typeLabel && LinphoneUtils.arePhoneNumberWeakEqual(
-                                                pn.phoneNumber,
-                                                number
-                                            )
+                            when (mime) {
+                                ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE -> {
+                                    val typeLabel =
+                                        ContactsContract.CommonDataKinds.Phone.getTypeLabel(
+                                            loader.context.resources,
+                                            data2?.toInt() ?: 0,
+                                            data3
+                                        ).toString()
+
+                                    val number =
+                                        if (corePreferences.preferNormalizedPhoneNumbersFromAddressBook ||
+                                            data1.isNullOrEmpty() ||
+                                            !Patterns.PHONE.matcher(data1).matches()
                                         ) {
-                                            duplicate = true
-                                            break
+                                            data4 ?: data1
+                                        } else {
+                                            data1
+                                        }
+                                    if (number != null) {
+                                        var duplicate = false
+                                        for (pn in friend.phoneNumbersWithLabel) {
+                                            if (pn.label == typeLabel && LinphoneUtils.arePhoneNumberWeakEqual(
+                                                    pn.phoneNumber,
+                                                    number
+                                                )
+                                            ) {
+                                                duplicate = true
+                                                break
+                                            }
+                                        }
+                                        if (!duplicate) {
+                                            val phoneNumber = Factory.instance()
+                                                .createFriendPhoneNumber(number, typeLabel)
+                                            friend.addPhoneNumberWithLabel(phoneNumber)
                                         }
                                     }
-                                    if (!duplicate) {
-                                        val phoneNumber = Factory.instance()
-                                            .createFriendPhoneNumber(number, typeLabel)
-                                        friend.addPhoneNumberWithLabel(phoneNumber)
-                                    }
+                                }
+                                linphoneMime, ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE -> {
+                                    if (data1 == null) continue
+                                    val address = core.interpretUrl(data1) ?: continue
+                                    friend.addAddress(address)
+                                }
+                                ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE -> {
+                                    if (data1 == null) continue
+                                    val vCard = friend.vcard
+                                    vCard?.organization = data1
+                                }
+                                ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE -> {
+                                    if (data2 == null && data3 == null) continue
+                                    val vCard = friend.vcard
+                                    vCard?.givenName = data2
+                                    vCard?.familyName = data3
                                 }
                             }
-                            linphoneMime, ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE -> {
-                                if (data1 == null) continue
-                                val address = core.interpretUrl(data1) ?: continue
-                                friend.addAddress(address)
-                            }
-                            ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE -> {
-                                if (data1 == null) continue
-                                val vCard = friend.vcard
-                                vCard?.organization = data1
-                            }
-                            ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE -> {
-                                if (data2 == null && data3 == null) continue
-                                val vCard = friend.vcard
-                                vCard?.givenName = data2
-                                vCard?.familyName = data3
-                            }
-                        }
 
-                        friends[id] = friend
-                    } catch (e: Exception) {
-                        Log.e("[Contacts Loader] Exception: $e")
-                    }
-                }
-
-                withContext(Dispatchers.Main) {
-                    Log.i("[Contacts Loader] Friends created")
-                    val contactId = coreContext.contactsManager.contactIdToWatchFor
-                    if (contactId.isNotEmpty()) {
-                        val friend = friends[contactId]
-                        Log.i("[Contacts Loader] Manager was asked to monitor contact id $contactId")
-                        if (friend != null) {
-                            Log.i("[Contacts Loader] Found new contact matching id $contactId, notifying listeners")
-                            coreContext.contactsManager.notifyListeners(friend)
+                            friends[id] = friend
+                        } catch (e: Exception) {
+                            Log.e("[Contacts Loader] Exception: $e")
                         }
                     }
 
-                    val fl = core.defaultFriendList ?: core.createFriendList()
-                    for (friend in fl.friends) {
-                        fl.removeFriend(friend)
+                    withContext(Dispatchers.Main) {
+                        Log.i("[Contacts Loader] Friends created")
+                        val contactId = coreContext.contactsManager.contactIdToWatchFor
+                        if (contactId.isNotEmpty()) {
+                            val friend = friends[contactId]
+                            Log.i("[Contacts Loader] Manager was asked to monitor contact id $contactId")
+                            if (friend != null) {
+                                Log.i("[Contacts Loader] Found new contact matching id $contactId, notifying listeners")
+                                coreContext.contactsManager.notifyListeners(friend)
+                            }
+                        }
+
+                        val fl = core.defaultFriendList ?: core.createFriendList()
+                        for (friend in fl.friends) {
+                            fl.removeFriend(friend)
+                        }
+
+                        if (fl != core.defaultFriendList) core.addFriendList(fl)
+
+                        val friendsList = friends.values
+                        for (friend in friendsList) {
+                            fl.addLocalFriend(friend)
+                        }
+
+                        fl.updateSubscriptions()
+
+                        Log.i("[Contacts Loader] Friends added & subscription updated")
+                        coreContext.contactsManager.fetchFinished()
                     }
-
-                    if (fl != core.defaultFriendList) core.addFriendList(fl)
-
-                    val friendsList = friends.values
-                    for (friend in friendsList) {
-                        fl.addLocalFriend(friend)
-                    }
-
-                    fl.updateSubscriptions()
-
-                    Log.i("[Contacts Loader] Friends added & subscription updated")
-                    coreContext.contactsManager.fetchFinished()
+                } catch (sde: StaleDataException) {
+                    Log.e("[Contacts Loader] State Data Exception: $sde")
+                    cancel()
                 }
             }
         }
