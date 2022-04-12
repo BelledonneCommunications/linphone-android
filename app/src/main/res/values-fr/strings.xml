@@ -468,9 +468,9 @@
     <string name="no_account_configured">Aucun compte configuré</string>
     <string name="contact_send_sms_invite_text">Bonjour ! Rejoins-moi sur &appName;! Disponible gratuitement ici : %s</string>
     <string name="assistant_validate_account_1">Votre compte a été créé. Nous vous avons envoyé un email de confirmation à l\'adresse :</string>
-    <plurals name="chat_room_remote_composing">
+    <plurals name="chat_room_remote_composing" tools:ignore="MissingQuantity">
         <item quantity="one">%s écrit…</item>
-        <item quantity="many">%s écrivent…</item>
+        <item quantity="other">%s écrivent…</item>
     </plurals>
     <string name="chat_event_participant_added">%s a rejoint le groupe</string>
     <string name="contact_choose_existing_or_new_to_add_number">Sélectionnez un contact ou créez-en un</string>
@@ -478,9 +478,9 @@
     <string name="service_description">Nécessaire pour recevoir les appels lorsque l\'app est en arrière-plan</string>
     <string name="select_your_country">Choisissez votre pays</string>
     <string name="sip_addresses">Adresses SIP</string>
-    <plurals name="days">
+    <plurals name="days" tools:ignore="MissingQuantity">
         <item quantity="one">%d jour</item>
-        <item quantity="many">%d jours</item>
+        <item quantity="other">%d jours</item>
     </plurals>
     <string name="contact_delete_one_dialog">Voulez-vous supprimer ce contact \?\nIl sera aussi retiré du carnet d\'adresses du téléphone.</string>
     <string name="dialer_address_bar_hint">Entrez un numéro ou une adresse</string>
@@ -576,9 +576,9 @@
     <string name="advanced_settings_disable_fragment_security_summary">Autorise l\'écran à être capturé/enregistré sur les vues sensibles</string>
     <string name="call_settings_use_telecom_manager_title">Améliore les intéractions avec les périphériques bluetooth</string>
     <string name="call_settings_use_telecom_manager_summary">Nécessite des permissions supplémentaires</string>
-    <plurals name="chat_room_unread_messages_event">
+    <plurals name="chat_room_unread_messages_event" tools:ignore="MissingQuantity">
         <item quantity="one">%1$d message non lu</item>
-        <item quantity="many">%1$d messages non lus</item>
+        <item quantity="other">%1$d messages non lus</item>
     </plurals>
     <string name="content_descripton_scroll_to_bottom">Aller au dernier message reçu ou au premier message non lu</string>
     <string name="audio_settings_prefer_bluetooth_devices_title">Acheminer l\'audio vers l\'appareil bluetooth, s\'il existe</string>
