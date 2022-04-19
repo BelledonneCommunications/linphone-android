@@ -2,6 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/contacts_nav_graph"
     app:startDestination="@id/emptyContactFragment">
 
     <fragment
@@ -25,7 +26,7 @@
 
         <action
             android:id="@+id/action_detailContactFragment_to_detailChatRoomFragment"
-            app:destination="@id/chat_nav_graph.xml" />
+            app:destination="@id/chat_nav_graph" />
     </fragment>
 
     <action

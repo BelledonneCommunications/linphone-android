@@ -26,6 +26,7 @@ import android.provider.Settings
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
+import org.linphone.activities.main.chat.viewmodels.ChatRoomsListViewModel
 import org.linphone.activities.main.settings.viewmodels.ChatSettingsViewModel
 import org.linphone.activities.navigateToEmptySetting
 import org.linphone.compatibility.Compatibility
@@ -81,6 +82,12 @@ class ChatSettingsFragment : GenericSettingFragment<SettingsChatFragmentBinding>
                 }
             }
         }
+
+        viewModel.reloadChatRoomsEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                reloadChatRooms()
+            }
+        }
     }
 
     override fun goBack() {
@@ -89,5 +96,12 @@ class ChatSettingsFragment : GenericSettingFragment<SettingsChatFragmentBinding>
         } else {
             navigateToEmptySetting()
         }
+    }
+
+    private fun reloadChatRooms() {
+        val listViewModel = requireActivity().run {
+            ViewModelProvider(this)[ChatRoomsListViewModel::class.java]
+        }
+        listViewModel.updateChatRooms()
     }
 }

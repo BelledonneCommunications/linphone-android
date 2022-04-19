@@ -141,7 +141,7 @@ class ChatRoomsListViewModel : MessageNotifierViewModel() {
         }
     }
 
-    private fun updateChatRooms() {
+    fun updateChatRooms() {
         chatRooms.value.orEmpty().forEach(ChatRoomViewModel::destroy)
 
         val list = arrayListOf<ChatRoomViewModel>()
