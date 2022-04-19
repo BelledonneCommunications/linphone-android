@@ -71,7 +71,11 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
         )
     }
 
-    override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor) {
+    override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor?) {
+        if (cursor == null) {
+            Log.e("[Contacts Loader] Cursor is null!")
+            return
+        }
         Log.i("[Contacts Loader] Load finished, found ${cursor.count} entries in cursor")
 
         val core = coreContext.core
@@ -211,6 +215,9 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                     }
                 } catch (sde: StaleDataException) {
                     Log.e("[Contacts Loader] State Data Exception: $sde")
+                } catch (ise: IllegalStateException) {
+                    Log.e("[Contacts Loader] Illegal State Exception: $ise")
+                } finally {
                     cancel()
                 }
             }
