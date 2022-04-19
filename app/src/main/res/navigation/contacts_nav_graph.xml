@@ -26,7 +26,7 @@
 
         <action
             android:id="@+id/action_detailContactFragment_to_detailChatRoomFragment"
-            app:destination="@id/chat_nav_graph.xml" />
+            app:destination="@id/chat_nav_graph" />
     </fragment>
 
     <action

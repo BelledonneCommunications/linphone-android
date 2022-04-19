@@ -116,6 +116,7 @@ class ChatSettingsViewModel : GenericSettingsViewModel() {
     val hideEmptyRoomsListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
             prefs.hideEmptyRooms = newValue
+            reloadChatRoomsEvent.value = Event(true)
         }
     }
     val hideEmptyRooms = MutableLiveData<Boolean>()
@@ -123,6 +124,7 @@ class ChatSettingsViewModel : GenericSettingsViewModel() {
     val hideRoomsRemovedProxiesListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
             prefs.hideRoomsFromRemovedProxies = newValue
+            reloadChatRoomsEvent.value = Event(true)
         }
     }
     val hideRoomsRemovedProxies = MutableLiveData<Boolean>()
@@ -135,6 +137,10 @@ class ChatSettingsViewModel : GenericSettingsViewModel() {
     val goToAndroidNotificationSettingsEvent = MutableLiveData<Event<Boolean>>()
 
     val vfs = MutableLiveData<Boolean>()
+
+    val reloadChatRoomsEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
 
     init {
         markAsReadNotifDismissal.value = prefs.markAsReadUponChatMessageNotificationDismissal
