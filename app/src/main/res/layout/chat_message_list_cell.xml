@@ -95,67 +95,39 @@
                 android:layout_marginLeft="@{selectionListViewModel.isEditionEnabled ? @dimen/edit_chat_message_bubble_left_margin : !data.chatMessage.outgoing ? @dimen/incoming_chat_message_bubble_left_margin : @dimen/outgoing_chat_message_bubble_left_margin}"
                 android:paddingBottom="5dp">
 
-                <LinearLayout
+                <TextView
                     android:visibility="@{data.chatMessage.forward ? View.VISIBLE : View.GONE, default=gone}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:textColor="@color/chat_bubble_text_color"
+                    android:textSize="10sp"
+                    android:fontFamily="sans-serif"
+                    android:textStyle="normal"
+                    android:lineSpacingExtra="3.3sp"
+                    android:drawablePadding="3dp"
+                    android:text="@string/chat_message_forwarded"
+                    tools:ignore="SmallSp"
                     android:gravity="center_vertical"
                     android:layout_marginTop="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginLeft="5dp">
+                    android:layout_marginLeft="5dp"
+                    app:drawableLeftCompat="@drawable/icon_forwarded_message" />
 
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="wrap_content"
-                        android:adjustViewBounds="true"
-                        android:src="@drawable/forwarded_message_default"
-                        android:contentDescription="@string/content_description_forwarded_message"
-                        android:layout_marginRight="3dp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/chat_bubble_text_color"
-                        android:textSize="10sp"
-                        android:fontFamily="sans-serif"
-                        android:textStyle="normal"
-                        android:lineSpacingExtra="3.3sp"
-                        android:text="@string/chat_message_forwarded"
-                        tools:ignore="SmallSp" />
-
-                </LinearLayout>
-
-                <LinearLayout
+                <TextView
                     android:visibility="@{data.chatMessage.reply ? View.VISIBLE : View.GONE, default=gone}"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginLeft="5dp">
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="wrap_content"
-                        android:adjustViewBounds="true"
-                        android:src="@drawable/replied_message_default"
-                        android:contentDescription="@string/content_description_replied_message"
-                        android:layout_marginRight="3dp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/chat_bubble_text_color"
-                        android:textSize="10sp"
-                        android:fontFamily="sans-serif"
-                        android:textStyle="normal"
-                        android:lineSpacingExtra="3.3sp"
-                        android:text="@string/chat_message_replied"
-                        tools:ignore="SmallSp" />
-
-                </LinearLayout>
+                    android:textColor="@color/chat_bubble_text_color"
+                    android:textSize="10sp"
+                    android:fontFamily="sans-serif"
+                    android:textStyle="normal"
+                    android:lineSpacingExtra="3.3sp"
+                    android:text="@string/chat_message_replied"
+                    tools:ignore="SmallSp"
+                    android:drawablePadding="3dp"
+                    app:drawableLeftCompat="@drawable/icon_replied_message" />
 
                 <include layout="@layout/chat_message_reply_bubble"
                     android:layout_width="wrap_content"
@@ -201,35 +173,22 @@
                     android:textStyle="normal"
                     android:lineSpacingExtra="-1.7sp"/>
 
-                <LinearLayout
+                <TextView
                     android:visibility="@{data.chatMessage.ephemeral ? View.VISIBLE : View.GONE, default=gone}"
+                    android:text="@{data.ephemeralLifetime, default=`00:00`}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:layout_gravity="right"
                     android:gravity="center_vertical|right"
                     android:layout_marginRight="5dp"
-                    android:layout_marginLeft="5dp">
-
-                    <TextView
-                        android:text="@{data.ephemeralLifetime}"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
-                        android:textColor="@color/primary_color"
-                        android:textSize="12sp"
-                        android:fontFamily="sans-serif"
-                        android:textStyle="normal"
-                        android:lineSpacingExtra="3.3sp" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="13dp"
-                        android:adjustViewBounds="true"
-                        android:contentDescription="@string/content_description_ephemeral_message"
-                        android:src="@drawable/ephemeral_messages"/>
-
-                </LinearLayout>
+                    android:layout_marginLeft="5dp"
+                    android:drawablePadding="3dp"
+                    android:textColor="@color/primary_color"
+                    android:textSize="12sp"
+                    android:fontFamily="sans-serif"
+                    android:textStyle="normal"
+                    android:lineSpacingExtra="3.3sp"
+                    app:drawableRightCompat="@drawable/icon_ephemeral_message" />
 
             </LinearLayout>
 
