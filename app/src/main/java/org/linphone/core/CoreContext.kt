@@ -373,6 +373,9 @@ class CoreContext(val context: Context, coreConfig: Config) : LifecycleOwner, Vi
             core.isVibrationOnIncomingCallEnabled = true
             core.config.setBool("app", "incoming_call_vibration", false)
         }
+        if (core.config.getInt("misc", "conference_layout", 1) > 1) {
+            core.config.setInt("misc", "conference_layout", 1)
+        }
 
         initUserCertificates()
 
