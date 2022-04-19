@@ -195,15 +195,15 @@ class CorePreferences constructor(private val context: Context) {
         }
 
     var hideEmptyRooms: Boolean
-        get() = config.getBool("app", "hide_empty_chat_rooms", true)
+        get() = config.getBool("misc", "hide_empty_chat_rooms", true)
         set(value) {
-            config.setBool("app", "hide_empty_chat_rooms", value)
+            config.setBool("misc", "hide_empty_chat_rooms", value)
         }
 
     var hideRoomsFromRemovedProxies: Boolean
-        get() = config.getBool("app", "hide_chat_rooms_from_removed_proxies", true)
+        get() = config.getBool("misc", "hide_chat_rooms_from_removed_proxies", true)
         set(value) {
-            config.setBool("app", "hide_chat_rooms_from_removed_proxies", value)
+            config.setBool("misc", "hide_chat_rooms_from_removed_proxies", value)
         }
 
     var deviceName: String
