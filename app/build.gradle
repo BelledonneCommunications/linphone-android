@@ -229,9 +229,11 @@ dependencies {
     implementation 'androidx.emoji:emoji:1.1.0'
     implementation 'androidx.emoji:emoji-bundled:1.1.0'
 
-    // https://github.com/bumptech/glide/blob/master/LICENSE, BSD / Apache v2
-    implementation 'com.github.bumptech.glide:glide:4.12.0'
-    kapt 'com.github.bumptech.glide:compiler:4.12.0'
+    // https://github.com/coil-kt/coil/blob/main/LICENSE.txt Apache v2.0
+    def coil_version = "2.0.0-rc03"
+    implementation("io.coil-kt:coil:$coil_version")
+    implementation("io.coil-kt:coil-gif:$coil_version")
+    implementation("io.coil-kt:coil-svg:$coil_version")
 
     // https://github.com/Baseflow/PhotoView/blob/master/LICENSE Apache v2.0
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
