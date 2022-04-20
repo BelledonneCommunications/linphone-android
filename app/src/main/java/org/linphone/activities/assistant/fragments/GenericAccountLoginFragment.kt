@@ -24,6 +24,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.assistant.AssistantActivity
@@ -57,7 +58,8 @@ class GenericAccountLoginFragment : GenericFragment<AssistantGenericAccountLogin
             viewLifecycleOwner
         ) {
             it.consume {
-                coreContext.contactsManager.updateLocalContacts()
+                val isLinphoneAccount = viewModel.domain.value.orEmpty() == corePreferences.defaultDomain
+                coreContext.newAccountConfigured(isLinphoneAccount)
 
                 if (coreContext.core.isEchoCancellerCalibrationRequired) {
                     navigateToEchoCancellerCalibration()

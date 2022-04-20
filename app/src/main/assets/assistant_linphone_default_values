@@ -22,11 +22,8 @@
     <entry name="stun_server" overwrite="true">stun.linphone.org</entry>
     <entry name="protocols" overwrite="true">stun,ice</entry>
   </section>
-  <section name="sip">
-    <entry name="rls_uri" overwrite="true">sips:rls@sip.linphone.org</entry>
-  </section>
-  <section name="lime">
-    <entry name="x3dh_server_url" overwrite="true">https://lime.linphone.org/lime-server/lime-server.php</entry>
+  <section name="net">
+    <entry name="friendlist_subscription_enabled" overwrite="true">1</entry>
   </section>
   <section name="assistant">
     <entry name="domain" overwrite="true">sip.linphone.org</entry>

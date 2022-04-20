@@ -402,16 +402,6 @@ class CoreContext(val context: Context, coreConfig: Config) : LifecycleOwner, Vi
                     account.params = params
                 }
 
-                // Ensure LIME server URL is set if at least one sip.linphone.org proxy
-                if (core.limeX3DhAvailable()) {
-                    var url: String? = core.limeX3DhServerUrl
-                    if (url == null || url.isEmpty()) {
-                        url = corePreferences.limeX3dhServerUrl
-                        Log.i("[Context] Setting LIME X3Dh server url to default value: $url")
-                        core.limeX3DhServerUrl = url
-                    }
-                }
-
                 // Ensure we allow CPIM messages in basic chat rooms
                 val newParams = account.params.clone()
                 newParams.isCpimInBasicChatRoomEnabled = true
@@ -450,6 +440,30 @@ class CoreContext(val context: Context, coreConfig: Config) : LifecycleOwner, Vi
             Log.i("[Context] Init contacts loader")
             LoaderManager.getInstance(this@CoreContext).initLoader(0, null, contactLoader)
         }
+    }
+
+    fun newAccountConfigured(isLinphoneAccount: Boolean) {
+        Log.i("[Context] A new ${if (isLinphoneAccount) AppUtils.getString(R.string.app_name) else "third-party"} account has been configured")
+
+        if (isLinphoneAccount) {
+            core.config.setString("sip", "rls_uri", corePreferences.defaultRlsUri)
+            val rlsAddress = core.interpretUrl(corePreferences.defaultRlsUri)
+            if (rlsAddress != null) {
+                for (friendList in core.friendsLists) {
+                    friendList.rlsAddress = rlsAddress
+                }
+            }
+
+            if (core.limeX3DhAvailable()) {
+                core.limeX3DhServerUrl = corePreferences.defaultLimeServerUrl
+            }
+        } else {
+            Log.i("[Context] Background mode with foreground service automatically enabled")
+            corePreferences.keepServiceAlive = true
+            notificationsManager.startForeground()
+        }
+
+        contactsManager.updateLocalContacts()
     }
 
     /* Call related functions */
