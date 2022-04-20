@@ -259,7 +259,7 @@
     <string name="assistant_error_invalid_email_address">Ungültige E-Mail Adresse</string>
     <string name="audio_settings_echo_cancellation_calibration_no_echo">Kein Echo erkannt</string>
     <string name="audio_settings_echo_tester_title">Echo testen</string>
-    <string name="about_weblate_translation">Helfen Sie uns &amp;appName; zu übersetzen</string>
+    <string name="about_weblate_translation">Helfen Sie uns &appName; zu übersetzen</string>
     <string name="contacts_settings_ldap_password_title">Passwort</string>
     <string name="contacts_settings_ldap_delete_title">Löschen</string>
     <string name="contacts_settings_ldap_connection_title">Verbindung</string>

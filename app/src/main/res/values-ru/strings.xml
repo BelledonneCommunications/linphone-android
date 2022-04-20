@@ -4,7 +4,7 @@
 ]>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="service_description">Необходимо для приема звонков в фоновом режиме</string>
-    <string name="sync_account_name">&amp;appName;-контакты</string>
+    <string name="sync_account_name">&appName;-контакты</string>
     <string name="logs_upload_failure">Не удалось загрузить журналы!</string>
     <string name="logs_reset_complete">Журналы очищены</string>
     <string name="logs_url_copied_to_clipboard">URL-адрес журналов скопирован в буфер обмена</string>
@@ -162,14 +162,14 @@
     <string name="call_notification_active">Активный звонок</string>
     <string name="assistant_welcome_title">Добро пожаловать</string>
     <string name="assistant_create_account">Создать аккаунт</string>
-    <string name="assistant_login_linphone">Использовать &amp;appName;-аккаунт</string>
+    <string name="assistant_login_linphone">Использовать &appName;-аккаунт</string>
     <string name="assistant_login_generic">Использовать SIP-аккаунт</string>
     <string name="assistant_remote_provisioning">Загрузить удалённую конфигурацию</string>
     <string name="assistant_ec_calibration">Выполняется калибровка эхоподавления</string>
     <string name="assistant_phone_number_link_info_content">"
 \nВашим друзьям будет проще связаться с вами, если вы свяжете свой аккаунт со своим номером телефона.
 \n
-\nВ вашей адресной книге вы увидите, кто использует &amp;appName;, а ваши друзья смогут узнать, что вы также зарегистрированы в &amp;appName;.
+\nВ вашей адресной книге вы увидите, кто использует &appName;, а ваши друзья смогут узнать, что вы также зарегистрированы в &appName;.
 \n"</string>
     <string name="assistant_general_terms">условия использования</string>
     <string name="assistant_privacy_policy">политику конфиденциальности</string>
@@ -184,7 +184,7 @@
     <string name="assistant_error_account_not_activated">Ваша учетная запись еще не подтверждена</string>
     <string name="assistant_error_invalid_credentials">Аккаунт не существует или пароль не совпадает</string>
     <string name="assistant_create_account_part_1">Подтвердите код страны и введите свой номер телефона</string>
-    <string name="assistant_linphone_login_desc">Введите имя пользователя и пароль &amp;appName;-аккаунта</string>
+    <string name="assistant_linphone_login_desc">Введите имя пользователя и пароль &appName;-аккаунта</string>
     <string name="assistant_login_forgotten_password">Забыли пароль\?</string>
     <string name="assistant_login">Вход</string>
     <string name="assistant_finish">Завершить настройку</string>
@@ -292,7 +292,7 @@
     <string name="network_settings_random_ports_title">Использовать случайные порты</string>
     <string name="network_settings_sip_port_title">SIP-порт для использования</string>
     <string name="contacts_settings_friendlist_subscribe_title">Подписка на список друзей</string>
-    <string name="contacts_settings_native_presence_summary">Вставка информационных ярлыков из контакта &amp;appName; в родные контакты Android</string>
+    <string name="contacts_settings_native_presence_summary">Вставка информационных ярлыков из контакта &appName; в родные контакты Android</string>
     <string name="contacts_settings_show_organization_title">Отображать контактную организацию</string>
     <string name="contacts_settings_launcher_shortcuts_summary">Заменяет ярлыки чата, если таковые имеются</string>
     <string name="contacts_settings_show_new_contact_account_dialog_title">Всегда спрашивать, в каком аккаунте сохранять вновь созданный контакт</string>
@@ -489,7 +489,7 @@
     <string name="content_description_cancel_voice_recording">Отменить запись голоса</string>
     <string name="content_description_pause_voice_recording_playback">Приостановить запись голоса</string>
     <string name="content_description_play_voice_recording">Воспроизвести запись голоса</string>
-    <string name="service_name">&amp;appName;-служба</string>
+    <string name="service_name">&appName;-служба</string>
     <string name="service_auto_start_description">&appName; был запущен автоматически</string>
     <string name="about_privacy_policy">Ознакомьтесь с нашей политикой конфиденциальности</string>
     <string name="select_your_country">Выберите вашу страну</string>
@@ -500,7 +500,7 @@
     <string name="quit">Выход</string>
     <string name="no_missed_call_history">В вашей истории нет пропущенных звонков</string>
     <string name="no_contact">В адресной книге нет контактов.</string>
-    <string name="contact_send_sms_invite_text">Здравствуйте! Присоединяйтесь ко мне в &amp;appName;! Вы можете загрузить его бесплатно отсюда: %s</string>
+    <string name="contact_send_sms_invite_text">Здравствуйте! Присоединяйтесь ко мне в &appName;! Вы можете загрузить его бесплатно отсюда: %s</string>
     <string name="contact_delete_one_dialog">Вы хотите удалить этот контакт\?
 \nОн также будет удалён из адресной книги вашего устройства</string>
     <string name="dialer_address_bar_hint">Введите номер или адрес</string>
@@ -519,14 +519,14 @@
     <string name="assistant_welcome_desc">Этот помощник поможет вам настроить и использовать свой SIP-аккаунт.</string>
     <string name="assistant_phone_number_info_title">Для чего будет использоваться мой номер телефона\?</string>
     <string name="assistant_phone_number_info_content">"\nБлагодаря вашему номеру телефона вашим друзьям будет проще вас найти. \n\nВы увидите в своей адресной книге, кто пользуется &appName;, и ваши друзья узнают, что они также могут связаться с вами по &appName;.\n"</string>
-    <string name="assistant_phone_number_link_info_content_already_account">Номер телефона можно использовать только с одним аккаунтом &amp;appName;.
+    <string name="assistant_phone_number_link_info_content_already_account">Номер телефона можно использовать только с одним аккаунтом &appName;.
 \n
 \nЕсли ваш номер уже был связан с другим аккаунтом, но вы предпочитаете использовать его, просто свяжите его сейчас, и ваш номер будет автоматически перенесён в этот аккаунт.</string>
-    <string name="assistant_linphone_account">Использовать &amp;appName;-аккаунт</string>
+    <string name="assistant_linphone_account">Использовать &appName;-аккаунт</string>
     <string name="assistant_login_with_username">Используйте своё имя пользователя и пароль вместо номера телефона</string>
     <string name="assistant_login_desc">Введите имя пользователя и пароль с вашим доменом SIP</string>
     <string name="assistant_password_hash_algorithm">Алгоритм хеширования</string>
-    <string name="assistant_create_account_part_email">Введите имя пользователя, адрес электронной почты и пароль для вашего &amp;appName;-аккаунта</string>
+    <string name="assistant_create_account_part_email">Введите имя пользователя, адрес электронной почты и пароль для вашего &appName;-аккаунта</string>
     <string name="chat_event_ephemeral_lifetime_changed">Срок действия недолговечных сообщений: %s</string>
     <string name="chat_message_pick_file_dialog">Выбрать источник</string>
     <string name="chat_room_group_info_leave">Покинуть группу</string>
@@ -581,7 +581,7 @@
     <string name="account_settings_avpf_rr_interval_title">AVPF регулярный интервал RTCP</string>
     <string name="account_settings_apply_prefix_for_calls_title">Применить префикс для исходящих звонков и чата</string>
     <string name="account_settings_apply_prefix_for_calls_summary">Если введён номер, примените префикс к номеру</string>
-    <string name="notification_channel_service_name">Сервисное уведомление &amp;appName;</string>
+    <string name="notification_channel_service_name">Сервисное уведомление &appName;</string>
     <string name="notification_channel_chat_name">Уведомления о мгновенных сообщениях &appName;</string>
     <string name="received_chat_notification_reply_label">Ответить</string>
     <string name="missed_calls_notification_body" tools:ignore="PluralsCandidate">%d пропущенных звонков</string>
@@ -597,7 +597,7 @@
     <string name="content_description_use_bluetooth_headset">Использовать bluetooth-гарнитуру в качестве аудиовыхода</string>
     <string name="content_description_toggle_call_menu">Показать или скрыть меню дополнительных действий</string>
     <string name="content_description_forwarded_message">Сообщение было переадресовано</string>
-    <string name="content_description_linphone_user">Контакт - это &amp;appName;-пользователь</string>
+    <string name="content_description_linphone_user">Контакт - это &appName;-пользователь</string>
     <string name="content_description_show_all_contacts">Показать список всех контактов</string>
     <string name="content_description_continue_chat_room_creation">Перейти к завершающему этапу создания чат-комнаты</string>
     <string name="content_description_show_chat_room_menu">Показать меню чата</string>
@@ -623,9 +623,9 @@
     <string name="call_settings_ring_during_early_media_title">Звонок во время входящего раннего потока</string>
     <string name="call_settings_use_telecom_manager_title">Улучшение взаимодействия с устройствами bluetooth</string>
     <string name="call_settings_use_telecom_manager_summary">Требуются некоторые дополнительные разрешения</string>
-    <string name="about_weblate_translation">Помогите нам перевести &amp;appName;</string>
+    <string name="about_weblate_translation">Помогите нам перевести &appName;</string>
     <string name="chat_message_abort_removal">Прервать</string>
-    <string name="assistant_generic_account_warning">Для некоторых функций требуется аккаунт &amp;appName;, таких как групповой обмен сообщениями или недолговечные сообщения.
+    <string name="assistant_generic_account_warning">Для некоторых функций требуется аккаунт &appName;, таких как групповой обмен сообщениями или недолговечные сообщения.
 \n
 \nЭти функции скрыты, когда вы регистрируетесь со сторонним SIP-аккаунтом.
 \n
