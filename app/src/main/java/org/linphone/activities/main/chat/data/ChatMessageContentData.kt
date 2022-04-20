@@ -19,7 +19,6 @@
  */
 package org.linphone.activities.main.chat.data
 
-import android.graphics.Bitmap
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.Spanned
@@ -43,7 +42,6 @@ import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.FileUtils
-import org.linphone.utils.ImageUtils
 import org.linphone.utils.TimestampUtils
 
 class ChatMessageContentData(
@@ -57,7 +55,6 @@ class ChatMessageContentData(
     val isImage = MutableLiveData<Boolean>()
     val isVideo = MutableLiveData<Boolean>()
     val isAudio = MutableLiveData<Boolean>()
-    val videoPreview = MutableLiveData<Bitmap>()
     val isPdf = MutableLiveData<Boolean>()
     val isGenericFile = MutableLiveData<Boolean>()
     val isVoiceRecording = MutableLiveData<Boolean>()
@@ -263,12 +260,6 @@ class ChatMessageContentData(
                     Log.i("[Content] Voice recording duration is ${voiceRecordDuration.value} ($duration)")
                 } else if (isConferenceIcs) {
                     parseConferenceInvite(content)
-                }
-
-                if (isVideo.value == true) {
-                    scope.launch {
-                        videoPreview.postValue(ImageUtils.getVideoPreview(path))
-                    }
                 }
             } else if (isConferenceIcs) {
                 Log.i("[Content] Found content with icalendar file")

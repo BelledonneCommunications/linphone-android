@@ -29,7 +29,7 @@
             android:layout_width="@dimen/chat_message_small_bubble_file_size"
             android:layout_height="@dimen/chat_message_small_bubble_file_size"
             android:layout_margin="5dp"
-            android:src="@{data.videoPreview}"
+            app:coilVideoPreview="@{data.filePath}"
             android:visibility="@{data.video ? View.VISIBLE : View.GONE}"
             android:scaleType="@{ScaleType.CENTER_CROP}"
             android:adjustViewBounds="true" />

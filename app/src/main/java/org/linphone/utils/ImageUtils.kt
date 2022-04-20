@@ -21,9 +21,7 @@ package org.linphone.utils
 
 import android.content.Context
 import android.graphics.*
-import android.media.ThumbnailUtils
 import android.net.Uri
-import android.provider.MediaStore
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 
@@ -61,10 +59,6 @@ class ImageUtils {
             )
             source.recycle()
             return rotatedBitmap
-        }
-
-        fun getVideoPreview(path: String): Bitmap? {
-            return ThumbnailUtils.createVideoThumbnail(path, MediaStore.Images.Thumbnails.MINI_KIND)
         }
 
         private fun getRoundBitmap(bitmap: Bitmap): Bitmap? {

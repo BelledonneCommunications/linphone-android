@@ -27,6 +27,7 @@ import coil.ImageLoaderFactory
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.decode.SvgDecoder
+import coil.decode.VideoFrameDecoder
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
 import org.linphone.core.*
@@ -86,6 +87,7 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
     override fun newImageLoader(): ImageLoader {
         return ImageLoader.Builder(this)
             .components {
+                add(VideoFrameDecoder.Factory())
                 add(SvgDecoder.Factory())
                 if (Version.sdkAboveOrEqual(Version.API28_PIE_90)) {
                     add(ImageDecoderDecoder.Factory())
