@@ -35,7 +35,7 @@
             android:layout_alignParentLeft="true"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
-            android:src="@{data.videoPreview}"/>
+            app:coilVideoPreview="@{data.path}"/>
 
         <ImageView
             android:visibility="@{data.video ? View.VISIBLE : View.GONE, default=gone}"

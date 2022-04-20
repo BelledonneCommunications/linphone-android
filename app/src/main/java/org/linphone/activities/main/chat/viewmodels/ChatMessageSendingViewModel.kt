@@ -140,7 +140,6 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
     }
 
     override fun onCleared() {
-        attachments.value.orEmpty().forEach(ChatMessageAttachmentData::destroy)
         pendingChatMessageToReplyTo.value?.destroy()
 
         if (recorder.state != RecorderState.Closed) {
@@ -191,7 +190,6 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         val list = arrayListOf<ChatMessageAttachmentData>()
         list.addAll(attachments.value.orEmpty())
         list.remove(attachment)
-        attachment.destroy()
         attachments.value = list
 
         sendMessageEnabled.value = textToSend.value.orEmpty().isNotEmpty() || list.isNotEmpty() || isPendingVoiceRecord.value == true
@@ -266,7 +264,6 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         }
 
         cancelReply()
-        attachments.value.orEmpty().forEach(ChatMessageAttachmentData::destroy)
         attachments.value = arrayListOf()
         textToSend.value = ""
 

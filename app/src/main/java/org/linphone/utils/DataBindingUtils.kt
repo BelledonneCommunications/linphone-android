@@ -40,6 +40,7 @@ import androidx.constraintlayout.widget.Guideline
 import androidx.databinding.*
 import coil.load
 import coil.request.CachePolicy
+import coil.request.videoFrameMillis
 import coil.transform.CircleCropTransformation
 import com.google.android.material.switchmaterial.SwitchMaterial
 import org.linphone.BR
@@ -353,6 +354,15 @@ fun loadAvatarWithGlide(imageView: ImageView, path: String?) {
         }
     } else {
         imageView.visibility = View.GONE
+    }
+}
+
+@BindingAdapter("coilVideoPreview")
+fun loadVideoPreview(imageView: ImageView, path: String?) {
+    if (path != null && path.isNotEmpty() && FileUtils.isExtensionVideo(path)) {
+        imageView.load(path) {
+            videoFrameMillis(0)
+        }
     }
 }
 
