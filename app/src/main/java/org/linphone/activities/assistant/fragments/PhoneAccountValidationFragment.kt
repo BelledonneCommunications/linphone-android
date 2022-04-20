@@ -64,7 +64,7 @@ class PhoneAccountValidationFragment : GenericFragment<AssistantPhoneAccountVali
             it.consume {
                 when {
                     viewModel.isLogin.value == true || viewModel.isCreation.value == true -> {
-                        coreContext.contactsManager.updateLocalContacts()
+                        coreContext.newAccountConfigured(true)
 
                         if (coreContext.core.isEchoCancellerCalibrationRequired) {
                             navigateToEchoCancellerCalibration()

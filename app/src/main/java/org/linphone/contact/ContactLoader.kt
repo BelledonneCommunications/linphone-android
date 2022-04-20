@@ -61,11 +61,18 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
         Log.i("[Contacts Loader] Loader created")
         coreContext.contactsManager.fetchInProgress.value = true
+
+        val selection = if (corePreferences.fetchContactsFromDefaultDirectory) {
+            ContactsContract.Data.IN_DEFAULT_DIRECTORY + " == 1"
+        } else {
+            null
+        }
+
         return CursorLoader(
             coreContext.context,
             ContactsContract.Data.CONTENT_URI,
             projection,
-            ContactsContract.Data.IN_DEFAULT_DIRECTORY + " == 1",
+            selection,
             null,
             null
         )

@@ -93,7 +93,7 @@ class AccountLoginFragment : AbstractPhoneFragment<AssistantAccountLoginFragment
             viewLifecycleOwner
         ) {
             it.consume {
-                coreContext.contactsManager.updateLocalContacts()
+                coreContext.newAccountConfigured(true)
 
                 if (coreContext.core.isEchoCancellerCalibrationRequired) {
                     navigateToEchoCancellerCalibration()

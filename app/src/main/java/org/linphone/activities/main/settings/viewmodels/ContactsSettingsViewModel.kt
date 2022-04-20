@@ -38,6 +38,7 @@ class ContactsSettingsViewModel : GenericSettingsViewModel() {
         }
     }
     val friendListSubscribe = MutableLiveData<Boolean>()
+    val rlsAddressAvailable = MutableLiveData<Boolean>()
 
     val showNewContactAccountDialogListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
@@ -95,6 +96,7 @@ class ContactsSettingsViewModel : GenericSettingsViewModel() {
         readContactsPermissionGranted.value = PermissionHelper.get().hasReadContactsPermission()
 
         friendListSubscribe.value = core.isFriendListSubscriptionEnabled
+        rlsAddressAvailable.value = core.defaultFriendList?.rlsAddress?.asStringUriOnly().orEmpty().isNotEmpty()
         showNewContactAccountDialog.value = prefs.showNewContactAccountDialog
         nativePresence.value = prefs.storePresenceInNativeContact
         showOrganization.value = prefs.displayOrganization

@@ -52,7 +52,7 @@ class EmailAccountValidationFragment : GenericFragment<AssistantEmailAccountVali
             viewLifecycleOwner
         ) {
             it.consume {
-                coreContext.contactsManager.updateLocalContacts()
+                coreContext.newAccountConfigured(true)
 
                 val args = Bundle()
                 args.putBoolean("AllowSkip", true)
