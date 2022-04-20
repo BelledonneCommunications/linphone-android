@@ -10,6 +10,18 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [4.6.6] - Unreleased
+
+### Changed
+- Prevent requests to LIME X3DH & long term presence servers when not using a sip.linphone.org account
+- Updated DE & RU translations
+- Improved UI on landscape tablets
+
+### Fixed
+- Catching exceptions in new ContactsLoader reported on PlayStore
+- Missing phone numbers in contacts when label contains a space character (5.1.24 SDK fix) 
+- Hide chat rooms settings not working properly
+
 ## [4.6.5] - 2022-04-11
 
 ### Changed
