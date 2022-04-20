@@ -328,17 +328,14 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
     }
 
     private fun checkForUpdate() {
-        val url: String? = corePreferences.checkIfUpdateAvailableUrl
-        if (url != null && url.isNotEmpty()) {
-            val lastTimestamp: Int = corePreferences.lastUpdateAvailableCheckTimestamp
-            val currentTimeStamp = System.currentTimeMillis().toInt()
-            val interval: Int = corePreferences.checkUpdateAvailableInterval
-            if (lastTimestamp == 0 || currentTimeStamp - lastTimestamp >= interval) {
-                val currentVersion = BuildConfig.VERSION_NAME
-                Log.i("[Dialer] Checking for update using url [$url] and current version [$currentVersion]")
-                coreContext.core.checkForUpdate(currentVersion)
-                corePreferences.lastUpdateAvailableCheckTimestamp = currentTimeStamp
-            }
+        val lastTimestamp: Int = corePreferences.lastUpdateAvailableCheckTimestamp
+        val currentTimeStamp = System.currentTimeMillis().toInt()
+        val interval: Int = corePreferences.checkUpdateAvailableInterval
+        if (lastTimestamp == 0 || currentTimeStamp - lastTimestamp >= interval) {
+            val currentVersion = BuildConfig.VERSION_NAME
+            Log.i("[Dialer] Checking for update using current version [$currentVersion]")
+            coreContext.core.checkForUpdate(currentVersion)
+            corePreferences.lastUpdateAvailableCheckTimestamp = currentTimeStamp
         }
     }
 

@@ -474,6 +474,9 @@ class CorePreferences constructor(private val context: Context) {
     val defaultRlsUri: String
         get() = config.getString("sip", "rls_uri", "sips:rls@sip.linphone.org")!!
 
+    val defaultLimeServerUrl: String
+        get() = config.getString("lime", "lime_server_url", "https://lime.linphone.org/lime-server/lime-server.php")!!
+
     val debugPopupCode: String
         get() = config.getString("app", "debug_popup_magic", "#1234#")!!
 
@@ -494,20 +497,6 @@ class CorePreferences constructor(private val context: Context) {
             "default_audio_video_conference_factory_uri",
             ""
         )!!
-
-    val limeX3dhServerUrl: String
-        get() = config.getString(
-            "app",
-            "default_lime_x3dh_server_url",
-            "https://lime.linphone.org/lime-server/lime-server.php"
-        )!!
-
-    val checkIfUpdateAvailableUrl: String?
-        get() = config.getString(
-            "misc",
-            "version_check_url_root",
-            "https://linphone.org/releases/android/RELEASE"
-        )
 
     val checkUpdateAvailableInterval: Int
         get() = config.getInt("app", "version_check_interval", 86400000)
