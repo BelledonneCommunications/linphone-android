@@ -59,13 +59,20 @@ class ContactSelectionData(private val searchResult: SearchResult) : ContactData
     }
 
     private fun searchMatchingContact() {
-        val address = searchResult.address
-        if (address != null) {
-            contact.value = coreContext.contactsManager.findContactByAddress(address)
-            displayName.value = searchResult.friend?.name ?: LinphoneUtils.getDisplayName(address)
-        } else if (searchResult.phoneNumber != null) {
-            contact.value = coreContext.contactsManager.findContactByPhoneNumber(searchResult.phoneNumber.orEmpty())
-            displayName.value = searchResult.friend?.name ?: searchResult.phoneNumber.orEmpty()
+        val friend = searchResult.friend
+        if (friend != null) {
+            contact.value = friend
+            displayName.value = friend.name
+        } else {
+            val address = searchResult.address
+            if (address != null) {
+                contact.value = coreContext.contactsManager.findContactByAddress(address)
+                displayName.value = LinphoneUtils.getDisplayName(address)
+            } else if (searchResult.phoneNumber != null) {
+                contact.value =
+                    coreContext.contactsManager.findContactByPhoneNumber(searchResult.phoneNumber.orEmpty())
+                displayName.value = searchResult.phoneNumber.orEmpty()
+            }
         }
     }
 }
