@@ -42,6 +42,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import androidx.window.layout.FoldingFeature
+import coil.imageLoader
 import com.google.android.material.snackbar.Snackbar
 import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
@@ -63,7 +64,6 @@ import org.linphone.databinding.MainActivityBinding
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
-import org.linphone.utils.GlideApp
 
 class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestinationChangedListener {
     private lateinit var binding: MainActivityBinding
@@ -99,7 +99,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
         override fun onTrimMemory(level: Int) {
             Log.w("[Main Activity] onTrimMemory called with level $level !")
-            GlideApp.get(this@MainActivity).clearMemory()
+            applicationContext.imageLoader.memoryCache?.clear()
         }
     }
 

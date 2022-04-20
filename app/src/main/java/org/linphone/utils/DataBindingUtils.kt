@@ -23,7 +23,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.text.Editable
 import android.text.TextWatcher
@@ -39,16 +38,11 @@ import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.Guideline
 import androidx.databinding.*
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.Target
-import com.bumptech.glide.signature.ObjectKey
+import coil.load
+import coil.request.CachePolicy
+import coil.transform.CircleCropTransformation
 import com.google.android.material.switchmaterial.SwitchMaterial
 import org.linphone.BR
-import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.GenericActivity
@@ -313,18 +307,8 @@ fun setImageViewScaleType(imageView: ImageView, scaleType: ImageView.ScaleType) 
 @BindingAdapter("glideRoundPath")
 fun loadRoundImageWithGlide(imageView: ImageView, path: String?) {
     if (path != null && path.isNotEmpty() && FileUtils.isExtensionImage(path)) {
-        if (corePreferences.vfsEnabled && path.endsWith(FileUtils.VFS_PLAIN_FILE_EXTENSION)) {
-            GlideApp.with(imageView)
-                .load(path)
-                .signature(ObjectKey(coreContext.contactsManager.latestContactFetch))
-                .apply(RequestOptions.circleCropTransform())
-                .into(imageView)
-        } else {
-            GlideApp
-                .with(imageView)
-                .load(path)
-                .apply(RequestOptions.circleCropTransform())
-                .into(imageView)
+        imageView.load(path) {
+            transformations(CircleCropTransformation())
         }
     } else {
         Log.w("[Data Binding] [Glide] Can't load $path")
@@ -335,13 +319,11 @@ fun loadRoundImageWithGlide(imageView: ImageView, path: String?) {
 fun loadImageWithGlide(imageView: ImageView, path: String?) {
     if (path != null && path.isNotEmpty() && FileUtils.isExtensionImage(path)) {
         if (corePreferences.vfsEnabled && path.endsWith(FileUtils.VFS_PLAIN_FILE_EXTENSION)) {
-            GlideApp.with(imageView)
-                .load(path)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .into(imageView)
+            imageView.load(path) {
+                diskCachePolicy(CachePolicy.DISABLED)
+            }
         } else {
-            GlideApp.with(imageView).load(path).into(imageView)
+            imageView.load(path)
         }
     } else {
         Log.w("[Data Binding] [Glide] Can't load $path")
@@ -357,35 +339,18 @@ fun loadAvatarWithGlide(imageView: ImageView, path: Uri?) {
 fun loadAvatarWithGlide(imageView: ImageView, path: String?) {
     if (path != null) {
         imageView.visibility = View.VISIBLE
-        GlideApp
-            .with(imageView)
-            .load(path)
-            .signature(ObjectKey(coreContext.contactsManager.latestContactFetch))
-            .apply(RequestOptions.circleCropTransform())
-            .listener(object : RequestListener<Drawable?> {
-                override fun onLoadFailed(
-                    e: GlideException?,
-                    model: Any?,
-                    target: Target<Drawable?>?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    Log.w("[Data Binding] [Glide] Can't load $path")
+        imageView.load(path) {
+            transformations(CircleCropTransformation())
+            listener(
+                onError = { _, _ ->
+                    Log.w("[Data Binding] [Coil] Can't load $path")
                     imageView.visibility = View.GONE
-                    return false
-                }
-
-                override fun onResourceReady(
-                    resource: Drawable?,
-                    model: Any?,
-                    target: Target<Drawable?>?,
-                    dataSource: DataSource?,
-                    isFirstResource: Boolean
-                ): Boolean {
+                },
+                onSuccess = { _, _ ->
                     imageView.visibility = View.VISIBLE
-                    return false
                 }
-            })
-            .into(imageView)
+            )
+        }
     } else {
         imageView.visibility = View.GONE
     }
