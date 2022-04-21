@@ -258,14 +258,13 @@ class ConferenceViewModel : ViewModel() {
         isRecording.value = conference.isRecording
 
         updateConferenceLayout(conference)
-
-        if (conferenceParticipants.value.orEmpty().isEmpty()) {
-            firstToJoinEvent.value = Event(true)
-        }
     }
 
     fun configureConference(conference: Conference) {
         updateParticipantsList(conference)
+        if (conferenceParticipants.value.orEmpty().isEmpty()) {
+            firstToJoinEvent.value = Event(true)
+        }
         updateParticipantsDevicesList(conference)
 
         isConferenceLocallyPaused.value = !conference.isIn
