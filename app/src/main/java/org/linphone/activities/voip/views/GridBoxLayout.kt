@@ -27,7 +27,6 @@ import androidx.core.view.children
 import org.linphone.core.tools.Log
 
 class GridBoxLayout : GridLayout {
-
     companion object {
         private val placementMatrix = arrayOf(intArrayOf(1, 2, 3, 4, 5, 6), intArrayOf(1, 1, 2, 2, 3, 3), intArrayOf(1, 1, 1, 2, 2, 2), intArrayOf(1, 1, 1, 1, 2, 2), intArrayOf(1, 1, 1, 1, 1, 2), intArrayOf(1, 1, 1, 1, 1, 1))
     }
@@ -42,16 +41,30 @@ class GridBoxLayout : GridLayout {
 
     var centerContent: Boolean = false
     var previousChildCount = 0
+    var previousCellSize = 0
 
     @SuppressLint("DrawAllocation")
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         if (childCount == 0 || (!changed && previousChildCount == childCount)) {
             super.onLayout(changed, left, top, right, bottom)
+            // To prevent display issue the first time conference is locally paused
+            children.forEach { child ->
+                child.post {
+                    child.layoutParams.width = previousCellSize
+                    child.layoutParams.height = previousCellSize
+                    child.requestLayout()
+                }
+            }
             return
         }
+
+        // To prevent java.lang.IllegalArgumentException: columnCount must be greater than or equal
+        // to the maximum of all grid indices (and spans) defined in the LayoutParams of each child.
+        children.forEach { child ->
+            child.layoutParams = LayoutParams()
+        }
+
         val availableSize = Pair(right - left, bottom - top)
-        previousChildCount = childCount
-        children.forEach { it.layoutParams = LayoutParams() }
         var cellSize = 0
         for (index in 1..childCount) {
             val neededColumns = placementMatrix[index - 1][childCount - 1]
@@ -64,6 +77,9 @@ class GridBoxLayout : GridLayout {
                 cellSize = candidateSize
             }
         }
+        previousCellSize = cellSize
+        previousChildCount = childCount
+
         super.onLayout(changed, left, top, right, bottom)
         children.forEach { child ->
             child.layoutParams.width = cellSize
@@ -72,6 +88,7 @@ class GridBoxLayout : GridLayout {
                 child.requestLayout()
             }
         }
+
         if (centerContent) {
             setPadding((availableSize.first - (columnCount * cellSize)) / 2, (availableSize.second - (rowCount * cellSize)) / 2, (availableSize.first - (columnCount * cellSize)) / 2, (availableSize.second - (rowCount * cellSize)) / 2)
         }
