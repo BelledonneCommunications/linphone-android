@@ -19,16 +19,16 @@
             android:layout_alignParentStart="true"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
-            android:src="@drawable/icon_single_contact_avatar"/>
+            android:src="@drawable/shape_call_contact_avatar_background" />
 
         <ImageView
-            android:visibility="@{data.displayInitials ? View.VISIBLE : View.GONE}"
+            android:visibility="@{data.displayInitials ? View.GONE : View.VISIBLE}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentStart="true"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
-            android:src="@drawable/shape_call_contact_avatar_background" />
+            android:src="@drawable/icon_single_contact_avatar"/>
 
         <TextView
             android:text="@{data.initials, default=`BB`}"
