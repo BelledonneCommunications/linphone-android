@@ -34,7 +34,6 @@ import androidx.window.layout.WindowInfoTracker
 import androidx.window.layout.WindowLayoutInfo
 import java.util.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -54,6 +53,7 @@ abstract class GenericActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        Log.i("[Generic Activity] Ensuring Core exists")
         ensureCoreExists(applicationContext)
 
         lifecycleScope.launch(Dispatchers.Main) {

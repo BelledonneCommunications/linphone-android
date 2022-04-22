@@ -22,12 +22,16 @@ package org.linphone.core
 import android.content.Intent
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.LinphoneApplication.Companion.ensureCoreExists
 import org.linphone.core.tools.Log
 import org.linphone.core.tools.service.CoreService
 
 class CoreService : CoreService() {
     override fun onCreate() {
         super.onCreate()
+
+        Log.i("[Service] Ensuring Core exists")
+        ensureCoreExists(applicationContext)
 
         coreContext.notificationsManager.service = this
         Log.i("[Service] Created")

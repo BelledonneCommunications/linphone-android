@@ -41,9 +41,8 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
         @SuppressLint("StaticFieldLeak")
         lateinit var coreContext: CoreContext
 
-        fun ensureCoreExists(context: Context, pushReceived: Boolean = false) {
-            if (::coreContext.isInitialized && !coreContext.stopped) {
-                Log.d("[Application] Skipping Core creation (push received? $pushReceived)")
+        private fun createConfig(context: Context) {
+            if (::corePreferences.isInitialized) {
                 return
             }
 
@@ -70,8 +69,17 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
                 Factory.instance().loggingService.setLogLevel(LogLevel.Message)
             }
 
-            Log.i("[Application] Core context created ${if (pushReceived) "from push" else ""}")
-            coreContext = CoreContext(context, config)
+            Log.i("[Application] Core config & preferences created")
+        }
+
+        fun ensureCoreExists(context: Context, pushReceived: Boolean = false) {
+            if (::coreContext.isInitialized && !coreContext.stopped) {
+                Log.d("[Application] Skipping Core creation (push received? $pushReceived)")
+                return
+            }
+
+            Log.i("[Application] Core context is being created ${if (pushReceived) "from push" else ""}")
+            coreContext = CoreContext(context, corePreferences.config)
             coreContext.start()
         }
     }
@@ -80,7 +88,7 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
         super.onCreate()
         val appName = getString(R.string.app_name)
         android.util.Log.i("[$appName]", "Application is being created")
-        ensureCoreExists(applicationContext)
+        createConfig(applicationContext)
         Log.i("[Application] Created")
     }
 
