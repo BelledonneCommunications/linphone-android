@@ -54,6 +54,7 @@ abstract class GenericActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        Log.i("[Generic Activity] Ensuring Core exists")
         ensureCoreExists(applicationContext)
 
         lifecycleScope.launch(Dispatchers.Main) {

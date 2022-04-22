@@ -32,6 +32,7 @@ import org.linphone.core.tools.Log
 class NotificationBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val notificationId = intent.getIntExtra(NotificationsManager.INTENT_NOTIF_ID, 0)
+        Log.i("[Notification Broadcast Receiver] Got notification broadcast for ID [$notificationId]")
 
         if (intent.action == NotificationsManager.INTENT_REPLY_NOTIF_ACTION || intent.action == NotificationsManager.INTENT_MARK_AS_READ_ACTION) {
             handleChatIntent(context, intent, notificationId)
