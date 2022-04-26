@@ -10,7 +10,7 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
-## [4.6.6] - Unreleased
+## [4.6.6] - 2022-04-26
 
 ### Changed
 - Prevent requests to LIME X3DH & long term presence servers when not using a sip.linphone.org account
