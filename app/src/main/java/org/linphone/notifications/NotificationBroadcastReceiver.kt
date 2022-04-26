@@ -25,12 +25,16 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.ensureCoreExists
 import org.linphone.core.Call
 import org.linphone.core.Core
 import org.linphone.core.tools.Log
 
 class NotificationBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
+        Log.i("[Notification Broadcast Receiver] Ensuring Core exists")
+        ensureCoreExists(context, false)
+
         val notificationId = intent.getIntExtra(NotificationsManager.INTENT_NOTIF_ID, 0)
         Log.i("[Notification Broadcast Receiver] Got notification broadcast for ID [$notificationId]")
 
