@@ -96,7 +96,7 @@ class ContactsSettingsViewModel : GenericSettingsViewModel() {
         readContactsPermissionGranted.value = PermissionHelper.get().hasReadContactsPermission()
 
         friendListSubscribe.value = core.isFriendListSubscriptionEnabled
-        rlsAddressAvailable.value = core.defaultFriendList?.rlsAddress?.asStringUriOnly().orEmpty().isNotEmpty()
+        rlsAddressAvailable.value = !core.config.getString("sip", "rls_uri", "").isNullOrEmpty()
         showNewContactAccountDialog.value = prefs.showNewContactAccountDialog
         nativePresence.value = prefs.storePresenceInNativeContact
         showOrganization.value = prefs.displayOrganization
