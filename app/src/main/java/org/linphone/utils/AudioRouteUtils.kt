@@ -93,6 +93,10 @@ class AudioRouteUtils {
                         applyAudioRouteChange(call, (arrayListOf(AudioDevice.Type.Headphones, AudioDevice.Type.Headset)), false)
                     }
                 }
+                AudioDevice.Type.Earpiece, AudioDevice.Type.Speaker -> {
+                    Log.i("[Audio Route Helper] Audio route requested to Earpice or speaker, setting input to Microphone")
+                    applyAudioRouteChange(call, (arrayListOf(AudioDevice.Type.Microphone)), false)
+                }
             }
         }
 
