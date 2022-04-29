@@ -93,7 +93,8 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
 
             withContext(Dispatchers.IO) {
                 try {
-                    while (!cursor.isClosed && cursor.moveToNext()) {
+                    // Cursor can be null now that we are on a different dispatcher according to Crashlytics
+                    while (cursor != null && !cursor.isClosed && cursor.moveToNext()) {
                         try {
                             val id: String =
                                 cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Data.CONTACT_ID))
@@ -224,6 +225,8 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                     Log.e("[Contacts Loader] State Data Exception: $sde")
                 } catch (ise: IllegalStateException) {
                     Log.e("[Contacts Loader] Illegal State Exception: $ise")
+                } catch (e: Exception) {
+                    Log.e("[Contacts Loader] Exception: $e")
                 } finally {
                     cancel()
                 }
