@@ -184,6 +184,15 @@
         <item name="autoSizeStepGranularity">@dimen/settings_granularity_step</item>
     </style>
 
+    <style name="call_remote_name_small_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/white_color</item>
+        <item name="android:textSize">16sp</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMinTextSize">12sp</item>
+        <item name="autoSizeMaxTextSize">16sp</item>
+        <item name="autoSizeStepGranularity">@dimen/settings_granularity_step</item>
+    </style>
+
     <style name="call_options_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">@color/voip_extra_button_text_color</item>
         <item name="android:textSize">12sp</item>

@@ -251,8 +251,7 @@ private fun <T> setEntries(
     viewGroup.removeAllViews()
     if (entries != null) {
         val inflater = viewGroup.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        for (i in entries.indices) {
-            val entry = entries[i]
+        for (entry in entries) {
             val binding = DataBindingUtil.inflate<ViewDataBinding>(
                 inflater,
                 layoutId,
