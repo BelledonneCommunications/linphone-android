@@ -214,14 +214,15 @@ fun setEditTextOnFocusChangeVisibilityOf(editText: EditText, view: View) {
 }
 
 @BindingAdapter("selectedIndex", "settingListener")
-fun spinnerSetting(spinner: Spinner, selectedIndex: Int, listener: SettingListener) {
+fun spinnerSetting(spinner: Spinner, selectedIndex: Int, listener: SettingListener?) {
     spinner.setSelection(selectedIndex, true)
 
     spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
         override fun onNothingSelected(parent: AdapterView<*>?) {}
 
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            listener.onListValueChanged(position)
+            // From Crashlytics it seems this method may be called with a null listener
+            listener?.onListValueChanged(position)
         }
     }
 }

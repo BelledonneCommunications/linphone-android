@@ -89,12 +89,15 @@ class ContactEditorViewModel(val c: Friend?) : ViewModel(), ContactDataInterface
 
         if (contact == null) {
             created = true
-            val nativeId = if (PermissionHelper.get().hasWriteContactsPermission()) {
+            // From Crashlytics it seems both permissions are required...
+            val nativeId = if (PermissionHelper.get().hasReadContactsPermission() &&
+                PermissionHelper.get().hasWriteContactsPermission()
+            ) {
                 Log.i("[Contact Editor] Creating native contact")
                 NativeContactEditor.createAndroidContact(syncAccountName, syncAccountType)
                     .toString()
             } else {
-                Log.e("[Contact Editor] Can't native contact, permission denied")
+                Log.e("[Contact Editor] Can't create native contact, permission denied")
                 null
             }
             contact = coreContext.core.createFriend()

@@ -333,9 +333,14 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
 
         viewModel.showOkButton(
             {
-                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                startActivity(browserIntent)
-                dialog.dismiss()
+                try {
+                    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                    startActivity(browserIntent)
+                } catch (ise: IllegalStateException) {
+                    Log.e("[Dialer] Can't start ACTION_VIEW intent, IllegalStateException: $ise")
+                } finally {
+                    dialog.dismiss()
+                }
             },
             getString(R.string.dialog_ok)
         )

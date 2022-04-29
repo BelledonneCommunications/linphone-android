@@ -51,7 +51,10 @@ class ContactAvatarView : LinearLayout {
         )
     }
 
-    fun setData(data: ContactDataInterface) {
+    fun setData(data: ContactDataInterface?) {
+        // From Crashlytics it seems this function can be called with null parameter...
+        data ?: return
+
         val contact = data.contact.value
         val initials = if (contact != null) {
             AppUtils.getInitials(contact.name ?: "")
