@@ -76,6 +76,8 @@ class RemoteProvisioningFragment : GenericFragment<AssistantRemoteProvisioningFr
 
     override fun onDestroy() {
         super.onDestroy()
-        sharedViewModel.remoteProvisioningUrl.value = null
+        if (this::sharedViewModel.isInitialized) {
+            sharedViewModel.remoteProvisioningUrl.value = null
+        }
     }
 }

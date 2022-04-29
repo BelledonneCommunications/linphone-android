@@ -47,11 +47,13 @@ class LinphoneUtils {
                     account.params.identityAddress?.asStringUriOnly() == address.asStringUriOnly()
                 }
                 val localDisplayName = account?.params?.identityAddress?.displayName
-                if (localDisplayName != null) {
+                // Do not return an empty local display name
+                if (localDisplayName != null && localDisplayName.isNotEmpty()) {
                     return localDisplayName
                 }
             }
-            return address.displayName ?: address.username ?: ""
+            // Do not return an empty display name
+            return address.displayName ?: address.username ?: address.asString()
         }
 
         fun getDisplayableAddress(address: Address?): String {
