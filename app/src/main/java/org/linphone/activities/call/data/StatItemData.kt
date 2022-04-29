@@ -22,10 +22,7 @@ package org.linphone.activities.call.data
 import androidx.lifecycle.MutableLiveData
 import java.text.DecimalFormat
 import org.linphone.R
-import org.linphone.core.AddressFamily
-import org.linphone.core.Call
-import org.linphone.core.CallStats
-import org.linphone.core.StreamType
+import org.linphone.core.*
 
 enum class StatType(val nameResource: Int) {
     CAPTURE(R.string.call_stats_capture_filter),
@@ -48,14 +45,21 @@ enum class StatType(val nameResource: Int) {
 }
 
 class StatItemData(val type: StatType) {
+    companion object {
+        fun audioDeviceToString(device: AudioDevice?): String {
+            if (device == null) return "null"
+            return "${device.deviceName} [${device.type}] (${device.driverName})"
+        }
+    }
+
     val value = MutableLiveData<String>()
 
     fun update(call: Call, stats: CallStats) {
         val payloadType = if (stats.type == StreamType.Audio) call.currentParams.usedAudioPayloadType else call.currentParams.usedVideoPayloadType
         payloadType ?: return
         value.value = when (type) {
-            StatType.CAPTURE -> if (stats.type == StreamType.Audio) call.core.captureDevice else call.core.videoDevice
-            StatType.PLAYBACK -> if (stats.type == StreamType.Audio) call.core.playbackDevice else call.core.videoDisplayFilter
+            StatType.CAPTURE -> if (stats.type == StreamType.Audio) audioDeviceToString(call.inputAudioDevice) else call.core.videoDevice
+            StatType.PLAYBACK -> if (stats.type == StreamType.Audio) audioDeviceToString(call.outputAudioDevice) else call.core.videoDisplayFilter
             StatType.PAYLOAD -> "${payloadType.mimeType}/${payloadType.clockRate / 1000} kHz"
             StatType.ENCODER -> call.core.mediastreamerFactory.getDecoderText(payloadType.mimeType)
             StatType.DECODER -> call.core.mediastreamerFactory.getEncoderText(payloadType.mimeType)
