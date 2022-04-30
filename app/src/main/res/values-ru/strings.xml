@@ -731,4 +731,8 @@
     <string name="conference_scheduled">Конференции</string>
     <string name="conference_layout_too_many_participants_for_mosaic">Вы не можете изменить макет конференции, так как слишком много участников</string>
     <string name="call_action_add_call">Начать новый звонок</string>
+    <string name="conference_last_user">Все другие участники покинули конференцию</string>
+    <string name="content_description_conference_participants">Участники конференции</string>
+    <string name="conference_first_to_join">Вы первый, кто присоединился к конференции</string>
+    <string name="content_description_toggle_conference_info_details">Переключить видимость сведений о конференции</string>
 </resources>
