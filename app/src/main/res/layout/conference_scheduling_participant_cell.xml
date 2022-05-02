@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-
         <import type="android.view.View" />
-
         <variable
             name="data"
             type="org.linphone.activities.main.conference.data.ConferenceSchedulingParticipantData" />
-
     </data>
 
     <RelativeLayout
@@ -25,13 +20,30 @@
             android:layout_marginRight="5dp"
             android:orientation="horizontal">
 
-            <org.linphone.contact.ContactAvatarView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                app:data="@{data}"
-                app:showLimeCapability="@{data.showLimeBadge}"
-                tools:layout="@layout/contact_avatar" />
+            <RelativeLayout
+                android:id="@+id/avatar"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical">
+
+                <ImageView
+                    coilContact="@{data}"
+                    android:layout_width="@dimen/contact_avatar_size"
+                    android:layout_height="@dimen/contact_avatar_size"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerHorizontal="true"
+                    android:contentDescription="@null" />
+
+                <ImageView
+                    android:visibility="@{data.showLimeBadge ? View.VISIBLE : View.GONE, default=gone}"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:contentDescription="@string/content_description_contact_can_do_encryption"
+                    android:src="@drawable/security_toggle_icon_green" />
+
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="0dp"

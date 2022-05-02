@@ -20,12 +20,12 @@
         app:layout_alignSelf="flex_end"
         app:layout_flexShrink="0">
 
-        <include
-            layout="@layout/voip_contact_avatar"
+        <ImageView
             android:layout_width="@dimen/voip_conference_active_speaker_miniature_avatar_size"
             android:layout_height="@dimen/voip_conference_active_speaker_miniature_avatar_size"
-            android:visibility="@{data.videoEnabled || !data.isInConference ? View.GONE : View.VISIBLE, default=gone}"
-            app:data="@{data}"
+            android:visibility="@{data.videoEnabled || !data.isInConference ? View.GONE : View.VISIBLE}"
+            android:contentDescription="@null"
+            coilVoipContact="@{data}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

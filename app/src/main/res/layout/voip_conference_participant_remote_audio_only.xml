@@ -42,14 +42,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <include
+        <ImageView
             android:id="@+id/participant_avatar"
-            layout="@layout/voip_contact_avatar"
             android:layout_width="@dimen/voip_conference_audio_only_participant_avatar_size"
             android:layout_height="@dimen/voip_conference_audio_only_participant_avatar_size"
             android:layout_marginStart="10dp"
+            android:contentDescription="@null"
             android:visibility="@{data.isInConference ? View.VISIBLE : View.GONE}"
-            app:data="@{data}"
+            coilVoipContact="@{data}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/paused_avatar"
             app:layout_constraintHorizontal_chainStyle="spread_inside"

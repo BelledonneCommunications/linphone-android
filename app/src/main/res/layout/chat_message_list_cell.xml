@@ -60,17 +60,18 @@
             android:src="@{data.imdnIcon, default=@drawable/chat_delivered}"
             android:visibility="@{data.chatMessage.outgoing ? (data.showImdn ? View.VISIBLE : View.INVISIBLE) : View.INVISIBLE}" />
 
-        <org.linphone.contact.ContactAvatarView
+        <ImageView
             android:id="@+id/avatar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/contact_avatar_size"
+            android:layout_height="@dimen/contact_avatar_size"
+            android:contentDescription="@null"
+            coilContact="@{data}"
             android:layout_below="@id/time"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:gravity="center"
-            android:visibility="@{data.chatMessage.outgoing || selectionListViewModel.isEditionEnabled ? View.GONE : (data.hideAvatar ? View.INVISIBLE : View.VISIBLE)}"
-            app:data="@{data}"
-            tools:layout="@layout/contact_avatar" />
+            android:visibility="@{data.chatMessage.outgoing || selectionListViewModel.isEditionEnabled ? View.GONE : (data.hideAvatar ? View.INVISIBLE : View.VISIBLE)}" />
 
         <LinearLayout
             android:id="@+id/background"

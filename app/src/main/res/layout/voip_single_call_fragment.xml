@@ -108,17 +108,19 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/call_header_barrier" />
 
-            <include
-                layout="@layout/voip_contact_avatar"
+            <ImageView
+                android:id="@+id/avatar"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_margin="20dp"
-                app:data="@{callsViewModel.currentCallData}"
+                android:contentDescription="@null"
+                coilVoipContact="@{callsViewModel.currentCallData}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHeight_max="200dp"
+                app:layout_constraintHeight_max="@dimen/voip_contact_avatar_max_size"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_max="@dimen/voip_contact_avatar_max_size" />
 
             <TextView
                 style="@style/call_remote_name_font"

@@ -20,8 +20,10 @@
 package org.linphone.activities.main.chat.data
 
 import androidx.lifecycle.MutableLiveData
+import org.linphone.R
 import org.linphone.activities.main.chat.GroupChatRoomMember
 import org.linphone.contact.GenericContactData
+import org.linphone.core.ChatRoomSecurityLevel
 import org.linphone.utils.LinphoneUtils
 
 class GroupInfoParticipantData(val participant: GroupChatRoomMember) : GenericContactData(participant.address) {
@@ -34,15 +36,27 @@ class GroupInfoParticipantData(val participant: GroupChatRoomMember) : GenericCo
     // A participant not yet added to a group can't be set admin at the same time it's added
     val canBeSetAdmin = MutableLiveData<Boolean>()
 
+    val securityLevelIcon: Int by lazy {
+        when (participant.securityLevel) {
+            ChatRoomSecurityLevel.Safe -> R.drawable.security_2_indicator
+            ChatRoomSecurityLevel.Encrypted -> R.drawable.security_1_indicator
+            else -> R.drawable.security_alert_indicator
+        }
+    }
+
+    val securityLevelContentDescription: Int by lazy {
+        when (participant.securityLevel) {
+            ChatRoomSecurityLevel.Safe -> R.string.content_description_security_level_safe
+            ChatRoomSecurityLevel.Encrypted -> R.string.content_description_security_level_encrypted
+            else -> R.string.content_description_security_level_unsafe
+        }
+    }
+
     init {
         securityLevel.value = participant.securityLevel
         isAdmin.value = participant.isAdmin
         showAdminControls.value = false
         canBeSetAdmin.value = participant.canBeSetAdmin
-    }
-
-    override fun destroy() {
-        super.destroy()
     }
 
     fun setAdmin() {
