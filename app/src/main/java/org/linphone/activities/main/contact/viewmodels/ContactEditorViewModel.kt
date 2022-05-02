@@ -211,8 +211,8 @@ class ContactEditorViewModel(val c: Friend?) : ViewModel(), ContactDataInterface
 
     private fun updateNumbersAndAddresses() {
         val phoneNumbers = arrayListOf<NumberOrAddressEditorData>()
-        for (number in c?.phoneNumbersWithLabel.orEmpty()) {
-            phoneNumbers.add(NumberOrAddressEditorData(number.phoneNumber, false))
+        for (number in c?.phoneNumbers.orEmpty()) {
+            phoneNumbers.add(NumberOrAddressEditorData(number, false))
         }
         if (phoneNumbers.isEmpty()) {
             phoneNumbers.add(NumberOrAddressEditorData("", false))
