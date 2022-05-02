@@ -224,10 +224,11 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                             for (friend in friendsList) {
                                 fl.addLocalFriend(friend)
                             }
+                            Log.i("[Contacts Loader] Friends added")
 
                             fl.updateSubscriptions()
+                            Log.i("[Contacts Loader] Subscription(s) updated")
 
-                            Log.i("[Contacts Loader] Friends added & subscription updated")
                             coreContext.contactsManager.fetchFinished()
                         }
                     }
