@@ -291,8 +291,8 @@ class ContactsManager(private val context: Context) {
     }
 
     private fun storePresenceInNativeContact(friend: Friend) {
-        for (phoneNumber in friend.phoneNumbersWithLabel) {
-            val sipAddress = friend.getContactForPhoneNumberOrAddress(phoneNumber.phoneNumber)
+        for (phoneNumber in friend.phoneNumbers) {
+            val sipAddress = friend.getContactForPhoneNumberOrAddress(phoneNumber)
             if (sipAddress != null) {
                 Log.d("[Contacts Manager] Found presence information to store in native contact $friend under Linphone sync account")
                 val contactEditor = NativeContactEditor(friend)
@@ -301,7 +301,7 @@ class ContactsManager(private val context: Context) {
                     val deferred = async {
                         withContext(Dispatchers.IO) {
                             contactEditor.setPresenceInformation(
-                                phoneNumber.phoneNumber,
+                                phoneNumber,
                                 sipAddress
                             ).commit()
                         }
@@ -347,8 +347,8 @@ fun Friend.hasPresence(): Boolean {
         val presenceModel = getPresenceModelForUriOrTel(address.asStringUriOnly())
         if (presenceModel != null && presenceModel.basicStatus == PresenceBasicStatus.Open) return true
     }
-    for (number in phoneNumbersWithLabel) {
-        val presenceModel = getPresenceModelForUriOrTel(number.phoneNumber)
+    for (number in phoneNumbers) {
+        val presenceModel = getPresenceModelForUriOrTel(number)
         if (presenceModel != null && presenceModel.basicStatus == PresenceBasicStatus.Open) return true
     }
     return false
