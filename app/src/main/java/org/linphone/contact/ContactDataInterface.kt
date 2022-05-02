@@ -38,6 +38,12 @@ interface ContactDataInterface {
 
     val showGroupChatAvatar: Boolean
         get() = false
+
+    val thumbnailUri: Uri?
+        get() = contact.value?.getThumbnailUri()
+
+    val pictureUri: Uri?
+        get() = contact.value?.getPictureUri()
 }
 
 open class GenericContactData(private val sipAddress: Address) : ContactDataInterface {
@@ -47,12 +53,6 @@ open class GenericContactData(private val sipAddress: Address) : ContactDataInte
 
     val initials = MutableLiveData<String>()
     val displayInitials = MutableLiveData<Boolean>()
-
-    val thumbnailUri: Uri?
-        get() = contact.value?.getThumbnailUri()
-
-    val pictureUri: Uri?
-        get() = contact.value?.getPictureUri()
 
     private val contactsUpdatedListener = object : ContactsUpdatedListenerStub() {
         override fun onContactUpdated(friend: Friend) {
@@ -89,12 +89,6 @@ abstract class GenericContactViewModel(private val sipAddress: Address) : Messag
     final override val contact: MutableLiveData<Friend> = MutableLiveData<Friend>()
     final override val displayName: MutableLiveData<String> = MutableLiveData<String>()
     final override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
-
-    val thumbnailUri: Uri?
-        get() = contact.value?.getThumbnailUri()
-
-    val pictureUri: Uri?
-        get() = contact.value?.getPictureUri()
 
     private val contactsUpdatedListener = object : ContactsUpdatedListenerStub() {
         override fun onContactUpdated(friend: Friend) {

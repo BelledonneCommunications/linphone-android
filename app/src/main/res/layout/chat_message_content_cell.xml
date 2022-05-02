@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:maxHeight="@dimen/chat_message_bubble_image_height_big"
             android:layout_size="@{data.alone ? 0f : @dimen/chat_message_bubble_file_size}"
-            app:glidePath="@{data.filePath}"
+            coil="@{data.filePath}"
             android:visibility="@{!data.downloadable &amp;&amp; data.image ? View.VISIBLE : View.GONE}"
             android:scaleType="@{data.alone ? ScaleType.FIT_CENTER : ScaleType.CENTER_CROP}"
             android:adjustViewBounds="true" />
@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:maxHeight="@dimen/chat_message_bubble_image_height_big"
             android:layout_size="@{data.alone ? 0f : @dimen/chat_message_bubble_file_size}"
-            app:coilVideoPreview="@{data.filePath}"
+            coilVideoPreview="@{data.filePath}"
             android:visibility="@{!data.downloadable &amp;&amp; data.video ? View.VISIBLE : View.GONE}"
             android:scaleType="@{data.alone ? ScaleType.FIT_CENTER : ScaleType.CENTER_CROP}"
             android:adjustViewBounds="true" />

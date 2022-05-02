@@ -23,7 +23,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
-import android.net.Uri
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Patterns
@@ -44,13 +43,15 @@ import coil.request.videoFrameMillis
 import coil.transform.CircleCropTransformation
 import com.google.android.material.switchmaterial.SwitchMaterial
 import org.linphone.BR
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.GenericActivity
 import org.linphone.activities.main.settings.SettingListener
 import org.linphone.activities.voip.data.ConferenceParticipantDeviceData
 import org.linphone.activities.voip.views.HorizontalScrollDotsView
-import org.linphone.contact.ContactAvatarView
+import org.linphone.contact.ContactAvatarGenerator
+import org.linphone.contact.ContactDataInterface
 import org.linphone.core.tools.Log
 import org.linphone.views.VoiceRecordProgressBar
 
@@ -305,19 +306,19 @@ fun setImageViewScaleType(imageView: ImageView, scaleType: ImageView.ScaleType) 
     imageView.scaleType = scaleType
 }
 
-@BindingAdapter("glideRoundPath")
-fun loadRoundImageWithGlide(imageView: ImageView, path: String?) {
+@BindingAdapter("coilRounded")
+fun loadRoundImageWithCoil(imageView: ImageView, path: String?) {
     if (path != null && path.isNotEmpty() && FileUtils.isExtensionImage(path)) {
         imageView.load(path) {
             transformations(CircleCropTransformation())
         }
     } else {
-        Log.w("[Data Binding] [Glide] Can't load $path")
+        Log.w("[Data Binding] [Coil] Can't load $path")
     }
 }
 
-@BindingAdapter("glidePath")
-fun loadImageWithGlide(imageView: ImageView, path: String?) {
+@BindingAdapter("coil")
+fun loadImageWithCoil(imageView: ImageView, path: String?) {
     if (path != null && path.isNotEmpty() && FileUtils.isExtensionImage(path)) {
         if (corePreferences.vfsEnabled && path.endsWith(FileUtils.VFS_PLAIN_FILE_EXTENSION)) {
             imageView.load(path) {
@@ -327,17 +328,86 @@ fun loadImageWithGlide(imageView: ImageView, path: String?) {
             imageView.load(path)
         }
     } else {
-        Log.w("[Data Binding] [Glide] Can't load $path")
+        Log.w("[Data Binding] [Coil] Can't load $path")
     }
 }
 
-@BindingAdapter("glideAvatar")
-fun loadAvatarWithGlide(imageView: ImageView, path: Uri?) {
-    loadAvatarWithGlide(imageView, path?.toString())
+private fun loadContactPictureWithCoil(
+    imageView: ImageView,
+    contact: ContactDataInterface?,
+    useThumbnail: Boolean,
+    size: Int = 0,
+    textSize: Int = 0,
+    color: Int = 0,
+    textColor: Int = 0
+) {
+    if (contact != null) {
+        val displayName = contact.displayName.value.orEmpty()
+        val source = if (useThumbnail) contact.thumbnailUri else contact.pictureUri
+        imageView.load(source) {
+            transformations(CircleCropTransformation())
+            error(
+                if (contact.showGroupChatAvatar) {
+                    coreContext.contactsManager.groupAvatar.loadDrawable(imageView.context)
+                } else if (displayName.isEmpty() || displayName == "+") {
+                    coreContext.contactsManager.contactAvatar.loadDrawable(imageView.context)
+                } else {
+                    val builder = ContactAvatarGenerator(imageView.context)
+                    builder.setLabel(displayName)
+                    if (size > 0) {
+                        builder.setAvatarSize(AppUtils.getDimension(size).toInt())
+                    }
+                    if (textSize > 0) {
+                        builder.setTextSize(AppUtils.getDimension(textSize))
+                    }
+                    if (color > 0) {
+                        builder.setBackgroundColorAttribute(color)
+                    }
+                    if (textColor > 0) {
+                        builder.setTextColorResource(textColor)
+                    }
+                    builder.build()
+                }
+            )
+        }
+    } else {
+        imageView.load(R.drawable.icon_single_contact_avatar)
+    }
 }
 
-@BindingAdapter("glideAvatar")
-fun loadAvatarWithGlide(imageView: ImageView, path: String?) {
+@BindingAdapter("coilContact")
+fun loadContactPictureWithCoil(imageView: ImageView, contact: ContactDataInterface?) {
+    loadContactPictureWithCoil(imageView, contact, true)
+}
+
+@BindingAdapter("coilContactBig")
+fun loadBigContactPictureWithCoil(imageView: ImageView, contact: ContactDataInterface?) {
+    loadContactPictureWithCoil(
+        imageView, contact, true,
+        R.dimen.contact_avatar_big_size, R.dimen.contact_avatar_text_big_size
+    )
+}
+
+@BindingAdapter("coilVoipContactAlt")
+fun loadVoipContactPictureWithCoilAlt(imageView: ImageView, contact: ContactDataInterface?) {
+    loadContactPictureWithCoil(
+        imageView, contact, false,
+        R.dimen.voip_contact_avatar_max_size, R.dimen.voip_contact_avatar_text_size,
+        R.attr.voipParticipantBackgroundColor, R.color.white_color
+    )
+}
+
+@BindingAdapter("coilVoipContact")
+fun loadVoipContactPictureWithCoil(imageView: ImageView, contact: ContactDataInterface?) {
+    loadContactPictureWithCoil(
+        imageView, contact, false,
+        R.dimen.voip_contact_avatar_max_size, R.dimen.voip_contact_avatar_text_size,
+        R.attr.voipBackgroundColor, R.color.white_color
+    )
+}
+
+@BindingAdapter("coilGoneIfError")
+fun loadAvatarWithCoil(imageView: ImageView, path: String?) {
     if (path != null) {
         imageView.visibility = View.VISIBLE
         imageView.load(path) {
@@ -364,16 +434,6 @@ fun loadVideoPreview(imageView: ImageView, path: String?) {
             videoFrameMillis(0)
         }
     }
-}
-
-@BindingAdapter("showSecurityLevel")
-fun ContactAvatarView.setShowAvatarSecurityLevel(visible: Boolean) {
-    this.binding.securityBadgeVisibility = visible
-}
-
-@BindingAdapter("showLimeCapability")
-fun ContactAvatarView.setShowLimeCapability(limeCapability: Boolean) {
-    this.binding.showLimeCapability = limeCapability
 }
 
 @BindingAdapter("assistantPhoneNumberValidation")

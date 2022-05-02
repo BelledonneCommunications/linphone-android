@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
         <import type="android.view.View"/>
@@ -16,13 +14,14 @@
         android:layout_margin="5dp"
         android:gravity="center_vertical">
 
-        <org.linphone.contact.ContactAvatarView
+        <ImageView
             android:id="@+id/avatar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            tools:layout="@layout/contact_avatar"
-            app:data="@{data}"/>
+            android:layout_width="@dimen/contact_avatar_size"
+            android:layout_height="@dimen/contact_avatar_size"
+            android:layout_marginRight="10dp"
+            coilContact="@{data}"
+            android:contentDescription="@null"
+            android:layout_centerVertical="true"/>
 
         <TextView
             android:id="@+id/time"
@@ -44,18 +43,18 @@
             android:orientation="vertical">
 
             <org.linphone.views.MarqueeTextView
-                android:text="@{data.contact.name ?? data.displayName}"
                 style="@style/contact_name_list_cell_font"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:text="@{data.contact.name ?? data.displayName}" />
 
             <org.linphone.views.MarqueeTextView
-                android:text="@{data.sipUri}"
                 style="@style/sip_uri_small_font"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:text="@{data.sipUri}" />
 
         </LinearLayout>
 

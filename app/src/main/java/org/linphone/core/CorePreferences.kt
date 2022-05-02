@@ -402,17 +402,8 @@ class CorePreferences constructor(private val context: Context) {
 
     /* UI related */
 
-    val hideContactsWithoutPresence: Boolean
-        get() = config.getBool("app", "hide_contacts_without_presence", false)
-
     val contactOrganizationVisible: Boolean
         get() = config.getBool("app", "display_contact_organization", true)
-
-    val showBorderOnContactAvatar: Boolean
-        get() = config.getBool("app", "show_border_on_contact_avatar", false)
-
-    val showBorderOnBigContactAvatar: Boolean
-        get() = config.getBool("app", "show_border_on_big_contact_avatar", true)
 
     private val darkModeAllowed: Boolean
         get() = config.getBool("app", "dark_mode_allowed", true)

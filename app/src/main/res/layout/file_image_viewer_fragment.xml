@@ -33,7 +33,7 @@
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
-                glidePath="@{viewModel.filePath}"/>
+                coil="@{viewModel.filePath}"/>
 
         </LinearLayout>
 
