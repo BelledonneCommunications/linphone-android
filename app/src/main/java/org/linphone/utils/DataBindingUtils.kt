@@ -34,6 +34,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import android.widget.SeekBar.OnSeekBarChangeListener
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.Guideline
 import androidx.databinding.*
@@ -43,7 +44,6 @@ import coil.request.videoFrameMillis
 import coil.transform.CircleCropTransformation
 import com.google.android.material.switchmaterial.SwitchMaterial
 import org.linphone.BR
-import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.GenericActivity
@@ -342,17 +342,22 @@ private fun loadContactPictureWithCoil(
     textColor: Int = 0
 ) {
     if (contact != null) {
+        val context = imageView.context
         val displayName = contact.displayName.value.orEmpty()
         val source = if (useThumbnail) contact.thumbnailUri else contact.pictureUri
         imageView.load(source) {
             transformations(CircleCropTransformation())
             error(
                 if (contact.showGroupChatAvatar) {
-                    coreContext.contactsManager.groupAvatar.loadDrawable(imageView.context)
+                    val bg = AppCompatResources.getDrawable(context, R.drawable.generated_avatar_bg)
+                    imageView.background = bg
+                    AppCompatResources.getDrawable(context, R.drawable.icon_multiple_contacts_avatar)
                 } else if (displayName.isEmpty() || displayName == "+") {
-                    coreContext.contactsManager.contactAvatar.loadDrawable(imageView.context)
+                    val bg = AppCompatResources.getDrawable(context, R.drawable.generated_avatar_bg)
+                    imageView.background = bg
+                    AppCompatResources.getDrawable(context, R.drawable.icon_single_contact_avatar)
                 } else {
-                    val builder = ContactAvatarGenerator(imageView.context)
+                    val builder = ContactAvatarGenerator(context)
                     builder.setLabel(displayName)
                     if (size > 0) {
                         builder.setAvatarSize(AppUtils.getDimension(size).toInt())
