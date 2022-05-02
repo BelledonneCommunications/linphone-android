@@ -40,6 +40,7 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.Factory
 import org.linphone.core.Friend
+import org.linphone.core.GlobalState
 import org.linphone.core.tools.Log
 import org.linphone.utils.LinphoneUtils
 
@@ -87,6 +88,11 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
 
         val core = coreContext.core
         val linphoneMime = loader.context.getString(R.string.linphone_address_mime_type)
+
+        if (core.globalState == GlobalState.Shutdown || core.globalState == GlobalState.Off) {
+            Log.w("[Contacts Loader] Core is being stopped or already destroyed, abort")
+            return
+        }
 
         coreContext.lifecycleScope.launch {
             val friends = HashMap<String, Friend>()
@@ -193,33 +199,37 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                     }
 
                     withContext(Dispatchers.Main) {
-                        Log.i("[Contacts Loader] Friends created")
-                        val contactId = coreContext.contactsManager.contactIdToWatchFor
-                        if (contactId.isNotEmpty()) {
-                            val friend = friends[contactId]
-                            Log.i("[Contacts Loader] Manager was asked to monitor contact id $contactId")
-                            if (friend != null) {
-                                Log.i("[Contacts Loader] Found new contact matching id $contactId, notifying listeners")
-                                coreContext.contactsManager.notifyListeners(friend)
+                        if (core.globalState == GlobalState.Shutdown || core.globalState == GlobalState.Off) {
+                            Log.w("[Contacts Loader] Core is being stopped or already destroyed, abort")
+                        } else {
+                            Log.i("[Contacts Loader] Friends created")
+                            val contactId = coreContext.contactsManager.contactIdToWatchFor
+                            if (contactId.isNotEmpty()) {
+                                val friend = friends[contactId]
+                                Log.i("[Contacts Loader] Manager was asked to monitor contact id $contactId")
+                                if (friend != null) {
+                                    Log.i("[Contacts Loader] Found new contact matching id $contactId, notifying listeners")
+                                    coreContext.contactsManager.notifyListeners(friend)
+                                }
                             }
+
+                            val fl = core.defaultFriendList ?: core.createFriendList()
+                            for (friend in fl.friends) {
+                                fl.removeFriend(friend)
+                            }
+
+                            if (fl != core.defaultFriendList) core.addFriendList(fl)
+
+                            val friendsList = friends.values
+                            for (friend in friendsList) {
+                                fl.addLocalFriend(friend)
+                            }
+
+                            fl.updateSubscriptions()
+
+                            Log.i("[Contacts Loader] Friends added & subscription updated")
+                            coreContext.contactsManager.fetchFinished()
                         }
-
-                        val fl = core.defaultFriendList ?: core.createFriendList()
-                        for (friend in fl.friends) {
-                            fl.removeFriend(friend)
-                        }
-
-                        if (fl != core.defaultFriendList) core.addFriendList(fl)
-
-                        val friendsList = friends.values
-                        for (friend in friendsList) {
-                            fl.addLocalFriend(friend)
-                        }
-
-                        fl.updateSubscriptions()
-
-                        Log.i("[Contacts Loader] Friends added & subscription updated")
-                        coreContext.contactsManager.fetchFinished()
                     }
                 } catch (sde: StaleDataException) {
                     Log.e("[Contacts Loader] State Data Exception: $sde")
