@@ -456,7 +456,8 @@ class CoreContext(val context: Context, coreConfig: Config) : LifecycleOwner, Vi
     fun fetchContacts() {
         if (PermissionHelper.required(context).hasReadContactsPermission()) {
             Log.i("[Context] Init contacts loader")
-            LoaderManager.getInstance(this@CoreContext).initLoader(0, null, contactLoader)
+            val manager = LoaderManager.getInstance(this@CoreContext)
+            manager.restartLoader(0, null, contactLoader)
         }
     }
 
