@@ -26,7 +26,6 @@ import org.linphone.activities.main.viewmodels.MessageNotifierViewModel
 import org.linphone.core.Address
 import org.linphone.core.ChatRoomSecurityLevel
 import org.linphone.core.Friend
-import org.linphone.utils.AppUtils
 import org.linphone.utils.LinphoneUtils
 
 interface ContactDataInterface {
@@ -51,9 +50,6 @@ open class GenericContactData(private val sipAddress: Address) : ContactDataInte
     final override val displayName: MutableLiveData<String> = MutableLiveData<String>()
     final override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
 
-    val initials = MutableLiveData<String>()
-    val displayInitials = MutableLiveData<Boolean>()
-
     private val contactsUpdatedListener = object : ContactsUpdatedListenerStub() {
         override fun onContactUpdated(friend: Friend) {
             contactLookup()
@@ -75,13 +71,6 @@ open class GenericContactData(private val sipAddress: Address) : ContactDataInte
 
         val c = coreContext.contactsManager.findContactByAddress(sipAddress)
         contact.value = c
-
-        initials.value = if (c != null) {
-            AppUtils.getInitials(c.name ?: "")
-        } else {
-            AppUtils.getInitials(displayName.value ?: "")
-        }
-        displayInitials.value = initials.value.orEmpty().isNotEmpty() && initials.value.orEmpty() != "+"
     }
 }
 
