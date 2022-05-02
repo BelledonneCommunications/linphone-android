@@ -202,7 +202,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                         if (core.globalState == GlobalState.Shutdown || core.globalState == GlobalState.Off) {
                             Log.w("[Contacts Loader] Core is being stopped or already destroyed, abort")
                         } else {
-                            Log.i("[Contacts Loader] Friends created")
+                            Log.i("[Contacts Loader] ${friends.size} friends created")
                             val contactId = coreContext.contactsManager.contactIdToWatchFor
                             if (contactId.isNotEmpty()) {
                                 val friend = friends[contactId]
@@ -224,10 +224,11 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                             for (friend in friendsList) {
                                 fl.addLocalFriend(friend)
                             }
+                            Log.i("[Contacts Loader] Friends added")
 
                             fl.updateSubscriptions()
+                            Log.i("[Contacts Loader] Subscription(s) updated")
 
-                            Log.i("[Contacts Loader] Friends added & subscription updated")
                             coreContext.contactsManager.fetchFinished()
                         }
                     }
