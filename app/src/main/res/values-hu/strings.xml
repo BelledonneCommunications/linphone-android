@@ -331,7 +331,6 @@
     <string name="content_description_pending_file_transfer">Fájl átvitele függőben van</string>
     <string name="content_description_downloaded_file_transfer">Csatolt fájl</string>
     <string name="content_description_delivery_status">Üzenet kézbesítési állapota</string>
-    <string name="content_description_forwarded_message">Az üzenetet továbbítottuk</string>
     <string name="content_description_contact_selected">Névjegy kiválasztva</string>
     <string name="content_description_show_all_contacts">Az összes névjegy listájának megjelenítése</string>
     <string name="content_description_continue_chat_room_creation">Ugrás a csevegőszoba létrehozásának utolsó lépésére</string>
@@ -567,7 +566,6 @@
     <string name="chat_message_replied">Válasz</string>
     <string name="chat_message_context_menu_reply">Válasz</string>
     <string name="chat_settings_auto_download_voice_recordings">A bejövő hangfelvételek önműködő letöltése</string>
-    <string name="content_description_replied_message">Az üzenet válasz</string>
     <string name="content_description_cancel_reply">Válasz visszavonása</string>
     <string name="content_description_cancel_voice_recording">Hangfelvétel visszavonása</string>
     <string name="chat_message_voice_recording_playback_low_volume">A média hangereje alacsony, lehet hogy, szeretné növelni</string>
@@ -580,7 +578,6 @@
         <item quantity="one">%1$d olvasatlan üzenet</item>
         <item quantity="other">%1$d olvasatlan üzenet</item>
     </plurals>
-    <string name="audio_settings_prefer_bluetooth_devices_summary">Ennek elsőbbsége lesz az alapértelmezett kimeneti eszközzel szemben</string>
     <string name="content_descripton_scroll_to_bottom">Görgetés legalulra vagy az első olvasatlan üzenetre</string>
     <string name="audio_settings_prefer_bluetooth_devices_title">Hang átirányítása a Bluetooth-eszközre (ha van ilyen)</string>
     <string name="call_settings_ringtones_title">Csengőhang</string>

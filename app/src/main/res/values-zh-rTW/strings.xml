@@ -443,7 +443,6 @@
     <string name="content_description_remove_pending_file_transfer">刪除待傳輸文件</string>
     <string name="content_description_downloaded_file_transfer">附加檔案</string>
     <string name="content_description_delivery_status">訊息傳遞狀態</string>
-    <string name="content_description_forwarded_message">訊息已轉發</string>
     <string name="content_description_ephemeral_message">信息是「閱後即焚」</string>
     <string name="content_description_linphone_user">聯絡人是&appName;用戶</string>
     <string name="content_description_contact_selected">已選擇聯絡人</string>

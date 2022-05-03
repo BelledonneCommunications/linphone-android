@@ -232,7 +232,6 @@
     <string name="chat_message_no_app_found_to_handle_file_mime_type">Keine App für diesen Dateityp vorhanden</string>
     <string name="chat_bubble_cant_open_enrypted_file">Öffnen von verschlüsselter Datei in Chat-Bubble nicht möglich</string>
     <string name="chat_message_removal_info">Nachricht wird gelöscht</string>
-    <string name="chat_room_failed_to_create">Erstellen des Chat-Rooms fehlgeschlagen</string>
     <string name="transport_udp">UDP</string>
     <string name="transport_tcp">TCP</string>
     <string name="transport_tls">TLS</string>

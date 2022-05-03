@@ -129,7 +129,6 @@
     <string name="content_description_remove_pending_file_transfer">Eliminar la transferencia de archivos pendiente</string>
     <string name="content_description_downloaded_file_transfer">Archivo adjunto</string>
     <string name="content_description_delivery_status">Estado de la entrega del mensaje</string>
-    <string name="content_description_forwarded_message">El mensaje ha sido remitido</string>
     <string name="content_description_ephemeral_message">Mensaje es efímero</string>
     <string name="content_description_linphone_user">Contacto es un &appName; usuario</string>
     <string name="content_description_e2e_encryption_disabled">La encriptación de extremo a extremo está desactivada</string>
@@ -561,7 +560,6 @@
     <string name="chat_message_removal_info">El mensaje será eliminado</string>
     <string name="chat_message_abort_removal">Cancelar</string>
     <string name="audio_settings_prefer_bluetooth_devices_title">Dirigir el audio al dispositivo bluetooth si existe</string>
-    <string name="content_description_replied_message">El mensaje es una respuesta</string>
     <string name="content_description_cancel_reply">Cancelar la respuesta</string>
     <string name="chat_message_replied">Respuesta</string>
     <string name="chat_message_context_menu_reply">Responder</string>
@@ -576,6 +574,5 @@
     <string name="call_settings_ringtones_title">Tono de llamada</string>
     <string name="call_settings_use_telecom_manager_summary">Requiere permisos adicionales</string>
     <string name="content_descripton_scroll_to_bottom">Desplazarse al final o al primer mensaje no leído</string>
-    <string name="audio_settings_prefer_bluetooth_devices_summary">Tendrá prioridad sobre el dispositivo de salida por defecto</string>
     <string name="call_settings_use_telecom_manager_title">Mejorar las interacciones con los dispositivos bluetooth</string>
 </resources>

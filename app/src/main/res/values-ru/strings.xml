@@ -396,7 +396,6 @@
     <string name="content_description_remove_pending_file_transfer">Удалить ожидающую передачу файла</string>
     <string name="content_description_downloaded_file_transfer">Прикреплённый файл</string>
     <string name="content_description_delivery_status">Статус доставки сообщения</string>
-    <string name="content_description_replied_message">Сообщение - это ответ</string>
     <string name="content_description_forward_message">Переслать сообщение в этой беседе</string>
     <string name="content_description_ephemeral_message">Сообщение - это недолговечное сообщение</string>
     <string name="content_description_contact_selected">Контакт выбран</string>
@@ -564,7 +563,6 @@
     <string name="content_description_enable_speaker">Направить звук на динамик</string>
     <string name="content_description_show_numpad">Показать цифр. клавиатуру</string>
     <string name="content_description_use_bluetooth_headset">Использовать bluetooth-гарнитуру в качестве аудиовыхода</string>
-    <string name="content_description_forwarded_message">Сообщение было переадресовано</string>
     <string name="content_description_linphone_user">Контакт - это &appName;-пользователь</string>
     <string name="content_description_show_all_contacts">Показать список всех контактов</string>
     <string name="content_description_continue_chat_room_creation">Перейти к завершающему этапу создания чат-комнаты</string>
@@ -596,13 +594,11 @@
     <string name="dialer_transfer_failed">Не могу перевести звонок</string>
     <string name="chat_message_removal_info">Сообщение будет удалено</string>
     <string name="chat_message_abort_removal">Прервать</string>
-    <string name="chat_room_failed_to_create">Не удалось создать комнату чата</string>
     <string name="conference_schedule_participants_list">Список участников</string>
     <string name="conference_schedule_summary">Информация конференции</string>
     <string name="conference_schedule_create">Создать конференцию</string>
     <string name="conference_schedule">Запланировать конференцию</string>
     <string name="conference_schedule_address_copied_to_clipboard">Адрес конференции скопирован в буфер обмена</string>
-    <string name="conference_schedule_creation_failure">Не удалось создать конференцию!</string>
     <string name="conference_schedule_info_not_sent_to_participant">Не удалось отправить информацию о конференции участнику</string>
     <string name="conference_paused_title">В настоящее время вы вне конференции.</string>
     <string name="conference_paused_subtitle">Нажмите на кнопку воспроизведения, чтобы присоединиться к ней обратно.</string>
@@ -637,7 +633,6 @@
     <string name="content_description_toggle_layout_menu">Показать или скрыть меню макета конференции</string>
     <string name="content_description_participant_is_paused">Участник на мгновение покинул конференцию</string>
     <string name="chat_message_download_already_in_progress">Пожалуйста, дождитесь завершения первой загрузки, прежде чем начинать новую</string>
-    <string name="audio_settings_prefer_bluetooth_devices_summary">Он будет иметь приоритет над устройством вывода по умолчанию</string>
     <string name="conference_organizer">Организатор</string>
     <string name="conference_default_title">Удалённая конференция</string>
     <string name="call_action_chat">Чат</string>

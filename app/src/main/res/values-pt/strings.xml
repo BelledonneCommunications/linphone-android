@@ -231,7 +231,6 @@
     <string name="audio_settings_input_device_summary">As alterações entrarão em vigor a partir da próxima chamada</string>
     <string name="audio_settings_output_device_title">Dispositivo de áudio de saída padrão</string>
     <string name="audio_settings_prefer_bluetooth_devices_title">Enviar áudio para o dispositivo bluetooth, se houver</string>
-    <string name="audio_settings_prefer_bluetooth_devices_summary">Terá prioridade sobre o dispositivo de saída padrão</string>
     <string name="audio_settings_codec_bitrate_title">Limite de taxa de bits do codec</string>
     <string name="audio_settings_microphone_gain_title">Ganho de microfone</string>
     <string name="audio_settings_microphone_gain_summary">(em decibéis)</string>
@@ -503,8 +502,6 @@
     <string name="content_description_remove_pending_file_transfer">Remover transferência de ficheiros pendentes</string>
     <string name="content_description_downloaded_file_transfer">Ficheiro anexo</string>
     <string name="content_description_delivery_status">Estado de entrega de mensagens</string>
-    <string name="content_description_forwarded_message">A mensagem foi reencaminhada</string>
-    <string name="content_description_replied_message">A mensagem é uma resposta</string>
     <string name="content_description_ephemeral_message">A mensagem é efémera</string>
     <string name="content_description_linphone_user">O contacto é um &appName; utilizador</string>
     <string name="content_description_contact_selected">O contacto é seleccionado</string>

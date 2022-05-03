@@ -281,6 +281,7 @@
                                 android:gravity="top"
                                 android:minLines="3"
                                 android:maxLines="5"
+                                android:inputType="textMultiLine"
                                 style="@style/conference_scheduling_font"
                                 android:background="@drawable/shape_edittext_background"
                                 android:hint="@string/conference_schedule_description_hint"
