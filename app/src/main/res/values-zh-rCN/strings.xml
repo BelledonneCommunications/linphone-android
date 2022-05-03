@@ -171,7 +171,6 @@
     <string name="missed_calls_notification_body">%d 未接来电</string>
     <string name="zrtp_dialog_title">通讯安全</string>
     <string name="zrtp_dialog_ok_button_label">接受</string>
-    <string name="content_description_forwarded_message">信息已转发</string>
     <string name="dialog_default_delete_one">你确定要删除这个项目吗？</string>
     <string name="dialog_update_available">有可用的更新</string>
     <string name="dialog_try_open_file_as_text_title">找不到此类文件的应用</string>
@@ -540,7 +539,6 @@
     <string name="advanced_settings_disable_fragment_security_summary">允许对敏感视图进行屏幕捕获/录制</string>
     <string name="account_settings_transport_dtls">DTLS</string>
     <string name="account_settings_apply_prefix_for_calls_summary">如果输入了数字，则将前缀应用于数字</string>
-    <string name="content_description_replied_message">留言即回复</string>
     <string name="content_description_open_app">在应用程序中打开对话而不是气泡</string>
     <string name="logs_reset_complete">日志已清除</string>
     <string name="chat_message_replied">回复</string>
@@ -590,7 +588,6 @@
     <string name="about_weblate_translation">帮助我们翻译 &appName;</string>
     <string name="assistant_generic_account_warning">某些功能需要 1&appName; 帐户，例如群组消息或临时消息。\n\n当您注册第三方 SIP 帐户时，这些功能会被隐藏。\n\n要在商业项目中启用它，请联系我们。</string>
     <string name="audio_settings_prefer_bluetooth_devices_title">将音频转到蓝牙设备（如果有）</string>
-    <string name="audio_settings_prefer_bluetooth_devices_summary">它将优先于默认输出设备</string>
     <string name="content_descripton_scroll_to_bottom">滚动到底部或第一条未读消息</string>
     <string name="call_settings_ringtones_title">铃声</string>
     <string name="chat_message_removal_info">消息将被删除</string>

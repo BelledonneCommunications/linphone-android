@@ -223,24 +223,6 @@
         <item name="android:textSize">12sp</item>
     </style>
 
-    <style name="call_generated_avatar_font" parent="@android:style/TextAppearance.Large">
-        <item name="android:textColor">@color/white_color</item>
-        <item name="android:textSize">70sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:ellipsize">none</item>
-        <item name="autoSizeTextType">uniform</item>
-        <item name="autoSizeMinTextSize">15sp</item>
-        <item name="autoSizeMaxTextSize">70sp</item>
-        <item name="autoSizeStepGranularity">@dimen/settings_granularity_step</item>
-    </style>
-
-    <style name="call_small_generated_avatar_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">@color/white_color</item>
-        <item name="android:textSize">35sp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
     <style name="call_context_menu_item_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">@color/white_color</item>
         <item name="android:textSize">16sp</item>

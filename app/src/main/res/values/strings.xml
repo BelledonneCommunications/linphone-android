@@ -227,7 +227,6 @@
     </plurals>
     <string name="chat_message_removal_info">Message will be deleted</string>
     <string name="chat_message_abort_removal">Abort</string>
-    <string name="chat_room_failed_to_create">Failed to create chat room</string>
     <string name="chat_message_download_already_in_progress">Please wait for first download to finish before starting a new one</string>
 
     <!-- Recordings -->
@@ -257,7 +256,6 @@
     <string name="conference_schedule_create">Create conference</string>
     <string name="conference_schedule">Schedule conference</string>
     <string name="conference_schedule_address_copied_to_clipboard">Conference address copied into clipboard</string>
-    <string name="conference_schedule_creation_failure">Failed to create conference!</string>
     <string name="conference_schedule_info_not_sent_to_participant">Failed to send conference info to a participant</string>
     <string name="conference_paused_title">You are currently out of the conference.</string>
     <string name="conference_paused_subtitle">Click on play button to join it back.</string>
@@ -454,7 +452,6 @@
     <string name="audio_settings_output_device_title">Default output audio device</string>
     <string name="audio_settings_output_device_summary">Changes will take effect starting next call</string>
     <string name="audio_settings_prefer_bluetooth_devices_title">Route audio to the bluetooth device if any</string>
-    <string name="audio_settings_prefer_bluetooth_devices_summary">It will have priority over the default output device</string>
     <string name="audio_settings_codec_bitrate_title">Codec bitrate limit</string>
     <string name="audio_settings_microphone_gain_title">Microphone gain</string>
     <string name="audio_settings_microphone_gain_summary">(in decibels)</string>
@@ -743,8 +740,6 @@
     <string name="content_description_remove_pending_file_transfer">Remove pending file transfer</string>
     <string name="content_description_downloaded_file_transfer">Attached file</string>
     <string name="content_description_delivery_status">Message delivery status</string>
-    <string name="content_description_forwarded_message">Message has been forwarded</string>
-    <string name="content_description_replied_message">Message is a reply</string>
     <string name="content_description_forward_message">Forward message in this conversation</string>
     <string name="content_description_ephemeral_message">Message is ephemeral</string>
     <string name="content_description_linphone_user">Contact is a &appName; user</string>

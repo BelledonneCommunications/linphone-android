@@ -261,7 +261,6 @@
     <string name="content_description_toggle_recording">Activer ou désactiver l\'enregistrement d\'appel</string>
     <string name="content_description_go_back_to_call">Revenir à la vue d\'appel</string>
     <string name="content_description_use_speaker">Utiliser une enceinte comme périphérique de sortie</string>
-    <string name="content_description_forwarded_message">Le message a été transféré</string>
     <string name="content_description_e2e_encryption_enabled">Le chiffrement de bout-en-bout est activé</string>
     <string name="content_description_show_chat_room_menu">Menu des conversations</string>
     <string name="content_description_toggle_participant_devices_list">Afficher ou masquer la liste des appareils</string>
@@ -568,7 +567,6 @@
     <string name="content_description_pause_voice_recording_playback">Mettre en pause la lecture du message vocal</string>
     <string name="content_description_play_voice_recording">Jouer le message vocal</string>
     <string name="chat_settings_auto_download_voice_recordings">Télécharger automatiquement les messages vocaux reçus</string>
-    <string name="content_description_replied_message">Ceci est une réponse</string>
     <string name="content_description_stop_voice_recording">Arrêter l\'enregistrement du message vocal</string>
     <string name="chat_message_voice_recording_playback_low_volume">Le volume média est faible, pensez à l\'augmenter si vous n\'entendez pas le message</string>
     <string name="call_settings_auto_start_recording_title">Enregistrer automatiquement les appels</string>
@@ -582,7 +580,6 @@
     </plurals>
     <string name="content_descripton_scroll_to_bottom">Aller au dernier message reçu ou au premier message non lu</string>
     <string name="audio_settings_prefer_bluetooth_devices_title">Acheminer l\'audio vers l\'appareil bluetooth, s\'il existe</string>
-    <string name="audio_settings_prefer_bluetooth_devices_summary">Il aura la priorité sur le périphérique de sortie par défaut</string>
     <string name="call_settings_ringtones_title">Sonnerie</string>
     <string name="chat_message_removal_info">Le message va être supprimé</string>
     <string name="chat_message_abort_removal">Annuler</string>
@@ -663,7 +660,6 @@
     <string name="content_description_call_context_menu">Ouvre le menu contextuel d\'appel</string>
     <string name="no_conference_call_history">Aucun appel de conférence dans votre historique</string>
     <string name="dialer_transfer_succeded">L\'appel est en train d\'être transféré</string>
-    <string name="chat_room_failed_to_create">Impossible de créer la conversation</string>
     <string name="conference_display_mode_active_speaker">Mode intervenant actif</string>
     <string name="conference_layout_too_many_participants_for_mosaic">Vous ne pouvez pas modifier la disposition de la conférence car il y a trop de participants</string>
     <string name="call_action_transfer_call">Transférer l\'appel</string>
@@ -692,7 +688,6 @@
     <string name="conference_schedule_create">Créer la conférence</string>
     <string name="conference_schedule">Planifier une conférence</string>
     <string name="conference_schedule_address_copied_to_clipboard">L\'adresse de la conférence à été copiée dans le presse papier</string>
-    <string name="conference_schedule_creation_failure">Échec de la création de la conférence !</string>
     <string name="conference_schedule_info_not_sent_to_participant">Échec de l\'envoi de l\'invitation de conférence à un participant</string>
     <string name="conference_paused_title">Vous êtes actuellement en dehors de la conférence.</string>
     <string name="conference_paused_subtitle">Cliquez sur le bouton \"play\" pour la rejoindre.</string>
