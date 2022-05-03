@@ -343,7 +343,7 @@ private fun loadContactPictureWithCoil(
 ) {
     if (contact != null) {
         val context = imageView.context
-        val displayName = contact.displayName.value.orEmpty()
+        val displayName = contact.contact.value?.name ?: contact.displayName.value.orEmpty()
         val source = if (useThumbnail) contact.thumbnailUri else contact.pictureUri
         imageView.load(source) {
             transformations(CircleCropTransformation())
@@ -352,7 +352,7 @@ private fun loadContactPictureWithCoil(
                     val bg = AppCompatResources.getDrawable(context, R.drawable.generated_avatar_bg)
                     imageView.background = bg
                     AppCompatResources.getDrawable(context, R.drawable.icon_multiple_contacts_avatar)
-                } else if (displayName.isEmpty() || displayName == "+") {
+                } else if (displayName.isEmpty() || AppUtils.getInitials(displayName) == "+") {
                     val bg = AppCompatResources.getDrawable(context, R.drawable.generated_avatar_bg)
                     imageView.background = bg
                     AppCompatResources.getDrawable(context, R.drawable.icon_single_contact_avatar)
