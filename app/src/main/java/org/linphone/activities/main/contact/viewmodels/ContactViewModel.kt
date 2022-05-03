@@ -37,6 +37,7 @@ import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.PhoneNumberUtils
 
 class ContactViewModelFactory(private val friend: Friend) :
     ViewModelProvider.NewInstanceFactory() {
@@ -213,7 +214,8 @@ class ContactViewModel(friend: Friend, async: Boolean = false) : ErrorReportingV
             address?.displayName = displayName.value.orEmpty()
             val isMe = if (address != null) coreContext.core.defaultAccount?.params?.identityAddress?.weakEqual(address) ?: false else false
             val secureChatAllowed = !isMe && friend.getPresenceModelForUriOrTel(number)?.hasCapability(FriendCapability.LimeX3Dh) ?: false
-            val noa = ContactNumberOrAddressData(address, hasPresence, number, isSip = false, showSecureChat = secureChatAllowed, typeLabel = phoneNumber.label ?: "", listener = listener)
+            val label = PhoneNumberUtils.vcardParamStringToAddressBookLabel(coreContext.context.resources, phoneNumber.label ?: "")
+            val noa = ContactNumberOrAddressData(address, hasPresence, number, isSip = false, showSecureChat = secureChatAllowed, typeLabel = label, listener = listener)
             list.add(noa)
         }
         numbersAndAddresses.postValue(list)
