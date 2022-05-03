@@ -128,7 +128,7 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
 
         attachFileEnabled.value = true
         sendMessageEnabled.value = false
-        isReadOnly.value = chatRoom.isReadOnly()
+        isReadOnly.value = chatRoom.isReadOnly
 
         val recorderParams = coreContext.core.createRecorderParams()
         if (corePreferences.voiceMessagesFormatMkv) {
@@ -158,7 +158,7 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
     }
 
     fun onTextToSendChanged(value: String) {
-        sendMessageEnabled.value = value.isNotEmpty() || attachments.value?.isNotEmpty() == true || isPendingVoiceRecord.value == true
+        sendMessageEnabled.value = value.trim().isNotEmpty() || attachments.value?.isNotEmpty() == true || isPendingVoiceRecord.value == true
         if (value.isNotEmpty()) {
             if (attachFileEnabled.value == true && !corePreferences.allowMultipleFilesAndTextInSameMessage) {
                 attachFileEnabled.value = false
@@ -181,7 +181,7 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         )
         attachments.value = list
 
-        sendMessageEnabled.value = textToSend.value.orEmpty().isNotEmpty() || list.isNotEmpty() || isPendingVoiceRecord.value == true
+        sendMessageEnabled.value = textToSend.value.orEmpty().trim().isNotEmpty() || list.isNotEmpty() || isPendingVoiceRecord.value == true
         if (!corePreferences.allowMultipleFilesAndTextInSameMessage) {
             attachFileEnabled.value = false
         }
@@ -194,7 +194,7 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         attachment.destroy()
         attachments.value = list
 
-        sendMessageEnabled.value = textToSend.value.orEmpty().isNotEmpty() || list.isNotEmpty() || isPendingVoiceRecord.value == true
+        sendMessageEnabled.value = textToSend.value.orEmpty().trim().isNotEmpty() || list.isNotEmpty() || isPendingVoiceRecord.value == true
         if (!corePreferences.allowMultipleFilesAndTextInSameMessage) {
             attachFileEnabled.value = list.isEmpty()
         }
@@ -227,13 +227,13 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
             isVoiceRecording.value = false
         }
 
-        val toSend = textToSend.value
-        if (toSend != null && toSend.isNotEmpty()) {
+        val toSend = textToSend.value.orEmpty().trim()
+        if (toSend.isNotEmpty()) {
             if (voiceRecord && isBasicChatRoom) {
-                val textMessage: ChatMessage = chatRoom.createMessageFromUtf8(toSend.trim())
+                val textMessage: ChatMessage = chatRoom.createMessageFromUtf8(toSend)
                 textMessage.send()
             } else {
-                message.addUtf8TextContent(toSend.trim())
+                message.addUtf8TextContent(toSend)
             }
         }
 
@@ -384,7 +384,7 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
 
         isPendingVoiceRecord.value = false
         isVoiceRecording.value = false
-        sendMessageEnabled.value = textToSend.value?.isNotEmpty() == true || attachments.value?.isNotEmpty() == true
+        sendMessageEnabled.value = textToSend.value.orEmpty().trim().isNotEmpty() == true || attachments.value?.isNotEmpty() == true
 
         if (!isPlayerClosed()) {
             stopVoiceRecordPlayer()
