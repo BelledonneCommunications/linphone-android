@@ -43,6 +43,7 @@ import org.linphone.core.Friend
 import org.linphone.core.GlobalState
 import org.linphone.core.tools.Log
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.PhoneNumberUtils
 
 class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
     companion object {
@@ -139,12 +140,10 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
 
                             when (mime) {
                                 ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE -> {
-                                    val typeLabel =
-                                        ContactsContract.CommonDataKinds.Phone.getTypeLabel(
-                                            loader.context.resources,
-                                            data2?.toInt() ?: 0,
-                                            data3
-                                        ).toString()
+                                    val label = PhoneNumberUtils.addressBookLabelTypeToVcardParamString(
+                                        data2?.toInt() ?: ContactsContract.CommonDataKinds.BaseTypes.TYPE_CUSTOM,
+                                        data3
+                                    )
 
                                     val number =
                                         if (corePreferences.preferNormalizedPhoneNumbersFromAddressBook ||
@@ -155,10 +154,11 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                                         } else {
                                             data1
                                         }
+
                                     if (number != null) {
                                         var duplicate = false
                                         for (pn in friend.phoneNumbersWithLabel) {
-                                            if (pn.label == typeLabel && LinphoneUtils.arePhoneNumberWeakEqual(
+                                            if (pn.label == label && LinphoneUtils.arePhoneNumberWeakEqual(
                                                     pn.phoneNumber,
                                                     number
                                                 )
@@ -169,7 +169,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                                         }
                                         if (!duplicate) {
                                             val phoneNumber = Factory.instance()
-                                                .createFriendPhoneNumber(number, typeLabel)
+                                                .createFriendPhoneNumber(number, label)
                                             friend.addPhoneNumberWithLabel(phoneNumber)
                                         }
                                     }
