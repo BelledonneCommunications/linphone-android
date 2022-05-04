@@ -10,6 +10,18 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [4.6.7] - 2022-05-04
+
+### Changed
+- Do not start Core in Application, prevents service notification from appearing by itself
+- When switching from bluetooth or headset device to earpiece/speaker, also change microphone
+- Prevent empty chat bubble by sending only space character(s)
+
+### Fixed
+- Phone numbers with non-ASCII labels missing from address book
+- Wrong audio device displayed in call statistics
+- Various issues from Crashlytics
+
 ## [4.6.6] - 2022-04-26
 
 ### Changed
