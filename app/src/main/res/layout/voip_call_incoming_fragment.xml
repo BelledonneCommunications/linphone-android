@@ -29,7 +29,7 @@
             android:id="@+id/progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:indeterminate="true"
             android:indeterminateDrawable="@drawable/icon_spinner_rotating"
             app:layout_constraintEnd_toEndOf="parent"
@@ -42,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="@string/call_incoming_title"
+            android:text="@{callsViewModel.currentCallData.remoteConferenceSubject.length > 0 ? @string/conference_incoming_title : @string/call_incoming_title, default=@string/call_incoming_title}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/progress" />
@@ -57,13 +57,24 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/incoming_call_title" />
 
+        <TextView
+            android:id="@+id/incoming_conference_subject"
+            style="@style/call_header_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@{callsViewModel.currentCallData.remoteConferenceSubject, default=`Conference subject`}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/incoming_call_title" />
+
         <ImageView
             android:id="@+id/avatar"
+            coilVoipContactAlt="@{callsViewModel.currentCallData}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="10dp"
             android:contentDescription="@null"
-            coilVoipContactAlt="@{callsViewModel.currentCallData}"
             app:layout_constraintBottom_toTopOf="@id/caller_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_max="@dimen/voip_contact_avatar_max_size"
@@ -81,13 +92,13 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@{callsViewModel.currentCallData.contact.name ?? callsViewModel.currentCallData.displayName, default=`Bilbo Baggins`}"
-            app:layout_constraintBottom_toTopOf="@id/textView"
+            app:layout_constraintBottom_toTopOf="@id/sipAddress"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/avatar" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/sipAddress"
             style="@style/call_header_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -100,6 +111,102 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/caller_name" />
+
+        <ImageView
+            android:id="@+id/conference_avatar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/icon_video_conf_incoming"
+            app:layout_constraintBottom_toTopOf="@id/participants_count"
+            app:layout_constraintHeight_max="120dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/incoming_conference_subject" />
+
+        <LinearLayout
+            android:id="@+id/participants_count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/event_decoration_gray"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@id/participants_list"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                style="@style/call_header_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/voipBackgroundColor"
+                android:lineSpacingExtra="0sp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="Participants (6)" /><!-- TODO -->
+
+        </LinearLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/participants_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="10dp"
+            android:fadeScrollbars="false"
+            android:scrollbars="vertical"
+            app:layout_constraintBottom_toTopOf="@id/buttons"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_max="400dp"
+            app:layout_constraintHeight_min="200dp"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include layout="@layout/voip_conference_incoming_participant_cell" />
+
+                <include layout="@layout/voip_conference_incoming_participant_cell" />
+
+                <include layout="@layout/voip_conference_incoming_participant_cell" />
+
+                <include layout="@layout/voip_conference_incoming_participant_cell" />
+
+                <include layout="@layout/voip_conference_incoming_participant_cell" />
+
+                <include layout="@layout/voip_conference_incoming_participant_cell" />
+
+                <include layout="@layout/voip_conference_incoming_participant_cell" />
+
+                <include layout="@layout/voip_conference_incoming_participant_cell" />
+
+                <include layout="@layout/voip_conference_incoming_participant_cell" />
+
+                <include layout="@layout/voip_conference_incoming_participant_cell" />
+                <!-- TODO -->
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/single_call_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{callsViewModel.currentCallData.remoteConferenceSubject.length > 0 ? View.GONE : View.VISIBLE, default=visible}"
+            app:constraint_referenced_ids="incoming_call_timer, avatar, caller_name, sipAddress" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/conference_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{callsViewModel.currentCallData.remoteConferenceSubject.length > 0 ? View.VISIBLE : View.GONE, default=gone}"
+            app:constraint_referenced_ids="incoming_conference_subject, conference_avatar, participants_count, participants_list" />
 
         <include
             android:id="@+id/buttons"

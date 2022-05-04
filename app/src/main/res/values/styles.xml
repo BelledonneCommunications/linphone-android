@@ -13,6 +13,7 @@
         <item name="android:windowBackground">@color/transparent_color</item>
 
         <!-- Android theme override -->
+        <item name="android:scrollbarThumbVertical">@color/light_grey_color</item>
         <item name="colorAccent">@color/primary_color</item>
         <item name="colorPrimary">@color/primary_color</item>
         <item name="android:colorPrimary">@color/primary_color</item>
