@@ -100,11 +100,21 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
             val params = account.params.clone()
             val identity = params.identityAddress
             if (identity != null) {
-                identity.username = newValue
-                params.identityAddress = identity
+                val newIdentityAddress = identity.clone()
+                newIdentityAddress.username = newValue
+                params.identityAddress = newIdentityAddress
                 account.params = params
             } else {
                 Log.e("[Account Settings] Account doesn't have an identity yet")
+
+                val domain = params.domain
+                val newIdentityAddress = Factory.instance().createAddress("sip:$newValue@$domain")
+                if (newIdentityAddress != null) {
+                    params.identityAddress = newIdentityAddress
+                    account.params = params
+                } else {
+                    Log.e("[Account Settings] Failed to create identity address sip:$newValue@$domain")
+                }
             }
         }
     }
