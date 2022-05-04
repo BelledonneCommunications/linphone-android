@@ -83,26 +83,6 @@ class CallActivity : ProximitySensorActivity() {
 
         statsViewModel = ViewModelProvider(navControllerStoreOwner)[StatisticsListViewModel::class.java]
 
-        callsViewModel.noMoreCallEvent.observe(
-            this
-        ) {
-            it.consume { noMoreCall ->
-                if (noMoreCall) {
-                    Log.i("[Call Activity] No more call event fired, finishing activity")
-                    finish()
-                }
-            }
-        }
-
-        callsViewModel.askWriteExternalStoragePermissionEvent.observe(
-            this
-        ) {
-            it.consume {
-                Log.i("[Call Activity] Asking for WRITE_EXTERNAL_STORAGE permission to take snapshot")
-                requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
-            }
-        }
-
         controlsViewModel.askPermissionEvent.observe(
             this
         ) {
@@ -136,6 +116,26 @@ class CallActivity : ProximitySensorActivity() {
             if (visible) statsViewModel.enable() else statsViewModel.disable()
         }
 
+        callsViewModel.noMoreCallEvent.observe(
+            this
+        ) {
+            it.consume { noMoreCall ->
+                if (noMoreCall) {
+                    Log.i("[Call Activity] No more call event fired, finishing activity")
+                    finish()
+                }
+            }
+        }
+
+        callsViewModel.askWriteExternalStoragePermissionEvent.observe(
+            this
+        ) {
+            it.consume {
+                Log.i("[Call Activity] Asking for WRITE_EXTERNAL_STORAGE permission to take snapshot")
+                requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
+            }
+        }
+
         callsViewModel.currentCallData.observe(
             this
         ) { callData ->
@@ -145,6 +145,15 @@ class CallActivity : ProximitySensorActivity() {
             } else {
                 Log.i("[Call Activity] Current call is linked to a conference, changing fragment")
                 navigateToConferenceCall()
+            }
+        }
+
+        callsViewModel.askPermissionEvent.observe(
+            this
+        ) {
+            it.consume { permission ->
+                Log.i("[Call Activity] Asking for $permission permission")
+                requestPermissions(arrayOf(permission), 0)
             }
         }
 
@@ -281,7 +290,7 @@ class CallActivity : ProximitySensorActivity() {
                 when (permissions[i]) {
                     Manifest.permission.RECORD_AUDIO -> if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                         Log.i("[Call Activity] RECORD_AUDIO permission has been granted")
-                        controlsViewModel.updateMicState()
+                        callsViewModel.updateMicState()
                     }
                     Manifest.permission.CAMERA -> if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                         Log.i("[Call Activity] CAMERA permission has been granted")

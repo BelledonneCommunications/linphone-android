@@ -19,6 +19,7 @@
  */
 package org.linphone.activities.voip.viewmodels
 
+import android.Manifest
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -43,6 +44,10 @@ class CallsViewModel : ViewModel() {
 
     val chatAndCallsCount = MediatorLiveData<Int>()
 
+    val isMicrophoneMuted = MutableLiveData<Boolean>()
+
+    val isMuteMicrophoneEnabled = MutableLiveData<Boolean>()
+
     val askWriteExternalStoragePermissionEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -61,6 +66,10 @@ class CallsViewModel : ViewModel() {
 
     val noMoreCallEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
+    }
+
+    val askPermissionEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
     }
 
     private val listener = object : CoreListenerStub() {
@@ -145,6 +154,7 @@ class CallsViewModel : ViewModel() {
         initCallList()
         updateInactiveCallsCount()
         updateUnreadChatCount()
+        updateMicState()
     }
 
     override fun onCleared() {
@@ -154,6 +164,17 @@ class CallsViewModel : ViewModel() {
         callsData.value.orEmpty().forEach(CallData::destroy)
 
         super.onCleared()
+    }
+
+    fun toggleMuteMicrophone() {
+        if (!PermissionHelper.get().hasRecordAudioPermission()) {
+            askPermissionEvent.value = Event(Manifest.permission.RECORD_AUDIO)
+            return
+        }
+
+        val micMuted = currentCallData.value?.call?.microphoneMuted ?: false
+        currentCallData.value?.call?.microphoneMuted = !micMuted
+        updateMicState()
     }
 
     fun mergeCallsIntoConference() {
@@ -258,6 +279,7 @@ class CallsViewModel : ViewModel() {
             currentCallData.value = viewModel
         }
 
+        updateMicState()
         // updateUnreadChatCount()
     }
 
@@ -268,6 +290,11 @@ class CallsViewModel : ViewModel() {
             }
         }
         return false
+    }
+
+    fun updateMicState() {
+        isMicrophoneMuted.value = !PermissionHelper.get().hasRecordAudioPermission() || currentCallData.value?.call?.microphoneMuted == true
+        isMuteMicrophoneEnabled.value = currentCallData.value?.call != null
     }
 
     private fun updateCallsAndChatCount(): Int {
