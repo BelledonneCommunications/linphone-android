@@ -119,6 +119,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/voip_buttons_fragment_size"
             android:layout_margin="10dp"
+            app:callsViewModel="@{callsViewModel}"
             app:controlsViewModel="@{controlsViewModel}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

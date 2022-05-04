@@ -75,7 +75,14 @@ class NativeCallWrapper(var callId: String) : Connection() {
                 return
             }
 
-            call.microphoneMuted = state.isMuted
+            if (state.isMuted != call.microphoneMuted) {
+                Log.w("[Connection] Connection audio state asks for changing in mute: ${state.isMuted}, currently is ${call.microphoneMuted}")
+                if (state.isMuted) {
+                    Log.w("[Connection] Muting microphone")
+                    call.microphoneMuted = true
+                }
+            }
+
             when (state.route) {
                 CallAudioState.ROUTE_EARPIECE -> AudioRouteUtils.routeAudioToEarpiece(call, true)
                 CallAudioState.ROUTE_SPEAKER -> AudioRouteUtils.routeAudioToSpeaker(call, true)

@@ -37,10 +37,6 @@ import org.linphone.utils.Event
 import org.linphone.utils.PermissionHelper
 
 class ControlsViewModel : ViewModel() {
-    val isMicrophoneMuted = MutableLiveData<Boolean>()
-
-    val isMuteMicrophoneEnabled = MutableLiveData<Boolean>()
-
     val isSpeakerSelected = MutableLiveData<Boolean>()
 
     val isBluetoothHeadsetSelected = MutableLiveData<Boolean>()
@@ -241,17 +237,6 @@ class ControlsViewModel : ViewModel() {
         }
     }
 
-    fun toggleMuteMicrophone() {
-        if (!PermissionHelper.get().hasRecordAudioPermission()) {
-            askPermissionEvent.value = Event(Manifest.permission.RECORD_AUDIO)
-            return
-        }
-
-        val micEnabled = coreContext.core.isMicEnabled
-        coreContext.core.isMicEnabled = !micEnabled
-        updateMicState()
-    }
-
     fun toggleSpeaker() {
         if (AudioRouteUtils.isSpeakerAudioRouteCurrentlyUsed()) {
             forceEarpieceAudioRoute()
@@ -402,14 +387,8 @@ class ControlsViewModel : ViewModel() {
     private fun updateUI() {
         updateVideoAvailable()
         updateVideoEnabled()
-        updateMicState()
         updateSpeakerState()
         updateAudioRoutesState()
-    }
-
-    fun updateMicState() {
-        isMicrophoneMuted.value = !PermissionHelper.get().hasRecordAudioPermission() || !coreContext.core.isMicEnabled
-        isMuteMicrophoneEnabled.value = coreContext.core.currentCall != null || coreContext.core.conference?.isIn == true
     }
 
     private fun updateSpeakerState() {
