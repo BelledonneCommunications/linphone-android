@@ -290,6 +290,7 @@
     <string name="conference_low_bandwidth">Low bandwidth detected, disabling video</string>
     <string name="conference_first_to_join">You\'re the first to join the conference</string>
     <string name="conference_last_user">All other participants have left the conference</string>
+    <string name="conference_incoming_title">Incoming conference call</string>
 
     <!-- Call -->
     <string name="call_incoming_title">Incoming Call</string>

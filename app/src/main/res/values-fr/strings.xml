@@ -718,4 +718,5 @@
     <string name="content_description_conference_participants">Participants de la conférence</string>
     <string name="conference_first_to_join">Vous êtes le premier à avoir rejoint la conférence</string>
     <string name="conference_last_user">Tous les autres participants ont quitté la conférence</string>
+    <string name="conference_incoming_title">Appel de conférence entrant</string>
 </resources>
