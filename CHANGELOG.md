@@ -18,10 +18,45 @@ Group changes to describe their impact on the project, as follows:
 ### Changed
 - In-call views have been re-designed
 - Improved how call logs are handled to improve performances
+- Improved how contact avatars are generated
 
 ### Fixed
 - Multiple file download attempt from the same chat bubble at the same time needed app restart to properly download each file
 - Generated avatars in dark mode
+
+## [4.6.7] - 2022-05-04
+
+### Changed
+- Do not start Core in Application, prevents service notification from appearing by itself
+- When switching from bluetooth or headset device to earpiece/speaker, also change microphone
+- Prevent empty chat bubble by sending only space character(s)
+
+### Fixed
+- Phone numbers with non-ASCII labels missing from address book
+- Wrong audio device displayed in call statistics
+- Various issues from Crashlytics
+
+## [4.6.6] - 2022-04-26
+
+### Changed
+- Prevent requests to LIME X3DH & long term presence servers when not using a sip.linphone.org account
+- Updated DE & RU translations
+- Improved UI on landscape tablets
+
+### Fixed
+- Catching exceptions in new ContactsLoader reported on PlayStore
+- Missing phone numbers in contacts when label contains a space character (5.1.24 SDK fix)
+- Prevent app from starting by itself due to DummySyncService
+- Hide chat rooms settings not working properly
+
+## [4.6.5] - 2022-04-11
+
+### Changed
+- Only display phone number if it matches SIP address username
+- Using new MagicSearch API to improve contacts list performances
+
+### Fixed
+- Prevent concurrent exception while loading native address book contacts
 
 ## [4.6.4] - 2022-04-06
 
