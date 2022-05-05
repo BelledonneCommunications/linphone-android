@@ -26,6 +26,7 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
 import org.linphone.activities.main.fragments.SecureFragment
+import org.linphone.core.tools.Log
 import org.linphone.databinding.AboutFragmentBinding
 
 class AboutFragment : SecureFragment<AboutFragmentBinding>() {
@@ -48,7 +49,11 @@ class AboutFragment : SecureFragment<AboutFragmentBinding>() {
                 Intent.ACTION_VIEW,
                 Uri.parse(getString(R.string.about_privacy_policy_link))
             )
-            startActivity(browserIntent)
+            try {
+                startActivity(browserIntent)
+            } catch (se: SecurityException) {
+                Log.e("[About] Failed to start browser intent, $se")
+            }
         }
 
         binding.setLicenseClickListener {
@@ -56,7 +61,11 @@ class AboutFragment : SecureFragment<AboutFragmentBinding>() {
                 Intent.ACTION_VIEW,
                 Uri.parse(getString(R.string.about_license_link))
             )
-            startActivity(browserIntent)
+            try {
+                startActivity(browserIntent)
+            } catch (se: SecurityException) {
+                Log.e("[About] Failed to start browser intent, $se")
+            }
         }
 
         binding.setWeblateClickListener {
@@ -64,7 +73,11 @@ class AboutFragment : SecureFragment<AboutFragmentBinding>() {
                 Intent.ACTION_VIEW,
                 Uri.parse(getString(R.string.about_weblate_link))
             )
-            startActivity(browserIntent)
+            try {
+                startActivity(browserIntent)
+            } catch (se: SecurityException) {
+                Log.e("[About] Failed to start browser intent, $se")
+            }
         }
     }
 }
