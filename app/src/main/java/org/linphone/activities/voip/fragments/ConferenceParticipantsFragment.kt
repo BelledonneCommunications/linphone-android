@@ -33,6 +33,9 @@ import org.linphone.databinding.VoipConferenceParticipantsFragmentBinding
 class ConferenceParticipantsFragment : GenericFragment<VoipConferenceParticipantsFragmentBinding>() {
     private val conferenceViewModel: ConferenceViewModel by navGraphViewModels(R.id.call_nav_graph)
 
+    // Only display events happening during while this fragment is visible
+    private var skipEvents = true
+
     override fun getLayoutId(): Int = R.layout.voip_conference_participants_fragment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -62,7 +65,9 @@ class ConferenceParticipantsFragment : GenericFragment<VoipConferenceParticipant
                 } else {
                     getString(R.string.conference_admin_unset).format(participantName)
                 }
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                if (!skipEvents) {
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
@@ -78,6 +83,13 @@ class ConferenceParticipantsFragment : GenericFragment<VoipConferenceParticipant
     override fun onResume() {
         super.onResume()
 
+        skipEvents = false
         coreContext.core.nativePreviewWindowId = binding.localPreviewVideoSurface
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        skipEvents = true
     }
 }
