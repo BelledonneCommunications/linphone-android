@@ -106,9 +106,17 @@ class ConferenceViewModel : ViewModel() {
             conference: Conference,
             participant: Participant
         ) {
-            Log.i("[Conference] Participant admin status changed")
+            Log.i("[Conference] Participant admin status changed [${participant.address.asStringUriOnly()}] is ${if (participant.isAdmin) "now admin" else "no longer admin"}")
             isMeAdmin.value = conference.me.isAdmin
             updateParticipantsList(conference)
+
+            if (conference.me.address.weakEqual(participant.address)) {
+                Log.i("[Conference] Found me participant [${participant.address.asStringUriOnly()}]")
+                val participantData = ConferenceParticipantData(conference, participant)
+                participantAdminStatusChangedEvent.value = Event(participantData)
+                return
+            }
+
             val participantData = conferenceParticipants.value.orEmpty().find { data -> data.participant.address.weakEqual(participant.address) }
             if (participantData != null) {
                 participantAdminStatusChangedEvent.value = Event(participantData)

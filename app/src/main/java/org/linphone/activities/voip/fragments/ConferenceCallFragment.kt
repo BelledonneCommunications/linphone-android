@@ -139,19 +139,23 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
         conferenceViewModel.firstToJoinEvent.observe(
             viewLifecycleOwner
         ) {
-            Snackbar
-                .make(binding.coordinator, R.string.conference_first_to_join, Snackbar.LENGTH_LONG)
-                .setAnchorView(binding.primaryButtons.hangup)
-                .show()
+            it.consume {
+                Snackbar
+                    .make(binding.coordinator, R.string.conference_first_to_join, Snackbar.LENGTH_LONG)
+                    .setAnchorView(binding.primaryButtons.hangup)
+                    .show()
+            }
         }
 
         conferenceViewModel.allParticipantsLeftEvent.observe(
             viewLifecycleOwner
         ) {
-            Snackbar
-                .make(binding.coordinator, R.string.conference_last_user, Snackbar.LENGTH_LONG)
-                .setAnchorView(binding.primaryButtons.hangup)
-                .show()
+            it.consume {
+                Snackbar
+                    .make(binding.coordinator, R.string.conference_last_user, Snackbar.LENGTH_LONG)
+                    .setAnchorView(binding.primaryButtons.hangup)
+                    .show()
+            }
         }
 
         controlsViewModel.goToConferenceParticipantsListEvent.observe(
