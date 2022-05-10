@@ -29,23 +29,24 @@ import org.linphone.core.tools.service.CoreService
 class CoreService : CoreService() {
     override fun onCreate() {
         super.onCreate()
-
-        Log.i("[Service] Ensuring Core exists")
-        ensureCoreExists(applicationContext)
-
-        coreContext.notificationsManager.service = this
         Log.i("[Service] Created")
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Log.i("[Service] Ensuring Core exists")
         if (corePreferences.keepServiceAlive) {
             Log.i("[Service] Starting as foreground to keep app alive in background")
-            coreContext.notificationsManager.startForeground(this, false)
+            if (!ensureCoreExists(applicationContext, pushReceived = false, service = this, useAutoStartDescription = false)) {
+                coreContext.notificationsManager.startForeground(this, false)
+            }
         } else if (intent?.extras?.get("StartForeground") == true) {
             Log.i("[Service] Starting as foreground due to device boot or app update")
-            coreContext.notificationsManager.startForeground(this, true)
+            if (!ensureCoreExists(applicationContext, pushReceived = false, service = this, useAutoStartDescription = true)) {
+                coreContext.notificationsManager.startForeground(this, true)
+            }
             coreContext.checkIfForegroundServiceNotificationCanBeRemovedAfterDelay(5000)
         }
+
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -80,7 +81,7 @@ class CoreService : CoreService() {
 
     override fun onDestroy() {
         Log.i("[Service] Stopping")
-        coreContext.notificationsManager.service = null
+        coreContext.notificationsManager.serviceDestroyed()
 
         super.onDestroy()
     }

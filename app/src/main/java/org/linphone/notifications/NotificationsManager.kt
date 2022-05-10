@@ -105,7 +105,7 @@ class NotificationsManager(private val context: Context) {
     private var currentForegroundServiceNotificationId: Int = 0
     private var serviceNotification: Notification? = null
 
-    var service: CoreService? = null
+    private var service: CoreService? = null
 
     var currentlyDisplayedChatRoomAddress: String? = null
 
@@ -330,6 +330,8 @@ class NotificationsManager(private val context: Context) {
     }
 
     fun startForeground(coreService: CoreService, useAutoStartDescription: Boolean = true) {
+        service = coreService
+
         if (serviceNotification == null) {
             createServiceNotification(useAutoStartDescription)
             if (serviceNotification == null) {
@@ -337,10 +339,10 @@ class NotificationsManager(private val context: Context) {
                 return
             }
         }
+
         currentForegroundServiceNotificationId = SERVICE_NOTIF_ID
         Log.i("[Notifications Manager] Starting service as foreground [$currentForegroundServiceNotificationId]")
         Compatibility.startForegroundService(coreService, currentForegroundServiceNotificationId, serviceNotification)
-        service = coreService
     }
 
     private fun startForeground(notificationId: Int, callNotification: Notification) {
@@ -353,9 +355,11 @@ class NotificationsManager(private val context: Context) {
 
     fun stopForegroundNotification() {
         if (service != null) {
-            Log.i("[Notifications Manager] Stopping service as foreground [$currentForegroundServiceNotificationId]")
+            if (currentForegroundServiceNotificationId != 0) {
+                Log.i("[Notifications Manager] Stopping service as foreground [$currentForegroundServiceNotificationId]")
+                currentForegroundServiceNotificationId = 0
+            }
             service?.stopForeground(true)
-            currentForegroundServiceNotificationId = 0
         }
     }
 
@@ -371,6 +375,11 @@ class NotificationsManager(private val context: Context) {
             Log.i("[Notifications Manager] Stopping call notification [$currentForegroundServiceNotificationId] used as foreground service")
             stopForegroundNotification()
         }
+    }
+
+    fun serviceDestroyed() {
+        stopForegroundNotification()
+        service = null
     }
 
     private fun createServiceNotification(useAutoStartDescription: Boolean = false) {

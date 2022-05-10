@@ -72,15 +72,21 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
             Log.i("[Application] Core config & preferences created")
         }
 
-        fun ensureCoreExists(context: Context, pushReceived: Boolean = false) {
+        fun ensureCoreExists(
+            context: Context,
+            pushReceived: Boolean = false,
+            service: CoreService? = null,
+            useAutoStartDescription: Boolean = false
+        ): Boolean {
             if (::coreContext.isInitialized && !coreContext.stopped) {
                 Log.d("[Application] Skipping Core creation (push received? $pushReceived)")
-                return
+                return false
             }
 
             Log.i("[Application] Core context is being created ${if (pushReceived) "from push" else ""}")
-            coreContext = CoreContext(context, corePreferences.config)
+            coreContext = CoreContext(context, corePreferences.config, service, useAutoStartDescription)
             coreContext.start()
+            return true
         }
     }
 

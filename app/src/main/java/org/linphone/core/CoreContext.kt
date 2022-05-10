@@ -64,7 +64,13 @@ import org.linphone.telecom.TelecomHelper
 import org.linphone.utils.*
 import org.linphone.utils.Event
 
-class CoreContext(val context: Context, coreConfig: Config) : LifecycleOwner, ViewModelStoreOwner {
+class CoreContext(
+    val context: Context,
+    coreConfig: Config,
+    service: CoreService? = null,
+    useAutoStartDescription: Boolean = false
+) :
+    LifecycleOwner, ViewModelStoreOwner {
     private val _lifecycleRegistry = LifecycleRegistry(this)
     override fun getLifecycle(): Lifecycle {
         return _lifecycleRegistry
@@ -283,6 +289,8 @@ class CoreContext(val context: Context, coreConfig: Config) : LifecycleOwner, Vi
             Log.i("[Context] Crashlytics enabled, register logging service listener")
         }
 
+        _lifecycleRegistry.currentState = Lifecycle.State.INITIALIZED
+
         Log.i("=========================================")
         Log.i("==== Linphone-android information dump ====")
         Log.i("VERSION=${BuildConfig.VERSION_NAME} / ${BuildConfig.VERSION_CODE}")
@@ -290,9 +298,15 @@ class CoreContext(val context: Context, coreConfig: Config) : LifecycleOwner, Vi
         Log.i("BUILD TYPE=${BuildConfig.BUILD_TYPE}")
         Log.i("=========================================")
 
+        if (service != null) {
+            Log.i("[Context] Starting foreground service")
+            notificationsManager.startForeground(service, useAutoStartDescription)
+        }
+
         core = Factory.instance().createCoreWithConfig(coreConfig, context)
+
         stopped = false
-        _lifecycleRegistry.currentState = Lifecycle.State.INITIALIZED
+        _lifecycleRegistry.currentState = Lifecycle.State.CREATED
         Log.i("[Context] Ready")
     }
 
@@ -316,7 +330,6 @@ class CoreContext(val context: Context, coreConfig: Config) : LifecycleOwner, Vi
 
         configureCore()
 
-        _lifecycleRegistry.currentState = Lifecycle.State.CREATED
         core.start()
         _lifecycleRegistry.currentState = Lifecycle.State.STARTED
 
