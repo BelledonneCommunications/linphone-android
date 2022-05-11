@@ -6,7 +6,7 @@
     <string name="service_description">Dies ist erforderlich um Anrufe im Hintergrund anzunehmen</string>
     <string name="sync_account_name">&appName; Kontakte</string>
     <string name="about_privacy_policy">Datenschutz-Bestimmungen</string>
-    <string name="logs_reset_complete">Lagdatei wurde gelöscht</string>
+    <string name="logs_reset_complete">Logdatei wurde gelöscht</string>
     <string name="logs_url_copied_to_clipboard">Logdatei-URL wurde in die Zwischenablage kopiert</string>
     <string name="error">Fehler</string>
     <string name="phone_number">Telefonnummer</string>
@@ -46,7 +46,7 @@
     <string name="contact_invite_friend">Einladen</string>
     <string name="no_account_configured">Kein Konto konfiguriert</string>
     <string name="no_sip_contact">Kein SIP-Kontakt im Adressbuch.</string>
-    <string name="no_contact">Keine Eintrag im Adressbuch.</string>
+    <string name="no_contact">Kein Eintrag im Adressbuch.</string>
     <string name="contact_filter_hint">Kontakt suchen</string>
     <string name="contact_last_name">Nachname</string>
     <string name="contact_first_name">Vorname</string>
@@ -116,7 +116,7 @@
     <string name="call_error_incompatible_media_params">Inkompatible Medienparameter</string>
     <string name="call_error_network_unreachable">Netzwerk nicht erreichbar</string>
     <string name="call_error_generic">Fehler: %s</string>
-    <string name="service_auto_start_description">&appName; wurde automatich gestartet</string>
+    <string name="service_auto_start_description">&amp;appName; wurde automatisch gestartet</string>
     <string name="logs_upload_failure">Hochladen der Logdatei fehlgeschlagen!</string>
     <string name="assistant_choose_country_title">Ländername oder Vorwahl</string>
     <string name="invalid_email">Ungültige E-Mail-Adresse</string>
