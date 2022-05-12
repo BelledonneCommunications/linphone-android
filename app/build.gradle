@@ -199,6 +199,7 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    namespace 'org.linphone'
 }
 
 dependencies {
@@ -224,7 +225,7 @@ dependencies {
     implementation 'androidx.core:core-splashscreen:1.0.0-beta02'
 
     // https://github.com/material-components/material-components-android/blob/master/LICENSE Apache v2.0
-    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'com.google.android.material:material:1.6.0'
     // https://github.com/google/flexbox-layout/blob/main/LICENSE Apache v2.0
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
 
