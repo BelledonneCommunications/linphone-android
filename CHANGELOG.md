@@ -23,6 +23,9 @@ Group changes to describe their impact on the project, as follows:
 ### Fixed
 - Multiple file download attempt from the same chat bubble at the same time needed app restart to properly download each file
 - Generated avatars in dark mode
+- Call state in self-managed TelecomManager service if it takes longer to be created than the call to be answered
+- Show service notification sooner to prevent crash if Core creation takes too long
+- Trying to keep the preferred driver (OpenSLES / AAudio) when switching device
 
 ## [4.6.7] - 2022-05-04
 
