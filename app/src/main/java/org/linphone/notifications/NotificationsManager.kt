@@ -49,10 +49,7 @@ import org.linphone.contact.getPerson
 import org.linphone.contact.getThumbnailUri
 import org.linphone.core.*
 import org.linphone.core.tools.Log
-import org.linphone.utils.AppUtils
-import org.linphone.utils.FileUtils
-import org.linphone.utils.ImageUtils
-import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.*
 
 class Notifiable(val notificationId: Int) {
     val messages: ArrayList<NotifiableMessage> = arrayListOf()
@@ -163,8 +160,12 @@ class NotificationsManager(private val context: Context) {
             }
 
             if (corePreferences.chatRoomShortcuts) {
-                Log.i("[Notifications Manager] Ensure chat room shortcut exists for bubble notification")
-                Compatibility.createShortcutsToChatRooms(context)
+                if (ShortcutsHelper.isShortcutToChatRoomAlreadyCreated(context, room)) {
+                    Log.i("[Notifications Manager] Chat room shortcut already exists")
+                } else {
+                    Log.i("[Notifications Manager] Ensure chat room shortcut exists for bubble notification")
+                    ShortcutsHelper.createShortcutsToChatRooms(context)
+                }
             }
             displayIncomingChatNotification(room, message)
         }

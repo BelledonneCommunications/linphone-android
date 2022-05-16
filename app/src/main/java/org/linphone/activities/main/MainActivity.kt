@@ -64,6 +64,7 @@ import org.linphone.databinding.MainActivityBinding
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
+import org.linphone.utils.ShortcutsHelper
 
 class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestinationChangedListener {
     private lateinit var binding: MainActivityBinding
@@ -74,9 +75,9 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         override fun onContactsUpdated() {
             Log.i("[Main Activity] Contact(s) updated, update shortcuts")
             if (corePreferences.contactsShortcuts) {
-                Compatibility.createShortcutsToContacts(this@MainActivity)
+                ShortcutsHelper.createShortcutsToContacts(this@MainActivity)
             } else if (corePreferences.chatRoomShortcuts) {
-                Compatibility.createShortcutsToChatRooms(this@MainActivity)
+                ShortcutsHelper.createShortcutsToChatRooms(this@MainActivity)
             }
         }
     }
