@@ -121,6 +121,8 @@
 
         <activity android:name=".activities.voip.CallActivity"
             android:launchMode="singleTask"
+            android:turnScreenOn="true"
+            android:showWhenLocked="true"
             android:resizeableActivity="true"
             android:supportsPictureInPicture="true" />
 
