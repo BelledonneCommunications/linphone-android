@@ -29,7 +29,6 @@ import org.linphone.activities.assistant.viewmodels.PhoneAccountCreationViewMode
 import org.linphone.activities.assistant.viewmodels.SharedAssistantViewModel
 import org.linphone.activities.navigateToPhoneAccountValidation
 import org.linphone.databinding.AssistantPhoneAccountCreationFragmentBinding
-import org.linphone.mediastream.Version
 
 class PhoneAccountCreationFragment :
     AbstractPhoneFragment<AssistantPhoneAccountCreationFragmentBinding>() {
@@ -80,8 +79,6 @@ class PhoneAccountCreationFragment :
             }
         }
 
-        if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
-            checkPermissions()
-        }
+        checkPermissions()
     }
 }

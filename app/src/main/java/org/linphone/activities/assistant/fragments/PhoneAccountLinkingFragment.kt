@@ -30,7 +30,6 @@ import org.linphone.activities.navigateToEchoCancellerCalibration
 import org.linphone.activities.navigateToPhoneAccountValidation
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantPhoneAccountLinkingFragmentBinding
-import org.linphone.mediastream.Version
 
 class PhoneAccountLinkingFragment : AbstractPhoneFragment<AssistantPhoneAccountLinkingFragmentBinding>() {
     private lateinit var sharedViewModel: SharedAssistantViewModel
@@ -103,8 +102,6 @@ class PhoneAccountLinkingFragment : AbstractPhoneFragment<AssistantPhoneAccountL
             }
         }
 
-        if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
-            checkPermissions()
-        }
+        checkPermissions()
     }
 }

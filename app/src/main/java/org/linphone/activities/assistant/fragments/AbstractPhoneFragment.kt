@@ -20,7 +20,6 @@
 
 package org.linphone.activities.assistant.fragments
 
-import android.annotation.TargetApi
 import android.content.pm.PackageManager
 import androidx.databinding.ViewDataBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -29,7 +28,6 @@ import org.linphone.activities.GenericFragment
 import org.linphone.activities.assistant.viewmodels.AbstractPhoneViewModel
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
-import org.linphone.mediastream.Version
 import org.linphone.utils.PermissionHelper
 import org.linphone.utils.PhoneNumberUtils
 
@@ -55,7 +53,6 @@ abstract class AbstractPhoneFragment<T : ViewDataBinding> : GenericFragment<T>()
         }
     }
 
-    @TargetApi(Version.API23_MARSHMALLOW_60)
     protected fun checkPermissions() {
         if (!resources.getBoolean(R.bool.isTablet)) {
             if (!PermissionHelper.get().hasReadPhoneStateOrPhoneNumbersPermission()) {

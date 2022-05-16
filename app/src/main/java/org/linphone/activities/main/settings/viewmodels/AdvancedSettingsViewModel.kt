@@ -28,7 +28,6 @@ import org.linphone.activities.main.viewmodels.LogsUploadViewModel
 import org.linphone.core.CoreContext
 import org.linphone.core.Factory
 import org.linphone.core.LogLevel
-import org.linphone.mediastream.Version
 import org.linphone.utils.Event
 
 class AdvancedSettingsViewModel : LogsUploadViewModel() {
@@ -183,6 +182,6 @@ class AdvancedSettingsViewModel : LogsUploadViewModel() {
         vfs.value = prefs.vfsEnabled
         disableSecureFragment.value = prefs.disableSecureMode
 
-        batterySettingsVisibility.value = Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)
+        batterySettingsVisibility.value = true
     }
 }

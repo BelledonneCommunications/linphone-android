@@ -20,7 +20,6 @@
 package org.linphone.activities.main.conference.fragments
 
 import android.Manifest
-import android.annotation.TargetApi
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
@@ -119,9 +118,7 @@ class ConferenceWaitingRoomFragment : GenericFragment<ConferenceWaitingRoomFragm
             }
         }
 
-        if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
-            checkPermissions()
-        }
+        checkPermissions()
     }
 
     override fun onResume() {
@@ -137,7 +134,6 @@ class ConferenceWaitingRoomFragment : GenericFragment<ConferenceWaitingRoomFragm
         super.onPause()
     }
 
-    @TargetApi(Version.API23_MARSHMALLOW_60)
     private fun checkPermissions() {
         val permissionsRequiredList = arrayListOf<String>()
 
