@@ -122,11 +122,15 @@
 
         <activity android:name=".activities.call.CallActivity"
             android:launchMode="singleTask"
+            android:turnScreenOn="true"
+            android:showWhenLocked="true"
             android:resizeableActivity="true"
             android:supportsPictureInPicture="true" />
 
         <activity android:name=".activities.call.IncomingCallActivity"
             android:launchMode="singleTask"
+            android:turnScreenOn="true"
+            android:showWhenLocked="true"
             android:noHistory="true" />
 
         <activity android:name=".activities.call.OutgoingCallActivity"
