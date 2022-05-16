@@ -388,6 +388,7 @@ class ControlsViewModel : ViewModel() {
         updateVideoAvailable()
         updateVideoEnabled()
         updateSpeakerState()
+        updateBluetoothHeadsetState()
         updateAudioRoutesState()
     }
 
