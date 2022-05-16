@@ -35,7 +35,6 @@ import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.navigateToEchoCancellerCalibration
 import org.linphone.activities.navigateToPhoneAccountValidation
 import org.linphone.databinding.AssistantAccountLoginFragmentBinding
-import org.linphone.mediastream.Version
 import org.linphone.utils.DialogUtils
 
 class AccountLoginFragment : AbstractPhoneFragment<AssistantAccountLoginFragmentBinding>() {
@@ -136,8 +135,6 @@ class AccountLoginFragment : AbstractPhoneFragment<AssistantAccountLoginFragment
             }
         }
 
-        if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
-            checkPermissions()
-        }
+        checkPermissions()
     }
 }

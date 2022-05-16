@@ -114,9 +114,7 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
 
     val systemWideOverlayListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
-            if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
-                if (newValue) systemWideOverlayEnabledEvent.value = Event(true)
-            }
+            if (newValue) systemWideOverlayEnabledEvent.value = Event(true)
             prefs.systemWideCallOverlay = newValue
         }
     }

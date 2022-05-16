@@ -20,7 +20,6 @@
 package org.linphone.activities.voip
 
 import android.Manifest
-import android.annotation.TargetApi
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
@@ -178,9 +177,7 @@ class CallActivity : ProximitySensorActivity() {
             }
         }
 
-        if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
-            checkPermissions()
-        }
+        checkPermissions()
     }
 
     override fun onUserLeaveHint() {
@@ -252,7 +249,6 @@ class CallActivity : ProximitySensorActivity() {
         super.onDestroy()
     }
 
-    @TargetApi(Version.API23_MARSHMALLOW_60)
     private fun checkPermissions() {
         val permissionsRequiredList = arrayListOf<String>()
 

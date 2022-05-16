@@ -192,9 +192,7 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
 
         checkForUpdate()
 
-        if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
-            checkPermissions()
-        }
+        checkPermissions()
     }
 
     override fun onPause() {
@@ -244,7 +242,6 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
-    @TargetApi(Version.API23_MARSHMALLOW_60)
     private fun checkPermissions() {
         checkReadPhoneStatePermission()
         if (Version.sdkAboveOrEqual(Version.API26_O_80) && PermissionHelper.get().hasReadPhoneStatePermission()) {
@@ -253,7 +250,6 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
         }
     }
 
-    @TargetApi(Version.API23_MARSHMALLOW_60)
     private fun checkReadPhoneStatePermission() {
         if (!PermissionHelper.get().hasReadPhoneStatePermission()) {
             Log.i("[Dialer] Asking for READ_PHONE_STATE permission")
