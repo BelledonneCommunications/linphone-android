@@ -273,27 +273,7 @@ class Compatibility {
             }
         }
 
-        /* Contacts */
-
-        fun createShortcutsToContacts(context: Context) {
-            if (Version.sdkAboveOrEqual(Version.API25_NOUGAT_71)) {
-                Api25Compatibility.createShortcutsToContacts(context)
-            }
-        }
-
-        fun removeShortcuts(context: Context) {
-            if (Version.sdkAboveOrEqual(Version.API25_NOUGAT_71)) {
-                Api25Compatibility.removeShortcuts(context)
-            }
-        }
-
         /* Chat */
-
-        fun createShortcutsToChatRooms(context: Context) {
-            if (Version.sdkAboveOrEqual(Version.API25_NOUGAT_71)) {
-                Api25Compatibility.createShortcutsToChatRooms(context)
-            }
-        }
 
         fun removeChatRoomShortcut(context: Context, chatRoom: ChatRoom) {
             if (Version.sdkAboveOrEqual(Version.API30_ANDROID_11)) {

@@ -30,11 +30,11 @@ import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.activities.main.settings.viewmodels.ContactsSettingsViewModel
 import org.linphone.activities.navigateToEmptySetting
 import org.linphone.activities.navigateToLdapSettings
-import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsContactsFragmentBinding
 import org.linphone.utils.Event
 import org.linphone.utils.PermissionHelper
+import org.linphone.utils.ShortcutsHelper
 
 class ContactsSettingsFragment : GenericSettingFragment<SettingsContactsFragmentBinding>() {
     private lateinit var viewModel: ContactsSettingsViewModel
@@ -57,11 +57,11 @@ class ContactsSettingsFragment : GenericSettingFragment<SettingsContactsFragment
         ) {
             it.consume { newValue ->
                 if (newValue) {
-                    Compatibility.createShortcutsToContacts(requireContext())
+                    ShortcutsHelper.createShortcutsToContacts(requireContext())
                 } else {
-                    Compatibility.removeShortcuts(requireContext())
+                    ShortcutsHelper.removeShortcuts(requireContext())
                     if (corePreferences.chatRoomShortcuts) {
-                        Compatibility.createShortcutsToChatRooms(requireContext())
+                        ShortcutsHelper.createShortcutsToChatRooms(requireContext())
                     }
                 }
             }

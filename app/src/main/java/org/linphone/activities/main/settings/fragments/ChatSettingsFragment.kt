@@ -29,10 +29,10 @@ import org.linphone.R
 import org.linphone.activities.main.chat.viewmodels.ChatRoomsListViewModel
 import org.linphone.activities.main.settings.viewmodels.ChatSettingsViewModel
 import org.linphone.activities.navigateToEmptySetting
-import org.linphone.compatibility.Compatibility
 import org.linphone.databinding.SettingsChatFragmentBinding
 import org.linphone.mediastream.Version
 import org.linphone.utils.Event
+import org.linphone.utils.ShortcutsHelper
 
 class ChatSettingsFragment : GenericSettingFragment<SettingsChatFragmentBinding>() {
     private lateinit var viewModel: ChatSettingsViewModel
@@ -55,9 +55,9 @@ class ChatSettingsFragment : GenericSettingFragment<SettingsChatFragmentBinding>
         ) {
             it.consume { newValue ->
                 if (newValue) {
-                    Compatibility.createShortcutsToChatRooms(requireContext())
+                    ShortcutsHelper.createShortcutsToChatRooms(requireContext())
                 } else {
-                    Compatibility.removeShortcuts(requireContext())
+                    ShortcutsHelper.removeShortcuts(requireContext())
                 }
             }
         }
