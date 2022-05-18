@@ -77,7 +77,7 @@ class Api31Compatibility {
                     .build()
             } else {
                 Person.Builder()
-                    .setName(conferenceInfo.subject)
+                    .setName(if (conferenceInfo.subject.isNullOrEmpty()) context.getString(R.string.conference_incoming_title) else conferenceInfo.subject)
                     .setIcon(coreContext.contactsManager.groupAvatar.toIcon(context))
                     .setImportant(false)
                     .build()
