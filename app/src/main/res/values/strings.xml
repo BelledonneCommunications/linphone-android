@@ -83,7 +83,7 @@
     <string name="history_calls_list">Calls</string>
     <string name="no_call_history">No call in your history</string>
     <string name="no_missed_call_history">No missed call in your history</string>
-    <string name="no_conference_call_history">No conference call in your history</string>
+    <string name="no_conference_call_history">No meeting call in your history</string>
     <string name="history_delete_one_dialog">Do you want to delete this record?</string>
     <string name="history_delete_many_dialog">Do you want to delete these records?</string>
     <plurals name="history_delete_dialog" translatable="false">
@@ -262,8 +262,8 @@
     <string name="conference_schedule_info_not_sent_to_participant">Failed to send meeting info to a participant</string>
     <string name="conference_paused_title">You are currently out of the meeting.</string>
     <string name="conference_paused_subtitle">Click on play button to join it back.</string>
-    <string name="conference_default_title">Remote meeting</string>
-    <string name="conference_local_title">Local meeting</string>
+    <string name="conference_default_title">Remote group call</string>
+    <string name="conference_local_title">Local group call</string>
     <string name="conference_invite_title">Meeting invite:</string>
     <string name="conference_description_title">Description:</string>
     <string name="conference_invite_join">Join</string>
@@ -275,7 +275,7 @@
     <string name="conference_waiting_room_cancel_call">Cancel</string>
     <string name="conference_waiting_room_video_disabled">Video is currently disabled</string>
     <string name="conference_scheduled">Meetings</string>
-    <string name="conference_layout_too_many_participants_for_mosaic">You can\'t change meeting layout as there is too many participants</string>
+    <string name="conference_layout_too_many_participants_for_mosaic">You can\'t change group call layout as there is too many participants</string>
     <string name="conference_too_many_participants_for_mosaic_layout">There is too many participants for mosaic layout, switching to active speaker</string>
     <string name="conference_participant_paused">(paused)</string>
     <string name="conference_no_schedule">No scheduled meeting yet.</string>
@@ -287,13 +287,13 @@
     <string name="conference_schedule_info_created">Meeting has been scheduled</string>
     <string name="conference_info_confirm_removal">Do you really want to delete this meeting?</string>
     <string name="conference_info_removed">Meeting info has been deleted</string>
-    <string name="conference_empty">You are currently alone in this meeting</string>
+    <string name="conference_empty">You are currently alone in this group call</string>
     <string name="conference_invitation_received_notification">You have been invited to a meeting</string>
     <string name="conference_invitation">Meeting invitation</string>
     <string name="conference_low_bandwidth">Low bandwidth detected, disabling video</string>
-    <string name="conference_first_to_join">You\'re the first to join the meeting</string>
-    <string name="conference_last_user">All other participants have left the meeting</string>
-    <string name="conference_incoming_title">Incoming meeting call</string>
+    <string name="conference_first_to_join">You\'re the first to join the group call</string>
+    <string name="conference_last_user">All other participants have left the group call</string>
+    <string name="conference_incoming_title">Incoming group call</string>
 
     <!-- Call -->
     <string name="call_incoming_title">Incoming Call</string>
@@ -432,7 +432,7 @@
     <string name="settings_network_title">Network</string>
     <string name="settings_contacts_title">Contacts</string>
     <string name="settings_advanced_title">Advanced</string>
-    <string name="settings_conferences_title">Conferences</string>
+    <string name="settings_conferences_title">Meetings</string>
     <string name="settings_primary_account_title">Primary Account</string>
     <string name="settings_primary_account_display_name_title">Display Name</string>
     <string name="settings_primary_account_username_title">Username</string>
@@ -838,19 +838,19 @@
     <string name="content_description_play_voice_recording">Play voice recording</string>
     <string name="content_descripton_scroll_to_bottom">Scroll to bottom or first unread message</string>
     <string name="content_description_call_context_menu">Open call context menu</string>
-    <string name="content_description_create_conference">Create a conference call</string>
-    <string name="content_description_copy_conference_address">Copy conference address</string>
-    <string name="content_description_edit_conference">Edit conference</string>
-    <string name="content_description_delete_conference">Delete conference</string>
-    <string name="content_description_encrypted_conference">Conference will be encrypted</string>
+    <string name="content_description_create_conference">Create a meeting call</string>
+    <string name="content_description_copy_conference_address">Copy meeting address</string>
+    <string name="content_description_edit_conference">Edit meeting</string>
+    <string name="content_description_delete_conference">Delete meeting</string>
+    <string name="content_description_encrypted_conference">Meeting will be encrypted</string>
     <string name="content_description_share_ics">Export event to calendar</string>
     <string name="content_description_hide_statistics">Hide call statistics</string>
     <string name="content_description_show_numpad">Show numpad</string>
     <string name="content_description_hide_numpad">Hide numpad</string>
     <string name="content_description_go_to_chat_rooms_list">Go to conversations list</string>
     <string name="content_description_conference_participant_mic_muted">Participant has it\'s microphone muted</string>
-    <string name="content_description_toggle_layout_menu">Show or hide conference layout menu</string>
-    <string name="content_description_participant_is_paused">Participant has momentarily left the conference</string>
-    <string name="content_description_toggle_conference_info_details">Toggle conference information details visibility</string>
-    <string name="content_description_conference_participants">Conference participants</string>
+    <string name="content_description_toggle_layout_menu">Show or hide group call layout menu</string>
+    <string name="content_description_participant_is_paused">Participant has momentarily left the group call</string>
+    <string name="content_description_toggle_conference_info_details">Toggle meeting information details visibility</string>
+    <string name="content_description_conference_participants">Group call participants</string>
 </resources>
