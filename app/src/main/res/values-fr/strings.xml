@@ -722,4 +722,5 @@
     <string name="conference_group_call_subject_hint">Sujet de l\'appel de groupe</string>
     <string name="conference_group_call_summary">Informations de l\'appel de groupe</string>
     <string name="conference_group_call_create">Démarrer l\'appel de groupe</string>
+    <string name="incoming_group_call_notification_title">Appel de groupe entrant</string>
 </resources>

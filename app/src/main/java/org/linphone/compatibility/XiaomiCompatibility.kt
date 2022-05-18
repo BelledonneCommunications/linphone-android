@@ -22,6 +22,7 @@ package org.linphone.compatibility
 import android.annotation.TargetApi
 import android.app.*
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
@@ -30,6 +31,8 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.contact.getThumbnailUri
 import org.linphone.core.Call
+import org.linphone.core.Friend
+import org.linphone.core.tools.Log
 import org.linphone.notifications.Notifiable
 import org.linphone.notifications.NotificationsManager
 import org.linphone.utils.ImageUtils
@@ -45,10 +48,31 @@ class XiaomiCompatibility {
             pendingIntent: PendingIntent,
             notificationsManager: NotificationsManager
         ): Notification {
-            val contact = coreContext.contactsManager.findContactByAddress(call.remoteAddress)
-            val roundPicture = ImageUtils.getRoundBitmapFromUri(context, contact?.getThumbnailUri())
-            val displayName = contact?.name ?: LinphoneUtils.getDisplayName(call.remoteAddress)
-            val address = LinphoneUtils.getDisplayableAddress(call.remoteAddress)
+            val contact: Friend?
+            val roundPicture: Bitmap?
+            val displayName: String
+            val address: String
+            val info: String
+
+            val remoteContact = call.remoteContact
+            val conferenceAddress = if (remoteContact != null) coreContext.core.interpretUrl(remoteContact) else null
+            val conferenceInfo = if (conferenceAddress != null) coreContext.core.findConferenceInformationFromUri(conferenceAddress) else null
+            if (conferenceInfo == null) {
+                Log.i("[Notifications Manager] No conference info found for remote contact address $remoteContact")
+                contact = coreContext.contactsManager.findContactByAddress(call.remoteAddress)
+                roundPicture =
+                    ImageUtils.getRoundBitmapFromUri(context, contact?.getThumbnailUri())
+                displayName = contact?.name ?: LinphoneUtils.getDisplayName(call.remoteAddress)
+                address = LinphoneUtils.getDisplayableAddress(call.remoteAddress)
+                info = context.getString(R.string.incoming_call_notification_title)
+            } else {
+                contact = null
+                displayName = conferenceInfo.subject ?: context.getString(R.string.conference)
+                address = LinphoneUtils.getDisplayableAddress(call.remoteAddress)
+                roundPicture = BitmapFactory.decodeResource(context.resources, R.drawable.voip_multiple_contacts_avatar_alt)
+                info = context.getString(R.string.incoming_group_call_notification_title)
+                Log.i("[Notifications Manager] Displaying incoming group call notification with subject $displayName and remote contact address $remoteContact")
+            }
 
             val builder = NotificationCompat.Builder(context, context.getString(R.string.notification_channel_incoming_call_id))
                 .addPerson(notificationsManager.getPerson(contact, displayName, roundPicture))
@@ -56,7 +80,7 @@ class XiaomiCompatibility {
                 .setLargeIcon(roundPicture ?: BitmapFactory.decodeResource(context.resources, R.drawable.voip_single_contact_avatar_alt))
                 .setContentTitle(displayName)
                 .setContentText(address)
-                .setSubText(context.getString(R.string.incoming_call_notification_title))
+                .setSubText(info)
                 .setCategory(NotificationCompat.CATEGORY_CALL)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)

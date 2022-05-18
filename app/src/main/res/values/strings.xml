@@ -681,7 +681,8 @@
     <string name="notification_channel_missed_call_name">&appName; missed calls notifications</string>
     <string name="notification_channel_incoming_call_name">&appName; incoming calls notifications</string>
     <string name="notification_channel_chat_name">&appName; instant messages notifications</string>
-    <string name="incoming_call_notification_title">Call incoming</string>
+    <string name="incoming_call_notification_title">Incoming call</string>
+    <string name="incoming_group_call_notification_title">Incoming group call</string>
     <string name="incoming_call_notification_hangup_action_label">Hangup</string>
     <string name="incoming_call_notification_answer_action_label">Answer</string>
     <string name="received_chat_notification_reply_label">Reply</string>
