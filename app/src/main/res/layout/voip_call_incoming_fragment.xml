@@ -42,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="@{callsViewModel.currentCallData.remoteConferenceSubject.length > 0 ? @string/conference_incoming_title : @string/call_incoming_title, default=@string/call_incoming_title}"
+            android:text="@{callsViewModel.currentCallData.isConferenceCall ? @string/conference_incoming_title : @string/call_incoming_title, default=@string/call_incoming_title}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/progress" />
@@ -129,7 +129,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/event_decoration_gray"
             android:gravity="center"
             android:orientation="horizontal"
@@ -145,7 +145,7 @@
                 android:lineSpacingExtra="0sp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:text="Participants (6)" /><!-- TODO -->
+                android:text="@{callsViewModel.currentCallData.conferenceParticipantsCountLabel, default=`Participants (6)`}" />
 
         </LinearLayout>
 
@@ -167,30 +167,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <include layout="@layout/voip_conference_incoming_participant_cell" />
-
-                <include layout="@layout/voip_conference_incoming_participant_cell" />
-
-                <include layout="@layout/voip_conference_incoming_participant_cell" />
-
-                <include layout="@layout/voip_conference_incoming_participant_cell" />
-
-                <include layout="@layout/voip_conference_incoming_participant_cell" />
-
-                <include layout="@layout/voip_conference_incoming_participant_cell" />
-
-                <include layout="@layout/voip_conference_incoming_participant_cell" />
-
-                <include layout="@layout/voip_conference_incoming_participant_cell" />
-
-                <include layout="@layout/voip_conference_incoming_participant_cell" />
-
-                <include layout="@layout/voip_conference_incoming_participant_cell" />
-                <!-- TODO -->
-
-            </LinearLayout>
+                android:orientation="vertical"
+                app:entries="@{callsViewModel.currentCallData.conferenceParticipants}"
+                app:layout="@{@layout/voip_conference_incoming_participant_cell}" />
 
         </androidx.core.widget.NestedScrollView>
 
@@ -198,14 +177,14 @@
             android:id="@+id/single_call_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="@{callsViewModel.currentCallData.remoteConferenceSubject.length > 0 ? View.GONE : View.VISIBLE, default=visible}"
+            android:visibility="@{callsViewModel.currentCallData.isConferenceCall ? View.GONE : View.VISIBLE, default=visible}"
             app:constraint_referenced_ids="incoming_call_timer, avatar, caller_name, sipAddress" />
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/conference_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="@{callsViewModel.currentCallData.remoteConferenceSubject.length > 0 ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{callsViewModel.currentCallData.isConferenceCall ? View.VISIBLE : View.GONE, default=gone}"
             app:constraint_referenced_ids="incoming_conference_subject, conference_avatar, participants_count, participants_list" />
 
         <include
