@@ -149,15 +149,36 @@ class Api26Compatibility {
             pendingIntent: PendingIntent,
             notificationsManager: NotificationsManager
         ): Notification {
-            val contact: Friend? = coreContext.contactsManager.findContactByAddress(call.remoteAddress)
-            val roundPicture = ImageUtils.getRoundBitmapFromUri(context, contact?.getThumbnailUri())
-            val displayName = contact?.name ?: LinphoneUtils.getDisplayName(call.remoteAddress)
-            val address = LinphoneUtils.getDisplayableAddress(call.remoteAddress)
+            val contact: Friend?
+            val roundPicture: Bitmap?
+            val displayName: String
+            val address: String
+            val info: String
+
+            val remoteContact = call.remoteContact
+            val conferenceAddress = if (remoteContact != null) coreContext.core.interpretUrl(remoteContact) else null
+            val conferenceInfo = if (conferenceAddress != null) coreContext.core.findConferenceInformationFromUri(conferenceAddress) else null
+            if (conferenceInfo == null) {
+                Log.i("[Notifications Manager] No conference info found for remote contact address $remoteContact")
+                contact = coreContext.contactsManager.findContactByAddress(call.remoteAddress)
+                roundPicture =
+                    ImageUtils.getRoundBitmapFromUri(context, contact?.getThumbnailUri())
+                displayName = contact?.name ?: LinphoneUtils.getDisplayName(call.remoteAddress)
+                address = LinphoneUtils.getDisplayableAddress(call.remoteAddress)
+                info = context.getString(R.string.incoming_call_notification_title)
+            } else {
+                contact = null
+                displayName = conferenceInfo.subject ?: context.getString(R.string.conference)
+                address = LinphoneUtils.getDisplayableAddress(call.remoteAddress)
+                roundPicture = BitmapFactory.decodeResource(context.resources, R.drawable.voip_multiple_contacts_avatar_alt)
+                info = context.getString(R.string.incoming_group_call_notification_title)
+                Log.i("[Notifications Manager] Displaying incoming group call notification with subject $displayName for remote contact address $remoteContact")
+            }
 
             val notificationLayoutHeadsUp = RemoteViews(context.packageName, R.layout.call_incoming_notification_heads_up)
             notificationLayoutHeadsUp.setTextViewText(R.id.caller, displayName)
             notificationLayoutHeadsUp.setTextViewText(R.id.sip_uri, address)
-            notificationLayoutHeadsUp.setTextViewText(R.id.incoming_call_info, context.getString(R.string.incoming_call_notification_title))
+            notificationLayoutHeadsUp.setTextViewText(R.id.incoming_call_info, info)
 
             if (roundPicture != null) {
                 notificationLayoutHeadsUp.setImageViewBitmap(R.id.caller_picture, roundPicture)
@@ -203,7 +224,9 @@ class Api26Compatibility {
             val title: String
             val person: Person
 
-            val conferenceInfo = coreContext.core.findConferenceInformationFromUri(call.remoteAddress)
+            val remoteContact = call.remoteContact
+            val conferenceAddress = if (remoteContact != null) coreContext.core.interpretUrl(remoteContact) else null
+            val conferenceInfo = if (conferenceAddress != null) coreContext.core.findConferenceInformationFromUri(conferenceAddress) else null
             if (conferenceInfo == null) {
                 val contact: Friend? =
                     coreContext.contactsManager.findContactByAddress(call.remoteAddress)

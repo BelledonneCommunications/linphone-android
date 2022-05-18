@@ -113,12 +113,6 @@ open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
         displayableAddress.value = clone.asStringUriOnly()
 
         update()
-
-        val conferenceInfo = coreContext.core.findConferenceInformationFromUri(call.remoteAddress)
-        if (conferenceInfo != null) {
-            Log.i("[Call] Found matching conference info with subject: ${conferenceInfo.subject}")
-            remoteConferenceSubject.value = conferenceInfo.subject
-        }
     }
 
     override fun destroy() {
@@ -228,6 +222,7 @@ open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
         val conference = call.conference
         isInRemoteConference.value = conference != null
         if (conference != null) {
+            Log.d("[Call] Found conference attached to call")
             remoteConferenceSubject.value = if (conference.subject.isNullOrEmpty()) {
                 if (conference.me.isFocus) {
                     AppUtils.getString(R.string.conference_local_title)
@@ -238,6 +233,15 @@ open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
                 conference.subject
             }
             Log.d("[Call] Found conference related to this call with subject [${remoteConferenceSubject.value}]")
+        } else {
+            val remoteContact = call.remoteContact
+            Log.d("[Call] Call's remote contact is $remoteContact")
+            val conferenceAddress = if (remoteContact != null) coreContext.core.interpretUrl(remoteContact) else null
+            val conferenceInfo = if (conferenceAddress != null) coreContext.core.findConferenceInformationFromUri(conferenceAddress) else null
+            if (conferenceInfo != null) {
+                Log.d("[Call] Found matching conference info with subject: ${conferenceInfo.subject}")
+                remoteConferenceSubject.value = conferenceInfo.subject
+            }
         }
     }
 

@@ -51,18 +51,37 @@ class Api31Compatibility {
             pendingIntent: PendingIntent,
             notificationsManager: NotificationsManager
         ): Notification {
-            val contact = coreContext.contactsManager.findContactByAddress(call.remoteAddress)
-            val roundPicture = ImageUtils.getRoundBitmapFromUri(context, contact?.getThumbnailUri())
-            val displayName = contact?.name ?: LinphoneUtils.getDisplayName(call.remoteAddress)
+            val remoteContact = call.remoteContact
+            val conferenceAddress = if (remoteContact != null) coreContext.core.interpretUrl(remoteContact) else null
+            val conferenceInfo = if (conferenceAddress != null) coreContext.core.findConferenceInformationFromUri(conferenceAddress) else null
+            if (conferenceInfo != null) {
+                Log.i("[Notifications Manager] Displaying incoming group call notification with subject ${conferenceInfo.subject} and remote contact address $remoteContact")
+            } else {
+                Log.i("[Notifications Manager] No conference info found for remote contact address $remoteContact")
+            }
 
-            val person = notificationsManager.getPerson(contact, displayName, roundPicture)
-            val caller = Person.Builder()
-                .setName(person.name)
-                .setIcon(person.icon?.toIcon(context))
-                .setUri(person.uri)
-                .setKey(person.key)
-                .setImportant(person.isImportant)
-                .build()
+            val caller = if (conferenceInfo == null) {
+                val contact =
+                    coreContext.contactsManager.findContactByAddress(call.remoteAddress)
+                val roundPicture =
+                    ImageUtils.getRoundBitmapFromUri(context, contact?.getThumbnailUri())
+                val displayName = contact?.name ?: LinphoneUtils.getDisplayName(call.remoteAddress)
+
+                val person = notificationsManager.getPerson(contact, displayName, roundPicture)
+                Person.Builder()
+                    .setName(person.name)
+                    .setIcon(person.icon?.toIcon(context))
+                    .setUri(person.uri)
+                    .setKey(person.key)
+                    .setImportant(person.isImportant)
+                    .build()
+            } else {
+                Person.Builder()
+                    .setName(conferenceInfo.subject)
+                    .setIcon(coreContext.contactsManager.groupAvatar.toIcon(context))
+                    .setImportant(false)
+                    .build()
+            }
 
             val declineIntent = notificationsManager.getCallDeclinePendingIntent(notifiable)
             val answerIntent = notificationsManager.getCallAnswerPendingIntent(notifiable)
@@ -98,7 +117,15 @@ class Api31Compatibility {
             channel: String,
             notificationsManager: NotificationsManager
         ): Notification {
-            val conferenceInfo = coreContext.core.findConferenceInformationFromUri(call.remoteAddress)
+            val remoteContact = call.remoteContact
+            val conferenceAddress = if (remoteContact != null) coreContext.core.interpretUrl(remoteContact) else null
+            val conferenceInfo = if (conferenceAddress != null) coreContext.core.findConferenceInformationFromUri(conferenceAddress) else null
+            if (conferenceInfo != null) {
+                Log.i("[Notifications Manager] Displaying incoming group call notification with subject ${conferenceInfo.subject} and remote contact address $remoteContact")
+            } else {
+                Log.i("[Notifications Manager] No conference info found for remote contact address $remoteContact")
+            }
+
             val caller = if (conferenceInfo == null) {
                 val contact =
                     coreContext.contactsManager.findContactByAddress(call.remoteAddress)
