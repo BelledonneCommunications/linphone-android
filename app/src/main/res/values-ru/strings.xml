@@ -596,8 +596,7 @@
     <string name="chat_message_abort_removal">Прервать</string>
     <string name="conference_schedule_participants_list">Список участников</string>
     <string name="conference_schedule_summary">Информация конференции</string>
-    <string name="conference_schedule_create">Создать конференцию</string>
-    <string name="conference_schedule">Запланировать конференцию</string>
+    <string name="conference_schedule_start">Запланировать конференцию</string>
     <string name="conference_schedule_address_copied_to_clipboard">Адрес конференции скопирован в буфер обмена</string>
     <string name="conference_schedule_info_not_sent_to_participant">Не удалось отправить информацию о конференции участнику</string>
     <string name="conference_paused_title">В настоящее время вы вне конференции.</string>
@@ -649,8 +648,6 @@
     <string name="conferences_settings_layout_title">Макет по умолчанию</string>
     <string name="content_description_delete_conference">Удалить конференцию</string>
     <string name="conference">Конференция</string>
-    <string name="conference_schedule_title">Начать конференцию</string>
-    <string name="conference_schedule_later">Вы хотите запланировать эту конференцию на потом\?</string>
     <string name="conference_schedule_mandatory_field">Обязательно</string>
     <string name="conference_schedule_subject_title">Тема</string>
     <string name="conference_schedule_subject_hint">Тема конференции</string>

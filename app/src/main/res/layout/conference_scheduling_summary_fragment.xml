@@ -49,7 +49,7 @@
                     android:gravity="center"
                     android:orientation="horizontal"
                     style="@style/calls_list_header_font"
-                    android:text="@string/conference_schedule_summary"/>
+                    android:text="@{viewModel.scheduleForLater ? @string/conference_schedule_summary : @string/conference_group_call_summary, default=@string/conference_group_call_summary}"/>
 
                 <View
                     android:layout_width="0dp"
@@ -269,9 +269,10 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="10dp"
                         android:layout_marginLeft="10dp"
                         style="@style/conference_scheduling_font"
+                        android:visibility="@{viewModel.scheduleForLater &amp;&amp; viewModel.sendInviteViaChat ? View.VISIBLE : View.GONE}"
                         android:text="@string/conference_schedule_send_invite_chat_summary"/>
 
                     <LinearLayout
@@ -313,7 +314,7 @@
                 android:layout_marginBottom="10dp"
                 android:layout_gravity="center"
                 android:background="@drawable/shape_rect_orange_button"
-                android:text="@{viewModel.scheduleForLater ? @string/conference_schedule : @string/conference_schedule_create, default=@string/conference_schedule}"
+                android:text="@{viewModel.scheduleForLater ? @string/conference_schedule_start : @string/conference_group_call_create, default=@string/conference_group_call_create}"
                 style="@style/big_orange_button_font"/>
 
         </LinearLayout>

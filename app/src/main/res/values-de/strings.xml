@@ -245,7 +245,6 @@
     <string name="chat_room_choose_conversation_for_text_sharing">Auswählen oder erstellen einer Konversation um den Text zu teilen</string>
     <string name="chat_message_cant_open_file_in_app_dialog_message">Möchten Sie die Datei als Text öffnen oder sie (unverschlüsselt) in eine Anwendung eines Drittanbieters exportieren, falls verfügbar\?</string>
     <string name="conference">Konferenz</string>
-    <string name="conference_schedule_later">Möchten Sie die Konferenz auf einen späteren Zeitpunkt planen\?</string>
     <string name="conference_schedule_subject_title">Betreff</string>
     <string name="conference_schedule_description_title">Beschreibung hinzufügen</string>
 </resources>

@@ -234,11 +234,13 @@
 
     <!-- Conferencing -->
     <string name="conference">Conference</string>
-    <string name="conference_schedule_title">Start a conference</string>
-    <string name="conference_schedule_later">Do you want to schedule this conference for later?</string>
+    <string name="conference_schedule_title">Schedule a conference</string>
+    <string name="conference_group_call_title">Start a group call</string>
+    <string name="conference_schedule_later">Do you want to schedule a conference for later?</string>
     <string name="conference_schedule_mandatory_field">Mandatory</string>
     <string name="conference_schedule_subject_title">Subject</string>
     <string name="conference_schedule_subject_hint">Conference subject</string>
+    <string name="conference_group_call_subject_hint">Group call subject</string>
     <string name="conference_schedule_address_title">Conference address</string>
     <string name="conference_schedule_description_title">Add a description</string>
     <string name="conference_schedule_description_hint">Description</string>
@@ -253,8 +255,9 @@
     <string name="conference_schedule_participants_list">Participants list</string>
     <string name="conference_organizer">Organizer</string>
     <string name="conference_schedule_summary">Conference info</string>
-    <string name="conference_schedule_create">Create conference</string>
-    <string name="conference_schedule">Schedule conference</string>
+    <string name="conference_group_call_summary">Group call info</string>
+    <string name="conference_schedule_start">Schedule conference</string>
+    <string name="conference_group_call_create">Start group call</string>
     <string name="conference_schedule_address_copied_to_clipboard">Conference address copied into clipboard</string>
     <string name="conference_schedule_info_not_sent_to_participant">Failed to send conference info to a participant</string>
     <string name="conference_paused_title">You are currently out of the conference.</string>
