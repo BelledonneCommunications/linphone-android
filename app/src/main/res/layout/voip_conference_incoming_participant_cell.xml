@@ -5,7 +5,7 @@
         <import type="android.view.View"/>
         <variable
             name="data"
-            type="org.linphone.activities.voip.data.ConferenceParticipantData" />
+            type="org.linphone.activities.voip.data.ConferenceInfoParticipantData" />
     </data>
 
     <LinearLayout
@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:text="Bilbo Baggins" />
+            android:text="@{data.contact.name ?? data.displayName, default=`Bilbo Baggins`}" />
 
         <org.linphone.views.MarqueeTextView
             style="@style/sip_uri_font"
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:ellipsize="end"
-            android:text="sip:bilbo.baggins@sip.linphone.org" />
+            android:text="@{data.sipUri, default=`sip:bilbo.baggins@sip.linphone.org`}" />
 
 
     </LinearLayout>

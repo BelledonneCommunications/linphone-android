@@ -20,6 +20,7 @@
 package org.linphone.activities.voip.data
 
 import android.view.View
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import java.util.*
 import kotlinx.coroutines.*
@@ -48,6 +49,9 @@ open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
 
     val isInRemoteConference = MutableLiveData<Boolean>()
     val remoteConferenceSubject = MutableLiveData<String>()
+    val isConferenceCall = MediatorLiveData<Boolean>()
+    val conferenceParticipants = MutableLiveData<List<ConferenceInfoParticipantData>>()
+    val conferenceParticipantsCountLabel = MutableLiveData<String>()
 
     val isOutgoing = MutableLiveData<Boolean>()
     val isIncoming = MutableLiveData<Boolean>()
@@ -109,6 +113,13 @@ open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
         call.addListener(listener)
         isRemotelyRecorded.value = call.remoteParams?.isRecording
         displayableAddress.value = LinphoneUtils.getDisplayableAddress(call.remoteAddress)
+
+        isConferenceCall.addSource(remoteConferenceSubject) {
+            isConferenceCall.value = remoteConferenceSubject.value.orEmpty().isNotEmpty() || conferenceParticipants.value.orEmpty().isNotEmpty()
+        }
+        isConferenceCall.addSource(conferenceParticipants) {
+            isConferenceCall.value = remoteConferenceSubject.value.orEmpty().isNotEmpty() || conferenceParticipants.value.orEmpty().isNotEmpty()
+        }
 
         update()
     }
@@ -231,6 +242,15 @@ open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
                 conference.subject
             }
             Log.d("[Call] Found conference related to this call with subject [${remoteConferenceSubject.value}]")
+
+            val participantsList = arrayListOf<ConferenceInfoParticipantData>()
+            for (participant in conference.participantList) {
+                val participantData = ConferenceInfoParticipantData(participant.address)
+                participantsList.add(participantData)
+            }
+
+            conferenceParticipants.value = participantsList
+            conferenceParticipantsCountLabel.value = coreContext.context.getString(R.string.conference_participants_title, participantsList.size)
         } else {
             val remoteContact = call.remoteContact
             Log.d("[Call] Call's remote contact is $remoteContact")
@@ -239,6 +259,25 @@ open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
             if (conferenceInfo != null) {
                 Log.d("[Call] Found matching conference info with subject: ${conferenceInfo.subject}")
                 remoteConferenceSubject.value = conferenceInfo.subject
+
+                val participantsList = arrayListOf<ConferenceInfoParticipantData>()
+                for (participant in conferenceInfo.participants) {
+                    val participantData = ConferenceInfoParticipantData(participant)
+                    participantsList.add(participantData)
+                }
+
+                // Add organizer if not in participants list
+                val organizer = conferenceInfo.organizer
+                if (organizer != null) {
+                    val found = participantsList.find { it.participant.weakEqual(organizer) }
+                    if (found == null) {
+                        val participantData = ConferenceInfoParticipantData(organizer)
+                        participantsList.add(0, participantData)
+                    }
+                }
+
+                conferenceParticipants.value = participantsList
+                conferenceParticipantsCountLabel.value = coreContext.context.getString(R.string.conference_participants_title, participantsList.size)
             }
         }
     }
