@@ -71,7 +71,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical|left"
-                android:layout_weight="@{viewModel.oneToOneChatRoom ? 0.4f : 0.6f}"
+                android:layout_weight="0.4"
                 android:gravity="center_vertical|left"
                 android:orientation="vertical"
                 android:paddingLeft="15dp">
@@ -113,6 +113,18 @@
                 android:padding="15dp"
                 android:visibility="@{viewModel.oneToOneChatRoom ? View.VISIBLE : View.GONE}"
                 android:src="@drawable/call_alt_start" />
+
+            <ImageView
+                android:onClick="@{() -> viewModel.startGroupCall()}"
+                android:contentDescription="@string/content_description_start_call"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:background="?attr/button_background_drawable"
+                android:padding="7dp"
+                android:enabled="@{viewModel.groupCallAvailable}"
+                android:visibility="@{viewModel.oneToOneChatRoom ? View.GONE : View.VISIBLE}"
+                android:src="@drawable/icon_video_conf_new" />
 
             <ImageView
                 android:id="@+id/menu"

@@ -50,7 +50,7 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 style="@style/calls_list_header_font"
-                android:text="@string/conference_schedule_title"/>
+                android:text="@{viewModel.scheduleForLater ? @string/conference_schedule_title : @string/conference_group_call_title, default=@string/conference_group_call_title}"/>
 
             <ImageView
                 android:onClick="@{nextClickListener}"
@@ -97,7 +97,7 @@
                         android:inputType="text"
                         style="@style/conference_scheduling_font"
                         android:background="@drawable/shape_edittext_background"
-                        android:hint="@string/conference_schedule_subject_hint"
+                        android:hint="@{viewModel.scheduleForLater ? @string/conference_schedule_subject_hint : @string/conference_group_call_subject_hint, default=@string/conference_group_call_subject_hint}"
                         android:text="@={viewModel.subject}" />
 
                 </LinearLayout>
@@ -289,30 +289,26 @@
 
                         </LinearLayout>
 
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="@string/conference_schedule_send_invite_chat"
+                            android:checked="@={viewModel.sendInviteViaChat, default=true}"
+                            style="@style/conference_scheduling_font"/>
+
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:visibility="gone"
+                            android:text="@string/conference_schedule_send_invite_email"
+                            android:checked="@={viewModel.sendInviteViaEmail}"
+                            style="@style/conference_scheduling_font"/>
+
                     </LinearLayout>
 
                 </LinearLayout>
-
-                <com.google.android.material.checkbox.MaterialCheckBox
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/conference_schedule_send_invite_chat"
-                    android:checked="@={viewModel.sendInviteViaChat, default=true}"
-                    style="@style/conference_scheduling_font"/>
-
-                <com.google.android.material.checkbox.MaterialCheckBox
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:visibility="gone"
-                    android:text="@string/conference_schedule_send_invite_email"
-                    android:checked="@={viewModel.sendInviteViaEmail}"
-                    style="@style/conference_scheduling_font"/>
 
                 <TextView
                     android:visibility="gone"

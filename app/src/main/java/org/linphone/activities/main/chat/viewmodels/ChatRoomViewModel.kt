@@ -96,6 +96,9 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
     val chatUnreadCountTranslateY = MutableLiveData<Float>()
 
+    val groupCallAvailable: Boolean
+        get() = LinphoneUtils.isRemoteConferencingAvailable()
+
     private var addressToCall: Address? = null
 
     private val bounceAnimator: ValueAnimator by lazy {
@@ -275,6 +278,29 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         if (address != null) {
             coreContext.startCall(address)
         }
+    }
+
+    fun startGroupCall() {
+        val conferenceScheduler = coreContext.core.createConferenceScheduler()
+        val conferenceInfo = Factory.instance().createConferenceInfo()
+
+        val localAddress = chatRoom.localAddress.clone()
+        localAddress.clean() // Remove GRUU
+        val addresses = Array(chatRoom.participants.size) {
+            index ->
+            chatRoom.participants[index].address
+        }
+        val localAccount = coreContext.core.accountList.find {
+            account ->
+            account.params.identityAddress?.weakEqual(localAddress) ?: false
+        }
+
+        conferenceInfo.organizer = localAddress
+        conferenceInfo.subject = subject.value
+        conferenceInfo.setParticipants(addresses)
+        conferenceScheduler.account = localAccount
+        // Will trigger the conference creation/update automatically
+        conferenceScheduler.info = conferenceInfo
     }
 
     fun updateLastMessageToDisplay() {

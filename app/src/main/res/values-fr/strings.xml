@@ -668,8 +668,8 @@
     <string name="content_description_create_conference">Créer une conférence</string>
     <string name="content_description_encrypted_conference">La conférence sera chiffrée</string>
     <string name="conference">Conférence</string>
-    <string name="conference_schedule_title">Démarrer une conférence</string>
-    <string name="conference_schedule_later">Voulez-vous la programmer pour plus tard \?</string>
+    <string name="conference_schedule_title">Programmer une conférence</string>
+    <string name="conference_schedule_later">Voulez-vous programmer une conférence pour plus tard ?</string>
     <string name="conference_schedule_mandatory_field">Obligatoire</string>
     <string name="conference_schedule_subject_title">Sujet</string>
     <string name="conference_schedule_subject_hint">Sujet de la conférence</string>
@@ -685,8 +685,7 @@
     <string name="conference_schedule_encryption">Voulez-vous chiffrer la conférence \?</string>
     <string name="conference_schedule_send_invite_chat_summary">L\'invitation va être envoyée depuis mon compte &appName;</string>
     <string name="conference_schedule_participants_list">Liste des participants</string>
-    <string name="conference_schedule_create">Créer la conférence</string>
-    <string name="conference_schedule">Planifier une conférence</string>
+    <string name="conference_schedule_start">Planifier une conférence</string>
     <string name="conference_schedule_address_copied_to_clipboard">L\'adresse de la conférence à été copiée dans le presse papier</string>
     <string name="conference_schedule_info_not_sent_to_participant">Échec de l\'envoi de l\'invitation de conférence à un participant</string>
     <string name="conference_paused_title">Vous êtes actuellement en dehors de la conférence.</string>
@@ -719,4 +718,8 @@
     <string name="conference_first_to_join">Vous êtes le premier à avoir rejoint la conférence</string>
     <string name="conference_last_user">Tous les autres participants ont quitté la conférence</string>
     <string name="conference_incoming_title">Appel de conférence entrant</string>
+    <string name="conference_group_call_title">Démarrer un appel de groupe</string>
+    <string name="conference_group_call_subject_hint">Sujet de l\'appel de groupe</string>
+    <string name="conference_group_call_summary">Informations de l\'appel de groupe</string>
+    <string name="conference_group_call_create">Démarrer l\'appel de groupe</string>
 </resources>
