@@ -479,14 +479,14 @@ class CorePreferences constructor(private val context: Context) {
         get() = config.getString(
             "app",
             "default_conference_factory_uri",
-            ""
+            "sip:conference-factory@sip.linphone.org"
         )!!
 
     val audioVideoConferenceServerUri: String
         get() = config.getString(
             "app",
             "default_audio_video_conference_factory_uri",
-            ""
+            "sip:videoconference-factory2@sip.linphone.org"
         )!!
 
     val checkUpdateAvailableInterval: Int
