@@ -116,7 +116,8 @@ class CallLogsListViewModel : ViewModel() {
             if ((!missed && !conference) || (missed && LinphoneUtils.isCallLogMissed(callLog)) || (conference && callLog.wasConference())) {
                 if (previousCallLogGroup == null) {
                     previousCallLogGroup = GroupedCallLogData(callLog)
-                } else if (previousCallLogGroup.lastCallLog.localAddress.weakEqual(callLog.localAddress) &&
+                } else if (!callLog.wasConference() && // Do not group conference call logs
+                    previousCallLogGroup.lastCallLog.localAddress.weakEqual(callLog.localAddress) &&
                     previousCallLogGroup.lastCallLog.remoteAddress.equal(callLog.remoteAddress)
                 ) {
                     if (TimestampUtils.isSameDay(
