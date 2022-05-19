@@ -117,6 +117,7 @@ class CallLogsListViewModel : ViewModel() {
                 if (previousCallLogGroup == null) {
                     previousCallLogGroup = GroupedCallLogData(callLog)
                 } else if (!callLog.wasConference() && // Do not group conference call logs
+                    callLog.wasConference() == previousCallLogGroup.lastCallLog.wasConference() && // Check that both are of the same type, if one has a conf-id and not the other the equal method will return true !
                     previousCallLogGroup.lastCallLog.localAddress.weakEqual(callLog.localAddress) &&
                     previousCallLogGroup.lastCallLog.remoteAddress.equal(callLog.remoteAddress)
                 ) {
