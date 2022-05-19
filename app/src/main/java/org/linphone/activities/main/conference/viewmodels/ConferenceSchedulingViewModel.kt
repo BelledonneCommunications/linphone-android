@@ -53,8 +53,8 @@ class ConferenceSchedulingViewModel : ContactsSelectionViewModel() {
 
     val conferenceCreationInProgress = MutableLiveData<Boolean>()
 
-    val conferenceCreationCompletedEvent: MutableLiveData<Event<Pair<String, String?>>> by lazy {
-        MutableLiveData<Event<Pair<String, String?>>>()
+    val conferenceCreationCompletedEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
     }
 
     val continueEnabled: MediatorLiveData<Boolean> = MediatorLiveData()
@@ -85,7 +85,7 @@ class ConferenceSchedulingViewModel : ContactsSelectionViewModel() {
 
                 address.value = conferenceAddress!!
 
-                if (sendInviteViaChat.value == true) {
+                if (scheduleForLater.value == true && sendInviteViaChat.value == true) {
                     // Send conference info even when conf is not scheduled for later
                     // as the conference server doesn't invite participants automatically
                     val chatRoomParams = coreContext.core.createDefaultChatRoomParams()
@@ -96,7 +96,7 @@ class ConferenceSchedulingViewModel : ContactsSelectionViewModel() {
                     conferenceScheduler.sendInvitations(chatRoomParams)
                 } else {
                     conferenceCreationInProgress.value = false
-                    conferenceCreationCompletedEvent.value = Event(Pair(conferenceAddress.asStringUriOnly(), conferenceScheduler.info?.subject))
+                    conferenceCreationCompletedEvent.value = Event(true)
                 }
             } else if (state == ConferenceSchedulerState.Error) {
                 Log.e("[Conference Creation] Failed to create conference!")
@@ -123,7 +123,7 @@ class ConferenceSchedulingViewModel : ContactsSelectionViewModel() {
             if (conferenceAddress == null) {
                 Log.e("[Conference Creation] Conference address is null!")
             } else {
-                conferenceCreationCompletedEvent.value = Event(Pair(conferenceAddress.asStringUriOnly(), conferenceScheduler.info?.subject))
+                conferenceCreationCompletedEvent.value = Event(true)
             }
         }
     }
