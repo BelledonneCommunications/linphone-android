@@ -88,6 +88,10 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
             coreContext.start()
             return true
         }
+
+        fun contextExists(): Boolean {
+            return ::coreContext.isInitialized
+        }
     }
 
     override fun onCreate() {
