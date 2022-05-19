@@ -206,7 +206,7 @@ internal fun ConferenceSchedulingParticipantsListFragment.navigateToSummary() {
     }
 }
 
-internal fun ConferenceSchedulingSummaryFragment.goToScheduledConferences() {
+internal fun ConferenceSchedulingSummaryFragment.navigateToScheduledConferences() {
     if (findNavController().currentDestination?.id == R.id.conferenceSchedulingSummaryFragment) {
         findNavController().navigate(
             R.id.action_global_scheduledConferencesFragment,
@@ -216,15 +216,10 @@ internal fun ConferenceSchedulingSummaryFragment.goToScheduledConferences() {
     }
 }
 
-internal fun ConferenceSchedulingSummaryFragment.navigateToConferenceWaitingRoom(
-    address: String,
-    subject: String?
-) {
+internal fun ConferenceSchedulingSummaryFragment.navigateToDialer() {
     val bundle = Bundle()
-    bundle.putString("Address", address)
-    bundle.putString("Subject", subject)
     findMasterNavController().navigate(
-        R.id.action_global_conferenceWaitingRoomFragment,
+        R.id.action_global_dialerFragment,
         bundle,
         popupTo(R.id.dialerFragment, false)
     )
