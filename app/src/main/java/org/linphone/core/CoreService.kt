@@ -20,6 +20,7 @@
 package org.linphone.core
 
 import android.content.Intent
+import org.linphone.LinphoneApplication
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.LinphoneApplication.Companion.ensureCoreExists
@@ -79,8 +80,10 @@ class CoreService : CoreService() {
     }
 
     override fun onDestroy() {
-        Log.i("[Service] Stopping")
-        coreContext.notificationsManager.service = null
+        if (LinphoneApplication.contextExists()) {
+            Log.i("[Service] Stopping")
+            coreContext.notificationsManager.service = null
+        }
 
         super.onDestroy()
     }

@@ -70,6 +70,10 @@ class LinphoneApplication : Application() {
             coreContext = CoreContext(context, corePreferences.config)
             coreContext.start()
         }
+
+        fun contextExists(): Boolean {
+            return ::coreContext.isInitialized
+        }
     }
 
     override fun onCreate() {
