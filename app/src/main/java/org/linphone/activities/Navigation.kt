@@ -225,14 +225,6 @@ internal fun ConferenceSchedulingSummaryFragment.navigateToDialer() {
     )
 }
 
-internal fun ConferenceWaitingRoomFragment.navigateToDialer() {
-    findNavController().navigate(
-        R.id.action_global_dialerFragment,
-        null,
-        popupTo(R.id.dialerFragment, true)
-    )
-}
-
 internal fun DetailChatRoomFragment.navigateToConferenceWaitingRoom(
     address: String,
     subject: String?
@@ -638,7 +630,7 @@ internal fun MasterCallLogsFragment.navigateToConferenceWaitingRoom(
     findMasterNavController().navigate(
         R.id.action_global_conferenceWaitingRoomFragment,
         bundle,
-        popupTo(R.id.dialerFragment, false)
+        popupTo(R.id.conferenceWaitingRoomFragment, true)
     )
 }
 

@@ -29,7 +29,6 @@ import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.conference.viewmodels.ConferenceWaitingRoomViewModel
-import org.linphone.activities.navigateToDialer
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ConferenceWaitingRoomFragmentBinding
@@ -70,7 +69,7 @@ class ConferenceWaitingRoomFragment : GenericFragment<ConferenceWaitingRoomFragm
                         Log.w("[Conference Waiting Room] Call to conference server with URI [$conferenceUri] wasn't found!")
                     }
                 }
-                navigateToDialer()
+                goBack()
             }
         }
 
