@@ -565,11 +565,27 @@ class CoreContext(
     fun answerCall(call: Call) {
         Log.i("[Context] Answering call $call")
         val params = core.createCallParams(call)
-        params?.recordFile = LinphoneUtils.getRecordingFilePathForAddress(call.remoteAddress)
+        if (params == null) {
+            Log.w("[Context] Answering call without params!")
+            call.accept()
+            return
+        }
+
+        params.recordFile = LinphoneUtils.getRecordingFilePathForAddress(call.remoteAddress)
+
         if (LinphoneUtils.checkIfNetworkHasLowBandwidth(context)) {
             Log.w("[Context] Enabling low bandwidth mode!")
-            params?.isLowBandwidthEnabled = true
+            params.isLowBandwidthEnabled = true
         }
+
+        if (call.callLog.wasConference()) {
+            // Prevent incoming group call to start in audio only layout
+            // Do the same as the conference waiting room
+            params.isVideoEnabled = true
+            params.videoDirection = if (core.videoActivationPolicy.automaticallyInitiate) MediaDirection.SendRecv else MediaDirection.RecvOnly
+            Log.i("[Context] Enabling video on call params to prevent audio-only layout when answering")
+        }
+
         call.acceptWithParams(params)
     }
 
