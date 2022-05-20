@@ -376,6 +376,8 @@ private fun loadContactPictureWithCoil(
             )
         }
     } else {
+        val bg = AppCompatResources.getDrawable(imageView.context, R.drawable.generated_avatar_bg)
+        imageView.background = bg
         imageView.load(R.drawable.icon_single_contact_avatar)
     }
 }
