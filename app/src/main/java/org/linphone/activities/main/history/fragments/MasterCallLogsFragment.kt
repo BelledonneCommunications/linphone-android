@@ -223,17 +223,14 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
             viewLifecycleOwner,
         ) {
             it.consume { callLogGroup ->
-                // To remove the GRUU if any
-                val remoteAddress = callLogGroup.lastCallLog.remoteAddress
-                val cleanAddress = remoteAddress.clone()
-                cleanAddress.clean()
-
-                val conferenceInfo = coreContext.core.findConferenceInformationFromUri(remoteAddress)
+                val callLog = callLogGroup.lastCallLog
+                val conferenceInfo = callLog.conferenceInfo
                 when {
                     conferenceInfo != null -> {
-                        navigateToConferenceWaitingRoom(remoteAddress.asStringUriOnly(), conferenceInfo.subject)
+                        navigateToConferenceWaitingRoom(conferenceInfo.uri?.asStringUriOnly().orEmpty(), conferenceInfo.subject)
                     }
                     coreContext.core.callsNb > 0 -> {
+                        val cleanAddress = LinphoneUtils.getCleanedAddress(callLog.remoteAddress)
                         Log.i("[History] Starting dialer with pre-filled URI ${cleanAddress.asStringUriOnly()}, is transfer? ${sharedViewModel.pendingCallTransfer}")
                         sharedViewModel.updateDialerAnimationsBasedOnDestination.value = Event(R.id.masterCallLogsFragment)
                         val args = Bundle()
@@ -243,6 +240,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
                         navigateToDialer(args)
                     }
                     else -> {
+                        val cleanAddress = LinphoneUtils.getCleanedAddress(callLog.remoteAddress)
                         val localAddress = callLogGroup.lastCallLog.localAddress
                         Log.i("[History] Starting call to ${cleanAddress.asStringUriOnly()} with local address ${localAddress.asStringUriOnly()}")
                         coreContext.startCall(cleanAddress, localAddress = localAddress)

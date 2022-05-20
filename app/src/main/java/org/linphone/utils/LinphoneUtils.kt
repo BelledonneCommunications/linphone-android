@@ -67,6 +67,13 @@ class LinphoneUtils {
             }
         }
 
+        fun getCleanedAddress(address: Address): Address {
+            // To remove the GRUU if any
+            val cleanAddress = address.clone()
+            cleanAddress.clean()
+            return cleanAddress
+        }
+
         fun isLimeAvailable(): Boolean {
             val core = coreContext.core
             return core.limeX3DhAvailable() && core.isLimeX3DhEnabled &&
