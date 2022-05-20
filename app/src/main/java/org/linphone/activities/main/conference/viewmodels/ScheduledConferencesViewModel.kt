@@ -34,12 +34,7 @@ class ScheduledConferencesViewModel : ViewModel() {
     private val listener = object : CoreListenerStub() {
         override fun onConferenceInfoReceived(core: Core, conferenceInfo: ConferenceInfo) {
             Log.i("[Scheduled Conferences] New conference info received")
-            val conferencesList = arrayListOf<ScheduledConferenceData>()
-            conferencesList.addAll(conferences.value.orEmpty())
-            val data = ScheduledConferenceData(conferenceInfo)
-            conferencesList.add(data)
-            conferencesList.sortBy { it.conferenceInfo.dateTime }
-            conferences.value = conferencesList
+            computeConferenceInfoList()
         }
     }
 
