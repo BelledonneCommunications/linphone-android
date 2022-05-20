@@ -137,12 +137,15 @@ class LinphoneUtils {
             return FileUtils.getFileStoragePath(fileName).absolutePath
         }
 
-        fun getRecordingFilePathForConference(): String {
+        fun getRecordingFilePathForConference(subject: String?): String {
             val dateFormat: DateFormat = SimpleDateFormat(
                 RECORDING_DATE_PATTERN,
                 Locale.getDefault()
             )
-            val fileName = "conference_${dateFormat.format(Date())}.mkv"
+            val fileName = if (subject.isNullOrEmpty())
+                "conference_${dateFormat.format(Date())}.mkv"
+            else
+                "${subject}_${dateFormat.format(Date())}.mkv"
             return FileUtils.getFileStoragePath(fileName).absolutePath
         }
 

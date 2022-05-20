@@ -250,7 +250,7 @@ class ConferenceViewModel : ViewModel() {
             Log.i("[Conference] Stopping conference recording")
             conference.value?.stopRecording()
         } else {
-            val path = LinphoneUtils.getRecordingFilePathForConference()
+            val path = LinphoneUtils.getRecordingFilePathForConference(conference.value?.currentParams?.subject)
             Log.i("[Conference] Starting recording in file $path")
             conference.value?.startRecording(path)
         }
