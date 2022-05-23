@@ -10,6 +10,13 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [4.6.8] - 2022-05-23
+
+### Fixed
+- Crash due to missing CoreContext in CoreService
+- Crash in BootReceiver if auto start is disabled
+- Other crashes
+
 ## [4.6.7] - 2022-05-04
 
 ### Changed
