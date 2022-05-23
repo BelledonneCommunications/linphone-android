@@ -724,4 +724,7 @@
     <string name="conference_group_call_create">Démarrer l\'appel de groupe</string>
     <string name="incoming_group_call_notification_title">Appel de groupe entrant</string>
     <string name="conference_participants_title">Participants (%d)</string>
+    <string name="conference_start_group_call_dialog_title">Appel de groupe</string>
+    <string name="conference_start_group_call_dialog_message">Voulez-vous démarrer un appel de groupe ?\nToutes les personnes dans cette conversation vont recevoir un appel.</string>
+    <string name="conference_start_group_call_dialog_ok_button">Démarrer</string>
 </resources>
