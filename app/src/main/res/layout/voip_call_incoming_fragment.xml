@@ -118,14 +118,17 @@
             android:layout_height="0dp"
             android:src="@drawable/icon_video_conf_incoming"
             app:layout_constraintBottom_toTopOf="@id/participants_count"
-            app:layout_constraintHeight_max="120dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_max="120dp"
+            app:layout_constraintHeight_min="40dp"
+            app:layout_constraintVertical_weight="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/incoming_conference_subject" />
+            app:layout_constraintTop_toBottomOf="@id/incoming_conference_subject"
+            app:layout_constraintVertical_chainStyle="packed" />
 
         <LinearLayout
             android:id="@+id/participants_count"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
@@ -135,7 +138,9 @@
             android:orientation="horizontal"
             app:layout_constraintBottom_toTopOf="@id/participants_list"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintVertical_weight="0"
+            app:layout_constraintTop_toBottomOf="@id/conference_avatar">
 
             <TextView
                 style="@style/call_header_title"
@@ -151,18 +156,19 @@
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/participants_list"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
             android:layout_marginBottom="10dp"
             android:fadeScrollbars="false"
             android:scrollbars="vertical"
-            app:layout_constraintBottom_toTopOf="@id/buttons"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/participants_count"
+            app:layout_constraintBottom_toTopOf="@id/buttons"
             app:layout_constraintHeight_max="400dp"
-            app:layout_constraintHeight_min="200dp"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintVertical_weight="2">
 
             <LinearLayout
                 android:layout_width="match_parent"
