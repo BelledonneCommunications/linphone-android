@@ -117,13 +117,12 @@ class Api31Compatibility {
             channel: String,
             notificationsManager: NotificationsManager
         ): Notification {
-            val remoteContact = call.remoteContact
-            val conferenceAddress = if (remoteContact != null) coreContext.core.interpretUrl(remoteContact) else null
+            val conferenceAddress = LinphoneUtils.getConferenceAddress(call)
             val conferenceInfo = if (conferenceAddress != null) coreContext.core.findConferenceInformationFromUri(conferenceAddress) else null
             if (conferenceInfo != null) {
-                Log.i("[Notifications Manager] Displaying incoming group call notification with subject ${conferenceInfo.subject} and remote contact address $remoteContact")
+                Log.i("[Notifications Manager] Displaying group call notification with subject ${conferenceInfo.subject}")
             } else {
-                Log.i("[Notifications Manager] No conference info found for remote contact address $remoteContact")
+                Log.i("[Notifications Manager] No conference info found for remote contact address ${call.remoteAddress} (${call.remoteContact})")
             }
 
             val caller = if (conferenceInfo == null) {

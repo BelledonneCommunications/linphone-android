@@ -252,9 +252,7 @@ open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
             conferenceParticipants.value = participantsList
             conferenceParticipantsCountLabel.value = coreContext.context.getString(R.string.conference_participants_title, participantsList.size)
         } else {
-            val remoteContact = call.remoteContact
-            Log.d("[Call] Call's remote contact is $remoteContact")
-            val conferenceAddress = if (remoteContact != null) coreContext.core.interpretUrl(remoteContact) else null
+            val conferenceAddress = LinphoneUtils.getConferenceAddress(call)
             val conferenceInfo = if (conferenceAddress != null) coreContext.core.findConferenceInformationFromUri(conferenceAddress) else null
             if (conferenceInfo != null) {
                 Log.d("[Call] Found matching conference info with subject: ${conferenceInfo.subject}")

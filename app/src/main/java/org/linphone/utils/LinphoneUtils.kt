@@ -74,6 +74,19 @@ class LinphoneUtils {
             return cleanAddress
         }
 
+        fun getConferenceAddress(call: Call): Address? {
+            val remoteContact = call.remoteContact
+            val conferenceAddress = if (call.dir == Call.Dir.Incoming) {
+                if (remoteContact != null)
+                    coreContext.core.interpretUrl(remoteContact)
+                else
+                    null
+            } else {
+                call.remoteAddress
+            }
+            return conferenceAddress
+        }
+
         fun isLimeAvailable(): Boolean {
             val core = coreContext.core
             return core.limeX3DhAvailable() && core.isLimeX3DhEnabled &&
