@@ -295,6 +295,9 @@
     <string name="conference_last_user">All other participants have left the group call</string>
     <string name="conference_incoming_title">Incoming group call</string>
     <string name="conference_participants_title">Participants (%d)</string>
+    <string name="conference_start_group_call_dialog_title">Group call</string>
+    <string name="conference_start_group_call_dialog_message">Do you want to start a group call?\nEveryone in this group will receive a call to join the meeting.</string>
+    <string name="conference_start_group_call_dialog_ok_button">Start</string>
 
     <!-- Call -->
     <string name="call_incoming_title">Incoming Call</string>

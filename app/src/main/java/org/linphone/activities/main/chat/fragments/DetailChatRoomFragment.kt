@@ -624,6 +624,10 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             viewModel.isUserScrollingUp.value = false
         }
 
+        binding.setGroupCallListener {
+            showGroupCallDialog()
+        }
+
         if (textToShare?.isNotEmpty() == true) {
             Log.i("[Chat Room] Found text to share")
             chatSendingViewModel.textToSend.value = textToShare
@@ -1053,6 +1057,28 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         dialogViewModel.showCancelButton {
             dialog.dismiss()
         }
+
+        dialog.show()
+    }
+
+    private fun showGroupCallDialog() {
+        val dialogViewModel = DialogViewModel(getString(R.string.conference_start_group_call_dialog_message), getString(R.string.conference_start_group_call_dialog_title))
+        val dialog: Dialog = DialogUtils.getDialog(requireContext(), dialogViewModel)
+
+        dialogViewModel.iconResource = R.drawable.icon_video_conf_incoming
+        dialogViewModel.showIcon = true
+
+        dialogViewModel.showCancelButton {
+            dialog.dismiss()
+        }
+
+        dialogViewModel.showOkButton(
+            {
+                dialog.dismiss()
+                viewModel.startGroupCall()
+            },
+            getString(R.string.conference_start_group_call_dialog_ok_button)
+        )
 
         dialog.show()
     }
