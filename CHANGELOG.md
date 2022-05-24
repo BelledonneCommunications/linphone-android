@@ -14,11 +14,13 @@ Group changes to describe their impact on the project, as follows:
 
 ### Added
 - Conference creation with scheduling, video, different layouts, showing who is speaking and who is muted, etc...
+- Chat rooms can be individually muted (no notification when receiving a chat message)
 
 ### Changed
 - In-call views have been re-designed
 - Improved how call logs are handled to improve performances
 - Improved how contact avatars are generated
+- 3-dots menu even for basic chat rooms
 
 ### Fixed
 - Multiple file download attempt from the same chat bubble at the same time needed app restart to properly download each file
@@ -26,6 +28,25 @@ Group changes to describe their impact on the project, as follows:
 - Call state in self-managed TelecomManager service if it takes longer to be created than the call to be answered
 - Show service notification sooner to prevent crash if Core creation takes too long
 - Trying to keep the preferred driver (OpenSLES / AAudio) when switching device
+
+## [4.6.9] - 2022-05-30
+
+### Fixed
+- ANR when screen turns OFF/ON while app is in foreground
+- Crash due to missing CoreContext instance in TelecomManager service
+- One-to-One encrypted chat room creation if it already exists
+- Crash if ConnectionService feature isn't supported by the device
+
+### Changed
+- Updated translations from Weblate
+- Improved audio devices logs
+
+## [4.6.8] - 2022-05-23
+
+### Fixed
+- Crash due to missing CoreContext in CoreService
+- Crash in BootReceiver if auto start is disabled
+- Other crashes
 
 ## [4.6.7] - 2022-05-04
 

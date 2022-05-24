@@ -87,7 +87,7 @@
             <TextView
                 android:id="@+id/title"
                 style="@style/contact_name_list_cell_font"
-                android:text="@{viewModel.oneToOneChatRoom ? (viewModel.contact.name ?? viewModel.displayName) : viewModel.subject}"
+                android:text="@{viewModel.oneToOneChatRoom ? (viewModel.contact.name ?? viewModel.displayName) : viewModel.subject, default=`Lorem Ipsum`}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="30dp"
@@ -101,7 +101,6 @@
                 android:layout_above="@+id/lastMessage"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="5dp"
-                android:layout_marginLeft="5dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -131,24 +130,42 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/title"
-                android:layout_toLeftOf="@id/ephemeral"
+                android:layout_toLeftOf="@id/icons"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:text="@{viewModel.lastMessageText}" />
+                android:text="@{viewModel.lastMessageText, default=`Lorem ipsum dolor sit amet`}" />
 
-            <ImageView
-                android:visibility="@{viewModel.ephemeralEnabled ? View.VISIBLE : View.GONE, default=gone}"
-                android:id="@+id/ephemeral"
-                android:contentDescription="@string/content_description_ephemeral_chat_room"
-                android:layout_width="20dp"
+            <LinearLayout
+                android:id="@+id/icons"
+                android:layout_width="wrap_content"
                 android:layout_height="20dp"
-                android:adjustViewBounds="true"
+                android:orientation="horizontal"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="5dp"
-                android:layout_marginLeft="5dp"
                 android:layout_marginBottom="10dp"
-                android:src="@drawable/ephemeral_messages"/>
+                android:gravity="right">
+
+                <ImageView
+                    android:visibility="@{viewModel.notificationsMuted ? View.VISIBLE : View.GONE, default=gone}"
+                    android:id="@+id/muted"
+                    android:contentDescription="@string/content_description_muted_chat_room"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:layout_marginRight="5dp"
+                    android:src="@drawable/menu_notifications_off"/>
+
+                <ImageView
+                    android:visibility="@{viewModel.ephemeralEnabled ? View.VISIBLE : View.GONE, default=gone}"
+                    android:id="@+id/ephemeral"
+                    android:contentDescription="@string/content_description_ephemeral_chat_room"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:layout_marginRight="5dp"
+                    android:src="@drawable/ephemeral_messages"/>
+
+            </LinearLayout>
 
         </RelativeLayout>
 

@@ -727,4 +727,7 @@
     <string name="conference_start_group_call_dialog_title">Appel de groupe</string>
     <string name="conference_start_group_call_dialog_message">Voulez-vous démarrer un appel de groupe ?\nToutes les personnes dans cette conversation vont recevoir un appel.</string>
     <string name="conference_start_group_call_dialog_ok_button">Démarrer</string>
+    <string name="chat_message_context_menu_turn_off_notifications">Désactiver les notifications</string>
+    <string name="chat_message_context_menu_turn_on_notifications">Activer les notifications</string>
+    <string name="content_description_muted_chat_room">Les notifications sont désactivées pour cette conversation</string>
 </resources>

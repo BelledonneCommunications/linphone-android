@@ -561,10 +561,6 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             showPopupMenu(chatRoom)
         }
 
-        binding.setEditClickListener {
-            enterEditionMode()
-        }
-
         binding.setSecurityIconClickListener {
             showParticipantsDevices()
         }
@@ -853,32 +849,50 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         )
 
         val itemSize = AppUtils.getDimension(R.dimen.chat_room_popup_item_height).toInt()
-        var totalSize = itemSize * 4
+        var totalSize = itemSize * 6
 
-        if (!viewModel.encryptedChatRoom) {
+        val notificationsTurnedOff = viewModel.areNotificationsMuted()
+        if (notificationsTurnedOff) {
+            popupView.muteHidden = true
+            totalSize -= itemSize
+        } else {
+            popupView.unmuteHidden = true
+            totalSize -= itemSize
+        }
+
+        if (viewModel.basicChatRoom) {
+            popupView.groupInfoHidden = true
+            totalSize -= itemSize
             popupView.devicesHidden = true
             totalSize -= itemSize
             popupView.ephemeralHidden = true
             totalSize -= itemSize
         } else {
-            if (viewModel.oneToOneChatRoom) {
-                popupView.groupInfoHidden = true
-                totalSize -= itemSize
-            }
-
-            // If one participant one device, a click on security badge
-            // will directly start a call or show the dialog, so don't show this menu
-            if (viewModel.oneParticipantOneDevice) {
+            if (!viewModel.encryptedChatRoom) {
                 popupView.devicesHidden = true
                 totalSize -= itemSize
-            }
+                popupView.ephemeralHidden = true
+                totalSize -= itemSize
+            } else {
+                if (viewModel.oneToOneChatRoom) {
+                    popupView.groupInfoHidden = true
+                    totalSize -= itemSize
+                }
 
-            if (viewModel.ephemeralChatRoom) {
-                if (chatRoom.currentParams.ephemeralMode == ChatRoomEphemeralMode.AdminManaged) {
-                    if (chatRoom.me?.isAdmin == false) {
-                        Log.w("[Chat Room] Hiding ephemeral menu as mode is admin managed and we aren't admin")
-                        popupView.ephemeralHidden = true
-                        totalSize -= itemSize
+                // If one participant one device, a click on security badge
+                // will directly start a call or show the dialog, so don't show this menu
+                if (viewModel.oneParticipantOneDevice) {
+                    popupView.devicesHidden = true
+                    totalSize -= itemSize
+                }
+
+                if (viewModel.ephemeralChatRoom) {
+                    if (chatRoom.currentParams.ephemeralMode == ChatRoomEphemeralMode.AdminManaged) {
+                        if (chatRoom.me?.isAdmin == false) {
+                            Log.w("[Chat Room] Hiding ephemeral menu as mode is admin managed and we aren't admin")
+                            popupView.ephemeralHidden = true
+                            totalSize -= itemSize
+                        }
                     }
                 }
             }
@@ -909,6 +923,14 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         }
         popupView.setEditionModeListener {
             enterEditionMode()
+            popupWindow.dismiss()
+        }
+        popupView.setMuteListener {
+            viewModel.muteNotifications(true)
+            popupWindow.dismiss()
+        }
+        popupView.setUnmuteListener {
+            viewModel.muteNotifications(false)
             popupWindow.dismiss()
         }
 
