@@ -136,6 +136,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                                 friend.starred = starred
                                 friend.nativeUri =
                                     "${ContactsContract.Contacts.CONTENT_LOOKUP_URI}/$lookupKey"
+                                friend.isSubscribesEnabled = false
                             }
 
                             when (mime) {
