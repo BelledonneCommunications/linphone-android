@@ -190,6 +190,8 @@
     <string name="chat_room_context_menu_participants_devices">Conversation\'s devices</string>
     <string name="chat_message_context_menu_ephemeral_messages">Ephemeral messages</string>
     <string name="chat_message_context_menu_delete_messages">Delete messages</string>
+    <string name="chat_message_context_menu_turn_off_notifications">Disable notifications</string>
+    <string name="chat_message_context_menu_turn_on_notifications">Enable notifications</string>
     <string name="chat_room_ephemeral_fragment_title">Ephemeral messages</string>
     <string name="chat_room_ephemeral_messages_desc">This message will be deleted on both ends once it has been read and after the selected timeout.</string>
     <string name="chat_room_ephemeral_message_disabled">Disabled</string>
@@ -773,6 +775,7 @@
     <string name="content_description_contact_is_admin">Contact is an admin in this conversation</string>
     <string name="content_description_contact_is_not_admin">Contact isn\'t an admin in this conversation</string>
     <string name="content_description_ephemeral_chat_room">Messages are ephemeral in this conversation</string>
+    <string name="content_description_muted_chat_room">Notifications are disabled for this conversation</string>
     <string name="content_description_contact_can_do_encryption">Contact can be invited in encrypted conversations</string>
     <string name="content_description_start_chat">Go into conversation</string>
     <string name="content_description_start_encrypted_chat">Go into encrypted conversation</string>

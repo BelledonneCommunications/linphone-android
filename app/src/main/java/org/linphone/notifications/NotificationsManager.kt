@@ -167,7 +167,14 @@ class NotificationsManager(private val context: Context) {
                     ShortcutsHelper.createShortcutsToChatRooms(context)
                 }
             }
-            displayIncomingChatNotification(room, message)
+
+            val id = LinphoneUtils.getChatRoomId(room.localAddress, room.peerAddress)
+            val mute = corePreferences.chatRoomMuted(id)
+            if (mute) {
+                Log.i("[Notifications Manager] Chat room $id has been muted")
+            } else {
+                displayIncomingChatNotification(room, message)
+            }
         }
 
         override fun onChatRoomRead(core: Core, chatRoom: ChatRoom) {

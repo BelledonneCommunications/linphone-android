@@ -78,6 +78,8 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
     val ephemeralEnabled = MutableLiveData<Boolean>()
 
+    val basicChatRoom: Boolean = chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt())
+
     val oneToOneChatRoom: Boolean = chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())
 
     val encryptedChatRoom: Boolean = chatRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt())
@@ -98,6 +100,8 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
     val groupCallAvailable: Boolean
         get() = LinphoneUtils.isRemoteConferencingAvailable()
+
+    val notificationsMuted = MutableLiveData<Boolean>()
 
     private var addressToCall: Address? = null
 
@@ -235,6 +239,8 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         callInProgress.value = chatRoom.core.callsNb > 0
         updateRemotesComposing()
 
+        notificationsMuted.value = areNotificationsMuted()
+
         if (corePreferences.enableAnimations) bounceAnimator.start()
     }
 
@@ -248,10 +254,6 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         chatRoom.removeListener(chatRoomListener)
         chatRoom.core.removeListener(coreListener)
         if (corePreferences.enableAnimations) bounceAnimator.end()
-    }
-
-    fun hideMenu(): Boolean {
-        return chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt()) || (oneToOneChatRoom && !encryptedChatRoom)
     }
 
     fun contactLookup() {
@@ -305,6 +307,17 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
     fun updateLastMessageToDisplay() {
         formatLastMessage(chatRoom.lastMessageInHistory)
+    }
+
+    fun areNotificationsMuted(): Boolean {
+        val id = LinphoneUtils.getChatRoomId(chatRoom.localAddress, chatRoom.peerAddress)
+        return corePreferences.chatRoomMuted(id)
+    }
+
+    fun muteNotifications(mute: Boolean) {
+        val id = LinphoneUtils.getChatRoomId(chatRoom.localAddress, chatRoom.peerAddress)
+        corePreferences.muteChatRoom(id, mute)
+        notificationsMuted.value = mute
     }
 
     private fun formatLastMessage(msg: ChatMessage?) {

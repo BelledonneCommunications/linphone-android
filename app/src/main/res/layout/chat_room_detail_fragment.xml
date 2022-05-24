@@ -12,9 +12,6 @@
             name="titleClickListener"
             type="android.view.View.OnClickListener"/>
         <variable
-            name="editClickListener"
-            type="android.view.View.OnClickListener"/>
-        <variable
             name="menuClickListener"
             type="android.view.View.OnClickListener"/>
         <variable
@@ -131,7 +128,6 @@
 
             <ImageView
                 android:id="@+id/menu"
-                android:visibility="@{viewModel.hideMenu() || chatSendingViewModel.isReadOnly ? View.GONE : View.VISIBLE}"
                 android:onClick="@{menuClickListener}"
                 android:contentDescription="@string/content_description_show_chat_room_menu"
                 android:layout_width="0dp"
@@ -140,17 +136,6 @@
                 android:background="?attr/button_background_drawable"
                 android:padding="15dp"
                 android:src="@drawable/icon_menu_more"/>
-
-            <ImageView
-                android:onClick="@{editClickListener}"
-                android:visibility="@{menu.visibility == View.GONE ? View.VISIBLE : View.GONE}"
-                android:contentDescription="@string/content_description_enter_edition_mode"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.2"
-                android:background="?attr/button_background_drawable"
-                android:padding="15dp"
-                android:src="@drawable/delete" />
 
         </LinearLayout>
 

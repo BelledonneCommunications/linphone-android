@@ -17,6 +17,12 @@
             name="editionModeListener"
             type="View.OnClickListener" />
         <variable
+            name="muteListener"
+            type="View.OnClickListener" />
+        <variable
+            name="unmuteListener"
+            type="View.OnClickListener" />
+        <variable
             name="groupInfoHidden"
             type="Boolean" />
         <variable
@@ -24,6 +30,12 @@
             type="Boolean" />
         <variable
             name="ephemeralHidden"
+            type="Boolean" />
+        <variable
+            name="muteHidden"
+            type="Boolean" />
+        <variable
+            name="unmuteHidden"
             type="Boolean" />
     </data>
 
@@ -62,6 +74,26 @@
             style="@style/popup_item_font"
             android:text="@string/chat_message_context_menu_ephemeral_messages"
             app:drawableRightCompat="@drawable/chat_room_menu_ephemeral" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chat_room_popup_item_height"
+            android:background="@drawable/menu_background"
+            android:visibility="@{muteHidden ? View.GONE : View.VISIBLE}"
+            android:onClick="@{muteListener}"
+            style="@style/popup_item_font"
+            android:text="@string/chat_message_context_menu_turn_off_notifications"
+            app:drawableRightCompat="@drawable/menu_notifications_off" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chat_room_popup_item_height"
+            android:background="@drawable/menu_background"
+            android:visibility="@{unmuteHidden ? View.GONE : View.VISIBLE}"
+            android:onClick="@{unmuteListener}"
+            style="@style/popup_item_font"
+            android:text="@string/chat_message_context_menu_turn_on_notifications"
+            app:drawableRightCompat="@drawable/menu_notifications_on" />
 
         <TextView
             android:layout_width="match_parent"
