@@ -41,6 +41,7 @@ import org.linphone.R
 import org.linphone.core.Factory
 import org.linphone.core.Friend
 import org.linphone.core.GlobalState
+import org.linphone.core.SubscribePolicy
 import org.linphone.core.tools.Log
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.PhoneNumberUtils
@@ -136,7 +137,10 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                                 friend.starred = starred
                                 friend.nativeUri =
                                     "${ContactsContract.Contacts.CONTENT_LOOKUP_URI}/$lookupKey"
+
+                                // Disable short term presence
                                 friend.isSubscribesEnabled = false
+                                friend.incSubscribePolicy = SubscribePolicy.SPDeny
                             }
 
                             when (mime) {
