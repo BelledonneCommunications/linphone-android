@@ -46,20 +46,12 @@ open class GenericContactData(private val sipAddress: Address) : ContactDataInte
 
     val initials = MutableLiveData<String>()
 
-    private val contactsUpdatedListener = object : ContactsUpdatedListenerStub() {
-        override fun onContactUpdated(friend: Friend) {
-            contactLookup()
-        }
-    }
-
     init {
         securityLevel.value = ChatRoomSecurityLevel.ClearText
-        coreContext.contactsManager.addListener(contactsUpdatedListener)
         contactLookup()
     }
 
     open fun destroy() {
-        coreContext.contactsManager.removeListener(contactsUpdatedListener)
     }
 
     private fun contactLookup() {
@@ -81,22 +73,9 @@ abstract class GenericContactViewModel(private val sipAddress: Address) : ErrorR
     final override val displayName: MutableLiveData<String> = MutableLiveData<String>()
     final override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
 
-    private val contactsUpdatedListener = object : ContactsUpdatedListenerStub() {
-        override fun onContactUpdated(friend: Friend) {
-            contactLookup()
-        }
-    }
-
     init {
         securityLevel.value = ChatRoomSecurityLevel.ClearText
-        coreContext.contactsManager.addListener(contactsUpdatedListener)
         contactLookup()
-    }
-
-    override fun onCleared() {
-        coreContext.contactsManager.removeListener(contactsUpdatedListener)
-
-        super.onCleared()
     }
 
     private fun contactLookup() {
