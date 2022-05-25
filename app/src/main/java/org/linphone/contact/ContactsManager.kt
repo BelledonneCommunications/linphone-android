@@ -283,7 +283,6 @@ class ContactsManager(private val context: Context) {
                     val id = friend.refKey
                     if (id != null) {
                         storePresenceInNativeContact(friend)
-                        notifyListeners(friend)
                     }
                 }
             }
