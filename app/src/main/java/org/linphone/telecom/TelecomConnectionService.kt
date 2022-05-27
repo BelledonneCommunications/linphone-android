@@ -23,7 +23,9 @@ import android.content.ComponentName
 import android.content.Intent
 import android.net.Uri
 import android.telecom.*
+import org.linphone.LinphoneApplication
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.ensureCoreExists
 import org.linphone.core.Call
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
@@ -70,12 +72,15 @@ class TelecomConnectionService : ConnectionService() {
         super.onCreate()
 
         Log.i("[Telecom Connection Service] onCreate()")
+        ensureCoreExists(applicationContext)
         coreContext.core.addListener(listener)
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
-        Log.i("[Telecom Connection Service] onUnbind()")
-        coreContext.core.removeListener(listener)
+        if (LinphoneApplication.contextExists()) {
+            Log.i("[Telecom Connection Service] onUnbind()")
+            coreContext.core.removeListener(listener)
+        }
 
         return super.onUnbind(intent)
     }
