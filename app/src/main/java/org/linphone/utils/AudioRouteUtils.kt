@@ -45,14 +45,20 @@ class AudioRouteUtils {
                 AudioDevice.Capabilities.CapabilityPlay
             else
                 AudioDevice.Capabilities.CapabilityRecord
+            val preferredDriver = if (output) {
+                coreContext.core.defaultOutputAudioDevice.driverName
+            } else {
+                coreContext.core.defaultInputAudioDevice.driverName
+            }
 
-            val preferredDriver = coreContext.core.defaultOutputAudioDevice.driverName
-            val foundAudioDevice = coreContext.core.extendedAudioDevices.find {
+            val extendedAudioDevices = coreContext.core.extendedAudioDevices
+            Log.i("[Audio Route Helper] Looking for an ${if (output) "output" else "input"} audio device with capability [$capability], driver name [$preferredDriver] and type [$types] in extended audio devices list (size ${extendedAudioDevices.size})")
+            val foundAudioDevice = extendedAudioDevices.find {
                 it.driverName == preferredDriver && types.contains(it.type) && it.hasCapability(capability)
             }
             val audioDevice = if (foundAudioDevice == null) {
-                Log.w("[Audio Route Helper] Failed to find an audio device with capability [$capability] and driver name [$preferredDriver]")
-                coreContext.core.extendedAudioDevices.find {
+                Log.w("[Audio Route Helper] Failed to find an audio device with capability [$capability], driver name [$preferredDriver] and type [$types]")
+                extendedAudioDevices.find {
                     types.contains(it.type) && it.hasCapability(capability)
                 }
             } else {
@@ -60,7 +66,11 @@ class AudioRouteUtils {
             }
 
             if (audioDevice == null) {
-                Log.e("[Audio Route Helper] Couldn't find $types audio device")
+                Log.e("[Audio Route Helper] Couldn't find audio device with capability [$capability] and type [$types]")
+                for (device in extendedAudioDevices) {
+                    // TODO: switch to debug?
+                    Log.i("[Audio Route Helper] Extended audio device: [${device.deviceName} (${device.driverName}) ${device.type} / ${device.capabilities}]")
+                }
                 return
             }
             if (conference != null && conference.isIn) {
