@@ -190,6 +190,11 @@ class NotificationsManager(private val context: Context) {
                 }
             }
         }
+
+        override fun onLastCallEnded(core: Core) {
+            Log.i("[Notifications Manager] Last call ended, make sure foreground service is stopped and notification removed")
+            stopCallForeground()
+        }
     }
 
     val chatListener: ChatMessageListener = object : ChatMessageListenerStub() {
