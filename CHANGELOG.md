@@ -10,6 +10,18 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [4.6.9] - 2022-05-30
+
+### Fixed
+- ANR when screen turns OFF/ON while app is in foreground
+- Crash due to missing CoreContext instance in TelecomManager service
+- One-to-One encrypted chat room creation if it already exists
+- Crash if ConnectionService feature isn't supported by the device
+
+### Changed
+- Updated translations from Weblate
+- Improved audio devices logs
+
 ## [4.6.8] - 2022-05-23
 
 ### Fixed
