@@ -181,14 +181,23 @@ class ChatRoomCreationViewModel : ErrorReportingViewModel() {
             Log.w("[Chat Room Creation] Couldn't find existing 1-1 chat room with remote ${address.asStringUriOnly()}, encryption=$encrypted and local identity ${localAddress?.asStringUriOnly()}")
             room = coreContext.core.createChatRoom(params, localAddress, participants)
 
-            if (encrypted) {
-                room?.addListener(listener)
-            } else {
-                if (room != null) {
-                    chatRoomCreatedEvent.value = Event(room)
+            if (room != null) {
+                if (encrypted) {
+                    val state = room.state
+                    if (state == ChatRoom.State.Created) {
+                        Log.i("[Chat Room Creation] Found already created chat room, using it")
+                        chatRoomCreatedEvent.value = Event(room)
+                        waitForChatRoomCreation.value = false
+                    } else {
+                        Log.i("[Chat Room Creation] Chat room creation is pending [$state], waiting for Created state")
+                        room.addListener(listener)
+                    }
                 } else {
-                    Log.e("[Chat Room Creation] Couldn't create chat room with remote ${address.asStringUriOnly()} and local identity ${localAddress?.asStringUriOnly()}")
+                    chatRoomCreatedEvent.value = Event(room)
+                    waitForChatRoomCreation.value = false
                 }
+            } else {
+                Log.e("[Chat Room Creation] Couldn't create chat room with remote ${address.asStringUriOnly()} and local identity ${localAddress?.asStringUriOnly()}")
                 waitForChatRoomCreation.value = false
             }
         } else {
