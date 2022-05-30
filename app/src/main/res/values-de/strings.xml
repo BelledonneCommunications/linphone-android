@@ -116,7 +116,7 @@
     <string name="call_error_incompatible_media_params">Inkompatible Medienparameter</string>
     <string name="call_error_network_unreachable">Netzwerk nicht erreichbar</string>
     <string name="call_error_generic">Fehler: %s</string>
-    <string name="service_auto_start_description">&amp;appName; wurde automatisch gestartet</string>
+    <string name="service_auto_start_description">&appName; wurde automatisch gestartet</string>
     <string name="logs_upload_failure">Hochladen der Logdatei fehlgeschlagen!</string>
     <string name="assistant_choose_country_title">Ländername oder Vorwahl</string>
     <string name="invalid_email">Ungültige E-Mail-Adresse</string>
