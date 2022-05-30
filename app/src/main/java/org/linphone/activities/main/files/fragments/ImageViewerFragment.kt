@@ -25,8 +25,10 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
+import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.files.viewmodels.ImageFileViewModel
 import org.linphone.activities.main.files.viewmodels.ImageFileViewModelFactory
+import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 import org.linphone.databinding.FileImageViewerFragmentBinding
 
@@ -53,5 +55,12 @@ class ImageViewerFragment : GenericViewerFragment<FileImageViewerFragmentBinding
             ImageFileViewModelFactory(content)
         )[ImageFileViewModel::class.java]
         binding.viewModel = viewModel
+
+        viewModel.fullScreenMode.observe(
+            viewLifecycleOwner
+        ) { hide ->
+            Compatibility.hideAndroidSystemUI(hide, requireActivity().window)
+            (requireActivity() as MainActivity).hideStatusFragment(hide)
+        }
     }
 }

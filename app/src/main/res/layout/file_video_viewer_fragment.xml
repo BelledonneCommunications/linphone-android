@@ -20,6 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
+            android:visibility="@{viewModel.fullScreenMode ? View.GONE : View.VISIBLE}"
             tools:layout="@layout/file_viewer_top_bar_fragment" />
 
         <RelativeLayout
@@ -31,7 +32,8 @@
                 android:id="@+id/video_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_centerInParent="true"/>
+                android:layout_centerInParent="true"
+                android:onClick="@{() -> viewModel.toggleFullScreen()}"/>
 
         </RelativeLayout>
 

@@ -246,6 +246,10 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         currentFocus?.hideKeyboard()
     }
 
+    fun hideStatusFragment(hide: Boolean) {
+        statusFragment.visibility = if (hide) View.GONE else View.VISIBLE
+    }
+
     private fun updateTabsFragmentVisibility() {
         tabsFragment.visibility = if (tabsFragmentVisible1 && tabsFragmentVisible2) View.VISIBLE else View.GONE
     }
