@@ -116,7 +116,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
     private val contactsUpdatedListener = object : ContactsUpdatedListenerStub() {
         override fun onContactsUpdated() {
-            Log.i("[Chat Room] Contacts have changed")
+            Log.d("[Chat Room] Contacts have changed")
             contactLookup()
             updateLastMessageToDisplay()
         }
