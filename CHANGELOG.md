@@ -15,6 +15,7 @@ Group changes to describe their impact on the project, as follows:
 ### Added
 - Conference creation with scheduling, video, different layouts, showing who is speaking and who is muted, etc...
 - Chat rooms can be individually muted (no notification when receiving a chat message)
+- Image & Video in-app viewers allow for full-screen display
 
 ### Changed
 - In-call views have been re-designed
