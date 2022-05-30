@@ -30,7 +30,7 @@ import android.telecom.PhoneAccount
 import android.telecom.PhoneAccountHandle
 import android.telecom.TelecomManager
 import android.telecom.TelecomManager.*
-import java.lang.Exception
+import kotlin.Exception
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Call
@@ -180,8 +180,14 @@ class TelecomHelper private constructor(context: Context) {
             .setSupportedUriSchemes(listOf(PhoneAccount.SCHEME_SIP))
             .build()
 
-        telecomManager.registerPhoneAccount(account)
-        Log.i("[Telecom Helper] Phone account created: $account")
+        try {
+            telecomManager.registerPhoneAccount(account)
+            Log.i("[Telecom Helper] Phone account created: $account")
+        } catch (uoe: UnsupportedOperationException) {
+            Log.e("[Telecom Helper] Unsupported Operation Exception: $uoe")
+        } catch (e: Exception) {
+            Log.e("[Telecom Helper] Exception: $e")
+        }
         return account
     }
 
