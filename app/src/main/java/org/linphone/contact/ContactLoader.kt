@@ -43,7 +43,6 @@ import org.linphone.core.Friend
 import org.linphone.core.GlobalState
 import org.linphone.core.SubscribePolicy
 import org.linphone.core.tools.Log
-import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.PhoneNumberUtils
 
 class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
@@ -102,6 +101,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
             withContext(Dispatchers.IO) {
                 try {
                     // Cursor can be null now that we are on a different dispatcher according to Crashlytics
+                    val friendsPhoneNumbers = HashMap<String, List<String>>()
                     while (cursor != null && !cursor.isClosed && cursor.moveToNext()) {
                         try {
                             val id: String =
@@ -143,6 +143,9 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                                 friend.incSubscribePolicy = SubscribePolicy.SPDeny
                             }
 
+                            if (!friendsPhoneNumbers.containsKey(id)) {
+                                friendsPhoneNumbers[id] = arrayListOf()
+                            }
                             when (mime) {
                                 ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE -> {
                                     val label = PhoneNumberUtils.addressBookLabelTypeToVcardParamString(
@@ -161,21 +164,15 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                                         }
 
                                     if (number != null) {
-                                        var duplicate = false
-                                        for (pn in friend.phoneNumbersWithLabel) {
-                                            if (pn.label == label && LinphoneUtils.arePhoneNumberWeakEqual(
-                                                    pn.phoneNumber,
-                                                    number
-                                                )
-                                            ) {
-                                                duplicate = true
-                                                break
-                                            }
-                                        }
-                                        if (!duplicate) {
+                                        if (
+                                            friendsPhoneNumbers[id].orEmpty().find {
+                                                PhoneNumberUtils.arePhoneNumberWeakEqual(it, number)
+                                            } == null
+                                        ) {
                                             val phoneNumber = Factory.instance()
                                                 .createFriendPhoneNumber(number, label)
                                             friend.addPhoneNumberWithLabel(phoneNumber)
+                                            friendsPhoneNumbers[id] = friendsPhoneNumbers[id].orEmpty().plus(number)
                                         }
                                     }
                                 }
@@ -202,6 +199,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                             Log.e("[Contacts Loader] Exception: $e")
                         }
                     }
+                    friendsPhoneNumbers.clear()
 
                     withContext(Dispatchers.Main) {
                         if (core.globalState == GlobalState.Shutdown || core.globalState == GlobalState.Off) {
