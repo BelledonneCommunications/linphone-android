@@ -33,7 +33,7 @@ import android.util.Patterns
 import androidx.core.app.Person
 import androidx.core.graphics.drawable.IconCompat
 import androidx.lifecycle.MutableLiveData
-import java.lang.NumberFormatException
+import java.io.IOException
 import kotlinx.coroutines.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -353,36 +353,41 @@ fun Friend.hasPresence(): Boolean {
     return false
 }
 
-fun Friend.getPictureUri(): Uri? {
-    val refKey = refKey
-    if (refKey != null) {
-        try {
-            val nativeId = refKey.toLong()
-            return Uri.withAppendedPath(
-                ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, nativeId),
-                ContactsContract.Contacts.Photo.DISPLAY_PHOTO
-            )
-        } catch (nfe: NumberFormatException) {}
-    }
-
-    val photoUri = photo ?: return null
-    return Uri.parse(photoUri)
+fun Friend.getThumbnailUri(): Uri? {
+    return getPictureUri(true)
 }
 
-fun Friend.getThumbnailUri(): Uri? {
+fun Friend.getPictureUri(thumbnailPreferred: Boolean = false): Uri? {
     val refKey = refKey
     if (refKey != null) {
         try {
-            val nativeId = refKey.toLong()
+            val lookupUri = ContentUris.withAppendedId(
+                ContactsContract.Contacts.CONTENT_URI,
+                refKey.toLong()
+            )
+
+            if (!thumbnailPreferred) {
+                val pictureUri = Uri.withAppendedPath(
+                    lookupUri,
+                    ContactsContract.Contacts.Photo.DISPLAY_PHOTO
+                )
+                // Check that the URI points to a real file
+                val contentResolver = coreContext.context.contentResolver
+                try {
+                    if (contentResolver.openAssetFileDescriptor(pictureUri, "r") != null) {
+                        return pictureUri
+                    }
+                } catch (ioe: IOException) { }
+            }
+
+            // Fallback to thumbnail if high res picture isn't available
             return Uri.withAppendedPath(
-                ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, nativeId),
+                lookupUri,
                 ContactsContract.Contacts.Photo.CONTENT_DIRECTORY
             )
-        } catch (nfe: NumberFormatException) {}
+        } catch (e: Exception) { }
     }
-
-    val photoUri = photo ?: return null
-    return Uri.parse(photoUri)
+    return null
 }
 
 fun Friend.getPerson(): Person {
