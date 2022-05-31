@@ -350,18 +350,24 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         lastUpdate.value = TimestampUtils.toString(chatRoom.lastUpdateTime, true)
     }
 
-    private fun searchMatchingContact() {
-        val remoteAddress = if (chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt())) {
+    fun getRemoteAddress(): Address? {
+        return if (chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt())) {
             chatRoom.peerAddress
         } else {
             if (chatRoom.participants.isNotEmpty()) {
                 chatRoom.participants[0].address
             } else {
                 Log.e("[Chat Room] $chatRoom doesn't have any participant in state ${chatRoom.state}!")
-                return
+                null
             }
         }
-        contact.value = coreContext.contactsManager.findContactByAddress(remoteAddress)
+    }
+
+    private fun searchMatchingContact() {
+        val remoteAddress = getRemoteAddress()
+        if (remoteAddress != null) {
+            contact.value = coreContext.contactsManager.findContactByAddress(remoteAddress)
+        }
     }
 
     private fun getParticipantsNames() {

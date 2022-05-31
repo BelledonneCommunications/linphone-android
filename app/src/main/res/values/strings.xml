@@ -188,6 +188,7 @@
     <string name="chat_room_file_not_found">File not found</string>
     <string name="chat_room_context_menu_group_info">Group info</string>
     <string name="chat_room_context_menu_participants_devices">Conversation\'s devices</string>
+    <string name="chat_room_context_menu_go_to_contact">Go to contact</string>
     <string name="chat_message_context_menu_ephemeral_messages">Ephemeral messages</string>
     <string name="chat_message_context_menu_delete_messages">Delete messages</string>
     <string name="chat_message_context_menu_turn_off_notifications">Disable notifications</string>

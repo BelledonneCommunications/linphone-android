@@ -37,6 +37,18 @@
         <variable
             name="unmuteHidden"
             type="Boolean" />
+        <variable
+            name="addToContactsListener"
+            type="View.OnClickListener" />
+        <variable
+            name="addToContactsHidden"
+            type="Boolean" />
+        <variable
+            name="goToContactListener"
+            type="View.OnClickListener" />
+        <variable
+            name="goToContactHidden"
+            type="Boolean" />
     </data>
 
     <LinearLayout
@@ -44,6 +56,26 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="?attr/backgroundColor">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chat_room_popup_item_height"
+            android:visibility="@{addToContactsHidden ? View.GONE : View.VISIBLE}"
+            android:background="@drawable/menu_background"
+            android:onClick="@{addToContactsListener}"
+            style="@style/popup_item_font"
+            android:text="@string/chat_message_context_menu_add_to_contacts"
+            app:drawableRightCompat="@drawable/menu_add_contact" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chat_room_popup_item_height"
+            android:visibility="@{goToContactHidden ? View.GONE : View.VISIBLE}"
+            android:background="@drawable/menu_background"
+            android:onClick="@{goToContactListener}"
+            style="@style/popup_item_font"
+            android:text="@string/chat_room_context_menu_go_to_contact"
+            app:drawableRightCompat="@drawable/menu_contact" />
 
         <TextView
             android:layout_width="match_parent"
