@@ -19,7 +19,6 @@
  */
 package org.linphone.contact
 
-import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.activities.main.viewmodels.MessageNotifierViewModel
@@ -37,12 +36,6 @@ interface ContactDataInterface {
 
     val showGroupChatAvatar: Boolean
         get() = false
-
-    val thumbnailUri: Uri?
-        get() = contact.value?.getThumbnailUri()
-
-    val pictureUri: Uri?
-        get() = contact.value?.getPictureUri()
 }
 
 open class GenericContactData(private val sipAddress: Address) : ContactDataInterface {

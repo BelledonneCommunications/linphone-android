@@ -52,6 +52,7 @@ import org.linphone.activities.voip.data.ConferenceParticipantDeviceData
 import org.linphone.activities.voip.views.HorizontalScrollDotsView
 import org.linphone.contact.ContactAvatarGenerator
 import org.linphone.contact.ContactDataInterface
+import org.linphone.contact.getPictureUri
 import org.linphone.core.tools.Log
 import org.linphone.views.VoiceRecordProgressBar
 
@@ -344,7 +345,7 @@ private fun loadContactPictureWithCoil(
     if (contact != null) {
         val context = imageView.context
         val displayName = contact.contact.value?.name ?: contact.displayName.value.orEmpty()
-        val source = if (useThumbnail) contact.thumbnailUri else contact.pictureUri
+        val source = contact.contact.value?.getPictureUri(useThumbnail)
         imageView.load(source) {
             transformations(CircleCropTransformation())
             error(
@@ -390,7 +391,7 @@ fun loadContactPictureWithCoil(imageView: ImageView, contact: ContactDataInterfa
 @BindingAdapter("coilContactBig")
 fun loadBigContactPictureWithCoil(imageView: ImageView, contact: ContactDataInterface?) {
     loadContactPictureWithCoil(
-        imageView, contact, true,
+        imageView, contact, false,
         R.dimen.contact_avatar_big_size, R.dimen.contact_avatar_text_big_size
     )
 }
