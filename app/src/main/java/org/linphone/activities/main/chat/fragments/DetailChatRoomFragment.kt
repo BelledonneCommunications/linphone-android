@@ -849,7 +849,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         )
 
         val itemSize = AppUtils.getDimension(R.dimen.chat_room_popup_item_height).toInt()
-        var totalSize = itemSize * 6
+        var totalSize = itemSize * 7
 
         val notificationsTurnedOff = viewModel.areNotificationsMuted()
         if (notificationsTurnedOff) {
@@ -857,6 +857,18 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             totalSize -= itemSize
         } else {
             popupView.unmuteHidden = true
+            totalSize -= itemSize
+        }
+
+        if (viewModel.basicChatRoom || viewModel.oneToOneChatRoom) {
+            if (viewModel.contact.value != null) {
+                popupView.addToContactsHidden = true
+            } else {
+                popupView.goToContactHidden = true
+            }
+        } else {
+            popupView.addToContactsHidden = true
+            popupView.goToContactHidden = true
             totalSize -= itemSize
         }
 
@@ -932,6 +944,32 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         popupView.setUnmuteListener {
             viewModel.muteNotifications(false)
             popupWindow.dismiss()
+        }
+        popupView.setAddToContactsListener {
+            popupWindow.dismiss()
+            val copy = viewModel.getRemoteAddress()?.clone()
+            if (copy != null) {
+                copy.clean()
+                val address = copy.asStringUriOnly()
+                Log.i("[Chat Room] Creating contact with SIP URI: $address")
+                navigateToContacts(address)
+            }
+        }
+        popupView.setGoToContactListener {
+            popupWindow.dismiss()
+            val contactId = viewModel.contact.value?.refKey
+            if (contactId != null) {
+                Log.i("[Chat Room] Displaying contact $contactId")
+                navigateToContact(contactId)
+            } else {
+                val copy = viewModel.getRemoteAddress()?.clone()
+                if (copy != null) {
+                    copy.clean()
+                    val address = copy.asStringUriOnly()
+                    Log.i("[Chat Room] Displaying friend with address $address")
+                    navigateToContact(address)
+                }
+            }
         }
 
         popupWindow.showAsDropDown(binding.menu, 0, 0, Gravity.BOTTOM)

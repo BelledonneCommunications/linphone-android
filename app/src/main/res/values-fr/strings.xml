@@ -730,4 +730,5 @@
     <string name="chat_message_context_menu_turn_off_notifications">Désactiver les notifications</string>
     <string name="chat_message_context_menu_turn_on_notifications">Activer les notifications</string>
     <string name="content_description_muted_chat_room">Les notifications sont désactivées pour cette conversation</string>
+    <string name="chat_room_context_menu_go_to_contact">Voir le contact</string>
 </resources>

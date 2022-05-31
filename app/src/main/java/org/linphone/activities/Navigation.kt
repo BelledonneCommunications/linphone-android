@@ -49,7 +49,6 @@ import org.linphone.activities.main.settings.fragments.*
 import org.linphone.activities.main.sidemenu.fragments.SideMenuFragment
 import org.linphone.activities.voip.CallActivity
 import org.linphone.activities.voip.fragments.*
-import org.linphone.core.Address
 
 internal fun Fragment.findMasterNavController(): NavController {
     return parentFragment?.parentFragment?.findNavController() ?: findNavController()
@@ -314,6 +313,11 @@ internal fun MasterChatRoomsFragment.clearDisplayedChatRoom() {
 
 internal fun DetailChatRoomFragment.navigateToContacts(sipUriToAdd: String) {
     val deepLink = "linphone-android://contact/new/$sipUriToAdd"
+    findMasterNavController().navigate(Uri.parse(deepLink))
+}
+
+internal fun DetailChatRoomFragment.navigateToContact(id: String) {
+    val deepLink = "linphone-android://contact/view/$id"
     findMasterNavController().navigate(Uri.parse(deepLink))
 }
 
@@ -641,11 +645,6 @@ internal fun DetailCallLogFragment.navigateToContacts(sipUriToAdd: String) {
 
 internal fun DetailCallLogFragment.navigateToContact(id: String) {
     val deepLink = "linphone-android://contact/view/$id"
-    findMasterNavController().navigate(Uri.parse(deepLink))
-}
-
-internal fun DetailCallLogFragment.navigateToFriend(friendAddress: Address) {
-    val deepLink = "linphone-android://contact/new/${friendAddress.asStringUriOnly()}"
     findMasterNavController().navigate(Uri.parse(deepLink))
 }
 

@@ -31,7 +31,6 @@ import org.linphone.activities.main.history.viewmodels.CallLogViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.navigateToContact
 import org.linphone.activities.navigateToContacts
-import org.linphone.activities.navigateToFriend
 import org.linphone.core.tools.Log
 import org.linphone.databinding.HistoryDetailFragmentBinding
 import org.linphone.utils.Event
@@ -72,9 +71,10 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
         binding.setNewContactClickListener {
             val copy = viewModel.callLog.remoteAddress.clone()
             copy.clean()
-            Log.i("[History] Creating contact with SIP URI: ${copy.asStringUriOnly()}")
+            val address = copy.asStringUriOnly()
+            Log.i("[History] Creating contact with SIP URI: $address")
             sharedViewModel.updateContactsAnimationsBasedOnDestination.value = Event(R.id.masterCallLogsFragment)
-            navigateToContacts(copy.asStringUriOnly())
+            navigateToContacts(address)
         }
 
         binding.setContactClickListener {
@@ -86,8 +86,9 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
             } else {
                 val copy = viewModel.callLog.remoteAddress.clone()
                 copy.clean()
-                Log.i("[History] Displaying friend with address ${copy.asStringUriOnly()}")
-                navigateToFriend(copy)
+                val address = copy.asStringUriOnly()
+                Log.i("[History] Displaying friend with address $address")
+                navigateToContact(address)
             }
         }
 
