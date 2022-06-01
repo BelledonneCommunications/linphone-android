@@ -284,8 +284,7 @@ class CoreContext(
 
     init {
         if (context.resources.getBoolean(R.bool.crashlytics_enabled)) {
-            // TODO: FIXME: uncomment
-            // loggingService.addListener(loggingServiceListener)
+            loggingService.addListener(loggingServiceListener)
             Log.i("[Context] Crashlytics enabled, register logging service listener")
         }
 
@@ -372,8 +371,7 @@ class CoreContext(
         core.removeListener(listener)
         stopped = true
         _lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
-        // TODO: FIXME: uncomment
-        // loggingService.removeListener(loggingServiceListener)
+        loggingService.removeListener(loggingServiceListener)
     }
 
     private fun configureCore() {
