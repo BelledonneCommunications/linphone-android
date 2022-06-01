@@ -152,6 +152,6 @@ private class CallLogDiffCallback : DiffUtil.ItemCallback<GroupedCallLogData>() 
         oldItem: GroupedCallLogData,
         newItem: GroupedCallLogData
     ): Boolean {
-        return false // For headers
+        return oldItem.callLogs.size == newItem.callLogs.size
     }
 }
