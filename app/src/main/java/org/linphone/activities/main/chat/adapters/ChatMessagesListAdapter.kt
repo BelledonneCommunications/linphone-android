@@ -313,7 +313,7 @@ class ChatMessagesListAdapter(
                             popupView.addToContactsHidden = true
                             totalSize -= itemSize
                         }
-                        if (chatMessage.chatRoom.isReadOnly()) {
+                        if (chatMessage.chatRoom.isReadOnly) {
                             popupView.replyHidden = true
                             totalSize -= itemSize
                         }

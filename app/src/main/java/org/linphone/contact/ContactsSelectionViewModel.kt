@@ -97,7 +97,7 @@ open class ContactsSelectionViewModel : MessageNotifierViewModel() {
         val domain = if (sipContactsSelected.value == true) coreContext.core.defaultAccount?.params?.domain ?: "" else ""
         searchResultsPending = true
         fastFetchJob?.cancel()
-        coreContext.contactsManager.magicSearch.getContactsAsync(filter.value.orEmpty(), domain, MagicSearchSource.All.toInt())
+        coreContext.contactsManager.magicSearch.getContactsListAsync(filter.value.orEmpty(), domain, MagicSearchSource.All.toInt(), MagicSearchAggregation.None)
 
         val spinnerDelay = corePreferences.delayBeforeShowingContactsSearchSpinner.toLong()
         fastFetchJob = viewModelScope.launch {

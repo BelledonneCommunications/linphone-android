@@ -169,7 +169,7 @@ class HorizontalScrollDotsView : View {
         setMeasuredDimension(width, height)
     }
 
-    fun setDotCount(count: Int) {
+    private fun setDotCount(count: Int) {
         this.count = count
         requestLayout()
         invalidate()

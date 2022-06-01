@@ -59,7 +59,7 @@ open class StatusViewModel : ViewModel() {
             if (body.type == "application" && body.subtype == "simple-message-summary" && body.size > 0) {
                 val data = body.utf8Text?.lowercase(Locale.getDefault())
                 val voiceMail = data?.split("voice-message: ")
-                if (voiceMail?.size ?: 0 >= 2) {
+                if ((voiceMail?.size ?: 0) >= 2) {
                     val toParse = voiceMail!![1].split("/", limit = 0)
                     try {
                         val unreadCount: Int = toParse[0].toInt()

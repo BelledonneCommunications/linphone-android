@@ -40,8 +40,8 @@ class GridBoxLayout : GridLayout {
     )
 
     var centerContent: Boolean = false
-    var previousChildCount = 0
-    var previousCellSize = 0
+    private var previousChildCount = 0
+    private var previousCellSize = 0
 
     @SuppressLint("DrawAllocation")
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {

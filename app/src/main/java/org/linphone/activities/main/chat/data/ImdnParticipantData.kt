@@ -27,8 +27,4 @@ class ImdnParticipantData(val imdnState: ParticipantImdnState) : GenericContactD
     val sipUri: String = imdnState.participant.address.asStringUriOnly()
 
     val time: String = TimestampUtils.toString(imdnState.stateChangeTime)
-
-    override fun destroy() {
-        super.destroy()
-    }
 }

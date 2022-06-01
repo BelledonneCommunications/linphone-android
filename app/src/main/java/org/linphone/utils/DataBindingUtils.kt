@@ -22,7 +22,6 @@ package org.linphone.utils
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
-import android.graphics.Bitmap
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Patterns
@@ -63,11 +62,6 @@ import org.linphone.views.VoiceRecordProgressBar
 @BindingAdapter("android:src")
 fun ImageView.setSourceImageResource(resource: Int) {
     this.setImageResource(resource)
-}
-
-@BindingAdapter("android:src")
-fun ImageView.setSourceImageBitmap(bitmap: Bitmap?) {
-    if (bitmap != null) this.setImageBitmap(bitmap)
 }
 
 @BindingAdapter("android:contentDescription")
@@ -113,13 +107,6 @@ fun setLeftMargin(view: View, margin: Float) {
 fun setRightMargin(view: View, margin: Float) {
     val layoutParams = view.layoutParams as RelativeLayout.LayoutParams
     layoutParams.rightMargin = margin.toInt()
-    view.layoutParams = layoutParams
-}
-
-@BindingAdapter("android:layout_weight")
-fun setLayoutWeight(view: View, weight: Float) {
-    val layoutParams = view.layoutParams as LinearLayout.LayoutParams
-    layoutParams.weight = weight
     view.layoutParams = layoutParams
 }
 
@@ -494,7 +481,7 @@ fun addUsernameEditTextValidation(editText: EditText, enabled: Boolean) {
                 s?.matches(Regex(usernameRegexp)) == false ->
                     editText.error =
                         editText.context.getString(R.string.assistant_error_username_invalid_characters)
-                s?.length ?: 0 > usernameMaxLength -> {
+                (s?.length ?: 0) > usernameMaxLength -> {
                     editText.error =
                         editText.context.getString(R.string.assistant_error_username_too_long)
                 }

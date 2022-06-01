@@ -63,10 +63,6 @@ class ChatRoomCreationViewModel : ContactsSelectionViewModel() {
         waitForChatRoomCreation.value = false
     }
 
-    override fun onCleared() {
-        super.onCleared()
-    }
-
     fun updateEncryption(encrypted: Boolean) {
         isEncrypted.value = encrypted
     }
