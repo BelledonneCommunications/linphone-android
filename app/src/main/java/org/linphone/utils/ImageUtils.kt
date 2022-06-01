@@ -22,6 +22,7 @@ package org.linphone.utils
 import android.content.Context
 import android.graphics.*
 import android.net.Uri
+import java.io.FileNotFoundException
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 
@@ -36,6 +37,8 @@ class ImageUtils {
                 bm = try {
                     // We make a copy to ensure Bitmap will be Software and not Hardware, required for shortcuts
                     Compatibility.getBitmapFromUri(context, fromPictureUri).copy(Bitmap.Config.ARGB_8888, true)
+                } catch (fnfe: FileNotFoundException) {
+                    return null
                 } catch (e: Exception) {
                     Log.e("[Image Utils] Failed to get bitmap from URI [$fromPictureUri]: $e")
                     return null
