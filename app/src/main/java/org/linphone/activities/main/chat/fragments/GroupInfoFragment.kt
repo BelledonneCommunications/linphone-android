@@ -73,7 +73,7 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
 
         adapter = GroupInfoParticipantsAdapter(
             viewLifecycleOwner,
-            chatRoom?.hasCapability(ChatRoomCapabilities.Encrypted.toInt()) ?: viewModel.isEncrypted.value == true
+            chatRoom?.hasCapability(ChatRoomCapabilities.Encrypted.toInt()) ?: (viewModel.isEncrypted.value == true)
         )
         binding.participants.adapter = adapter
 

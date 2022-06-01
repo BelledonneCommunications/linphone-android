@@ -171,12 +171,16 @@ class RecordingData(val path: String, private val recordingListener: RecordingLi
         var earpieceCard: String? = null
         for (device in coreContext.core.audioDevices) {
             if (device.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
-                if (device.type == AudioDevice.Type.Speaker) {
-                    speakerCard = device.id
-                } else if (device.type == AudioDevice.Type.Earpiece) {
-                    earpieceCard = device.id
-                } else if (device.type == AudioDevice.Type.Headphones || device.type == AudioDevice.Type.Headset) {
-                    headphonesCard = device.id
+                when (device.type) {
+                    AudioDevice.Type.Speaker -> {
+                        speakerCard = device.id
+                    }
+                    AudioDevice.Type.Earpiece -> {
+                        earpieceCard = device.id
+                    }
+                    AudioDevice.Type.Headphones, AudioDevice.Type.Headset -> {
+                        headphonesCard = device.id
+                    }
                 }
             }
         }

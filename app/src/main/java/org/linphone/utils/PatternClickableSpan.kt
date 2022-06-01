@@ -27,7 +27,7 @@ import android.widget.TextView
 import java.util.regex.Pattern
 
 class PatternClickableSpan {
-    var patterns: ArrayList<SpannablePatternItem> = ArrayList()
+    private var patterns: ArrayList<SpannablePatternItem> = ArrayList()
 
     inner class SpannablePatternItem(
         var pattern: Pattern,

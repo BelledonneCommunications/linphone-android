@@ -114,7 +114,7 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
     private val chatRoomListener: ChatRoomListenerStub = object : ChatRoomListenerStub() {
         override fun onStateChanged(chatRoom: ChatRoom, state: ChatRoom.State) {
             if (state == ChatRoom.State.Created || state == ChatRoom.State.Terminated) {
-                isReadOnly.value = chatRoom.isReadOnly()
+                isReadOnly.value = chatRoom.isReadOnly
             }
         }
     }
@@ -457,12 +457,16 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         var earpieceCard: String? = null
         for (device in coreContext.core.audioDevices) {
             if (device.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
-                if (device.type == AudioDevice.Type.Speaker) {
-                    speakerCard = device.id
-                } else if (device.type == AudioDevice.Type.Earpiece) {
-                    earpieceCard = device.id
-                } else if (device.type == AudioDevice.Type.Headphones || device.type == AudioDevice.Type.Headset) {
-                    headphonesCard = device.id
+                when (device.type) {
+                    AudioDevice.Type.Speaker -> {
+                        speakerCard = device.id
+                    }
+                    AudioDevice.Type.Earpiece -> {
+                        earpieceCard = device.id
+                    }
+                    AudioDevice.Type.Headphones, AudioDevice.Type.Headset -> {
+                        headphonesCard = device.id
+                    }
                 }
             }
         }
