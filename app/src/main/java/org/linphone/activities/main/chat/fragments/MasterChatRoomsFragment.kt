@@ -219,14 +219,6 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
             adapter.submitList(chatRooms)
         }
 
-        listViewModel.contactsUpdatedEvent.observe(
-            viewLifecycleOwner
-        ) {
-            it.consume {
-                adapter.notifyItemRangeChanged(0, adapter.itemCount)
-            }
-        }
-
         adapter.selectedChatRoomEvent.observe(
             viewLifecycleOwner
         ) {

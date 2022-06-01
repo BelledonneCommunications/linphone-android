@@ -136,6 +136,6 @@ private class ContactDiffCallback : DiffUtil.ItemCallback<ContactViewModel>() {
         oldItem: ContactViewModel,
         newItem: ContactViewModel
     ): Boolean {
-        return false // For headers
+        return true
     }
 }

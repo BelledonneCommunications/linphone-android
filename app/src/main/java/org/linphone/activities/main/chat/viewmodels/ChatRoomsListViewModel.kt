@@ -24,7 +24,6 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.main.viewmodels.MessageNotifierViewModel
 import org.linphone.compatibility.Compatibility
-import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
@@ -33,10 +32,6 @@ import org.linphone.utils.LinphoneUtils
 class ChatRoomsListViewModel : MessageNotifierViewModel() {
     val chatRooms = MutableLiveData<ArrayList<ChatRoomViewModel>>()
 
-    val contactsUpdatedEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
-    }
-
     val fileSharingPending = MutableLiveData<Boolean>()
 
     val textSharingPending = MutableLiveData<Boolean>()
@@ -44,13 +39,6 @@ class ChatRoomsListViewModel : MessageNotifierViewModel() {
     val forwardPending = MutableLiveData<Boolean>()
 
     val groupChatAvailable: Boolean = LinphoneUtils.isGroupChatAvailable()
-
-    private val contactsUpdatedListener = object : ContactsUpdatedListenerStub() {
-        override fun onContactsUpdated() {
-            Log.i("[Chat Rooms] Contacts have changed")
-            contactsUpdatedEvent.value = Event(true)
-        }
-    }
 
     private val listener: CoreListenerStub = object : CoreListenerStub() {
         override fun onChatRoomStateChanged(core: Core, chatRoom: ChatRoom, state: ChatRoom.State) {
@@ -102,12 +90,10 @@ class ChatRoomsListViewModel : MessageNotifierViewModel() {
     init {
         updateChatRooms()
         coreContext.core.addListener(listener)
-        coreContext.contactsManager.addListener(contactsUpdatedListener)
     }
 
     override fun onCleared() {
         chatRooms.value.orEmpty().forEach(ChatRoomViewModel::destroy)
-        coreContext.contactsManager.removeListener(contactsUpdatedListener)
         coreContext.core.removeListener(listener)
 
         super.onCleared()
