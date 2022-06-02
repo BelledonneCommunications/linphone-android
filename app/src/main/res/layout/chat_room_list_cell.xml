@@ -153,7 +153,7 @@
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:layout_marginRight="5dp"
-                    android:src="@drawable/menu_notifications_off"/>
+                    android:src="@drawable/chat_room_menu_mute_notifications"/>
 
                 <ImageView
                     android:visibility="@{viewModel.ephemeralEnabled ? View.VISIBLE : View.GONE, default=gone}"

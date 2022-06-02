@@ -65,7 +65,7 @@
             android:onClick="@{addToContactsListener}"
             style="@style/popup_item_font"
             android:text="@string/chat_message_context_menu_add_to_contacts"
-            app:drawableRightCompat="@drawable/menu_add_contact" />
+            app:drawableRightCompat="@drawable/chat_room_menu_add_contact" />
 
         <TextView
             android:layout_width="match_parent"
@@ -75,7 +75,7 @@
             android:onClick="@{goToContactListener}"
             style="@style/popup_item_font"
             android:text="@string/chat_room_context_menu_go_to_contact"
-            app:drawableRightCompat="@drawable/menu_contact" />
+            app:drawableRightCompat="@drawable/chat_room_menu_view_contact" />
 
         <TextView
             android:layout_width="match_parent"
@@ -115,7 +115,7 @@
             android:onClick="@{muteListener}"
             style="@style/popup_item_font"
             android:text="@string/chat_message_context_menu_turn_off_notifications"
-            app:drawableRightCompat="@drawable/menu_notifications_off" />
+            app:drawableRightCompat="@drawable/chat_room_menu_mute_notifications" />
 
         <TextView
             android:layout_width="match_parent"
@@ -125,7 +125,7 @@
             android:onClick="@{unmuteListener}"
             style="@style/popup_item_font"
             android:text="@string/chat_message_context_menu_turn_on_notifications"
-            app:drawableRightCompat="@drawable/menu_notifications_on" />
+            app:drawableRightCompat="@drawable/chat_room_menu_unmute_notifications" />
 
         <TextView
             android:layout_width="match_parent"
