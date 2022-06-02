@@ -10,6 +10,12 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [4.6.10] - Unreleased
+
+### Fixed
+- Fixed contact address used instead of identity address when creating a basic chat room from history or contact details
+- Fixed call notification still visible after call ended on some devices
+
 ## [4.6.9] - 2022-05-30
 
 ### Fixed
