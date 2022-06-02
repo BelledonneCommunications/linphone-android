@@ -119,8 +119,8 @@ class LinphoneUtils {
 
             val participants = arrayOf(participant)
 
-            return core.searchChatRoom(params, defaultAccount?.contactAddress, null, participants)
-                ?: core.createChatRoom(params, defaultAccount?.contactAddress, participants)
+            return core.searchChatRoom(params, defaultAccount?.params?.identityAddress, null, participants)
+                ?: core.createChatRoom(params, defaultAccount?.params?.identityAddress, participants)
         }
 
         fun deleteFilesAttachedToEventLog(eventLog: EventLog) {
