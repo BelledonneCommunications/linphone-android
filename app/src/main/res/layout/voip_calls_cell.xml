@@ -130,7 +130,7 @@
                 android:onClick="@{() -> data.showContextMenu(contextMenu)}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/voip_call_list_menu"
+                android:src="@drawable/icon_calls_list_menu"
                 android:padding="5dp"
                 android:contentDescription="@string/content_description_call_context_menu"/>
 
