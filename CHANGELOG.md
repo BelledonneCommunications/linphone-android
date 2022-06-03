@@ -14,6 +14,7 @@ Group changes to describe their impact on the project, as follows:
 
 ### Added
 - Conference creation with scheduling, video, different layouts, showing who is speaking and who is muted, etc...
+- Group calls directly from group chat rooms
 - Chat rooms can be individually muted (no notification when receiving a chat message)
 - Image & Video in-app viewers allow for full-screen display
 
@@ -21,13 +22,15 @@ Group changes to describe their impact on the project, as follows:
 - In-call views have been re-designed
 - Improved how call logs are handled to improve performances
 - Improved how contact avatars are generated
-- 3-dots menu even for basic chat rooms
+- 3-dots menu even for basic chat rooms with more options
 
 ### Fixed
 - Multiple file download attempt from the same chat bubble at the same time needed app restart to properly download each file
 - Generated avatars in dark mode
 - Call state in self-managed TelecomManager service if it takes longer to be created than the call to be answered
 - Show service notification sooner to prevent crash if Core creation takes too long
+- One to one chat room creation process waiting indefinitely if chat room already exists
+- "Blinking" in some views when presence is being received
 - Trying to keep the preferred driver (OpenSLES / AAudio) when switching device
 
 ## [4.6.9] - 2022-05-30
