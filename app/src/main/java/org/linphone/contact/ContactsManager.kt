@@ -386,6 +386,10 @@ fun Friend.getPictureUri(thumbnailPreferred: Boolean = false): Uri? {
                 ContactsContract.Contacts.Photo.CONTENT_DIRECTORY
             )
         } catch (e: Exception) { }
+    } else if (photo != null) {
+        try {
+            return Uri.parse(photo)
+        } catch (e: Exception) { }
     }
     return null
 }
