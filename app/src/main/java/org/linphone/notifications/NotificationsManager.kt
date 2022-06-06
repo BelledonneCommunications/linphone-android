@@ -159,6 +159,11 @@ class NotificationsManager(private val context: Context) {
                 return
             }
 
+            if (message.isRead) {
+                Log.w("[Notifications Manager] Received message is already marked as read, do not notify")
+                return
+            }
+
             if (corePreferences.chatRoomShortcuts) {
                 if (ShortcutsHelper.isShortcutToChatRoomAlreadyCreated(context, room)) {
                     Log.i("[Notifications Manager] Chat room shortcut already exists")
