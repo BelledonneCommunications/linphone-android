@@ -23,6 +23,7 @@ Group changes to describe their impact on the project, as follows:
 - Improved how call logs are handled to improve performances
 - Improved how contact avatars are generated
 - 3-dots menu even for basic chat rooms with more options
+- Phone numbers & email addresses are now clickable links in chat messages
 
 ### Fixed
 - Multiple file download attempt from the same chat bubble at the same time needed app restart to properly download each file
