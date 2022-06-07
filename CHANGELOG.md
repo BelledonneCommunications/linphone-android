@@ -33,6 +33,15 @@ Group changes to describe their impact on the project, as follows:
 - "Blinking" in some views when presence is being received
 - Trying to keep the preferred driver (OpenSLES / AAudio) when switching device
 
+## [4.6.10] - 2022-06-07
+
+### Fixed
+- Fixed contact address used instead of identity address when creating a basic chat room from history or contact details
+- Fixed call notification still visible after call ended on some devices
+- Fixed incoming call activity not displayed on some devices
+- Fixed Malaysian dial plan (SDK fix)
+- Fixed incoming call ringing even if Do not disturb mode is enabled (SDK fix)
+
 ## [4.6.9] - 2022-05-30
 
 ### Fixed
