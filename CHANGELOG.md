@@ -10,11 +10,14 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
-## [4.6.10] - Unreleased
+## [4.6.10] - 2022-06-07
 
 ### Fixed
 - Fixed contact address used instead of identity address when creating a basic chat room from history or contact details
 - Fixed call notification still visible after call ended on some devices
+- Fixed incoming call activity not displayed on some devices
+- Fixed Malaysian dial plan (SDK fix)
+- Fixed incoming call ringing even if Do not disturb mode is enabled (SDK fix)
 
 ## [4.6.9] - 2022-05-30
 
