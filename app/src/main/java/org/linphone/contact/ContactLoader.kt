@@ -38,10 +38,7 @@ import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
-import org.linphone.core.Factory
-import org.linphone.core.Friend
-import org.linphone.core.GlobalState
-import org.linphone.core.SubscribePolicy
+import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.PhoneNumberUtils
 
@@ -76,7 +73,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
             projection,
             selection,
             null,
-            null
+            ContactsContract.Data.CONTACT_ID + " ASC"
         )
     }
 
@@ -101,7 +98,9 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
             withContext(Dispatchers.IO) {
                 try {
                     // Cursor can be null now that we are on a different dispatcher according to Crashlytics
-                    val friendsPhoneNumbers = HashMap<String, List<String>>()
+                    val friendsPhoneNumbers = arrayListOf<String>()
+                    val friendsAddresses = arrayListOf<Address>()
+                    var previousId = ""
                     while (cursor != null && !cursor.isClosed && cursor.moveToNext()) {
                         try {
                             val id: String =
@@ -123,6 +122,12 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                             val lookupKey =
                                 cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Contacts.LOOKUP_KEY))
 
+                            if (previousId.isEmpty() || previousId != id) {
+                                friendsPhoneNumbers.clear()
+                                friendsAddresses.clear()
+                                previousId = id
+                            }
+
                             val friend = friends[id] ?: core.createFriend()
                             friend.refKey = id
                             if (friend.name.isNullOrEmpty()) {
@@ -143,9 +148,6 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                                 friend.incSubscribePolicy = SubscribePolicy.SPDeny
                             }
 
-                            if (!friendsPhoneNumbers.containsKey(id)) {
-                                friendsPhoneNumbers[id] = arrayListOf()
-                            }
                             when (mime) {
                                 ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE -> {
                                     val label = PhoneNumberUtils.addressBookLabelTypeToVcardParamString(
@@ -165,26 +167,32 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
 
                                     if (number != null) {
                                         if (
-                                            friendsPhoneNumbers[id].orEmpty().find {
+                                            friendsPhoneNumbers.find {
                                                 PhoneNumberUtils.arePhoneNumberWeakEqual(it, number)
                                             } == null
                                         ) {
                                             val phoneNumber = Factory.instance()
                                                 .createFriendPhoneNumber(number, label)
                                             friend.addPhoneNumberWithLabel(phoneNumber)
-                                            friendsPhoneNumbers[id] = friendsPhoneNumbers[id].orEmpty().plus(number)
+                                            friendsPhoneNumbers.add(number)
                                         }
                                     }
                                 }
                                 linphoneMime, ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE -> {
                                     if (data1 == null) continue
                                     val address = core.interpretUrl(data1) ?: continue
-                                    friend.addAddress(address)
+                                    if (
+                                        friendsAddresses.find {
+                                            it.weakEqual(address)
+                                        } == null
+                                    ) {
+                                        friend.addAddress(address)
+                                        friendsAddresses.add(address)
+                                    }
                                 }
                                 ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE -> {
                                     if (data1 == null) continue
-                                    val vCard = friend.vcard
-                                    vCard?.organization = data1
+                                    friend.organization = data1
                                 }
                                 ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE -> {
                                     if (data2 == null && data3 == null) continue
@@ -199,7 +207,6 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                             Log.e("[Contacts Loader] Exception: $e")
                         }
                     }
-                    friendsPhoneNumbers.clear()
 
                     withContext(Dispatchers.Main) {
                         if (core.globalState == GlobalState.Shutdown || core.globalState == GlobalState.Off) {

@@ -103,7 +103,7 @@ class NativeContactEditor(val friend: Friend) {
                 if (rawId == null) {
                     try {
                         rawId = cursor.getString(cursor.getColumnIndexOrThrow(RawContacts._ID))
-                        Log.i("[Native Contact Editor] Found raw id $rawId for native contact with id ${friend.refKey}")
+                        Log.d("[Native Contact Editor] Found raw id $rawId for native contact with id ${friend.refKey}")
                     } catch (iae: IllegalArgumentException) {
                         Log.e("[Native Contact Editor] Exception: $iae")
                     }
@@ -484,15 +484,19 @@ class NativeContactEditor(val friend: Friend) {
         } else null
         cursor?.close()
 
+        val address = if (sipAddress.endsWith(";user=phone")) {
+            sipAddress.substring(0, sipAddress.length - ";user=phone".length)
+        } else sipAddress
+
         if (count == 0) {
-            Log.i("[Native Contact Editor] No existing presence information found for this phone number & SIP address, let's add it")
-            addPresenceLinphoneSipAddressForPhoneNumber(sipAddress, phoneNumber)
+            Log.i("[Native Contact Editor] No existing presence information found for this phone number ($phoneNumber) & SIP address ($address), let's add it")
+            addPresenceLinphoneSipAddressForPhoneNumber(address, phoneNumber)
         } else {
-            if (data1 != null && data1 == sipAddress) {
+            if (data1 != null && data1 == address) {
                 Log.d("[Native Contact Editor] There is already an entry for this phone number and SIP address, skipping")
             } else {
-                Log.w("[Native Contact Editor] There is already an entry for this phone number but not for the same SIP address")
-                updatePresenceLinphoneSipAddressForPhoneNumber(sipAddress, phoneNumber)
+                Log.w("[Native Contact Editor] There is already an entry for this phone number ($phoneNumber) but not for the same SIP address ($data1 != $address)")
+                updatePresenceLinphoneSipAddressForPhoneNumber(address, phoneNumber)
             }
         }
     }
