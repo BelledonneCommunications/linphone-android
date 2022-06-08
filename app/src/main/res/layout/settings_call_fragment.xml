@@ -148,7 +148,8 @@
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/call_settings_remote_recording_title}"
                     linphone:listener="@{viewModel.remoteCallRecordingListener}"
-                    linphone:checked="@={viewModel.remoteCallRecording}"/>
+                    linphone:checked="@={viewModel.remoteCallRecording}"
+                    android:visibility="gone"/>
 
                 <include
                     layout="@layout/settings_widget_switch"

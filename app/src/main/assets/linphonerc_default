@@ -22,6 +22,7 @@ size=vga
 [app]
 tunnel=disabled
 auto_start=1
+record_aware=1
 
 [tunnel]
 host=
