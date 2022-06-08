@@ -17,6 +17,7 @@ Group changes to describe their impact on the project, as follows:
 - Group calls directly from group chat rooms
 - Chat rooms can be individually muted (no notification when receiving a chat message)
 - Image & Video in-app viewers allow for full-screen display
+- Display name can be set during assistant when creating / logging in a sip.linphone.org account
 
 ### Changed
 - In-call views have been re-designed
@@ -33,6 +34,7 @@ Group changes to describe their impact on the project, as follows:
 - One to one chat room creation process waiting indefinitely if chat room already exists
 - "Blinking" in some views when presence is being received
 - Trying to keep the preferred driver (OpenSLES / AAudio) when switching device
+- Issues when storing presence in native contacts + potentially duplicated SIP addresses in contact details
 
 ## [4.6.10] - 2022-06-07
 

@@ -184,6 +184,22 @@
 
                         </com.google.android.material.textfield.TextInputLayout>
 
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/assistant_display_name_optional">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:text="@={viewModel.displayName}"
+                                android:imeOptions="actionDone"
+                                android:singleLine="true"
+                                android:inputType="textPersonName"
+                                android:background="@color/transparent_color"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"/>
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
                     </LinearLayout>
 
                 </RelativeLayout>

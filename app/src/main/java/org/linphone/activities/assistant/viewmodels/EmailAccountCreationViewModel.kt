@@ -52,6 +52,8 @@ class EmailAccountCreationViewModel(val accountCreator: AccountCreator) : ViewMo
     val passwordConfirmation = MutableLiveData<String>()
     val passwordConfirmationError = MutableLiveData<String>()
 
+    val displayName = MutableLiveData<String>()
+
     val createEnabled: MediatorLiveData<Boolean> = MediatorLiveData()
 
     val waitForServerAnswer = MutableLiveData<Boolean>()
@@ -146,6 +148,7 @@ class EmailAccountCreationViewModel(val accountCreator: AccountCreator) : ViewMo
         accountCreator.username = username.value
         accountCreator.password = password.value
         accountCreator.email = email.value
+        accountCreator.displayName = displayName.value
 
         waitForServerAnswer.value = true
         val status = accountCreator.isAccountExist

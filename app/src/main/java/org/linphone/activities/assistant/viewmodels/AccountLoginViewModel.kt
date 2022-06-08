@@ -49,6 +49,8 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
 
     val waitForServerAnswer = MutableLiveData<Boolean>()
 
+    val displayName = MutableLiveData<String>()
+
     val leaveAssistantEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -151,6 +153,8 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
     }
 
     fun login() {
+        accountCreator.displayName = displayName.value
+
         if (loginWithUsernamePassword.value == true) {
             val result = accountCreator.setUsername(username.value)
             if (result != AccountCreator.UsernameStatus.Ok) {
