@@ -275,40 +275,19 @@ class ContactsManager(private val context: Context) {
         notifyListeners(friend)
     }
 
-    @Synchronized
-    fun storePresenceInformationForAllContacts() {
-        if (corePreferences.storePresenceInNativeContact && PermissionHelper.get().hasWriteContactsPermission()) {
-            for (list in coreContext.core.friendsLists) {
-                for (friend in list.friends) {
-                    val id = friend.refKey
-                    if (id != null) {
-                        storePresenceInNativeContact(friend)
-                    }
-                }
-            }
-        }
-    }
-
     private fun storePresenceInNativeContact(friend: Friend) {
+        val contactEditor = NativeContactEditor(friend)
         for (phoneNumber in friend.phoneNumbers) {
             val sipAddress = friend.getContactForPhoneNumberOrAddress(phoneNumber)
             if (sipAddress != null) {
                 Log.d("[Contacts Manager] Found presence information to store in native contact $friend under Linphone sync account")
-                val contactEditor = NativeContactEditor(friend)
-                val coroutineScope = CoroutineScope(Dispatchers.Main)
-                coroutineScope.launch {
-                    val deferred = async {
-                        withContext(Dispatchers.IO) {
-                            contactEditor.setPresenceInformation(
-                                phoneNumber,
-                                sipAddress
-                            ).commit()
-                        }
-                    }
-                    deferred.await()
-                }
+                contactEditor.setPresenceInformation(
+                    phoneNumber,
+                    sipAddress
+                )
             }
         }
+        contactEditor.commit()
     }
 
     fun createFriendFromSearchResult(searchResult: SearchResult): Friend {

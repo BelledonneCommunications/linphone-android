@@ -119,7 +119,6 @@ class ContactsSettingsFragment : GenericSettingFragment<SettingsContactsFragment
                 if (granted) {
                     Log.i("[Contacts Settings] WRITE_CONTACTS permission granted")
                     corePreferences.storePresenceInNativeContact = true
-                    coreContext.contactsManager.storePresenceInformationForAllContacts()
                 } else {
                     Log.w("[Contacts Settings] WRITE_CONTACTS permission denied")
                 }
