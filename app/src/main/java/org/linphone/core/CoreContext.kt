@@ -388,6 +388,11 @@ class CoreContext(
             core.config.setInt("misc", "conference_layout", 1)
         }
 
+        if (!core.config.getBool("app", "conference_migration", false)) {
+            core.isRecordAwareEnabled = true
+            core.config.setBool("app", "conference_migration", true)
+        }
+
         initUserCertificates()
 
         computeUserAgent()
