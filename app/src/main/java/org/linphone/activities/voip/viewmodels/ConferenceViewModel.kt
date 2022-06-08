@@ -264,6 +264,7 @@ class ConferenceViewModel : ViewModel() {
         conference.addListener(conferenceListener)
 
         isRecording.value = conference.isRecording
+        subject.value = LinphoneUtils.getConferenceSubject(conference)
 
         updateConferenceLayout(conference)
     }
@@ -278,15 +279,7 @@ class ConferenceViewModel : ViewModel() {
         isConferenceLocallyPaused.value = !conference.isIn
         isMeAdmin.value = conference.me.isAdmin
         isVideoConference.value = conference.currentParams.isVideoEnabled
-        subject.value = if (conference.subject.isNullOrEmpty()) {
-            if (conference.me.isFocus) {
-                AppUtils.getString(R.string.conference_local_title)
-            } else {
-                AppUtils.getString(R.string.conference_default_title)
-            }
-        } else {
-            conference.subject
-        }
+        subject.value = LinphoneUtils.getConferenceSubject(conference)
 
         updateConferenceLayout(conference)
     }

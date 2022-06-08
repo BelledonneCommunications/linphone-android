@@ -87,6 +87,23 @@ class LinphoneUtils {
             return conferenceAddress
         }
 
+        fun getConferenceSubject(conference: Conference): String? {
+            return if (conference.subject.isNullOrEmpty()) {
+                val conferenceInfo = coreContext.core.findConferenceInformationFromUri(conference.conferenceAddress)
+                if (conferenceInfo != null) {
+                    conferenceInfo.subject
+                } else {
+                    if (conference.me.isFocus) {
+                        AppUtils.getString(R.string.conference_local_title)
+                    } else {
+                        AppUtils.getString(R.string.conference_default_title)
+                    }
+                }
+            } else {
+                conference.subject
+            }
+        }
+
         fun isLimeAvailable(): Boolean {
             val core = coreContext.core
             return core.limeX3DhAvailable() && core.isLimeX3DhEnabled &&
