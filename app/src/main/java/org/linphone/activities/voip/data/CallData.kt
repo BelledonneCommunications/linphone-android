@@ -30,7 +30,6 @@ import org.linphone.compatibility.Compatibility
 import org.linphone.contact.GenericContactData
 import org.linphone.core.*
 import org.linphone.core.tools.Log
-import org.linphone.utils.AppUtils
 import org.linphone.utils.LinphoneUtils
 
 open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
@@ -232,15 +231,7 @@ open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
         isInRemoteConference.value = conference != null
         if (conference != null) {
             Log.d("[Call] Found conference attached to call")
-            remoteConferenceSubject.value = if (conference.subject.isNullOrEmpty()) {
-                if (conference.me.isFocus) {
-                    AppUtils.getString(R.string.conference_local_title)
-                } else {
-                    AppUtils.getString(R.string.conference_default_title)
-                }
-            } else {
-                conference.subject
-            }
+            remoteConferenceSubject.value = LinphoneUtils.getConferenceSubject(conference)
             Log.d("[Call] Found conference related to this call with subject [${remoteConferenceSubject.value}]")
 
             val participantsList = arrayListOf<ConferenceInfoParticipantData>()
