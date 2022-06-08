@@ -45,9 +45,8 @@
                 android:contentDescription="@string/content_description_add_participants"
                 android:onClick="@{editClickListener}"
                 android:src="@drawable/icon_edit_alt"
-                android:visibility="@{conferenceViewModel.isMeAdmin ? View.GONE : View.GONE, default=gone}"
+                android:visibility="@{conferenceViewModel.isMeAdmin ? View.VISIBLE : View.GONE, default=gone}"
                 app:layout_constraintEnd_toStartOf="@id/cancel" />
-            <!-- TODO: set visibility to VISIBLE when isMeAdmin -->
 
             <ImageView
                 android:id="@+id/cancel"
