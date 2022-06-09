@@ -181,6 +181,7 @@ class RecordingData(val path: String, private val recordingListener: RecordingLi
                     AudioDevice.Type.Headphones, AudioDevice.Type.Headset -> {
                         headphonesCard = device.id
                     }
+                    else -> {}
                 }
             }
         }

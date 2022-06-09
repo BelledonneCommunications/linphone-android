@@ -79,4 +79,8 @@ class PermissionHelper private constructor(private val context: Context) {
     fun hasBluetoothConnectPermission(): Boolean {
         return Compatibility.hasBluetoothConnectPermission(context)
     }
+
+    fun hasPostNotificationsPermission(): Boolean {
+        return Compatibility.hasPostNotificationsPermission(context)
+    }
 }

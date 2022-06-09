@@ -84,11 +84,11 @@ project.tasks['preBuild'].dependsOn 'getGitVersion'
 project.tasks['preBuild'].dependsOn 'linphoneSdkSource'
 
 android {
-    compileSdkVersion 31
-    buildToolsVersion '31.0.0'
+    compileSdkVersion 33
+    buildToolsVersion '33.0.0'
     defaultConfig {
         minSdkVersion 23
-        targetSdkVersion 31
+        targetSdkVersion 33
         versionCode appVersionCode
         versionName "${project.version}"
         applicationId getPackageName()
@@ -228,7 +228,7 @@ dependencies {
     implementation 'androidx.emoji:emoji-bundled:1.1.0'
 
     // https://github.com/material-components/material-components-android/blob/master/LICENSE Apache v2.0
-    implementation 'com.google.android.material:material:1.6.0'
+    implementation 'com.google.android.material:material:1.6.1'
     // https://github.com/google/flexbox-layout/blob/main/LICENSE Apache v2.0
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
 

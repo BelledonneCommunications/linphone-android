@@ -59,6 +59,9 @@ class EchoCancellerCalibrationViewModel : ViewModel() {
             EcCalibratorStatus.Failed -> {
                 Log.w("[Echo Canceller Calibration] Failed")
             }
+            EcCalibratorStatus.InProgress -> {
+                Log.i("[Echo Canceller Calibration] In progress")
+            }
         }
         echoCalibrationTerminated.value = Event(true)
     }

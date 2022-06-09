@@ -95,6 +95,18 @@ class Compatibility {
             }
         }
 
+        fun requestPostNotificationsPermission(fragment: Fragment, code: Int) {
+            if (Version.sdkAboveOrEqual(Version.API33_ANDROID_13_TIRAMISU)) {
+                Api33Compatibility.requestPostNotificationsPermission(fragment, code)
+            }
+        }
+
+        fun hasPostNotificationsPermission(context: Context): Boolean {
+            return if (Version.sdkAboveOrEqual(Version.API33_ANDROID_13_TIRAMISU)) {
+                Api33Compatibility.hasPostNotificationsPermission(context)
+            } else true
+        }
+
         fun getDeviceName(context: Context): String {
             return when (Version.sdkAboveOrEqual(Version.API25_NOUGAT_71)) {
                 true -> Api25Compatibility.getDeviceName(context)

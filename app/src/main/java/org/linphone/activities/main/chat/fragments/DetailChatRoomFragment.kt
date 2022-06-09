@@ -19,6 +19,7 @@
  */
 package org.linphone.activities.main.chat.fragments
 
+import android.Manifest
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
@@ -572,8 +573,8 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 Log.i("[Chat Room] Asking for READ_EXTERNAL_STORAGE and CAMERA permissions")
                 requestPermissions(
                     arrayOf(
-                        android.Manifest.permission.READ_EXTERNAL_STORAGE,
-                        android.Manifest.permission.CAMERA
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.CAMERA
                     ),
                     0
                 )

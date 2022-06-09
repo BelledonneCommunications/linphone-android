@@ -52,6 +52,7 @@ class TelecomConnectionService : ConnectionService() {
                 Call.State.Error -> onCallError(call)
                 Call.State.End, Call.State.Released -> onCallEnded(call)
                 Call.State.Connected -> onCallConnected(call)
+                else -> {}
             }
         }
 

@@ -467,6 +467,7 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
                     AudioDevice.Type.Headphones, AudioDevice.Type.Headset -> {
                         headphonesCard = device.id
                     }
+                    else -> {}
                 }
             }
         }
