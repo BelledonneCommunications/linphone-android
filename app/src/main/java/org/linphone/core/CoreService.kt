@@ -66,7 +66,9 @@ class CoreService : CoreService() {
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
-        if (!corePreferences.keepServiceAlive) {
+        if (coreContext.core.callsNb > 0) {
+            Log.w("[Service] Task removed but there is at least one active call, do not stop the Core!")
+        } else if (!corePreferences.keepServiceAlive) {
             if (coreContext.core.isInBackground) {
                 Log.i("[Service] Task removed, stopping Core")
                 coreContext.stop()

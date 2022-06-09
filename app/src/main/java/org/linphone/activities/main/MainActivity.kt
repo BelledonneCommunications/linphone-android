@@ -261,6 +261,16 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
     private fun handleIntentParams(intent: Intent) {
         when (intent.action) {
+            Intent.ACTION_MAIN -> {
+                val core = coreContext.core
+                val call = core.currentCall ?: core.calls.firstOrNull()
+                if (call != null) {
+                    Log.i("[Main Activity] Launcher clicked while there is at least one active call, go to CallActivity")
+                    val callIntent = Intent(this, org.linphone.activities.voip.CallActivity::class.java)
+                    callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+                    startActivity(callIntent)
+                }
+            }
             Intent.ACTION_SEND, Intent.ACTION_SENDTO -> {
                 if (intent.type == "text/plain") {
                     handleSendText(intent)
