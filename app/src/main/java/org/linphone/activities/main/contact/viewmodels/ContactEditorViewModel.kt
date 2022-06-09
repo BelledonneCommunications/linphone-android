@@ -25,8 +25,10 @@ import android.media.ExifInterface
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import java.io.ByteArrayOutputStream
 import java.io.IOException
+import kotlinx.coroutines.CoroutineScope
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.activities.main.contact.data.NumberOrAddressEditorData
@@ -50,6 +52,7 @@ class ContactEditorViewModel(val c: Friend?) : ViewModel(), ContactDataInterface
     override val contact: MutableLiveData<Friend> = MutableLiveData<Friend>()
     override val displayName: MutableLiveData<String> = MutableLiveData<String>()
     override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
+    override val coroutineScope: CoroutineScope = viewModelScope
 
     val firstName = MutableLiveData<String>()
 

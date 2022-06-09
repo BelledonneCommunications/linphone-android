@@ -42,7 +42,9 @@ import coil.request.CachePolicy
 import coil.request.videoFrameMillis
 import coil.transform.CircleCropTransformation
 import com.google.android.material.switchmaterial.SwitchMaterial
+import kotlinx.coroutines.*
 import org.linphone.BR
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.GenericActivity
@@ -320,7 +322,7 @@ fun loadImageWithCoil(imageView: ImageView, path: String?) {
     }
 }
 
-private fun loadContactPictureWithCoil(
+private suspend fun loadContactPictureWithCoil(
     imageView: ImageView,
     contact: ContactDataInterface?,
     useThumbnail: Boolean,
@@ -329,76 +331,100 @@ private fun loadContactPictureWithCoil(
     color: Int = 0,
     textColor: Int = 0
 ) {
-    if (contact != null) {
-        val context = imageView.context
-        val displayName = contact.contact.value?.name ?: contact.displayName.value.orEmpty()
-        val source = contact.contact.value?.getPictureUri(useThumbnail)
-        imageView.load(source) {
-            transformations(CircleCropTransformation())
-            error(
-                if (contact.showGroupChatAvatar) {
-                    val bg = AppCompatResources.getDrawable(context, R.drawable.generated_avatar_bg)
-                    imageView.background = bg
-                    AppCompatResources.getDrawable(context, R.drawable.icon_multiple_contacts_avatar)
-                } else if (displayName.isEmpty() || AppUtils.getInitials(displayName) == "+") {
-                    val bg = AppCompatResources.getDrawable(context, R.drawable.generated_avatar_bg)
-                    imageView.background = bg
-                    AppCompatResources.getDrawable(context, R.drawable.icon_single_contact_avatar)
-                } else {
-                    val builder = ContactAvatarGenerator(context)
-                    builder.setLabel(displayName)
-                    if (size > 0) {
-                        builder.setAvatarSize(AppUtils.getDimension(size).toInt())
-                    }
-                    if (textSize > 0) {
-                        builder.setTextSize(AppUtils.getDimension(textSize))
-                    }
-                    if (color > 0) {
-                        builder.setBackgroundColorAttribute(color)
-                    }
-                    if (textColor > 0) {
-                        builder.setTextColorResource(textColor)
-                    }
-                    builder.build()
+    coroutineScope {
+        withContext(Dispatchers.IO) {
+            if (contact != null) {
+                val context = imageView.context
+                val displayName = contact.contact.value?.name ?: contact.displayName.value.orEmpty()
+                val source = contact.contact.value?.getPictureUri(useThumbnail)
+                imageView.load(source) {
+                    transformations(CircleCropTransformation())
+                    error(
+                        if (contact.showGroupChatAvatar) {
+                            val bg = AppCompatResources.getDrawable(context, R.drawable.generated_avatar_bg)
+                            imageView.background = bg
+                            AppCompatResources.getDrawable(context, R.drawable.icon_multiple_contacts_avatar)
+                        } else if (displayName.isEmpty() || AppUtils.getInitials(displayName) == "+") {
+                            val bg = AppCompatResources.getDrawable(context, R.drawable.generated_avatar_bg)
+                            imageView.background = bg
+                            AppCompatResources.getDrawable(context, R.drawable.icon_single_contact_avatar)
+                        } else {
+                            val builder = ContactAvatarGenerator(context)
+                            builder.setLabel(displayName)
+                            if (size > 0) {
+                                builder.setAvatarSize(AppUtils.getDimension(size).toInt())
+                            }
+                            if (textSize > 0) {
+                                builder.setTextSize(AppUtils.getDimension(textSize))
+                            }
+                            if (color > 0) {
+                                builder.setBackgroundColorAttribute(color)
+                            }
+                            if (textColor > 0) {
+                                builder.setTextColorResource(textColor)
+                            }
+                            builder.build()
+                        }
+                    )
                 }
-            )
+            } else {
+                val bg = AppCompatResources.getDrawable(imageView.context, R.drawable.generated_avatar_bg)
+                imageView.background = bg
+                imageView.load(R.drawable.icon_single_contact_avatar)
+            }
         }
-    } else {
-        val bg = AppCompatResources.getDrawable(imageView.context, R.drawable.generated_avatar_bg)
-        imageView.background = bg
-        imageView.load(R.drawable.icon_single_contact_avatar)
     }
 }
 
 @BindingAdapter("coilContact")
 fun loadContactPictureWithCoil(imageView: ImageView, contact: ContactDataInterface?) {
-    loadContactPictureWithCoil(imageView, contact, true)
+    val coroutineScope = contact?.coroutineScope ?: coreContext.coroutineScope
+    coroutineScope.launch {
+        withContext(Dispatchers.Main) {
+            loadContactPictureWithCoil(imageView, contact, true)
+        }
+    }
 }
 
 @BindingAdapter("coilContactBig")
 fun loadBigContactPictureWithCoil(imageView: ImageView, contact: ContactDataInterface?) {
-    loadContactPictureWithCoil(
-        imageView, contact, false,
-        R.dimen.contact_avatar_big_size, R.dimen.contact_avatar_text_big_size
-    )
+    val coroutineScope = contact?.coroutineScope ?: coreContext.coroutineScope
+    coroutineScope.launch {
+        withContext(Dispatchers.Main) {
+            loadContactPictureWithCoil(
+                imageView, contact, false,
+                R.dimen.contact_avatar_big_size, R.dimen.contact_avatar_text_big_size
+            )
+        }
+    }
 }
 
 @BindingAdapter("coilVoipContactAlt")
 fun loadVoipContactPictureWithCoilAlt(imageView: ImageView, contact: ContactDataInterface?) {
-    loadContactPictureWithCoil(
-        imageView, contact, false,
-        R.dimen.voip_contact_avatar_max_size, R.dimen.voip_contact_avatar_text_size,
-        R.attr.voipParticipantBackgroundColor, R.color.white_color
-    )
+    val coroutineScope = contact?.coroutineScope ?: coreContext.coroutineScope
+    coroutineScope.launch {
+        withContext(Dispatchers.Main) {
+            loadContactPictureWithCoil(
+                imageView, contact, false,
+                R.dimen.voip_contact_avatar_max_size, R.dimen.voip_contact_avatar_text_size,
+                R.attr.voipParticipantBackgroundColor, R.color.white_color
+            )
+        }
+    }
 }
 
 @BindingAdapter("coilVoipContact")
 fun loadVoipContactPictureWithCoil(imageView: ImageView, contact: ContactDataInterface?) {
-    loadContactPictureWithCoil(
-        imageView, contact, false,
-        R.dimen.voip_contact_avatar_max_size, R.dimen.voip_contact_avatar_text_size,
-        R.attr.voipBackgroundColor, R.color.white_color
-    )
+    val coroutineScope = contact?.coroutineScope ?: coreContext.coroutineScope
+    coroutineScope.launch {
+        withContext(Dispatchers.Main) {
+            loadContactPictureWithCoil(
+                imageView, contact, false,
+                R.dimen.voip_contact_avatar_max_size, R.dimen.voip_contact_avatar_text_size,
+                R.attr.voipBackgroundColor, R.color.white_color
+            )
+        }
+    }
 }
 
 @BindingAdapter("coilGoneIfError")

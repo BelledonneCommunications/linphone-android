@@ -20,6 +20,8 @@
 package org.linphone.contact
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.activities.main.viewmodels.MessageNotifierViewModel
 import org.linphone.core.Address
@@ -36,12 +38,15 @@ interface ContactDataInterface {
 
     val showGroupChatAvatar: Boolean
         get() = false
+
+    val coroutineScope: CoroutineScope
 }
 
 open class GenericContactData(private val sipAddress: Address) : ContactDataInterface {
     final override val contact: MutableLiveData<Friend> = MutableLiveData<Friend>()
     final override val displayName: MutableLiveData<String> = MutableLiveData<String>()
     final override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
+    final override val coroutineScope: CoroutineScope = coreContext.coroutineScope
 
     init {
         securityLevel.value = ChatRoomSecurityLevel.ClearText
@@ -63,6 +68,7 @@ abstract class GenericContactViewModel(private val sipAddress: Address) : Messag
     final override val contact: MutableLiveData<Friend> = MutableLiveData<Friend>()
     final override val displayName: MutableLiveData<String> = MutableLiveData<String>()
     final override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
+    final override val coroutineScope: CoroutineScope = viewModelScope
 
     init {
         securityLevel.value = ChatRoomSecurityLevel.ClearText

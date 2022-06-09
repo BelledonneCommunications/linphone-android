@@ -20,6 +20,7 @@
 package org.linphone.contact
 
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.CoroutineScope
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.*
 import org.linphone.utils.LinphoneUtils
@@ -28,6 +29,7 @@ class ContactSelectionData(private val searchResult: SearchResult) : ContactData
     override val contact: MutableLiveData<Friend> = MutableLiveData<Friend>()
     override val displayName: MutableLiveData<String> = MutableLiveData<String>()
     override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
+    override val coroutineScope: CoroutineScope = coreContext.coroutineScope
 
     val isDisabled: MutableLiveData<Boolean> by lazy {
         MutableLiveData<Boolean>()

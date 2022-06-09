@@ -118,8 +118,9 @@ class CoreContext(
         MutableLiveData<Event<String>>()
     }
 
+    val coroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+
     private val loggingService = Factory.instance().loggingService
-    private val coroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     private var overlayX = 0f
     private var overlayY = 0f
