@@ -25,9 +25,11 @@ Group changes to describe their impact on the project, as follows:
 - Improved how contact avatars are generated
 - 3-dots menu even for basic chat rooms with more options
 - Phone numbers & email addresses are now clickable links in chat messages
+- Go to call activity when there is at least one active call and you click on launcher icon
 
 ### Fixed
 - Multiple file download attempt from the same chat bubble at the same time needed app restart to properly download each file
+- Call stopped when removing app from recent tasks
 - Generated avatars in dark mode
 - Call state in self-managed TelecomManager service if it takes longer to be created than the call to be answered
 - Show service notification sooner to prevent crash if Core creation takes too long
