@@ -33,6 +33,7 @@ import org.linphone.activities.main.viewmodels.ListTopBarViewModel
 import org.linphone.core.ChatRoom
 import org.linphone.databinding.ChatRoomListCellBinding
 import org.linphone.utils.Event
+import org.linphone.utils.LinphoneUtils
 
 class ChatRoomsListAdapter(
     selectionVM: ListTopBarViewModel,
@@ -108,13 +109,13 @@ private class ChatRoomDiffCallback : DiffUtil.ItemCallback<ChatRoomViewModel>() 
         oldItem: ChatRoomViewModel,
         newItem: ChatRoomViewModel
     ): Boolean {
-        return oldItem.chatRoom == newItem.chatRoom
+        return LinphoneUtils.areChatRoomsTheSame(oldItem.chatRoom, newItem.chatRoom)
     }
 
     override fun areContentsTheSame(
         oldItem: ChatRoomViewModel,
         newItem: ChatRoomViewModel
     ): Boolean {
-        return false // To force redraw when contacts are updated
+        return true
     }
 }
