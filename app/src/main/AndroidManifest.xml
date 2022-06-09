@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- To be able to display contacts list & match calling/called numbers -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <!-- For in-app contact edition -->
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
 
     <!-- Helps filling phone number and country code in assistant -->
@@ -10,17 +12,22 @@
     <!-- Needed for auto start at boot and to ensure the service won't be killed by OS while in call -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+    <!-- Starting Android 13 we need to ask notification permission -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
     <!-- Needed for full screen intent in incoming call notifications -->
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
-    <!-- To vibrate when pressing DTMF keys on numpad -->
+    <!-- To vibrate when pressing DTMF keys on numpad & incoming calls -->
     <uses-permission android:name="android.permission.VIBRATE" />
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- Needed to attach file(s) in chat room fragment -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32"/>
     <!-- Needed to shared downloaded files if setting is on -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
 
-    <!-- Both permissions below are for contacts sync account -->
+    <!-- Both permissions below are for contacts sync account, needed to store presence in native contact if enabled -->
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 

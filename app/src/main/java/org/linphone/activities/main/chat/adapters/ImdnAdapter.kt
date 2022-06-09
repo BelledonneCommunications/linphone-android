@@ -100,6 +100,7 @@ class ImdnAdapter(
                 binding.textColor = R.color.red_color
                 binding.icon = R.drawable.chat_error
             }
+            else -> {}
         }
         binding.executePendingBindings()
         return binding.root

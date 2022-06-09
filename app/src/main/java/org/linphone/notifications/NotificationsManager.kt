@@ -281,6 +281,11 @@ class NotificationsManager(private val context: Context) {
     }
 
     private fun notify(id: Int, notification: Notification, tag: String? = null) {
+        if (!PermissionHelper.get().hasPostNotificationsPermission()) {
+            Log.w("[Notifications Manager] Can't notify [$id] with tag [$tag], POST_NOTIFICATIONS permission isn't granted!")
+            return
+        }
+
         Log.i("[Notifications Manager] Notifying [$id] with tag [$tag]")
         notificationManager.notify(tag, id, notification)
     }

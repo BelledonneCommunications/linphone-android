@@ -47,6 +47,7 @@ class RemoteProvisioningViewModel : ViewModel() {
                 ConfiguringState.Failed -> {
                     fetchSuccessfulEvent.value = Event(false)
                 }
+                else -> {}
             }
         }
     }

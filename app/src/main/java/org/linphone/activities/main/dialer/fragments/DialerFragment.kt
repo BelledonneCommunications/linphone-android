@@ -224,7 +224,7 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
                 Log.i("[Dialer] READ_PHONE_STATE permission has been granted")
                 coreContext.initPhoneStateListener()
             }
-            checkTelecomManagerPermissions()
+            checkPermissions()
         } else if (requestCode == 1) {
             var allGranted = true
             for (result in grantResults) {
@@ -238,22 +238,26 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
             } else {
                 Log.w("[Dialer] Telecom Manager permission have been denied (at least one of them)")
             }
+        } else if (requestCode == 2) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.i("[Dialer] POST_NOTIFICATIONS permission has been granted")
+            }
+            checkTelecomManagerPermissions()
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun checkPermissions() {
-        checkReadPhoneStatePermission()
-        if (Version.sdkAboveOrEqual(Version.API26_O_80) && PermissionHelper.get().hasReadPhoneStatePermission()) {
-            // Don't check the following the previous permission is being asked
-            checkTelecomManagerPermissions()
-        }
-    }
-
-    private fun checkReadPhoneStatePermission() {
         if (!PermissionHelper.get().hasReadPhoneStatePermission()) {
             Log.i("[Dialer] Asking for READ_PHONE_STATE permission")
             requestPermissions(arrayOf(Manifest.permission.READ_PHONE_STATE), 0)
+        } else if (!PermissionHelper.get().hasPostNotificationsPermission()) {
+            // Don't check the following the previous permission is being asked
+            Log.i("[Dialer] Asking for POST_NOTIFICATIONS permission")
+            Compatibility.requestPostNotificationsPermission(this, 2)
+        } else if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
+            // Don't check the following the previous permissions are being asked
+            checkTelecomManagerPermissions()
         }
     }
 

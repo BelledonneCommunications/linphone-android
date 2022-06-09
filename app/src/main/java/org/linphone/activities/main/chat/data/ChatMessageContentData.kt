@@ -412,6 +412,7 @@ class ChatMessageContentData(
                     AudioDevice.Type.Headphones, AudioDevice.Type.Headset -> {
                         headphonesCard = device.id
                     }
+                    else -> {}
                 }
             }
         }
