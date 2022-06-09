@@ -27,6 +27,8 @@ import android.view.animation.LinearInterpolator
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -53,6 +55,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
     override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
     override val showGroupChatAvatar: Boolean = chatRoom.hasCapability(ChatRoomCapabilities.Conference.toInt()) &&
         !chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())
+    override val coroutineScope: CoroutineScope = viewModelScope
 
     val subject = MutableLiveData<String>()
 
