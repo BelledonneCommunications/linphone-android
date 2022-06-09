@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="android.view.View"/>
+        <import type="android.view.View" />
         <variable
             name="clickListener"
-            type="android.view.View.OnClickListener"/>
+            type="android.view.View.OnClickListener" />
         <variable
             name="longClickListener"
-            type="android.view.View.OnLongClickListener"/>
+            type="android.view.View.OnLongClickListener" />
         <variable
             name="position"
-            type="Integer"/>
+            type="Integer" />
         <variable
             name="forwardPending"
-            type="Boolean"/>
+            type="Boolean" />
         <variable
             name="viewModel"
             type="org.linphone.activities.main.chat.viewmodels.ChatRoomViewModel" />
@@ -23,162 +24,171 @@
             type="org.linphone.activities.main.viewmodels.ListTopBarViewModel" />
     </data>
 
-    <LinearLayout
-        android:onClick="@{clickListener}"
-        android:onLongClick="@{longClickListener}"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"
+        android:background="?attr/backgroundColor"
         android:gravity="center_vertical"
-        android:paddingLeft="10dp"
-        android:paddingTop="5dp"
-        android:paddingRight="10dp"
+        android:onClick="@{clickListener}"
+        android:onLongClick="@{longClickListener}"
         android:orientation="horizontal"
-        android:background="?attr/backgroundColor">
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <RelativeLayout
-                android:id="@+id/avatar"
-                android:layout_width="45dp"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    coilContact="@{viewModel}"
-                    android:layout_width="@dimen/contact_avatar_size"
-                    android:layout_height="@dimen/contact_avatar_size"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerHorizontal="true"
-                    android:contentDescription="@null" />
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true"
-                    android:contentDescription="@{viewModel.securityLevelContentDescription}"
-                    android:src="@{viewModel.securityLevelIcon, default=@drawable/security_alert_indicator}"
-                    android:visibility="@{viewModel.encryptedChatRoom ? View.VISIBLE : View.GONE, default=gone}" />
-
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/avatar"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="5dp"
-                android:paddingRight="10dp"
-                android:singleLine="true"
-                android:text="@{viewModel.lastUpdate, default=`12:03`}"
-                android:textColor="?attr/accentColor"
-                android:textSize="16sp" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:paddingLeft="5dp">
-
-            <TextView
-                android:id="@+id/title"
-                style="@style/contact_name_list_cell_font"
-                android:text="@{viewModel.oneToOneChatRoom ? (viewModel.contact.name ?? viewModel.displayName) : viewModel.subject, default=`Lorem Ipsum`}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="30dp"
-                android:singleLine="true"
-                android:scrollHorizontally="true" />
-
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/lastMessage"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="5dp"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/unread_count_font"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/unread_message_count_bg"
-                    android:gravity="center"
-                    android:singleLine="true"
-                    android:ellipsize="end"
-                    android:text="@{String.valueOf(viewModel.unreadMessagesCount)}"
-                    android:visibility="@{viewModel.unreadMessagesCount == 0 ? View.GONE : View.VISIBLE, default=gone}"/>
-
-                <CheckBox
-                    android:onClick="@{() -> selectionListViewModel.onToggleSelect(position)}"
-                    android:visibility="@{selectionListViewModel.isEditionEnabled ? View.VISIBLE : View.GONE, default=gone}"
-                    android:checked="@{selectionListViewModel.selectedItems.contains(position)}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent" />
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/lastMessage"
-                style="@style/standard_small_text_font"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/title"
-                android:layout_toLeftOf="@id/icons"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:text="@{viewModel.lastMessageText, default=`Lorem ipsum dolor sit amet`}" />
-
-            <LinearLayout
-                android:id="@+id/icons"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:orientation="horizontal"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginBottom="10dp"
-                android:gravity="right">
-
-                <ImageView
-                    android:visibility="@{viewModel.notificationsMuted ? View.VISIBLE : View.GONE, default=gone}"
-                    android:id="@+id/muted"
-                    android:contentDescription="@string/content_description_muted_chat_room"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:adjustViewBounds="true"
-                    android:layout_marginRight="5dp"
-                    android:src="@drawable/chat_room_menu_mute_notifications"/>
-
-                <ImageView
-                    android:visibility="@{viewModel.ephemeralEnabled ? View.VISIBLE : View.GONE, default=gone}"
-                    android:id="@+id/ephemeral"
-                    android:contentDescription="@string/content_description_ephemeral_chat_room"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:adjustViewBounds="true"
-                    android:layout_marginRight="5dp"
-                    android:src="@drawable/ephemeral_messages"/>
-
-            </LinearLayout>
-
-        </RelativeLayout>
+        android:paddingLeft="5dp"
+        android:paddingTop="5dp"
+        android:paddingRight="5dp">
 
         <ImageView
-            android:visibility="@{forwardPending ? View.VISIBLE : View.GONE, default=gone}"
+            android:id="@+id/avatar"
+            coilContact="@{viewModel}"
+            android:layout_width="@dimen/contact_avatar_size"
+            android:layout_height="@dimen/contact_avatar_size"
+            android:layout_marginLeft="5dp"
+            android:contentDescription="@null"
+            android:src="@drawable/voip_single_contact_avatar_alt"
+            app:layout_constraintBottom_toTopOf="@id/date"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <ImageView
+            android:id="@+id/securityLevel"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="25dp"
+            android:contentDescription="@{viewModel.securityLevelContentDescription}"
+            android:src="@{viewModel.securityLevelIcon, default=@drawable/security_alert_indicator}"
+            android:visibility="@{viewModel.encryptedChatRoom ? View.VISIBLE : View.INVISIBLE, default=invisible}"
+            app:layout_constraintStart_toStartOf="@id/avatar"
+            app:layout_constraintTop_toTopOf="@id/avatar" />
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:paddingRight="10dp"
+            android:singleLine="true"
+            android:text="@{viewModel.lastUpdate, default=`12:03`}"
+            android:textColor="?attr/accentColor"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/securityLevel"
+            app:layout_constraintStart_toStartOf="@id/avatar"
+            app:layout_constraintTop_toBottomOf="@id/avatar" />
+
+        <TextView
+            android:id="@+id/title"
+            style="@style/contact_name_list_cell_font"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:text="@{viewModel.oneToOneChatRoom ? (viewModel.contact.name ?? viewModel.displayName) : viewModel.subject, default=`Lorem Ipsum`}"
+            app:layout_constraintStart_toEndOf="@id/date"
+            app:layout_constraintEnd_toStartOf="@id/unread"
+            app:layout_constraintTop_toTopOf="@id/avatar" />
+
+        <TextView
+            android:id="@+id/lastMessage"
+            style="@style/standard_small_text_font"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="@{viewModel.lastMessageText, default=`Lorem ipsum dolor sit amet`}"
+            app:layout_constraintStart_toEndOf="@id/date"
+            app:layout_constraintEnd_toStartOf="@id/endBarrier"
+            app:layout_constraintTop_toBottomOf="@id/title" />
+
+        <CheckBox
+            android:id="@+id/select"
+            android:layout_width="30dp"
+            android:layout_height="20dp"
+            android:checked="@{selectionListViewModel.selectedItems.contains(position)}"
+            android:onClick="@{() -> selectionListViewModel.onToggleSelect(position)}"
+            android:visibility="@{selectionListViewModel.isEditionEnabled ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/title" />
+
+        <TextView
+            android:id="@+id/unread"
+            style="@style/unread_count_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/unread_message_count_bg"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="@{String.valueOf(viewModel.unreadMessagesCount)}"
+            android:visibility="@{viewModel.unreadMessagesCount == 0 ? View.GONE : View.VISIBLE, default=gone}"
+            app:layout_constraintEnd_toStartOf="@id/endBarrier2"
+            app:layout_constraintTop_toTopOf="@id/title" />
+
+        <ImageView
+            android:id="@+id/ephemeral"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="5dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/content_description_ephemeral_chat_room"
+            android:src="@drawable/ephemeral_messages"
+            android:visibility="@{viewModel.ephemeralEnabled ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/forward" />
+
+        <ImageView
+            android:id="@+id/muted"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="5dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/content_description_muted_chat_room"
+            android:src="@drawable/chat_room_menu_mute_notifications"
+            android:visibility="@{viewModel.notificationsMuted ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/endBarrier3" />
+
+        <ImageView
+            android:id="@+id/forward"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:padding="10dp"
-            android:layout_marginLeft="10dp"
-            android:src="@drawable/forward_message_default"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/background_round_secondary_color"
             android:contentDescription="@string/content_description_forward_message"
-            android:background="@drawable/background_round_secondary_color" />
+            android:padding="10dp"
+            android:src="@drawable/forward_message_default"
+            android:visibility="@{forwardPending ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </LinearLayout>
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/endBarrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="left"
+            app:constraint_referenced_ids="ephemeral, muted, forward"/>
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/endBarrier2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="left"
+            app:constraint_referenced_ids="select, forward"/>
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/endBarrier3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="left"
+            app:constraint_referenced_ids="ephemeral, forward"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
