@@ -342,11 +342,15 @@ private suspend fun loadContactPictureWithCoil(
                     error(
                         if (contact.showGroupChatAvatar) {
                             val bg = AppCompatResources.getDrawable(context, R.drawable.generated_avatar_bg)
-                            imageView.background = bg
+                            withContext(Dispatchers.Main) {
+                                imageView.background = bg
+                            }
                             AppCompatResources.getDrawable(context, R.drawable.icon_multiple_contacts_avatar)
                         } else if (displayName.isEmpty() || AppUtils.getInitials(displayName) == "+") {
                             val bg = AppCompatResources.getDrawable(context, R.drawable.generated_avatar_bg)
-                            imageView.background = bg
+                            withContext(Dispatchers.Main) {
+                                imageView.background = bg
+                            }
                             AppCompatResources.getDrawable(context, R.drawable.icon_single_contact_avatar)
                         } else {
                             val builder = ContactAvatarGenerator(context)
@@ -369,7 +373,9 @@ private suspend fun loadContactPictureWithCoil(
                 }
             } else {
                 val bg = AppCompatResources.getDrawable(imageView.context, R.drawable.generated_avatar_bg)
-                imageView.background = bg
+                withContext(Dispatchers.Main) {
+                    imageView.background = bg
+                }
                 imageView.load(R.drawable.icon_single_contact_avatar)
             }
         }
