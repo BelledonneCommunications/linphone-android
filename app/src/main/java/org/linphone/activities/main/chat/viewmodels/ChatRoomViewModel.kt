@@ -28,7 +28,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -53,8 +53,8 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
     override val contact: MutableLiveData<Friend> = MutableLiveData<Friend>()
     override val displayName: MutableLiveData<String> = MutableLiveData<String>()
     override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
-    override val showGroupChatAvatar: Boolean = chatRoom.hasCapability(ChatRoomCapabilities.Conference.toInt()) &&
-        !chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())
+    override val showGroupChatAvatar: Boolean
+        get() = conferenceChatRoom && !oneToOneChatRoom
     override val coroutineScope: CoroutineScope = viewModelScope
 
     val subject = MutableLiveData<String>()
@@ -66,8 +66,6 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
     val lastUpdate = MutableLiveData<String>()
 
     val lastMessageText = MutableLiveData<SpannableStringBuilder>()
-
-    val callInProgress = MutableLiveData<Boolean>()
 
     val remoteIsComposing = MutableLiveData<Boolean>()
 
@@ -81,13 +79,25 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
     val ephemeralEnabled = MutableLiveData<Boolean>()
 
-    val basicChatRoom: Boolean = chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt())
+    val basicChatRoom: Boolean by lazy {
+        chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt())
+    }
 
-    val oneToOneChatRoom: Boolean = chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())
+    val oneToOneChatRoom: Boolean by lazy {
+        chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())
+    }
 
-    val encryptedChatRoom: Boolean = chatRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt())
+    private val conferenceChatRoom: Boolean by lazy {
+        chatRoom.hasCapability(ChatRoomCapabilities.Conference.toInt())
+    }
 
-    val ephemeralChatRoom: Boolean = chatRoom.hasCapability(ChatRoomCapabilities.Ephemeral.toInt())
+    val encryptedChatRoom: Boolean by lazy {
+        chatRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt())
+    }
+
+    val ephemeralChatRoom: Boolean by lazy {
+        chatRoom.hasCapability(ChatRoomCapabilities.Ephemeral.toInt())
+    }
 
     val meAdmin: MutableLiveData<Boolean> by lazy {
         MutableLiveData<Boolean>()
@@ -130,18 +140,9 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
     }
 
     private val coreListener: CoreListenerStub = object : CoreListenerStub() {
-        override fun onCallStateChanged(
-            core: Core,
-            call: Call,
-            state: Call.State,
-            message: String
-        ) {
-            callInProgress.value = core.callsNb > 0
-        }
-
         override fun onChatRoomRead(core: Core, room: ChatRoom) {
             if (room == chatRoom) {
-                unreadMessagesCount.value = 0
+                updateUnreadMessageCount()
             }
         }
     }
@@ -161,7 +162,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         }
 
         override fun onChatMessageReceived(chatRoom: ChatRoom, eventLog: EventLog) {
-            unreadMessagesCount.value = chatRoom.unreadMessagesCount
+            updateUnreadMessageCount()
             formatLastMessage(eventLog.chatMessage)
         }
 
@@ -228,7 +229,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         chatRoom.addListener(chatRoomListener)
         coreContext.contactsManager.addListener(contactsUpdatedListener)
 
-        unreadMessagesCount.value = chatRoom.unreadMessagesCount
+        updateUnreadMessageCount()
 
         subject.value = chatRoom.subject
         updateSecurityIcon()
@@ -239,12 +240,9 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         updateParticipants()
         updateLastMessageToDisplay()
 
-        callInProgress.value = chatRoom.core.callsNb > 0
         updateRemotesComposing()
 
         notificationsMuted.value = areNotificationsMuted()
-
-        if (corePreferences.enableAnimations) bounceAnimator.start()
     }
 
     override fun onCleared() {
@@ -261,17 +259,17 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
     fun contactLookup() {
         displayName.value = when {
-            chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt()) -> LinphoneUtils.getDisplayName(
+            basicChatRoom -> LinphoneUtils.getDisplayName(
                 chatRoom.peerAddress
             )
-            chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) -> LinphoneUtils.getDisplayName(
+            oneToOneChatRoom -> LinphoneUtils.getDisplayName(
                 chatRoom.participants.firstOrNull()?.address ?: chatRoom.peerAddress
             )
-            chatRoom.hasCapability(ChatRoomCapabilities.Conference.toInt()) -> chatRoom.subject.orEmpty()
+            conferenceChatRoom -> chatRoom.subject.orEmpty()
             else -> chatRoom.peerAddress.asStringUriOnly()
         }
 
-        if (chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
+        if (oneToOneChatRoom) {
             searchMatchingContact()
         } else {
             getParticipantsNames()
@@ -350,11 +348,17 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
         builder.trim()
         lastMessageText.value = builder
-        lastUpdate.value = TimestampUtils.toString(chatRoom.lastUpdateTime, true)
+
+        val lastUpdateTime = chatRoom.lastUpdateTime
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                lastUpdate.postValue(TimestampUtils.toString(lastUpdateTime, true))
+            }
+        }
     }
 
     fun getRemoteAddress(): Address? {
-        return if (chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt())) {
+        return if (basicChatRoom) {
             chatRoom.peerAddress
         } else {
             if (chatRoom.participants.isNotEmpty()) {
@@ -388,14 +392,15 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
     }
 
     private fun updateSecurityIcon() {
-        securityLevel.value = chatRoom.securityLevel
+        val level = chatRoom.securityLevel
+        securityLevel.value = level
 
-        securityLevelIcon.value = when (chatRoom.securityLevel) {
+        securityLevelIcon.value = when (level) {
             ChatRoomSecurityLevel.Safe -> R.drawable.security_2_indicator
             ChatRoomSecurityLevel.Encrypted -> R.drawable.security_1_indicator
             else -> R.drawable.security_alert_indicator
         }
-        securityLevelContentDescription.value = when (chatRoom.securityLevel) {
+        securityLevelContentDescription.value = when (level) {
             ChatRoomSecurityLevel.Safe -> R.string.content_description_security_level_safe
             ChatRoomSecurityLevel.Encrypted -> R.string.content_description_security_level_encrypted
             else -> R.string.content_description_security_level_unsafe
@@ -403,7 +408,9 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
     }
 
     private fun updateRemotesComposing() {
-        remoteIsComposing.value = chatRoom.isRemoteComposing
+        val isComposing = chatRoom.isRemoteComposing
+        remoteIsComposing.value = isComposing
+        if (!isComposing) return
 
         var composing = ""
         for (address in chatRoom.composingAddresses) {
@@ -415,20 +422,27 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
     }
 
     private fun updateParticipants() {
-        peerSipUri.value = if (oneToOneChatRoom && !chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt()))
+        peerSipUri.value = if (oneToOneChatRoom && !basicChatRoom)
             chatRoom.participants.firstOrNull()?.address?.asStringUriOnly()
                 ?: chatRoom.peerAddress.asStringUriOnly()
         else chatRoom.peerAddress.asStringUriOnly()
 
-        oneParticipantOneDevice = chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) &&
+        oneParticipantOneDevice = oneToOneChatRoom &&
             chatRoom.me?.devices?.size == 1 &&
             chatRoom.participants.firstOrNull()?.devices?.size == 1
 
-        addressToCall = if (chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt()))
+        addressToCall = if (basicChatRoom)
             chatRoom.peerAddress
         else
             chatRoom.participants.firstOrNull()?.address
 
         onlyParticipantOnlyDeviceAddress = chatRoom.participants.firstOrNull()?.devices?.firstOrNull()?.address
+    }
+
+    private fun updateUnreadMessageCount() {
+        val count = chatRoom.unreadMessagesCount
+        unreadMessagesCount.value = count
+        if (count > 0 && corePreferences.enableAnimations) bounceAnimator.start()
+        else if (count == 0 && bounceAnimator.isStarted) bounceAnimator.end()
     }
 }
