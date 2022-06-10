@@ -107,6 +107,22 @@ class Compatibility {
             } else true
         }
 
+        fun requestReadExternalStorageAndCameraPermissions(fragment: Fragment, code: Int) {
+            if (Version.sdkAboveOrEqual(Version.API33_ANDROID_13_TIRAMISU)) {
+                Api33Compatibility.requestReadMediaAndCameraPermissions(fragment, code)
+            } else {
+                Api23Compatibility.requestReadExternalStorageAndCameraPermissions(fragment, code)
+            }
+        }
+
+        fun hasReadExternalStoragePermission(context: Context): Boolean {
+            return if (Version.sdkAboveOrEqual(Version.API33_ANDROID_13_TIRAMISU)) {
+                Api33Compatibility.hasReadExternalStoragePermission(context)
+            } else {
+                Api23Compatibility.hasReadExternalStoragePermission(context)
+            }
+        }
+
         fun getDeviceName(context: Context): String {
             return when (Version.sdkAboveOrEqual(Version.API25_NOUGAT_71)) {
                 true -> Api25Compatibility.getDeviceName(context)

@@ -281,5 +281,19 @@ class Api23Compatibility {
             }
             return ""
         }
+
+        fun requestReadExternalStorageAndCameraPermissions(fragment: Fragment, code: Int) {
+            fragment.requestPermissions(
+                arrayOf(
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.CAMERA
+                ),
+                code
+            )
+        }
+
+        fun hasReadExternalStoragePermission(context: Context): Boolean {
+            return Compatibility.hasPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
     }
 }

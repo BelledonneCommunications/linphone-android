@@ -20,10 +20,14 @@
     <!-- To vibrate when pressing DTMF keys on numpad & incoming calls -->
     <uses-permission android:name="android.permission.VIBRATE" />
 
-    <!-- TODO: require new permissions instead: https://developer.android.com/about/versions/13/behavior-changes-13 -->
     <!-- Needed to attach file(s) in chat room fragment -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32"/>
+    <!-- Starting Android 13 you need those 3 permissions instead (https://developer.android.com/about/versions/13/behavior-changes-13) -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+
     <!-- Needed to shared downloaded files if setting is on -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />

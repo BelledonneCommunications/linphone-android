@@ -18,6 +18,7 @@ Group changes to describe their impact on the project, as follows:
 - Chat rooms can be individually muted (no notification when receiving a chat message)
 - Image & Video in-app viewers allow for full-screen display
 - Display name can be set during assistant when creating / logging in a sip.linphone.org account
+- Android 13 support, using new post notifications & media permissions
 
 ### Changed
 - In-call views have been re-designed
