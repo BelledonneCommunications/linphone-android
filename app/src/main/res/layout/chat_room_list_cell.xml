@@ -113,6 +113,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/title" />
 
+        <ImageView
+            android:id="@+id/muted"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginRight="10dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/content_description_muted_chat_room"
+            android:src="@drawable/chat_room_menu_mute_notifications"
+            android:visibility="@{viewModel.notificationsMuted ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintEnd_toStartOf="@id/endBarrier3"
+            app:layout_constraintTop_toTopOf="@id/title" />
+
         <TextView
             android:id="@+id/unread"
             style="@style/unread_count_font"
@@ -142,19 +154,6 @@
             app:layout_constraintEnd_toStartOf="@id/forward" />
 
         <ImageView
-            android:id="@+id/muted"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="5dp"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/content_description_muted_chat_room"
-            android:src="@drawable/chat_room_menu_mute_notifications"
-            android:visibility="@{viewModel.notificationsMuted ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/endBarrier3" />
-
-        <ImageView
             android:id="@+id/forward"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -176,18 +175,18 @@
             app:constraint_referenced_ids="ephemeral, muted, forward"/>
 
         <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/endBarrier2"
+            android:id="@+id/endBarrier3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="left"
             app:constraint_referenced_ids="select, forward"/>
 
         <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/endBarrier3"
+            android:id="@+id/endBarrier2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="left"
-            app:constraint_referenced_ids="ephemeral, forward"/>
+            app:constraint_referenced_ids="muted, forward"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
