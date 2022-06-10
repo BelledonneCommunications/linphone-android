@@ -60,7 +60,7 @@ class PermissionHelper private constructor(private val context: Context) {
     }
 
     fun hasReadExternalStoragePermission(): Boolean {
-        return hasPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+        return Compatibility.hasReadExternalStoragePermission(context)
     }
 
     fun hasWriteExternalStoragePermission(): Boolean {

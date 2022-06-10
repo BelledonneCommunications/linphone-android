@@ -19,7 +19,6 @@
  */
 package org.linphone.activities.voip.fragments
 
-import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -41,6 +40,7 @@ import org.linphone.activities.main.chat.adapters.ChatMessagesListAdapter
 import org.linphone.activities.main.chat.data.ChatMessageData
 import org.linphone.activities.main.chat.viewmodels.*
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
+import org.linphone.compatibility.Compatibility
 import org.linphone.core.ChatRoom
 import org.linphone.core.Factory
 import org.linphone.core.tools.Log
@@ -83,17 +83,11 @@ class ChatFragment : GenericFragment<VoipChatFragmentBinding>() {
         }
 
         binding.setAttachFileClickListener {
-            if (PermissionHelper.get().hasReadExternalStoragePermission() && PermissionHelper.get().hasCameraPermission()) {
+            if (PermissionHelper.get().hasReadExternalStoragePermission() || PermissionHelper.get().hasCameraPermission()) {
                 pickFile()
             } else {
                 Log.i("[Chat] Asking for READ_EXTERNAL_STORAGE and CAMERA permissions")
-                requestPermissions(
-                    arrayOf(
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.CAMERA
-                    ),
-                    0
-                )
+                Compatibility.requestReadExternalStorageAndCameraPermissions(this, 0)
             }
         }
 

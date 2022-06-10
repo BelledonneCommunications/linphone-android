@@ -567,17 +567,11 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         }
 
         binding.setAttachFileClickListener {
-            if (PermissionHelper.get().hasReadExternalStoragePermission() && PermissionHelper.get().hasCameraPermission()) {
+            if (PermissionHelper.get().hasReadExternalStoragePermission() || PermissionHelper.get().hasCameraPermission()) {
                 pickFile()
             } else {
                 Log.i("[Chat Room] Asking for READ_EXTERNAL_STORAGE and CAMERA permissions")
-                requestPermissions(
-                    arrayOf(
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.CAMERA
-                    ),
-                    0
-                )
+                Compatibility.requestReadExternalStorageAndCameraPermissions(this, 0)
             }
         }
 
