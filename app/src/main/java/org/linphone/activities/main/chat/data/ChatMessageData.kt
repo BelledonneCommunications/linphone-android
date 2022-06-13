@@ -61,6 +61,10 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
 
     val replyData = MutableLiveData<ChatMessageData>()
 
+    val isDisplayed = MutableLiveData<Boolean>()
+
+    val isOutgoing = chatMessage.isOutgoing
+
     var hasPreviousMessage = false
     var hasNextMessage = false
 
@@ -168,6 +172,8 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
             ChatMessage.State.Displayed -> R.drawable.chat_read
             else -> R.drawable.chat_error
         }
+
+        isDisplayed.value = state == ChatMessage.State.Displayed
     }
 
     private fun updateContentsList() {
