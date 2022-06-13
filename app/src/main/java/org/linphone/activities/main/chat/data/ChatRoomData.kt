@@ -130,7 +130,7 @@ class ChatRoomData(private val chatRoom: ChatRoom) : ContactDataInterface {
             if (chatRoom.participants.isNotEmpty()) {
                 chatRoom.participants[0].address
             } else {
-                Log.e("[Chat Room] $chatRoom doesn't have any participant in state ${chatRoom.state}!")
+                Log.e("[Chat Room] $chatRoom doesn't have any participant (state ${chatRoom.state})!")
                 null
             }
         }
@@ -141,6 +141,7 @@ class ChatRoomData(private val chatRoom: ChatRoom) : ContactDataInterface {
 
     private fun formatLastMessage(msg: ChatMessage?) {
         val lastUpdateTime = chatRoom.lastUpdateTime
+        lastUpdate.value = "00:00"
         coroutineScope.launch {
             withContext(Dispatchers.IO) {
                 lastUpdate.postValue(TimestampUtils.toString(lastUpdateTime, true))

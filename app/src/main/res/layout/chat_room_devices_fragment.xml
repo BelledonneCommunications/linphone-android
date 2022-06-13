@@ -38,17 +38,12 @@
                 style="@style/toolbar_small_title_font"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.6"
+                android:layout_weight="0.8"
                 android:gravity="center"
                 android:padding="15dp"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="@string/chat_room_devices_fragment_title" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.2" />
 
         </LinearLayout>
 
