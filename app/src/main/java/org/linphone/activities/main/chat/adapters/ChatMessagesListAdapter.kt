@@ -466,30 +466,34 @@ private class ChatMessageDiffCallback : DiffUtil.ItemCallback<EventLogData>() {
         oldItem: EventLogData,
         newItem: EventLogData
     ): Boolean {
-        return if (oldItem.eventLog.type == EventLog.Type.ConferenceChatMessage &&
-            newItem.eventLog.type == EventLog.Type.ConferenceChatMessage
+        return if (oldItem.type == EventLog.Type.ConferenceChatMessage &&
+            newItem.type == EventLog.Type.ConferenceChatMessage
         ) {
-            oldItem.eventLog.chatMessage?.time == newItem.eventLog.chatMessage?.time &&
-                oldItem.eventLog.chatMessage?.isOutgoing == newItem.eventLog.chatMessage?.isOutgoing
-        } else oldItem.eventLog.notifyId == newItem.eventLog.notifyId
+            val oldData = (oldItem.data as ChatMessageData)
+            val newData = (newItem.data as ChatMessageData)
+
+            oldData.time.value == newData.time.value &&
+                oldData.isOutgoing == newData.isOutgoing
+        } else oldItem.notifyId == newItem.notifyId
     }
 
     override fun areContentsTheSame(
         oldItem: EventLogData,
         newItem: EventLogData
     ): Boolean {
-        return if (oldItem.eventLog.type == EventLog.Type.ConferenceChatMessage &&
-            newItem.eventLog.type == EventLog.Type.ConferenceChatMessage
+        return if (oldItem.type == EventLog.Type.ConferenceChatMessage &&
+            newItem.type == EventLog.Type.ConferenceChatMessage
         ) {
             val oldData = (oldItem.data as ChatMessageData)
             val newData = (newItem.data as ChatMessageData)
 
             val previous = oldData.hasPreviousMessage == newData.hasPreviousMessage
             val next = oldData.hasNextMessage == newData.hasNextMessage
-            newItem.eventLog.chatMessage?.state == ChatMessage.State.Displayed && previous && next
+            val isDisplayed = newData.isDisplayed.value == true
+            isDisplayed && previous && next
         } else {
-            oldItem.eventLog.type != EventLog.Type.ConferenceChatMessage &&
-                newItem.eventLog.type != EventLog.Type.ConferenceChatMessage
+            oldItem.type != EventLog.Type.ConferenceChatMessage &&
+                newItem.type != EventLog.Type.ConferenceChatMessage
         }
     }
 }
