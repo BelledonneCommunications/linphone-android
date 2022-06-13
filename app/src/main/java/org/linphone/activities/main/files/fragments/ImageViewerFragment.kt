@@ -63,4 +63,10 @@ class ImageViewerFragment : GenericViewerFragment<FileImageViewerFragmentBinding
             (requireActivity() as MainActivity).hideStatusFragment(hide)
         }
     }
+
+    override fun onPause() {
+        super.onPause()
+
+        viewModel.fullScreenMode.value = false
+    }
 }
