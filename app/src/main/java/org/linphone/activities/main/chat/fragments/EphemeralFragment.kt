@@ -30,6 +30,7 @@ import org.linphone.activities.main.fragments.SecureFragment
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatRoomEphemeralFragmentBinding
+import org.linphone.utils.Event
 
 class EphemeralFragment : SecureFragment<ChatRoomEphemeralFragmentBinding>() {
     private lateinit var viewModel: EphemeralViewModel
@@ -68,6 +69,7 @@ class EphemeralFragment : SecureFragment<ChatRoomEphemeralFragmentBinding>() {
 
         binding.setValidClickListener {
             viewModel.updateChatRoomEphemeralDuration()
+            sharedViewModel.refreshChatRoomInListEvent.value = Event(true)
             goBack()
         }
     }

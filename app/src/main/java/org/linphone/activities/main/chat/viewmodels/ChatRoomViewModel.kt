@@ -20,9 +20,6 @@
 package org.linphone.activities.main.chat.viewmodels
 
 import android.animation.ValueAnimator
-import android.graphics.Typeface
-import android.text.SpannableStringBuilder
-import android.text.style.StyleSpan
 import android.view.animation.LinearInterpolator
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -38,7 +35,6 @@ import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.LinphoneUtils
-import org.linphone.utils.TimestampUtils
 
 class ChatRoomViewModelFactory(private val chatRoom: ChatRoom) :
     ViewModelProvider.NewInstanceFactory() {
@@ -62,10 +58,6 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
     val participants = MutableLiveData<String>()
 
     val unreadMessagesCount = MutableLiveData<Int>()
-
-    val lastUpdate = MutableLiveData<String>()
-
-    val lastMessageText = MutableLiveData<SpannableStringBuilder>()
 
     val remoteIsComposing = MutableLiveData<Boolean>()
 
@@ -114,8 +106,6 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
     val groupCallAvailable: Boolean
         get() = LinphoneUtils.isRemoteConferencingAvailable()
 
-    val notificationsMuted = MutableLiveData<Boolean>()
-
     private var addressToCall: Address? = null
 
     private val bounceAnimator: ValueAnimator by lazy {
@@ -135,7 +125,6 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         override fun onContactsUpdated() {
             Log.d("[Chat Room] Contacts have changed")
             contactLookup()
-            updateLastMessageToDisplay()
         }
     }
 
@@ -163,11 +152,6 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
         override fun onChatMessageReceived(chatRoom: ChatRoom, eventLog: EventLog) {
             updateUnreadMessageCount()
-            formatLastMessage(eventLog.chatMessage)
-        }
-
-        override fun onChatMessageSent(chatRoom: ChatRoom, eventLog: EventLog) {
-            formatLastMessage(eventLog.chatMessage)
         }
 
         override fun onParticipantAdded(chatRoom: ChatRoom, eventLog: EventLog) {
@@ -210,11 +194,6 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
             updateParticipants()
         }
 
-        override fun onEphemeralMessageDeleted(chatRoom: ChatRoom, eventLog: EventLog) {
-            Log.i("[Chat Room] Ephemeral message deleted, updated last message displayed")
-            updateLastMessageToDisplay()
-        }
-
         override fun onEphemeralEvent(chatRoom: ChatRoom, eventLog: EventLog) {
             ephemeralEnabled.value = chatRoom.isEphemeralEnabled
         }
@@ -238,23 +217,16 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
         contactLookup()
         updateParticipants()
-        updateLastMessageToDisplay()
 
         updateRemotesComposing()
-
-        notificationsMuted.value = areNotificationsMuted()
     }
 
     override fun onCleared() {
-        destroy()
-        super.onCleared()
-    }
-
-    fun destroy() {
         coreContext.contactsManager.removeListener(contactsUpdatedListener)
         chatRoom.removeListener(chatRoomListener)
         chatRoom.core.removeListener(coreListener)
         if (corePreferences.enableAnimations) bounceAnimator.end()
+        super.onCleared()
     }
 
     fun contactLookup() {
@@ -306,10 +278,6 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         conferenceScheduler.info = conferenceInfo
     }
 
-    fun updateLastMessageToDisplay() {
-        formatLastMessage(chatRoom.lastMessageInHistory)
-    }
-
     fun areNotificationsMuted(): Boolean {
         val id = LinphoneUtils.getChatRoomId(chatRoom.localAddress, chatRoom.peerAddress)
         return corePreferences.chatRoomMuted(id)
@@ -318,43 +286,6 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
     fun muteNotifications(mute: Boolean) {
         val id = LinphoneUtils.getChatRoomId(chatRoom.localAddress, chatRoom.peerAddress)
         corePreferences.muteChatRoom(id, mute)
-        notificationsMuted.value = mute
-    }
-
-    private fun formatLastMessage(msg: ChatMessage?) {
-        val lastUpdateTime = chatRoom.lastUpdateTime
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                lastUpdate.postValue(TimestampUtils.toString(lastUpdateTime, true))
-            }
-        }
-
-        val builder = SpannableStringBuilder()
-        if (msg == null) {
-            lastMessageText.value = builder
-            return
-        }
-
-        val sender: String =
-            coreContext.contactsManager.findContactByAddress(msg.fromAddress)?.name
-                ?: LinphoneUtils.getDisplayName(msg.fromAddress)
-        builder.append(sender)
-        builder.append(": ")
-
-        for (content in msg.contents) {
-            if (content.isIcalendar) {
-                val body = AppUtils.getString(R.string.conference_invitation)
-                builder.append(body)
-                builder.setSpan(StyleSpan(Typeface.ITALIC), builder.length - body.length, builder.length, 0)
-            } else if (content.isFile || content.isFileTransfer) {
-                builder.append(content.name + " ")
-            } else if (content.isText) {
-                builder.append(content.utf8Text + " ")
-            }
-        }
-
-        builder.trim()
-        lastMessageText.value = builder
     }
 
     fun getRemoteAddress(): Address? {
