@@ -322,6 +322,13 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
     }
 
     private fun formatLastMessage(msg: ChatMessage?) {
+        val lastUpdateTime = chatRoom.lastUpdateTime
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                lastUpdate.postValue(TimestampUtils.toString(lastUpdateTime, true))
+            }
+        }
+
         val builder = SpannableStringBuilder()
         if (msg == null) {
             lastMessageText.value = builder
@@ -348,13 +355,6 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
         builder.trim()
         lastMessageText.value = builder
-
-        val lastUpdateTime = chatRoom.lastUpdateTime
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                lastUpdate.postValue(TimestampUtils.toString(lastUpdateTime, true))
-            }
-        }
     }
 
     fun getRemoteAddress(): Address? {
@@ -422,21 +422,24 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
     }
 
     private fun updateParticipants() {
-        peerSipUri.value = if (oneToOneChatRoom && !basicChatRoom)
-            chatRoom.participants.firstOrNull()?.address?.asStringUriOnly()
+        val participants = chatRoom.participants
+        peerSipUri.value = if (oneToOneChatRoom && !basicChatRoom) {
+            participants.firstOrNull()?.address?.asStringUriOnly()
                 ?: chatRoom.peerAddress.asStringUriOnly()
-        else chatRoom.peerAddress.asStringUriOnly()
+        } else {
+            chatRoom.peerAddress.asStringUriOnly()
+        }
 
         oneParticipantOneDevice = oneToOneChatRoom &&
             chatRoom.me?.devices?.size == 1 &&
-            chatRoom.participants.firstOrNull()?.devices?.size == 1
+            participants.firstOrNull()?.devices?.size == 1
 
         addressToCall = if (basicChatRoom)
             chatRoom.peerAddress
         else
-            chatRoom.participants.firstOrNull()?.address
+            participants.firstOrNull()?.address
 
-        onlyParticipantOnlyDeviceAddress = chatRoom.participants.firstOrNull()?.devices?.firstOrNull()?.address
+        onlyParticipantOnlyDeviceAddress = participants.firstOrNull()?.devices?.firstOrNull()?.address
     }
 
     private fun updateUnreadMessageCount() {
