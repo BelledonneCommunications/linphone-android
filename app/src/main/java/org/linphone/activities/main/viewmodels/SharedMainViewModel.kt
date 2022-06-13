@@ -69,6 +69,10 @@ class SharedMainViewModel : ViewModel() {
     // When using keyboard to share gif or other, see RichContentReceiver & RichEditText classes
     val richContentUri = MutableLiveData<Event<Uri>>()
 
+    val refreshChatRoomInListEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     /* Contacts */
 
     val contactFragmentOpenedEvent: MutableLiveData<Event<Boolean>> by lazy {

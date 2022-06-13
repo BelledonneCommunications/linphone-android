@@ -19,7 +19,6 @@
  */
 package org.linphone.activities.main.chat.fragments
 
-import android.Manifest
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
@@ -175,16 +174,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
         isSecure = chatRoom.currentParams.isEncryptionEnabled
 
-        val chatRoomsListViewModel: ChatRoomsListViewModel = requireActivity().run {
-            ViewModelProvider(this)[ChatRoomsListViewModel::class.java]
-        }
-        val chatRoomViewModel = chatRoomsListViewModel.chatRooms.value.orEmpty().find {
-            it.chatRoom == chatRoom
-        }
-        if (chatRoomViewModel == null) {
-            Log.w("[Chat Room] Couldn't find existing view model, will create a new one!")
-        }
-        viewModel = chatRoomViewModel ?: ViewModelProvider(
+        viewModel = ViewModelProvider(
             this,
             ChatRoomViewModelFactory(chatRoom)
         )[ChatRoomViewModel::class.java]
@@ -360,7 +350,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         ) {
             it.consume { chatMessage ->
                 listViewModel.deleteMessage(chatMessage)
-                viewModel.updateLastMessageToDisplay()
+                sharedViewModel.refreshChatRoomInListEvent.value = Event(true)
             }
         }
 
@@ -677,7 +667,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             list.add(eventLog)
         }
         listViewModel.deleteEventLogs(list)
-        viewModel.updateLastMessageToDisplay()
+        sharedViewModel.refreshChatRoomInListEvent.value = Event(true)
     }
 
     override fun onRequestPermissionsResult(
@@ -934,10 +924,12 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         }
         popupView.setMuteListener {
             viewModel.muteNotifications(true)
+            sharedViewModel.refreshChatRoomInListEvent.value = Event(true)
             popupWindow.dismiss()
         }
         popupView.setUnmuteListener {
             viewModel.muteNotifications(false)
+            sharedViewModel.refreshChatRoomInListEvent.value = Event(true)
             popupWindow.dismiss()
         }
         popupView.setAddToContactsListener {
@@ -984,7 +976,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                         Log.i("[Chat Room] Deleting event $eventLog at position $position")
                         listViewModel.deleteEventLogs(arrayListOf(eventLog))
                     }
-                    viewModel.updateLastMessageToDisplay()
+                    sharedViewModel.refreshChatRoomInListEvent.value = Event(true)
                 }
             }
         }

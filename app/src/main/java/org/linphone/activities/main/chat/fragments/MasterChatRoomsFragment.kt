@@ -130,6 +130,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
                 }
             }
         }
+
         sharedViewModel.layoutChangedEvent.observe(
             viewLifecycleOwner
         ) {
@@ -145,6 +146,18 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
                 }
             }
         }
+
+        sharedViewModel.refreshChatRoomInListEvent.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                val chatRoom = sharedViewModel.selectedChatRoom.value
+                if (chatRoom != null) {
+                    listViewModel.notifyChatRoomUpdate(chatRoom)
+                }
+            }
+        }
+
         binding.slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
 
         /* End of shared view model & sliding pane related */
@@ -175,8 +188,8 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
         )
         val swipeListener = object : RecyclerViewSwipeListener {
             override fun onLeftToRightSwipe(viewHolder: RecyclerView.ViewHolder) {
-                val chatRoomViewModel = adapter.currentList[viewHolder.bindingAdapterPosition]
-                chatRoomViewModel.chatRoom.markAsRead()
+                val chatRoom = adapter.currentList[viewHolder.bindingAdapterPosition]
+                chatRoom.markAsRead()
                 adapter.notifyItemChanged(viewHolder.bindingAdapterPosition)
             }
 
@@ -191,7 +204,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
 
                 viewModel.showDeleteButton(
                     {
-                        val deletedChatRoom = adapter.currentList[viewHolder.bindingAdapterPosition].chatRoom
+                        val deletedChatRoom = adapter.currentList[viewHolder.bindingAdapterPosition]
                         listViewModel.deleteChatRoom(deletedChatRoom)
                         if (!binding.slidingPane.isSlideable &&
                             deletedChatRoom == sharedViewModel.selectedChatRoom.value
@@ -217,6 +230,14 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
             viewLifecycleOwner
         ) { chatRooms ->
             adapter.submitList(chatRooms)
+        }
+
+        listViewModel.chatRoomIndexUpdatedEvent.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume { index ->
+                adapter.notifyItemChanged(index)
+            }
         }
 
         adapter.selectedChatRoomEvent.observe(
@@ -349,10 +370,10 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
         val list = ArrayList<ChatRoom>()
         var closeSlidingPane = false
         for (index in indexesOfItemToDelete) {
-            val chatRoomViewModel = adapter.currentList[index]
-            list.add(chatRoomViewModel.chatRoom)
+            val chatRoom = adapter.currentList[index]
+            list.add(chatRoom)
 
-            if (chatRoomViewModel.chatRoom == sharedViewModel.selectedChatRoom.value) {
+            if (chatRoom == sharedViewModel.selectedChatRoom.value) {
                 closeSlidingPane = true
             }
         }

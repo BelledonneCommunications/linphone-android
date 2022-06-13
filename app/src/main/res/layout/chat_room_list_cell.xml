@@ -17,8 +17,8 @@
             name="forwardPending"
             type="Boolean" />
         <variable
-            name="viewModel"
-            type="org.linphone.activities.main.chat.viewmodels.ChatRoomViewModel" />
+            name="data"
+            type="org.linphone.activities.main.chat.data.ChatRoomData" />
         <variable
             name="selectionListViewModel"
             type="org.linphone.activities.main.viewmodels.ListTopBarViewModel" />
@@ -38,7 +38,7 @@
 
         <ImageView
             android:id="@+id/avatar"
-            coilContact="@{viewModel}"
+            coilContact="@{data}"
             android:layout_width="@dimen/contact_avatar_size"
             android:layout_height="@dimen/contact_avatar_size"
             android:layout_marginLeft="5dp"
@@ -54,9 +54,9 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginLeft="25dp"
-            android:contentDescription="@{viewModel.securityLevelContentDescription}"
-            android:src="@{viewModel.securityLevelIcon, default=@drawable/security_alert_indicator}"
-            android:visibility="@{viewModel.encryptedChatRoom ? View.VISIBLE : View.INVISIBLE, default=invisible}"
+            android:contentDescription="@{data.securityLevelContentDescription}"
+            android:src="@{data.securityLevelIcon, default=@drawable/security_alert_indicator}"
+            android:visibility="@{data.encryptedChatRoom ? View.VISIBLE : View.INVISIBLE, default=invisible}"
             app:layout_constraintStart_toStartOf="@id/avatar"
             app:layout_constraintTop_toTopOf="@id/avatar" />
 
@@ -67,7 +67,7 @@
             android:layout_marginTop="5dp"
             android:paddingRight="10dp"
             android:singleLine="true"
-            android:text="@{viewModel.lastUpdate, default=`12:03`}"
+            android:text="@{data.lastUpdate, default=`12:03`}"
             android:textColor="?attr/accentColor"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -84,7 +84,7 @@
             android:layout_marginRight="5dp"
             android:singleLine="true"
             android:ellipsize="end"
-            android:text="@{viewModel.oneToOneChatRoom ? (viewModel.contact.name ?? viewModel.displayName) : viewModel.subject, default=`Lorem Ipsum`}"
+            android:text="@{data.oneToOneChatRoom ? (data.contact.name ?? data.displayName) : data.subject, default=`Lorem Ipsum`}"
             app:layout_constraintStart_toEndOf="@id/date"
             app:layout_constraintEnd_toStartOf="@id/unread"
             app:layout_constraintTop_toTopOf="@id/avatar" />
@@ -98,7 +98,7 @@
             android:layout_marginRight="5dp"
             android:ellipsize="end"
             android:maxLines="2"
-            android:text="@{viewModel.lastMessageText, default=`Lorem ipsum dolor sit amet`}"
+            android:text="@{data.lastMessageText, default=`Lorem ipsum dolor sit amet`}"
             app:layout_constraintStart_toEndOf="@id/date"
             app:layout_constraintEnd_toStartOf="@id/endBarrier"
             app:layout_constraintTop_toBottomOf="@id/title" />
@@ -121,7 +121,7 @@
             android:adjustViewBounds="true"
             android:contentDescription="@string/content_description_muted_chat_room"
             android:src="@drawable/chat_room_menu_mute_notifications"
-            android:visibility="@{viewModel.notificationsMuted ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{data.notificationsMuted ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintEnd_toStartOf="@id/endBarrier3"
             app:layout_constraintTop_toTopOf="@id/title" />
 
@@ -135,8 +135,8 @@
             android:ellipsize="end"
             android:gravity="center"
             android:singleLine="true"
-            android:text="@{String.valueOf(viewModel.unreadMessagesCount)}"
-            android:visibility="@{viewModel.unreadMessagesCount == 0 ? View.GONE : View.VISIBLE, default=gone}"
+            android:text="@{String.valueOf(data.unreadMessagesCount)}"
+            android:visibility="@{data.unreadMessagesCount == 0 ? View.GONE : View.VISIBLE, default=gone}"
             app:layout_constraintEnd_toStartOf="@id/endBarrier2"
             app:layout_constraintTop_toTopOf="@id/title" />
 
@@ -149,7 +149,7 @@
             android:adjustViewBounds="true"
             android:contentDescription="@string/content_description_ephemeral_chat_room"
             android:src="@drawable/ephemeral_messages"
-            android:visibility="@{viewModel.ephemeralEnabled ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{data.ephemeralEnabled ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/forward" />
 
