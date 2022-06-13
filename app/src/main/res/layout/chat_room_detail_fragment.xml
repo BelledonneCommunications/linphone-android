@@ -15,6 +15,9 @@
             name="menuClickListener"
             type="android.view.View.OnClickListener"/>
         <variable
+            name="menuLongClickListener"
+            type="android.view.View.OnLongClickListener"/>
+        <variable
             name="securityIconClickListener"
             type="android.view.View.OnClickListener"/>
         <variable
@@ -129,6 +132,7 @@
             <ImageView
                 android:id="@+id/menu"
                 android:onClick="@{menuClickListener}"
+                android:onLongClick="@{menuLongClickListener}"
                 android:contentDescription="@string/content_description_show_chat_room_menu"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"

@@ -21,7 +21,7 @@ package org.linphone.activities.main.chat.fragments
 
 import android.app.Activity
 import android.app.Dialog
-import android.content.Intent
+import android.content.*
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Parcelable
@@ -40,6 +40,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.File
 import java.lang.IllegalArgumentException
 import kotlinx.coroutines.*
@@ -550,6 +551,34 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
         binding.setMenuClickListener {
             showPopupMenu(chatRoom)
+        }
+
+        binding.setMenuLongClickListener {
+            // Only show debug infos if debug mode is enabled
+            if (corePreferences.debugLogs) {
+                val alertDialog = MaterialAlertDialogBuilder(requireContext())
+
+                val messageBuilder = StringBuilder()
+                messageBuilder.append("Chat room id:\n")
+                messageBuilder.append(viewModel.chatRoom.peerAddress.asString())
+                messageBuilder.append("\n")
+                messageBuilder.append("Local account:\n")
+                messageBuilder.append(viewModel.chatRoom.localAddress.asString())
+                val message = messageBuilder.toString()
+                alertDialog.setMessage(message)
+
+                alertDialog.setNeutralButton(R.string.chat_message_context_menu_copy_text) {
+                    _, _ ->
+                    val clipboard: ClipboardManager =
+                        coreContext.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                    val clip = ClipData.newPlainText("Chat room info", message)
+                    clipboard.setPrimaryClip(clip)
+                }
+
+                alertDialog.show()
+                true
+            }
+            false
         }
 
         binding.setSecurityIconClickListener {
