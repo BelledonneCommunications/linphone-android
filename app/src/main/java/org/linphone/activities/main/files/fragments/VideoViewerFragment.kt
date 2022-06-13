@@ -93,6 +93,7 @@ class VideoViewerFragment : GenericViewerFragment<FileVideoViewerFragmentBinding
             binding.videoView.pause()
         }
 
+        viewModel.fullScreenMode.value = false
         super.onPause()
     }
 
