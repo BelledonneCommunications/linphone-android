@@ -169,7 +169,7 @@ class Api26Compatibility {
             } else {
                 contact = null
                 displayName = conferenceInfo.subject ?: context.getString(R.string.conference)
-                address = LinphoneUtils.getDisplayableAddress(call.remoteAddress)
+                address = LinphoneUtils.getDisplayableAddress(conferenceInfo.organizer)
                 roundPicture = BitmapFactory.decodeResource(context.resources, R.drawable.voip_multiple_contacts_avatar_alt)
                 info = context.getString(R.string.incoming_group_call_notification_title)
                 Log.i("[Notifications Manager] Displaying incoming group call notification with subject $displayName for remote contact address $remoteContact")
