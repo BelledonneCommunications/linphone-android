@@ -34,7 +34,7 @@ open class FileViewerViewModel(val content: Content) : ViewModel() {
     init {
         filePath = if (deleteAfterUse) {
             Log.i("[File Viewer] Content is encrypted, requesting plain file path")
-            content.plainFilePath
+            content.exportPlainFile()
         } else {
             content.filePath.orEmpty()
         }

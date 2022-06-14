@@ -233,7 +233,7 @@ class ChatMessageContentData(
         if (content.isFile || (content.isFileTransfer && chatMessage.isOutgoing)) {
             val path = if (isFileEncrypted) {
                 Log.i("[Content] Content is encrypted, requesting plain file path")
-                content.plainFilePath
+                content.exportPlainFile()
             } else {
                 content.filePath ?: ""
             }

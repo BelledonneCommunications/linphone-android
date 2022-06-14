@@ -128,7 +128,7 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
 
         attachFileEnabled.value = true
         sendMessageEnabled.value = false
-        isReadOnly.value = chatRoom.isReadOnly
+        isReadOnly.value = chatRoom.isReadOnly || (chatRoom.hasCapability(ChatRoomCapabilities.Conference.toInt()) && chatRoom.participants.isEmpty())
 
         val recorderParams = coreContext.core.createRecorderParams()
         if (corePreferences.voiceMessagesFormatMkv) {
