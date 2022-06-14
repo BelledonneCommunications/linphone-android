@@ -188,8 +188,11 @@ class CallLogViewModel(val callLog: CallLog, private val isRelated: Boolean = fa
     fun startChat(isSecured: Boolean) {
         waitForChatRoomCreation.value = true
         val chatRoom = LinphoneUtils.createOneToOneChatRoom(callLog.remoteAddress, isSecured)
+
         if (chatRoom != null) {
-            if (chatRoom.state == ChatRoom.State.Created) {
+            val state = chatRoom.state
+            Log.i("[History Detail] Found existing chat room in state $state")
+            if (state == ChatRoom.State.Created || state == ChatRoom.State.Terminated) {
                 waitForChatRoomCreation.value = false
                 chatRoomCreatedEvent.value = Event(chatRoom)
             } else {

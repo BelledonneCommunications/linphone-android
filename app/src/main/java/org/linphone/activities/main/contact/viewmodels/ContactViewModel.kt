@@ -115,7 +115,9 @@ class ContactViewModel(friend: Friend, async: Boolean = false) : MessageNotifier
             val chatRoom = LinphoneUtils.createOneToOneChatRoom(address, isSecured)
 
             if (chatRoom != null) {
-                if (chatRoom.state == ChatRoom.State.Created) {
+                val state = chatRoom.state
+                Log.i("[Contact Detail] Found existing chat room in state $state")
+                if (state == ChatRoom.State.Created || state == ChatRoom.State.Terminated) {
                     waitForChatRoomCreation.value = false
                     chatRoomCreatedEvent.value = Event(chatRoom)
                 } else {
