@@ -147,7 +147,7 @@ class Api23Compatibility {
                 return false
             }
 
-            val plainFilePath = content.plainFilePath.orEmpty()
+            val plainFilePath = content.exportPlainFile().orEmpty()
             val isVfsEncrypted = plainFilePath.isNotEmpty()
             Log.w("[Media Store] Content is encrypted, requesting plain file path")
             val filePath = if (isVfsEncrypted) plainFilePath else content.filePath
@@ -185,7 +185,7 @@ class Api23Compatibility {
                 return false
             }
 
-            val plainFilePath = content.plainFilePath.orEmpty()
+            val plainFilePath = content.exportPlainFile().orEmpty()
             val isVfsEncrypted = plainFilePath.isNotEmpty()
             Log.w("[Media Store] Content is encrypted, requesting plain file path")
             val filePath = if (isVfsEncrypted) plainFilePath else content.filePath
@@ -224,7 +224,7 @@ class Api23Compatibility {
                 return false
             }
 
-            val plainFilePath = content.plainFilePath.orEmpty()
+            val plainFilePath = content.exportPlainFile().orEmpty()
             val isVfsEncrypted = plainFilePath.isNotEmpty()
             Log.w("[Media Store] Content is encrypted, requesting plain file path")
             val filePath = if (isVfsEncrypted) plainFilePath else content.filePath

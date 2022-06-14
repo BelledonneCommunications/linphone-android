@@ -1107,7 +1107,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 dialog.dismiss()
                 lifecycleScope.launch {
                     Log.w("[Chat Room] Content is encrypted, requesting plain file path")
-                    val plainFilePath = content.plainFilePath
+                    val plainFilePath = content.exportPlainFile()
                     Log.i("[Cht Room] Making a copy of [$plainFilePath] to the cache directory before exporting it")
                     val cacheCopyPath = FileUtils.copyFileToCache(plainFilePath)
                     if (cacheCopyPath != null) {
