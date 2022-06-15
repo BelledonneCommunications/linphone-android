@@ -130,7 +130,7 @@ class ChatRoomData(private val chatRoom: ChatRoom) : ContactDataInterface {
             if (chatRoom.participants.isNotEmpty()) {
                 chatRoom.participants[0].address
             } else {
-                Log.e("[Chat Room] $chatRoom doesn't have any participant (state ${chatRoom.state})!")
+                Log.e("[Chat Room] ${chatRoom.peerAddress} doesn't have any participant (state ${chatRoom.state})!")
                 null
             }
         }
