@@ -776,8 +776,12 @@ class CoreContext(
             onCallOverlayClick()
         }
 
-        callOverlay = overlay
-        windowManager.addView(overlay, params)
+        try {
+            windowManager.addView(overlay, params)
+            callOverlay = overlay
+        } catch (e: Exception) {
+            Log.e("[Context] Failed to add overlay in windowManager: $e")
+        }
     }
 
     fun onCallOverlayClick() {
