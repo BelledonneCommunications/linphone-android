@@ -88,6 +88,8 @@ class SharedMainViewModel : ViewModel() {
 
     /* Accounts */
 
+    val defaultAccountChanged = MutableLiveData<Boolean>()
+
     val accountRemoved = MutableLiveData<Boolean>()
 
     val accountSettingsFragmentOpenedEvent: MutableLiveData<Event<Boolean>> by lazy {

@@ -116,6 +116,13 @@ class SettingsFragment : SecureFragment<SettingsFragmentBinding>() {
             viewModel.updateAccountsList()
         }
 
+        sharedViewModel.defaultAccountChanged.observe(
+            viewLifecycleOwner
+        ) {
+            Log.i("[Settings] Default account changed, update accounts list")
+            viewModel.updateAccountsList()
+        }
+
         val identity = arguments?.getString("Identity")
         if (identity != null) {
             Log.i("[Settings] Found identity parameter in arguments: $identity")

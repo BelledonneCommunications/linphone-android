@@ -73,6 +73,13 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
             viewModel.updateAccountsList()
         }
 
+        sharedViewModel.defaultAccountChanged.observe(
+            viewLifecycleOwner
+        ) {
+            Log.i("[Side Menu] Default account changed, update accounts list")
+            viewModel.updateAccountsList()
+        }
+
         viewModel.accountsSettingsListener = object : SettingListenerStub() {
             override fun onAccountClicked(identity: String) {
                 val args = Bundle()

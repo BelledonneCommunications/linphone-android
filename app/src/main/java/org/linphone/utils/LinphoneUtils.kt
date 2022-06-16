@@ -222,5 +222,17 @@ class LinphoneUtils {
             remoteSipUri.clean()
             return "${localSipUri.asStringUriOnly()}~${remoteSipUri.asStringUriOnly()}"
         }
+
+        fun getAccountsNotHidden(): List<Account> {
+            val list = arrayListOf<Account>()
+
+            for (account in coreContext.core.accountList) {
+                if (account.getCustomParam("hidden") != "1") {
+                    list.add(account)
+                }
+            }
+
+            return list
+        }
     }
 }
