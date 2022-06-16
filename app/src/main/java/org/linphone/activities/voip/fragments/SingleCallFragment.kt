@@ -260,7 +260,7 @@ class SingleCallFragment : GenericFragment<VoipSingleCallFragmentBinding>() {
     }
 
     private fun updateHingeRelatedConstraints(state: FoldingFeature.State) {
-        Log.i("[Single Call] Updating constraint layout hinges")
+        Log.i("[Single Call] Updating constraint layout hinges: $state")
         /*val constraintLayout = binding.constraintLayout
         val set = ConstraintSet()
         set.clone(constraintLayout)
