@@ -119,7 +119,7 @@
                 app:layout_constraintBottom_toTopOf="@id/primary_buttons"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <LinearLayout
+            <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/voip_translucent_popup_background"

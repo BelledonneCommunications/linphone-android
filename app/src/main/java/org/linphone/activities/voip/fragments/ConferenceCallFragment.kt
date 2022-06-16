@@ -25,7 +25,7 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.view.View
 import android.widget.Chronometer
-import android.widget.RelativeLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.navigation.navGraphViewModels
@@ -88,7 +88,7 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
                 if (conferenceViewModel.conferenceExists.value == true) {
                     Log.i("[Conference Call] Local participant is in conference and current layout is active speaker, updating Core's native window id")
                     val layout =
-                        binding.root.findViewById<RelativeLayout>(R.id.conference_active_speaker_layout)
+                        binding.root.findViewById<ConstraintLayout>(R.id.conference_active_speaker_layout)
                     val window =
                         layout?.findViewById<RoundCornersTextureView>(R.id.conference_active_speaker_remote_video)
                     coreContext.core.nativeVideoWindowId = window
@@ -320,8 +320,11 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
     }
 
     private fun updateHingeRelatedConstraints(state: FoldingFeature.State) {
-        Log.i("[Conference Call] Updating constraint layout hinges")
-        /*val constraintLayout = binding.constraintLayout
+        Log.i("[Conference Call] Updating constraint layout hinges: $state")
+        /*val constraintLayout =
+            binding.root.findViewById<ConstraintLayout>(R.id.conference_active_speaker_layout)
+        constraintLayout ?: return
+
         val set = ConstraintSet()
         set.clone(constraintLayout)
 
