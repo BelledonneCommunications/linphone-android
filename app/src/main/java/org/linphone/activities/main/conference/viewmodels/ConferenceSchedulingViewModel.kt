@@ -95,8 +95,7 @@ class ConferenceSchedulingViewModel : ContactsSelectionViewModel() {
                     chatRoomParams.subject = subject.value
                     conferenceScheduler.sendInvitations(chatRoomParams)
                 } else {
-                    conferenceCreationInProgress.value = false
-                    conferenceCreationCompletedEvent.value = Event(true)
+                    // Will be done in coreListener
                 }
             } else if (state == ConferenceSchedulerState.Error) {
                 Log.e("[Conference Creation] Failed to create conference!")
@@ -124,6 +123,30 @@ class ConferenceSchedulingViewModel : ContactsSelectionViewModel() {
                 Log.e("[Conference Creation] Conference address is null!")
             } else {
                 conferenceCreationCompletedEvent.value = Event(true)
+            }
+        }
+    }
+
+    private val coreListener: CoreListenerStub = object : CoreListenerStub() {
+        override fun onCallStateChanged(
+            core: Core,
+            call: Call,
+            state: Call.State?,
+            message: String
+        ) {
+            when (state) {
+                Call.State.OutgoingProgress -> {
+                    conferenceCreationInProgress.value = false
+                }
+                Call.State.End -> {
+                    Log.i("[Conference Creation] Call has ended, leaving waiting room fragment")
+                    conferenceCreationCompletedEvent.value = Event(true)
+                }
+                Call.State.Error -> {
+                    Log.w("[Conference Creation] Call has failed, leaving waiting room fragment")
+                    conferenceCreationCompletedEvent.value = Event(true)
+                }
+                else -> {}
             }
         }
     }
@@ -159,9 +182,11 @@ class ConferenceSchedulingViewModel : ContactsSelectionViewModel() {
         }
 
         conferenceScheduler.addListener(listener)
+        coreContext.core.addListener(coreListener)
     }
 
     override fun onCleared() {
+        coreContext.core.removeListener(coreListener)
         conferenceScheduler.removeListener(listener)
         participantsData.value.orEmpty().forEach(ConferenceSchedulingParticipantData::destroy)
 
