@@ -90,11 +90,12 @@ class ConferenceWaitingRoomViewModel : MessageNotifierViewModel() {
             message: String
         ) {
             when (state) {
-                Call.State.Connected -> {
-                    Log.i("[Conference Waiting Room] Call is now connected")
+                Call.State.End -> {
+                    Log.i("[Conference Waiting Room] Call has ended, leaving waiting room fragment")
+                    leaveWaitingRoomEvent.value = Event(true)
                 }
-                Call.State.End, Call.State.Error -> {
-                    Log.w("[Conference Waiting Room] Call has failed or ended, leaving waiting room fragment")
+                Call.State.Error -> {
+                    Log.w("[Conference Waiting Room] Call has failed, leaving waiting room fragment")
                     leaveWaitingRoomEvent.value = Event(true)
                 }
                 else -> {}

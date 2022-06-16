@@ -182,13 +182,13 @@ class CoreContext(
                         )
                     }
                 }
-            } else if (state == Call.State.OutgoingInit) {
+            } else if (state == Call.State.OutgoingProgress) {
                 val conferenceInfo = core.findConferenceInformationFromUri(call.remoteAddress)
                 // Do not show outgoing call view for conference calls, wait for connected state
                 if (conferenceInfo == null) {
                     onOutgoingStarted()
                 }
-            } else if (state == Call.State.OutgoingProgress) {
+
                 if (core.callsNb == 1 && corePreferences.routeAudioToBluetoothIfAvailable) {
                     AudioRouteUtils.routeAudioToBluetooth(call)
                 }
