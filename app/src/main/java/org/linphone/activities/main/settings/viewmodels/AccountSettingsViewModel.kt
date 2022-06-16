@@ -70,6 +70,10 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
         MutableLiveData<Event<Boolean>>()
     }
 
+    val accountDefaultEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     val displayUsernameInsteadOfIdentity = corePreferences.replaceSipUriByUsername
 
     private var accountToDelete: Account? = null
@@ -212,6 +216,7 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
         override fun onBoolValueChanged(newValue: Boolean) {
             if (newValue) {
                 core.defaultAccount = account
+                accountDefaultEvent.value = Event(true)
             }
         }
     }

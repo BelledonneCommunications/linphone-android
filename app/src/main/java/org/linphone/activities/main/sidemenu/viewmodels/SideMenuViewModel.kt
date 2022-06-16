@@ -83,29 +83,27 @@ class SideMenuViewModel : ViewModel() {
         accounts.value.orEmpty().forEach(AccountSettingsViewModel::destroy)
 
         val list = arrayListOf<AccountSettingsViewModel>()
-        if (coreContext.core.accountList.isNotEmpty()) {
-            val defaultAccount = coreContext.core.defaultAccount
-            if (defaultAccount != null) {
-                val defaultViewModel = AccountSettingsViewModel(defaultAccount)
-                defaultViewModel.accountsSettingsListener = object : SettingListenerStub() {
+        val defaultAccount = coreContext.core.defaultAccount
+        if (defaultAccount != null) {
+            val defaultViewModel = AccountSettingsViewModel(defaultAccount)
+            defaultViewModel.accountsSettingsListener = object : SettingListenerStub() {
+                override fun onAccountClicked(identity: String) {
+                    accountsSettingsListener.onAccountClicked(identity)
+                }
+            }
+            defaultAccountViewModel.value = defaultViewModel
+            defaultAccountFound.value = true
+        }
+
+        for (account in LinphoneUtils.getAccountsNotHidden()) {
+            if (account != coreContext.core.defaultAccount) {
+                val viewModel = AccountSettingsViewModel(account)
+                viewModel.accountsSettingsListener = object : SettingListenerStub() {
                     override fun onAccountClicked(identity: String) {
                         accountsSettingsListener.onAccountClicked(identity)
                     }
                 }
-                defaultAccountViewModel.value = defaultViewModel
-                defaultAccountFound.value = true
-            }
-
-            for (account in coreContext.core.accountList) {
-                if (account != coreContext.core.defaultAccount) {
-                    val viewModel = AccountSettingsViewModel(account)
-                    viewModel.accountsSettingsListener = object : SettingListenerStub() {
-                        override fun onAccountClicked(identity: String) {
-                            accountsSettingsListener.onAccountClicked(identity)
-                        }
-                    }
-                    list.add(viewModel)
-                }
+                list.add(viewModel)
             }
         }
         accounts.value = list

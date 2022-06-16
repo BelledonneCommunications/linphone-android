@@ -87,6 +87,14 @@ class AccountSettingsFragment : GenericSettingFragment<SettingsAccountFragmentBi
             }
         }
 
+        viewModel.accountDefaultEvent.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                sharedViewModel.defaultAccountChanged.value = true
+            }
+        }
+
         view.doOnPreDraw {
             // Notifies fragment is ready to be drawn
             sharedViewModel.accountSettingsFragmentOpenedEvent.value = Event(true)
