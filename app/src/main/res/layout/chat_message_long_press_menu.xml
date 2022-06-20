@@ -109,7 +109,7 @@
             android:onClick="@{addToContactsClickListener}"
             style="@style/popup_item_font"
             android:text="@string/chat_message_context_menu_add_to_contacts"
-            app:drawableRightCompat="@drawable/menu_add_contact" />
+            app:drawableRightCompat="@drawable/chat_room_menu_add_contact" />
 
         <TextView
             android:layout_width="match_parent"
