@@ -147,6 +147,7 @@
             android:id="@+id/scroll_indicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="@{controlsViewModel.pipMode ? View.GONE : View.VISIBLE}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

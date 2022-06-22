@@ -33,7 +33,6 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.*
 import org.linphone.activities.main.MainActivity
-import org.linphone.activities.navigateToActiveCall
 import org.linphone.activities.voip.viewmodels.CallsViewModel
 import org.linphone.activities.voip.viewmodels.ConferenceViewModel
 import org.linphone.activities.voip.viewmodels.ControlsViewModel
@@ -106,7 +105,7 @@ class CallActivity : ProximitySensorActivity() {
         controlsViewModel.isVideoEnabled.observe(
             this
         ) { enabled ->
-            Compatibility.enableAutoEnterPiP(this, enabled)
+            Compatibility.enableAutoEnterPiP(this, enabled, conferenceViewModel.conferenceExists.value == true)
         }
 
         controlsViewModel.callStatsVisible.observe(
@@ -185,7 +184,7 @@ class CallActivity : ProximitySensorActivity() {
 
         if (coreContext.core.currentCall?.currentParams?.isVideoEnabled == true) {
             Log.i("[Call Activity] Entering PiP mode")
-            Compatibility.enterPipMode(this)
+            Compatibility.enterPipMode(this, conferenceViewModel.conferenceExists.value == true)
         }
     }
 

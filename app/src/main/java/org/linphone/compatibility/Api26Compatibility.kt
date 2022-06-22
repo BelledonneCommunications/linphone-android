@@ -55,14 +55,20 @@ import org.linphone.utils.LinphoneUtils
 @TargetApi(26)
 class Api26Compatibility {
     companion object {
-        fun enterPipMode(activity: Activity) {
+        fun enterPipMode(activity: Activity, conference: Boolean) {
             val supportsPip = activity.packageManager
                 .hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
             Log.i("[Call] Is PiP supported: $supportsPip")
             if (supportsPip) {
-                val params = PictureInPictureParams.Builder().build()
+                // Force portrait layout if in conference, otherwise for landscape
+                // Our layouts behave better in these orientation
+                val params = PictureInPictureParams.Builder()
+                    .setAspectRatio(Compatibility.getPipRatio(activity, conference, !conference))
+                    .build()
                 if (!activity.enterPictureInPictureMode(params)) {
                     Log.e("[Call] Failed to enter PiP mode")
+                } else {
+                    Log.i("[Call] Entering PiP mode with ${if (conference) "portrait" else "landscape"} aspect ratio")
                 }
             }
         }
