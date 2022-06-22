@@ -25,6 +25,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="@{() -> data.toggleExpand()}"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         android:orientation="vertical">
@@ -114,7 +115,6 @@
                     app:drawableStartCompat="@drawable/icon_schedule_participants" />
 
                 <ImageView
-                    android:onClick="@{() -> data.toggleExpand()}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
@@ -132,7 +132,6 @@
                 android:layout_marginEnd="5dp">
 
                 <ImageView
-                    android:onClick="@{() -> data.toggleExpand()}"
                     android:id="@+id/selected_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -153,7 +152,7 @@
                     android:contentDescription="@string/content_description_conference_participants"
                     android:src="@drawable/icon_schedule_participants"/>
 
-                <EditText
+                <TextView
                     style="@style/conference_invite_desc_font"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -163,9 +162,7 @@
                     android:layout_toEndOf="@id/participants_icon"
                     android:background="@color/transparent_color"
                     android:drawablePadding="5dp"
-                    android:enabled="false"
-                    android:inputType="textMultiLine"
-                    android:text="@{data.participantsExpanded}"
+                    android:text="@{data.participantsExpanded, default=`Daryl Martin\nMartin Pecheur`}"
                     tools:ignore="LabelFor" />
 
             </RelativeLayout>
