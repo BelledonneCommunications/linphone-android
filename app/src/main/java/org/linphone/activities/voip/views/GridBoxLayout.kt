@@ -24,6 +24,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.GridLayout
 import androidx.core.view.children
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.tools.Log
 
 class GridBoxLayout : GridLayout {
@@ -62,6 +63,13 @@ class GridBoxLayout : GridLayout {
         // to the maximum of all grid indices (and spans) defined in the LayoutParams of each child.
         children.forEach { child ->
             child.layoutParams = LayoutParams()
+        }
+
+        val maxChild = placementMatrix[0].size
+        if (childCount > maxChild) {
+            val maxMosaicParticipants = corePreferences.maxConferenceParticipantsForMosaicLayout
+            Log.e("[GridBoxLayout] $childCount children but placementMatrix only knows how to display $maxChild (max allowed participants for grid layout in settings is $maxMosaicParticipants)")
+            return
         }
 
         val availableSize = Pair(right - left, bottom - top)
