@@ -128,6 +128,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/scroll_indicator"
+            android:layout_marginBottom="5dp"
             android:scrollbars="none">
 
             <com.google.android.flexbox.FlexboxLayout
@@ -149,7 +150,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             app:dotColor="@color/voip_gray_dots"
             app:dotRadius="5dp"
