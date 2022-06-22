@@ -420,7 +420,8 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             it.consume { content ->
                 var path = content.filePath.orEmpty()
 
-                if (!File(path).exists()) {
+                if (path.isNotEmpty() && !File(path).exists()) {
+                    Log.e("[Chat Message] File not found: $path")
                     (requireActivity() as MainActivity).showSnackBar(R.string.chat_room_file_not_found)
                 } else {
                     if (path.isEmpty()) {
