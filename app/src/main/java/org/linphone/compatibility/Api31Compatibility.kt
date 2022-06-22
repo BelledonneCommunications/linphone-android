@@ -204,14 +204,19 @@ class Api31Compatibility {
             }
         }
 
-        fun enableAutoEnterPiP(activity: Activity, enable: Boolean) {
+        fun enableAutoEnterPiP(activity: Activity, enable: Boolean, conference: Boolean) {
             val supportsPip = activity.packageManager
                 .hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
             Log.i("[Call] Is PiP supported: $supportsPip")
             if (supportsPip) {
-                val params = PictureInPictureParams.Builder().setAutoEnterEnabled(enable).build()
+                // Force portrait layout if in conference, otherwise for landscape
+                // Our layouts behave better in these orientation
+                val params = PictureInPictureParams.Builder()
+                    .setAutoEnterEnabled(enable)
+                    .setAspectRatio(Compatibility.getPipRatio(activity, conference, !conference))
+                    .build()
                 activity.setPictureInPictureParams(params)
-                Log.i("[Call] PiP auto enter enabled params set to $enable")
+                Log.i("[Call] PiP auto enter enabled params set to $enable with ${if (conference) "portrait" else "landscape"} aspect ratio")
             }
         }
 

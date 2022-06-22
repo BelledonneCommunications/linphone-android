@@ -30,6 +30,8 @@ import android.net.Uri
 import android.os.Build
 import android.os.Vibrator
 import android.telephony.TelephonyManager
+import android.util.DisplayMetrics
+import android.util.Rational
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
@@ -266,16 +268,41 @@ class Compatibility {
             return Api23Compatibility.canDrawOverlay(context)
         }
 
-        fun enterPipMode(activity: Activity) {
+        fun enterPipMode(activity: Activity, conference: Boolean) {
             if (Version.sdkStrictlyBelow(Version.API31_ANDROID_12) && Version.sdkAboveOrEqual(Version.API26_O_80)) {
-                Api26Compatibility.enterPipMode(activity)
+                Api26Compatibility.enterPipMode(activity, conference)
             }
         }
 
-        fun enableAutoEnterPiP(activity: Activity, enable: Boolean) {
+        fun enableAutoEnterPiP(activity: Activity, enable: Boolean, conference: Boolean) {
             if (Version.sdkAboveOrEqual(Version.API31_ANDROID_12)) {
-                Api31Compatibility.enableAutoEnterPiP(activity, enable)
+                Api31Compatibility.enableAutoEnterPiP(activity, enable, conference)
             }
+        }
+
+        fun getPipRatio(
+            activity: Activity,
+            forcePortrait: Boolean = false,
+            forceLandscape: Boolean = false
+        ): Rational {
+            val displayMetrics = DisplayMetrics()
+            activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
+            val height = displayMetrics.heightPixels
+            val width = displayMetrics.widthPixels
+            val ratio = if (width > height) {
+                if (forcePortrait) {
+                    Rational(height, width)
+                } else {
+                    Rational(width, height)
+                }
+            } else {
+                if (forceLandscape) {
+                    Rational(height, width)
+                } else {
+                    Rational(width, height)
+                }
+            }
+            return ratio
         }
 
         fun eventVibration(vibrator: Vibrator) {
