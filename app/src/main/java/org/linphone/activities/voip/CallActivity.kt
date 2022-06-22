@@ -162,7 +162,7 @@ class CallActivity : ProximitySensorActivity() {
             if (exists) {
                 Log.i("[Call Activity] Found active conference, changing fragment")
                 navigateToConferenceCall()
-            } else {
+            } else if (coreContext.core.callsNb > 0) {
                 Log.i("[Call Activity] Conference no longer exists, changing fragment")
                 navigateToActiveCall()
             }
