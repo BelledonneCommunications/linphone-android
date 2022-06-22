@@ -114,7 +114,7 @@ class RecordingsFragment : MasterFragment<RecordingsFragmentBinding, RecordingsL
 
     override fun onResume() {
         if (this::viewModel.isInitialized) {
-            viewModel.udpdateRecordingsList()
+            viewModel.updateRecordingsList()
         } else {
             Log.e("[Recordings] Fragment resuming but viewModel lateinit property isn't initialized!")
         }

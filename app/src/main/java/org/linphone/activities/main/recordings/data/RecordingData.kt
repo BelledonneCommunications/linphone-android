@@ -119,10 +119,10 @@ class RecordingData(val path: String, private val recordingListener: RecordingLi
             player.open(path)
             player.seek(0)
         }
-        recordingListener.onPlayingStarted(isVideoAvailable())
 
         player.start()
         isPlaying.value = true
+        recordingListener.onPlayingStarted(isVideoAvailable())
 
         scope.launch {
             withContext(Dispatchers.IO) {

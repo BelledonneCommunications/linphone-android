@@ -85,10 +85,10 @@ class RecordingsViewModel : ViewModel() {
             FileUtils.deleteFile(recording.path)
         }
 
-        udpdateRecordingsList()
+        updateRecordingsList()
     }
 
-    fun udpdateRecordingsList() {
+    fun updateRecordingsList() {
         recordingsList.value.orEmpty().forEach(RecordingData::destroy)
         val list = arrayListOf<RecordingData>()
 
