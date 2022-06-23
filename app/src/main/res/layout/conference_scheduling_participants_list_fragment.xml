@@ -58,17 +58,33 @@
 
         </LinearLayout>
 
-        <EditText
-            android:text="@={viewModel.filter}"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:inputType="textPersonName"
-            android:layout_margin="10dp"
-            android:drawableLeft="@drawable/search"
-            android:drawablePadding="10dp"
-            android:background="@color/transparent_color"
-            android:backgroundTint="@color/transparent_color"
-            android:hint="@string/contact_filter_hint"/>
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/searchBar"
+                android:text="@={viewModel.filter}"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:inputType="textPersonName"
+                android:layout_margin="10dp"
+                android:drawableLeft="@drawable/search"
+                android:drawablePadding="10dp"
+                android:background="@color/transparent_color"
+                android:backgroundTint="@color/transparent_color"
+                android:hint="@string/contact_filter_hint"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/searchBar"
+                android:layout_alignRight="@id/searchBar"
+                android:layout_alignBottom="@id/searchBar"
+                android:onClick="@{() -> viewModel.clearFilter()}"
+                android:src="@drawable/field_clean" />
+
+        </RelativeLayout>
 
         <HorizontalScrollView
             android:id="@+id/layoutContactsSelected"
