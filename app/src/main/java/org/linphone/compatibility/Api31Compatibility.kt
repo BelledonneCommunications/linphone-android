@@ -215,8 +215,12 @@ class Api31Compatibility {
                     .setAutoEnterEnabled(enable)
                     .setAspectRatio(Compatibility.getPipRatio(activity, conference, !conference))
                     .build()
-                activity.setPictureInPictureParams(params)
-                Log.i("[Call] PiP auto enter enabled params set to $enable with ${if (conference) "portrait" else "landscape"} aspect ratio")
+                try {
+                    activity.setPictureInPictureParams(params)
+                    Log.i("[Call] PiP auto enter enabled params set to $enable with ${if (conference) "portrait" else "landscape"} aspect ratio")
+                } catch (e: Exception) {
+                    Log.e("[Call] Can't build PiP params: $e")
+                }
             }
         }
 
