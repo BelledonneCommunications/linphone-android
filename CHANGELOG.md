@@ -35,6 +35,7 @@ Group changes to describe their impact on the project, as follows:
 - Generated avatars in dark mode
 - Call state in self-managed TelecomManager service if it takes longer to be created than the call to be answered
 - Show service notification sooner to prevent crash if Core creation takes too long
+- Incoming call screen not being showed up to user (& screen staying off) when using app in Samsung secure folder
 - One to one chat room creation process waiting indefinitely if chat room already exists
 - "Blinking" in some views when presence is being received
 - Trying to keep the preferred driver (OpenSLES / AAudio) when switching device

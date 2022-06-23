@@ -116,12 +116,19 @@ class NotificationsManager(private val context: Context) {
             Log.i("[Notifications Manager] Call state changed [$state]")
 
             if (corePreferences.preventInterfaceFromShowingUp) {
-                Log.w("[Context] We were asked to not show the call notifications")
+                Log.w("[Notifications Manager] We were asked to not show the call notifications")
                 return
             }
 
             when (call.state) {
-                Call.State.IncomingEarlyMedia, Call.State.IncomingReceived -> displayIncomingCallNotification(call)
+                Call.State.IncomingEarlyMedia, Call.State.IncomingReceived -> {
+                    if (service != null) {
+                        Log.i("[Notifications Manager] Service isn't null, show incoming call notification")
+                        displayIncomingCallNotification(call, false)
+                    } else {
+                        Log.w("[Notifications Manager] No service found, waiting for it to start")
+                    }
+                }
                 Call.State.End, Call.State.Error -> dismissCallNotification(call)
                 Call.State.Released -> {
                     if (LinphoneUtils.isCallLogMissed(call.callLog)) {
@@ -341,7 +348,8 @@ class NotificationsManager(private val context: Context) {
                 val call = coreContext.core.currentCall ?: coreContext.core.calls[0]
                 when (call.state) {
                     Call.State.IncomingReceived, Call.State.IncomingEarlyMedia -> {
-                        Log.i("[Notifications Manager] Waiting for call to be in state Connected before creating service notification")
+                        Log.i("[Notifications Manager] Creating incoming call notification to be used as foreground service")
+                        displayIncomingCallNotification(call, true)
                     }
                     else -> {
                         Log.i("[Notifications Manager] Creating call notification to be used as foreground service")
@@ -373,6 +381,8 @@ class NotificationsManager(private val context: Context) {
             Log.i("[Notifications Manager] Starting service as foreground using call notification [$notificationId]")
             currentForegroundServiceNotificationId = notificationId
             service?.startForeground(currentForegroundServiceNotificationId, callNotification)
+        } else {
+            Log.w("[Notifications Manager] Can't start foreground service using notification id [$notificationId] (current foreground service notification id is [$currentForegroundServiceNotificationId]) and service [$service]")
         }
     }
 
@@ -470,9 +480,15 @@ class NotificationsManager(private val context: Context) {
         }
     }
 
-    private fun displayIncomingCallNotification(call: Call, useAsForeground: Boolean = false) {
+    fun displayIncomingCallNotification(call: Call, useAsForeground: Boolean) {
         if (coreContext.declineCallDueToGsmActiveCall()) {
             Log.w("[Notifications Manager] Call will be declined, do not show incoming call notification")
+            return
+        }
+
+        val notifiable = getNotifiableForCall(call)
+        if (notifiable.notificationId == currentForegroundServiceNotificationId) {
+            Log.i("[Notifications Manager] There is already a Service foreground notification for this incoming call, skipping")
             return
         }
 
@@ -487,15 +503,8 @@ class NotificationsManager(private val context: Context) {
             Log.e("[Notifications Manager] Failed to get android.provider.Settings.Secure.getInt(lock_screen_show_notifications): $e")
         }
 
-        val notifiable = getNotifiableForCall(call)
-        if (notifiable.notificationId == currentForegroundServiceNotificationId) {
-            Log.e("[Notifications Manager] There is already a Service foreground notification for an incoming call, cancelling it")
-            cancel(notifiable.notificationId)
-            currentForegroundServiceNotificationId = 0
-        }
-
         val incomingCallNotificationIntent = Intent(context, CallActivity::class.java)
-        incomingCallNotificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NO_USER_ACTION)
+        incomingCallNotificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NO_USER_ACTION or Intent.FLAG_FROM_BACKGROUND)
         val pendingIntent = PendingIntent.getActivity(
             context,
             0,
