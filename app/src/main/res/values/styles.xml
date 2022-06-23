@@ -298,6 +298,15 @@
 
     <!-- Chat related -->
 
+    <style name="chat_room_last_updated_time_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/primary_color</item>
+        <item name="android:textSize">16sp</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMinTextSize">8sp</item>
+        <item name="autoSizeMaxTextSize">16sp</item>
+        <item name="autoSizeStepGranularity">@dimen/settings_granularity_step</item>
+    </style>
+
     <style name="chat_message_reply_sender_font">
         <item name="android:textColor">@color/light_primary_text_color</item>
         <item name="android:textSize">13sp</item>

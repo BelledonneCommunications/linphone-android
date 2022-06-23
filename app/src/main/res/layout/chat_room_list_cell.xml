@@ -62,17 +62,16 @@
 
         <TextView
             android:id="@+id/date"
-            android:layout_width="wrap_content"
+            style="@style/chat_room_last_updated_time_font"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:paddingRight="10dp"
-            android:singleLine="true"
-            android:text="@{data.lastUpdate, default=`12:03`}"
-            android:textColor="?attr/accentColor"
-            android:textSize="16sp"
+            android:maxLines="1"
+            android:text="@{data.lastUpdate, default=`10:11 PM`}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/securityLevel"
             app:layout_constraintStart_toStartOf="@id/avatar"
+            app:layout_constraintEnd_toEndOf="@id/securityLevel"
             app:layout_constraintTop_toBottomOf="@id/avatar" />
 
         <TextView
