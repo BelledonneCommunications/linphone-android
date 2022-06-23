@@ -287,8 +287,18 @@ class Compatibility {
         ): Rational {
             val displayMetrics = DisplayMetrics()
             activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
-            val height = displayMetrics.heightPixels
-            val width = displayMetrics.widthPixels
+            var height = displayMetrics.heightPixels
+            var width = displayMetrics.widthPixels
+
+            val aspectRatio = width / height
+            if (aspectRatio < 1 / 2.39) {
+                height = 2.39.toInt()
+                width = 1
+            } else if (aspectRatio > 2.39) {
+                width = 2.39.toInt()
+                height = 1
+            }
+
             val ratio = if (width > height) {
                 if (forcePortrait) {
                     Rational(height, width)

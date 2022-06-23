@@ -65,10 +65,14 @@ class Api26Compatibility {
                 val params = PictureInPictureParams.Builder()
                     .setAspectRatio(Compatibility.getPipRatio(activity, conference, !conference))
                     .build()
-                if (!activity.enterPictureInPictureMode(params)) {
-                    Log.e("[Call] Failed to enter PiP mode")
-                } else {
-                    Log.i("[Call] Entering PiP mode with ${if (conference) "portrait" else "landscape"} aspect ratio")
+                try {
+                    if (!activity.enterPictureInPictureMode(params)) {
+                        Log.e("[Call] Failed to enter PiP mode")
+                    } else {
+                        Log.i("[Call] Entering PiP mode with ${if (conference) "portrait" else "landscape"} aspect ratio")
+                    }
+                } catch (e: Exception) {
+                    Log.e("[Call] Can't build PiP params: $e")
                 }
             }
         }
