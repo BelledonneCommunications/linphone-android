@@ -134,10 +134,15 @@ If your computer isn't used for Android development, you can download those tool
 
 Once you have the debug libraries and the proper tools installed, you can use the ```ndk-stack``` tool to symbolize your stacktrace. Note that you also need to know the architecture (armv7, arm64, x86, etc...) of the libraries that were used.
 
-Here's how to get the stacktrace and the right architecture from a device plugged to your computer:
+If you know the CPU architecture of your device (most probably arm64 if it's a recent device) you can use the following to get the stacktrace from a device plugged to a computer:
+```
+adb logcat -d | ndk-stack -sym ./libs-debug/arm64-v8a/
+```
+If you don't know the CPU architecture, use the following instead:
 ```
 adb logcat -d | ndk-stack -sym ./libs-debug/`adb shell getprop ro.product.cpu.abi | tr -d '\r'` 
 ```
+Warning: This command won't print anything until you reproduce the crash!
 
 ## Create an APK with a different package name
 
