@@ -160,6 +160,15 @@
             android:backgroundTint="@color/transparent_color"
             android:hint="@string/contact_filter_hint"/>
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/searchBar"
+            android:layout_alignRight="@id/searchBar"
+            android:layout_alignBottom="@id/searchBar"
+            android:onClick="@{() -> viewModel.clearFilter()}"
+            android:src="@drawable/field_clean" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -216,7 +225,7 @@
 
         <include
             layout="@layout/wait_layout"
-            bind:visibility="@{viewModel.waitForChatRoomCreation || viewModel.fetchInProgress}"/>
+            bind:visibility="@{viewModel.waitForChatRoomCreation || viewModel.fetchInProgress}" />
 
     </RelativeLayout>
 

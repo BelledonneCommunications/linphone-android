@@ -112,6 +112,10 @@ open class ContactsSelectionViewModel : MessageNotifierViewModel() {
         }
     }
 
+    fun clearFilter() {
+        filter.value = ""
+    }
+
     fun toggleSelectionForSearchResult(searchResult: SearchResult) {
         val address = searchResult.address
         if (address != null) {
