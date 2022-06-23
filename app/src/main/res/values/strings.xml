@@ -234,6 +234,7 @@
 
     <!-- Recordings -->
     <string name="recordings_empty_list">No recordings</string>
+    <string name="recordings_export">Export recording using…</string>
 
     <!-- Conferencing -->
     <string name="conference">Meeting</string>
@@ -861,4 +862,5 @@
     <string name="content_description_participant_is_paused">Participant has momentarily left the group call</string>
     <string name="content_description_toggle_conference_info_details">Toggle meeting information details visibility</string>
     <string name="content_description_conference_participants">Group call participants</string>
+    <string name="content_description_recording_export">Export recording</string>
 </resources>

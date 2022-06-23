@@ -163,6 +163,10 @@ class RecordingData(val path: String, private val recordingListener: RecordingLi
         }
     }
 
+    fun export() {
+        recordingListener.onExportClicked(path)
+    }
+
     private fun initPlayer() {
         // In case no headphones/headset is connected, use speaker sound card to play recordings, otherwise use earpiece
         // If none are available, default one will be used
@@ -218,5 +222,6 @@ class RecordingData(val path: String, private val recordingListener: RecordingLi
     interface RecordingListener {
         fun onPlayingStarted(videoAvailable: Boolean)
         fun onPlayingEnded()
+        fun onExportClicked(path: String)
     }
 }
