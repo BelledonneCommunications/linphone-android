@@ -27,12 +27,17 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.activities.main.recordings.data.RecordingData
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
+import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 
 class RecordingsViewModel : ViewModel() {
     val recordingsList = MutableLiveData<ArrayList<RecordingData>>()
 
     val isVideoVisible = MutableLiveData<Boolean>()
+
+    val exportRecordingEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
 
     private var recordingPlayingAudioFocusRequest: AudioFocusRequestCompat? = null
 
@@ -55,6 +60,10 @@ class RecordingsViewModel : ViewModel() {
             }
 
             isVideoVisible.value = false
+        }
+
+        override fun onExportClicked(path: String) {
+            exportRecordingEvent.value = Event(path)
         }
     }
 
@@ -93,7 +102,7 @@ class RecordingsViewModel : ViewModel() {
         val list = arrayListOf<RecordingData>()
 
         for (f in FileUtils.getFileStorageDir().listFiles().orEmpty()) {
-            Log.i("[Recordings] Found file ${f.path}")
+            Log.d("[Recordings] Found file ${f.path}")
             if (RecordingData.RECORD_PATTERN.matcher(f.path).matches()) {
                 list.add(
                     RecordingData(

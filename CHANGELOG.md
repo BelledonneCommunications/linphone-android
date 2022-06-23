@@ -19,6 +19,7 @@ Group changes to describe their impact on the project, as follows:
 - Image & Video in-app viewers allow for full-screen display
 - Display name can be set during assistant when creating / logging in a sip.linphone.org account
 - Android 13 support, using new post notifications & media permissions
+- Call recordings can be exported
 
 ### Changed
 - In-call views have been re-designed

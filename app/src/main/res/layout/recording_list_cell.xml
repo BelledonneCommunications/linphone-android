@@ -58,7 +58,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@id/delete"
+            android:layout_toLeftOf="@id/export"
             android:layout_toRightOf="@id/record_play_pause">
 
             <LinearLayout
@@ -70,9 +70,9 @@
                 android:layout_alignParentTop="true">
 
                 <TextView
-                    android:text="@{data.name}"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:text="@{data.name}" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -80,9 +80,9 @@
                     android:text=" - " />
 
                 <TextView
-                    android:text="@{data.formattedDate}"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:text="@{data.formattedDate}" />
 
             </LinearLayout>
 
@@ -96,10 +96,10 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:text="@{data.formattedPosition}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center" />
+                    android:layout_gravity="center"
+                    android:text="@{data.formattedPosition}" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -107,26 +107,36 @@
                     android:text="/" />
 
                 <TextView
-                    android:text="@{data.formattedDuration}"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:text="@{data.formattedDuration}" />
 
             </LinearLayout>
 
             <SeekBar
                 android:id="@+id/record_progression_bar"
                 onProgressChanged="@{(progress) -> data.onProgressChanged(progress)}"
-                android:max="@{data.duration}"
-                android:progress="@{data.position}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
+                android:layout_marginRight="5dp"
+                android:layout_alignParentEnd="true"
+                android:max="@{data.duration}"
+                android:progress="@{data.position}"
                 android:progressTint="?attr/accentColor"
                 android:thumbTint="?attr/accentColor" />
 
         </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/export"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:onClick="@{() -> data.export()}"
+            android:src="@drawable/icon_share" />
 
     </RelativeLayout>
 
