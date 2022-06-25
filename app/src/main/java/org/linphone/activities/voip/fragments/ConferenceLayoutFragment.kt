@@ -21,7 +21,6 @@ package org.linphone.activities.voip.fragments
 
 import android.os.Bundle
 import android.view.View
-import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.navGraphViewModels
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -66,7 +65,7 @@ class ConferenceLayoutFragment : GenericFragment<VoipConferenceLayoutFragmentBin
         }
 
         binding.setDismissDialogClickListener {
-            val dialog = binding.root.findViewById<LinearLayout>(R.id.too_many_participants_dialog)
+            val dialog = binding.root.findViewById<ConstraintLayout>(R.id.too_many_participants_dialog)
             dialog?.visibility = View.GONE
         }
     }
