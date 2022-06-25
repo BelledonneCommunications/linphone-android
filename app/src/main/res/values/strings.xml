@@ -283,6 +283,7 @@
     <string name="conference_too_many_participants_for_mosaic_layout">There is too many participants for mosaic layout, switching to active speaker</string>
     <string name="conference_participant_paused">(paused)</string>
     <string name="conference_no_schedule">No scheduled meeting yet.</string>
+    <string name="conference_no_terminated_schedule">No terminated meeting yet.</string>
     <string name="conference_schedule_organizer">Organizer:</string>
     <string name="conference_go_to_chat">Meeting\'s chat room</string>
     <string name="conference_creation_failed">Failed to create meeting</string>
@@ -302,6 +303,8 @@
     <string name="conference_start_group_call_dialog_title">Group call</string>
     <string name="conference_start_group_call_dialog_message">Do you want to start a group call?\nEveryone in this group will receive a call to join the meeting.</string>
     <string name="conference_start_group_call_dialog_ok_button">Start</string>
+    <string name="conference_scheduled_terminated_filter">Terminated</string>
+    <string name="conference_scheduled_future_filter">Scheduled</string>
 
     <!-- Call -->
     <string name="call_incoming_title">Incoming Call</string>

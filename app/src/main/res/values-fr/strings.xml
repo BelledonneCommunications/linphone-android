@@ -733,4 +733,7 @@
     <string name="chat_room_context_menu_go_to_contact">Voir le contact</string>
     <string name="recordings_export">Exporter l\'enregistrement avec…</string>
     <string name="content_description_recording_export">Exporter l\'enregistrement</string>
+    <string name="conference_no_terminated_schedule">Aucune réunion terminée pour le moment.</string>
+    <string name="conference_scheduled_terminated_filter">Terminées</string>
+    <string name="conference_scheduled_future_filter">Programmées</string>
 </resources>

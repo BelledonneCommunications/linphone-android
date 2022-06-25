@@ -22,6 +22,7 @@ package org.linphone.activities.main.conference.data
 import androidx.lifecycle.MutableLiveData
 import java.util.concurrent.TimeUnit
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
 import org.linphone.core.ConferenceInfo
 import org.linphone.core.tools.Log
 import org.linphone.utils.LinphoneUtils
@@ -29,6 +30,8 @@ import org.linphone.utils.TimestampUtils
 
 class ScheduledConferenceData(val conferenceInfo: ConferenceInfo) {
     val expanded = MutableLiveData<Boolean>()
+    val isFinished = MutableLiveData<Boolean>()
+    val backgroundResId = MutableLiveData<Int>()
 
     val address = MutableLiveData<String>()
     val subject = MutableLiveData<String>()
@@ -76,6 +79,11 @@ class ScheduledConferenceData(val conferenceInfo: ConferenceInfo) {
             Log.e("[Scheduled Conference] No organizer SIP URI found for: ${conferenceInfo.uri?.asStringUriOnly()}")
         }
 
+        val now = System.currentTimeMillis() / 1000 // Linphone uses time_t in seconds
+        val limit = conferenceInfo.dateTime + conferenceInfo.duration
+        isFinished.value = limit < now
+        computeBackgroundResId()
+
         computeParticipantsLists()
     }
 
@@ -88,6 +96,23 @@ class ScheduledConferenceData(val conferenceInfo: ConferenceInfo) {
 
     fun toggleExpand() {
         expanded.value = expanded.value == false
+        computeBackgroundResId()
+    }
+
+    private fun computeBackgroundResId() {
+        backgroundResId.value = if (isFinished.value == true) {
+            if (expanded.value == true) {
+                R.drawable.shape_round_dark_gray_background_with_orange_border
+            } else {
+                R.drawable.shape_round_dark_gray_background
+            }
+        } else {
+            if (expanded.value == true) {
+                R.drawable.shape_round_gray_background_with_orange_border
+            } else {
+                R.drawable.shape_round_gray_background
+            }
+        }
     }
 
     private fun computeParticipantsLists() {
