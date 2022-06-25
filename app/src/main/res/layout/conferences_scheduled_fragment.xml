@@ -60,11 +60,45 @@
 
         </LinearLayout>
 
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/top_bar"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp">
+
+            <com.google.android.material.chip.Chip
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onCheckedChanged="@{() -> viewModel.applyFilter()}"
+                android:checked="@={viewModel.showTerminated, default=false}"
+                android:text="@string/conference_scheduled_terminated_filter" />
+
+            <com.google.android.material.chip.Chip
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onCheckedChanged="@{() -> viewModel.applyFilter()}"
+                android:checked="@={!viewModel.showTerminated, default=true}"
+                android:text="@string/conference_scheduled_future_filter" />
+
+        </com.google.android.material.chip.ChipGroup>
+
+        <View
+            android:id="@+id/divider"
+            android:layout_below="@id/chips"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:background="?attr/dividerColor" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/conference_info_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/top_bar" />
+            android:layout_marginBottom="10dp"
+            android:layout_below="@id/divider" />
 
         <TextView
             style="@style/empty_list_font"
@@ -73,8 +107,16 @@
             android:layout_centerVertical="true"
             android:gravity="center"
             android:text="@string/conference_no_schedule"
-            android:visibility="@{viewModel.conferences.empty ? View.VISIBLE : View.GONE}" />
+            android:visibility="@{!viewModel.showTerminated &amp;&amp; viewModel.conferences.empty ? View.VISIBLE : View.GONE}" />
 
+        <TextView
+            style="@style/empty_list_font"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="@string/conference_no_terminated_schedule"
+            android:visibility="@{viewModel.showTerminated &amp;&amp; viewModel.conferences.empty ? View.VISIBLE : View.GONE, default=gone}" />
     </RelativeLayout>
 
 </layout>

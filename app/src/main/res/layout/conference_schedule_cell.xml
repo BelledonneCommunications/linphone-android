@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="5dp"
-            android:background="@{data.expanded ? @drawable/shape_round_gray_background_with_orange_border : @drawable/shape_round_gray_background, default=@drawable/shape_round_gray_background}">
+            backgroundImage="@{data.backgroundResId, default=@drawable/shape_round_gray_background}">
 
             <RelativeLayout
                 android:layout_width="match_parent"

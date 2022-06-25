@@ -31,6 +31,8 @@ import org.linphone.core.tools.Log
 class ScheduledConferencesViewModel : ViewModel() {
     val conferences = MutableLiveData<ArrayList<ScheduledConferenceData>>()
 
+    val showTerminated = MutableLiveData<Boolean>()
+
     private val listener = object : CoreListenerStub() {
         override fun onConferenceInfoReceived(core: Core, conferenceInfo: ConferenceInfo) {
             Log.i("[Scheduled Conferences] New conference info received")
@@ -40,6 +42,9 @@ class ScheduledConferencesViewModel : ViewModel() {
 
     init {
         coreContext.core.addListener(listener)
+
+        showTerminated.value = false
+
         computeConferenceInfoList()
     }
 
@@ -47,6 +52,10 @@ class ScheduledConferencesViewModel : ViewModel() {
         coreContext.core.removeListener(listener)
         conferences.value.orEmpty().forEach(ScheduledConferenceData::destroy)
         super.onCleared()
+    }
+
+    fun applyFilter() {
+        computeConferenceInfoList()
     }
 
     fun deleteConferenceInfo(data: ScheduledConferenceData) {
@@ -66,11 +75,22 @@ class ScheduledConferencesViewModel : ViewModel() {
         val conferencesList = arrayListOf<ScheduledConferenceData>()
 
         val now = System.currentTimeMillis() / 1000 // Linphone uses time_t in seconds
-        val oneHourAgo = now - 3600 // Show all conferences from 1 hour ago and forward
-        for (conferenceInfo in coreContext.core.getConferenceInformationListAfterTime(oneHourAgo)) {
-            if (conferenceInfo.duration == 0) continue // This isn't a scheduled conference, don't display it
-            val data = ScheduledConferenceData(conferenceInfo)
-            conferencesList.add(data)
+
+        if (showTerminated.value == true) {
+            for (conferenceInfo in coreContext.core.conferenceInformationList) {
+                if (conferenceInfo.duration == 0) continue // This isn't a scheduled conference, don't display it
+                val limit = conferenceInfo.dateTime + conferenceInfo.duration
+                if (limit >= now) continue // This isn't a terminated conference, don't display it
+                val data = ScheduledConferenceData(conferenceInfo)
+                conferencesList.add(data)
+            }
+        } else {
+            val oneHourAgo = now - 7200 // Show all conferences from 2 hours ago and forward
+            for (conferenceInfo in coreContext.core.getConferenceInformationListAfterTime(oneHourAgo)) {
+                if (conferenceInfo.duration == 0) continue // This isn't a scheduled conference, don't display it
+                val data = ScheduledConferenceData(conferenceInfo)
+                conferencesList.add(data)
+            }
         }
 
         conferences.value = conferencesList
