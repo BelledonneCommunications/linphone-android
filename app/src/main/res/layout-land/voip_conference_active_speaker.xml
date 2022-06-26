@@ -51,14 +51,53 @@
             app:barrierDirection="bottom"
             app:constraint_referenced_ids="header, remote_recording"/>
 
+        <org.linphone.activities.voip.views.ScrollDotsView
+            android:id="@+id/scroll_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{controlsViewModel.pipMode ? View.GONE : View.VISIBLE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/top_barrier"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="5dp"
+            app:dotColor="@color/voip_gray_dots"
+            app:dotRadius="5dp"
+            app:scrollView="@id/miniatures"
+            app:itemCount="@{conferenceViewModel.conferenceParticipantDevices.size()}"
+            app:selectedDot="@{0}"
+            app:selectedDotColor="@color/voip_dark_gray" />
+
+        <ScrollView
+            android:id="@+id/miniatures"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            app:layout_constraintTop_toBottomOf="@id/top_barrier"
+            app:layout_constraintEnd_toStartOf="@id/scroll_indicator"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:scrollbars="none">
+
+            <com.google.android.flexbox.FlexboxLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:alignItems="stretch"
+                app:entries="@{conferenceViewModel.conferenceParticipantDevices}"
+                app:flexDirection="column"
+                app:flexWrap="nowrap"
+                app:justifyContent="flex_start"
+                app:layout="@{@layout/voip_conference_participant_remote_active_speaker_miniature}" />
+
+        </ScrollView>
+
         <View
             android:id="@+id/active_speaker_background"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintTop_toBottomOf="@id/top_barrier"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/miniatures"
+            app:layout_constraintEnd_toStartOf="@id/miniatures"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginTop="@{controlsViewModel.fullScreenMode ? @dimen/margin_0dp : @dimen/voip_active_speaker_top_margin, default=@dimen/voip_active_speaker_top_margin}"
             android:background="@drawable/shape_remote_background"
             android:onClick="@{() -> controlsViewModel.toggleFullScreen()}"/>
@@ -67,15 +106,14 @@
             android:id="@+id/speaking_participant_avatar"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="10dp"
             android:contentDescription="@null"
             coilVoipContact="@{conferenceViewModel.speakingParticipant}"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintBottom_toTopOf="@id/miniatures"
+            app:layout_constraintBottom_toBottomOf="@id/active_speaker_background"
             app:layout_constraintEnd_toEndOf="@id/active_speaker_background"
             app:layout_constraintHeight_max="@dimen/voip_contact_avatar_max_size"
             app:layout_constraintStart_toStartOf="@id/active_speaker_background"
-            app:layout_constraintTop_toBottomOf="@id/top_barrier"
+            app:layout_constraintTop_toTopOf="@id/active_speaker_background"
             app:layout_constraintWidth_max="@dimen/voip_contact_avatar_max_size" />
 
         <org.linphone.activities.voip.views.RoundCornersTextureView
@@ -98,43 +136,6 @@
             android:text="@{conferenceViewModel.speakingParticipant.contact.name ?? conferenceViewModel.speakingParticipant.displayName}"
             app:layout_constraintBottom_toBottomOf="@id/active_speaker_background"
             app:layout_constraintStart_toStartOf="@id/active_speaker_background" />
-
-        <HorizontalScrollView
-            android:id="@+id/miniatures"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/scroll_indicator"
-            android:scrollbars="none">
-
-            <com.google.android.flexbox.FlexboxLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                app:alignItems="stretch"
-                app:entries="@{conferenceViewModel.conferenceParticipantDevices}"
-                app:flexDirection="row"
-                app:flexWrap="nowrap"
-                app:justifyContent="flex_start"
-                app:layout="@{@layout/voip_conference_participant_remote_active_speaker_miniature}" />
-
-        </HorizontalScrollView>
-
-        <org.linphone.activities.voip.views.ScrollDotsView
-            android:id="@+id/scroll_indicator"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="@{controlsViewModel.pipMode ? View.GONE : View.VISIBLE}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="5dp"
-            app:dotColor="@color/voip_gray_dots"
-            app:dotRadius="5dp"
-            app:scrollView="@id/miniatures"
-            app:itemCount="@{conferenceViewModel.conferenceParticipantDevices.size()}"
-            app:selectedDot="@{0}"
-            app:selectedDotColor="@color/voip_dark_gray" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

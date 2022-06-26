@@ -50,7 +50,7 @@ import org.linphone.R
 import org.linphone.activities.GenericActivity
 import org.linphone.activities.main.settings.SettingListener
 import org.linphone.activities.voip.data.ConferenceParticipantDeviceData
-import org.linphone.activities.voip.views.HorizontalScrollDotsView
+import org.linphone.activities.voip.views.ScrollDotsView
 import org.linphone.contact.ContactAvatarGenerator
 import org.linphone.contact.ContactDataInterface
 import org.linphone.contact.getPictureUri
@@ -641,6 +641,14 @@ fun setConstraintLayoutMargins(view: View, margins: Float) {
     view.layoutParams = params
 }
 
+@BindingAdapter("android:layout_marginTop")
+fun setConstraintLayoutTopMargin(view: View, margins: Float) {
+    val params = view.layoutParams as ConstraintLayout.LayoutParams
+    val m = margins.toInt()
+    params.setMargins(params.leftMargin, m, params.rightMargin, params.bottomMargin)
+    view.layoutParams = params
+}
+
 @BindingAdapter("android:onTouch")
 fun View.setTouchListener(listener: View.OnTouchListener) {
     setOnTouchListener(listener)
@@ -691,11 +699,11 @@ fun setParticipantTextureView(
 }
 
 @BindingAdapter("itemCount")
-fun HorizontalScrollDotsView.setItems(count: Int) {
+fun ScrollDotsView.setItems(count: Int) {
     setItemCount(count)
 }
 
 @BindingAdapter("selectedDot")
-fun HorizontalScrollDotsView.setSelectedIndex(index: Int) {
+fun ScrollDotsView.setSelectedIndex(index: Int) {
     setSelectedDot(index)
 }

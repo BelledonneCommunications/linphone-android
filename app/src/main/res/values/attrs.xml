@@ -75,13 +75,13 @@
         </attr>
     </declare-styleable>
 
-    <declare-styleable name="HorizontalScrollDot">
+    <declare-styleable name="ScrollDot">
         <attr name="dotCount" format="integer" />
         <attr name="itemCount" format="integer" />
         <attr name="dotColor" format="color" />
         <attr name="selectedDotColor" format="color" />
         <attr name="selectedDot" format="integer" />
         <attr name="dotRadius" format="dimension" />
-        <attr name="horizontalScrollView" format="reference" />
+        <attr name="scrollView" format="reference" />
     </declare-styleable>
 </resources>
