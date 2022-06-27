@@ -175,34 +175,45 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
         )
         val swipeListener = object : RecyclerViewSwipeListener {
             override fun onLeftToRightSwipe(viewHolder: RecyclerView.ViewHolder) {
-                val chatRoomViewModel = adapter.currentList[viewHolder.bindingAdapterPosition]
-                chatRoomViewModel.chatRoom.markAsRead()
-                adapter.notifyItemChanged(viewHolder.bindingAdapterPosition)
+                val index = viewHolder.bindingAdapterPosition
+                if (index < 0 || index >= adapter.currentList.size) {
+                    Log.e("[Chat] Index is out of bound, can't mark chat room as read")
+                } else {
+                    val chatRoomViewModel = adapter.currentList[index]
+                    chatRoomViewModel.chatRoom.markAsRead()
+                    adapter.notifyItemChanged(index)
+                }
             }
 
             override fun onRightToLeftSwipe(viewHolder: RecyclerView.ViewHolder) {
                 val viewModel = DialogViewModel(getString(R.string.chat_room_delete_one_dialog))
                 val dialog: Dialog = DialogUtils.getDialog(requireContext(), viewModel)
 
-                viewModel.showCancelButton {
-                    adapter.notifyItemChanged(viewHolder.bindingAdapterPosition)
-                    dialog.dismiss()
-                }
-
-                viewModel.showDeleteButton(
-                    {
-                        val deletedChatRoom = adapter.currentList[viewHolder.bindingAdapterPosition].chatRoom
-                        listViewModel.deleteChatRoom(deletedChatRoom)
-                        if (!binding.slidingPane.isSlideable &&
-                            deletedChatRoom == sharedViewModel.selectedChatRoom.value
-                        ) {
-                            Log.i("[Chat] Currently displayed chat room has been deleted, removing detail fragment")
-                            clearDisplayedChatRoom()
-                        }
+                val index = viewHolder.bindingAdapterPosition
+                if (index < 0 || index >= adapter.currentList.size) {
+                    Log.e("[Chat] Index is out of bound, can't delete chat room")
+                } else {
+                    viewModel.showCancelButton {
+                        adapter.notifyItemChanged(index)
                         dialog.dismiss()
-                    },
-                    getString(R.string.dialog_delete)
-                )
+                    }
+
+                    viewModel.showDeleteButton(
+                        {
+                            val deletedChatRoom =
+                                adapter.currentList[index].chatRoom
+                            listViewModel.deleteChatRoom(deletedChatRoom)
+                            if (!binding.slidingPane.isSlideable &&
+                                deletedChatRoom == sharedViewModel.selectedChatRoom.value
+                            ) {
+                                Log.i("[Chat] Currently displayed chat room has been deleted, removing detail fragment")
+                                clearDisplayedChatRoom()
+                            }
+                            dialog.dismiss()
+                        },
+                        getString(R.string.dialog_delete)
+                    )
+                }
 
                 dialog.show()
             }

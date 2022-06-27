@@ -158,25 +158,30 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
                 val viewModel = DialogViewModel(getString(R.string.history_delete_one_dialog))
                 val dialog: Dialog = DialogUtils.getDialog(requireContext(), viewModel)
 
-                viewModel.showCancelButton {
-                    adapter.notifyItemChanged(viewHolder.bindingAdapterPosition)
-                    dialog.dismiss()
-                }
-
-                viewModel.showDeleteButton(
-                    {
-                        val deletedCallGroup = adapter.currentList[viewHolder.bindingAdapterPosition]
-                        listViewModel.deleteCallLogGroup(deletedCallGroup)
-                        if (!binding.slidingPane.isSlideable &&
-                            deletedCallGroup.lastCallLog.callId == sharedViewModel.selectedCallLogGroup.value?.lastCallLog?.callId
-                        ) {
-                            Log.i("[History] Currently displayed history has been deleted, removing detail fragment")
-                            clearDisplayedCallHistory()
-                        }
+                val index = viewHolder.bindingAdapterPosition
+                if (index < 0 || index >= adapter.currentList.size) {
+                    Log.e("[History] Index is out of bound, can't delete call log")
+                } else {
+                    viewModel.showCancelButton {
+                        adapter.notifyItemChanged(index)
                         dialog.dismiss()
-                    },
-                    getString(R.string.dialog_delete)
-                )
+                    }
+
+                    viewModel.showDeleteButton(
+                        {
+                            val deletedCallGroup = adapter.currentList[index]
+                            listViewModel.deleteCallLogGroup(deletedCallGroup)
+                            if (!binding.slidingPane.isSlideable &&
+                                deletedCallGroup.lastCallLog.callId == sharedViewModel.selectedCallLogGroup.value?.lastCallLog?.callId
+                            ) {
+                                Log.i("[History] Currently displayed history has been deleted, removing detail fragment")
+                                clearDisplayedCallHistory()
+                            }
+                            dialog.dismiss()
+                        },
+                        getString(R.string.dialog_delete)
+                    )
+                }
 
                 dialog.show()
             }
