@@ -49,7 +49,7 @@ class ConferenceLayoutFragment : GenericFragment<VoipConferenceLayoutFragmentBin
         conferenceViewModel.conferenceParticipantDevices.observe(
             viewLifecycleOwner
         ) {
-            if (it.size > conferenceViewModel.maxParticipantsForMosaicLayout) {
+            if (it.size > conferenceViewModel.maxParticipantsForMosaicLayout && conferenceViewModel.conferenceDisplayMode.value == ConferenceDisplayMode.GRID) {
                 showTooManyParticipantsForMosaicLayoutDialog()
             }
         }
