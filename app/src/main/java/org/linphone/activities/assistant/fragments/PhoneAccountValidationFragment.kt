@@ -24,6 +24,7 @@ import android.content.Context.CLIPBOARD_SERVICE
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.GenericFragment
@@ -73,12 +74,16 @@ class PhoneAccountValidationFragment : GenericFragment<AssistantPhoneAccountVali
                         }
                     }
                     viewModel.isLinking.value == true -> {
-                        val args = Bundle()
-                        args.putString(
-                            "Identity",
-                            "sip:${viewModel.accountCreator.username}@${viewModel.accountCreator.domain}"
-                        )
-                        navigateToAccountSettings(args)
+                        if (findNavController().graph.id == R.id.settings_nav_graph_xml) {
+                            val args = Bundle()
+                            args.putString(
+                                "Identity",
+                                "sip:${viewModel.accountCreator.username}@${viewModel.accountCreator.domain}"
+                            )
+                            navigateToAccountSettings(args)
+                        } else {
+                            requireActivity().finish()
+                        }
                     }
                 }
             }

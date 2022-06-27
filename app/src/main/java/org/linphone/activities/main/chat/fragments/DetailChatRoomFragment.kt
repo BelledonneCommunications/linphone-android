@@ -241,24 +241,32 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         )
         val swipeListener = object : RecyclerViewSwipeListener {
             override fun onLeftToRightSwipe(viewHolder: RecyclerView.ViewHolder) {
-                adapter.notifyItemChanged(viewHolder.bindingAdapterPosition)
+                val index = viewHolder.bindingAdapterPosition
+                if (index < 0 || index >= adapter.currentList.size) {
+                    Log.e("[Chat Room] Index is out of bound, can't reply to chat message")
+                } else {
+                    adapter.notifyItemChanged(index)
 
-                val chatMessageEventLog = adapter.currentList[viewHolder.bindingAdapterPosition]
-                val chatMessage = chatMessageEventLog.eventLog.chatMessage
-                if (chatMessage != null) {
-                    chatSendingViewModel.pendingChatMessageToReplyTo.value?.destroy()
-                    chatSendingViewModel.pendingChatMessageToReplyTo.value =
-                        ChatMessageData(chatMessage)
-                    chatSendingViewModel.isPendingAnswer.value = true
+                    val chatMessageEventLog = adapter.currentList[index]
+                    val chatMessage = chatMessageEventLog.eventLog.chatMessage
+                    if (chatMessage != null) {
+                        chatSendingViewModel.pendingChatMessageToReplyTo.value?.destroy()
+                        chatSendingViewModel.pendingChatMessageToReplyTo.value =
+                            ChatMessageData(chatMessage)
+                        chatSendingViewModel.isPendingAnswer.value = true
+                    }
                 }
             }
 
             override fun onRightToLeftSwipe(viewHolder: RecyclerView.ViewHolder) {
-                val position = viewHolder.bindingAdapterPosition
-                // adapter.notifyItemRemoved(viewHolder.bindingAdapterPosition)
-
-                val eventLog = adapter.currentList[position]
-                addDeleteMessageTaskToQueue(eventLog, position)
+                val index = viewHolder.bindingAdapterPosition
+                if (index < 0 || index >= adapter.currentList.size) {
+                    Log.e("[Chat Room] Index is out of bound, can't delete chat message")
+                } else {
+                    // adapter.notifyItemRemoved(index)
+                    val eventLog = adapter.currentList[index]
+                    addDeleteMessageTaskToQueue(eventLog, index)
+                }
             }
         }
         RecyclerViewSwipeUtils(ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT, swipeConfiguration, swipeListener)
@@ -421,7 +429,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 var path = content.filePath.orEmpty()
 
                 if (path.isNotEmpty() && !File(path).exists()) {
-                    Log.e("[Chat Message] File not found: $path")
+                    Log.e("[Chat Room] File not found: $path")
                     (requireActivity() as MainActivity).showSnackBar(R.string.chat_room_file_not_found)
                 } else {
                     if (path.isEmpty()) {
@@ -431,18 +439,18 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                             FileUtils.writeIntoFile(content.buffer, file)
                             path = file.absolutePath
                             content.filePath = path
-                            Log.i("[Chat Message] Content file path was empty, created file from buffer at $path")
+                            Log.i("[Chat Room] Content file path was empty, created file from buffer at $path")
                         } else if (content.isIcalendar) {
                             val name = "conference.ics"
                             val file = FileUtils.getFileStoragePath(name)
                             FileUtils.writeIntoFile(content.buffer, file)
                             path = file.absolutePath
                             content.filePath = path
-                            Log.i("[Chat Message] Content file path was empty, created conference.ics from buffer at $path")
+                            Log.i("[Chat Room] Content file path was empty, created conference.ics from buffer at $path")
                         }
                     }
 
-                    Log.i("[Chat Message] Opening file: $path")
+                    Log.i("[Chat Room] Opening file: $path")
                     sharedViewModel.contentToOpen.value = content
 
                     if (corePreferences.useInAppFileViewerForNonEncryptedFiles || content.isFileEncrypted) {
@@ -466,7 +474,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                             )
                             else -> {
                                 if (content.isFileEncrypted) {
-                                    Log.w("[Chat Message] File is encrypted and can't be opened in one of our viewers...")
+                                    Log.w("[Chat Room] File is encrypted and can't be opened in one of our viewers...")
                                     showDialogForUserConsentBeforeExportingFileInThirdPartyApp(
                                         content
                                     )
@@ -654,11 +662,11 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             viewLifecycleOwner
         ) {
             it.consume { uri ->
-                Log.i("[Chat] Found rich content URI: $uri")
+                Log.i("[Chat Room] Found rich content URI: $uri")
                 lifecycleScope.launch {
                     withContext(Dispatchers.Main) {
                         val path = FileUtils.getFilePath(requireContext(), uri)
-                        Log.i("[Chat] Rich content URI: $uri matching path is: $path")
+                        Log.i("[Chat Room] Rich content URI: $uri matching path is: $path")
                         if (path != null) {
                             chatSendingViewModel.addAttachment(path)
                         }
@@ -1053,18 +1061,22 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             val tempFileName = System.currentTimeMillis().toString() + ".jpeg"
             val file = FileUtils.getFileStoragePath(tempFileName)
             chatSendingViewModel.temporaryFileUploadPath = file
-            val publicUri = FileProvider.getUriForFile(
-                requireContext(),
-                requireContext().getString(R.string.file_provider),
-                file
-            )
-            capturePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, publicUri)
-            capturePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            capturePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-            intentsList.add(capturePictureIntent)
+            try {
+                val publicUri = FileProvider.getUriForFile(
+                    requireContext(),
+                    requireContext().getString(R.string.file_provider),
+                    file
+                )
+                capturePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, publicUri)
+                capturePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                capturePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                intentsList.add(capturePictureIntent)
 
-            val captureVideoIntent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
-            intentsList.add(captureVideoIntent)
+                val captureVideoIntent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
+                intentsList.add(captureVideoIntent)
+            } catch (e: Exception) {
+                Log.e("[Chat Room] Failed to pick file: $e")
+            }
         }
 
         val chooserIntent =
@@ -1109,10 +1121,10 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 lifecycleScope.launch {
                     Log.w("[Chat Room] Content is encrypted, requesting plain file path")
                     val plainFilePath = content.exportPlainFile()
-                    Log.i("[Cht Room] Making a copy of [$plainFilePath] to the cache directory before exporting it")
+                    Log.i("[Chat Room] Making a copy of [$plainFilePath] to the cache directory before exporting it")
                     val cacheCopyPath = FileUtils.copyFileToCache(plainFilePath)
                     if (cacheCopyPath != null) {
-                        Log.i("[Cht Room] Cache copy has been made: $cacheCopyPath")
+                        Log.i("[Chat Room] Cache copy has been made: $cacheCopyPath")
                         FileUtils.deleteFile(plainFilePath)
                         if (!FileUtils.openFileInThirdPartyApp(requireActivity(), cacheCopyPath)) {
                             showDialogToSuggestOpeningFileAsText()
