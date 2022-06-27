@@ -38,6 +38,7 @@ import org.linphone.utils.AppUtils
 
 class ScrollDotsView : View {
     private var count = 2
+    private var itemCount = 0
     private var selected = 0
 
     private var radius: Float = 5f
@@ -55,7 +56,7 @@ class ScrollDotsView : View {
     private lateinit var scrollView: FrameLayout
     private var isHorizontal = false
 
-    private val scrollListener = OnScrollChangeListener { v, scrollX, _, _, _ ->
+    private val scrollListener = OnScrollChangeListener { v, scrollX, scrollY, _, _ ->
         if (isHorizontal) {
             if (v !is HorizontalScrollView) {
                 Log.e("[Scoll Dots] ScrollView reference isn't a HorizontalScrollView!")
@@ -128,7 +129,6 @@ class ScrollDotsView : View {
                 selected = getInt(R.styleable.ScrollDot_selectedDot, 1)
 
                 scrollViewRef = getResourceId(R.styleable.ScrollDot_scrollView, 0)
-                Log.d("[Scroll Dots] ScrollView reference set is $scrollViewRef")
 
                 invalidate()
             } catch (e: Exception) {
@@ -160,26 +160,6 @@ class ScrollDotsView : View {
         Log.d("[Scroll Dots] Screen size is $screenWidth/$screenHeight and item size is $itemWidth/$itemHeight")
     }
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-
-        if (scrollViewRef > 0) {
-            try {
-                scrollView = (parent as View).findViewById(scrollViewRef)
-                scrollView.setOnScrollChangeListener(scrollListener)
-                Log.d("[Scroll Dots] ScrollView scroll listener set")
-
-                if (scrollView is HorizontalScrollView) {
-                    isHorizontal = true
-                }
-            } catch (e: Exception) {
-                Log.e("[Scroll Dots] Failed to find ScrollView from id $scrollViewRef: $e")
-            }
-        } else {
-            Log.e("[Scroll Dots] No ScrollView reference given")
-        }
-    }
-
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
@@ -207,6 +187,8 @@ class ScrollDotsView : View {
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
+        checkOrientation()
+
         if (isHorizontal) {
             val width = ((radius * 2 + margin) * count + margin).toInt()
             val height: Int = (radius * 2).toInt()
@@ -218,6 +200,24 @@ class ScrollDotsView : View {
         }
     }
 
+    private fun checkOrientation() {
+        if (scrollViewRef > 0) {
+            try {
+                scrollView = (parent as View).findViewById(scrollViewRef)
+                scrollView.setOnScrollChangeListener(scrollListener)
+                Log.d("[Scroll Dots] ScrollView scroll listener set")
+                isHorizontal = scrollView is HorizontalScrollView
+                Log.d("[Scroll Dots] ScrollView is horizontal ? $isHorizontal")
+                requestLayout()
+                setItemCount(itemCount)
+            } catch (e: Exception) {
+                Log.e("[Scroll Dots] Failed to find ScrollView from id $scrollViewRef: $e")
+            }
+        } else {
+            Log.e("[Scroll Dots] No ScrollView reference given")
+        }
+    }
+
     private fun setDotCount(count: Int) {
         this.count = count
         requestLayout()
@@ -225,6 +225,7 @@ class ScrollDotsView : View {
     }
 
     fun setItemCount(items: Int) {
+        itemCount = items
         if (isHorizontal) {
             val itemsPerScreen = (screenWidth / itemWidth)
             val dots = ceil(items.toDouble() / itemsPerScreen).toInt()
@@ -233,7 +234,7 @@ class ScrollDotsView : View {
         } else {
             val itemsPerScreen = (screenHeight / itemHeight)
             val dots = ceil(items.toDouble() / itemsPerScreen).toInt()
-            Log.d("[Vertical Scroll Dots] Calculated $count for $items items ($itemsPerScreen items fit in screen height), given that screen height is $screenHeight and item height is $itemHeight")
+            Log.d("[Scroll Dots] Calculated $count for $items items ($itemsPerScreen items fit in screen height), given that screen height is $screenHeight and item height is $itemHeight")
             setDotCount(dots)
         }
     }
