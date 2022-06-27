@@ -173,35 +173,41 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
                 val viewModel = DialogViewModel(getString(R.string.contact_delete_one_dialog))
                 val dialog: Dialog = DialogUtils.getDialog(requireContext(), viewModel)
 
-                val contactViewModel = adapter.currentList[viewHolder.bindingAdapterPosition]
-                if (contactViewModel.isNativeContact.value == false) {
-                    adapter.notifyItemChanged(viewHolder.bindingAdapterPosition)
-                    val activity = requireActivity() as MainActivity
-                    activity.showSnackBar(R.string.contact_cant_be_deleted)
-                    return
-                }
+                val index = viewHolder.bindingAdapterPosition
+                if (index < 0 || index >= adapter.currentList.size) {
+                    Log.e("[Contacts] Index is out of bound, can't delete contact")
+                } else {
+                    val contactViewModel = adapter.currentList[index]
+                    if (contactViewModel.isNativeContact.value == false) {
+                        adapter.notifyItemChanged(index)
+                        val activity = requireActivity() as MainActivity
+                        activity.showSnackBar(R.string.contact_cant_be_deleted)
+                        return
+                    }
 
-                viewModel.showCancelButton {
-                    adapter.notifyItemChanged(viewHolder.bindingAdapterPosition)
-                    dialog.dismiss()
-                }
-
-                viewModel.showDeleteButton(
-                    {
-                        val deletedContact = adapter.currentList[viewHolder.bindingAdapterPosition].contact.value
-                        if (deletedContact != null) {
-                            listViewModel.deleteContact(deletedContact)
-                            if (!binding.slidingPane.isSlideable &&
-                                deletedContact == sharedViewModel.selectedContact.value
-                            ) {
-                                Log.i("[Contacts] Currently displayed contact has been deleted, removing detail fragment")
-                                clearDisplayedContact()
-                            }
-                        }
+                    viewModel.showCancelButton {
+                        adapter.notifyItemChanged(index)
                         dialog.dismiss()
-                    },
-                    getString(R.string.dialog_delete)
-                )
+                    }
+
+                    viewModel.showDeleteButton(
+                        {
+                            val deletedContact =
+                                adapter.currentList[index].contact.value
+                            if (deletedContact != null) {
+                                listViewModel.deleteContact(deletedContact)
+                                if (!binding.slidingPane.isSlideable &&
+                                    deletedContact == sharedViewModel.selectedContact.value
+                                ) {
+                                    Log.i("[Contacts] Currently displayed contact has been deleted, removing detail fragment")
+                                    clearDisplayedContact()
+                                }
+                            }
+                            dialog.dismiss()
+                        },
+                        getString(R.string.dialog_delete)
+                    )
+                }
 
                 dialog.show()
             }
