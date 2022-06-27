@@ -61,6 +61,9 @@ class CorePreferences constructor(private val context: Context) {
         } catch (kse: KeyStoreException) {
             Log.e("[VFS] Keystore exception: $kse")
             null
+        } catch (e: Exception) {
+            Log.e("[VFS] Exception: $e")
+            null
         }
     }
 
