@@ -101,6 +101,17 @@ class ConferenceWaitingRoomViewModel : MessageNotifierViewModel() {
                 else -> {}
             }
         }
+
+        override fun onConferenceStateChanged(
+            core: Core,
+            conference: Conference,
+            state: Conference.State?
+        ) {
+            if (state == Conference.State.Created) {
+                Log.i("[Conference Waiting Room] Conference has been created, leaving waiting room fragment")
+                leaveWaitingRoomEvent.value = Event(true)
+            }
+        }
     }
 
     init {
