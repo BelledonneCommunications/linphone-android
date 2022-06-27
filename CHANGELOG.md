@@ -10,6 +10,12 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [4.6.11] - 2022-06-27
+
+### Fixed
+- Various crashes due to unhandled exceptions
+- Echo canceller calibration not using speaker (SDK fix)
+
 ## [4.6.10] - 2022-06-07
 
 ### Fixed
