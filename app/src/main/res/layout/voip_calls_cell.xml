@@ -129,7 +129,8 @@
                 android:id="@+id/context_menu"
                 android:onClick="@{() -> data.showContextMenu(contextMenu)}"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
+                android:layout_gravity="center_vertical"
                 android:src="@drawable/icon_calls_list_menu"
                 android:padding="5dp"
                 android:contentDescription="@string/content_description_call_context_menu"/>
