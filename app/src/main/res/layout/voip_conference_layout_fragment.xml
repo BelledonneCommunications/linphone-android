@@ -93,7 +93,6 @@
                     android:checked="@{conferenceViewModel.conferenceDisplayMode == ConferenceDisplayMode.ACTIVE_SPEAKER}"
                     android:drawableEnd="@drawable/icon_conference_layout_active_speaker"
                     android:drawableTint="?attr/voipDrawableColor"
-                    android:enabled="@{conferenceViewModel.conferenceParticipantDevices.size() > conferenceViewModel.maxParticipantsForMosaicLayout ? false : true}"
                     android:onClickListener="@{() -> conferenceViewModel.changeLayout(ConferenceDisplayMode.ACTIVE_SPEAKER)}"
                     android:text="@string/conference_display_mode_active_speaker" />
 

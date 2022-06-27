@@ -84,6 +84,7 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
             viewLifecycleOwner
         ) { displayMode ->
             startTimer(R.id.active_conference_timer)
+
             if (displayMode == ConferenceDisplayMode.ACTIVE_SPEAKER) {
                 if (conferenceViewModel.conferenceExists.value == true) {
                     Log.i("[Conference Call] Local participant is in conference and current layout is active speaker, updating Core's native window id")
@@ -107,6 +108,8 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
                 it.size > conferenceViewModel.maxParticipantsForMosaicLayout
             ) {
                 showSnackBar(R.string.conference_too_many_participants_for_mosaic_layout)
+                Log.w("[Conference Call] More than ${conferenceViewModel.maxParticipantsForMosaicLayout} participants (${it.size}), forcing active speaker layout")
+                conferenceViewModel.conferenceDisplayMode.value = ConferenceDisplayMode.ACTIVE_SPEAKER
             }
         }
 
