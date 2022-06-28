@@ -58,10 +58,6 @@ class ConferenceSchedulingParticipantsListFragment : GenericFragment<ConferenceS
         // Divider between items
         binding.contactsList.addItemDecoration(AppUtils.getDividerDecoration(requireContext(), layoutManager))
 
-        binding.setBackClickListener {
-            goBack()
-        }
-
         binding.setNextClickListener {
             navigateToSummary()
         }

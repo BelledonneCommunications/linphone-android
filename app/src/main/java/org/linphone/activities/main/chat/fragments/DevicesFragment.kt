@@ -27,13 +27,11 @@ import org.linphone.R
 import org.linphone.activities.main.chat.viewmodels.DevicesListViewModel
 import org.linphone.activities.main.chat.viewmodels.DevicesListViewModelFactory
 import org.linphone.activities.main.fragments.SecureFragment
-import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatRoomDevicesFragmentBinding
 
 class DevicesFragment : SecureFragment<ChatRoomDevicesFragmentBinding>() {
     private lateinit var listViewModel: DevicesListViewModel
-    private lateinit var sharedViewModel: SharedMainViewModel
 
     override fun getLayoutId(): Int = R.layout.chat_room_devices_fragment
 
@@ -41,10 +39,6 @@ class DevicesFragment : SecureFragment<ChatRoomDevicesFragmentBinding>() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
-
-        sharedViewModel = requireActivity().run {
-            ViewModelProvider(this)[SharedMainViewModel::class.java]
-        }
 
         val chatRoom = sharedViewModel.selectedChatRoom.value
         if (chatRoom == null) {
@@ -60,10 +54,6 @@ class DevicesFragment : SecureFragment<ChatRoomDevicesFragmentBinding>() {
             DevicesListViewModelFactory(chatRoom)
         )[DevicesListViewModel::class.java]
         binding.viewModel = listViewModel
-
-        binding.setBackClickListener {
-            goBack()
-        }
     }
 
     override fun onResume() {

@@ -4,9 +4,6 @@
     <data>
         <import type="android.view.View"/>
         <variable
-            name="backClickListener"
-            type="android.view.View.OnClickListener"/>
-        <variable
             name="exportClickListener"
             type="android.view.View.OnClickListener"/>
         <variable
@@ -28,7 +25,7 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:onClick="@{backClickListener}"
+                android:id="@+id/back"
                 android:contentDescription="@string/content_description_go_back"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"

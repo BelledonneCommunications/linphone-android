@@ -37,7 +37,7 @@ import org.linphone.activities.navigateToEchoCancellerCalibration
 import org.linphone.databinding.AssistantPhoneAccountValidationFragmentBinding
 
 class PhoneAccountValidationFragment : GenericFragment<AssistantPhoneAccountValidationFragmentBinding>() {
-    private lateinit var sharedViewModel: SharedAssistantViewModel
+    private lateinit var sharedAssistantViewModel: SharedAssistantViewModel
     private lateinit var viewModel: PhoneAccountValidationViewModel
 
     override fun getLayoutId(): Int = R.layout.assistant_phone_account_validation_fragment
@@ -47,11 +47,11 @@ class PhoneAccountValidationFragment : GenericFragment<AssistantPhoneAccountVali
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        sharedViewModel = requireActivity().run {
+        sharedAssistantViewModel = requireActivity().run {
             ViewModelProvider(this)[SharedAssistantViewModel::class.java]
         }
 
-        viewModel = ViewModelProvider(this, PhoneAccountValidationViewModelFactory(sharedViewModel.getAccountCreator()))[PhoneAccountValidationViewModel::class.java]
+        viewModel = ViewModelProvider(this, PhoneAccountValidationViewModelFactory(sharedAssistantViewModel.getAccountCreator()))[PhoneAccountValidationViewModel::class.java]
         binding.viewModel = viewModel
 
         viewModel.phoneNumber.value = arguments?.getString("PhoneNumber")

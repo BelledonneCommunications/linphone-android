@@ -30,12 +30,10 @@ import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.settings.viewmodels.AdvancedSettingsViewModel
-import org.linphone.activities.navigateToEmptySetting
 import org.linphone.core.tools.Log
 import org.linphone.core.tools.compatibility.DeviceUtils
 import org.linphone.databinding.SettingsAdvancedFragmentBinding
 import org.linphone.utils.AppUtils
-import org.linphone.utils.Event
 import org.linphone.utils.PowerManagerUtils
 
 class AdvancedSettingsFragment : GenericSettingFragment<SettingsAdvancedFragmentBinding>() {
@@ -51,8 +49,6 @@ class AdvancedSettingsFragment : GenericSettingFragment<SettingsAdvancedFragment
 
         viewModel = ViewModelProvider(this)[AdvancedSettingsViewModel::class.java]
         binding.viewModel = viewModel
-
-        binding.setBackClickListener { goBack() }
 
         viewModel.uploadFinishedEvent.observe(
             viewLifecycleOwner
@@ -144,14 +140,6 @@ class AdvancedSettingsFragment : GenericSettingFragment<SettingsAdvancedFragment
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
                 ContextCompat.startActivity(requireContext(), intent, null)
             }
-        }
-    }
-
-    override fun goBack() {
-        if (sharedViewModel.isSlidingPaneSlideable.value == true) {
-            sharedViewModel.closeSlidingPaneEvent.value = Event(true)
-        } else {
-            navigateToEmptySetting()
         }
     }
 }

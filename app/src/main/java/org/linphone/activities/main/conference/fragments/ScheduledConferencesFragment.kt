@@ -33,7 +33,6 @@ import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.conference.adapters.ScheduledConferencesAdapter
 import org.linphone.activities.main.conference.viewmodels.ScheduledConferencesViewModel
 import org.linphone.activities.main.viewmodels.DialogViewModel
-import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.navigateToConferenceScheduling
 import org.linphone.activities.navigateToConferenceWaitingRoom
 import org.linphone.databinding.ConferencesScheduledFragmentBinding
@@ -45,7 +44,6 @@ import org.linphone.utils.RecyclerViewHeaderDecoration
 class ScheduledConferencesFragment : GenericFragment<ConferencesScheduledFragmentBinding>() {
     private lateinit var viewModel: ScheduledConferencesViewModel
     private lateinit var adapter: ScheduledConferencesAdapter
-    private lateinit var sharedViewModel: SharedMainViewModel
 
     override fun getLayoutId(): Int = R.layout.conferences_scheduled_fragment
 
@@ -65,10 +63,6 @@ class ScheduledConferencesFragment : GenericFragment<ConferencesScheduledFragmen
             viewLifecycleOwner
         )
         binding.conferenceInfoList.adapter = adapter
-
-        sharedViewModel = requireActivity().run {
-            ViewModelProvider(this)[SharedMainViewModel::class.java]
-        }
 
         val layoutManager = LinearLayoutManager(activity)
         binding.conferenceInfoList.layoutManager = layoutManager
@@ -140,10 +134,6 @@ class ScheduledConferencesFragment : GenericFragment<ConferencesScheduledFragmen
 
                 deleteConferenceInfoDialog?.show()
             }
-        }
-
-        binding.setBackClickListener {
-            goBack()
         }
 
         binding.setNewConferenceClickListener {

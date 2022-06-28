@@ -28,10 +28,8 @@ import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
 import org.linphone.activities.main.chat.viewmodels.ChatRoomsListViewModel
 import org.linphone.activities.main.settings.viewmodels.ChatSettingsViewModel
-import org.linphone.activities.navigateToEmptySetting
 import org.linphone.databinding.SettingsChatFragmentBinding
 import org.linphone.mediastream.Version
-import org.linphone.utils.Event
 import org.linphone.utils.ShortcutsHelper
 
 class ChatSettingsFragment : GenericSettingFragment<SettingsChatFragmentBinding>() {
@@ -47,8 +45,6 @@ class ChatSettingsFragment : GenericSettingFragment<SettingsChatFragmentBinding>
 
         viewModel = ViewModelProvider(this)[ChatSettingsViewModel::class.java]
         binding.viewModel = viewModel
-
-        binding.setBackClickListener { goBack() }
 
         viewModel.launcherShortcutsEvent.observe(
             viewLifecycleOwner
@@ -87,14 +83,6 @@ class ChatSettingsFragment : GenericSettingFragment<SettingsChatFragmentBinding>
             it.consume {
                 reloadChatRooms()
             }
-        }
-    }
-
-    override fun goBack() {
-        if (sharedViewModel.isSlidingPaneSlideable.value == true) {
-            sharedViewModel.closeSlidingPaneEvent.value = Event(true)
-        } else {
-            navigateToEmptySetting()
         }
     }
 

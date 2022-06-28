@@ -31,10 +31,8 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.activities.main.settings.viewmodels.VideoSettingsViewModel
-import org.linphone.activities.navigateToEmptySetting
 import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsVideoFragmentBinding
-import org.linphone.utils.Event
 import org.linphone.utils.PermissionHelper
 
 class VideoSettingsFragment : GenericSettingFragment<SettingsVideoFragmentBinding>() {
@@ -50,8 +48,6 @@ class VideoSettingsFragment : GenericSettingFragment<SettingsVideoFragmentBindin
 
         viewModel = ViewModelProvider(this)[VideoSettingsViewModel::class.java]
         binding.viewModel = viewModel
-
-        binding.setBackClickListener { goBack() }
 
         initVideoCodecsList()
 
@@ -102,13 +98,5 @@ class VideoSettingsFragment : GenericSettingFragment<SettingsVideoFragmentBindin
             list.add(binding)
         }
         viewModel.videoCodecs.value = list
-    }
-
-    override fun goBack() {
-        if (sharedViewModel.isSlidingPaneSlideable.value == true) {
-            sharedViewModel.closeSlidingPaneEvent.value = Event(true)
-        } else {
-            navigateToEmptySetting()
-        }
     }
 }

@@ -27,14 +27,12 @@ import org.linphone.R
 import org.linphone.activities.main.chat.viewmodels.EphemeralViewModel
 import org.linphone.activities.main.chat.viewmodels.EphemeralViewModelFactory
 import org.linphone.activities.main.fragments.SecureFragment
-import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatRoomEphemeralFragmentBinding
 import org.linphone.utils.Event
 
 class EphemeralFragment : SecureFragment<ChatRoomEphemeralFragmentBinding>() {
     private lateinit var viewModel: EphemeralViewModel
-    private lateinit var sharedViewModel: SharedMainViewModel
 
     override fun getLayoutId(): Int {
         return R.layout.chat_room_ephemeral_fragment
@@ -45,10 +43,6 @@ class EphemeralFragment : SecureFragment<ChatRoomEphemeralFragmentBinding>() {
 
         isSecure = true
         binding.lifecycleOwner = viewLifecycleOwner
-
-        sharedViewModel = requireActivity().run {
-            ViewModelProvider(this)[SharedMainViewModel::class.java]
-        }
 
         val chatRoom = sharedViewModel.selectedChatRoom.value
         if (chatRoom == null) {
@@ -62,10 +56,6 @@ class EphemeralFragment : SecureFragment<ChatRoomEphemeralFragmentBinding>() {
             EphemeralViewModelFactory(chatRoom)
         )[EphemeralViewModel::class.java]
         binding.viewModel = viewModel
-
-        binding.setBackClickListener {
-            goBack()
-        }
 
         binding.setValidClickListener {
             viewModel.updateChatRoomEphemeralDuration()

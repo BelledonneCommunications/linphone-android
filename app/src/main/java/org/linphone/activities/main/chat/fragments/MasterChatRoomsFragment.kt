@@ -24,7 +24,6 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -42,7 +41,6 @@ import org.linphone.activities.main.chat.adapters.ChatRoomsListAdapter
 import org.linphone.activities.main.chat.viewmodels.ChatRoomsListViewModel
 import org.linphone.activities.main.fragments.MasterFragment
 import org.linphone.activities.main.viewmodels.DialogViewModel
-import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.navigateToChatRoom
 import org.linphone.activities.navigateToChatRoomCreation
 import org.linphone.core.ChatRoom
@@ -54,7 +52,6 @@ import org.linphone.utils.*
 class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, ChatRoomsListAdapter>() {
     override val dialogConfirmationMessageBeforeRemoval = R.plurals.chat_room_delete_dialog
     private lateinit var listViewModel: ChatRoomsListViewModel
-    private lateinit var sharedViewModel: SharedMainViewModel
 
     private val observer = object : RecyclerView.AdapterDataObserver() {
         override fun onChanged() {
@@ -105,11 +102,18 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
 
         /* Shared view model & sliding pane related */
 
-        sharedViewModel = requireActivity().run {
-            ViewModelProvider(this)[SharedMainViewModel::class.java]
-        }
+        setUpSlidingPane(binding.slidingPane)
 
-        view.doOnPreDraw { sharedViewModel.isSlidingPaneSlideable.value = binding.slidingPane.isSlideable }
+        binding.slidingPane.addPanelSlideListener(object : SlidingPaneLayout.PanelSlideListener {
+            override fun onPanelSlide(panel: View, slideOffset: Float) { }
+
+            override fun onPanelOpened(panel: View) { }
+
+            override fun onPanelClosed(panel: View) {
+                // Conversation isn't visible anymore, any new message received in it will trigger a notification
+                coreContext.notificationsManager.currentlyDisplayedChatRoomAddress = null
+            }
+        })
 
         // Chat room loading can take some time, so wait until it is ready before opening the pane
         sharedViewModel.chatRoomFragmentOpenedEvent.observe(
@@ -117,17 +121,6 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
         ) {
             it.consume {
                 binding.slidingPane.openPane()
-            }
-        }
-
-        sharedViewModel.closeSlidingPaneEvent.observe(
-            viewLifecycleOwner
-        ) {
-            it.consume {
-                (requireActivity() as MainActivity).hideKeyboard()
-                if (!binding.slidingPane.closePane()) {
-                    goBack()
-                }
             }
         }
 
@@ -157,8 +150,6 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
                 }
             }
         }
-
-        binding.slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
 
         /* End of shared view model & sliding pane related */
 

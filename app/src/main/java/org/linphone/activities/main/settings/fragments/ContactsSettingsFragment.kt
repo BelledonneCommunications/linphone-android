@@ -28,11 +28,9 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.activities.main.settings.viewmodels.ContactsSettingsViewModel
-import org.linphone.activities.navigateToEmptySetting
 import org.linphone.activities.navigateToLdapSettings
 import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsContactsFragmentBinding
-import org.linphone.utils.Event
 import org.linphone.utils.PermissionHelper
 import org.linphone.utils.ShortcutsHelper
 
@@ -49,8 +47,6 @@ class ContactsSettingsFragment : GenericSettingFragment<SettingsContactsFragment
 
         viewModel = ViewModelProvider(this)[ContactsSettingsViewModel::class.java]
         binding.viewModel = viewModel
-
-        binding.setBackClickListener { goBack() }
 
         viewModel.launcherShortcutsEvent.observe(
             viewLifecycleOwner
@@ -123,14 +119,6 @@ class ContactsSettingsFragment : GenericSettingFragment<SettingsContactsFragment
                     Log.w("[Contacts Settings] WRITE_CONTACTS permission denied")
                 }
             }
-        }
-    }
-
-    override fun goBack() {
-        if (sharedViewModel.isSlidingPaneSlideable.value == true) {
-            sharedViewModel.closeSlidingPaneEvent.value = Event(true)
-        } else {
-            navigateToEmptySetting()
         }
     }
 

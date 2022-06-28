@@ -21,14 +21,12 @@ package org.linphone.activities.main.history.fragments
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.*
 import org.linphone.activities.main.*
 import org.linphone.activities.main.history.viewmodels.CallLogViewModel
-import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.navigateToContact
 import org.linphone.activities.navigateToContacts
 import org.linphone.core.tools.Log
@@ -37,7 +35,6 @@ import org.linphone.utils.Event
 
 class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
     private lateinit var viewModel: CallLogViewModel
-    private lateinit var sharedViewModel: SharedMainViewModel
 
     override fun getLayoutId(): Int = R.layout.history_detail_fragment
 
@@ -46,9 +43,6 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        sharedViewModel = requireActivity().run {
-            ViewModelProvider(this)[SharedMainViewModel::class.java]
-        }
         binding.sharedMainViewModel = sharedViewModel
 
         val callLogGroup = sharedViewModel.selectedCallLogGroup.value
@@ -63,10 +57,6 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
         viewModel.addRelatedCallLogs(callLogGroup.callLogs)
 
         useMaterialSharedAxisXForwardAnimation = sharedViewModel.isSlidingPaneSlideable.value == false
-
-        binding.setBackClickListener {
-            goBack()
-        }
 
         binding.setNewContactClickListener {
             val copy = viewModel.callLog.remoteAddress.clone()
@@ -138,14 +128,6 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
             it.consume { messageResourceId ->
                 (activity as MainActivity).showSnackBar(messageResourceId)
             }
-        }
-    }
-
-    override fun goBack() {
-        if (sharedViewModel.isSlidingPaneSlideable.value == true) {
-            sharedViewModel.closeSlidingPaneEvent.value = Event(true)
-        } else {
-            navigateToEmptyCallHistory()
         }
     }
 

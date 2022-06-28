@@ -29,7 +29,6 @@ import android.view.View
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import java.io.File
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -38,18 +37,14 @@ import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.contact.data.NumberOrAddressEditorData
 import org.linphone.activities.main.contact.viewmodels.*
-import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.navigateToContact
-import org.linphone.activities.navigateToEmptyContact
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactEditorFragmentBinding
-import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.PermissionHelper
 
 class ContactEditorFragment : GenericFragment<ContactEditorFragmentBinding>(), SyncAccountPickerFragment.SyncAccountPickedListener {
     private lateinit var viewModel: ContactEditorViewModel
-    private lateinit var sharedViewModel: SharedMainViewModel
     private var temporaryPicturePath: File? = null
 
     override fun getLayoutId(): Int = R.layout.contact_editor_fragment
@@ -59,10 +54,6 @@ class ContactEditorFragment : GenericFragment<ContactEditorFragmentBinding>(), S
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        sharedViewModel = requireActivity().run {
-            ViewModelProvider(this)[SharedMainViewModel::class.java]
-        }
-
         viewModel = ViewModelProvider(
             this,
             ContactEditorViewModelFactory(sharedViewModel.selectedContact.value)
@@ -70,10 +61,6 @@ class ContactEditorFragment : GenericFragment<ContactEditorFragmentBinding>(), S
         binding.viewModel = viewModel
 
         useMaterialSharedAxisXForwardAnimation = sharedViewModel.isSlidingPaneSlideable.value == false
-
-        binding.setBackClickListener {
-            goBack()
-        }
 
         binding.setAvatarClickListener {
             pickFile()
@@ -106,16 +93,6 @@ class ContactEditorFragment : GenericFragment<ContactEditorFragmentBinding>(), S
         if (!PermissionHelper.required(requireContext()).hasWriteContactsPermission()) {
             Log.i("[Contact Editor] Asking for WRITE_CONTACTS permission")
             requestPermissions(arrayOf(android.Manifest.permission.WRITE_CONTACTS), 0)
-        }
-    }
-
-    override fun goBack() {
-        if (!findNavController().popBackStack()) {
-            if (sharedViewModel.isSlidingPaneSlideable.value == true) {
-                sharedViewModel.closeSlidingPaneEvent.value = Event(true)
-            } else {
-                navigateToEmptyContact()
-            }
         }
     }
 

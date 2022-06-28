@@ -36,7 +36,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -57,7 +56,6 @@ import org.linphone.activities.main.chat.viewmodels.*
 import org.linphone.activities.main.chat.views.RichEditTextSendListener
 import org.linphone.activities.main.fragments.MasterFragment
 import org.linphone.activities.main.viewmodels.DialogViewModel
-import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.navigateToContacts
 import org.linphone.activities.navigateToImageFileViewer
 import org.linphone.activities.navigateToImdn
@@ -73,7 +71,6 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
     private lateinit var viewModel: ChatRoomViewModel
     private lateinit var chatSendingViewModel: ChatMessageSendingViewModel
     private lateinit var listViewModel: ChatMessagesListViewModel
-    private lateinit var sharedViewModel: SharedMainViewModel
 
     private val observer = object : RecyclerView.AdapterDataObserver() {
         override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
@@ -111,7 +108,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        if (::sharedViewModel.isInitialized) {
+        if (isSharedViewModelInitialized()) {
             val chatRoom = sharedViewModel.selectedChatRoom.value
             if (chatRoom != null) {
                 outState.putString("LocalSipUri", chatRoom.localAddress.asStringUriOnly())
@@ -129,9 +126,6 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        sharedViewModel = requireActivity().run {
-            ViewModelProvider(this)[SharedMainViewModel::class.java]
-        }
         binding.sharedMainViewModel = sharedViewModel
 
         useMaterialSharedAxisXForwardAnimation = sharedViewModel.isSlidingPaneSlideable.value == false
@@ -383,7 +377,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
                 if (sharedViewModel.isSlidingPaneSlideable.value == true) {
                     Log.i("[Chat Room] Forwarding message, going to chat rooms list")
-                    sharedViewModel.closeSlidingPaneEvent.value = Event(true)
+                    goBack()
                 } else {
                     navigateToEmptyChatRoom()
                 }
@@ -546,10 +540,6 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             it.consume { message ->
                 (requireActivity() as MainActivity).showSnackBar(message)
             }
-        }
-
-        binding.setBackClickListener {
-            goBack()
         }
 
         binding.setTitleClickListener {
@@ -747,6 +737,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
     }
 
     override fun onPause() {
+        // Conversation isn't visible anymore, any new message received in it will trigger a notification
         coreContext.notificationsManager.currentlyDisplayedChatRoomAddress = null
 
         super.onPause()
@@ -763,22 +754,6 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 ) {
                     chatSendingViewModel.addAttachment(fileToUploadPath)
                 }
-            }
-        }
-    }
-
-    override fun goBack() {
-        coreContext.notificationsManager.currentlyDisplayedChatRoomAddress = null
-        if (!findNavController().popBackStack()) {
-            if (sharedViewModel.isSlidingPaneSlideable.value == true) {
-                if (_adapter != null) {
-                    try {
-                        adapter.unregisterAdapterDataObserver(observer)
-                    } catch (ise: IllegalStateException) {}
-                }
-                sharedViewModel.closeSlidingPaneEvent.value = Event(true)
-            } else {
-                navigateToEmptyChatRoom()
             }
         }
     }
