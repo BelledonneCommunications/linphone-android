@@ -43,7 +43,6 @@ import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.dialer.viewmodels.DialerViewModel
 import org.linphone.activities.main.fragments.SecureFragment
 import org.linphone.activities.main.viewmodels.DialogViewModel
-import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.navigateToConferenceScheduling
 import org.linphone.activities.navigateToConfigFileViewer
 import org.linphone.activities.navigateToContacts
@@ -59,7 +58,6 @@ import org.linphone.utils.PermissionHelper
 
 class DialerFragment : SecureFragment<DialerFragmentBinding>() {
     private lateinit var viewModel: DialerViewModel
-    private lateinit var sharedViewModel: SharedMainViewModel
 
     private var uploadLogsInitiatedByUs = false
 
@@ -72,10 +70,6 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
 
         viewModel = ViewModelProvider(this)[DialerViewModel::class.java]
         binding.viewModel = viewModel
-
-        sharedViewModel = requireActivity().run {
-            ViewModelProvider(this)[SharedMainViewModel::class.java]
-        }
 
         useMaterialSharedAxisXForwardAnimation = false
         sharedViewModel.updateDialerAnimationsBasedOnDestination.observe(

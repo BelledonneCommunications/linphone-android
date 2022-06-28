@@ -62,7 +62,5 @@ class LdapSettingsFragment : GenericSettingFragment<SettingsLdapFragmentBinding>
                 goBack()
             }
         }
-
-        binding.setBackClickListener { goBack() }
     }
 }

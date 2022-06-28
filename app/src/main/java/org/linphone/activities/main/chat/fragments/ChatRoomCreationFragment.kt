@@ -23,27 +23,22 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.chat.viewmodels.ChatRoomCreationViewModel
 import org.linphone.activities.main.fragments.SecureFragment
-import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.navigateToChatRoom
-import org.linphone.activities.navigateToEmptyChatRoom
 import org.linphone.activities.navigateToGroupInfo
 import org.linphone.contact.ContactsSelectionAdapter
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatRoomCreationFragmentBinding
 import org.linphone.utils.AppUtils
-import org.linphone.utils.Event
 import org.linphone.utils.PermissionHelper
 
 class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>() {
     private lateinit var viewModel: ChatRoomCreationViewModel
-    private lateinit var sharedViewModel: SharedMainViewModel
     private lateinit var adapter: ContactsSelectionAdapter
 
     override fun getLayoutId(): Int = R.layout.chat_room_creation_fragment
@@ -52,10 +47,6 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
-
-        sharedViewModel = requireActivity().run {
-            ViewModelProvider(this)[SharedMainViewModel::class.java]
-        }
 
         useMaterialSharedAxisXForwardAnimation = sharedViewModel.isSlidingPaneSlideable.value == false
 
@@ -79,9 +70,6 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
         // Divider between items
         binding.contactsList.addItemDecoration(AppUtils.getDividerDecoration(requireContext(), layoutManager))
 
-        binding.setBackClickListener {
-            goBack()
-        }
         binding.back.visibility = if (resources.getBoolean(R.bool.isTablet)) View.INVISIBLE else View.VISIBLE
 
         binding.setAllContactsToggleClickListener {
@@ -178,16 +166,6 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
                 coreContext.fetchContacts()
             } else {
                 Log.w("[Chat Room Creation] READ_CONTACTS permission denied")
-            }
-        }
-    }
-
-    override fun goBack() {
-        if (!findNavController().popBackStack()) {
-            if (sharedViewModel.isSlidingPaneSlideable.value == true) {
-                sharedViewModel.closeSlidingPaneEvent.value = Event(true)
-            } else {
-                navigateToEmptyChatRoom()
             }
         }
     }

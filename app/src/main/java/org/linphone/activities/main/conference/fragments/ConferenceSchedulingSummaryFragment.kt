@@ -42,10 +42,6 @@ class ConferenceSchedulingSummaryFragment : GenericFragment<ConferenceScheduling
 
         binding.viewModel = viewModel
 
-        binding.setBackClickListener {
-            goBack()
-        }
-
         binding.setCreateConferenceClickListener {
             viewModel.createConference()
         }

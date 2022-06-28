@@ -25,7 +25,6 @@ import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.GenericFragment
-import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.main.viewmodels.StatusViewModel
 import org.linphone.core.tools.Log
 import org.linphone.databinding.StatusFragmentBinding
@@ -33,7 +32,6 @@ import org.linphone.utils.Event
 
 class StatusFragment : GenericFragment<StatusFragmentBinding>() {
     private lateinit var viewModel: StatusViewModel
-    private lateinit var sharedViewModel: SharedMainViewModel
 
     override fun getLayoutId(): Int = R.layout.status_fragment
 
@@ -45,10 +43,6 @@ class StatusFragment : GenericFragment<StatusFragmentBinding>() {
 
         viewModel = ViewModelProvider(this)[StatusViewModel::class.java]
         binding.viewModel = viewModel
-
-        sharedViewModel = requireActivity().run {
-            ViewModelProvider(this)[SharedMainViewModel::class.java]
-        }
 
         sharedViewModel.accountRemoved.observe(
             viewLifecycleOwner
@@ -67,7 +61,5 @@ class StatusFragment : GenericFragment<StatusFragmentBinding>() {
         binding.setRefreshClickListener {
             viewModel.refreshRegister()
         }
-
-        onBackPressedCallback.isEnabled = false
     }
 }

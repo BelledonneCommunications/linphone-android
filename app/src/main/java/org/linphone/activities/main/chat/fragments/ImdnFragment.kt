@@ -29,7 +29,6 @@ import org.linphone.activities.main.chat.adapters.ImdnAdapter
 import org.linphone.activities.main.chat.viewmodels.ImdnViewModel
 import org.linphone.activities.main.chat.viewmodels.ImdnViewModelFactory
 import org.linphone.activities.main.fragments.SecureFragment
-import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatRoomImdnFragmentBinding
 import org.linphone.utils.AppUtils
@@ -38,7 +37,6 @@ import org.linphone.utils.RecyclerViewHeaderDecoration
 class ImdnFragment : SecureFragment<ChatRoomImdnFragmentBinding>() {
     private lateinit var viewModel: ImdnViewModel
     private lateinit var adapter: ImdnAdapter
-    private lateinit var sharedViewModel: SharedMainViewModel
 
     override fun getLayoutId(): Int {
         return R.layout.chat_room_imdn_fragment
@@ -48,10 +46,6 @@ class ImdnFragment : SecureFragment<ChatRoomImdnFragmentBinding>() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
-
-        sharedViewModel = requireActivity().run {
-            ViewModelProvider(this)[SharedMainViewModel::class.java]
-        }
 
         val chatRoom = sharedViewModel.selectedChatRoom.value
         if (chatRoom == null) {
@@ -100,10 +94,6 @@ class ImdnFragment : SecureFragment<ChatRoomImdnFragmentBinding>() {
             viewLifecycleOwner
         ) {
             adapter.submitList(it)
-        }
-
-        binding.setBackClickListener {
-            goBack()
         }
     }
 }

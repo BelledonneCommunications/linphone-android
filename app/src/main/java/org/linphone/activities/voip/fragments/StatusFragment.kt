@@ -75,11 +75,6 @@ class StatusFragment : GenericFragment<VoipStatusFragmentBinding>() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        onBackPressedCallback.isEnabled = false
-    }
-
     override fun onDestroy() {
         if (zrtpDialog != null) {
             zrtpDialog?.dismiss()

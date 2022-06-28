@@ -28,7 +28,6 @@ import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.GenericFragment
-import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.main.viewmodels.TabsViewModel
 import org.linphone.activities.navigateToCallHistory
 import org.linphone.activities.navigateToChatRooms
@@ -39,7 +38,6 @@ import org.linphone.utils.Event
 
 class TabsFragment : GenericFragment<TabsFragmentBinding>(), NavController.OnDestinationChangedListener {
     private lateinit var viewModel: TabsViewModel
-    private lateinit var sharedViewModel: SharedMainViewModel
 
     override fun getLayoutId(): Int = R.layout.tabs_fragment
 
@@ -48,10 +46,6 @@ class TabsFragment : GenericFragment<TabsFragmentBinding>(), NavController.OnDes
 
         binding.lifecycleOwner = viewLifecycleOwner
         useMaterialSharedAxisXForwardAnimation = false
-
-        sharedViewModel = requireActivity().run {
-            ViewModelProvider(this)[SharedMainViewModel::class.java]
-        }
 
         viewModel = requireActivity().run {
             ViewModelProvider(this)[TabsViewModel::class.java]
@@ -89,8 +83,6 @@ class TabsFragment : GenericFragment<TabsFragmentBinding>(), NavController.OnDes
             }
             navigateToChatRooms()
         }
-
-        onBackPressedCallback.isEnabled = false
     }
 
     override fun onStart() {

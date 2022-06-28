@@ -31,7 +31,6 @@ class SharedMainViewModel : ViewModel() {
 
     val layoutChangedEvent = MutableLiveData<Event<Boolean>>()
     var isSlidingPaneSlideable = MutableLiveData<Boolean>()
-    val closeSlidingPaneEvent = MutableLiveData<Event<Boolean>>()
 
     /* Call history */
 

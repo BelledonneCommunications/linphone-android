@@ -26,7 +26,6 @@ import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
 import org.linphone.activities.main.settings.viewmodels.AccountSettingsViewModel
 import org.linphone.activities.main.settings.viewmodels.AccountSettingsViewModelFactory
-import org.linphone.activities.navigateToEmptySetting
 import org.linphone.activities.navigateToPhoneLinking
 import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsAccountFragmentBinding
@@ -58,8 +57,6 @@ class AccountSettingsFragment : GenericSettingFragment<SettingsAccountFragmentBi
             return
         }
         binding.viewModel = viewModel
-
-        binding.setBackClickListener { goBack() }
 
         viewModel.linkPhoneNumberEvent.observe(
             viewLifecycleOwner
@@ -98,14 +95,6 @@ class AccountSettingsFragment : GenericSettingFragment<SettingsAccountFragmentBi
         view.doOnPreDraw {
             // Notifies fragment is ready to be drawn
             sharedViewModel.accountSettingsFragmentOpenedEvent.value = Event(true)
-        }
-    }
-
-    override fun goBack() {
-        if (sharedViewModel.isSlidingPaneSlideable.value == true) {
-            sharedViewModel.closeSlidingPaneEvent.value = Event(true)
-        } else {
-            navigateToEmptySetting()
         }
     }
 }

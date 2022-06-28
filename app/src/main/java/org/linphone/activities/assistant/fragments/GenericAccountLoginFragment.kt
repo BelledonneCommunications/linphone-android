@@ -37,7 +37,7 @@ import org.linphone.databinding.AssistantGenericAccountLoginFragmentBinding
 import org.linphone.utils.DialogUtils
 
 class GenericAccountLoginFragment : GenericFragment<AssistantGenericAccountLoginFragmentBinding>() {
-    private lateinit var sharedViewModel: SharedAssistantViewModel
+    private lateinit var sharedAssistantViewModel: SharedAssistantViewModel
     private lateinit var viewModel: GenericLoginViewModel
 
     override fun getLayoutId(): Int = R.layout.assistant_generic_account_login_fragment
@@ -47,11 +47,11 @@ class GenericAccountLoginFragment : GenericFragment<AssistantGenericAccountLogin
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        sharedViewModel = requireActivity().run {
+        sharedAssistantViewModel = requireActivity().run {
             ViewModelProvider(this)[SharedAssistantViewModel::class.java]
         }
 
-        viewModel = ViewModelProvider(this, GenericLoginViewModelFactory(sharedViewModel.getAccountCreator(true)))[GenericLoginViewModel::class.java]
+        viewModel = ViewModelProvider(this, GenericLoginViewModelFactory(sharedAssistantViewModel.getAccountCreator(true)))[GenericLoginViewModel::class.java]
         binding.viewModel = viewModel
 
         viewModel.leaveAssistantEvent.observe(

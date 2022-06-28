@@ -22,22 +22,15 @@ package org.linphone.activities.main.files.fragments
 import android.os.Bundle
 import android.view.View
 import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
 import org.linphone.activities.main.fragments.SecureFragment
-import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.tools.Log
 
 abstract class GenericViewerFragment<T : ViewDataBinding> : SecureFragment<T>() {
-    protected lateinit var sharedViewModel: SharedMainViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        sharedViewModel = requireActivity().run {
-            ViewModelProvider(this)[SharedMainViewModel::class.java]
-        }
 
         isSecure = arguments?.getBoolean("Secure") ?: false
     }
@@ -54,9 +47,5 @@ abstract class GenericViewerFragment<T : ViewDataBinding> : SecureFragment<T>() 
 
         (childFragmentManager.findFragmentById(R.id.top_bar_fragment) as? TopBarFragment)
             ?.setContent(content)
-    }
-
-    override fun goBack() {
-        findNavController().popBackStack()
     }
 }

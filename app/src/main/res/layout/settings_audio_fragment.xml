@@ -6,9 +6,6 @@
         <import type="android.view.View"/>
         <import type="android.text.InputType"/>
         <variable
-            name="backClickListener"
-            type="android.view.View.OnClickListener"/>
-        <variable
             name="viewModel"
             type="org.linphone.activities.main.settings.viewmodels.AudioSettingsViewModel"/>
         <variable
@@ -30,7 +27,6 @@
 
             <ImageView
                 android:id="@+id/back"
-                android:onClick="@{backClickListener}"
                 android:visibility="@{sharedMainViewModel.isSlidingPaneSlideable ? View.VISIBLE : View.GONE}"
                 android:contentDescription="@string/content_description_go_back"
                 android:layout_width="0dp"

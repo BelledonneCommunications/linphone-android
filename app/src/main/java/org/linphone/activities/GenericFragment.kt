@@ -23,35 +23,65 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.transition.MaterialSharedAxis
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.R
+import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.tools.Log
 
 abstract class GenericFragment<T : ViewDataBinding> : Fragment() {
+    companion object {
+        val emptyFragmentsIds = arrayListOf(
+            R.id.emptyChatFragment,
+            R.id.emptyContactFragment,
+            R.id.emptySettingsFragment,
+            R.id.emptyCallHistoryFragment
+        )
+    }
+
     private var _binding: T? = null
     protected val binding get() = _binding!!
+
     protected var useMaterialSharedAxisXForwardAnimation = true
+
+    protected lateinit var sharedViewModel: SharedMainViewModel
+
+    protected fun isSharedViewModelInitialized(): Boolean {
+        return ::sharedViewModel.isInitialized
+    }
 
     protected fun isBindingAvailable(): Boolean {
         return _binding != null
     }
 
-    protected val onBackPressedCallback = object : OnBackPressedCallback(true) {
+    private fun getFragmentRealClassName(): String {
+        return this.javaClass.name
+    }
+
+    private val onBackPressedCallback = object : OnBackPressedCallback(false) {
         override fun handleOnBackPressed() {
-            lifecycleScope.launch {
-                withContext(Dispatchers.Main) {
-                    goBack()
+            try {
+                val navController = findNavController()
+                Log.d("[Generic Fragment] ${getFragmentRealClassName()} handleOnBackPressed")
+                if (!navController.popBackStack()) {
+                    Log.d("[Generic Fragment] ${getFragmentRealClassName()} couldn't pop")
+                    if (!navController.navigateUp()) {
+                        Log.d("[Generic Fragment] ${getFragmentRealClassName()} couldn't navigate up")
+                        // Disable this callback & start a new back press event
+                        isEnabled = false
+                        goBack()
+                    }
                 }
+            } catch (ise: IllegalStateException) {
+                Log.e("[Generic Fragment] ${getFragmentRealClassName()} Can't go back: $ise")
             }
         }
     }
@@ -63,18 +93,17 @@ abstract class GenericFragment<T : ViewDataBinding> : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        sharedViewModel = requireActivity().run {
+            ViewModelProvider(this)[SharedMainViewModel::class.java]
+        }
+
+        sharedViewModel.isSlidingPaneSlideable.observe(viewLifecycleOwner) {
+            Log.d("[Generic Fragment] ${getFragmentRealClassName()} shared main VM sliding pane has changed")
+            onBackPressedCallback.isEnabled = backPressedCallBackEnabled()
+        }
+
         _binding = DataBindingUtil.inflate(inflater, getLayoutId(), container, false)
         return _binding!!.root
-    }
-
-    override fun onResume() {
-        super.onResume()
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
-    }
-
-    override fun onPause() {
-        onBackPressedCallback.remove()
-        super.onPause()
     }
 
     override fun onStart() {
@@ -89,25 +118,50 @@ abstract class GenericFragment<T : ViewDataBinding> : Fragment() {
             postponeEnterTransition()
             binding.root.doOnPreDraw { startPostponedEnterTransition() }
         }
+
+        setupBackPressCallback()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+
+        onBackPressedCallback.remove()
         _binding = null
     }
 
-    protected open fun goBack() {
-        try {
-            if (!findNavController().popBackStack()) {
-                if (!findNavController().navigateUp()) {
-                    onBackPressedCallback.isEnabled = false
-                    requireActivity().onBackPressed()
-                }
-            }
-        } catch (ise: IllegalStateException) {
-            Log.e("[Generic Fragment] [$this] Can't go back: $ise")
+    protected fun goBack() {
+        requireActivity().onBackPressedDispatcher.onBackPressed()
+    }
+
+    private fun setupBackPressCallback() {
+        Log.d("[Generic Fragment] ${getFragmentRealClassName()} setupBackPressCallback")
+
+        val backButton = binding.root.findViewById<ImageView>(R.id.back)
+        if (backButton != null) {
+            Log.d("[Generic Fragment] ${getFragmentRealClassName()} found back button")
+            // If popping navigation back stack entry would bring us to an "empty" fragment
+            // then don't do it if sliding pane layout isn't "flat"
+            onBackPressedCallback.isEnabled = backPressedCallBackEnabled()
+            backButton.setOnClickListener { goBack() }
+        } else {
             onBackPressedCallback.isEnabled = false
-            requireActivity().onBackPressed()
         }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
+    }
+
+    private fun backPressedCallBackEnabled(): Boolean {
+        // This allow to navigate a SlidingPane child nav graph.
+        // This only concerns fragments for which the nav graph is inside a SlidingPane layout.
+        // In our case it's all graphs except the main one.
+        if (findNavController().graph.id == R.id.main_nav_graph_xml) return false
+
+        val isSlidingPaneFlat = sharedViewModel.isSlidingPaneSlideable.value == false
+        Log.d("[Generic Fragment] ${getFragmentRealClassName()} isSlidingPaneFlat ? $isSlidingPaneFlat")
+        val isPreviousFragmentEmpty = findNavController().previousBackStackEntry?.destination?.id in emptyFragmentsIds
+        Log.d("[Generic Fragment] ${getFragmentRealClassName()} isPreviousFragmentEmpty ? $isPreviousFragmentEmpty")
+        val popBackStack = isSlidingPaneFlat || !isPreviousFragmentEmpty
+        Log.d("[Generic Fragment] ${getFragmentRealClassName()} popBackStack ? $popBackStack")
+        return popBackStack
     }
 }

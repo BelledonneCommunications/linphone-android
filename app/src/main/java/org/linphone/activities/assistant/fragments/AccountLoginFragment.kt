@@ -39,7 +39,7 @@ import org.linphone.utils.DialogUtils
 
 class AccountLoginFragment : AbstractPhoneFragment<AssistantAccountLoginFragmentBinding>() {
     override lateinit var viewModel: AccountLoginViewModel
-    private lateinit var sharedViewModel: SharedAssistantViewModel
+    private lateinit var sharedAssistantViewModel: SharedAssistantViewModel
 
     override fun getLayoutId(): Int = R.layout.assistant_account_login_fragment
 
@@ -48,13 +48,13 @@ class AccountLoginFragment : AbstractPhoneFragment<AssistantAccountLoginFragment
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        sharedViewModel = requireActivity().run {
+        sharedAssistantViewModel = requireActivity().run {
             ViewModelProvider(this)[SharedAssistantViewModel::class.java]
         }
 
         viewModel = ViewModelProvider(
             this,
-            AccountLoginViewModelFactory(sharedViewModel.getAccountCreator())
+            AccountLoginViewModelFactory(sharedAssistantViewModel.getAccountCreator())
         )[AccountLoginViewModel::class.java]
         binding.viewModel = viewModel
 

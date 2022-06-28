@@ -26,7 +26,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.*
@@ -34,7 +33,6 @@ import org.linphone.activities.main.*
 import org.linphone.activities.main.contact.viewmodels.ContactViewModel
 import org.linphone.activities.main.contact.viewmodels.ContactViewModelFactory
 import org.linphone.activities.main.viewmodels.DialogViewModel
-import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.navigateToChatRoom
 import org.linphone.activities.navigateToContactEditor
 import org.linphone.activities.navigateToDialer
@@ -45,7 +43,6 @@ import org.linphone.utils.Event
 
 class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
     private lateinit var viewModel: ContactViewModel
-    private lateinit var sharedViewModel: SharedMainViewModel
 
     override fun getLayoutId(): Int = R.layout.contact_detail_fragment
 
@@ -54,9 +51,6 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        sharedViewModel = requireActivity().run {
-            ViewModelProvider(this)[SharedMainViewModel::class.java]
-        }
         binding.sharedMainViewModel = sharedViewModel
 
         useMaterialSharedAxisXForwardAnimation = sharedViewModel.isSlidingPaneSlideable.value == false
@@ -127,10 +121,6 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
             }
         }
 
-        binding.setBackClickListener {
-            goBack()
-        }
-
         binding.setEditClickListener {
             navigateToContactEditor()
         }
@@ -167,16 +157,6 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
         coreContext.contactsManager.contactIdToWatchFor = ""
         if (this::viewModel.isInitialized) {
             viewModel.unregisterContactListener()
-        }
-    }
-
-    override fun goBack() {
-        if (!findNavController().popBackStack()) {
-            if (sharedViewModel.isSlidingPaneSlideable.value == true) {
-                sharedViewModel.closeSlidingPaneEvent.value = Event(true)
-            } else {
-                navigateToEmptyContact()
-            }
         }
     }
 

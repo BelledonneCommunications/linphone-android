@@ -32,7 +32,7 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantPhoneAccountLinkingFragmentBinding
 
 class PhoneAccountLinkingFragment : AbstractPhoneFragment<AssistantPhoneAccountLinkingFragmentBinding>() {
-    private lateinit var sharedViewModel: SharedAssistantViewModel
+    private lateinit var sharedAssistantViewModel: SharedAssistantViewModel
     override lateinit var viewModel: PhoneAccountLinkingViewModel
 
     override fun getLayoutId(): Int = R.layout.assistant_phone_account_linking_fragment
@@ -42,11 +42,11 @@ class PhoneAccountLinkingFragment : AbstractPhoneFragment<AssistantPhoneAccountL
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        sharedViewModel = requireActivity().run {
+        sharedAssistantViewModel = requireActivity().run {
             ViewModelProvider(this)[SharedAssistantViewModel::class.java]
         }
 
-        val accountCreator = sharedViewModel.getAccountCreator()
+        val accountCreator = sharedAssistantViewModel.getAccountCreator()
         viewModel = ViewModelProvider(this, PhoneAccountLinkingViewModelFactory(accountCreator))[PhoneAccountLinkingViewModel::class.java]
         binding.viewModel = viewModel
 

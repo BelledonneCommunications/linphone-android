@@ -6,9 +6,6 @@
     <data>
         <import type="android.view.View" />
         <variable
-            name="backClickListener"
-            type="android.view.View.OnClickListener"/>
-        <variable
             name="deleteClickListener"
             type="android.view.View.OnClickListener"/>
         <variable
@@ -35,7 +32,6 @@
 
             <ImageView
                 android:id="@+id/back"
-                android:onClick="@{backClickListener}"
                 android:visibility="@{sharedMainViewModel.isSlidingPaneSlideable ? View.VISIBLE : View.GONE}"
                 android:contentDescription="@string/content_description_go_back"
                 android:layout_width="0dp"

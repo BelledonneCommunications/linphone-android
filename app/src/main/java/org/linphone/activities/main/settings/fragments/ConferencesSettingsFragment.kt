@@ -24,9 +24,7 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
 import org.linphone.activities.main.settings.viewmodels.ConferencesSettingsViewModel
-import org.linphone.activities.navigateToEmptySetting
 import org.linphone.databinding.SettingsConferencesFragmentBinding
-import org.linphone.utils.Event
 
 class ConferencesSettingsFragment : GenericSettingFragment<SettingsConferencesFragmentBinding>() {
     private lateinit var viewModel: ConferencesSettingsViewModel
@@ -41,15 +39,5 @@ class ConferencesSettingsFragment : GenericSettingFragment<SettingsConferencesFr
 
         viewModel = ViewModelProvider(this)[ConferencesSettingsViewModel::class.java]
         binding.viewModel = viewModel
-
-        binding.setBackClickListener { goBack() }
-    }
-
-    override fun goBack() {
-        if (sharedViewModel.isSlidingPaneSlideable.value == true) {
-            sharedViewModel.closeSlidingPaneEvent.value = Event(true)
-        } else {
-            navigateToEmptySetting()
-        }
     }
 }

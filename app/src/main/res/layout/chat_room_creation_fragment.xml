@@ -6,9 +6,6 @@
     <data>
         <import type="android.view.View"/>
         <variable
-            name="backClickListener"
-            type="android.view.View.OnClickListener"/>
-        <variable
             name="allContactsToggleClickListener"
             type="android.view.View.OnClickListener"/>
         <variable
@@ -36,7 +33,6 @@
             <ImageView
                 android:id="@+id/back"
                 android:contentDescription="@string/content_description_go_back"
-                android:onClick="@{backClickListener}"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="left"

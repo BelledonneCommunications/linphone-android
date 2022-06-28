@@ -30,13 +30,11 @@ import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.main.settings.viewmodels.CallSettingsViewModel
-import org.linphone.activities.navigateToEmptySetting
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsCallFragmentBinding
 import org.linphone.mediastream.Version
 import org.linphone.telecom.TelecomHelper
-import org.linphone.utils.Event
 
 class CallSettingsFragment : GenericSettingFragment<SettingsCallFragmentBinding>() {
     private lateinit var viewModel: CallSettingsViewModel
@@ -51,8 +49,6 @@ class CallSettingsFragment : GenericSettingFragment<SettingsCallFragmentBinding>
 
         viewModel = ViewModelProvider(this)[CallSettingsViewModel::class.java]
         binding.viewModel = viewModel
-
-        binding.setBackClickListener { goBack() }
 
         viewModel.systemWideOverlayEnabledEvent.observe(
             viewLifecycleOwner
@@ -160,14 +156,6 @@ class CallSettingsFragment : GenericSettingFragment<SettingsCallFragmentBinding>
         Log.i("[Call Settings] Telecom Manager is ${if (enabled) "enabled" else "disabled"}")
         viewModel.useTelecomManager.value = enabled
         corePreferences.useTelecomManager = enabled
-    }
-
-    override fun goBack() {
-        if (sharedViewModel.isSlidingPaneSlideable.value == true) {
-            sharedViewModel.closeSlidingPaneEvent.value = Event(true)
-        } else {
-            navigateToEmptySetting()
-        }
     }
 
     override fun onRequestPermissionsResult(

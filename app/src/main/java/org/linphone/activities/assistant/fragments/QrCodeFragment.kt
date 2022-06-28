@@ -38,7 +38,7 @@ class QrCodeFragment : GenericFragment<AssistantQrCodeFragmentBinding>() {
         const val CAMERA_PERMISSION_REQUEST_CODE = 0
     }
 
-    private lateinit var sharedViewModel: SharedAssistantViewModel
+    private lateinit var sharedAssistantViewModel: SharedAssistantViewModel
     private lateinit var viewModel: QrCodeViewModel
 
     override fun getLayoutId(): Int = R.layout.assistant_qr_code_fragment
@@ -48,7 +48,7 @@ class QrCodeFragment : GenericFragment<AssistantQrCodeFragmentBinding>() {
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        sharedViewModel = requireActivity().run {
+        sharedAssistantViewModel = requireActivity().run {
             ViewModelProvider(this)[SharedAssistantViewModel::class.java]
         }
 
@@ -59,7 +59,7 @@ class QrCodeFragment : GenericFragment<AssistantQrCodeFragmentBinding>() {
             viewLifecycleOwner
         ) {
             it.consume { url ->
-                sharedViewModel.remoteProvisioningUrl.value = url
+                sharedAssistantViewModel.remoteProvisioningUrl.value = url
                 findNavController().navigateUp()
             }
         }

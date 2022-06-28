@@ -25,13 +25,11 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.google.android.material.transition.MaterialSharedAxis
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -43,7 +41,6 @@ import org.linphone.activities.main.contact.adapters.ContactsListAdapter
 import org.linphone.activities.main.contact.viewmodels.ContactsListViewModel
 import org.linphone.activities.main.fragments.MasterFragment
 import org.linphone.activities.main.viewmodels.DialogViewModel
-import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.navigateToContact
 import org.linphone.activities.navigateToContactEditor
 import org.linphone.core.Factory
@@ -55,7 +52,6 @@ import org.linphone.utils.*
 class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, ContactsListAdapter>() {
     override val dialogConfirmationMessageBeforeRemoval = R.plurals.contact_delete_dialog
     private lateinit var listViewModel: ContactsListViewModel
-    private lateinit var sharedViewModel: SharedMainViewModel
 
     private var sipUriToAdd: String? = null
     private var editOnClick: Boolean = false
@@ -78,11 +74,7 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
 
         /* Shared view model & sliding pane related */
 
-        sharedViewModel = requireActivity().run {
-            ViewModelProvider(this)[SharedMainViewModel::class.java]
-        }
-
-        view.doOnPreDraw { sharedViewModel.isSlidingPaneSlideable.value = binding.slidingPane.isSlideable }
+        setUpSlidingPane(binding.slidingPane)
 
         useMaterialSharedAxisXForwardAnimation = false
         sharedViewModel.updateContactsAnimationsBasedOnDestination.observe(
@@ -114,15 +106,6 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
             }
         }
 
-        sharedViewModel.closeSlidingPaneEvent.observe(
-            viewLifecycleOwner
-        ) {
-            it.consume {
-                if (!binding.slidingPane.closePane()) {
-                    goBack()
-                }
-            }
-        }
         sharedViewModel.layoutChangedEvent.observe(
             viewLifecycleOwner
         ) {
@@ -138,7 +121,7 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
                 }
             }
         }
-        binding.slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
+
         /* End of shared view model & sliding pane related */
 
         _adapter = ContactsListAdapter(listSelectionViewModel, viewLifecycleOwner)

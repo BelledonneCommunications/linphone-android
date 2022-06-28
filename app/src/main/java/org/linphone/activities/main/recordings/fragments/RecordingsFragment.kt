@@ -97,8 +97,6 @@ class RecordingsFragment : MasterFragment<RecordingsFragmentBinding, RecordingsL
             }
         }
 
-        binding.setBackClickListener { goBack() }
-
         binding.setEditClickListener { listSelectionViewModel.isEditionEnabled.value = true }
 
         binding.setVideoTouchListener { v, event ->

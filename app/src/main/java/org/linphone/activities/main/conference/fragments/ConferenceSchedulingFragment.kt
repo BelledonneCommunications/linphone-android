@@ -22,7 +22,6 @@ package org.linphone.activities.main.conference.fragments
 import android.os.Bundle
 import android.text.format.DateFormat.is24HourFormat
 import android.view.View
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.navGraphViewModels
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
@@ -33,7 +32,6 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.conference.viewmodels.ConferenceSchedulingViewModel
-import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.navigateToParticipantsList
 import org.linphone.core.Factory
 import org.linphone.core.tools.Log
@@ -41,7 +39,6 @@ import org.linphone.databinding.ConferenceSchedulingFragmentBinding
 
 class ConferenceSchedulingFragment : GenericFragment<ConferenceSchedulingFragmentBinding>() {
     private val viewModel: ConferenceSchedulingViewModel by navGraphViewModels(R.id.conference_scheduling_nav_graph)
-    private lateinit var sharedViewModel: SharedMainViewModel
 
     override fun getLayoutId(): Int = R.layout.conference_scheduling_fragment
 
@@ -51,10 +48,6 @@ class ConferenceSchedulingFragment : GenericFragment<ConferenceSchedulingFragmen
         binding.lifecycleOwner = viewLifecycleOwner
 
         binding.viewModel = viewModel
-
-        sharedViewModel = requireActivity().run {
-            ViewModelProvider(this)[SharedMainViewModel::class.java]
-        }
 
         sharedViewModel.conferenceInfoToEdit.observe(
             viewLifecycleOwner
@@ -73,10 +66,6 @@ class ConferenceSchedulingFragment : GenericFragment<ConferenceSchedulingFragmen
                     Log.e("[Conference Scheduling] Failed to parse conference address: $address")
                 }
             }
-        }
-
-        binding.setBackClickListener {
-            goBack()
         }
 
         binding.setNextClickListener {

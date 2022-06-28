@@ -42,8 +42,6 @@ class AboutFragment : SecureFragment<AboutFragmentBinding>() {
         viewModel = ViewModelProvider(this)[AboutViewModel::class.java]
         binding.viewModel = viewModel
 
-        binding.setBackClickListener { goBack() }
-
         binding.setPrivacyPolicyClickListener {
             val browserIntent = Intent(
                 Intent.ACTION_VIEW,

@@ -48,10 +48,6 @@ class TopBarFragment : GenericFragment<FileViewerTopBarFragmentBinding>() {
         binding.lifecycleOwner = viewLifecycleOwner
         useMaterialSharedAxisXForwardAnimation = false
 
-        binding.setBackClickListener {
-            goBack()
-        }
-
         binding.setExportClickListener {
             val contentToExport = content
             if (contentToExport != null) {

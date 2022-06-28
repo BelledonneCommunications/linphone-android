@@ -45,10 +45,6 @@ class ConfigViewerFragment : SecureFragment<FileConfigViewerFragmentBinding>() {
 
         isSecure = arguments?.getBoolean("Secure") ?: false
 
-        binding.setBackClickListener {
-            goBack()
-        }
-
         binding.setExportClickListener {
             shareConfig()
         }

@@ -24,13 +24,11 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.google.android.material.transition.MaterialSharedAxis
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -42,7 +40,6 @@ import org.linphone.activities.main.history.adapters.CallLogsListAdapter
 import org.linphone.activities.main.history.data.GroupedCallLogData
 import org.linphone.activities.main.history.viewmodels.CallLogsListViewModel
 import org.linphone.activities.main.viewmodels.DialogViewModel
-import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.main.viewmodels.TabsViewModel
 import org.linphone.activities.navigateToCallHistory
 import org.linphone.activities.navigateToConferenceCallHistory
@@ -54,7 +51,6 @@ import org.linphone.utils.*
 class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, CallLogsListAdapter>() {
     override val dialogConfirmationMessageBeforeRemoval = R.plurals.history_delete_dialog
     private lateinit var listViewModel: CallLogsListViewModel
-    private lateinit var sharedViewModel: SharedMainViewModel
 
     private val observer = object : RecyclerView.AdapterDataObserver() {
         override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
@@ -96,21 +92,8 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
 
         /* Shared view model & sliding pane related */
 
-        sharedViewModel = requireActivity().run {
-            ViewModelProvider(this)[SharedMainViewModel::class.java]
-        }
+        setUpSlidingPane(binding.slidingPane)
 
-        view.doOnPreDraw { sharedViewModel.isSlidingPaneSlideable.value = binding.slidingPane.isSlideable }
-
-        sharedViewModel.closeSlidingPaneEvent.observe(
-            viewLifecycleOwner
-        ) {
-            it.consume {
-                if (!binding.slidingPane.closePane()) {
-                    goBack()
-                }
-            }
-        }
         sharedViewModel.layoutChangedEvent.observe(
             viewLifecycleOwner
         ) {
@@ -126,7 +109,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
                 }
             }
         }
-        binding.slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
+
         /* End of shared view model & sliding pane related */
 
         _adapter = CallLogsListAdapter(listSelectionViewModel, viewLifecycleOwner)

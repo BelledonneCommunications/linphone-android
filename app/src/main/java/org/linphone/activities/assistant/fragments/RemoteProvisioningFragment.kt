@@ -33,7 +33,7 @@ import org.linphone.activities.navigateToQrCode
 import org.linphone.databinding.AssistantRemoteProvisioningFragmentBinding
 
 class RemoteProvisioningFragment : GenericFragment<AssistantRemoteProvisioningFragmentBinding>() {
-    private lateinit var sharedViewModel: SharedAssistantViewModel
+    private lateinit var sharedAssistantViewModel: SharedAssistantViewModel
     private lateinit var viewModel: RemoteProvisioningViewModel
 
     override fun getLayoutId(): Int = R.layout.assistant_remote_provisioning_fragment
@@ -43,7 +43,7 @@ class RemoteProvisioningFragment : GenericFragment<AssistantRemoteProvisioningFr
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        sharedViewModel = requireActivity().run {
+        sharedAssistantViewModel = requireActivity().run {
             ViewModelProvider(this)[SharedAssistantViewModel::class.java]
         }
 
@@ -71,13 +71,14 @@ class RemoteProvisioningFragment : GenericFragment<AssistantRemoteProvisioningFr
             }
         }
 
-        viewModel.urlToFetch.value = sharedViewModel.remoteProvisioningUrl.value ?: coreContext.core.provisioningUri
+        viewModel.urlToFetch.value = sharedAssistantViewModel.remoteProvisioningUrl.value ?: coreContext.core.provisioningUri
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        if (this::sharedViewModel.isInitialized) {
-            sharedViewModel.remoteProvisioningUrl.value = null
+
+        if (::sharedAssistantViewModel.isInitialized) {
+            sharedAssistantViewModel.remoteProvisioningUrl.value = null
         }
     }
 }

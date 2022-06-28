@@ -33,7 +33,6 @@ import org.linphone.activities.main.chat.viewmodels.GroupInfoViewModel
 import org.linphone.activities.main.chat.viewmodels.GroupInfoViewModelFactory
 import org.linphone.activities.main.fragments.SecureFragment
 import org.linphone.activities.main.viewmodels.DialogViewModel
-import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.navigateToChatRoom
 import org.linphone.activities.navigateToChatRoomCreation
 import org.linphone.core.Address
@@ -45,7 +44,6 @@ import org.linphone.utils.DialogUtils
 
 class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
     private lateinit var viewModel: GroupInfoViewModel
-    private lateinit var sharedViewModel: SharedMainViewModel
     private lateinit var adapter: GroupInfoParticipantsAdapter
     private var meAdminStatusChangedDialog: Dialog? = null
 
@@ -55,10 +53,6 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
-
-        sharedViewModel = requireActivity().run {
-            ViewModelProvider(this)[SharedMainViewModel::class.java]
-        }
 
         val chatRoom: ChatRoom? = sharedViewModel.selectedGroupChatRoom.value
         isSecure = chatRoom?.currentParams?.isEncryptionEnabled ?: false
@@ -112,10 +106,6 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
         }
 
         addParticipantsFromSharedViewModel()
-
-        binding.setBackClickListener {
-            goBack()
-        }
 
         viewModel.createdChatRoomEvent.observe(
             viewLifecycleOwner

@@ -21,20 +21,16 @@ package org.linphone.activities.main.history.fragments
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
 import org.linphone.activities.*
 import org.linphone.activities.main.*
 import org.linphone.activities.main.history.viewmodels.CallLogViewModel
-import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.core.tools.Log
 import org.linphone.databinding.HistoryConfDetailFragmentBinding
-import org.linphone.utils.Event
 
 class DetailConferenceCallLogFragment : GenericFragment<HistoryConfDetailFragmentBinding>() {
     private lateinit var viewModel: CallLogViewModel
-    private lateinit var sharedViewModel: SharedMainViewModel
 
     override fun getLayoutId(): Int = R.layout.history_conf_detail_fragment
 
@@ -43,9 +39,6 @@ class DetailConferenceCallLogFragment : GenericFragment<HistoryConfDetailFragmen
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        sharedViewModel = requireActivity().run {
-            ViewModelProvider(this)[SharedMainViewModel::class.java]
-        }
         binding.sharedMainViewModel = sharedViewModel
 
         val callLogGroup = sharedViewModel.selectedCallLogGroup.value
@@ -61,24 +54,12 @@ class DetailConferenceCallLogFragment : GenericFragment<HistoryConfDetailFragmen
 
         useMaterialSharedAxisXForwardAnimation = sharedViewModel.isSlidingPaneSlideable.value == false
 
-        binding.setBackClickListener {
-            goBack()
-        }
-
         viewModel.onMessageToNotifyEvent.observe(
             viewLifecycleOwner
         ) {
             it.consume { messageResourceId ->
                 (activity as MainActivity).showSnackBar(messageResourceId)
             }
-        }
-    }
-
-    override fun goBack() {
-        if (sharedViewModel.isSlidingPaneSlideable.value == true) {
-            sharedViewModel.closeSlidingPaneEvent.value = Event(true)
-        } else {
-            navigateToEmptyCallHistory()
         }
     }
 }
