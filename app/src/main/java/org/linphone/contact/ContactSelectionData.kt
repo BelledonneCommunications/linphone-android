@@ -63,7 +63,7 @@ class ContactSelectionData(private val searchResult: SearchResult) : ContactData
     private fun searchMatchingContact() {
         val friend = searchResult.friend
         if (friend != null) {
-            contact.value = friend
+            contact.value = friend!!
             displayName.value = friend.name
         } else {
             val address = searchResult.address

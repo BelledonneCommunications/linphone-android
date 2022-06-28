@@ -60,7 +60,9 @@ open class GenericContactData(private val sipAddress: Address) : ContactDataInte
         displayName.value = LinphoneUtils.getDisplayName(sipAddress)
 
         val c = coreContext.contactsManager.findContactByAddress(sipAddress)
-        contact.value = c
+        if (c != null) {
+            contact.value = c!!
+        }
     }
 }
 
