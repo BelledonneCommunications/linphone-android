@@ -12,6 +12,7 @@
     </data>
 
     <LinearLayout
+        android:id="@+id/audio_routes_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/shape_audio_routes_background"
@@ -20,6 +21,7 @@
         android:orientation="vertical">
 
         <ImageView
+            android:id="@+id/bluetooth_audio_route"
             android:selected="@{controlsViewModel.isBluetoothHeadsetSelected}"
             android:onClick="@{() -> controlsViewModel.forceBluetoothAudioRoute()}"
             android:contentDescription="@string/content_description_use_bluetooth_headset"
@@ -30,6 +32,7 @@
             android:src="@drawable/icon_bluetooth" />
 
         <ImageView
+            android:id="@+id/earpiece_audio_route"
             android:selected="@{!controlsViewModel.isSpeakerSelected &amp;&amp; !controlsViewModel.isBluetoothHeadsetSelected}"
             android:onClick="@{() -> controlsViewModel.forceEarpieceAudioRoute()}"
             android:contentDescription="@string/content_description_use_earpiece"
@@ -40,6 +43,7 @@
             android:src="@drawable/icon_earpiece" />
 
         <ImageView
+            android:id="@+id/speaker_audio_route"
             android:selected="@{controlsViewModel.isSpeakerSelected}"
             android:onClick="@{() -> controlsViewModel.forceSpeakerAudioRoute()}"
             android:contentDescription="@string/content_description_use_speaker"

@@ -70,4 +70,6 @@
     <dimen name="master_fragment_width">280dp</dimen>
     <dimen name="voip_active_speaker_top_margin">10dp</dimen>
     <dimen name="margin_0dp">0dp</dimen>
+    <dimen name="voip_single_call_header_size">50dp</dimen>
+    <dimen name="voip_single_call_header_size_with_record_info">85dp</dimen>
 </resources>

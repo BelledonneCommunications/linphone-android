@@ -22,8 +22,12 @@
 
         <ImageView
             android:id="@+id/resume_conference"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_max="@dimen/voip_contact_avatar_max_size"
+            app:layout_constraintWidth_max="@dimen/voip_contact_avatar_max_size"
+            app:layout_constraintDimensionRatio="1:1"
+            android:layout_marginTop="5dp"
             android:background="@drawable/shape_orange_circle"
             android:contentDescription="@null"
             android:onClick="@{() -> conferenceViewModel.resumeConference()}"
@@ -53,6 +57,7 @@
             style="@style/conference_paused_subtitle_font"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:gravity="center"
             android:text="@string/conference_paused_subtitle"
             app:layout_constraintBottom_toBottomOf="parent"
