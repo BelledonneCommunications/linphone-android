@@ -41,6 +41,12 @@ Group changes to describe their impact on the project, as follows:
 - Trying to keep the preferred driver (OpenSLES / AAudio) when switching device
 - Issues when storing presence in native contacts + potentially duplicated SIP addresses in contact details
 
+## [4.6.11] - 2022-06-27
+
+### Fixed
+- Various crashes due to unhandled exceptions
+- Echo canceller calibration not using speaker (SDK fix)
+
 ## [4.6.10] - 2022-06-07
 
 ### Fixed
