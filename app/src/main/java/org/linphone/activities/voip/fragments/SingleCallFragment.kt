@@ -26,6 +26,7 @@ import android.os.SystemClock
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Chronometer
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.navigation.navGraphViewModels
@@ -261,18 +262,20 @@ class SingleCallFragment : GenericFragment<VoipSingleCallFragmentBinding>() {
 
     private fun updateHingeRelatedConstraints(state: FoldingFeature.State) {
         Log.i("[Single Call] Updating constraint layout hinges: $state")
-        /*val constraintLayout = binding.constraintLayout
+        val constraintLayout = binding.constraintLayout
         val set = ConstraintSet()
         set.clone(constraintLayout)
 
         if (state == FoldingFeature.State.HALF_OPENED) {
             set.setGuidelinePercent(R.id.hinge_top, 0.5f)
             set.setGuidelinePercent(R.id.hinge_bottom, 0.5f)
+            controlsViewModel.folded.value = true
         } else {
             set.setGuidelinePercent(R.id.hinge_top, 0f)
             set.setGuidelinePercent(R.id.hinge_bottom, 1f)
+            controlsViewModel.folded.value = false
         }
 
-        set.applyTo(constraintLayout)*/
+        set.applyTo(constraintLayout)
     }
 }

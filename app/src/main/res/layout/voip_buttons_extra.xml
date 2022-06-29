@@ -23,6 +23,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/extra_buttons_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/voip_call_extra_buttons_height"
         android:layout_marginStart="15dp"
@@ -76,6 +77,7 @@
             app:layout_constraintVertical_chainStyle="spread" />
 
         <TextView
+            android:id="@+id/unread_chat_count"
             style="@style/unread_count_font"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -90,6 +92,7 @@
             app:layout_constraintTop_toTopOf="@id/chat" />
 
         <ProgressBar
+            android:id="@+id/chat_room_creation_progress"
             style="?android:attr/progressBarStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -178,6 +181,7 @@
             app:layout_constraintTop_toBottomOf="@id/chat" />
 
         <TextView
+            android:id="@+id/paused_calls_count"
             style="@style/unread_count_font"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
