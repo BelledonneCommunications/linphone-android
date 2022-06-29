@@ -189,10 +189,10 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
                 list.add(data)
             } else if (content.isText) {
                 val spannable = Spannable.Factory.getInstance().newSpannable(content.utf8Text?.trim())
-                LinkifyCompat.addLinks(spannable, Linkify.WEB_URLS or Linkify.EMAIL_ADDRESSES or Linkify.PHONE_NUMBERS)
+                LinkifyCompat.addLinks(spannable, Linkify.WEB_URLS or Linkify.PHONE_NUMBERS)
                 text.value = PatternClickableSpan()
                     .add(
-                        Pattern.compile("(sips?):([^@]+)(?:@([^ ]+))?"),
+                        Pattern.compile("((sips?):)?([^@]+)(?:@([^ ]+))?"),
                         object : PatternClickableSpan.SpannableClickedListener {
                             override fun onSpanClicked(text: String) {
                                 Log.i("[Chat Message Data] Clicked on SIP URI: $text")
