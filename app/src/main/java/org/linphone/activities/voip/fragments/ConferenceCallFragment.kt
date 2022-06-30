@@ -25,6 +25,7 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.view.View
 import android.widget.Chronometer
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -34,7 +35,7 @@ import com.google.android.material.snackbar.Snackbar
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
-import org.linphone.activities.GenericFragment
+import org.linphone.activities.*
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.navigateToCallsList
 import org.linphone.activities.navigateToConferenceLayout
@@ -107,9 +108,11 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
                 conferenceViewModel.conferenceDisplayMode.value == ConferenceDisplayMode.GRID &&
                 it.size > conferenceViewModel.maxParticipantsForMosaicLayout
             ) {
-                showSnackBar(R.string.conference_too_many_participants_for_mosaic_layout)
                 Log.w("[Conference Call] More than ${conferenceViewModel.maxParticipantsForMosaicLayout} participants (${it.size}), forcing active speaker layout")
-                conferenceViewModel.conferenceDisplayMode.value = ConferenceDisplayMode.ACTIVE_SPEAKER
+                conferenceViewModel.changeLayout(ConferenceDisplayMode.ACTIVE_SPEAKER)
+                refreshConferenceFragment()
+                // Can't use SnackBar whilst changing fragment
+                Toast.makeText(requireContext(), R.string.conference_too_many_participants_for_mosaic_layout, Toast.LENGTH_LONG).show()
             }
         }
 
