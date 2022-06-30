@@ -137,7 +137,7 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
             }
         }
 
-        val layoutManager = LinearLayoutManager(activity)
+        val layoutManager = LinearLayoutManager(requireContext())
         binding.contactsList.layoutManager = layoutManager
 
         // Swipe action

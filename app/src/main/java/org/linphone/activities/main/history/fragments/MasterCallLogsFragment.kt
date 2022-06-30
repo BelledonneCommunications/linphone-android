@@ -123,7 +123,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
             listSelectionViewModel.isEditionEnabled.value = true
         }
 
-        val layoutManager = LinearLayoutManager(activity)
+        val layoutManager = LinearLayoutManager(requireContext())
         binding.callLogsList.layoutManager = layoutManager
 
         // Swipe action

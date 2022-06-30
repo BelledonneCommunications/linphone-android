@@ -63,7 +63,7 @@ class ConferenceAddParticipantsFragment : GenericFragment<VoipConferenceParticip
         adapter.setLimeCapabilityRequired(false) // TODO: Use right value from conference
         binding.contactsList.adapter = adapter
 
-        val layoutManager = LinearLayoutManager(activity)
+        val layoutManager = LinearLayoutManager(requireContext())
         binding.contactsList.layoutManager = layoutManager
 
         // Divider between items

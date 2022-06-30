@@ -52,7 +52,7 @@ class ConferenceSchedulingParticipantsListFragment : GenericFragment<ConferenceS
         adapter.setLimeCapabilityRequired(viewModel.isEncrypted.value == true)
         binding.contactsList.adapter = adapter
 
-        val layoutManager = LinearLayoutManager(activity)
+        val layoutManager = LinearLayoutManager(requireContext())
         binding.contactsList.layoutManager = layoutManager
 
         // Divider between items

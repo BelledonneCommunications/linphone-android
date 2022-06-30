@@ -187,7 +187,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         // We need this adapter data observer to know when to scroll
         binding.chatMessagesList.adapter = adapter
 
-        val layoutManager = LinearLayoutManager(activity)
+        val layoutManager = LinearLayoutManager(requireContext())
         layoutManager.stackFromEnd = true
         binding.chatMessagesList.layoutManager = layoutManager
 
