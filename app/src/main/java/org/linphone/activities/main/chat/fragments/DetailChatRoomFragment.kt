@@ -86,24 +86,22 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                     if (viewModel.isUserScrollingUp.value == false) {
                         scrollToFirstUnreadMessageOrBottom(false)
                     } else {
-                        Log.w("[Chat Room] User has scrolled up manually in the messages history, don't scroll to the newly added message at the bottom & don't mark the chat room as read")
+                        Log.d("[Chat Room] User has scrolled up manually in the messages history, don't scroll to the newly added message at the bottom & don't mark the chat room as read")
                     }
                 }
             }
         }
     }
 
+    private lateinit var chatScrollListener: ChatScrollListener
+
     override fun getLayoutId(): Int {
         return R.layout.chat_room_detail_fragment
     }
 
     override fun onDestroyView() {
-        if (_adapter != null) {
-            try {
-                adapter.unregisterAdapterDataObserver(observer)
-            } catch (ise: IllegalStateException) {}
-        }
         binding.chatMessagesList.adapter = null
+
         super.onDestroyView()
     }
 
@@ -190,7 +188,6 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         _adapter = ChatMessagesListAdapter(listSelectionViewModel, viewLifecycleOwner)
         // SubmitList is done on a background thread
         // We need this adapter data observer to know when to scroll
-        adapter.registerAdapterDataObserver(observer)
         binding.chatMessagesList.adapter = adapter
 
         val layoutManager = LinearLayoutManager(activity)
@@ -200,25 +197,6 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         // Displays unread messages header
         val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
         binding.chatMessagesList.addItemDecoration(headerItemDecoration)
-
-        // Wait for items to be displayed before scrolling for the first time
-        binding.chatMessagesList
-            .viewTreeObserver
-            .addOnGlobalLayoutListener(
-                object : OnGlobalLayoutListener {
-                    override fun onGlobalLayout() {
-                        if (isBindingAvailable()) {
-                            binding.chatMessagesList
-                                .viewTreeObserver
-                                .removeOnGlobalLayoutListener(this)
-                            Log.i("[Chat Room] Messages have been displayed, scrolling to first unread message if any")
-                            scrollToFirstUnreadMessageOrBottom(false)
-                        } else {
-                            Log.e("[Chat Room] Binding not available in onGlobalLayout callback!")
-                        }
-                    }
-                }
-            )
 
         // Swipe action
         val swipeConfiguration = RecyclerViewSwipeConfiguration()
@@ -266,7 +244,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         RecyclerViewSwipeUtils(ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT, swipeConfiguration, swipeListener)
             .attachToRecyclerView(binding.chatMessagesList)
 
-        val chatScrollListener = object : ChatScrollListener(layoutManager) {
+        chatScrollListener = object : ChatScrollListener(layoutManager) {
             override fun onLoadMore(totalItemsCount: Int) {
                 Log.i("[Chat Room] User has scrolled up far enough, load more items from history (currently there are $totalItemsCount messages displayed)")
                 listViewModel.loadMoreData(totalItemsCount)
@@ -278,13 +256,16 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
             override fun onScrolledToEnd() {
                 viewModel.isUserScrollingUp.value = false
-                if (viewModel.unreadMessagesCount.value != 0 && coreContext.notificationsManager.currentlyDisplayedChatRoomAddress != null) {
+
+                val peerAddress = viewModel.chatRoom.peerAddress.asStringUriOnly()
+                if (viewModel.unreadMessagesCount.value != 0 &&
+                    coreContext.notificationsManager.currentlyDisplayedChatRoomAddress == peerAddress
+                ) {
                     Log.i("[Chat Room] User has scrolled to the latest message, mark chat room as read")
                     viewModel.chatRoom.markAsRead()
                 }
             }
         }
-        binding.chatMessagesList.addOnScrollListener(chatScrollListener)
 
         chatSendingViewModel.textToSend.observe(
             viewLifecycleOwner
@@ -729,14 +710,59 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             // Prevent notifications for this chat room to be displayed
             val peerAddress = viewModel.chatRoom.peerAddress.asStringUriOnly()
             coreContext.notificationsManager.currentlyDisplayedChatRoomAddress = peerAddress
-            Log.i("[Chat Room] Fragment resuming, mark chat room as read")
-            viewModel.chatRoom.markAsRead()
+
+            if (_adapter != null) {
+                try {
+                    adapter.registerAdapterDataObserver(observer)
+                } catch (ise: IllegalStateException) {}
+            }
+
+            // Wait for items to be displayed
+            binding.chatMessagesList
+                .viewTreeObserver
+                .addOnGlobalLayoutListener(
+                    object : OnGlobalLayoutListener {
+                        override fun onGlobalLayout() {
+                            if (isBindingAvailable()) {
+                                binding.chatMessagesList
+                                    .viewTreeObserver
+                                    .removeOnGlobalLayoutListener(this)
+                                if (::chatScrollListener.isInitialized) {
+                                    binding.chatMessagesList.addOnScrollListener(chatScrollListener)
+                                }
+
+                                if (viewModel.chatRoom.unreadMessagesCount > 0) {
+                                    Log.i("[Chat Room] Messages have been displayed, scrolling to first unread")
+                                    val notAllMessagesDisplayed = scrollToFirstUnreadMessageOrBottom(false)
+                                    if (notAllMessagesDisplayed) {
+                                        Log.w("[Chat Room] More unread messages than the screen can display, do not mark chat room as read now, wait for user to scroll to bottom")
+                                    } else {
+                                        Log.i("[Chat Room] Marking chat room as read")
+                                        viewModel.chatRoom.markAsRead()
+                                    }
+                                }
+                            } else {
+                                Log.e("[Chat Room] Binding not available in onGlobalLayout callback!")
+                            }
+                        }
+                    }
+                )
         } else {
             Log.e("[Chat Room] Fragment resuming but viewModel lateinit property isn't initialized!")
         }
     }
 
     override fun onPause() {
+        if (::chatScrollListener.isInitialized) {
+            binding.chatMessagesList.removeOnScrollListener(chatScrollListener)
+        }
+
+        if (_adapter != null) {
+            try {
+                adapter.unregisterAdapterDataObserver(observer)
+            } catch (ise: IllegalStateException) {}
+        }
+
         // Conversation isn't visible anymore, any new message received in it will trigger a notification
         coreContext.notificationsManager.currentlyDisplayedChatRoomAddress = null
 
@@ -1004,7 +1030,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         }
     }
 
-    private fun scrollToFirstUnreadMessageOrBottom(smooth: Boolean) {
+    private fun scrollToFirstUnreadMessageOrBottom(smooth: Boolean): Boolean {
         if (_adapter != null && adapter.itemCount > 0) {
             // Scroll to first unread message if any
             val firstUnreadMessagePosition = adapter.getFirstUnreadMessagePosition()
@@ -1020,7 +1046,9 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             } else {
                 binding.chatMessagesList.scrollToPosition(indexToScrollTo)
             }
+            return firstUnreadMessagePosition == 0
         }
+        return false
     }
 
     private fun pickFile() {
