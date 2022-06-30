@@ -40,6 +40,7 @@ Group changes to describe their impact on the project, as follows:
 - "Blinking" in some views when presence is being received
 - Trying to keep the preferred driver (OpenSLES / AAudio) when switching device
 - Issues when storing presence in native contacts + potentially duplicated SIP addresses in contact details
+- Chat room scroll position lost when going into sub-view
 
 ## [4.6.11] - 2022-06-27
 
