@@ -951,6 +951,16 @@ internal fun ConferenceCallFragment.navigateToConferenceLayout() {
     }
 }
 
+internal fun ConferenceCallFragment.refreshConferenceFragment() {
+    if (findNavController().currentDestination?.id == R.id.conferenceCallFragment) {
+        findNavController().navigate(
+            R.id.action_global_conferenceCallFragment,
+            null,
+            popupTo(R.id.conferenceCallFragment, true)
+        )
+    }
+}
+
 internal fun ConferenceParticipantsFragment.navigateToAddParticipants() {
     if (findNavController().currentDestination?.id == R.id.conferenceParticipantsFragment) {
         findNavController().navigate(
