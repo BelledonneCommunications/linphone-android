@@ -32,7 +32,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
             android:gravity="center"
-            android:textAlignment="center"
             android:text="@{viewModel.title, default=Title}"
             android:visibility="@{viewModel.showTitle ? View.VISIBLE : View.GONE}" />
 
@@ -42,7 +41,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
             android:gravity="center"
-            android:textAlignment="center"
             android:text="@{viewModel.message, default=Message}"/>
 
         <LinearLayout
@@ -64,7 +62,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/dialog_zrtp_local_sas"
-                    android:textAlignment="center"
+                    android:gravity="center"
                     android:textAppearance="@style/dialog_zrtp_white_font" />
 
                 <TextView
@@ -87,7 +85,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/dialog_zrtp_remote_sas"
-                    android:textAlignment="center"
+                    android:gravity="center"
                     android:textAppearance="@style/dialog_zrtp_white_font" />
 
                 <TextView
