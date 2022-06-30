@@ -64,7 +64,7 @@ class ScheduledConferencesFragment : GenericFragment<ConferencesScheduledFragmen
         )
         binding.conferenceInfoList.adapter = adapter
 
-        val layoutManager = LinearLayoutManager(activity)
+        val layoutManager = LinearLayoutManager(requireContext())
         binding.conferenceInfoList.layoutManager = layoutManager
 
         // Displays date header

@@ -80,7 +80,7 @@ class ImdnFragment : SecureFragment<ChatRoomImdnFragmentBinding>() {
         adapter = ImdnAdapter(viewLifecycleOwner)
         binding.participantsList.adapter = adapter
 
-        val layoutManager = LinearLayoutManager(activity)
+        val layoutManager = LinearLayoutManager(requireContext())
         binding.participantsList.layoutManager = layoutManager
 
         // Divider between items

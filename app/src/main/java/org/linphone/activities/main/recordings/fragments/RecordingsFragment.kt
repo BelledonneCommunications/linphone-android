@@ -62,7 +62,7 @@ class RecordingsFragment : MasterFragment<RecordingsFragmentBinding, RecordingsL
         binding.recordingsList.setHasFixedSize(true)
         binding.recordingsList.adapter = adapter
 
-        val layoutManager = LinearLayoutManager(activity)
+        val layoutManager = LinearLayoutManager(requireContext())
         binding.recordingsList.layoutManager = layoutManager
 
         // Divider between items

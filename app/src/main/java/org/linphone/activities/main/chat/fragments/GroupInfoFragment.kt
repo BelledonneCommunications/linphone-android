@@ -71,7 +71,7 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
         )
         binding.participants.adapter = adapter
 
-        val layoutManager = LinearLayoutManager(activity)
+        val layoutManager = LinearLayoutManager(requireContext())
         binding.participants.layoutManager = layoutManager
 
         // Divider between items

@@ -160,7 +160,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
         binding.chatList.setHasFixedSize(true)
         binding.chatList.adapter = adapter
 
-        val layoutManager = LinearLayoutManager(activity)
+        val layoutManager = LinearLayoutManager(requireContext())
         binding.chatList.layoutManager = layoutManager
 
         // Swipe action
