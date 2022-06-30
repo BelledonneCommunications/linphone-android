@@ -151,9 +151,19 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="conference_invite_desc_title_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/lightToolbarTextColor</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
     <style name="conference_invite_desc_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">?attr/lightToolbarTextColor</item>
         <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="conference_invite_dat_time_font" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">?attr/lightToolbarTextColor</item>
+        <item name="android:textSize">13sp</item>
     </style>
 
     <style name="conference_invite_join_font" parent="@android:style/TextAppearance.Medium">
