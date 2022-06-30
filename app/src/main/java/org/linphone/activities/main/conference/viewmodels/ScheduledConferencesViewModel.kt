@@ -82,7 +82,7 @@ class ScheduledConferencesViewModel : ViewModel() {
                 val limit = conferenceInfo.dateTime + conferenceInfo.duration
                 if (limit >= now) continue // This isn't a terminated conference, don't display it
                 val data = ScheduledConferenceData(conferenceInfo)
-                conferencesList.add(data)
+                conferencesList.add(0, data) // Keep terminated meetings list in reverse order to always display most recent on top
             }
         } else {
             val oneHourAgo = now - 7200 // Show all conferences from 2 hours ago and forward
