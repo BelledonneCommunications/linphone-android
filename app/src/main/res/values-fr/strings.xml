@@ -626,7 +626,7 @@
     <string name="conference_default_title">Réunion distante</string>
     <string name="conference_local_title">Réunion locale</string>
     <string name="conference_invite_title">Invitation à la réunion :</string>
-    <string name="conference_description_title">Description :</string>
+    <string name="conference_description_title">Description</string>
     <string name="conference_invite_join">Rejoindre</string>
     <string name="conference_invite_participants_count" tools:ignore="PluralsCandidate">%d participants</string>
     <string name="conference_display_mode_mosaic">Mode mosaïque</string>

@@ -191,7 +191,6 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
                     style="@style/conference_invite_desc_font"
-                    android:maxLines="3"
                     android:text="@{data.description, default=`Lorem ipsum dolor sit amet`}"/>
 
                 <TextView
