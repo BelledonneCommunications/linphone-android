@@ -1029,9 +1029,12 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
     private fun scrollToFirstUnreadMessageOrBottom(smooth: Boolean): Boolean {
         if (_adapter != null && adapter.itemCount > 0) {
-            // Scroll to first unread message if any
+            val recyclerView = binding.chatMessagesList
+
+            // Scroll to first unread message if any, unless we are already on it
             val firstUnreadMessagePosition = adapter.getFirstUnreadMessagePosition()
-            val indexToScrollTo = if (firstUnreadMessagePosition != -1) {
+            val currentPosition = (recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
+            val indexToScrollTo = if (firstUnreadMessagePosition != -1 && firstUnreadMessagePosition != currentPosition) {
                 firstUnreadMessagePosition
             } else {
                 adapter.itemCount - 1
@@ -1039,11 +1042,15 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
             Log.i("[Chat Room] Scrolling to position $indexToScrollTo, first unread message is at $firstUnreadMessagePosition")
             if (smooth && corePreferences.enableAnimations) {
-                binding.chatMessagesList.smoothScrollToPosition(indexToScrollTo)
+                recyclerView.smoothScrollToPosition(indexToScrollTo)
             } else {
-                binding.chatMessagesList.scrollToPosition(indexToScrollTo)
+                recyclerView.scrollToPosition(indexToScrollTo)
             }
-            return firstUnreadMessagePosition == 0
+
+            if (firstUnreadMessagePosition == 0) {
+                // Return true only if all unread messages don't fit in the recyclerview height
+                return recyclerView.computeVerticalScrollRange() > recyclerView.height
+            }
         }
         return false
     }
