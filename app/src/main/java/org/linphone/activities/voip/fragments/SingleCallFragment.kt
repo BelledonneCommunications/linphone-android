@@ -157,8 +157,8 @@ class SingleCallFragment : GenericFragment<VoipSingleCallFragmentBinding>() {
 
         controlsViewModel.foldingState.observe(
             viewLifecycleOwner
-        ) { state ->
-            updateHingeRelatedConstraints(state)
+        ) { feature ->
+            updateHingeRelatedConstraints(feature)
         }
 
         callsViewModel.callUpdateEvent.observe(
@@ -260,13 +260,17 @@ class SingleCallFragment : GenericFragment<VoipSingleCallFragmentBinding>() {
         startActivity(intent)
     }
 
-    private fun updateHingeRelatedConstraints(state: FoldingFeature.State) {
-        Log.i("[Single Call] Updating constraint layout hinges: $state")
+    private fun updateHingeRelatedConstraints(feature: FoldingFeature) {
+        Log.i("[Single Call] Updating constraint layout hinges: $feature")
+
         val constraintLayout = binding.constraintLayout
         val set = ConstraintSet()
         set.clone(constraintLayout)
 
-        if (state == FoldingFeature.State.HALF_OPENED) {
+        // Only modify UI in table top mode
+        if (feature.orientation == FoldingFeature.Orientation.HORIZONTAL &&
+            feature.state == FoldingFeature.State.HALF_OPENED
+        ) {
             set.setGuidelinePercent(R.id.hinge_top, 0.5f)
             set.setGuidelinePercent(R.id.hinge_bottom, 0.5f)
             controlsViewModel.folded.value = true
