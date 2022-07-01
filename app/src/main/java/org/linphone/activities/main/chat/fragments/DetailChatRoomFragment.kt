@@ -80,14 +80,11 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 // First time we fill the list with messages
                 Log.i("[Chat Room] History first $itemCount messages loaded")
             } else {
-                // Scroll to newly added messages automatically
-                if (positionStart == adapter.itemCount - itemCount) {
-                    // But only if user hasn't initiated a scroll up in the messages history
-                    if (viewModel.isUserScrollingUp.value == false) {
-                        scrollToFirstUnreadMessageOrBottom(false)
-                    } else {
-                        Log.d("[Chat Room] User has scrolled up manually in the messages history, don't scroll to the newly added message at the bottom & don't mark the chat room as read")
-                    }
+                // Scroll to newly added messages automatically only if user hasn't initiated a scroll up in the messages history
+                if (viewModel.isUserScrollingUp.value == false) {
+                    scrollToFirstUnreadMessageOrBottom(false)
+                } else {
+                    Log.d("[Chat Room] User has scrolled up manually in the messages history, don't scroll to the newly added message at the bottom & don't mark the chat room as read")
                 }
             }
         }
