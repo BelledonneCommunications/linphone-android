@@ -133,7 +133,7 @@
                 android:id="@+id/background"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_margin="@{controlsViewModel.fullScreenMode || controlsViewModel.pipMode ? @dimen/voip_remote_margin_full_screen : @dimen/voip_remote_margin, default=@dimen/voip_remote_margin}"
+                android:layout_margin="@{controlsViewModel.fullScreenMode || controlsViewModel.pipMode ? @dimen/margin_0dp : @dimen/voip_remote_margin, default=@dimen/voip_remote_margin}"
                 android:background="@drawable/shape_remote_background"
                 app:layout_constraintBottom_toTopOf="@id/bottom_barrier"
                 app:layout_constraintEnd_toEndOf="parent"
