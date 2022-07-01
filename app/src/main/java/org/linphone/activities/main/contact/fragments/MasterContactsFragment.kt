@@ -275,8 +275,8 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
             // Remove any previously selected contact
             sharedViewModel.selectedContact.value = null
             editOnClick = false
-            sipUriToAdd = null
             navigateToContactEditor(sipUriToAdd, binding.slidingPane)
+            sipUriToAdd = null
         }
 
         val id = arguments?.getString("id")
