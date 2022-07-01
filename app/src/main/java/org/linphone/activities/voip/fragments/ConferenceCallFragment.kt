@@ -27,6 +27,7 @@ import android.view.View
 import android.widget.Chronometer
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.navigation.navGraphViewModels
@@ -89,10 +90,8 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
             if (displayMode == ConferenceDisplayMode.ACTIVE_SPEAKER) {
                 if (conferenceViewModel.conferenceExists.value == true) {
                     Log.i("[Conference Call] Local participant is in conference and current layout is active speaker, updating Core's native window id")
-                    val layout =
-                        binding.root.findViewById<ConstraintLayout>(R.id.conference_active_speaker_layout)
                     val window =
-                        layout?.findViewById<RoundCornersTextureView>(R.id.conference_active_speaker_remote_video)
+                        binding.root.findViewById<RoundCornersTextureView>(R.id.conference_active_speaker_remote_video)
                     coreContext.core.nativeVideoWindowId = window
                 } else {
                     Log.i("[Conference Call] Either not in conference or current layout isn't active speaker, updating Core's native window id")
@@ -330,21 +329,21 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
 
     private fun updateHingeRelatedConstraints(state: FoldingFeature.State) {
         Log.i("[Conference Call] Updating constraint layout hinges: $state")
-        /*val constraintLayout =
-            binding.root.findViewById<ConstraintLayout>(R.id.conference_active_speaker_layout)
-        constraintLayout ?: return
-
+        val constraintLayout = binding.root.findViewById<ConstraintLayout>(R.id.conference_constraint_layout)
+            ?: return
         val set = ConstraintSet()
         set.clone(constraintLayout)
 
         if (state == FoldingFeature.State.HALF_OPENED) {
             set.setGuidelinePercent(R.id.hinge_top, 0.5f)
             set.setGuidelinePercent(R.id.hinge_bottom, 0.5f)
+            controlsViewModel.folded.value = true
         } else {
             set.setGuidelinePercent(R.id.hinge_top, 0f)
             set.setGuidelinePercent(R.id.hinge_bottom, 1f)
+            controlsViewModel.folded.value = false
         }
 
-        set.applyTo(constraintLayout)*/
+        set.applyTo(constraintLayout)
     }
 }

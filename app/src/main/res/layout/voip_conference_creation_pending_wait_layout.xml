@@ -9,6 +9,7 @@
     </data>
 
     <RelativeLayout
+        android:id="@+id/creation_pending_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="@{visibility ? View.VISIBLE : View.GONE}">
@@ -22,6 +23,7 @@
             android:indeterminateTint="?attr/accentColor" />
 
         <TextView
+            android:id="@+id/progress_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
