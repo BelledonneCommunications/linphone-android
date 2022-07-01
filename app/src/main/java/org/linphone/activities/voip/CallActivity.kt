@@ -51,8 +51,6 @@ class CallActivity : ProximitySensorActivity() {
     private lateinit var conferenceViewModel: ConferenceViewModel
     private lateinit var statsViewModel: StatisticsListViewModel
 
-    private var foldingFeature: FoldingFeature? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -307,13 +305,9 @@ class CallActivity : ProximitySensorActivity() {
     }
 
     override fun onLayoutChanges(foldingFeature: FoldingFeature?) {
-        this.foldingFeature = foldingFeature
-        updateConstraintSetDependingOnFoldingState()
-    }
+        foldingFeature ?: return
+        Log.i("[Call Activity] Folding feature state changed: ${foldingFeature.state}, orientation is ${foldingFeature.orientation}")
 
-    private fun updateConstraintSetDependingOnFoldingState() {
-        val feature = foldingFeature ?: return
-        Log.i("[Call Activity] Folding feature state changed: $feature.state")
-        controlsViewModel.foldingState.value = feature.state
+        controlsViewModel.foldingState.value = foldingFeature
     }
 }

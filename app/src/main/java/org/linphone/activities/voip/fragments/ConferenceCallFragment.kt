@@ -200,8 +200,8 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
 
         controlsViewModel.foldingState.observe(
             viewLifecycleOwner
-        ) { state ->
-            updateHingeRelatedConstraints(state)
+        ) { feature ->
+            updateHingeRelatedConstraints(feature)
         }
 
         callsViewModel.callUpdateEvent.observe(
@@ -327,14 +327,17 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
         timer.start()
     }
 
-    private fun updateHingeRelatedConstraints(state: FoldingFeature.State) {
-        Log.i("[Conference Call] Updating constraint layout hinges: $state")
+    private fun updateHingeRelatedConstraints(feature: FoldingFeature) {
+        Log.i("[Conference Call] Updating constraint layout hinges: $feature")
         val constraintLayout = binding.root.findViewById<ConstraintLayout>(R.id.conference_constraint_layout)
             ?: return
         val set = ConstraintSet()
         set.clone(constraintLayout)
 
-        if (state == FoldingFeature.State.HALF_OPENED) {
+        // Only modify UI in table top mode
+        if (feature.orientation == FoldingFeature.Orientation.HORIZONTAL &&
+            feature.state == FoldingFeature.State.HALF_OPENED
+        ) {
             set.setGuidelinePercent(R.id.hinge_top, 0.5f)
             set.setGuidelinePercent(R.id.hinge_bottom, 0.5f)
             controlsViewModel.folded.value = true

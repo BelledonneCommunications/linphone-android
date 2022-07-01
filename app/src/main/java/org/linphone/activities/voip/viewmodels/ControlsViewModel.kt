@@ -101,7 +101,7 @@ class ControlsViewModel : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
-    val foldingState = MutableLiveData<FoldingFeature.State>()
+    val foldingState = MutableLiveData<FoldingFeature>()
 
     private val nonEarpieceOutputAudioDevice = MutableLiveData<Boolean>()
 
@@ -199,7 +199,6 @@ class ControlsViewModel : ViewModel() {
         extraButtonsMenuTranslateY.value = AppUtils.getDimension(R.dimen.voip_call_extra_buttons_translate_y)
         audioRoutesMenuTranslateY.value = AppUtils.getDimension(R.dimen.voip_audio_routes_menu_translate_y)
         audioRoutesSelected.value = false
-        foldingState.value = FoldingFeature.State.FLAT
 
         nonEarpieceOutputAudioDevice.value = coreContext.core.outputAudioDevice?.type != AudioDevice.Type.Earpiece
         proximitySensorEnabled.value = shouldProximitySensorBeEnabled()
