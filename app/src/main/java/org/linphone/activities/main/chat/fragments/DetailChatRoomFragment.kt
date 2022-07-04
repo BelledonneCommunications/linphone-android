@@ -493,21 +493,47 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             viewLifecycleOwner
         ) {
             it.consume { chatMessage ->
-                val events = listViewModel.events.value.orEmpty()
-                val eventLog = events.find { eventLog ->
-                    if (eventLog.eventLog.type == EventLog.Type.ConferenceChatMessage) {
-                        (eventLog.data as ChatMessageData).chatMessage.messageId == chatMessage.messageId
-                    } else false
-                }
-                val index = events.indexOf(eventLog)
-                try {
-                    if (corePreferences.enableAnimations) {
-                        binding.chatMessagesList.smoothScrollToPosition(index)
-                    } else {
-                        binding.chatMessagesList.scrollToPosition(index)
+                var index = 0
+                var retryCount = 0
+                var expectedChildCount = 0
+                do {
+                    val events = listViewModel.events.value.orEmpty()
+                    expectedChildCount = events.size
+                    Log.e("[Chat Room] expectedChildCount : $expectedChildCount")
+                    val eventLog = events.find { eventLog ->
+                        if (eventLog.eventLog.type == EventLog.Type.ConferenceChatMessage) {
+                            (eventLog.data as ChatMessageData).chatMessage.messageId == chatMessage.messageId
+                        } else false
                     }
-                } catch (iae: IllegalArgumentException) {
-                    Log.e("[Chat Room] Can't scroll to position $index")
+                    index = events.indexOf(eventLog)
+                    if (index == -1) {
+                        retryCount += 1
+                        listViewModel.loadMoreData(events.size)
+                    }
+                } while (index == -1 && retryCount < 5)
+
+                if (index != -1) {
+                    if (retryCount == 0) {
+                        scrollTo(index, true)
+                    } else {
+                        lifecycleScope.launch {
+                            withContext(Dispatchers.Default) {
+                                val layoutManager = binding.chatMessagesList.layoutManager as LinearLayoutManager
+                                var retryCount = 0
+                                do {
+                                    // We have to wait for newly loaded items to be added to list before being able to scroll
+                                    delay(500)
+                                    retryCount += 1
+                                } while (layoutManager.itemCount != expectedChildCount && retryCount < 5)
+
+                                withContext(Dispatchers.Main) {
+                                    scrollTo(index, true)
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    Log.w("[Chat Room] Failed to find matching event!")
                 }
             }
         }
@@ -1041,11 +1067,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             }
 
             Log.i("[Chat Room] Scrolling to position $indexToScrollTo, first unread message is at $firstUnreadMessagePosition")
-            if (smooth && corePreferences.enableAnimations) {
-                recyclerView.smoothScrollToPosition(indexToScrollTo)
-            } else {
-                recyclerView.scrollToPosition(indexToScrollTo)
-            }
+            scrollTo(indexToScrollTo, smooth)
 
             if (firstUnreadMessagePosition == 0) {
                 // Return true only if all unread messages don't fit in the recyclerview height
@@ -1177,5 +1199,17 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         )
 
         dialog.show()
+    }
+
+    private fun scrollTo(position: Int, smooth: Boolean = true) {
+        try {
+            if (smooth && corePreferences.enableAnimations) {
+                binding.chatMessagesList.smoothScrollToPosition(position)
+            } else {
+                binding.chatMessagesList.scrollToPosition(position)
+            }
+        } catch (iae: IllegalArgumentException) {
+            Log.e("[Chat Room] Can't scroll to position $position")
+        }
     }
 }
