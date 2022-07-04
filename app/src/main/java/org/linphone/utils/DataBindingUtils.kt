@@ -61,6 +61,14 @@ import org.linphone.views.VoiceRecordProgressBar
  * This file contains all the data binding necessary for the app
  */
 
+fun View.hideKeyboard() {
+    try {
+        val imm =
+            context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(windowToken, 0)
+    } catch (e: Exception) {}
+}
+
 @BindingAdapter("android:src")
 fun ImageView.setSourceImageResource(resource: Int) {
     this.setImageResource(resource)
