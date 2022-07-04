@@ -56,137 +56,143 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/top_bar"
-            android:orientation="vertical"
-            android:paddingTop="10dp"
-            android:paddingBottom="5dp">
+            android:layout_below="@id/top_bar">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:orientation="horizontal"
-                android:baselineAligned="false">
+                android:orientation="vertical"
+                android:paddingTop="10dp"
+                android:paddingBottom="5dp">
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:orientation="horizontal"
+                    android:baselineAligned="false">
 
-                    <TextView
-                        style="@style/conference_scheduling_font"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/conference_schedule_date" />
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-                    <TextView
-                        style="@style/conference_scheduling_font"
-                        android:layout_width="match_parent"
+                        <TextView
+                            style="@style/conference_scheduling_font"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/conference_schedule_date" />
+
+                        <TextView
+                            style="@style/conference_scheduling_font"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:background="?attr/voipFormDisabledFieldBackgroundColor"
+                            android:padding="10dp"
+                            android:text="@{viewModel.conferenceDate}" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:background="?attr/voipFormDisabledFieldBackgroundColor"
-                        android:padding="10dp"
-                        android:text="@{viewModel.conferenceDate}" />
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/conference_scheduling_font"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/conference_schedule_time" />
+
+                        <TextView
+                            style="@style/conference_scheduling_font"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:background="?attr/voipFormDisabledFieldBackgroundColor"
+                            android:padding="10dp"
+                            android:text="@{viewModel.conferenceTime}" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_marginTop="20dp"
+                    android:background="?attr/voipFormDisabledFieldBackgroundColor">
 
                     <TextView
-                        style="@style/conference_scheduling_font"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/conference_schedule_time" />
-
-                    <TextView
-                        style="@style/conference_scheduling_font"
+                        style="@style/calls_list_header_font"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:background="?attr/voipFormDisabledFieldBackgroundColor"
-                        android:padding="10dp"
-                        android:text="@{viewModel.conferenceTime}" />
+                        android:layout_marginLeft="20dp"
+                        android:padding="5dp"
+                        android:text="@string/conference_organizer" />
 
                 </LinearLayout>
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:background="?attr/voipFormDisabledFieldBackgroundColor">
-
-                <TextView
-                    style="@style/calls_list_header_font"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:padding="5dp"
-                    android:text="@string/conference_organizer" />
-
-            </LinearLayout>
-
-            <include
-                layout="@layout/conference_scheduling_participant_cell"
-                app:data="@{viewModel.organizerParticipantData}" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/voipFormDisabledFieldBackgroundColor">
-
-                <TextView
-                    style="@style/calls_list_header_font"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:padding="5dp"
-                    android:text="@string/conference_schedule_participants_list" />
-
-            </LinearLayout>
-
-            <androidx.core.widget.NestedScrollView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
+                <include
+                    layout="@layout/conference_scheduling_participant_cell"
+                    app:data="@{viewModel.organizerParticipantData}" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:entries="@{viewModel.conferenceParticipantsData}"
-                    app:layout="@{@layout/conference_scheduling_participant_cell}" />
+                    android:background="?attr/voipFormDisabledFieldBackgroundColor">
 
-            </androidx.core.widget.NestedScrollView>
+                    <TextView
+                        style="@style/calls_list_header_font"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:padding="5dp"
+                        android:text="@string/conference_schedule_participants_list" />
 
-            <TextView
-                style="@style/big_orange_button_font"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/shape_rect_orange_button"
-                android:paddingLeft="20dp"
-                android:paddingTop="8dp"
-                android:paddingRight="20dp"
-                android:paddingBottom="8dp"
-                android:text="@string/conference_go_to_chat"
-                android:visibility="gone" />
+                </LinearLayout>
 
-        </LinearLayout>
+                <androidx.core.widget.NestedScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:entries="@{viewModel.conferenceParticipantsData}"
+                        app:layout="@{@layout/conference_scheduling_participant_cell}" />
+
+                </androidx.core.widget.NestedScrollView>
+
+                <TextView
+                    style="@style/big_orange_button_font"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/shape_rect_orange_button"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="20dp"
+                    android:paddingBottom="8dp"
+                    android:text="@string/conference_go_to_chat"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
 
     </RelativeLayout>
 
