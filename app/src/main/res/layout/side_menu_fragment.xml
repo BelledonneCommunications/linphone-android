@@ -241,9 +241,9 @@
                     <ImageView
                         android:layout_width="45dp"
                         android:layout_height="45dp"
-                        android:padding="5dp"
+                        android:padding="7dp"
                         android:contentDescription="@string/conference_scheduled"
-                        android:src="@drawable/icon_video_conf_new" />
+                        android:src="@drawable/icon_meeting_schedule" />
 
                     <TextView
                         android:text="@string/conference_scheduled"

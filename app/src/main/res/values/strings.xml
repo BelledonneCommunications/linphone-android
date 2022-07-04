@@ -836,6 +836,7 @@
     <string name="content_description_call_secured">Call is secured</string>
     <string name="content_description_call_security_pending">Call security is pending</string>
     <string name="content_description_chat_message_video_attachment">Video attachment</string>
+    <string name="content_description_chat_message_meeting_attachment">Meeting attachment</string>
     <string name="content_description_take_screenshot">Take a screenshot of received video</string>
     <string name="content_description_close_bubble">Close notification bubble</string>
     <string name="content_description_open_app">Open conversation in app instead of bubble</string>

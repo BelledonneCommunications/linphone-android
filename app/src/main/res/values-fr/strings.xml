@@ -736,4 +736,5 @@
     <string name="conference_no_terminated_schedule">Aucune réunion terminée pour le moment.</string>
     <string name="conference_scheduled_terminated_filter">Terminées</string>
     <string name="conference_scheduled_future_filter">Programmées</string>
+    <string name="content_description_chat_message_meeting_attachment">Invitation à une réunion</string>
 </resources>

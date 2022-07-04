@@ -58,15 +58,27 @@
             app:drawableTopCompat="@drawable/audio_recording_reply_preview_default" />
 
         <ImageView
+            android:visibility="@{data.isConferenceSchedule ? View.VISIBLE : View.GONE}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxHeight="@dimen/chat_message_bubble_image_height_small"
+            android:padding="10dp"
+            android:src="@drawable/icon_meeting_schedule"
+            android:background="@drawable/chat_bubble_reply_file_background"
+            android:contentDescription="@string/content_description_chat_message_meeting_attachment"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_size="@{data.alone ? 0f : @dimen/chat_message_small_bubble_file_size}"
             android:background="@drawable/chat_bubble_reply_file_background"
-            android:padding="10dp"
             android:contentDescription="@{data.fileName}"
-            android:visibility="@{data.downloadable || data.pdf || data.audio || data.genericFile ? View.VISIBLE : View.GONE}"
-            android:src="@{data.video ? @drawable/file_video : (data.image ? @drawable/file_picture : (data.pdf ? @drawable/file_pdf : (data.audio ? @drawable/file_audio : @drawable/file))), default=@drawable/file}" />
+            android:maxHeight="@dimen/chat_message_bubble_image_height_small"
+            android:padding="10dp"
+            android:src="@{data.video ? @drawable/file_video : (data.image ? @drawable/file_picture : (data.pdf ? @drawable/file_pdf : (data.audio ? @drawable/file_audio : @drawable/file))), default=@drawable/file}"
+            android:visibility="@{data.downloadable || data.pdf || data.audio || data.genericFile ? View.VISIBLE : View.GONE}" />
 
     </RelativeLayout>
 

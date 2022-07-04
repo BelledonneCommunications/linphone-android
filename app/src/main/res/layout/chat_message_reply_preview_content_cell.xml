@@ -56,6 +56,28 @@
             app:drawableLeftCompat="@drawable/audio_recording_reply_preview_default" />
 
         <ImageView
+            android:id="@+id/conference_icon"
+            android:visibility="@{data.isConferenceSchedule ? View.VISIBLE : View.GONE}"
+            android:layout_width="@dimen/chat_message_small_bubble_file_size"
+            android:layout_height="@dimen/chat_message_small_bubble_file_size"
+            android:background="@drawable/chat_bubble_reply_file_background"
+            android:padding="10dp"
+            android:src="@drawable/icon_meeting_schedule"
+            android:contentDescription="@string/content_description_chat_message_meeting_attachment"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"/>
+
+        <TextView
+            android:visibility="@{data.isConferenceSchedule ? View.VISIBLE : View.GONE}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{data.conferenceSubject, default=`Lorem Ipsum`}"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/light_primary_text_color"
+            android:layout_toEndOf="@id/conference_icon"
+            android:layout_centerVertical="true"/>
+
+        <ImageView
             android:layout_width="@dimen/chat_message_small_bubble_file_size"
             android:layout_height="@dimen/chat_message_small_bubble_file_size"
             android:layout_margin="5dp"
