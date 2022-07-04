@@ -83,7 +83,7 @@ class ScheduledConferencesFragment : GenericFragment<ConferencesScheduledFragmen
             it.consume { address ->
                 val clipboard =
                     requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clip = ClipData.newPlainText("Conference address", address.asStringUriOnly())
+                val clip = ClipData.newPlainText("Conference address", address)
                 clipboard.setPrimaryClip(clip)
 
                 (activity as MainActivity).showSnackBar(R.string.conference_schedule_address_copied_to_clipboard)

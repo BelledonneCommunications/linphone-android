@@ -99,6 +99,15 @@ class ScheduledConferenceData(val conferenceInfo: ConferenceInfo) {
         computeBackgroundResId()
     }
 
+    fun getAddressAsString(): String {
+        val address = conferenceInfo.uri?.clone()
+        if (address != null) {
+            address.displayName = conferenceInfo.subject
+            return address.asString()
+        }
+        return ""
+    }
+
     private fun computeBackgroundResId() {
         backgroundResId.value = if (isFinished.value == true) {
             if (expanded.value == true) {
