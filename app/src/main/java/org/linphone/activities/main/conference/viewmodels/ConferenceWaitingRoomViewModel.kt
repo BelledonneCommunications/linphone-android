@@ -124,7 +124,6 @@ class ConferenceWaitingRoomViewModel : MessageNotifierViewModel() {
 
         callParams.isVideoEnabled = isVideoAvailableInCore()
         callParams.videoDirection = if (core.videoActivationPolicy.automaticallyInitiate) MediaDirection.SendRecv else MediaDirection.RecvOnly
-        Log.i("[Conference Waiting Room] Video will be ${if (callParams.isVideoEnabled) "enabled" else "disabled"}")
         updateVideoState()
 
         isLowBandwidth.value = false
@@ -274,12 +273,10 @@ class ConferenceWaitingRoomViewModel : MessageNotifierViewModel() {
         }
         callParams.isVideoEnabled = isVideoAvailableInCore()
         callParams.videoDirection = if (callParams.videoDirection == MediaDirection.SendRecv) MediaDirection.RecvOnly else MediaDirection.SendRecv
-        Log.i("[Conference Waiting Room] Video will be ${if (callParams.isVideoEnabled) "enabled" else "disabled"}")
         updateVideoState()
     }
 
     fun enableVideo() {
-        Log.i("[Conference Waiting Room] Video will be enabled")
         callParams.isVideoEnabled = isVideoAvailableInCore()
         callParams.videoDirection = MediaDirection.SendRecv
         updateVideoState()
@@ -342,8 +339,10 @@ class ConferenceWaitingRoomViewModel : MessageNotifierViewModel() {
     private fun updateVideoState() {
         isVideoAvailable.value = callParams.isVideoEnabled
         isVideoEnabled.value = callParams.isVideoEnabled && callParams.videoDirection == MediaDirection.SendRecv
+        Log.i("[Conference Waiting Room] Video will be ${if (callParams.isVideoEnabled) "enabled" else "disabled"} with direction ${callParams.videoDirection}")
+
         isSwitchCameraAvailable.value = callParams.isVideoEnabled && coreContext.showSwitchCameraButton()
-        coreContext.core.isVideoPreviewEnabled = callParams.isVideoEnabled
+        coreContext.core.isVideoPreviewEnabled = isVideoEnabled.value == true
     }
 
     private fun isVideoAvailableInCore(): Boolean {
