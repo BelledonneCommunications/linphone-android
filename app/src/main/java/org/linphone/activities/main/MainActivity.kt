@@ -19,7 +19,6 @@
  */
 package org.linphone.activities.main
 
-import android.app.Activity
 import android.content.ComponentCallbacks2
 import android.content.Intent
 import android.content.res.Configuration
@@ -29,7 +28,6 @@ import android.os.Parcelable
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -61,10 +59,7 @@ import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.core.CorePreferences
 import org.linphone.core.tools.Log
 import org.linphone.databinding.MainActivityBinding
-import org.linphone.utils.AppUtils
-import org.linphone.utils.Event
-import org.linphone.utils.FileUtils
-import org.linphone.utils.ShortcutsHelper
+import org.linphone.utils.*
 
 class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestinationChangedListener {
     private lateinit var binding: MainActivityBinding
@@ -108,8 +103,8 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         sharedViewModel.layoutChangedEvent.value = Event(true)
     }
 
-    private var tabsFragmentVisible1 = true
-    private var tabsFragmentVisible2 = true
+    private var shouldTabsBeVisibleDependingOnDestination = true
+    private var shouldTabsBeVisibleDueToOrientationAndKeyboard = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -209,7 +204,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             val keyboardVisible = ViewCompat.getRootWindowInsets(binding.rootCoordinatorLayout)
                 ?.isVisible(WindowInsetsCompat.Type.ime()) == true
             Log.d("[Tabs Fragment] Keyboard is ${if (keyboardVisible) "visible" else "invisible"}")
-            tabsFragmentVisible2 = !portraitOrientation || !keyboardVisible
+            shouldTabsBeVisibleDueToOrientationAndKeyboard = !portraitOrientation || !keyboardVisible
             updateTabsFragmentVisibility()
         }
 
@@ -234,7 +229,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             statusFragment.visibility = View.VISIBLE
         }
 
-        tabsFragmentVisible1 = when (destination.id) {
+        shouldTabsBeVisibleDependingOnDestination = when (destination.id) {
             R.id.masterCallLogsFragment, R.id.masterContactsFragment, R.id.dialerFragment, R.id.masterChatRoomsFragment ->
                 true
             else -> false
@@ -251,12 +246,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     }
 
     private fun updateTabsFragmentVisibility() {
-        tabsFragment.visibility = if (tabsFragmentVisible1 && tabsFragmentVisible2) View.VISIBLE else View.GONE
-    }
-
-    private fun View.hideKeyboard() {
-        val imm = context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(windowToken, 0)
+        tabsFragment.visibility = if (shouldTabsBeVisibleDependingOnDestination && shouldTabsBeVisibleDueToOrientationAndKeyboard) View.VISIBLE else View.GONE
     }
 
     private fun handleIntentParams(intent: Intent) {
