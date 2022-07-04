@@ -31,7 +31,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.activities.main.conference.data.ScheduledConferenceData
-import org.linphone.core.Address
 import org.linphone.databinding.ConferenceScheduleCellBinding
 import org.linphone.databinding.ConferenceScheduleListHeaderBinding
 import org.linphone.utils.Event
@@ -42,8 +41,8 @@ class ScheduledConferencesAdapter(
     private val viewLifecycleOwner: LifecycleOwner
 ) : ListAdapter<ScheduledConferenceData, RecyclerView.ViewHolder>(ConferenceInfoDiffCallback()),
     HeaderAdapter {
-    val copyAddressToClipboardEvent: MutableLiveData<Event<Address>> by lazy {
-        MutableLiveData<Event<Address>>()
+    val copyAddressToClipboardEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
     }
 
     val joinConferenceEvent: MutableLiveData<Event<Pair<String, String?>>> by lazy {
@@ -108,8 +107,8 @@ class ScheduledConferencesAdapter(
                 lifecycleOwner = viewLifecycleOwner
 
                 setCopyAddressClickListener {
-                    val address = conferenceData.conferenceInfo.uri
-                    if (address != null) {
+                    val address = conferenceData.getAddressAsString()
+                    if (address.isNotEmpty()) {
                         copyAddressToClipboardEvent.value = Event(address)
                     }
                 }
