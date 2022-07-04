@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintWidth_max="120dp"
+                app:layout_constraintWidth_max="@dimen/chat_message_content_preview_max_width"
                 app:entries="@{data.contents}"
                 app:layout="@{@layout/chat_message_reply_content_cell}"
                 app:flexWrap="wrap"
