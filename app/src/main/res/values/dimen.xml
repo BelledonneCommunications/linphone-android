@@ -68,10 +68,11 @@
     <dimen name="voip_conference_audio_only_participant_avatar_size">40dp</dimen>
     <dimen name="conference_schedule_form_field_border_thickness">1dp</dimen>
     <dimen name="master_fragment_width">280dp</dimen>
-    <dimen name="voip_active_speaker_top_margin">10dp</dimen>
+    <dimen name="voip_active_speaker_top_margin">5dp</dimen>
     <dimen name="margin_0dp">0dp</dimen>
     <dimen name="voip_single_call_header_size">50dp</dimen>
     <dimen name="voip_single_call_header_size_with_record_info">85dp</dimen>
     <dimen name="voip_conference_header_folded_top_margin">30dp</dimen>
     <dimen name="chat_message_content_preview_max_width">120dp</dimen>
+    <dimen name="voip_conference_active_speaker_dots_margin">5dp</dimen>
 </resources>

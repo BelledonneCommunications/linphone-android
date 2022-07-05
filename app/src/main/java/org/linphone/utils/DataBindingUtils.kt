@@ -657,6 +657,22 @@ fun setConstraintLayoutTopMargin(view: View, margins: Float) {
     view.layoutParams = params
 }
 
+@BindingAdapter("android:layout_marginBottom")
+fun setConstraintLayoutBottomMargin(view: View, margins: Float) {
+    val params = view.layoutParams as ConstraintLayout.LayoutParams
+    val m = margins.toInt()
+    params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, m)
+    view.layoutParams = params
+}
+
+@BindingAdapter("android:layout_marginEnd")
+fun setConstraintLayoutEndMargin(view: View, margins: Float) {
+    val params = view.layoutParams as ConstraintLayout.LayoutParams
+    val m = margins.toInt()
+    params.marginEnd = m
+    view.layoutParams = params
+}
+
 @BindingAdapter("android:onTouch")
 fun View.setTouchListener(listener: View.OnTouchListener) {
     setOnTouchListener(listener)
