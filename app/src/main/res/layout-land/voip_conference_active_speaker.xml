@@ -34,7 +34,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="@{controlsViewModel.folded ? @dimen/margin_0dp : conferenceViewModel.isRemotelyRecorded ? @dimen/voip_single_call_header_size_with_record_info : @dimen/voip_single_call_header_size, default=@dimen/voip_single_call_header_size}"/>
+            android:layout_marginTop="@{controlsViewModel.folded || controlsViewModel.fullScreenMode ? @dimen/margin_0dp : conferenceViewModel.isRemotelyRecorded ? @dimen/voip_single_call_header_size_with_record_info : @dimen/voip_single_call_header_size, default=@dimen/voip_single_call_header_size}"/>
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/hinge_top"
@@ -125,7 +125,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/top_barrier"
             app:layout_constraintBottom_toBottomOf="@id/hinge_bottom"
-            android:layout_marginEnd="5dp"
+            android:layout_marginEnd="@{controlsViewModel.fullScreenMode ? @dimen/margin_0dp : @dimen/voip_conference_active_speaker_dots_margin, default=@dimen/voip_conference_active_speaker_dots_margin}"
             app:dotColor="@color/voip_gray_dots"
             app:dotRadius="5dp"
             app:scrollView="@id/miniatures"
@@ -137,8 +137,6 @@
             android:id="@+id/miniatures"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
             app:layout_constraintTop_toBottomOf="@id/top_barrier"
             app:layout_constraintEnd_toStartOf="@id/scroll_indicator"
             app:layout_constraintBottom_toBottomOf="@id/hinge_bottom"
