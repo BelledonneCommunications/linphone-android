@@ -247,18 +247,13 @@ class CoreContext(
             }
         }
 
-        override fun onMessageReceived(core: Core, chatRoom: ChatRoom, message: ChatMessage) {
-            if (core.maxSizeForAutoDownloadIncomingFiles != -1) {
-                var hasFile = false
-                for (content in message.contents) {
-                    if (content.isFile) {
-                        hasFile = true
-                        break
-                    }
-                }
-                if (hasFile) {
-                    exportFilesInMessageToMediaStore(message)
-                }
+        override fun onMessagesReceived(
+            core: Core,
+            chatRoom: ChatRoom,
+            messages: Array<out ChatMessage>
+        ) {
+            for (message in messages) {
+                exportFileInMessage(message)
             }
         }
     }
@@ -817,7 +812,22 @@ class CoreContext(
 
     /* Coroutine related */
 
-    fun exportFilesInMessageToMediaStore(message: ChatMessage) {
+    private fun exportFileInMessage(message: ChatMessage) {
+        if (core.maxSizeForAutoDownloadIncomingFiles != -1) {
+            var hasFile = false
+            for (content in message.contents) {
+                if (content.isFile) {
+                    hasFile = true
+                    break
+                }
+            }
+            if (hasFile) {
+                exportFilesInMessageToMediaStore(message)
+            }
+        }
+    }
+
+    private fun exportFilesInMessageToMediaStore(message: ChatMessage) {
         if (message.isEphemeral) {
             Log.w("[Context] Do not make ephemeral file(s) public")
             return

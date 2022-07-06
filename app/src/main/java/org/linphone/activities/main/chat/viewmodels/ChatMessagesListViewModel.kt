@@ -56,31 +56,10 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
     }
 
     private val chatRoomListener: ChatRoomListenerStub = object : ChatRoomListenerStub() {
-        override fun onChatMessageReceived(chatRoom: ChatRoom, eventLog: EventLog) {
-            if (eventLog.type == EventLog.Type.ConferenceChatMessage) {
-                val chatMessage = eventLog.chatMessage
-                chatMessage ?: return
-                chatMessage.userData = events.value.orEmpty().size
-
-                val existingEvent = events.value.orEmpty().find { data ->
-                    data.eventLog == eventLog
-                }
-                if (existingEvent != null) {
-                    Log.w("[Chat Messages] Found already present chat message, don't add it it's probably the result of an auto download")
-                    return
-                }
-
-                if (!PermissionHelper.get().hasWriteExternalStoragePermission()) {
-                    for (content in chatMessage.contents) {
-                        if (content.isFileTransfer) {
-                            Log.i("[Chat Messages] Android < 10 detected and WRITE_EXTERNAL_STORAGE permission isn't granted yet")
-                            requestWriteExternalStoragePermissionEvent.value = Event(true)
-                        }
-                    }
-                }
+        override fun onChatMessagesReceived(chatRoom: ChatRoom, eventLogs: Array<out EventLog>) {
+            for (eventLog in eventLogs) {
+                addChatMessageEventLog(eventLog)
             }
-
-            addEvent(eventLog)
         }
 
         override fun onChatMessageSending(chatRoom: ChatRoom, eventLog: EventLog) {
@@ -244,5 +223,32 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
 
         events.value.orEmpty().forEach(EventLogData::destroy)
         events.value = getEvents()
+    }
+
+    private fun addChatMessageEventLog(eventLog: EventLog) {
+        if (eventLog.type == EventLog.Type.ConferenceChatMessage) {
+            val chatMessage = eventLog.chatMessage
+            chatMessage ?: return
+            chatMessage.userData = events.value.orEmpty().size
+
+            val existingEvent = events.value.orEmpty().find { data ->
+                data.eventLog == eventLog
+            }
+            if (existingEvent != null) {
+                Log.w("[Chat Messages] Found already present chat message, don't add it it's probably the result of an auto download")
+                return
+            }
+
+            if (!PermissionHelper.get().hasWriteExternalStoragePermission()) {
+                for (content in chatMessage.contents) {
+                    if (content.isFileTransfer) {
+                        Log.i("[Chat Messages] Android < 10 detected and WRITE_EXTERNAL_STORAGE permission isn't granted yet")
+                        requestWriteExternalStoragePermissionEvent.value = Event(true)
+                    }
+                }
+            }
+        }
+
+        addEvent(eventLog)
     }
 }

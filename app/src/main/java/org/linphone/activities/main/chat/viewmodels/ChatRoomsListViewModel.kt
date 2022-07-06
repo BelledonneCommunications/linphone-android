@@ -56,19 +56,15 @@ class ChatRoomsListViewModel : MessageNotifierViewModel() {
         }
 
         override fun onMessageSent(core: Core, chatRoom: ChatRoom, message: ChatMessage) {
-            when (findChatRoomIndex(chatRoom)) {
-                -1 -> updateChatRooms()
-                0 -> chatRoomIndexUpdatedEvent.value = Event(0)
-                else -> reorderChatRooms()
-            }
+            onChatRoomMessageEvent(chatRoom)
         }
 
-        override fun onMessageReceived(core: Core, chatRoom: ChatRoom, message: ChatMessage) {
-            when (findChatRoomIndex(chatRoom)) {
-                -1 -> updateChatRooms()
-                0 -> chatRoomIndexUpdatedEvent.value = Event(0)
-                else -> reorderChatRooms()
-            }
+        override fun onMessagesReceived(
+            core: Core,
+            chatRoom: ChatRoom,
+            messages: Array<out ChatMessage>
+        ) {
+            onChatRoomMessageEvent(chatRoom)
         }
 
         override fun onChatRoomRead(core: Core, chatRoom: ChatRoom) {
@@ -167,5 +163,13 @@ class ChatRoomsListViewModel : MessageNotifierViewModel() {
             }
         }
         return -1
+    }
+
+    private fun onChatRoomMessageEvent(chatRoom: ChatRoom) {
+        when (findChatRoomIndex(chatRoom)) {
+            -1 -> updateChatRooms()
+            0 -> chatRoomIndexUpdatedEvent.value = Event(0)
+            else -> reorderChatRooms()
+        }
     }
 }

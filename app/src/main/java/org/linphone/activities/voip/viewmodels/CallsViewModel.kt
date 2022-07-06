@@ -77,7 +77,11 @@ class CallsViewModel : ViewModel() {
             updateUnreadChatCount()
         }
 
-        override fun onMessageReceived(core: Core, chatRoom: ChatRoom, message: ChatMessage) {
+        override fun onMessagesReceived(
+            core: Core,
+            chatRoom: ChatRoom,
+            messages: Array<out ChatMessage>
+        ) {
             updateUnreadChatCount()
         }
 
