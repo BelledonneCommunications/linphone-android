@@ -153,6 +153,13 @@ class NotificationsManager(private val context: Context) {
                 return
             }
 
+            val id = LinphoneUtils.getChatRoomId(room.localAddress, room.peerAddress)
+            val mute = corePreferences.chatRoomMuted(id)
+            if (mute) {
+                Log.i("[Notifications Manager] Chat room $id has been muted")
+                return
+            }
+
             if (message.errorInfo.reason == Reason.UnsupportedContent) {
                 Log.w("[Notifications Manager] Received message with unsupported content, do not notify")
                 return
@@ -180,13 +187,7 @@ class NotificationsManager(private val context: Context) {
                 }
             }
 
-            val id = LinphoneUtils.getChatRoomId(room.localAddress, room.peerAddress)
-            val mute = corePreferences.chatRoomMuted(id)
-            if (mute) {
-                Log.i("[Notifications Manager] Chat room $id has been muted")
-            } else {
-                displayIncomingChatNotification(room, message)
-            }
+            displayIncomingChatNotification(room, message)
         }
 
         override fun onChatRoomRead(core: Core, chatRoom: ChatRoom) {
@@ -655,14 +656,14 @@ class NotificationsManager(private val context: Context) {
     }
 
     private fun displayIncomingChatNotification(room: ChatRoom, message: ChatMessage) {
-        val friend = coreContext.contactsManager.findContactByAddress(message.fromAddress)
-
         val notifiable = getNotifiableForRoom(room)
         if (notifiable.messages.isNotEmpty() || room.unreadMessagesCount == 1) {
+            val friend = coreContext.contactsManager.findContactByAddress(message.fromAddress)
             val notifiableMessage = getNotifiableMessage(message, friend)
             notifiable.messages.add(notifiableMessage)
         } else {
             for (chatMessage in room.unreadHistory) {
+                val friend = coreContext.contactsManager.findContactByAddress(chatMessage.fromAddress)
                 val notifiableMessage = getNotifiableMessage(chatMessage, friend)
                 notifiable.messages.add(notifiableMessage)
             }
