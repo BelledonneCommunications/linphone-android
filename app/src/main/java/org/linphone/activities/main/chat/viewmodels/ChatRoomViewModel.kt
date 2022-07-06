@@ -150,7 +150,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
             subject.value = chatRoom.subject
         }
 
-        override fun onChatMessageReceived(chatRoom: ChatRoom, eventLog: EventLog) {
+        override fun onChatMessagesReceived(chatRoom: ChatRoom, eventLogs: Array<out EventLog>) {
             updateUnreadMessageCount()
         }
 

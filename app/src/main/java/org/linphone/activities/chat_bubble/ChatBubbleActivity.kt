@@ -61,7 +61,7 @@ class ChatBubbleActivity : GenericActivity() {
     }
 
     private val listener = object : ChatRoomListenerStub() {
-        override fun onChatMessageReceived(chatRoom: ChatRoom, eventLog: EventLog) {
+        override fun onChatMessagesReceived(chatRoom: ChatRoom, eventLogs: Array<out EventLog>) {
             chatRoom.markAsRead()
         }
     }
