@@ -168,6 +168,7 @@ class NotificationsManager(private val context: Context) {
                 Log.i("[Notifications Manager] Ensure chat room shortcut exists for bubble notification")
                 Compatibility.createShortcutsToChatRooms(context)
             }
+
             displayIncomingChatNotification(room, message)
         }
 
@@ -633,14 +634,14 @@ class NotificationsManager(private val context: Context) {
     }
 
     private fun displayIncomingChatNotification(room: ChatRoom, message: ChatMessage) {
-        val friend = coreContext.contactsManager.findContactByAddress(message.fromAddress)
-
         val notifiable = getNotifiableForRoom(room)
         if (notifiable.messages.isNotEmpty() || room.unreadMessagesCount == 1) {
+            val friend = coreContext.contactsManager.findContactByAddress(message.fromAddress)
             val notifiableMessage = getNotifiableMessage(message, friend)
             notifiable.messages.add(notifiableMessage)
         } else {
             for (chatMessage in room.unreadHistory) {
+                val friend = coreContext.contactsManager.findContactByAddress(chatMessage.fromAddress)
                 val notifiableMessage = getNotifiableMessage(chatMessage, friend)
                 notifiable.messages.add(notifiableMessage)
             }
