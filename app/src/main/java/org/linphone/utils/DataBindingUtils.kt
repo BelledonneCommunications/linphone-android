@@ -339,20 +339,15 @@ private suspend fun loadContactPictureWithCoil(
     color: Int = 0,
     textColor: Int = 0
 ) {
-    if (contact != null) {
-        val context = imageView.context
+    val context = imageView.context
+    if (contact != null && !contact.showGroupChatAvatar) {
         val displayName = contact.contact.value?.name ?: contact.displayName.value.orEmpty()
         val source = contact.contact.value?.getPictureUri(useThumbnail)
+
         imageView.load(source) {
             transformations(CircleCropTransformation())
             error(
-                if (contact.showGroupChatAvatar) {
-                    val bg = AppCompatResources.getDrawable(context, R.drawable.generated_avatar_bg)
-                    imageView.background = bg
-                    AppCompatResources.getDrawable(context, R.drawable.icon_multiple_contacts_avatar)
-                } else if (displayName.isEmpty() || AppUtils.getInitials(displayName) == "+") {
-                    val bg = AppCompatResources.getDrawable(context, R.drawable.generated_avatar_bg)
-                    imageView.background = bg
+                if (displayName.isEmpty() || AppUtils.getInitials(displayName) == "+") {
                     AppCompatResources.getDrawable(context, R.drawable.icon_single_contact_avatar)
                 } else {
                     coroutineScope {
@@ -377,9 +372,9 @@ private suspend fun loadContactPictureWithCoil(
                 }
             )
         }
+    } else if (contact != null && contact.showGroupChatAvatar) {
+        imageView.load(AppCompatResources.getDrawable(context, R.drawable.icon_multiple_contacts_avatar))
     } else {
-        val bg = AppCompatResources.getDrawable(imageView.context, R.drawable.generated_avatar_bg)
-        imageView.background = bg
         imageView.load(R.drawable.icon_single_contact_avatar)
     }
 }
