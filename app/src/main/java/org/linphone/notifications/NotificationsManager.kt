@@ -375,7 +375,7 @@ class NotificationsManager(private val context: Context) {
     }
 
     fun stopCallForeground() {
-        if (service != null && currentForegroundServiceNotificationId != SERVICE_NOTIF_ID && !corePreferences.keepServiceAlive) {
+        if (service != null && currentForegroundServiceNotificationId != SERVICE_NOTIF_ID) {
             Log.i("[Notifications Manager] Stopping call notification [$currentForegroundServiceNotificationId] used as foreground service")
             stopForegroundNotification()
         }
