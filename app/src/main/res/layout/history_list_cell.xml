@@ -88,7 +88,9 @@
                 android:layout_height="@dimen/contact_avatar_size"
                 android:layout_alignParentLeft="true"
                 android:layout_marginRight="10dp"
-                android:contentDescription="@null" />
+                android:contentDescription="@null"
+                android:background="@drawable/generated_avatar_bg"
+                android:src="@drawable/voip_single_contact_avatar" />
 
             <ImageView
                 android:id="@+id/icon"
