@@ -340,7 +340,11 @@ private suspend fun loadContactPictureWithCoil(
     textColor: Int = 0
 ) {
     val context = imageView.context
-    if (contact != null && !contact.showGroupChatAvatar) {
+    if (contact == null) {
+        imageView.load(R.drawable.icon_single_contact_avatar)
+    } else if (contact.showGroupChatAvatar) {
+        imageView.load(AppCompatResources.getDrawable(context, R.drawable.icon_multiple_contacts_avatar))
+    } else {
         val displayName = contact.contact.value?.name ?: contact.displayName.value.orEmpty()
         val source = contact.contact.value?.getPictureUri(useThumbnail)
 
@@ -372,10 +376,6 @@ private suspend fun loadContactPictureWithCoil(
                 }
             )
         }
-    } else if (contact != null && contact.showGroupChatAvatar) {
-        imageView.load(AppCompatResources.getDrawable(context, R.drawable.icon_multiple_contacts_avatar))
-    } else {
-        imageView.load(R.drawable.icon_single_contact_avatar)
     }
 }
 
