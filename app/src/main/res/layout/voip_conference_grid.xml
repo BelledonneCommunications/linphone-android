@@ -34,7 +34,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="@{controlsViewModel.folded ? @dimen/margin_0dp : conferenceViewModel.isRemotelyRecorded ? @dimen/voip_single_call_header_size_with_record_info : @dimen/voip_single_call_header_size, default=@dimen/voip_single_call_header_size}"/>
+            android:layout_marginTop="@{controlsViewModel.fullScreenMode || controlsViewModel.pipMode || controlsViewModel.folded ? @dimen/margin_0dp : conferenceViewModel.isRemotelyRecorded ? @dimen/voip_single_call_header_size_with_record_info : @dimen/voip_single_call_header_size, default=@dimen/voip_single_call_header_size}"/>
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/hinge_top"
@@ -126,7 +126,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/hinge_bottom"
-            android:layout_marginTop="10dp"
             android:onClick="@{() -> controlsViewModel.toggleFullScreen()}"
             app:entries="@{conferenceViewModel.conferenceParticipantDevices}"
             app:layout="@{@layout/voip_conference_participant_remote_grid}" />
