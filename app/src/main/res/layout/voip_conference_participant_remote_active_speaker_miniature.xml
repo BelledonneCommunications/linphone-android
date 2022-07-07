@@ -15,14 +15,15 @@
         android:layout_width="@dimen/voip_active_speaker_miniature_size"
         android:layout_height="@dimen/voip_active_speaker_miniature_size"
         android:layout_margin="5dp"
-        android:background="@{!data.isInConference ? @drawable/shape_remote_paused_background : data.videoEnabled ? @drawable/shape_remote_video_background : @drawable/shape_remote_background, default=@drawable/shape_remote_background}"
+        android:background="@{!data.isInConference &amp;&amp; !data.isJoining ? @drawable/shape_remote_paused_background : data.videoEnabled ? @drawable/shape_remote_video_background : @drawable/shape_remote_background, default=@drawable/shape_remote_background}"
         app:layout_alignSelf="flex_end"
         app:layout_flexShrink="0">
 
         <ImageView
+            android:id="@+id/participant_avatar"
             android:layout_width="@dimen/voip_conference_active_speaker_miniature_avatar_size"
             android:layout_height="@dimen/voip_conference_active_speaker_miniature_avatar_size"
-            android:visibility="@{data.videoEnabled || !data.isInConference ? View.GONE : View.VISIBLE}"
+            android:visibility="@{data.isInConference || data.isJoining ? View.VISIBLE : View.GONE}"
             android:contentDescription="@null"
             coilVoipContact="@{data}"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -44,12 +45,13 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:id="@+id/paused"
             android:layout_width="@dimen/voip_conference_active_speaker_miniature_avatar_size"
             android:layout_height="@dimen/voip_conference_active_speaker_miniature_avatar_size"
             android:background="@drawable/shape_button_background"
             android:contentDescription="@string/content_description_participant_is_paused"
             android:src="@drawable/icon_pause"
-            android:visibility="@{data.isInConference ? View.GONE : View.VISIBLE, default=gone}"
+            android:visibility="@{data.isInConference || data.isJoining ? View.GONE : View.VISIBLE, default=gone}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -71,7 +73,7 @@
             android:layout_height="0dp"
             android:contentDescription="@null"
             android:src="@drawable/shape_conference_active_speaker_border"
-            android:visibility="@{data.activeSpeaker ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{data.isSpeaking ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -90,16 +92,15 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <!--<TextView
-            android:visibility="@{data.isInConference ? View.GONE : View.VISIBLE, default=gone}"
-            android:text="@string/conference_participant_paused"
-            style="@style/call_remote_name_font"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/participant_name"/>-->
+        <ProgressBar
+            android:id="@+id/joining"
+            android:layout_width="@dimen/voip_conference_participant_joining_icon_size_active_speaker"
+            android:layout_height="@dimen/voip_conference_participant_joining_icon_size_active_speaker"
+            android:indeterminate="true"
+            android:indeterminateDrawable="@drawable/icon_spinner_rotating"
+            android:visibility="@{data.isJoining ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:layout_width="@dimen/voip_conference_participant_mic_muted_icon_size_active_speaker"
@@ -109,7 +110,7 @@
             android:contentDescription="@string/content_description_conference_participant_mic_muted"
             android:padding="2dp"
             android:src="@drawable/icon_mic_muted"
-            android:visibility="@{data.micMuted ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{data.isMuted ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

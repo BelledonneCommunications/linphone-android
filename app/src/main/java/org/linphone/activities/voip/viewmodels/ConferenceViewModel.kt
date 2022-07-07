@@ -124,17 +124,23 @@ class ConferenceViewModel : ViewModel() {
             this@ConferenceViewModel.subject.value = subject
         }
 
-        override fun onParticipantDeviceJoined(conference: Conference, device: ParticipantDevice) {
+        override fun onParticipantDeviceStateChanged(
+            conference: Conference,
+            device: ParticipantDevice,
+            state: ParticipantDeviceState
+        ) {
             if (conference.isMe(device.address)) {
-                Log.i("[Conference] Entered conference")
-                isConferenceLocallyPaused.value = false
-            }
-        }
-
-        override fun onParticipantDeviceLeft(conference: Conference, device: ParticipantDevice) {
-            if (conference.isMe(device.address)) {
-                Log.i("[Conference] Left conference")
-                isConferenceLocallyPaused.value = true
+                when (state) {
+                    ParticipantDeviceState.Present -> {
+                        Log.i("[Conference] Entered conference")
+                        isConferenceLocallyPaused.value = false
+                    }
+                    ParticipantDeviceState.OnHold -> {
+                        Log.i("[Conference] Left conference")
+                        isConferenceLocallyPaused.value = true
+                    }
+                    else -> {}
+                }
             }
         }
 

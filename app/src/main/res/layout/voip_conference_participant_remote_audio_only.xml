@@ -36,7 +36,7 @@
             android:adjustViewBounds="true"
             android:contentDescription="@null"
             android:src="@drawable/shape_conference_audio_only_border"
-            android:visibility="@{data.activeSpeaker ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{data.isSpeaking ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -48,10 +48,10 @@
             android:layout_height="@dimen/voip_conference_audio_only_participant_avatar_size"
             android:layout_marginStart="10dp"
             android:contentDescription="@null"
-            android:visibility="@{data.isInConference ? View.VISIBLE : View.GONE}"
+            android:visibility="@{data.isInConference || data.isJoining ? View.VISIBLE : View.GONE}"
             coilVoipContact="@{data}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/paused_avatar"
+            app:layout_constraintEnd_toStartOf="@id/paused_avatar"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -64,10 +64,10 @@
             android:background="@drawable/shape_button_background"
             android:contentDescription="@string/content_description_participant_is_paused"
             android:src="@drawable/icon_pause"
-            android:visibility="@{data.isInConference ? View.GONE : View.VISIBLE, default=gone}"
+            android:visibility="@{data.isInConference || data.isJoining ? View.GONE : View.VISIBLE, default=gone}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/participant_name"
-            app:layout_constraintStart_toEndOf="@+id/participant_avatar"
+            app:layout_constraintEnd_toStartOf="@id/participant_name"
+            app:layout_constraintStart_toEndOf="@id/participant_avatar"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -80,10 +80,29 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="2"
-            android:text="@{(data.contact.name ?? data.displayName) + (data.isInConference ? `` : ` ` + @string/conference_participant_paused), default=`Merry Brandybuck`}"
+            android:text="@{(data.contact.name ?? data.displayName) + (data.isInConference || data.isJoining ? `` : ` ` + @string/conference_participant_paused), default=`Merry Brandybuck`}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/participant_mic_muted"
-            app:layout_constraintStart_toEndOf="@+id/paused_avatar"
+            app:layout_constraintEnd_toStartOf="@id/endBarrier"
+            app:layout_constraintStart_toEndOf="@id/paused_avatar"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/endBarrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="left"
+            app:constraint_referenced_ids="joining, participant_mic_muted" />
+
+        <ProgressBar
+            android:id="@+id/joining"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:indeterminateDrawable="@drawable/icon_spinner_rotating"
+            android:visibility="@{data.isJoining ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/participant_name"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
@@ -95,10 +114,10 @@
             android:contentDescription="@string/content_description_conference_participant_mic_muted"
             android:padding="2dp"
             android:src="@drawable/icon_mic_muted"
-            android:visibility="@{data.micMuted ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{data.isMuted ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/participant_name"
+            app:layout_constraintStart_toEndOf="@id/participant_name"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

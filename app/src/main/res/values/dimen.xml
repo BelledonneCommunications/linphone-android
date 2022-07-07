@@ -59,7 +59,9 @@
     <dimen name="voip_active_speaker_miniature_margin">10dp</dimen>
     <dimen name="voip_conference_active_speaker_miniature_avatar_size">50dp</dimen>
     <dimen name="voip_conference_participant_mic_muted_icon_size_grid">30dp</dimen>
+    <dimen name="voip_conference_participant_joining_icon_size_grid">30dp</dimen>
     <dimen name="voip_conference_participant_mic_muted_icon_size_active_speaker">25dp</dimen>
+    <dimen name="voip_conference_participant_joining_icon_size_active_speaker">35dp</dimen>
     <dimen name="voip_dialog_button_max_width">137dp</dimen>
     <dimen name="voip_contact_avatar_max_size">180dp</dimen>
     <dimen name="voip_contact_avatar_text_size">80sp</dimen>
