@@ -89,17 +89,21 @@ class CallSettingsFragment : GenericSettingFragment<SettingsCallFragmentBinding>
             viewLifecycleOwner
         ) {
             it.consume {
-                if (!Compatibility.hasTelecomManagerPermissions(requireContext())) {
-                    Compatibility.requestTelecomManagerPermissions(requireActivity(), 1)
-                } else if (!TelecomHelper.exists()) {
-                    corePreferences.useTelecomManager = true
-                    Log.w("[Telecom Helper] Doesn't exists yet, creating it")
-                    if (requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_CONNECTION_SERVICE)) {
-                        TelecomHelper.create(requireContext())
-                        updateTelecomManagerAccount()
-                    } else {
-                        Log.e("[Telecom Helper] Telecom Helper can't be created, device doesn't support connection service")
+                if (requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_CONNECTION_SERVICE)) {
+                    if (!Compatibility.hasTelecomManagerPermissions(requireContext())) {
+                        Compatibility.requestTelecomManagerPermissions(requireActivity(), 1)
+                    } else if (!TelecomHelper.exists()) {
+                        corePreferences.useTelecomManager = true
+                        Log.w("[Telecom Helper] Doesn't exists yet, creating it")
+                        if (requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_CONNECTION_SERVICE)) {
+                            TelecomHelper.create(requireContext())
+                            updateTelecomManagerAccount()
+                        } else {
+                            Log.e("[Telecom Helper] Telecom Helper can't be created, device doesn't support connection service")
+                        }
                     }
+                } else {
+                    Log.e("[Telecom Helper] Telecom Helper can't be created, device doesn't support connection service!")
                 }
             }
         }
