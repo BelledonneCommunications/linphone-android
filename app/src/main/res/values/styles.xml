@@ -281,7 +281,7 @@
 
     <style name="call_dtmf_history_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">@color/white_color</item>
-        <item name="android:textSize">30sp</item>
+        <item name="android:textSize">35sp</item>
     </style>
 
     <!-- Contact related -->
