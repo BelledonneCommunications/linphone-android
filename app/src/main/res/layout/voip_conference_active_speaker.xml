@@ -136,6 +136,7 @@
             android:layout_margin="10dp"
             android:contentDescription="@null"
             coilVoipContact="@{conferenceViewModel.speakingParticipant}"
+            android:background="@drawable/generated_avatar_bg"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintBottom_toTopOf="@id/miniatures"
             app:layout_constraintEnd_toEndOf="@id/active_speaker_background"
