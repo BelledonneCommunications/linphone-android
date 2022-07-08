@@ -74,7 +74,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/conference_controls"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -83,6 +83,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/cancel"
                 style="@style/big_orange_button_font"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -96,9 +97,15 @@
                 android:paddingTop="8dp"
                 android:paddingRight="20dp"
                 android:paddingBottom="8dp"
-                android:text="@string/conference_waiting_room_cancel_call" />
+                android:text="@string/conference_waiting_room_cancel_call"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/start"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_max="@dimen/conference_waiting_room_buttons_max_width"/>
 
             <TextView
+                android:id="@+id/start"
                 style="@style/big_orange_button_bold_font"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -113,9 +120,15 @@
                 android:paddingTop="8dp"
                 android:paddingRight="20dp"
                 android:paddingBottom="8dp"
-                android:text="@string/conference_waiting_room_start_call" />
+                android:text="@string/conference_waiting_room_start_call"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/cancel"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintWidth_max="@dimen/conference_waiting_room_buttons_max_width" />
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
