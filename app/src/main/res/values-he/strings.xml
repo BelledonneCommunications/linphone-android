@@ -127,7 +127,6 @@
     </plurals>
     <string name="chat_message_removal_info">ההודעה תימחק</string>
     <string name="chat_message_abort_removal">בטל</string>
-    <string name="chat_room_failed_to_create">נכשל ביצירת חדר להתכתבות</string>
     <string name="recordings_empty_list">אין הקלטות</string>
     <string name="conference">ועידה</string>
     <string name="conference_schedule_title">החל בועידה</string>
@@ -147,10 +146,7 @@
     <string name="conference_schedule_participants_list">רשימת משתתפים</string>
     <string name="conference_organizer">מארגן</string>
     <string name="conference_schedule_summary">מידע ועידה</string>
-    <string name="conference_schedule_create">צור ועידה</string>
-    <string name="conference_schedule">תזמן ועידה</string>
     <string name="conference_schedule_address_copied_to_clipboard">כתובת הועידה הועתקה ללוח</string>
-    <string name="conference_schedule_creation_failure">נכשל ביצירת ועידה!</string>
     <string name="conference_schedule_info_not_sent_to_participant">נכשל בשליחת מידע אודות הועידה למשתתף</string>
     <string name="conference_default_title">ועידה מרחוק</string>
     <string name="conference_local_title">ועידה מקומית</string>
@@ -224,7 +220,7 @@
     <string name="call_stats_capture_filter">סנן לכידה:</string>
     <string name="assistant_welcome_title">ברוך הבא</string>
     <string name="assistant_create_account">יצירת חשבון</string>
-    <string name="assistant_login_linphone">השתמש בחשבון &amp;appName;</string>
+    <string name="assistant_login_linphone">השתמש בחשבון &appName;</string>
     <string name="assistant_login_generic">השתמש בחשבון SIP</string>
     <string name="assistant_remote_provisioning">קבל הגדרות מרחוק</string>
     <string name="assistant_ec_calibration">מכייל ביטול הד</string>
@@ -250,7 +246,7 @@
     <string name="status_in_progress">בתהליך חיבור</string>
     <string name="no_missed_call_history">אין שיחות שלא נענו</string>
     <string name="history_delete_many_dialog">האםנאתה רוצה למחוק את ההקלטה הנוכחית\?</string>
-    <string name="contact_send_sms_invite_text">היי, הצטרף אליי ב&amp;appName;! אתה יכול להוריד בחינם ב %s</string>
+    <string name="contact_send_sms_invite_text">היי, הצטרף אליי ב&appName;! אתה יכול להוריד בחינם ב %s</string>
     <string name="contact_delete_one_dialog">האם ברצונך למחוק איש קשר זה\? פעולה זו תסיר את איש הקשר מפנקס הכתובות של מכשירך</string>
     <string name="contact_delete_many_dialog">האם אתה בטוח שברצונך למחוק את אנשי הקשר שנבחרו\? אנשי הקשר יוסרו מפנקס הכתובות של מכשירך</string>
     <string name="contact_cant_be_deleted">לא ניתן למחוק איש קשר זה</string>
@@ -275,7 +271,7 @@
     <string name="chat_message_voice_recording_playback_low_volume">עוצמת השמע נמוכה, יכול להיות שתרצה להגביר</string>
     <string name="chat_message_download_already_in_progress">אנא המתן לסיום ההורדה הראשונה בטרם תתחיל הורדה חדשה</string>
     <string name="conference_schedule_send_invite_email">שלח הזמנה באמצעות דוא\"ל</string>
-    <string name="conference_schedule_send_invite_chat_summary">הזמנה תשלח באמצעות חשבון &amp;appName;</string>
+    <string name="conference_schedule_send_invite_chat_summary">הזמנה תשלח באמצעות חשבון &appName;</string>
     <string name="conference_paused_title">אתה מחוץ לועידה.</string>
     <string name="conference_paused_subtitle">לחץ על לחצן הנגן כדי להצטרף בחזרה.</string>
     <string name="conference_waiting_room_video_disabled">וידיאו לא מאופשר כרגע</string>
@@ -293,9 +289,9 @@
     <string name="assistant_phone_number_link_info_content">"
 \nYour friends will find you more easily if you link your account to your phone number
 \n
-\nYou will see in your address book who is using &amp;appName; and your friends will know that they can reach you on &amp;appName; as well.
+\nYou will see in your address book who is using &appName; and your friends will know that they can reach you on &appName; as well.
 \n"</string>
-    <string name="assistant_phone_number_link_info_content_already_account">You can only use your phone number with one &amp;appName; account.
+    <string name="assistant_phone_number_link_info_content_already_account">You can only use your phone number with one &appName; account.
 \n
 \nIf you had already linked your number to an other account but you prefer to use this one, simply link it now and your number will automatically be moved to this account.</string>
     <string name="assistant_general_terms">תנאי השימוש</string>

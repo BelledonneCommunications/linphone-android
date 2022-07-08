@@ -162,7 +162,7 @@
     <string name="call_stats_capture_filter">擷取過濾器：</string>
     <string name="assistant_welcome_title">歡迎</string>
     <string name="assistant_create_account">註冊帳號</string>
-    <string name="assistant_login_linphone">使用 &amp;appName; 帳號</string>
+    <string name="assistant_login_linphone">使用 &appName; 帳號</string>
     <string name="assistant_login_generic">使用 SIP 帳號</string>
     <string name="assistant_remote_provisioning">取得遠端設定</string>
     <string name="assistant_ec_calibration">正在進行回音消除校正</string>
@@ -179,7 +179,7 @@
     <string name="assistant_error_passwords_dont_match">密碼錯誤</string>
     <string name="assistant_error_invalid_email_address">電子郵件地址無效</string>
     <string name="assistant_error_username_too_long">使用者名稱太長</string>
-    <string name="assistant_linphone_account">使用您的 &amp;appName; 帳號</string>
+    <string name="assistant_linphone_account">使用您的 &appName; 帳號</string>
     <string name="assistant_create_account_part_1">請確認您的國碼，並輸入電話號碼</string>
     <string name="assistant_linphone_login_desc">請輸入您 &appName; 帳號的使用者名稱和密碼</string>
     <string name="assistant_login_with_username">使用使用者名稱和密碼，不使用電話號碼</string>
@@ -204,7 +204,7 @@
     <string name="assistant_remote_provisioning_url">網址</string>
     <string name="assistant_remote_provisioning_wrong_format">網址格式不正確，無法下載開通設定…</string>
     <string name="assistant_welcome_desc">設定助理將會協助您設定使用您的 SIP 帳號。</string>
-    <string name="assistant_phone_number_link_info_content_already_account">您只能將電話號碼與一組 &amp;appName; 綁定起來。
+    <string name="assistant_phone_number_link_info_content_already_account">您只能將電話號碼與一組 &appName; 綁定起來。
 \n
 \n如果您已經將號碼連結到其他帳號，但是您更想使用這個，只需連結您現在的帳號，號碼就會自動轉移到這個帳號。</string>
     <string name="assistant_error_invalid_credentials">帳號不存在或密碼不正確</string>
@@ -400,8 +400,8 @@
     <string name="account_settings_prefix_title">您所在國家的前綴</string>
     <string name="account_settings_prefix_summary">不含 +</string>
     <string name="account_settings_escape_plus_title">將 + 取代為 00</string>
-    <string name="notification_channel_incoming_call_name">&amp;appName; 來電通知</string>
-    <string name="notification_channel_chat_name">&amp;appName; 即時訊息通知</string>
+    <string name="notification_channel_incoming_call_name">&appName; 來電通知</string>
+    <string name="notification_channel_chat_name">&appName; 即時訊息通知</string>
     <string name="incoming_call_notification_title">有來電</string>
     <string name="incoming_call_notification_hangup_action_label">掛斷</string>
     <string name="incoming_call_notification_answer_action_label">接聽</string>
@@ -451,7 +451,7 @@
     <string name="content_description_downloaded_file_transfer">附加檔案</string>
     <string name="content_description_delivery_status">訊息傳遞狀態</string>
     <string name="content_description_ephemeral_message">是「閱後即焚」訊息</string>
-    <string name="content_description_linphone_user">聯絡人是 &amp;appName; 使用者</string>
+    <string name="content_description_linphone_user">聯絡人是 &appName; 使用者</string>
     <string name="content_description_contact_selected">已選擇聯絡人</string>
     <string name="content_description_e2e_encryption_enabled">已啟用端到端加密</string>
     <string name="content_description_show_all_contacts">顯示所有聯絡人清單</string>
@@ -690,7 +690,7 @@
     <string name="advanced_settings_debug_title">除錯選項</string>
     <string name="advanced_settings_other_title">其他設定</string>
     <string name="advanced_settings_disable_fragment_security_summary">允許對含有敏感資料的畫面拍攝螢幕擷圖</string>
-    <string name="notification_channel_missed_call_name">&amp;appName; 未接來電通知</string>
+    <string name="notification_channel_missed_call_name">&appName; 未接來電通知</string>
     <string name="content_description_cancel_sharing">取消分享</string>
     <string name="content_description_stop_voice_recording">停止錄音</string>
     <string name="content_description_cancel_voice_recording">取消通話錄音</string>
@@ -718,7 +718,7 @@
     <string name="conference_schedule_time">時間</string>
     <string name="conference_schedule_duration">持續時間</string>
     <string name="conference_schedule_timezone">時區</string>
-    <string name="conference_schedule_send_invite_chat">透過 &amp;appName; 邀請</string>
+    <string name="conference_schedule_send_invite_chat">透過 &appName; 邀請</string>
     <string name="conference_schedule_send_invite_email">透過電子郵件邀請</string>
     <string name="conference_schedule_encryption">是否要加密會議？</string>
     <string name="conference_schedule_participants_list">與會者清單</string>
@@ -730,7 +730,7 @@
     <string name="conference_participant_paused">（已暫停）</string>
     <string name="conference_schedule_start">安排會議</string>
     <string name="conference_group_call_create">建立群組通話</string>
-    <string name="conference_schedule_send_invite_chat_summary">將從我的 &amp;appName; 帳號寄出邀請</string>
+    <string name="conference_schedule_send_invite_chat_summary">將從我的 &appName; 帳號寄出邀請</string>
     <string name="call_error_temporarily_unavailable">暫時無法使用</string>
     <string name="conference_no_schedule">未安排會議。</string>
     <string name="conference_schedule_organizer">主辦人：</string>
