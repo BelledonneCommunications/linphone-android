@@ -68,6 +68,7 @@
         </androidx.core.widget.NestedScrollView>
 
         <LinearLayout
+            android:id="@+id/bottom_buttons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -108,6 +109,19 @@
                 android:contentDescription="@string/cancel"/>
 
         </LinearLayout>
+
+        <org.linphone.activities.voip.views.RoundCornersTextureView
+            android:id="@+id/local_preview_video_surface"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="10dp"
+            android:layout_size="@{@dimen/video_preview_max_size}"
+            app:alignTopRight="true"
+            app:displayMode="black_bars"
+            app:layout_constraintBottom_toTopOf="@id/bottom_buttons"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_max="200dp"
+            app:layout_constraintWidth_max="200dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -27,9 +27,11 @@ import android.view.View
 import android.widget.PopupWindow
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.navGraphViewModels
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.MainActivity
+import org.linphone.activities.voip.ConferenceDisplayMode
 import org.linphone.activities.voip.data.CallData
 import org.linphone.activities.voip.viewmodels.CallsViewModel
 import org.linphone.activities.voip.viewmodels.ConferenceViewModel
@@ -77,6 +79,22 @@ class CallsListFragment : GenericFragment<VoipCallsListFragmentBinding>() {
                 data.contextMenuClickListener = callContextMenuClickListener
             }
         }
+
+        conferenceViewModel.conferenceDisplayMode.observe(
+            viewLifecycleOwner
+        ) {
+            binding.localPreviewVideoSurface.visibility = if (it == ConferenceDisplayMode.AUDIO_ONLY) {
+                View.GONE
+            } else {
+                View.VISIBLE
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        coreContext.core.nativePreviewWindowId = binding.localPreviewVideoSurface
     }
 
     private fun showCallMenu(anchor: View, callData: CallData) {
