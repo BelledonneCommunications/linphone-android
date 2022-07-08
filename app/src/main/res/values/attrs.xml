@@ -73,6 +73,7 @@
             <enum name="occupy_all_space" value="1"/>
             <enum name="hybrid" value="2"/>
         </attr>
+        <attr name="radius" format="float" />
     </declare-styleable>
 
     <declare-styleable name="ScrollDot">

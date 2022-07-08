@@ -29,6 +29,8 @@ import org.linphone.R
 import org.linphone.mediastream.video.capture.CaptureTextureView
 
 class RoundCornersTextureView : CaptureTextureView {
+    private var mRadius: Float = 0f
+
     constructor(context: Context) : super(context) {
         mAlignTopRight = true
         mDisplayMode = DisplayMode.BLACK_BARS
@@ -64,6 +66,7 @@ class RoundCornersTextureView : CaptureTextureView {
                     2 -> DisplayMode.HYBRID
                     else -> DisplayMode.BLACK_BARS
                 }
+                mRadius = getFloat(R.styleable.RoundCornersTextureView_radius, context.resources.getDimension(R.dimen.voip_round_corners_texture_view_radius))
             } finally {
                 recycle()
             }
@@ -91,7 +94,7 @@ class RoundCornersTextureView : CaptureTextureView {
                         height
                     )
                 }
-                outline.setRoundRect(rect, context.resources.getDimension(R.dimen.voip_round_corners_texture_view_radius))
+                outline.setRoundRect(rect, mRadius)
             }
         }
         clipToOutline = true

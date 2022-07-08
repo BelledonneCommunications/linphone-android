@@ -30,6 +30,7 @@
                 android:layout_height="0dp"
                 app:alignTopRight="false"
                 app:displayMode="occupy_all_space"
+                app:radius="0"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
