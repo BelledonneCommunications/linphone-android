@@ -11,12 +11,16 @@
         <variable
             name="longClickListener"
             type="android.view.View.OnLongClickListener"/>
+        <variable
+            name="inflatedVisibility"
+            type="Integer" />
     </data>
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onLongClick="@{longClickListener}">
+        android:onLongClick="@{longClickListener}"
+        android:visibility="@{inflatedVisibility}">
 
         <org.linphone.views.VoiceRecordProgressBar
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"

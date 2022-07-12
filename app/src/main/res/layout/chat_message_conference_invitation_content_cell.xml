@@ -11,11 +11,8 @@
             name="longClickListener"
             type="android.view.View.OnLongClickListener"/>
         <variable
-            name="joinClickListener"
-            type="android.view.View.OnClickListener"/>
-        <variable
-            name="shareClickListener"
-            type="android.view.View.OnClickListener"/>
+            name="inflatedVisibility"
+            type="Integer" />
     </data>
 
     <LinearLayout
@@ -25,7 +22,8 @@
         android:minWidth="250dp"
         android:orientation="vertical"
         android:padding="10dp"
-        android:background="@drawable/shape_conference_invite_background">
+        android:background="@drawable/shape_conference_invite_background"
+        android:visibility="@{inflatedVisibility}">
 
         <TextView
             android:layout_width="match_parent"
@@ -112,7 +110,7 @@
                 android:layout_marginEnd="10dp"
                 android:layout_toStartOf="@id/join_conference"
                 android:contentDescription="@string/content_description_share_ics"
-                android:onClick="@{shareClickListener}"
+                android:onClick="@{() -> data.openFile()}"
                 android:src="@drawable/icon_share" />
 
             <TextView
@@ -125,7 +123,7 @@
                 android:layout_gravity="center_vertical|end"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/button_green_background"
-                android:onClick="@{joinClickListener}"
+                android:onClick="@{() -> data.callConferenceAddress()}"
                 android:paddingLeft="20dp"
                 android:paddingTop="8dp"
                 android:paddingRight="20dp"

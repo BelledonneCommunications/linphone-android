@@ -4,7 +4,6 @@
 
     <data>
         <import type="android.view.View"/>
-        <import type="android.widget.ImageView.ScaleType"/>
         <variable
             name="data"
             type="org.linphone.activities.main.chat.data.ChatMessageContentData" />
@@ -18,113 +17,93 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp">
 
-        <ImageView
-            android:onClick="@{() -> data.openFile()}"
-            android:onLongClick="@{longClickListener}"
-            android:contentDescription="@string/content_description_downloaded_file_transfer"
+        <ViewStub
+            android:id="@+id/image_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxHeight="@dimen/chat_message_bubble_image_height_big"
-            android:layout_size="@{data.alone ? 0f : @dimen/chat_message_bubble_file_size}"
-            coil="@{data.filePath}"
+            android:layout="@layout/chat_message_image_content_cell"
             android:visibility="@{!data.downloadable &amp;&amp; data.image ? View.VISIBLE : View.GONE}"
-            android:scaleType="@{data.alone ? ScaleType.FIT_CENTER : ScaleType.CENTER_CROP}"
-            android:adjustViewBounds="true" />
+            app:inflatedVisibility="@{!data.downloadable &amp;&amp; data.image ? View.VISIBLE : View.GONE}"
+            app:data="@{data}"
+            app:longClickListener="@{longClickListener}"/>
 
-        <ImageView
-            android:onClick="@{() -> data.openFile()}"
-            android:onLongClick="@{longClickListener}"
-            android:contentDescription="@string/content_description_downloaded_file_transfer"
+        <ViewStub
+            android:id="@+id/video_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxHeight="@dimen/chat_message_bubble_image_height_big"
-            android:layout_size="@{data.alone ? 0f : @dimen/chat_message_bubble_file_size}"
-            coilVideoPreview="@{data.filePath}"
+            android:layout="@layout/chat_message_video_content_cell"
             android:visibility="@{!data.downloadable &amp;&amp; data.video ? View.VISIBLE : View.GONE}"
-            android:scaleType="@{data.alone ? ScaleType.FIT_CENTER : ScaleType.CENTER_CROP}"
-            android:adjustViewBounds="true" />
+            app:inflatedVisibility="@{!data.downloadable &amp;&amp; data.video ? View.VISIBLE : View.GONE}"
+            app:data="@{data}"
+            app:longClickListener="@{longClickListener}"/>
 
-        <ImageView
-            android:visibility="@{!data.downloadable &amp;&amp; data.video ? View.VISIBLE : View.GONE}"
-            android:layout_width="@dimen/play_pause_button_size"
-            android:layout_height="@dimen/play_pause_button_size"
-            android:padding="9dp"
-            android:src="@drawable/record_play_dark"
-            android:background="@drawable/round_recording_button_background_dark"
-            android:contentDescription="@string/content_description_chat_message_video_attachment"
-            android:layout_centerInParent="true"/>
-
-        <include layout="@layout/chat_message_voice_record_content_cell"
+        <ViewStub
+            android:id="@+id/voice_recording_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout="@layout/chat_message_voice_record_content_cell"
+            android:visibility="@{!data.downloadable &amp;&amp; data.voiceRecording ? View.VISIBLE : View.GONE}"
             app:data="@{data}"
             app:longClickListener="@{longClickListener}"
-            android:visibility="@{!data.downloadable &amp;&amp; data.voiceRecording ? View.VISIBLE : View.GONE, default=gone}" />
+            app:inflatedVisibility="@{!data.downloadable &amp;&amp; data.voiceRecording ? View.VISIBLE : View.GONE}"/>
 
-        <include layout="@layout/chat_message_conference_invitation_content_cell"
+        <ViewStub
+            android:id="@+id/conference_invitation_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout="@layout/chat_message_conference_invitation_content_cell"
+            android:visibility="@{!data.downloadable &amp;&amp; data.conferenceSchedule ? View.VISIBLE : View.GONE}"
             app:data="@{data}"
             app:longClickListener="@{longClickListener}"
-            app:joinClickListener="@{() -> data.callConferenceAddress()}"
-            app:shareClickListener="@{() -> data.openFile()}"
-            android:visibility="@{!data.downloadable &amp;&amp; data.conferenceSchedule ? View.VISIBLE : View.GONE, default=gone}" />
+            app:inflatedVisibility="@{!data.downloadable &amp;&amp; data.conferenceSchedule ? View.VISIBLE : View.GONE}" />
 
-        <LinearLayout
+        <ViewStub
+            android:id="@+id/generic_file_content"
             android:layout_width="@dimen/chat_message_bubble_file_size"
             android:layout_height="wrap_content"
             android:minHeight="@dimen/chat_message_bubble_file_size"
             android:orientation="vertical"
             android:gravity="center"
             android:background="?attr/backgroundColor"
-            android:visibility="@{data.downloadable || data.audio || data.pdf || data.genericFile ? View.VISIBLE : View.GONE}">
+            android:layout="@layout/chat_message_generic_file_content_cell"
+            android:visibility="@{data.audio || data.pdf || data.genericFile ? View.VISIBLE : View.GONE}"
+            app:data="@{data}"
+            app:longClickListener="@{longClickListener}"
+            app:inflatedVisibility="@{data.audio || data.pdf || data.genericFile ? View.VISIBLE : View.GONE}" />
 
-            <TextView
-                style="@style/chat_file_attachment_font"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:ellipsize="middle"
-                android:singleLine="true"
-                android:gravity="center"
-                android:textAlignment="center"
-                android:drawablePadding="5dp"
-                android:drawableTop="@{data.video ? @drawable/file_video : (data.image ? @drawable/file_picture : (data.pdf ? @drawable/file_pdf : (data.audio ? @drawable/file_audio : (data.voiceRecording ? @drawable/audio_recording_reply_preview_default : @drawable/file)))), default=@drawable/file}"
-                android:text="@{data.fileName, default=`test.pdf`}"
-                android:onClick="@{() -> data.downloadable ? data.download() : data.openFile()}"
-                android:onLongClick="@{longClickListener}"/>
+        <ViewStub
+            android:id="@+id/downloadable_file_content"
+            android:layout_width="@dimen/chat_message_bubble_file_size"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/chat_message_bubble_file_size"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="?attr/backgroundColor"
+            android:layout="@layout/chat_message_downloadable_file_content_cell"
+            android:visibility="@{data.downloadable ? View.VISIBLE : View.GONE}"
+            app:data="@{data}"
+            app:longClickListener="@{longClickListener}"
+            app:inflatedVisibility="@{data.downloadable ? View.VISIBLE : View.GONE}" />
 
-            <TextView
-                style="@style/chat_file_attachment_font"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_marginBottom="5dp"
-                android:text="@{data.downloadLabel}"
-                android:onClick="@{() -> data.download()}"
-                android:visibility="@{data.downloadable ? View.VISIBLE : View.GONE}"/>
-
-        </LinearLayout>
-
-        <RelativeLayout
+        <!-- Keep two views below here instead of chat_message_downloadable_file_content_cell.xml
+            layout because of viewstub lifecycleowner databinding issue -->
+        <com.google.android.material.progressindicator.CircularProgressIndicator
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="@{data.downloadProgressInt > 0 ? View.VISIBLE : View.GONE, default=gone}"
-            android:layout_centerInParent="true">
+            android:max="100"
+            android:layout_centerInParent="true"
+            app:trackColor="?attr/backgroundColor"
+            android:progress="@{data.downloadProgressInt, default=50}"
+            android:background="@drawable/background_round_secondary_color" />
 
-            <com.google.android.material.progressindicator.CircularProgressIndicator
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:max="100"
-                android:layout_centerInParent="true"
-                app:trackColor="?attr/backgroundColor"
-                android:progress="@{data.downloadProgressInt, default=50}"
-                android:background="@drawable/background_round_secondary_color"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                style="@style/file_transfer_progress_font"
-                android:text="@{data.downloadProgressString, default=`50%`}"/>
-
-        </RelativeLayout>
+        <TextView
+            android:visibility="@{data.downloadProgressInt > 0 ? View.VISIBLE : View.GONE, default=gone}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            style="@style/file_transfer_progress_font"
+            android:text="@{data.downloadProgressString, default=`50%`}"/>
 
     </RelativeLayout>
 
