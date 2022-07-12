@@ -329,6 +329,14 @@
         <item name="android:fontFamily">sans-serif</item>
     </style>
 
+    <style name="chat_message_reply_forward_indicator_font">
+        <item name="android:textColor">@color/chat_bubble_text_color</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:lineSpacingExtra">3.3sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
     <!-- Dialog related -->
 
     <style name="dialog_title_font" parent="@android:style/TextAppearance.Medium">
