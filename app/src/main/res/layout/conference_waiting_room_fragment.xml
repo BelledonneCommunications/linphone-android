@@ -190,7 +190,7 @@
                 android:background="@drawable/button_toggle_background_reverse"
                 android:contentDescription="@string/conference_display_mode_mosaic"
                 android:onClick="@{() -> viewModel.setMosaicLayout()}"
-                android:padding="5dp"
+                android:padding="10dp"
                 android:selected="@{viewModel.selectedLayout == ConferenceDisplayMode.GRID}"
                 android:src="@drawable/icon_conference_layout_grid"
                 app:tint="@color/white_color" />
@@ -202,7 +202,7 @@
                 android:background="@drawable/button_toggle_background_reverse"
                 android:contentDescription="@string/conference_display_mode_active_speaker"
                 android:onClick="@{() -> viewModel.setActiveSpeakerLayout()}"
-                android:padding="5dp"
+                android:padding="10dp"
                 android:selected="@{viewModel.selectedLayout == ConferenceDisplayMode.ACTIVE_SPEAKER}"
                 android:src="@drawable/icon_conference_layout_active_speaker"
                 app:tint="@color/white_color" />
@@ -214,7 +214,7 @@
                 android:background="@drawable/button_toggle_background_reverse"
                 android:contentDescription="@string/conference_display_mode_audio_only"
                 android:onClick="@{() -> viewModel.setAudioOnlyLayout()}"
-                android:padding="5dp"
+                android:padding="10dp"
                 android:selected="@{viewModel.selectedLayout == ConferenceDisplayMode.AUDIO_ONLY}"
                 android:src="@drawable/icon_conference_layout_audio_only"
                 app:tint="@color/white_color" />
