@@ -91,37 +91,29 @@
             android:paddingBottom="5dp">
 
             <TextView
+                style="@style/chat_message_reply_forward_indicator_font"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="5dp"
                 android:drawablePadding="3dp"
-                android:fontFamily="sans-serif"
                 android:gravity="center_vertical"
-                android:lineSpacingExtra="3.3sp"
                 android:text="@string/chat_message_forwarded"
-                android:textColor="@color/chat_bubble_text_color"
-                android:textSize="10sp"
-                android:textStyle="normal"
                 android:visibility="@{data.chatMessage.forward ? View.VISIBLE : View.GONE, default=gone}"
                 app:drawableLeftCompat="@drawable/icon_forwarded_message"
                 tools:ignore="SmallSp" />
 
             <TextView
+                style="@style/chat_message_reply_forward_indicator_font"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="5dp"
                 android:drawablePadding="3dp"
-                android:fontFamily="sans-serif"
                 android:gravity="center_vertical"
-                android:lineSpacingExtra="3.3sp"
                 android:text="@string/chat_message_replied"
-                android:textColor="@color/chat_bubble_text_color"
-                android:textSize="10sp"
-                android:textStyle="normal"
                 android:visibility="@{data.chatMessage.reply ? View.VISIBLE : View.GONE, default=gone}"
                 app:drawableLeftCompat="@drawable/icon_replied_message"
                 tools:ignore="SmallSp" />
