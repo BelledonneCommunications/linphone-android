@@ -59,6 +59,7 @@
             android:visibility="@{data.isConferenceSchedule ? View.VISIBLE : View.GONE, default=gone}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:maxWidth="@dimen/chat_message_content_preview_max_width"
             android:maxLines="3"
             android:ellipsize="end"

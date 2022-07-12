@@ -61,6 +61,7 @@
             android:visibility="@{data.isConferenceSchedule ? View.VISIBLE : View.GONE, default=gone}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:text="@{data.conferenceSubject, default=`Lorem Ipsum`}"
             android:textColor="@color/light_primary_text_color"
             android:padding="5dp"
