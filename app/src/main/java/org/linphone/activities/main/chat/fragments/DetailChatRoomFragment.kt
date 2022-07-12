@@ -746,10 +746,11 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 .addOnGlobalLayoutListener(
                     object : OnGlobalLayoutListener {
                         override fun onGlobalLayout() {
+                            binding.chatMessagesList
+                                .viewTreeObserver
+                                .removeOnGlobalLayoutListener(this)
+
                             if (isBindingAvailable()) {
-                                binding.chatMessagesList
-                                    .viewTreeObserver
-                                    .removeOnGlobalLayoutListener(this)
                                 if (::chatScrollListener.isInitialized) {
                                     binding.chatMessagesList.addOnScrollListener(chatScrollListener)
                                 }
