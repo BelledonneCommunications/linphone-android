@@ -59,7 +59,7 @@ class CallLogViewModel(val callLog: CallLog) : GenericContactViewModel(callLog.r
 
     val chatAllowed = !corePreferences.disableChat
 
-    val secureChatAllowed = contact.value?.getPresenceModelForUriOrTel(peerSipUri)?.hasCapability(FriendCapability.LimeX3Dh) ?: false
+    val secureChatAllowed = LinphoneUtils.isLimeAvailable() && (contact.value?.getPresenceModelForUriOrTel(peerSipUri)?.hasCapability(FriendCapability.LimeX3Dh) ?: false)
 
     val relatedCallLogs = MutableLiveData<ArrayList<CallLogData>>()
 
