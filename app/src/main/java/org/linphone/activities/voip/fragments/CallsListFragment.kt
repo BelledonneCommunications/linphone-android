@@ -27,21 +27,21 @@ import android.view.View
 import android.widget.PopupWindow
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.navGraphViewModels
-import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
-import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.voip.ConferenceDisplayMode
 import org.linphone.activities.voip.data.CallData
 import org.linphone.activities.voip.viewmodels.CallsViewModel
 import org.linphone.activities.voip.viewmodels.ConferenceViewModel
+import org.linphone.activities.voip.viewmodels.ControlsViewModel
 import org.linphone.databinding.VoipCallContextMenuBindingImpl
 import org.linphone.databinding.VoipCallsListFragmentBinding
 import org.linphone.utils.AppUtils
 
-class CallsListFragment : GenericFragment<VoipCallsListFragmentBinding>() {
+class CallsListFragment : GenericVideoPreviewFragment<VoipCallsListFragmentBinding>() {
     private val callsViewModel: CallsViewModel by navGraphViewModels(R.id.call_nav_graph)
     private val conferenceViewModel: ConferenceViewModel by navGraphViewModels(R.id.call_nav_graph)
+    private val controlsViewModel: ControlsViewModel by navGraphViewModels(R.id.call_nav_graph)
 
     override fun getLayoutId(): Int = R.layout.voip_calls_list_fragment
 
@@ -57,7 +57,12 @@ class CallsListFragment : GenericFragment<VoipCallsListFragmentBinding>() {
         binding.lifecycleOwner = viewLifecycleOwner
 
         binding.callsViewModel = callsViewModel
+
         binding.conferenceViewModel = conferenceViewModel
+
+        binding.controlsViewModel = controlsViewModel
+
+        setupLocalViewPreview(binding.localPreviewVideoSurface, binding.switchCamera)
 
         binding.setCancelClickListener {
             goBack()
@@ -89,12 +94,6 @@ class CallsListFragment : GenericFragment<VoipCallsListFragmentBinding>() {
                 View.VISIBLE
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        coreContext.core.nativePreviewWindowId = binding.localPreviewVideoSurface
     }
 
     private fun showCallMenu(anchor: View, callData: CallData) {

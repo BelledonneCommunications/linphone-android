@@ -16,6 +16,9 @@
         <variable
             name="conferenceViewModel"
             type="org.linphone.activities.voip.viewmodels.ConferenceViewModel" />
+        <variable
+            name="controlsViewModel"
+            type="org.linphone.activities.voip.viewmodels.ControlsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -122,6 +125,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_max="200dp"
             app:layout_constraintWidth_max="200dp" />
+
+        <ImageView
+            android:id="@+id/switch_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:contentDescription="@string/content_description_switch_camera"
+            android:onClick="@{() -> controlsViewModel.switchCamera()}"
+            android:padding="10dp"
+            android:src="@drawable/icon_call_camera_switch"
+            android:visibility="@{controlsViewModel.isSwitchCameraAvailable &amp;&amp; !controlsViewModel.pipMode ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintEnd_toEndOf="@id/local_preview_video_surface"
+            app:layout_constraintTop_toTopOf="@id/local_preview_video_surface" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

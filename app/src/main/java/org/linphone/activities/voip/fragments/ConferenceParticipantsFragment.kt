@@ -25,14 +25,15 @@ import android.widget.Toast
 import androidx.navigation.navGraphViewModels
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
-import org.linphone.activities.GenericFragment
 import org.linphone.activities.navigateToAddParticipants
 import org.linphone.activities.voip.viewmodels.ConferenceViewModel
+import org.linphone.activities.voip.viewmodels.ControlsViewModel
 import org.linphone.core.tools.Log
 import org.linphone.databinding.VoipConferenceParticipantsFragmentBinding
 
-class ConferenceParticipantsFragment : GenericFragment<VoipConferenceParticipantsFragmentBinding>() {
+class ConferenceParticipantsFragment : GenericVideoPreviewFragment<VoipConferenceParticipantsFragmentBinding>() {
     private val conferenceViewModel: ConferenceViewModel by navGraphViewModels(R.id.call_nav_graph)
+    private val controlsViewModel: ControlsViewModel by navGraphViewModels(R.id.call_nav_graph)
 
     // Only display events happening during while this fragment is visible
     private var skipEvents = true
@@ -45,6 +46,10 @@ class ConferenceParticipantsFragment : GenericFragment<VoipConferenceParticipant
         binding.lifecycleOwner = viewLifecycleOwner
 
         binding.conferenceViewModel = conferenceViewModel
+
+        binding.controlsViewModel = controlsViewModel
+
+        setupLocalViewPreview(binding.localPreviewVideoSurface, binding.switchCamera)
 
         conferenceViewModel.conferenceExists.observe(
             viewLifecycleOwner

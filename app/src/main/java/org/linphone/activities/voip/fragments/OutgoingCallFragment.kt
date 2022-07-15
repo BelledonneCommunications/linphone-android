@@ -28,13 +28,12 @@ import androidx.databinding.ViewDataBinding
 import androidx.navigation.navGraphViewModels
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
-import org.linphone.activities.GenericFragment
 import org.linphone.activities.navigateToActiveCall
 import org.linphone.activities.voip.viewmodels.CallsViewModel
 import org.linphone.activities.voip.viewmodels.ControlsViewModel
 import org.linphone.databinding.VoipCallOutgoingFragmentBinding
 
-class OutgoingCallFragment : GenericFragment<VoipCallOutgoingFragmentBinding>() {
+class OutgoingCallFragment : GenericVideoPreviewFragment<VoipCallOutgoingFragmentBinding>() {
     private val controlsViewModel: ControlsViewModel by navGraphViewModels(R.id.call_nav_graph)
     private val callsViewModel: CallsViewModel by navGraphViewModels(R.id.call_nav_graph)
 
@@ -48,6 +47,8 @@ class OutgoingCallFragment : GenericFragment<VoipCallOutgoingFragmentBinding>() 
         binding.controlsViewModel = controlsViewModel
 
         binding.callsViewModel = callsViewModel
+
+        setupLocalViewPreview(binding.localPreviewVideoSurface, binding.switchCamera)
 
         callsViewModel.callConnectedEvent.observe(
             viewLifecycleOwner

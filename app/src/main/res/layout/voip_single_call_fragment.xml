@@ -10,10 +10,6 @@
         <import type="com.google.android.flexbox.FlexDirection" />
 
         <variable
-            name="previewTouchListener"
-            type="android.view.View.OnTouchListener" />
-
-        <variable
             name="controlsViewModel"
             type="org.linphone.activities.voip.viewmodels.ControlsViewModel" />
 
@@ -234,7 +230,6 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_size="@{controlsViewModel.pipMode ? @dimen/video_preview_pip_max_size : @dimen/video_preview_max_size}"
-                android:onTouch="@{previewTouchListener}"
                 app:alignTopRight="true"
                 app:displayMode="black_bars"
                 app:layout_constraintBottom_toTopOf="@id/bottom_barrier"
