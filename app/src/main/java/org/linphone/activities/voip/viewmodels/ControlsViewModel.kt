@@ -418,7 +418,7 @@ class ControlsViewModel : ViewModel() {
     }
 
     private fun updateVideoEnabled() {
-        val currentCall = coreContext.core.currentCall
+        val currentCall = coreContext.core.currentCall ?: coreContext.core.calls.firstOrNull()
         val enabled = currentCall?.currentParams?.isVideoEnabled ?: false
         // Prevent speaker to turn on each time a participant joins a video conference
         val isConference = currentCall?.conference != null
