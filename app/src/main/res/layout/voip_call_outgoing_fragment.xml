@@ -127,6 +127,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintWidth_max="@dimen/voip_buttons_max_width" />
 
+        <org.linphone.activities.voip.views.RoundCornersTextureView
+            android:id="@+id/local_preview_video_surface"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="10dp"
+            android:layout_size="@{@dimen/video_preview_max_size}"
+            app:alignTopRight="true"
+            app:displayMode="black_bars"
+            app:layout_constraintBottom_toTopOf="@id/buttons"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_max="200dp"
+            app:layout_constraintWidth_max="200dp" />
+
         <ViewStub
             android:id="@+id/stub_numpad"
             android:layout_width="match_parent"

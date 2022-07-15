@@ -26,6 +26,7 @@ import android.widget.Chronometer
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.navigation.navGraphViewModels
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.navigateToActiveCall
@@ -72,6 +73,14 @@ class OutgoingCallFragment : GenericFragment<VoipCallOutgoingFragmentBinding>() 
                 timer.base =
                     SystemClock.elapsedRealtime() - (1000 * it.call.duration) // Linphone timestamps are in seconds
                 timer.start()
+            }
+        }
+
+        controlsViewModel.isOutgoingEarlyMedia.observe(
+            viewLifecycleOwner
+        ) {
+            if (it) {
+                coreContext.core.nativePreviewWindowId = binding.localPreviewVideoSurface
             }
         }
 
