@@ -25,13 +25,14 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.navGraphViewModels
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
-import org.linphone.activities.GenericFragment
 import org.linphone.activities.voip.ConferenceDisplayMode
 import org.linphone.activities.voip.viewmodels.ConferenceViewModel
+import org.linphone.activities.voip.viewmodels.ControlsViewModel
 import org.linphone.databinding.VoipConferenceLayoutFragmentBinding
 
-class ConferenceLayoutFragment : GenericFragment<VoipConferenceLayoutFragmentBinding>() {
+class ConferenceLayoutFragment : GenericVideoPreviewFragment<VoipConferenceLayoutFragmentBinding>() {
     private val conferenceViewModel: ConferenceViewModel by navGraphViewModels(R.id.call_nav_graph)
+    private val controlsViewModel: ControlsViewModel by navGraphViewModels(R.id.call_nav_graph)
 
     override fun getLayoutId(): Int = R.layout.voip_conference_layout_fragment
 
@@ -41,6 +42,10 @@ class ConferenceLayoutFragment : GenericFragment<VoipConferenceLayoutFragmentBin
         binding.lifecycleOwner = viewLifecycleOwner
 
         binding.conferenceViewModel = conferenceViewModel
+
+        binding.controlsViewModel = controlsViewModel
+
+        setupLocalViewPreview(binding.localPreviewVideoSurface, binding.switchCamera)
 
         binding.setCancelClickListener {
             goBack()
