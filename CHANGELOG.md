@@ -16,10 +16,12 @@ Group changes to describe their impact on the project, as follows:
 - Conference creation with scheduling, video, different layouts, showing who is speaking and who is muted, etc...
 - Group calls directly from group chat rooms
 - Chat rooms can be individually muted (no notification when receiving a chat message)
+- Outgoing call video in early-media if requested by callee
 - Image & Video in-app viewers allow for full-screen display
 - Display name can be set during assistant when creating / logging in a sip.linphone.org account
 - Android 13 support, using new post notifications & media permissions
 - Call recordings can be exported
+- Setting to prevent international prefix from account to be applied to call & chat
 
 ### Changed
 - In-call views have been re-designed
