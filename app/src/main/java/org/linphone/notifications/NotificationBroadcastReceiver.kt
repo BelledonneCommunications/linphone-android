@@ -53,7 +53,7 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
         }
         val core: Core = coreContext.core
 
-        val remoteAddress = core.interpretUrl(remoteSipAddress)
+        val remoteAddress = core.interpretUrl(remoteSipAddress, false)
         if (remoteAddress == null) {
             Log.e("[Notification Broadcast Receiver] Couldn't interpret remote address $remoteSipAddress")
             return
@@ -64,7 +64,7 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
             Log.e("[Notification Broadcast Receiver] Local identity is null for notification id $notificationId")
             return
         }
-        val localAddress = core.interpretUrl(localIdentity)
+        val localAddress = core.interpretUrl(localIdentity, false)
         if (localAddress == null) {
             Log.e("[Notification Broadcast Receiver] Couldn't interpret local address $localIdentity")
             return
@@ -107,7 +107,7 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
 
         val core: Core = coreContext.core
 
-        val remoteAddress = core.interpretUrl(remoteSipAddress)
+        val remoteAddress = core.interpretUrl(remoteSipAddress, false)
         val call = if (remoteAddress != null) core.getCallByRemoteAddress2(remoteAddress) else null
         if (call == null) {
             Log.e("[Notification Broadcast Receiver] Couldn't find call from remote address $remoteSipAddress")

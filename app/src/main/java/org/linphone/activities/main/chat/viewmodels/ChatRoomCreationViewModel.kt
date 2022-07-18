@@ -72,7 +72,7 @@ class ChatRoomCreationViewModel : ContactsSelectionViewModel() {
         val defaultAccount = coreContext.core.defaultAccount
         var room: ChatRoom?
 
-        val address = searchResult.address ?: coreContext.core.interpretUrl(searchResult.phoneNumber ?: "")
+        val address = searchResult.address ?: coreContext.core.interpretUrl(searchResult.phoneNumber ?: "", LinphoneUtils.applyInternationalPrefix())
         if (address == null) {
             Log.e("[Chat Room Creation] Can't get a valid address from search result $searchResult")
             onMessageToNotifyEvent.value = Event(R.string.chat_room_creation_failed_snack)

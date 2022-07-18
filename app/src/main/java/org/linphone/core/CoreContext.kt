@@ -414,7 +414,7 @@ class CoreContext(
                 // Ensure audio/video conference factory URI is set on sip.linphone.org proxy configs
                 if (account.params.audioVideoConferenceFactoryAddress == null) {
                     val uri = corePreferences.audioVideoConferenceServerUri
-                    val address = core.interpretUrl(uri)
+                    val address = core.interpretUrl(uri, false)
                     if (address != null) {
                         Log.i("[Context] Setting audio/video conference factory on proxy config ${params.identityAddress?.asString()} to default value: $uri")
                         params.audioVideoConferenceFactoryAddress = address
@@ -483,7 +483,7 @@ class CoreContext(
 
         if (isLinphoneAccount) {
             core.config.setString("sip", "rls_uri", corePreferences.defaultRlsUri)
-            val rlsAddress = core.interpretUrl(corePreferences.defaultRlsUri)
+            val rlsAddress = core.interpretUrl(corePreferences.defaultRlsUri, false)
             if (rlsAddress != null) {
                 for (friendList in core.friendsLists) {
                     friendList.rlsAddress = rlsAddress
@@ -596,7 +596,7 @@ class CoreContext(
     fun declineCall(call: Call) {
         val voiceMailUri = corePreferences.voiceMailUri
         if (voiceMailUri != null && corePreferences.redirectDeclinedCallToVoiceMail) {
-            val voiceMailAddress = core.interpretUrl(voiceMailUri)
+            val voiceMailAddress = core.interpretUrl(voiceMailUri, false)
             if (voiceMailAddress != null) {
                 Log.i("[Context] Redirecting call $call to voice mail URI: $voiceMailUri")
                 call.redirectTo(voiceMailAddress)
@@ -617,7 +617,7 @@ class CoreContext(
         if (currentCall == null) {
             Log.e("[Context] Couldn't find a call to transfer")
         } else {
-            val address = core.interpretUrl(addressToCall)
+            val address = core.interpretUrl(addressToCall, LinphoneUtils.applyInternationalPrefix())
             if (address != null) {
                 Log.i("[Context] Transferring current call to $addressToCall")
                 currentCall.transferTo(address)
@@ -638,7 +638,7 @@ class CoreContext(
             }
         }
 
-        val address: Address? = core.interpretUrl(stringAddress)
+        val address: Address? = core.interpretUrl(stringAddress, LinphoneUtils.applyInternationalPrefix())
         if (address == null) {
             Log.e("[Context] Failed to parse $stringAddress, abort outgoing call")
             callErrorMessageResourceId.value = Event(context.getString(R.string.call_error_network_unreachable))

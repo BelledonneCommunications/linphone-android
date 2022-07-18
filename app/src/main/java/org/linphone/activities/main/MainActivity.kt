@@ -361,7 +361,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             }
         }
 
-        val address = coreContext.core.interpretUrl(addressToCall)
+        val address = coreContext.core.interpretUrl(addressToCall, LinphoneUtils.applyInternationalPrefix())
         if (address != null) {
             addressToCall = address.asStringUriOnly()
         }
@@ -460,7 +460,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
             val localAddress =
                 coreContext.core.defaultAccount?.params?.identityAddress?.asStringUriOnly()
-            val peerAddress = coreContext.core.interpretUrl(addressToIM)?.asStringUriOnly()
+            val peerAddress = coreContext.core.interpretUrl(addressToIM, LinphoneUtils.applyInternationalPrefix())?.asStringUriOnly()
             Log.i("[Main Activity] Navigating to chat room with local [$localAddress] and peer [$peerAddress] addresses")
             navigateToChatRoom(localAddress, peerAddress)
         } else {

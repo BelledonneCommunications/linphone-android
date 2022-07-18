@@ -79,7 +79,7 @@ class ConferenceWaitingRoomFragment : GenericFragment<ConferenceWaitingRoomFragm
             it.consume { callParams ->
                 val conferenceUri = arguments?.getString("Address")
                 if (conferenceUri != null) {
-                    val conferenceAddress = coreContext.core.interpretUrl(conferenceUri)
+                    val conferenceAddress = coreContext.core.interpretUrl(conferenceUri, false)
                     if (conferenceAddress != null) {
                         Log.i("[Conference Waiting Room] Calling conference SIP URI: ${conferenceAddress.asStringUriOnly()}")
                         coreContext.startCall(conferenceAddress, callParams)
