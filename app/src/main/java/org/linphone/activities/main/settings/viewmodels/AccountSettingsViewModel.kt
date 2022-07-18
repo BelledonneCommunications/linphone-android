@@ -420,7 +420,7 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
     val audioVideoConferenceFactoryUriListener = object : SettingListenerStub() {
         override fun onTextValueChanged(newValue: String) {
             val params = account.params.clone()
-            val uri = coreContext.core.interpretUrl(newValue)
+            val uri = coreContext.core.interpretUrl(newValue, false)
             Log.i("[Account Settings] Forcing audio/video conference factory on proxy config ${params.identityAddress?.asString()} to value: $newValue")
             params.audioVideoConferenceFactoryAddress = uri
             account.params = params

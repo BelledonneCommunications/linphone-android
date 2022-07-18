@@ -180,7 +180,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                                 }
                                 linphoneMime, ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE -> {
                                     if (data1 == null) continue
-                                    val address = core.interpretUrl(data1) ?: continue
+                                    val address = core.interpretUrl(data1, true) ?: continue
                                     if (
                                         friendsAddresses.find {
                                             it.weakEqual(address)

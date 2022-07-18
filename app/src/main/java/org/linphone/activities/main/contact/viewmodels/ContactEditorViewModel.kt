@@ -130,7 +130,7 @@ class ContactEditorViewModel(val c: Friend?) : ViewModel(), ContactDataInterface
             val sipAddress = address.newValue.value.orEmpty()
             if (sipAddress.isEmpty()) continue
 
-            val parsed = coreContext.core.interpretUrl(sipAddress)
+            val parsed = coreContext.core.interpretUrl(sipAddress, false)
             if (parsed != null) contact.addAddress(parsed)
         }
 

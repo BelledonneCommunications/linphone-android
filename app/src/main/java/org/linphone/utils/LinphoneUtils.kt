@@ -78,7 +78,7 @@ class LinphoneUtils {
             val remoteContact = call.remoteContact
             val conferenceAddress = if (call.dir == Call.Dir.Incoming) {
                 if (remoteContact != null)
-                    coreContext.core.interpretUrl(remoteContact)
+                    coreContext.core.interpretUrl(remoteContact, false)
                 else
                     null
             } else {
@@ -233,6 +233,16 @@ class LinphoneUtils {
             }
 
             return list
+        }
+
+        fun applyInternationalPrefix(): Boolean {
+            val account = coreContext.core.defaultAccount
+            if (account != null) {
+                val params = account.params
+                return params.useInternationalPrefixForCallsAndChats
+            }
+
+            return true // Legacy behavior
         }
     }
 }
