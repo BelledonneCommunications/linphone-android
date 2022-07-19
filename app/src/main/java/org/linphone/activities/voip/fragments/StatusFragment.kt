@@ -112,9 +112,13 @@ class StatusFragment : GenericFragment<VoipStatusFragmentBinding>() {
         viewModel.zrtpReadSas = toRead.uppercase(Locale.getDefault())
         viewModel.zrtpListenSas = toListen.uppercase(Locale.getDefault())
         viewModel.showIcon = true
-        viewModel.iconResource = R.drawable.security_2_indicator
+        viewModel.iconResource = if (call.audioStats?.isZrtpKeyAgreementAlgoPostQuantum == true) {
+            R.drawable.security_post_quantum
+        } else {
+            R.drawable.security_2_indicator
+        }
 
-        val dialog: Dialog = DialogUtils.getDialog(requireContext(), viewModel)
+        val dialog: Dialog = DialogUtils.getVoipDialog(requireContext(), viewModel)
 
         viewModel.showDeleteButton(
             {

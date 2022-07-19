@@ -15,99 +15,208 @@
         android:clickable="true"
         android:focusable="true">
 
-        <View
-            android:id="@+id/background"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:background="@drawable/shape_dialog_background"
-            app:layout_constraintTop_toTopOf="@id/dialog_message"
-            app:layout_constraintBottom_toBottomOf="@id/bottom_barrier"/>
-
-        <TextView
-            android:id="@+id/cancel_button"
-            style="@style/big_orange_button_font"
-            android:layout_width="0dp"
-            app:layout_constraintWidth_max="@dimen/voip_dialog_button_max_width"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:background="@drawable/shape_rect_gray_button"
-            android:gravity="center"
-            android:onClick="@{() -> viewModel.onCancelClicked()}"
-            android:padding="10dp"
-            android:text="@{viewModel.cancelLabel, default=Cancel}"
-            android:visibility="@{viewModel.showCancel ? View.VISIBLE : View.GONE}"
-            app:layout_constraintEnd_toStartOf="@id/delete_button"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@id/background"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintHorizontal_chainStyle="spread"/>
-
-        <TextView
-            android:id="@+id/delete_button"
-            style="@style/big_orange_button_font"
-            android:layout_width="0dp"
-            app:layout_constraintWidth_max="@dimen/voip_dialog_button_max_width"
-            android:layout_height="wrap_content"
-            android:background="@drawable/shape_rect_orange_button"
-            android:gravity="center"
-            android:onClick="@{() -> viewModel.onDeleteClicked()}"
-            android:padding="10dp"
-            android:text="@{viewModel.deleteLabel, default=Delete}"
-            android:visibility="@{viewModel.showDelete ? View.VISIBLE : View.GONE}"
-            app:layout_constraintEnd_toStartOf="@id/ok_button"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/cancel_button" />
-
-        <TextView
-            android:id="@+id/ok_button"
-            style="@style/big_orange_button_font"
-            android:layout_width="0dp"
-            app:layout_constraintWidth_max="@dimen/voip_dialog_button_max_width"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:background="@drawable/shape_rect_green_button"
-            android:gravity="center"
-            android:onClick="@{() -> viewModel.onOkClicked()}"
-            android:padding="10dp"
-            android:text="@{viewModel.okLabel, default=OK}"
-            android:visibility="@{viewModel.showOk ? View.VISIBLE : View.GONE}"
-            app:layout_constraintEnd_toEndOf="@id/background"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/delete_button" />
-
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/top_barrier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="top"
-            app:barrierMargin="-10dp"
-            app:constraint_referenced_ids="ok_button,delete_button,cancel_button"/>
+            app:constraint_referenced_ids="dialog_icon, dialog_title, dialog_message" />
 
-        <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/bottom_barrier"
-            android:layout_width="wrap_content"
+        <View
+            android:id="@+id/background"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="-20dp"
+            android:layout_marginTop="-10dp"
+            android:background="@drawable/shape_dialog_background"
+            app:layout_constraintBottom_toBottomOf="@id/buttons_bottom_barrier"
+            app:layout_constraintTop_toTopOf="@id/top_barrier"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/dialog_icon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginBottom="10dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@{viewModel.title}"
+            android:src="@{viewModel.iconResource, default=@drawable/security_alert_indicator}"
+            android:visibility="@{viewModel.showIcon ? View.VISIBLE : View.GONE}"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintBottom_toTopOf="@id/dialog_title"
+            app:layout_constraintEnd_toEndOf="@id/background"
+            app:layout_constraintStart_toStartOf="@id/background"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/dialog_title"
+            style="@style/dialog_title_font"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:barrierDirection="bottom"
-            app:barrierMargin="20dp"
-            app:constraint_referenced_ids="ok_button,delete_button,cancel_button"/>
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:text="@{viewModel.title, default=Title}"
+            android:visibility="@{viewModel.showTitle ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toTopOf="@id/dialog_message"
+            app:layout_constraintEnd_toEndOf="@id/background"
+            app:layout_constraintStart_toStartOf="@id/background"
+            app:layout_constraintTop_toBottomOf="@id/dialog_icon" />
 
         <TextView
             android:id="@+id/dialog_message"
             style="@style/dialog_message_font"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
             android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="20dp"
             android:gravity="center"
             android:text="@{viewModel.message, default=Message}"
-            app:layout_constraintBottom_toTopOf="@id/top_barrier"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintBottom_toTopOf="@id/dialog_zrtp_1"
+            app:layout_constraintEnd_toEndOf="@id/background"
+            app:layout_constraintStart_toStartOf="@id/background"
+            app:layout_constraintTop_toBottomOf="@id/dialog_title" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/dialog_zrtp_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewModel.showZrtp ? View.VISIBLE : View.GONE}"
+            app:constraint_referenced_ids="dialog_zrtp_1, dialog_zrtp_sas_1, dialog_zrtp_2, dialog_zrtp_sas_2" />
+
+        <TextView
+            android:id="@+id/dialog_zrtp_1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="@string/dialog_zrtp_local_sas"
+            android:textAppearance="@style/dialog_zrtp_white_font"
+            app:layout_constraintBottom_toTopOf="@id/dialog_zrtp_sas_1"
+            app:layout_constraintEnd_toEndOf="@id/background"
+            app:layout_constraintStart_toStartOf="@id/background"
+            app:layout_constraintTop_toBottomOf="@id/dialog_message" />
+
+        <TextView
+            android:id="@+id/dialog_zrtp_sas_1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:gravity="center"
+            android:text="@{viewModel.zrtpReadSas}"
+            android:textAppearance="@style/dialog_zrtp_colored_font"
+            app:layout_constraintBottom_toTopOf="@id/dialog_zrtp_2"
+            app:layout_constraintEnd_toEndOf="@id/background"
+            app:layout_constraintStart_toStartOf="@id/background"
+            app:layout_constraintTop_toBottomOf="@id/dialog_zrtp_1" />
+
+        <TextView
+            android:id="@+id/dialog_zrtp_2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="@string/dialog_zrtp_remote_sas"
+            android:textAppearance="@style/dialog_zrtp_white_font"
+            app:layout_constraintBottom_toTopOf="@id/dialog_zrtp_sas_2"
+            app:layout_constraintEnd_toEndOf="@id/background"
+            app:layout_constraintStart_toStartOf="@id/background"
+            app:layout_constraintTop_toBottomOf="@id/dialog_zrtp_sas_1" />
+
+        <TextView
+            android:id="@+id/dialog_zrtp_sas_2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:gravity="center"
+            android:text="@{viewModel.zrtpListenSas}"
+            android:textAppearance="@style/dialog_zrtp_colored_font"
+            app:layout_constraintBottom_toTopOf="@id/cancel_button"
+            app:layout_constraintEnd_toEndOf="@id/background"
+            app:layout_constraintStart_toStartOf="@id/background"
+            app:layout_constraintTop_toBottomOf="@id/dialog_zrtp_2" />
+
+        <TextView
+            android:id="@+id/cancel_button"
+            style="@style/big_orange_button_font"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/shape_rect_gray_button"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:onClick="@{() -> viewModel.onCancelClicked()}"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:text="@{viewModel.cancelLabel, default=Cancel}"
+            android:visibility="@{viewModel.showCancel ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toStartOf="@id/delete_button"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="@id/background"
+            app:layout_constraintTop_toBottomOf="@id/dialog_zrtp_sas_2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintWidth_max="@dimen/voip_dialog_button_max_width" />
+
+        <TextView
+            android:id="@+id/delete_button"
+            style="@style/big_orange_button_font"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/shape_rect_orange_button"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:onClick="@{() -> viewModel.onDeleteClicked()}"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:text="@{viewModel.deleteLabel, default=Delete}"
+            android:visibility="@{viewModel.showDelete ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toStartOf="@id/ok_button"
+            app:layout_constraintStart_toEndOf="@id/cancel_button"
+            app:layout_constraintTop_toBottomOf="@id/dialog_zrtp_sas_2"
+            app:layout_constraintWidth_max="@dimen/voip_dialog_button_max_width" />
+
+        <TextView
+            android:id="@+id/ok_button"
+            style="@style/big_orange_button_font"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/shape_rect_green_button"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:onClick="@{() -> viewModel.onOkClicked()}"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:text="@{viewModel.okLabel, default=OK}"
+            android:visibility="@{viewModel.showOk ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="@id/background"
+            app:layout_constraintStart_toEndOf="@id/delete_button"
+            app:layout_constraintTop_toTopOf="@id/delete_button"
+            app:layout_constraintWidth_max="@dimen/voip_dialog_button_max_width" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/buttons_top_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="dialog_message, dialog_zrtp_sas_2" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/buttons_bottom_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="ok_button,delete_button,cancel_button" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

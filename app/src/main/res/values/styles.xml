@@ -341,7 +341,7 @@
 
     <style name="dialog_title_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">@color/white_color</item>
-        <item name="android:textSize">21.7sp</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:lineSpacingExtra">6.7sp</item>
@@ -349,7 +349,7 @@
 
     <style name="dialog_message_font" parent="@android:style/TextAppearance.Small">
         <item name="android:textColor">@color/white_color</item>
-        <item name="android:textSize">21sp</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
     <style name="dialog_cancel_button_font" parent="@android:style/TextAppearance.Medium">
@@ -374,7 +374,7 @@
 
     <style name="dialog_zrtp_white_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">@color/white_color</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:lineSpacingExtra">8.3sp</item>
     </style>

@@ -23,6 +23,7 @@ import androidx.lifecycle.MutableLiveData
 import java.text.DecimalFormat
 import org.linphone.R
 import org.linphone.core.*
+import org.linphone.utils.AppUtils
 
 enum class StatType(val nameResource: Int) {
     CAPTURE(R.string.call_stats_capture_filter),
@@ -41,7 +42,13 @@ enum class StatType(val nameResource: Int) {
     RECEIVED_RESOLUTION(R.string.call_stats_video_resolution_received),
     SENT_FPS(R.string.call_stats_video_fps_sent),
     RECEIVED_FPS(R.string.call_stats_video_fps_received),
-    ESTIMATED_AVAILABLE_DOWNLOAD_BW(R.string.call_stats_estimated_download)
+    ESTIMATED_AVAILABLE_DOWNLOAD_BW(R.string.call_stats_estimated_download),
+    MEDIA_ENCRYPTION(R.string.call_stats_media_encryption),
+    ZRTP_CIPHER_ALGO(R.string.call_stats_zrtp_cipher_algo),
+    ZRTP_KEY_AGREEMENT_ALGO(R.string.call_stats_zrtp_key_agreement_algo),
+    ZRTP_HASH_ALGO(R.string.call_stats_zrtp_hash_algo),
+    ZRTP_AUTH_TAG_ALGO(R.string.call_stats_zrtp_auth_tag_algo),
+    ZRTP_AUTH_SAS_ALGO(R.string.call_stats_zrtp_sas_algo)
 }
 
 class StatItemData(val type: StatType) {
@@ -75,6 +82,26 @@ class StatItemData(val type: StatType) {
             StatType.SENT_FPS -> "${call.currentParams.sentFramerate}"
             StatType.RECEIVED_FPS -> "${call.currentParams.receivedFramerate}"
             StatType.ESTIMATED_AVAILABLE_DOWNLOAD_BW -> "${stats.estimatedDownloadBandwidth} kbit/s"
+            StatType.MEDIA_ENCRYPTION -> {
+                when (call.currentParams.mediaEncryption) {
+                    MediaEncryption.ZRTP -> {
+                        if (stats.isZrtpKeyAgreementAlgoPostQuantum) {
+                            AppUtils.getString(R.string.call_settings_media_encryption_zrtp_post_quantum)
+                        } else {
+                            AppUtils.getString(R.string.call_settings_media_encryption_zrtp)
+                        }
+                    }
+                    MediaEncryption.DTLS -> AppUtils.getString(R.string.call_settings_media_encryption_dtls)
+                    MediaEncryption.SRTP -> AppUtils.getString(R.string.call_settings_media_encryption_srtp)
+                    MediaEncryption.None -> AppUtils.getString(R.string.call_settings_media_encryption_none)
+                    else -> "Unexpected!"
+                }
+            }
+            StatType.ZRTP_CIPHER_ALGO -> stats.zrtpCipherAlgo
+            StatType.ZRTP_KEY_AGREEMENT_ALGO -> stats.zrtpKeyAgreementAlgo
+            StatType.ZRTP_HASH_ALGO -> stats.zrtpHashAlgo
+            StatType.ZRTP_AUTH_TAG_ALGO -> stats.zrtpAuthTagAlgo
+            StatType.ZRTP_AUTH_SAS_ALGO -> stats.zrtpSasAlgo
         }
     }
 }

@@ -277,7 +277,8 @@
     <string name="call_settings_media_encryption_none">Aucun</string>
     <string name="call_settings_media_encryption_srtp">SRTP</string>
     <string name="call_settings_media_encryption_zrtp">ZRTP</string>
-    <string name="call_settings_media_encryption_dtls">DTLS</string>
+    <string name="call_settings_media_encryption_zrtp_post_quantum">ZRTP Post Quantique</string>
+    <string name="call_settings_media_encryption_dtls">DTLS-SRTP</string>
     <string name="content_description_menu_history">Historique</string>
     <string name="content_description_go_to_contact">Afficher les détails du contact</string>
     <string name="content_description_call_quality_0">La qualité est très mauvaise</string>
@@ -737,4 +738,10 @@
     <string name="conference_scheduled_terminated_filter">Terminées</string>
     <string name="conference_scheduled_future_filter">Programmées</string>
     <string name="content_description_chat_message_meeting_attachment">Invitation à une réunion</string>
+    <string name="call_stats_media_encryption">Chiffrement du média :</string>
+    <string name="call_stats_zrtp_cipher_algo">Algorithme de chiffrement :</string>
+    <string name="call_stats_zrtp_key_agreement_algo">Algorithme d\'échange de clef :</string>
+    <string name="call_stats_zrtp_hash_algo">Algorithme de hachage :</string>
+    <string name="call_stats_zrtp_auth_tag_algo">Algorithme d\'authentification :</string>
+    <string name="call_stats_zrtp_sas_algo">Algorithme SAS :</string>
 </resources>

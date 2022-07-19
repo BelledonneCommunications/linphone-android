@@ -21,6 +21,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical|center"
+            android:text="@string/call_settings_encryption_title"
+            tools:gravity="center" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="10dp"
+            app:entries="@{data.mediaEncryptionStats}"
+            app:layout="@{@layout/voip_call_stat_cell}" />
+
+        <TextView
+            style="@style/call_stats_title_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|center"
             android:layout_marginTop="10dp"
             android:text="@string/call_stats_audio"
             tools:gravity="center" />

@@ -13,6 +13,7 @@ Group changes to describe their impact on the project, as follows:
 ## [4.7.0] - Unreleased
 
 ### Added
+- Post Quantum encryption when using ZRTP
 - Conference creation with scheduling, video, different layouts, showing who is speaking and who is muted, etc...
 - Group calls directly from group chat rooms
 - Chat rooms can be individually muted (no notification when receiving a chat message)
