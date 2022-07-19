@@ -28,6 +28,8 @@ class CallStatisticsData(val call: Call) : GenericContactData(call.remoteAddress
 
     val videoStats = MutableLiveData<ArrayList<StatItemData>>()
 
+    val mediaEncryptionStats = MutableLiveData<ArrayList<StatItemData>>()
+
     val isVideoEnabled = MutableLiveData<Boolean>()
 
     private var enabled = false
@@ -48,11 +50,16 @@ class CallStatisticsData(val call: Call) : GenericContactData(call.remoteAddress
 
         val videoEnabled = call.currentParams.isVideoEnabled
         isVideoEnabled.value = videoEnabled
+
+        updateMediaEncryptionStats()
     }
 
     fun enable() {
         enabled = true
         call.addListener(listener)
+
+        // Needed for media encryption stats
+        updateMediaEncryptionStats()
     }
 
     fun disable() {
@@ -65,8 +72,13 @@ class CallStatisticsData(val call: Call) : GenericContactData(call.remoteAddress
         super.destroy()
     }
 
+    private fun updateMediaEncryptionStats() {
+        initCallStats()
+    }
+
     private fun initCallStats() {
         val audioList = arrayListOf<StatItemData>()
+
         audioList.add(StatItemData(StatType.CAPTURE))
         audioList.add(StatItemData(StatType.PLAYBACK))
         audioList.add(StatItemData(StatType.PAYLOAD))
@@ -79,9 +91,26 @@ class CallStatisticsData(val call: Call) : GenericContactData(call.remoteAddress
         audioList.add(StatItemData(StatType.SENDER_LOSS))
         audioList.add(StatItemData(StatType.RECEIVER_LOSS))
         audioList.add(StatItemData(StatType.JITTER))
+
         audioStats.value = audioList
 
+        val mediaEncryptionList = arrayListOf<StatItemData>()
+
+        mediaEncryptionList.add(StatItemData(StatType.MEDIA_ENCRYPTION))
+
+        // ZRTP stats are only available when authentication token isn't null !
+        if (call.currentParams.mediaEncryption == MediaEncryption.ZRTP && call.authenticationToken != null) {
+            mediaEncryptionList.add(StatItemData(StatType.ZRTP_CIPHER_ALGO))
+            mediaEncryptionList.add(StatItemData(StatType.ZRTP_KEY_AGREEMENT_ALGO))
+            mediaEncryptionList.add(StatItemData(StatType.ZRTP_HASH_ALGO))
+            mediaEncryptionList.add(StatItemData(StatType.ZRTP_AUTH_TAG_ALGO))
+            mediaEncryptionList.add(StatItemData(StatType.ZRTP_AUTH_SAS_ALGO))
+        }
+
+        mediaEncryptionStats.value = mediaEncryptionList
+
         val videoList = arrayListOf<StatItemData>()
+
         videoList.add(StatItemData(StatType.CAPTURE))
         videoList.add(StatItemData(StatType.PLAYBACK))
         videoList.add(StatItemData(StatType.PAYLOAD))
@@ -98,12 +127,16 @@ class CallStatisticsData(val call: Call) : GenericContactData(call.remoteAddress
         videoList.add(StatItemData(StatType.RECEIVED_RESOLUTION))
         videoList.add(StatItemData(StatType.SENT_FPS))
         videoList.add(StatItemData(StatType.RECEIVED_FPS))
+
         videoStats.value = videoList
     }
 
     private fun updateCallStats(stats: CallStats) {
         if (stats.type == StreamType.Audio) {
             for (stat in audioStats.value.orEmpty()) {
+                stat.update(call, stats)
+            }
+            for (stat in mediaEncryptionStats.value.orEmpty()) {
                 stat.update(call, stats)
             }
         } else if (stats.type == StreamType.Video) {

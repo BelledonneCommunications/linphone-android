@@ -44,62 +44,6 @@
             android:text="@{viewModel.message, default=Message}"/>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="5dp"
-            android:orientation="vertical"
-            android:visibility="@{viewModel.showZrtp ? View.VISIBLE : View.GONE, default=gone}">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dialog_zrtp_local_sas"
-                    android:gravity="center"
-                    android:textAppearance="@style/dialog_zrtp_white_font" />
-
-                <TextView
-                    android:text="@{viewModel.zrtpReadSas}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:textAppearance="@style/dialog_zrtp_colored_font" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dialog_zrtp_remote_sas"
-                    android:gravity="center"
-                    android:textAppearance="@style/dialog_zrtp_white_font" />
-
-                <TextView
-                    android:text="@{viewModel.zrtpListenSas}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:textAppearance="@style/dialog_zrtp_colored_font" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

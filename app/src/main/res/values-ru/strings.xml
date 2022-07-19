@@ -256,7 +256,7 @@
     <string name="call_settings_go_to_android_notification_settings">Настройки уведомлений Android</string>
     <string name="call_settings_media_encryption_srtp">SRTP</string>
     <string name="call_settings_media_encryption_zrtp">ZRTP</string>
-    <string name="call_settings_media_encryption_dtls">DTLS</string>
+    <string name="call_settings_media_encryption_dtls">DTLS-SRTP</string>
     <string name="call_settings_auto_start_recording_title">Автоматически начинать запись разговоров</string>
     <string name="chat_settings_file_sharing_url_title">URL сервера обмена</string>
     <string name="chat_settings_file_sharing_url_summary">Не изменяйте, если вы не знаете, что делаете!</string>
