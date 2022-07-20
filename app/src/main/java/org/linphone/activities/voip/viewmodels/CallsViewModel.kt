@@ -182,6 +182,8 @@ class CallsViewModel : ViewModel() {
         val core = coreContext.core
         val params = core.createConferenceParams(null)
         params.subject = AppUtils.getString(R.string.conference_local_title)
+        // Prevent group call to start in audio only layout
+        params.isVideoEnabled = true
         val conference = core.createConferenceWithParams(params)
         conference?.addParticipants(core.calls)
     }
