@@ -191,6 +191,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/shape_rect_green_button"
             android:ellipsize="end"
             android:gravity="center"
@@ -201,7 +202,7 @@
             android:visibility="@{viewModel.showOk ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="@id/background"
             app:layout_constraintStart_toEndOf="@id/delete_button"
-            app:layout_constraintTop_toTopOf="@id/delete_button"
+            app:layout_constraintTop_toBottomOf="@id/dialog_zrtp_sas_2"
             app:layout_constraintWidth_max="@dimen/voip_dialog_button_max_width" />
 
         <androidx.constraintlayout.widget.Barrier
