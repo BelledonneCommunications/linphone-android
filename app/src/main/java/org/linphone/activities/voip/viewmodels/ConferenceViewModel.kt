@@ -156,7 +156,11 @@ class ConferenceViewModel : ViewModel() {
                 }
                 if (device != null && device != speakingParticipant.value) {
                     Log.i("[Conference] Found participant device")
-                    speakingParticipant.value = device!!
+                    if (!device.isMe) {
+                        // TODO: FIXME: remove, this is a temporary workaround to not have your name
+                        //  displayed above someone else video in active speaker layout when you talk
+                        speakingParticipant.value = device!!
+                    }
                 } else if (device == null) {
                     Log.w("[Conference] Participant device [${participantDevice.address.asStringUriOnly()}] is speaking but couldn't find it in devices list")
                 }
@@ -406,6 +410,10 @@ class ConferenceViewModel : ViewModel() {
         for (device in conference.me.devices) {
             Log.i("[Conference] Participant device for myself found: ${device.name} (${device.address.asStringUriOnly()})")
             val deviceData = ConferenceParticipantDeviceData(device, true)
+            if (devices.isEmpty()) {
+                // TODO: FIXME: Temporary workaround when alone in a conference in active speaker layout
+                speakingParticipant.value = deviceData
+            }
             devices.add(deviceData)
         }
 
