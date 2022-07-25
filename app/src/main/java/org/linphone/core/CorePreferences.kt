@@ -469,6 +469,9 @@ class CorePreferences constructor(private val context: Context) {
     val showAllRingtones: Boolean
         get() = config.getBool("app", "show_all_available_ringtones", false)
 
+    val showContactInviteBySms: Boolean
+        get() = config.getBool("app", "show_invite_contact_by_sms", true)
+
     /* Default values related */
 
     val echoCancellerCalibration: Int
