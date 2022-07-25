@@ -879,7 +879,7 @@ internal fun OutgoingCallFragment.navigateToActiveCall() {
     findNavController().navigate(
         R.id.action_global_singleCallFragment,
         null,
-        popupTo(R.id.singleCallFragment, true)
+        popupTo(R.id.outgoingCallFragment, true)
     )
 }
 
@@ -887,7 +887,7 @@ internal fun IncomingCallFragment.navigateToActiveCall() {
     findNavController().navigate(
         R.id.action_global_singleCallFragment,
         null,
-        popupTo(R.id.singleCallFragment, true)
+        popupTo(R.id.incomingCallFragment, true)
     )
 }
 
