@@ -164,22 +164,24 @@ class Api31Compatibility {
 
             val builder = Notification.Builder(
                 context, channel
-            )
-                .setStyle(
-                    Notification.CallStyle.forOngoingCall(caller, declineIntent).setIsVideo(isVideo)
-                )
-                .setSmallIcon(iconResourceId)
-                .setAutoCancel(false)
-                .setCategory(Notification.CATEGORY_CALL)
-                .setVisibility(Notification.VISIBILITY_PUBLIC)
-                .setWhen(System.currentTimeMillis())
-                .setShowWhen(true)
-                .setOngoing(true)
-                .setColor(ContextCompat.getColor(context, R.color.notification_led_color))
-                .setFullScreenIntent(
-                    pendingIntent,
-                    true
-                ) // This is required for CallStyle notification
+            ).apply {
+                try {
+                    style = Notification.CallStyle.forOngoingCall(caller, declineIntent)
+                        .setIsVideo(isVideo)
+                } catch (ise: IllegalStateException) {
+                    Log.e("[Api31 Compatibility] Can't use notification call style: $ise")
+                }
+                setSmallIcon(iconResourceId)
+                setAutoCancel(false)
+                setCategory(Notification.CATEGORY_CALL)
+                setVisibility(Notification.VISIBILITY_PUBLIC)
+                setWhen(System.currentTimeMillis())
+                setShowWhen(true)
+                setOngoing(true)
+                setColor(ContextCompat.getColor(context, R.color.notification_led_color))
+                // This is required for CallStyle notification
+                setFullScreenIntent(pendingIntent, true)
+            }
 
             if (!corePreferences.preventInterfaceFromShowingUp) {
                 builder.setContentIntent(pendingIntent)
