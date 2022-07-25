@@ -185,7 +185,11 @@ class ChatMessageContentData(
                 if (!chatMessage.downloadContent(content)) {
                     Log.e("[Content] Failed to start content download!")
                 }
+            } else {
+                Log.e("[Content] Content name is null, can't download it!")
             }
+        } else {
+            Log.e("[Content] Either content is not a FileTransfer or it's filePath has already been set, can't download it anyway!")
         }
     }
 
