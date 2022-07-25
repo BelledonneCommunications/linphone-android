@@ -31,7 +31,7 @@ class ContactNumberOrAddressData(
     val typeLabel: String = "",
     private val listener: ContactNumberOrAddressClickListener
 ) {
-    val showInvite = !hasPresence && !isSip
+    val showInvite = !hasPresence && !isSip && corePreferences.showContactInviteBySms
 
     val chatAllowed = !corePreferences.disableChat
 
