@@ -234,7 +234,7 @@ class ControlsViewModel : ViewModel() {
         if (currentCall != null) {
             coreContext.answerCall(currentCall)
         } else {
-            Log.e("[Controls] Cant't find any current call to answer")
+            Log.e("[Controls] Can't find any current call to answer")
         }
     }
 
