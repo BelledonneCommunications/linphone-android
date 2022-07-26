@@ -90,17 +90,27 @@ class Api31Compatibility {
             val isVideoAutomaticallyAccepted = call.core.videoActivationPolicy.automaticallyAccept
             val isVideo = isVideoEnabledInRemoteParams && isVideoAutomaticallyAccepted
 
-            val builder = Notification.Builder(context, context.getString(R.string.notification_channel_incoming_call_id))
-                .setStyle(Notification.CallStyle.forIncomingCall(caller, declineIntent, answerIntent).setIsVideo(isVideo))
-                .setSmallIcon(R.drawable.topbar_call_notification)
-                .setCategory(Notification.CATEGORY_CALL)
-                .setVisibility(Notification.VISIBILITY_PUBLIC)
-                .setWhen(System.currentTimeMillis())
-                .setAutoCancel(false)
-                .setShowWhen(true)
-                .setOngoing(true)
-                .setColor(ContextCompat.getColor(context, R.color.primary_color))
-                .setFullScreenIntent(pendingIntent, true)
+            val builder = Notification.Builder(context, context.getString(R.string.notification_channel_incoming_call_id)).apply {
+                try {
+                    style = Notification.CallStyle.forIncomingCall(
+                        caller,
+                        declineIntent,
+                        answerIntent
+                    ).setIsVideo(isVideo)
+                } catch (iae: IllegalArgumentException) {
+                    Log.e("[Api31 Compatibility] Can't use notification call style: $iae, using API 26 notification instead")
+                    return Api26Compatibility.createIncomingCallNotification(context, call, notifiable, pendingIntent, notificationsManager)
+                }
+                setSmallIcon(R.drawable.topbar_call_notification)
+                setCategory(Notification.CATEGORY_CALL)
+                setVisibility(Notification.VISIBILITY_PUBLIC)
+                setWhen(System.currentTimeMillis())
+                setAutoCancel(false)
+                setShowWhen(true)
+                setOngoing(true)
+                setColor(ContextCompat.getColor(context, R.color.primary_color))
+                setFullScreenIntent(pendingIntent, true)
+            }
 
             if (!corePreferences.preventInterfaceFromShowingUp) {
                 builder.setContentIntent(pendingIntent)
@@ -168,8 +178,9 @@ class Api31Compatibility {
                 try {
                     style = Notification.CallStyle.forOngoingCall(caller, declineIntent)
                         .setIsVideo(isVideo)
-                } catch (ise: IllegalStateException) {
-                    Log.e("[Api31 Compatibility] Can't use notification call style: $ise")
+                } catch (iae: IllegalArgumentException) {
+                    Log.e("[Api31 Compatibility] Can't use notification call style: $iae, using API 26 notification instead")
+                    return Api26Compatibility.createCallNotification(context, call, notifiable, pendingIntent, channel, notificationsManager)
                 }
                 setSmallIcon(iconResourceId)
                 setAutoCancel(false)
