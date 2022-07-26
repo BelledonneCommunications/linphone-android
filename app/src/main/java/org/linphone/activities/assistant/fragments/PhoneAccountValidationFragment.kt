@@ -34,6 +34,7 @@ import org.linphone.activities.assistant.viewmodels.PhoneAccountValidationViewMo
 import org.linphone.activities.assistant.viewmodels.SharedAssistantViewModel
 import org.linphone.activities.navigateToAccountSettings
 import org.linphone.activities.navigateToEchoCancellerCalibration
+import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantPhoneAccountValidationFragmentBinding
 
 class PhoneAccountValidationFragment : GenericFragment<AssistantPhoneAccountValidationFragmentBinding>() {
@@ -97,13 +98,17 @@ class PhoneAccountValidationFragment : GenericFragment<AssistantPhoneAccountVali
             }
         }
 
+        // This won't work starting Android 10 as clipboard access is denied unless app has focus,
+        // which won't be the case when the SMS arrives unless it is added into clipboard from a notification
         val clipboard = requireContext().getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
         clipboard.addPrimaryClipChangedListener {
             val data = clipboard.primaryClip
             if (data != null && data.itemCount > 0) {
                 val clip = data.getItemAt(0).text.toString()
                 if (clip.length == 4) {
+                    Log.i("[Assistant] [Phone Account Validation] Found 4 digits as primary clip in clipboard, using it and clear it")
                     viewModel.code.value = clip
+                    clipboard.clearPrimaryClip()
                 }
             }
         }
