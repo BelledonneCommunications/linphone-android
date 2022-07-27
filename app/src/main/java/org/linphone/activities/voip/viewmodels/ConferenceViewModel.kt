@@ -77,6 +77,11 @@ class ConferenceViewModel : ViewModel() {
 
             if (conferenceParticipants.value.orEmpty().isEmpty()) {
                 allParticipantsLeftEvent.value = Event(true)
+                // TODO: FIXME: Temporary workaround when alone in a conference in active speaker layout
+                val meDeviceData = conferenceParticipantDevices.value.orEmpty().firstOrNull()
+                if (meDeviceData != null) {
+                    speakingParticipant.value = meDeviceData!!
+                }
             }
         }
 
