@@ -81,14 +81,14 @@ class ScheduledConferencesViewModel : ViewModel() {
                 if (conferenceInfo.duration == 0) continue // This isn't a scheduled conference, don't display it
                 val limit = conferenceInfo.dateTime + conferenceInfo.duration
                 if (limit >= now) continue // This isn't a terminated conference, don't display it
-                val data = ScheduledConferenceData(conferenceInfo)
+                val data = ScheduledConferenceData(conferenceInfo, true)
                 conferencesList.add(0, data) // Keep terminated meetings list in reverse order to always display most recent on top
             }
         } else {
             val oneHourAgo = now - 7200 // Show all conferences from 2 hours ago and forward
             for (conferenceInfo in coreContext.core.getConferenceInformationListAfterTime(oneHourAgo)) {
                 if (conferenceInfo.duration == 0) continue // This isn't a scheduled conference, don't display it
-                val data = ScheduledConferenceData(conferenceInfo)
+                val data = ScheduledConferenceData(conferenceInfo, false)
                 conferencesList.add(data)
             }
         }
