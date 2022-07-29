@@ -38,10 +38,7 @@ import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
-import org.linphone.core.Factory
-import org.linphone.core.Friend
-import org.linphone.core.GlobalState
-import org.linphone.core.SubscribePolicy
+import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.PhoneNumberUtils
 
@@ -101,7 +98,9 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
             withContext(Dispatchers.IO) {
                 try {
                     // Cursor can be null now that we are on a different dispatcher according to Crashlytics
-                    val friendsPhoneNumbers = HashMap<String, List<String>>()
+                    val friendsPhoneNumbers = arrayListOf<String>()
+                    val friendsAddresses = arrayListOf<Address>()
+                    var previousId = ""
                     while (cursor != null && !cursor.isClosed && cursor.moveToNext()) {
                         try {
                             val id: String =
@@ -123,83 +122,101 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                             val lookupKey =
                                 cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Contacts.LOOKUP_KEY))
 
-                            val friend = friends[id] ?: core.createFriend()
-                            friend.refKey = id
-                            if (friend.name.isNullOrEmpty()) {
-                                friend.name = displayName
-                                friend.photo = Uri.withAppendedPath(
-                                    ContentUris.withAppendedId(
-                                        ContactsContract.Contacts.CONTENT_URI,
-                                        id.toLong()
-                                    ),
-                                    ContactsContract.Contacts.Photo.CONTENT_DIRECTORY
-                                ).toString()
-                                friend.starred = starred
-                                friend.nativeUri =
-                                    "${ContactsContract.Contacts.CONTENT_LOOKUP_URI}/$lookupKey"
-
-                                // Disable short term presence
-                                friend.isSubscribesEnabled = false
-                                friend.incSubscribePolicy = SubscribePolicy.SPDeny
+                            if (previousId.isEmpty() || previousId != id) {
+                                friendsPhoneNumbers.clear()
+                                friendsAddresses.clear()
+                                previousId = id
                             }
 
-                            if (!friendsPhoneNumbers.containsKey(id)) {
-                                friendsPhoneNumbers[id] = arrayListOf()
-                            }
-                            when (mime) {
-                                ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE -> {
-                                    val label = PhoneNumberUtils.addressBookLabelTypeToVcardParamString(
-                                        data2?.toInt() ?: ContactsContract.CommonDataKinds.BaseTypes.TYPE_CUSTOM,
-                                        data3
-                                    )
+                            withContext(Dispatchers.Main) {
+                                val friend = friends[id] ?: core.createFriend()
+                                friend.refKey = id
+                                if (friend.name.isNullOrEmpty()) {
+                                    friend.name = displayName
+                                    friend.photo = Uri.withAppendedPath(
+                                        ContentUris.withAppendedId(
+                                            ContactsContract.Contacts.CONTENT_URI,
+                                            id.toLong()
+                                        ),
+                                        ContactsContract.Contacts.Photo.CONTENT_DIRECTORY
+                                    ).toString()
+                                    friend.starred = starred
+                                    friend.nativeUri =
+                                        "${ContactsContract.Contacts.CONTENT_LOOKUP_URI}/$lookupKey"
 
-                                    val number =
-                                        if (corePreferences.preferNormalizedPhoneNumbersFromAddressBook ||
-                                            data1.isNullOrEmpty() ||
-                                            !Patterns.PHONE.matcher(data1).matches()
-                                        ) {
-                                            data4 ?: data1
-                                        } else {
-                                            data1
+                                    // Disable short term presence
+                                    friend.isSubscribesEnabled = false
+                                    friend.incSubscribePolicy = SubscribePolicy.SPDeny
+                                }
+
+                                when (mime) {
+                                    ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE -> {
+                                        val label =
+                                            PhoneNumberUtils.addressBookLabelTypeToVcardParamString(
+                                                data2?.toInt()
+                                                    ?: ContactsContract.CommonDataKinds.BaseTypes.TYPE_CUSTOM,
+                                                data3
+                                            )
+
+                                        val number =
+                                            if (corePreferences.preferNormalizedPhoneNumbersFromAddressBook ||
+                                                data1.isNullOrEmpty() ||
+                                                !Patterns.PHONE.matcher(data1).matches()
+                                            ) {
+                                                data4 ?: data1
+                                            } else {
+                                                data1
+                                            }
+
+                                        if (number != null) {
+                                            if (
+                                                friendsPhoneNumbers.find {
+                                                    PhoneNumberUtils.arePhoneNumberWeakEqual(
+                                                        it,
+                                                        number
+                                                    )
+                                                } == null
+                                            ) {
+                                                val phoneNumber = Factory.instance()
+                                                    .createFriendPhoneNumber(number, label)
+                                                friend.addPhoneNumberWithLabel(phoneNumber)
+                                                friendsPhoneNumbers.add(number)
+                                            }
                                         }
-
-                                    if (number != null) {
-                                        if (
-                                            friendsPhoneNumbers[id].orEmpty().find {
-                                                PhoneNumberUtils.arePhoneNumberWeakEqual(it, number)
-                                            } == null
-                                        ) {
-                                            val phoneNumber = Factory.instance()
-                                                .createFriendPhoneNumber(number, label)
-                                            friend.addPhoneNumberWithLabel(phoneNumber)
-                                            friendsPhoneNumbers[id] = friendsPhoneNumbers[id].orEmpty().plus(number)
+                                    }
+                                    linphoneMime, ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE -> {
+                                        if (data1 != null) {
+                                            val address = core.interpretUrl(data1)
+                                            if (address != null &&
+                                                friendsAddresses.find {
+                                                    it.weakEqual(address)
+                                                } == null
+                                            ) {
+                                                friend.addAddress(address)
+                                                friendsAddresses.add(address)
+                                            }
+                                        }
+                                    }
+                                    ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE -> {
+                                        if (data1 != null) {
+                                            friend.organization = data1
+                                        }
+                                    }
+                                    ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE -> {
+                                        if (data2 != null && data3 != null) {
+                                            val vCard = friend.vcard
+                                            vCard?.givenName = data2
+                                            vCard?.familyName = data3
                                         }
                                     }
                                 }
-                                linphoneMime, ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE -> {
-                                    if (data1 == null) continue
-                                    val address = core.interpretUrl(data1) ?: continue
-                                    friend.addAddress(address)
-                                }
-                                ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE -> {
-                                    if (data1 == null) continue
-                                    val vCard = friend.vcard
-                                    vCard?.organization = data1
-                                }
-                                ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE -> {
-                                    if (data2 == null && data3 == null) continue
-                                    val vCard = friend.vcard
-                                    vCard?.givenName = data2
-                                    vCard?.familyName = data3
-                                }
-                            }
 
-                            friends[id] = friend
+                                friends[id] = friend
+                            }
                         } catch (e: Exception) {
                             Log.e("[Contacts Loader] Exception: $e")
                         }
                     }
-                    friendsPhoneNumbers.clear()
 
                     withContext(Dispatchers.Main) {
                         if (core.globalState == GlobalState.Shutdown || core.globalState == GlobalState.Off) {
