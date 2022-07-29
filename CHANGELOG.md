@@ -45,6 +45,17 @@ Group changes to describe their impact on the project, as follows:
 - Issues when storing presence in native contacts + potentially duplicated SIP addresses in contact details
 - Chat room scroll position lost when going into sub-view
 
+## [4.6.12] - 2022-07-29
+
+### Fixed
+- Call notification not being removed if service channel is disabled & background mode is enabled
+- Wrong display name in chat notification sometimes
+- Removed secure chat button if no LIME server configured or no conference factory URI set
+- Disable TelecomManager feature when the device doesn't support it
+
+### Changed
+- ContactsLoader have been updated, shouldn't crash anymore
+
 ## [4.6.11] - 2022-06-27
 
 ### Fixed
