@@ -26,6 +26,7 @@ import org.linphone.core.tools.Log
 class PhoneStateListener(private val telephonyManager: TelephonyManager) : PhoneStateInterface {
     private var gsmCallActive = false
     private val phoneStateListener = object : PhoneStateListener() {
+        @Deprecated("Deprecated in Java")
         override fun onCallStateChanged(state: Int, phoneNumber: String?) {
             gsmCallActive = when (state) {
                 TelephonyManager.CALL_STATE_OFFHOOK -> {

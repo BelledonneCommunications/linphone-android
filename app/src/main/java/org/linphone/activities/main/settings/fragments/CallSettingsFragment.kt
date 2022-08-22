@@ -130,6 +130,7 @@ class CallSettingsFragment : GenericSettingFragment<SettingsCallFragmentBinding>
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -162,6 +163,7 @@ class CallSettingsFragment : GenericSettingFragment<SettingsCallFragmentBinding>
         corePreferences.useTelecomManager = enabled
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,

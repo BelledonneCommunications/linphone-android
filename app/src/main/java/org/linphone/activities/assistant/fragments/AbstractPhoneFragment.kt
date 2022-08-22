@@ -38,6 +38,7 @@ abstract class AbstractPhoneFragment<T : ViewDataBinding> : GenericFragment<T>()
 
     abstract val viewModel: AbstractPhoneViewModel
 
+    @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,

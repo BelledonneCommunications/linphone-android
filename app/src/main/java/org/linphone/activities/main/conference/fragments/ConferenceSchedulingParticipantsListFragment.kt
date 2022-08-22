@@ -98,6 +98,7 @@ class ConferenceSchedulingParticipantsListFragment : GenericFragment<ConferenceS
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,

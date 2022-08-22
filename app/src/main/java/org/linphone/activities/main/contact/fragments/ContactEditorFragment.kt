@@ -103,6 +103,7 @@ class ContactEditorFragment : GenericFragment<ContactEditorFragmentBinding>(), S
         saveContact()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -120,6 +121,7 @@ class ContactEditorFragment : GenericFragment<ContactEditorFragmentBinding>(), S
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             lifecycleScope.launch {

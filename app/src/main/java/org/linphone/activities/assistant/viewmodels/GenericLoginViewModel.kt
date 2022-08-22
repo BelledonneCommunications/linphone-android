@@ -65,6 +65,7 @@ class GenericLoginViewModel(private val accountCreator: AccountCreator) : ViewMo
     private var proxyConfigToCheck: ProxyConfig? = null
 
     private val coreListener = object : CoreListenerStub() {
+        @Deprecated("Deprecated in Java")
         override fun onRegistrationStateChanged(
             core: Core,
             cfg: ProxyConfig,
