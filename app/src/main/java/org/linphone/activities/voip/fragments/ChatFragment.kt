@@ -179,6 +179,7 @@ class ChatFragment : GenericFragment<VoipChatFragmentBinding>() {
         super.onPause()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             lifecycleScope.launch {
@@ -194,6 +195,7 @@ class ChatFragment : GenericFragment<VoipChatFragmentBinding>() {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,

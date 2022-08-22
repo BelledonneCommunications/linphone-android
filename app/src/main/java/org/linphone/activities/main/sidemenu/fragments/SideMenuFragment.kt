@@ -124,6 +124,7 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             lifecycleScope.launch {
