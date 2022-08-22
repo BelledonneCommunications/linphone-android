@@ -46,7 +46,11 @@ class CoreService : CoreService() {
                 coreContext.notificationsManager.startForeground(this, true)
             }
             coreContext.checkIfForegroundServiceNotificationCanBeRemovedAfterDelay(5000)
+        } else {
+            ensureCoreExists(applicationContext, pushReceived = false, service = this, useAutoStartDescription = false)
         }
+
+        coreContext.notificationsManager.serviceCreated(this)
 
         return super.onStartCommand(intent, flags, startId)
     }
@@ -73,7 +77,7 @@ class CoreService : CoreService() {
                 Log.i("[Service] Task removed, stopping Core")
                 coreContext.stop()
             } else {
-                Log.w("[Service] Task removed but Core in not in background, skipping")
+                Log.w("[Service] Task removed but Core is not in background, skipping")
             }
         } else {
             Log.i("[Service] Task removed but we were asked to keep the service alive, so doing nothing")
