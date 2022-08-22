@@ -839,6 +839,7 @@ class NotificationsManager(private val context: Context) {
             .build()
 
         val notificationBuilder = NotificationCompat.Builder(context, context.getString(R.string.notification_channel_chat_id))
+            .addPerson(lastPerson)
             .setSmallIcon(R.drawable.topbar_chat_notification)
             .setAutoCancel(true)
             .setLargeIcon(largeIcon)
