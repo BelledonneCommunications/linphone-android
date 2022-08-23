@@ -136,14 +136,25 @@
             android:layout_margin="10dp"
             android:contentDescription="@null"
             coilVoipContact="@{conferenceViewModel.speakingParticipant}"
+            android:visibility="@{conferenceViewModel.speakingParticipant.isJoining ? View.GONE : View.VISIBLE}"
             android:background="@drawable/generated_avatar_bg"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintBottom_toTopOf="@id/miniatures"
+            app:layout_constraintBottom_toBottomOf="@id/active_speaker_background"
             app:layout_constraintEnd_toEndOf="@id/active_speaker_background"
             app:layout_constraintHeight_max="@dimen/voip_contact_avatar_max_size"
             app:layout_constraintStart_toStartOf="@id/active_speaker_background"
-            app:layout_constraintTop_toBottomOf="@id/top_barrier"
+            app:layout_constraintTop_toTopOf="@id/active_speaker_background"
             app:layout_constraintWidth_max="@dimen/voip_contact_avatar_max_size" />
+
+        <ProgressBar
+            android:id="@+id/speaking_participant_joining"
+            android:layout_width="@dimen/voip_conference_participant_joining_icon_size_active_speaker"
+            android:layout_height="@dimen/voip_conference_participant_joining_icon_size_active_speaker"
+            android:indeterminate="true"
+            android:indeterminateDrawable="@drawable/icon_spinner_rotating"
+            android:visibility="@{conferenceViewModel.speakingParticipant.isJoining ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintLeft_toLeftOf="@id/active_speaker_background"
+            app:layout_constraintTop_toTopOf="@id/active_speaker_background" />
 
         <org.linphone.activities.voip.views.RoundCornersTextureView
             android:id="@+id/conference_active_speaker_remote_video"
@@ -170,9 +181,11 @@
             android:id="@+id/miniatures"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="5dp"
+            app:layout_constraintStart_toEndOf="@id/local_participant_background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/scroll_indicator"
+            android:visibility="@{conferenceViewModel.moreThanTwoParticipants ? View.VISIBLE : View.GONE, default=gone}"
             android:scrollbars="none">
 
             <com.google.android.flexbox.FlexboxLayout
@@ -180,7 +193,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 app:alignItems="stretch"
-                app:entries="@{conferenceViewModel.conferenceParticipantDevices}"
+                app:entries="@{conferenceViewModel.activeSpeakerConferenceParticipantDevices}"
                 app:flexDirection="row"
                 app:flexWrap="nowrap"
                 app:justifyContent="flex_start"
@@ -192,7 +205,7 @@
             android:id="@+id/scroll_indicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="@{controlsViewModel.pipMode ? View.GONE : View.VISIBLE}"
+            android:visibility="@{controlsViewModel.pipMode || !conferenceViewModel.moreThanTwoParticipants ? View.GONE : View.VISIBLE, default=gone}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/hinge_bottom"
@@ -203,6 +216,109 @@
             app:itemCount="@{conferenceViewModel.conferenceParticipantDevices.size()}"
             app:selectedDot="@{0}"
             app:selectedDotColor="@color/voip_dark_gray" />
+
+        <View
+            android:id="@+id/local_participant_background"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/top_barrier"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="@{controlsViewModel.fullScreenMode ? @dimen/margin_0dp : @dimen/voip_active_speaker_top_margin, default=@dimen/voip_active_speaker_top_margin}"
+            android:background="@drawable/shape_remote_background"
+            android:onClick="@{() -> controlsViewModel.toggleFullScreen()}"/>
+
+        <ImageView
+            android:id="@+id/local_participant_avatar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="10dp"
+            android:contentDescription="@null"
+            coilSelfAvatar="@{conferenceViewModel.meParticipant}"
+            android:background="@drawable/generated_avatar_bg"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintBottom_toBottomOf="@id/local_participant_background"
+            app:layout_constraintEnd_toEndOf="@id/local_participant_background"
+            app:layout_constraintHeight_max="@dimen/voip_contact_avatar_max_size"
+            app:layout_constraintStart_toStartOf="@id/local_participant_background"
+            app:layout_constraintTop_toTopOf="@id/local_participant_background"
+            app:layout_constraintWidth_max="@dimen/voip_contact_avatar_max_size" />
+
+        <org.linphone.activities.voip.views.RoundCornersTextureView
+            android:id="@+id/local_preview_video_surface"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:alignTopRight="false"
+            app:displayMode="occupy_all_space"
+            android:visibility="@{conferenceViewModel.meParticipant.isInConference &amp;&amp; controlsViewModel.isSendingVideo ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintBottom_toBottomOf="@id/local_participant_background"
+            app:layout_constraintEnd_toEndOf="@id/local_participant_background"
+            app:layout_constraintStart_toStartOf="@id/local_participant_background"
+            app:layout_constraintTop_toTopOf="@id/local_participant_background" />
+
+        <TextView
+            android:id="@+id/local_participant_name"
+            style="@style/call_remote_name_font"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:text="@{conferenceViewModel.meParticipant.contact.name ?? conferenceViewModel.meParticipant.displayName}"
+            app:layout_constraintBottom_toBottomOf="@id/local_participant_background"
+            app:layout_constraintStart_toStartOf="@id/local_participant_background"
+            app:layout_constraintEnd_toEndOf="@id/local_participant_background"/>
+
+        <ImageView
+            android:id="@+id/switch_camera"
+            android:layout_width="@dimen/conference_miniature_switch_camera_icon_size"
+            android:layout_height="@dimen/conference_miniature_switch_camera_icon_size"
+            android:layout_margin="5dp"
+            android:contentDescription="@string/content_description_switch_camera"
+            android:onClick="@{() -> controlsViewModel.switchCamera()}"
+            android:src="@drawable/icon_call_camera_switch"
+            android:visibility="@{controlsViewModel.isSwitchCameraAvailable &amp;&amp; !controlsViewModel.pipMode &amp;&amp; !controlsViewModel.fullScreenMode ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="@id/local_participant_background"
+            app:layout_constraintTop_toTopOf="@id/local_participant_background" />
+
+        <ImageView
+            android:id="@+id/local_participant_speaking_border"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:contentDescription="@null"
+            android:src="@drawable/shape_conference_active_speaker_border"
+            android:visibility="@{conferenceViewModel.meParticipant.isSpeaking ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintBottom_toBottomOf="@id/local_participant_background"
+            app:layout_constraintLeft_toLeftOf="@id/local_participant_background"
+            app:layout_constraintRight_toRightOf="@id/local_participant_background"
+            app:layout_constraintTop_toTopOf="@id/local_participant_background" />
+
+        <ImageView
+            android:id="@+id/local_participant_muted"
+            android:layout_width="@dimen/voip_conference_participant_mic_muted_icon_size_active_speaker"
+            android:layout_height="@dimen/voip_conference_participant_mic_muted_icon_size_active_speaker"
+            android:layout_margin="5dp"
+            android:background="@drawable/shape_toggle_pressed_background"
+            android:contentDescription="@string/content_description_conference_participant_mic_muted"
+            android:padding="2dp"
+            android:src="@drawable/icon_mic_muted"
+            android:visibility="@{conferenceViewModel.meParticipant.isMuted ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintLeft_toLeftOf="@id/local_participant_background"
+            app:layout_constraintTop_toTopOf="@id/local_participant_background" />
+
+        <ImageView
+            android:id="@+id/local_participant_paused"
+            android:layout_width="@dimen/voip_conference_active_speaker_miniature_avatar_size"
+            android:layout_height="@dimen/voip_conference_active_speaker_miniature_avatar_size"
+            android:background="@drawable/shape_button_background"
+            android:contentDescription="@string/content_description_participant_is_paused"
+            android:src="@drawable/icon_pause"
+            android:visibility="@{conferenceViewModel.conferenceCreationPending || conferenceViewModel.meParticipant.isInConference || conferenceViewModel.meParticipant.isJoining ? View.GONE : View.VISIBLE, default=gone}"
+            app:layout_constraintBottom_toBottomOf="@id/local_participant_background"
+            app:layout_constraintEnd_toEndOf="@id/local_participant_background"
+            app:layout_constraintStart_toStartOf="@id/local_participant_background"
+            app:layout_constraintTop_toTopOf="@id/local_participant_background" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -23,6 +23,7 @@ Group changes to describe their impact on the project, as follows:
 - Android 13 support, using new post notifications & media permissions
 - Call recordings can be exported
 - Setting to prevent international prefix from account to be applied to call & chat
+- Themed app icon is now supported for Android 13+
 
 ### Changed
 - In-call views have been re-designed

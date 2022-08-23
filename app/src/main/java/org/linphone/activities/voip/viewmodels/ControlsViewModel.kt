@@ -75,7 +75,7 @@ class ControlsViewModel : ViewModel() {
 
     val proximitySensorEnabled = MediatorLiveData<Boolean>()
 
-    val showTakeSnaptshotButton = MutableLiveData<Boolean>()
+    val showTakeSnapshotButton = MutableLiveData<Boolean>()
 
     val goToConferenceParticipantsListEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
@@ -436,14 +436,15 @@ class ControlsViewModel : ViewModel() {
         }
 
         isVideoEnabled.value = enabled
-        showTakeSnaptshotButton.value = enabled && corePreferences.showScreenshotButton
-        isSwitchCameraAvailable.value = enabled && coreContext.showSwitchCameraButton()
-        isSendingVideo.value = if (coreContext.core.currentCall?.conference != null) {
+        showTakeSnapshotButton.value = enabled && corePreferences.showScreenshotButton
+        var isVideoBeingSent = if (coreContext.core.currentCall?.conference != null) {
             val videoDirection = coreContext.core.currentCall?.currentParams?.videoDirection
             videoDirection == MediaDirection.SendRecv || videoDirection == MediaDirection.SendOnly
         } else {
             true
         }
+        isSendingVideo.value = isVideoBeingSent
+        isSwitchCameraAvailable.value = enabled && coreContext.showSwitchCameraButton() && isVideoBeingSent
     }
 
     private fun shouldProximitySensorBeEnabled(): Boolean {
