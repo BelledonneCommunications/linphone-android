@@ -78,4 +78,5 @@
     <dimen name="chat_message_content_preview_max_width">120dp</dimen>
     <dimen name="voip_conference_active_speaker_dots_margin">5dp</dimen>
     <dimen name="conference_waiting_room_buttons_max_width">250dp</dimen>
+    <dimen name="conference_miniature_switch_camera_icon_size">25dp</dimen>
 </resources>

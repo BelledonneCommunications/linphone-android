@@ -19,6 +19,7 @@
  */
 package org.linphone.activities.voip.viewmodels
 
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -45,13 +46,17 @@ class ConferenceViewModel : ViewModel() {
     val conferenceParticipants = MutableLiveData<List<ConferenceParticipantData>>()
     val conferenceParticipantDevices = MutableLiveData<List<ConferenceParticipantDeviceData>>()
     val conferenceDisplayMode = MutableLiveData<ConferenceDisplayMode>()
+    val activeSpeakerConferenceParticipantDevices = MediatorLiveData<List<ConferenceParticipantDeviceData>>()
 
     val isRecording = MutableLiveData<Boolean>()
     val isRemotelyRecorded = MutableLiveData<Boolean>()
 
     val maxParticipantsForMosaicLayout = corePreferences.maxConferenceParticipantsForMosaicLayout
 
+    val moreThanTwoParticipants = MutableLiveData<Boolean>()
+
     val speakingParticipant = MutableLiveData<ConferenceParticipantDeviceData>()
+    val meParticipant = MutableLiveData<ConferenceParticipantDeviceData>()
 
     val participantAdminStatusChangedEvent: MutableLiveData<Event<ConferenceParticipantData>> by lazy {
         MutableLiveData<Event<ConferenceParticipantData>>()
@@ -62,6 +67,14 @@ class ConferenceViewModel : ViewModel() {
     }
 
     val allParticipantsLeftEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
+    val secondParticipantJoinedEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
+    val moreThanTwoParticipantsJoinedEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
 
@@ -77,11 +90,6 @@ class ConferenceViewModel : ViewModel() {
 
             if (conferenceParticipants.value.orEmpty().isEmpty()) {
                 allParticipantsLeftEvent.value = Event(true)
-                // TODO: FIXME: Temporary workaround when alone in a conference in active speaker layout
-                val meDeviceData = conferenceParticipantDevices.value.orEmpty().firstOrNull()
-                if (meDeviceData != null) {
-                    speakingParticipant.value = meDeviceData!!
-                }
             }
         }
 
@@ -91,6 +99,12 @@ class ConferenceViewModel : ViewModel() {
         ) {
             Log.i("[Conference] Participant device added: ${participantDevice.address.asStringUriOnly()}")
             addParticipantDevice(participantDevice)
+
+            if (conferenceParticipantDevices.value.orEmpty().size == 2) {
+                secondParticipantJoinedEvent.value = Event(true)
+            } else if (conferenceParticipantDevices.value.orEmpty().size == 3) {
+                moreThanTwoParticipantsJoinedEvent.value = Event(true)
+            }
         }
 
         override fun onParticipantDeviceRemoved(
@@ -99,6 +113,10 @@ class ConferenceViewModel : ViewModel() {
         ) {
             Log.i("[Conference] Participant device removed: ${participantDevice.address.asStringUriOnly()}")
             removeParticipantDevice(participantDevice)
+
+            if (conferenceParticipantDevices.value.orEmpty().size == 2) {
+                secondParticipantJoinedEvent.value = Event(true)
+            }
         }
 
         override fun onParticipantAdminStatusChanged(
@@ -208,6 +226,9 @@ class ConferenceViewModel : ViewModel() {
 
         conferenceParticipants.value = arrayListOf()
         conferenceParticipantDevices.value = arrayListOf()
+        activeSpeakerConferenceParticipantDevices.addSource(conferenceParticipantDevices) {
+            activeSpeakerConferenceParticipantDevices.value = conferenceParticipantDevices.value.orEmpty().drop(1)
+        }
 
         subject.value = AppUtils.getString(R.string.conference_default_title)
 
@@ -240,6 +261,7 @@ class ConferenceViewModel : ViewModel() {
 
         conferenceParticipants.value.orEmpty().forEach(ConferenceParticipantData::destroy)
         conferenceParticipantDevices.value.orEmpty().forEach(ConferenceParticipantDeviceData::destroy)
+        activeSpeakerConferenceParticipantDevices.value.orEmpty().forEach(ConferenceParticipantDeviceData::destroy)
 
         super.onCleared()
     }
@@ -283,7 +305,13 @@ class ConferenceViewModel : ViewModel() {
         if (conferenceParticipants.value.orEmpty().isEmpty()) {
             firstToJoinEvent.value = Event(true)
         }
+
         updateParticipantsDevicesList(conference)
+        if (conferenceParticipantDevices.value.orEmpty().size == 2) {
+            secondParticipantJoinedEvent.value = Event(true)
+        } else if (conferenceParticipantDevices.value.orEmpty().size > 2) {
+            moreThanTwoParticipantsJoinedEvent.value = Event(true)
+        }
 
         isConferenceLocallyPaused.value = !conference.isIn
         isMeAdmin.value = conference.me.isAdmin
@@ -371,6 +399,8 @@ class ConferenceViewModel : ViewModel() {
 
         conferenceParticipants.value.orEmpty().forEach(ConferenceParticipantData::destroy)
         conferenceParticipantDevices.value.orEmpty().forEach(ConferenceParticipantDeviceData::destroy)
+        activeSpeakerConferenceParticipantDevices.value.orEmpty().forEach(ConferenceParticipantDeviceData::destroy)
+
         conferenceParticipants.value = arrayListOf()
         conferenceParticipantDevices.value = arrayListOf()
     }
@@ -394,6 +424,7 @@ class ConferenceViewModel : ViewModel() {
 
     private fun updateParticipantsDevicesList(conference: Conference) {
         conferenceParticipantDevices.value.orEmpty().forEach(ConferenceParticipantDeviceData::destroy)
+        activeSpeakerConferenceParticipantDevices.value.orEmpty().forEach(ConferenceParticipantDeviceData::destroy)
         val devices = arrayListOf<ConferenceParticipantDeviceData>()
 
         val participantsList = conference.participantList
@@ -415,14 +446,12 @@ class ConferenceViewModel : ViewModel() {
         for (device in conference.me.devices) {
             Log.i("[Conference] Participant device for myself found: ${device.name} (${device.address.asStringUriOnly()})")
             val deviceData = ConferenceParticipantDeviceData(device, true)
-            if (devices.isEmpty()) {
-                // TODO: FIXME: Temporary workaround when alone in a conference in active speaker layout
-                speakingParticipant.value = deviceData
-            }
             devices.add(deviceData)
+            meParticipant.value = deviceData
         }
 
         conferenceParticipantDevices.value = devices
+        moreThanTwoParticipants.value = devices.size > 2
     }
 
     private fun addParticipantDevice(device: ParticipantDevice) {
@@ -448,6 +477,7 @@ class ConferenceViewModel : ViewModel() {
         }
 
         conferenceParticipantDevices.value = sortedDevices
+        moreThanTwoParticipants.value = sortedDevices.size > 2
     }
 
     private fun removeParticipantDevice(device: ParticipantDevice) {
@@ -456,6 +486,8 @@ class ConferenceViewModel : ViewModel() {
         for (participantDevice in conferenceParticipantDevices.value.orEmpty()) {
             if (participantDevice.participantDevice.address.asStringUriOnly() != device.address.asStringUriOnly()) {
                 devices.add(participantDevice)
+            } else {
+                participantDevice.destroy()
             }
         }
         if (devices.size == conferenceParticipantDevices.value.orEmpty().size) {
@@ -465,6 +497,7 @@ class ConferenceViewModel : ViewModel() {
         }
 
         conferenceParticipantDevices.value = devices
+        moreThanTwoParticipants.value = devices.size > 2
     }
 
     private fun sortDevicesDataList(devices: List<ConferenceParticipantDeviceData>): ArrayList<ConferenceParticipantDeviceData> {

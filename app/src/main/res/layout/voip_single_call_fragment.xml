@@ -198,7 +198,7 @@
                 android:onClick="@{() -> callsViewModel.takeSnapshot()}"
                 android:enabled="@{!callsViewModel.currentCallData.isPaused &amp;&amp; !callsViewModel.currentCallData.isRemotelyPaused}"
                 android:src="@drawable/icon_call_screenshot"
-                android:visibility="@{!controlsViewModel.showTakeSnaptshotButton || controlsViewModel.fullScreenMode || controlsViewModel.pipMode ? View.GONE : View.VISIBLE}"
+                android:visibility="@{!controlsViewModel.showTakeSnapshotButton || controlsViewModel.fullScreenMode || controlsViewModel.pipMode ? View.GONE : View.VISIBLE}"
                 app:layout_constraintStart_toStartOf="@id/background"
                 app:layout_constraintTop_toBottomOf="@id/record_call" />
 

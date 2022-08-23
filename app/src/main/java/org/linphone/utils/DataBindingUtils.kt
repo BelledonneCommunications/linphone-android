@@ -337,11 +337,18 @@ private suspend fun loadContactPictureWithCoil(
     size: Int = 0,
     textSize: Int = 0,
     color: Int = 0,
-    textColor: Int = 0
+    textColor: Int = 0,
+    defaultAvatar: String? = null
 ) {
     val context = imageView.context
     if (contact == null) {
-        imageView.load(R.drawable.icon_single_contact_avatar)
+        if (defaultAvatar != null) {
+            imageView.load(defaultAvatar) {
+                transformations(CircleCropTransformation())
+            }
+        } else {
+            imageView.load(R.drawable.icon_single_contact_avatar)
+        }
     } else if (contact.showGroupChatAvatar) {
         imageView.load(AppCompatResources.getDrawable(context, R.drawable.icon_multiple_contacts_avatar))
     } else {
@@ -425,6 +432,21 @@ fun loadVoipContactPictureWithCoil(imageView: ImageView, contact: ContactDataInt
                 imageView, contact, false,
                 R.dimen.voip_contact_avatar_max_size, R.dimen.voip_contact_avatar_text_size,
                 R.attr.voipBackgroundColor, R.color.white_color
+            )
+        }
+    }
+}
+
+@BindingAdapter("coilSelfAvatar")
+fun loadSelfAvatarWithCoil(imageView: ImageView, contact: ContactDataInterface?) {
+    val coroutineScope = contact?.coroutineScope ?: coreContext.coroutineScope
+    coroutineScope.launch {
+        withContext(Dispatchers.Main) {
+            loadContactPictureWithCoil(
+                imageView, contact, false,
+                R.dimen.voip_contact_avatar_max_size, R.dimen.voip_contact_avatar_text_size,
+                R.attr.voipBackgroundColor, R.color.white_color,
+                corePreferences.defaultAccountAvatarPath
             )
         }
     }

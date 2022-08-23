@@ -58,8 +58,8 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="@dimen/conference_miniature_switch_camera_icon_size"
+            android:layout_height="@dimen/conference_miniature_switch_camera_icon_size"
             android:layout_margin="5dp"
             android:contentDescription="@string/content_description_switch_camera"
             android:onClick="@{() -> data.switchCamera()}"

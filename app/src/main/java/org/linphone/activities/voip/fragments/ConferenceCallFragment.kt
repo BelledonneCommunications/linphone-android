@@ -21,9 +21,11 @@ package org.linphone.activities.voip.fragments
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Chronometer
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -31,6 +33,8 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.navigation.navGraphViewModels
+import androidx.transition.AutoTransition
+import androidx.transition.TransitionManager
 import androidx.window.layout.FoldingFeature
 import com.google.android.material.snackbar.Snackbar
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -38,9 +42,6 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.*
 import org.linphone.activities.main.MainActivity
-import org.linphone.activities.navigateToCallsList
-import org.linphone.activities.navigateToConferenceLayout
-import org.linphone.activities.navigateToConferenceParticipants
 import org.linphone.activities.voip.ConferenceDisplayMode
 import org.linphone.activities.voip.viewmodels.CallsViewModel
 import org.linphone.activities.voip.viewmodels.ConferenceViewModel
@@ -90,9 +91,11 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
             if (displayMode == ConferenceDisplayMode.ACTIVE_SPEAKER) {
                 if (conferenceViewModel.conferenceExists.value == true) {
                     Log.i("[Conference Call] Local participant is in conference and current layout is active speaker, updating Core's native window id")
-                    val window =
-                        binding.root.findViewById<RoundCornersTextureView>(R.id.conference_active_speaker_remote_video)
+                    val window = binding.root.findViewById<RoundCornersTextureView>(R.id.conference_active_speaker_remote_video)
                     coreContext.core.nativeVideoWindowId = window
+
+                    val preview = binding.root.findViewById<RoundCornersTextureView>(R.id.local_preview_video_surface)
+                    conferenceViewModel.meParticipant.value?.setTextureView(preview)
                 } else {
                     Log.i("[Conference Call] Either not in conference or current layout isn't active speaker, updating Core's native window id")
                     coreContext.core.nativeVideoWindowId = null
@@ -112,6 +115,22 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
                 refreshConferenceFragment()
                 // Can't use SnackBar whilst changing fragment
                 Toast.makeText(requireContext(), R.string.conference_too_many_participants_for_mosaic_layout, Toast.LENGTH_LONG).show()
+            }
+        }
+
+        conferenceViewModel.secondParticipantJoinedEvent.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                switchToActiveSpeakerLayoutForTwoParticipants()
+            }
+        }
+
+        conferenceViewModel.moreThanTwoParticipantsJoinedEvent.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                switchToActiveSpeakerLayoutForMoreThanTwoParticipants()
             }
         }
 
@@ -163,6 +182,8 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
                     .make(binding.coordinator, R.string.conference_last_user, Snackbar.LENGTH_LONG)
                     .setAnchorView(binding.primaryButtons.hangup)
                     .show()
+
+                switchToActiveSpeakerLayoutWhenAlone()
             }
         }
 
@@ -278,9 +299,21 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
         controlsViewModel.hideExtraButtons(true)
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        if (conferenceViewModel.conferenceCreationPending.value == false) {
+            when (conferenceViewModel.conferenceParticipantDevices.value.orEmpty().size) {
+                1 -> switchToActiveSpeakerLayoutWhenAlone()
+                2 -> switchToActiveSpeakerLayoutForTwoParticipants()
+                else -> switchToActiveSpeakerLayoutForMoreThanTwoParticipants()
+            }
+        }
+    }
+
     private fun switchToFullScreenIfPossible(conference: Conference) {
         if (corePreferences.enableFullScreenWhenJoiningVideoConference) {
-            if (conference.currentParams.isVideoEnabled) {
+            if (conference.currentParams.isVideoEnabled && conferenceViewModel.conferenceCreationPending.value == false) {
                 when {
                     conference.me.devices.isEmpty() -> {
                         Log.w("[Conference Call] Conference has video enabled but either our device hasn't joined yet")
@@ -303,10 +336,6 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
         intent.putExtra("Chat", true)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
-    }
-
-    private fun showSnackBar(resourceId: Int) {
-        Snackbar.make(binding.coordinator, resourceId, Snackbar.LENGTH_LONG).show()
     }
 
     private fun startTimer(timerId: Int) {
@@ -348,5 +377,191 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
         }
 
         set.applyTo(constraintLayout)
+    }
+
+    private fun animateConstraintLayout(
+        constraintLayout: ConstraintLayout,
+        set: ConstraintSet
+    ) {
+        val trans = AutoTransition()
+        trans.duration = 500
+        trans.interpolator = AccelerateDecelerateInterpolator()
+        TransitionManager.beginDelayedTransition(constraintLayout, trans)
+        set.applyTo(constraintLayout)
+    }
+
+    private fun switchToActiveSpeakerLayoutForMoreThanTwoParticipants() {
+        if (conferenceViewModel.conferenceDisplayMode.value != ConferenceDisplayMode.ACTIVE_SPEAKER) return
+
+        val constraintLayout =
+            binding.root.findViewById<ConstraintLayout>(R.id.conference_constraint_layout)
+                ?: return
+        val set = ConstraintSet()
+        set.clone(constraintLayout)
+
+        set.clear(R.id.local_participant_background, ConstraintSet.TOP)
+        set.clear(R.id.local_participant_background, ConstraintSet.START)
+        set.clear(R.id.local_participant_background, ConstraintSet.BOTTOM)
+        set.clear(R.id.local_participant_background, ConstraintSet.END)
+
+        val margin = resources.getDimension(R.dimen.voip_active_speaker_miniature_margin).toInt()
+        val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
+        if (portraitOrientation) {
+            set.connect(
+                R.id.local_participant_background,
+                ConstraintSet.START,
+                R.id.conference_constraint_layout,
+                ConstraintSet.START,
+                margin
+            )
+            set.connect(
+                R.id.local_participant_background,
+                ConstraintSet.BOTTOM,
+                R.id.miniatures,
+                ConstraintSet.BOTTOM,
+                0
+            )
+            set.connect(
+                R.id.local_participant_background,
+                ConstraintSet.TOP,
+                R.id.miniatures,
+                ConstraintSet.TOP,
+                0
+            )
+        } else {
+            set.connect(
+                R.id.local_participant_background,
+                ConstraintSet.TOP,
+                R.id.top_barrier,
+                ConstraintSet.BOTTOM,
+                0
+            )
+            set.connect(
+                R.id.local_participant_background,
+                ConstraintSet.START,
+                R.id.active_speaker_background,
+                ConstraintSet.END,
+                0
+            )
+            set.connect(
+                R.id.local_participant_background,
+                ConstraintSet.END,
+                R.id.scroll_indicator,
+                ConstraintSet.START,
+                0
+            )
+        }
+
+        val size = resources.getDimension(R.dimen.voip_active_speaker_miniature_size).toInt()
+        set.constrainWidth(
+            R.id.local_participant_background,
+            size
+        )
+        set.constrainHeight(
+            R.id.local_participant_background,
+            size
+        )
+
+        if (corePreferences.enableAnimations) {
+            animateConstraintLayout(constraintLayout, set)
+        } else {
+            set.applyTo(constraintLayout)
+        }
+    }
+
+    private fun switchToActiveSpeakerLayoutForTwoParticipants() {
+        if (conferenceViewModel.conferenceDisplayMode.value != ConferenceDisplayMode.ACTIVE_SPEAKER) return
+
+        val constraintLayout =
+            binding.root.findViewById<ConstraintLayout>(R.id.conference_constraint_layout)
+                ?: return
+        val set = ConstraintSet()
+        set.clone(constraintLayout)
+
+        set.clear(R.id.local_participant_background, ConstraintSet.TOP)
+        set.clear(R.id.local_participant_background, ConstraintSet.START)
+        set.clear(R.id.local_participant_background, ConstraintSet.BOTTOM)
+        set.clear(R.id.local_participant_background, ConstraintSet.END)
+
+        val margin = resources.getDimension(R.dimen.voip_active_speaker_miniature_margin).toInt()
+        set.connect(
+            R.id.local_participant_background,
+            ConstraintSet.BOTTOM,
+            R.id.conference_constraint_layout,
+            ConstraintSet.BOTTOM,
+            margin
+        )
+        // Don't know why but if we use END instead of RIGHT, margin isn't applied...
+        set.connect(
+            R.id.local_participant_background,
+            ConstraintSet.RIGHT,
+            R.id.conference_constraint_layout,
+            ConstraintSet.RIGHT,
+            margin
+        )
+
+        val size = resources.getDimension(R.dimen.voip_active_speaker_miniature_size).toInt()
+        set.constrainWidth(
+            R.id.local_participant_background,
+            size
+        )
+        set.constrainHeight(
+            R.id.local_participant_background,
+            size
+        )
+
+        if (corePreferences.enableAnimations) {
+            animateConstraintLayout(constraintLayout, set)
+        } else {
+            set.applyTo(constraintLayout)
+        }
+    }
+
+    private fun switchToActiveSpeakerLayoutWhenAlone() {
+        if (conferenceViewModel.conferenceDisplayMode.value != ConferenceDisplayMode.ACTIVE_SPEAKER) return
+
+        val constraintLayout =
+            binding.root.findViewById<ConstraintLayout>(R.id.conference_constraint_layout)
+                ?: return
+        val set = ConstraintSet()
+        set.clone(constraintLayout)
+
+        set.connect(
+            R.id.local_participant_background,
+            ConstraintSet.BOTTOM,
+            R.id.conference_constraint_layout,
+            ConstraintSet.BOTTOM,
+            0
+        )
+        set.connect(
+            R.id.local_participant_background,
+            ConstraintSet.END,
+            R.id.conference_constraint_layout,
+            ConstraintSet.END,
+            0
+        )
+        set.connect(
+            R.id.local_participant_background,
+            ConstraintSet.TOP,
+            R.id.top_barrier,
+            ConstraintSet.BOTTOM,
+            0
+        )
+        set.connect(
+            R.id.local_participant_background,
+            ConstraintSet.START,
+            R.id.conference_constraint_layout,
+            ConstraintSet.START,
+            0
+        )
+
+        set.constrainWidth(R.id.local_participant_background, 0)
+        set.constrainHeight(R.id.local_participant_background, 0)
+
+        if (corePreferences.enableAnimations) {
+            animateConstraintLayout(constraintLayout, set)
+        } else {
+            set.applyTo(constraintLayout)
+        }
     }
 }
