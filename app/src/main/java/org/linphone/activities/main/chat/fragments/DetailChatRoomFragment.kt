@@ -762,6 +762,8 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                                     if (notAllMessagesDisplayed) {
                                         Log.w("[Chat Room] More unread messages than the screen can display, do not mark chat room as read now, wait for user to scroll to bottom")
                                     } else {
+                                        // Consider user as scrolled to the end when marking chat room as read
+                                        viewModel.isUserScrollingUp.value = false
                                         Log.i("[Chat Room] Marking chat room as read")
                                         viewModel.chatRoom.markAsRead()
                                     }
