@@ -103,7 +103,7 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
     val enableTelecomManagerEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
-    val api26OrHigher = MutableLiveData<Boolean>()
+    val api29OrHigher = MutableLiveData<Boolean>()
 
     val overlayListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
@@ -238,7 +238,7 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
         encryptionMandatory.value = core.isMediaEncryptionMandatory
 
         useTelecomManager.value = prefs.useTelecomManager
-        api26OrHigher.value = Version.sdkAboveOrEqual(Version.API26_O_80)
+        api29OrHigher.value = Version.sdkAboveOrEqual(Version.API29_ANDROID_10)
 
         overlay.value = prefs.showCallOverlay
         systemWideOverlay.value = prefs.systemWideCallOverlay

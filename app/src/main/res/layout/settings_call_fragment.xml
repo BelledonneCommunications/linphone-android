@@ -104,7 +104,7 @@
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/call_settings_use_telecom_manager_title}"
                     linphone:subtitle="@{@string/call_settings_use_telecom_manager_summary}"
-                    android:visibility="@{viewModel.api26OrHigher ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.api29OrHigher ? View.VISIBLE : View.GONE}"
                     linphone:listener="@{viewModel.useTelecomManagerListener}"
                     linphone:checked="@={viewModel.useTelecomManager}"/>
 

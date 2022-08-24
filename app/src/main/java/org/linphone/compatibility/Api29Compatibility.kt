@@ -56,6 +56,11 @@ class Api29Compatibility {
             return granted
         }
 
+        fun hasTelecomManagerPermission(context: Context): Boolean {
+            return Compatibility.hasPermission(context, Manifest.permission.READ_PHONE_STATE) &&
+                Compatibility.hasPermission(context, Manifest.permission.MANAGE_OWN_CALLS)
+        }
+
         fun createMessageChannel(
             context: Context,
             notificationManager: NotificationManagerCompat

@@ -394,6 +394,15 @@ class CoreContext(
             core.config.setBool("app", "conference_migration", true)
         }
 
+        // Disable Telecom Manager on Android < 10 to prevent crash due to OS bug in Android 9
+        if (Version.sdkStrictlyBelow(Version.API29_ANDROID_10)) {
+            if (corePreferences.useTelecomManager) {
+                Log.w("[Context] Android < 10 detected, disabling telecom manager to prevent crash due to OS bug")
+            }
+            corePreferences.useTelecomManager = false
+            corePreferences.manuallyDisabledTelecomManager = true
+        }
+
         initUserCertificates()
 
         computeUserAgent()

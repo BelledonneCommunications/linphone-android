@@ -341,11 +341,6 @@ class Api26Compatibility {
             )
         }
 
-        fun hasTelecomManagerPermission(context: Context): Boolean {
-            return Compatibility.hasPermission(context, Manifest.permission.READ_PHONE_STATE) &&
-                Compatibility.hasPermission(context, Manifest.permission.MANAGE_OWN_CALLS)
-        }
-
         fun getImeFlagsForSecureChatRoom(): Int {
             return EditorInfo.IME_FLAG_NO_EXTRACT_UI or EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING
         }

@@ -41,7 +41,7 @@ import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.PermissionHelper
 import org.linphone.utils.SingletonHolder
 
-@TargetApi(26)
+@TargetApi(29)
 class TelecomHelper private constructor(context: Context) {
     companion object : SingletonHolder<TelecomHelper, Context>(::TelecomHelper)
 
