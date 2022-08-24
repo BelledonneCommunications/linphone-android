@@ -84,8 +84,10 @@ class Compatibility {
         fun hasTelecomManagerPermissions(context: Context): Boolean {
             return if (Version.sdkAboveOrEqual(Version.API30_ANDROID_11)) {
                 Api30Compatibility.hasTelecomManagerPermission(context)
+            } else if (Version.sdkAboveOrEqual(Version.API29_ANDROID_10)) {
+                Api29Compatibility.hasTelecomManagerPermission(context)
             } else {
-                Api26Compatibility.hasTelecomManagerPermission(context)
+                false
             }
         }
 
