@@ -234,7 +234,7 @@
     <string name="call_stats_zrtp_hash_algo">ჰეშირების ალგორითმი:</string>
     <string name="call_stats_zrtp_sas_algo">SAS ალგორითმი:</string>
     <string name="assistant_create_account">ანგარიშის შექმნა</string>
-    <string name="assistant_login_linphone">&amp;appName;-ანგარიშის გამოყენება</string>
+    <string name="assistant_login_linphone">&appName;-ანგარიშის გამოყენება</string>
     <string name="assistant_login_generic">SIP ანგარიშის გამოყენება</string>
     <string name="assistant_remote_provisioning">დაშორებული კონფიგურაციის გადმოტვირთვა</string>
     <string name="assistant_privacy_policy">კონფიდენციალურობის პოლიტიკა</string>
@@ -243,7 +243,7 @@
     <string name="assistant_error_passwords_dont_match">პაროლები არ ემთხვევა</string>
     <string name="assistant_error_invalid_email_address">ელექტრონული ფოსტის მისამართი არასწორია</string>
     <string name="assistant_error_invalid_credentials">ანგარიში არ არსებობს ან პაროლი არ ემთხვევა</string>
-    <string name="assistant_linphone_account">გამოიყენეთ თქვენი &amp;appName;-ის ანგარიში</string>
+    <string name="assistant_linphone_account">გამოიყენეთ თქვენი &appName;-ის ანგარიში</string>
     <string name="assistant_login_forgotten_password">დაგავიწყდათ პაროლი\?</string>
     <string name="assistant_login">შესვლა</string>
     <string name="assistant_finish">კონფიგურირების დასრულება</string>
@@ -369,7 +369,7 @@
     <string name="advanced_settings_device_name_summary">ცვლილებები შევა ძალაში შემდეგი გაშვებისას</string>
     <string name="advanced_settings_logs_server_url_summary">არ შეცვალოთ, თუ არ იცით, რას აკეთებთ!</string>
     <string name="advanced_settings_go_to_android_app_settings">Android აპის პარამეტრები</string>
-    <string name="service_name">&amp;appName; სერვისი</string>
+    <string name="service_name">&appName; სერვისი</string>
     <string name="service_description">ეს საჭიროა ფონურ რეჟიმში ზარების მისაღებად</string>
     <string name="about_privacy_policy">ეწვიეთ ჩვენს კონფიდენციალურობის პოლიტიკას</string>
     <string name="logs_upload_failure">ჟურნალების ატვირთვა ვერ მოხერხდა!</string>
@@ -386,7 +386,7 @@
     <string name="no_conference_call_history">ისტორიაში შეხვედრა არ არის</string>
     <string name="contact_invite_friend">მოწვევა</string>
     <string name="no_contact">თქვენს მისამართების წიგნაკში კონტაქტი არ არის.</string>
-    <string name="contact_send_sms_invite_text">გამარჯობა, შემომიერთდით &amp;appName;-ში! შეგიძლიათ იგი უფასოდ გადმოიწეროთ აქედან: %s</string>
+    <string name="contact_send_sms_invite_text">გამარჯობა, შემომიერთდით &appName;-ში! შეგიძლიათ იგი უფასოდ გადმოიწეროთ აქედან: %s</string>
     <string name="contact_choose_existing_or_new_to_add_number">აირჩიეთ კონტაქტი ან შექმენით ახალი</string>
     <string name="contact_delete_one_dialog">გსურთ ამ კონტაქტის წაშლა\?
 \nიგი ასევე იქნება წაშლილი თქვენი მოწყობილობის მისამართების წიგნაკიდან</string>
@@ -434,7 +434,7 @@
     <string name="recordings_export">ჩანაწერის ექსპორტირება შემდეგის გამოყენებით…</string>
     <string name="conference_schedule_later">გსურთ შეხვედრის დაგეგმვა მოგვიანებით\?</string>
     <string name="conference_schedule_address_title">შეხვედრის მისამართი</string>
-    <string name="conference_schedule_send_invite_chat">&amp;appName;-ის მეშვეობით მოწვევის გაგზავნა</string>
+    <string name="conference_schedule_send_invite_chat">&appName;-ის მეშვეობით მოწვევის გაგზავნა</string>
     <string name="conference_schedule_send_invite_email">ელ. ფოსტით მოწვევის გაგზავნა</string>
     <string name="conference_schedule_encryption">გსურთ შეხვედრის დაშიფრვა\?</string>
     <string name="conference_schedule_summary">შეხვედრის ინფორმაცია</string>
@@ -489,14 +489,14 @@
     <string name="assistant_phone_number_link_info_content">"
 \nთქვენი მეგობრები შეძლებენ თქვენს პოვნას უფრო მარტივად, თუ მიაბამთ თქვენს ანგარიშს თქვენ ტელეფონის ნომერზე
 \n
-\nთქვენ დაინახავთ თქვენს მისამართების წიგნაკში, თუ ვინ იყენებს &amp;appName;-ს და თქვენ მეგობრებს ეცოდინებათ, რომ შეუძლიათ ასევე დაგიკავშირდნენ &amp;appName;-ზე.
+\nთქვენ დაინახავთ თქვენს მისამართების წიგნაკში, თუ ვინ იყენებს &appName;-ს და თქვენ მეგობრებს ეცოდინებათ, რომ შეუძლიათ ასევე დაგიკავშირდნენ &appName;-ზე.
 \n"</string>
-    <string name="assistant_phone_number_link_info_content_already_account">თქვენი ტელეფონის ნომრის გამოყენება მხოლოდ ერთ &amp;appName;-ის ანგარიშთან შეგიძლიათ.
+    <string name="assistant_phone_number_link_info_content_already_account">თქვენი ტელეფონის ნომრის გამოყენება მხოლოდ ერთ &appName;-ის ანგარიშთან შეგიძლიათ.
 \n
 \nთუ უკვე მიაბით თქვენი ნომერი სხვა ანგარიშს, მაგრამ გირჩევნიათ ამის გამოყენება, უბრალოდ მიაბით იგი ახლა, და თქვენი ნომერი ავტომატურად იქნება გადმოტანილი ამ ანგარიშზე.</string>
     <string name="assistant_general_terms">გამოყენების პირობები</string>
     <string name="assistant_read_and_agree_terms">მე ვეთანხმები Belledonne Communications-ს %1$s-ს და %2$s-ს</string>
-    <string name="assistant_generic_account_warning">ზოგი ფუნქცია ითხოვს &amp;appName;-ის ანგარიშს, მაგ., ჯგუფური მიწერ-მოწერა ან დროებით მიწერ-მოწერა.
+    <string name="assistant_generic_account_warning">ზოგი ფუნქცია ითხოვს &appName;-ის ანგარიშს, მაგ., ჯგუფური მიწერ-მოწერა ან დროებით მიწერ-მოწერა.
 \n
 \nეს ფუნქციები დამალულია, როდესაც რეგისტრირდებით მესამე პირის SIP ანგარიშით.
 \n
@@ -506,12 +506,12 @@
     <string name="assistant_error_phone_number_already_exists">უკვე არსებობს ანგარიში, რომელიც იყენებს ამ ნომერს</string>
     <string name="assistant_error_username_too_long">მომხმარებლის სახელში ზედმეტი სიმბოლოებია</string>
     <string name="assistant_create_account_part_1">გთხოვთ, დაადასტუროთ თქვენი ქვეყნის კოდი და შეიყვანოთ თქვენი ტელეფონის ნომერი</string>
-    <string name="assistant_linphone_login_desc">გთხოვთ, შეიყვანოთ თქვენი &amp;appName;-ის ანგარიშის მომხმარებლის სახელი და პაროლი</string>
+    <string name="assistant_linphone_login_desc">გთხოვთ, შეიყვანოთ თქვენი &appName;-ის ანგარიშის მომხმარებლის სახელი და პაროლი</string>
     <string name="assistant_login_with_username">გამოიყენეთ თქვენი მომხმარებლის სახელი და პაროლი თქვენი ტელეფონის ნომრის მაგივრად</string>
     <string name="assistant_continue_even_if_credentials_invalid">გაგრძელება</string>
     <string name="assistant_generic_account">გამოიყენეთ SIP ანგარიში</string>
     <string name="assistant_login_desc">გთხოვთ, შეიყვანოთ თქვენი მომხმარებლის სახელი და პაროლი თქვენ SIP დომენთან ერთად</string>
-    <string name="assistant_create_account_part_email">გთხოვთ, შეიყვანოთ მომხმარებლის სახელი, ელ. ფოსტა და პაროლი თქვენი &amp;appName;-ის ანგარიშისთვის</string>
+    <string name="assistant_create_account_part_email">გთხოვთ, შეიყვანოთ მომხმარებლის სახელი, ელ. ფოსტა და პაროლი თქვენი &appName;-ის ანგარიშისთვის</string>
     <string name="assistant_validate_account_2">ამის შემდეგ, დაბრუნდით აქ და დააჭირეთ ღილაკს.</string>
     <string name="assistant_create_account_part_2">ჩვენ გამოგიგზავნეთ SMS დასტურის კოდით თქვენს ტელეფონის ნომერზე:</string>
     <string name="assistant_create_account_part_3">თქვენი ტელეფონის ნომრის შემოწმების დასასრულებლად, გთხოვთ, შეიყვანოთ 4-ციფრიანი კოდი ქვემოთ:
@@ -566,7 +566,7 @@
     <string name="account_settings_prefix_summary">\"+\"-ის გარეშე</string>
     <string name="account_settings_escape_plus_title">\"+\"-ის \"00\"-ით ჩანაცვლება</string>
     <string name="account_setting_conference_factory_address">კონფერენციის ქარხნის URI</string>
-    <string name="notification_channel_incoming_call_name">&amp;appName; შემომავალი ზარების შეტყობინება</string>
+    <string name="notification_channel_incoming_call_name">&appName; შემომავალი ზარების შეტყობინება</string>
     <string name="incoming_call_notification_title">შემომავალი ზარი</string>
     <string name="incoming_group_call_notification_title">შემომავალი ჯგუფური ზარი</string>
     <string name="incoming_call_notification_hangup_action_label">დაკიდება</string>
@@ -607,7 +607,7 @@
     <string name="content_description_remove_pending_file_transfer">მომლოდინე ფაილის გადაცემის წაშლა</string>
     <string name="content_description_delivery_status">შეტყობინების მიწოდების სტატუსი</string>
     <string name="content_description_ephemeral_message">შეტყობინება ეფემერულია</string>
-    <string name="content_description_linphone_user">კონტაქტი &amp;appName;-ის მომხმარებელია</string>
+    <string name="content_description_linphone_user">კონტაქტი &appName;-ის მომხმარებელია</string>
     <string name="content_description_e2e_encryption_disabled">ბოლოდან ბოლომდე დაშიფრვა გათიშულია</string>
     <string name="content_description_e2e_encryption_enabled">ბოლოდან ბოლომდე დაშიფრვა ჩართულია</string>
     <string name="content_description_show_sip_contacts">მხოლოდ SIP კონტაქტების სიის ჩვენება</string>
@@ -696,9 +696,9 @@
     <string name="account_settings_apply_prefix_for_calls_summary">თუ ნომერი შეყვანილია, პრეფიქსის გამოყენება ნომრისთვის</string>
     <string name="account_setting_audio_video_conference_factory_address">აუდიო/ვიდეო კონფერენციის ქარხნის URI</string>
     <string name="conferences_settings_layout_title">ნაგულისხმევი განლაგება</string>
-    <string name="notification_channel_service_name">&amp;appName; სერვისის შეტყობინება</string>
-    <string name="notification_channel_missed_call_name">&amp;appName; გამოტოვებული ზარების შეტყობინება</string>
-    <string name="notification_channel_chat_name">&amp;appName; შეტყობინების შეტყობინება</string>
+    <string name="notification_channel_service_name">&appName; სერვისის შეტყობინება</string>
+    <string name="notification_channel_missed_call_name">&appName; გამოტოვებული ზარების შეტყობინება</string>
+    <string name="notification_channel_chat_name">&appName; შეტყობინების შეტყობინება</string>
     <string name="missed_call_notification_body">გამოტოვებული ზარი %s-სგან</string>
     <string name="missed_calls_notification_body" tools:ignore="PluralsCandidate">%d გამოტოვებული ზარი</string>
     <string name="zrtp_dialog_title">კავშირის უსაფრთხოება</string>
