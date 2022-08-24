@@ -189,7 +189,7 @@
     <string name="call_stats_zrtp_hash_algo">Алгоритм хешування:</string>
     <string name="call_stats_zrtp_sas_algo">Алгоритм SAS:</string>
     <string name="assistant_create_account">Створити акаунт</string>
-    <string name="assistant_login_linphone">Використовуйте &amp;appName; акаунт</string>
+    <string name="assistant_login_linphone">Використовуйте &appName; акаунт</string>
     <string name="assistant_login_generic">Використовуйте обліковий запис SIP</string>
     <string name="assistant_remote_provisioning">Отримати віддалену конфігурацію</string>
     <string name="assistant_ec_calibration">Виконується калібрування ехокомпенсатора</string>
@@ -201,7 +201,7 @@
     <string name="assistant_error_passwords_dont_match">Паролі не співпадають</string>
     <string name="assistant_error_invalid_email_address">Адреса електронної пошти недійсна</string>
     <string name="assistant_error_username_too_long">Ім\'я користувача містить забагато символів</string>
-    <string name="assistant_linphone_login_desc">Введіть своє ім’я користувача та пароль для &amp;appName; акаунту</string>
+    <string name="assistant_linphone_login_desc">Введіть своє ім’я користувача та пароль для &appName; акаунту</string>
     <string name="assistant_login_forgotten_password">Забули свій пароль\?</string>
     <string name="assistant_login">Логін</string>
     <string name="assistant_confirmation_code">Код підтвердження</string>
@@ -220,10 +220,10 @@
     <string name="assistant_remote_provisioning_failure">Не вдалося завантажити або застосувати профіль віддаленої конфігурації…</string>
     <string name="content_description_recording_export">Експорт запису</string>
     <string name="content_description_conference_participants">Учасники групового дзвінка</string>
-    <string name="service_name">&amp;appName; Сервіс</string>
-    <string name="service_auto_start_description">&amp;appName; було запущено автоматично</string>
+    <string name="service_name">&appName; Сервіс</string>
+    <string name="service_auto_start_description">&appName; було запущено автоматично</string>
     <string name="about_privacy_policy">Ознайомтесь з нашою політикою конфіденційності</string>
-    <string name="about_weblate_translation">Допоможіть нам перекласти &amp;appName;</string>
+    <string name="about_weblate_translation">Допоможіть нам перекласти &appName;</string>
     <string name="logs_url_copied_to_clipboard">URL-адресу журналу, скопійовану в буфер обміну</string>
     <string name="international_prefix">Префікс</string>
     <string name="assistant_choose_country">Виберіть країну</string>
@@ -246,7 +246,7 @@
     <string name="no_call_history">Відсутні дзвінки у вашій історії</string>
     <string name="history_delete_one_dialog">Ви бажаєте видалити цей запис\?</string>
     <string name="no_contact">Немає контактів у вашій адресній книзі.</string>
-    <string name="contact_send_sms_invite_text">Привіт, приєднуйтесь до мене в &amp;appName;! Ви можете завантажити його безкоштовно на %s</string>
+    <string name="contact_send_sms_invite_text">Привіт, приєднуйтесь до мене в &appName;! Ви можете завантажити його безкоштовно на %s</string>
     <string name="contact_last_name">Прізвище</string>
     <string name="contact_choose_existing_or_new_to_add_number">Виберіть контакт або створіть новий</string>
     <string name="contact_editor_write_permission_denied">Відмовлено в дозволі на запис контактів, неможливо редагувати контакт</string>
@@ -292,7 +292,7 @@
     <string name="conference_schedule_mandatory_field">Обов\'язковий</string>
     <string name="conference_schedule_description_title">Додати опис</string>
     <string name="conference_schedule_duration">Тривалість</string>
-    <string name="conference_schedule_send_invite_chat">Надіслати запрошення через &amp;appName;</string>
+    <string name="conference_schedule_send_invite_chat">Надіслати запрошення через &appName;</string>
     <string name="conference_schedule_send_invite_email">Надіслати запрошення електронною поштою</string>
     <string name="conference_schedule_encryption">Бажаєте зашифрувати зустріч\?</string>
     <string name="conference_schedule_participants_list">Список учасників</string>
@@ -338,13 +338,13 @@
     <string name="assistant_phone_number_link_info_content">"
 \nВаші друзі знайдуть вас легше, якщо ви прив’яжете обліковий запис до свого номера телефону
 \n
-\n Ви побачите у своїй адресній книзі, хто використовує &amp;appName;  і ваші друзі знатимуть, що вони можуть зв’язатися з вами на &amp;appName; так само.
+\n Ви побачите у своїй адресній книзі, хто використовує &appName;  і ваші друзі знатимуть, що вони можуть зв’язатися з вами на &appName; так само.
 \n"</string>
-    <string name="assistant_phone_number_link_info_content_already_account">Ви можете використовувати свій номер телефону лише з одним &amp;appName; акаунтом.
+    <string name="assistant_phone_number_link_info_content_already_account">Ви можете використовувати свій номер телефону лише з одним &appName; акаунтом.
 \n
 \n Якщо ви вже прив’язали свій номер до іншого облікового запису, але бажаєте використовувати цей, просто прив’яжіть його зараз, і ваш номер буде автоматично переміщено до цього облікового запису.</string>
     <string name="assistant_privacy_policy">політика конфіденційності</string>
-    <string name="assistant_generic_account_warning">Деякі функції потребують &amp;appName; облікового запису, як-от групові або тимчасові повідомлення.
+    <string name="assistant_generic_account_warning">Деякі функції потребують &appName; облікового запису, як-от групові або тимчасові повідомлення.
 \n
 \n Ці функції приховані, коли ви реєструєтеся за допомогою стороннього облікового запису SIP.
 \n
@@ -352,12 +352,12 @@
     <string name="assistant_error_phone_number_invalid_characters">Тільки цифри</string>
     <string name="assistant_error_phone_number_already_exists">Уже існує обліковий запис із цим номером</string>
     <string name="assistant_error_invalid_credentials">Обліковий запис не існує або пароль не збігається</string>
-    <string name="assistant_linphone_account">Використовуйте свій &amp;appName; акаунт</string>
+    <string name="assistant_linphone_account">Використовуйте свій &appName; акаунт</string>
     <string name="assistant_create_account_part_1">Підтвердьте код країни та введіть номер телефону</string>
     <string name="assistant_login_with_username">Використовуйте своє ім\'я користувача та пароль замість свого номера телефону</string>
     <string name="assistant_finish">Завершіть налаштування</string>
     <string name="assistant_generic_account">Використовуйте обліковий запис SIP</string>
-    <string name="assistant_create_account_part_email">Введіть ім’я користувача, електронну адресу та пароль для &amp;appName; акаунт</string>
+    <string name="assistant_create_account_part_email">Введіть ім’я користувача, електронну адресу та пароль для &appName; акаунт</string>
     <string name="assistant_validate_account_1">Ваш обліковий запис створено. Перевірте свою електронну пошту, щоб підтвердити обліковий запис:</string>
     <string name="assistant_create_account_part_2">Ми надіслали вам SMS із кодом підтвердження на ваш номер телефону:</string>
     <string name="assistant_link_phone_number">Ви пов’яжете зі своїм номером телефону таке ім’я користувача:</string>

@@ -298,6 +298,6 @@
     <string name="assistant_privacy_policy">מדיניות פרטיות</string>
     <string name="assistant_generic_account_warning_continue_button_text">אני מסכים</string>
     <string name="assistant_error_username_invalid_characters">נמצאו תווים לא חוקיים</string>
-    <string name="notification_channel_service_name">&amp;appName; service notification</string>
+    <string name="notification_channel_service_name">&appName; service notification</string>
     <string name="notification_channel_missed_call_name">שיחה שלא נענתה</string>
 </resources>
