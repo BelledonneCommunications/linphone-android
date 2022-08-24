@@ -387,6 +387,15 @@ class CoreContext(val context: Context, coreConfig: Config) : LifecycleOwner, Vi
             core.config.setBool("app", "incoming_call_vibration", false)
         }
 
+        // Disable Telecom Manager on Android < 10 to prevent crash due to OS bug in Android 9
+        if (Version.sdkStrictlyBelow(Version.API29_ANDROID_10)) {
+            if (corePreferences.useTelecomManager) {
+                Log.w("[Context] Android < 10 detected, disabling telecom manager to prevent crash due to OS bug")
+            }
+            corePreferences.useTelecomManager = false
+            corePreferences.manuallyDisabledTelecomManager = true
+        }
+
         initUserCertificates()
 
         computeUserAgent()
