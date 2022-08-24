@@ -431,8 +431,8 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
         } else {
             set.connect(
                 R.id.local_participant_background,
-                ConstraintSet.TOP,
-                R.id.top_barrier,
+                ConstraintSet.BOTTOM,
+                R.id.hinge_bottom,
                 ConstraintSet.BOTTOM,
                 0
             )
