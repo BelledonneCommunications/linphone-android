@@ -40,6 +40,7 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.*
 import org.linphone.core.tools.Log
+import org.linphone.utils.AppUtils
 import org.linphone.utils.PhoneNumberUtils
 
 class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
@@ -50,10 +51,10 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
             ContactsContract.Data.MIMETYPE,
             ContactsContract.Contacts.STARRED,
             ContactsContract.Contacts.LOOKUP_KEY,
-            "data1", // Company, Phone or SIP Address
-            "data2", // ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.SipAddress.TYPE
-            "data3", // ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME, ContactsContract.CommonDataKinds.Phone.LABEL, ContactsContract.CommonDataKinds.SipAddress.LABEL
-            "data4" // Normalized phone number
+            "data1", // ContactsContract.CommonDataKinds.Phone.NUMBER, ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS, ContactsContract.CommonDataKinds.Organization.COMPANY
+            ContactsContract.CommonDataKinds.Phone.TYPE,
+            ContactsContract.CommonDataKinds.Phone.LABEL,
+            ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER
         )
     }
 
@@ -61,18 +62,29 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
         Log.i("[Contacts Loader] Loader created")
         coreContext.contactsManager.fetchInProgress.value = true
 
+        val mimeType = ContactsContract.Data.MIMETYPE
+        val mimeSelection = "$mimeType = ? OR $mimeType = ? OR $mimeType = ? OR $mimeType = ?"
+
         val selection = if (corePreferences.fetchContactsFromDefaultDirectory) {
-            ContactsContract.Data.IN_DEFAULT_DIRECTORY + " == 1"
+            ContactsContract.Data.IN_DEFAULT_DIRECTORY + " == 1 AND ($mimeSelection)"
         } else {
-            null
+            mimeSelection
         }
+
+        val linphoneMime = AppUtils.getString(R.string.linphone_address_mime_type)
+        val selectionArgs = arrayOf(
+            ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE,
+            ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE,
+            linphoneMime,
+            ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE
+        )
 
         return CursorLoader(
             coreContext.context,
             ContactsContract.Data.CONTENT_URI,
             projection,
             selection,
-            null,
+            selectionArgs,
             ContactsContract.Data.CONTACT_ID + " ASC"
         )
     }
@@ -86,6 +98,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
 
         val core = coreContext.core
         val linphoneMime = loader.context.getString(R.string.linphone_address_mime_type)
+        var preferNormalizedPhoneNumber = corePreferences.preferNormalizedPhoneNumbersFromAddressBook
 
         if (core.globalState == GlobalState.Shutdown || core.globalState == GlobalState.Off) {
             Log.w("[Contacts Loader] Core is being stopped or already destroyed, abort")
@@ -105,22 +118,8 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                         try {
                             val id: String =
                                 cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Data.CONTACT_ID))
-                            val displayName: String? =
-                                cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Data.DISPLAY_NAME_PRIMARY))
                             val mime: String? =
                                 cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Data.MIMETYPE))
-                            val data1: String? =
-                                cursor.getString(cursor.getColumnIndexOrThrow("data1"))
-                            val data2: String? =
-                                cursor.getString(cursor.getColumnIndexOrThrow("data2"))
-                            val data3: String? =
-                                cursor.getString(cursor.getColumnIndexOrThrow("data3"))
-                            val data4: String? =
-                                cursor.getString(cursor.getColumnIndexOrThrow("data4"))
-                            val starred =
-                                cursor.getInt(cursor.getColumnIndexOrThrow(ContactsContract.Contacts.STARRED)) == 1
-                            val lookupKey =
-                                cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Contacts.LOOKUP_KEY))
 
                             if (previousId.isEmpty() || previousId != id) {
                                 friendsPhoneNumbers.clear()
@@ -131,7 +130,10 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                             val friend = friends[id] ?: core.createFriend()
                             friend.refKey = id
                             if (friend.name.isNullOrEmpty()) {
+                                val displayName: String? =
+                                    cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Data.DISPLAY_NAME_PRIMARY))
                                 friend.name = displayName
+
                                 friend.photo = Uri.withAppendedPath(
                                     ContentUris.withAppendedId(
                                         ContactsContract.Contacts.CONTENT_URI,
@@ -139,7 +141,12 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                                     ),
                                     ContactsContract.Contacts.Photo.CONTENT_DIRECTORY
                                 ).toString()
+
+                                val starred =
+                                    cursor.getInt(cursor.getColumnIndexOrThrow(ContactsContract.Contacts.STARRED)) == 1
                                 friend.starred = starred
+                                val lookupKey =
+                                    cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Contacts.LOOKUP_KEY))
                                 friend.nativeUri =
                                     "${ContactsContract.Contacts.CONTENT_LOOKUP_URI}/$lookupKey"
 
@@ -150,6 +157,15 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
 
                             when (mime) {
                                 ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE -> {
+                                    val data1: String? =
+                                        cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER))
+                                    val data2: String? =
+                                        cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.TYPE))
+                                    val data3: String? =
+                                        cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.LABEL))
+                                    val data4: String? =
+                                        cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER))
+
                                     val label =
                                         PhoneNumberUtils.addressBookLabelTypeToVcardParamString(
                                             data2?.toInt()
@@ -158,7 +174,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                                         )
 
                                     val number =
-                                        if (corePreferences.preferNormalizedPhoneNumbersFromAddressBook ||
+                                        if (preferNormalizedPhoneNumber ||
                                             data1.isNullOrEmpty() ||
                                             !Patterns.PHONE.matcher(data1).matches()
                                         ) {
@@ -184,8 +200,10 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                                     }
                                 }
                                 linphoneMime, ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE -> {
-                                    if (data1 != null) {
-                                        val address = core.interpretUrl(data1, true)
+                                    val sipAddress: String? =
+                                        cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS))
+                                    if (sipAddress != null) {
+                                        val address = core.interpretUrl(sipAddress, true)
                                         if (address != null &&
                                             friendsAddresses.find {
                                                 it.weakEqual(address)
@@ -197,8 +215,10 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                                     }
                                 }
                                 ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE -> {
-                                    if (data1 != null) {
-                                        friend.organization = data1
+                                    val organization: String? =
+                                        cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Organization.COMPANY))
+                                    if (organization != null) {
+                                        friend.organization = organization
                                     }
                                 }
                                 // Our API not being thread safe this causes crashes sometimes given the Play Store reports
@@ -244,6 +264,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                             for (friend in friendsList) {
                                 fl.addLocalFriend(friend)
                             }
+                            friends.clear()
                             Log.i("[Contacts Loader] Friends added")
 
                             fl.updateSubscriptions()
