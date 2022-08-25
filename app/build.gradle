@@ -205,9 +205,8 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.6.0-beta01'
-    implementation 'androidx.core:core-ktx:1.9.0-beta01'
+    implementation 'androidx.core:core-ktx:1.9.0-rc01'
     implementation 'androidx.core:core-splashscreen:1.0.0'
-    implementation 'androidx.fragment:fragment-ktx:1.5.2'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
     implementation 'androidx.media:media:1.6.0'
     implementation "androidx.security:security-crypto-ktx:1.1.0-alpha03"
