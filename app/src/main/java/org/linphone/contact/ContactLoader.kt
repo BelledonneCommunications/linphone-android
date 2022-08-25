@@ -98,7 +98,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
 
         val core = coreContext.core
         val linphoneMime = loader.context.getString(R.string.linphone_address_mime_type)
-        var preferNormalizedPhoneNumber = corePreferences.preferNormalizedPhoneNumbersFromAddressBook
+        val preferNormalizedPhoneNumber = corePreferences.preferNormalizedPhoneNumbersFromAddressBook
 
         if (core.globalState == GlobalState.Shutdown || core.globalState == GlobalState.Off) {
             Log.w("[Contacts Loader] Core is being stopped or already destroyed, abort")

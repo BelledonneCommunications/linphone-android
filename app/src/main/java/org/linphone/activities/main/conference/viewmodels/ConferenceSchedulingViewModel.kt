@@ -38,6 +38,7 @@ class ConferenceSchedulingViewModel : ContactsSelectionViewModel() {
     val description = MutableLiveData<String>()
 
     val scheduleForLater = MutableLiveData<Boolean>()
+    val isUpdate = MutableLiveData<Boolean>()
 
     val formattedDate = MutableLiveData<String>()
     val formattedTime = MutableLiveData<String>()
@@ -156,6 +157,8 @@ class ConferenceSchedulingViewModel : ContactsSelectionViewModel() {
 
         subject.value = ""
         scheduleForLater.value = false
+        isUpdate.value = false
+
         isEncrypted.value = false
         sendInviteViaChat.value = true
         sendInviteViaEmail.value = false
@@ -195,9 +198,11 @@ class ConferenceSchedulingViewModel : ContactsSelectionViewModel() {
 
     fun populateFromConferenceInfo(conferenceInfo: ConferenceInfo) {
         confInfo = conferenceInfo
+
         address.value = conferenceInfo.uri
         subject.value = conferenceInfo.subject
         description.value = conferenceInfo.description
+        isUpdate.value = true
 
         val dateTime = conferenceInfo.dateTime
         val calendar = Calendar.getInstance()
@@ -262,7 +267,11 @@ class ConferenceSchedulingViewModel : ContactsSelectionViewModel() {
         val localAccount = core.defaultAccount
         val localAddress = localAccount?.params?.identityAddress
 
-        val conferenceInfo = confInfo ?: Factory.instance().createConferenceInfo()
+        val conferenceInfo = if (isUpdate.value == true) {
+            confInfo?.clone() ?: Factory.instance().createConferenceInfo()
+        } else {
+            Factory.instance().createConferenceInfo()
+        }
         conferenceInfo.organizer = localAddress
         conferenceInfo.subject = subject.value
         conferenceInfo.description = description.value
@@ -273,6 +282,7 @@ class ConferenceSchedulingViewModel : ContactsSelectionViewModel() {
             val duration = duration.value?.value ?: 0
             conferenceInfo.duration = duration
         }
+
         confInfo = conferenceInfo
         conferenceScheduler.account = localAccount
         // Will trigger the conference creation/update automatically

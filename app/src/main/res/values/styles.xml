@@ -145,6 +145,18 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <style name="conference_update_title_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/voip_conference_updated_color</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="conference_cancel_title_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/voip_conference_cancelled_color</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
     <style name="conference_invite_subject_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">?attr/voipTextColor2</item>
         <item name="android:textSize">16sp</item>

@@ -744,4 +744,7 @@
     <string name="call_stats_zrtp_hash_algo">Algorithme de hachage :</string>
     <string name="call_stats_zrtp_auth_tag_algo">Algorithme d\'authentification :</string>
     <string name="call_stats_zrtp_sas_algo">Algorithme SAS :</string>
+    <string name="conference_schedule_edit">Modifier la réunion</string>
+    <string name="conference_update_title">La réunion a été modifiée : </string>
+    <string name="conference_cancel_title">La réunion a été annulée : </string>
 </resources>

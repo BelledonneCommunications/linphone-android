@@ -59,6 +59,8 @@ class ChatMessageContentData(
     val isGenericFile = MutableLiveData<Boolean>()
     val isVoiceRecording = MutableLiveData<Boolean>()
     val isConferenceSchedule = MutableLiveData<Boolean>()
+    val isConferenceUpdated = MutableLiveData<Boolean>()
+    val isConferenceCancelled = MutableLiveData<Boolean>()
 
     val fileName = MutableLiveData<String>()
     val filePath = MutableLiveData<String>()
@@ -233,6 +235,8 @@ class ChatMessageContentData(
         isPdf.value = false
         isVoiceRecording.value = false
         isConferenceSchedule.value = false
+        isConferenceUpdated.value = false
+        isConferenceCancelled.value = false
 
         if (content.isFile || (content.isFileTransfer && chatMessage.isOutgoing)) {
             val path = if (isFileEncrypted) {
@@ -307,6 +311,10 @@ class ChatMessageContentData(
             Log.i("[Content] Created conference info from ICS with address ${conferenceAddress.value}")
             conferenceSubject.value = conferenceInfo.subject
             conferenceDescription.value = conferenceInfo.description
+
+            val state = conferenceInfo.state
+            isConferenceUpdated.value = state == ConferenceInfoState.Updated
+            isConferenceCancelled.value = state == ConferenceInfoState.Cancelled
 
             conferenceDate.value = TimestampUtils.dateToString(conferenceInfo.dateTime)
             conferenceTime.value = TimestampUtils.timeToString(conferenceInfo.dateTime)
