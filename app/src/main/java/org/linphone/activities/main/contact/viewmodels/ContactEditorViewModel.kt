@@ -22,6 +22,7 @@ package org.linphone.activities.main.contact.viewmodels
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.ExifInterface
+import android.provider.ContactsContract
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -79,9 +80,24 @@ class ContactEditorViewModel(val c: Friend?) : ViewModel(), ContactDataInterface
         } else {
             displayName.value = ""
         }
-        firstName.value = c?.vcard?.givenName ?: ""
-        lastName.value = c?.vcard?.familyName ?: ""
-        organization.value = c?.vcard?.organization ?: ""
+
+        organization.value = c?.organization ?: ""
+
+        firstName.value = ""
+        lastName.value = ""
+        val vCard = c?.vcard
+        if (vCard?.familyName.isNullOrEmpty() && vCard?.givenName.isNullOrEmpty()) {
+            val refKey = c?.refKey
+            if (refKey != null) {
+                Log.w("[Contact Editor] vCard first & last name not filled-in yet, doing it now")
+                fetchFirstAndLastNames(refKey)
+            } else {
+                Log.e("[Contact Editor] vCard first & last name not available as contact doesn't have a native ID")
+            }
+        } else {
+            firstName.value = vCard?.givenName
+            lastName.value = vCard?.familyName
+        }
 
         updateNumbersAndAddresses()
     }
@@ -230,5 +246,44 @@ class ContactEditorViewModel(val c: Friend?) : ViewModel(), ContactDataInterface
             sipAddresses.add(NumberOrAddressEditorData("", true))
         }
         addresses.value = sipAddresses
+    }
+
+    private fun fetchFirstAndLastNames(contactId: String) {
+        try {
+            val cursor = coreContext.context.contentResolver.query(
+                ContactsContract.Data.CONTENT_URI,
+                arrayOf(
+                    ContactsContract.Data.MIMETYPE,
+                    ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME,
+                    ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME
+                ),
+                ContactsContract.CommonDataKinds.StructuredName.CONTACT_ID + " = ?",
+                arrayOf(contactId),
+                null
+            )
+
+            while (cursor != null && cursor.moveToNext()) {
+                val mime: String? = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Data.MIMETYPE))
+                if (mime == ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE) {
+                    val givenName: String? =
+                        cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME))
+                    if (!givenName.isNullOrEmpty()) {
+                        c?.vcard?.givenName = givenName
+                        firstName.value = givenName!!
+                    }
+
+                    val familyName: String? =
+                        cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME))
+                    if (!familyName.isNullOrEmpty()) {
+                        c?.vcard?.familyName = familyName
+                        lastName.value = familyName!!
+                    }
+                }
+            }
+
+            cursor?.close()
+        } catch (e: Exception) {
+            Log.e("[Contact Editor] Failed to fetch first & last name: $e")
+        }
     }
 }
