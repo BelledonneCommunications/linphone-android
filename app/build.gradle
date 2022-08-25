@@ -5,8 +5,8 @@ plugins {
     id 'org.jlleitschuh.gradle.ktlint'
 }
 
-def appVersionName = "4.6.12"
-def appVersionCode = 40612 // 4.06.12
+def appVersionName = "4.6.13"
+def appVersionCode = 40613 // 4.06.13
 
 static def getPackageName() {
     return "org.linphone"
@@ -218,7 +218,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation "androidx.security:security-crypto-ktx:1.1.0-alpha03"
-    implementation 'androidx.core:core-splashscreen:1.0.0-beta02'
+    implementation 'androidx.core:core-splashscreen:1.0.0'
 
     implementation 'com.google.android.material:material:1.5.0'
     implementation 'com.google.android.flexbox:flexbox:3.0.0'

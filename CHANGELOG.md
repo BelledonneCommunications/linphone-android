@@ -10,6 +10,12 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [4.6.13] - 2022-08-25
+
+### Fixed
+- Disable Telecom Manager feature on Android < 10 to prevent crash due to Android 9 OS bug
+- Fixed crash due to AAudio's waitForStateChange (SDK fix)
+
 ## [4.6.12] - 2022-07-29
 
 ### Fixed
