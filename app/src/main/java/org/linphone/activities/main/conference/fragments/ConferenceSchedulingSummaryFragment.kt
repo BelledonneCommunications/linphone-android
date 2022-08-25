@@ -42,10 +42,6 @@ class ConferenceSchedulingSummaryFragment : GenericFragment<ConferenceScheduling
 
         binding.viewModel = viewModel
 
-        binding.setCreateConferenceClickListener {
-            viewModel.createConference()
-        }
-
         viewModel.conferenceCreationCompletedEvent.observe(
             viewLifecycleOwner
         ) {

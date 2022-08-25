@@ -29,7 +29,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/conference_invite_title_font"
-            android:text="@string/conference_invite_title"/>
+            android:text="@string/conference_invite_title"
+            android:visibility="@{data.isConferenceUpdated || data.isConferenceCancelled ? View.GONE : View.VISIBLE}"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/conference_update_title_font"
+            android:text="@string/conference_update_title"
+            android:visibility="@{data.isConferenceUpdated ? View.VISIBLE : View.GONE, default=gone}"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/conference_cancel_title_font"
+            android:text="@string/conference_cancel_title"
+            android:visibility="@{data.isConferenceCancelled ? View.VISIBLE : View.GONE, default=gone}"/>
 
         <TextView
             android:layout_width="wrap_content"

@@ -36,6 +36,8 @@
     <color name="voip_dark_color5">#353B3F</color> <!-- Scheduled conference background dark mode -->
     <color name="voip_text_dark_color">#6E8596</color> <!-- Text color above voip_dark_color5 -->
     <color name="voip_conf_address_text_color">#A2A2A2</color>
+    <color name="voip_conference_updated_color">#EFAE00</color>
+    <color name="voip_conference_cancelled_color">#FF0000</color>
 
     <color name="form_field_gray_background">#F7F7F7</color>
 
