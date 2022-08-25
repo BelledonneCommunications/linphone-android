@@ -17,6 +17,7 @@ Group changes to describe their impact on the project, as follows:
 - Conference creation with scheduling, video, different layouts, showing who is speaking and who is muted, etc...
 - Group calls directly from group chat rooms
 - Chat rooms can be individually muted (no notification when receiving a chat message)
+- When a message is received wait a short amount of time to check if more are to be received to notify them all at once
 - Outgoing call video in early-media if requested by callee
 - Image & Video in-app viewers allow for full-screen display
 - Display name can be set during assistant when creating / logging in a sip.linphone.org account
@@ -45,6 +46,12 @@ Group changes to describe their impact on the project, as follows:
 - Trying to keep the preferred driver (OpenSLES / AAudio) when switching device
 - Issues when storing presence in native contacts + potentially duplicated SIP addresses in contact details
 - Chat room scroll position lost when going into sub-view
+
+## [4.6.13] - 2022-08-25
+
+### Fixed
+- Disable Telecom Manager feature on Android < 10 to prevent crash due to Android 9 OS bug
+- Fixed crash due to AAudio's waitForStateChange (SDK fix)
 
 ## [4.6.12] - 2022-07-29
 
