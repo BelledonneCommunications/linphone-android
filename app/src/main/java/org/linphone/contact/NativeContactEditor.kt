@@ -146,7 +146,7 @@ class NativeContactEditor(val friend: Friend) {
     }
 
     fun setOrganization(value: String): NativeContactEditor {
-        val previousValue = friend.vcard?.organization.orEmpty()
+        val previousValue = friend.organization.orEmpty()
         if (value == previousValue) {
             Log.d("[Native Contact Editor] Organization hasn't changed")
             return this
