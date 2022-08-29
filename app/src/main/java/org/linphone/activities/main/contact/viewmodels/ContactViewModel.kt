@@ -215,7 +215,7 @@ class ContactViewModel(friend: Friend, async: Boolean = false) : MessageNotifier
             val presenceModel = friend.getPresenceModelForUriOrTel(number)
             val hasPresence = presenceModel != null && presenceModel.basicStatus == PresenceBasicStatus.Open
             val contactAddress = presenceModel?.contact ?: number
-            val address = coreContext.core.interpretUrl(contactAddress, false)
+            val address = coreContext.core.interpretUrl(contactAddress, true)
             address?.displayName = displayName.value.orEmpty()
             val isMe = if (address != null) coreContext.core.defaultAccount?.params?.identityAddress?.weakEqual(address) ?: false else false
             val secureChatAllowed = LinphoneUtils.isLimeAvailable() && !isMe && friend.getPresenceModelForUriOrTel(number)?.hasCapability(FriendCapability.LimeX3Dh) ?: false
