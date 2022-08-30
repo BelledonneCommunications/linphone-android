@@ -117,6 +117,14 @@ class ConferenceWaitingRoomFragment : GenericFragment<ConferenceWaitingRoomFragm
             }
         }
 
+        viewModel.networkNotReachableEvent.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                (activity as MainActivity).showSnackBar(R.string.call_error_network_unreachable)
+            }
+        }
+
         checkPermissions()
     }
 
