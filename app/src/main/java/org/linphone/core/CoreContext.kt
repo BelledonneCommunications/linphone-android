@@ -148,6 +148,10 @@ class CoreContext(
             }
         }
 
+        override fun onPushNotificationReceived(core: Core, payload: String?) {
+            Log.i("[Context] Push notification received: $payload")
+        }
+
         override fun onCallStateChanged(
             core: Core,
             call: Call,
