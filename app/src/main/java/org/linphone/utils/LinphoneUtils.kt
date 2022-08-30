@@ -118,7 +118,7 @@ class LinphoneUtils {
 
         fun isRemoteConferencingAvailable(): Boolean {
             val core = coreContext.core
-            return core.defaultAccount?.params?.audioVideoConferenceFactoryAddress != null || core.defaultAccount?.params?.conferenceFactoryUri != null
+            return core.defaultAccount?.params?.audioVideoConferenceFactoryAddress != null
         }
 
         fun createOneToOneChatRoom(participant: Address, isSecured: Boolean = false): ChatRoom? {
