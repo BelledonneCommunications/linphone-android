@@ -128,6 +128,15 @@ class DialerViewModel : LogsUploadViewModel() {
                 }
             }
         }
+
+        override fun onAccountRegistrationStateChanged(
+            core: Core,
+            account: Account,
+            state: RegistrationState?,
+            message: String
+        ) {
+            scheduleConferenceAvailable.value = LinphoneUtils.isRemoteConferencingAvailable()
+        }
     }
 
     init {

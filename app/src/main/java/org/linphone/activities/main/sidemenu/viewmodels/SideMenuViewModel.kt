@@ -33,8 +33,7 @@ class SideMenuViewModel : ViewModel() {
     val showAssistant: Boolean = corePreferences.showAssistantInSideMenu
     val showSettings: Boolean = corePreferences.showSettingsInSideMenu
     val showRecordings: Boolean = corePreferences.showRecordingsInSideMenu
-    val showScheduledConferences: Boolean = corePreferences.showScheduledConferencesInSideMenu &&
-        LinphoneUtils.isRemoteConferencingAvailable()
+    val showScheduledConferences = MutableLiveData<Boolean>()
     val showAbout: Boolean = corePreferences.showAboutInSideMenu
     val showQuit: Boolean = corePreferences.showQuitInSideMenu
 
@@ -66,6 +65,8 @@ class SideMenuViewModel : ViewModel() {
     init {
         defaultAccountFound.value = false
         defaultAccountAvatar.value = corePreferences.defaultAccountAvatarPath
+        showScheduledConferences.value = corePreferences.showScheduledConferencesInSideMenu &&
+            LinphoneUtils.isRemoteConferencingAvailable()
         coreContext.core.addListener(listener)
         updateAccountsList()
     }
@@ -107,6 +108,9 @@ class SideMenuViewModel : ViewModel() {
             }
         }
         accounts.value = list
+
+        showScheduledConferences.value = corePreferences.showScheduledConferencesInSideMenu &&
+            LinphoneUtils.isRemoteConferencingAvailable()
     }
 
     fun setPictureFromPath(picturePath: String) {
