@@ -59,6 +59,8 @@ class ConferenceWaitingRoomViewModel : MessageNotifierViewModel() {
 
     val joinInProgress = MutableLiveData<Boolean>()
 
+    val networkReachable = MutableLiveData<Boolean>()
+
     val askPermissionEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
     }
@@ -72,6 +74,10 @@ class ConferenceWaitingRoomViewModel : MessageNotifierViewModel() {
     }
 
     val leaveWaitingRoomEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
+    val networkNotReachableEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
 
@@ -112,11 +118,25 @@ class ConferenceWaitingRoomViewModel : MessageNotifierViewModel() {
                 leaveWaitingRoomEvent.value = Event(true)
             }
         }
+
+        override fun onNetworkReachable(core: Core, reachable: Boolean) {
+            Log.i("[Conference Waiting Room] Network reachability changed: [$reachable]")
+            networkReachable.value = reachable
+            if (!reachable) {
+                networkNotReachableEvent.value = Event(true)
+            }
+        }
     }
 
     init {
         val core = coreContext.core
         core.addListener(listener)
+
+        val reachable = core.isNetworkReachable
+        networkReachable.value = reachable
+        if (!reachable) {
+            networkNotReachableEvent.value = Event(true)
+        }
 
         callParams.isMicEnabled = PermissionHelper.get().hasRecordAudioPermission() && coreContext.core.isMicEnabled
         Log.i("[Conference Waiting Room] Microphone will be ${if (callParams.isMicEnabled) "enabled" else "muted"}")
