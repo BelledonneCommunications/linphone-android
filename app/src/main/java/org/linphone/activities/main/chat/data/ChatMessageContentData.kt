@@ -176,22 +176,27 @@ class ChatMessageContentData(
 
         val content = getContent()
         val filePath = content.filePath
-        if (content.isFileTransfer && (filePath == null || filePath.isEmpty())) {
-            val contentName = content.name
-            if (contentName != null) {
-                val file = FileUtils.getFileStoragePath(contentName)
-                content.filePath = file.path
-                downloadEnabled.value = false
-
-                Log.i("[Content] Started downloading $contentName into ${content.filePath}")
-                if (!chatMessage.downloadContent(content)) {
-                    Log.e("[Content] Failed to start content download!")
+        if (content.isFileTransfer) {
+            if (filePath == null || filePath.isEmpty()) {
+                val contentName = content.name
+                if (contentName != null) {
+                    val file = FileUtils.getFileStoragePath(contentName)
+                    content.filePath = file.path
+                    Log.i("[Content] Started downloading $contentName into ${content.filePath}")
+                } else {
+                    Log.e("[Content] Content name is null, can't download it!")
+                    return
                 }
             } else {
-                Log.e("[Content] Content name is null, can't download it!")
+                Log.w("[Content] File path already set [$filePath] using it (auto download that failed probably)")
+            }
+
+            downloadEnabled.value = false
+            if (!chatMessage.downloadContent(content)) {
+                Log.e("[Content] Failed to start content download!")
             }
         } else {
-            Log.e("[Content] Either content is not a FileTransfer or it's filePath has already been set, can't download it anyway!")
+            Log.e("[Content] Content is not a FileTransfer, can't download it!")
         }
     }
 
