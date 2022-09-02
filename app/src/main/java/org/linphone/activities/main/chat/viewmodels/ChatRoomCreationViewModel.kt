@@ -41,7 +41,7 @@ class ChatRoomCreationViewModel : ContactsSelectionViewModel() {
 
     val waitForChatRoomCreation = MutableLiveData<Boolean>()
 
-    val limeAvailable: Boolean = LinphoneUtils.isLimeAvailable()
+    val secureChatAvailable: Boolean = LinphoneUtils.isEndToEndEncryptedChatAvailable()
 
     private val listener = object : ChatRoomListenerStub() {
         override fun onStateChanged(room: ChatRoom, state: ChatRoom.State) {

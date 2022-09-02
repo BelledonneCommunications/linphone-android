@@ -384,13 +384,16 @@ class CoreContext(
             core.isVibrationOnIncomingCallEnabled = true
             core.config.setBool("app", "incoming_call_vibration", false)
         }
+
         if (core.config.getInt("misc", "conference_layout", 1) > 1) {
             core.config.setInt("misc", "conference_layout", 1)
         }
 
-        if (!core.config.getBool("app", "conference_migration", false)) {
-            core.isRecordAwareEnabled = true
-            core.config.setBool("app", "conference_migration", true)
+        // Now LIME server URL is set on accounts
+        val limeServerUrl = core.limeX3DhServerUrl.orEmpty()
+        if (limeServerUrl.isNotEmpty()) {
+            Log.w("[Context] Removing LIME X3DH server URL from Core config")
+            core.limeX3DhServerUrl = null
         }
 
         // Disable Telecom Manager on Android < 10 to prevent crash due to OS bug in Android 9
@@ -446,6 +449,12 @@ class CoreContext(
                     Log.i("[Context] CPIM allowed in basic chat rooms for account ${params.identityAddress?.asString()}")
                 }
 
+                if (account.params.limeServerUrl == null && limeServerUrl.isNotEmpty()) {
+                    params.limeServerUrl = limeServerUrl
+                    paramsChanged = true
+                    Log.i("[Context] Moving Core's LIME X3DH server URL [$limeServerUrl] on account ${params.identityAddress?.asString()}")
+                }
+
                 if (paramsChanged) {
                     Log.i("[Context] Account params have been updated, apply changes")
                     account.params = params
@@ -496,10 +505,6 @@ class CoreContext(
                 for (friendList in core.friendsLists) {
                     friendList.rlsAddress = rlsAddress
                 }
-            }
-
-            if (core.limeX3DhAvailable()) {
-                core.limeX3DhServerUrl = corePreferences.defaultLimeServerUrl
             }
         } else {
             Log.i("[Context] Background mode with foreground service automatically enabled")
