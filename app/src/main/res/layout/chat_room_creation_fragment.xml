@@ -42,7 +42,7 @@
                 android:src="@drawable/back" />
 
             <LinearLayout
-                android:visibility="@{viewModel.limeAvailable ? View.VISIBLE : View.INVISIBLE}"
+                android:visibility="@{viewModel.secureChatAvailable ? View.VISIBLE : View.INVISIBLE}"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"

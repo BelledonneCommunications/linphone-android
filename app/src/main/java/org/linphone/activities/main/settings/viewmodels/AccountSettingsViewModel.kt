@@ -428,6 +428,15 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
     }
     val audioVideoConferenceFactoryUri = MutableLiveData<String>()
 
+    val limeServerUrlListener = object : SettingListenerStub() {
+        override fun onTextValueChanged(newValue: String) {
+            val params = account.params.clone()
+            params.limeServerUrl = newValue
+            account.params = params
+        }
+    }
+    val limeServerUrl = MutableLiveData<String>()
+
     init {
         update()
         account.addListener(listener)
@@ -485,6 +494,7 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
 
         conferenceFactoryUri.value = params.conferenceFactoryUri
         audioVideoConferenceFactoryUri.value = params.audioVideoConferenceFactoryAddress?.asStringUriOnly()
+        limeServerUrl.value = params.limeServerUrl
     }
 
     private fun initTransportList() {

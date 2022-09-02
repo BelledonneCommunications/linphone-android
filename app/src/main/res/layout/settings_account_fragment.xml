@@ -247,6 +247,13 @@
                     linphone:defaultValue="@{viewModel.audioVideoConferenceFactoryUri}"
                     linphone:inputType="@{InputType.TYPE_CLASS_TEXT}"/>
 
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/account_setting_end_to_end_encryption_keys_server_url}"
+                    linphone:listener="@{viewModel.limeServerUrlListener}"
+                    linphone:defaultValue="@{viewModel.limeServerUrl}"
+                    linphone:inputType="@{InputType.TYPE_CLASS_TEXT}"/>
+
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>

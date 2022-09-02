@@ -483,9 +483,6 @@ class CorePreferences constructor(private val context: Context) {
     val defaultRlsUri: String
         get() = config.getString("sip", "rls_uri", "sips:rls@sip.linphone.org")!!
 
-    val defaultLimeServerUrl: String
-        get() = config.getString("lime", "lime_server_url", "https://lime.linphone.org/lime-server/lime-server.php")!!
-
     val debugPopupCode: String
         get() = config.getString("app", "debug_popup_magic", "#1234#")!!
 

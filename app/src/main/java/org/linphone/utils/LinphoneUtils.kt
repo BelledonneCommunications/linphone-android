@@ -104,10 +104,10 @@ class LinphoneUtils {
             }
         }
 
-        fun isLimeAvailable(): Boolean {
+        fun isEndToEndEncryptedChatAvailable(): Boolean {
             val core = coreContext.core
-            return core.limeX3DhAvailable() && core.isLimeX3DhEnabled &&
-                core.limeX3DhServerUrl != null &&
+            return core.limeX3DhAvailable() &&
+                core.defaultAccount?.params?.limeServerUrl != null &&
                 core.defaultAccount?.params?.conferenceFactoryUri != null
         }
 
