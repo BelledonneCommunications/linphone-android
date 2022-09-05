@@ -89,7 +89,7 @@ class ChatRoomsListViewModel : MessageNotifierViewModel() {
     }
 
     private val contactsListener = object : ContactsUpdatedListenerStub() {
-        override fun onContactUpdated(friend: Friend) {
+        override fun onContactsUpdated() {
             updateChatRooms()
         }
     }

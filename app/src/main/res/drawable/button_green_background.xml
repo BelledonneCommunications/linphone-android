@@ -2,6 +2,8 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="true"
         android:drawable="@drawable/shape_rect_orange_button" />
+    <item android:state_enabled="false"
+        android:drawable="@drawable/shape_rect_gray_button" />
     <item
         android:drawable="@drawable/shape_rect_green_button" />
 </selector>
