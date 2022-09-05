@@ -69,6 +69,21 @@ class ScheduledConferencesViewModel : ViewModel() {
         conferences.value = conferenceInfoList
     }
 
+    fun deleteConferencesInfo(toRemoveList: List<ScheduledConferenceData>) {
+        val conferenceInfoList = arrayListOf<ScheduledConferenceData>()
+
+        for (confInfo in conferences.value.orEmpty()) {
+            if (confInfo in toRemoveList) {
+                confInfo.delete()
+                confInfo.destroy()
+            } else {
+                conferenceInfoList.add(confInfo)
+            }
+        }
+
+        conferences.value = conferenceInfoList
+    }
+
     private fun computeConferenceInfoList() {
         conferences.value.orEmpty().forEach(ScheduledConferenceData::destroy)
 

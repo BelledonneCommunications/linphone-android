@@ -169,7 +169,7 @@
     <string name="conference_admin_set">%s הוא מנהל</string>
     <string name="conference_admin_unset">%s כבר לא מנהל</string>
     <string name="conference_schedule_info_created">ועידה תוזמנה</string>
-    <string name="conference_info_confirm_removal">האם ברצונך למחוק ועידה זו\?</string>
+    <string name="conference_scheduled_delete_one_dialog">האם ברצונך למחוק ועידה זו\?</string>
     <string name="conference_info_removed">מידע אודות הועידה נמחק</string>
     <string name="conference_invitation">הזמנה לועידה</string>
     <string name="conference_low_bandwidth">רוחב פס נמוך,מבטל וידאו</string>

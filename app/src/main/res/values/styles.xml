@@ -152,7 +152,7 @@
     </style>
 
     <style name="conference_cancel_title_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">@color/voip_conference_cancelled_color</item>
+        <item name="android:textColor">@color/voip_conference_cancelled_title_color</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">16sp</item>
     </style>

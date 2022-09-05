@@ -189,7 +189,7 @@
     <string name="conference_schedule_organizer">ორგანიზატორი:</string>
     <string name="conference_admin_set">%s აწი ადმინისტრატორია</string>
     <string name="conference_admin_unset">%s აღარ არის ადმინისტრატორი</string>
-    <string name="conference_info_confirm_removal">დარწმუნებული ხართ, რომ გსურთ ამ შეხვედრის წაშლა\?</string>
+    <string name="conference_scheduled_delete_one_dialog">დარწმუნებული ხართ, რომ გსურთ ამ შეხვედრის წაშლა\?</string>
     <string name="conference_empty">თქვენ ამ მომენტისთვის მარტო ხართ ამ ჯგუფურ ზარში</string>
     <string name="conference_invitation">შეხვედრის მოწვევა</string>
     <string name="conference_first_to_join">თქვენ პირველი შეუერთდით ჯგუფურ ზარს</string>
