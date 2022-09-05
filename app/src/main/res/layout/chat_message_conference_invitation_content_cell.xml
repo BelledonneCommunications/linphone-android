@@ -124,6 +124,7 @@
                 android:layout_gravity="center_vertical|end"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/button_green_background"
+                android:enabled="@{data.isOutgoing || !data.isConferenceCancelled}"
                 android:onClick="@{() -> data.callConferenceAddress()}"
                 android:paddingLeft="20dp"
                 android:paddingTop="8dp"
