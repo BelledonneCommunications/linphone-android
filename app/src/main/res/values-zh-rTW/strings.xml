@@ -735,7 +735,7 @@
     <string name="conference_no_schedule">未安排會議。</string>
     <string name="conference_schedule_organizer">主辦人：</string>
     <string name="conference_go_to_chat">會議聊天室</string>
-    <string name="conference_info_confirm_removal">您真的要刪除這場會議嗎？</string>
+    <string name="conference_scheduled_delete_one_dialog">您真的要刪除這場會議嗎？</string>
     <string name="conference_empty">您是目前通話中唯一的與會者</string>
     <string name="conference_invitation_received_notification">您已受邀加入會議</string>
     <string name="conference_invitation">會議邀請</string>

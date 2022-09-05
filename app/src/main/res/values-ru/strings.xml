@@ -670,7 +670,7 @@
     <string name="conference_admin_set">%s - сейчас администратор</string>
     <string name="conference_admin_unset">%s больше не администратор</string>
     <string name="conference_schedule_info_created">Встреча была запланирована</string>
-    <string name="conference_info_confirm_removal">Вы действительно хотите удалить эту встречу\?</string>
+    <string name="conference_scheduled_delete_one_dialog">Вы действительно хотите удалить эту встречу\?</string>
     <string name="conference_info_removed">Информация о встречи удалена</string>
     <string name="contacts_settings_ldap_auth_method_simple">Простой</string>
     <string name="contacts_settings_ldap_tls_title">Использовать TLS</string>

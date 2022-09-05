@@ -27,10 +27,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
+import org.linphone.activities.main.adapters.SelectionListAdapter
 import org.linphone.activities.main.conference.data.ScheduledConferenceData
+import org.linphone.activities.main.viewmodels.ListTopBarViewModel
 import org.linphone.databinding.ConferenceScheduleCellBinding
 import org.linphone.databinding.ConferenceScheduleListHeaderBinding
 import org.linphone.utils.Event
@@ -38,8 +39,9 @@ import org.linphone.utils.HeaderAdapter
 import org.linphone.utils.TimestampUtils
 
 class ScheduledConferencesAdapter(
+    selectionVM: ListTopBarViewModel,
     private val viewLifecycleOwner: LifecycleOwner
-) : ListAdapter<ScheduledConferenceData, RecyclerView.ViewHolder>(ConferenceInfoDiffCallback()),
+) : SelectionListAdapter<ScheduledConferenceData, RecyclerView.ViewHolder>(selectionVM, ConferenceInfoDiffCallback()),
     HeaderAdapter {
     val copyAddressToClipboardEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
@@ -105,6 +107,31 @@ class ScheduledConferencesAdapter(
                 data = conferenceData
 
                 lifecycleOwner = viewLifecycleOwner
+
+                // This is for item selection through ListTopBarFragment
+                selectionListViewModel = selectionViewModel
+                selectionViewModel.isEditionEnabled.observe(
+                    viewLifecycleOwner
+                ) {
+                    position = bindingAdapterPosition
+                }
+
+                setClickListener {
+                    if (selectionViewModel.isEditionEnabled.value == true) {
+                        selectionViewModel.onToggleSelect(bindingAdapterPosition)
+                    } else {
+                        conferenceData.toggleExpand()
+                    }
+                }
+
+                setLongClickListener {
+                    if (selectionViewModel.isEditionEnabled.value == false) {
+                        selectionViewModel.isEditionEnabled.value = true
+                        // Selection will be handled by click listener
+                        true
+                    }
+                    false
+                }
 
                 setCopyAddressClickListener {
                     val address = conferenceData.getAddressAsString()

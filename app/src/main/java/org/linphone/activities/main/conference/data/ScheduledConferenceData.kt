@@ -107,7 +107,13 @@ class ScheduledConferenceData(val conferenceInfo: ConferenceInfo, private val is
     }
 
     private fun computeBackgroundResId() {
-        backgroundResId.value = if (isFinished) {
+        backgroundResId.value = if (conferenceInfo.state == ConferenceInfoState.Cancelled) {
+            if (expanded.value == true) {
+                R.drawable.shape_round_red_background_with_orange_border
+            } else {
+                R.drawable.shape_round_red_background
+            }
+        } else if (isFinished) {
             if (expanded.value == true) {
                 R.drawable.shape_round_dark_gray_background_with_orange_border
             } else {

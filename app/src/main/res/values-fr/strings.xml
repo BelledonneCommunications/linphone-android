@@ -636,7 +636,8 @@
     <string name="conference_waiting_room_video_disabled">La vidéo est actuellement désactivée</string>
     <string name="conference_scheduled">Réunions</string>
     <string name="conference_no_schedule">Aucune réunion planifiée pour le moment.</string>
-    <string name="conference_info_confirm_removal">Voulez-vous supprimer cette réunion \?</string>
+    <string name="conference_scheduled_delete_one_dialog">Voulez-vous supprimer cette réunion ?</string>
+    <string name="conference_scheduled_delete_many_dialog">Voulez-vous supprimer ces réunions ?</string>
     <string name="conference_empty">Vous êtes actuellement seul dans cet appel de groupe</string>
     <string name="conference_invitation_received_notification">Vous avez été invité à une réunion</string>
     <string name="conference_invitation">Invitation à une réunion</string>
@@ -750,4 +751,6 @@
     <string name="account_setting_conference_factory_address">Adresse du serveur de conversation de groupe/sécurisées</string>
     <string name="account_setting_audio_video_conference_factory_address">Adresse du serveur de conférence audio/vidéo</string>
     <string name="account_setting_end_to_end_encryption_keys_server_url">URL du serveur de clés pour le chiffrement de bout en bout</string>
+    <string name="conference_scheduled_cancelled_by_organizer">L\'organisateur a annulé la conférence</string>
+    <string name="conference_scheduled_cancelled_by_me">Vous avez annulé la conférence</string>
 </resources>

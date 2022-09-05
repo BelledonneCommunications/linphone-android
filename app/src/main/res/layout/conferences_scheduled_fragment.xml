@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View" />
@@ -55,6 +56,14 @@
                 android:src="@drawable/icon_video_conf_new" />
 
         </LinearLayout>
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/list_edit_top_bar_fragment"
+            android:name="org.linphone.activities.main.fragments.ListTopBarFragment"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/main_activity_top_bar_size"
+            android:layout_alignTop="@id/top_bar"
+            tools:layout="@layout/list_edit_top_bar_fragment" />
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chips"

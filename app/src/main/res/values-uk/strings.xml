@@ -307,7 +307,7 @@
     <string name="conference_layout_too_many_participants_for_mosaic">Ви не можете змінити схему групового виклику, оскільки забагато учасників</string>
     <string name="conference_no_terminated_schedule">Припинених зустрічей ще немає.</string>
     <string name="conference_schedule_info_created">Зустріч була призначена</string>
-    <string name="conference_info_confirm_removal">Ви справді хочете видалити цю зустріч\?</string>
+    <string name="conference_scheduled_delete_one_dialog">Ви справді хочете видалити цю зустріч\?</string>
     <string name="conference_info_removed">Інформацію про зустріч видалено</string>
     <string name="conference_low_bandwidth">Виявлено низьку пропускну здатність, відео вимикається</string>
     <string name="conference_incoming_title">Вхідний груповий виклик</string>
