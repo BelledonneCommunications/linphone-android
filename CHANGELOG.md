@@ -32,7 +32,7 @@ Group changes to describe their impact on the project, as follows:
 - Improved how contact avatars are generated
 - 3-dots menu even for basic chat rooms with more options
 - Phone numbers & email addresses are now clickable links in chat messages
-- Go to call activity when there is at least one active call and you click on launcher icon
+- Go to call activity when you click on launcher icon if there is at least one active call
 
 ### Fixed
 - Multiple file download attempt from the same chat bubble at the same time needed app restart to properly download each file
@@ -46,6 +46,8 @@ Group changes to describe their impact on the project, as follows:
 - Trying to keep the preferred driver (OpenSLES / AAudio) when switching device
 - Issues when storing presence in native contacts + potentially duplicated SIP addresses in contact details
 - Chat room scroll position lost when going into sub-view
+- No longer makes requests to our LIME server (end-to-end encryption keys server) for non sip.linphone.org accounts
+- Fixed incoming call/notification not ringing if Do not Disturb mode is enabled except for favorite contacts
 
 ## [4.6.13] - 2022-08-25
 
