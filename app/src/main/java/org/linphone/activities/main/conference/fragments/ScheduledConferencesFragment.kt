@@ -80,29 +80,13 @@ class ScheduledConferencesFragment : MasterFragment<ConferencesScheduledFragment
             override fun onLeftToRightSwipe(viewHolder: RecyclerView.ViewHolder) {}
 
             override fun onRightToLeftSwipe(viewHolder: RecyclerView.ViewHolder) {
-                val viewModel = DialogViewModel(getString(R.string.conference_scheduled_delete_one_dialog))
-                val dialog: Dialog = DialogUtils.getDialog(requireContext(), viewModel)
-
                 val index = viewHolder.bindingAdapterPosition
                 if (index < 0 || index >= adapter.currentList.size) {
                     Log.e("[Scheduled Conferences] Index is out of bound, can't delete conference info")
                 } else {
-                    viewModel.showCancelButton {
-                        adapter.notifyItemChanged(index)
-                        dialog.dismiss()
-                    }
-
-                    viewModel.showDeleteButton(
-                        {
-                            val deletedConfInfo = adapter.currentList[index]
-                            listViewModel.deleteConferenceInfo(deletedConfInfo)
-                            dialog.dismiss()
-                        },
-                        getString(R.string.dialog_delete)
-                    )
+                    val deletedConfInfo = adapter.currentList[index]
+                    showConfInfoDeleteConfirmationDialog(deletedConfInfo, index)
                 }
-
-                dialog.show()
             }
         }
         RecyclerViewSwipeUtils(ItemTouchHelper.LEFT, swipeConfiguration, swipeListener)
@@ -152,28 +136,7 @@ class ScheduledConferencesFragment : MasterFragment<ConferencesScheduledFragment
             viewLifecycleOwner
         ) {
             it.consume { data ->
-                val dialogViewModel =
-                    DialogViewModel(AppUtils.getString(R.string.conference_scheduled_delete_one_dialog))
-                deleteConferenceInfoDialog =
-                    DialogUtils.getVoipDialog(requireContext(), dialogViewModel)
-
-                dialogViewModel.showCancelButton(
-                    {
-                        deleteConferenceInfoDialog?.dismiss()
-                    },
-                    getString(R.string.dialog_cancel)
-                )
-
-                dialogViewModel.showDeleteButton(
-                    {
-                        listViewModel.deleteConferenceInfo(data)
-                        deleteConferenceInfoDialog?.dismiss()
-                        (requireActivity() as MainActivity).showSnackBar(R.string.conference_info_removed)
-                    },
-                    getString(R.string.dialog_delete)
-                )
-
-                deleteConferenceInfoDialog?.show()
+                showConfInfoDeleteConfirmationDialog(data, -1)
             }
         }
 
@@ -189,5 +152,33 @@ class ScheduledConferencesFragment : MasterFragment<ConferencesScheduledFragment
             list.add(conferenceData)
         }
         listViewModel.deleteConferencesInfo(list)
+    }
+
+    private fun showConfInfoDeleteConfirmationDialog(data: ScheduledConferenceData, index: Int) {
+        val dialogViewModel =
+            DialogViewModel(AppUtils.getString(R.string.conference_scheduled_delete_one_dialog))
+        deleteConferenceInfoDialog =
+            DialogUtils.getVoipDialog(requireContext(), dialogViewModel)
+
+        dialogViewModel.showCancelButton(
+            {
+                if (index != -1) {
+                    adapter.notifyItemChanged(index)
+                }
+                deleteConferenceInfoDialog?.dismiss()
+            },
+            getString(R.string.dialog_cancel)
+        )
+
+        dialogViewModel.showDeleteButton(
+            {
+                listViewModel.deleteConferenceInfo(data)
+                deleteConferenceInfoDialog?.dismiss()
+                (requireActivity() as MainActivity).showSnackBar(R.string.conference_info_removed)
+            },
+            getString(R.string.dialog_delete)
+        )
+
+        deleteConferenceInfoDialog?.show()
     }
 }
