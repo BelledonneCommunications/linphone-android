@@ -20,7 +20,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="5dp"
-            android:background="@{!data.isInConference &amp;&amp; !data.isJoining ? @drawable/shape_remote_paused_background : data.videoEnabled ? @drawable/shape_remote_video_background : @drawable/shape_remote_background, default=@drawable/shape_remote_background}"
+            android:background="@{!data.isInConference &amp;&amp; !data.isJoining ? @drawable/shape_remote_paused_background : @drawable/shape_remote_background, default=@drawable/shape_remote_background}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
