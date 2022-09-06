@@ -409,6 +409,14 @@ internal fun DetailChatRoomFragment.navigateToDialer(args: Bundle?) {
     )
 }
 
+internal fun DetailChatRoomFragment.navigateToConferenceScheduling() {
+    findMasterNavController().navigate(
+        R.id.action_global_conferenceSchedulingFragment,
+        null,
+        popupTo()
+    )
+}
+
 internal fun ChatRoomCreationFragment.navigateToGroupInfo() {
     if (findNavController().currentDestination?.id == R.id.chatRoomCreationFragment) {
         findNavController().navigate(

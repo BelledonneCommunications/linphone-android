@@ -196,6 +196,11 @@ class ConferenceSchedulingViewModel : ContactsSelectionViewModel() {
         super.onCleared()
     }
 
+    fun prePopulateParticipantsList(participants: ArrayList<Address>, isSchedule: Boolean) {
+        selectedAddresses.value = participants
+        scheduleForLater.value = isSchedule
+    }
+
     fun populateFromConferenceInfo(conferenceInfo: ConferenceInfo) {
         confInfo = conferenceInfo
 

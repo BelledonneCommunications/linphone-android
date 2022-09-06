@@ -14,6 +14,9 @@
             name="ephemeralListener"
             type="View.OnClickListener" />
         <variable
+            name="meetingListener"
+            type="View.OnClickListener" />
+        <variable
             name="editionModeListener"
             type="View.OnClickListener" />
         <variable
@@ -30,6 +33,9 @@
             type="Boolean" />
         <variable
             name="ephemeralHidden"
+            type="Boolean" />
+        <variable
+            name="meetingHidden"
             type="Boolean" />
         <variable
             name="muteHidden"
@@ -106,6 +112,16 @@
             style="@style/popup_item_font"
             android:text="@string/chat_message_context_menu_ephemeral_messages"
             app:drawableRightCompat="@drawable/chat_room_menu_ephemeral" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chat_room_popup_item_height"
+            android:visibility="@{meetingHidden ? View.GONE : View.VISIBLE}"
+            android:background="@drawable/menu_background"
+            android:onClick="@{meetingListener}"
+            style="@style/popup_item_font"
+            android:text="@string/conference_schedule_title"
+            app:drawableRightCompat="@drawable/chat_room_menu_meeting" />
 
         <TextView
             android:layout_width="match_parent"

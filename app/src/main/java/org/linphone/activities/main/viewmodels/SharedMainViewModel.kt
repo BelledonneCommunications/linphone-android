@@ -101,8 +101,12 @@ class SharedMainViewModel : ViewModel() {
 
     /* Conference */
 
-    val conferenceInfoToEdit: MutableLiveData<Event<String>> by lazy {
+    val addressOfConferenceInfoToEdit: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
+    }
+
+    val participantsListForNextScheduledMeeting: MutableLiveData<Event<ArrayList<Address>>> by lazy {
+        MutableLiveData<Event<ArrayList<Address>>>()
     }
 
     /* Dialer */

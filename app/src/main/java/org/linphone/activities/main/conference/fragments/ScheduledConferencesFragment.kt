@@ -127,7 +127,7 @@ class ScheduledConferencesFragment : MasterFragment<ConferencesScheduledFragment
             viewLifecycleOwner
         ) {
             it.consume { address ->
-                sharedViewModel.conferenceInfoToEdit.value = Event(address)
+                sharedViewModel.addressOfConferenceInfoToEdit.value = Event(address)
                 navigateToConferenceScheduling()
             }
         }
