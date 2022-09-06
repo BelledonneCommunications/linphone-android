@@ -871,6 +871,15 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         navigateToEphemeralInfo()
     }
 
+    private fun scheduleMeeting(chatRoom: ChatRoom) {
+        val participants = arrayListOf<Address>()
+        for (participant in chatRoom.participants) {
+            participants.add(participant.address)
+        }
+        sharedViewModel.participantsListForNextScheduledMeeting.value = Event(participants)
+        navigateToConferenceScheduling()
+    }
+
     private fun showForwardConfirmationDialog(chatMessage: ChatMessage) {
         val viewModel = DialogViewModel(getString(R.string.chat_message_forward_confirmation_dialog))
         viewModel.iconResource = R.drawable.forward_message_default
@@ -901,7 +910,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         )
 
         val itemSize = AppUtils.getDimension(R.dimen.chat_room_popup_item_height).toInt()
-        var totalSize = itemSize * 7
+        var totalSize = itemSize * 8
 
         val notificationsTurnedOff = viewModel.areNotificationsMuted()
         if (notificationsTurnedOff) {
@@ -918,6 +927,9 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             } else {
                 popupView.goToContactHidden = true
             }
+
+            popupView.meetingHidden = true
+            totalSize -= itemSize
         } else {
             popupView.addToContactsHidden = true
             popupView.goToContactHidden = true
@@ -983,6 +995,10 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         }
         popupView.setEphemeralListener {
             showEphemeralMessages()
+            popupWindow.dismiss()
+        }
+        popupView.setMeetingListener {
+            scheduleMeeting(chatRoom)
             popupWindow.dismiss()
         }
         popupView.setEditionModeListener {

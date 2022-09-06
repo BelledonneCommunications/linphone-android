@@ -49,7 +49,16 @@ class ConferenceSchedulingFragment : GenericFragment<ConferenceSchedulingFragmen
 
         binding.viewModel = viewModel
 
-        sharedViewModel.conferenceInfoToEdit.observe(
+        sharedViewModel.participantsListForNextScheduledMeeting.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume { participants ->
+                Log.i("[Conference Scheduling] Found participants (${participants.size}) to pre-populate for meeting schedule")
+                viewModel.prePopulateParticipantsList(participants, true)
+            }
+        }
+
+        sharedViewModel.addressOfConferenceInfoToEdit.observe(
             viewLifecycleOwner
         ) {
             it.consume { address ->
