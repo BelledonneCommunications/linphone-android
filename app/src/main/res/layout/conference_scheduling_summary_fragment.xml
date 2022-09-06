@@ -308,7 +308,7 @@
                 android:layout_marginBottom="10dp"
                 android:layout_gravity="center"
                 android:background="@drawable/shape_rect_orange_button"
-                android:text="@{viewModel.scheduleForLater ? (viewModel.isUpdate ? @string/conference_schedule_edit : @string/conference_schedule_start) : @string/conference_group_call_create, default=@string/conference_group_call_create}"
+                android:text="@{viewModel.isUpdate ? @string/conference_schedule_edit : viewModel.scheduleForLater ? @string/conference_schedule_start : @string/conference_group_call_create, default=@string/conference_group_call_create}"
                 style="@style/big_orange_button_font"/>
 
         </LinearLayout>

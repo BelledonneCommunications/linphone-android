@@ -47,7 +47,7 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 style="@style/calls_list_header_font"
-                android:text="@{viewModel.scheduleForLater ? @string/conference_schedule_title : @string/conference_group_call_title, default=@string/conference_group_call_title}"/>
+                android:text="@{viewModel.isUpdate ? @string/conference_schedule_edit : viewModel.scheduleForLater ? @string/conference_schedule_title : @string/conference_group_call_title, default=@string/conference_group_call_title}"/>
 
             <ImageView
                 android:onClick="@{nextClickListener}"
