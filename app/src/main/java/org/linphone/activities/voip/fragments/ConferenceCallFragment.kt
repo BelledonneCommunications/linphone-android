@@ -95,7 +95,9 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
                     coreContext.core.nativeVideoWindowId = window
 
                     val preview = binding.root.findViewById<RoundCornersTextureView>(R.id.local_preview_video_surface)
-                    conferenceViewModel.meParticipant.value?.setTextureView(preview)
+                    if (preview != null) {
+                        conferenceViewModel.meParticipant.value?.setTextureView(preview)
+                    }
                 } else {
                     Log.i("[Conference Call] Either not in conference or current layout isn't active speaker, updating Core's native window id")
                     coreContext.core.nativeVideoWindowId = null
@@ -302,8 +304,13 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
     override fun onResume() {
         super.onResume()
 
+        if (conferenceViewModel.conferenceDisplayMode.value != ConferenceDisplayMode.ACTIVE_SPEAKER)
+            return
+
         if (conferenceViewModel.conferenceCreationPending.value == false) {
-            when (conferenceViewModel.conferenceParticipantDevices.value.orEmpty().size) {
+            val participantsCount = conferenceViewModel.conferenceParticipantDevices.value.orEmpty().size
+            Log.i("[Conference Call] Fragment resumed, updating layout for [$participantsCount] participants")
+            when (participantsCount) {
                 1 -> switchToActiveSpeakerLayoutWhenAlone()
                 2 -> switchToActiveSpeakerLayoutForTwoParticipants()
                 else -> switchToActiveSpeakerLayoutForMoreThanTwoParticipants()
@@ -462,6 +469,7 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
             size
         )
 
+        Log.i("[Conference Call] Updating active speaker layout for 3 or more participants")
         if (corePreferences.enableAnimations) {
             animateConstraintLayout(constraintLayout, set)
         } else {
@@ -510,6 +518,7 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
             size
         )
 
+        Log.i("[Conference Call] Updating active speaker layout for 2 participants")
         if (corePreferences.enableAnimations) {
             animateConstraintLayout(constraintLayout, set)
         } else {
@@ -558,6 +567,7 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
         set.constrainWidth(R.id.local_participant_background, 0)
         set.constrainHeight(R.id.local_participant_background, 0)
 
+        Log.i("[Conference Call] Updating active speaker layout for 1 participant (myself)")
         if (corePreferences.enableAnimations) {
             animateConstraintLayout(constraintLayout, set)
         } else {
