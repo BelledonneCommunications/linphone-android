@@ -15,7 +15,7 @@
         android:layout_width="@dimen/voip_active_speaker_miniature_size"
         android:layout_height="@dimen/voip_active_speaker_miniature_size"
         android:layout_margin="5dp"
-        android:background="@{!data.isInConference &amp;&amp; !data.isJoining ? @drawable/shape_remote_paused_background : data.videoEnabled ? @drawable/shape_remote_video_background : @drawable/shape_remote_background, default=@drawable/shape_remote_background}"
+        android:background="@{!data.isInConference &amp;&amp; !data.isJoining ? @drawable/shape_remote_paused_background : @drawable/shape_remote_background, default=@drawable/shape_remote_background}"
         app:layout_alignSelf="flex_end"
         app:layout_flexShrink="0">
 
