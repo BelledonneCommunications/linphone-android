@@ -19,7 +19,8 @@
         android:background="@{data.chatMessage.isOutgoing ? @color/chat_bubble_outgoing_color : @color/chat_bubble_incoming_color, default=@color/chat_bubble_incoming_color}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="@{inflatedVisibility}">
+        android:visibility="@{inflatedVisibility}"
+        inflatedLifecycleOwner="@{true}">
 
         <LinearLayout
             android:id="@+id/reply_layout"

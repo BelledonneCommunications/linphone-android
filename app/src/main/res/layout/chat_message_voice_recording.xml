@@ -18,7 +18,8 @@
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
-        android:visibility="@{inflatedVisibility}">
+        android:visibility="@{inflatedVisibility}"
+        inflatedLifecycleOwner="@{true}">
 
         <ImageView
             android:id="@+id/cancel_recording"

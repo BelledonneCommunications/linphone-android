@@ -20,7 +20,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="@{inflatedVisibility}">
+        android:visibility="@{inflatedVisibility}"
+        inflatedLifecycleOwner="@{true}">
 
         <ImageView
             android:onClick="@{() -> data.openFile()}"

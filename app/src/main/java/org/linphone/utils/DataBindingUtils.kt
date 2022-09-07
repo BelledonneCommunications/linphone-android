@@ -25,10 +25,7 @@ import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Patterns
-import android.view.LayoutInflater
-import android.view.TextureView
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
@@ -226,6 +223,13 @@ fun setListener(view: SeekBar, lambda: (Any) -> Unit) {
 
         override fun onStopTrackingTouch(seekBar: SeekBar?) {}
     })
+}
+
+@BindingAdapter("inflatedLifecycleOwner")
+fun setInflatedViewStubLifecycleOwner(view: View, enable: Boolean) {
+    val binding = DataBindingUtil.bind<ViewDataBinding>(view)
+    // This is a bit hacky...
+    binding?.lifecycleOwner = view.context as GenericActivity
 }
 
 @BindingAdapter("entries")

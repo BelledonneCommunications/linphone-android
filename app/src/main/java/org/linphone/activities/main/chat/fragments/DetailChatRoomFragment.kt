@@ -33,7 +33,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -677,18 +676,6 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 showForwardConfirmationDialog(chatMessage)
                 sharedViewModel.isPendingMessageForward.value = false
             }
-        }
-
-        binding.stubbedMessageToReplyTo.setOnInflateListener { _, inflated ->
-            Log.i("[Chat Room] Replying to message layout inflated")
-            val binding = DataBindingUtil.bind<ViewDataBinding>(inflated)
-            binding?.lifecycleOwner = viewLifecycleOwner
-        }
-
-        binding.stubbedVoiceRecording.setOnInflateListener { _, inflated ->
-            Log.i("[Chat Room] Voice recording layout inflated")
-            val binding = DataBindingUtil.bind<ViewDataBinding>(inflated)
-            binding?.lifecycleOwner = viewLifecycleOwner
         }
     }
 

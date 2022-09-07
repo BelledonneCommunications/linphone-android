@@ -25,7 +25,8 @@
         android:layout_height="match_parent"
         android:layout_margin="@{controlsViewModel.fullScreenMode || controlsViewModel.pipMode ? @dimen/margin_0dp : @dimen/voip_remote_margin, default=@dimen/voip_remote_margin}"
         android:paddingBottom="@{controlsViewModel.fullScreenMode || controlsViewModel.pipMode ? @dimen/margin_0dp : @dimen/voip_buttons_fragment_margin_size}"
-        android:visibility="@{inflatedVisibility}">
+        android:visibility="@{inflatedVisibility}"
+        inflatedLifecycleOwner="@{true}">
 
         <View
             android:id="@+id/top_barrier"
