@@ -227,7 +227,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/hinge_bottom"
             android:layout_marginTop="@{controlsViewModel.fullScreenMode ? @dimen/margin_0dp : @dimen/voip_active_speaker_top_margin, default=@dimen/voip_active_speaker_top_margin}"
-            android:background="@drawable/shape_remote_background"
+            android:background="@drawable/shape_me_background"
             android:onClick="@{() -> controlsViewModel.toggleFullScreen()}"/>
 
         <ImageView

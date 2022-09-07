@@ -58,17 +58,6 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:layout_width="@dimen/conference_miniature_switch_camera_icon_size"
-            android:layout_height="@dimen/conference_miniature_switch_camera_icon_size"
-            android:layout_margin="5dp"
-            android:contentDescription="@string/content_description_switch_camera"
-            android:onClick="@{() -> data.switchCamera()}"
-            android:src="@drawable/icon_call_camera_switch"
-            android:visibility="@{data.videoEnabled &amp;&amp; data.isSwitchCameraAvailable() &amp;&amp; data.isInConference ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintEnd_toEndOf="@id/participant_video_surface"
-            app:layout_constraintTop_toTopOf="@id/participant_video_surface" />
-
-        <ImageView
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:contentDescription="@null"

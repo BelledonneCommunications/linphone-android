@@ -49,6 +49,7 @@
         <item name="voipBackgroundColor">@color/voip_dark_color</item>
         <item name="voipBackgroundBWColor">@color/voip_dark_color</item>
         <item name="voipParticipantBackgroundColor">@color/voip_dark_color2</item>
+        <item name="voipMeParticipantBackgroundColor">@color/voip_dark_color3</item>
         <item name="voipExtraButtonsBackgroundColor">@color/voip_dark_color3</item>
         <item name="voipToolbarBackgroundColor">@color/voip_dark_color4</item>
         <item name="voipDrawableColor">@color/white_color</item>
