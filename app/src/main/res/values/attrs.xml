@@ -33,6 +33,7 @@
 
         <attr name="voipBackgroundColor" format="color" />
         <attr name="voipBackgroundBWColor" format="color" />
+        <attr name="voipMeParticipantBackgroundColor" format="color" />
         <attr name="voipParticipantBackgroundColor" format="color" />
         <attr name="voipExtraButtonsBackgroundColor" format="color" />
         <attr name="voipToolbarBackgroundColor" format="color" />

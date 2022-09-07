@@ -428,14 +428,12 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
         }
 
         val size = resources.getDimension(R.dimen.voip_active_speaker_miniature_size).toInt()
-        set.constrainWidth(
-            R.id.local_participant_background,
-            size
-        )
-        set.constrainHeight(
-            R.id.local_participant_background,
-            size
-        )
+        set.constrainWidth(R.id.local_participant_background, size)
+        set.constrainHeight(R.id.local_participant_background, size)
+
+        val avatarSize = resources.getDimension(R.dimen.voip_conference_active_speaker_miniature_avatar_size).toInt()
+        set.constrainWidth(R.id.local_participant_avatar, avatarSize)
+        set.constrainHeight(R.id.local_participant_avatar, avatarSize)
 
         Log.i("[Conference Call] Updating active speaker layout for 3 or more participants")
         if (corePreferences.enableAnimations) {
@@ -471,14 +469,12 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
         )
 
         val size = resources.getDimension(R.dimen.voip_active_speaker_miniature_size).toInt()
-        set.constrainWidth(
-            R.id.local_participant_background,
-            size
-        )
-        set.constrainHeight(
-            R.id.local_participant_background,
-            size
-        )
+        set.constrainWidth(R.id.local_participant_background, size)
+        set.constrainHeight(R.id.local_participant_background, size)
+
+        val avatarSize = resources.getDimension(R.dimen.voip_conference_active_speaker_miniature_avatar_size).toInt()
+        set.constrainWidth(R.id.local_participant_avatar, avatarSize)
+        set.constrainHeight(R.id.local_participant_avatar, avatarSize)
 
         Log.i("[Conference Call] Updating active speaker layout for 2 participants")
         if (corePreferences.enableAnimations) {
@@ -527,6 +523,8 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
 
         set.constrainWidth(R.id.local_participant_background, 0)
         set.constrainHeight(R.id.local_participant_background, 0)
+        set.constrainWidth(R.id.local_participant_avatar, 0)
+        set.constrainHeight(R.id.local_participant_avatar, 0)
 
         Log.i("[Conference Call] Updating active speaker layout for 1 participant (myself)")
         if (corePreferences.enableAnimations) {

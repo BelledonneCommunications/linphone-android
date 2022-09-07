@@ -23,7 +23,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="5dp"
-            android:background="@drawable/shape_audio_only_remote_background"
+            android:background="@{data.isMe ? @drawable/shape_audio_only_me_background : @drawable/shape_audio_only_remote_background, default=@drawable/shape_audio_only_remote_background}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
