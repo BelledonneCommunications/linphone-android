@@ -217,7 +217,7 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
     implementation "androidx.slidingpanelayout:slidingpanelayout:1.2.0"
-    implementation 'androidx.constraintlayout:constraintlayout:2.2.0-alpha03'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation "androidx.gridlayout:gridlayout:1.0.0"
     implementation 'androidx.recyclerview:recyclerview:1.3.0-beta02'
 
