@@ -21,7 +21,8 @@
         android:orientation="vertical"
         android:gravity="center"
         android:background="?attr/backgroundColor"
-        android:visibility="@{inflatedVisibility}">
+        android:visibility="@{inflatedVisibility}"
+        inflatedLifecycleOwner="@{true}">
 
         <TextView
             style="@style/chat_file_attachment_font"

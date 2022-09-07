@@ -23,8 +23,6 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.view.View
 import android.widget.Chronometer
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import androidx.navigation.navGraphViewModels
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
@@ -83,11 +81,6 @@ class OutgoingCallFragment : GenericVideoPreviewFragment<VoipCallOutgoingFragmen
             if (it) {
                 coreContext.core.nativePreviewWindowId = binding.localPreviewVideoSurface
             }
-        }
-
-        binding.stubNumpad.setOnInflateListener { _, inflated ->
-            val binding = DataBindingUtil.bind<ViewDataBinding>(inflated)
-            binding?.lifecycleOwner = viewLifecycleOwner
         }
     }
 }

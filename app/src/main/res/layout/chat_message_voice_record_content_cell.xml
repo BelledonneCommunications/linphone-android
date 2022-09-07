@@ -20,7 +20,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onLongClick="@{longClickListener}"
-        android:visibility="@{inflatedVisibility}">
+        android:visibility="@{inflatedVisibility}"
+        inflatedLifecycleOwner="@{true}">
 
         <org.linphone.views.VoiceRecordProgressBar
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"

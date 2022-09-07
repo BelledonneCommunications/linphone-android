@@ -23,7 +23,8 @@
         android:orientation="vertical"
         android:padding="10dp"
         android:background="@drawable/shape_conference_invite_background"
-        android:visibility="@{inflatedVisibility}">
+        android:visibility="@{inflatedVisibility}"
+        inflatedLifecycleOwner="@{true}">
 
         <TextView
             android:layout_width="match_parent"

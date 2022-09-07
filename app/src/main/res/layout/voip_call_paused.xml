@@ -19,7 +19,8 @@
         android:background="@color/voip_translucent_popup_background"
         android:clickable="true"
         android:focusable="true"
-        android:visibility="@{inflatedVisibility}">
+        android:visibility="@{inflatedVisibility}"
+        inflatedLifecycleOwner="@{true}">
 
         <ImageView
             android:id="@+id/resume_call"

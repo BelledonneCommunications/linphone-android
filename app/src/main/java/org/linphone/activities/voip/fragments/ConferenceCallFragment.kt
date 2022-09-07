@@ -30,8 +30,6 @@ import android.widget.Chronometer
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import androidx.navigation.navGraphViewModels
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
@@ -251,49 +249,6 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             }
-        }
-
-        binding.stubbedConferenceActiveSpeakerLayout.setOnInflateListener { _, inflated ->
-            Log.i("[Conference Call] Active speaker conference layout inflated")
-            val binding = DataBindingUtil.bind<ViewDataBinding>(inflated)
-            binding?.lifecycleOwner = viewLifecycleOwner
-            startTimer(R.id.active_conference_timer)
-
-            adjustActiveSpeakerLayout()
-        }
-
-        binding.stubbedConferenceGridLayout.setOnInflateListener { _, inflated ->
-            Log.i("[Conference Call] Mosaic conference layout inflated")
-            val binding = DataBindingUtil.bind<ViewDataBinding>(inflated)
-            binding?.lifecycleOwner = viewLifecycleOwner
-            startTimer(R.id.active_conference_timer)
-        }
-
-        binding.stubbedConferenceAudioOnlyLayout.setOnInflateListener { _, inflated ->
-            Log.i("[Conference Call] Audio only conference layout inflated")
-            val binding = DataBindingUtil.bind<ViewDataBinding>(inflated)
-            binding?.lifecycleOwner = viewLifecycleOwner
-            startTimer(R.id.active_conference_timer)
-        }
-
-        binding.stubbedAudioRoutes.setOnInflateListener { _, inflated ->
-            val binding = DataBindingUtil.bind<ViewDataBinding>(inflated)
-            binding?.lifecycleOwner = viewLifecycleOwner
-        }
-
-        binding.stubbedNumpad.setOnInflateListener { _, inflated ->
-            val binding = DataBindingUtil.bind<ViewDataBinding>(inflated)
-            binding?.lifecycleOwner = viewLifecycleOwner
-        }
-
-        binding.stubbedCallStats.setOnInflateListener { _, inflated ->
-            val binding = DataBindingUtil.bind<ViewDataBinding>(inflated)
-            binding?.lifecycleOwner = viewLifecycleOwner
-        }
-
-        binding.stubbedPausedConference.setOnInflateListener { _, inflated ->
-            val binding = DataBindingUtil.bind<ViewDataBinding>(inflated)
-            binding?.lifecycleOwner = viewLifecycleOwner
         }
     }
 

@@ -26,8 +26,6 @@ import android.os.SystemClock
 import android.view.View
 import android.widget.Chronometer
 import androidx.constraintlayout.widget.ConstraintSet
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import androidx.navigation.navGraphViewModels
 import androidx.window.layout.FoldingFeature
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -162,31 +160,6 @@ class SingleCallFragment : GenericVideoPreviewFragment<VoipSingleCallFragmentBin
 
         coreContext.core.nativeVideoWindowId = binding.remoteVideoSurface
         coreContext.core.nativePreviewWindowId = binding.localPreviewVideoSurface
-
-        binding.stubbedAudioRoutes.setOnInflateListener { _, inflated ->
-            val binding = DataBindingUtil.bind<ViewDataBinding>(inflated)
-            binding?.lifecycleOwner = viewLifecycleOwner
-        }
-
-        binding.stubbedNumpad.setOnInflateListener { _, inflated ->
-            val binding = DataBindingUtil.bind<ViewDataBinding>(inflated)
-            binding?.lifecycleOwner = viewLifecycleOwner
-        }
-
-        binding.stubbedCallStats.setOnInflateListener { _, inflated ->
-            val binding = DataBindingUtil.bind<ViewDataBinding>(inflated)
-            binding?.lifecycleOwner = viewLifecycleOwner
-        }
-
-        binding.stubbedPausedCall.setOnInflateListener { _, inflated ->
-            val binding = DataBindingUtil.bind<ViewDataBinding>(inflated)
-            binding?.lifecycleOwner = viewLifecycleOwner
-        }
-
-        binding.stubbedRemotelyPausedCall.setOnInflateListener { _, inflated ->
-            val binding = DataBindingUtil.bind<ViewDataBinding>(inflated)
-            binding?.lifecycleOwner = viewLifecycleOwner
-        }
     }
 
     override fun onPause() {
