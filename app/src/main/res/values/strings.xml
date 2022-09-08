@@ -253,7 +253,9 @@
     <string name="conference_schedule_duration">Duration</string>
     <string name="conference_schedule_timezone">Timezone</string>
     <string name="conference_schedule_send_invite_chat">Send invite via &appName;</string>
+    <string name="conference_schedule_send_updated_invite_chat">Send update via &appName;</string>
     <string name="conference_schedule_send_invite_email">Send invite via email</string>
+    <string name="conference_schedule_send_updated_invite_email">Send update via email</string>
     <string name="conference_schedule_encryption">Would you like to encrypt the meeting?</string>
     <string name="conference_schedule_send_invite_chat_summary">Invite will be sent out from my &appName; account</string>
     <string name="conference_schedule_participants_list">Participants list</string>
