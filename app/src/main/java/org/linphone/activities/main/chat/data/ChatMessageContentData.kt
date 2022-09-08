@@ -384,7 +384,9 @@ class ChatMessageContentData(
         voiceRecordingPlayer.start()
         isVoiceRecordPlaying.value = true
         tickerFlow().onEach {
-            voiceRecordPlayingPosition.postValue(voiceRecordingPlayer.currentPosition)
+            withContext(Dispatchers.Main) {
+                voiceRecordPlayingPosition.value = voiceRecordingPlayer.currentPosition
+            }
         }.launchIn(scope)
     }
 
