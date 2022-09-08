@@ -106,7 +106,7 @@ class LinphoneUtils {
 
         fun isEndToEndEncryptedChatAvailable(): Boolean {
             val core = coreContext.core
-            return core.limeX3DhAvailable() &&
+            return core.isLimeX3DhEnabled &&
                 core.defaultAccount?.params?.limeServerUrl != null &&
                 core.defaultAccount?.params?.conferenceFactoryUri != null
         }

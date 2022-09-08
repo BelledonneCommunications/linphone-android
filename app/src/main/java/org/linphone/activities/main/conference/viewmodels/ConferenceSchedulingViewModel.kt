@@ -31,6 +31,7 @@ import org.linphone.contact.ContactsSelectionViewModel
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
+import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.TimestampUtils
 
 class ConferenceSchedulingViewModel : ContactsSelectionViewModel() {
@@ -90,9 +91,14 @@ class ConferenceSchedulingViewModel : ContactsSelectionViewModel() {
                     // Send conference info even when conf is not scheduled for later
                     // as the conference server doesn't invite participants automatically
                     val chatRoomParams = coreContext.core.createDefaultChatRoomParams()
-                    chatRoomParams.backend = ChatRoomBackend.FlexisipChat
                     chatRoomParams.isGroupEnabled = false
-                    chatRoomParams.isEncryptionEnabled = true
+                    if (LinphoneUtils.isEndToEndEncryptedChatAvailable()) {
+                        chatRoomParams.backend = ChatRoomBackend.FlexisipChat
+                        chatRoomParams.isEncryptionEnabled = true
+                    } else {
+                        chatRoomParams.backend = ChatRoomBackend.Basic
+                        chatRoomParams.isEncryptionEnabled = false
+                    }
                     chatRoomParams.subject = subject.value
                     conferenceScheduler.sendInvitations(chatRoomParams)
                 } else {
