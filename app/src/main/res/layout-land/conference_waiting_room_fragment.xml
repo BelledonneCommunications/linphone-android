@@ -133,8 +133,8 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="10dp"
             android:background="@drawable/shape_audio_routes_background"
-            android:orientation="vertical"
-            android:visibility="@{viewModel.audioRoutesSelected ? View.VISIBLE : View.GONE, default=gone}">
+            android:translationY="@{viewModel.audioRoutesMenuTranslateY, default=@dimen/voip_audio_routes_menu_translate_y}"
+            android:orientation="vertical">
 
             <ImageView
                 android:layout_width="@dimen/voip_call_button_size"
@@ -176,8 +176,8 @@
             android:layout_marginEnd="15dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/shape_audio_routes_background"
-            android:orientation="vertical"
-            android:visibility="@{viewModel.layoutMenuSelected ? View.VISIBLE : View.GONE, default=gone}">
+            android:translationY="@{viewModel.conferenceLayoutMenuTranslateY, default=@dimen/voip_audio_routes_menu_translate_y}"
+            android:orientation="vertical">
 
             <ImageView
                 android:layout_width="@dimen/voip_call_button_size"
