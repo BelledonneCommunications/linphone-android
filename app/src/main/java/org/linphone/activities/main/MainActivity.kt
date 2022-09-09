@@ -28,6 +28,7 @@ import android.os.Parcelable
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
+import androidx.annotation.StringRes
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -109,7 +110,8 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val splashScreen = installSplashScreen()
+        // Must be done before the setContentView
+        installSplashScreen()
 
         binding = DataBindingUtil.setContentView(this, R.layout.main_activity)
         binding.lifecycleOwner = this
@@ -175,11 +177,11 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         super.onPause()
     }
 
-    override fun showSnackBar(resourceId: Int) {
+    override fun showSnackBar(@StringRes resourceId: Int) {
         Snackbar.make(findViewById(R.id.coordinator), resourceId, Snackbar.LENGTH_LONG).show()
     }
 
-    override fun showSnackBar(resourceId: Int, action: Int, listener: () -> Unit) {
+    override fun showSnackBar(@StringRes resourceId: Int, action: Int, listener: () -> Unit) {
         Snackbar
             .make(findViewById(R.id.coordinator), resourceId, Snackbar.LENGTH_LONG)
             .setAction(action) {
