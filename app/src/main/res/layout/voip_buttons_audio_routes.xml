@@ -18,7 +18,8 @@
         android:background="@drawable/shape_audio_routes_background"
         android:translationY="@{controlsViewModel.audioRoutesMenuTranslateY, default=@dimen/voip_audio_routes_menu_translate_y}"
         android:visibility="@{inflatedVisibility}"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        inflatedLifecycleOwner="@{true}">
 
         <ImageView
             android:id="@+id/bluetooth_audio_route"
