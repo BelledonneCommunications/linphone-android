@@ -34,6 +34,7 @@ import android.os.Vibrator
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.widget.RemoteViews
+import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.Person
@@ -228,7 +229,7 @@ class Api26Compatibility {
             channel: String,
             notificationsManager: NotificationsManager
         ): Notification {
-            val stringResourceId: Int
+            @StringRes val stringResourceId: Int
             val iconResourceId: Int
             val roundPicture: Bitmap?
             val title: String

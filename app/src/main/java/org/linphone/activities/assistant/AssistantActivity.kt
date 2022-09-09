@@ -20,6 +20,7 @@
 package org.linphone.activities.assistant
 
 import android.os.Bundle
+import androidx.annotation.StringRes
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
@@ -45,11 +46,11 @@ class AssistantActivity : GenericActivity(), SnackBarActivity {
         corePreferences.firstStart = false
     }
 
-    override fun showSnackBar(resourceId: Int) {
+    override fun showSnackBar(@StringRes resourceId: Int) {
         Snackbar.make(coordinator, resourceId, Snackbar.LENGTH_LONG).show()
     }
 
-    override fun showSnackBar(resourceId: Int, action: Int, listener: () -> Unit) {
+    override fun showSnackBar(@StringRes resourceId: Int, action: Int, listener: () -> Unit) {
         Snackbar
             .make(findViewById(R.id.coordinator), resourceId, Snackbar.LENGTH_LONG)
             .setAction(action) {
