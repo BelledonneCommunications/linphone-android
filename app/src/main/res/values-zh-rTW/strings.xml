@@ -757,4 +757,13 @@
     <string name="call_stats_zrtp_hash_algo">雜湊演算法：</string>
     <string name="call_stats_zrtp_auth_tag_algo">驗證演算法：</string>
     <string name="call_stats_zrtp_sas_algo">SAS 演算法：</string>
+    <string name="account_setting_end_to_end_encryption_keys_server_url">E2E 加密金鑰伺服器網址</string>
+    <string name="conference_update_title">已更新會議：</string>
+    <string name="conference_schedule_edit">編輯會議</string>
+    <string name="conference_cancel_title">已取消會議：</string>
+    <string name="conference_scheduled_delete_many_dialog">您要刪除這些會議嗎？</string>
+    <string name="conference_scheduled_cancelled_by_organizer">會議主辦者已取消會議</string>
+    <string name="conference_scheduled_cancelled_by_me">您已取消此會議</string>
+    <string name="conference_schedule_send_updated_invite_chat">透過 &appName; 更新活動資訊</string>
+    <string name="conference_schedule_send_updated_invite_email">透過電子郵件更新活動資訊</string>
 </resources>
