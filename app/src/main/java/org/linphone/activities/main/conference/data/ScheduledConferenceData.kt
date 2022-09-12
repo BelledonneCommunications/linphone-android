@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.ConferenceInfo
-import org.linphone.core.ConferenceInfoState
+import org.linphone.core.ConferenceInfo.State
 import org.linphone.core.tools.Log
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.TimestampUtils
@@ -55,7 +55,7 @@ class ScheduledConferenceData(val conferenceInfo: ConferenceInfo, private val is
 
         time.value = TimestampUtils.timeToString(conferenceInfo.dateTime)
         date.value = TimestampUtils.toString(conferenceInfo.dateTime, onlyDate = true, shortDate = false, hideYear = false)
-        isConferenceCancelled.value = conferenceInfo.state == ConferenceInfoState.Cancelled
+        isConferenceCancelled.value = conferenceInfo.state == State.Cancelled
 
         val minutes = conferenceInfo.duration
         val hours = TimeUnit.MINUTES.toHours(minutes.toLong())
@@ -107,7 +107,7 @@ class ScheduledConferenceData(val conferenceInfo: ConferenceInfo, private val is
     }
 
     private fun computeBackgroundResId() {
-        backgroundResId.value = if (conferenceInfo.state == ConferenceInfoState.Cancelled) {
+        backgroundResId.value = if (conferenceInfo.state == State.Cancelled) {
             if (expanded.value == true) {
                 R.drawable.shape_round_red_background_with_orange_border
             } else {
