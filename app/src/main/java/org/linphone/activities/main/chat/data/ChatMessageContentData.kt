@@ -318,8 +318,8 @@ class ChatMessageContentData(
             conferenceDescription.value = conferenceInfo.description
 
             val state = conferenceInfo.state
-            isConferenceUpdated.value = state == ConferenceInfoState.Updated
-            isConferenceCancelled.value = state == ConferenceInfoState.Cancelled
+            isConferenceUpdated.value = state == ConferenceInfo.State.Updated
+            isConferenceCancelled.value = state == ConferenceInfo.State.Cancelled
 
             conferenceDate.value = TimestampUtils.dateToString(conferenceInfo.dateTime)
             conferenceTime.value = TimestampUtils.timeToString(conferenceInfo.dateTime)
