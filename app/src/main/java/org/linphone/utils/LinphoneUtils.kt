@@ -140,6 +140,20 @@ class LinphoneUtils {
                 ?: core.createChatRoom(params, defaultAccount?.params?.identityAddress, participants)
         }
 
+        fun getConferenceInvitationsChatRoomParams(): ChatRoomParams {
+            val chatRoomParams = coreContext.core.createDefaultChatRoomParams()
+            chatRoomParams.isGroupEnabled = false
+            if (isEndToEndEncryptedChatAvailable()) {
+                chatRoomParams.backend = ChatRoomBackend.FlexisipChat
+                chatRoomParams.isEncryptionEnabled = true
+            } else {
+                chatRoomParams.backend = ChatRoomBackend.Basic
+                chatRoomParams.isEncryptionEnabled = false
+            }
+            chatRoomParams.subject = "Meeting invitation" // Won't be used
+            return chatRoomParams
+        }
+
         fun deleteFilesAttachedToEventLog(eventLog: EventLog) {
             if (eventLog.type == EventLog.Type.ConferenceChatMessage) {
                 val message = eventLog.chatMessage
