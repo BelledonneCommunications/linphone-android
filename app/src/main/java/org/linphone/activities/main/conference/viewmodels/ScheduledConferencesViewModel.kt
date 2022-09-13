@@ -23,20 +23,52 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.activities.main.conference.data.ScheduledConferenceData
-import org.linphone.core.ConferenceInfo
-import org.linphone.core.Core
-import org.linphone.core.CoreListenerStub
+import org.linphone.core.*
 import org.linphone.core.tools.Log
+import org.linphone.utils.LinphoneUtils
 
 class ScheduledConferencesViewModel : ViewModel() {
     val conferences = MutableLiveData<ArrayList<ScheduledConferenceData>>()
 
     val showTerminated = MutableLiveData<Boolean>()
 
+    private val conferenceScheduler: ConferenceScheduler by lazy {
+        val scheduler = coreContext.core.createConferenceScheduler()
+        scheduler.addListener(conferenceListener)
+        scheduler
+    }
+
     private val listener = object : CoreListenerStub() {
         override fun onConferenceInfoReceived(core: Core, conferenceInfo: ConferenceInfo) {
             Log.i("[Scheduled Conferences] New conference info received")
             computeConferenceInfoList()
+        }
+    }
+
+    private val conferenceListener = object : ConferenceSchedulerListenerStub() {
+        override fun onStateChanged(
+            conferenceScheduler: ConferenceScheduler,
+            state: ConferenceScheduler.State
+        ) {
+            Log.i("[Scheduled Conferences] Conference scheduler state is $state")
+            if (state == ConferenceScheduler.State.Ready) {
+                Log.i("[Scheduled Conferences] Conference ${conferenceScheduler.info?.subject} cancelled")
+                val chatRoomParams = LinphoneUtils.getConferenceInvitationsChatRoomParams()
+                conferenceScheduler.sendInvitations(chatRoomParams) // Send cancel ICS
+            }
+        }
+
+        override fun onInvitationsSent(
+            conferenceScheduler: ConferenceScheduler,
+            failedInvitations: Array<out Address>?
+        ) {
+            if (failedInvitations?.isNotEmpty() == true) {
+                for (address in failedInvitations) {
+                    Log.e("[Scheduled Conferences] Conference cancelled ICS wasn't sent to participant ${address.asStringUriOnly()}")
+                }
+            } else {
+                Log.i("[Scheduled Conferences] Conference cancelled ICS successfully sent to all participants")
+            }
         }
     }
 
@@ -51,6 +83,7 @@ class ScheduledConferencesViewModel : ViewModel() {
     override fun onCleared() {
         coreContext.core.removeListener(listener)
         conferences.value.orEmpty().forEach(ScheduledConferenceData::destroy)
+
         super.onCleared()
     }
 
@@ -63,6 +96,11 @@ class ScheduledConferencesViewModel : ViewModel() {
 
         conferenceInfoList.addAll(conferences.value.orEmpty())
         conferenceInfoList.remove(data)
+
+        if (data.conferenceInfo.state != ConferenceInfo.State.Cancelled && data.canEdit.value == true) {
+            Log.i("[Scheduled Conferences] Cancelling conference ${data.conferenceInfo.subject}")
+            conferenceScheduler.cancelConference(data.conferenceInfo)
+        }
 
         data.delete()
         data.destroy()
