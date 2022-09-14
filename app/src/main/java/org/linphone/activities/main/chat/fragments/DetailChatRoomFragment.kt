@@ -89,6 +89,35 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         }
     }
 
+    private val globalLayoutLayout = object : OnGlobalLayoutListener {
+        override fun onGlobalLayout() {
+            if (isBindingAvailable()) {
+                binding.chatMessagesList
+                    .viewTreeObserver
+                    .removeOnGlobalLayoutListener(this)
+
+                if (::chatScrollListener.isInitialized) {
+                    binding.chatMessagesList.addOnScrollListener(chatScrollListener)
+                }
+
+                if (viewModel.chatRoom.unreadMessagesCount > 0) {
+                    Log.i("[Chat Room] Messages have been displayed, scrolling to first unread")
+                    val notAllMessagesDisplayed = scrollToFirstUnreadMessageOrBottom(false)
+                    if (notAllMessagesDisplayed) {
+                        Log.w("[Chat Room] More unread messages than the screen can display, do not mark chat room as read now, wait for user to scroll to bottom")
+                    } else {
+                        // Consider user as scrolled to the end when marking chat room as read
+                        viewModel.isUserScrollingUp.value = false
+                        Log.i("[Chat Room] Marking chat room as read")
+                        viewModel.chatRoom.markAsRead()
+                    }
+                }
+            } else {
+                Log.e("[Chat Room] Binding not available in onGlobalLayout callback!")
+            }
+        }
+    }
+
     private lateinit var chatScrollListener: ChatScrollListener
 
     override fun getLayoutId(): Int {
@@ -731,36 +760,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             // Wait for items to be displayed
             binding.chatMessagesList
                 .viewTreeObserver
-                .addOnGlobalLayoutListener(
-                    object : OnGlobalLayoutListener {
-                        override fun onGlobalLayout() {
-                            binding.chatMessagesList
-                                .viewTreeObserver
-                                .removeOnGlobalLayoutListener(this)
-
-                            if (isBindingAvailable()) {
-                                if (::chatScrollListener.isInitialized) {
-                                    binding.chatMessagesList.addOnScrollListener(chatScrollListener)
-                                }
-
-                                if (viewModel.chatRoom.unreadMessagesCount > 0) {
-                                    Log.i("[Chat Room] Messages have been displayed, scrolling to first unread")
-                                    val notAllMessagesDisplayed = scrollToFirstUnreadMessageOrBottom(false)
-                                    if (notAllMessagesDisplayed) {
-                                        Log.w("[Chat Room] More unread messages than the screen can display, do not mark chat room as read now, wait for user to scroll to bottom")
-                                    } else {
-                                        // Consider user as scrolled to the end when marking chat room as read
-                                        viewModel.isUserScrollingUp.value = false
-                                        Log.i("[Chat Room] Marking chat room as read")
-                                        viewModel.chatRoom.markAsRead()
-                                    }
-                                }
-                            } else {
-                                Log.e("[Chat Room] Binding not available in onGlobalLayout callback!")
-                            }
-                        }
-                    }
-                )
+                .addOnGlobalLayoutListener(globalLayoutLayout)
         } else {
             Log.e("[Chat Room] Fragment resuming but viewModel lateinit property isn't initialized!")
         }
@@ -770,6 +770,9 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         if (::chatScrollListener.isInitialized) {
             binding.chatMessagesList.removeOnScrollListener(chatScrollListener)
         }
+
+        binding.chatMessagesList
+            .viewTreeObserver.removeOnGlobalLayoutListener(globalLayoutLayout)
 
         if (_adapter != null) {
             try {
