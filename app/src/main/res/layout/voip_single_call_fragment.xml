@@ -26,6 +26,7 @@
             type="org.linphone.activities.voip.viewmodels.StatisticsListViewModel" />
     </data>
 
+
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinator"
         android:layout_width="match_parent"
@@ -166,7 +167,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:onClick="@{() -> controlsViewModel.toggleFullScreen()}"
-                android:visibility="@{controlsViewModel.isVideoEnabled &amp;&amp; controlsViewModel.isSendingVideo &amp;&amp; !callsViewModel.currentCallData.isRemotelyPaused ? View.VISIBLE : View.GONE, default=gone}"
+                android:visibility="@{controlsViewModel.isVideoEnabled &amp;&amp; controlsViewModel.isSendingVideo &amp;&amp; !callsViewModel.currentCallData.isRemotelyPaused &amp;&amp; !callsViewModel.currentCallData.isPaused ? View.VISIBLE : View.GONE, default=gone}"
                 app:layout_constraintBottom_toBottomOf="@id/background"
                 app:layout_constraintEnd_toEndOf="@id/background"
                 app:layout_constraintStart_toStartOf="@id/background"
@@ -222,7 +223,7 @@
                 android:id="@+id/video_preview_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="@{controlsViewModel.isVideoEnabled &amp;&amp; !callsViewModel.currentCallData.isRemotelyPaused ? View.VISIBLE : View.GONE}"
+                android:visibility="@{controlsViewModel.isVideoEnabled &amp;&amp; !callsViewModel.currentCallData.isRemotelyPaused &amp;&amp; !callsViewModel.currentCallData.isPaused ? View.VISIBLE : View.GONE}"
                 app:constraint_referenced_ids="local_preview_video_surface,switch_camera" />
 
             <org.linphone.activities.voip.views.RoundCornersTextureView
