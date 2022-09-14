@@ -167,6 +167,19 @@
             app:layout_constraintStart_toStartOf="@id/active_speaker_background"
             app:layout_constraintTop_toTopOf="@id/active_speaker_background" />
 
+        <ImageView
+            android:id="@+id/active_speaker_muted"
+            android:layout_width="@dimen/voip_conference_participant_mic_muted_icon_size_active_speaker"
+            android:layout_height="@dimen/voip_conference_participant_mic_muted_icon_size_active_speaker"
+            android:layout_margin="5dp"
+            android:background="@drawable/shape_toggle_pressed_background"
+            android:contentDescription="@string/content_description_conference_participant_mic_muted"
+            android:padding="2dp"
+            android:src="@drawable/icon_mic_muted"
+            android:visibility="@{conferenceViewModel.speakingParticipant.isMuted &amp;&amp; !conferenceViewModel.moreThanTwoParticipants ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintLeft_toLeftOf="@id/active_speaker_background"
+            app:layout_constraintTop_toTopOf="@id/active_speaker_background" />
+
         <TextView
             android:id="@+id/speaking_participant_name"
             style="@style/call_remote_name_font"
