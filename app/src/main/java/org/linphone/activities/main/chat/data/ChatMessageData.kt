@@ -21,8 +21,7 @@ package org.linphone.activities.main.chat.data
 
 import android.os.CountDownTimer
 import android.text.Spannable
-import android.text.util.Linkify
-import androidx.core.text.util.LinkifyCompat
+import android.util.Patterns
 import androidx.lifecycle.MutableLiveData
 import java.util.regex.Pattern
 import org.linphone.R
@@ -189,13 +188,30 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
                 list.add(data)
             } else if (content.isText) {
                 val spannable = Spannable.Factory.getInstance().newSpannable(content.utf8Text?.trim())
-                LinkifyCompat.addLinks(spannable, Linkify.WEB_URLS or Linkify.PHONE_NUMBERS)
                 text.value = PatternClickableSpan()
                     .add(
                         Pattern.compile("(?:<?sips?:)?[^@\\s]+(?:@([^\\s]+))+"),
                         object : PatternClickableSpan.SpannableClickedListener {
                             override fun onSpanClicked(text: String) {
                                 Log.i("[Chat Message Data] Clicked on SIP URI: $text")
+                                contentListener?.onSipAddressClicked(text)
+                            }
+                        }
+                    )
+                    .add(
+                        Patterns.WEB_URL,
+                        object : PatternClickableSpan.SpannableClickedListener {
+                            override fun onSpanClicked(text: String) {
+                                Log.i("[Chat Message Data] Clicked on web URL: $text")
+                                contentListener?.onWebUrlClicked(text)
+                            }
+                        }
+                    )
+                    .add(
+                        Patterns.PHONE,
+                        object : PatternClickableSpan.SpannableClickedListener {
+                            override fun onSpanClicked(text: String) {
+                                Log.i("[Chat Message Data] Clicked on phone number: $text")
                                 contentListener?.onSipAddressClicked(text)
                             }
                         }

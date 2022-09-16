@@ -473,6 +473,8 @@ interface OnContentClickedListener {
 
     fun onSipAddressClicked(sipUri: String)
 
+    fun onWebUrlClicked(url: String)
+
     fun onCallConference(address: String, subject: String?)
 
     fun onError(messageId: Int)

@@ -23,6 +23,7 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.*
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.provider.MediaStore
@@ -492,6 +493,22 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                             showDialogToSuggestOpeningFileAsText()
                         }
                     }
+                }
+            }
+        }
+
+        adapter.urlClickEvent.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume { url ->
+                val browserIntent = Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(url)
+                )
+                try {
+                    startActivity(browserIntent)
+                } catch (se: SecurityException) {
+                    Log.e("[Chat Room] Failed to start browser intent, $se")
                 }
             }
         }
