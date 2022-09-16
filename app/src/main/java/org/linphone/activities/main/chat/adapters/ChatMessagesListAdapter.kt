@@ -41,6 +41,7 @@ import org.linphone.activities.main.chat.data.EventLogData
 import org.linphone.activities.main.chat.data.OnContentClickedListener
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
 import org.linphone.core.*
+import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatEventListCellBinding
 import org.linphone.databinding.ChatMessageListCellBinding
 import org.linphone.databinding.ChatMessageLongPressMenuBindingImpl
@@ -86,6 +87,10 @@ class ChatMessagesListAdapter(
         MutableLiveData<Event<Content>>()
     }
 
+    val urlClickEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
     val sipUriClickedEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
     }
@@ -107,7 +112,19 @@ class ChatMessagesListAdapter(
             openContentEvent.value = Event(content)
         }
 
+        override fun onWebUrlClicked(url: String) {
+            if (popup?.isShowing == true) {
+                Log.w("[Chat Message Data] Long press that displayed context menu detected, aborting click on URL [$url]")
+                return
+            }
+            urlClickEvent.value = Event(url)
+        }
+
         override fun onSipAddressClicked(sipUri: String) {
+            if (popup?.isShowing == true) {
+                Log.w("[Chat Message Data] Long press that displayed context menu detected, aborting click on SIP URI [$sipUri]")
+                return
+            }
             sipUriClickedEvent.value = Event(sipUri)
         }
 
@@ -121,6 +138,7 @@ class ChatMessagesListAdapter(
     }
 
     private var advancedContextMenuOptionsDisabled: Boolean = false
+    private var popup: PopupWindow? = null
 
     private var unreadMessagesCount: Int = 0
     private var firstUnreadMessagePosition: Int = -1
@@ -330,6 +348,8 @@ class ChatMessagesListAdapter(
                             totalSize,
                             true
                         )
+                        popup = popupWindow
+
                         // Elevation is for showing a shadow around the popup
                         popupWindow.elevation = 20f
 
