@@ -10,6 +10,14 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [4.6.14] - 2022-09-19
+
+### Fixed
+- ANR that happens sometimes when playing voice recording
+
+### Changed
+- Improved contact loader by querying only relevant fields
+
 ## [4.6.13] - 2022-08-25
 
 ### Fixed
