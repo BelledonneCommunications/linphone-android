@@ -35,6 +35,7 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.*
 import org.linphone.activities.clearDisplayedCallHistory
+import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.fragments.MasterFragment
 import org.linphone.activities.main.history.adapters.CallLogsListAdapter
 import org.linphone.activities.main.history.data.GroupedCallLogData
@@ -44,6 +45,7 @@ import org.linphone.activities.main.viewmodels.TabsViewModel
 import org.linphone.activities.navigateToCallHistory
 import org.linphone.activities.navigateToConferenceCallHistory
 import org.linphone.activities.navigateToDialer
+import org.linphone.core.ConferenceInfo
 import org.linphone.core.tools.Log
 import org.linphone.databinding.HistoryMasterFragmentBinding
 import org.linphone.utils.*
@@ -215,7 +217,28 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
                 val conferenceInfo = callLog.conferenceInfo
                 when {
                     conferenceInfo != null -> {
-                        navigateToConferenceWaitingRoom(conferenceInfo.uri?.asStringUriOnly().orEmpty(), conferenceInfo.subject)
+                        if (conferenceInfo.state == ConferenceInfo.State.Cancelled) {
+                            var snackRes = R.string.conference_scheduled_cancelled_by_organizer
+
+                            val organizer = conferenceInfo.organizer
+                            if (organizer != null) {
+                                val localAccount = coreContext.core.accountList.find { account ->
+                                    val address = account.params.identityAddress
+                                    address != null && organizer.weakEqual(address)
+                                }
+                                if (localAccount != null) {
+                                    snackRes = R.string.conference_scheduled_cancelled_by_me
+                                }
+                            }
+
+                            val activity = requireActivity() as MainActivity
+                            activity.showSnackBar(snackRes)
+                        } else {
+                            navigateToConferenceWaitingRoom(
+                                conferenceInfo.uri?.asStringUriOnly().orEmpty(),
+                                conferenceInfo.subject
+                            )
+                        }
                     }
                     coreContext.core.callsNb > 0 -> {
                         val cleanAddress = LinphoneUtils.getCleanedAddress(callLog.remoteAddress)
