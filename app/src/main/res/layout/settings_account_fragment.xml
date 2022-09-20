@@ -238,6 +238,7 @@
                     linphone:title="@{@string/account_setting_conference_factory_address}"
                     linphone:listener="@{viewModel.conferenceFactoryUriListener}"
                     linphone:defaultValue="@{viewModel.conferenceFactoryUri}"
+                    android:visibility="gone"
                     linphone:inputType="@{InputType.TYPE_CLASS_TEXT}"/>
 
                 <include
@@ -245,6 +246,7 @@
                     linphone:title="@{@string/account_setting_audio_video_conference_factory_address}"
                     linphone:listener="@{viewModel.audioVideoConferenceFactoryUriListener}"
                     linphone:defaultValue="@{viewModel.audioVideoConferenceFactoryUri}"
+                    android:visibility="gone"
                     linphone:inputType="@{InputType.TYPE_CLASS_TEXT}"/>
 
                 <include
@@ -252,6 +254,7 @@
                     linphone:title="@{@string/account_setting_end_to_end_encryption_keys_server_url}"
                     linphone:listener="@{viewModel.limeServerUrlListener}"
                     linphone:defaultValue="@{viewModel.limeServerUrl}"
+                    android:visibility="gone"
                     linphone:inputType="@{InputType.TYPE_CLASS_TEXT}"/>
 
             </LinearLayout>
