@@ -38,6 +38,8 @@ class ContactsListViewModel : ViewModel() {
 
     val contactsList = MutableLiveData<ArrayList<ContactViewModel>>()
 
+    val nativeAddressBookEnabled = MutableLiveData<Boolean>()
+
     val fetchInProgress = MutableLiveData<Boolean>()
     private var searchResultsPending: Boolean = false
     private var fastFetchJob: Job? = null
@@ -72,6 +74,7 @@ class ContactsListViewModel : ViewModel() {
 
     init {
         sipContactsSelected.value = coreContext.contactsManager.shouldDisplaySipContactsList()
+        nativeAddressBookEnabled.value = corePreferences.enableNativeAddressBookIntegration
 
         coreContext.contactsManager.addListener(contactsUpdatedListener)
         coreContext.contactsManager.magicSearch.addListener(magicSearchListener)

@@ -368,6 +368,12 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        listViewModel.groupChatAvailable.value = LinphoneUtils.isGroupChatAvailable()
+    }
+
     override fun deleteItems(indexesOfItemToDelete: ArrayList<Int>) {
         val list = ArrayList<ChatRoom>()
         var closeSlidingPane = false
