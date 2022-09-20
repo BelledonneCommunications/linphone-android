@@ -41,7 +41,9 @@ class ChatRoomCreationViewModel : ContactsSelectionViewModel() {
 
     val waitForChatRoomCreation = MutableLiveData<Boolean>()
 
-    val secureChatAvailable: Boolean = LinphoneUtils.isEndToEndEncryptedChatAvailable()
+    val secureChatAvailable = MutableLiveData<Boolean>()
+
+    val secureChatMandatory: Boolean = corePreferences.forceEndToEndEncryptedChat
 
     private val listener = object : ChatRoomListenerStub() {
         override fun onStateChanged(room: ChatRoom, state: ChatRoom.State) {
@@ -59,11 +61,16 @@ class ChatRoomCreationViewModel : ContactsSelectionViewModel() {
 
     init {
         createGroupChat.value = false
-        isEncrypted.value = false
+        isEncrypted.value = secureChatMandatory
         waitForChatRoomCreation.value = false
+        secureChatAvailable.value = LinphoneUtils.isEndToEndEncryptedChatAvailable()
     }
 
     fun updateEncryption(encrypted: Boolean) {
+        if (!encrypted && secureChatMandatory) {
+            Log.w("[Chat Room Creation] Something tries to force plain text chat room even if secureChatMandatory is enabled!")
+            return
+        }
         isEncrypted.value = encrypted
     }
 
@@ -80,7 +87,7 @@ class ChatRoomCreationViewModel : ContactsSelectionViewModel() {
             return
         }
 
-        val encrypted = isEncrypted.value == true
+        val encrypted = secureChatMandatory || isEncrypted.value == true
         val params: ChatRoomParams = coreContext.core.createDefaultChatRoomParams()
         params.backend = ChatRoomBackend.Basic
         params.isGroupEnabled = false

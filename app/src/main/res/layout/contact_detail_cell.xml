@@ -102,7 +102,7 @@
             <ImageView
                 android:onClick="@{() -> data.startChat(false)}"
                 android:enabled="@{data.address != null}"
-                android:visibility="@{data.chatAllowed ? View.VISIBLE : View.GONE}"
+                android:visibility="@{data.chatAllowed &amp;&amp; !data.hidePlainChat ? View.VISIBLE : View.GONE}"
                 android:contentDescription="@string/content_description_start_chat"
                 android:layout_width="60dp"
                 android:layout_height="60dp"

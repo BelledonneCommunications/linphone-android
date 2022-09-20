@@ -455,6 +455,9 @@ class CorePreferences constructor(private val context: Context) {
     val disableChat: Boolean
         get() = config.getBool("app", "disable_chat_feature", false)
 
+    val forceEndToEndEncryptedChat: Boolean
+        get() = config.getBool("app", "force_lime_chat_rooms", false)
+
     // This will prevent UI from showing up, except for the launcher & the foreground service notification
     val preventInterfaceFromShowingUp: Boolean
         get() = config.getBool("app", "keep_app_invisible", false)

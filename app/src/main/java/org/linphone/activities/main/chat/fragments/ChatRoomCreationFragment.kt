@@ -36,6 +36,7 @@ import org.linphone.contact.ContactsSelectionAdapter
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatRoomCreationFragmentBinding
 import org.linphone.utils.AppUtils
+import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.PermissionHelper
 
 class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>() {
@@ -172,6 +173,12 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
                 Log.w("[Chat Room Creation] READ_CONTACTS permission denied")
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        viewModel.secureChatAvailable.value = LinphoneUtils.isEndToEndEncryptedChatAvailable()
     }
 
     private fun addParticipantsFromSharedViewModel() {
