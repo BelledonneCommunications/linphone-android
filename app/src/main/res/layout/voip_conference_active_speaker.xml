@@ -293,7 +293,7 @@
             android:contentDescription="@string/content_description_switch_camera"
             android:onClick="@{() -> controlsViewModel.switchCamera()}"
             android:src="@drawable/icon_call_camera_switch"
-            android:visibility="@{controlsViewModel.isSwitchCameraAvailable &amp;&amp; !controlsViewModel.pipMode &amp;&amp; !controlsViewModel.fullScreenMode ? View.VISIBLE : View.GONE}"
+            android:visibility="@{controlsViewModel.isSwitchCameraAvailable &amp;&amp; !controlsViewModel.pipMode ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="@id/local_participant_background"
             app:layout_constraintTop_toTopOf="@id/local_participant_background" />
 
