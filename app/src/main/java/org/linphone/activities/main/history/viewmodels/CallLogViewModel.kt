@@ -99,6 +99,8 @@ class CallLogViewModel(val callLog: CallLog, private val isRelated: Boolean = fa
 
     val chatAllowed = !corePreferences.disableChat
 
+    val hidePlainChat = corePreferences.forceEndToEndEncryptedChat
+
     val secureChatAllowed = LinphoneUtils.isEndToEndEncryptedChatAvailable() && (contact.value?.getPresenceModelForUriOrTel(peerSipUri)?.hasCapability(FriendCapability.LimeX3Dh) ?: false)
 
     val relatedCallLogs = MutableLiveData<ArrayList<CallLogViewModel>>()

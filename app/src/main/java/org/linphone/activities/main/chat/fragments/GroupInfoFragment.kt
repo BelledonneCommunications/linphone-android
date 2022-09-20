@@ -24,6 +24,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.chat.GroupChatRoomMember
@@ -132,7 +133,7 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
         }
 
         binding.setParticipantsClickListener {
-            sharedViewModel.createEncryptedChatRoom = viewModel.isEncrypted.value == true
+            sharedViewModel.createEncryptedChatRoom = corePreferences.forceEndToEndEncryptedChat || viewModel.isEncrypted.value == true
 
             val list = arrayListOf<Address>()
             for (participant in viewModel.participants.value.orEmpty()) {

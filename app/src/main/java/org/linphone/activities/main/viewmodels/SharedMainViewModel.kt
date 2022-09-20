@@ -22,6 +22,7 @@ package org.linphone.activities.main.viewmodels
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.activities.main.history.data.GroupedCallLogData
 import org.linphone.core.*
 import org.linphone.utils.Event
@@ -59,7 +60,7 @@ class SharedMainViewModel : ViewModel() {
 
     val contentToOpen = MutableLiveData<Content>()
 
-    var createEncryptedChatRoom: Boolean = false
+    var createEncryptedChatRoom: Boolean = corePreferences.forceEndToEndEncryptedChat
 
     val chatRoomParticipants = MutableLiveData<ArrayList<Address>>()
 

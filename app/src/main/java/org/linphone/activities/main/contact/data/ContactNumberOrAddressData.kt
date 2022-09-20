@@ -35,6 +35,8 @@ class ContactNumberOrAddressData(
 
     val chatAllowed = !corePreferences.disableChat
 
+    val hidePlainChat = corePreferences.forceEndToEndEncryptedChat
+
     fun startCall() {
         address ?: return
         listener.onCall(address)

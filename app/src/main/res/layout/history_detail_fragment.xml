@@ -122,14 +122,14 @@
                         android:src="@drawable/call_start_default" />
 
                     <ImageView
-                        android:onClick="@{() -> viewModel.startChat(false)}"
-                        android:visibility="@{viewModel.chatAllowed ? View.VISIBLE : View.GONE}"
-                        android:contentDescription="@string/content_description_start_chat"
-                        android:layout_width="60dp"
+                        android:layout_width="56dp"
                         android:layout_height="60dp"
                         android:layout_margin="10dp"
                         android:background="@drawable/round_orange_button_background"
-                        android:src="@drawable/chat_start_default" />
+                        android:contentDescription="@string/content_description_start_chat"
+                        android:onClick="@{() -> viewModel.startChat(false)}"
+                        android:src="@drawable/chat_start_default"
+                        android:visibility="@{viewModel.chatAllowed &amp;&amp; !viewModel.hidePlainChat ? View.VISIBLE : View.GONE}" />
 
                     <RelativeLayout
                         android:onClick="@{() -> viewModel.startChat(true)}"
