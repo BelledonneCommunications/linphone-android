@@ -25,6 +25,7 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.chat.viewmodels.ChatRoomCreationViewModel
@@ -148,9 +149,11 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
             }
         }
 
-        if (!PermissionHelper.get().hasReadContactsPermission()) {
-            Log.i("[Chat Room Creation] Asking for READ_CONTACTS permission")
-            requestPermissions(arrayOf(android.Manifest.permission.READ_CONTACTS), 0)
+        if (corePreferences.enableNativeAddressBookIntegration) {
+            if (!PermissionHelper.get().hasReadContactsPermission()) {
+                Log.i("[Chat Room Creation] Asking for READ_CONTACTS permission")
+                requestPermissions(arrayOf(android.Manifest.permission.READ_CONTACTS), 0)
+            }
         }
     }
 

@@ -488,10 +488,12 @@ class CoreContext(
     }
 
     fun fetchContacts() {
-        if (PermissionHelper.required(context).hasReadContactsPermission()) {
-            Log.i("[Context] Init contacts loader")
-            val manager = LoaderManager.getInstance(this@CoreContext)
-            manager.restartLoader(0, null, contactLoader)
+        if (corePreferences.enableNativeAddressBookIntegration) {
+            if (PermissionHelper.required(context).hasReadContactsPermission()) {
+                Log.i("[Context] Init contacts loader")
+                val manager = LoaderManager.getInstance(this@CoreContext)
+                manager.restartLoader(0, null, contactLoader)
+            }
         }
     }
 

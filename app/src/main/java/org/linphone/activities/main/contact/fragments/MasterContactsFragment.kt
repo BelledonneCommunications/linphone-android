@@ -311,9 +311,11 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
             }
         }
 
-        if (!PermissionHelper.get().hasReadContactsPermission()) {
-            Log.i("[Contacts] Asking for READ_CONTACTS permission")
-            requestPermissions(arrayOf(android.Manifest.permission.READ_CONTACTS), 0)
+        if (corePreferences.enableNativeAddressBookIntegration) {
+            if (!PermissionHelper.get().hasReadContactsPermission()) {
+                Log.i("[Contacts] Asking for READ_CONTACTS permission")
+                requestPermissions(arrayOf(android.Manifest.permission.READ_CONTACTS), 0)
+            }
         }
     }
 

@@ -26,6 +26,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.LinphoneApplication
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.voip.viewmodels.ConferenceParticipantsViewModel
@@ -104,9 +105,11 @@ class ConferenceAddParticipantsFragment : GenericFragment<VoipConferenceParticip
             }
         }
 
-        if (!PermissionHelper.get().hasReadContactsPermission()) {
-            Log.i("[Conference Add Participants] Asking for READ_CONTACTS permission")
-            requestPermissions(arrayOf(android.Manifest.permission.READ_CONTACTS), 0)
+        if (corePreferences.enableNativeAddressBookIntegration) {
+            if (!PermissionHelper.get().hasReadContactsPermission()) {
+                Log.i("[Conference Add Participants] Asking for READ_CONTACTS permission")
+                requestPermissions(arrayOf(android.Manifest.permission.READ_CONTACTS), 0)
+            }
         }
     }
 

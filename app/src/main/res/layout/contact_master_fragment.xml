@@ -102,7 +102,8 @@
                     android:layout_weight="0.2"
                     android:background="?attr/button_background_drawable"
                     android:padding="15dp"
-                    android:src="@drawable/contact_add" />
+                    android:src="@drawable/contact_add"
+                    android:visibility="@{viewModel.nativeAddressBookEnabled ? View.VISIBLE : View.GONE}"/>
 
                 <ImageView
                     android:onClick="@{editClickListener}"
