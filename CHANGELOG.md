@@ -49,6 +49,14 @@ Group changes to describe their impact on the project, as follows:
 - No longer makes requests to our LIME server (end-to-end encryption keys server) for non sip.linphone.org accounts
 - Fixed incoming call/notification not ringing if Do not Disturb mode is enabled except for favorite contacts
 
+## [4.6.14] - 2022-09-19
+
+### Fixed
+- ANR that happens sometimes when playing voice recording
+
+### Changed
+- Improved contact loader by querying only relevant fields
+
 ## [4.6.13] - 2022-08-25
 
 ### Fixed
