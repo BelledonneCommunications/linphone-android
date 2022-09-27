@@ -46,6 +46,7 @@
         <attr name="voipFormBackgroundColor" format="color" />
         <attr name="voipFormFieldBackgroundColor" format="color" />
         <attr name="voipFormDisabledFieldBackgroundColor" format="color" />
+        <attr name="voipCancelledMeetingBackgroundColor" format="color" />
     </declare-styleable>
 
     <declare-styleable name="Settings">
