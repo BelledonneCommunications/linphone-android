@@ -38,7 +38,8 @@
     <color name="voip_conf_address_text_color">#A2A2A2</color>
     <color name="voip_conference_updated_color">#EFAE00</color>
     <color name="voip_conference_cancelled_title_color">#FF0000</color>
-    <color name="voip_conference_cancelled_bg_color">#FFE6E6</color>
+    <color name="voip_conference_cancelled_bg_color_light">#FFE6E6</color>
+    <color name="voip_conference_cancelled_bg_color_dark">#3D3434</color>
 
     <color name="form_field_gray_background">#F7F7F7</color>
 

@@ -61,6 +61,7 @@
         <item name="voipFormBackgroundColor">@color/voip_dark_color</item>
         <item name="voipFormFieldBackgroundColor">@color/voip_dark_color5</item>
         <item name="voipFormDisabledFieldBackgroundColor">@color/voip_dark_color4</item>
+        <item name="voipCancelledMeetingBackgroundColor">@color/voip_conference_cancelled_bg_color_dark</item>
     </style>
 
     <style name="AppTheme" parent="BaseAppTheme" />
