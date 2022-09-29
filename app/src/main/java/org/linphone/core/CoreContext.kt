@@ -508,6 +508,10 @@ class CoreContext(
                     friendList.rlsAddress = rlsAddress
                 }
             }
+            if (core.mediaEncryption == MediaEncryption.None) {
+                Log.i("[Context] Enabling SRTP media encryption instead of None")
+                core.mediaEncryption = MediaEncryption.SRTP
+            }
         } else {
             Log.i("[Context] Background mode with foreground service automatically enabled")
             corePreferences.keepServiceAlive = true
